@@ -2,148 +2,139 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D927DC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB52BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD0B2205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2DD7206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 08:26:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tt+YF24j"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Fs497W/R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbgCQIWn (ORCPT
+        id S1726077AbgCQI0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 04:22:43 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38771 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbgCQIWn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 04:22:43 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w3so9302125plz.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 01:22:42 -0700 (PDT)
+        Tue, 17 Mar 2020 04:26:07 -0400
+Received: from mail-eopbgr1400123.outbound.protection.outlook.com ([40.107.140.123]:26816
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725536AbgCQI0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 04:26:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZKlyewpyvE9GtjntPtFDSAmOg9Dt7R857VqxRBkVf1WHk3pAhDb9M6C0IbYxE3cMJ1VDUvePk09EXAJURBRYNU6KIaowqx5GIWvx4E3y/wwX9OQgisSFAoy8Ryzr8QMA7OWkh8GCF1pI3GTmqaJSpbgBI1OCb+j0WzJL/Eza5TDtn7l/wmITpnSqwAqUaSj8DqMCT6uTG0N9ihg1sceTjefrkEShhnMzflxKcBQatLRBdtIymLKgWLZBMIx//I/sbBZ/+Q1PFfjlZdNnyLIjy3v6byuUs77R8dpljd50YSJk4QG8rlua7DGpazX0QOncyoHTizsDlMWgm9pi6FEuEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BPmcOlrb+yKUg/weZuB9bCyL075WJYW3h6SzJ8jlSIk=;
+ b=WGlJ8ZmwsbLq5axrJwKgbOagtPeVXEDrR76XfvKHT+mXUL5mKnfMAiEdNDuCpMp4vDHXiLxfbKL4w86fCcMX2Z9PXZLQaq8rB3AKVSizwhWWi6yqOZZ4u19V7MXGfWf42eS8G9bY6PyPU19gFVhC7ylzfuiox46CsfoTeNJP48nl8zkzOQbRX1FUQEmHIZJ3B65n6Tfaapr5IV63m/JlBL9sLnvBEm+VkhyGUBQyR+UsLPaalVMzDlsbr33DyKh3mLYtFwV11JjYI04CAGEXq24id9Me2BIGNtXn5OsuL/p6MYktbn+Si40hMdvsxtpftAaIj0DvFP2T/0rKXUmk/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=S2YGO8hzm/1fcL5wpw6053JutNwav0C8AiM1n0QLEJQ=;
-        b=tt+YF24jXkH4DM2UPX3by871WLRY4lJS9/PgQ3JcC+pZiDfqTI72Toa0UhnV1blIER
-         ferVEZVuDowmSFATTGRgXZzaiabKPqIr8sXX3jEOKI4eODGwy3kPCLqB0RgdmqpNp3ub
-         FUF60dlbYzcD3jtnlbyEBnJ0/Yv8FDwqp4Ci9JUMUXKYx0jRMZCPsd0aBuKrFMkhd4pz
-         JsifRxQLQ0I/Um+E/9vxEblk74TyqRhKZXdmYqaxXglJlCUZKWPXc38U3jdG5RdRILSS
-         mwM+BeUDnJwARYv1wXCrfU92TZIxOo47fEp6t3C+Ol9dHGmu/WmOhy5Qe8LkoGQ+isn+
-         zOUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=S2YGO8hzm/1fcL5wpw6053JutNwav0C8AiM1n0QLEJQ=;
-        b=HpbfLZyIy/mVeM/ME2crwOriTd8VdGqDZK5MzEPb12RYB84SrKj4mcoiq8SpPVQzFy
-         +nMBN+gEihkhXfAa5pwRRSrRf2gxmZNsrv37fdudNzvXCzGX1TXiM/fdHwiKwzrEBg5r
-         ws5whMOd4medw7F68fZvVMPM2qrYvBLlqO1Z8G7r4slo7cVbuUTxmWY2uFhaYpGKZsBq
-         exg4R5bB94VHAh8kBIgBPgj2q8HldPmZQy3HFuejlQ018yDhArnrwubTQpAcezJ4zU31
-         /sVFVx9czhn0wwUEb7+DLgH6PsCPbdalGVofqflhHwvdbeGyJzKZWe5OF7VwF41hxQp+
-         H7jg==
-X-Gm-Message-State: ANhLgQ36rqTDGP1xSJeWhB3kJXUQBsMxe94D+eeevnUc6TxUpLzkJddu
-        wluqhJULW9mssceZJ1IYaNE=
-X-Google-Smtp-Source: ADFU+vvcUoxwSV/QfKtwuyZl9nq8hzXjTUPjOPwh177PntOmiNmWzrBdoV0eRhfNJ/Vn83jYM7xjug==
-X-Received: by 2002:a17:902:a9c5:: with SMTP id b5mr3274017plr.126.1584433362206;
-        Tue, 17 Mar 2020 01:22:42 -0700 (PDT)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id s25sm2132325pfe.147.2020.03.17.01.22.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 01:22:41 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 17:22:39 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Shreyas Joshi <shreyas.joshi@biamp.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "pmladek@suse.com" <pmladek@suse.com>,
-        "sergey.senozhatsky@gmail.com" <sergey.senozhatsky@gmail.com>,
-        "shreyasjoshi15@gmail.com" <shreyasjoshi15@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] printk: handle blank console arguments passed in.
-Message-ID: <20200317082239.GA4494@google.com>
-References: <20200309052915.858-1-shreyas.joshi@biamp.com>
- <MN2PR17MB31979437E605257461AC003DFCF60@MN2PR17MB3197.namprd17.prod.outlook.com>
- <20200316213900.6b1eb594@oasis.local.home>
- <20200317020144.GB219881@google.com>
- <20200317021736.syreot6rs5rtqsh3@shreyas_biamp.biamp.com>
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BPmcOlrb+yKUg/weZuB9bCyL075WJYW3h6SzJ8jlSIk=;
+ b=Fs497W/R9O9rc8yQL1NiWI/xDXB1fCqswlATrATmnG+lJlq0Lj9UiFXEYeXblDV6h4c5DF/rotAY6/rOTQVyqeeM7bY5PSyIj0wcUsATtTiwYRjim34LrpT3/zLo6RMDsaAqIq6BJ14GdfBmk6+Lwj85VpAL1fUx18+eJW7ZNfM=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB3213.jpnprd01.prod.outlook.com (20.177.104.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.16; Tue, 17 Mar 2020 08:26:03 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
+ 08:26:03 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+CC:     Andrew Murray <andrew.murray@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: RE: [PATCH v5 5/7] dt-bindings: PCI: rcar: Add bindings for R-Car
+ PCIe endpoint controller
+Thread-Topic: [PATCH v5 5/7] dt-bindings: PCI: rcar: Add bindings for R-Car
+ PCIe endpoint controller
+Thread-Index: AQHV7k2mHX0IeWzmbUuqL/cidPXc16hMjZhw
+Date:   Tue, 17 Mar 2020 08:26:03 +0000
+Message-ID: <TYAPR01MB454466B8451E3115D8A7DFB7D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200228154122.14164-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200228154122.14164-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 40f9e958-e883-4431-5168-08d7ca4cd4d2
+x-ms-traffictypediagnostic: TYAPR01MB3213:|TYAPR01MB3213:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB3213D0CB519558870D56BF0FD8F60@TYAPR01MB3213.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-forefront-prvs: 0345CFD558
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(366004)(136003)(346002)(376002)(199004)(33656002)(52536014)(8936002)(55016002)(5660300002)(4326008)(64756008)(9686003)(26005)(186003)(86362001)(2906002)(8676002)(66476007)(76116006)(66946007)(81156014)(66556008)(81166006)(66446008)(478600001)(7416002)(558084003)(6916009)(54906003)(7696005)(71200400001)(6506007)(55236004)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB3213;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sUP2WRCSrmCT6B1OnBLOt5bGDTtxR/U5eJQcpyk8Pbwc1Fn4SEXwO/mXY0itdaDSRG5a+e+rBEp2rza2Auce5Vks63f1rew4j54hRB2PhTUhjPlMNh9btDY6jfWFwWWwjIGo4x9Wg6S7A/FECW2emIETwPqo/R3O7+43IixeHuv6JSj41hdkBz1e83b8sv/fVqtVqOodnHpXaH2DdOl2QziUF7t/PVZaH/dDoXvFTu3FkNFXAiB+i2+XhZS4nVh7yROYMeQ+IBhqxReFPTqqXjwSR2x6kkcxzaJbhA0+PbQQR8LOCHDqn+LuzvjZtXumjG3Qng0s7KtfDVlF5hPcIii4hbizIzw6VknTxdO6cQf7CmEBtR3YJ5UykwSbeL9PtldiBAabUD7RPZGYmmjewUxjuiGITfMOGzhMifgT45Df87HLrcnvy9fkGGpcQcaG
+x-ms-exchange-antispam-messagedata: nPz+KD4K74cmcwqaO3a0XU8r0gIQNhMLKks3YAtYZellB3K/NocEQobWkDJrmcN0fAMlGqDfDeWD3q5E19hYP9gmwhLVVT/+qsgfFBoXa3GWDD3Qelygo3oH0NfIEJXbsF+4TH8izMyDVyJ1QPQraA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200317021736.syreot6rs5rtqsh3@shreyas_biamp.biamp.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40f9e958-e883-4431-5168-08d7ca4cd4d2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 08:26:03.0654
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AEKg5toFkrBKfz+kdF84oWoV3nR1G6DMm4T5UFA66MhY9gKq4bjo6/Gv0D9zoUlNxci9CL0CYvkulni7TSOBvAeWUGQGx6hTQ3RQ0rHzcCnNr1OH1GHsjze3578YHReO
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3213
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/16 19:17), Shreyas Joshi wrote:
-> 
-> Thanks! I thought If we put a warning there then it won’t print anything.
-> Please advise. I will send a new patch with the line wrapping to at most 75  once
-> I know if I need to change anything more. 
-> 
+Hi Prabhakar-san,
 
-What I'm thinking about is turning "param=\0" into invalid case,
-not just for printk(), for in general. Treat it as a NULL value.
+Thank you for the patch!
 
-Something like this, perhaps?
+> From: Lad Prabhakar, Sent: Saturday, February 29, 2020 12:41 AM
+>=20
+> This patch adds the bindings for the R-Car PCIe endpoint driver.
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
----
- init/main.c   | 4 ++++
- lib/cmdline.c | 8 ++++++--
- 2 files changed, 10 insertions(+), 2 deletions(-)
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-diff --git a/init/main.c b/init/main.c
-index d46b5673ecb4..46b732cd2615 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -673,6 +673,10 @@ static int __init do_early_param(char *param, char *val,
- 		    (strcmp(param, "console") == 0 &&
- 		     strcmp(p->str, "earlycon") == 0)
- 		) {
-+			if (!val && strchr(p->str, '=')) {
-+				pr_warn("Malformed early option '%s'\n", param);
-+				continue;
-+			}
- 			if (p->setup_func(val) != 0)
- 				pr_warn("Malformed early option '%s'\n", param);
- 		}
-diff --git a/lib/cmdline.c b/lib/cmdline.c
-index fbb9981a04a4..33fa0fc505a0 100644
---- a/lib/cmdline.c
-+++ b/lib/cmdline.c
-@@ -222,9 +222,9 @@ char *next_arg(char *args, char **param, char **val)
- 	}
- 
- 	*param = args;
--	if (!equals)
-+	if (!equals) {
- 		*val = NULL;
--	else {
-+	} else {
- 		args[equals] = '\0';
- 		*val = args + equals + 1;
- 
-@@ -244,6 +244,10 @@ char *next_arg(char *args, char **param, char **val)
- 	} else
- 		next = args + i;
- 
-+	/* Treat blank param value, e.g. 'param=', as NULL value. */
-+	if (equals && **val == '\0')
-+		*val = NULL;
-+
- 	/* Chew up trailing spaces. */
- 	return skip_spaces(next);
- }
--- 
-2.25.1.481.gfbce0eb801-goog
+Best regards,
+Yoshihiro Shimoda
 
