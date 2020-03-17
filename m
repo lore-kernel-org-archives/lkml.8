@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414A0C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35A8C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BAF7206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A661A205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443550;
-	bh=Jrq8GnAH/sFA0KIqg2gX0t78NK+wSKSmi/KkF5Q9Dbo=;
+	s=default; t=1584443553;
+	bh=KfkoEY+Syfax/L/wRug3QqCGe34zw6kA5NHS4T9pyJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e9CfjiZvj92iPropy7+mAOjCXGqFP9sGJ5/oZn6WIkAyGIi6CiCWXOr2IKB+tolxS
-	 qOLfKm9tAcJHHOQooOs6CqJqmxIdY1gNl+lH+M37uIhpzEZwL3VpfMXUBe62VnGNm+
-	 Ym3nx9sllWwYTl9lLMUx6rjE2HyRuTjp5mZXss9U=
+	b=IPq+tN0QIXkE7GUpfMbK/Mi4N5DxNn4EAgh62rNfOfPwInVzorg4z5NtnqtIaSqgB
+	 m7IuvdCNJCIAj6dCES7qfJtL8Z9T5DDGwDyALeH4UgN/PzINOeI0E5yJL5j0Fkw/TX
+	 HIwKPDrxIKiBnZ7V/uQqgGk8ttma9RAaosUI0mLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgCQLM2 (ORCPT
+        id S1729425AbgCQLMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:12:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56100 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:12:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbgCQLM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:12:26 -0400
+        id S1729130AbgCQLM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:12:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67B7620719;
-        Tue, 17 Mar 2020 11:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF9C20719;
+        Tue, 17 Mar 2020 11:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443545;
-        bh=Jrq8GnAH/sFA0KIqg2gX0t78NK+wSKSmi/KkF5Q9Dbo=;
+        s=default; t=1584443548;
+        bh=KfkoEY+Syfax/L/wRug3QqCGe34zw6kA5NHS4T9pyJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ws1QBIojnFf1c1ZF9Mzk/lyKmm1NpOBmiVEeqApNDrA12UCq0U80vXE3PFon12kRv
-         WngW7nYqo82uYlEndoEpNjLDkWN1xro8njn7tzYX0pYT58dNfY3/QdSHEsXcGb5T5z
-         yRj6gZ/xqoVhzn2a/T4OsRn3Fmcd4GIw8RCXecxM=
+        b=CLZzI6CMcNvkwZK/9isX+6RKgGVIRdML6O+acKk7RDKIBO+1EcQSUM6ft6dz6vBWQ
+         ICosKqdkE8DM5RGHrqvAtSOCW70copRaj9HuB0A79dV0lgHhwTep0KsqyMZ5aQaO+o
+         B5dr4hYckunwySjMkgVNtpRevr76o1iWpnZbNV9c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.5 118/151] x86/mce: Fix logic and comments around MSR_PPIN_CTL
-Date:   Tue, 17 Mar 2020 11:55:28 +0100
-Message-Id: <20200317103334.854857043@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Will Deacon <will@kernel.org>
+Subject: [PATCH 5.5 119/151] iommu/dma: Fix MSI reservation allocation
+Date:   Tue, 17 Mar 2020 11:55:29 +0100
+Message-Id: <20200317103334.923709728@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -59,66 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Luck <tony.luck@intel.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 59b5809655bdafb0767d3fd00a3e41711aab07e6 upstream.
+commit 65ac74f1de3334852fb7d9b1b430fa5a06524276 upstream.
 
-There are two implemented bits in the PPIN_CTL MSR:
+The way cookie_init_hw_msi_region() allocates the iommu_dma_msi_page
+structures doesn't match the way iommu_put_dma_cookie() frees them.
 
-Bit 0: LockOut (R/WO)
-      Set 1 to prevent further writes to MSR_PPIN_CTL.
+The former performs a single allocation of all the required structures,
+while the latter tries to free them one at a time. It doesn't quite
+work for the main use case (the GICv3 ITS where the range is 64kB)
+when the base granule size is 4kB.
 
-Bit 1: Enable_PPIN (R/W)
-       If 1, enables MSR_PPIN to be accessible using RDMSR.
-       If 0, an attempt to read MSR_PPIN will cause #GP.
+This leads to a nice slab corruption on teardown, which is easily
+observable by simply creating a VF on a SRIOV-capable device, and
+tearing it down immediately (no need to even make use of it).
+Fortunately, this only affects systems where the ITS isn't translated
+by the SMMU, which are both rare and non-standard.
 
-So there are four defined values:
-	0: PPIN is disabled, PPIN_CTL may be updated
-	1: PPIN is disabled. PPIN_CTL is locked against updates
-	2: PPIN is enabled. PPIN_CTL may be updated
-	3: PPIN is enabled. PPIN_CTL is locked against updates
+Fix it by allocating iommu_dma_msi_page structures one at a time.
 
-Code would only enable the X86_FEATURE_INTEL_PPIN feature for case "2".
-When it should have done so for both case "2" and case "3".
-
-Fix the final test to just check for the enable bit. Also fix some of
-the other comments in this function.
-
-Fixes: 3f5a7896a509 ("x86/mce: Include the PPIN in MCE records when available")
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200226011737.9958-1-tony.luck@intel.com
+Fixes: 7c1b058c8b5a3 ("iommu/dma: Handle IOMMU API reserved regions")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Joerg Roedel <jroedel@suse.de>
+Cc: Will Deacon <will@kernel.org>
+Cc: stable@vger.kernel.org
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/mce/intel.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/iommu/dma-iommu.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/arch/x86/kernel/cpu/mce/intel.c
-+++ b/arch/x86/kernel/cpu/mce/intel.c
-@@ -492,17 +492,18 @@ static void intel_ppin_init(struct cpuin
- 			return;
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -177,15 +177,15 @@ static int cookie_init_hw_msi_region(str
+ 	start -= iova_offset(iovad, start);
+ 	num_pages = iova_align(iovad, end - start) >> iova_shift(iovad);
  
- 		if ((val & 3UL) == 1UL) {
--			/* PPIN available but disabled: */
-+			/* PPIN locked in disabled mode */
- 			return;
- 		}
- 
--		/* If PPIN is disabled, but not locked, try to enable: */
--		if (!(val & 3UL)) {
-+		/* If PPIN is disabled, try to enable */
-+		if (!(val & 2UL)) {
- 			wrmsrl_safe(MSR_PPIN_CTL,  val | 2UL);
- 			rdmsrl_safe(MSR_PPIN_CTL, &val);
- 		}
- 
--		if ((val & 3UL) == 2UL)
-+		/* Is the enable bit set? */
-+		if (val & 2UL)
- 			set_cpu_cap(c, X86_FEATURE_INTEL_PPIN);
+-	msi_page = kcalloc(num_pages, sizeof(*msi_page), GFP_KERNEL);
+-	if (!msi_page)
+-		return -ENOMEM;
+-
+ 	for (i = 0; i < num_pages; i++) {
+-		msi_page[i].phys = start;
+-		msi_page[i].iova = start;
+-		INIT_LIST_HEAD(&msi_page[i].list);
+-		list_add(&msi_page[i].list, &cookie->msi_page_list);
++		msi_page = kmalloc(sizeof(*msi_page), GFP_KERNEL);
++		if (!msi_page)
++			return -ENOMEM;
++
++		msi_page->phys = start;
++		msi_page->iova = start;
++		INIT_LIST_HEAD(&msi_page->list);
++		list_add(&msi_page->list, &cookie->msi_page_list);
+ 		start += iovad->granule;
  	}
- }
+ 
 
 
