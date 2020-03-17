@@ -2,136 +2,183 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C10C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BA4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2467D20735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2475A20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 15:05:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="B7tejMTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgCQPDk (ORCPT
+        id S1726943AbgCQPE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 11:03:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:39424 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbgCQPDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 11:03:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4C3030E;
-        Tue, 17 Mar 2020 08:03:38 -0700 (PDT)
-Received: from [10.37.12.228] (unknown [10.37.12.228])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80D4E3F52E;
-        Tue, 17 Mar 2020 08:03:33 -0700 (PDT)
-Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
- vgettimeofday
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-mips@vger.kernel.org, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
- <20200317122220.30393-19-vincenzo.frascino@arm.com>
- <20200317143834.GC632169@arrakis.emea.arm.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
-Date:   Tue, 17 Mar 2020 15:04:01 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 17 Mar 2020 11:04:59 -0400
+Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:33496 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726388AbgCQPE6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 11:04:58 -0400
+Received: from pps.filterd (m0098781.ppops.net [127.0.0.1])
+        by mx0a-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02HDbxfW000726;
+        Tue, 17 Mar 2020 08:57:04 -0500
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2176.outbound.protection.outlook.com [104.47.57.176])
+        by mx0a-00010702.pphosted.com with ESMTP id 2yrua11mn8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Mar 2020 08:57:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k1pBipBnvbXZzFvibq/IrkVaxt2PFGWENETVSRxelzwulketE6ATcNrW8aT/UB06DrAvPgjpulZQHOb071g1Rea/F9E2B38lAnEjvULQmknzplNy3Vs4D0AXNPsIjvZ5Eny4pAkuLMFEcGvgyz3a+AwU3d8/6h/zc+IcOcQ4wGW9k8WQV7Xzcdrye+6yMIDhNv6HgGl6XUxcB/px4xH9OGVKkozv9lnq666WaJcFdNPSKZH1+y6v1uUi0SyVqccX4YUAx1436MUYH/nUlOaQl3BVNAJHgfOnqOkQ2Fd16C7dfmh78PCAlJ9ZWR2AFUU0DQ2xasAsLexKebcYw+xK4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pTc1M08uh4ajhnLJSGyCpHmDMmV/ESEmtH376gDBt14=;
+ b=GyYef7Sus5xe2kxqd6CJBd3coLOOTvNRtbJH34Xa5JjMGg+rT0+2OPcYJMcQh704dYBAeiPmLYDLV0IzxYmO0D/eXvTc3QZmtzYzObnwgoXAE131UWMdDoHl+oLRW0rAhmVAsw6G+7505/ApRp5jhb6Z0d5BGgx70iReMse1ArA5jO+nNyzPhPTPD0nT1OdfU6Bsfsw1U6DODU8KWoMUv9+E7Ap2HxvyG6aAhvorWN7qYR4G+5A1i+5QKLk/aKM93Q6ZoDP0FpuX0e66p3zI59Sui8Vo0GZcBYI6Qy8S47c4/2kgTHywF6PGk4NvBSdD1tb0l4dCmXhl0YMRXprdrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
+ header.d=ni.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pTc1M08uh4ajhnLJSGyCpHmDMmV/ESEmtH376gDBt14=;
+ b=B7tejMTZoe8MrP5Sj+tUxCQ8j1gqScsb8hK7Mkyzg99sbzabyKnSoBmzkMBBOMFuH2AYB4h/3CFP8v8K60pyRONAFGHXkK5U+uDdfdy6bsG87vFKCoZ8vdmh/gsz4lOpaMSLDDIiXnDRYcdGzRFDb4N0Rjze5g9dvw1RbV7mJVc=
+Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::29) by SN4PR0401MB3567.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.17; Tue, 17 Mar
+ 2020 13:57:01 +0000
+Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
+ ([fe80::d05b:1953:4111:38e4]) by SN4PR0401MB3646.namprd04.prod.outlook.com
+ ([fe80::d05b:1953:4111:38e4%5]) with mapi id 15.20.2793.023; Tue, 17 Mar 2020
+ 13:57:01 +0000
+From:   Michael Auchter <michael.auchter@ni.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Auchter <michael.auchter@ni.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] dt-bindings: iio: adc: ad7291: add binding
+Date:   Tue, 17 Mar 2020 08:56:49 -0500
+Message-Id: <20200317135649.8876-2-michael.auchter@ni.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200317135649.8876-1-michael.auchter@ni.com>
+References: <20200317135649.8876-1-michael.auchter@ni.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SN4PR0401CA0034.namprd04.prod.outlook.com
+ (2603:10b6:803:2a::20) To SN4PR0401MB3646.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::29)
 MIME-Version: 1.0
-In-Reply-To: <20200317143834.GC632169@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xaphan.phire.org (66.90.216.181) by SN4PR0401CA0034.namprd04.prod.outlook.com (2603:10b6:803:2a::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18 via Frontend Transport; Tue, 17 Mar 2020 13:57:01 +0000
+X-Mailer: git-send-email 2.24.1
+X-Originating-IP: [66.90.216.181]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 71534422-479e-48a5-f597-08d7ca7b1128
+X-MS-TrafficTypeDiagnostic: SN4PR0401MB3567:|SN4PR0401MB3567:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN4PR0401MB35672C9A560BDCDE14C5BBE587F60@SN4PR0401MB3567.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1388;
+X-Forefront-PRVS: 0345CFD558
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(366004)(346002)(136003)(396003)(199004)(6666004)(110136005)(966005)(2906002)(6512007)(186003)(66476007)(2616005)(956004)(44832011)(6506007)(5660300002)(478600001)(52116002)(4326008)(316002)(26005)(1076003)(16526019)(66556008)(36756003)(81156014)(81166006)(8936002)(8676002)(6486002)(66946007)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN4PR0401MB3567;H:SN4PR0401MB3646.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: ni.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aMxMguFKxcGNw4yiYPqhXXMCmY1oMZIq6hTf/ORCfV76p9SzpXT08t88GsfzVZfffyQOH7JAMb9KNFCpPqbMrC/z+Xl5kW4C1ybEAMzTjheIORuaKCk+T3+EaC4t/pUE+ToUZlu3mfLMgDS8Cqs3/UmAULpY+NjRQZuOmEu0b0B5Ho1R4sUhAlBREhb1mDVn/4MORwPwwn0JTLhL1G1NgTzB+sVZudZJpPSZRa2nh1TndexA7I5RzInTiQwdX9ChajNPt7QHiJCjpe1adeDq4PTvvJTANfEilXCMie9XN51kFJ0vuTLbr1jLqEvLS+jpKCagFpsEmtNKffORt3JxuwFLETsk2LZi87+DJBhJOpmcOZIXWY29t7EYFaA0xRRTrLdg5z9G0Zp1Tpm67V0o9BEn3V5w3OZFPxybLNZhFYQcjfiwq09kw1OSYKKDVWI5730oZH2ayLphTJBeGUR+Q3//XDuS6kW9xeN15dBIZxLVnilh/fuk4EiD76o/ic/znorg7nlJoKxGmOnl9cwO4g==
+X-MS-Exchange-AntiSpam-MessageData: DyP3RspsG2/j4W3atibpwwzRWQRS4ikfLHMqkjnfzm3p7dnk2TVSBtoKsSwLO5hJIfSxQITCIf/2za9fVS2WeBTHWP+UNvYuf+jRHbyvlhrWLvMU2NHJ0hJFdpQhytIp+gZkFyTqUTtIjbE74M3F1w==
+X-OriginatorOrg: ni.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71534422-479e-48a5-f597-08d7ca7b1128
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2020 13:57:01.5668
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KRWlkJAheJfHYDs5ZY96yxK2u4Oq+dw0gCyfcpkutLtmXBggG732Qlq3tZWhmP6In5Fxf/4MEJG1xW+WOsKpaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3567
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-17_05:2020-03-17,2020-03-17 signatures=0
+X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30 impostorscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 classifier=spam adjust=30 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003170060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
+Add device-tree binding for ADI AD7291 ADC.
 
-On 3/17/20 2:38 PM, Catalin Marinas wrote:
-> On Tue, Mar 17, 2020 at 12:22:12PM +0000, Vincenzo Frascino wrote:
->> diff --git a/arch/arm64/kernel/vdso32/vgettimeofday.c b/arch/arm64/kernel/vdso32/vgettimeofday.c
->> index 54fc1c2ce93f..91138077b073 100644
->> --- a/arch/arm64/kernel/vdso32/vgettimeofday.c
->> +++ b/arch/arm64/kernel/vdso32/vgettimeofday.c
->> @@ -8,11 +8,14 @@
->>  #include <linux/time.h>
->>  #include <linux/types.h>
->>  
->> +#define VALID_CLOCK_ID(x) \
->> +	((x >= 0) && (x < VDSO_BASES))
->> +
->>  int __vdso_clock_gettime(clockid_t clock,
->>  			 struct old_timespec32 *ts)
->>  {
->>  	/* The checks below are required for ABI consistency with arm */
->> -	if ((u32)ts >= TASK_SIZE_32)
->> +	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
->>  		return -EFAULT;
->>  
->>  	return __cvdso_clock_gettime32(clock, ts);
-> 
-> I probably miss something but I can't find the TASK_SIZE check in the
-> arch/arm/vdso/vgettimeofday.c code. Is this done elsewhere?
+Signed-off-by: Michael Auchter <michael.auchter@ni.com>
+---
+ .../bindings/iio/adc/adi,ad7291.yaml          | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
 
-Can TASK_SIZE > UINTPTR_MAX on an arm64 system?
-
-> 
->> @@ -22,7 +25,7 @@ int __vdso_clock_gettime64(clockid_t clock,
->>  			   struct __kernel_timespec *ts)
->>  {
->>  	/* The checks below are required for ABI consistency with arm */
->> -	if ((u32)ts >= TASK_SIZE_32)
->> +	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
->>  		return -EFAULT;
->>  
->>  	return __cvdso_clock_gettime(clock, ts);
->> @@ -38,9 +41,12 @@ int __vdso_clock_getres(clockid_t clock_id,
->>  			struct old_timespec32 *res)
->>  {
->>  	/* The checks below are required for ABI consistency with arm */
->> -	if ((u32)res >= TASK_SIZE_32)
->> +	if ((u32)res > UINTPTR_MAX - sizeof(res) + 1)
->>  		return -EFAULT;
->>  
->> +	if (!VALID_CLOCK_ID(clock_id) && res == NULL)
->> +		return -EINVAL;
-> 
-> This last check needs an explanation. If the clock_id is invalid but res
-> is not NULL, we allow it. I don't see where the compatibility issue is,
-> arm32 doesn't have such check.
-> 
-
-The case that you are describing has to return -EPERM per ABI spec. This case
-has to return -EINVAL.
-
-The first case is taken care from the generic code. But if we don't do this
-check before on arm64 compat we end up returning the wrong error code.
-
-For the non compat case the same is taken care from the syscall fallback [1].
-
-[1] lib/vdso/gettimeofday.c
-
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
+new file mode 100644
+index 000000000000..93aa29413049
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7291.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7291.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AD7291 8-Channel, I2C, 12-Bit SAR ADC with Temperature Sensor
++
++maintainers:
++  - Michael Auchter <michael.auchter@ni.com>
++
++description: |
++  Analog Devices AD7291 8-Channel I2C 12-Bit SAR ADC with Temperature Sensor
++  https://www.analog.com/media/en/technical-documentation/data-sheets/ad7291.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7291
++
++  reg:
++    maxItems: 1
++
++  vref-supply:
++    description: |
++      The regulator supply for ADC reference voltage.
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      ad7291: adc@0 {
++        compatible = "adi,ad7291";
++        reg = <0>;
++        vref-supply = <&adc_vref>;
++      };
++    };
++
 -- 
-Regards,
-Vincenzo
+2.24.1
+
