@@ -2,82 +2,82 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49026C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CDDC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14DA92073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D002073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 20:23:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jJwCjEtH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L9OCTGRm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgCQUWv (ORCPT
+        id S1726879AbgCQUX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 16:22:51 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38004 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbgCQUWu (ORCPT
+        Tue, 17 Mar 2020 16:23:26 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44025 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbgCQUX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 16:22:50 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x7so12346076pgh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:22:50 -0700 (PDT)
+        Tue, 17 Mar 2020 16:23:26 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f8so10105738plt.10
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 13:23:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=EAIJCbc9UnYGBhZAgTxjslTz10fA3gHJNpsPT5X0d/0=;
-        b=jJwCjEtHgr13odNFCH9H9QGOK6qYtGJmi3Lff6ROgfMdrMnLhXjkrg29YHbzWopzmS
-         02WMyKj3xIe8PhZaCZpLLVBE0XdXPKQtF/G5BDTxtU+8CD4Ixet9A3DgT/fPVZ7CrFBF
-         rpsE+tU61HmBnrjEDwRzixtEsw65RA/HGhmhw=
+        bh=zSe8rWeFlsZU0i7SSuhjlg2s06lvOZ+QgAEbRnXRKCw=;
+        b=L9OCTGRmtGM0cSyfUndXTADSKHCyCWwkd8y+0Iq1lernFN6S/gSBxFugqQCSM3a41w
+         Hbws/X3PlJembs2iaA/CtPF9h3RDr2QAQlu0p0DPMfpKUF1OLPx5ZBh1s0+QBY3G4sHl
+         PxZvzJ7TCTYRkl345izjxFZUqQWGq+Mg5DsjM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=EAIJCbc9UnYGBhZAgTxjslTz10fA3gHJNpsPT5X0d/0=;
-        b=HeJrjFHcnl6+ywdQm8zs2Vywawl6epmo27U78B/fE3UDTUZyHxCu7pa2aP7utIX/0F
-         5JPSlkhjAqmkuAIGgekzYYiqSlYOORqzCccbZErCavA4e9VjHFAOs4v4bhHtv95JFx+2
-         jv8L5XXymXomcHKOoyhtCrh9DvP2O/uprroY83kbWoOtthCqJgJfy9aNJ3uODP9o4ibi
-         xboSRUgfdhKHFibN+60wfWr/vCwBaTFa0IUWGAH4kFXe40B7DaDYuk0RMZqnZ5WnuQsk
-         TfC7qvm6oaau350Pff5TDge5/BYNIHg032x5dLtDbca9Hd/YRknQYx1gCweK+0g+mmcS
-         6bmg==
-X-Gm-Message-State: ANhLgQ3xHqYRMvY6dkLpu3yQhd6Smvg2pah+2Yv5y12Q3k2Dm32UwSw0
-        pQsReGjDpDHttLJlCJ9MIJyYOw==
-X-Google-Smtp-Source: ADFU+vsgTPKpKOop85D3za3E34mi1V5jczJYrDVYLZp5wxLbhQu4/38ysB16lWDoiJeHKHqWdqEuEg==
-X-Received: by 2002:a63:6944:: with SMTP id e65mr1017514pgc.406.1584476569477;
-        Tue, 17 Mar 2020 13:22:49 -0700 (PDT)
+        bh=zSe8rWeFlsZU0i7SSuhjlg2s06lvOZ+QgAEbRnXRKCw=;
+        b=sEP0coANqeHL05k+0+7tveyofTr7IGXL2OdNtkv4zrp+jxg1qnZKcTukRWsli6p7aV
+         cFd06oSJ7M+ocEIVAcI2zjOxF0xFS3ncOyoef9wlujIsGumGDEe6oS69hC/rxPD5TLNO
+         2MdTJBfg+3VPZbz3Zn2RtUeEy8yzA9dDw95nxoiHMiUjtkyT4zuA8wK0Cfkrj1R+HSgZ
+         kGJajo1o3blhRzZRz6EhCAoXPF8A46MaXMV7Dflu6lUcROME1tT+xehFWfgNUk+SGCId
+         97d/pqBwFQZ0syrSfT5wm3Iy3UiBxvaJ0oO0lagnjRN+7SszVDauw331NwyaGT7ysLCQ
+         Qh5Q==
+X-Gm-Message-State: ANhLgQ2OXf0uksaeY53jMZgw7Q7/rNu3J42P7rsvXwrohu4DrTcqJMcK
+        RIjxJVW5AKf7MPfj+qOq4/zGUg==
+X-Google-Smtp-Source: ADFU+vv3DNRu8Nu5EhpiP8v6utskBwT0IOzS4pn9YJ+qbpl6DgviLHuFEBc0pWxb6jnlHg7nOiuKZA==
+X-Received: by 2002:a17:90a:bf0b:: with SMTP id c11mr1079314pjs.28.1584476604873;
+        Tue, 17 Mar 2020 13:23:24 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x189sm3965762pfb.1.2020.03.17.13.22.48
+        by smtp.gmail.com with ESMTPSA id h4sm3971934pfg.177.2020.03.17.13.23.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 13:22:48 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 13:22:47 -0700
+        Tue, 17 Mar 2020 13:23:24 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 13:23:23 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Jakub Kicinski <kuba@kernel.org>
 Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
         linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel-team@fb.com, Tim.Bird@sony.com
-Subject: Re: [PATCH v3 2/6] kselftest: factor out list manipulation to a
- helper
-Message-ID: <202003171322.19433D7@keescook>
+Subject: Re: [PATCH v3 3/6] kselftest: create fixture objects
+Message-ID: <202003171323.7A18C455@keescook>
 References: <20200316225647.3129354-1-kuba@kernel.org>
- <20200316225647.3129354-3-kuba@kernel.org>
+ <20200316225647.3129354-4-kuba@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200316225647.3129354-3-kuba@kernel.org>
+In-Reply-To: <20200316225647.3129354-4-kuba@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 03:56:42PM -0700, Jakub Kicinski wrote:
-> Kees suggest to factor out the list append code to a macro,
-> since following commits need it, which leads to code duplication.
+On Mon, Mar 16, 2020 at 03:56:43PM -0700, Jakub Kicinski wrote:
+> Grouping tests by fixture will allow us to parametrize
+> test runs. Create full objects for fixtures.
 > 
-> Suggested-by: Kees Cook <keescook@chromium.org>
+> Add a "global" fixture for tests without a fixture.
+> 
 > Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 
 Acked-by: Kees Cook <keescook@chromium.org>
@@ -85,69 +85,116 @@ Acked-by: Kees Cook <keescook@chromium.org>
 -Kees
 
 > ---
->  tools/testing/selftests/kselftest_harness.h | 42 ++++++++++++---------
->  1 file changed, 24 insertions(+), 18 deletions(-)
+>  tools/testing/selftests/kselftest_harness.h | 46 ++++++++++++++++-----
+>  1 file changed, 35 insertions(+), 11 deletions(-)
 > 
 > diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-> index 5336b26506ab..aaf58fffc8f7 100644
+> index aaf58fffc8f7..0f68943d6f04 100644
 > --- a/tools/testing/selftests/kselftest_harness.h
 > +++ b/tools/testing/selftests/kselftest_harness.h
-> @@ -631,6 +631,29 @@
+> @@ -169,8 +169,10 @@
+>  #define __TEST_IMPL(test_name, _signal) \
+>  	static void test_name(struct __test_metadata *_metadata); \
+>  	static struct __test_metadata _##test_name##_object = \
+> -		{ .name = "global." #test_name, \
+> -		  .fn = &test_name, .termsig = _signal, \
+> +		{ .name = #test_name, \
+> +		  .fn = &test_name, \
+> +		  .fixture = &_fixture_global, \
+> +		  .termsig = _signal, \
+>  		  .timeout = TEST_TIMEOUT_DEFAULT, }; \
+>  	static void __attribute__((constructor)) _register_##test_name(void) \
+>  	{ \
+> @@ -212,10 +214,12 @@
+>   * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
+>   */
+>  #define FIXTURE(fixture_name) \
+> +	static struct __fixture_metadata _##fixture_name##_fixture_object = \
+> +		{ .name =  #fixture_name, }; \
+>  	static void __attribute__((constructor)) \
+>  	_register_##fixture_name##_data(void) \
+>  	{ \
+> -		__fixture_count++; \
+> +		__register_fixture(&_##fixture_name##_fixture_object); \
 >  	} \
->  } while (0); OPTIONAL_HANDLER(_assert)
+>  	FIXTURE_DATA(fixture_name)
 >  
-> +/* List helpers */
-> +#define __LIST_APPEND(head, item) \
-> +{ \
-> +	/* Circular linked list where only prev is circular. */ \
-> +	if (head == NULL) { \
-> +		head = item; \
-> +		item->next = NULL; \
-> +		item->prev = item; \
-> +		return;	\
-> +	} \
-> +	if (__constructor_order == _CONSTRUCTOR_ORDER_FORWARD) { \
-> +		item->next = NULL; \
-> +		item->prev = head->prev; \
-> +		item->prev->next = item; \
-> +		head->prev = item; \
-> +	} else { \
-> +		item->next = head; \
-> +		item->next->prev = item; \
-> +		item->prev = item; \
-> +		head = item; \
-> +	} \
+> @@ -309,8 +313,9 @@
+>  	} \
+>  	static struct __test_metadata \
+>  		      _##fixture_name##_##test_name##_object = { \
+> -		.name = #fixture_name "." #test_name, \
+> +		.name = #test_name, \
+>  		.fn = &wrapper_##fixture_name##_##test_name, \
+> +		.fixture = &_##fixture_name##_fixture_object, \
+>  		.termsig = signal, \
+>  		.timeout = tmout, \
+>  	 }; \
+> @@ -654,10 +659,33 @@
+>  	} \
+>  }
+>  
+> +/* Contains all the information about a fixture */
+> +struct __fixture_metadata {
+> +	const char *name;
+> +	struct __fixture_metadata *prev, *next;
+> +} _fixture_global __attribute__((unused)) = {
+> +	.name = "global",
+> +	.prev = &_fixture_global,
+> +};
+> +
+> +static struct __fixture_metadata *__fixture_list = &_fixture_global;
+> +static unsigned int __fixture_count;
+> +static int __constructor_order;
+> +
+> +#define _CONSTRUCTOR_ORDER_FORWARD   1
+> +#define _CONSTRUCTOR_ORDER_BACKWARD -1
+> +
+> +static inline void __register_fixture(struct __fixture_metadata *f)
+> +{
+> +	__fixture_count++;
+> +	__LIST_APPEND(__fixture_list, f);
 > +}
 > +
 >  /* Contains all the information for test execution and status checking. */
 >  struct __test_metadata {
 >  	const char *name;
-> @@ -665,24 +688,7 @@ static int __constructor_order;
->  static inline void __register_test(struct __test_metadata *t)
->  {
->  	__test_count++;
-> -	/* Circular linked list where only prev is circular. */
-> -	if (__test_list == NULL) {
-> -		__test_list = t;
-> -		t->next = NULL;
-> -		t->prev = t;
-> -		return;
-> -	}
-> -	if (__constructor_order == _CONSTRUCTOR_ORDER_FORWARD) {
-> -		t->next = NULL;
-> -		t->prev = __test_list->prev;
-> -		t->prev->next = t;
-> -		__test_list->prev = t;
-> -	} else {
-> -		t->next = __test_list;
-> -		t->next->prev = t;
-> -		t->prev = t;
-> -		__test_list = t;
-> -	}
-> +	__LIST_APPEND(__test_list, t);
+>  	void (*fn)(struct __test_metadata *);
+> +	struct __fixture_metadata *fixture;
+>  	int termsig;
+>  	int passed;
+>  	int trigger; /* extra handler after the evaluation */
+> @@ -670,11 +698,6 @@ struct __test_metadata {
+>  /* Storage for the (global) tests to be run. */
+>  static struct __test_metadata *__test_list;
+>  static unsigned int __test_count;
+> -static unsigned int __fixture_count;
+> -static int __constructor_order;
+> -
+> -#define _CONSTRUCTOR_ORDER_FORWARD   1
+> -#define _CONSTRUCTOR_ORDER_BACKWARD -1
+>  
+>  /*
+>   * Since constructors are called in reverse order, reverse the test
+> @@ -708,7 +731,7 @@ void __run_test(struct __test_metadata *t)
+>  
+>  	t->passed = 1;
+>  	t->trigger = 0;
+> -	printf("[ RUN      ] %s\n", t->name);
+> +	printf("[ RUN      ] %s.%s\n", t->fixture->name, t->name);
+>  	alarm(t->timeout);
+>  	child_pid = fork();
+>  	if (child_pid < 0) {
+> @@ -757,7 +780,8 @@ void __run_test(struct __test_metadata *t)
+>  				status);
+>  		}
+>  	}
+> -	printf("[     %4s ] %s\n", (t->passed ? "OK" : "FAIL"), t->name);
+> +	printf("[     %4s ] %s.%s\n", (t->passed ? "OK" : "FAIL"),
+> +	       t->fixture->name, t->name);
+>  	alarm(0);
 >  }
 >  
->  static inline int __bail(int for_realz, bool no_print, __u8 step)
 > -- 
 > 2.24.1
 > 
