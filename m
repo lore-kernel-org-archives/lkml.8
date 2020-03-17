@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04BAC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BEBC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA80620658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13114205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443472;
-	bh=mFKKfWcFB/9Jb1MTNHl5+8C5MTPIV+2hOeqpObc2q2g=;
+	s=default; t=1584443474;
+	bh=zNvJ3ICknpkN2zIsT7l86XyKLAoZLFhMG9n0Y6AeR+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2G+aK8ADEFkXqA+ruldeBoPXCMQb8sSQiHura4L3rskri/BWZlQGbkghpGefJMjFL
-	 plI+eaInbKQM7A9nq7uOpHIyYkO2itjr3zWhBif+OhngrF73HE51DFBmfnasQuLLuh
-	 voyW4rdUTJn/DymbjkMc+F6p0kynOisf47ERXopk=
+	b=IV8CT1ao422dLtkRBF3KDEaL4yTQTERjT3SzDleY17BXDGx3sNI1VnvGJX05WAScw
+	 G8RczowvaNo3iQLfpKAol/joC4c4v+u6MDkeqFyAIUwcrPrHffcW6w3/VOKzFwZ8a0
+	 xkX8eBdzye6mp5IX0/zfTzSOCKJvl9yrP1L1JR30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgCQLLK (ORCPT
+        id S1727977AbgCQLLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:11:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54170 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:11:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728543AbgCQLLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:11:07 -0400
+        id S1729029AbgCQLLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:11:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1FAF20658;
-        Tue, 17 Mar 2020 11:11:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8491B20719;
+        Tue, 17 Mar 2020 11:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443465;
-        bh=mFKKfWcFB/9Jb1MTNHl5+8C5MTPIV+2hOeqpObc2q2g=;
+        s=default; t=1584443469;
+        bh=zNvJ3ICknpkN2zIsT7l86XyKLAoZLFhMG9n0Y6AeR+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ihJe8eIHDMo1HYKXbMaVvBkayBnCgFcOaRNYecHIL6YqxAzmt0cHicIMvSG34tXld
-         uRdtCNHkh0u3eg3Xe64EkWUrjRtwTJhvuweGzrC9tfYJhKB6VmamnSMpqyxRdxMOeu
-         jOspd6Uxri4lBg+hUI715IqLttJag7PfeKe7tNa8=
+        b=kWQVq5gNDXmzivzdhEYvgH/2Te4ZJQiGgltOp0Px4py7ZkOjwR8kE/G5BAdEQ55hS
+         pu14LHMh5bAfeLyBIhvlqzJygPp9//NvkJFdKBlx/BDmk5hskiEl7ixkU68MvGWVuX
+         8VgLPuq27Pt8G75roV5BqqAAT3NOwkXYwjX0I2f8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
         Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
         Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.5 089/151] drm/i915/gt: Close race between cacheline_retire and free
-Date:   Tue, 17 Mar 2020 11:54:59 +0100
-Message-Id: <20200317103332.771651153@linuxfoundation.org>
+Subject: [PATCH 5.5 090/151] drm/i915/execlists: Enable timeslice on partial virtual engine dequeue
+Date:   Tue, 17 Mar 2020 11:55:00 +0100
+Message-Id: <20200317103332.842961594@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -64,48 +63,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 8ea6bb8e4d47e07518e5dba4f5cb77e210f0df82 upstream.
+commit eafc2aa20fba319b6e791a1b0c45a91511eccb6b upstream.
 
-If the cacheline may still be busy, atomically mark it for future
-release, and only if we can determine that it will never be used again,
-immediately free it.
+If we stop filling the ELSP due to an incompatible virtual engine
+request, check if we should enable the timeslice on behalf of the queue.
 
-Closes: https://gitlab.freedesktop.org/drm/intel/issues/1392
-Fixes: ebece7539242 ("drm/i915: Keep timeline HWSP allocated until idle across the system")
+This fixes the case where we are inspecting the last->next element when
+we know that the last element is the last request in the execution queue,
+and so decided we did not need to enable timeslicing despite the intent
+to do so!
+
+Fixes: 8ee36e048c98 ("drm/i915/execlists: Minimalistic timeslicing")
 Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
 Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Cc: Matthew Auld <matthew.auld@intel.com>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: <stable@vger.kernel.org> # v5.4+
 Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Cc: <stable@vger.kernel.org> # v5.2+
-Link: https://patchwork.freedesktop.org/patch/msgid/20200306154647.3528345-1-chris@chris-wilson.co.uk
-(cherry picked from commit 2d4bd971f5baa51418625f379a69f5d58b5a0450)
+Link: https://patchwork.freedesktop.org/patch/msgid/20200306113012.3184606-1-chris@chris-wilson.co.uk
+(cherry picked from commit 3df2deed411e0f1b7312baf0139aab8bba4c0410)
 Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/gt/intel_timeline.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/gt/intel_lrc.c |   29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
---- a/drivers/gpu/drm/i915/gt/intel_timeline.c
-+++ b/drivers/gpu/drm/i915/gt/intel_timeline.c
-@@ -197,11 +197,15 @@ static void cacheline_release(struct int
+--- a/drivers/gpu/drm/i915/gt/intel_lrc.c
++++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
+@@ -1501,11 +1501,9 @@ need_timeslice(struct intel_engine_cs *e
+ 	if (!intel_engine_has_timeslices(engine))
+ 		return false;
  
- static void cacheline_free(struct intel_timeline_cacheline *cl)
- {
-+	if (!i915_active_acquire_if_busy(&cl->active)) {
-+		__idle_cacheline_free(cl);
-+		return;
-+	}
-+
- 	GEM_BUG_ON(ptr_test_bit(cl->vaddr, CACHELINE_FREE));
- 	cl->vaddr = ptr_set_bit(cl->vaddr, CACHELINE_FREE);
+-	if (list_is_last(&rq->sched.link, &engine->active.requests))
+-		return false;
+-
+-	hint = max(rq_prio(list_next_entry(rq, sched.link)),
+-		   engine->execlists.queue_priority_hint);
++	hint = engine->execlists.queue_priority_hint;
++	if (!list_is_last(&rq->sched.link, &engine->active.requests))
++		hint = max(hint, rq_prio(list_next_entry(rq, sched.link)));
  
--	if (i915_active_is_idle(&cl->active))
--		__idle_cacheline_free(cl);
-+	i915_active_release(&cl->active);
+ 	return hint >= effective_prio(rq);
+ }
+@@ -1547,6 +1545,18 @@ static void set_timeslice(struct intel_e
+ 	set_timer_ms(&engine->execlists.timer, active_timeslice(engine));
  }
  
- int intel_timeline_init(struct intel_timeline *timeline,
++static void start_timeslice(struct intel_engine_cs *engine)
++{
++	struct intel_engine_execlists *execlists = &engine->execlists;
++
++	execlists->switch_priority_hint = execlists->queue_priority_hint;
++
++	if (timer_pending(&execlists->timer))
++		return;
++
++	set_timer_ms(&execlists->timer, timeslice(engine));
++}
++
+ static void record_preemption(struct intel_engine_execlists *execlists)
+ {
+ 	(void)I915_SELFTEST_ONLY(execlists->preempt_hang.count++);
+@@ -1705,11 +1715,7 @@ static void execlists_dequeue(struct int
+ 				 * Even if ELSP[1] is occupied and not worthy
+ 				 * of timeslices, our queue might be.
+ 				 */
+-				if (!execlists->timer.expires &&
+-				    need_timeslice(engine, last))
+-					set_timer_ms(&execlists->timer,
+-						     timeslice(engine));
+-
++				start_timeslice(engine);
+ 				return;
+ 			}
+ 		}
+@@ -1744,7 +1750,8 @@ static void execlists_dequeue(struct int
+ 
+ 			if (last && !can_merge_rq(last, rq)) {
+ 				spin_unlock(&ve->base.active.lock);
+-				return; /* leave this for another */
++				start_timeslice(engine);
++				return; /* leave this for another sibling */
+ 			}
+ 
+ 			GEM_TRACE("%s: virtual rq=%llx:%lld%s, new engine? %s\n",
 
 
