@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8379C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9CFC1975A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D1D20752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508B82051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 19:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgCQT24 (ORCPT
+        id S1726682AbgCQT3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 15:28:56 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:46884 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726294AbgCQT24 (ORCPT
+        Tue, 17 Mar 2020 15:29:41 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:59995 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726294AbgCQT3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 15:28:56 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TsuFGLH_1584473331;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TsuFGLH_1584473331)
+        Tue, 17 Mar 2020 15:29:40 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TsuLFfP_1584473375;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TsuLFfP_1584473375)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 18 Mar 2020 03:28:53 +0800
+          Wed, 18 Mar 2020 03:29:37 +0800
 Subject: Re: [v3 PATCH 1/2] mm: swap: make page_evictable() inline
 To:     Matthew Wilcox <willy@infradead.org>
 Cc:     shakeelb@google.com, vbabka@suse.cz, akpm@linux-foundation.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
 References: <1584466971-110029-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200317190411.GD22433@bombadil.infradead.org>
+ <20200317192136.GE22433@bombadil.infradead.org>
 From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <03aa047b-4e52-d5fb-c212-b341df4ea07f@linux.alibaba.com>
-Date:   Tue, 17 Mar 2020 12:28:49 -0700
+Message-ID: <65617abd-d7b7-5e1c-46a3-77e9cddcc514@linux.alibaba.com>
+Date:   Tue, 17 Mar 2020 12:29:33 -0700
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
  Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200317190411.GD22433@bombadil.infradead.org>
+In-Reply-To: <20200317192136.GE22433@bombadil.infradead.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -47,30 +47,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 3/17/20 12:04 PM, Matthew Wilcox wrote:
+On 3/17/20 12:21 PM, Matthew Wilcox wrote:
 > On Wed, Mar 18, 2020 at 01:42:50AM +0800, Yang Shi wrote:
->> v3: * Fixed the build error reported by lkp.
-> I'm not terribly enthusiastic about including pagemap.h from swap.h.
-> It's a discussion that reasonable people can disagree about, so let's
-> set it up:
+>> -static inline int mapping_unevictable(struct address_space *mapping)
+>> +static inline bool mapping_unevictable(struct address_space *mapping)
+>>   {
+>>   	if (mapping)
+>>   		return test_bit(AS_UNEVICTABLE, &mapping->flags);
+> Shouldn't this be:
 >
-> This patch adds inline bool page_evictable(struct page *page) to swap.h.
-> page_evictable() uses mapping_evictable() which is in pagemap.h.
-> mapping_evictable() uses AS_UNEVICTABLE which is also in pagemap.h.
->
-> We could move mapping_evictable() and friends to fs.h (already included
-> by swap.h).  But how about just moving page_evictable() to pagemap.h?
-> pagemap.h is already included by mm/mlock.c, mm/swap.c and mm/vmscan.c,
-> which are the only three current callers of page_evictable().
->
-> In fact, since it's only called by those three files, perhaps it should
-> be in mm/internal.h?  I don't see it becoming a terribly popular function
-> to call outside of the core mm code.
->
-> I think I have a mild preference for it being in pagemap.h, since I don't
-> have a hard time convincing myself that it's part of the page cache API,
-> but I definitely prefer internal.h over swap.h.
+> -static inline int mapping_unevictable(struct address_space *mapping)
+> +static inline bool mapping_unevictable(struct address_space *mapping)
+>   {
+> -       if (mapping)
+> -               return test_bit(AS_UNEVICTABLE, &mapping->flags);
+> -       return !!mapping;
+> +       return mapping && test_bit(AS_UNEVICTABLE, &mapping->flags);
 
-Thanks for the suggestion. Will move it to pagemap.h
+Looks neater. Will take it in thew new version.
 
+>   }
 
