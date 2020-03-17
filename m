@@ -2,97 +2,94 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272A8C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F5CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0611020658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E455F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 05:30:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hBWJ+yn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgCQF3X (ORCPT
+        id S1726407AbgCQFaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 01:29:23 -0400
-Received: from mga18.intel.com ([134.134.136.126]:36414 "EHLO mga18.intel.com"
+        Tue, 17 Mar 2020 01:30:39 -0400
+Received: from ozlabs.org ([203.11.71.1]:33709 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbgCQF3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 01:29:23 -0400
-IronPort-SDR: XaZZiAzL+9Qd45yLhedp9xWJo+ddeOULHtMv3kZ1Wuc+cDdeyU/qncQU/RY6HeQnND6EjeN0kx
- xXgf0iSI6MXA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 22:29:23 -0700
-IronPort-SDR: PUIlMNm7xVASLuPlejGWZhuu0wSElctBxpEEQS5vYpKR5cGY/eZM5jT1eChKj5aHr23GA9uDaP
- Y/xHmnqh0MWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,563,1574150400"; 
-   d="scan'208";a="262919627"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 16 Mar 2020 22:29:22 -0700
-Date:   Mon, 16 Mar 2020 22:29:22 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH 06/10] KVM: nVMX: Convert local exit_reason to u16 in
- ...enter_non_root_mode()
-Message-ID: <20200317052922.GQ24267@linux.intel.com>
-References: <20200312184521.24579-1-sean.j.christopherson@intel.com>
- <20200312184521.24579-7-sean.j.christopherson@intel.com>
- <87pndgnyud.fsf@vitty.brq.redhat.com>
+        id S1725468AbgCQFaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 01:30:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hMFm3r6yz9sPF;
+        Tue, 17 Mar 2020 16:30:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584423037;
+        bh=0QSdFBmo3Jxw2FG6/tNSmnGRL3dfpOUfxQFPx7YyZUo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hBWJ+yn37axtoRhG3ePM41DkqPfLUhmVavBu+E3mYavCGm+NM+L59/SLp+gE7lLjR
+         7URkN+5eYupb7hkKFm5i7PCsWSEmuYQNGWA8fVfF0VCFqtO0tWOOKiuxP0YCzwiDo/
+         3DFX9I0igbJoXxnSomLIQEtmKRzUUcY0F0B0Qto53UcTfNUCxuvyOQZUt7f2+op/a8
+         OUXSEA949SWxMly+4alTIRAUxIhU2/kIqV7GNsV7a6eGJ0EsMOubfjE9/uG92LlL4a
+         b6h0ZJ21tCp9PNA/g73EmKZ2n3T+40s1gaINPdyAwKLvmR22YUsM/Boag8j4YTAl/u
+         DkHBxLmnmQn4g==
+Date:   Tue, 17 Mar 2020 16:30:34 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ran Bi <ran.bi@mediatek.com>
+Subject: linux-next: build warning after merge of the rtc tree
+Message-ID: <20200317163034.2921155e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pndgnyud.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: multipart/signed; boundary="Sig_/4G6dYCPbVjrmEI7zzrRXetQ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 02:55:38PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
-> > Use a u16 for nested_vmx_enter_non_root_mode()'s local "exit_reason" to
-> > make it clear the intermediate code is only responsible for setting the
-> > basic exit reason, e.g. FAILED_VMENTRY is unconditionally OR'd in when
-> > emulating a failed VM-Entry.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  arch/x86/kvm/vmx/nested.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > index 1848ca0116c0..8fbbe2152ab7 100644
-> > --- a/arch/x86/kvm/vmx/nested.c
-> > +++ b/arch/x86/kvm/vmx/nested.c
-> > @@ -3182,7 +3182,7 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
-> >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> >  	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-> >  	bool evaluate_pending_interrupts;
-> > -	u32 exit_reason = EXIT_REASON_INVALID_STATE;
-> > +	u16 exit_reason = EXIT_REASON_INVALID_STATE;
-> >  	u32 exit_qual;
-> >  
-> >  	evaluate_pending_interrupts = exec_controls_get(vmx) &
-> > @@ -3308,7 +3308,7 @@ enum nvmx_vmentry_status nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu,
-> >  		return NVMX_VMENTRY_VMEXIT;
-> >  
-> >  	load_vmcs12_host_state(vcpu, vmcs12);
-> > -	vmcs12->vm_exit_reason = exit_reason | VMX_EXIT_REASONS_FAILED_VMENTRY;
-> > +	vmcs12->vm_exit_reason = VMX_EXIT_REASONS_FAILED_VMENTRY | exit_reason;
-> 
-> My personal preference would be to do
->  (u32)exit_reason | VMX_EXIT_REASONS_FAILED_VMENTRY 
-> instead but maybe I'm just not in love with implicit type convertion in C.
+--Sig_/4G6dYCPbVjrmEI7zzrRXetQ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Either way works for me.  Paolo?
+Hi all,
+
+After merging the rtc tree, today's linux-next build (x86_64 allmodconfig)
+produced this warning:
+
+drivers/rtc/rtc-mt2712.c: In function 'mt2712_rtc_set_alarm':
+drivers/rtc/rtc-mt2712.c:235:6: warning: unused variable 'irqen' [-Wunused-=
+variable]
+  235 |  u16 irqen;
+      |      ^~~~~
+
+Introduced by commit
+
+  4037b7df1026 ("rtc: add support for the MediaTek MT2712 RTC")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/4G6dYCPbVjrmEI7zzrRXetQ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5wYHoACgkQAVBC80lX
+0GxEmAf8DijSiVIFOx1Ha5q0MO3eQgN9odfkjEIAHHroswHqZ3bGk3vTjW52QlGw
+l8Lu+3fZdwsuYl68GtzBKARYku/5tH+RZfpryCFO3oSW4oj8jtbb+UxUrlZElwMS
+q/zUc80jaQDwYZwVfBrDbWIvBAjiTbSZPXJ9jC6h7DpnkSRMBX1Nj72VxKK3fE2D
+QBteAJioDQtGEHd9ABES7cvSnqPoP3Wnkf7hF5W2T9F0OUQzKVPZFObYGRn8ByzY
+kR8YwOy001Wae+1ts6bgxisfhiP+y/jLgqzPqUMDuzb4bgAz2VwHEmcRWajo/39j
+MCv2IK9HuQgC+T3aJ1clXvvW+HX+MA==
+=kmhU
+-----END PGP SIGNATURE-----
+
+--Sig_/4G6dYCPbVjrmEI7zzrRXetQ--
