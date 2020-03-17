@@ -2,122 +2,79 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74012C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCEEC0044D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7152051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D069420663
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:12:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733110AbgCQBJ7 (ORCPT
+        id S1733116AbgCQBMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 21:09:59 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:60356 "EHLO wind.enjellic.com"
+        Mon, 16 Mar 2020 21:12:50 -0400
+Received: from mga07.intel.com ([134.134.136.100]:35614 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733017AbgCQBJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 21:09:59 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 02H17IhN002955;
-        Mon, 16 Mar 2020 20:07:18 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 02H17Irm002954;
-        Mon, 16 Mar 2020 20:07:18 -0500
-Date:   Mon, 16 Mar 2020 20:07:18 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Haitao Huang <haitao.huang@linux.intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
-Message-ID: <20200317010718.GA2546@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com> <20200306053210.GA16297@wind.enjellic.com> <op.0g923rgpwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <op.0g923rgpwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Mon, 16 Mar 2020 20:07:18 -0500 (CDT)
+        id S1733017AbgCQBMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 21:12:50 -0400
+IronPort-SDR: 0eLccunPwof4+zVF20ibZbFYYQ2CjSJ2ZywnWok76MaHhuetEgfKYVFJHVplXAu0AqjNS6bYbA
+ eFNdHD9Z4m1w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2020 18:12:49 -0700
+IronPort-SDR: +84DntUAMAuwV5f09HlFOUn2P/p32UPXKVpFFk29p2DkFjlDAcIQJe/qIvhWUYyffUH0pMyjpW
+ DjOh7595MAjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,562,1574150400"; 
+   d="scan'208";a="267782250"
+Received: from allen-box.sh.intel.com ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Mar 2020 18:12:47 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     ashok.raj@intel.com, jacob.jun.pan@linux.intel.com,
+        kevin.tian@intel.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Liu Yi L <yi.l.liu@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 1/1] iommu/vt-d: Fix page request descriptor size
+Date:   Tue, 17 Mar 2020 09:10:18 +0800
+Message-Id: <20200317011018.22799-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 02:29:41PM -0500, Haitao Huang wrote:
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 
-Good evening, I hope the week is going well for everyone.
+Intel VT-d might support PRS (Page Reqest Support) when it's
+running in the scalable mode. Each page request descriptor
+occupies 32 bytes and is 32-bytes aligned. The page request
+descriptor offset mask should be 32-bytes aligned.
 
-> >Just as a clarification, are you testing the new driver against
-> >signed production class enclaves in .so format that also include
-> >metadata layout directives or is the driver just getting tested
-> >against the two page toy enclave that copies a word of memory from
-> >one memory location to another?
+Fixes: 5b438f4ba315d ("iommu/vt-d: Support page request in scalable mode")
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ drivers/iommu/intel-svm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> We (Intel SGX SDK/PSW team) tested this driver for enclaves in .so
-> format with metadata. Our 2.8 release supports v24 and 2.9 supports
-> v25+. Both production signed and debug signed enclaves worked.
->
-> *Note* we did make some code changes in our runtime for v24+, mainly
-> dealing with src & EPC page alignment for EADD, open one fd per
-> enclave, use -z noexecstack linker option, etc. You can see the
-> changes on GitHub.
+diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
+index 0e506de2d375..6183016f4269 100644
+--- a/drivers/iommu/intel-svm.c
++++ b/drivers/iommu/intel-svm.c
+@@ -491,7 +491,7 @@ struct page_req_dsc {
+ 	u64 priv_data[2];
+ };
+ 
+-#define PRQ_RING_MASK ((0x1000 << PRQ_ORDER) - 0x10)
++#define PRQ_RING_MASK	((0x1000 << PRQ_ORDER) - 0x20)
+ 
+ static bool access_error(struct vm_area_struct *vma, struct page_req_dsc *req)
+ {
+-- 
+2.17.1
 
-Lots of knobs getting turned at the same time but we sorted out all
-the issues and our runtime is now passing its regression tests with
-the new driver, with an exception that we note below.
-
-I suspect that we might have the only complete and architecturally
-independent runtime implementation so if the new driver is working
-against yours and ours it would seem to be a reasonable test spectrum
-for the driver.
-
-> >We see the same behavior from both our unit test enclaves and the
-> >Quoting Enclave from the Intel SGX runtime.
-
-> We did not see any issue loading QE in our tests. Please directly
-> email me on this test if you have specific questions.
-
-As it turns out the major problem we were running into with respect to
-the QE test was the fact that generic use of atexit() handlers was
-disabled by changes that went into the 2.8 SDK.  Our runtime and SDK
-assume that enclave atexit() handling works.
-
-The enclave UNINIT ECALL is only allowed on runtimes that are
-advertising EDMM support.  That seems excessively restrictive since
-atexit() handling is generically useful for enclaves that are not
-using EDMM.  Our runtime allows EDMM to be disabled and we have
-enclaves that gate on that for security purposes.
-
-On a quasi-related note, it appears that the 1.4 compatibility
-metadata created by post 2.0 signing tools is leaking layout
-descriptors that a version 1.4 runtime doesn't understand.
-
-Do you want to exchange e-mail on this or should we direct
-conversations about these issues with others on your SDK team.
-
-Have a good remainder of the week.
-
-Dr. Greg
-
-As always,
-Dr. Greg Wettstein, Ph.D, Worker      SGX secured infrastructure and
-Enjellic Systems Development, LLC     autonomously self-defensive
-4206 N. 19th Ave.                     platforms.
-Fargo, ND  58102
-PH: 701-281-1686                      EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"All parts should go together without forcing.  You must remember that
- the parts you are reassembling were disassembled by you.  Therefore,
- if you can't get them together again, there must be a reason.  By all
- means, do not use a hammer."
-                                -- IBM maintenance manual, 1925
