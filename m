@@ -2,99 +2,125 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E43C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1756EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF0820663
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:04:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KNL1OXo9"
+	by mail.kernel.org (Postfix) with ESMTP id EDF2120724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 12:05:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgCQMEF (ORCPT
+        id S1726781AbgCQMFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 08:04:05 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47366 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgCQMEF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 08:04:05 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02HC1j8I000556;
-        Tue, 17 Mar 2020 07:01:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584446505;
-        bh=wjn4Q51nWQESg+W49NEoLzwZmi+vaAV5Ld0LLIhWlMU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KNL1OXo9R7zP4eMivWB4YnLEg888FaJWaGkzMD5YYZcsng8pfehS7k6fR7PvpulCz
-         ZjYhiCPs7bBFO6fdxT0GWADv1bDM5eKivS1hatnQNu3sosUujTF+qlvEc5qqKdv7wc
-         9SRMgnYWYt4NvxqtEC4khpx4utYWlHORTpjYAxoA=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02HC1j8g024334
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Mar 2020 07:01:45 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Mar 2020 07:01:45 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Mar 2020 07:01:45 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02HC1ggs013068;
-        Tue, 17 Mar 2020 07:01:43 -0500
-Subject: Re: [PATCH] arm: dts: ti: k3-am654-main: Update otap-del-sel values
-To:     Faiz Abbas <faiz_abbas@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <nm@ti.com>
-References: <20200109085152.10573-1-faiz_abbas@ti.com>
- <5dc0bca0-502d-01b8-554b-4c4bc06688a8@ti.com>
- <54c5abfd-7ac5-92ba-e89b-aeae9ee4e275@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <3b721020-7ef2-410f-325c-6e17bdffc4a6@ti.com>
-Date:   Tue, 17 Mar 2020 14:01:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 17 Mar 2020 08:05:41 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:49552 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725962AbgCQMFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 08:05:40 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 17C74FB03;
+        Tue, 17 Mar 2020 13:05:38 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LQVffm-bFDdy; Tue, 17 Mar 2020 13:05:36 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 0B565412BE; Tue, 17 Mar 2020 13:05:35 +0100 (CET)
+Date:   Tue, 17 Mar 2020 13:05:35 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Lars-Peter Clausen <lars@metafoo.de>
+Cc:     Tomas Novotny <tomas@novotny.cz>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] iio: vcnl4000: Export near level property for
+ proximity sensor
+Message-ID: <20200317120535.GA16807@bogon.m.sigxcpu.org>
+References: <cover.1584380360.git.agx@sigxcpu.org>
+ <5566fe01df933d3281f058666e2147cb97b38126.1584380360.git.agx@sigxcpu.org>
+ <c787921f-c412-4986-14ea-e31b531d3d5b@metafoo.de>
 MIME-Version: 1.0
-In-Reply-To: <54c5abfd-7ac5-92ba-e89b-aeae9ee4e275@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c787921f-c412-4986-14ea-e31b531d3d5b@metafoo.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/03/2020 09:11, Faiz Abbas wrote:
-> Tero,
+Hi,
+On Mon, Mar 16, 2020 at 07:23:01PM +0100, Lars-Peter Clausen wrote:
+> On 3/16/20 6:46 PM, Guido Günther wrote:
+> > [...]
+> > +static ssize_t vcnl4000_read_near_level(struct iio_dev *indio_dev,
+> > +					uintptr_t priv,
+> > +					const struct iio_chan_spec *chan,
+> > +					char *buf)
+> > +{
+> > +	struct vcnl4000_data *data = iio_priv(indio_dev);
+> > +
+> > +	return sprintf(buf, "%u\n", data->near_level);
+> > +}
+> > +
+> > +static const struct iio_chan_spec_ext_info vcnl4000_ext_info[] = {
+> > +	{
+> > +		.name = "near_level",
 > 
-> On 17/01/20 1:38 pm, Tero Kristo wrote:
->> On 09/01/2020 10:51, Faiz Abbas wrote:
->>> According to the latest AM65x Data Manual[1], a different output tap
->>> delay value is optimum for a given speed mode. Update these values.
->>>
->>> [1] http://www.ti.com/lit/gpn/am6526
->>>
->>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>
->> I believe this patch is going to be updated, as the dt binding has
->> received comments. As such, going to ignore this for now.
->>
+> Generally having properties with a underscore in them breaks generic parsing
+> of the property name by userspace applications. This is because we use
+> underscores to separate different components (type, modifier, etc.) of the
+> attribute from each other.
 > 
-> Those other series are merged now so you should be able to pick this up.
+> Do you think calling this "nearlevel" would work?
 
-There were no changes to the DT binding?
+That works as well. I'll change that for v3.
 
-Can you resend the DTS patch, and refer to the merged dt-binding? I 
-deleted the whole series from my inbox already based on above.
+For my education: Is the type, modifier policy written down somewhere
+(similar to
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/leds/leds-class.rst#n44
+)?
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Cheers,
+ -- Guido
+
+> 
+> I know there are existing bad examples of properties that use an underscore,
+> but we should try to limit introducing new ones.
+> 
+> > +		.shared = IIO_SEPARATE,
+> > +		.read = vcnl4000_read_near_level,
+> > +	},
+> > +	{ /* sentinel */ }
+> > +};
+> > +
+> >   static const struct iio_chan_spec vcnl4000_channels[] = {
+> >   	{
+> >   		.type = IIO_LIGHT,
+> > @@ -350,6 +371,7 @@ static const struct iio_chan_spec vcnl4000_channels[] = {
+> >   	}, {
+> >   		.type = IIO_PROXIMITY,
+> >   		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> > +		.ext_info = vcnl4000_ext_info,
+> >   	}
+> >   };
+> > @@ -439,6 +461,10 @@ static int vcnl4000_probe(struct i2c_client *client,
+> >   	dev_dbg(&client->dev, "%s Ambient light/proximity sensor, Rev: %02x\n",
+> >   		data->chip_spec->prod, data->rev);
+> > +	if (device_property_read_u32(&client->dev, "near-level",
+> > +				     &data->near_level) < 0)
+> > +		data->near_level = 0;
+> > +
+> >   	indio_dev->dev.parent = &client->dev;
+> >   	indio_dev->info = &vcnl4000_info;
+> >   	indio_dev->channels = vcnl4000_channels;
+> 
+> 
