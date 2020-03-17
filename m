@@ -2,54 +2,53 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE25C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAC8C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFA620658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B952073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584443533;
-	bh=UWFV8+U9wMHUFK72MiBkyIfm7IytvMt4ap0HCa0loR0=;
+	s=default; t=1584443536;
+	bh=5QJOn0BGZeqjo1WWc33zP/NAQjl4vPPkzkv1rjbDqwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JZAghhXz8jnuHdqvjcnKoL2uVulV+6zba+YKJT7EAcMLwMEC93F3uwecFQn7MLAT8
-	 t8hmxmx+RoOcKLhY7Mg7kONWtZA3FvL/KZv/u9757Vu/oW/jJsInv1fBmdXL1XolxE
-	 B+Q3TVz/l2RGqp+SKs1FHBv8nolVAQcvJGCz/hts=
+	b=XlUK8nj8EW6Xc3RikmuRhaV56J8yQhaHicewvXR6EFzGsRrI36QcMd6XYNqQf3yOO
+	 rQ4uTXy+UmomlnvT5F4QWigt+AjMHKihS7egXxfup4NTjHnPw1iNRprZwoaazj/mBW
+	 1alAEhUyPWO5OtLwuPbCoIfaNv+cqMgzP97TwG/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgCQLMM (ORCPT
+        id S1729016AbgCQLMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:12:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729377AbgCQLMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:12:10 -0400
+        id S1729389AbgCQLMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:12:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D1FD20735;
-        Tue, 17 Mar 2020 11:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 206952073C;
+        Tue, 17 Mar 2020 11:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584443529;
-        bh=UWFV8+U9wMHUFK72MiBkyIfm7IytvMt4ap0HCa0loR0=;
+        s=default; t=1584443531;
+        bh=5QJOn0BGZeqjo1WWc33zP/NAQjl4vPPkzkv1rjbDqwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DbN/+Bjx6ujMzh3rMaACpJobhu0Ci47IYaZng/9ep9pC2uot/+60fOV2WN6VRR2BY
-         SepkRuUCxHp6mxXySmdJD3qxm9fTtBc9ExLu/7VTizAYjMoJ9h0Gw8S1MzXsV++c84
-         EN5vTigq8oSRZrPEkrXFeTFwh1paUED7r0WBkruk=
+        b=eJEzBumHouCyqCoU9NK9Ja+hQFeiSHdLJ2KD9IiyniSOPWvcboXDrIj4fP1yf2m/7
+         fCDiFcAsvZGJdpkhFsiTTUWZo8TldTP8rMksj3/HdN6BFgARJEsTU7QdAc1BR46YgT
+         rlPYM41SuAlq5HAnHTkIVMUTA3AiZf7/b5kjl7II=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.5 095/151] block: Fix partition support for host aware zoned block devices
-Date:   Tue, 17 Mar 2020 11:55:05 +0100
-Message-Id: <20200317103333.201614552@linuxfoundation.org>
+        stable@vger.kernel.org, Vladis Dronov <vdronov@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Bob Sanders <bob.sanders@hpe.com>
+Subject: [PATCH 5.5 113/151] efi: Fix a race and a buffer overflow while reading efivars via sysfs
+Date:   Tue, 17 Mar 2020 11:55:23 +0100
+Message-Id: <20200317103334.492278814@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103326.593639086@linuxfoundation.org>
 References: <20200317103326.593639086@linuxfoundation.org>
@@ -62,109 +61,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+From: Vladis Dronov <vdronov@redhat.com>
 
-commit b53df2e7442c73a932fb74228147fb946e531585 upstream.
+commit 286d3250c9d6437340203fb64938bea344729a0e upstream.
 
-Commit b72053072c0b ("block: allow partitions on host aware zone
-devices") introduced the helper function disk_has_partitions() to check
-if a given disk has valid partitions. However, since this function result
-directly depends on the disk partition table length rather than the
-actual existence of valid partitions in the table, it returns true even
-after all partitions are removed from the disk. For host aware zoned
-block devices, this results in zone management support to be kept
-disabled even after removing all partitions.
+There is a race and a buffer overflow corrupting a kernel memory while
+reading an EFI variable with a size more than 1024 bytes via the older
+sysfs method. This happens because accessing struct efi_variable in
+efivar_{attr,size,data}_read() and friends is not protected from
+a concurrent access leading to a kernel memory corruption and, at best,
+to a crash. The race scenario is the following:
 
-Fix this by changing disk_has_partitions() to walk through the partition
-table entries and return true if and only if a valid non-zero size
-partition is found.
+CPU0:                                CPU1:
+efivar_attr_read()
+  var->DataSize = 1024;
+  efivar_entry_get(... &var->DataSize)
+    down_interruptible(&efivars_lock)
+                                     efivar_attr_read() // same EFI var
+                                       var->DataSize = 1024;
+                                       efivar_entry_get(... &var->DataSize)
+                                         down_interruptible(&efivars_lock)
+    virt_efi_get_variable()
+    // returns EFI_BUFFER_TOO_SMALL but
+    // var->DataSize is set to a real
+    // var size more than 1024 bytes
+    up(&efivars_lock)
+                                         virt_efi_get_variable()
+                                         // called with var->DataSize set
+                                         // to a real var size, returns
+                                         // successfully and overwrites
+                                         // a 1024-bytes kernel buffer
+                                         up(&efivars_lock)
 
-Fixes: b72053072c0b ("block: allow partitions on host aware zone devices")
-Cc: stable@vger.kernel.org # 5.5
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This can be reproduced by concurrent reading of an EFI variable which size
+is more than 1024 bytes:
+
+  ts# for cpu in $(seq 0 $(nproc --ignore=1)); do ( taskset -c $cpu \
+  cat /sys/firmware/efi/vars/KEKDefault*/size & ) ; done
+
+Fix this by using a local variable for a var's data buffer size so it
+does not get overwritten.
+
+Fixes: e14ab23dde12b80d ("efivars: efivar_entry API")
+Reported-by: Bob Sanders <bob.sanders@hpe.com> and the LTP testsuite
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200305084041.24053-2-vdronov@redhat.com
+Link: https://lore.kernel.org/r/20200308080859.21568-24-ardb@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/block/genhd.c b/block/genhd.c
-index ff6268970ddc..9c2e13ce0d19 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -301,6 +301,42 @@ struct hd_struct *disk_map_sector_rcu(struct gendisk *disk, sector_t sector)
- }
- EXPORT_SYMBOL_GPL(disk_map_sector_rcu);
- 
-+/**
-+ * disk_has_partitions
-+ * @disk: gendisk of interest
-+ *
-+ * Walk through the partition table and check if valid partition exists.
-+ *
-+ * CONTEXT:
-+ * Don't care.
-+ *
-+ * RETURNS:
-+ * True if the gendisk has at least one valid non-zero size partition.
-+ * Otherwise false.
-+ */
-+bool disk_has_partitions(struct gendisk *disk)
-+{
-+	struct disk_part_tbl *ptbl;
-+	int i;
-+	bool ret = false;
-+
-+	rcu_read_lock();
-+	ptbl = rcu_dereference(disk->part_tbl);
-+
-+	/* Iterate partitions skipping the whole device at index 0 */
-+	for (i = 1; i < ptbl->len; i++) {
-+		if (rcu_dereference(ptbl->part[i])) {
-+			ret = true;
-+			break;
-+		}
-+	}
-+
-+	rcu_read_unlock();
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(disk_has_partitions);
-+
- /*
-  * Can be deleted altogether. Later.
-  *
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 6fbe58538ad6..07dc91835b98 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -245,18 +245,6 @@ static inline bool disk_part_scan_enabled(struct gendisk *disk)
- 		!(disk->flags & GENHD_FL_NO_PART_SCAN);
- }
- 
--static inline bool disk_has_partitions(struct gendisk *disk)
--{
--	bool ret = false;
--
--	rcu_read_lock();
--	if (rcu_dereference(disk->part_tbl)->len > 1)
--		ret = true;
--	rcu_read_unlock();
--
--	return ret;
--}
--
- static inline dev_t disk_devt(struct gendisk *disk)
+---
+ drivers/firmware/efi/efivars.c |   29 ++++++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
+
+--- a/drivers/firmware/efi/efivars.c
++++ b/drivers/firmware/efi/efivars.c
+@@ -83,13 +83,16 @@ static ssize_t
+ efivar_attr_read(struct efivar_entry *entry, char *buf)
  {
- 	return MKDEV(disk->major, disk->first_minor);
-@@ -298,6 +286,7 @@ extern void disk_part_iter_exit(struct disk_part_iter *piter);
+ 	struct efi_variable *var = &entry->var;
++	unsigned long size = sizeof(var->Data);
+ 	char *str = buf;
++	int ret;
  
- extern struct hd_struct *disk_map_sector_rcu(struct gendisk *disk,
- 					     sector_t sector);
-+bool disk_has_partitions(struct gendisk *disk);
+ 	if (!entry || !buf)
+ 		return -EINVAL;
  
- /*
-  * Macros to operate on percpu disk statistics:
+-	var->DataSize = 1024;
+-	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
++	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
++	var->DataSize = size;
++	if (ret)
+ 		return -EIO;
+ 
+ 	if (var->Attributes & EFI_VARIABLE_NON_VOLATILE)
+@@ -116,13 +119,16 @@ static ssize_t
+ efivar_size_read(struct efivar_entry *entry, char *buf)
+ {
+ 	struct efi_variable *var = &entry->var;
++	unsigned long size = sizeof(var->Data);
+ 	char *str = buf;
++	int ret;
+ 
+ 	if (!entry || !buf)
+ 		return -EINVAL;
+ 
+-	var->DataSize = 1024;
+-	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
++	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
++	var->DataSize = size;
++	if (ret)
+ 		return -EIO;
+ 
+ 	str += sprintf(str, "0x%lx\n", var->DataSize);
+@@ -133,12 +139,15 @@ static ssize_t
+ efivar_data_read(struct efivar_entry *entry, char *buf)
+ {
+ 	struct efi_variable *var = &entry->var;
++	unsigned long size = sizeof(var->Data);
++	int ret;
+ 
+ 	if (!entry || !buf)
+ 		return -EINVAL;
+ 
+-	var->DataSize = 1024;
+-	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
++	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
++	var->DataSize = size;
++	if (ret)
+ 		return -EIO;
+ 
+ 	memcpy(buf, var->Data, var->DataSize);
+@@ -250,14 +259,16 @@ efivar_show_raw(struct efivar_entry *ent
+ {
+ 	struct efi_variable *var = &entry->var;
+ 	struct compat_efi_variable *compat;
++	unsigned long datasize = sizeof(var->Data);
+ 	size_t size;
++	int ret;
+ 
+ 	if (!entry || !buf)
+ 		return 0;
+ 
+-	var->DataSize = 1024;
+-	if (efivar_entry_get(entry, &entry->var.Attributes,
+-			     &entry->var.DataSize, entry->var.Data))
++	ret = efivar_entry_get(entry, &var->Attributes, &datasize, var->Data);
++	var->DataSize = datasize;
++	if (ret)
+ 		return -EIO;
+ 
+ 	if (in_compat_syscall()) {
 
 
