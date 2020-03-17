@@ -2,131 +2,104 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778A9C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0CAC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F2B205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED92820738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:06:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584453980;
+	bh=DmaqvTgO1fmmMqgI6fMIcL8ag6suzOfDR3kPhV4+PwA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=A9A1LZDTtrP1hGNA50y4oHQvT5gCaLXxnOS6EoedSVcotivW13RPLJy6Dq2wdQVxe
+	 ZjpI2Hi85vo6SXe6k+YazlpZPT/emZEPoerJmVXw0zRNR08kWznysiFkwLxICN+Sqh
+	 Z6L3o+XCHbobbDBmaOgrg70HyKSe0FzzaARxAvMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgCQOF1 (ORCPT
+        id S1726740AbgCQOGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:05:27 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43644 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726016AbgCQOF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:05:27 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 16EDA231494C2953428D;
-        Tue, 17 Mar 2020 22:05:15 +0800 (CST)
-Received: from [127.0.0.1] (10.133.210.141) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Tue, 17 Mar 2020
- 22:05:10 +0800
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
- regression
-From:   yangerkun <yangerkun@huawei.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeff Layton <jlayton@kernel.org>
-CC:     NeilBrown <neilb@suse.de>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, <lkp@lists.01.org>,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-References: <20200308140314.GQ5972@shao2-debian>
- <875zfbvrbm.fsf@notabene.neil.brown.name>
- <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
- <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
- <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
- <87v9nattul.fsf@notabene.neil.brown.name>
- <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
- <87o8t2tc9s.fsf@notabene.neil.brown.name>
- <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
- <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
- <877dznu0pk.fsf@notabene.neil.brown.name>
- <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
- <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
- <87pndcsxc6.fsf@notabene.neil.brown.name>
- <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
- <CAHk-=whnqDS0NJtAaArVeYQz3hcU=4Ja3auB1Jvs42eADfUgMQ@mail.gmail.com>
- <7c8d3752-6573-ab83-d0af-f3dd4fc373f5@huawei.com>
-Message-ID: <6df79609-90eb-2f59-7e86-3532ac309a7a@huawei.com>
-Date:   Tue, 17 Mar 2020 22:05:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 17 Mar 2020 10:06:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726187AbgCQOGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:06:18 -0400
+Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81860205ED;
+        Tue, 17 Mar 2020 14:06:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584453977;
+        bh=DmaqvTgO1fmmMqgI6fMIcL8ag6suzOfDR3kPhV4+PwA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MCWCwGfnU+jb8ce35ywWcM47WdZTqfv4Ej/STM9Dw7MqFKaQ9sFNBXUhH0PJA7pE9
+         qTD2mYziACOoGGIwTyBYLbP0CLGQc8ez0gbcnEvy2hBD4NHBP7z+lFwIPgGDCGPJ9D
+         IettSkaEBTtKSQEL/Vf+Z+7EDfgo9+zMzzMQrC6Y=
+Date:   Tue, 17 Mar 2020 15:06:09 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 04/12] docs: dt: fix references to m_can.txt file
+Message-ID: <20200317150609.4d5c7c71@coco.lan>
+In-Reply-To: <60f77c6f-0536-1f50-1b49-2f604026a5cb@ti.com>
+References: <cover.1584450500.git.mchehab+huawei@kernel.org>
+        <db67f9bc93f062179942f1e095a46b572a442b76.1584450500.git.mchehab+huawei@kernel.org>
+        <376dba43-84cc-6bf9-6c69-270c689caf37@pengutronix.de>
+        <60f77c6f-0536-1f50-1b49-2f604026a5cb@ti.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <7c8d3752-6573-ab83-d0af-f3dd4fc373f5@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.133.210.141]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Tue, 17 Mar 2020 08:29:45 -0500
+Dan Murphy <dmurphy@ti.com> escreveu:
 
+> Hello
+>=20
+> On 3/17/20 8:17 AM, Marc Kleine-Budde wrote:
+> > On 3/17/20 2:10 PM, Mauro Carvalho Chehab wrote: =20
+> >> This file was converted to json and renamed. Update its
+> >> references accordingly.
+> >>
+> >> Fixes: 824674b59f72 ("dt-bindings: net: can: Convert M_CAN to json-sch=
+ema") =20
+>=20
+> I am trying to find out where the above commit was applied
+>=20
+> I don't see it in can-next or linux-can. I need to update the tcan dt=20
+> binding file as it was missed.
+>=20
+> And I am not sure why the maintainers of these files were not CC'd on=20
+> the conversion of this binding.
 
-On 2020/3/17 9:41, yangerkun wrote:
-> 
-> 
-> On 2020/3/17 1:26, Linus Torvalds wrote:
->> On Mon, Mar 16, 2020 at 4:07 AM Jeff Layton <jlayton@kernel.org> wrote:
->>>
->>>
->>> +       /*
->>> +        * If fl_blocker is NULL, it won't be set again as this 
->>> thread "owns"
->>> +        * the lock and is the only one that might try to claim the 
->>> lock.
->>> +        * Because fl_blocker is explicitly set last during a delete, 
->>> it's
->>> +        * safe to locklessly test to see if it's NULL. If it is, 
->>> then we know
->>> +        * that no new locks can be inserted into its 
->>> fl_blocked_requests list,
->>> +        * and we can therefore avoid doing anything further as long 
->>> as that
->>> +        * list is empty.
->>> +        */
->>> +       if (!smp_load_acquire(&waiter->fl_blocker) &&
->>> +           list_empty(&waiter->fl_blocked_requests))
->>> +               return status;
->>
->> Ack. This looks sane to me now.
->>
->> yangerkun - how did you find the original problem?\
-> 
-> While try to fix CVE-2019-19769, add some log in __locks_wake_up_blocks 
-> help me to rebuild the problem soon. This help me to discern the problem 
-> soon.
-> 
->>
->> Would you mind using whatever stress test that caused commit
->> 6d390e4b5d48 ("locks: fix a potential use-after-free problem when
->> wakeup a waiter") with this patch? And if you did it analytically,
->> you're a champ and should look at this patch too!
-> 
-> I will try to understand this patch, and if it's looks good to me, will 
-> do the performance test!
+=46rom Next/merge.log:
 
-This patch looks good to me, with this patch, the bug '6d390e4b5d48 
-("locks: fix a potential use-after-free problem when wakeup a waiter")' 
-describes won't happen again. Actually, I find that syzkaller has report 
-this bug before[1], and the log of it can help us to reproduce it with 
-some latency in __locks_wake_up_blocks!
+Merging devicetree/for-next (d047cd8a2760 scripts/dtc: Update to upstream v=
+ersion v1.6.0-2-g87a656ae5ff9)
+$ git merge devicetree/for-next
+Removing scripts/dtc/libfdt/Makefile.libfdt
+Removing scripts/dtc/Makefile.dtc
+...
+ create mode 100644 Documentation/devicetree/bindings/net/can/bosch,m_can.y=
+aml
+ delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
 
-Also, some ltp testcases describes in [2] pass too with the patch!
-
-For performance test, I have try to understand will-it-scale/lkp, but it 
-seem a little complex to me, and may need some more time. So, Rong Chen, 
-can you help to do this? Or the results may come a little later...
+It sounds that those came from DT for-next branch.
 
 Thanks,
-----
-[1] https://syzkaller.appspot.com/bug?extid=922689db06e57b69c240
-[2] https://lkml.org/lkml/2020/3/11/578
-
+Mauro
