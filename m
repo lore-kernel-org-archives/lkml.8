@@ -2,70 +2,131 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F37C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148EFC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F7420735
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA74206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 14:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbgCQOzt (ORCPT
+        id S1726777AbgCQO5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 10:55:49 -0400
-Received: from mga18.intel.com ([134.134.136.126]:9571 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbgCQOzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 10:55:48 -0400
-IronPort-SDR: +AwL8ns/o1/Mi2avIUrvyYesrQ6bf35Jcjor/Dk2Yv/Bc+GwVFGjPb52eGb02hbpO0nzxPx1SA
- HaNjDUb/CwXA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 07:55:48 -0700
-IronPort-SDR: F5WVtNGoovVCH4D/0UgxTfl963XCSHxim8CK/sXKmp/Jf2OYVLWSwk7NHZYjnmI/0eCdZ3WZhU
- U1PQTRo1T8xA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,564,1574150400"; 
-   d="scan'208";a="247843647"
-Received: from mnagar-mobl.amr.corp.intel.com (HELO [10.254.66.68]) ([10.254.66.68])
-  by orsmga006.jf.intel.com with ESMTP; 17 Mar 2020 07:55:47 -0700
-Subject: Re: [PATCH v17 05/12] PCI: portdrv: remove reset_link member from
- pcie_port_service_driver
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com
-References: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <13d4866abf46f034f706f255287258cda99fadb4.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <20200317144143.GD23471@infradead.org>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <496e07cf-2bdb-b1a5-c246-246103740ca1@linux.intel.com>
-Date:   Tue, 17 Mar 2020 07:55:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 17 Mar 2020 10:57:02 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43052 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726484AbgCQO5C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 10:57:02 -0400
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jEDeL-0005u8-Rs; Tue, 17 Mar 2020 14:56:57 +0000
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1jEDeL-00CpNa-FG; Tue, 17 Mar 2020 14:56:57 +0000
+Message-ID: <18622dc08c49e7d4304f221e378137ecde09ba61.camel@decadent.org.uk>
+Subject: Re: [PATCH] genirq: fix reference leaks on irq affinity notifiers
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Edward Cree <ecree@solarflare.com>, tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, psodagud@codeaurora.org
+Date:   Tue, 17 Mar 2020 14:56:46 +0000
+In-Reply-To: <a527a4bb-fdc4-815d-8852-674767b9dd1d@solarflare.com>
+References: <24f5983f-2ab5-e83a-44ee-a45b5f9300f5@solarflare.com>
+         <17c4273e4f72ebdf1ca838d75fc6ed93fcdc7287.camel@decadent.org.uk>
+         <a527a4bb-fdc4-815d-8852-674767b9dd1d@solarflare.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-8Dsb++f6nhTcgfY8y8C/"
+User-Agent: Evolution 3.34.1-4 
 MIME-Version: 1.0
-In-Reply-To: <20200317144143.GD23471@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 3/17/20 7:41 AM, Christoph Hellwig wrote:
-> On Tue, Mar 03, 2020 at 06:36:28PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-it.
-> 
-> This should be folded into
-> "PCI/ERR: Remove service dependency in pcie_do_recovery()"
-I think Bjorn already folded them together. Please check.
-https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=review/edr&id=7a18dc6506f108db3dc40f5cd779bc15270c4183
+--=-8Dsb++f6nhTcgfY8y8C/
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> 
+On Tue, 2020-03-17 at 10:58 +0000, Edward Cree wrote:
+> On 15/03/2020 20:29, Ben Hutchings wrote:
+> > ...since the pending work item holds a reference to the notification
+> > state, it's still not clear to me why or whether "genirq: Prevent use-
+> > after-free and work list corruption" was needed.
+> Yeah, I think that commit was bogus.  The email thread[1] doesn't
+>  exactly inspire confidence either.  I think the submitter just didn't
+>  realise that there was a ref corresponding to the work; AFAICT there's
+>  no way the alleged "work list corruption" could happen.
+>=20
+> > If it's reasonable to cancel_work_sync() when removing a notifier, I
+> > think we can remove the kref and call the release function directly.
+> I'd prefer to stick to the smaller fix for -rc and stable.  But if you
+>  want to remove the kref for -next, I'd be happy to Ack that patch.
+
+OK, then you can add:
+
+Acked-by: Ben Hutchings <ben@decadent.org.uk>
+
+to this one.
+
+> Btw, we (sfc linux team) think there's still a use-after-free issue in
+>  the cpu_rmap lib, as follows:
+> 1) irq_cpu_rmap_add creates a glue and notifier, adds glue to rmap->obj
+> 2) someone else does irq_set_affinity_notifier.
+>    This causes cpu_rmap's notifier (old_notify) to get released, and so
+>    irq_cpu_rmap_release kfrees glue.  But it's still in rmap->obj
+> 3) free_irq_cpu_rmap loops over obj, finds the glue, tries to clear its
+>    notifier.
+> Now one could say that this UAF is academic, since having two bits of
+>  code trying to register notifiers for the same IRQ is broken anyway
+>  (in this case, the rmap would stop getting updated, because the
+>  "someone else" stole the notifier).
+
+So far as I can remember, my thinking was that only non-shared IRQs
+will have notifiers and only the current user of the IRQ will set the
+notifier.  The doc comment for irq_set_affinity_notifier() implies the
+latter restriction, but it might be worth spelling this out explicitly.
+
+Ben.
+
+> But I thought I'd bring it up in case it's halfway relevant.
+>=20
+> -ed
+>=20
+> [1] https://lore.kernel.org/lkml/1553119211-29761-1-git-send-email-psodag=
+ud@codeaurora.org/T/#u
+--=20
+Ben Hutchings
+For every complex problem
+there is a solution that is simple, neat, and wrong.
+
+
+--=-8Dsb++f6nhTcgfY8y8C/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl5w5S8ACgkQ57/I7JWG
+EQmZBxAAucg9e7dBvW7zXPn9pe7tgtrQ/iR7i+Y5zGDNAYYHM2wafoFJ25eivyb5
+PkGWjBx2COU6U9aoXR3AFlrl1kx4iDmcdVo82WNa1el2RDntfVIytoDh65O31h2P
+yquPzfsBAd2appE2kFhOeVb/YXT27AcFBhsgOT0ltCKUiulci9u9B1IQbqE30oxu
+Hwqd+tFXnCzdo0gryx3tW1EaNgIYa+Cytlnu9NhCEypD0EaNc5NGIEYG2u7wTtGy
+dlPlxaINKKsW0tf6w8YPV2oRbd5EH4v2hqLBl5ey3znHw8ZJ5TiOyyxxm4BM9q4w
+4oZS4K1f5tO2EKOevlcuEXLsNQlUYgRWKCMQBgMGVx6oBwZiOfr7nMQTR0qWHLj8
+oqw4HVfaJpRCSEN0VA9ch64Xxyy2mkCOIXV9oCsFP0NMO2uXyEMeoMrtAmJ5Fbs5
+vqsPXEJLG1ks/+bemebK6BLvBh7ZJJytyp0G8XDKI1ogJnTTR51wQNaqAfgU/M6t
+jIo1kKWWoVw72xYDZbl4tlFb5ZvXeGvWPfF89MH9nkjYFyHk+JT9anr0KTyIYtjc
+DfBZ8Vqibne43wKUTjRHZFtLbDnZGxH6rePxYrPoCyiLC+rpgingUoVfgAAYuK6K
+lTMr9qOiSTSBhHR7XvytOvlS1CJbSgfSIK+09V35nW/kl+EnfC4=
+=78Yv
+-----END PGP SIGNATURE-----
+
+--=-8Dsb++f6nhTcgfY8y8C/--
