@@ -2,96 +2,57 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EB0C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F08FC0044D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 161662051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F283D205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 00:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733194AbgCQA0D (ORCPT
+        id S1733202AbgCQA00 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 20:26:03 -0400
-Received: from regular1.263xmail.com ([211.150.70.202]:49038 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733175AbgCQA0D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 20:26:03 -0400
-Received: from localhost (unknown [192.168.167.69])
-        by regular1.263xmail.com (Postfix) with ESMTP id A3E30270;
-        Tue, 17 Mar 2020 08:19:04 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from localhost (unknown [103.29.142.67])
-        by smtp.263.net (postfix) whith ESMTP id P20067T140595454527232S1584404312807233_;
-        Tue, 17 Mar 2020 08:19:03 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <2b68b92362a0c690d724f94dc8d9c475>
-X-RL-SENDER: jeffy.chen@rock-chips.com
-X-SENDER: cjf@rock-chips.com
-X-LOGIN-NAME: jeffy.chen@rock-chips.com
-X-FST-TO: linux-kernel@vger.kernel.org
-X-SENDER-IP: 103.29.142.67
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Jeffy Chen <jeffy.chen@rock-chips.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     anders.roxell@linaro.org, arnd@arndb.de, sboyd@kernel.org,
-        gregkh@linuxfoundation.org, naresh.kamboju@linaro.org,
-        daniel.lezcano@linaro.org, Basil.Eljuse@arm.com,
-        mturquette@baylibre.com, Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH] arch_topology: Fix putting invalid cpu clk
-Date:   Tue, 17 Mar 2020 08:18:29 +0800
-Message-Id: <20200317001829.29516-1-jeffy.chen@rock-chips.com>
-X-Mailer: git-send-email 2.11.0
+        Mon, 16 Mar 2020 20:26:26 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:51470 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733009AbgCQA00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 20:26:26 -0400
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jE03p-0004NN-Kj; Tue, 17 Mar 2020 01:26:21 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Cc:     linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: rockchip: use DMA channels for UARTs for RK3288
+Date:   Tue, 17 Mar 2020 01:26:21 +0100
+Message-ID: <2031112.Bdp2p14rd6@phil>
+In-Reply-To: <20200315095115.10106-1-katsuhiro@katsuster.net>
+References: <20200315095115.10106-1-katsuhiro@katsuster.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a sanity check before putting the cpu clk.
+Am Sonntag, 15. März 2020, 10:51:15 CET schrieb Katsuhiro Suzuki:
+> This patch enables to use DMAC for all UARTs that are connected to
+> dmac_peri core for Rochchip RK3288.
+> 
+> Only uart2 is connected different DMAC (dmac_bus_s) so keep current
+> settings on this patch.
+> 
+> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-Fixes: 2a6d1c6bcd1f (â€œarch_topology: Adjust initial CPU capacities with current freq")
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
+applied for 5.7
 
- drivers/base/arch_topology.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 8a9fe2bc8635..4d0a0038b476 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -176,11 +176,11 @@ bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
- 		 * frequency (by keeping the initial freq_factor value).
- 		 */
- 		cpu_clk = of_clk_get(cpu_node, 0);
--		if (!PTR_ERR_OR_ZERO(cpu_clk))
-+		if (!PTR_ERR_OR_ZERO(cpu_clk)) {
- 			per_cpu(freq_factor, cpu) =
- 				clk_get_rate(cpu_clk) / 1000;
--
--		clk_put(cpu_clk);
-+			clk_put(cpu_clk);
-+		}
- 	} else {
- 		if (raw_capacity) {
- 			pr_err("cpu_capacity: missing %pOF raw capacity\n",
--- 
-2.11.0
-
+Thanks
+Heiko
 
 
