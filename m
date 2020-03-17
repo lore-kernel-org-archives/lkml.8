@@ -2,52 +2,52 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C443C0044D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11DEC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2792051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3752051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 01:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584407068;
-	bh=nEg68x32fuq0SSCSY1vU9QhzWXk+NqACdr/mq70L4OE=;
+	s=default; t=1584407069;
+	bh=45fsYffh3Uo6wUAOX3qL24WDiWQ9Qas3Ng0BML8C6MM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fTYNe/UWSEIWvjrTtd0J5xEa77gV3E2/YxSz063ZUIRrpo7lCU9zhH/u99MEEyP7U
-	 +Df9bkGU6CBAKs+0v5DUhZvSfo9UOseDg2604eYUt87joXraTN45y1NNY+HLqNUsiF
-	 qFNcKQr84DytEiiPlg+YvrmqWSfUsyULf6rMLxn8=
+	b=PVe5GxVjtVeqpSXF8C2W5fhNWvMiHOLCC7+bzhTmqF55jKm2vrs/r0+ZnwW/7QZy4
+	 nzDuyLxsc2T/iILeuCHws/z744f865fyUgDto+Z2FS5ahopaFFNvXrbtYqcuhTW2cl
+	 +swCAVXFvIpja8KfcVJAuYjcZKcIwGvG69Ts09G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387493AbgCQBE1 (ORCPT
+        id S2387503AbgCQBE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 21:04:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59956 "EHLO mail.kernel.org"
+        Mon, 16 Mar 2020 21:04:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387457AbgCQBEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 21:04:25 -0400
+        id S2387413AbgCQBEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 21:04:23 -0400
 Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9DFE20753;
-        Tue, 17 Mar 2020 01:04:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF4AB206E2;
+        Tue, 17 Mar 2020 01:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584407064;
-        bh=nEg68x32fuq0SSCSY1vU9QhzWXk+NqACdr/mq70L4OE=;
+        s=default; t=1584407063;
+        bh=45fsYffh3Uo6wUAOX3qL24WDiWQ9Qas3Ng0BML8C6MM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MCj+7F31ZgrwGSycteT8XHujOPdG3FVz5MU2GReT81LOCvfEfxYpqPc3F2iS+zoRE
-         JlS1IQj8E0Lhu10UTg4aWGYsJlyyeew9RthHj3IwOulTUJy36suCiFWZYlmaVRyejr
-         ISLaqRrp+nYxiZ7p1hhx7i+C8SPRwx8PJba+NFgw=
+        b=OVFmdKMcvpdRfx2RxIki2DkuketG8Dzz0YmkFBlEo6xCI1wWdy3UqCi5BgAY59M17
+         SS7uiJrU6zaN/uXIlP/321soC9Hq+ntHLqN815hhPI0F6OQjRHBdgUIQ6h4O96nLXR
+         eSdIOv/sbzMaOO44q7vsYU6UOBcGyk+2ZXUogaBY=
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     shuah@kernel.org, keescook@chromium.org
 Cc:     luto@amacapital.net, wad@chromium.org,
         linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel-team@fb.com,
         Tim.Bird@sony.com, Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH v4 5/5] selftests: tls: run all tests for TLS 1.2 and TLS 1.3
-Date:   Mon, 16 Mar 2020 18:04:19 -0700
-Message-Id: <20200317010419.3268916-6-kuba@kernel.org>
+Subject: [PATCH v4 3/5] kselftest: run tests by fixture
+Date:   Mon, 16 Mar 2020 18:04:17 -0700
+Message-Id: <20200317010419.3268916-4-kuba@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200317010419.3268916-1-kuba@kernel.org>
 References: <20200317010419.3268916-1-kuba@kernel.org>
@@ -58,139 +58,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TLS 1.2 and TLS 1.3 differ in the implementation.
-Use fixture parameters to run all tests for both
-versions, and remove the one-off TLS 1.2 test.
+Now that all tests have a fixture object move from a global
+list of tests to a list of tests per fixture.
+
+Order of tests may change as we will now group and run test
+fixture by fixture, rather than in declaration order.
 
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- tools/testing/selftests/net/tls.c | 93 ++++++-------------------------
- 1 file changed, 17 insertions(+), 76 deletions(-)
+ tools/testing/selftests/kselftest_harness.h | 32 +++++++++++++--------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
 
-diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
-index 0ea44d975b6c..c5282e62df75 100644
---- a/tools/testing/selftests/net/tls.c
-+++ b/tools/testing/selftests/net/tls.c
-@@ -101,6 +101,21 @@ FIXTURE(tls)
- 	bool notls;
- };
- 
-+FIXTURE_VARIANT(tls)
-+{
-+	unsigned int tls_version;
-+};
-+
-+FIXTURE_VARIANT_ADD(tls, 12)
-+{
-+	.tls_version = TLS_1_2_VERSION,
-+};
-+
-+FIXTURE_VARIANT_ADD(tls, 13)
-+{
-+	.tls_version = TLS_1_3_VERSION,
-+};
-+
- FIXTURE_SETUP(tls)
- {
- 	struct tls12_crypto_info_aes_gcm_128 tls12;
-@@ -112,7 +127,7 @@ FIXTURE_SETUP(tls)
- 	len = sizeof(addr);
- 
- 	memset(&tls12, 0, sizeof(tls12));
--	tls12.info.version = TLS_1_3_VERSION;
-+	tls12.info.version = variant->tls_version;
- 	tls12.info.cipher_type = TLS_CIPHER_AES_GCM_128;
- 
- 	addr.sin_family = AF_INET;
-@@ -733,7 +748,7 @@ TEST_F(tls, bidir)
- 		struct tls12_crypto_info_aes_gcm_128 tls12;
- 
- 		memset(&tls12, 0, sizeof(tls12));
--		tls12.info.version = TLS_1_3_VERSION;
-+		tls12.info.version = variant->tls_version;
- 		tls12.info.cipher_type = TLS_CIPHER_AES_GCM_128;
- 
- 		ret = setsockopt(self->fd, SOL_TLS, TLS_RX, &tls12,
-@@ -1258,78 +1273,4 @@ TEST(keysizes) {
- 	close(cfd);
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 0f68943d6f04..36ab1b92eb35 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -660,8 +660,11 @@
  }
  
--TEST(tls12) {
--	int fd, cfd;
--	bool notls;
--
--	struct tls12_crypto_info_aes_gcm_128 tls12;
--	struct sockaddr_in addr;
--	socklen_t len;
--	int sfd, ret;
--
--	notls = false;
--	len = sizeof(addr);
--
--	memset(&tls12, 0, sizeof(tls12));
--	tls12.info.version = TLS_1_2_VERSION;
--	tls12.info.cipher_type = TLS_CIPHER_AES_GCM_128;
--
--	addr.sin_family = AF_INET;
--	addr.sin_addr.s_addr = htonl(INADDR_ANY);
--	addr.sin_port = 0;
--
--	fd = socket(AF_INET, SOCK_STREAM, 0);
--	sfd = socket(AF_INET, SOCK_STREAM, 0);
--
--	ret = bind(sfd, &addr, sizeof(addr));
--	ASSERT_EQ(ret, 0);
--	ret = listen(sfd, 10);
--	ASSERT_EQ(ret, 0);
--
--	ret = getsockname(sfd, &addr, &len);
--	ASSERT_EQ(ret, 0);
--
--	ret = connect(fd, &addr, sizeof(addr));
--	ASSERT_EQ(ret, 0);
--
--	ret = setsockopt(fd, IPPROTO_TCP, TCP_ULP, "tls", sizeof("tls"));
--	if (ret != 0) {
--		notls = true;
--		printf("Failure setting TCP_ULP, testing without tls\n");
--	}
--
--	if (!notls) {
--		ret = setsockopt(fd, SOL_TLS, TLS_TX, &tls12,
--				 sizeof(tls12));
--		ASSERT_EQ(ret, 0);
--	}
--
--	cfd = accept(sfd, &addr, &len);
--	ASSERT_GE(cfd, 0);
--
--	if (!notls) {
--		ret = setsockopt(cfd, IPPROTO_TCP, TCP_ULP, "tls",
--				 sizeof("tls"));
--		ASSERT_EQ(ret, 0);
--
--		ret = setsockopt(cfd, SOL_TLS, TLS_RX, &tls12,
--				 sizeof(tls12));
--		ASSERT_EQ(ret, 0);
--	}
--
--	close(sfd);
--
--	char const *test_str = "test_read";
--	int send_len = 10;
--	char buf[10];
--
--	send_len = strlen(test_str) + 1;
--	EXPECT_EQ(send(fd, test_str, send_len, 0), send_len);
--	EXPECT_NE(recv(cfd, buf, send_len, 0), -1);
--	EXPECT_EQ(memcmp(buf, test_str, send_len), 0);
--
--	close(fd);
--	close(cfd);
--}
--
- TEST_HARNESS_MAIN
+ /* Contains all the information about a fixture */
++struct __test_metadata;
++
+ struct __fixture_metadata {
+ 	const char *name;
++	struct __test_metadata *tests;
+ 	struct __fixture_metadata *prev, *next;
+ } _fixture_global __attribute__((unused)) = {
+ 	.name = "global",
+@@ -696,7 +699,6 @@ struct __test_metadata {
+ };
+ 
+ /* Storage for the (global) tests to be run. */
+-static struct __test_metadata *__test_list;
+ static unsigned int __test_count;
+ 
+ /*
+@@ -710,8 +712,10 @@ static unsigned int __test_count;
+  */
+ static inline void __register_test(struct __test_metadata *t)
+ {
++	struct __fixture_metadata *f = t->fixture;
++
+ 	__test_count++;
+-	__LIST_APPEND(__test_list, t);
++	__LIST_APPEND(f->tests, t);
+ }
+ 
+ static inline int __bail(int for_realz, bool no_print, __u8 step)
+@@ -724,14 +728,15 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
+ 	return 0;
+ }
+ 
+-void __run_test(struct __test_metadata *t)
++void __run_test(struct __fixture_metadata *f,
++		struct __test_metadata *t)
+ {
+ 	pid_t child_pid;
+ 	int status;
+ 
+ 	t->passed = 1;
+ 	t->trigger = 0;
+-	printf("[ RUN      ] %s.%s\n", t->fixture->name, t->name);
++	printf("[ RUN      ] %s.%s\n", f->name, t->name);
+ 	alarm(t->timeout);
+ 	child_pid = fork();
+ 	if (child_pid < 0) {
+@@ -781,13 +786,14 @@ void __run_test(struct __test_metadata *t)
+ 		}
+ 	}
+ 	printf("[     %4s ] %s.%s\n", (t->passed ? "OK" : "FAIL"),
+-	       t->fixture->name, t->name);
++	       f->name, t->name);
+ 	alarm(0);
+ }
+ 
+ static int test_harness_run(int __attribute__((unused)) argc,
+ 			    char __attribute__((unused)) **argv)
+ {
++	struct __fixture_metadata *f;
+ 	struct __test_metadata *t;
+ 	int ret = 0;
+ 	unsigned int count = 0;
+@@ -796,13 +802,15 @@ static int test_harness_run(int __attribute__((unused)) argc,
+ 	/* TODO(wad) add optional arguments similar to gtest. */
+ 	printf("[==========] Running %u tests from %u test cases.\n",
+ 	       __test_count, __fixture_count + 1);
+-	for (t = __test_list; t; t = t->next) {
+-		count++;
+-		__run_test(t);
+-		if (t->passed)
+-			pass_count++;
+-		else
+-			ret = 1;
++	for (f = __fixture_list; f; f = f->next) {
++		for (t = f->tests; t; t = t->next) {
++			count++;
++			__run_test(f, t);
++			if (t->passed)
++				pass_count++;
++			else
++				ret = 1;
++		}
+ 	}
+ 	printf("[==========] %u / %u tests passed.\n", pass_count, count);
+ 	printf("[  %s  ]\n", (ret ? "FAILED" : "PASSED"));
 -- 
 2.24.1
 
