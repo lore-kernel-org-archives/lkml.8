@@ -2,357 +2,247 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42454C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AA1C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C29206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48633206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:14:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="l4ZfgNHp"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="uJs2Lp1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgCQKOt (ORCPT
+        id S1726564AbgCQKO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:14:49 -0400
-Received: from mail-eopbgr1410123.outbound.protection.outlook.com ([40.107.141.123]:20800
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725906AbgCQKOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:14:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LMny3N0+KVqDHu+pEhVH+k5i/aAlrpB/09j6XbdlGomOcIL8qVqRZeadSjRmrIKA2kHoJCl2YdwHJrpYwzOvqm/sewnAdcxY+ikDNAEhAxsxycvTYbQZ6+PvVFsqqDGhg5xdfPzXq6l0eWCRoyMVBFg4oBq0S7YQaKqh74om5dFf8SGr8fwxeyo82G13FenDjftyV2Bb7KMHT5sppbXScWB8zfoyB/wHJ5qefR7MR39s/UHGUT0TWVek3Jpo5IybrfR8VDw+04EOwIzlpNC2Sqv7qxiDW21RLAEzcDV5KsjZ6lm71YredQXBvMMhF3GKEARlmxu1/N9BAyIydsy1kQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2XmtuWXdmw92wQOC5V0vBeshHzT80BFMkZUKPPttbE0=;
- b=Wj1hccD9vbuSsxeuCQ4XLGdUD421JHOuB+aN6ZIw6VtUv5EUO0Xb7BIJOGQSsN12gjbK1+cE7tfduunVP5Tcx51lfkdavUyHGwWgIqvpoHHnHhLW2D+Pqm+UdOL4nBjc7oPLG9IIvFUppFoGvLmaMRFYxwem4gxQZaRiWFvZJ1isoAPNAOtSaVB8Sh0fVCaK5o70eo0/IjlTO7ljxy3/RYrGi7objmXgTbV0q0ii75qtkC+cMHQjdeSVhtabEELiXpOAo0MWCN7DwH3Ap4h8j26D8+rdzo3+8L5MTihlEPIQLWoMLm6P+DknD4GyfdKzw8wrIMOIgZ/cHZQMkd6MTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2XmtuWXdmw92wQOC5V0vBeshHzT80BFMkZUKPPttbE0=;
- b=l4ZfgNHpcb2YHFLTb79BoA801cIn2dbSg1FsJEWTROxIFT6S0CDVJkg8ZQBvquPJZW86bX1K0kkZl7V6kVj3n50GmA440MgYcbkMwqvz3911Ft7bgW65SnwJzwFhBVmFvukqfy7Mhk7BoSVS+zwJ6ImWfiwEnVhGY3H9SHg84Zw=
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com (20.178.97.80) by
- OSBPR01MB2454.jpnprd01.prod.outlook.com (52.134.253.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.22; Tue, 17 Mar 2020 10:14:40 +0000
-Received: from OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::490:aa83:2d09:3a0b]) by OSBPR01MB3590.jpnprd01.prod.outlook.com
- ([fe80::490:aa83:2d09:3a0b%5]) with mapi id 15.20.2814.021; Tue, 17 Mar 2020
- 10:14:40 +0000
-From:   Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-CC:     Andrew Murray <andrew.murray@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: RE: [PATCH v5 6/7] PCI: rcar: Add support for rcar PCIe controller in
- endpoint mode
-Thread-Topic: [PATCH v5 6/7] PCI: rcar: Add support for rcar PCIe controller
- in endpoint mode
-Thread-Index: AQHV7k2o26WkjnS8fk2KjcbLYSuAj6hMqNeAgAABMfA=
-Date:   Tue, 17 Mar 2020 10:14:39 +0000
-Message-ID: <OSBPR01MB3590B241F5BBC991DE6ABED2AAF60@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-References: <20200228154122.14164-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200228154122.14164-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <TYAPR01MB4544EAC877ADD0664CB93FF5D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYAPR01MB4544EAC877ADD0664CB93FF5D8F60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=prabhakar.mahadev-lad.rj@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 17704d6a-1d79-4b15-b3e0-08d7ca5c012f
-x-ms-traffictypediagnostic: OSBPR01MB2454:|OSBPR01MB2454:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSBPR01MB2454E859201518F88A24A03AAAF60@OSBPR01MB2454.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0345CFD558
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(376002)(39860400002)(346002)(366004)(199004)(316002)(110136005)(54906003)(2906002)(76116006)(4326008)(5660300002)(52536014)(33656002)(7416002)(66946007)(66476007)(64756008)(66446008)(8676002)(86362001)(7696005)(26005)(66556008)(186003)(71200400001)(8936002)(53546011)(81156014)(6506007)(478600001)(9686003)(81166006)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:OSBPR01MB2454;H:OSBPR01MB3590.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KvUeP7XuG7nYNxUow8LB5GXbXo9FDhsBKRNQcwwPGK45t3GPvkFyKMFcsn2VPRmxtIeRue2lSo8jxqS96jEOTWeQUCym5/L3E8uNptUAT2RBPkGCJpgiQKuK0qtonbXJ+4gj+57fWhCVL1rk9LqFN985t+wFWdxqPf7gSAVtzMe6PYLFl3f03/+0GYUc3ZVBHl1BkW9p/+7Sp3NtBQnkS5da1HnsichhsEIhFfkT0FVtHc1R3XSWEl/YhlDTB52U3qI4/WnKeeRyrRs5vgTy5xvA9fcJK7eb0bGpO6WapxTfNknb9E5PhmdbPUjxYX8S/jFkgyiU10UNvGx2StQgSqUSWzx8085sFEmhY5gGVEqTnMuoqmcC4BOfjVt/LFL0a2jQBB7V7W2FJFzk0Ay8v4RjkwPEdJGccbCJxCxhosaAEK8RivSJoR3tV47BSLOo
-x-ms-exchange-antispam-messagedata: 3PVgGe28oOVoyc1aWEX4gERuJpyO85sfo4L4uFkvZbwKYCaXIRdrGaYsDE4gnjst6yEa198kgCQW6Ju5mCHal4aoPd0+xTUaU+xaVvKgmvTSmqrbvPpUnNzSAQLTNf3NrCg4h/HGK25QO4ZpXoWWGQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 17 Mar 2020 06:14:56 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46606 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbgCQKOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:14:55 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48hTYn1Q2Bz9txmY;
+        Tue, 17 Mar 2020 11:14:53 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=uJs2Lp1s; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id HsW8z12_x4g8; Tue, 17 Mar 2020 11:14:53 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48hTYn0HH4z9txmV;
+        Tue, 17 Mar 2020 11:14:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1584440093; bh=fONsrZN6lMxswRlJhDf2ydTRYrah+Hv1rbNo7C2XfiQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=uJs2Lp1sIjbA/dtw/io6ZwexpDe6PtFTr+CxAvXkHm1Q3oYBxnObrlidRCAv4p2g6
+         mP06nOXgGZmMqdveJlDdBtdhbsHiOjRUSEy+Ra8+iltI7RIV2JX7+0qP9swGKxHPQz
+         yVriu+XwMmXWUQkVXzMpEHf7lC8y++/k3+9Uw1vM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2460C8B786;
+        Tue, 17 Mar 2020 11:14:54 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 3E_j_0lDdxTE; Tue, 17 Mar 2020 11:14:54 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4F39D8B785;
+        Tue, 17 Mar 2020 11:14:52 +0100 (CET)
+Subject: Re: [PATCH 01/15] powerpc/watchpoint: Rename current DAWR macros
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
+        mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
+ <20200309085806.155823-2-ravi.bangoria@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <6ae1865c-fcf6-5bef-2d93-e75b03ed8b44@c-s.fr>
+Date:   Tue, 17 Mar 2020 11:14:50 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17704d6a-1d79-4b15-b3e0-08d7ca5c012f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2020 10:14:39.9771
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: j3vx+jtYPdzxrQAricawLILMFkEfQoOp0Fx/854yX8l6DqluH7KaYI83w1bwH9c6/sApaZvGB8RIL8YbsohMnsHxS0r05Yny77jZ7c7SnDRp97qkaGiNAKupYn5S5Vbu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB2454
+In-Reply-To: <20200309085806.155823-2-ravi.bangoria@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yoshihiro-san,
-
-Thank you for the review,
-
-> -----Original Message-----
-> From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Sent: 17 March 2020 09:59
-> To: Lad Prabhakar <prabhakar.csengg@gmail.com>
-> Cc: Andrew Murray <andrew.murray@arm.com>; linux-pci@vger.kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-renesas-soc@vger.kernel.org;
-> linux-rockchip@lists.infradead.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; Prabhakar Mahadev Lad <prabhakar.mahadev-
-> lad.rj@bp.renesas.com>; Bjorn Helgaas <bhelgaas@google.com>; Rob
-> Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> Catalin Marinas <catalin.marinas@arm.com>; Will Deacon <will@kernel.org>;
-> Kishon Vijay Abraham I <kishon@ti.com>; Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com>; Arnd Bergmann <arnd@arndb.de>; Greg
-> Kroah-Hartman <gregkh@linuxfoundation.org>; Jingoo Han
-> <jingoohan1@gmail.com>; Gustavo Pimentel
-> <gustavo.pimentel@synopsys.com>; Marek Vasut
-> <marek.vasut+renesas@gmail.com>; Shawn Lin <shawn.lin@rock-
-> chips.com>; Heiko Stuebner <heiko@sntech.de>
-> Subject: RE: [PATCH v5 6/7] PCI: rcar: Add support for rcar PCIe controll=
-er in
-> endpoint mode
->
-> Hi Prabhakar-san,
->
-> Thank you for the patch!
->
-> > From: Lad Prabhakar, Sent: Saturday, February 29, 2020 12:41 AM
-> >
-> > This patch adds support for rcar PCIe controller to work in endpoint mo=
-de.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-
-> lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/pci/controller/Kconfig        |   8 +
-> >  drivers/pci/controller/Makefile       |   1 +
-> >  drivers/pci/controller/pcie-rcar-ep.c | 490
-> ++++++++++++++++++++++++++++++++++
-> >  drivers/pci/controller/pcie-rcar.h    |   4 +
-> >  4 files changed, 503 insertions(+)
-> >  create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
-> >
-> > diff --git a/drivers/pci/controller/Kconfig
-> > b/drivers/pci/controller/Kconfig index 37e0ea7..9bf4b02 100644
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -62,6 +62,14 @@ config PCIE_RCAR_HOST
-> >    Say Y here if you want PCIe controller support on R-Car SoCs in host
-> >    mode.
-> >
-> > +config PCIE_RCAR_EP
-> > +bool "Renesas R-Car PCIe endpoint controller"
-> > +depends on ARCH_RENESAS || COMPILE_TEST
-> > +depends on PCI_ENDPOINT
-> > +help
-> > +  Say Y here if you want PCIe controller support on R-Car SoCs in
-> > +  endpoint mode.
-> > +
-> >  config PCI_HOST_COMMON
-> >  bool
-> >  select PCI_ECAM
-> > diff --git a/drivers/pci/controller/Makefile
-> > b/drivers/pci/controller/Makefile index b4ada32..067bd33 100644
-> > --- a/drivers/pci/controller/Makefile
-> > +++ b/drivers/pci/controller/Makefile
-> > @@ -8,6 +8,7 @@ obj-$(CONFIG_PCI_AARDVARK) +=3D pci-aardvark.o
-> >  obj-$(CONFIG_PCI_TEGRA) +=3D pci-tegra.o
-> >  obj-$(CONFIG_PCI_RCAR_GEN2) +=3D pci-rcar-gen2.o
-> >  obj-$(CONFIG_PCIE_RCAR_HOST) +=3D pcie-rcar.o pcie-rcar-host.o
-> > +obj-$(CONFIG_PCIE_RCAR_EP) +=3D pcie-rcar.o pcie-rcar-ep.o
-> >  obj-$(CONFIG_PCI_HOST_COMMON) +=3D pci-host-common.o
-> >  obj-$(CONFIG_PCI_HOST_GENERIC) +=3D pci-host-generic.o
-> >  obj-$(CONFIG_PCIE_XILINX) +=3D pcie-xilinx.o diff --git
-> > a/drivers/pci/controller/pcie-rcar-ep.c
-> > b/drivers/pci/controller/pcie-rcar-ep.c
-> > new file mode 100644
-> > index 0000000..db89bbe
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/pcie-rcar-ep.c
-> > @@ -0,0 +1,490 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * PCIe endpoint driver for Renesas R-Car SoCs
-> > + *  Copyright (c) 2020 Renesas Electronics Europe GmbH
-> > + *
-> > + * Author: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/of_pci.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/pci.h>
-> > +#include <linux/pci-epc.h>
-> > +#include <linux/phy/phy.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#include "pcie-rcar.h"
-> > +
-> > +/* Structure representing the PCIe interface */ struct rcar_pcie {
-> > +phys_addr_t*ob_addr;
->
-> I think "ob_mapped_addr" is better.
->
-OK will rename that.
-
-> > +struct pci_epc_mem_window *ob_window;
->
-> I think we can get these windows from "array of address space of the
-> endpoint controller" in struct pci_epc. If so, we can remove this member.
->
-I shall see if this can be dropped.
-
-> > +struct pci_epc*epc;
->
-> This member can be removed like pcie-cadence-ep.c because this is not use=
-d
-> except saving the epc value from devm_pci_epc_create().
->
-OK will drop it.
-
-> <snip>
-> > +static int rcar_pcie_ep_start(struct pci_epc *epc) {
-> > +struct rcar_pcie *ep =3D epc_get_drvdata(epc);
-> > +
-> > +rcar_pci_write_reg(ep->base, CFINIT, PCIETCTLR);
->
-> The following setting is needed before CFINIT like host.
->
-> rcar_pci_write_reg(pcie->base, MACCTLR_INIT_VAL, MACCTLR);
->
-I shall add this as part of rcar_pcie_ep_hw_init()
-
-> > +
-> > +return 0;
-> > +}
-> > +
-> > +static void rcar_pcie_ep_stop(struct pci_epc *epc) {
-> > +struct rcar_pcie *ep =3D epc_get_drvdata(epc);
-> > +
-> > +rcar_pci_write_reg(ep->base, 0, PCIETCTLR); }
-> > +
-> > +static const struct pci_epc_features rcar_pcie_epc_features =3D {
-> > +.linkup_notifier =3D false,
-> > +.msi_capable =3D false,
-> > +.msix_capable =3D false,
-> > +/* use 64-bit bars so mark bar1/3/5 as reserved */
-> > +.reserved_bar =3D 1 << BAR_1 | 1 << BAR_3 | 1 << BAR_5,
-> > +.bar_fixed_64bit =3D  (1 << BAR_0) | (1 << BAR_2) | (1 << BAR_4),
->
-> These parentheses are not needed like .reserved_bar.
->
-Agreed.
-
-> <snip>
-> > +err =3D pci_epc_mem_init(epc, pcie->ob_window, pcie-
-> >num_ob_windows);
-> > +if (err < 0) {
-> > +dev_err(dev, "failed to initialize the epc memory space\n");
-> > +goto err_pm_put;
-> > +}
-> > +
-> > +rcar_pcie_ep_hw_init(pcie);
->
-> I'm not sure, but I wonder if we should call this hw init before
-> pci_epc_mem_init().
->
-Ideally shouldn't matter because in pci_epc_mem_init(), we just tell the fr=
-amework
-our windows properties.  But shall move hw_init() before mem_init().
-
-> <snip>
-> > +builtin_platform_driver(rcar_pcie_ep_driver);
-> > diff --git a/drivers/pci/controller/pcie-rcar.h
-> > b/drivers/pci/controller/pcie-rcar.h
-> > index b529d806..5564ca8 100644
-> > --- a/drivers/pci/controller/pcie-rcar.h
-> > +++ b/drivers/pci/controller/pcie-rcar.h
-> > @@ -17,6 +17,7 @@
-> >  #define PCIECDR0x000020
-> >  #define PCIEMSR0x000028
-> >  #define PCIEINTXR0x000400
-> > +#define  ASTINTX_SHIFTBIT(16)
->
-> Just "ASTINTX" is better.
->
-Shall replace it.
-
-> >  #define PCIEPHYSR0x0007f0
-> >  #define  PHYRDYBIT(0)
-> >  #define PCIEMSITXR0x000840
-> > @@ -55,12 +56,15 @@
-> >
-> >  /* Configuration */
-> >  #define PCICONF(x)(0x010000 + ((x) * 0x4))
-> > +#define  INTDIS_SHIFTBIT(10)
->
-> Same here (we can remove "_SHIFT").
->
-OK.
-
-Cheers,
---Prabhakar
-
-> Best regards,
-> Yoshihiro Shimoda
->
-> >  #define PMCAP(x)(0x010040 + ((x) * 0x4))
-> >  #define EXPCAP(x)(0x010070 + ((x) * 0x4))
-> >  #define VCCAP(x)(0x010100 + ((x) * 0x4))
-> >
-> >  /* link layer */
-> > +#define IDSETR00x011000
-> >  #define IDSETR10x011004
-> > +#define SUBIDSETR0x011024
-> >  #define TLCTLR0x011048
-> >  #define MACSR0x011054
-> >  #define  SPCHGFINBIT(4)
-> > --
-> > 2.7.4
 
 
+Le 09/03/2020 à 09:57, Ravi Bangoria a écrit :
+> Future Power architecture is introducing second DAWR. Rename current
+> DAWR macros as:
+>   s/SPRN_DAWR/SPRN_DAWR0/
+>   s/SPRN_DAWRX/SPRN_DAWRX0/
 
-Renesas Electronics Europe GmbH, Geschaeftsfuehrer/President: Carsten Jauch=
-, Sitz der Gesellschaft/Registered office: Duesseldorf, Arcadiastrasse 10, =
-40472 Duesseldorf, Germany, Handelsregister/Commercial Register: Duesseldor=
-f, HRB 3708 USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WE=
-EE reg. no.: DE 14978647
+I think you should tell that DAWR0 and DAWRX0 is the real name of the 
+register as documented in (at least) power8 and power9 user manual.
+
+Otherwise, we can't understand why you change the name of the register.
+
+Christophe
+
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+>   arch/powerpc/include/asm/reg.h          |  4 ++--
+>   arch/powerpc/kernel/dawr.c              |  4 ++--
+>   arch/powerpc/kvm/book3s_hv.c            | 12 ++++++------
+>   arch/powerpc/kvm/book3s_hv_rmhandlers.S | 18 +++++++++---------
+>   arch/powerpc/xmon/xmon.c                |  2 +-
+>   5 files changed, 20 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
+> index da5cab038e25..156ee89fa9be 100644
+> --- a/arch/powerpc/include/asm/reg.h
+> +++ b/arch/powerpc/include/asm/reg.h
+> @@ -283,14 +283,14 @@
+>   #define   CTRL_CT1	0x40000000	/* thread 1 */
+>   #define   CTRL_TE	0x00c00000	/* thread enable */
+>   #define   CTRL_RUNLATCH	0x1
+> -#define SPRN_DAWR	0xB4
+> +#define SPRN_DAWR0	0xB4
+>   #define SPRN_RPR	0xBA	/* Relative Priority Register */
+>   #define SPRN_CIABR	0xBB
+>   #define   CIABR_PRIV		0x3
+>   #define   CIABR_PRIV_USER	1
+>   #define   CIABR_PRIV_SUPER	2
+>   #define   CIABR_PRIV_HYPER	3
+> -#define SPRN_DAWRX	0xBC
+> +#define SPRN_DAWRX0	0xBC
+>   #define   DAWRX_USER	__MASK(0)
+>   #define   DAWRX_KERNEL	__MASK(1)
+>   #define   DAWRX_HYP	__MASK(2)
+> diff --git a/arch/powerpc/kernel/dawr.c b/arch/powerpc/kernel/dawr.c
+> index cc14aa6c4a1b..e91b613bf137 100644
+> --- a/arch/powerpc/kernel/dawr.c
+> +++ b/arch/powerpc/kernel/dawr.c
+> @@ -39,8 +39,8 @@ int set_dawr(struct arch_hw_breakpoint *brk)
+>   	if (ppc_md.set_dawr)
+>   		return ppc_md.set_dawr(dawr, dawrx);
+>   
+> -	mtspr(SPRN_DAWR, dawr);
+> -	mtspr(SPRN_DAWRX, dawrx);
+> +	mtspr(SPRN_DAWR0, dawr);
+> +	mtspr(SPRN_DAWRX0, dawrx);
+>   
+>   	return 0;
+>   }
+> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+> index 33be4d93248a..498c57e1f5c9 100644
+> --- a/arch/powerpc/kvm/book3s_hv.c
+> +++ b/arch/powerpc/kvm/book3s_hv.c
+> @@ -3383,8 +3383,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
+>   	int trap;
+>   	unsigned long host_hfscr = mfspr(SPRN_HFSCR);
+>   	unsigned long host_ciabr = mfspr(SPRN_CIABR);
+> -	unsigned long host_dawr = mfspr(SPRN_DAWR);
+> -	unsigned long host_dawrx = mfspr(SPRN_DAWRX);
+> +	unsigned long host_dawr = mfspr(SPRN_DAWR0);
+> +	unsigned long host_dawrx = mfspr(SPRN_DAWRX0);
+>   	unsigned long host_psscr = mfspr(SPRN_PSSCR);
+>   	unsigned long host_pidr = mfspr(SPRN_PID);
+>   
+> @@ -3413,8 +3413,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
+>   	mtspr(SPRN_SPURR, vcpu->arch.spurr);
+>   
+>   	if (dawr_enabled()) {
+> -		mtspr(SPRN_DAWR, vcpu->arch.dawr);
+> -		mtspr(SPRN_DAWRX, vcpu->arch.dawrx);
+> +		mtspr(SPRN_DAWR0, vcpu->arch.dawr);
+> +		mtspr(SPRN_DAWRX0, vcpu->arch.dawrx);
+>   	}
+>   	mtspr(SPRN_CIABR, vcpu->arch.ciabr);
+>   	mtspr(SPRN_IC, vcpu->arch.ic);
+> @@ -3466,8 +3466,8 @@ static int kvmhv_load_hv_regs_and_go(struct kvm_vcpu *vcpu, u64 time_limit,
+>   	      (local_paca->kvm_hstate.fake_suspend << PSSCR_FAKE_SUSPEND_LG));
+>   	mtspr(SPRN_HFSCR, host_hfscr);
+>   	mtspr(SPRN_CIABR, host_ciabr);
+> -	mtspr(SPRN_DAWR, host_dawr);
+> -	mtspr(SPRN_DAWRX, host_dawrx);
+> +	mtspr(SPRN_DAWR0, host_dawr);
+> +	mtspr(SPRN_DAWRX0, host_dawrx);
+>   	mtspr(SPRN_PID, host_pidr);
+>   
+>   	/*
+> diff --git a/arch/powerpc/kvm/book3s_hv_rmhandlers.S b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
+> index dbc2fecc37f0..f4b412b7cad8 100644
+> --- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
+> +++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
+> @@ -707,8 +707,8 @@ BEGIN_FTR_SECTION
+>   END_FTR_SECTION_IFSET(CPU_FTR_ARCH_300)
+>   BEGIN_FTR_SECTION
+>   	mfspr	r5, SPRN_CIABR
+> -	mfspr	r6, SPRN_DAWR
+> -	mfspr	r7, SPRN_DAWRX
+> +	mfspr	r6, SPRN_DAWR0
+> +	mfspr	r7, SPRN_DAWRX0
+>   	mfspr	r8, SPRN_IAMR
+>   	std	r5, STACK_SLOT_CIABR(r1)
+>   	std	r6, STACK_SLOT_DAWR(r1)
+> @@ -803,8 +803,8 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_207S)
+>   	beq	1f
+>   	ld	r5, VCPU_DAWR(r4)
+>   	ld	r6, VCPU_DAWRX(r4)
+> -	mtspr	SPRN_DAWR, r5
+> -	mtspr	SPRN_DAWRX, r6
+> +	mtspr	SPRN_DAWR0, r5
+> +	mtspr	SPRN_DAWRX0, r6
+>   1:
+>   	ld	r7, VCPU_CIABR(r4)
+>   	ld	r8, VCPU_TAR(r4)
+> @@ -1772,8 +1772,8 @@ BEGIN_FTR_SECTION
+>   	 * If the DAWR doesn't work, it's ok to write these here as
+>   	 * this value should always be zero
+>   	*/
+> -	mtspr	SPRN_DAWR, r6
+> -	mtspr	SPRN_DAWRX, r7
+> +	mtspr	SPRN_DAWR0, r6
+> +	mtspr	SPRN_DAWRX0, r7
+>   END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
+>   BEGIN_FTR_SECTION
+>   	ld	r5, STACK_SLOT_TID(r1)
+> @@ -2583,8 +2583,8 @@ END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
+>   	mfmsr	r6
+>   	andi.	r6, r6, MSR_DR		/* in real mode? */
+>   	bne	4f
+> -	mtspr	SPRN_DAWR, r4
+> -	mtspr	SPRN_DAWRX, r5
+> +	mtspr	SPRN_DAWR0, r4
+> +	mtspr	SPRN_DAWRX0, r5
+>   4:	li	r3, 0
+>   	blr
+>   
+> @@ -3340,7 +3340,7 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_300)
+>   	mtspr	SPRN_AMR, r0
+>   	mtspr	SPRN_IAMR, r0
+>   	mtspr	SPRN_CIABR, r0
+> -	mtspr	SPRN_DAWRX, r0
+> +	mtspr	SPRN_DAWRX0, r0
+>   
+>   BEGIN_MMU_FTR_SECTION
+>   	b	4f
+> diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
+> index e8c84d265602..6c4a8f8c0bd8 100644
+> --- a/arch/powerpc/xmon/xmon.c
+> +++ b/arch/powerpc/xmon/xmon.c
+> @@ -1938,7 +1938,7 @@ static void dump_207_sprs(void)
+>   	printf("hfscr  = %.16lx  dhdes = %.16lx rpr    = %.16lx\n",
+>   		mfspr(SPRN_HFSCR), mfspr(SPRN_DHDES), mfspr(SPRN_RPR));
+>   	printf("dawr   = %.16lx  dawrx = %.16lx ciabr  = %.16lx\n",
+> -		mfspr(SPRN_DAWR), mfspr(SPRN_DAWRX), mfspr(SPRN_CIABR));
+> +		mfspr(SPRN_DAWR0), mfspr(SPRN_DAWRX0), mfspr(SPRN_CIABR));
+>   #endif
+>   }
+>   
+> 
