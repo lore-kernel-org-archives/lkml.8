@@ -2,56 +2,59 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC0FC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AE4C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF0E420658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE057206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584444026;
-	bh=HRRrl/gxVhH1ZfxEt4j/7UewEaU43uaSVp+a8r/n95c=;
+	s=default; t=1584444031;
+	bh=i+SqTv+Vux7BWPpeVVY3vjeBGqTlQiO2wZRdtvc2LrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=etSwazgtDpNFVbFZzWj/VxAkEZKe4vDxGr+BYFdr3P/tFzgj0f9nBeJTIsdQP4xI2
-	 Yhksp/lvIpVSk/Xx6L9KIxfX4apnvOnGYgpJoKBWn5aL3+b4RPBHAwbveV8OPlqKyD
-	 1/KLBgwByI6Uqx6R9CHL41E5g5i1loBoeKNAJRpE=
+	b=q2SvV9rjdekva3KCRDyBCfcDmiuCLvP/5b07QW4rNxXMldLMSiTy3Jj0XkM6tvHBG
+	 0gt4rGwbXO6ZLfeTII0De/2hxuR+HzvzZIRw7Jgm68twNDvWj+n1Wxi9WJZuPtbOXA
+	 5QKdsMzWAn229V2OaaMRzBdkHEIjkXa7o+RAc/1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbgCQLAz (ORCPT
+        id S1727066AbgCQLAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:00:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727673AbgCQLAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:00:52 -0400
+        id S1727629AbgCQLAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:00:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B43420735;
-        Tue, 17 Mar 2020 11:00:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BD5720719;
+        Tue, 17 Mar 2020 11:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442851;
-        bh=HRRrl/gxVhH1ZfxEt4j/7UewEaU43uaSVp+a8r/n95c=;
+        s=default; t=1584442836;
+        bh=i+SqTv+Vux7BWPpeVVY3vjeBGqTlQiO2wZRdtvc2LrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E8k91v7gmMkfeAbp4w422WHUekeGAaH4TB8IbdNR6rKwMtWoLd+9816+lxTnLg6kh
-         yOKfiuRdi7ORsu9KazhLGH5ANv3c4FMIkbqgxg+gw+rbPNk+TykAkWe8dZUlDZniX5
-         jRTmKgKlF4eZR5usZyi/uUNLezMmI6PWXXnBq3zw=
+        b=LjQzRvIE/3DKgEkxN8mvBCz58zjunSUjoHVXHqk67LcZLt2K7ZMZX9FdpNywXjoj8
+         kYLZxVPNp5NqAYGFZRVb1RuZBp9jjWL8B971ABciQcTFiLcjfem6HzMWAhCXlAqGnf
+         uVVpBZUwsomLrwroa3kkZwgdtEKB9SyCuoqxU148=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 014/123] net: dsa: fix phylink_start()/phylink_stop() calls
-Date:   Tue, 17 Mar 2020 11:54:01 +0100
-Message-Id: <20200317103309.165012071@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH 5.4 001/123] virtio_balloon: Adjust label in virtballoon_probe
+Date:   Tue, 17 Mar 2020 11:53:48 +0100
+Message-Id: <20200317103307.543917075@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,133 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 8640f8dc6d657ebfb4e67c202ad32c5457858a13 ]
+commit 6ae4edab2fbf86ec92fbf0a8f0c60b857d90d50f upstream.
 
-Place phylink_start()/phylink_stop() inside dsa_port_enable() and
-dsa_port_disable(), which ensures that we call phylink_stop() before
-tearing down phylink - which is a documented requirement.  Failure
-to do so can cause use-after-free bugs.
+Clang warns when CONFIG_BALLOON_COMPACTION is unset:
 
-Fixes: 0e27921816ad ("net: dsa: Use PHYLINK for the CPU/DSA ports")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+../drivers/virtio/virtio_balloon.c:963:1: warning: unused label
+'out_del_vqs' [-Wunused-label]
+out_del_vqs:
+^~~~~~~~~~~~
+1 warning generated.
+
+Move the label within the preprocessor block since it is only used when
+CONFIG_BALLOON_COMPACTION is set.
+
+Fixes: 1ad6f58ea936 ("virtio_balloon: Fix memory leaks on errors in virtballoon_probe()")
+Link: https://github.com/ClangBuiltLinux/linux/issues/886
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lore.kernel.org/r/20200216004039.23464-1-natechancellor@gmail.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/dsa/dsa_priv.h |    2 ++
- net/dsa/port.c     |   32 ++++++++++++++++++++++++++------
- net/dsa/slave.c    |    8 ++------
- 3 files changed, 30 insertions(+), 12 deletions(-)
 
---- a/net/dsa/dsa_priv.h
-+++ b/net/dsa/dsa_priv.h
-@@ -128,7 +128,9 @@ static inline struct net_device *dsa_mas
- /* port.c */
- int dsa_port_set_state(struct dsa_port *dp, u8 state,
- 		       struct switchdev_trans *trans);
-+int dsa_port_enable_rt(struct dsa_port *dp, struct phy_device *phy);
- int dsa_port_enable(struct dsa_port *dp, struct phy_device *phy);
-+void dsa_port_disable_rt(struct dsa_port *dp);
- void dsa_port_disable(struct dsa_port *dp);
- int dsa_port_bridge_join(struct dsa_port *dp, struct net_device *br);
- void dsa_port_bridge_leave(struct dsa_port *dp, struct net_device *br);
---- a/net/dsa/port.c
-+++ b/net/dsa/port.c
-@@ -63,7 +63,7 @@ static void dsa_port_set_state_now(struc
- 		pr_err("DSA: failed to set STP state %u (%d)\n", state, err);
- }
- 
--int dsa_port_enable(struct dsa_port *dp, struct phy_device *phy)
-+int dsa_port_enable_rt(struct dsa_port *dp, struct phy_device *phy)
- {
- 	struct dsa_switch *ds = dp->ds;
- 	int port = dp->index;
-@@ -78,14 +78,31 @@ int dsa_port_enable(struct dsa_port *dp,
- 	if (!dp->bridge_dev)
- 		dsa_port_set_state_now(dp, BR_STATE_FORWARDING);
- 
-+	if (dp->pl)
-+		phylink_start(dp->pl);
-+
- 	return 0;
- }
- 
--void dsa_port_disable(struct dsa_port *dp)
-+int dsa_port_enable(struct dsa_port *dp, struct phy_device *phy)
-+{
-+	int err;
-+
-+	rtnl_lock();
-+	err = dsa_port_enable_rt(dp, phy);
-+	rtnl_unlock();
-+
-+	return err;
-+}
-+
-+void dsa_port_disable_rt(struct dsa_port *dp)
- {
- 	struct dsa_switch *ds = dp->ds;
- 	int port = dp->index;
- 
-+	if (dp->pl)
-+		phylink_stop(dp->pl);
-+
- 	if (!dp->bridge_dev)
- 		dsa_port_set_state_now(dp, BR_STATE_DISABLED);
- 
-@@ -93,6 +110,13 @@ void dsa_port_disable(struct dsa_port *d
- 		ds->ops->port_disable(ds, port);
- }
- 
-+void dsa_port_disable(struct dsa_port *dp)
-+{
-+	rtnl_lock();
-+	dsa_port_disable_rt(dp);
-+	rtnl_unlock();
-+}
-+
- int dsa_port_bridge_join(struct dsa_port *dp, struct net_device *br)
- {
- 	struct dsa_notifier_bridge_info info = {
-@@ -615,10 +639,6 @@ static int dsa_port_phylink_register(str
- 		goto err_phy_connect;
- 	}
- 
--	rtnl_lock();
--	phylink_start(dp->pl);
--	rtnl_unlock();
--
- 	return 0;
- 
- err_phy_connect:
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -90,12 +90,10 @@ static int dsa_slave_open(struct net_dev
- 			goto clear_allmulti;
- 	}
- 
--	err = dsa_port_enable(dp, dev->phydev);
-+	err = dsa_port_enable_rt(dp, dev->phydev);
- 	if (err)
- 		goto clear_promisc;
- 
--	phylink_start(dp->pl);
--
- 	return 0;
- 
- clear_promisc:
-@@ -119,9 +117,7 @@ static int dsa_slave_close(struct net_de
- 	cancel_work_sync(&dp->xmit_work);
- 	skb_queue_purge(&dp->xmit_queue);
- 
--	phylink_stop(dp->pl);
--
--	dsa_port_disable(dp);
-+	dsa_port_disable_rt(dp);
- 
- 	dev_mc_unsync(master, dev);
- 	dev_uc_unsync(master, dev);
+---
+ drivers/virtio/virtio_balloon.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -958,8 +958,8 @@ out_iput:
+ 	iput(vb->vb_dev_info.inode);
+ out_kern_unmount:
+ 	kern_unmount(balloon_mnt);
+-#endif
+ out_del_vqs:
++#endif
+ 	vdev->config->del_vqs(vdev);
+ out_free_vb:
+ 	kfree(vb);
 
 
