@@ -2,276 +2,117 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61519C5ACBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23298C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBDD20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E393420714
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:20:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pJM18bnI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q9Im2QR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgCQQUN (ORCPT
+        id S1726814AbgCQQU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:20:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37418 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgCQQUM (ORCPT
+        Tue, 17 Mar 2020 12:20:57 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:21717 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726207AbgCQQU4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:20:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i12so16981236otp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 09:20:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LDDLPrurbXme3HphtMq0LDhgeuYDSZr9cLDGYqfGR1U=;
-        b=pJM18bnIe3Novdg3QP++3NYc6FrVfVjft3IKS7J/CPzIJsoZweJFv9jqcPBuw3zt3/
-         5oaKc57yprv/RlDts/CD2k7XS9cAhxBVpzU43/ACyjXfmXDpYFw7MU4zGOorMZoMbALD
-         WWpfjyMYDz/zd243nfbYCG7qDeZx3DbYkyORWG72zEs95pvL65Yy+agupol0WiCmw7e1
-         gq6Z2MUSiFv09vFrStVjZbWX3Idrh5WvnBFsChRibn2YFuzwq3+4BZ9P27lLIWdtIuZf
-         xj6EILeP/mGKSlKAI3Qt0vd6RlVK/X9J6qeeqpohG7fzznWAr6FL5ixkohRw7HJBWG0e
-         cFeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LDDLPrurbXme3HphtMq0LDhgeuYDSZr9cLDGYqfGR1U=;
-        b=jiewRxh4ObsI9TaWvxzmvTlysqNVZQxYH0gh9xxcM90G/Re0/zQQL6B5KIHy9jLpUr
-         PbhVKt/qCmLIsXT+XFdfR5nQFmNctKqSMDKTa6V8APoqB4huh3b+xFsgOlbb6VF4uOit
-         DUQQhDvwfn6AOksPAaIQsxDEQ/xMZBzbgX/ZJ1idiOO63fNNnwtv5QzoACR/4AWoFv6T
-         p5CNuIfOL2gwOjsQOWv0dGSiEgdpwMG6YKy14cf11YzMcctnDV3muJ/TKRYc1FmEa1J7
-         3r7Ryh13EEPsut7Yt1w4Rz1Iqsu77kWNncnkpQ+dGnjRU5FKbbeKhaoR6xbm4xmpz656
-         31Cg==
-X-Gm-Message-State: ANhLgQ1WWpAUqwkc0t/+vWdcZ+9Kbe87MzP9+MogBxUsG8sNbYkQReRA
-        hu6SWS1QOLIDvhZIIhoywCEQCsv4jAmUc+0Jwa4q+A==
-X-Google-Smtp-Source: ADFU+vvYtV0FKPWq7LFeyokEHyBI71vTbRcOgoCKbPcTmFER+gCEBMqzGIoqAItRSRLT/GDI4LPOGMTySoaWeJJtd9c=
-X-Received: by 2002:a9d:7cd1:: with SMTP id r17mr4602832otn.183.1584462009635;
- Tue, 17 Mar 2020 09:20:09 -0700 (PDT)
+        Tue, 17 Mar 2020 12:20:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584462055;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hr3pVOlJUq6wHuVCTKnwOlTcZibMgQuZS4Wu2Y9Ir3g=;
+        b=Q9Im2QR3WIRX9fS0LdX3jYNmVM/lWG/OPsyIPCyd0TP8++vbMpjFuM/LTw7vbZ/pnKp4y/
+        uXqeLEhyrkcwwenyi7JOTux2oylMe6qcw5FHxZC6tO7sGnD88IMMuFN4uN3DAAr2WElgec
+        8Yn9jSoOxUa2Vatr1mLSPnsPNkQYsvA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-493-AmXlN7qYP6u8SV4_EI_6-A-1; Tue, 17 Mar 2020 12:20:51 -0400
+X-MC-Unique: AmXlN7qYP6u8SV4_EI_6-A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7352F1007274;
+        Tue, 17 Mar 2020 16:20:49 +0000 (UTC)
+Received: from krava (unknown [10.40.195.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CC3473894;
+        Tue, 17 Mar 2020 16:20:45 +0000 (UTC)
+Date:   Tue, 17 Mar 2020 17:20:43 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        namhyung@kernel.org, will@kernel.org, ak@linux.intel.com,
+        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
+        james.clark@arm.com, qiangqing.zhang@nxp.com
+Subject: Re: [PATCH v2 7/7] perf test: Test pmu-events aliases
+Message-ID: <20200317162043.GC759708@krava>
+References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
+ <1584442939-8911-8-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-References: <20200224160215.4136-1-mic@digikod.net> <CAG48ez21bEn0wL1bbmTiiu8j9jP5iEWtHOwz4tURUJ+ki0ydYw@mail.gmail.com>
- <873d7419-bdd9-8a52-0a9b-dddbe31df4f9@digikod.net>
-In-Reply-To: <873d7419-bdd9-8a52-0a9b-dddbe31df4f9@digikod.net>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 17 Mar 2020 17:19:43 +0100
-Message-ID: <CAG48ez0=0W5Ok-8nASqZrZ28JboXRRi3gDxV5u6mdcOtzwuRVA@mail.gmail.com>
-Subject: Re: [RFC PATCH v14 00/10] Landlock LSM
-To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-doc@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584442939-8911-8-git-send-email-john.garry@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 12:38 AM Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>=
- wrote:
-> On 10/03/2020 00:44, Jann Horn wrote:
-> > On Mon, Feb 24, 2020 at 5:03 PM Micka=C3=ABl Sala=C3=BCn <mic@digikod.n=
-et> wrote:
-> >> This new version of Landlock is a major revamp of the previous series
-> >> [1], hence the RFC tag.  The three main changes are the replacement of
-> >> eBPF with a dedicated safe management of access rules, the replacement
-> >> of the use of seccomp(2) with a dedicated syscall, and the management =
-of
-> >> filesystem access-control (back from the v10).
-> >>
-> >> As discussed in [2], eBPF may be too powerful and dangerous to be put =
-in
-> >> the hand of unprivileged and potentially malicious processes, especial=
-ly
-> >> because of side-channel attacks against access-controls or other parts
-> >> of the kernel.
-> >>
-> >> Thanks to this new implementation (1540 SLOC), designed from the groun=
-d
-> >> to be used by unprivileged processes, this series enables a process to
-> >> sandbox itself without requiring CAP_SYS_ADMIN, but only the
-> >> no_new_privs constraint (like seccomp).  Not relying on eBPF also
-> >> enables to improve performances, especially for stacked security
-> >> policies thanks to mergeable rulesets.
-> >>
-> >> The compiled documentation is available here:
-> >> https://landlock.io/linux-doc/landlock-v14/security/landlock/index.htm=
-l
-> >>
-> >> This series can be applied on top of v5.6-rc3.  This can be tested wit=
-h
-> >> CONFIG_SECURITY_LANDLOCK and CONFIG_SAMPLE_LANDLOCK.  This patch serie=
-s
-> >> can be found in a Git repository here:
-> >> https://github.com/landlock-lsm/linux/commits/landlock-v14
-> >> I would really appreciate constructive comments on the design and the =
-code.
-> >
-> > I've looked through the patchset, and I think that it would be
-> > possible to simplify it quite a bit. I have tried to do that (and
-> > compiled-tested it, but not actually tried running it); here's what I
-> > came up with:
-> >
-> > https://github.com/thejh/linux/commits/landlock-mod
-> >
-> > The three modified patches (patches 1, 2 and 5) are marked with
-> > "[MODIFIED]" in their title. Please take a look - what do you think?
-> > Feel free to integrate my changes into your patches if you think they
-> > make sense.
->
-> Regarding the landlock_release_inodes(), the final wait_var_event() is
-> indeed needed (as does fsnotify), but why do you use a READ_ONCE() for
-> landlock_initialized?
+On Tue, Mar 17, 2020 at 07:02:19PM +0800, John Garry wrote:
 
-Ah, good point - that READ_ONCE() should be unnecessary.
+SNIP
 
-> The other main change is about the object cross-reference: you entirely
-> removed it, which means that an object will only be free when there are
-> no rules using it. This does not free an object when its underlying
-> object is being terminated. We now only have to worry about the
-> termination of the parent of an underlying object (e.g. the super-block
-> of an inode).
->
-> However, I think you forgot to increment object->usage in
-> create_ruleset_elem().
+>  struct perf_pmu_test_event {
+>  	struct pmu_event event;
+> +
+> +	/* extra events for aliases */
+> +	const char *alias_str;
+> +
+> +	/*
+> +	 * Note: For when PublicDescription does not exist in the JSON, we
+> +	 * will have no long_desc in pmu_event.long_desc, but long_desc may
+> +	 * be set in the alias.
+> +	 */
+> +	const char *alias_long_desc;
+>  };
+> +
+>  static struct perf_pmu_test_event test_cpu_events[] = {
+>  	{
+>  		.event = {
+> @@ -20,6 +31,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
+>  			.desc = "L1 BTB Correction",
+>  			.topic = "branch",
+>  		},
+> +		.alias_str = "event=0x8a",
+> +		.alias_long_desc = "L1 BTB Correction",
+>  	},
+>  	{
+>  		.event = {
+> @@ -28,6 +41,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
+>  			.desc = "L2 BTB Correction",
+>  			.topic = "branch",
+>  		},
+> +		.alias_str = "event=0x8b",
+> +		.alias_long_desc = "L2 BTB Correction",
+>  	},
+>  	{
+>  		.event = {
+> @@ -36,6 +51,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
+>  			.desc = "Number of segment register loads",
+>  			.topic = "other",
+>  		},
+> +		.alias_str = "umask=0x80,(null)=0x30d40,event=0x6",
 
-Whoops, you're right.
+ah so we are using other pmus because of the format definitions
 
-> There is also an unused checked_mask variable in merge_ruleset().
+why is there the '(null)' in there?
 
-Oh, yeah, oops.
+jirka
 
-> All this removes optimizations that made the code more difficult to
-> understand. The performance difference is negligible, and I think that
-> the memory footprint is fine.
-> These optimizations (and others) could be discussed later. I'm
-> integrating most of your changes in the next patch series.
-
-:)
-
-> > Aside from those things, there is also a major correctness issue where
-> > I'm not sure how to solve it properly:
-> >
-> > Let's say a process installs a filter on itself like this:
-> >
-> > struct landlock_attr_ruleset ruleset =3D { .handled_access_fs =3D
-> > ACCESS_FS_ROUGHLY_WRITE};
-> > int ruleset_fd =3D landlock(LANDLOCK_CMD_CREATE_RULESET,
-> > LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
-> > struct landlock_attr_path_beneath path_beneath =3D {
-> >   .ruleset_fd =3D ruleset_fd,
-> >   .allowed_access =3D ACCESS_FS_ROUGHLY_WRITE,
-> >   .parent_fd =3D open("/tmp/foobar", O_PATH),
-> > };
-> > landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
-> > sizeof(path_beneath), &path_beneath);
-> > prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-> > struct landlock_attr_enforce attr_enforce =3D { .ruleset_fd =3D ruleset=
-_fd };
-> > landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
-> > sizeof(attr_enforce), &attr_enforce);
-> >
-> > At this point, the process is not supposed to be able to write to
-> > anything outside /tmp/foobar, right? But what happens if the process
-> > does the following next?
-> >
-> > struct landlock_attr_ruleset ruleset =3D { .handled_access_fs =3D
-> > ACCESS_FS_ROUGHLY_WRITE};
-> > int ruleset_fd =3D landlock(LANDLOCK_CMD_CREATE_RULESET,
-> > LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
-> > struct landlock_attr_path_beneath path_beneath =3D {
-> >   .ruleset_fd =3D ruleset_fd,
-> >   .allowed_access =3D ACCESS_FS_ROUGHLY_WRITE,
-> >   .parent_fd =3D open("/", O_PATH),
-> > };
-> > landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
-> > sizeof(path_beneath), &path_beneath);
-> > prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-> > struct landlock_attr_enforce attr_enforce =3D { .ruleset_fd =3D ruleset=
-_fd };
-> > landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
-> > sizeof(attr_enforce), &attr_enforce);
-> >
-> > As far as I can tell from looking at the source, after this, you will
-> > have write access to the entire filesystem again. I think the idea is
-> > that LANDLOCK_CMD_ENFORCE_RULESET should only let you drop privileges,
-> > not increase them, right?
->
-> There is an additionnal check in syscall.c:get_path_from_fd(): it is
-> forbidden to add a rule with a path which is not accessible (according
-> to LANDLOCK_ACCESS_FS_OPEN) thanks to a call to security_file_open(),
-> but this is definitely not perfect.
-
-Ah, I missed that.
-
-> > I think the easy way to fix this would be to add a bitmask to each
-> > rule that says from which ruleset it originally comes, and then let
-> > check_access_path() collect these bitmasks from each rule with OR, and
-> > check at the end whether the resulting bitmask is full - if not, at
-> > least one of the rulesets did not permit the access, and it should be
-> > denied.
-> >
-> > But maybe it would make more sense to change how the API works
-> > instead, and get rid of the concept of "merging" two rulesets
-> > together? Instead, we could make the API work like this:
-> >
-> >  - LANDLOCK_CMD_CREATE_RULESET gives you a file descriptor whose
-> > ->private_data contains a pointer to the old ruleset of the process,
-> > as well as a pointer to a new empty ruleset.
-> >  - LANDLOCK_CMD_ADD_RULE fails if the specified rule would not be
-> > permitted by the old ruleset, then adds the rule to the new ruleset
-> >  - LANDLOCK_CMD_ENFORCE_RULESET fails if the old ruleset pointer in
-> > ->private_data doesn't match the current ruleset of the process, then
-> > replaces the old ruleset with the new ruleset.
-> >
-> > With this, the new ruleset is guaranteed to be a subset of the old
-> > ruleset because each of the new ruleset's rules is permitted by the
-> > old ruleset. (Unless the directory hierarchy rotates, but in that case
-> > the inaccuracy isn't much worse than what would've been possible
-> > through RCU path walk anyway AFAIK.)
-> >
-> > What do you think?
-> >
->
-> I would prefer to add the same checks you described at first (with
-> check_access_path), but only when creating a new ruleset with
-> merge_ruleset() (which should probably be renamed). This enables not to
-> rely on a parent ruleset/domain until the enforcement, which is the case
-> anyway.
-> Unfortunately this doesn't work for some cases with bind mounts. Because
-> check_access_path() goes through one path, another (bind mounted) path
-> could be illegitimately allowed.
-
-Hmm... I'm not sure what you mean. At the moment, landlock doesn't
-allow any sandboxed process to change the mount hierarchy, right? Can
-you give an example where this would go wrong?
-
-> That makes the problem a bit more complicated. A solution may be to keep
-> track of the hierarchy of each rule (e.g. with a layer/depth number),
-> and only allow an access request if at least a rule of each layer allow
-> this access. In this case we also need to correctly handle the case when
-> rules from different layers are tied to the same object.
