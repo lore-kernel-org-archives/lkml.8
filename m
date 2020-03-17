@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961D0C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EF0C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69DCA20719
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83DD620719
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584442943;
-	bh=vHKEC9mhEm8qFf8Q8T+sfKKtpiK0KxK4jHXwJdiTetU=;
+	s=default; t=1584442947;
+	bh=IU13o9mi6MI7gTr6yP0H7azxbuYAal33zHQozvYAp4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GofRaiMgBSw9wvwej2ierjsi0YMIPPsDz9QDstfVSe2ySFOpNMEKa8ZQVGiSZTCVQ
-	 AG/YiQbG9LsSo4Z/vyr14QmXv8PGCPZOi1/xYE1q2a2nRpnRBy2z+EjYyFIJrNMdhe
-	 WoY8/xdRKFaA8M66xLtQ5l5SEzvQ20B9B7r9sXFQ=
+	b=I/eDZFqqIOY3DatDaItlZXnXYk+SEtvVPUr92qvY4O4XRXAnGsyOBjiSTUM7prOB3
+	 fkrwZ12IkW+JCVeKIcCJ6wb8SFrehjErravPX/zcw6vGKCGOMMrWgnou7DhunjcPcg
+	 nNKXXgmM2gNVoeniSrRFy3F4GXTYxBY2STY3/8ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgCQLCV (ORCPT
+        id S1727937AbgCQLCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:02:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41988 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 07:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727601AbgCQLCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:02:20 -0400
+        id S1727601AbgCQLCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 07:02:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E56420738;
-        Tue, 17 Mar 2020 11:02:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1703720753;
+        Tue, 17 Mar 2020 11:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584442940;
-        bh=vHKEC9mhEm8qFf8Q8T+sfKKtpiK0KxK4jHXwJdiTetU=;
+        s=default; t=1584442942;
+        bh=IU13o9mi6MI7gTr6yP0H7azxbuYAal33zHQozvYAp4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ENT6Ak77ScrlOxwGD3YZm4L+Vn2RZ5HRc7yZOye6kXl5YWZCLfPyoea6oOf6tghlW
-         IHMdy1jA9CEpTwWIgNVArNUpt5p+2Zc1rOCTcaf84LFkLSTLtZSFXFOuV8IB5NcjbN
-         wNMcaUOQFv2n5DxdXz8tIxKGk5uUpSFBw2MmRhQg=
+        b=E6/V32TIpqt/rN2Oub8MvEuMlj98PGNE2uPJgo4NMO06Kgpk4ssOsxZ29/PFyxyqF
+         Oz2EBxuGJCzgGUO8YXF6z/h1dhYuk79aymUHarmCWrMLw9P/cqR8r+IHVFuM2qpHXD
+         6TAgyY0Fav8qoN+z6Hpb5XPXnud52cXgKq/I6mSc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 042/123] macsec: add missing attribute validation for port
-Date:   Tue, 17 Mar 2020 11:54:29 +0100
-Message-Id: <20200317103312.141935808@linuxfoundation.org>
+Subject: [PATCH 5.4 043/123] net: fq: add missing attribute validation for orphan mask
+Date:   Tue, 17 Mar 2020 11:54:30 +0100
+Message-Id: <20200317103312.236358175@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200317103307.343627747@linuxfoundation.org>
 References: <20200317103307.343627747@linuxfoundation.org>
@@ -61,28 +61,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 31d9a1c524964bac77b7f9d0a1ac140dc6b57461 ]
+[ Upstream commit 7e6dc03eeb023e18427a373522f1d247b916a641 ]
 
-Add missing attribute validation for IFLA_MACSEC_PORT
+Add missing attribute validation for TCA_FQ_ORPHAN_MASK
 to the netlink policy.
 
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Fixes: 06eb395fa985 ("pkt_sched: fq: better control of DDOS traffic")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/macsec.c |    1 +
+ net/sched/sch_fq.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -2983,6 +2983,7 @@ static const struct device_type macsec_t
- 
- static const struct nla_policy macsec_rtnl_policy[IFLA_MACSEC_MAX + 1] = {
- 	[IFLA_MACSEC_SCI] = { .type = NLA_U64 },
-+	[IFLA_MACSEC_PORT] = { .type = NLA_U16 },
- 	[IFLA_MACSEC_ICV_LEN] = { .type = NLA_U8 },
- 	[IFLA_MACSEC_CIPHER_SUITE] = { .type = NLA_U64 },
- 	[IFLA_MACSEC_WINDOW] = { .type = NLA_U32 },
+--- a/net/sched/sch_fq.c
++++ b/net/sched/sch_fq.c
+@@ -745,6 +745,7 @@ static const struct nla_policy fq_policy
+ 	[TCA_FQ_FLOW_MAX_RATE]		= { .type = NLA_U32 },
+ 	[TCA_FQ_BUCKETS_LOG]		= { .type = NLA_U32 },
+ 	[TCA_FQ_FLOW_REFILL_DELAY]	= { .type = NLA_U32 },
++	[TCA_FQ_ORPHAN_MASK]		= { .type = NLA_U32 },
+ 	[TCA_FQ_LOW_RATE_THRESHOLD]	= { .type = NLA_U32 },
+ 	[TCA_FQ_CE_THRESHOLD]		= { .type = NLA_U32 },
+ };
 
 
