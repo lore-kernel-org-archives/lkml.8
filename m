@@ -2,134 +2,228 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_ABUSE_MALW
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA746C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C697FC10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE84120658
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C8920658
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 10:48:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="emVIIeWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgCQKpo (ORCPT
+        id S1726112AbgCQKsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 06:45:44 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:59850 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgCQKpo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 06:45:44 -0400
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id BBAB767A7C0;
-        Tue, 17 Mar 2020 11:45:40 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 17 Mar
- 2020 11:45:40 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1913.007; Tue, 17 Mar 2020 11:45:40 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>, Jacky Bai <ping.bai@nxp.com>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH v2] clk: imx8mm: Switch to platform driver
-Thread-Topic: [PATCH v2] clk: imx8mm: Switch to platform driver
-Thread-Index: AQHV3Nj/eAC8KOmHpke/9mSCMhEqHagN6HgAgD15JoCAAPP1AIAAclyA
-Date:   Tue, 17 Mar 2020 10:45:40 +0000
-Message-ID: <4cdbd500-2199-762c-43d9-2a49bd8e2414@kontron.de>
-References: <1562682003-20951-1-git-send-email-abel.vesa@nxp.com>
- <2df024c3-ab46-4e33-f961-5ef994aea145@kontron.de>
- <c2a9d048-6a33-f357-ac88-4eb81002fe93@kontron.de>
- <9dae8bb7-b1da-28b5-a6e9-42102a5c3be3@kontron.de>
- <AM0PR04MB4481780CEA5A8A7DB87C7D9F88F60@AM0PR04MB4481.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4481780CEA5A8A7DB87C7D9F88F60@AM0PR04MB4481.eurprd04.prod.outlook.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1172F57047C547449EA5A455818DC942@snt-world.com>
-Content-Transfer-Encoding: base64
+        Tue, 17 Mar 2020 06:48:25 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:28210 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbgCQKsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:48:25 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48hVJQ1HStz9v9FD;
+        Tue, 17 Mar 2020 11:48:22 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=emVIIeWl; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id HJvjTYux4trp; Tue, 17 Mar 2020 11:48:22 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48hVJP6k7nz9v9Dv;
+        Tue, 17 Mar 2020 11:48:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1584442101; bh=wLdjv3dVY0RXsHL3a5X6PrKv3uQSB4fvS8ryPLQU0ZE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=emVIIeWlficGn6I1qT7B8GjLh/33KCDgCbn7757pX1msComrs9eTY+dAcBi+kGti8
+         6c011tbl3H6Rp0Lr8i4XEikOGw83HGbZVIu+ptP+phCneSmsv02fpTOCGeorgIBBfG
+         wtLjesVln1UqCJnGxzQp9y42kXHua0iyyG7VsA14=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CF32C8B787;
+        Tue, 17 Mar 2020 11:48:22 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id HxQiT3sW3VxQ; Tue, 17 Mar 2020 11:48:22 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B19818B785;
+        Tue, 17 Mar 2020 11:48:14 +0100 (CET)
+Subject: Re: [PATCH 10/15] powerpc/watchpoint: Use loop for
+ thread_struct->ptrace_bps
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
+        mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
+ <20200309085806.155823-11-ravi.bangoria@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <0eeeac90-b5e3-722b-2d2c-bb95c81d851a@c-s.fr>
+Date:   Tue, 17 Mar 2020 11:48:12 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: BBAB767A7C0.A1251
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: abel.vesa@nxp.com, anson.huang@nxp.com,
-        fabio.estevam@nxp.com, kernel@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, mturquette@baylibre.com, peng.fan@nxp.com,
-        ping.bai@nxp.com, sboyd@kernel.org, shawnguo@kernel.org
+In-Reply-To: <20200309085806.155823-11-ravi.bangoria@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUGVuZywNCg0KT24gMTcuMDMuMjAgMDQ6NTYsIFBlbmcgRmFuIHdyb3RlOg0KPj4gU3ViamVj
-dDogUmU6IFtQQVRDSCB2Ml0gY2xrOiBpbXg4bW06IFN3aXRjaCB0byBwbGF0Zm9ybSBkcml2ZXIN
-Cj4+DQo+PiBPbiAwNi4wMi4yMCAxMTozNywgRnJpZWRlciBTY2hyZW1wZiB3cm90ZToNCj4+PiBP
-biAwNi4wMi4yMCAxMTozNCwgU2NocmVtcGYgRnJpZWRlciB3cm90ZToNCj4+Pj4gSGksDQo+Pj4+
-DQo+Pj4+IE9uIDA5LjA3LjE5IDE2OjIwLCBBYmVsIFZlc2Egd3JvdGU6DQo+Pj4+PiBUaGVyZSBp
-cyBubyBzdHJvbmcgcmVhc29uIGZvciB0aGlzIHRvIHVzZSBDTEtfT0ZfREVDTEFSRSBpbnN0ZWFk
-IG9mDQo+Pj4+PiBiZWluZyBhIHBsYXRmb3JtIGRyaXZlci4gUGx1cywgdGhpcyB3aWxsIG5vdyBi
-ZSBhbGlnbmVkIHdpdGggdGhlDQo+Pj4+PiBvdGhlciBpLk1YOE0gY2xvY2sgZHJpdmVycyB3aGlj
-aCBhcmUgcGxhdGZvcm0gZHJpdmVycy4NCj4+Pj4+DQo+Pj4+PiBJbiBvcmRlciB0byBtYWtlIHRo
-ZSBjbG9jayBwcm92aWRlciBhIHBsYXRmb3JtIGRyaXZlciBhbGwgdGhlIGRhdGENCj4+Pj4+IGFu
-ZCBjb2RlIG5lZWRzIHRvIGJlIG91dHNpZGUgb2YgLmluaXQgc2VjdGlvbi4NCj4+Pj4+DQo+Pj4+
-PiBTaWduZWQtb2ZmLWJ5OiBBYmVsIFZlc2EgPGFiZWwudmVzYUBueHAuY29tPg0KPj4+Pj4gQWNr
-ZWQtYnk6IFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZz4NCj4+Pj4NCj4+Pj4gVGhpcyBo
-YXMgYmVlbiB1cHN0cmVhbSBmb3IgcXVpdGUgc29tZSB0aW1lIG5vdywgYnV0IHNvbWVob3cgSSBo
-YXZlIGFuDQo+Pj4+IGlzc3VlIHdpdGggU1BJIG9uIHRoZSBpLk1YOE1NIHRoYXQgZ2V0cyByZXNv
-bHZlZCB3aGVuIEkgcmV2ZXJ0IHRoaXMNCj4+Pj4gcGF0Y2guDQo+Pj4+DQo+Pj4+IFdoZW4gSSB0
-cnkgdG8gcHJvYmUgYW4gU1BJIE5PUiBmbGFzaCB3aXRoIGxhdGVzdCA1LjQgb3IgZXZlbiA1LjU6
-DQo+Pj4+DQo+Pj4+ICDCoMKgwqDCoHNwaV9pbXggMzA4MjAwMDAuc3BpOiBkbWEgc2V0dXAgZXJy
-b3IgLTE5LCB1c2UgcGlvDQo+Pj4+ICDCoMKgwqDCoHNwaS1ub3Igc3BpMC4wOiB1bnJlY29nbml6
-ZWQgSkVERUMgaWQgYnl0ZXM6IDAwIDAwIDAwIDAwIDAwIDAwDQo+Pj4+ICDCoMKgwqDCoHNwaV9p
-bXggMzA4MjAwMDAuc3BpOiBwcm9iZWQNCj4+Pj4NCj4+Pj4gV2hlbiBJIHJldmVydCB0aGlzIHBh
-dGNoOg0KPj4+Pg0KPj4+PiAgwqDCoMKgwqBzcGlfaW14IDMwODIwMDAwLnNwaTogZG1hIHNldHVw
-IGVycm9yIC0xOSwgdXNlIHBpbw0KPj4+PiAgwqDCoMKgwqBzcGktbm9yIHNwaTAuMDogbXgyNXIx
-NjM1ZiAoMjA0OCBLYnl0ZXMpDQo+Pj4+ICDCoMKgwqDCoHNwaV9pbXggMzA4MjAwMDAuc3BpOiBw
-cm9iZWQNCj4+Pj4NCj4+Pj4gUGxlYXNlIG5vdGUsIHRoYXQgaW4gYm90aCBjYXNlcyBJIGhhdmUg
-ZGlzYWJsZWQgRE1BLCBhcyB0aGlzIGNhdXNlcw0KPj4+PiBldmVuIG1vcmUgdHJvdWJsZSAoc2Vl
-IFsxXSkuIEJ1dCBldmVuIHdpdGggRE1BIGVuYWJsZWQgYW5kIGlnbm9yaW5nDQo+Pj4+IHRoZSBE
-TUEgZXJyb3JzLCB0aGUgaXNzdWUgZGVzY3JpYmVkIGFib3ZlIG9jY3Vycy4NCj4+Pj4NCj4+Pj4g
-RG9lcyBzb21lb25lIGhhdmUgYW4gaWRlYSB3aGF0J3Mgd3Jvbmc/DQo+Pj4+IEFtIEkgdGhlIG9u
-bHkgdXNlciBvZiBTUEkgb24gaS5NWDhNTSBhcyB0aGlzIGlzc3VlIHNlZW1zIHRvIGV4aXN0DQo+
-Pj4+IHVwc3RyZWFtIHNpbmNlIHY1LjQtcmMxPw0KPj4NCj4+IFRoaXMgaXNzdWUgc3RpbGwgcGVy
-c2lzdHMgaW4gdjUuNi1yYzYuIENhbiBzb21lb25lIHBsZWFzZSBoYXZlIGEgbG9vaz8NCj4gDQo+
-IFdvdWxkIHlvdSBwb3N0IHlvdXIgZnVsbCBib290IGxvZyBzb21ld2hlcmU/DQoNClN1cmUsIHRo
-ZSB0d28gYm9vdGxvZ3MgYXJlIGhlcmU6IGh0dHBzOi8vcGFzdGUuZWUvcC84dUR3ZC4NClRoZSBv
-bmx5IGRpZmZlcmVuY2UgaXMgdGhhdCBpbiB0aGUgT0sgY2FzZSB0aGlzIHBhdGNoIGlzIGFwcGxp
-ZWQ6IA0KaHR0cHM6Ly9wYXN0ZS5lZS9wL3hVQnJPDQoNCj4gDQo+IFdpdGggc3VjY2Vzcy9mYWls
-IGNhc2UsIGFyZSB0aGVyZSBhbnkgZGlmZmVyZW5jZXMgaW4gc3BpIGNvbnRyb2xsZXIgcmVnaXN0
-ZXJzPw0KPiBJIHN1cHBvc2Ugbm8uDQoNCk5vLCB0aGV5IGFyZSB0aGUgc2FtZSwgZXhjZXB0IGZv
-ciBCVVJTVF9MRU5HVEggaW4gRUNTUEkxX0NPTlJFRywgd2hpY2ggDQppcyAweDJGIGluIGNhc2Ug
-b2YgZmFpbHVyZSBhbmQgMHgzRiBpbiBjYXNlIGl0IGlzIHdvcmtpbmcuIEJ1dCBJIGd1ZXNzIA0K
-dGhhdCdzIGEgcmVzdWx0IG9mIHRoZSBmYWlsZWQvc3VjY2Vzc2Z1bCB0cmFuc2ZlcnMuDQoNCj4g
-DQo+IERpZCB5b3UgbWVhc3VyZSB0aGUgc2lnbmFsIHNheWluZyBkYXRhIGluIHdoZW4gY3MgaXMg
-bG93Pw0KDQpJdCdzIGEgYml0IGRpZmZpY3VsdCB0byBhY2Nlc3MgdGhlIHNpZ25hbHMgb24gdGhl
-IGJvYXJkIHNvIEkgZGlkbid0IA0KY2hlY2sgdGhlIHNpZ25hbHMsIHlldC4NCg0KPiANCj4gQW55
-d2F5IGl0IGlzIGEgYml0IHdpcmVkIHNpbmNlIHRoaXMgcGF0Y2gganVzdCBkZWxheWVkIHRoZSBw
-cm9iZSBmb3IgYSB3aGlsZS4NCg0KWWVzLCBpdCdzIHJlYWxseSB3ZWlyZCBhbmQgaXQncyB2ZXJ5
-IHVuZm9ydHVuYXRlIHRoYXQgdGhlIEVWSyBkb2VzIG5vdCANCmhhdmUgYSBTUEkgZGV2aWNlIG9u
-Ym9hcmQuIEkgZ3Vlc3MgdGhhdCB3b3VsZCBoYXZlIGhlbHBlZCB0byBwcmV2ZW50IA0KcmVncmVz
-c2lvbnMgZHVlIHRvIGJldHRlciB0ZXN0aW5nLg0KDQpJZiB5b3UgaGF2ZSBhbnkgc3VnZ2VzdGlv
-bnMsIHBsZWFzZSBsZXQgbWUga25vdy4NCg0KVGhhbmtzLA0KRnJpZWRlcg==
+
+
+Le 09/03/2020 à 09:58, Ravi Bangoria a écrit :
+> ptrace_bps is already an array of size HBP_NUM_MAX. But we use
+> hardcoded index 0 while fetching/updating it. Convert such code
+> to loop over array.
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+>   arch/powerpc/kernel/hw_breakpoint.c |  7 +++++--
+>   arch/powerpc/kernel/process.c       |  6 +++++-
+>   arch/powerpc/kernel/ptrace.c        | 28 +++++++++++++++++++++-------
+>   3 files changed, 31 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+> index f4d48f87dcb8..b27aca623267 100644
+> --- a/arch/powerpc/kernel/hw_breakpoint.c
+> +++ b/arch/powerpc/kernel/hw_breakpoint.c
+> @@ -419,10 +419,13 @@ NOKPROBE_SYMBOL(hw_breakpoint_exceptions_notify);
+>    */
+>   void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
+>   {
+> +	int i;
+>   	struct thread_struct *t = &tsk->thread;
+>   
+> -	unregister_hw_breakpoint(t->ptrace_bps[0]);
+> -	t->ptrace_bps[0] = NULL;
+> +	for (i = 0; i < nr_wp_slots(); i++) {
+> +		unregister_hw_breakpoint(t->ptrace_bps[i]);
+> +		t->ptrace_bps[i] = NULL;
+> +	}
+>   }
+>   
+>   void hw_breakpoint_pmu_read(struct perf_event *bp)
+> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+> index 42ff62ef749c..b9ab740fcacf 100644
+> --- a/arch/powerpc/kernel/process.c
+> +++ b/arch/powerpc/kernel/process.c
+> @@ -1628,6 +1628,9 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
+>   	void (*f)(void);
+>   	unsigned long sp = (unsigned long)task_stack_page(p) + THREAD_SIZE;
+>   	struct thread_info *ti = task_thread_info(p);
+> +#ifdef CONFIG_HAVE_HW_BREAKPOINT
+> +	int i;
+> +#endif
+
+Could we avoid all those #ifdefs ?
+
+I think if we make p->thread.ptrace_bps[] exist all the time, with a 
+size of 0 when CONFIG_HAVE_HW_BREAKPOINT is not set, then we can drop a 
+lot of #ifdefs.
+
+>   
+>   	klp_init_thread_info(p);
+>   
+> @@ -1687,7 +1690,8 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
+>   	p->thread.ksp_limit = (unsigned long)end_of_stack(p);
+>   #endif
+>   #ifdef CONFIG_HAVE_HW_BREAKPOINT
+> -	p->thread.ptrace_bps[0] = NULL;
+> +	for (i = 0; i < nr_wp_slots(); i++)
+> +		p->thread.ptrace_bps[i] = NULL;
+>   #endif
+>   
+>   	p->thread.fp_save_area = NULL;
+> diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
+> index f6d7955fc61e..e2651f86d56f 100644
+> --- a/arch/powerpc/kernel/ptrace.c
+> +++ b/arch/powerpc/kernel/ptrace.c
+
+You'll have to rebase all this on the series 
+https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=161356 
+which is about to go into powerpc-next
+
+> @@ -2829,6 +2829,19 @@ static int set_dac_range(struct task_struct *child,
+>   }
+>   #endif /* CONFIG_PPC_ADV_DEBUG_DAC_RANGE */
+>   
+> +#ifdef CONFIG_HAVE_HW_BREAKPOINT
+> +static int empty_ptrace_bp(struct thread_struct *thread)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < nr_wp_slots(); i++) {
+> +		if (!thread->ptrace_bps[i])
+> +			return i;
+> +	}
+> +	return -1;
+> +}
+> +#endif
+
+What does this function do exactly ? I seems to do more than what its 
+name suggests.
+
+> +
+>   #ifndef CONFIG_PPC_ADV_DEBUG_REGS
+>   static int empty_hw_brk(struct thread_struct *thread)
+>   {
+> @@ -2915,8 +2928,9 @@ static long ppc_set_hwdebug(struct task_struct *child,
+>   		len = 1;
+>   	else
+>   		return -EINVAL;
+> -	bp = thread->ptrace_bps[0];
+> -	if (bp)
+> +
+> +	i = empty_ptrace_bp(thread);
+> +	if (i < 0)
+>   		return -ENOSPC;
+>   
+>   	/* Create a new breakpoint request if one doesn't exist already */
+> @@ -2925,14 +2939,14 @@ static long ppc_set_hwdebug(struct task_struct *child,
+>   	attr.bp_len = len;
+>   	arch_bp_generic_fields(brk.type, &attr.bp_type);
+>   
+> -	thread->ptrace_bps[0] = bp = register_user_hw_breakpoint(&attr,
+> +	thread->ptrace_bps[i] = bp = register_user_hw_breakpoint(&attr,
+>   					       ptrace_triggered, NULL, child);
+>   	if (IS_ERR(bp)) {
+> -		thread->ptrace_bps[0] = NULL;
+> +		thread->ptrace_bps[i] = NULL;
+>   		return PTR_ERR(bp);
+>   	}
+>   
+> -	return 1;
+> +	return i + 1;
+>   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
+>   
+>   	if (bp_info->addr_mode != PPC_BREAKPOINT_MODE_EXACT)
+> @@ -2979,10 +2993,10 @@ static long ppc_del_hwdebug(struct task_struct *child, long data)
+>   		return -EINVAL;
+>   
+>   #ifdef CONFIG_HAVE_HW_BREAKPOINT
+> -	bp = thread->ptrace_bps[0];
+> +	bp = thread->ptrace_bps[data - 1];
+
+Is data checked somewhere to ensure it is not out of boundaries ? Or are 
+we sure it is always within ?
+
+>   	if (bp) {
+>   		unregister_hw_breakpoint(bp);
+> -		thread->ptrace_bps[0] = NULL;
+> +		thread->ptrace_bps[data - 1] = NULL;
+>   	} else
+>   		ret = -ENOENT;
+>   	return ret;
+> 
+
+
+Christophe
