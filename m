@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41945C1975A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFBEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FFBA2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222FD20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 21:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgCQVfO (ORCPT
+        id S1727070AbgCQVfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 17:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53632 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 17:35:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727341AbgCQVeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727346AbgCQVeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 17:34:18 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDC022087C;
-        Tue, 17 Mar 2020 21:34:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1980D20880;
+        Tue, 17 Mar 2020 21:34:18 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jEJqq-000EYg-Nj; Tue, 17 Mar 2020 17:34:16 -0400
-Message-Id: <20200317213416.592032170@goodmis.org>
+        id 1jEJqr-000EZi-0n; Tue, 17 Mar 2020 17:34:17 -0400
+Message-Id: <20200317213416.903351225@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Tue, 17 Mar 2020 17:32:29 -0400
+Date:   Tue, 17 Mar 2020 17:32:31 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -40,7 +40,7 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Peter Wu <peter@lekensteyn.nl>,
         Jonathan Corbet <corbet@lwn.net>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [RFC][PATCH 07/11] ring-buffer: Optimize rb_iter_head_event()
+Subject: [RFC][PATCH 09/11] tracing: Do not disable tracing when reading the trace file
 References: <20200317213222.421100128@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -51,30 +51,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-As it is fine to perform several "peeks" of event data in the ring buffer
-via the iterator before moving it forward, do not re-read the event, just
-return what was read before. Otherwise, it can cause inconsistent results,
-especially when testing multiple CPU buffers to interleave them.
+When opening the "trace" file, it is no longer necessary to disable tracing.
 
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/trace/trace.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 475338fda969..5979327254f9 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1929,6 +1929,9 @@ rb_iter_head_event(struct ring_buffer_iter *iter)
- 	unsigned long commit;
- 	unsigned length;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 1085b3d5d0dc..a60f49c401f9 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4261,10 +4261,6 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	if (trace_clocks[tr->clock_id].in_ns)
+ 		iter->iter_flags |= TRACE_FILE_TIME_IN_NS;
  
-+	if (iter->head != iter->next_event)
-+		return iter->event;
-+
- 	/*
- 	 * When the writer goes across pages, it issues a cmpxchg which
- 	 * is a mb(), which will synchronize with the rmb here.
+-	/* stop the trace while dumping if we are not opening "snapshot" */
+-	if (!iter->snapshot)
+-		tracing_stop_tr(tr);
+-
+ 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter->buffer_iter[cpu] =
+@@ -4358,10 +4354,6 @@ static int tracing_release(struct inode *inode, struct file *file)
+ 	if (iter->trace && iter->trace->close)
+ 		iter->trace->close(iter);
+ 
+-	if (!iter->snapshot)
+-		/* reenable tracing if it was previously enabled */
+-		tracing_start_tr(tr);
+-
+ 	__trace_array_put(tr);
+ 
+ 	mutex_unlock(&trace_types_lock);
 -- 
 2.25.1
 
