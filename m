@@ -2,96 +2,220 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17734C10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4ADC18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC2820738
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0066520724
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 16:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sCqQM4hm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CbuPh/l2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgCQQDy (ORCPT
+        id S1726797AbgCQQEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 12:03:54 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43660 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726019AbgCQQDx (ORCPT
+        Tue, 17 Mar 2020 12:04:22 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:31839 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726019AbgCQQEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 12:03:53 -0400
-Received: by mail-qt1-f195.google.com with SMTP id l13so17850247qtv.10;
-        Tue, 17 Mar 2020 09:03:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=1cq61pMKrXnE/8ZgHPZoRI5nasAc/Gz5oZHWr1Wic8E=;
-        b=sCqQM4hmv6145mTEPmet3o0Tv8fHUfT2SJ2jUgYxjyqHesDKwMrZMju/OqsGJ0KkUy
-         Zb8goI+G07BzcmChJSPGxgc0JO1adCIwbLtyLmrdlfP+y69SolfWTYipGyNYJWZngUgo
-         9/fFLBnjNH+njW6YDJY4ELS80/jIqjhJircFhujElwB6HiuMs/UJgZzrDyw90jrMNgyV
-         72LtRXZvRNBQLqAzZbwUBqPrxAI4hHj2pbSEzixtYzJfJF7ntJ3zDWg3GxEhDE5wOges
-         DMuWktybl8vpQKEWR25hXv2ITdLUyW2kck/j2ahjPVwdeWs9RM1Bu4bbe8v8HWhRBf5d
-         sxyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=1cq61pMKrXnE/8ZgHPZoRI5nasAc/Gz5oZHWr1Wic8E=;
-        b=g4wriJL2WGl97qBIJJ2UbFu5NpMo/Q9wfuMuRDyw6m0bxB2PwhnPHDQvX8PwKXcgSu
-         /nlDshhLdG8dXgJFL0xb/cTHsTJ5fkYUqIPtF0BgD2Rb4DcKs2vRnvzyOKDwM8fCx2OR
-         YhcBV5S2jgz7T87D3pxNoaHl1KYntNCaVkQywiO2bzayOcV03hd6kyCIXQIyuVjUDhgm
-         fAytFwz7/tBoDsOzqcJcx7zqac99Mxbo28Qz9NbX/SidZxEcIoixlfPWasmae9yBPXAa
-         hSODuYAOjUu7aJ6HtaZAOMHNQmS9mqV+lVozSyxdgJBhutXmWtMTlrL039FLvRyxSQYD
-         QihA==
-X-Gm-Message-State: ANhLgQ1qoOQVZyn86uSOztWxSopYQOISeRkC50oRSZW9qFSu73kLeHBH
-        KUmdYBmCPe0a9QRHhZzAzCA=
-X-Google-Smtp-Source: ADFU+vt7FKNB0A6TEbsFTVfek3+MsRk98Sx7N8uZNFeebxxE9XulpOQvjLTKwJGXOtQ+xV1zLn8qEQ==
-X-Received: by 2002:ac8:3671:: with SMTP id n46mr6298448qtb.33.1584461031859;
-        Tue, 17 Mar 2020 09:03:51 -0700 (PDT)
-Received: from ?IPv6:2620:cc:8000:1c83:c194:7ea1:d9a4:fef8? ([2620:cc:8000:1c83:c194:7ea1:d9a4:fef8])
-        by smtp.gmail.com with ESMTPSA id 31sm2418634qta.56.2020.03.17.09.03.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 09:03:51 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 12:03:48 -0400
-User-Agent: K-9 Mail for Android
-In-Reply-To: <9ae33061-1595-4387-5767-79437b2ff2ae@lwfinger.net>
-References: <C9F34A4B-E3F3-4D7A-B870-058C8D4871B9@gmail.com> <9ae33061-1595-4387-5767-79437b2ff2ae@lwfinger.net>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: PROBLEM: 5.6.0-rc6 + Realtek RTL8188CUS wifi dongle: 8051 reset failed!
-To:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Jes Sorensen <Jes.Sorensen@gmail.com>,
-        linux-wireless@vger.kernel.org
-CC:     kernel list <linux-kernel@vger.kernel.org>
-From:   AC <achirvasub@gmail.com>
-Message-ID: <0B600F12-BD49-446B-9B4B-F6E873FB91B0@gmail.com>
+        Tue, 17 Mar 2020 12:04:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584461060;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=MFzSTMX2w6R5gx3NLUQBpJfkbMWo+nNj12n2pe5d5Tc=;
+        b=CbuPh/l2TgehIUszE7buR4MeAhTosvXDv3MWOR1Ir49iYwPkTBUxaWH3wy3MMWSNqBPOor
+        h5yi5cgYZL0/NIs+8sn6cIBYTGo/aC4CLrRB3VbGv3VT/VdGB5i1y2a6B8fd1QwRnIWVU0
+        UexKNPLgUlIcvNS5QAZRpKrD9chPl6A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-293-K82rWuaNPziJJdgsEbwWsg-1; Tue, 17 Mar 2020 12:04:15 -0400
+X-MC-Unique: K82rWuaNPziJJdgsEbwWsg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC9EBCF9B2;
+        Tue, 17 Mar 2020 16:04:13 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.36.110.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8BAB55C241;
+        Tue, 17 Mar 2020 16:03:57 +0000 (UTC)
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Paul Moore <paul@paul-moore.com>, sgrubb@redhat.com,
+        omosnace@redhat.com, eparis@parisplace.org,
+        Richard Guy Briggs <rgb@redhat.com>
+Subject: [PATCH ghak28 V7] audit: log audit netlink multicast bind and unbind events
+Date:   Tue, 17 Mar 2020 12:03:23 -0400
+Message-Id: <82d85f72416560c155031375fb5b32ac06394c31.1584033222.git.rgb@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Log information about programs connecting to and disconnecting from the
+audit netlink multicast socket. This is needed so that during
+investigations a security officer can tell who or what had access to the
+audit trail.  This helps to meet the FAU_SAR.2 requirement for Common
+Criteria.  Here is the systemd startup event:
 
+type=PROCTITLE msg=audit(2020-02-18 15:26:50.775:10) : proctitle=/init
+type=SYSCALL msg=audit(2020-02-18 15:26:50.775:10) : arch=x86_64 syscall=bind success=yes exit=0 a0=0x19 a1=0x55645c369b70 a2=0xc a3=0x7fff9fedec24 items=0 ppid=0 pid=1 auid=unset uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=(none) ses=unset comm=systemd exe=/usr/lib/systemd/systemd subj=kernel key=(null)
+type=UNKNOWN[1335] msg=audit(2020-02-18 15:26:50.775:10) : pid=1 uid=root auid=unset tty=(none) ses=unset subj=kernel comm=systemd exe=/usr/lib/systemd/systemd nl-mcgrp=1 op=connect res=yes
 
-On March 17, 2020 10:52:14 AM EDT, Larry Finger <Larry=2EFinger@lwfinger=
-=2Enet> wrote:
->
->Please bisect this problem=2E No one else has reported it, thus it may
->depend on=20
->some specific configuration of your system=2E
->
+And the events from the test suite:
 
-I will try=2E
+type=PROCTITLE msg=audit(2020-02-18 15:28:01.594:307) : proctitle=/usr/bin/perl -w amcast_joinpart/test
+type=SYSCALL msg=audit(2020-02-18 15:28:01.594:307) : arch=x86_64 syscall=bind success=yes exit=0 a0=0x7 a1=0x558ebc428be0 a2=0xc a3=0x0 items=0 ppid=642 pid=645 auid=root uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=ttyS0 ses=1 comm=perl exe=/usr/bin/perl subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key=(null)
+type=UNKNOWN[1335] msg=audit(2020-02-18 15:28:01.594:307) : pid=645 uid=root auid=root tty=ttyS0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=perl exe=/usr/bin/perl nl-mcgrp=1 op=connect res=yes
 
->Was 5=2E6=2E0-rc5 OK?
->
+type=PROCTITLE msg=audit(2020-03-17 11:35:31.474:344) : proctitle=/usr/bin/perl -w amcast_joinpart/test 
+type=SYSCALL msg=audit(2020-03-17 11:35:31.474:344) : arch=x86_64 syscall=setsockopt success=yes exit=0 a0=0x7 a1=SOL_NETLINK a2=0x2 a3=0x7ffee21ca5f0 items=0 ppid=686 pid=689 auid=root uid=root gid=root euid=root suid=root fsuid=root egid=root sgid=root fsgid=root tty=ttyS0 ses=3 comm=perl exe=/usr/bin/perl subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 key=(null) 
+type=UNKNOWN[1335] msg=audit(2020-03-17 11:35:31.474:344) : pid=689 uid=root auid=root tty=ttyS0 ses=3 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=perl exe=/usr/bin/perl nl-mcgrp=1 op=disconnect res=yes 
 
-rc5 showed the same dmesg noise=2E
+type=UNKNOWN[1335] msg=audit(2020-01-17 10:36:24.051:295) : pid=674 uid=root auid=root tty=ttyS0 ses=3 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 comm=perl exe=/usr/bin/perl nl-mcgrp=1 op=disconnect res=yes
+
+Please see the upstream issue tracker at
+  https://github.com/linux-audit/audit-kernel/issues/28
+With the feature description at
+  https://github.com/linux-audit/audit-kernel/wiki/RFE-Audit-Multicast-Socket-Join-Part
+The testsuite support is at
+  https://github.com/rgbriggs/audit-testsuite/compare/ghak28-mcast-part-join
+  https://github.com/linux-audit/audit-testsuite/pull/93
+And the userspace support patch is at
+  https://github.com/linux-audit/audit-userspace/pull/114
+
+Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+
+---
+Note: subj attrs included due to missing syscall record for disconnect on close
+Note: tried refactor of subj attrs, but this is yet another new order.
+
+Changelog:
+v7:
+- rename audit_log_multicast_bind to audit_log_multicast
+
+v6:
+- rebased on 5.6-rc1 audit/next and audit log BPF
+- updated patch description sample records
+
+v5:
+- rebased on 5.5-rc1 audit/next
+- group bind/unbind ops
+- add audit context
+- justify message number skip
+- check audit_enabled
+- change field name from nlnk-grp to nl-mcgrp
+- fix whitespace issues
+
+v4:
+- 2017-10-13 sgrubb
+- squash to 1 patch
+- rebase on KERN_MODULE event
+- open code subj attrs
+
+v3:
+- 2016-11-30 sgrubb
+- rebase on REPLACE event
+- minimize audit_log_format calls
+- rename audit_log_bind to audit_log_multicast_bind
+
+v2:
+- 2015-07-23 sgrubb
+- spin off audit_log_task_simple in seperate patch
+
+v1:
+- 2014-10-07 rgb
+---
+ include/uapi/linux/audit.h |  1 +
+ kernel/audit.c             | 48 ++++++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 45 insertions(+), 4 deletions(-)
+
+diff --git a/include/uapi/linux/audit.h b/include/uapi/linux/audit.h
+index a534d71e689a..9b6a973f4cc3 100644
+--- a/include/uapi/linux/audit.h
++++ b/include/uapi/linux/audit.h
+@@ -117,6 +117,7 @@
+ #define AUDIT_TIME_INJOFFSET	1332	/* Timekeeping offset injected */
+ #define AUDIT_TIME_ADJNTPVAL	1333	/* NTP value adjustment */
+ #define AUDIT_BPF		1334	/* BPF subsystem */
++#define AUDIT_EVENT_LISTENER	1335	/* Task joined multicast read socket */
+ 
+ #define AUDIT_AVC		1400	/* SE Linux avc denial or grant */
+ #define AUDIT_SELINUX_ERR	1401	/* Internal SE Linux Errors */
+diff --git a/kernel/audit.c b/kernel/audit.c
+index b96331e1976d..612bd818f6d7 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -1520,20 +1520,60 @@ static void audit_receive(struct sk_buff  *skb)
+ 	audit_ctl_unlock();
+ }
+ 
++/* Log information about who is connecting to the audit multicast socket */
++static void audit_log_multicast(int group, const char *op, int err)
++{
++	const struct cred *cred;
++	struct tty_struct *tty;
++	char comm[sizeof(current->comm)];
++	struct audit_buffer *ab;
++
++	if (!audit_enabled)
++		return;
++
++	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_EVENT_LISTENER);
++	if (!ab)
++		return;
++
++	cred = current_cred();
++	tty = audit_get_tty();
++	audit_log_format(ab, "pid=%u uid=%u auid=%u tty=%s ses=%u",
++			 task_pid_nr(current),
++			 from_kuid(&init_user_ns, cred->uid),
++			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
++			 tty ? tty_name(tty) : "(none)",
++			 audit_get_sessionid(current));
++	audit_put_tty(tty);
++	audit_log_task_context(ab); /* subj= */
++	audit_log_format(ab, " comm=");
++	audit_log_untrustedstring(ab, get_task_comm(comm, current));
++	audit_log_d_path_exe(ab, current->mm); /* exe= */
++	audit_log_format(ab, " nl-mcgrp=%d op=%s res=%d", group, op, !err);
++	audit_log_end(ab);
++}
++
+ /* Run custom bind function on netlink socket group connect or bind requests. */
+-static int audit_bind(struct net *net, int group)
++static int audit_multicast_bind(struct net *net, int group)
+ {
++	int err = 0;
++
+ 	if (!capable(CAP_AUDIT_READ))
+-		return -EPERM;
++		err = -EPERM;
++	audit_log_multicast(group, "connect", err);
++	return err;
++}
+ 
+-	return 0;
++static void audit_multicast_unbind(struct net *net, int group)
++{
++	audit_log_multicast(group, "disconnect", 0);
+ }
+ 
+ static int __net_init audit_net_init(struct net *net)
+ {
+ 	struct netlink_kernel_cfg cfg = {
+ 		.input	= audit_receive,
+-		.bind	= audit_bind,
++		.bind	= audit_multicast_bind,
++		.unbind	= audit_multicast_unbind,
+ 		.flags	= NL_CFG_F_NONROOT_RECV,
+ 		.groups	= AUDIT_NLGRP_MAX,
+ 	};
+-- 
+1.8.3.1
 
