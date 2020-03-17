@@ -2,133 +2,101 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B35AC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F47C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65CFF20575
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9F720575
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 03:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgCQDTK (ORCPT
+        id S1726974AbgCQDXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Mar 2020 23:19:10 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58659 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgCQDTK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Mar 2020 23:19:10 -0400
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02H3IpDp047482;
-        Tue, 17 Mar 2020 12:18:51 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp);
- Tue, 17 Mar 2020 12:18:51 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 02H3Ip6f047472;
-        Tue, 17 Mar 2020 12:18:51 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: (from i-love@localhost)
-        by www262.sakura.ne.jp (8.15.2/8.15.2/Submit) id 02H3IpSx047471;
-        Tue, 17 Mar 2020 12:18:51 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Message-Id: <202003170318.02H3IpSx047471@www262.sakura.ne.jp>
-X-Authentication-Warning: www262.sakura.ne.jp: i-love set sender to penguin-kernel@i-love.sakura.ne.jp using -f
-Subject: Re: [patch] mm, oom: prevent soft lockup on memcg oom for UP systems
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
+        Mon, 16 Mar 2020 23:23:07 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:38864 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726823AbgCQDXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Mar 2020 23:23:07 -0400
+Received: from gwarestrin.me.apana.org.au ([192.168.0.7] helo=gwarestrin.arnor.me.apana.org.au)
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1jE2oW-0007Oi-Rq; Tue, 17 Mar 2020 14:22:45 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 17 Mar 2020 14:22:44 +1100
+Date:   Tue, 17 Mar 2020 14:22:44 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Silvano Di Ninno <silvano.dininno@nxp.com>,
+        Franck Lenormand <franck.lenormand@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v4 1/2] crypto: engine - support for parallel requests
+Message-ID: <20200317032244.GA18743@gondor.apana.org.au>
+References: <1583707893-23699-1-git-send-email-iuliana.prodan@nxp.com>
+ <1583707893-23699-2-git-send-email-iuliana.prodan@nxp.com>
+ <20200312032553.GB19920@gondor.apana.org.au>
+ <61c28d90-af55-25a1-3729-90a622f2a7b2@nxp.com>
 MIME-Version: 1.0
-Date:   Tue, 17 Mar 2020 12:18:51 +0900
-References: <8395df04-9b7a-0084-4bb5-e430efe18b97@i-love.sakura.ne.jp> <alpine.DEB.2.21.2003161648370.47327@chino.kir.corp.google.com>
-In-Reply-To: <alpine.DEB.2.21.2003161648370.47327@chino.kir.corp.google.com>
-Content-Type: text/plain; charset="ISO-2022-JP"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <61c28d90-af55-25a1-3729-90a622f2a7b2@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-David Rientjes wrote:
-> On Sat, 14 Mar 2020, Tetsuo Handa wrote:
-> > If current thread is an OOM victim, schedule_timeout_killable(1) will give other
-> > threads (including the OOM reaper kernel thread) CPU time to run, by leaving
-> > try_charge() path due to should_force_charge() == true and reaching do_exit() path
-> > instead of returning to userspace code doing "for (;;);".
+On Thu, Mar 12, 2020 at 01:05:32PM +0200, Horia Geantă wrote:
+> On 3/12/2020 5:26 AM, Herbert Xu wrote:
+> > On Mon, Mar 09, 2020 at 12:51:32AM +0200, Iuliana Prodan wrote:
+> >>
+> >>  	ret = enginectx->op.do_one_request(engine, async_req);
+> >> -	if (ret) {
+> >> -		dev_err(engine->dev, "Failed to do one request from queue: %d\n", ret);
+> >> -		goto req_err;
+> >> +	can_enq_more = ret;
+> >> +	if (can_enq_more < 0) {
+> >> +		dev_err(engine->dev, "Failed to do one request from queue: %d\n",
+> >> +			ret);
+> >> +		goto req_err_1;
+> >> +	}
 > > 
-> > Unless the problem is that current thread cannot reach should_force_charge() check,
-> > schedule_timeout_killable(1) should work.
-> > 
+> > So this now includes the case of the hardware queue being full
+> > and the request needs to be queued until space opens up again.
+> I see no difference when compared with existing implementation:
+> in both cases failing the transfer from SW queue to HW queue means
+> losing the request irrespective of the error code returned by .do_one_request.
 > 
-> No need to yield if current is the oom victim, allowing the oom reaper to 
-> run when it may not actually be able to free memory is not required.  It 
-> increases the likelihood that some other process schedules and is unable 
-> to yield back due to the memcg oom condition such that the victim doesn't 
-> get a chance to run again.
-> 
-> This happens because the victim is allowed to overcharge but other 
-> processes attached to an oom memcg hierarchy simply fail the charge.  We 
-> are then reliant on all memory chargers in the kernel to yield if their 
-> charges fail due to oom.  It's the only way to allow the victim to 
-> eventually run.
-> 
-> So the only change that I would make to your patch is to do this in 
-> mem_cgroup_out_of_memory() instead:
-> 
-> 	if (!fatal_signal_pending(current))
-> 		schedule_timeout_killable(1);
-> 
-> So we don't have this reliance on all other memory chargers to yield when 
-> their charge fails and there is no delay for victims themselves.
+> This doesn't mean it shouldn't be fixed.
 
-I see. You want below functions for environments where current thread can
-fail to resume execution for long if current thread once reschedules (e.g.
-UP kernel, many threads contended on one CPU).
+I don't think they are the same though.  With the existing code,
+you only ever have one outstanding request so a new one is only
+given over to the hardware after the previous one has completed.
+That means that the only errors you expect to get from the driver
+are fatal ones that you cannot recover from.
 
-/*
- * Give other threads CPU time, unless current thread was already killed.
- * Used when we prefer killed threads to continue execution (in a hope that
- * killed threads terminate quickly) over giving other threads CPU time.
- */
-signed long __sched schedule_timeout_killable_expedited(signed long timeout)
-{
-	if (unlikely(fatal_signal_pending(current)))
-		return timeout;
-	return schedule_timeout_killable(timeout);
-}
+With parallel requests, you will be giving as many requests to
+the driver as it can take.  In fact the error condition is now
+used to tell the engine to stop giving more requests.  This is
+in no way the same as a fatal error from before.
 
-/*
- * Latency reduction via explicit rescheduling in places that are safe,
- * but becomes no-op if current thread was already killed. Used when we
- * prefer killed threads to continue execution (in a hope that killed
- * threads terminate quickly) over giving other threads CPU time.
- */
-int cond_resched_expedited(void)
-{
-	if (unlikely(fatal_signal_pending(current)))
-		return 0;
-	return cond_resched();
-}
+We should not print out an error in this case and we should ensure
+that the request is put back on the queue and reprocessed when the
+driver comes back for more.
 
-> 
->  [ I'll still propose my change that adds cond_resched() to 
->    shrink_node_memcgs() because we can see need_resched set for a 
->    prolonged period of time without scheduling. ]
-
-As long as there is schedule_timeout_killable(), I'm fine with adding
-cond_resched() in other places.
-
-> 
-> If you agree, I'll propose your patch with a changelog that indicates it 
-> can fix the soft lockup issue for UP and can likely get a tested-by for 
-> it.
-> 
-
-Please go ahead.
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
