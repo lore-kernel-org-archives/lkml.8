@@ -6,66 +6,60 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB89C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C0CC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B85720752
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B83FB20409
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 22:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584484229;
-	bh=UikcPXzKIi3FqCpext+x38VLcTWWZqV5+lnLEXHxy8g=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:
-	 Cc:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ksv1JzJwCwu45XPGQ8l5E8UijSUou0viVVOexwc1+yaiYKrhuHPtqdC2Qspr1AG1w
-	 RpzZ0+mXUaA44OVD9re36RuJiqJdJXDKdIZyoS16PAtDv6TYu/BMqu0S7G51sk2QLV
-	 an6s1a2MEfKssTit3KsUO3dOnYmr5Xg88Ox8nEAY=
+	s=default; t=1584484233;
+	bh=69Vm+ZQ+trBq00La+Q/6ySMamY+DRfo+xpTdpnHr0Oc=;
+	h=Date:From:To:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:
+	 In-Reply-To:References:List-ID:From;
+	b=RIUydZvQALCzn6gHtlW5KwL52iV653YF8SsKawKBd7uP1wmSkhVw6VLVrOABFoIai
+	 K9z+rhB8dtSQhI41xNxQlsrVJKtZ+qaFgltweCvjoBwYuffWEFjuAm+hRfx5vNkZva
+	 fm6F2cqVlDgE9tRsiGepS2bIy1TZgj5Lr0mul/Eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgCQWa1 (ORCPT
+        id S1727128AbgCQWac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 18:30:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38766 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 18:30:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727132AbgCQWaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 18:30:25 -0400
+        id S1727232AbgCQWa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 18:30:29 -0400
 Received: from localhost (unknown [137.135.114.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9C932073E;
-        Tue, 17 Mar 2020 22:30:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6840A20738;
+        Tue, 17 Mar 2020 22:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584484225;
-        bh=UikcPXzKIi3FqCpext+x38VLcTWWZqV5+lnLEXHxy8g=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:
-         Cc:Cc:Subject:In-Reply-To:References:From;
-        b=qm3pZ04W3fXIEVnkfZjpafq14GsKMbLCxkWGJB4FDLI6NqwmbidA1mnyWRv7RDP8P
-         gjsAgiar3DNSlEIK8tKp+oJsX1sWG6ISZL1SBcsmSFpE4P1XWqdVgqXR/Lzby/G/ee
-         VWO3PBXwgD5lMTreF8cCvFESjunKEP6duC291wuE=
-Date:   Tue, 17 Mar 2020 22:30:24 +0000
+        s=default; t=1584484228;
+        bh=69Vm+ZQ+trBq00La+Q/6ySMamY+DRfo+xpTdpnHr0Oc=;
+        h=Date:From:To:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Subject:
+         In-Reply-To:References:From;
+        b=CTUc7HSF39IWepT00n+94v26NGOm7rTWCAGERCPEOdcK73rLbTqIMTxci2mUxSSU8
+         wuIC7mVNpPD7zWRfvVxJZ1/x1+LFcffGrDw2ePB3ezcOjqw3eR280zNZJUYO3+nvrV
+         Lt2vzX2pAz3+VSPYxndH1FjK+PMAO0jb1yosheQI=
+Date:   Tue, 17 Mar 2020 22:30:27 +0000
 From:   Sasha Levin <sashal@kernel.org>
 To:     Sasha Levin <sashal@kernel.org>
-To:     Kim Phillips <kim.phillips@amd.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Ingo Molnar <mingo@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Michael Petlan <mpetlan@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org
-Cc:     x86@kernel.org
+To:     Eric Biggers <ebiggers@kernel.org>
+To:     Eric Biggers <ebiggers@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>
 Cc:     stable@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jeff Vander Stoep <jeffv@google.com>
+Cc:     Jessica Yu <jeyu@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>
+Cc:     NeilBrown <neilb@suse.com>
 Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH 1/3 RESEND] perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
-In-Reply-To: <20200311191323.13124-1-kim.phillips@amd.com>
-References: <20200311191323.13124-1-kim.phillips@amd.com>
-Message-Id: <20200317223024.D9C932073E@mail.kernel.org>
+Subject: Re: [PATCH v3 2/5] fs/filesystems.c: downgrade user-reachable WARN_ONCE() to pr_warn_once()
+In-Reply-To: <20200314213426.134866-3-ebiggers@kernel.org>
+References: <20200314213426.134866-3-ebiggers@kernel.org>
+Message-Id: <20200317223028.6840A20738@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -75,43 +69,20 @@ Hi
 
 [This is an automated email]
 
-This commit has been processed because it contains a "Fixes:" tag
-fixing commit: c43ca5091a37 ("perf/x86/amd: Add support for AMD NB and L2I "uncore" counters").
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
 
 The bot has tested the following trees: v5.5.9, v5.4.25, v4.19.109, v4.14.173, v4.9.216, v4.4.216.
 
 v5.5.9: Build OK!
 v5.4.25: Build OK!
-v4.19.109: Failed to apply! Possible dependencies:
-    88dbe3c94e27 ("perf/core, arch/x86: Strengthen exclusion checks with PERF_PMU_CAP_NO_EXCLUDE")
-
-v4.14.173: Failed to apply! Possible dependencies:
-    88dbe3c94e27 ("perf/core, arch/x86: Strengthen exclusion checks with PERF_PMU_CAP_NO_EXCLUDE")
-
+v4.19.109: Build OK!
+v4.14.173: Build OK!
 v4.9.216: Failed to apply! Possible dependencies:
-    1650dfd1a9bc ("x86/events, drivers/amd/iommu: Prepare for multiple IOMMUs support")
-    25df39f2cfd0 ("x86/events/amd/iommu: Enable support for multiple IOMMUs")
-    51686546304f ("x86/events/amd/iommu: Fix sysfs perf attribute groups")
-    6aad0c626905 ("x86/events/amd/iommu: Clean up bitwise operations")
-    88dbe3c94e27 ("perf/core, arch/x86: Strengthen exclusion checks with PERF_PMU_CAP_NO_EXCLUDE")
-    cf25f904ef75 ("x86/events/amd/iommu: Add IOMMU-specific hw_perf_event struct")
-    f5863a00e73c ("x86/events/amd/iommu.c: Modify functions to query max banks and counters")
-    f9573e53f123 ("x86/events/amd/iommu: Declare pr_fmt() format")
+    41124db869b7 ("fs: warn in case userspace lied about modprobe return")
 
 v4.4.216: Failed to apply! Possible dependencies:
-    1229735b290d ("perf/x86/intel/uncore: Make code more readable")
-    1a246b9f58c6 ("perf/x86/intel/uncore: Convert to hotplug state machine")
-    31d50c551e30 ("perf/x86/amd/uncore: Do not register a task ctx for uncore PMUs")
-    4f089678d071 ("perf/x86/intel/uncore: Fix error handling")
-    5485592c1795 ("perf/x86/intel/uncore: Make PCI and MSR uncore independent")
-    77af0037de0a ("perf/x86/intel/uncore: Add Knights Landing uncore PMU support")
-    7d762e49c211 ("perf/x86/amd/uncore: Prevent use after free")
-    83f8ebd2eb45 ("perf/x86/intel/uncore: Add sanity checks for PCI dev package id")
-    96b2bd3866a0 ("perf/x86/amd/uncore: Convert to hotplug state machine")
-    a46195f1782e ("perf/x86/intel/uncore: Clean up hardware on exit")
-    a83f4c00dd6a ("perf/x86/amd/uncore: Rename 'L2' to 'LLC'")
-    cf6d445f6897 ("perf/x86/uncore: Track packages, not per CPU data")
-    ffeda0038032 ("perf/x86/intel/uncore: Simplify error rollback")
+    41124db869b7 ("fs: warn in case userspace lied about modprobe return")
 
 
 NOTE: The patch will not be queued to stable trees until it is upstream.
