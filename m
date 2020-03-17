@@ -2,125 +2,136 @@ Return-Path: <SRS0=kRID=5C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BAEC10F29
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EE5C10F29
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 075C02051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="R3suC07y"
+	by mail.kernel.org (Postfix) with ESMTP id 462E62051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Mar 2020 11:22:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584444179;
+	bh=PM8pvE6OwB8LDMCq4KfLYQAvcmFk6uCBwLt+Y0/b59A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TI5XZbujGnCdi1WYkokSpQCRL+3gmfMPzNLzjAfy6dr35Bqiw269bnC8ijsBh7oEJ
+	 v4ss9H9edz3k2t/jNywqwJtRi9MpSohxExfCUvkfJbTPzArXVG9oC5cYFSesZOYvYz
+	 +M4T/BeLgRNAxQ1E0u+Hg79YdVwo97ahnsIJuHTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgCQLWU (ORCPT
+        id S1727486AbgCQK7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 07:22:20 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49131 "EHLO ozlabs.org"
+        Tue, 17 Mar 2020 06:59:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbgCQLWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:22:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727468AbgCQK7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 06:59:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hW3W3wNXzB3t3;
-        Tue, 17 Mar 2020 22:22:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1584444136;
-        bh=7m6xTV6ORC9fimP591QotV0DExi6ArwAslaYAD6a8gE=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=R3suC07yLLownGnMiQtBzYlWQBjC2Y2Mr1fjgaMhi7I03Tw6ufjZw4WoaZXiqoW7X
-         9w7zSb2LsfkCq8qcUn9o6JDfZtIASBH4sFz8ntWfjzvCQz05fGey3e+m483q7aENNl
-         WTjER2R9FHM0pwErCXzPUaOlqszJZ/dyxvLAY/7h0QKpfmECwhSvG1su6e0j9+Ibat
-         SXe0q3bo4rMn5DbePzxlsRagSr8oOu986j8OGuQrkaCUhpM00HGe9unpetpD+aO/eV
-         wcdxLe1dn62eA00W63BAXp3KDbgrdVnAh5ByL/QW192YlMk3FeRuzPn7et6TB3Nz1X
-         57yXL6Iyl5JEg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     =?utf-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        trivial@kernel.org, kernel@vivo.com,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v3] powerpc/fsl-85xx: fix compile error
-In-Reply-To: <AJUA5gAVCMaMlIkPsaTC0KqL.3.1584357605616.Hmail.wenhu.wang@vivo.com>
-References: <AJUA5gAVCMaMlIkPsaTC0KqL.3.1584357605616.Hmail.wenhu.wang@vivo.com>
-Date:   Tue, 17 Mar 2020 22:22:13 +1100
-Message-ID: <878sjzfcpm.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9422420658;
+        Tue, 17 Mar 2020 10:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584442775;
+        bh=PM8pvE6OwB8LDMCq4KfLYQAvcmFk6uCBwLt+Y0/b59A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2CCiXbg0BzB9iJG5/slSaTB7yquxdMErytO0BNCkmSgYM4q9MMOU5HYkWTE0DnSCp
+         XZtPm9gNdtl55KlE93AcBbzEjiIuMH0jJ8m3HsXyB8rb9FXyxJrspczAq6RDDS5v7Z
+         Odaeh92IiyaFe99Bjxcy/7huFko64zGknQZ6K+es=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tommi Rantala <tommi.t.rantala@nokia.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.19 78/89] perf bench futex-wake: Restore thread count default to online CPU count
+Date:   Tue, 17 Mar 2020 11:55:27 +0100
+Message-Id: <20200317103309.069345868@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200317103259.744774526@linuxfoundation.org>
+References: <20200317103259.744774526@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E7=8E=8B=E6=96=87=E8=99=8E <wenhu.wang@vivo.com> writes:
-> From: Michael Ellerman <mpe@ellerman.id.au>
->  Date: 2020-03-16 17:41:12
-> To:WANG Wenhu <wenhu.wang@vivo.com>,Benjamin Herrenschmidt <benh@kernel.c=
-rashing.org>,Paul Mackerras <paulus@samba.org>,WANG Wenhu <wenhu.wang@vivo.=
-com>,Allison Randal <allison@lohutok.net>,Richard Fontana <rfontana@redhat.=
-com>,Greg Kroah-Hartman <gregkh@linuxfoundation.org>,Thomas Gleixner <tglx@=
-linutronix.de>,linuxppc-dev@lists.ozlabs.org,linux-kernel@vger.kernel.org
->  cc: trivial@kernel.org,kernel@vivo.com,stable <stable@vger.kernel.org>
-> Subject: Re: [PATCH v3] powerpc/fsl-85xx: fix compile error>WANG Wenhu <w=
-enhu.wang@vivo.com> writes:
->>> Include "linux/of_address.h" to fix the compile error for
->>> mpc85xx_l2ctlr_of_probe() when compiling fsl_85xx_cache_sram.c.
->>>
->>>   CC      arch/powerpc/sysdev/fsl_85xx_l2ctlr.o
->>> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c: In function =E2=80=98mpc85xx_l2c=
-tlr_of_probe=E2=80=99:
->>> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:11: error: implicit declaratio=
-n of function =E2=80=98of_iomap=E2=80=99; did you mean =E2=80=98pci_iomap=
-=E2=80=99? [-Werror=3Dimplicit-function-declaration]
->>>   l2ctlr =3D of_iomap(dev->dev.of_node, 0);
->>>            ^~~~~~~~
->>>            pci_iomap
->>> arch/powerpc/sysdev/fsl_85xx_l2ctlr.c:90:9: error: assignment makes poi=
-nter from integer without a cast [-Werror=3Dint-conversion]
->>>   l2ctlr =3D of_iomap(dev->dev.of_node, 0);
->>>          ^
->>> cc1: all warnings being treated as errors
->>> scripts/Makefile.build:267: recipe for target 'arch/powerpc/sysdev/fsl_=
-85xx_l2ctlr.o' failed
->>> make[2]: *** [arch/powerpc/sysdev/fsl_85xx_l2ctlr.o] Error 1
->>>
->>> Fixes: commit 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
->>
->>The syntax is:
->>
->>Fixes: 6db92cc9d07d ("powerpc/85xx: add cache-sram support")
->>
->>> Cc: stable <stable@vger.kernel.org>
->>
->>The commit above went into v2.6.37.
->>
->>So no one has noticed this bug since then, how? Or did something else
->>change to expose the problem?
->
-> Actually a hard question to answer cause it also left me scratching for l=
-ong.
-> However, I can not find right or definite answer.
+From: Tommi Rantala <tommi.t.rantala@nokia.com>
 
-Oh, actually it's fairly straight forward, the code can't be built at
-all in upstream because CONFIG_FSL_85XX_CACHE_SRAM is not selectable or
-selected by anything.
+commit f649bd9dd5d5004543bbc3c50b829577b49f5d75 upstream.
 
-You sent a patch previously to make it selectable, which Scott thought
-was a bad idea.
+Since commit 3b2323c2c1c4 ("perf bench futex: Use cpumaps") the default
+number of threads the benchmark uses got changed from number of online
+CPUs to zero:
 
-So this whole file is dead code as far as I'm concerned, so patches for
-it definitely do not need to go to stable.
+  $ perf bench futex wake
+  # Running 'futex/wake' benchmark:
+  Run summary [PID 15930]: blocking on 0 threads (at [private] futex 0x558b8ee4bfac), waking up 1 at a time.
+  [Run 1]: Wokeup 0 of 0 threads in 0.0000 ms
+  [...]
+  [Run 10]: Wokeup 0 of 0 threads in 0.0000 ms
+  Wokeup 0 of 0 threads in 0.0004 ms (+-40.82%)
 
-If you want to add a user for it then please send a series doing that,
-and this commit can be the first.
+Restore the old behavior by grabbing the number of online CPUs via
+cpu->nr:
 
-cheers
+  $ perf bench futex wake
+  # Running 'futex/wake' benchmark:
+  Run summary [PID 18356]: blocking on 8 threads (at [private] futex 0xb3e62c), waking up 1 at a time.
+  [Run 1]: Wokeup 8 of 8 threads in 0.0260 ms
+  [...]
+  [Run 10]: Wokeup 8 of 8 threads in 0.0270 ms
+  Wokeup 8 of 8 threads in 0.0419 ms (+-24.35%)
+
+Fixes: 3b2323c2c1c4 ("perf bench futex: Use cpumaps")
+Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lore.kernel.org/lkml/20200305083714.9381-3-tommi.t.rantala@nokia.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ tools/perf/bench/futex-wake.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/tools/perf/bench/futex-wake.c
++++ b/tools/perf/bench/futex-wake.c
+@@ -42,7 +42,7 @@ static bool done = false, silent = false
+ static pthread_mutex_t thread_lock;
+ static pthread_cond_t thread_parent, thread_worker;
+ static struct stats waketime_stats, wakeup_stats;
+-static unsigned int ncpus, threads_starting, nthreads = 0;
++static unsigned int threads_starting, nthreads = 0;
+ static int futex_flag = 0;
+ 
+ static const struct option options[] = {
+@@ -140,7 +140,7 @@ int bench_futex_wake(int argc, const cha
+ 	sigaction(SIGINT, &act, NULL);
+ 
+ 	if (!nthreads)
+-		nthreads = ncpus;
++		nthreads = cpu->nr;
+ 
+ 	worker = calloc(nthreads, sizeof(*worker));
+ 	if (!worker)
+
+
