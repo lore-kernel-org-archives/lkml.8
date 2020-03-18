@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D85EC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A638C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A60D20409
+	by mail.kernel.org (Postfix) with ESMTP id D80B220409
 	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565383;
-	bh=PCQiCcLpjOfTjr2w4cHvIxBjxX8NXcJ9mXahb2ETR8Q=;
+	s=default; t=1584565384;
+	bh=ctyX5zrqCFcoyk2sSXO2XUC6BM1qpvOncSDgBlMNsKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wula61pcxmX+HPz0qjcSSfTRFYsvflc4/uE8QssQjH5Em9dheu/TqVDYTHz2rWhRR
-	 wXN9Yi4JMlzl3DwvRxtmWwl6jaa8tOg4jygFkA3rabkjRY3rbOImXIB9lUMH7mqo1P
-	 msJA6NZgit3AN2xa6ZBU+luvrW/gJkXgItwQel0Q=
+	b=ToZT+q3ZLdmQ0mBXhHtvoXfpEW9767LRLTIrbZWgOYi9Zi1ZtdH2UdFSNkV3DTW0H
+	 qeuZmC70YrNLYBOjA9rfvuSJaSCjQM75AvpNj3/BEdscdOJg+8kIscef2mp8kTLGsd
+	 od5j6+3/TBVw6KJygD4hCD+lK5qxPT9bsLmga+4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgCRUzo (ORCPT
+        id S1727128AbgCRVDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:55:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56138 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:03:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbgCRUzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:39 -0400
+        id S1728437AbgCRUzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C72EB208DB;
-        Wed, 18 Mar 2020 20:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8FE4208FE;
+        Wed, 18 Mar 2020 20:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564938;
-        bh=PCQiCcLpjOfTjr2w4cHvIxBjxX8NXcJ9mXahb2ETR8Q=;
+        s=default; t=1584564944;
+        bh=ctyX5zrqCFcoyk2sSXO2XUC6BM1qpvOncSDgBlMNsKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1CZk27v5Hizcf+vaPfM1MaaQmMY0mh78baAgcNFU/kT7Vknq/dyB/4Sfb3XZmN8am
-         hewM2OzyUVBbRCU649sJoYq8NR2jFPRXxePCSDB9KQRNUIZGCEiHq2qP7mUkjLsbi2
-         kzcQztzqLzLO9WnmuNQNaQk+Z+uCA28gj6J8yYCY=
+        b=bDnkOcwo6wVbPaMFVp5HWCLV11G3ry2s2Fhv0sSg3TepDiXS0JD7WfqzFLO9ZzYsA
+         oxXIEo54Ha0VK3Mew0CWmtfO4+InmhwMzLYvZ2ypJZj5k9mJKIWc27JIOn37yCdqjz
+         rjJmbP6VjYH/OjERIB3mIx1HTDQuPZiQcSdmcCQA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Wiesner <jwiesner@suse.com>,
-        Per Sundstrom <per.sundstrom@redqube.se>,
-        Eric Dumazet <edumazet@google.com>,
-        Mahesh Bandewar <maheshb@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/37] ipvlan: do not add hardware address of master to its unicast filter list
-Date:   Wed, 18 Mar 2020 16:54:56 -0400
-Message-Id: <20200318205509.17053-24-sashal@kernel.org>
+Cc:     Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 29/37] i2c: gpio: suppress error on probe defer
+Date:   Wed, 18 Mar 2020 16:55:01 -0400
+Message-Id: <20200318205509.17053-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
@@ -62,73 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Wiesner <jwiesner@suse.com>
+From: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
 
-[ Upstream commit 63aae7b17344d4b08a7d05cb07044de4c0f9dcc6 ]
+[ Upstream commit 3747cd2efe7ecb9604972285ab3f60c96cb753a8 ]
 
-There is a problem when ipvlan slaves are created on a master device that
-is a vmxnet3 device (ipvlan in VMware guests). The vmxnet3 driver does not
-support unicast address filtering. When an ipvlan device is brought up in
-ipvlan_open(), the ipvlan driver calls dev_uc_add() to add the hardware
-address of the vmxnet3 master device to the unicast address list of the
-master device, phy_dev->uc. This inevitably leads to the vmxnet3 master
-device being forced into promiscuous mode by __dev_set_rx_mode().
+If a GPIO we are trying to use is not available and we are deferring
+the probe, don't output an error message.
+This seems to have been the intent of commit 05c74778858d
+("i2c: gpio: Add support for named gpios in DT") but the error was
+still output due to not checking the updated 'retdesc'.
 
-Promiscuous mode is switched on the master despite the fact that there is
-still only one hardware address that the master device should use for
-filtering in order for the ipvlan device to be able to receive packets.
-The comment above struct net_device describes the uc_promisc member as a
-"counter, that indicates, that promiscuous mode has been enabled due to
-the need to listen to additional unicast addresses in a device that does
-not implement ndo_set_rx_mode()". Moreover, the design of ipvlan
-guarantees that only the hardware address of a master device,
-phy_dev->dev_addr, will be used to transmit and receive all packets from
-its ipvlan slaves. Thus, the unicast address list of the master device
-should not be modified by ipvlan_open() and ipvlan_stop() in order to make
-ipvlan a workable option on masters that do not support unicast address
-filtering.
-
-Fixes: 2ad7bf3638411 ("ipvlan: Initial check-in of the IPVLAN driver")
-Reported-by: Per Sundstrom <per.sundstrom@redqube.se>
-Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Mahesh Bandewar <maheshb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 05c74778858d ("i2c: gpio: Add support for named gpios in DT")
+Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ipvlan/ipvlan_main.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-gpio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
-index 0115a2868933c..87f605a33c37a 100644
---- a/drivers/net/ipvlan/ipvlan_main.c
-+++ b/drivers/net/ipvlan/ipvlan_main.c
-@@ -236,7 +236,6 @@ static void ipvlan_uninit(struct net_device *dev)
- static int ipvlan_open(struct net_device *dev)
- {
- 	struct ipvl_dev *ipvlan = netdev_priv(dev);
--	struct net_device *phy_dev = ipvlan->phy_dev;
- 	struct ipvl_addr *addr;
+diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
+index c008d209f0b83..87014d144ccdc 100644
+--- a/drivers/i2c/busses/i2c-gpio.c
++++ b/drivers/i2c/busses/i2c-gpio.c
+@@ -248,7 +248,7 @@ static struct gpio_desc *i2c_gpio_get_desc(struct device *dev,
+ 	if (ret == -ENOENT)
+ 		retdesc = ERR_PTR(-EPROBE_DEFER);
  
- 	if (ipvlan->port->mode == IPVLAN_MODE_L3 ||
-@@ -250,7 +249,7 @@ static int ipvlan_open(struct net_device *dev)
- 		ipvlan_ht_addr_add(ipvlan, addr);
- 	rcu_read_unlock();
+-	if (ret != -EPROBE_DEFER)
++	if (PTR_ERR(retdesc) != -EPROBE_DEFER)
+ 		dev_err(dev, "error trying to get descriptor: %d\n", ret);
  
--	return dev_uc_add(phy_dev, phy_dev->dev_addr);
-+	return 0;
- }
- 
- static int ipvlan_stop(struct net_device *dev)
-@@ -262,8 +261,6 @@ static int ipvlan_stop(struct net_device *dev)
- 	dev_uc_unsync(phy_dev, dev);
- 	dev_mc_unsync(phy_dev, dev);
- 
--	dev_uc_del(phy_dev, phy_dev->dev_addr);
--
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(addr, &ipvlan->addrs, anode)
- 		ipvlan_ht_addr_del(addr);
+ 	return retdesc;
 -- 
 2.20.1
 
