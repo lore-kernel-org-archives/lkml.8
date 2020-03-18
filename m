@@ -2,272 +2,108 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2383AC5ACD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C53C5ACD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E730920714
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E7820714
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:53:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yflygsXu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KxMvDqah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgCROvq (ORCPT
+        id S1726855AbgCROx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:51:46 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36916 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726638AbgCROvq (ORCPT
+        Wed, 18 Mar 2020 10:53:26 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:52067 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726638AbgCROx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:51:46 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02IEcWpY031412;
-        Wed, 18 Mar 2020 15:51:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=AtAQ6Omp1kqvN3R2P3Ojq/dUkGTPHDTP71rAjUnsU+g=;
- b=yflygsXu04iS8mLX+60UttjdYpPiJKyzWBEm3v0ejRG2+CyZykKK438rf0MPYBFVUn5S
- xVwFRl3IiFHH4EqdKie/Zx/GEbimNiSf4jv4jZBgjWY6elmjJU3GMq4FQTlNHSKF5AyD
- cWgZZdUtdcpUvRKPKe4v1MW3k2qLxPkKVbqediBQlB9P7yWn9b0dePUyb4mkavF69xjm
- VxMpgDs9PZ7yEzpO2vqm7ZWdeKVcDvdKbcnCq3xD5VysVXcSSE3Yfc0qGtrNNx9YqA+6
- e453O+qAQjlyAFfCBDGs11drAWv30u6NoRI5cbIYkETCBvlZdRfWgnigfIn0Ny0VTVqT Hg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yu95um43b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 15:51:21 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3C62C10002A;
-        Wed, 18 Mar 2020 15:51:20 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1FDE42AE6B7;
-        Wed, 18 Mar 2020 15:51:20 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar 2020 15:51:19
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <robh+dt@kernel.org>, <jic23@kernel.org>
-CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
-        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <fabrice.gasnier@st.com>,
-        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dt-bindings: iio: dac: stm32-dac: convert bindings to json-schema
-Date:   Wed, 18 Mar 2020 15:50:37 +0100
-Message-ID: <1584543037-32095-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 18 Mar 2020 10:53:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584543205;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8WKtJ0NoeW5X7Z6TZZcRE25TjkVLqGWMqe9mT+XKLH4=;
+        b=KxMvDqaho/8gR34f2Z0QSgoB7Xg14MwS+Tm/IArEN3oeHdOmCUHFZ3cCqwCcSErL6Nf9cJ
+        L/Kbv/lo6425+j37wDzlGxXTyjy8bwhGYgxSoZDACm14FxHvpaovMBmOUBGHnjUG0WSCWK
+        wQ0JnLKYgz+Dfgv83U9bfNXEytZQNPc=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-253-A0-5DACsPqqLYNW4_G35cg-1; Wed, 18 Mar 2020 10:53:22 -0400
+X-MC-Unique: A0-5DACsPqqLYNW4_G35cg-1
+Received: by mail-wr1-f70.google.com with SMTP id d17so676233wrw.19
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 07:53:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=8WKtJ0NoeW5X7Z6TZZcRE25TjkVLqGWMqe9mT+XKLH4=;
+        b=SViTuiScot+ZGIifvVKD/HkWPdLml51pYCWTdLpw5VnE4AyrUkOzlc1CtIRnqOdym0
+         a9aT5RnlwXzUkdsqe/fXE9GYeXJOP5+7UI9ksyCtKAQcYYz5fXOd7o/cpPAdXn/Z053M
+         q9j91wO30+IkSp2eLd650Zm8i3xi2htGGwEL9Z8Hs1LA8JykxHuARBDZgJzdRrchOGvx
+         Gngu1+3j3Pw4pdxmdbJxZ0G5nNSZAs7OuNpUV0sbi7+cnbVG0tft9sDGf0tCnwu4hLF+
+         5dbudRKVpyonfziKS9M25HQ3FRs3LvsaYWqMWlBEyGcemevTp7faktTEzegQbnZEQTUG
+         0C6Q==
+X-Gm-Message-State: ANhLgQ3pcqk3v3vQkaZJdGZPEyKr6Sh48SrBZR3kKDAIVq/DGo7SFXBE
+        vEkuXZSQGablr3U/ILb6z1XRk7xO1C0Zd5xrkxsWkOGTbNNrQSXWyWwHtvsBsAEMI72NDin2XFb
+        10hLpxvI7fREOQHhW7TGciRWb
+X-Received: by 2002:a1c:2701:: with SMTP id n1mr5686045wmn.180.1584543201132;
+        Wed, 18 Mar 2020 07:53:21 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsEFavcmZ92zPR5GFapmD2k6UNbKOWgwr1iImA3etdVN9BHmNhPJHNXPkEEJZIZmcDqYJmUaA==
+X-Received: by 2002:a1c:2701:: with SMTP id n1mr5686021wmn.180.1584543200952;
+        Wed, 18 Mar 2020 07:53:20 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id q10sm9326043wrx.12.2020.03.18.07.53.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 07:53:20 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: nSVM: check for EFER.SVME=1 before entering guest
+In-Reply-To: <1584535300-6571-1-git-send-email-pbonzini@redhat.com>
+References: <1584535300-6571-1-git-send-email-pbonzini@redhat.com>
+Date:   Wed, 18 Mar 2020 15:53:19 +0100
+Message-ID: <877dzh3eao.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-18_06:2020-03-18,2020-03-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 DAC binding to DT schema format using json-schema
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
- .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
- 2 files changed, 110 insertions(+), 63 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
- create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
+> EFER is set for L2 using svm_set_efer, which hardcodes EFER_SVME to 1 and hides
+> an incorrect value for EFER.SVME in the L1 VMCB.  Perform the check manually
+> to detect invalid guest state.
+>
+> Reported-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/svm.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 08568ae9f7a1..2125c6ae5951 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -3558,6 +3558,9 @@ static bool nested_svm_vmrun_msrpm(struct vcpu_svm *svm)
+>  
+>  static bool nested_vmcb_checks(struct vmcb *vmcb)
+>  {
+> +	if ((vmcb->save.efer & EFER_SVME) == 0)
+> +		return false;
+> +
+>  	if ((vmcb->control.intercept & (1ULL << INTERCEPT_VMRUN)) == 0)
+>  		return false;
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
-deleted file mode 100644
-index bf2925c..00000000
---- a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
-+++ /dev/null
-@@ -1,63 +0,0 @@
--STMicroelectronics STM32 DAC
--
--The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
--may be configured in 8 or 12-bit mode. It has two output channels, each with
--its own converter.
--It has built-in noise and triangle waveform generator and supports external
--triggers for conversions. The DAC's output buffer allows a high drive output
--current.
--
--Contents of a stm32 dac root node:
-------------------------------------
--Required properties:
--- compatible: Should be one of:
--  "st,stm32f4-dac-core"
--  "st,stm32h7-dac-core"
--- reg: Offset and length of the device's register set.
--- clocks: Must contain an entry for pclk (which feeds the peripheral bus
--  interface)
--- clock-names: Must be "pclk".
--- vref-supply: Phandle to the vref+ input analog reference supply.
--- #address-cells = <1>;
--- #size-cells = <0>;
--
--Optional properties:
--- resets: Must contain the phandle to the reset controller.
--- A pinctrl state named "default" for each DAC channel may be defined to set
--  DAC_OUTx pin in mode of operation for analog output on external pin.
--
--Contents of a stm32 dac child node:
-------------------------------------
--DAC core node should contain at least one subnode, representing a
--DAC instance/channel available on the machine.
--
--Required properties:
--- compatible: Must be "st,stm32-dac".
--- reg: Must be either 1 or 2, to define (single) channel in use
--- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
--  Documentation/devicetree/bindings/iio/iio-bindings.txt
--
--Example:
--	dac: dac@40007400 {
--		compatible = "st,stm32h7-dac-core";
--		reg = <0x40007400 0x400>;
--		clocks = <&clk>;
--		clock-names = "pclk";
--		vref-supply = <&reg_vref>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&dac_out1 &dac_out2>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		dac1: dac@1 {
--			compatible = "st,stm32-dac";
--			#io-channels-cells = <1>;
--			reg = <1>;
--		};
--
--		dac2: dac@2 {
--			compatible = "st,stm32-dac";
--			#io-channels-cells = <1>;
--			reg = <2>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
-new file mode 100644
-index 00000000..2b4a955
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
-@@ -0,0 +1,110 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/bindings/iio/dac/st,stm32-dac.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: STMicroelectronics STM32 DAC bindings
-+
-+description: |
-+  The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
-+  may be configured in 8 or 12-bit mode. It has two output channels, each with
-+  its own converter.
-+  It has built-in noise and triangle waveform generator and supports external
-+  triggers for conversions. The DAC's output buffer allows a high drive output
-+  current.
-+
-+maintainers:
-+  - Fabrice Gasnier <fabrice.gasnier@st.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32f4-dac-core
-+      - st,stm32h7-dac-core
-+
-+  reg:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+
-+  vref-supply:
-+    description: Phandle to the vref input analog reference voltage.
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - vref-supply
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+patternProperties:
-+  "^dac@[1-2]+$":
-+    type: object
-+    description:
-+      A DAC block node should contain at least one subnode, representing an
-+      DAC instance/channel available on the machine.
-+
-+    properties:
-+      compatible:
-+        const: st,stm32-dac
-+
-+      reg:
-+        description: Must be either 1 or 2, to define (single) channel in use
-+        enum: [1, 2]
-+
-+      '#io-channel-cells':
-+        const: 1
-+
-+    additionalProperties: false
-+
-+    required:
-+      - compatible
-+      - reg
-+      - '#io-channel-cells'
-+
-+examples:
-+  - |
-+    // Example on stm32mp157c
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    dac: dac@40017000 {
-+      compatible = "st,stm32h7-dac-core";
-+      reg = <0x40017000 0x400>;
-+      clocks = <&rcc DAC12>;
-+      clock-names = "pclk";
-+      vref-supply = <&vref>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      dac@1 {
-+        compatible = "st,stm32-dac";
-+        #io-channel-cells = <1>;
-+        reg = <1>;
-+      };
-+
-+      dac@2 {
-+        compatible = "st,stm32-dac";
-+        #io-channel-cells = <1>;
-+        reg = <2>;
-+      };
-+    };
-+
-+...
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
 -- 
-2.7.4
+Vitaly
 
