@@ -2,291 +2,262 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F54C43332
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413F5C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0981020753
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6122076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbgCRXtl (ORCPT
+        id S1727320AbgCRXuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:49:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25184 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726934AbgCRXtl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:49:41 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02INXvQ1034319;
-        Wed, 18 Mar 2020 19:49:38 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yu7fsde1b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 19:49:38 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02INjJk0021708;
-        Wed, 18 Mar 2020 23:49:37 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma01dal.us.ibm.com with ESMTP id 2yrpw75cpt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 23:49:37 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02INnZ4U37683512
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 23:49:35 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B0D06A04F;
-        Wed, 18 Mar 2020 23:49:35 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 66B076A058;
-        Wed, 18 Mar 2020 23:49:35 +0000 (GMT)
-Received: from crimini9.aus.stglabs.ibm.com (unknown [9.40.192.141])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Wed, 18 Mar 2020 23:49:35 +0000 (GMT)
-Received: (from gcwilson@localhost)
-        by crimini9.aus.stglabs.ibm.com (8.15.2/8.15.2/Submit) id 02INnXCC206129;
-        Wed, 18 Mar 2020 19:49:33 -0400
-X-Authentication-Warning: crimini9.aus.stglabs.ibm.com: gcwilson set sender to gcwilson@linux.ibm.com using -f
-From:   George Wilson <gcwilson@linux.ibm.com>
-To:     linux-integrity@vger.kernel.org
-Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Nayna Jain <nayna@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Linh Pham <phaml@us.ibm.com>
-Subject: [PATCH v3] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
-Date:   Wed, 18 Mar 2020 19:49:27 -0400
-Message-Id: <20200318234927.206075-1-gcwilson@linux.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 18 Mar 2020 19:50:02 -0400
+Received: from mga14.intel.com ([192.55.52.115]:26641 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727202AbgCRXuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 19:50:02 -0400
+IronPort-SDR: Mm3UoBM9HHqdRuZxLSsyXe3BcXhv0Hzl2/SesM1OXU+a+pFDx/9/8eqZTB0QXQIBieEJIlrI8H
+ 88u4097rWNlg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 16:50:01 -0700
+IronPort-SDR: kVtJTVEAVMhtSzpUyBStutr7HyqH8XR7s9ed6eMUHVt2s3jzbCAqsw1OBcL8xea/kga08wMYRB
+ sTaDgLaeWmRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,569,1574150400"; 
+   d="scan'208";a="391621348"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 18 Mar 2020 16:49:59 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jEiRi-000Enk-PA; Thu, 19 Mar 2020 07:49:58 +0800
+Date:   Thu, 19 Mar 2020 07:49:53 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/kdump] BUILD SUCCESS
+ e4160b2e4b02377c67f8ecd05786811598f39acd
+Message-ID: <5e72b3a1.JVy1i/8n4M3UnHZQ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-18_07:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- mlxlogscore=999 suspectscore=1 bulkscore=0 phishscore=0 malwarescore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003180099
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tpm_ibmvtpm_send() can fail during PowerVM Live Partition Mobility resume
-with an H_CLOSED return from ibmvtpm_send_crq().  The PAPR says, 'The
-“partner partition suspended” transport event disables the associated CRQ
-such that any H_SEND_CRQ hcall() to the associated CRQ returns H_Closed
-until the CRQ has been explicitly enabled using the H_ENABLE_CRQ hcall.'
-This patch adds a check in tpm_ibmvtpm_send() for an H_CLOSED return from
-ibmvtpm_send_crq() and in that case calls tpm_ibmvtpm_resume() and
-retries the ibmvtpm_send_crq() once.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/kdump
+branch HEAD: e4160b2e4b02377c67f8ecd05786811598f39acd  x86/purgatory: Fail the build if purgatory.ro has missing symbols
 
-Reported-by: Linh Pham <phaml@us.ibm.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Signed-off-by: George Wilson <gcwilson@linux.ibm.com>
-Tested-by: Linh Pham <phaml@us.ibm.com>
-Fixes: 132f76294744 ("Add new device driver to support IBM vTPM")
+elapsed time: 1532m
+
+configs tested: 195
+configs skipped: 90
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+ia64                                defconfig
+sparc64                           allnoconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+riscv                             allnoconfig
+m68k                       m5475evb_defconfig
+h8300                       h8s-sim_defconfig
+ia64                              allnoconfig
+parisc                            allnoconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                             allyesconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+xtensa                          iss_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+m68k                             allmodconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200317
+x86_64               randconfig-a002-20200317
+x86_64               randconfig-a003-20200317
+i386                 randconfig-a001-20200317
+i386                 randconfig-a002-20200317
+i386                 randconfig-a003-20200317
+x86_64               randconfig-a001-20200318
+x86_64               randconfig-a002-20200318
+x86_64               randconfig-a003-20200318
+i386                 randconfig-a001-20200318
+i386                 randconfig-a002-20200318
+i386                 randconfig-a003-20200318
+alpha                randconfig-a001-20200317
+m68k                 randconfig-a001-20200317
+mips                 randconfig-a001-20200317
+nds32                randconfig-a001-20200317
+parisc               randconfig-a001-20200317
+riscv                randconfig-a001-20200317
+alpha                randconfig-a001-20200318
+m68k                 randconfig-a001-20200318
+mips                 randconfig-a001-20200318
+nds32                randconfig-a001-20200318
+parisc               randconfig-a001-20200318
+riscv                randconfig-a001-20200318
+c6x                  randconfig-a001-20200317
+h8300                randconfig-a001-20200317
+microblaze           randconfig-a001-20200317
+nios2                randconfig-a001-20200317
+sparc64              randconfig-a001-20200317
+csky                 randconfig-a001-20200317
+openrisc             randconfig-a001-20200317
+s390                 randconfig-a001-20200317
+sh                   randconfig-a001-20200317
+xtensa               randconfig-a001-20200317
+csky                 randconfig-a001-20200318
+openrisc             randconfig-a001-20200318
+s390                 randconfig-a001-20200318
+sh                   randconfig-a001-20200318
+xtensa               randconfig-a001-20200318
+x86_64               randconfig-b001-20200318
+x86_64               randconfig-b002-20200318
+x86_64               randconfig-b003-20200318
+i386                 randconfig-b001-20200318
+i386                 randconfig-b002-20200318
+i386                 randconfig-b003-20200318
+x86_64               randconfig-b001-20200317
+x86_64               randconfig-b002-20200317
+x86_64               randconfig-b003-20200317
+i386                 randconfig-b001-20200317
+i386                 randconfig-b002-20200317
+i386                 randconfig-b003-20200317
+x86_64               randconfig-c001-20200317
+x86_64               randconfig-c002-20200317
+x86_64               randconfig-c003-20200317
+i386                 randconfig-c001-20200317
+i386                 randconfig-c002-20200317
+i386                 randconfig-c003-20200317
+x86_64               randconfig-d001-20200318
+x86_64               randconfig-d002-20200318
+x86_64               randconfig-d003-20200318
+i386                 randconfig-d001-20200318
+i386                 randconfig-d002-20200318
+i386                 randconfig-d003-20200318
+x86_64               randconfig-d001-20200317
+x86_64               randconfig-d002-20200317
+x86_64               randconfig-d003-20200317
+i386                 randconfig-d001-20200317
+i386                 randconfig-d002-20200317
+i386                 randconfig-d003-20200317
+x86_64               randconfig-e001-20200317
+x86_64               randconfig-e002-20200317
+x86_64               randconfig-e003-20200317
+i386                 randconfig-e001-20200317
+i386                 randconfig-e002-20200317
+i386                 randconfig-e003-20200317
+x86_64               randconfig-f001-20200317
+x86_64               randconfig-f002-20200317
+x86_64               randconfig-f003-20200317
+i386                 randconfig-f001-20200317
+i386                 randconfig-f002-20200317
+i386                 randconfig-f003-20200317
+x86_64               randconfig-f001-20200318
+x86_64               randconfig-f002-20200318
+x86_64               randconfig-f003-20200318
+i386                 randconfig-f001-20200318
+i386                 randconfig-f002-20200318
+i386                 randconfig-f003-20200318
+x86_64               randconfig-g001-20200317
+x86_64               randconfig-g002-20200317
+x86_64               randconfig-g003-20200317
+i386                 randconfig-g001-20200317
+i386                 randconfig-g002-20200317
+i386                 randconfig-g003-20200317
+x86_64               randconfig-h001-20200317
+x86_64               randconfig-h002-20200317
+x86_64               randconfig-h003-20200317
+i386                 randconfig-h001-20200317
+i386                 randconfig-h002-20200317
+i386                 randconfig-h003-20200317
+x86_64               randconfig-h001-20200318
+x86_64               randconfig-h002-20200318
+x86_64               randconfig-h003-20200318
+i386                 randconfig-h001-20200318
+i386                 randconfig-h002-20200318
+i386                 randconfig-h003-20200318
+arc                  randconfig-a001-20200317
+arm                  randconfig-a001-20200317
+arm64                randconfig-a001-20200317
+ia64                 randconfig-a001-20200317
+powerpc              randconfig-a001-20200317
+sparc                randconfig-a001-20200317
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
 ---
- drivers/char/tpm/tpm_ibmvtpm.c | 136 ++++++++++++++++++---------------
- 1 file changed, 73 insertions(+), 63 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
-index 78cc52690177..d097d47e0efa 100644
---- a/drivers/char/tpm/tpm_ibmvtpm.c
-+++ b/drivers/char/tpm/tpm_ibmvtpm.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (C) 2012 IBM Corporation
-+ * Copyright (C) 2012-2020 IBM Corporation
-  *
-  * Author: Ashley Lai <ashleydlai@gmail.com>
-  *
-@@ -133,6 +133,64 @@ static int tpm_ibmvtpm_recv(struct tpm_chip *chip, u8 *buf, size_t count)
- 	return len;
- }
- 
-+/**
-+ * ibmvtpm_crq_send_init - Send a CRQ initialize message
-+ * @ibmvtpm:	vtpm device struct
-+ *
-+ * Return:
-+ *	0 on success.
-+ *	Non-zero on failure.
-+ */
-+static int ibmvtpm_crq_send_init(struct ibmvtpm_dev *ibmvtpm)
-+{
-+	int rc;
-+
-+	rc = ibmvtpm_send_crq_word(ibmvtpm->vdev, INIT_CRQ_CMD);
-+	if (rc != H_SUCCESS)
-+		dev_err(ibmvtpm->dev,
-+			"ibmvtpm_crq_send_init failed rc=%d\n", rc);
-+
-+	return rc;
-+}
-+
-+/**
-+ * tpm_ibmvtpm_resume - Resume from suspend
-+ *
-+ * @dev:	device struct
-+ *
-+ * Return: Always 0.
-+ */
-+static int tpm_ibmvtpm_resume(struct device *dev)
-+{
-+	struct tpm_chip *chip = dev_get_drvdata(dev);
-+	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
-+	int rc = 0;
-+
-+	do {
-+		if (rc)
-+			msleep(100);
-+		rc = plpar_hcall_norets(H_ENABLE_CRQ,
-+					ibmvtpm->vdev->unit_address);
-+	} while (rc == H_IN_PROGRESS || rc == H_BUSY || H_IS_LONG_BUSY(rc));
-+
-+	if (rc) {
-+		dev_err(dev, "Error enabling ibmvtpm rc=%d\n", rc);
-+		return rc;
-+	}
-+
-+	rc = vio_enable_interrupts(ibmvtpm->vdev);
-+	if (rc) {
-+		dev_err(dev, "Error vio_enable_interrupts rc=%d\n", rc);
-+		return rc;
-+	}
-+
-+	rc = ibmvtpm_crq_send_init(ibmvtpm);
-+	if (rc)
-+		dev_err(dev, "Error send_init rc=%d\n", rc);
-+
-+	return rc;
-+}
-+
- /**
-  * tpm_ibmvtpm_send() - Send a TPM command
-  * @chip:	tpm chip struct
-@@ -146,6 +204,7 @@ static int tpm_ibmvtpm_recv(struct tpm_chip *chip, u8 *buf, size_t count)
- static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
- {
- 	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
-+	bool retry = true;
- 	int rc, sig;
- 
- 	if (!ibmvtpm->rtce_buf) {
-@@ -179,18 +238,27 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
- 	 */
- 	ibmvtpm->tpm_processing_cmd = true;
- 
-+again:
- 	rc = ibmvtpm_send_crq(ibmvtpm->vdev,
- 			IBMVTPM_VALID_CMD, VTPM_TPM_COMMAND,
- 			count, ibmvtpm->rtce_dma_handle);
- 	if (rc != H_SUCCESS) {
-+		/*
-+		 * H_CLOSED can be returned after LPM resume.  Call
-+		 * tpm_ibmvtpm_resume() to re-enable the CRQ then retry
-+		 * ibmvtpm_send_crq() once before failing.
-+		 */
-+		if (rc == H_CLOSED && retry) {
-+			tpm_ibmvtpm_resume(ibmvtpm->dev);
-+			retry = false;
-+			goto again;
-+		}
- 		dev_err(ibmvtpm->dev, "tpm_ibmvtpm_send failed rc=%d\n", rc);
--		rc = 0;
- 		ibmvtpm->tpm_processing_cmd = false;
--	} else
--		rc = 0;
-+	}
- 
- 	spin_unlock(&ibmvtpm->rtce_lock);
--	return rc;
-+	return 0;
- }
- 
- static void tpm_ibmvtpm_cancel(struct tpm_chip *chip)
-@@ -268,26 +336,6 @@ static int ibmvtpm_crq_send_init_complete(struct ibmvtpm_dev *ibmvtpm)
- 	return rc;
- }
- 
--/**
-- * ibmvtpm_crq_send_init - Send a CRQ initialize message
-- * @ibmvtpm:	vtpm device struct
-- *
-- * Return:
-- *	0 on success.
-- *	Non-zero on failure.
-- */
--static int ibmvtpm_crq_send_init(struct ibmvtpm_dev *ibmvtpm)
--{
--	int rc;
--
--	rc = ibmvtpm_send_crq_word(ibmvtpm->vdev, INIT_CRQ_CMD);
--	if (rc != H_SUCCESS)
--		dev_err(ibmvtpm->dev,
--			"ibmvtpm_crq_send_init failed rc=%d\n", rc);
--
--	return rc;
--}
--
- /**
-  * tpm_ibmvtpm_remove - ibm vtpm remove entry point
-  * @vdev:	vio device struct
-@@ -400,44 +448,6 @@ static int ibmvtpm_reset_crq(struct ibmvtpm_dev *ibmvtpm)
- 				  ibmvtpm->crq_dma_handle, CRQ_RES_BUF_SIZE);
- }
- 
--/**
-- * tpm_ibmvtpm_resume - Resume from suspend
-- *
-- * @dev:	device struct
-- *
-- * Return: Always 0.
-- */
--static int tpm_ibmvtpm_resume(struct device *dev)
--{
--	struct tpm_chip *chip = dev_get_drvdata(dev);
--	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
--	int rc = 0;
--
--	do {
--		if (rc)
--			msleep(100);
--		rc = plpar_hcall_norets(H_ENABLE_CRQ,
--					ibmvtpm->vdev->unit_address);
--	} while (rc == H_IN_PROGRESS || rc == H_BUSY || H_IS_LONG_BUSY(rc));
--
--	if (rc) {
--		dev_err(dev, "Error enabling ibmvtpm rc=%d\n", rc);
--		return rc;
--	}
--
--	rc = vio_enable_interrupts(ibmvtpm->vdev);
--	if (rc) {
--		dev_err(dev, "Error vio_enable_interrupts rc=%d\n", rc);
--		return rc;
--	}
--
--	rc = ibmvtpm_crq_send_init(ibmvtpm);
--	if (rc)
--		dev_err(dev, "Error send_init rc=%d\n", rc);
--
--	return rc;
--}
--
- static bool tpm_ibmvtpm_req_canceled(struct tpm_chip *chip, u8 status)
- {
- 	return (status == 0);
--- 
-2.24.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
