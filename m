@@ -2,112 +2,165 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB56C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848CCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83A8820768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:17:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fcYMCaML"
+	by mail.kernel.org (Postfix) with ESMTP id 50A1A2076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:18:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584537506;
+	bh=aUGyqTKA5hfG5n2z9i2CNgp/54hZegNuW8F7Ze1TW5w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CbyI6HcPSdv32KFX1scuwiK5eAvf1FhKYdOQm+K9SzZ02+YOkEu7TRHe0U+0Q165f
+	 KSCDxDU1nDfD2Z22jSbKXYncyLFbw0XGj0ZjtOyEfNWQSCrCKPMM6rHAfyx/BTv6Ej
+	 Ynp8mhS3B4yuzYbUEnD6VduB5Nw4LlZJXs3xMsGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgCRNRP (ORCPT
+        id S1727024AbgCRNSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:17:15 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45749 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgCRNRP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:17:15 -0400
-Received: by mail-ed1-f66.google.com with SMTP id u59so2500869edc.12;
-        Wed, 18 Mar 2020 06:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fyMBbWwjDpTftQhmCAd3B6Ppi0nc30PtiYahkvf0nHE=;
-        b=fcYMCaMLtiWCsmQT8JbcyWQpDuScuRHajkNK7PUkjHiGzDS6udOJ9PnBp6p2mIJXB8
-         wSZA1HDCCb2ob9wALGYbn9SfrnScOpDxYpcYI1HsqTg6mNM42paITLWash5aPffl6rJ3
-         aTr/WfcG7SVkHmhZr+915q/ES6KEiAE17MSZoBVxw7df2ZV1rzIAO7iWdJSAjxd5fuqk
-         bbUwc+i1QmQ6RiIw9XB8DckfeXJ2zawZKEr/OZavn+TgUJ0L2ySegbNqbMJ42LrxBKvh
-         vmrzML9OlCxSc7nCrIuBF9cuvs+yMKZLEMpRY8sqpBRcTHvtYhmuM3PfLq7KF6hlPY5E
-         YHcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fyMBbWwjDpTftQhmCAd3B6Ppi0nc30PtiYahkvf0nHE=;
-        b=VRCPCGvnNv74bWNJ6VgPzpSJXa2NRgAr9sLLvupNWgtbbIkPEhvXxJTYihF3NTFmfg
-         VYG5zuUyxKR4FCCw0Sidwzps+M5d2BdizqUpxYqZfECwvsw2xh/U49593BC/aZlqNGJ2
-         UIEz2+3GsBcJ12sSGUX7+9RrgiXFqDrUSQzb2l+VfqPWes3OrM6pfFGbV0kSDFf9xFzL
-         7Wxf2R6UQ9xiMRS/gzHa8IB6JIaOa39m1CLczRLDeMLvHlqTVdSrCssjyJkrb6AVSZZ7
-         oe2NenilpjdRdAIUrX+yf5xCV5t+U2DqGL2revJUqAK0iJpXg02yNiqbIg4qvzMlY/Ip
-         oQMA==
-X-Gm-Message-State: ANhLgQ38x0GxrZYXKvpIZZs/fB4bM1tO8oX7bIGiG4AodwVQcenYiHLU
-        7/3H38wp37Qcw25ilRXL9Cs=
-X-Google-Smtp-Source: ADFU+vtD/ZeaAm58b/8h9UuPaw4myY7lxqf9HAWY30OoOz5vO5MYYlpfGFCjAH9ppo8JLSUCIOkJ1A==
-X-Received: by 2002:a05:6402:1757:: with SMTP id v23mr3825355edx.384.1584537433064;
-        Wed, 18 Mar 2020 06:17:13 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
-        by smtp.googlemail.com with ESMTPSA id ha2sm241921ejb.88.2020.03.18.06.17.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 06:17:11 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Abhishek Sahu <absahu@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kumar Gala <galak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ipq806x: gcc: Added the enable regs and mask for PRNG
-Date:   Wed, 18 Mar 2020 14:16:56 +0100
-Message-Id: <20200318131657.345-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 18 Mar 2020 09:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726740AbgCRNSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 09:18:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE42220768;
+        Wed, 18 Mar 2020 13:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584537504;
+        bh=aUGyqTKA5hfG5n2z9i2CNgp/54hZegNuW8F7Ze1TW5w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y9oZVQVnpxVULOg3RGf6NiAye0DIn2rRsAkn5peJSOgZHhXQeyED5i+8YsCwpgHcz
+         irENiKSIHsgvGcO1BpcVr3qeKVbRLj4iClEGte2zNHT1SDhFTjnEPCoRh40U63SAur
+         Ers4QWZsoS95whsZOwL4fBfDXbam/VOYhJtZJv6Y=
+Date:   Wed, 18 Mar 2020 14:18:21 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/13] coresight: cti: Add sysfs coresight mgmt register
+ access
+Message-ID: <20200318131821.GA2789508@kroah.com>
+References: <20200309161748.31975-1-mathieu.poirier@linaro.org>
+ <20200309161748.31975-3-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309161748.31975-3-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhishek Sahu <absahu@codeaurora.org>
+On Mon, Mar 09, 2020 at 10:17:37AM -0600, Mathieu Poirier wrote:
+> From: Mike Leach <mike.leach@linaro.org>
+> 
+> Adds sysfs access to the coresight management registers.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> [Fixed abbreviation in title]
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  .../hwtracing/coresight/coresight-cti-sysfs.c | 53 +++++++++++++++++++
+>  drivers/hwtracing/coresight/coresight-priv.h  |  1 +
+>  2 files changed, 54 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> index a832b8c6b866..507f8eb487fe 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> @@ -62,11 +62,64 @@ static struct attribute *coresight_cti_attrs[] = {
+>  	NULL,
+>  };
+>  
+> +/* register based attributes */
+> +
+> +/* macro to access RO registers with power check only (no enable check). */
+> +#define coresight_cti_reg(name, offset)			\
+> +static ssize_t name##_show(struct device *dev,				\
+> +			   struct device_attribute *attr, char *buf)	\
+> +{									\
+> +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);	\
+> +	u32 val = 0;							\
+> +	pm_runtime_get_sync(dev->parent);				\
+> +	spin_lock(&drvdata->spinlock);					\
+> +	if (drvdata->config.hw_powered)					\
+> +		val = readl_relaxed(drvdata->base + offset);		\
+> +	spin_unlock(&drvdata->spinlock);				\
+> +	pm_runtime_put_sync(dev->parent);				\
+> +	return scnprintf(buf, PAGE_SIZE, "0x%x\n", val);		\
+> +}									\
+> +static DEVICE_ATTR_RO(name)
+> +
+> +/* coresight management registers */
+> +coresight_cti_reg(devaff0, CTIDEVAFF0);
+> +coresight_cti_reg(devaff1, CTIDEVAFF1);
+> +coresight_cti_reg(authstatus, CORESIGHT_AUTHSTATUS);
+> +coresight_cti_reg(devarch, CORESIGHT_DEVARCH);
+> +coresight_cti_reg(devid, CORESIGHT_DEVID);
+> +coresight_cti_reg(devtype, CORESIGHT_DEVTYPE);
+> +coresight_cti_reg(pidr0, CORESIGHT_PERIPHIDR0);
+> +coresight_cti_reg(pidr1, CORESIGHT_PERIPHIDR1);
+> +coresight_cti_reg(pidr2, CORESIGHT_PERIPHIDR2);
+> +coresight_cti_reg(pidr3, CORESIGHT_PERIPHIDR3);
+> +coresight_cti_reg(pidr4, CORESIGHT_PERIPHIDR4);
+> +
+> +static struct attribute *coresight_cti_mgmt_attrs[] = {
+> +	&dev_attr_devaff0.attr,
+> +	&dev_attr_devaff1.attr,
+> +	&dev_attr_authstatus.attr,
+> +	&dev_attr_devarch.attr,
+> +	&dev_attr_devid.attr,
+> +	&dev_attr_devtype.attr,
+> +	&dev_attr_pidr0.attr,
+> +	&dev_attr_pidr1.attr,
+> +	&dev_attr_pidr2.attr,
+> +	&dev_attr_pidr3.attr,
+> +	&dev_attr_pidr4.attr,
+> +	NULL,
+> +};
+> +
+>  static const struct attribute_group coresight_cti_group = {
+>  	.attrs = coresight_cti_attrs,
+>  };
+>  
+> +static const struct attribute_group coresight_cti_mgmt_group = {
+> +	.attrs = coresight_cti_mgmt_attrs,
+> +	.name = "mgmt",
+> +};
+> +
+>  const struct attribute_group *coresight_cti_groups[] = {
+>  	&coresight_cti_group,
+> +	&coresight_cti_mgmt_group,
+>  	NULL,
+>  };
+> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+> index 82e563cdc879..aba6b789c969 100644
+> --- a/drivers/hwtracing/coresight/coresight-priv.h
+> +++ b/drivers/hwtracing/coresight/coresight-priv.h
+> @@ -22,6 +22,7 @@
+>  #define CORESIGHT_CLAIMCLR	0xfa4
+>  #define CORESIGHT_LAR		0xfb0
+>  #define CORESIGHT_LSR		0xfb4
+> +#define CORESIGHT_DEVARCH	0xfbc
+>  #define CORESIGHT_AUTHSTATUS	0xfb8
+>  #define CORESIGHT_DEVID		0xfc8
+>  #define CORESIGHT_DEVTYPE	0xfcc
+> -- 
+> 2.20.1
+> 
 
-Kernel got hanged while reading from /dev/hwrng at the
-time of PRNG clock enable
+I do not see any Documentation/ABI/ entries for these new sysfs files,
+did I miss it somehow?  I can't take new sysfs code without
+documentation.
 
-Fixes: 24d8fba44af3 "clk: qcom: Add support for IPQ8064's global
-clock controller (GCC)"
+thanks,
 
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
-v2:
- * Fix wrong authorship
-
- drivers/clk/qcom/gcc-ipq806x.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-ipq806x.c
-index b0eee0903807..a8456e09c44d 100644
---- a/drivers/clk/qcom/gcc-ipq806x.c
-+++ b/drivers/clk/qcom/gcc-ipq806x.c
-@@ -1224,6 +1224,8 @@ static struct clk_rcg prng_src = {
- 		.parent_map = gcc_pxo_pll8_map,
- 	},
- 	.clkr = {
-+		.enable_reg = 0x2e80,
-+		.enable_mask = BIT(11),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "prng_src",
- 			.parent_names = gcc_pxo_pll8,
--- 
-2.25.0
-
+greg k-h
