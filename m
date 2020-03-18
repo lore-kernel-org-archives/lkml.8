@@ -2,35 +2,35 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8462DC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BDFC4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6572E2071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329D92071C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727411AbgCRUsU (ORCPT
+        id S1727146AbgCRUrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:48:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58410 "EHLO
+        Wed, 18 Mar 2020 16:47:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58402 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgCRUr3 (ORCPT
+        with ESMTP id S1727065AbgCRUrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:47:29 -0400
+        Wed, 18 Mar 2020 16:47:21 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jEfaH-00065m-Ie; Wed, 18 Mar 2020 21:46:37 +0100
+        id 1jEfaH-00065i-6k; Wed, 18 Mar 2020 21:46:37 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id B08301040C7;
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4402C1040C5;
         Wed, 18 Mar 2020 21:46:35 +0100 (CET)
-Message-Id: <20200318204407.700914073@linutronix.de>
+Message-Id: <20200318204407.497942274@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 18 Mar 2020 21:43:05 +0100
+Date:   Wed, 18 Mar 2020 21:43:03 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -41,19 +41,19 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
         Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
         Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Kalle Valo <kvalo@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         Oleg Nesterov <oleg@redhat.com>,
         Davidlohr Bueso <dave@stgolabs.net>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: [patch V2 03/15] usb: gadget: Use completion interface instead of open coding it
+Subject: [patch V2 01/15] PCI/switchtec: Fix init_completion race condition with poll_wait()
 References: <20200318204302.693307984@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,50 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ep_io() uses a completion on stack and open codes the waiting with:
+From: Logan Gunthorpe <logang@deltatee.com>
 
-  wait_event_interruptible (done.wait, done.done);
-and
-  wait_event (done.wait, done.done);
+The call to init_completion() in mrpc_queue_cmd() can theoretically
+race with the call to poll_wait() in switchtec_dev_poll().
 
-This waits in non-exclusive mode for complete(), but there is no reason to
-do so because the completion can only be waited for by the task itself and
-complete() wakes exactly one exlusive waiter.
+  poll()			write()
+    switchtec_dev_poll()   	  switchtec_dev_write()
+      poll_wait(&s->comp.wait);      mrpc_queue_cmd()
+			               init_completion(&s->comp)
+				         init_waitqueue_head(&s->comp.wait)
 
-Replace the open coded implementation with the corresponding
-wait_for_completion*() functions.
+To my knowledge, no one has hit this bug.
 
-No functional change.
+Fix this by using reinit_completion() instead of init_completion() in
+mrpc_queue_cmd().
 
+Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
 Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org
----
-V2: New patch to avoid the conversion to swait interfaces later
----
- drivers/usb/gadget/legacy/inode.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Link: https://lkml.kernel.org/r/20200313183608.2646-1-logang@deltatee.com
 
---- a/drivers/usb/gadget/legacy/inode.c
-+++ b/drivers/usb/gadget/legacy/inode.c
-@@ -344,7 +344,7 @@ ep_io (struct ep_data *epdata, void *buf
- 	spin_unlock_irq (&epdata->dev->lock);
+---
+ drivers/pci/switch/switchtec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+index a823b4b8ef8a..81dc7ac01381 100644
+--- a/drivers/pci/switch/switchtec.c
++++ b/drivers/pci/switch/switchtec.c
+@@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
+ 	kref_get(&stuser->kref);
+ 	stuser->read_len = sizeof(stuser->data);
+ 	stuser_set_state(stuser, MRPC_QUEUED);
+-	init_completion(&stuser->comp);
++	reinit_completion(&stuser->comp);
+ 	list_add_tail(&stuser->list, &stdev->mrpc_queue);
  
- 	if (likely (value == 0)) {
--		value = wait_event_interruptible (done.wait, done.done);
-+		value = wait_for_completion_interruptible(&done);
- 		if (value != 0) {
- 			spin_lock_irq (&epdata->dev->lock);
- 			if (likely (epdata->ep != NULL)) {
-@@ -353,7 +353,7 @@ ep_io (struct ep_data *epdata, void *buf
- 				usb_ep_dequeue (epdata->ep, epdata->req);
- 				spin_unlock_irq (&epdata->dev->lock);
- 
--				wait_event (done.wait, done.done);
-+				wait_for_completion(&done);
- 				if (epdata->status == -ECONNRESET)
- 					epdata->status = -EINTR;
- 			} else {
+ 	mrpc_cmd_submit(stdev);
+-- 
+2.20.1
+
 
