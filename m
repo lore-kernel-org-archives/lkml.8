@@ -2,194 +2,143 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AA0C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8FEC4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F0120752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F4820752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:07:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ha7+5huB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FGED8sOe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgCRWHD (ORCPT
+        id S1727299AbgCRWHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:07:03 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:50876 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726704AbgCRWHC (ORCPT
+        Wed, 18 Mar 2020 18:07:49 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59426 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCRWHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:07:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584569220;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=14t4HjIQMqA+ULzOv7X6FcxbMiKkPDMaZzG1d8eZBno=;
-        b=Ha7+5huB0PpV++aeB71d1WWTDLJnHuPpwscLC5/YvropvClrEYF6P3cyW0yxwIfEVMgqBd
-        hFd6Qe/NvlyEkOW8Mbsdev0sDMO2dGSLThK4Wxtc38VVuwqEvFXyXwDfKPf4xMxDicys70
-        rMDaX8OrCmr19ZhV9FOX43ACr6gGdRg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-277-NyPZxzzdO3CDcetCpgyJxw-1; Wed, 18 Mar 2020 18:06:32 -0400
-X-MC-Unique: NyPZxzzdO3CDcetCpgyJxw-1
-Received: by mail-wr1-f70.google.com with SMTP id w11so13036615wrp.20
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 15:06:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=14t4HjIQMqA+ULzOv7X6FcxbMiKkPDMaZzG1d8eZBno=;
-        b=c86bduqYx8FJjd1MhClobkenssrDSr2Sg+QXQuayjIfoNN1GJGVwbldIRxbA+FkIQ1
-         jOfIFQ7ao9g3CmII3cWVyDhKhwKbyakHU1NoSG7ZAoMmw9q/yA8mXtsHnch3/6umQJo+
-         bDhRpHesGGLXbqbfJtZXvFuTLqqoimyCDuJPqQs5jOPWYNIXJ05SDEz1NWKUw98PVOV+
-         GFz7Pc6lswM5ntlI715YtWzK2TSJs31JYxsDR9Yd7lFDUY0vxTyk7zu9++76pILk66Lb
-         VYra79cMnF/mJLzFe/hL5WioQrDXBfK5i0nGBA2y7S+pgqKi++UDqJ/F8xI0xyFnmgXk
-         fAvg==
-X-Gm-Message-State: ANhLgQ2FtJ/pH2LR9blLxgg8izcUglfOuTzzOAk/Zbo0rU+SxeZNg7yF
-        k1O8cOsVxD2eCfPMxegV1CxEP0pTVnvfIi5MVsFliu1Fn27lSrlhHrX+Li8e7Gg70JBtqo8LqaW
-        jEpqNLwA+O5408k38V6yuHUQi
-X-Received: by 2002:a05:6000:10c6:: with SMTP id b6mr65441wrx.130.1584569191393;
-        Wed, 18 Mar 2020 15:06:31 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vshXi2bFCTY0GiaK4KHLwbxxmTP/J7PmFuoSbyu55J8ItmB/ndud1KHLF+/1Ov96kHePRHVEA==
-X-Received: by 2002:a05:6000:10c6:: with SMTP id b6mr65417wrx.130.1584569191098;
-        Wed, 18 Mar 2020 15:06:31 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id t126sm200794wmb.27.2020.03.18.15.06.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Mar 2020 15:06:30 -0700 (PDT)
-Subject: Re: Updating cypress/brcm firmware in linux-firmware for
- CVE-2019-15126
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Chirjeev Singh <Chirjeev.Singh@cypress.com>,
-        Chung-Hsien Hsu <cnhu@cypress.com>,
-        Christopher Rumpf <Christopher.Rumpf@cypress.com>
-List-Id: <linux-firmware.lore.kernel.org>
-Cc:     linux-firmware@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <93dba8d2-6e46-9157-d292-4d93feb8ec1a@redhat.com>
-Message-ID: <f7f5076f-d799-7c5c-90e9-3ad781ef96a9@redhat.com>
-Date:   Wed, 18 Mar 2020 23:06:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 18:07:48 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ILvmT0077845;
+        Wed, 18 Mar 2020 22:06:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=s1pMLzutcA2e/hf3OvlXjDnIfQPhs95bJayfMQOUxME=;
+ b=FGED8sOeZH7vZegY5KTbymmNwi6RTCwH53GlXQ5Z8MkOBREidu2uKWXTr9CUnP2UU50v
+ 3g9pxzX4LX+mJxpPSPbLQc/izyIzA+fNY73oaab+Qz5r/bAQFXTgx7cVJEFa7/X0KB78
+ XCnEHj9Ydk/Ic9oK6rnyT2aVqigXRKtHnH2paGht1i7rne7tnwM1R80+f2oxcif+foMT
+ rDa8RNHkxhUPTR8az1yINaNjXPsCSt/u24S704F9NM/VuprmE4UEARi6ZiQ9V6Z3VHvK
+ DrZ9+i2u4c/OlxO+oxKkLXRY5Ilry1YPhe97NfHJpEnRTeflyxsWz/1/Z+NyJJskqQfv jg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2yub2753n1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 22:06:49 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ILuqsD058502;
+        Wed, 18 Mar 2020 22:06:48 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2ys8tutekx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 22:06:48 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02IM6fZG003470;
+        Wed, 18 Mar 2020 22:06:41 GMT
+Received: from monkey.oracle.com (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 18 Mar 2020 15:06:41 -0700
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH 0/4] Clean up hugetlb boot command line processing
+Date:   Wed, 18 Mar 2020 15:06:30 -0700
+Message-Id: <20200318220634.32100-1-mike.kravetz@oracle.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <93dba8d2-6e46-9157-d292-4d93feb8ec1a@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003180094
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
+ clxscore=1011 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003180094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Longpeng(Mike) reported a weird message from hugetlb command line processing
+and proposed a solution [1].  While the proposed patch does address the
+specific issue, there are other related issues in command line processing.
+As hugetlbfs evolved, updates to command line processing have been made to
+meet immediate needs and not necessarily in a coordinated manner.  The result
+is that some processing is done in arch specific code, some is done in arch
+independent code and coordination is problematic.  Semantics can vary between
+architectures.
 
-On 2/26/20 11:16 PM, Hans de Goede wrote:
-> Hello Cypress people,
-> 
-> Can we please get updated firmware for
-> brcm/brcmfmac4356-pcie.bin and brcm/brcmfmac4356-sdio.bin
-> fixing CVE-2019-15126 as well as for any other affected
-> models (the 4356 is explicitly named in the CVE description) ?
-> 
-> The current Cypress firmware files in linux-firmware are
-> quite old, e.g. for brcm/brcmfmac4356-pcie.bin linux-firmware has:
-> version 7.35.180.176 dated 2017-10-23, way before the CVE
-> 
-> Where as https://community.cypress.com/docs/DOC-19000 /
-> cypress-fmac-v4.14.77-2020_0115.zip has:
-> version 7.35.180.197 which presumably contains a fix (no changelog)
+The following patch series does the following:
+- Define arch specific arch_hugetlb_valid_size routine used to validate
+  passed huge page sizes.
+- Move hugepagesz= command line parsing out of arch specific code and into
+  an arch independent routine.
+- Clean up command line processing to follow desired semantics and
+  document those semantics.
 
-Chris from Cypress has replied privately to me because of some
-email issues, with the request to relay the information he
-wrote here:
+[1] https://lore.kernel.org/linux-mm/20200305033014.1152-1-longpeng2@huawei.com
 
-On 3/18/20 6:54 PM, Christopher Rumpf wrote:
+Mike Kravetz (4):
+  hugetlbfs: add arch_hugetlb_valid_size
+  hugetlbfs: move hugepagesz= parsing to arch independent code
+  hugetlbfs: remove hugetlb_add_hstate() warning for existing hstate
+  hugetlbfs: clean up command line processing
 
- >  Cypress' CLM upstream policy is currently fragmented, as you have indicated.
- > The 43340 and 43362 have embedded CLM upstreamed yet no other Cypress parts
- > have done so and only deliver the firmware.bin files.  Cypress' customers
- > have been OK to follow this technote
- > https://www.cypress.com/documentation/application-notes/an225347-cypress-wi-fi-clm-regulatory-manual
- > which requires users to contact Cypress support to obtain the best performing
- > Country Locale Matrix (CLM) for the Wi-Fi module and targeted regions.
- > Such a model is of course not ideal for the open source community or for
- > what we  call “the broad market” as it requires an extra human to human
- > interaction that at the end of the day may reduce the user's time to
- > market and ability to independently move forward.
- >
- >  As I am sure you are aware, Cypress’ Embedded CLM = Wi-Fi Firmware +
- > regional regulatory database + RF settings (NVRAM).  The Wi-Fi Firmware is
- > static across all projects however the regional regulatory database and the
- > RF settings are implementation specific.  Previously the hesitation to
- > release a "worldwide generic embedded CLM” was because the regional
- > regulatory and RF settings are not tuned correctly for the implementation's
- > characteristics and the project may experience sub-par connectivity
- > performance or even perceived defects (such as power, RF, robustness).
- >
- > In the long term Cypress will be investing in additional tooling to automate
- > these steps, perhaps even as part of the project's config or build step.
- >
- > In the short term Cypress is considering these two actions:
- >
- > 1. For all active upstreamed Cypress parts, Cypress will upstream a
- >    "worldwide generic embedded CLM”.  These Embedded CLMs won’t be tuned for
- >    specific project’s regional or RF settings and customers may still need
- >    to reach out to Cypress support but at least they will be able to use the
- >    Cypress firmware in the linux-firmware repo right out of the box.
+ Documentation/admin-guide/mm/hugetlbpage.rst |  26 ++++
+ arch/arm64/include/asm/hugetlb.h             |   2 +
+ arch/arm64/mm/hugetlbpage.c                  |  30 ++---
+ arch/powerpc/include/asm/hugetlb.h           |   3 +
+ arch/powerpc/mm/hugetlbpage.c                |  30 ++---
+ arch/riscv/include/asm/hugetlb.h             |   3 +
+ arch/riscv/mm/hugetlbpage.c                  |  24 ++--
+ arch/s390/include/asm/hugetlb.h              |   3 +
+ arch/s390/mm/hugetlbpage.c                   |  24 ++--
+ arch/sparc/include/asm/hugetlb.h             |   3 +
+ arch/sparc/mm/init_64.c                      |  42 ++-----
+ arch/x86/include/asm/hugetlb.h               |   3 +
+ arch/x86/mm/hugetlbpage.c                    |  23 ++--
+ include/linux/hugetlb.h                      |   8 +-
+ mm/hugetlb.c                                 | 126 ++++++++++++++-----
+ 15 files changed, 198 insertions(+), 152 deletions(-)
 
-Note Chris later send me some clarification on this point:
-
-On 3/18/20 10:29 PM, Christopher Rumpf wrote:
- > One clarification here! Regarding the short term solution -
- > the delivery may not be “embedded clm”.  It may be three different artifacts
- > which are meant to service the broad market. The Cypress R&D team will decide
- > the specifics of how to address the technical implementation to deliver the
- > worldwide clm.
-
-The below is a continuation of Chris' original email:
-
- >  2. Cypress will add some more documentation in our READMEs and other
- >     supporting docs that discusses the risks which
- >     "worldwide generic embedded CLM” brings.  Customers can then make
- >     their own decision to engage with Cypress support which will depend
- >     on the characteristics of their project, I would imagine.
- >
- > Cypress would be able to implement these actions for the next release train
- > which will be posted somewhere around end of June (pending any impact due
- > to the coronavirus).
- >
- > Would these short and long term solutions meet the needs of the
- > linux-firmware community?  If no, may we collaborate more?
-
-Chris, if I understand you correctly then the plan would result in the Cypress
-maintained firmwares in linux-firmware being in sync (being the same versions
-but with a more generic CLM) with the firmwares Cypress releases as part of
-their SDK; and the first time we would see this in sync. release of Cypress
-maintained firmwares would be around June. Correct?
-
-This sounds very good to me.
-
-I do have one question though, you describe the firmware as consisting of
-3 parts: The actual firmware, the Country Locale Matrix and the NVRAM.
-
-Currently linux-firmware contains firmwares with a generic CLM embedded
-in them. But AFAIK the nvram-s are device-model/project specific (more so
-then the CLM-s I believe) and normally the nvram is actual part of the
-device and read by the kernel driver?  The one exception to this is the
-nvram files for some SDIO boards. Recent kernels have code to load
-the nvram files for these SDIO boards using a device-model specific
-name and the linux-firmware repository contains community contributed
-NVRAM files for various device-models. Would this change with the
-new firmware versions ?
-
-Regards,
-
-Hans
+-- 
+2.24.1
 
