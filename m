@@ -2,144 +2,272 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7613CC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2383AC5ACD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA8D20752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E730920714
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KAEI0kAw"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yflygsXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgCROum (ORCPT
+        id S1726877AbgCROvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:50:42 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:48374 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726643AbgCROul (ORCPT
+        Wed, 18 Mar 2020 10:51:46 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36916 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726638AbgCROvq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:50:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584543040;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Pg3T1YSkd/t+cEXO/Ncu3CZsj7y8ycoimX/LbjLT0SY=;
-        b=KAEI0kAwVQ95hzTb+ABSyphQMQZKvE3RZMXtJ/iw9A7f1ZyhjK8SPFNzemdBoiJ7s3byeD
-        HyvX4ShufC58CKymCVIEzSJZFfLQtj8/NoHdSDLJwygC/RYScBBm1G2vDlWRRGYq45CQHN
-        +QxvfWVWqLkzJtuTl1Vumen8c/mlwAU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-Tzw0Wt77OHWjREzHnSG7Wg-1; Wed, 18 Mar 2020 10:50:37 -0400
-X-MC-Unique: Tzw0Wt77OHWjREzHnSG7Wg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3833F1005512;
-        Wed, 18 Mar 2020 14:50:34 +0000 (UTC)
-Received: from localhost (ovpn-12-66.pek2.redhat.com [10.72.12.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CF618F35B;
-        Wed, 18 Mar 2020 14:50:30 +0000 (UTC)
-Date:   Wed, 18 Mar 2020 22:50:26 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Yumei Huang <yuhuang@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Eduardo Habkost <ehabkost@redhat.com>,
-        Milan Zamazal <mzamazal@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v2 0/8] mm/memory_hotplug: allow to specify a default
- online_type
-Message-ID: <20200318145026.GF30899@MiWiFi-R3L-srv>
-References: <20200317104942.11178-1-david@redhat.com>
- <20200318130517.GC30899@MiWiFi-R3L-srv>
- <67a054f6-df07-e4fb-dd4b-e503cb767276@redhat.com>
+        Wed, 18 Mar 2020 10:51:46 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02IEcWpY031412;
+        Wed, 18 Mar 2020 15:51:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=AtAQ6Omp1kqvN3R2P3Ojq/dUkGTPHDTP71rAjUnsU+g=;
+ b=yflygsXu04iS8mLX+60UttjdYpPiJKyzWBEm3v0ejRG2+CyZykKK438rf0MPYBFVUn5S
+ xVwFRl3IiFHH4EqdKie/Zx/GEbimNiSf4jv4jZBgjWY6elmjJU3GMq4FQTlNHSKF5AyD
+ cWgZZdUtdcpUvRKPKe4v1MW3k2qLxPkKVbqediBQlB9P7yWn9b0dePUyb4mkavF69xjm
+ VxMpgDs9PZ7yEzpO2vqm7ZWdeKVcDvdKbcnCq3xD5VysVXcSSE3Yfc0qGtrNNx9YqA+6
+ e453O+qAQjlyAFfCBDGs11drAWv30u6NoRI5cbIYkETCBvlZdRfWgnigfIn0Ny0VTVqT Hg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yu95um43b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Mar 2020 15:51:21 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3C62C10002A;
+        Wed, 18 Mar 2020 15:51:20 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1FDE42AE6B7;
+        Wed, 18 Mar 2020 15:51:20 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar 2020 15:51:19
+ +0100
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <robh+dt@kernel.org>, <jic23@kernel.org>
+CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <fabrice.gasnier@st.com>,
+        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dt-bindings: iio: dac: stm32-dac: convert bindings to json-schema
+Date:   Wed, 18 Mar 2020 15:50:37 +0100
+Message-ID: <1584543037-32095-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67a054f6-df07-e4fb-dd4b-e503cb767276@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_06:2020-03-18,2020-03-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/18/20 at 02:50pm, David Hildenbrand wrote:
-> On 18.03.20 14:05, Baoquan He wrote:
-> > On 03/17/20 at 11:49am, David Hildenbrand wrote:
-> >> Distributions nowadays use udev rules ([1] [2]) to specify if and
-> >> how to online hotplugged memory. The rules seem to get more complex with
-> >> many special cases. Due to the various special cases,
-> >> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE cannot be used. All memory hotplug
-> >> is handled via udev rules.
-> >>
-> >> Everytime we hotplug memory, the udev rule will come to the same
-> >> conclusion. Especially Hyper-V (but also soon virtio-mem) add a lot of
-> >> memory in separate memory blocks and wait for memory to get onlined by user
-> >> space before continuing to add more memory blocks (to not add memory faster
-> >> than it is getting onlined). This of course slows down the whole memory
-> >> hotplug process.
-> >>
-> >> To make the job of distributions easier and to avoid udev rules that get
-> >> more and more complicated, let's extend the mechanism provided by
-> >> - /sys/devices/system/memory/auto_online_blocks
-> >> - "memhp_default_state=" on the kernel cmdline
-> >> to be able to specify also "online_movable" as well as "online_kernel"
-> > 
-> > This patch series looks good, thanks. Since Andrew has merged it to -mm again,
-> > I won't add my Reviewed-by to bother. 
-> > 
-> > Hi David, Vitaly
-> > 
-> > There are several things unclear to me.
-> > 
-> > So, these improved interfaces are used to alleviate the burden of the 
-> > existing udev rules, or try to replace it? As you know, we have been
-> 
-> At least in RHEL, my plan is to replace it / use a udev rules as a
-> fallback on older kernels (see the example scripts below). But other
+Convert the STM32 DAC binding to DT schema format using json-schema
 
-Ok, got it. Didn't notice the script and the systemd service are your
-part of plan, thought you are demonstrating the status. Thanks.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
+ .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
+ 2 files changed, 110 insertions(+), 63 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
 
-> distribution can handle it as they want.
-> 
-> > using udev rules to interact between kernel and user space on bare metal,
-> > and guests who want to hot add/remove.>
-> > And also the OOM issue in hyperV when onlining pages after adding memory
-> > block. I am not a virt devel expert, could this happen on bare metal
-> > system?
-> 
-> Don't think it's relevant on bare metal. If you plug a big DIMM, all
-> memory blocks will be added first in one shot and then all memory blocks
-> will be onlined. So it doesn't matter "how fast" you online that memory.
-> 
-> In contrast, Hyper-V (and virtio-mem) add one (or a limited number of)
-> memory block at a time and wait for them to get onlined.
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
+diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+deleted file mode 100644
+index bf2925c..00000000
+--- a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
++++ /dev/null
+@@ -1,63 +0,0 @@
+-STMicroelectronics STM32 DAC
+-
+-The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
+-may be configured in 8 or 12-bit mode. It has two output channels, each with
+-its own converter.
+-It has built-in noise and triangle waveform generator and supports external
+-triggers for conversions. The DAC's output buffer allows a high drive output
+-current.
+-
+-Contents of a stm32 dac root node:
+------------------------------------
+-Required properties:
+-- compatible: Should be one of:
+-  "st,stm32f4-dac-core"
+-  "st,stm32h7-dac-core"
+-- reg: Offset and length of the device's register set.
+-- clocks: Must contain an entry for pclk (which feeds the peripheral bus
+-  interface)
+-- clock-names: Must be "pclk".
+-- vref-supply: Phandle to the vref+ input analog reference supply.
+-- #address-cells = <1>;
+-- #size-cells = <0>;
+-
+-Optional properties:
+-- resets: Must contain the phandle to the reset controller.
+-- A pinctrl state named "default" for each DAC channel may be defined to set
+-  DAC_OUTx pin in mode of operation for analog output on external pin.
+-
+-Contents of a stm32 dac child node:
+------------------------------------
+-DAC core node should contain at least one subnode, representing a
+-DAC instance/channel available on the machine.
+-
+-Required properties:
+-- compatible: Must be "st,stm32-dac".
+-- reg: Must be either 1 or 2, to define (single) channel in use
+-- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
+-  Documentation/devicetree/bindings/iio/iio-bindings.txt
+-
+-Example:
+-	dac: dac@40007400 {
+-		compatible = "st,stm32h7-dac-core";
+-		reg = <0x40007400 0x400>;
+-		clocks = <&clk>;
+-		clock-names = "pclk";
+-		vref-supply = <&reg_vref>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&dac_out1 &dac_out2>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		dac1: dac@1 {
+-			compatible = "st,stm32-dac";
+-			#io-channels-cells = <1>;
+-			reg = <1>;
+-		};
+-
+-		dac2: dac@2 {
+-			compatible = "st,stm32-dac";
+-			#io-channels-cells = <1>;
+-			reg = <2>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
+new file mode 100644
+index 00000000..2b4a955
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
+@@ -0,0 +1,110 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/bindings/iio/dac/st,stm32-dac.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: STMicroelectronics STM32 DAC bindings
++
++description: |
++  The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
++  may be configured in 8 or 12-bit mode. It has two output channels, each with
++  its own converter.
++  It has built-in noise and triangle waveform generator and supports external
++  triggers for conversions. The DAC's output buffer allows a high drive output
++  current.
++
++maintainers:
++  - Fabrice Gasnier <fabrice.gasnier@st.com>
++
++properties:
++  compatible:
++    enum:
++      - st,stm32f4-dac-core
++      - st,stm32h7-dac-core
++
++  reg:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: pclk
++
++  vref-supply:
++    description: Phandle to the vref input analog reference voltage.
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - vref-supply
++  - '#address-cells'
++  - '#size-cells'
++
++patternProperties:
++  "^dac@[1-2]+$":
++    type: object
++    description:
++      A DAC block node should contain at least one subnode, representing an
++      DAC instance/channel available on the machine.
++
++    properties:
++      compatible:
++        const: st,stm32-dac
++
++      reg:
++        description: Must be either 1 or 2, to define (single) channel in use
++        enum: [1, 2]
++
++      '#io-channel-cells':
++        const: 1
++
++    additionalProperties: false
++
++    required:
++      - compatible
++      - reg
++      - '#io-channel-cells'
++
++examples:
++  - |
++    // Example on stm32mp157c
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    dac: dac@40017000 {
++      compatible = "st,stm32h7-dac-core";
++      reg = <0x40017000 0x400>;
++      clocks = <&rcc DAC12>;
++      clock-names = "pclk";
++      vref-supply = <&vref>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      dac@1 {
++        compatible = "st,stm32-dac";
++        #io-channel-cells = <1>;
++        reg = <1>;
++      };
++
++      dac@2 {
++        compatible = "st,stm32-dac";
++        #io-channel-cells = <1>;
++        reg = <2>;
++      };
++    };
++
++...
+-- 
+2.7.4
 
