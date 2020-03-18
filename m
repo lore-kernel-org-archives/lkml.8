@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD389C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F52C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2FE7206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4A420752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:42:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A25Jj/vR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RvCLfokS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbgCRAmr (ORCPT
+        id S1727253AbgCRAmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 20:42:47 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:51786 "EHLO
+        Tue, 17 Mar 2020 20:42:50 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:29548 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727408AbgCRAmp (ORCPT
+        by vger.kernel.org with ESMTP id S1727262AbgCRAmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 20:42:45 -0400
+        Tue, 17 Mar 2020 20:42:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584492164;
+        s=mimecast20190719; t=1584492165;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uqPAYguVEZWqPeMAuR/XQRE/Rb26pO/ctNUZpEKUECE=;
-        b=A25Jj/vRjUijpXRVZ2J9QEdQgQVJRHwWxqe95ZaygL7wW0M47PSlTby8IS3fwppI57YtTs
-        83Q/CMvh5to27ltWHj9ijEKw+EJTF4N1REOGo8aa0094zCqaBiYCwTLgs9emEDKx+rvwTP
-        RLPC7TWHj1rqwVT/Poa9pmFMeuDGVX8=
+        bh=xxjWKp4eSSSGnZvC4kR091RQqoE0RigqfNFBzIWnlyI=;
+        b=RvCLfokSo+eRUgZoYfiO3CZsDoltqq8TSXDDrib8iUWdfu+PYO5stpLSl6oQGsrZgc/a8Z
+        PRUoDiHkibyEpmU3xa1e+a1MHrs0jtjTHqfM/bcBcq+WQYyfJ51YJPlVVDXsL06G+pCNq+
+        eaK5p+MZVV1OePIBCcaCfH/CUcH861I=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-ZgUK4iL1OOaOVJnBP8s68A-1; Tue, 17 Mar 2020 20:42:36 -0400
-X-MC-Unique: ZgUK4iL1OOaOVJnBP8s68A-1
+ us-mta-232-xMaJolXOPpaxC3Ja2791Jw-1; Tue, 17 Mar 2020 20:42:42 -0400
+X-MC-Unique: xMaJolXOPpaxC3Ja2791Jw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A07DD800D50;
-        Wed, 18 Mar 2020 00:42:35 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CAA2A8014CD;
+        Wed, 18 Mar 2020 00:42:40 +0000 (UTC)
 Received: from whitewolf.redhat.com (ovpn-113-173.rdu2.redhat.com [10.10.113.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A783360BE0;
-        Wed, 18 Mar 2020 00:42:34 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A11D660BE0;
+        Wed, 18 Mar 2020 00:42:39 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
 Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Ilia Mirkin <imirkin@alum.mit.edu>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/9] drm/nouveau/kms/nv140-: Don't modify depth in state during atomic commit
-Date:   Tue, 17 Mar 2020 20:41:00 -0400
-Message-Id: <20200318004159.235623-4-lyude@redhat.com>
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Gerd Hoffmann <kraxel@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 5/9] drm/nouveau/kms/nv50-: s/harm/armh/g
+Date:   Tue, 17 Mar 2020 20:41:02 -0400
+Message-Id: <20200318004159.235623-6-lyude@redhat.com>
 In-Reply-To: <20200318004159.235623-1-lyude@redhat.com>
 References: <20200318004159.235623-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -64,86 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, we modify the depth value stored in the atomic state when
-performing a commit in order to workaround the fact we haven't
-implemented support for depths higher then 10 yet. This isn't idempotent
-though, as it will happen every atomic commit where we modify the OR
-state even if the head's depth in the atomic state hasn't been modified.
+We refer to the armed hardware assembly as armh elsewhere in nouveau, so
+fix the naming here to make it consistent.
 
-Normally this wouldn't matter, since we don't modify OR state outside of
-modesets, but since the CRC capture region is implemented as part of the
-OR state in hardware we'll want to make sure all commits modifying OR
-state are idempotent so as to avoid changing the depth unexpectedly.
-
-So, fix this by simply not writing the reduced depth value we come up
-with to the atomic state.
+This patch contains no functional changes.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- drivers/gpu/drm/nouveau/dispnv50/headc37d.c | 11 +++++++----
- drivers/gpu/drm/nouveau/dispnv50/headc57d.c | 11 +++++++----
- 2 files changed, 14 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv50/wndw.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/headc37d.c b/drivers/gpu/dr=
-m/nouveau/dispnv50/headc37d.c
-index 00011ce109a6..68920f8d9c79 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/headc37d.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/headc37d.c
-@@ -27,17 +27,20 @@ static void
- headc37d_or(struct nv50_head *head, struct nv50_head_atom *asyh)
- {
- 	struct nv50_dmac *core =3D &nv50_disp(head->base.base.dev)->core->chan;
-+	u8 depth;
- 	u32 *push;
-+
- 	if ((push =3D evo_wait(core, 2))) {
- 		/*XXX: This is a dirty hack until OR depth handling is
- 		 *     improved later for deep colour etc.
- 		 */
- 		switch (asyh->or.depth) {
--		case 6: asyh->or.depth =3D 5; break;
--		case 5: asyh->or.depth =3D 4; break;
--		case 2: asyh->or.depth =3D 1; break;
--		case 0:	asyh->or.depth =3D 4; break;
-+		case 6: depth =3D 5; break;
-+		case 5: depth =3D 4; break;
-+		case 2: depth =3D 1; break;
-+		case 0:	depth =3D 4; break;
- 		default:
-+			depth =3D asyh->or.depth;
- 			WARN_ON(1);
- 			break;
- 		}
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/headc57d.c b/drivers/gpu/dr=
-m/nouveau/dispnv50/headc57d.c
-index 938d910a1b1e..0296cd1d761f 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/headc57d.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/headc57d.c
-@@ -27,17 +27,20 @@ static void
- headc57d_or(struct nv50_head *head, struct nv50_head_atom *asyh)
- {
- 	struct nv50_dmac *core =3D &nv50_disp(head->base.base.dev)->core->chan;
-+	u8 depth;
- 	u32 *push;
-+
- 	if ((push =3D evo_wait(core, 2))) {
- 		/*XXX: This is a dirty hack until OR depth handling is
- 		 *     improved later for deep colour etc.
- 		 */
- 		switch (asyh->or.depth) {
--		case 6: asyh->or.depth =3D 5; break;
--		case 5: asyh->or.depth =3D 4; break;
--		case 2: asyh->or.depth =3D 1; break;
--		case 0:	asyh->or.depth =3D 4; break;
-+		case 6: depth =3D 5; break;
-+		case 5: depth =3D 4; break;
-+		case 2: depth =3D 1; break;
-+		case 0:	depth =3D 4; break;
- 		default:
-+			depth =3D asyh->or.depth;
- 			WARN_ON(1);
- 			break;
- 		}
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/wndw.c b/drivers/gpu/drm/no=
+uveau/dispnv50/wndw.c
+index bb737f9281e6..39cca8eaa066 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/wndw.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/wndw.c
+@@ -397,7 +397,7 @@ nv50_wndw_atomic_check(struct drm_plane *plane, struc=
+t drm_plane_state *state)
+ 	struct nv50_wndw *wndw =3D nv50_wndw(plane);
+ 	struct nv50_wndw_atom *armw =3D nv50_wndw_atom(wndw->plane.state);
+ 	struct nv50_wndw_atom *asyw =3D nv50_wndw_atom(state);
+-	struct nv50_head_atom *harm =3D NULL, *asyh =3D NULL;
++	struct nv50_head_atom *armh =3D NULL, *asyh =3D NULL;
+ 	bool modeset =3D false;
+ 	int ret;
+=20
+@@ -418,9 +418,9 @@ nv50_wndw_atomic_check(struct drm_plane *plane, struc=
+t drm_plane_state *state)
+=20
+ 	/* Fetch assembly state for the head the window used to belong to. */
+ 	if (armw->state.crtc) {
+-		harm =3D nv50_head_atom_get(asyw->state.state, armw->state.crtc);
+-		if (IS_ERR(harm))
+-			return PTR_ERR(harm);
++		armh =3D nv50_head_atom_get(asyw->state.state, armw->state.crtc);
++		if (IS_ERR(armh))
++			return PTR_ERR(armh);
+ 	}
+=20
+ 	/* LUT configuration can potentially cause the window to be disabled. *=
+/
+@@ -444,8 +444,8 @@ nv50_wndw_atomic_check(struct drm_plane *plane, struc=
+t drm_plane_state *state)
+ 		asyh->wndw.mask |=3D BIT(wndw->id);
+ 	} else
+ 	if (armw->visible) {
+-		nv50_wndw_atomic_check_release(wndw, asyw, harm);
+-		harm->wndw.mask &=3D ~BIT(wndw->id);
++		nv50_wndw_atomic_check_release(wndw, asyw, armh);
++		armh->wndw.mask &=3D ~BIT(wndw->id);
+ 	} else {
+ 		return 0;
+ 	}
 --=20
 2.24.1
 
