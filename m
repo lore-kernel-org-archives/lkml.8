@@ -2,192 +2,116 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B827C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CCAC5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148A4205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971BA20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WLVVjmm/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvB9nJ8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgCRSPR (ORCPT
+        id S1727025AbgCRSPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:15:17 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40159 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgCRSPQ (ORCPT
+        Wed, 18 Mar 2020 14:15:25 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33722 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbgCRSPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:15:16 -0400
-Received: by mail-io1-f68.google.com with SMTP id h18so5339113ioh.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 11:15:15 -0700 (PDT)
+        Wed, 18 Mar 2020 14:15:25 -0400
+Received: by mail-ot1-f68.google.com with SMTP id x26so9531941otk.0;
+        Wed, 18 Mar 2020 11:15:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G3ezxdprHPC/cW/uKAbsl7U/GdK+KSS74BcxSx0wptQ=;
-        b=WLVVjmm/0PMM1l1p6mDIVriTyJMJ0Th4tquzPahs8W/LnzwtxpNz6jDrsqwMj83DYl
-         rt1/0GMd0/IJApxkA6y+pEOMFi3PRsiD7CWqdRV3C4xQq1BtuGfPkyaFw5GY4UTpRh+t
-         3pukT1OWurinsg+ucUwnnUpmNhwFxNo01T3dS/9Y1VROoU+3qlJoveEMhYdFa340GYrt
-         JNWJZnHaGG3/awfsFukSXDJorBi3REn7/YvXWulIyHgrno7QTqIc8D+fJHecyIA5Rw0F
-         aDuXkjrXNLfDlCm56VR7BkduHGPR7AhHAepYAK6QBJTHF1WX2FO660zP0sr33jJ5QkjY
-         1oeg==
+         :cc:content-transfer-encoding;
+        bh=zH2xSEw0UeDcOPH0g6JF6ZJUmfMT78Ha+NBEa9P16fM=;
+        b=rvB9nJ8fzHcVKJ0ZUvacVPpQTBcJgb/0TR9IPt+22dNHMMt5ikAjszYXMXuFTfW+/v
+         +Mre8BOWCtkZLGP3IaAh7xc6ocFjm3Tk5fhMEcYTe4r1oYQbArPHkeoYQuPLndZorWne
+         QC6jhn1H2rS58z9WWfHDYcllJVIhIK5On4mfimEpaPMnHzJaAhKI+8sUsUqane1vgil0
+         ysKBrUitfjCTBZzq8IUxH8MJC3iw41EuCCuWvR3bmKQN51MvCEZ4M253HIQLnWzfcIUA
+         8RbVRtBe2m2NzMheIr0aohjCfmtRcq+oly/J8bnRBwMsf+CsYCoovuNDh3bZYCyZKAdy
+         Rsqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G3ezxdprHPC/cW/uKAbsl7U/GdK+KSS74BcxSx0wptQ=;
-        b=HTzcZWlBTZzBolDP0SJtmUOS1Q4UzM6DV673PBuy32oQah0+m8zaYfIXok30hV8UtW
-         32Wkvi7NeDdaYbUffbX2Y+0WLmPqatW01Hxtzx7ukcjGhc6ihFbkcntSZLbCJ/Q5ECal
-         b5UvQNO+3C8Ax0P0uf5g9oqkMhNF9/ay2LQXD8eg2P3lTWWqdzL13yRO7b+5riMGXw/7
-         SLzgQTYkv81TmFWSRq5Kd1S2rhNypeIL2YPDqEnKRaaRICsmB22+f2OsXwHWY/2oP5Jk
-         M515M/f7WRUU6JBjsvubFPUcq0wLEtIkhChqUCfa0WOXNp5FMTS/QQX/nRpEDfU4Ml5L
-         WR7A==
-X-Gm-Message-State: ANhLgQ17ckx5NozkpWWVCC5UN//XOrpY1+Ks1C3gGqGbWZB8ngv+DQOb
-        fDa1gXlIpyMK4UD+Q3lzIylH2hvoFNlrsTcquKdPug==
-X-Google-Smtp-Source: ADFU+vsy1Xcz73+8WOjXa+8SolKRUHeZY/s0KA74nqezOvrFq97BgP/0qG96ERIthIjEQ+53e3HMW0S91FCfhZMyXik=
-X-Received: by 2002:a05:6638:f01:: with SMTP id h1mr5469337jas.36.1584555315208;
- Wed, 18 Mar 2020 11:15:15 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zH2xSEw0UeDcOPH0g6JF6ZJUmfMT78Ha+NBEa9P16fM=;
+        b=oiPK+7uLF5VHJI7Lz1LYR5wKuhahQ4KToEbC78HOh0RjwZ3mvszB7XCBn9AIt7mSCK
+         XqK1X3Nt010MwczhF9Ggj7tLMldGH1RAvpvLijNDqWBIf3OIDCtHLKMyDAW7h09OwVLJ
+         nkYFbXgf6ItkfPD21bkEOOWzBIJr/KqXSGNTxpVky0zdGWKS3jAbS59dqBc286gBs56v
+         4Znrwl3/y5QUZMb6dQDsdCi7U5AK+6VpwtXzXPP8DPHRrNPtwrli0L8c4PRWUXoRV7FA
+         wpa6hO//JNmIoURkanS/ErLKz0xuRlXA15R0/fVGhmCUiY2HQqp4aqJhQS77XTWR+3Gs
+         hJ/w==
+X-Gm-Message-State: ANhLgQ0lJ7LZKQvI/bxYnASKzviLNXVoJhUmhMm4QAyDh8CYqZsHlwz6
+        9CGHyXBrmtD+VqJQuq/TSoJHpWnSKssc5YsS8vI=
+X-Google-Smtp-Source: ADFU+vtz9XxeMdAeAaXdIJGIpPNzmsHKXpChYjW9nVgxD3Zd2FNMSPRl3YeUpBVMj0QuCyhZJgJjLH5/0t3p3ncxjyw=
+X-Received: by 2002:a9d:6ac6:: with SMTP id m6mr5197146otq.198.1584555323797;
+ Wed, 18 Mar 2020 11:15:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200309161748.31975-1-mathieu.poirier@linaro.org>
- <20200309161748.31975-2-mathieu.poirier@linaro.org> <20200318132241.GB2789508@kroah.com>
- <20200318181226.GA18359@xps15>
-In-Reply-To: <20200318181226.GA18359@xps15>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 18 Mar 2020 12:15:04 -0600
-Message-ID: <CANLsYkxxUuaAZEy8fHm1aWDocdaRg1rUKan6tQQh6+T4afTxFg@mail.gmail.com>
-Subject: Re: [PATCH 01/13] coresight: cti: Initial CoreSight CTI Driver
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200318170638.18562-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200318170638.18562-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200318170638.18562-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 18 Mar 2020 18:14:57 +0000
+Message-ID: <CA+V-a8u_zovBDO91OXCLkdngKcbpGs3x9tS0xbtGK98OeWpZYw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] media: rcar-vin: Add support for
+ MEDIA_BUS_FMT_SRGGB8_1X8 format
+To:     Niklas <niklas.soderlund@ragnatech.se>
+Cc:     linux-media <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020 at 12:12, Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
+On Wed, Mar 18, 2020 at 5:06 PM Lad Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
 >
-> On Wed, Mar 18, 2020 at 02:22:41PM +0100, Greg KH wrote:
-> > On Mon, Mar 09, 2020 at 10:17:36AM -0600, Mathieu Poirier wrote:
-> > > From: Mike Leach <mike.leach@linaro.org>
-> > >
-> > > This introduces a baseline CTI driver and associated configuration files.
-> > >
-> > > Uses the platform agnostic naming standard for CoreSight devices, along
-> > > with a generic platform probing method that currently supports device
-> > > tree descriptions, but allows for the ACPI bindings to be added once these
-> > > have been defined for the CTI devices.
-> > >
-> > > Driver will probe for the device on the AMBA bus, and load the CTI driver
-> > > on CoreSight ID match to CTI IDs in tables.
-> > >
-> > > Initial sysfs support for enable / disable provided.
-> > >
-> > > Default CTI interconnection data is generated based on hardware
-> > > register signal counts, with no additional connection information.
-> > >
-> > > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >
-> > You didn't cc: all of them to get review comments?  I've added it
-> > above...
+> This patch adds support for MEDIA_BUS_FMT_SRGGB8_1X8 format for CSI2
+> input.
 >
-> Thanks
->
-> >
-> > And signed-off-by implies reviewed-by.
->
-> This set has been refined over several iterations.  I added my R-b to patches
-> that I had reviewed and did not need attentions anymore.  Since this is supposed
-> to be a chain of custody I decided to keep my R-b and append my S-b before
-> queueing in my tree.  I have seen this done many times before but will remove if
-> you think it is better.
->
-> >
-> > > +/* basic attributes */
-> > > +static ssize_t enable_show(struct device *dev,
-> > > +                      struct device_attribute *attr,
-> > > +                      char *buf)
-> > > +{
-> > > +   int enable_req;
-> > > +   bool enabled, powered;
-> > > +   struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> > > +   ssize_t size = 0;
-> > > +
-> > > +   enable_req = atomic_read(&drvdata->config.enable_req_count);
-> > > +   spin_lock(&drvdata->spinlock);
-> > > +   powered = drvdata->config.hw_powered;
-> > > +   enabled = drvdata->config.hw_enabled;
-> > > +   spin_unlock(&drvdata->spinlock);
-> > > +
-> > > +   if (powered) {
-> > > +           size = scnprintf(buf, PAGE_SIZE, "cti %s; powered;\n",
-> > > +                            enabled ? "enabled" : "disabled");
-> > > +   } else {
-> > > +           size = scnprintf(buf, PAGE_SIZE, "cti %s; unpowered;\n",
-> > > +                            enable_req ? "enable req" : "disabled");
-> >
-> > sysfs files should never need scnprintf() as you "know" a single value
-> > will fit into a PAGE_SIZE.
->
-> I've seen many patches using scnprintf() that were merged.  We can change this
-> to sprintf().
->
-> >
-> > And shouldn't this just be a single value, this looks like it is 2
-> > values in one line, that then needs to be parsed, is that to be
-> > expected?
->
-> There is no shortage of files under /sys/device/ with output that needs parsing,
-> but this can be split in two entries.
->
-> >
-> > Where is the documentation for this new sysfs file?
->
-> All the documentation for sysfs files are lumped together in a single patch [1]
-> that is also part of this set.
->
-> [1]. https://lkml.org/lkml/2020/3/9/643
+Argh! missed to update the subject line to rcar-csi2
 
-Correction - this link should be:
+Cheers,
+--Prabhakar
 
-https://lkml.org/lkml/2020/3/9/642
-
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se=
 >
-> >
-> > > +const struct attribute_group *coresight_cti_groups[] = {
-> > > +   &coresight_cti_group,
-> > > +   NULL,
-> > > +};
-> >
-> > ATTRIBUTE_GROUPS()?
+> ---
+>  drivers/media/platform/rcar-vin/rcar-csi2.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> As with all the other coresight devices, groups are communicated to
-> coresight_register() and added to the csdev->dev in that function.
+> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/=
+platform/rcar-vin/rcar-csi2.c
+> index faa9fb23a2e9..3d1945d7996c 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> @@ -320,6 +320,7 @@ static const struct rcar_csi2_format rcar_csi2_format=
+s[] =3D {
+>         { .code =3D MEDIA_BUS_FMT_YUYV8_1X16,     .datatype =3D 0x1e, .bp=
+p =3D 16 },
+>         { .code =3D MEDIA_BUS_FMT_UYVY8_2X8,      .datatype =3D 0x1e, .bp=
+p =3D 16 },
+>         { .code =3D MEDIA_BUS_FMT_YUYV10_2X10,    .datatype =3D 0x1e, .bp=
+p =3D 20 },
+> +       { .code =3D MEDIA_BUS_FMT_SRGGB8_1X8,     .datatype =3D 0x2a, .bp=
+p =3D 8 },
+>  };
 >
-> >
-> > > +static struct amba_driver cti_driver = {
-> > > +   .drv = {
-> > > +           .name   = "coresight-cti",
-> > > +           .owner = THIS_MODULE,
-> >
-> > Aren't amba drivers smart enough to set this properly on their own?
-> > {sigh}
+>  static const struct rcar_csi2_format *rcsi2_code_to_fmt(unsigned int cod=
+e)
+> --
+> 2.20.1
 >
-> Would you mind indicating where?  builtin_amba_driver() calls
-> amba_driver_register() and  that doesn't set the owner field.
->
-> Thanks,
-> Mathieu
->
-> >
-> > greg k-h
