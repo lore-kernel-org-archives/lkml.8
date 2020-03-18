@@ -2,198 +2,111 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465D8C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEA9C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1236320754
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:42:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7nNzbOX"
+	by mail.kernel.org (Postfix) with ESMTP id 005D820754
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:43:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584571433;
+	bh=RPUpDSRkoMVZF2rKv6MfDn4VBERlMj6dw3OMoxfcRG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Wy5MYiEhR3CcWxNBITPvs+zoUgp3qLtwQr/MXk0AN4J2cwO3y1F9vaeC8nV+wH/IO
+	 Rw/3yjiK7LWSnRkKTscfmFia/6XI902PRYPEyw7gT2XUeMFBs4yajc6Nfl7fPiBOvc
+	 g3Sjid8uesNjU6Djr2BFewSJKIkBn/+dJYUsyeHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgCRWmZ (ORCPT
+        id S1727212AbgCRWnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:42:25 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42704 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCRWmZ (ORCPT
+        Wed, 18 Mar 2020 18:43:52 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43474 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCRWnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:42:25 -0400
-Received: by mail-ot1-f66.google.com with SMTP id a2so374194otq.9;
-        Wed, 18 Mar 2020 15:42:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xmDtlPZZt6AhkIa9RNZ63X94d3qxtY/pBeuqTxtM6B8=;
-        b=b7nNzbOXPtnvlE3gG1PJ0B6/TDG5+2bsj66N8oWRaWt+djk+gNRA8ueaW1TI6ofTIi
-         Dv3DBijbD4E6cWOZT9jT7J2AjcCLp7qxEdmfvs35qp8VSBkLgeuD7+FdXReOQHsFlulT
-         tFICkBCaM3fwRoF8rlvtkXP6Jgt0PQIxVv0vzYdfigRS+BQVKMCSxh9/JIDU4vpW7wTk
-         Lv+O5O31N0BTBOeJVK60H5HnMazVMh1LWfXvZisI5fNIw4fuM8B9IM0DWcgt2K6npEJS
-         MenqtwxHDFLS3kjlniGTDeld7jBtod/fnDZiAm6H9yD9AvqFuY6Pz+akI9ujCi6cNBKo
-         Sc5A==
+        Wed, 18 Mar 2020 18:43:51 -0400
+Received: by mail-io1-f67.google.com with SMTP id n21so234213ioo.10;
+        Wed, 18 Mar 2020 15:43:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xmDtlPZZt6AhkIa9RNZ63X94d3qxtY/pBeuqTxtM6B8=;
-        b=cCgpZz7yBYArzXHINuwD4MoJtaycC9ukp53GHLXTomwEB0ZWgr7lF93lhJYGr+alQy
-         6jQBtxh2+U0xNfh8TV57wVhmZY3t4A/cPB8K/xL87tWO/TpkAlrKNaTGHVMRkYoerDOs
-         mN1dVCbpMKh/lis75fghfbSe0Z6wEB+B9TPds8Y2DTKNSvcT/RLXySLp2N3nN3KAH4Ps
-         UH1xHYjbSLjAgreWqx5paaNtma9rs66rM3r//uLq82DIVdG3Rl2ORi1WhQ7/Gx7Xatrc
-         rPn6yTGQLmCzPTy/U8fet/JLyFk3LACF36t8/+5ShDKaxajo/M/4c5ggH6LX1WfABDZW
-         Y8LA==
-X-Gm-Message-State: ANhLgQ2jXkJmWqkjg6X7/gRWUnt6NkC8ZsgRHMMKNi1RwfQ/jVToMFd/
-        qa9RSqGJm0igCc9InI+ZK93EEr31gHIXjpZ+pZc=
-X-Google-Smtp-Source: ADFU+vsvjgAClOIMqrGGIb7SpXqS1gb1iFF33qVcEpJgyK0wGZvK+9LgyP8Z7Vpzi0hvGvTCOziEP0Qb1UkSCWhgSCQ=
-X-Received: by 2002:a9d:6ac6:: with SMTP id m6mr6155284otq.198.1584571343441;
- Wed, 18 Mar 2020 15:42:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UbWcmYV7Yk+Clr9xPUcjHEM8UjChZ0Ube2X+QPUWkcY=;
+        b=YB6lOO8AbfuKsy8r9AReBvsEsfG+nCJb09MQNVF5Qg2GpEfPI6lZldsN0pPKundrUu
+         yUKkQdaTBpKXkTTLwRhwsYMet5iefhYKKlaIcSFHVEbUXYjuZNXc+EQ84W2tM5nIV7Cb
+         993p9Mq2rKOHi3/bvGO6YNw2n5amq5hvvjK7Lmus+4/C6F7qLS7ndpzvS6cWYRlTvQ2i
+         XTzFaq7vdHe2tlVAtLoCdZ9Ng6dDe909YuJzQlhzULCSO9p75ooCliCzNM79vzWhj31e
+         +RKWKK60dGe62dpKah9L+csMZxtpVzVE9sYvyYGYANbaZATDTPeowyx9nHSC8wrWcJ1l
+         0iNA==
+X-Gm-Message-State: ANhLgQ1zkhXGk1bGhQpZDBpPKc+97KaAK9c4VevyzXYDXLCe8YwmF9k3
+        FL44CFU99TQrX5HmB47bZw==
+X-Google-Smtp-Source: ADFU+vuKZ5nQigQX/gmK6fyGJCYz1mOJ8JDdLBfylffuuRMp7AeJ8OWk0BKHi5uLykgsBx99vlqsSw==
+X-Received: by 2002:a02:7787:: with SMTP id g129mr352527jac.29.1584571430672;
+        Wed, 18 Mar 2020 15:43:50 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id w11sm93346ilh.55.2020.03.18.15.43.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 15:43:50 -0700 (PDT)
+Received: (nullmailer pid 7184 invoked by uid 1000);
+        Wed, 18 Mar 2020 22:43:47 -0000
+Date:   Wed, 18 Mar 2020 16:43:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] dt-bindings: sram: convert rockchip-pmu-sram
+ bindings to yaml
+Message-ID: <20200318224347.GA2792@bogus>
+References: <20200317163555.18107-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200313212345.GM4751@pendragon.ideasonboard.com> <OSBPR01MB359079EAA32E0DCBF63C6886AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB359079EAA32E0DCBF63C6886AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 18 Mar 2020 22:41:57 +0000
-Message-ID: <CA+V-a8t-rA-6AmZry63QeXN6pvGWVtcEEuHaDA1jsS-x+30oiQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] media: i2c: ov5645: Set maximum leverage of
- external clock frequency to 24480000
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317163555.18107-1-jbx6244@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+On Tue, 17 Mar 2020 17:35:54 +0100, Johan Jonker wrote:
+> Current dts files with 'rockchip-pmu-sram' compatible nodes
+> are manually verified. In order to automate this process
+> rockchip-pmu-sram.txt has to be converted to yaml.
+> 
+> A check with the command below gives for example this error:
+> 
+> arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff700000:
+> compatible:0:
+> 'rockchip,rk3288-pmu-sram' was expected
+> arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff700000:
+> compatible:
+> ['mmio-sram'] is too short
+> 
+> Fix this error by adding an extra 'mmio-sram' compatible and
+> 'if then' structure to filter yaml warnings.
+> 
+> make ARCH=arm dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/sram/
+> rockchip-pmu-sram.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+>  .../devicetree/bindings/sram/rockchip-pmu-sram.txt | 16 --------
+>  .../bindings/sram/rockchip-pmu-sram.yaml           | 46 ++++++++++++++++++++++
+>  2 files changed, 46 insertions(+), 16 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
+>  create mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.yaml
+> 
 
-On Fri, Mar 13, 2020 at 9:31 PM Prabhakar Mahadev Lad
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Hi Laurent,
->
-> Thank you for the review.
->
-> > -----Original Message-----
-> > From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Sent: 13 March 2020 21:24
-> > To: Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>; Shawn Guo
-> > <shawnguo@kernel.org>; Sascha Hauer <s.hauer@pengutronix.de>;
-> > Pengutronix Kernel Team <kernel@pengutronix.de>; Rob Herring
-> > <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Sakari
-> > Ailus <sakari.ailus@linux.intel.com>; NXP Linux Team <linux-imx@nxp.com=
->;
-> > Magnus Damm <magnus.damm@gmail.com>; Ezequiel Garcia
-> > <ezequiel@collabora.com>; Geert Uytterhoeven <geert@linux-m68k.org>;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-renesas=
--
-> > soc@vger.kernel.org; Fabio Estevam <festevam@gmail.com>; linux-
-> > media@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> > Subject: Re: [PATCH v3 3/4] media: i2c: ov5645: Set maximum leverage of
-> > external clock frequency to 24480000
-> >
-> > Hi Prabhakar,
-> >
-> > Thank you for the patch.
-> >
-> > On Fri, Mar 13, 2020 at 09:12:33PM +0000, Lad Prabhakar wrote:
-> > > While testing on Renesas RZ/G2E platform, noticed the clock frequency
-> > > to be 24242424 as a result the probe failed. However increasing the
-> > > maximum leverage of external clock frequency to 24480000 fixes this
-> > > issue. Since this difference is small enough and is insignificant set
-> > > the same in the driver.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-
-> > lad.rj@bp.renesas.com>
-> > > ---
-> > >  drivers/media/i2c/ov5645.c | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
-> > > index 4fbabf3..b49359b 100644
-> > > --- a/drivers/media/i2c/ov5645.c
-> > > +++ b/drivers/media/i2c/ov5645.c
-> > > @@ -1107,8 +1107,10 @@ static int ov5645_probe(struct i2c_client *cli=
-ent)
-> > >  }
-> > >
-> > >  xclk_freq =3D clk_get_rate(ov5645->xclk);
-> > > -/* external clock must be 24MHz, allow 1% tolerance */
-> > > -if (xclk_freq < 23760000 || xclk_freq > 24240000) {
-> > > +/* external clock must be 24MHz, allow a minimum 1% and a
-> > maximum of 2%
-> > > + * tolerance
-> >
-> > So where do these numbers come from ? I understand that 2% is what you
-> > need to make your clock fit in the range, but why -1%/+2% instead of -
-> > 2%/+2% ? And why not 2.5 or 3% ? The sensor datasheet documents the
-> > range of supported xvclk frequencies to be 6MHz to 54MHz. I understand
-> > that PLL parameters depend on the clock frequency, but could they be
-> > calculated instead of hardcoded, to avoid requiring an exact 24MHz inpu=
-t
-> > frequency ?
-> >
-> To be honest I don't have the datasheet for ov5645, the flyer says 6-54Mh=
-z but the
-> logs/comment says 24Mhz.
->
-Comparing to ov5640 datasheet [1] (which I am assuming might be
-similar to ov5645), this change should affect the driver.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-[1] https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/OV5640_datashe=
-et.pdf
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.example.dt.yaml: sram@ff720000: '#address-cells' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.example.dt.yaml: sram@ff720000: '#size-cells' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.example.dt.yaml: sram@ff720000: 'ranges' is a required property
 
-Cheers,
---Prabhakar
-
-> Cheers,
-> --Prabhakar
->
-> > > + */
-> > > +if (xclk_freq < 23760000 || xclk_freq > 24480000) {
-> > >  dev_err(dev, "external clock frequency %u is not
-> > supported\n",
-> > >  xclk_freq);
-> > >  return -EINVAL;
-> >
-> > --
-> > Regards,
-> >
-> > Laurent Pinchart
->
->
-> Renesas Electronics Europe GmbH, Geschaeftsfuehrer/President: Carsten Jau=
-ch, Sitz der Gesellschaft/Registered office: Duesseldorf, Arcadiastrasse 10=
-, 40472 Duesseldorf, Germany, Handelsregister/Commercial Register: Duesseld=
-orf, HRB 3708 USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./=
-WEEE reg. no.: DE 14978647
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+See https://patchwork.ozlabs.org/patch/1256661
+Please check and re-submit.
