@@ -2,117 +2,227 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3BAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD74C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F287820663
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD41420663
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ADYpT/no"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="zOTIH/VO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbgCRKTd (ORCPT
+        id S1727719AbgCRKTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:19:33 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:28998 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726786AbgCRKTd (ORCPT
+        Wed, 18 Mar 2020 06:19:41 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35085 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbgCRKTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:19:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584526772;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=t01fhWNp1IRXO32y9v3L1IxmXyRwLvORUavbkYC8gO4=;
-        b=ADYpT/no2EVaCuUjpWuHZNIRY77eX4JqHB8xWXgMsxh47sMb+glK/Qi3xmQ6vxO2zR76QU
-        g7DFWBal9yGQE95pLMqMRwWOFAWy0onawcoZFVWQdmxWo3G7VTfEJnx4EUUswJP8zjl2bh
-        WPvPggiAXEdq3uc6DI+SWA14UYPbQT4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-416-BCLxyEjRMZOmdsNyN1yuxA-1; Wed, 18 Mar 2020 06:19:30 -0400
-X-MC-Unique: BCLxyEjRMZOmdsNyN1yuxA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F970107ACCC;
-        Wed, 18 Mar 2020 10:19:29 +0000 (UTC)
-Received: from krava (unknown [10.40.195.82])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B453B92D0E;
-        Wed, 18 Mar 2020 10:19:25 +0000 (UTC)
-Date:   Wed, 18 Mar 2020 11:19:15 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v2 00/14] perf: Stream comparison
-Message-ID: <20200318101915.GB821557@krava>
-References: <20200313071118.11983-1-yao.jin@linux.intel.com>
+        Wed, 18 Mar 2020 06:19:40 -0400
+Received: by mail-lj1-f196.google.com with SMTP id u12so26355181ljo.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:19:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=gzym+ypZqpjWmWKa4VJKBMKo9LIO59BdQoueTVn41OM=;
+        b=zOTIH/VOJopsLS0rZHxSVfiTGkCoEaq9QcfoXQf9O9MFBO+oNrnrouGTC2y6Pv4zll
+         RNva8BANBr2Y5cEndoEbedTZQEQmM25pJbjU7o/gLWKCVD5AdD+e0vNteSlI3aBq2/gN
+         U6QoRwbpoJ3H8KhzKfKBimcoprdAhvhgWfFfSJwwAzDzDSnruLL9JeocTicsbraAJ9Aj
+         QC4rLBrsMX63siPSOunTGHKZPVg89mPn/1DW2BCtUvOQhFtYSzR9/dOCdGDDtitd3r0S
+         wFwgzhcInX3rXZWgjf6Up6rSjvxQ8XlMKVMCPk/1boTeRDRGHDkVIaaZeN0/5F0TbcmM
+         F+Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=gzym+ypZqpjWmWKa4VJKBMKo9LIO59BdQoueTVn41OM=;
+        b=AzNaFfJ8eZWjdqUA1w9yZHi++zgKOgKivMGpqpDbiLPvq4+kGQOP//hxptJ6ek5+iA
+         A4ho5JBhNQbKdojrr967C/DQzN3f2/2HhwqELZUDa1O2htaHL8en/RaCBrIWUxhh6lOD
+         9xkQItvRKFUSgtL43WIElakROuXrYN7dfNS1ltPsODtP3/82Bi7+WmR4N3UJm13hsLQ/
+         Nbdncn/uCaTFHGFn39aHyAAB9oqwuYoop7rvvjy6tDKynXRZ8WRrMWcgEzQQ+9XwDCib
+         siQJsSA+QGbHsaCvn3GVG8NfhIb2YKtHOtoSO+FPObnR1kjlb9NSh5RoJ0Zf65n3Vtx8
+         4rNg==
+X-Gm-Message-State: ANhLgQ3P4EcfytfrwLY5MoTU3lXpu/qnOrh/x7TmKMT01FvIKcirSybG
+        jGvbPXY9ZqSusK53LmRUuvhDULFyW3Q=
+X-Google-Smtp-Source: ADFU+vvzt0BbIXxDJbV9xAGI8ELBnSE73Mm5oRWePbKFm4alzRuwENpzZQgxE+sl7zMNsxenhANutw==
+X-Received: by 2002:a2e:9b93:: with SMTP id z19mr1922902lji.64.1584526777495;
+        Wed, 18 Mar 2020 03:19:37 -0700 (PDT)
+Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
+        by smtp.gmail.com with ESMTPSA id t6sm3537154ljc.50.2020.03.18.03.19.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 03:19:36 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 11:19:36 +0100
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Suresh Udipi <sudipi@jp.adit-jv.com>
+Cc:     akiyama@nds-osk.co.jp, efriedrich@de.adit-jv.com,
+        erosca@de.adit-jv.com, hverkuil-cisco@xs4all.nl,
+        jacopo+renesas@jmondi.org, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, mrodin@de.adit-jv.com,
+        securitycheck@denso.co.jp
+Subject: Re: [PATCH v2] [RFC] rcar-vin: rcar-csi2: Correct the selection of
+ hsfreqrange
+Message-ID: <20200318101936.GA2667161@oden.dyn.berto.se>
+References: <20200316130247.GA2258968@oden.dyn.berto.se>
+ <1584428905-21560-1-git-send-email-sudipi@jp.adit-jv.com>
+ <20200317103756.GC2496015@oden.dyn.berto.se>
+ <20200318090029.GA22842@jp-u0004>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200313071118.11983-1-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200318090029.GA22842@jp-u0004>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 03:11:04PM +0800, Jin Yao wrote:
+Hi Suresh,
 
-SNIP
+Thanks for your feedback.
+
+On 2020-03-18 18:00:29 +0900, Suresh Udipi wrote:
+> On Tue, Mar 17, 2020 at 11:37:56AM +0100, Niklas Söderlund wrote:
+> > Hi Suresh,
+> > 
+> > Thanks for your work.
+> > 
+> > On 2020-03-17 16:08:25 +0900, Suresh Udipi wrote:
+> > > hsfreqrange should be chosen based on the calculated mbps which
+> > > is closer to the default bit rate  and within the range as per
+> > > table[1]. But current calculation always selects first value which
+> > > is greater than or equal to the calculated mbps which may lead
+> > > to chosing a wrong range in some cases.
+> > > 
+> > > For example for 360 mbps for H3/M3N
+> > > Existing logic selects
+> > > Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
+> > > 
+> > > This hsfreqrange is out of range.
+> > > 
+> > > The logic is changed to get the default value which is closest to the
+> > > calculated value [1]
+> > > 
+> > > Calculated value 360Mbps : Default 350Mbps  Range [320.625 -380.625 mpbs]
+> > > 
+> > > [1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
+> > > 
+> > > There is one exectpion value 227Mbps, which may cause out of
+> > > range.
+> > 
+> > Then something else is needed I think :-)
+> > 
+> > I liked v1 of this RFC more, where you added a u16 min and max to struct 
+> > rcsi2_mbps_reg. I think that is the right solution.
+> > 
+> > What I tried to express in my review of v1 was
+> > 
+> > - You should remove the mbps member from struct rcsi2_mbps_reg.
+> > - Update the walk of the array in rcsi2_set_phypll() so that it finds 
+> >   the first entry where the calculated target value is between min and 
+> >   max and use the reg setting for that entry.
+> > 
+> > Would that solution make sens too you? Sorry if I expressed myself a but 
+> > muddy in v1 about this.
+>  
+> Thank you for your feedback. Checking the range make more sense.
+> 
+> We can further optimize it, by checking only the Max range value.
+> 
+> - Remove mbps and min member from struct rcsi2_mbps_reg.
+> - Update the walk of the array in rcsi2_set_phypll() so that it finds
+>   the first entry where the calculated bit rate is less than the max.
+> 
+> Lower bit rates less than 80Mbps 
+> like 48Mbps(Raspberry pi camera 640x480 connected to Kingfisher)
+> can also be supported by selecting the lowest default bit rate 80Mbps
+> as done before this fix.
+
+I think this approach sounds nice.
 
 > 
->  v2:
->  ---
->  Refine the codes for following patches:
->   perf util: Create source line mapping table
->   perf util: Create streams for managing top N hottest callchains
->   perf util: Calculate the sum of all streams hits
->   perf util: Add new block info functions for top N hot blocks comparison 
-> 
-> Jin Yao (14):
->   perf util: Create source line mapping table
->   perf util: Create streams for managing top N hottest callchains
->   perf util: Return per-event callchain streams
->   perf util: Compare two streams
->   perf util: Calculate the sum of all streams hits
->   perf util: Report hot streams
->   perf diff: Support hot streams comparison
->   perf util: Add new block info functions for top N hot blocks
->     comparison
->   perf util: Add new block info fmts for showing hot blocks comparison
->   perf util: Enable block source line comparison
->   perf diff: support hot blocks comparison
->   perf util: Filter out streams by name of changed functions
->   perf util: Filter out blocks by name of changed functions
->   perf diff: Filter out streams by changed functions
+> Please let me know your opinion on the same.
+> Meanwhile iam working on creating the patch, test it and update the same.
 
-I can't apply this on latest perf/core, do you have it in git tree branch?
+Looking forward to it!
 
-thanks,
-jirka
-
-> 
->  tools/perf/Documentation/perf-diff.txt |  19 +
->  tools/perf/builtin-diff.c              | 324 ++++++++++++---
->  tools/perf/util/Build                  |   1 +
->  tools/perf/util/block-info.c           | 433 ++++++++++++++++++-
->  tools/perf/util/block-info.h           |  38 +-
->  tools/perf/util/callchain.c            | 517 +++++++++++++++++++++++
->  tools/perf/util/callchain.h            |  34 ++
->  tools/perf/util/srclist.c              | 555 +++++++++++++++++++++++++
->  tools/perf/util/srclist.h              |  74 ++++
->  9 files changed, 1935 insertions(+), 60 deletions(-)
->  create mode 100644 tools/perf/util/srclist.c
->  create mode 100644 tools/perf/util/srclist.h
+> > > 
+> > > Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
+> > > 
+> > > Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+> > > Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
+> > > ---
+> > > Changes in v2:
+> > >   - Added the boundary check for the maximum bit rate.
+> > >   
+> > >   - Simplified the logic by remmoving range check 
+> > >     as only the closest default value covers most 
+> > >     of the use cases.
+> > > 
+> > >   - Aligning the commit message based on the above change
+> > > 
+> > >  drivers/media/platform/rcar-vin/rcar-csi2.c | 18 +++++++++++++-----
+> > >  1 file changed, 13 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > > index faa9fb2..6573625 100644
+> > > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > > @@ -199,6 +199,7 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
+> > >  /* PHY Frequency Control */
+> > >  #define PHYPLL_REG			0x68
+> > >  #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
+> > > +#define PHYPLL_HSFREQRANGE_MAX		1500
+> > >  
+> > >  static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
+> > >  	{ .mbps =   80, .reg = 0x00 },
+> > > @@ -431,16 +432,23 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
+> > >  static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
+> > >  {
+> > >  	const struct rcsi2_mbps_reg *hsfreq;
+> > > +	const struct rcsi2_mbps_reg *hsfreq_prev = NULL;
+> > >  
+> > > -	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
+> > > -		if (hsfreq->mbps >= mbps)
+> > > -			break;
+> > > -
+> > > -	if (!hsfreq->mbps) {
+> > > +	if (mbps > PHYPLL_HSFREQRANGE_MAX) {
+> > >  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+> > >  		return -ERANGE;
+> > >  	}
+> > >  
+> > > +	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
+> > > +		if (hsfreq->mbps >= mbps)
+> > > +			break;
+> > > +		hsfreq_prev = hsfreq;
+> > > +	}
+> > > +
+> > > +	if (hsfreq_prev &&
+> > > +	    ((mbps - hsfreq_prev->mbps) <= (hsfreq->mbps - mbps)))
+> > > +		hsfreq = hsfreq_prev;
+> > > +
+> > >  	rcsi2_write(priv, PHYPLL_REG, PHYPLL_HSFREQRANGE(hsfreq->reg));
+> > >  
+> > >  	return 0;
+> > > -- 
+> > > 2.7.4
+> > > 
+> > 
+> > -- 
+> > Regards,
+> > Niklas Söderlund
 > 
 > -- 
-> 2.17.1
-> 
+> Best Regards,
+> Suresh Udipi.
 
+-- 
+Regards,
+Niklas Söderlund
