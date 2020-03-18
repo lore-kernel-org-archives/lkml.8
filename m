@@ -2,141 +2,118 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E66C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E67C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4B420768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:35:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvNwNyny"
+	by mail.kernel.org (Postfix) with ESMTP id 2099920768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgCRHfa (ORCPT
+        id S1726473AbgCRHgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 03:35:30 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40472 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgCRHf3 (ORCPT
+        Wed, 18 Mar 2020 03:36:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10820 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726452AbgCRHgb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 03:35:29 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 19so25781654ljj.7;
-        Wed, 18 Mar 2020 00:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k7ojDd8bH4rHuUROHL8yQ33iky3lTQUOUIq9HFOqbw0=;
-        b=fvNwNynyOikKBbNMPLWFivb8+f/I6G7r6/sGEbmTWHGmzpQjeP9wsYYAXLZOy0ELEs
-         uQxerWZnBTiM6a9jVTPHhErJlqLNLYHgux/6v9CSDe9kf1nez6AXTEiyIlPDWkyT4pYr
-         bQuatnuTbQSpLCEqyTaJeltoOLQ6fNNUCh9YOnaErd5yfyvoIBHRhsg5geZ5yd54bYun
-         0KXbm6R18BztDKMtycbA4Xd04h/VK2yJh/A9Pcfe5LRneZXcwA2Sz5iYx0MDHKstqVx4
-         oxyyrUVcF9wRb5FplwuzoHbs2aqwGM3m0P1Kqcp8TLCLHROj2YlHxbw11gR7/Q8FqApB
-         +CzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k7ojDd8bH4rHuUROHL8yQ33iky3lTQUOUIq9HFOqbw0=;
-        b=TvgfDkQ1myW+0N9bsvhBEEefZP1oK5euf/hW2XPx3StBZvHCaECckJO+6JJ5d8ZnGX
-         PETUynC4ph6m7gdl10RFKnEvGNMQeiZuasZYp164X6i8A6WxMlMoQ8u6/JPKhu2yA4Ve
-         R6lW7jQhwYEon/fystqrFN0NMvkipBqz2Jk5nhhCE3X1OzQgpiIEM9eCgfNvk4bKzO14
-         r8tPSOYbZcuqGK0WW7xG2sMikDWTWGaCVXfJq65D4Ib5c6H99g4j3JULr8iBDhvywaxK
-         nU9FOm+joHqgajRXOb1JZgb46i9SbSZ1bmKtyesNzeOqgJ9WZ3trZgH4qppQQx4Mo7ot
-         hDYg==
-X-Gm-Message-State: ANhLgQ1LT84SLVNxnhHMeHHp0xTbZa3TjgRw1QBL513hU1RwYap2B1Tp
-        Hg1eGUNVyWFUZqMN6Oha1ZFu2bfIX4xUAK11YdE=
-X-Google-Smtp-Source: ADFU+vtpXx/uYsdmeJhw5fEuthwiRX9xrXySvD7fu+K1NVi3etsAr/tIqptomf57tOeij/3UfqnMGqSKp4p5gwy/kXs=
-X-Received: by 2002:a2e:8059:: with SMTP id p25mr1565366ljg.196.1584516927469;
- Wed, 18 Mar 2020 00:35:27 -0700 (PDT)
+        Wed, 18 Mar 2020 03:36:31 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02I7aATG113937
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:36:30 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yu96ejywk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:36:30 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 18 Mar 2020 07:36:28 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Mar 2020 07:36:25 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02I7aOS247579388
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 07:36:24 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9B96A4054;
+        Wed, 18 Mar 2020 07:36:24 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CDD24A4066;
+        Wed, 18 Mar 2020 07:36:23 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.202.35])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 18 Mar 2020 07:36:23 +0000 (GMT)
+Date:   Wed, 18 Mar 2020 09:36:22 +0200
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Wang Wenhu <wenhu.wang@vivo.com>
+Cc:     Guo Ren <guoren@kernel.org>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-csky@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@vivo.com, trivial@kernel.org
+Subject: Re: [PATCH] csky: delete redundant micro io_remap_pfn_range
+References: <20200318044702.104793-1-wenhu.wang@vivo.com>
 MIME-Version: 1.0
-References: <cover.1584428736.git.baolin.wang7@gmail.com> <7866e519-80ad-8678-6708-7726a53ea4f5@intel.com>
- <CADBw62q7q=wqKGBnLRA+npYLVZVXeMiFwGP-K1TLkG2GPCwLjg@mail.gmail.com> <ce622b0c-6ec0-10c8-f71f-fa2bba8b4a66@intel.com>
-In-Reply-To: <ce622b0c-6ec0-10c8-f71f-fa2bba8b4a66@intel.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Wed, 18 Mar 2020 15:35:15 +0800
-Message-ID: <CADBw62pAm2h5m2Hz4uXHv6m0W3RpA7BoegwBHc+s2RK6spF_3Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Introduce the request_atomic() for the host
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318044702.104793-1-wenhu.wang@vivo.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20031807-0020-0000-0000-000003B65568
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031807-0021-0000-0000-0000220EBD63
+Message-Id: <20200318073622.GB17919@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_02:2020-03-17,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=747 bulkscore=0
+ malwarescore=0 suspectscore=1 adultscore=0 priorityscore=1501 spamscore=0
+ phishscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003180034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 11:07 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 17/03/20 3:49 pm, Baolin Wang wrote:
-> > On Tue, Mar 17, 2020 at 9:25 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >>
-> >> On 17/03/20 12:14 pm, Baolin Wang wrote:
-> >>> This patch set introduces a new request_atomic() interface for the
-> >>> MMC host controller, which is used to submit a request to host in
-> >>> the atomic context, such as in the irq hard handler, to reduce the
-> >>> request latency.
-> >>>
-> >>> Any comments are welcome. Thanks.
-> >>>
-> >>> Note: Adrian pointed out that it is not good if moving the polling of
-> >>> inhibit bits in sdhci_send_command() into the interrupt context, but
-> >>> now I have not found a better way to address Adrian's concern. Moveover
-> >>> this is an unusual abnormal case and the original code has the same
-> >>> problem, so I plan to create another patch set to talk about and fix
-> >>> this issue.
-> >>
-> >> I tend to think the API requires the possibility for host controllers to
-> >> return "busy", so that should be sorted out first.
-> >
-> > If request_atomic() can return 'busy', the HSQ need queue a work to
-> > dispatch this request to host again?
->
-> Sounds reasonable
->
-> >
-> > I am thinking if I can introduce a new flag to avoid polling the
-> > status before sending commands, cause from the datasheet, I did not
-> > see we should need do this if the command complete and transfer
-> > complete interrupts are processed normally. At least on my platfrom, I
-> > did not see the inhibit bits are set. If we meet this issue, I think
-> > some abormal things are happened, we should give out errors. How do
-> > you think?
->
-> For the atomic path, some kind of warning would be ok.
+On Tue, Mar 17, 2020 at 09:47:01PM -0700, Wang Wenhu wrote:
+> Same definition exists in "include/asm-generic/pgtable.h",
+> which is included just below the lines to be deleted.
+> 
+> #ifndef io_remap_pfn_range
+> #define io_remap_pfn_range remap_pfn_range
+> #endif
+> 
+> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
 
-OK. I will try in next version. Thanks.
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
 
-> >
-> >>>
-> >>> Changes from v1:
-> >>>  - Re-split the changes to make them more clear suggested by Ulf.
-> >>>  - Factor out the auto CMD23 checking into a separate function.
-> >>>
-> >>> Baolin Wang (3):
-> >>>   mmc: host: Introduce the request_atomic() for the host
-> >>>   mmc: host: sdhci: Implement the request_atomic() API
-> >>>   mmc: host: sdhci-sprd: Implement the request_atomic() API
-> >>>
-> >>>  drivers/mmc/host/mmc_hsq.c    |  5 ++++-
-> >>>  drivers/mmc/host/sdhci-sprd.c | 23 ++++++++++++++++++++---
-> >>>  drivers/mmc/host/sdhci.c      | 27 +++++++++++++++++++--------
-> >>>  drivers/mmc/host/sdhci.h      |  1 +
-> >>>  include/linux/mmc/host.h      |  3 +++
-> >>>  5 files changed, 47 insertions(+), 12 deletions(-)
-> >>>
-> >>
-> >
-> >
->
-
+> ---
+>  arch/csky/include/asm/pgtable.h | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/arch/csky/include/asm/pgtable.h b/arch/csky/include/asm/pgtable.h
+> index 9b7764cb7645..bde812a785c8 100644
+> --- a/arch/csky/include/asm/pgtable.h
+> +++ b/arch/csky/include/asm/pgtable.h
+> @@ -306,9 +306,6 @@ void update_mmu_cache(struct vm_area_struct *vma, unsigned long address,
+>  /* Needs to be defined here and not in linux/mm.h, as it is arch dependent */
+>  #define kern_addr_valid(addr)	(1)
+>  
+> -#define io_remap_pfn_range(vma, vaddr, pfn, size, prot) \
+> -	remap_pfn_range(vma, vaddr, pfn, size, prot)
+> -
+>  #include <asm-generic/pgtable.h>
+>  
+>  #endif /* __ASM_CSKY_PGTABLE_H */
+> -- 
+> 2.17.1
+> 
 
 -- 
-Baolin Wang
+Sincerely yours,
+Mike.
+
