@@ -2,87 +2,76 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1B1C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8494C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E2920771
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A8E2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgCRMyp (ORCPT
+        id S1726894AbgCRM6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 08:54:45 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:45728 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726550AbgCRMyp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:54:45 -0400
-Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id f7d79faa9d0d97e6; Wed, 18 Mar 2020 13:54:43 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCHv2 46/50] power: Use show_stack_loglvl()
-Date:   Wed, 18 Mar 2020 13:54:42 +0100
-Message-ID: <3067782.Hudzh6pScr@kreacher>
-In-Reply-To: <20200316143916.195608-47-dima@arista.com>
-References: <20200316143916.195608-1-dima@arista.com> <20200316143916.195608-47-dima@arista.com>
+        Wed, 18 Mar 2020 08:58:02 -0400
+Received: from mga06.intel.com ([134.134.136.31]:63424 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbgCRM6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 08:58:02 -0400
+IronPort-SDR: RvbxxRczG7WdWNhsPeOiqSYS0RGD/fPyhXC4R2xRalk0a9iBIIj7CUjhJZ6TjUMxfsctqPkjhR
+ T/LEyM0wB2tw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 05:58:02 -0700
+IronPort-SDR: aEOQ2pm0rO6THLoXW9F6ereX9BgMU5ud7ETZSpylp/E5z87zJyoffb+Rd2xI1jypSAHrkD+RmY
+ Pay+mPtT4FmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,567,1574150400"; 
+   d="scan'208";a="238598966"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.29.88]) ([10.255.29.88])
+  by orsmga008.jf.intel.com with ESMTP; 18 Mar 2020 05:57:59 -0700
+Subject: Re: [PATCH] x86/cpufeatures: make bits in cpu_caps_cleared[] and
+ cpu_cpus_set[] exclusive
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200318061624.150313-1-xiaoyao.li@intel.com>
+ <20200318103219.GA4377@zn.tnic>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <42770941-dfdf-628b-3fe8-6ee5a871b1b4@intel.com>
+Date:   Wed, 18 Mar 2020 20:57:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200318103219.GA4377@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, March 16, 2020 3:39:12 PM CET Dmitry Safonov wrote:
-> Aligning with other watchdog messages just before panic - use
-> KERN_EMERG.
+On 3/18/2020 6:32 PM, Borislav Petkov wrote:
+> On Wed, Mar 18, 2020 at 02:16:24PM +0800, Xiaoyao Li wrote:
+>> In apply_forced_caps(), cpu_caps_set[] overrides cpu_caps_cleared[], so
+>> that setup_clear_cpu_cap() cannot clear one cap if setup_force_cpu_cap()
+>> sets the cap before it.
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> Context pls: what is the observation, what are you trying to do,
+> reproducer, etc?
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Well. I use setup_force_cup_cap(XXX) to set one flag, XXX, during early 
+boot. And use setup_clear_cpu_cap(XXX) to clear this flag when something 
+wrong later. However, it turns out that the flag is still set when I use 
+cpu_has(c, XXX) to check when init each AP. I have to clear the flag XXX 
+explicitly using clear_cpu_cap(c, XXX). However, in /proc/cpuinfo, this 
+XXX flag still presents on every CPU.
 
-or please let me know if I'm expected to take this one.
-
-> ---
->  drivers/base/power/main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Thx.
 > 
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index 0e99a760aebd..9b8450eab02e 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -515,7 +515,7 @@ static void dpm_watchdog_handler(struct timer_list *t)
->  	struct dpm_watchdog *wd = from_timer(wd, t, timer);
->  
->  	dev_emerg(wd->dev, "**** DPM device timeout ****\n");
-> -	show_stack(wd->tsk, NULL);
-> +	show_stack_loglvl(wd->tsk, NULL, KERN_EMERG);
->  	panic("%s %s: unrecoverable failure\n",
->  		dev_driver_string(wd->dev), dev_name(wd->dev));
->  }
-> 
-
-
-
 
