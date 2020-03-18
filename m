@@ -2,118 +2,148 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF5EC43332
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD70C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F015620752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:29:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VOGW/Dj8"
+	by mail.kernel.org (Postfix) with ESMTP id 93A4E208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:30:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584567007;
+	bh=AKZ5wSrqySyD7FEQCwdnhmME3FkgJSof5Wl3vt7foe8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=M4QjyhF98bCc7zDrOJVlJjy4Ck4GicBCccbYQ8K/E6vgsGcdKe62diyFCGSiomjpl
+	 M5Fe/K4c55VR3S8x7X0618mFmoCSaHVZqPggSlhaZgg1dLqyJGy/R1dmw5SzrswQkM
+	 f1KAfAuW7Q/bguyXIlLU+esRjba/b9lisHcX+flk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbgCRV3S (ORCPT
+        id S1727069AbgCRVaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:29:18 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:51365 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCRV3R (ORCPT
+        Wed, 18 Mar 2020 17:30:06 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35087 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbgCRVaG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:29:17 -0400
-Received: by mail-pj1-f66.google.com with SMTP id hg10so8253pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 14:29:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=vPxunhAC+58vvctmoFp0mN4mjw3S+0eezQoOCor4cGs=;
-        b=VOGW/Dj8fGjI99TmvzepftNCpO4/MF0xNVIWEVCFGM5msDgWmk9GbdMjLQF38bAiXe
-         5gagPr9toHAfEAsPQwMfnuXDZQf7H3CatTnOsFNOsCOhbmACF/ZMzZCRZSSciBpOPJSC
-         Q7K91OtcK/hEVFs79ZF4SKleT6de5W7BC03o8=
+        Wed, 18 Mar 2020 17:30:06 -0400
+Received: by mail-ot1-f66.google.com with SMTP id k26so233761otr.2;
+        Wed, 18 Mar 2020 14:30:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=vPxunhAC+58vvctmoFp0mN4mjw3S+0eezQoOCor4cGs=;
-        b=cDBwlL2el3ub6C01EIaa6MAnGwZtuaSlkKtfrwxRTg478M7zPIM3LDfrzrBSQhovyo
-         CXwc83ak/2IVLvfpDH2dZ2YOlc5wMy2FXliCvErzACV973lsPifQFdSctYn76LrH0Yad
-         5m4rU8FQXDhTmXWc4fQXXY5jRkAW/lZUN4CSnq8DmQYI+aWqBXPZEU++IVVYg528/20r
-         iafmKBs0U/yYBVI17+NPmROEB2KIeF+otbFSrTLN/QZNYpbCCB71qRI+6/3jcGhhs4Um
-         PP3cpwHWuwFIQwYyBBDO74EFllNNZpLJ0PAqDBFxeu8LoBILuG9hyE/sAiBqL8u8wcYI
-         S3+g==
-X-Gm-Message-State: ANhLgQ3TagcY8uAANInvGoge/JgE6zHcTSTBNPpRKxbgIYd5TXyFrd/Q
-        uAZiw3Wn7ANWQ6DpRqc6vvby6AN3to8=
-X-Google-Smtp-Source: ADFU+vuNwz5zB7ybsEb07TyGdEuZebQPsPh4F6LxTKWUK7RBgfUFTMHmwsHSGC2pOB6twp7ci+pDew==
-X-Received: by 2002:a17:902:aa98:: with SMTP id d24mr221832plr.74.1584566955402;
-        Wed, 18 Mar 2020 14:29:15 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id w6sm9144pfw.55.2020.03.18.14.29.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 14:29:14 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CLiBZtpr4e56p2g/o11hfAKRe9jeKBAJwiRBOQ3WAnY=;
+        b=BECAOQbJs7Cy+AZvv/gInHpkqj/nY6B/SO4zEjo9swMB39IZwShfeXaUI5UtK2biOP
+         vcmu85QGwCfcwZ4gFfmjmU/zCPsUiaXRdLMGFete/uEkJ019x38W1rRVcFkPwRza0YXO
+         bBgzAk5cvd8KE4B78vWOb/Lo9HTRhSjzxt2yQFwhz/abFJ5t79gMVDKcgaDvz5xSH0Eu
+         P2nQ3QyEbBfv7TazaMDGD3wZZsOjfzqwGTBvE9D2HHi95Sg3lCmh9NspTj33924Upsto
+         dZi4X/gIWtUw89D6RHH88HYAvpxC0kEqsQd3FYpBop0ksNT2pSOEuAnkcLnOQ+l8eOvo
+         ejNg==
+X-Gm-Message-State: ANhLgQ1wHxptzfSEyj0uUj3496uZaOpBXvWnlX6RU+dyvUhgJC4IyBkw
+        EsnGqPe+oNVwRVFtBjDfiPmYS8KtzjG6wfaM3J8=
+X-Google-Smtp-Source: ADFU+vuxickbFyRcIty7lM9IaclCHNf1VAH/8QnH6PATSgt1jsbljLQUn/9lceImpYF6c+RmcTIg7Ei6qm1POuD/8pY=
+X-Received: by 2002:a05:6830:1e96:: with SMTP id n22mr5524399otr.189.1584567005337;
+ Wed, 18 Mar 2020 14:30:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1584505758-21037-2-git-send-email-mkshah@codeaurora.org>
-References: <1584505758-21037-1-git-send-email-mkshah@codeaurora.org> <1584505758-21037-2-git-send-email-mkshah@codeaurora.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: Introduce SoC sleep stats bindings
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Mahesh Sivasubramanian <msivasub@codeaurora.org>,
-        devicetree@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Date:   Wed, 18 Mar 2020 14:29:13 -0700
-Message-ID: <158456695397.152100.7669140417826227943@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200316210843.11678-1-daniel.lezcano@linaro.org>
+ <2605374.f08NWHE4iP@kreacher> <669fe03f-0d65-8ca9-53dc-1323e0397c53@linaro.org>
+ <93da445f-ebfd-4d2e-c8b4-cd81e54892c0@linaro.org>
+In-Reply-To: <93da445f-ebfd-4d2e-c8b4-cd81e54892c0@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 18 Mar 2020 22:29:53 +0100
+Message-ID: <CAJZ5v0g6fPu5mhUgy9ADb7fo7Q_WngVcADewVY9Pii3R=SMzZg@mail.gmail.com>
+Subject: Re: [PATCH RFC] cpuidle: consolidate calls to time capture
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kevin Hilman <khilman@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-03-17 21:29:15)
-> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
->=20
-> Add device binding documentation for Qualcomm Technologies, Inc. (QTI)
-> SoC sleep stats driver. The driver is used for displaying SoC sleep
-> statistic maintained by Always On Processor or Resource Power Manager.
->=20
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+On Wed, Mar 18, 2020 at 3:32 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 18/03/2020 12:04, Daniel Lezcano wrote:
+> >
+> > Hi Rafael,
+> >
+> > On 18/03/2020 11:17, Rafael J. Wysocki wrote:
+> >> On Monday, March 16, 2020 10:08:43 PM CET Daniel Lezcano wrote:
+> >>> A few years ago, we changed the code in cpuidle to replace ktime_get()
+> >>> by a local_clock() to get rid of potential seq lock in the path and an
+> >>> extra latency.
+> >>>
+> >>> Meanwhile, the code evolved and we are getting the time in some other
+> >>> places like the power domain governor and in the future break even
+> >>> deadline proposal.
+> >>
+> >> Hmm?
+> >>
+> >> Have any patches been posted for that?
+> >
+> > https://lkml.org/lkml/2020/3/11/1113
+> >
+> > https://lkml.org/lkml/2020/3/13/466
+> >
+> > but there is no consensus yet if that has a benefit or not.
+> >
+> >>> Unfortunately, as the time must be compared across the CPU, we have no
+> >>> other option than using the ktime_get() again. Hopefully, we can
+> >>> factor out all the calls to local_clock() and ktime_get() into a
+> >>> single one when the CPU is entering idle as the value will be reuse in
+> >>> different places.
+> >>
+> >> So there are cases in which it is not necessary to synchronize the time
+> >> between CPUs and those would take the overhead unnecessarily.
+> >>
+> >> This change looks premature to me at least.
+> >
+> > The idea is to call one time ktime_get() when entering idle and store
+> > the result in the struct cpuidle_device, so we have the information when
+> > we entered idle.
+> >
+> > Moreover, ktime_get() is called in do_idle() via:
+> >
+> > tick_nohz_idle_enter()
+> >   tick_nohz_start_idle()
+> >     ts->idle_entrytime = ktime_get();
+> >
+> > This is called at the first loop level. The idle loop is exiting and
+> > re-entering again without passing through tick_nohz_idle_enter() in the
+> > second loop level in case of interrupt processing, thus the
+> > idle_entrytime is not updated and the return of
+> > tick_nohz_get_sleep_length() will be greater than what is expected.
+> >
+> > May be we can consider ktime_get_mono_fast_ns() which is lockless with a
+> > particular care of the non-monotonic aspect if needed. Given the
+> > description at [1] the time jump could a few nanoseconds in case of NMI.
+> >
+> > The local_clock() can no be inspected across CPUs, the gap is too big
+> > and continues to increase during system lifetime.
+>
+> I took the opportunity to measure the duration to a call to ktime_get,
+> ktime_get_mono_fast_ns and local_clock.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+The results you get depend a good deal on the conditions of the test,
+the system on which they were obtained and so on.  Without this
+information it is hard to draw any conclusions from those results.  In
+particular, ktime_get() is not significantly slower than local_clock()
+if there is no contention AFAICS, and the lack of contention cannot be
+guaranteed here.
 
-Two nits below.
+Generally speaking, the problem is that it is not sufficient to
+measure the time before running the governor and after the CPU wakes
+up, because in the cases that really care about the latency of that
+operation the time needed to run the governor may be a significant
+fraction of the entire overhead.  So it is necessary to take time
+stamps in several places and putting ktime_get() in all of them
+doesn't sound particularly attractive.
 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.y=
-aml b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
-> new file mode 100644
-> index 0000000..d0c751d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
-> @@ -0,0 +1,46 @@
-[...]
-> +
-> +examples:
-> +  # Example of rpmh sleep stats
-> +  - |
-> +    rpmh-sleep-stats@c3f0000 {
-
-I would think 'memory' would be a more appropriate node name, but OK.
-
-> +      compatible =3D "qcom,rpmh-sleep-stats";
-> +      reg =3D <0 0xc3f0000 0 0x400>;
-
-Please add a leading 0 to the address to pad it out to 8 digits.
-
-> +    };
+Anyway, there is no real need to make this change AFAICS, so I'm not
+really sure what the entire argument is about.
