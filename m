@@ -2,88 +2,108 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983F6C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFC9C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A2A20780
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D557B20780
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cyIQZRoc"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="dZRhDVxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgCRSem (ORCPT
+        id S1726933AbgCRSet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:34:42 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:33661 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726647AbgCRSem (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:34:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584556481;
+        Wed, 18 Mar 2020 14:34:49 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53450 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbgCRSes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 14:34:48 -0400
+Received: from zn.tnic (p200300EC2F0B450084928C9FAEA2F9FB.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:4500:8492:8c9f:aea2:f9fb])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EE3541EC0CFB;
+        Wed, 18 Mar 2020 19:34:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584556487;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ErsZoLMrL+thfUVb/I3GceTUQrmbRqvx5UmwuzPOWAQ=;
-        b=cyIQZRocPpgIFPtG4Zd6wAejWd7S/CNv9Xl19BtAD85EiPSpDbE1JTXuirLbmJCdkKELOm
-        EEzuTuNWRMtnJSnTVlYjE0ifeK0ryqJgusD9FGDAGtgzFUd0m9OeBOIA7MuGHUKPjVJJPU
-        z/zeDpS3gStY9diFJvUmtCEGVXJ0NTo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-254-3fDY5p_2MBmsW5IZjKvp7Q-1; Wed, 18 Mar 2020 14:34:33 -0400
-X-MC-Unique: 3fDY5p_2MBmsW5IZjKvp7Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8CDBF8010C8;
-        Wed, 18 Mar 2020 18:34:29 +0000 (UTC)
-Received: from treble (unknown [10.10.110.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3E1056EF81;
-        Wed, 18 Mar 2020 18:34:28 +0000 (UTC)
-Date:   Wed, 18 Mar 2020 13:34:25 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: Re: [RFC][PATCH v2 20/19] kbuild/objtool: Add objtool-vmlinux.o pass
-Message-ID: <20200318183425.54xgldze5tfdnugz@treble>
-References: <20200317170234.897520633@infradead.org>
- <20200318131845.GG20730@hirez.programming.kicks-ass.net>
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=CJE3KOqbdzcdAA4tnut68OnvOQdfGMEspNjEMsSW2gw=;
+        b=dZRhDVxLhreppLmXOhJXaAhCr9vGDc9tMADcynzUXsN63kewjWMLY5zcIA43nffCLFygDH
+        n38J8+tdTtXmS/lRor00/yio7W8kTTTg/uN8mvnsgaBKg9NjPulRssJIsbs85nwppYNt0f
+        oAldBT+C/Rj4L6JadK4EL07mLiVYsa0=
+Date:   Wed, 18 Mar 2020 19:34:51 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [PATCH] x86/ioremap: Fix CONFIG_EFI=n build
+Message-ID: <20200318183451.GC4377@zn.tnic>
+References: <20200316183039.0d1c45ce@canb.auug.org.au>
+ <7561e981-0d9b-d62c-0ef2-ce6007aff1ab@infradead.org>
+ <20200318151707.GB4377@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200318131845.GG20730@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200318151707.GB4377@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 02:18:45PM +0100, Peter Zijlstra wrote:
+On Wed, Mar 18, 2020 at 04:17:07PM +0100, Borislav Petkov wrote:
+> > ld: arch/x86/mm/ioremap.o: in function `__ioremap_caller':
+> > ioremap.c:(.text+0x150): undefined reference to `efi_mem_type'
 > 
-> This seems to 'work', must be perfect etc..
-> 
-> ---
-> 
-> Subject: kbuild/objtool: Add objtool-vmlinux.o pass
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Wed Mar 18 13:33:54 CET 2020
-> 
-> Now that objtool is capable of processing vmlinux.o and actually has
-> something useful to do there, (conditionally) add it to the final link
-> pass.
-> 
-> This will increase build time by a few seconds.
+> Working on it.
 
-This looks fine (with the -z fix), but I'm guessing you haven't tried it
-on an allyesconfig kernel yet?  For example I'd expect the crypto code
-to give trouble.
+The below should fix it:
 
-I actually have some code to fix that stashed away somewhere...
+---
+From: Borislav Petkov <bp@suse.de>
+Date: Wed, 18 Mar 2020 19:27:48 +0100
+
+In order to use efi_mem_type(), one needs CONFIG_EFI enabled. Otherwise
+that function is undefined. Use IS_ENABLED() to check and avoid the
+ifdeffery as the compiler optimizes away the following unreachable code
+then.
+
+Fixes: 985e537a4082 ("x86/ioremap: Map EFI runtime services data as encrypted for SEV")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Link: https://lkml.kernel.org/r/7561e981-0d9b-d62c-0ef2-ce6007aff1ab@infradead.org
+---
+ arch/x86/mm/ioremap.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 935a91e1fd77..18c637c0dc6f 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -115,6 +115,9 @@ static void __ioremap_check_other(resource_size_t addr, struct ioremap_desc *des
+ 	if (!sev_active())
+ 		return;
+ 
++	if (!IS_ENABLED(CONFIG_EFI))
++		return;
++
+ 	if (efi_mem_type(addr) == EFI_RUNTIME_SERVICES_DATA)
+ 		desc->flags |= IORES_MAP_ENCRYPTED;
+ }
+-- 
+2.21.0
 
 -- 
-Josh
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
