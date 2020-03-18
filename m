@@ -2,278 +2,130 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671E3C5ACD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A10EC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31BE620770
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4145620770
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:10:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A4+oBWkt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="IPjbKREK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbgCRPKE (ORCPT
+        id S1727539AbgCRPKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:10:04 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:31456 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727101AbgCRPKC (ORCPT
+        Wed, 18 Mar 2020 11:10:14 -0400
+Received: from www381.your-server.de ([78.46.137.84]:42922 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgCRPKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:10:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584544201;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PhtuzhH7HoYoxWiFFKdPTqNn1KamL8DNhzQaNlGjd/s=;
-        b=A4+oBWkt9GNJksS40d/kR9Wfd62czgdAJyDq8FEgtu8zLaZ5e2utoJpvQvcToIZCrBikzX
-        m6AGxAVWgWcUSFH0l3aMQYD+3B68kBsAL2S6gU7EMaNs7ZIxo4pVOY0wvye6SbK9OYoyQ9
-        QCCl/vWjuepIvfqVqVNURWNjkH2eCU8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-393-EhCaXUzsMf-nJJPjfB6LiQ-1; Wed, 18 Mar 2020 11:09:59 -0400
-X-MC-Unique: EhCaXUzsMf-nJJPjfB6LiQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D7581005F94;
-        Wed, 18 Mar 2020 15:09:57 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 94FF85D9E5;
-        Wed, 18 Mar 2020 15:09:54 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 12/13] fsinfo: Example support for Ext4 [ver #19]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, dhowells@redhat.com, raven@themaw.net,
-        mszeredi@redhat.com, christian@brauner.io, jannh@google.com,
-        darrick.wong@oracle.com, kzak@redhat.com, jlayton@redhat.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 18 Mar 2020 15:09:53 +0000
-Message-ID: <158454419382.2864823.6001642888459699321.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
-References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        Wed, 18 Mar 2020 11:10:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=fVkLEgRzM/r0AyOZ8ZF2WRxdioYlNEatN5ixEHTn2Mw=; b=IPjbKREKP5ktPaPLKl56Z5kfgs
+        zMxcPemxNVIrqOhPpFuAe+bgIi7HUS/0fA7Cm4KHGOnyQ2yX+GFTFRv8+bP3l67c6g2De2/DMUx4W
+        38gOqzDg16WE1LsaB5qVMah58eip4ovBRgh8Y8PyTIyjGZTaNT/aKKZx1ujo8LsUxNNG93YbymBe7
+        kmyGQt6hnLB7ZPhgIhHd+2I7yAq3BKWRacBr4u1eQRI/ulmtBvmS5AaJPvoJ5P3D2QElkp9yKuUk8
+        ZZcvCBHao4+GQNLKP9NuK2AJPcESrpLekirPtQ2olYLg3F6AvUljKlA0wuptx9gZKa1DGrkqDRSYG
+        /p+UgaeA==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jEaKg-0002za-7F; Wed, 18 Mar 2020 16:10:10 +0100
+Received: from [93.104.115.49] (helo=[192.168.178.20])
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jEaKf-000JOc-SW; Wed, 18 Mar 2020 16:10:09 +0100
+Subject: Re: [PATCH 5/5] iio: adc: ad7793: use read_avail iio hook for scale
+ available
+To:     Alexandru Ardelean <ardeleanalex@gmail.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Michael.Hennerich@analog.com, renatogeh@gmail.com,
+        jic23@kernel.org, mircea.caprioru@analog.com,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+References: <20200318134042.30133-1-alexandru.ardelean@analog.com>
+ <20200318134042.30133-6-alexandru.ardelean@analog.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <ffe8008d-5506-0e88-7ab2-6b221e36afba@metafoo.de>
+Date:   Wed, 18 Mar 2020 16:10:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200318134042.30133-6-alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25755/Wed Mar 18 14:14:00 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ability to list some Ext4 volume timestamps as an example.
-
-Is this useful for ext4?  Is there anything else that could be useful?
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: "Theodore Ts'o" <tytso@mit.edu>
-cc: Andreas Dilger <adilger.kernel@dilger.ca>
-cc: linux-ext4@vger.kernel.org
----
-
- fs/ext4/Makefile            |    1 +
- fs/ext4/ext4.h              |    6 ++++++
- fs/ext4/fsinfo.c            |   45 +++++++++++++++++++++++++++++++++++++++++++
- fs/ext4/super.c             |    3 +++
- include/uapi/linux/fsinfo.h |   16 +++++++++++++++
- samples/vfs/test-fsinfo.c   |   35 +++++++++++++++++++++++++++++++++
- 6 files changed, 106 insertions(+)
- create mode 100644 fs/ext4/fsinfo.c
-
-diff --git a/fs/ext4/Makefile b/fs/ext4/Makefile
-index 4ccb3c9189d8..71d5b460c7c7 100644
---- a/fs/ext4/Makefile
-+++ b/fs/ext4/Makefile
-@@ -16,3 +16,4 @@ ext4-$(CONFIG_EXT4_FS_SECURITY)		+= xattr_security.o
- ext4-inode-test-objs			+= inode-test.o
- obj-$(CONFIG_EXT4_KUNIT_TESTS)		+= ext4-inode-test.o
- ext4-$(CONFIG_FS_VERITY)		+= verity.o
-+ext4-$(CONFIG_FSINFO)			+= fsinfo.o
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 61b37a052052..f0304aa107f8 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -42,6 +42,7 @@
- 
- #include <linux/fscrypt.h>
- #include <linux/fsverity.h>
-+#include <linux/fsinfo.h>
- 
- #include <linux/compiler.h>
- 
-@@ -3190,6 +3191,11 @@ extern const struct inode_operations ext4_file_inode_operations;
- extern const struct file_operations ext4_file_operations;
- extern loff_t ext4_llseek(struct file *file, loff_t offset, int origin);
- 
-+/* fsinfo.c */
-+#ifdef CONFIG_FSINFO
-+extern int ext4_fsinfo(struct path *path, struct fsinfo_context *ctx);
-+#endif
-+
- /* inline.c */
- extern int ext4_get_max_inline_size(struct inode *inode);
- extern int ext4_find_inline_data_nolock(struct inode *inode);
-diff --git a/fs/ext4/fsinfo.c b/fs/ext4/fsinfo.c
-new file mode 100644
-index 000000000000..785f82a74dc9
---- /dev/null
-+++ b/fs/ext4/fsinfo.c
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Filesystem information for ext4
-+ *
-+ * Copyright (C) 2020 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#include <linux/mount.h>
-+#include "ext4.h"
-+
-+static int ext4_fsinfo_get_volume_name(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct ext4_sb_info *sbi = EXT4_SB(path->mnt->mnt_sb);
-+	const struct ext4_super_block *es = sbi->s_es;
-+
-+	memcpy(ctx->buffer, es->s_volume_name, sizeof(es->s_volume_name));
-+	return strlen(ctx->buffer);
-+}
-+
-+static int ext4_fsinfo_get_timestamps(struct path *path, struct fsinfo_context *ctx)
-+{
-+	const struct ext4_sb_info *sbi = EXT4_SB(path->mnt->mnt_sb);
-+	const struct ext4_super_block *es = sbi->s_es;
-+	struct fsinfo_ext4_timestamps *ts = ctx->buffer;
-+
-+#define Z(R,S) R = S | (((u64)S##_hi) << 32)
-+	Z(ts->mkfs_time,	es->s_mkfs_time);
-+	Z(ts->mount_time,	es->s_mtime);
-+	Z(ts->write_time,	es->s_wtime);
-+	Z(ts->last_check_time,	es->s_lastcheck);
-+	Z(ts->first_error_time,	es->s_first_error_time);
-+	Z(ts->last_error_time,	es->s_last_error_time);
-+	return sizeof(*ts);
-+}
-+
-+static const struct fsinfo_attribute ext4_fsinfo_attributes[] = {
-+	FSINFO_STRING	(FSINFO_ATTR_VOLUME_NAME,	ext4_fsinfo_get_volume_name),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_EXT4_TIMESTAMPS,	ext4_fsinfo_get_timestamps),
-+	{}
-+};
-+
-+int ext4_fsinfo(struct path *path, struct fsinfo_context *ctx)
-+{
-+	return fsinfo_get_attribute(path, ctx, ext4_fsinfo_attributes);
-+}
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index ff1b764b0c0e..3655fbeab754 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1487,6 +1487,9 @@ static const struct super_operations ext4_sops = {
- 	.freeze_fs	= ext4_freeze,
- 	.unfreeze_fs	= ext4_unfreeze,
- 	.statfs		= ext4_statfs,
-+#ifdef CONFIG_FSINFO
-+	.fsinfo		= ext4_fsinfo,
-+#endif
- 	.remount_fs	= ext4_remount,
- 	.show_options	= ext4_show_options,
- #ifdef CONFIG_QUOTA
-diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
-index 150b693a1b5a..4cfb71227eff 100644
---- a/include/uapi/linux/fsinfo.h
-+++ b/include/uapi/linux/fsinfo.h
-@@ -42,6 +42,8 @@
- #define FSINFO_ATTR_AFS_SERVER_NAME	0x301	/* Name of the Nth server (string) */
- #define FSINFO_ATTR_AFS_SERVER_ADDRESSES 0x302	/* List of addresses of the Nth server */
- 
-+#define FSINFO_ATTR_EXT4_TIMESTAMPS	0x400	/* Ext4 superblock timestamps */
-+
- /*
-  * Optional fsinfo() parameter structure.
-  *
-@@ -323,4 +325,18 @@ struct fsinfo_afs_server_address {
- 
- #define FSINFO_ATTR_AFS_SERVER_ADDRESSES__STRUCT struct fsinfo_afs_server_address
- 
-+/*
-+ * Information struct for fsinfo(FSINFO_ATTR_EXT4_TIMESTAMPS).
-+ */
-+struct fsinfo_ext4_timestamps {
-+	__u64		mkfs_time;
-+	__u64		mount_time;
-+	__u64		write_time;
-+	__u64		last_check_time;
-+	__u64		first_error_time;
-+	__u64		last_error_time;
-+};
-+
-+#define FSINFO_ATTR_EXT4_TIMESTAMPS__STRUCT struct fsinfo_ext4_timestamps
-+
- #endif /* _UAPI_LINUX_FSINFO_H */
-diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
-index 9f9564f7f73e..6ad1128a3e1d 100644
---- a/samples/vfs/test-fsinfo.c
-+++ b/samples/vfs/test-fsinfo.c
-@@ -384,6 +384,40 @@ static void dump_afs_fsinfo_server_address(void *reply, unsigned int size)
- 	printf("family=%u\n", ss->ss_family);
- }
- 
-+static char *dump_ext4_time(char *buffer, time_t tim)
-+{
-+	struct tm tm;
-+	int len;
-+
-+	if (tim == 0)
-+		return "-";
-+
-+	if (!localtime_r(&tim, &tm)) {
-+		perror("localtime_r");
-+		exit(1);
-+	}
-+	len = strftime(buffer, 100, "%F %T", &tm);
-+	if (len == 0) {
-+		perror("strftime");
-+		exit(1);
-+	}
-+	return buffer;
-+}
-+
-+static void dump_ext4_fsinfo_timestamps(void *reply, unsigned int size)
-+{
-+	struct fsinfo_ext4_timestamps *r = reply;
-+	char buffer[100];
-+
-+	printf("\n");
-+	printf("\tmkfs    : %s\n", dump_ext4_time(buffer, r->mkfs_time));
-+	printf("\tmount   : %s\n", dump_ext4_time(buffer, r->mount_time));
-+	printf("\twrite   : %s\n", dump_ext4_time(buffer, r->write_time));
-+	printf("\tfsck    : %s\n", dump_ext4_time(buffer, r->last_check_time));
-+	printf("\t1st-err : %s\n", dump_ext4_time(buffer, r->first_error_time));
-+	printf("\tlast-err: %s\n", dump_ext4_time(buffer, r->last_error_time));
-+}
-+
- static void dump_string(void *reply, unsigned int size)
- {
- 	char *s = reply, *p;
-@@ -471,6 +505,7 @@ static const struct fsinfo_attribute fsinfo_attributes[] = {
- 	FSINFO_STRING	(FSINFO_ATTR_AFS_CELL_NAME,	string),
- 	FSINFO_STRING	(FSINFO_ATTR_AFS_SERVER_NAME,	string),
- 	FSINFO_LIST_N	(FSINFO_ATTR_AFS_SERVER_ADDRESSES, afs_fsinfo_server_address),
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_EXT4_TIMESTAMPS,	ext4_fsinfo_timestamps),
- 	{}
- };
- 
+On 3/18/20 2:40 PM, Alexandru Ardelean wrote:
+> This change uses the read_avail and '.info_mask_shared_by_type_available'
+> modifier to set the available scale.
+> Essentially, nothing changes to the driver's ABI.
+> 
+> The main idea for this patch is to remove the AD7793 driver from
+> checkpatch's radar. There have been about ~3 attempts to fix/break the
+> 'in_voltage-voltage_scale_available' attribute, because checkpatch assumed
+> it to be an arithmetic operation and people were trying to change that.
 
 
+Yeah, probably a good idea!
+
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>   drivers/iio/adc/ad7793.c | 53 +++++++++++++++++++++++++++-------------
+>   1 file changed, 36 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
+> index 5592ae573e6b..fad98f1801db 100644
+> --- a/drivers/iio/adc/ad7793.c
+> +++ b/drivers/iio/adc/ad7793.c
+> @@ -354,29 +354,28 @@ static IIO_CONST_ATTR_SAMP_FREQ_AVAIL(
+>   static IIO_CONST_ATTR_NAMED(sampling_frequency_available_ad7797,
+>   	sampling_frequency_available, "123 62 50 33 17 16 12 10 8 6 4");
+>   
+> -static ssize_t ad7793_show_scale_available(struct device *dev,
+> -			struct device_attribute *attr, char *buf)
+> +static int ad7793_read_avail(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     const int **vals, int *type, int *length,
+> +			     long mask)
+>   {
+> -	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+>   	struct ad7793_state *st = iio_priv(indio_dev);
+> -	int i, len = 0;
+>   
+> -	for (i = 0; i < ARRAY_SIZE(st->scale_avail); i++)
+> -		len += sprintf(buf + len, "%d.%09u ", st->scale_avail[i][0],
+> -			       st->scale_avail[i][1]);
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*vals = (int *)st->scale_avail;
+
+Can you change the type of scale_avail to int so we don't need the cast?
+
+> +		*type = IIO_VAL_INT_PLUS_NANO;
+> +		/* Values are stored in a 2D matrix  */
+> +		*length = ARRAY_SIZE(st->scale_avail) * 2;
+>   
+> -	len += sprintf(buf + len, "\n");
+> +		return IIO_AVAIL_LIST;
+> +	}
+>   
+> -	return len;
+> +	return -EINVAL;
+>   }
