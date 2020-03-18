@@ -2,135 +2,99 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626CFC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C73C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5EA20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD6F20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:01:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WPXblPFy"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="IHTT0YwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgCRC7e (ORCPT
+        id S1726655AbgCRDBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 22:59:34 -0400
-Received: from mail-eopbgr60053.outbound.protection.outlook.com ([40.107.6.53]:20995
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726229AbgCRC7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 22:59:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gtZzdtBmXczlp/TMYvilkXImx9TScIUzjk7wW9gAkhW7D+swu/oI1Sy6+RP7pC2rYYXU3jIlt0UnuqU3po/vGgzZQ4p07mmMdmNx7sFL5rSWJRci8Xy5fXelpNYAoROdvNVCCyyO19X1trQm9wecwVRSyNeEP0zxjSv/QF3mfdBWj2HnIJe8e3yrbl/V6xb5bwuegV7vNPIkpNDwMNaMG44ROgwiCTlpc0kZypZuOfplCFgyNvZ8022TsM3D3u7jGncdUjs0CpVlfn3kZLhW1Hd4KmIwoRxjtAqiPsQwEypq/3yJ9NHeBfbwuDgKr4K68Q2lE37VFKms7C8EdH6AHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fMydHRIbTHGOL4stBTGJQEQgpXgMzMnUhuRPmS/lsbk=;
- b=PrgyqcUtoHKmxw2ZDGuhiOr6iYYncgxdDt2fYloyo4K3tBOBW1hPF1EShZP5SlsyM6a+0mJPxy/qsTC/7bOB2IDRRgigmiyaQNlAcqcSQvp4I8STxV9lTByS0+AFOIoJ2oNY8mXTRElPP9xAs0/mD3cfE4H0MhFv6vPnf+Tpe/w405MKDYiyUaZa0U3P93Nk+oEIbtDvV35nmBEFklHYIzlPFNsR+PY/UJB34S9191sMh1Ohs8c7+f5mxys+oP77v3Bc2Rdsh/8BhEnsR/+MyGFxPA5Ela7pfdyf87UawxSpAtEJ1O63En0MvteEwi3A4kzoCclVKqssZPf7+DcBEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fMydHRIbTHGOL4stBTGJQEQgpXgMzMnUhuRPmS/lsbk=;
- b=WPXblPFy9D0fnwPerfwZwVgeeMkp5yduCnxYaHhR9PDHa52dN3fc9ccewX4LVOptUoorBIiV+8aNB711LItn3NfOVUVVfEplGVZ/TxSCoglikA/H45XvFxRSZV5XjpzDL9E/DUzStfK0f82YAY6OoluE3ezNwcZxB7XDWaL6k9c=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-Received: from AM7PR04MB7016.eurprd04.prod.outlook.com (52.135.58.214) by
- AM7PR04MB6823.eurprd04.prod.outlook.com (10.141.171.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.21; Wed, 18 Mar 2020 02:59:31 +0000
-Received: from AM7PR04MB7016.eurprd04.prod.outlook.com
- ([fe80::14c2:8800:1248:ddfa]) by AM7PR04MB7016.eurprd04.prod.outlook.com
- ([fe80::14c2:8800:1248:ddfa%7]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
- 02:59:31 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     leoyang.li@nxp.com, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, ran.wang_1@nxp.com,
-        Peng Ma <peng.ma@nxp.com>
-Subject: [PATCH] soc: fsl: enable acpi support
-Date:   Wed, 18 Mar 2020 10:56:05 +0800
-Message-Id: <20200318025605.6671-1-peng.ma@nxp.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR0401CA0014.apcprd04.prod.outlook.com
- (2603:1096:3:1::24) To AM7PR04MB7016.eurprd04.prod.outlook.com
- (2603:10a6:20b:11e::22)
+        Tue, 17 Mar 2020 23:01:22 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34034 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgCRDBV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 23:01:21 -0400
+Received: by mail-qk1-f194.google.com with SMTP id f3so36436699qkh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 20:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=ydkM02gA1lv2jXZ+vVnjGn/g5VzXdwCSm+r9ur1CJPs=;
+        b=IHTT0YwYPoS8iMmX0qpmgTqBgRe4WcF01YbL2TEUEwWqZdjOAZwHvbArCyepsxfcs0
+         5RhcvvUs+1Nhtw8Q6FHiVx6OPM4knOtgscqJG4CCaIjYfENTn8BQGSfU8HnjNQ0Au5q5
+         fCJ1bE1qbheMPOHu5Rx+kKtWBcbtX1E1cUtDYKEmYlLrkxgQNFYTrzM5p90radr5v1Do
+         uKvdEWktYiutwnbjOklODkdp0T+wqHzG0jkZ1uC+yH67D/mYvJ0vRtYBv6vLNZnQN5rh
+         lsF+ZTSX4PkQQneVutZwIkM59OL6A9ALmdJbMV/E2fIKiRfxHbcRzHn0n78WLUHNuXvy
+         MMcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=ydkM02gA1lv2jXZ+vVnjGn/g5VzXdwCSm+r9ur1CJPs=;
+        b=CBQNntlOGHV/85BqyW8AkFXV94kABTVi75DBDICr8eRuLvb4zB5dc+jjeKMa/SF4cD
+         sXzLQ+QVa7QWLSgCqa9Q2exw0xBH2ZCCJB62Vq67ZiAVlVHRqk3H6UboJ7NV20nnC14V
+         0ZWA0AA2ZTQ4/zAofoT3LFWtGfE3MWZNWafL26N6ytorr+z9qnTJFcv4eBdwpQVK536n
+         p5AZPN2X9y/fA8gIXl4/G8y1w1l0rqJ1S4Ov9san85e46FTbtF/sdPoFwXLxgt5OUnIa
+         h0OHRG+4FsZaK8Nnafk670c4ZBlkDiuv3uiwP4axgo0oRCqdTRd/P36Dtlx1WXIlHI+U
+         xmbw==
+X-Gm-Message-State: ANhLgQ3AHSzc6ZA9FVNzlXHUmHW+juddIsLrtse1wgK8ApZuBVPfeAqM
+        GzE0FuJYK3xosBhrq+Ha4jRnuQ==
+X-Google-Smtp-Source: ADFU+vvoBQmPUjD+nO2M86aMQl7VYth980jIKigj6jVHrMsul9eZMS8ExL6RHyTxp/EV9PKXlpRWrQ==
+X-Received: by 2002:a37:6244:: with SMTP id w65mr2061863qkb.350.1584500480945;
+        Tue, 17 Mar 2020 20:01:20 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id i4sm3478217qtr.41.2020.03.17.20.01.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 20:01:20 -0700 (PDT)
+Message-ID: <3ffd63b480b47aa572a9f95ba620eb4d0ce93f34.camel@massaru.org>
+Subject: Re: [PATCH 2/2] xarray: Add missing blank line after declaration
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Date:   Wed, 18 Mar 2020 00:01:17 -0300
+In-Reply-To: <20200318015553.GG22433@bombadil.infradead.org>
+References: <cover.1584494902.git.vitor@massaru.org>
+         <7efa62f727eb176341fc0cdfcd47c890ff424451.1584494902.git.vitor@massaru.org>
+         <20200318015553.GG22433@bombadil.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.73) by SG2PR0401CA0014.apcprd04.prod.outlook.com (2603:1096:3:1::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Wed, 18 Mar 2020 02:59:29 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.73]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: f3e031ac-eb0f-4f18-d67b-08d7cae8615b
-X-MS-TrafficTypeDiagnostic: AM7PR04MB6823:|AM7PR04MB6823:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM7PR04MB6823C9539465CA19161A418FEDF70@AM7PR04MB6823.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:949;
-X-Forefront-PRVS: 03468CBA43
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(366004)(376002)(346002)(136003)(199004)(4326008)(66556008)(66476007)(66946007)(5660300002)(16526019)(44832011)(69590400007)(2616005)(186003)(26005)(956004)(86362001)(1076003)(6506007)(316002)(6486002)(4744005)(6512007)(8676002)(81156014)(36756003)(478600001)(2906002)(52116002)(6666004)(8936002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR04MB6823;H:AM7PR04MB7016.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xrzPY2ejFQqC1OhopF1CCychFqwHMWf563Z7hsS3+oITrD+1+DM59CVtBATIoQ3haFNAaKlJiAu64+yWn76qDG6oBqejMRNjHyKNNrTkpU2ONga5LDzkigL3r8QGd049orwZOacZD6YvaH4QIGNa+2+PZWcaATcnoVQcOrbxO7KMgfeKZt+VeVYmdeh0cQq15hi9PIa+NfbENg56BBV2MqLmFYu2i4EgUS64VvjbBcaYtiAD25M2+bfzV0HyD14lQPfMi++NdssNebLlv5aA/5QOLgwMmyzFHCiieQ25wPBeuYHSsq+vZrNTbEK4JllafhcDh+wvP1U8uU95T1d8YPiFJ2Qsa0+rIddgy+ljeHjW3D2S/sz9XAVO01rjmkU2GIP2vDvQZP+l+B0etWx3ttDQvIOoMlWgBbTMR7dQKhOb1W7WRWF7wvZH39bRPjpJTjns1Om4CR12PaFXGxvHsosfwLVG5qI0rOQEpkvP8VnBxQc0K6yjyZ5W1Ea9Fira
-X-MS-Exchange-AntiSpam-MessageData: ydjO25rVKsFY6f9cQDySFWLzv7ry8LCIoV3PAionkQ71YonLblXXRuUtdLG/Fh2fbXYYNEXEGyJ0u0tGl2Oj/wsW6rMBWhLNROwP/12v5Ofw0purLM2GVim4U7apmz1Ipi/46+0C0RaaMVsvbsXdmw==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3e031ac-eb0f-4f18-d67b-08d7cae8615b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 02:59:31.4112
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2zISa8wj5m2ZluF8fMNwwj/OyY1jenmKNKGWPGw0ae71S3WUxfiJVtptPjHHR1wj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6823
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables ACPI support in Rcpm driver.
+Hi Matthew,
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
- drivers/soc/fsl/rcpm.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Tue, 2020-03-17 at 18:55 -0700, Matthew Wilcox wrote:
+> On Tue, Mar 17, 2020 at 10:43:03PM -0300, Vitor Massaru Iha wrote:
+> > @@ -1624,6 +1624,7 @@ static inline unsigned int
+> > xas_find_chunk(struct xa_state *xas, bool advance,
+> >  	if (XA_CHUNK_SIZE == BITS_PER_LONG) {
+> >  		if (offset < XA_CHUNK_SIZE) {
+> >  			unsigned long data = *addr & (~0UL << offset);
+> > +
+> >  			if (data)
+> >  				return __ffs(data);
+> >  		}
+> 
+> Do you seriously think this makes the function in any way more
+> legible?
 
-diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
-index a093dbe..7da6bbd 100644
---- a/drivers/soc/fsl/rcpm.c
-+++ b/drivers/soc/fsl/rcpm.c
-@@ -13,6 +13,7 @@
- #include <linux/slab.h>
- #include <linux/suspend.h>
- #include <linux/kernel.h>
-+#include <linux/acpi.h>
- 
- #define RCPM_WAKEUP_CELL_MAX_SIZE	7
- 
-@@ -139,10 +140,17 @@ static const struct of_device_id rcpm_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, rcpm_of_match);
- 
-+static const struct acpi_device_id rcpm_imx_acpi_ids[] = {
-+	{"NXP0012",},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, rcpm_imx_acpi_ids);
-+
- static struct platform_driver rcpm_driver = {
- 	.driver = {
- 		.name = "rcpm",
- 		.of_match_table = rcpm_of_match,
-+		.acpi_match_table = ACPI_PTR(rcpm_imx_acpi_ids),
- 		.pm	= &rcpm_pm_ops,
- 	},
- 	.probe = rcpm_probe,
--- 
-2.9.5
+Sorry. I was in doubt whether it would actually improve. I did some
+research in older patches and I found something like this.
+
+
 
