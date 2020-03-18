@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE28C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0366C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5A920773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D77120409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565340;
-	bh=DlQSvKcrvx1iZK+hM1Ku2CdTowpynbTIE9M/QpsqnXs=;
+	s=default; t=1584565346;
+	bh=UznoJOSHLBhMhOVJNFY5p5Oz83QB4h1QIyL4ApQmhD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mbv/NaHVNedPf4WQwlF3oX1ELbF+hB7iSwjKxlWiSOsb/wuobByfUIXwh1Bsod2UE
-	 s/YDY3FlnBZLZqrHLJsHjf1JzDjHWS8+H/QERZTu3H1PPPvcH2Tw3696QyGukq7f0v
-	 CXZaRvzSHEF2VL1XuQyiUvMfDRwnwlSNn00UrDZ4=
+	b=leY2zcBIiDQ3DBSl0otEVyExurC6Bzs+Cfi+5tHNob1GXRR7AFBSNdW6I23CqG1hL
+	 zmqqUnnb1/LwfQjbw1zMs2bwFbdGpA9sGHU7ikv7BWiWddghKsLXrDguyd3MmOThN1
+	 +shvFFMM4jKxzeOvugXV0ofsdCLHnOUDwP9gaooM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgCRU4E (ORCPT
+        id S1728728AbgCRVCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56494 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbgCRUzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:54 -0400
+        id S1728500AbgCRU4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9FD321775;
-        Wed, 18 Mar 2020 20:55:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 976732098B;
+        Wed, 18 Mar 2020 20:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564953;
-        bh=DlQSvKcrvx1iZK+hM1Ku2CdTowpynbTIE9M/QpsqnXs=;
+        s=default; t=1584564959;
+        bh=UznoJOSHLBhMhOVJNFY5p5Oz83QB4h1QIyL4ApQmhD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJO9GJQnfm7Zh3vTx7nDMMjE6o4Q3ztlHjGrenvr9F1HxB0nhYPcsuODP85ot0/vb
-         Ymf2M39mxEJymelKuS3r7SUdJJETIKidQe0AxaIc0AqCtravCBy6c8dVAio7uEWeft
-         9HnW3q8aBfhS7UX6ByhqLe4eLXVl5GGkbDjyWt4Q=
+        b=0PwUoRVX51pQgh026TxTMQ4vLoeez2A3jIL74kEOWEzw6s+kr3JSQZJSi6kWY3uaw
+         flVCf4/NSFh6F4lLpNMCuNbJ6O7/nu//T0E+Ccir++7Cgq7HokdvF/+YrTYx3KyICb
+         nLah6hMVymC+Kr+yT0AQpmvZIRwHQ0QmhAjRIiqw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
+Cc:     Sven Eckelmann <sven@narfation.org>,
+        syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com,
+        syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com,
+        Hillf Danton <hdanton@sina.com>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 37/37] iommu/vt-d: Fix the wrong printing in RHSA parsing
-Date:   Wed, 18 Mar 2020 16:55:09 -0400
-Message-Id: <20200318205509.17053-37-sashal@kernel.org>
+        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/28] batman-adv: Don't schedule OGM for disabled interface
+Date:   Wed, 18 Mar 2020 16:55:30 -0400
+Message-Id: <20200318205555.17447-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
-References: <20200318205509.17053-1-sashal@kernel.org>
+In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
+References: <20200318205555.17447-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,38 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-[ Upstream commit b0bb0c22c4db623f2e7b1a471596fbf1c22c6dc5 ]
+[ Upstream commit 8e8ce08198de193e3d21d42e96945216e3d9ac7f ]
 
-When base address in RHSA structure doesn't match base address in
-each DRHD structure, the base address in last DRHD is printed out.
+A transmission scheduling for an interface which is currently dropped by
+batadv_iv_ogm_iface_disable could still be in progress. The B.A.T.M.A.N. V
+is simply cancelling the workqueue item in an synchronous way but this is
+not possible with B.A.T.M.A.N. IV because the OGM submissions are
+intertwined.
 
-This doesn't make sense when there are multiple DRHD units, fix it
-by printing the buggy RHSA's base address.
+Instead it has to stop submitting the OGM when it detect that the buffer
+pointer is set to NULL.
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Fixes: fd0c8894893cb ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reported-by: syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com
+Reported-by: syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com
+Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Cc: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dmar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/batman-adv/bat_iv_ogm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 72994d67bc5b9..5a0238806cae0 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -486,7 +486,7 @@ static int dmar_parse_one_rhsa(struct acpi_dmar_header *header, void *arg)
- 		1, TAINT_FIRMWARE_WORKAROUND,
- 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
- 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
--		drhd->reg_base_addr,
-+		rhsa->base_address,
- 		dmi_get_system_info(DMI_BIOS_VENDOR),
- 		dmi_get_system_info(DMI_BIOS_VERSION),
- 		dmi_get_system_info(DMI_PRODUCT_VERSION));
+diff --git a/net/batman-adv/bat_iv_ogm.c b/net/batman-adv/bat_iv_ogm.c
+index 8b3f9441b3a01..5d5e5401a9ea2 100644
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -926,6 +926,10 @@ static void batadv_iv_ogm_schedule(struct batadv_hard_iface *hard_iface)
+ 	    (hard_iface->if_status == BATADV_IF_TO_BE_REMOVED))
+ 		return;
+ 
++	/* interface already disabled by batadv_iv_ogm_iface_disable */
++	if (!*ogm_buff)
++		return;
++
+ 	/* the interface gets activated here to avoid race conditions between
+ 	 * the moment of activating the interface in
+ 	 * hardif_activate_interface() where the originator mac is set and
 -- 
 2.20.1
 
