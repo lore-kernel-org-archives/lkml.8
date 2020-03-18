@@ -2,114 +2,90 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC7AC43332
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594A2C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 618DB2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243832076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:13:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584573233;
+	bh=oFy9zaUxFZZJmaRDFLzCKtAEprfj3oqdBpvxcG2rk8k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=eELfIf4TmMzSO8Pwt2dY7B/LUINw12GH070GTTfHkv2gDpoFbo9eqwA81shX8ETZF
+	 XozMCWz7rJrv1Nf73irmVl2NFToRNKmccD+hMG2Ckj5xnvSd//XZ0yYdToEVrzUrag
+	 5GsWRSCR+U3/3jAHswoR69KkyheA+STX8GBGkpaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgCRXJq (ORCPT
+        id S1726879AbgCRXNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:09:46 -0400
-Received: from muru.com ([72.249.23.125]:60832 "EHLO muru.com"
+        Wed, 18 Mar 2020 19:13:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726647AbgCRXJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:09:44 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id B8208819C;
-        Wed, 18 Mar 2020 23:10:29 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Nick Dyer <nick@shmanahar.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Henrik Rydberg <rydberg@bitmath.org>,
-        Arthur Demchenkov <spinal.by@gmail.com>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Subject: [PATCH 2/3] Input: atmel_mxt_ts - add idle power config
-Date:   Wed, 18 Mar 2020 16:09:37 -0700
-Message-Id: <20200318230938.31573-2-tony@atomide.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200318230938.31573-1-tony@atomide.com>
-References: <20200318230938.31573-1-tony@atomide.com>
+        id S1726619AbgCRXNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 19:13:51 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD2C92076C;
+        Wed, 18 Mar 2020 23:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584573231;
+        bh=oFy9zaUxFZZJmaRDFLzCKtAEprfj3oqdBpvxcG2rk8k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=DzpZj5+8msW57avSvGgNIEAwIntQcyPVC0z0zfdOwSqCS4B8BIynnP/AjLzlVp87e
+         WmAel2zgAp0zu8KDdv9CPTxak6CuSCSIAHsuESHXVqryOJB7C5lUAUbPreMfNkpWHE
+         HrHEks/wwnAvs2pS0qX4q58qMpUYAEPdtDIps/eY=
+Date:   Wed, 18 Mar 2020 18:13:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andrew Maier <andrew.maier@eideticom.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        logang@deltatee.com
+Subject: Re: [PATCH v2] PCI/P2PDMA: Add the remaining Intel Sky Lake-E root
+ ports to the whitelist
+Message-ID: <20200318231349.GA3278@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207221219.4309-1-andrew.maier@eideticom.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can save few tens of mW of power during runtime. Let's add a new idle
-power config where we minimize the active time and maximize the idle time.
+On Fri, Feb 07, 2020 at 03:12:19PM -0700, Andrew Maier wrote:
+> Add the three remaining Intel Sky Lake-E host root ports to the
+> whitelist of p2pdma.
+> 
+> P2P has been tested and is working on this system.
+> 
+> Signed-off-by: Andrew Maier <andrew.maier@eideticom.com>
 
-Then we can use the new idle setting based on runtime PM autosuspend in
-the following patch.
+Applied with Logan's reviewed-by to pci/p2pdma for v5.7, thanks!
 
-Let's also start using enum mxt_power_cfg while at it.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 27 +++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -97,8 +97,11 @@ struct t7_config {
- 	u8 active;
- } __packed;
- 
--#define MXT_POWER_CFG_RUN		0
--#define MXT_POWER_CFG_DEEPSLEEP		1
-+enum mxt_power_cfg {
-+	MXT_POWER_CFG_RUN,
-+	MXT_POWER_CFG_IDLE,
-+	MXT_POWER_CFG_DEEPSLEEP,
-+};
- 
- /* MXT_TOUCH_MULTI_T9 field */
- #define MXT_T9_CTRL		0
-@@ -2155,17 +2158,31 @@ static int mxt_initialize(struct mxt_data *data)
- 	return 0;
- }
- 
--static int mxt_set_t7_power_cfg(struct mxt_data *data, u8 sleep)
-+/*
-+ * Note that active value 0 forces the controller to idle so 1 is the shortest
-+ * active periiod with interrupts still working. Idle value of 255 blocks idle
-+ * completely so 254 is the maximum idle time we can use.
-+ */
-+static int mxt_set_t7_power_cfg(struct mxt_data *data,
-+				enum mxt_power_cfg config)
- {
- 	struct device *dev = &data->client->dev;
- 	int error;
- 	struct t7_config *new_config;
- 	struct t7_config deepsleep = { .active = 0, .idle = 0 };
-+	struct t7_config idle = { .active = 1, .idle = 254 };
- 
--	if (sleep == MXT_POWER_CFG_DEEPSLEEP)
-+	switch (config) {
-+	case MXT_POWER_CFG_IDLE:
-+		new_config = &idle;
-+		break;
-+	case MXT_POWER_CFG_DEEPSLEEP:
- 		new_config = &deepsleep;
--	else
-+		break;
-+	default:
- 		new_config = &data->t7_cfg;
-+		break;
-+	}
- 
- 	error = __mxt_write_reg(data->client, data->T7_address,
- 				sizeof(data->t7_cfg), new_config);
--- 
-2.25.1
+> ---
+> Resending this as I rebased it onto the latest patches.
+>  drivers/pci/p2pdma.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
+> index 9a8a38384121..b73b10bce0df 100644
+> --- a/drivers/pci/p2pdma.c
+> +++ b/drivers/pci/p2pdma.c
+> @@ -291,6 +291,9 @@ static const struct pci_p2pdma_whitelist_entry {
+>  	{PCI_VENDOR_ID_INTEL,	0x2f01, REQ_SAME_HOST_BRIDGE},
+>  	/* Intel SkyLake-E */
+>  	{PCI_VENDOR_ID_INTEL,	0x2030, 0},
+> +	{PCI_VENDOR_ID_INTEL,	0x2031, 0},
+> +	{PCI_VENDOR_ID_INTEL,	0x2032, 0},
+> +	{PCI_VENDOR_ID_INTEL,	0x2033, 0},
+>  	{PCI_VENDOR_ID_INTEL,	0x2020, 0},
+>  	{}
+>  };
+> -- 
+> 2.17.1
+> 
