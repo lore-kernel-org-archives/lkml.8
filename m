@@ -2,140 +2,95 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB04C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909BAC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD23620768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:48:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="T4F+0zg1"
+	by mail.kernel.org (Postfix) with ESMTP id 6AB662076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgCRVsB (ORCPT
+        id S1727196AbgCRVw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:48:01 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33577 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbgCRVsB (ORCPT
+        Wed, 18 Mar 2020 17:52:27 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:39504 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbgCRVw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:48:01 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z65so45646ede.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 14:47:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jSbmM7deMijcGQ2Njr0obFK5q42A00wv1XC6bXtNHSs=;
-        b=T4F+0zg1O4tCjiTKCeojQKo/2Vtz1Y+alVLD9/3BaXATvaIH/n9YlZXNzm44rRIYbc
-         /F5yX5PPdgh6l01fK9Gc10RKTceI3FKoMamsMY7hRmF0avd+AHmIzQx36bFZmvXUv3WA
-         EvoGBOAqVPPUfit4G9+GonZdu56r9uGVHxzjN4hKfT0wxiYfjbDnp6J0f3ZqDddnq+2k
-         cyBGj7HLAeLnxb7lU/gUixuR6E1k3WHUyCQ/ClL6F7PlGcFYjaOKkhpgPPSb+URJI5vX
-         hlLE/L/hNKSs2ia2J+nArMBJNI5rRs49r+Pxi72D9WYQ8pY6L5sMGpDq0zB1ajX5b02A
-         uXHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jSbmM7deMijcGQ2Njr0obFK5q42A00wv1XC6bXtNHSs=;
-        b=RnDQWwngrSiVArTdieRVkonGx517WbBsjE4ocB8eISMsLBPlKHfJ5Udc9LZEmCasLy
-         bX8AJZ//R7ZTbAxtf23W/qrLiQUNaSmKmsB1SpLTgzpaPbQNK5URmFkL5Nne+5MdIsyd
-         p391qP+j+wxWXOAfHu6P2X+GLCY+ShYpY4+rVD28oUb4xV/Dr1jAqufycNb6c49XPW5/
-         KW7u5NZ5pDnmSNMn0BLV/R1UULXwJ95oNreiZlkzMLjdXBL4sKaiDd9GktPJsEvJZSDa
-         wNfuu9M3QMgdt46fwWh/KSSe35gf+pdkm/ofVskv5yjH7TMDiBMWgn7BUaionzypfcwZ
-         6pWw==
-X-Gm-Message-State: ANhLgQ0HoziPDRCQOpzbQjAox9kOfjDVnBFxpUkaYUNRQzWi7wjqrMfu
-        QamwcFLclMW/bPmAWBcf1dcvt6sAKqirBVpcV7j/
-X-Google-Smtp-Source: ADFU+vv/EY9M8GK0pcJMqD/OH+jUGrRWl+6JVHzUqMMHKF9wP/wDKGvAN8gqZuvjirieWXrnqF8sYPlcMloCLTpwSog=
-X-Received: by 2002:a17:906:7a46:: with SMTP id i6mr281388ejo.95.1584568078394;
- Wed, 18 Mar 2020 14:47:58 -0700 (PDT)
+        Wed, 18 Mar 2020 17:52:27 -0400
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 756462005E4;
+        Wed, 18 Mar 2020 21:52:25 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 91F5B20B1B; Wed, 18 Mar 2020 22:52:18 +0100 (CET)
+Date:   Wed, 18 Mar 2020 22:52:18 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     Cezary Rojewski <cezary.rojewski@intel.com>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, curtis@malainey.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        liam.r.girdwood@linux.intel.com, broonie@kernel.org
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+Message-ID: <20200318215218.GA2439@light.dominikbrodowski.net>
+References: <20200318063022.GA116342@light.dominikbrodowski.net>
+ <41d0b2b5-6014-6fab-b6a2-7a7dbc4fe020@linux.intel.com>
+ <20200318123930.GA2433@light.dominikbrodowski.net>
+ <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
+ <20200318162029.GA3999@light.dominikbrodowski.net>
+ <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca>
- <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
- <3142237.YMNxv0uec1@x2> <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
- <20200312202733.7kli64zsnqc4mrd2@madcap2.tricolour.ca> <CAHC9VhS9DtxJ4gvOfMRnzoo6ccGJVKL+uZYe6qqH+SPqD8r01Q@mail.gmail.com>
- <20200313192306.wxey3wn2h4htpccm@madcap2.tricolour.ca> <CAHC9VhQKOpVWxDg-tWuCWV22QRu8P_NpFKme==0Ot1RQKa_DWA@mail.gmail.com>
- <20200318214154.ycxy5dl4pxno6fvi@madcap2.tricolour.ca>
-In-Reply-To: <20200318214154.ycxy5dl4pxno6fvi@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 18 Mar 2020 17:47:47 -0400
-Message-ID: <CAHC9VhSuMnd3-ci2Bx-xJ0yscQ=X8ZqFAcNPKpbh_ZWN3FJcuQ@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
-        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 5:42 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-03-18 17:01, Paul Moore wrote:
-> > On Fri, Mar 13, 2020 at 3:23 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-03-13 12:42, Paul Moore wrote:
-> >
-> > ...
-> >
-> > > > The thread has had a lot of starts/stops, so I may be repeating a
-> > > > previous suggestion, but one idea would be to still emit a "death
-> > > > record" when the final task in the audit container ID does die, but
-> > > > block the particular audit container ID from reuse until it the
-> > > > SIGNAL2 info has been reported.  This gives us the timely ACID death
-> > > > notification while still preventing confusion and ambiguity caused by
-> > > > potentially reusing the ACID before the SIGNAL2 record has been sent;
-> > > > there is a small nit about the ACID being present in the SIGNAL2
-> > > > *after* its death, but I think that can be easily explained and
-> > > > understood by admins.
-> > >
-> > > Thinking quickly about possible technical solutions to this, maybe it
-> > > makes sense to have two counters on a contobj so that we know when the
-> > > last process in that container exits and can issue the death
-> > > certificate, but we still block reuse of it until all further references
-> > > to it have been resolved.  This will likely also make it possible to
-> > > report the full contid chain in SIGNAL2 records.  This will eliminate
-> > > some of the issues we are discussing with regards to passing a contobj
-> > > vs a contid to the audit_log_contid function, but won't eliminate them
-> > > all because there are still some contids that won't have an object
-> > > associated with them to make it impossible to look them up in the
-> > > contobj lists.
-> >
-> > I'm not sure you need a full second counter, I imagine a simple flag
-> > would be okay.  I think you just something to indicate that this ACID
-> > object is marked as "dead" but it still being held for sanity reasons
-> > and should not be reused.
->
-> Ok, I see your point.  This refcount can be changed to a flag easily
-> enough without change to the api if we can be sure that more than one
-> signal can't be delivered to the audit daemon *and* collected by sig2.
-> I'll have a more careful look at the audit daemon code to see if I can
-> determine this.
+On Wed, Mar 18, 2020 at 09:43:54PM +0100, Cezary Rojewski wrote:
+> On 2020-03-18 20:22, Dominik Brodowski wrote:
+> > On Wed, Mar 18, 2020 at 07:27:58PM +0100, Cezary Rojewski wrote:
+> 
+> > > 
+> > > Due to pandemic I'm working remotely and right now won't be able to test
+> > > audio quality so focusing on the stream==NULL issue. And thus we got to help
+> > > each other out : )
+> > 
+> > Sure, and thanks for taking a look at this!
+> > 
+> > > Could you verify issue reproduces on 5.6.0-rc1 on your machine?
+> > 
+> > It reproduces on 5.6.0-rc1 + i915-bugfix. I'm trying to bisect it further in
+> > the background, but that may take quite some time.
+> > 
+> 
+> Could you checkout v5.6-rc1 with following commit reverted:
+> 	ASoC: Intel: broadwell: change cpu_dai and platform components for SOF
+> 
+> For my working v5.6-rc1 commit id is:
+> 64df6afa0dab5eda95cc4cc2269e3d4e83b6b6ce.
 
-Maybe I'm not understanding your concern, but this isn't really
-different than any of the other things we track for the auditd signal
-sender, right?  If we are worried about multiple signals being sent
-then it applies to everything, not just the audit container ID.
+Hm, no joy -- after suspend/resume, no sound at first, and if I twiggle some
+options with pulseaudio, I get garbled output (even when using
 
-> Another question occurs to me is that what if the audit daemon is sent a
-> signal and it cannot or will not collect the sig2 information from the
-> kernel (SIGKILL?)?  Does that audit container identifier remain dead
-> until reboot, or do we institute some other form of reaping, possibly
-> time-based?
+	aplay -f S16_LE -r 44100 -c 2 --device="sysdefault:CARD=broadwellrt286"
 
-In order to preserve the integrity of the audit log that ACID value
-would need to remain unavailable until the ACID which contains the
-associated auditd is "dead" (no one can request the signal sender's
-info if that container is dead).
+). Will try to bisect further the next days.
 
--- 
-paul moore
-www.paul-moore.com
+Thanks,
+	Dominik
