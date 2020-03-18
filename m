@@ -2,146 +2,282 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C57C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED17C5ACD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2BB120724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DE120724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pknIHKQ8";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="gl6OEm5f"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QcqZJ6mT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgCRPhQ (ORCPT
+        id S1727045AbgCRPhz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:37:16 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:45464 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726776AbgCRPhQ (ORCPT
+        Wed, 18 Mar 2020 11:37:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45220 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgCRPhz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:37:16 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02IFFTc7016755;
-        Wed, 18 Mar 2020 08:37:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type :
- content-transfer-encoding : in-reply-to : mime-version; s=facebook;
- bh=KDrkWS+043x96sLDXdoncbyUSUAGOpKfbJ0+4DtRykc=;
- b=pknIHKQ8HEzBYil/YhWHVv0vbHMShnGMURhlGCNaivnaeuf70S+QyIfKbGvNZpoRQvaY
- iOujgGgTAxp8398M4tD5A87rVVd3dx2o3yOWoF3F1s1mngWxdVx7sk0vyhHiZmLfQC/L
- 5MuDqHYVIZf/mhejLZIf8k6BiW0OpuXOCgY= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2yu8x3k69k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 18 Mar 2020 08:37:09 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 18 Mar 2020 08:37:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J+CKUyyIRsWAF6w8cmxvb6Vi9AL42nzeC/qi5BlTzgeRk4sl9Vn5yAJ6uES75QVD17oqtxPJ8Qwm3GZWnCm8pDxMlzbozHlOifJpo8rK/ulUvTXBMPv5Dgj6nXGr05o4qryAf7wEnBav3y5pTQquNPe9DJl6bHTNk4HuICV+tMXJ7flR7zLP/vwfh2fbsdFtSY9AYY7oq+AuNr/EPVxFJvP8asiIZohM8b11cDhSVWRuFImZpAfJa44b8bWYOxuKH928oZ4Izcj3cUV0NksdTy8cJb9G27v4EH/v+eUhznn/SDJvwgsnVS5iMDmz6b5p3lNhA8t+kJLTfPDpdFtzVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KDrkWS+043x96sLDXdoncbyUSUAGOpKfbJ0+4DtRykc=;
- b=n7LHQqH6vR3slN1zwJL2mTbQAjmJefEVPOhs3qWmCL49IUHzYJu+mTCpPcjTVYkGdli3zDlcsIVy3ive7h7PZVwkZeg6Kgv/3/ztIyIP3h9wplh6wKqky1SEd/gLMBe3GOY8k4rul7qXq7kVOjoTPjPHntpFm6lOKKqxnYv3huKMlLKuZ/D9BRGmiuZXi5F/ZwlC8ueTzOYBbmsFJ8SR/JEvFU+qZZdjdP+gSJhe2vTcI7epYfDOTi7Clj5+SQBO/+QTHxc6mqcevpSgbx8hroa1/CBWL/uz+SWIlYeA9ntxJXusBOxxGkSPNbym2R06AzpcWTsBm7ecM14QkHYX6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KDrkWS+043x96sLDXdoncbyUSUAGOpKfbJ0+4DtRykc=;
- b=gl6OEm5fdlRYoZj1ytqnIoGssZnABIhfh04h3a5K/K9flBqQuz2K06YvaHngmzTaICAMqm2am+rPEhhVJN9LMMfMu/6gM3atnDWAiaf1nyGWQWZfobXAwo2S82IH1aI6OtcMZEqi4J9zJcv1/tOXtn3vkkR9yZ3uvaxVYz+Z6jw=
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB3191.namprd15.prod.outlook.com (2603:10b6:a03:107::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15; Wed, 18 Mar
- 2020 15:37:06 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::a0af:3ebe:a804:f648]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::a0af:3ebe:a804:f648%6]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
- 15:37:06 +0000
-Date:   Wed, 18 Mar 2020 08:37:02 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>
-Subject: Re: linux-next build failure on arm64 with CMA but !NUMA
-Message-ID: <20200318153702.GA22501@carbon.DHCP.thefacebook.com>
-References: <20200318114109.GA65068@bogon.m.sigxcpu.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200318114109.GA65068@bogon.m.sigxcpu.org>
-X-ClientProxiedBy: MWHPR19CA0008.namprd19.prod.outlook.com
- (2603:10b6:300:d4::18) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Wed, 18 Mar 2020 11:37:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=u7yUh+Pccr7fZlpNl28+tmTDUjOKZ4t7vGIdOPFsEoY=; b=QcqZJ6mTb+XRyhUw+JRDawfor7
+        j5pjDgZfB7rP0RSOcn6HupdDyEMi2fyb6sjJ1laRo58q6Z19FIB6rIVVDSi+hh5ZPShsvARe2LY2C
+        xbO6ujmfENROXxTpC73fWyGsiefISK6/6gmbmaWC+hqOMgUTQcZwYGTs2osEuazdq7TXIlZC/VDLK
+        D9Fxfpc/JLryq3j5o5hI4YwyeGDPHZR5q6miwzh8sYlnVejQP8VCkR175XrxnX4BoTLMXBeLR03/j
+        odw7SV7yMYpH0/QweH0I+zm6NWWvOHPD/72mzY/cdTEOo7FSv0jgUVwbJLVmUx+AKYWoWeVQ4m+di
+        gQAdHKNg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEalV-000071-N0; Wed, 18 Mar 2020 15:37:53 +0000
+Subject: Re: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+References: <4c0db5d0-1a61-cb80-2bcb-034f5bcd1597@infradead.org>
+ <20200312193917.GA160316@google.com>
+ <DB8PR04MB6747C1032BF126CFFB5720E084F60@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <e53be1bc-e84d-433a-e9a7-ea442c93f2cf@infradead.org>
+ <DB8PR04MB6747E855D3349173CE2AE9F684F60@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <23a2a891-4d69-34a3-4cf6-525e54738b77@infradead.org>
+ <DB8PR04MB6747096182E3DDC288866A2884F70@DB8PR04MB6747.eurprd04.prod.outlook.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <05b35cb5-7f00-e67d-fd76-fbe2d34f875c@infradead.org>
+Date:   Wed, 18 Mar 2020 08:37:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:6aee) by MWHPR19CA0008.namprd19.prod.outlook.com (2603:10b6:300:d4::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21 via Frontend Transport; Wed, 18 Mar 2020 15:37:05 +0000
-X-Originating-IP: [2620:10d:c090:400::5:6aee]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f264a5d0-9ce7-4772-5cb5-08d7cb5236ab
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3191:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB3191AD5B07FC8C8BEE51C09CBEF70@BYAPR15MB3191.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 03468CBA43
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(199004)(8936002)(8676002)(81166006)(81156014)(66946007)(52116002)(7696005)(66556008)(66476007)(86362001)(6506007)(55016002)(6916009)(2906002)(4326008)(9686003)(33656002)(1076003)(498600001)(5660300002)(186003)(6666004)(4744005)(16526019);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3191;H:BYAPR15MB4136.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QdB1QbhhUkuJ+Lb7rV8scTCkkzObPxMywIWK63RNuCTJ0KAgw7Z0fRinYnvU1hOhPIKi3g3+bxDJqDtraXUXKO+yl+O7g9kC+et8oG13RRZK5ETexHqrWGtuQIbRT0d3zdMCOD/hkPCWRef24C+7gN4pv56ghmFnm+khBobY9M3uyHGzbFEP/Y4BcHoctA5kNCTPMAPb3gXIsufVZc6sNimCSWK6XR0DePsNH/UStsm3EP98ZBSXXvVd2POqsXphQxxTxwwj+4bAcEk+wxHbLe/2/mrCSoZpH5ICpfbtoXEtlSCIiXwFifuKv16NXtzAKxr4Els/4oDcPsEwCCSqeGsxEum9OUt5e6Y7hKkR7+Qoobf2tEQErR/H8fJuOEuUfkeUfu+xmj8RkPL16i8O3T1M4CFFWXOI+efdu6LBlnF6jSl/l4av3cPa1S+oUoSL
-X-MS-Exchange-AntiSpam-MessageData: pohI1PXwvXq2X2LQx4J//MsCw2wBw6bLdKOKh3b2XQAT2DVbjEavsoD0+zRrW5bLWZuTITNM0ABX0r8S84FK8j7ZtuQJOOIpkwX/8p3TFlxs4st8wrGK7W/e7cVgWv1YrOKVcVJ4nRgScyeE0/vVXInfFFzvZFL8W2BtjSMMxEIVnZ71rAjz0dL+2OZcPkqz
-X-MS-Exchange-CrossTenant-Network-Message-Id: f264a5d0-9ce7-4772-5cb5-08d7cb5236ab
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 15:37:06.2120
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VXsaEysgtpoU+APH0h8tJNEBpMcopEYXg28a7v34XoNJRtNQdhLJ8gJa9a2ngG03
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3191
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-18_07:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
- mlxlogscore=685 malwarescore=0 phishscore=0 spamscore=0 suspectscore=1
- clxscore=1011 mlxscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003180073
-X-FB-Internal: deliver
+In-Reply-To: <DB8PR04MB6747096182E3DDC288866A2884F70@DB8PR04MB6747.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 12:41:09PM +0100, Guido Günther wrote:
-> Hi Roman,
-> 882d60d2ce725381236a158204d7ec13ff19ab25 in linux-next broke compilation
-> on arm64 CMA && !NUMA like
+On 3/18/20 2:44 AM, Z.q. Hou wrote:
+> Hi Randy,
 > 
->   CC      kernel/irq/irqdesc.o
-> mm/hugetlb.c: In function ‘hugetlb_cma_reserve’:
-> mm/hugetlb.c:5449:3: error: implicit declaration of function ‘for_each_mem_pfn_range’; did you mean ‘for_each_mem_range’? [-Werror=implicit-function-declaration]
->    for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
->    ^~~~~~~~~~~~~~~~~~~~~~ 
->    for_each_mem_range
-> mm/hugetlb.c:5449:61: error: expected ‘;’ before ‘{’ token
->    for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
->                                                              ^~
-> Reverting that fixes the build for the moment. Would making all of this
-> dependent on CMA && NUMA be the right fix?
+>> -----Original Message-----
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>> Sent: 2020年3月17日 23:16
+>> To: Z.q. Hou <zhiqiang.hou@nxp.com>; Bjorn Helgaas <helgaas@kernel.org>
+>> Cc: Stephen Rothwell <sfr@canb.auug.org.au>; Linux Next Mailing List
+>> <linux-next@vger.kernel.org>; Linux Kernel Mailing List
+>> <linux-kernel@vger.kernel.org>; linux-pci <linux-pci@vger.kernel.org>;
+>> Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
+>> Subject: Re: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
+>>
+>> On 3/17/20 3:05 AM, Z.q. Hou wrote:
+>>> Hi Randy,
+>>>
+>>>> -----Original Message-----
+>>>> From: Randy Dunlap <rdunlap@infradead.org>
+>>>> Sent: 2020年3月17日 12:59
+>>>> To: Z.q. Hou <zhiqiang.hou@nxp.com>; Bjorn Helgaas
+>>>> <helgaas@kernel.org>
+>>>> Cc: Stephen Rothwell <sfr@canb.auug.org.au>; Linux Next Mailing List
+>>>> <linux-next@vger.kernel.org>; Linux Kernel Mailing List
+>>>> <linux-kernel@vger.kernel.org>; linux-pci
+>>>> <linux-pci@vger.kernel.org>; Karthikeyan Mitran
+>>>> <m.karthikeyan@mobiveil.co.in>
+>>>> Subject: Re: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
+>>>>
+>>>> On 3/16/20 9:31 PM, Z.q. Hou wrote:
+>>>>> Hi Randy and Bjorn,
+>>>>>
+>>>>>> -----Original Message-----
+>>>>>> From: Bjorn Helgaas <helgaas@kernel.org>
+>>>>>> Sent: 2020年3月13日 3:39
+>>>>>> To: Z.q. Hou <zhiqiang.hou@nxp.com>
+>>>>>> Cc: Randy Dunlap <rdunlap@infradead.org>; Stephen Rothwell
+>>>>>> <sfr@canb.auug.org.au>; Linux Next Mailing List
+>>>>>> <linux-next@vger.kernel.org>; Linux Kernel Mailing List
+>>>>>> <linux-kernel@vger.kernel.org>; linux-pci
+>>>>>> <linux-pci@vger.kernel.org>; Karthikeyan Mitran
+>>>>>> <m.karthikeyan@mobiveil.co.in>
+>>>>>> Subject: Re: linux-next: Tree for Mar 12 (pci/controller/mobiveil/)
+>>>>>>
+>>>>>> On Thu, Mar 12, 2020 at 08:13:50AM -0700, Randy Dunlap wrote:
+>>>>>>> On 3/12/20 3:04 AM, Stephen Rothwell wrote:
+>>>>>>>> Hi all,
+>>>>>>>>
+>>>>>>>> Changes since 20200311:
+>>>>>>>>
+>>>>>>>
+>>>>>>> on i386:
+>>>>>>> # CONFIG_PCI_MSI is not set
+>>>>>>>
+>>>>>>> WARNING: unmet direct dependencies detected for
+>>>> PCIE_MOBIVEIL_HOST
+>>>>>>>   Depends on [n]: PCI [=y] && PCI_MSI_IRQ_DOMAIN [=n]
+>>>>>>>   Selected by [y]:
+>>>>>>>   - PCIE_MOBIVEIL_PLAT [=y] && PCI [=y] && (ARCH_ZYNQMP ||
+>>>>>> COMPILE_TEST [=y]) && OF [=y]
+>>>>>>
+>>>>>> Thanks, Randy.
+>>>>>>
+>>>>>> I'm not sure if this is a new problem introduced by something in my
+>>>>>> "next" branch, or if this is an existing problem we just happened
+>>>>>> to hit with randconfig.
+>>>>>>
+>>>>>> Here are the commits on remotes/lorenzo/pci/mobiveil branch:
+>>>>>>
+>>>>>>   d29ad70a813b ("PCI: mobiveil: Add PCIe Gen4 RC driver for
+>>>>>> Layerscape
+>>>>>> SoCs")
+>>>>>>   3edeb49525bb ("dt-bindings: PCI: Add NXP Layerscape SoCs PCIe
+>>>>>> Gen4
+>>>>>> controller")
+>>>>>>   11d22cc395ca ("PCI: mobiveil: Add Header Type field check")
+>>>>>>   029dea3cdc67 ("PCI: mobiveil: Add 8-bit and 16-bit CSR register
+>>>>>> accessors")
+>>>>>>   52cae4c7082f ("PCI: mobiveil: Allow mobiveil_host_init() to be
+>>>>>> used to re-init host")
+>>>>>>   fc99b3311af7 ("PCI: mobiveil: Add callback function for link up
+>> check")
+>>>>>>   ed620e96541f ("PCI: mobiveil: Add callback function for interrupt
+>>>>>> initialization")
+>>>>>>   03bdc3884019 ("PCI: mobiveil: Modularize the Mobiveil PCIe Host
+>>>>>> Bridge IP
+>>>>>> driver")
+>>>>>>   39e3a03eea5b ("PCI: mobiveil: Collect the interrupt related
+>>>>>> operations into a function")
+>>>>>>   2ba24842d6b4 ("PCI: mobiveil: Move the host initialization into a
+>>>> function")
+>>>>>>   1f442218d657 ("PCI: mobiveil: Introduce a new structure
+>>>>>> mobiveil_root_port")
+>>>>>>
+>>>>>> I dropped that mobiveil branch for now, so Hou, can you please
+>>>>>> check this out and resolve it one way or the other?
+>>>>>
+>>>>> I don't reproduce this issue with i386_defconfig, can you help me to
+>>>> reproduce it?
+>>>>
+>>>> Sure, see below.
+>>>>
+>>>>
+>>>>> Thanks,
+>>>>> Zhiqiang
+>>>>>
+>>>>>>
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:375:15: error:
+>>>>>> variable ‘mobiveil_msi_domain_info’ has initializer but incomplete
+>>>>>> type
+>>>>>>>  static struct msi_domain_info mobiveil_msi_domain_info = {
+>>>>>>>                ^~~~~~~~~~~~~~~
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:3:
+>>>>>>> error: ‘struct
+>>>>>> msi_domain_info’ has no member named ‘flags’
+>>>>>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>>>>>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>>>>>    ^~~~~
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:12: error:
+>>>>>> ‘MSI_FLAG_USE_DEF_DOM_OPS’ undeclared here (not in a function);
+>>>> did
+>>>>>> you mean ‘SIMPLE_DEV_PM_OPS’?
+>>>>>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>>>>>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>>>>>             ^~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>>>             SIMPLE_DEV_PM_OPS
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:39: error:
+>>>>>> ‘MSI_FLAG_USE_DEF_CHIP_OPS’ undeclared here (not in a function);
+>>>>>> did you mean ‘MSI_FLAG_USE_DEF_DOM_OPS’?
+>>>>>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>>>>>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>>>>>
+>>>>>> ^~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>>>
+>>>>>> MSI_FLAG_USE_DEF_DOM_OPS
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:377:6: error:
+>>>>>> ‘MSI_FLAG_PCI_MSIX’ undeclared here (not in a function); did you
+>>>>>> mean ‘SS_FLAG_BITS’?
+>>>>>>>       MSI_FLAG_PCI_MSIX),
+>>>>>>>       ^~~~~~~~~~~~~~~~~
+>>>>>>>       SS_FLAG_BITS
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:11:
+>> warning:
+>>>>>> excess elements in struct initializer
+>>>>>>>   .flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>>>>>> MSI_FLAG_USE_DEF_CHIP_OPS |
+>>>>>>>            ^
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:376:11:
+>>>>>>> note: (near
+>>>>>> initialization for ‘mobiveil_msi_domain_info’)
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:378:3:
+>>>>>>> error: ‘struct
+>>>>>> msi_domain_info’ has no member named ‘chip’
+>>>>>>>   .chip = &mobiveil_msi_irq_chip,
+>>>>>>>    ^~~~
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:378:10:
+>> warning:
+>>>>>> excess elements in struct initializer
+>>>>>>>   .chip = &mobiveil_msi_irq_chip,
+>>>>>>>           ^
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:378:10:
+>>>>>>> note: (near
+>>>>>> initialization for ‘mobiveil_msi_domain_info’)
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c: In
+>>>>>>> function
+>>>>>> ‘mobiveil_allocate_msi_domains’:
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:469:20: error:
+>>>>>> implicit declaration of function ‘pci_msi_create_irq_domain’; did
+>>>>>> you mean ‘pci_msi_get_device_domain’?
+>>>>>> [-Werror=implicit-function-declaration]
+>>>>>>>   msi->msi_domain = pci_msi_create_irq_domain(fwnode,
+>>>>>>>                     ^~~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>>>                     pci_msi_get_device_domain
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:469:18:
+>> warning:
+>>>>>> assignment makes pointer from integer without a cast
+>>>>>> [-Wint-conversion]
+>>>>>>>   msi->msi_domain = pci_msi_create_irq_domain(fwnode,
+>>>>>>>                   ^
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c: At top level:
+>>>>>>> ../drivers/pci/controller/mobiveil/pcie-mobiveil-host.c:375:31: error:
+>>>>>> storage size of ‘mobiveil_msi_domain_info’ isn’t known
+>>>>>>>  static struct msi_domain_info mobiveil_msi_domain_info = {
+>>>>>>>                                ^~~~~~~~~~~~~~~~~~~~~~~~
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> Full randconfig file is attached.
+>>>>
+>>>> Use the .config file that was attached in the report.
+>>>
+>>> One query, which default config you used to generate this .config? I
+>>> cannot select the PCIE_MOBIVEIL_PLAT in 'menuconfig' when use the
+>> i386_defconfig.
+>>
+>> Hi,
+>>
+>> I did not use any defconfig.
+>> Just cp that config file into your build directory (as .config)
+>>
+>> and do something like:
+>> $ make ARCH=i386 oldconfig
+> 
+> I sent a patch to fix this issue, but I also want to know why did you enable the
+> PCIE_MOBIVEIL_PLAT in the i386 .config? I mean what is this test for.
 
-Hello Guido!
+Hi,
+Every day that linux-next is released, I run a bunch of randconfigs:
 
-Thank you for the report!
+$ make ARCH=i386 randconfig
+$ make ARCH=x86_64 randconfig
 
-We've been discussing the issue for a couple of days, and I've proposed a fix.
-I've just resent it to linux-mm@ (you're in cc), so hopefully it will be merged today.
+That's what caused PCIE_MOBIVEIL_PLAT to be set.
 
-Thanks!
+-- 
+~Randy
+
