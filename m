@@ -2,165 +2,116 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0C5C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F311C5ACD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E5820773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96C320773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584539457;
-	bh=9zcXYLKK5Dhr/+f1z2OMEWB6HxFE4z3Xgg7sGJiZW8o=;
+	s=default; t=1584539654;
+	bh=3rZZHsovek0yRkwZJ7LctmTKjWOgEmShiqjr7xCy9BU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kqxylZgevcVUYujZht2cHpx0kWmF1YGMHOYM5ldpJJBlKF8oVA9hc9hj0cluFEPBB
-	 6EJ30gjnXBtiwhRk2aWmeMXm2W5xMHDWl51ddLaS9CrMohJRKwKd+gG5akItO0wvo+
-	 xKFbPtHsGbxxm3gISpuNYg879OUMWNJlTXKzQQhc=
+	b=d1LSSdOmQkrjt2xKLfJ7aLuW7bqIbWwPt0hfL1jHAuYeyGix4vz+t9qcP4ltm7x5T
+	 hrg7bNp+PNNQjQRsRqUkkveM9xzLY5D5iv3D+CxU0YdfV5M1beUm4f3jNjj6TL7S8M
+	 GdJYbIi3pfbtgLzjP6VyoOx5wYkLlYcqrqFF6S/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbgCRNuz (ORCPT
+        id S1726987AbgCRNyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:50:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726894AbgCRNuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:50:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C79A020767;
-        Wed, 18 Mar 2020 13:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584539454;
-        bh=9zcXYLKK5Dhr/+f1z2OMEWB6HxFE4z3Xgg7sGJiZW8o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xzl7WDy28mpXrKG2uuW9mWQWA6nDhybZpFEgynuX461hV6NyJmhE1pNlCmk69rfaW
-         FfhPC4crTBVLVlo4RJthEex5J1bu7XOcWh43uQA8WZnkPViZpYyossDRHrbsGrjRaM
-         lej9sKAIAKQVVgnpS6YCq5WXpAKLgH2POgcb/NAg=
-Date:   Wed, 18 Mar 2020 14:50:52 +0100
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "rafael@kernel.org" <rafael@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>
-Subject: Re: [PATCH v4 3/9] drivers: base: add linear ranges helpers
-Message-ID: <20200318135052.GA2804430@kroah.com>
-References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
- <01ac2439f9d33ae405999065c5d28c368bad4a28.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
- <20200318130838.GB2769584@kroah.com>
- <910505f6a38298707fc27b135e49a7e2a941fb88.camel@fi.rohmeurope.com>
+        Wed, 18 Mar 2020 09:54:13 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38543 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726857AbgCRNyN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 09:54:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s1so8784163wrv.5;
+        Wed, 18 Mar 2020 06:54:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ngy8A2YvpuwSAkIHITqsxwhgr3uY9q04Wj+xXFxPERw=;
+        b=Gg3QDTQV4FlHYnc95udwQauTpJ/ckkB2XPs61itNXcx4a+tvpKbYK4LxCQ6jJUWoGe
+         L7kImEj9/DkmUI5PK48+z7DS0kicJqTaI2WU3I4GYFubkq5TEhIuHMPHewLOxB/gvQKI
+         U0eTmyD+TmzK/dcRW6sIMZBvEu0bu39lAIfdbM8yh3iw61iuxMWN1GClWLW+aKVacOjL
+         60VUDQ1o6a88H6QnhznSuKEopTL88wZdHu8W1jiwea9QF9ODJmwcrKGY20Qr/VQRkeGt
+         5Rqi3VjI6+LFBZtacZDhJQrUjfyh+ky7fk3iXY+CAOIwIsC2aIbzegzYUVJVs7T3xYlQ
+         gXVA==
+X-Gm-Message-State: ANhLgQ25qXLsPEH7SE8IVhr86JVsKmSDMHs/tQ8jLGHBaDGEMi5LRZAr
+        jvH8ZSBTUQv1mHnYXD5DZ+M=
+X-Google-Smtp-Source: ADFU+vt7+qT3flEZeTSP4vvFvbKpC/QUOdsY3jrET0kgzQHel35UwsgLvygyXmij4VftsNdLAZApgw==
+X-Received: by 2002:a05:6000:11d0:: with SMTP id i16mr5649369wrx.319.1584539651261;
+        Wed, 18 Mar 2020 06:54:11 -0700 (PDT)
+Received: from localhost (ip-37-188-180-89.eurotel.cz. [37.188.180.89])
+        by smtp.gmail.com with ESMTPSA id n2sm1696410wro.25.2020.03.18.06.54.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 06:54:10 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 14:54:08 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-hyperv@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Yumei Huang <yuhuang@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Eduardo Habkost <ehabkost@redhat.com>,
+        Milan Zamazal <mzamazal@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oscar Salvador <osalvador@suse.de>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v2 0/8] mm/memory_hotplug: allow to specify a default
+ online_type
+Message-ID: <20200318135408.GP21362@dhcp22.suse.cz>
+References: <20200317104942.11178-1-david@redhat.com>
+ <20200318130517.GC30899@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <910505f6a38298707fc27b135e49a7e2a941fb88.camel@fi.rohmeurope.com>
+In-Reply-To: <20200318130517.GC30899@MiWiFi-R3L-srv>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 01:42:26PM +0000, Vaittinen, Matti wrote:
-> Hello Greg,
-> 
-> On Wed, 2020-03-18 at 14:08 +0100, Greg Kroah-Hartman wrote:
-> > On Tue, Feb 25, 2020 at 10:53:01AM +0200, Matti Vaittinen wrote:
-> > > Many devices have control registers which control some measurable
-> > > property. Often a register contains control field so that change in
-> > > this field causes linear change in the controlled property. It is
-> > > not
-> > > a rare case that user wants to give 'meaningful' control values and
-> > > driver needs to convert them to register field values. Even more
-> > > often user wants to 'see' the currently set value - again in
-> > > meaningful units - and driver needs to convert the values it reads
-> > > from register to these meaningful units. Examples of this include:
-> > > 
-> > > - regulators, voltage/current configurations
-> > > - power, voltage/current configurations
-> > > - clk(?) NCOs
-> > > 
-> > > and maybe others I can't think of right now.
-> > > 
-> > > Provide a linear_range helper which can do conversion from user
-> > > value
-> > > to register value 'selector'.
-> > > 
-> > > The idea here is stolen from regulator framework and patches
-> > > refactoring
-> > > the regulator helpers to use this are following.
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > ---
-> > > 
-> > > Changes since rfc-v3:
-> > >   - Kerneldoc fixes
-> > >   - Corrected commit message typo meaningfull => meaningful
-> > > 
-> > >  drivers/base/Kconfig         |   3 +
-> > >  drivers/base/Makefile        |   1 +
-> > >  drivers/base/linear_ranges.c | 246
-> > > +++++++++++++++++++++++++++++++++++
+On Wed 18-03-20 21:05:17, Baoquan He wrote:
+> On 03/17/20 at 11:49am, David Hildenbrand wrote:
+> > Distributions nowadays use udev rules ([1] [2]) to specify if and
+> > how to online hotplugged memory. The rules seem to get more complex with
+> > many special cases. Due to the various special cases,
+> > CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE cannot be used. All memory hotplug
+> > is handled via udev rules.
 > > 
-> > Why in drivers/base/ ?
+> > Everytime we hotplug memory, the udev rule will come to the same
+> > conclusion. Especially Hyper-V (but also soon virtio-mem) add a lot of
+> > memory in separate memory blocks and wait for memory to get onlined by user
+> > space before continuing to add more memory blocks (to not add memory faster
+> > than it is getting onlined). This of course slows down the whole memory
+> > hotplug process.
 > > 
-> > Why not in lib/ ?
+> > To make the job of distributions easier and to avoid udev rules that get
+> > more and more complicated, let's extend the mechanism provided by
+> > - /sys/devices/system/memory/auto_online_blocks
+> > - "memhp_default_state=" on the kernel cmdline
+> > to be able to specify also "online_movable" as well as "online_kernel"
 > 
-> I was pondering which of these would be better. I decided to do with
-> drivers/base because - in it's current form - this is really a driver
-> related stuff. I see it somehow in same position as regmap code -
-> although this is just a tiny helper compared to regmap. But this also
-> has pretty driver specific audience :)
-> 
-> And... I must admit I like things which I know. And I have been doing
-> driver development and "know" a few of the driver related colleagues -
-> hence working with them is easier for me ;) Getting to know the
-> colleagues maintaining lib is a bit scary :] Yep, I'm Finnish if you
-> happen to wonder why getting to know people is scary xD
-> 
-> > 
-> > >  include/linux/linear_range.h |  48 +++++++
-> > >  4 files changed, 298 insertions(+)
-> > >  create mode 100644 drivers/base/linear_ranges.c
-> > >  create mode 100644 include/linux/linear_range.h
-> > > 
-> > > diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-> > > index 5f0bc74d2409..636b6fa8e499 100644
-> > > --- a/drivers/base/Kconfig
-> > > +++ b/drivers/base/Kconfig
-> > > @@ -209,4 +209,7 @@ config GENERIC_ARCH_TOPOLOGY
-> > >  	  appropriate scaling, sysfs interface for reading capacity
-> > > values at
-> > >  	  runtime.
-> > >  
-> > > +config LINEAR_RANGES
-> > > +	tristate
-> > 
-> > No help text at all???
-> 
-> Yes. The linear ranges has no meaning to be enabled alone. It only
-> plays a role if it is used by some driver/subsystem. And
-> drivers/subsystems should do
-> select LINEAR_RANGES. So showing help in any config tool is not needed.
-> This should actually not be visible in menuconfig or others. I think I
-> have seen a few examples like this.
-> 
-> Ayways, I have no obejctions to adding some text if absolutely needed.
-> Any suggestions for a text politely saying - "please, pretend I am not
-> here" - are welcome :) (Although, I think this really does not need
-> help text).
+> This patch series looks good, thanks. Since Andrew has merged it to -mm again,
+> I won't add my Reviewed-by to bother. 
 
-This kind of implies it needs to be in lib/ that way the needed code
-links it and all should be fine.
+JFYI, Andrew usually adds R-b or A-b tags as they are posted.
 
-thanks,
-
-greg k-h
+-- 
+Michal Hocko
+SUSE Labs
