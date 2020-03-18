@@ -2,136 +2,145 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCD3C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBD8C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E35208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="vKUVcXTV"
+	by mail.kernel.org (Postfix) with ESMTP id CC049208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584565145;
+	bh=X7SO+AFWtttTHvmpiHOIjqHujUY1avAOlL7VXiJYJl0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nkxtT70kX4L/EZeFH8m/7khutkklP+BFe+Uk/X7ST22J/uZEQhFLRiEiimEn2VubI
+	 DGnyi4MV+qJEmwZTNcykcpOEmuJxWnQn5dmFLBg2h6OkiUh1r9zifnQUCsJ47cBscM
+	 rWmD2z71kDUT8vuxccMuMDV7qsaRE/97ElrQDzH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgCRU64 (ORCPT
+        id S1728280AbgCRU7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:58:56 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36201 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728744AbgCRU47 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:59 -0400
-Received: by mail-ed1-f66.google.com with SMTP id b18so28099384edu.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 13:56:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g4AW1divsHMPr3pCP4CdP4Cl7K8Ooaeq6pBA6GUaETQ=;
-        b=vKUVcXTVLCHqGtHDPpcfyVqC7Iyjswe5s6J8QA9fOEK3HpHui7X1QKcUp6EbQ9CrJA
-         C05DjEwPknqFMwyMxVdqOASL4j0b74tzhGVN0rVlDcTqP9r+6muRk44tUHGBiJX0FH3l
-         0kSJ6xSo1oAI9qxQ9gvTZog0w8m3+yD8qjRaTynTXcNhuDoADAvpXa2+efq0e6D5YD6n
-         3CHbsifYNfb0CcekkOIbFkd9XH2x71AkNHltG81Un5wU3LND7OYeks7yEgdlSRFl1uJ5
-         VwR+O1FlMTPjN3UY4K4PQO/XHK+MSLNlCxZ0KmE3m5D5D1kIPJi19WSDxOhR1iInmt9f
-         77jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g4AW1divsHMPr3pCP4CdP4Cl7K8Ooaeq6pBA6GUaETQ=;
-        b=nu7YZ8QxE9iUyi/YWAvwpLsKjONCEtaRng2iOmib6JA3WUl4erlfbOaM5zuuuJne/N
-         Vw85PULrwQUQZTTMV8WJbA+0fH+DYPucrVsXFhAAJz79E3a7qhoXV6qUYyOR6Mafimz6
-         LbXj9aPsZm6IfsZwT2ruwcWFg5DFJpQJOj0nLFp5psf3VQFdcKJq1DuTP3TZe17XJML/
-         qBMO4t0LHsWg0eEoinP8V+oEPAYQiy9FAV2SJELXnuIhL3j96ygP03N5/kDho8UiLnnH
-         F76V/pQ1zCY5mShEvidjxMK5YSWO+bSjXS1JjUvNQDZD2d9gm2Wv1w7/Uwehy+8CVvri
-         Vs1g==
-X-Gm-Message-State: ANhLgQ0dioL5Phudp9W5lnfmqbjiwACs/J8nEq8RFcpr8czMe3NY3grP
-        Wx9+sqbRrWPJ/ESbhri436UB+BRxq2J1UpDTTWei
-X-Google-Smtp-Source: ADFU+vufKN/Y6D0NZVHBfHqWGsUn/HVoc7DCLKs6yGElrUkdM/dJMEcsEF5RKrrMdJTSmw7tnsN+cSFDtag+WxqrPu4=
-X-Received: by 2002:a17:906:7b8d:: with SMTP id s13mr120333ejo.77.1584565017755;
- Wed, 18 Mar 2020 13:56:57 -0700 (PDT)
+        Wed, 18 Mar 2020 16:59:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728207AbgCRU46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:58 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A10CA2166E;
+        Wed, 18 Mar 2020 20:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584565017;
+        bh=X7SO+AFWtttTHvmpiHOIjqHujUY1avAOlL7VXiJYJl0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=C/fnKMGPRcdR2tZN3S/29Bd3UX3pbPwmqoHYuYuMVBbQjtSLv10qi3Tcd0z2pSLM1
+         mZxFjOQvu6v0cH20/69pKBzYbCrITY80PlfyoKbhJKEimcmaoz9Jds+WBpVsCkw+pI
+         HIJUaDgFW+T4z7YA7AKewVHQEDSLqBlEzSTlnuok=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 07/12] dt-bindings: net: FMan erratum A050385
+Date:   Wed, 18 Mar 2020 16:56:43 -0400
+Message-Id: <20200318205648.17937-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200318205648.17937-1-sashal@kernel.org>
+References: <20200318205648.17937-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca>
- <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
- <3142237.YMNxv0uec1@x2> <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
- <CAHC9VhS09b_fM19tn7pHZzxfyxcHnK+PJx80Z9Z1hn8-==4oLA@mail.gmail.com>
- <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca> <CAHC9VhQoVOzy_b9W6h+kmizKr1rPkC4cy5aYoKT2i0ZgsceNDg@mail.gmail.com>
- <20200313185900.y44yvrfm4zxa5lfk@madcap2.tricolour.ca>
-In-Reply-To: <20200313185900.y44yvrfm4zxa5lfk@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 18 Mar 2020 16:56:46 -0400
-Message-ID: <CAHC9VhR2zCCE5bjH75rSwfLC7TJGFj4RBnrtcOoUiqVp9q5TaA@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
-        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 2:59 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-03-13 12:29, Paul Moore wrote:
-> > On Thu, Mar 12, 2020 at 3:30 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-02-13 16:44, Paul Moore wrote:
-> > > > This is a bit of a thread-hijack, and for that I apologize, but
-> > > > another thought crossed my mind while thinking about this issue
-> > > > further ... Once we support multiple auditd instances, including the
-> > > > necessary record routing and duplication/multiple-sends (the host
-> > > > always sees *everything*), we will likely need to find a way to "trim"
-> > > > the audit container ID (ACID) lists we send in the records.  The
-> > > > auditd instance running on the host/initns will always see everything,
-> > > > so it will want the full container ACID list; however an auditd
-> > > > instance running inside a container really should only see the ACIDs
-> > > > of any child containers.
-> > >
-> > > Agreed.  This should be easy to check and limit, preventing an auditd
-> > > from seeing any contid that is a parent of its own contid.
-> > >
-> > > > For example, imagine a system where the host has containers 1 and 2,
-> > > > each running an auditd instance.  Inside container 1 there are
-> > > > containers A and B.  Inside container 2 there are containers Y and Z.
-> > > > If an audit event is generated in container Z, I would expect the
-> > > > host's auditd to see a ACID list of "1,Z" but container 1's auditd
-> > > > should only see an ACID list of "Z".  The auditd running in container
-> > > > 2 should not see the record at all (that will be relatively
-> > > > straightforward).  Does that make sense?  Do we have the record
-> > > > formats properly designed to handle this without too much problem (I'm
-> > > > not entirely sure we do)?
-> > >
-> > > I completely agree and I believe we have record formats that are able to
-> > > handle this already.
-> >
-> > I'm not convinced we do.  What about the cases where we have a field
-> > with a list of audit container IDs?  How do we handle that?
->
-> I don't understand the problem.  (I think you crossed your 1/2 vs
-> A/B/Y/Z in your example.) ...
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-It looks like I did, sorry about that.
+[ Upstream commit 26d5bb9e4c4b541c475751e015072eb2cbf70d15 ]
 
-> ... Clarifying the example above, if as you
-> suggest an event happens in container Z, the hosts's auditd would report
->         Z,^2
-> and the auditd in container 2 would report
->         Z,^2
-> but if there were another auditd running in container Z it would report
->         Z
-> while the auditd in container 1 or A/B would see nothing.
+FMAN DMA read or writes under heavy traffic load may cause FMAN
+internal resource leak; thus stopping further packet processing.
 
-Yes.  My concern is how do we handle this to minimize duplicating and
-rewriting the records?  It isn't so much about the format, although
-the format is a side effect.
+The FMAN internal queue can overflow when FMAN splits single
+read or write transactions into multiple smaller transactions
+such that more than 17 AXI transactions are in flight from FMAN
+to interconnect. When the FMAN internal queue overflows, it can
+stall further packet processing. The issue can occur with any one
+of the following three conditions:
 
+  1. FMAN AXI transaction crosses 4K address boundary (Errata
+     A010022)
+  2. FMAN DMA address for an AXI transaction is not 16 byte
+     aligned, i.e. the last 4 bits of an address are non-zero
+  3. Scatter Gather (SG) frames have more than one SG buffer in
+     the SG list and any one of the buffers, except the last
+     buffer in the SG list has data size that is not a multiple
+     of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
+
+With any one of the above three conditions present, there is
+likelihood of stalled FMAN packet processing, especially under
+stress with multiple ports injecting line-rate traffic.
+
+To avoid situations that stall FMAN packet processing, all of the
+above three conditions must be avoided; therefore, configure the
+system with the following rules:
+
+  1. Frame buffers must not span a 4KB address boundary, unless
+     the frame start address is 256 byte aligned
+  2. All FMAN DMA start addresses (for example, BMAN buffer
+     address, FD[address] + FD[offset]) are 16B aligned
+  3. SG table and buffer addresses are 16B aligned and the size
+     of SG buffers are multiple of 16 bytes, except for the last
+     SG buffer that can be of any size.
+
+Additional workaround notes:
+- Address alignment of 64 bytes is recommended for maximally
+efficient system bus transactions (although 16 byte alignment is
+sufficient to avoid the stall condition)
+- To support frame sizes that are larger than 4K bytes, there are
+two options:
+  1. Large single buffer frames that span a 4KB page boundary can
+     be converted into SG frames to avoid transaction splits at
+     the 4KB boundary,
+  2. Align the large single buffer to 256B address boundaries,
+     ensure that the frame address plus offset is 256B aligned.
+- If software generated SG frames have buffers that are unaligned
+and with random non-multiple of 16 byte lengths, before
+transmitting such frames via FMAN, frames will need to be copied
+into a new single buffer or multiple buffer SG frame that is
+compliant with the three rules listed above.
+
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Documentation/devicetree/bindings/powerpc/fsl/fman.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+index 1fc5328c0651b..23708f3f4e58a 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
+@@ -110,6 +110,13 @@ PROPERTIES
+ 		Usage: required
+ 		Definition: See soc/fsl/qman.txt and soc/fsl/bman.txt
+ 
++- fsl,erratum-a050385
++		Usage: optional
++		Value type: boolean
++		Definition: A boolean property. Indicates the presence of the
++		erratum A050385 which indicates that DMA transactions that are
++		split can result in a FMan lock.
++
+ =============================================================================
+ FMan MURAM Node
+ 
 -- 
-paul moore
-www.paul-moore.com
+2.20.1
+
