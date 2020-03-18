@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632C7C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B427C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299CA208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5025E208D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564810;
-	bh=uXDGNLCrGr2jksJkSRoXf3F08iWPTsL4n2XmsDF9I/8=;
+	s=default; t=1584564812;
+	bh=rRNLqGDe4Hh9VMNxMXiXDvn4zvX3xSXrJ2j8vKZEdL4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EfrRCJ16oEw8vvbX7BKiHwBktsKwVG7HHc+51snlX6NTWxJ2ctXGzx6YsspG/699t
-	 aIjcc/XozkS6FYzVVyMZKvCXTCA0Od/pJSU0xKqJIUYd13D9SEIMeiNz6x06CqMhuz
-	 klmqbH1f7jDLa6kdRoIyBmgT3J6hGvGiy6gELbPg=
+	b=pjjzxVa7jgpM+56n0bCBRs15M9DjcenhikzTxzgor6rKLUYvhl1x6soJaLzcHateE
+	 vDUQnA5EdxtaVljgpS0JiW+QJJsBukqheYrQpQ4Ni/gr1d0z2PSN5WMxgnOaORLqpe
+	 03XBnzJZtr+LgF1ExfsrMJ8/4GWsS+Q9Gu+xrm4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgCRUx3 (ORCPT
+        id S1727113AbgCRUxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:53:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52332 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:53:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgCRUx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:53:27 -0400
+        id S1726894AbgCRUx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:53:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5756A208CA;
-        Wed, 18 Mar 2020 20:53:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36EC420724;
+        Wed, 18 Mar 2020 20:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564807;
-        bh=uXDGNLCrGr2jksJkSRoXf3F08iWPTsL4n2XmsDF9I/8=;
+        s=default; t=1584564805;
+        bh=rRNLqGDe4Hh9VMNxMXiXDvn4zvX3xSXrJ2j8vKZEdL4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0W9CW62ntiqX8cgol8Qxem+r5dXRH0vznfEjueJGnwGl350RNS282Lu/5MRlcU/Ge
-         2o+ybnVieaU0hDLHF5/LPHSejKRh2PZAStmLngJppFhkZiRUAkPr7n0lJ2Th5YW5PY
-         mZz2uKsPnIhX/IyKflu851bz9By+hfgP0rgIrRTc=
+        b=vC4ytYBFLDVWKAqBMv1QVIPSr6hqii9qKgtApNOCWFaw+T7NxBLQcGf12oSwixEK1
+         XquXGk4+woE8W7sf5NoKd8EiYnWF6xjOjcD7g2HTler+UxC+zjHCVqp3iRiq04B6Rd
+         BthlzDu/w3U9Vt1sbPimLWfI2Bq4bAj+yFBI+If8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.5 04/84] clk: imx8mn: Fix incorrect clock defines
-Date:   Wed, 18 Mar 2020 16:52:01 -0400
-Message-Id: <20200318205321.16066-4-sashal@kernel.org>
+Cc:     Dan Moulding <dmoulding@me.com>, Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 03/84] iwlwifi: mvm: Do not require PHY_SKU NVM section for 3168 devices
+Date:   Wed, 18 Mar 2020 16:52:00 -0400
+Message-Id: <20200318205321.16066-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205321.16066-1-sashal@kernel.org>
 References: <20200318205321.16066-1-sashal@kernel.org>
@@ -59,36 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Dan Moulding <dmoulding@me.com>
 
-[ Upstream commit 5eb40257047fb11085d582b7b9ccd0bffe900726 ]
+[ Upstream commit a9149d243f259ad8f02b1e23dfe8ba06128f15e1 ]
 
-IMX8MN_CLK_I2C4 and IMX8MN_CLK_UART1's index definitions are incorrect,
-fix them.
+The logic for checking required NVM sections was recently fixed in
+commit b3f20e098293 ("iwlwifi: mvm: fix NVM check for 3168
+devices"). However, with that fixed the else is now taken for 3168
+devices and within the else clause there is a mandatory check for the
+PHY_SKU section. This causes the parsing to fail for 3168 devices.
 
-Fixes: 1e80936a42e1 ("dt-bindings: imx: Add clock binding doc for i.MX8MN")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+The PHY_SKU section is really only mandatory for the IWL_NVM_EXT
+layout (the phy_sku parameter of iwl_parse_nvm_data is only used when
+the NVM type is IWL_NVM_EXT). So this changes the PHY_SKU section
+check so that it's only mandatory for IWL_NVM_EXT.
+
+Fixes: b3f20e098293 ("iwlwifi: mvm: fix NVM check for 3168 devices")
+Signed-off-by: Dan Moulding <dmoulding@me.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/dt-bindings/clock/imx8mn-clock.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/nvm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/clock/imx8mn-clock.h b/include/dt-bindings/clock/imx8mn-clock.h
-index 0f2b8423ce1d1..65ac6eb6c7330 100644
---- a/include/dt-bindings/clock/imx8mn-clock.h
-+++ b/include/dt-bindings/clock/imx8mn-clock.h
-@@ -122,8 +122,8 @@
- #define IMX8MN_CLK_I2C1				105
- #define IMX8MN_CLK_I2C2				106
- #define IMX8MN_CLK_I2C3				107
--#define IMX8MN_CLK_I2C4				118
--#define IMX8MN_CLK_UART1			119
-+#define IMX8MN_CLK_I2C4				108
-+#define IMX8MN_CLK_UART1			109
- #define IMX8MN_CLK_UART2			110
- #define IMX8MN_CLK_UART3			111
- #define IMX8MN_CLK_UART4			112
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c b/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
+index 46128a2a9c6e1..e98ce380c7b91 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
+@@ -308,7 +308,8 @@ iwl_parse_nvm_sections(struct iwl_mvm *mvm)
+ 		}
+ 
+ 		/* PHY_SKU section is mandatory in B0 */
+-		if (!mvm->nvm_sections[NVM_SECTION_TYPE_PHY_SKU].data) {
++		if (mvm->trans->cfg->nvm_type == IWL_NVM_EXT &&
++		    !mvm->nvm_sections[NVM_SECTION_TYPE_PHY_SKU].data) {
+ 			IWL_ERR(mvm,
+ 				"Can't parse phy_sku in B0, empty sections\n");
+ 			return NULL;
 -- 
 2.20.1
 
