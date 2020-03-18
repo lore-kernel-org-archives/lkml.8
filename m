@@ -4,36 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29E7C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08E6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D503A20773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 717F820772
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgCRO1R (ORCPT
+        id S1727237AbgCRO1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:27:17 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:37358 "EHLO gloria.sntech.de"
+        Wed, 18 Mar 2020 10:27:22 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:37354 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbgCRO1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726944AbgCRO1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Mar 2020 10:27:00 -0400
 Received: from [94.134.91.63] (helo=phil.fritz.box)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1jEZeo-0004YX-AJ; Wed, 18 Mar 2020 15:26:54 +0100
+        id 1jEZen-0004YX-OA; Wed, 18 Mar 2020 15:26:53 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
 To:     gregkh@linuxfoundation.org
 Cc:     jslaby@suse.com, andriy.shevchenko@linux.intel.com,
         matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
         linux-kernel@vger.kernel.org, heiko@sntech.de,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
         Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH 3/7] serial: 8250: Handle case port doesn't have TEMT interrupt using em485.
-Date:   Wed, 18 Mar 2020 15:26:36 +0100
-Message-Id: <20200318142640.982763-4-heiko@sntech.de>
+Subject: [PATCH 2/7] serial: 8250: add serial_in_poll_timeout helper
+Date:   Wed, 18 Mar 2020 15:26:35 +0100
+Message-Id: <20200318142640.982763-3-heiko@sntech.de>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200318142640.982763-1-heiko@sntech.de>
 References: <20200318142640.982763-1-heiko@sntech.de>
@@ -44,145 +43,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-Some 8250 ports only have TEMT interrupt, so current implementation
-can't work for ports without it. The only chance to make it work is to
-loop-read on LSR register.
+In cases where a serial register needs to be polled until a specific
+state, this should have a timeout as noted in the thread bringing em485
+support to 8250_dw.
 
-With NO TEMT interrupt check if both TEMT and THRE are set looping on
-LSR register.
+To not re-implement timeout handling in each case, add a helper modelled
+after readx_poll_timeout / regmap_read_poll_timeout to facilitate this.
 
-Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
 Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 ---
- drivers/tty/serial/8250/8250.h      |  2 +-
- drivers/tty/serial/8250/8250_of.c   |  2 +-
- drivers/tty/serial/8250/8250_omap.c |  2 +-
- drivers/tty/serial/8250/8250_port.c | 30 +++++++++++++++++++++--------
- include/linux/serial_8250.h         |  1 +
- 5 files changed, 26 insertions(+), 11 deletions(-)
+ drivers/tty/serial/8250/8250.h | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
 diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
-index 50a4c174410d..9e049d2a039e 100644
+index 33ad9d6de532..50a4c174410d 100644
 --- a/drivers/tty/serial/8250/8250.h
 +++ b/drivers/tty/serial/8250/8250.h
-@@ -190,7 +190,7 @@ void serial8250_rpm_put(struct uart_8250_port *p);
- void serial8250_rpm_get_tx(struct uart_8250_port *p);
- void serial8250_rpm_put_tx(struct uart_8250_port *p);
+@@ -118,6 +118,40 @@ static inline void serial_out(struct uart_8250_port *up, int offset, int value)
+ 	up->port.serial_out(&up->port, offset, value);
+ }
  
--int serial8250_em485_init(struct uart_8250_port *p);
-+int serial8250_em485_init(struct uart_8250_port *p, bool has_temt_isr);
- void serial8250_em485_destroy(struct uart_8250_port *p);
- 
- /* MCR <-> TIOCM conversion */
-diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
-index 92fbf46ce3bd..c77ab44a5468 100644
---- a/drivers/tty/serial/8250/8250_of.c
-+++ b/drivers/tty/serial/8250/8250_of.c
-@@ -64,7 +64,7 @@ static int of_8250_rs485_config(struct uart_port *port,
- 	 * are idempotent
- 	 */
- 	if (rs485->flags & SER_RS485_ENABLED) {
--		int ret = serial8250_em485_init(up);
-+		int ret = serial8250_em485_init(up, true);
- 
- 		if (ret) {
- 			rs485->flags &= ~SER_RS485_ENABLED;
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index 836e736ae188..241322900298 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -734,7 +734,7 @@ static int omap_8250_rs485_config(struct uart_port *port,
- 	 * are idempotent
- 	 */
- 	if (rs485->flags & SER_RS485_ENABLED) {
--		int ret = serial8250_em485_init(up);
-+		int ret = serial8250_em485_init(up, true);
- 
- 		if (ret) {
- 			rs485->flags &= ~SER_RS485_ENABLED;
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 67aa3a2a9afa..3d1d8490bc42 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -605,15 +605,17 @@ EXPORT_SYMBOL_GPL(serial8250_rpm_put);
- /**
-  *	serial8250_em485_init() - put uart_8250_port into rs485 emulating
-  *	@p:	uart_8250_port port instance
-+ *	@p:	bool specify if 8250 port has TEMT interrupt or not
-  *
-  *	The function is used to start rs485 software emulating on the
-  *	&struct uart_8250_port* @p. Namely, RTS is switched before/after
-  *	transmission. The function is idempotent, so it is safe to call it
-  *	multiple times.
-  *
-- *	The caller MUST enable interrupt on empty shift register before
-- *	calling serial8250_em485_init(). This interrupt is not a part of
-- *	8250 standard, but implementation defined.
-+ *	If has_temt_isr is passed as true, the caller MUST enable interrupt
-+ *	on empty shift register before calling serial8250_em485_init().
-+ *	This interrupt is not a part of	8250 standard, but implementation
-+ *	defined.
-  *
-  *	The function is supposed to be called from .rs485_config callback
-  *	or from any other callback protected with p->port.lock spinlock.
-@@ -622,7 +624,7 @@ EXPORT_SYMBOL_GPL(serial8250_rpm_put);
-  *
-  *	Return 0 - success, -errno - otherwise
-  */
--int serial8250_em485_init(struct uart_8250_port *p)
-+int serial8250_em485_init(struct uart_8250_port *p, bool has_temt_isr)
- {
- 	if (p->em485)
- 		return 0;
-@@ -639,6 +641,7 @@ int serial8250_em485_init(struct uart_8250_port *p)
- 	p->em485->start_tx_timer.function = &serial8250_em485_handle_start_tx;
- 	p->em485->port = p;
- 	p->em485->active_timer = NULL;
-+	p->em485->has_temt_isr = has_temt_isr;
- 	serial8250_em485_rts_after_send(p);
- 
- 	return 0;
-@@ -1475,11 +1478,22 @@ static inline void __stop_tx(struct uart_8250_port *p)
- 		/*
- 		 * To provide required timeing and allow FIFO transfer,
- 		 * __stop_tx_rs485() must be called only when both FIFO and
--		 * shift register are empty. It is for device driver to enable
--		 * interrupt on TEMT.
-+		 * shift register are empty. If 8250 port supports it,
-+		 * it is for device driver to enable interrupt on TEMT.
-+		 * Otherwise must loop-read until TEMT and THRE flags are set.
- 		 */
--		if ((lsr & BOTH_EMPTY) != BOTH_EMPTY)
--			return;
-+		if (em485->has_temt_isr) {
-+			if ((lsr & BOTH_EMPTY) != BOTH_EMPTY)
-+				return;
-+		} else {
-+			int val;
++/**
++ * serial_in_poll_timeout - Poll until a condition is met or a timeout occurs
++ *
++ * @port: uart_8250_port to read from
++ * @offs: Offset to poll
++ * @val: Integer variable to read the value into
++ * @cond: Break condition (usually involving @val)
++ * @timeout_us: Timeout in us, 0 means never timeout
++ *
++ * Returns 0 on success and -ETIMEDOUT upon a timeout or the serial_in
++ * error return value in case of a error read.
++ *
++ * This is modelled after the readx_poll_timeout macros in linux/iopoll.h.
++ */
++#define serial_in_poll_timeout(port, offs, val, cond, timeout_us) \
++({ \
++	u64 __timeout_us = (timeout_us); \
++	ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
++	for (;;) { \
++		val = serial_in((port), (offs)); \
++		if (val < 0) \
++			break; \
++		if (cond) \
++			break; \
++		if ((__timeout_us) && \
++		    ktime_compare(ktime_get(), __timeout) > 0) { \
++			val = serial_in((port), (offs)); \
++			break; \
++		} \
++		cpu_relax(); \
++	} \
++	(val < 0) ? val : ((cond) ? 0 : -ETIMEDOUT); \
++})
 +
-+			if (serial_in_poll_timeout(p, UART_LSR, val,
-+					(val & BOTH_EMPTY) != BOTH_EMPTY,
-+					100000) < 0)
-+				pr_warn("%s: timeout waiting for fifos to empty\n",
-+					p->port.name);
-+		}
+ void serial8250_clear_and_reinit_fifos(struct uart_8250_port *p);
  
- 		em485->active_timer = NULL;
- 
-diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
-index bb2bc99388ca..c4b4469c272b 100644
---- a/include/linux/serial_8250.h
-+++ b/include/linux/serial_8250.h
-@@ -79,6 +79,7 @@ struct uart_8250_em485 {
- 	struct hrtimer		start_tx_timer; /* "rs485 start tx" timer */
- 	struct hrtimer		stop_tx_timer;  /* "rs485 stop tx" timer */
- 	struct hrtimer		*active_timer;  /* pointer to active timer */
-+	bool			has_temt_isr;	/* variant has TEMT interrupt */
- 	struct uart_8250_port	*port;          /* for hrtimer callbacks */
- };
- 
+ static inline int serial_dl_read(struct uart_8250_port *up)
 -- 
 2.24.1
 
