@@ -2,222 +2,115 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237DEC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C16C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 066692077E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF83920785
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584555825;
+	bh=aZEDZJRdrXhE++b4T7A09QeifAD5cam+S1ZxdnS3pkc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MWpd15VBYv1fFNZHOlknH1KWATMmZUJIqH373ocXx1yb8Y3pM8rbxZuRNVS4NTJyd
+	 +ibQs2r+h2KZM9xeVjatcWZL40mx7FbS2NJlXdCCuUAyz77WAm4eppXFOmMmZzL3pV
+	 itkOiN7woWj4zSXwGXeqWjkVPnLqVLTFRyjt8C44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgCRSWQ (ORCPT
+        id S1726894AbgCRSXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:22:16 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:11629 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbgCRSWQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:22:16 -0400
-IronPort-SDR: PtQYAqYmSU0V13VozZJzT3/D/k3Aw4DWrLHK9jvJkfDjc7Uk3homh3/D233H7+zWukP/i0yQKL
- wp/+b68cT7IFCY38LwOmf1gwPpR8cnMHcgIzjLAbe//7kaVpbnS4xtArEuE7JhZZaX9g2rYbtx
- cOZWUXGZkvFoFmSfrF2hQi7wRmUwSTcNsIB28g9c9J9L/Dekjuu0TSwiqAb6HuutnC5F6qW3iU
- yHzocVmXAsSGvKRiqwL15u0/S+I1fN0VxBbaPPBmP5TV64ejczCwQ47DCSau5WTT/Ra6MkYzcu
- /Z0=
-X-IronPort-AV: E=Sophos;i="5.70,559,1574150400"; 
-   d="scan'208";a="46713605"
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by labrats.qualcomm.com with ESMTP; 16 Mar 2020 00:06:27 -0700
-Received: from pacamara-linux.qualcomm.com ([192.168.140.135])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 16 Mar 2020 00:06:25 -0700
-Received: by pacamara-linux.qualcomm.com (Postfix, from userid 359480)
-        id CC1EC3A63; Mon, 16 Mar 2020 00:06:25 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Subhash Jadavani <subhashj@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/2] scsi: ufs: Clean up ufshcd_scale_clks() and clock scaling error out path
-Date:   Mon, 16 Mar 2020 00:06:10 -0700
-Message-Id: <1584342373-10282-2-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1584342373-10282-1-git-send-email-cang@codeaurora.org>
-References: <1584342373-10282-1-git-send-email-cang@codeaurora.org>
+        Wed, 18 Mar 2020 14:23:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726638AbgCRSXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 14:23:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69E1A2077E;
+        Wed, 18 Mar 2020 18:23:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584555823;
+        bh=aZEDZJRdrXhE++b4T7A09QeifAD5cam+S1ZxdnS3pkc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nCEGogAGA0oyySUCABWIV7CNnFz/PEdTbzV5FyZ6IYymyFiZPAdeNG2hbcHE13lGM
+         jhsV0G4iIvYyPJ9b4nuOdz3SnpXh+3epIidbNmtfZc3OAlHHbeYAorcTocoWGhizGd
+         vOfrAhn/INttfPs2++1NwDyoFBVgtho/+55WtUwg=
+Date:   Wed, 18 Mar 2020 19:23:41 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/13] coresight: cti: Initial CoreSight CTI Driver
+Message-ID: <20200318182341.GB3235688@kroah.com>
+References: <20200309161748.31975-1-mathieu.poirier@linaro.org>
+ <20200309161748.31975-2-mathieu.poirier@linaro.org>
+ <20200318132241.GB2789508@kroah.com>
+ <20200318181226.GA18359@xps15>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318181226.GA18359@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subhash Jadavani <subhashj@codeaurora.org>
+On Wed, Mar 18, 2020 at 12:12:26PM -0600, Mathieu Poirier wrote:
+> > And shouldn't this just be a single value, this looks like it is 2
+> > values in one line, that then needs to be parsed, is that to be
+> > expected?
+> 
+> There is no shortage of files under /sys/device/ with output that needs parsing,
 
-This change introduces a func ufshcd_set_clk_freq() to explicitly
-set clock frequency so that it can be used in reset_and_resotre path and
-in ufshcd_scale_clks(). Meanwhile, this change cleans up the clock scaling
-error out path.
+Then they need to be fixed.  Seriously, we've been doing this and
+fighting this for 15 years, not giving up yet! :)
 
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 2a2a63b..63aaa88f 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -855,28 +855,29 @@ static bool ufshcd_is_unipro_pa_params_tuning_req(struct ufs_hba *hba)
- 		return false;
- }
- 
--static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
-+/**
-+ * ufshcd_set_clk_freq - set UFS controller clock frequencies
-+ * @hba: per adapter instance
-+ * @scale_up: If True, set max possible frequency othewise set low frequency
-+ *
-+ * Returns 0 if successful
-+ * Returns < 0 for any other errors
-+ */
-+static int ufshcd_set_clk_freq(struct ufs_hba *hba, bool scale_up)
- {
- 	int ret = 0;
- 	struct ufs_clk_info *clki;
- 	struct list_head *head = &hba->clk_list_head;
--	ktime_t start = ktime_get();
--	bool clk_state_changed = false;
- 
- 	if (list_empty(head))
- 		goto out;
- 
--	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
--	if (ret)
--		return ret;
--
- 	list_for_each_entry(clki, head, list) {
- 		if (!IS_ERR_OR_NULL(clki->clk)) {
- 			if (scale_up && clki->max_freq) {
- 				if (clki->curr_freq == clki->max_freq)
- 					continue;
- 
--				clk_state_changed = true;
- 				ret = clk_set_rate(clki->clk, clki->max_freq);
- 				if (ret) {
- 					dev_err(hba->dev, "%s: %s clk set rate(%dHz) failed, %d\n",
-@@ -895,7 +896,6 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
- 				if (clki->curr_freq == clki->min_freq)
- 					continue;
- 
--				clk_state_changed = true;
- 				ret = clk_set_rate(clki->clk, clki->min_freq);
- 				if (ret) {
- 					dev_err(hba->dev, "%s: %s clk set rate(%dHz) failed, %d\n",
-@@ -914,13 +914,36 @@ static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
- 				clki->name, clk_get_rate(clki->clk));
- 	}
- 
-+out:
-+	return ret;
-+}
-+
-+/**
-+ * ufshcd_scale_clks - scale up or scale down UFS controller clocks
-+ * @hba: per adapter instance
-+ * @scale_up: True if scaling up and false if scaling down
-+ *
-+ * Returns 0 if successful
-+ * Returns < 0 for any other errors
-+ */
-+static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
-+{
-+	int ret = 0;
-+
-+	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
-+	if (ret)
-+		return ret;
-+
-+	ret = ufshcd_set_clk_freq(hba, scale_up);
-+	if (ret)
-+		return ret;
-+
- 	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, POST_CHANGE);
-+	if (ret) {
-+		ufshcd_set_clk_freq(hba, !scale_up);
-+		return ret;
-+	}
- 
--out:
--	if (clk_state_changed)
--		trace_ufshcd_profile_clk_scaling(dev_name(hba->dev),
--			(scale_up ? "up" : "down"),
--			ktime_to_us(ktime_sub(ktime_get(), start)), ret);
- 	return ret;
- }
- 
-@@ -1106,35 +1129,36 @@ static int ufshcd_devfreq_scale(struct ufs_hba *hba, bool scale_up)
- 
- 	ret = ufshcd_clock_scaling_prepare(hba);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	/* scale down the gear before scaling down clocks */
- 	if (!scale_up) {
- 		ret = ufshcd_scale_gear(hba, false);
- 		if (ret)
--			goto out;
-+			goto clk_scaling_unprepare;
- 	}
- 
- 	ret = ufshcd_scale_clks(hba, scale_up);
--	if (ret) {
--		if (!scale_up)
--			ufshcd_scale_gear(hba, true);
--		goto out;
--	}
-+	if (ret)
-+		goto scale_up_gear;
- 
- 	/* scale up the gear after scaling up clocks */
- 	if (scale_up) {
- 		ret = ufshcd_scale_gear(hba, true);
- 		if (ret) {
- 			ufshcd_scale_clks(hba, false);
--			goto out;
-+			goto clk_scaling_unprepare;
- 		}
- 	}
- 
--	ret = ufshcd_vops_clk_scale_notify(hba, scale_up, POST_CHANGE);
-+	goto clk_scaling_unprepare;
- 
--out:
-+scale_up_gear:
-+	if (!scale_up)
-+		ufshcd_scale_gear(hba, true);
-+clk_scaling_unprepare:
- 	ufshcd_clock_scaling_unprepare(hba);
-+out:
- 	ufshcd_release(hba);
- 	return ret;
- }
-@@ -6251,7 +6275,7 @@ static int ufshcd_host_reset_and_restore(struct ufs_hba *hba)
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
- 
- 	/* scale up clocks to max frequency before full reinitialization */
--	ufshcd_scale_clks(hba, true);
-+	ufshcd_set_clk_freq(hba, true);
- 
- 	err = ufshcd_hba_enable(hba);
- 	if (err)
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> but this can be split in two entries.
 
+Please do.
+
+> > Where is the documentation for this new sysfs file?
+> 
+> All the documentation for sysfs files are lumped together in a single patch [1]
+> that is also part of this set.
+> 
+> [1]. https://lkml.org/lkml/2020/3/9/643
+
+As I reported in the other email, that is not the correct format to use.
+
+> 
+> > 
+> > > +const struct attribute_group *coresight_cti_groups[] = {
+> > > +	&coresight_cti_group,
+> > > +	NULL,
+> > > +};
+> > 
+> > ATTRIBUTE_GROUPS()?
+> 
+> As with all the other coresight devices, groups are communicated to
+> coresight_register() and added to the csdev->dev in that function.
+
+Ah, ok, missed that, sorry.
+
+> > > +static struct amba_driver cti_driver = {
+> > > +	.drv = {
+> > > +		.name	= "coresight-cti",
+> > > +		.owner = THIS_MODULE,
+> > 
+> > Aren't amba drivers smart enough to set this properly on their own?
+> > {sigh}
+> 
+> Would you mind indicating where?  builtin_amba_driver() calls
+> amba_driver_register() and  that doesn't set the owner field.
+
+Yes, it doesn't, I'm saying that the amba bus code should be fixed, not
+that this is a bug here, just complaining in general :)
+
+thanks,
+
+greg k-h
