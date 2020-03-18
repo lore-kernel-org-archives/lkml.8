@@ -2,52 +2,52 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BA5C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC79CC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD917206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A02232073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584493364;
-	bh=DUPo3GN8HipNjHM66Tef9TzikURLlcvTLv5WTvpF2To=;
+	s=default; t=1584493370;
+	bh=bjiUoRTSUmH/jxo33MwdGbJLSbtImgImlJ6ARVJq1+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WEBq9p4/nrwovWZH0S4gl6H2X8DBXYQShdqxVKlcrcB24h99l8rLqkTcm35J9JoWA
-	 LmXZFbWiEh2G9Z0F2vJzBUVMmXAfN73W87xHdkN772oEWMFFJWgKMdkcMJKvg7WGOQ
-	 wCYKbrswjvwopaBuQFFxC5/Du8Cc88JXSfLfg9m8=
+	b=GlyCRiD8FiFp+qf2cnS2srGxclNWCaSVURXaakxI6U/ODF/IINnqKbInBLClP04an
+	 bz+NBOgwt3Uhddx3bYio6a6kowBfW0JFPLUQrD3ZXZBz1lm717iiC7bptuvBegVOoa
+	 wmgM6AFh0vN5+19Q+PHq33lhVIaFzjh/SYYuOVPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgCRBCn (ORCPT
+        id S1727455AbgCRBCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 21:02:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39306 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 21:02:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727304AbgCRBCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727210AbgCRBCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 21:02:31 -0400
 Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68A392076A;
-        Wed, 18 Mar 2020 01:02:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E36852075E;
+        Wed, 18 Mar 2020 01:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1584493350;
-        bh=DUPo3GN8HipNjHM66Tef9TzikURLlcvTLv5WTvpF2To=;
+        bh=bjiUoRTSUmH/jxo33MwdGbJLSbtImgImlJ6ARVJq1+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2XGUHII62Ic4JN7mT7RuCedPBBUENc3wBazq+MbWkTp/ry5w7uWHzqPifFm4r8S8+
-         ok3AgiR/wQVi3pomJ6dM+8O348DgW/r16vd3MhQtXAswk3oBAKWoXxTzhss2wgzPn+
-         XDLZpzTkdpItNikto4E1vuaUR66mQy/WQvQsElbc=
+        b=jRWb79wMyf9PVHHt/j37aPe/6M3LZBUQ6gpWKva9WVbObkzkVrlD7kiTP8MDD4VGH
+         +I6ZjB4HkAheVL4zu8uxr4g3+jTOWMIYNaSfa3k2457mK4EjwD690tdd0EcOfVjfF3
+         UXVlrL+hiQQ5l/qBC4AkV2Vhs1nWso/er3nxoAk4=
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     keescook@chromium.org, shuah@kernel.org
 Cc:     netdev@vger.kernel.org, luto@amacapital.net, wad@chromium.org,
         linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com, Tim.Bird@sony.com,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH v5 3/5] kselftest: run tests by fixture
-Date:   Tue, 17 Mar 2020 18:01:51 -0700
-Message-Id: <20200318010153.40797-4-kuba@kernel.org>
+Subject: [PATCH v5 2/5] kselftest: create fixture objects
+Date:   Tue, 17 Mar 2020 18:01:50 -0700
+Message-Id: <20200318010153.40797-3-kuba@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200318010153.40797-1-kuba@kernel.org>
 References: <20200318010153.40797-1-kuba@kernel.org>
@@ -58,87 +58,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all tests have a fixture object move from a global
-list of tests to a list of tests per fixture.
+Grouping tests by fixture will allow us to parametrize
+test runs. Create full objects for fixtures.
 
-Order of tests may change as we will now group and run test
-fixture by fixture, rather than in declaration order.
+Add a "global" fixture for tests without a fixture.
 
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Acked-by: Kees Cook <keescook@chromium.org>
 ---
-v5 (Kees):
- - move a comment;
- - remove temporary variable.
+v5:
+ - pass fixture as argument to __run_test() right away,
+   previously this change was made in the next patch.
 ---
- tools/testing/selftests/kselftest_harness.h | 23 +++++++++++++--------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ tools/testing/selftests/kselftest_harness.h | 51 +++++++++++++++------
+ 1 file changed, 38 insertions(+), 13 deletions(-)
 
 diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 2dc9b7a63467..de38d6898c3f 100644
+index aaf58fffc8f7..2dc9b7a63467 100644
 --- a/tools/testing/selftests/kselftest_harness.h
 +++ b/tools/testing/selftests/kselftest_harness.h
-@@ -659,9 +659,12 @@
+@@ -169,8 +169,10 @@
+ #define __TEST_IMPL(test_name, _signal) \
+ 	static void test_name(struct __test_metadata *_metadata); \
+ 	static struct __test_metadata _##test_name##_object = \
+-		{ .name = "global." #test_name, \
+-		  .fn = &test_name, .termsig = _signal, \
++		{ .name = #test_name, \
++		  .fn = &test_name, \
++		  .fixture = &_fixture_global, \
++		  .termsig = _signal, \
+ 		  .timeout = TEST_TIMEOUT_DEFAULT, }; \
+ 	static void __attribute__((constructor)) _register_##test_name(void) \
+ 	{ \
+@@ -212,10 +214,12 @@
+  * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
+  */
+ #define FIXTURE(fixture_name) \
++	static struct __fixture_metadata _##fixture_name##_fixture_object = \
++		{ .name =  #fixture_name, }; \
+ 	static void __attribute__((constructor)) \
+ 	_register_##fixture_name##_data(void) \
+ 	{ \
+-		__fixture_count++; \
++		__register_fixture(&_##fixture_name##_fixture_object); \
+ 	} \
+ 	FIXTURE_DATA(fixture_name)
+ 
+@@ -309,8 +313,9 @@
+ 	} \
+ 	static struct __test_metadata \
+ 		      _##fixture_name##_##test_name##_object = { \
+-		.name = #fixture_name "." #test_name, \
++		.name = #test_name, \
+ 		.fn = &wrapper_##fixture_name##_##test_name, \
++		.fixture = &_##fixture_name##_fixture_object, \
+ 		.termsig = signal, \
+ 		.timeout = tmout, \
+ 	 }; \
+@@ -654,10 +659,33 @@
  	} \
  }
  
-+struct __test_metadata;
++/* Contains all the information about a fixture. */
++struct __fixture_metadata {
++	const char *name;
++	struct __fixture_metadata *prev, *next;
++} _fixture_global __attribute__((unused)) = {
++	.name = "global",
++	.prev = &_fixture_global,
++};
 +
- /* Contains all the information about a fixture. */
- struct __fixture_metadata {
++static struct __fixture_metadata *__fixture_list = &_fixture_global;
++static unsigned int __fixture_count;
++static int __constructor_order;
++
++#define _CONSTRUCTOR_ORDER_FORWARD   1
++#define _CONSTRUCTOR_ORDER_BACKWARD -1
++
++static inline void __register_fixture(struct __fixture_metadata *f)
++{
++	__fixture_count++;
++	__LIST_APPEND(__fixture_list, f);
++}
++
+ /* Contains all the information for test execution and status checking. */
+ struct __test_metadata {
  	const char *name;
-+	struct __test_metadata *tests;
- 	struct __fixture_metadata *prev, *next;
- } _fixture_global __attribute__((unused)) = {
- 	.name = "global",
-@@ -696,7 +699,6 @@ struct __test_metadata {
- };
- 
+ 	void (*fn)(struct __test_metadata *);
++	struct __fixture_metadata *fixture;
+ 	int termsig;
+ 	int passed;
+ 	int trigger; /* extra handler after the evaluation */
+@@ -670,11 +698,6 @@ struct __test_metadata {
  /* Storage for the (global) tests to be run. */
--static struct __test_metadata *__test_list;
+ static struct __test_metadata *__test_list;
  static unsigned int __test_count;
+-static unsigned int __fixture_count;
+-static int __constructor_order;
+-
+-#define _CONSTRUCTOR_ORDER_FORWARD   1
+-#define _CONSTRUCTOR_ORDER_BACKWARD -1
  
  /*
-@@ -711,7 +713,7 @@ static unsigned int __test_count;
- static inline void __register_test(struct __test_metadata *t)
- {
- 	__test_count++;
--	__LIST_APPEND(__test_list, t);
-+	__LIST_APPEND(t->fixture->tests, t);
+  * Since constructors are called in reverse order, reverse the test
+@@ -701,14 +724,15 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
+ 	return 0;
  }
  
- static inline int __bail(int for_realz, bool no_print, __u8 step)
-@@ -789,6 +791,7 @@ void __run_test(struct __fixture_metadata *f,
- static int test_harness_run(int __attribute__((unused)) argc,
- 			    char __attribute__((unused)) **argv)
+-void __run_test(struct __test_metadata *t)
++void __run_test(struct __fixture_metadata *f,
++		struct __test_metadata *t)
  {
-+	struct __fixture_metadata *f;
- 	struct __test_metadata *t;
- 	int ret = 0;
- 	unsigned int count = 0;
-@@ -797,13 +800,15 @@ static int test_harness_run(int __attribute__((unused)) argc,
- 	/* TODO(wad) add optional arguments similar to gtest. */
- 	printf("[==========] Running %u tests from %u test cases.\n",
- 	       __test_count, __fixture_count + 1);
--	for (t = __test_list; t; t = t->next) {
--		count++;
--		__run_test(t->fixture, t);
--		if (t->passed)
--			pass_count++;
--		else
--			ret = 1;
-+	for (f = __fixture_list; f; f = f->next) {
-+		for (t = f->tests; t; t = t->next) {
-+			count++;
-+			__run_test(f, t);
-+			if (t->passed)
-+				pass_count++;
-+			else
-+				ret = 1;
-+		}
+ 	pid_t child_pid;
+ 	int status;
+ 
+ 	t->passed = 1;
+ 	t->trigger = 0;
+-	printf("[ RUN      ] %s\n", t->name);
++	printf("[ RUN      ] %s.%s\n", f->name, t->name);
+ 	alarm(t->timeout);
+ 	child_pid = fork();
+ 	if (child_pid < 0) {
+@@ -757,7 +781,8 @@ void __run_test(struct __test_metadata *t)
+ 				status);
+ 		}
  	}
- 	printf("[==========] %u / %u tests passed.\n", pass_count, count);
- 	printf("[  %s  ]\n", (ret ? "FAILED" : "PASSED"));
+-	printf("[     %4s ] %s\n", (t->passed ? "OK" : "FAIL"), t->name);
++	printf("[     %4s ] %s.%s\n", (t->passed ? "OK" : "FAIL"),
++	       f->name, t->name);
+ 	alarm(0);
+ }
+ 
+@@ -774,7 +799,7 @@ static int test_harness_run(int __attribute__((unused)) argc,
+ 	       __test_count, __fixture_count + 1);
+ 	for (t = __test_list; t; t = t->next) {
+ 		count++;
+-		__run_test(t);
++		__run_test(t->fixture, t);
+ 		if (t->passed)
+ 			pass_count++;
+ 		else
 -- 
 2.25.1
 
