@@ -2,190 +2,134 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EB6C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A4FC4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1610220754
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822002076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:19:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="PRDNOM25";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="X/qZSsNA"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="X3wMKCoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbgCRXS2 (ORCPT
+        id S1727403AbgCRXTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:18:28 -0400
-Received: from smtp.uniroma2.it ([160.80.6.16]:46381 "EHLO smtp.uniroma2.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgCRXS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:18:26 -0400
-Received: from smtpauth-2019-1.uniroma2.it (smtpauth.uniroma2.it [160.80.5.46])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 02INHLWk003537;
-        Thu, 19 Mar 2020 00:17:26 +0100
-Received: from utente-Aspire-V3-572G.campusx-relay3.uniroma2.it (wireless-125-133.net.uniroma2.it [160.80.133.125])
-        by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id 8DA6712289B;
-        Thu, 19 Mar 2020 00:17:16 +0100 (CET)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
-        s=ed201904; t=1584573436; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=iSGAk4HwiZ16/zSHFrsdM03PvsoTUmgS3EJd8tzffTw=;
-        b=PRDNOM25c6HycmnlJCVzvXCt9QnAOBcEw8uQH2ufLjviDA27iYBBma129QEjBX0rdTJGdP
-        ApAoyDl1uP9YzNCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
-        t=1584573436; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=iSGAk4HwiZ16/zSHFrsdM03PvsoTUmgS3EJd8tzffTw=;
-        b=X/qZSsNAKqOUsivu/rpsVhFRSyrIv+d3OUQPrPrp1uDDkralLBW+C2gmu20iunncXNsKQL
-        4+E1QpjzJcw1HjdLxl6a3Jx5jMQ/v+onRAcH+/EbKk/mRHmmjcEmjRZspF35EttyRt7PCQ
-        mO+Nel2KCuW6VJKz8KQgsjN38kMjFQe+ETtgsilKlfsZa7VzA+0kDqa6eVtPyLA98exk3G
-        MevWI0jfFCB4vGUCx9nTk3T7TZv8wN0aHla3UVRXRlsaorKp72SMh0+kkROPC99W2FqLcX
-        E0txf8qIzu1govCLl/b/UGg790gzx5nc1vX64P0LkQD1oq140RQ/vq3PwOG9CQ==
-From:   Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-To:     davem@davemloft.net
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ahmed.abdelsalam@gssi.it, david.lebrun@uclouvain.be,
-        dav.lebrun@gmail.com, stefano.salsano@uniroma2.it,
-        andrea.mayer@uniroma2.it, paolo.lungaroni@cnit.it,
-        hiroki.shirokura@linecorp.com,
-        Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-Subject: [v2,net-next 1/2] Perform IPv4 FIB lookup in a predefined FIB table
-Date:   Thu, 19 Mar 2020 00:16:34 +0100
-Message-Id: <20200318231635.15116-2-carmine.scarpitta@uniroma2.it>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200318231635.15116-1-carmine.scarpitta@uniroma2.it>
-References: <20200318231635.15116-1-carmine.scarpitta@uniroma2.it>
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
+        Wed, 18 Mar 2020 19:19:06 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:41564 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCRXTF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 19:19:05 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6269B5F;
+        Thu, 19 Mar 2020 00:19:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584573542;
+        bh=/zedXgBTnib8ZFBNicYJfz7d9YDzUXZrVfIpem0oI00=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X3wMKCohj+Eri0noSK4cxXv2J+Tdk+etLcebTplD2XwAu0mnpUCJBz9JoBTVtgKyB
+         BuYND21PycYFWMRG2CDc0GZ8rvrsDLqV+vZKMIO3R3FRv4+AgQPZ59Gq234fNiH5Z5
+         CrBG+MYpU8w1RzkF6O4stmkROcCdhibfo+U67x8I=
+Date:   Thu, 19 Mar 2020 01:18:56 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/4] media: i2c: ov5645: Set maximum leverage of
+ external clock frequency to 24480000
+Message-ID: <20200318231856.GI24538@pendragon.ideasonboard.com>
+References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584133954-6953-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200313212345.GM4751@pendragon.ideasonboard.com>
+ <OSBPR01MB359079EAA32E0DCBF63C6886AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB359079EAA32E0DCBF63C6886AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In IPv4, the routing subsystem is invoked by calling ip_route_input_rcu()
-which performs the recognition logic and calls ip_route_input_slow().
+Hi Prabhakar,
 
-ip_route_input_slow() initialises both "fi" and "table" members
-of the fib_result structure to null before calling fib_lookup().
+On Fri, Mar 13, 2020 at 09:31:25PM +0000, Prabhakar Mahadev Lad wrote:
+> On 13 March 2020 21:24, Laurent Pinchart wrote:
+> > On Fri, Mar 13, 2020 at 09:12:33PM +0000, Lad Prabhakar wrote:
+> > > While testing on Renesas RZ/G2E platform, noticed the clock frequency
+> > > to be 24242424 as a result the probe failed. However increasing the
+> > > maximum leverage of external clock frequency to 24480000 fixes this
+> > > issue. Since this difference is small enough and is insignificant set
+> > > the same in the driver.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > ---
+> > >  drivers/media/i2c/ov5645.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+> > > index 4fbabf3..b49359b 100644
+> > > --- a/drivers/media/i2c/ov5645.c
+> > > +++ b/drivers/media/i2c/ov5645.c
+> > > @@ -1107,8 +1107,10 @@ static int ov5645_probe(struct i2c_client *client)
+> > >  }
+> > >
+> > >  xclk_freq = clk_get_rate(ov5645->xclk);
+> > > -/* external clock must be 24MHz, allow 1% tolerance */
+> > > -if (xclk_freq < 23760000 || xclk_freq > 24240000) {
+> > > +/* external clock must be 24MHz, allow a minimum 1% and a maximum of 2%
+> > > + * tolerance
+> >
+> > So where do these numbers come from ? I understand that 2% is what you
+> > need to make your clock fit in the range, but why -1%/+2% instead of -
+> > 2%/+2% ? And why not 2.5 or 3% ? The sensor datasheet documents the
+> > range of supported xvclk frequencies to be 6MHz to 54MHz. I understand
+> > that PLL parameters depend on the clock frequency, but could they be
+> > calculated instead of hardcoded, to avoid requiring an exact 24MHz input
+> > frequency ?
+>
+> To be honest I don't have the datasheet for ov5645, the flyer says 6-54Mhz but the
+> logs/comment says 24Mhz.
 
-fib_lookup() performs fib lookup in the routing table configured
-by the policy routing rules.
+The OV5645 clock topology is fairly complex, with two PLLs and different
+set of output dividers. It however shouldn't be impossible to calculate
+the PLL configuration in the driver, but would require some dedication,
+and is probably not worth it.
 
-In this patch, we allow invoking the ip4 routing subsystem
-with known routing table. This is useful for use-cases implementing
-a separate routing table per tenant.
+I've discussed the matter with Sakari, and we concluded that this is
+just a sanity check. We advise increasing the tolerance by a bigger
+amount to avoid patching this for every new board (completely
+arbitrarily, +/- 5%), and turning the fatal error into a dev_warn,
+dropping the return -EINVAL statement.
 
-The patch introduces a new flag named "tbl_known" to the definition of
-ip_route_input_rcu() and ip_route_input_slow().
+> > > + */
+> > > +if (xclk_freq < 23760000 || xclk_freq > 24480000) {
+> > >  dev_err(dev, "external clock frequency %u is not supported\n",
+> > >  xclk_freq);
+> > >  return -EINVAL;
 
-When the flag is set, ip_route_input_slow() will call fib_table_lookup()
-using the defined table instead of using fib_lookup().
-
-Signed-off-by: Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-Acked-by: Ahmed Abdelsalam <ahmed.abdelsalam@gssi.it>
-Acked-by: Andrea Mayer <andrea.mayer@uniroma2.it>
-Acked-by: Paolo Lungaroni <paolo.lungaroni@cnit.it>
----
- include/net/route.h |  2 +-
- net/ipv4/route.c    | 23 +++++++++++++++++------
- 2 files changed, 18 insertions(+), 7 deletions(-)
-
-diff --git a/include/net/route.h b/include/net/route.h
-index a9c60fc68e36..4ff977bd7029 100644
---- a/include/net/route.h
-+++ b/include/net/route.h
-@@ -183,7 +183,7 @@ int ip_route_input_noref(struct sk_buff *skb, __be32 dst, __be32 src,
- 			 u8 tos, struct net_device *devin);
- int ip_route_input_rcu(struct sk_buff *skb, __be32 dst, __be32 src,
- 		       u8 tos, struct net_device *devin,
--		       struct fib_result *res);
-+		       struct fib_result *res, bool tbl_known);
- 
- int ip_route_use_hint(struct sk_buff *skb, __be32 dst, __be32 src,
- 		      u8 tos, struct net_device *devin,
-diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-index d5c57b3f77d5..e1eca68eede2 100644
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -2077,7 +2077,7 @@ int ip_route_use_hint(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 
- static int ip_route_input_slow(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 			       u8 tos, struct net_device *dev,
--			       struct fib_result *res)
-+			       struct fib_result *res, bool tbl_known)
- {
- 	struct in_device *in_dev = __in_dev_get_rcu(dev);
- 	struct flow_keys *flkeys = NULL, _flkeys;
-@@ -2110,7 +2110,6 @@ static int ip_route_input_slow(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 		goto martian_source;
- 
- 	res->fi = NULL;
--	res->table = NULL;
- 	if (ipv4_is_lbcast(daddr) || (saddr == 0 && daddr == 0))
- 		goto brd_input;
- 
-@@ -2155,7 +2154,18 @@ static int ip_route_input_slow(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 		fl4.fl4_dport = 0;
- 	}
- 
-+#ifdef CONFIG_IP_MULTIPLE_TABLES
-+	if (!tbl_known) {
-+		res->table = NULL;
-+		err = fib_lookup(net, &fl4, res, 0);
-+	} else {
-+		err = fib_table_lookup(res->table, &fl4, res, FIB_LOOKUP_NOREF);
-+	}
-+#else
-+	res->table = NULL;
- 	err = fib_lookup(net, &fl4, res, 0);
-+#endif
-+
- 	if (err != 0) {
- 		if (!IN_DEV_FORWARD(in_dev))
- 			err = -EHOSTUNREACH;
-@@ -2292,7 +2302,7 @@ int ip_route_input_noref(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 
- 	tos &= IPTOS_RT_MASK;
- 	rcu_read_lock();
--	err = ip_route_input_rcu(skb, daddr, saddr, tos, dev, &res);
-+	err = ip_route_input_rcu(skb, daddr, saddr, tos, dev, &res, false);
- 	rcu_read_unlock();
- 
- 	return err;
-@@ -2301,7 +2311,8 @@ EXPORT_SYMBOL(ip_route_input_noref);
- 
- /* called with rcu_read_lock held */
- int ip_route_input_rcu(struct sk_buff *skb, __be32 daddr, __be32 saddr,
--		       u8 tos, struct net_device *dev, struct fib_result *res)
-+		       u8 tos, struct net_device *dev, struct fib_result *res,
-+		       bool tbl_known)
- {
- 	/* Multicast recognition logic is moved from route cache to here.
- 	   The problem was that too many Ethernet cards have broken/missing
-@@ -2347,7 +2358,7 @@ int ip_route_input_rcu(struct sk_buff *skb, __be32 daddr, __be32 saddr,
- 		return err;
- 	}
- 
--	return ip_route_input_slow(skb, daddr, saddr, tos, dev, res);
-+	return ip_route_input_slow(skb, daddr, saddr, tos, dev, res, tbl_known);
- }
- 
- /* called with rcu_read_lock() */
-@@ -3192,7 +3203,7 @@ static int inet_rtm_getroute(struct sk_buff *in_skb, struct nlmsghdr *nlh,
- 		skb->dev	= dev;
- 		skb->mark	= mark;
- 		err = ip_route_input_rcu(skb, dst, src, rtm->rtm_tos,
--					 dev, &res);
-+					 dev, &res, false);
- 
- 		rt = skb_rtable(skb);
- 		if (err == 0 && rt->dst.error)
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
