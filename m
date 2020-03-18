@@ -2,112 +2,138 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9756C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B23AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A272B20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F84C20757
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FWcITW8h"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MvL35sHe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgCRPAX (ORCPT
+        id S1726912AbgCRPAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:00:23 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:59088 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726726AbgCRPAX (ORCPT
+        Wed, 18 Mar 2020 11:00:55 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60758 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbgCRPAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:00:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584543621;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vM5m3AgHzQ8TLHWUI0zWYeLWIk49n7q4tlPXYDa1gEQ=;
-        b=FWcITW8h9pdTlAORXzYB3p0IJSisHmFknF2lLYFTUKgXIEtdJfdUWnyj8ghbIj2+AG4UBc
-        AD0fZW8/YSUZBiUnpUw1X0pMWeIMc5aEg0/7XI81AWpaQwCz1qn0kqFJ++Uc6DfJAdvl76
-        e2UYJ3id9J1YOilW7WfU/vFsRZVuS1k=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-75-inQ68xkTNmaFnsw9eEUiKw-1; Wed, 18 Mar 2020 11:00:19 -0400
-X-MC-Unique: inQ68xkTNmaFnsw9eEUiKw-1
-Received: by mail-wm1-f71.google.com with SMTP id r23so1201270wmn.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:00:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=vM5m3AgHzQ8TLHWUI0zWYeLWIk49n7q4tlPXYDa1gEQ=;
-        b=lT8xCW2NJLTqEUBccJ/anoPJKUYeTl5G1QvKWldwiUnHViLC6zwCNbL6L0rRDngntZ
-         NEVm11jyxAlsIoE4uDMMvl0ShcsCCaf4/P5S6r6M4o8C52L1AYczbj8esSy+gcsJqvSe
-         XzTS5pVr2R3oU7eS+uezqQcumoUvdCmhSPox2EwN9yxeRvLe96pVud8c4WkR4nMkBfwF
-         Mqm5DP/QCaoJRy0FJdqcYdfI2dv0yy3GcWJixryA4SsOBPyOYdCZvbSsFwt/amsMgSDz
-         F5bXuOdZYiurttb9zIfB6+4ekIR8kVuUMGyuxQUpKEtuYmAZEUZ97RB5MEsws0+PiIWc
-         Ay8Q==
-X-Gm-Message-State: ANhLgQ2p9vD2eXz5RW2hf0ljDhgi+0rmJAKbKsJu085fhs71t6k8SBfe
-        a2r8kCIPgyWXiEA0mmWWidpksUa5e1oN/eii0RkMGX2Ow87/HDVdVkJnVDAC5bTq+2lcLzEZAmn
-        nCK2Xv8zr5A+pkMrY49G269M7
-X-Received: by 2002:a5d:474c:: with SMTP id o12mr6171258wrs.156.1584543618597;
-        Wed, 18 Mar 2020 08:00:18 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vv+zT1QJmX75ZvxUY39VsKhPCv6bUGTeJatv+Ce8GRjcg/v0Lus2RekaAdHVMZwveqCGhi86Q==
-X-Received: by 2002:a5d:474c:: with SMTP id o12mr6171235wrs.156.1584543618411;
-        Wed, 18 Mar 2020 08:00:18 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id x13sm4631033wmj.5.2020.03.18.08.00.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 08:00:17 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-hyperv@vger.kernel.org, Yumei Huang <yuhuang@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Eduardo Habkost <ehabkost@redhat.com>,
-        Milan Zamazal <mzamazal@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v2 0/8] mm/memory_hotplug: allow to specify a default online_type
-In-Reply-To: <20200318144119.GD30899@MiWiFi-R3L-srv>
-References: <20200317104942.11178-1-david@redhat.com> <20200318130517.GC30899@MiWiFi-R3L-srv> <87d0993gto.fsf@vitty.brq.redhat.com> <20200318144119.GD30899@MiWiFi-R3L-srv>
-Date:   Wed, 18 Mar 2020 16:00:15 +0100
-Message-ID: <874kul3dz4.fsf@vitty.brq.redhat.com>
+        Wed, 18 Mar 2020 11:00:55 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02IF0oXs100065;
+        Wed, 18 Mar 2020 10:00:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584543650;
+        bh=4hsSjsqTg006Xi7d9l/z1juDZrjWW/WtTHhxxRdkAAU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=MvL35sHeun/xhaqUjJ2DzelnFWg7GMdahFHl1WVuqKKepeePmmB8i93XE/6ThICpL
+         HElEzJNx/4WgUFCta5c3ocCpSI4Qib0z8CBx7bpVBwvCcbAgkBTjuKPcjwV3deTE8C
+         84Tjij5GfTPtkqhAsLoO0Jl822hG6/OIk+qf5xg8=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02IF0oGj026548
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Mar 2020 10:00:50 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
+ Mar 2020 10:00:50 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 18 Mar 2020 10:00:50 -0500
+Received: from [10.250.35.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02IF0os8119880;
+        Wed, 18 Mar 2020 10:00:50 -0500
+Subject: Re: [PATCH 2/2] remoteproc: Fix and restore the parenting hierarchy
+ for vdev
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200305224108.21351-1-s-anna@ti.com>
+ <20200305224108.21351-3-s-anna@ti.com> <20200317180530.GA1801@xps15>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <17204b55-2d58-d8cf-e504-6b6969afa987@ti.com>
+Date:   Wed, 18 Mar 2020 10:00:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200317180530.GA1801@xps15>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Baoquan He <bhe@redhat.com> writes:
+Hi Mathieu,
 
-> Is there a reason hyperV need boot with small memory, then enlarge it
-> with huge memory? Since it's a real case in hyperV, I guess there must
-> be reason, I am just curious.
->
+On 3/17/20 1:05 PM, Mathieu Poirier wrote:
+> Hi Suman,
+> 
+> On Thu, Mar 05, 2020 at 04:41:08PM -0600, Suman Anna wrote:
+>> The commit 086d08725d34 ("remoteproc: create vdev subdevice with specific
+>> dma memory pool") has introduced a new vdev subdevice for each vdev
+>> declared in the firmware resource table and made it as the parent for the
+>> created virtio rpmsg devices instead of the previous remoteproc device.
+>> This changed the overall parenting hierarchy for the rpmsg devices, which
+>> were children of virtio devices, and does not allow the corresponding
+>> rpmsg drivers to retrieve the parent rproc device through the
+>> rproc_get_by_child() API.
+>>
+>> Fix this by restoring the remoteproc device as the parent. The new vdev
+>> subdevice can continue to inherit the DMA attributes from the remoteproc's
+>> parent device (actual platform device).
+>>
+>> Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>>  drivers/remoteproc/remoteproc_core.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+>> index 097f33e4f1f3..ba18f32bd0c4 100644
+>> --- a/drivers/remoteproc/remoteproc_core.c
+>> +++ b/drivers/remoteproc/remoteproc_core.c
+>> @@ -510,7 +510,7 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
+>>  
+>>  	/* Initialise vdev subdevice */
+>>  	snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
+>> -	rvdev->dev.parent = rproc->dev.parent;
+>> +	rvdev->dev.parent = &rproc->dev;
+> 
+> I can see how it would not be possible to retrieve the parent rproc device since
+> rvdev->dev.parent was set to be platform device...
+> 
+> I wonder how the original change didn't blow up sysmon_probe() and potentially
+> other out-of-tree users of rproc_get_by_child().  
 
-It doesn't really *need* to but this can be utilized in e.g. 'hot
-standby' schemes I believe. Also, it may be enough if the administrator
-is just trying to e.g. double the size of RAM but the VM is already
-under memory pressure. I wouldn't say that these cases are common but
-afair bugs like 'I tried adding more memory to my VM and it just OOMed'
-were reported in the past.
+QCOM code uses SMD transport, and not virtio_rpmsg transport, and the
+parent-child relationship is direct rproc subdevices which are added in
+their platform drivers directly. This affects only virtio-rpmsg clients.
+Please see qcom_add_smd_subdev().
 
--- 
-Vitaly
+It would be nice to have
+> someone from the QCOM team test your patch.
+> 
+>>  	rvdev->dev.dma_pfn_offset = rproc->dev.parent->dma_pfn_offset;
+>>  	rvdev->dev.release = rproc_rvdev_release;
+>>  	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
+> 
+> Be mindful there might be fallouts from applying this patch since it does change
+> the location of the vdev under /sys/device/platform/ .
+> 
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
+Thanks for the review.
+
+regards
+Suman
