@@ -7,33 +7,41 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1210EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE0FC5ACD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD5E420674
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E38320674
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgCRHHm (ORCPT
+        id S1727334AbgCRHHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 03:07:42 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40254 "EHLO
+        Wed, 18 Mar 2020 03:07:44 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40278 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgCRHHl (ORCPT
+        with ESMTP id S1726473AbgCRHHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 03:07:41 -0400
+        Wed, 18 Mar 2020 03:07:43 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 3DB422924A1
+        with ESMTPSA id 8CCD929360F
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>,
         Andrzej Hajda <a.hajda@samsung.com>, icenowy@aosc.io,
         anarsoul@gmail.com, Neil Armstrong <narmstrong@baylibre.com>,
         matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        megous@megous.com, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v4 2/4] mfd: anx7688: Add driver for Analogix ANX7688 chip
-Date:   Wed, 18 Mar 2020 08:07:28 +0100
-Message-Id: <20200318070730.4012371-2-enric.balletbo@collabora.com>
+        megous@megous.com, kbuild test robot <lkp@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Torsten Duwe <duwe@suse.de>, dri-devel@lists.freedesktop.org
+Subject: [PATCH v4 4/4] drm/bridge: anx7688: Add ANX7688 bridge driver support
+Date:   Wed, 18 Mar 2020 08:07:30 +0100
+Message-Id: <20200318070730.4012371-4-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200318070730.4012371-1-enric.balletbo@collabora.com>
 References: <20200318070730.4012371-1-enric.balletbo@collabora.com>
@@ -44,201 +52,215 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ANX7688 chip is a Type-C Port Controller, HDMI to DP converter and
-USB-C mux between USB 3.0 lanes and the DP output.
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-For our use case a big part of the chip, like power supplies, control
-gpios and usb-c parts are managed by an Embedded Controller, hence,
-this is its simplest form of it. Other users of this chip might
-introduce new functionalities as per their requirements.
+This driver adds support for the ANX7688 HDMI to DP converter block of the
+ANX7688 multi-function device.
 
+For our use case, the only reason the Linux kernel driver is necessary is
+to reject resolutions that require more bandwidth than what is available
+on the DP side. DP bandwidth and lane count are reported by the bridge via
+2 registers and, as far as we know, only for chips that have a firmware
+version greather than 0.85 supports these two registers.
+
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+[The driver is OF only so should depends on CONFIG_OF]
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+Changes in v4:
+- Fix build issue reported by kbuild test robot
 
- drivers/mfd/Kconfig         | 11 +++++
- drivers/mfd/Makefile        |  1 +
- drivers/mfd/anx7688.c       | 87 +++++++++++++++++++++++++++++++++++++
- include/linux/mfd/anx7688.h | 39 +++++++++++++++++
- 4 files changed, 138 insertions(+)
- create mode 100644 drivers/mfd/anx7688.c
- create mode 100644 include/linux/mfd/anx7688.h
+Changes in v3:
+- Convert to a child of ANX7688 multi-function device.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 2b203290e7b9..ac4ef4f20518 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -51,6 +51,17 @@ config MFD_ACT8945A
- 	  linear regulators, along with a complete ActivePath battery
- 	  charger.
+Changes in v2:
+- Move driver to drivers/gpu/drm/bridge/analogix.
+- Make the driver OF only so we can reduce the ifdefs.
+- Update the Copyright to 2020.
+- Use probe_new so we can get rid of the i2c_device_id table.
+
+ drivers/gpu/drm/bridge/analogix/Kconfig       |  10 ++
+ drivers/gpu/drm/bridge/analogix/Makefile      |   1 +
+ .../drm/bridge/analogix/analogix-anx7688.c    | 135 ++++++++++++++++++
+ 3 files changed, 146 insertions(+)
+ create mode 100644 drivers/gpu/drm/bridge/analogix/analogix-anx7688.c
+
+diff --git a/drivers/gpu/drm/bridge/analogix/Kconfig b/drivers/gpu/drm/bridge/analogix/Kconfig
+index e1fa7d820373..1f096055c036 100644
+--- a/drivers/gpu/drm/bridge/analogix/Kconfig
++++ b/drivers/gpu/drm/bridge/analogix/Kconfig
+@@ -11,6 +11,16 @@ config DRM_ANALOGIX_ANX6345
+ 	  ANX6345 transforms the LVTTL RGB output of an
+ 	  application processor to eDP or DisplayPort.
  
-+config MFD_ANX7688
-+	tristate "Analogix ANX7688"
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	depends on I2C && OF
++config DRM_ANALOGIX_ANX7688
++	tristate "Analogix ANX7688 bridge"
++	depends on OF
++	select DRM_KMS_HELPER
++	select MFD_ANX7688
 +	help
-+	  Support the ANX7688 from Analogix. This device features a USB
-+	  Type-C Port Controller (TCPC), and HDMI to DP converter, and
-+	  USB-C mux between USB 3.0 lanes and the DP output of the
-+	  embedded converter.
++	  ANX7688 is an ultra-low power 4k Ultra-HD (4096x2160p60)
++	  mobile HD transmitter designed for portable devices. The
++	  ANX7688 converts HDMI 2.0 to DisplayPort 1.3 Ultra-HD.
 +
- config MFD_SUN4I_GPADC
- 	tristate "Allwinner sunxi platforms' GPADC MFD driver"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index b83f172545e1..4c6ca8a7d260 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_MFD_88PM800)	+= 88pm800.o 88pm80x.o
- obj-$(CONFIG_MFD_88PM805)	+= 88pm805.o 88pm80x.o
- obj-$(CONFIG_MFD_ACT8945A)	+= act8945a.o
- obj-$(CONFIG_MFD_SM501)		+= sm501.o
-+obj-$(CONFIG_MFD_ANX7688)	+= anx7688.o
- obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
- obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
- obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
-diff --git a/drivers/mfd/anx7688.c b/drivers/mfd/anx7688.c
+ config DRM_ANALOGIX_ANX78XX
+ 	tristate "Analogix ANX78XX bridge"
+ 	select DRM_ANALOGIX_DP
+diff --git a/drivers/gpu/drm/bridge/analogix/Makefile b/drivers/gpu/drm/bridge/analogix/Makefile
+index 97669b374098..27cd73635c8c 100644
+--- a/drivers/gpu/drm/bridge/analogix/Makefile
++++ b/drivers/gpu/drm/bridge/analogix/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ analogix_dp-objs := analogix_dp_core.o analogix_dp_reg.o analogix-i2c-dptx.o
+ obj-$(CONFIG_DRM_ANALOGIX_ANX6345) += analogix-anx6345.o
++obj-$(CONFIG_DRM_ANALOGIX_ANX7688) += analogix-anx7688.o
+ obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
+ obj-$(CONFIG_DRM_ANALOGIX_DP) += analogix_dp.o
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx7688.c b/drivers/gpu/drm/bridge/analogix/analogix-anx7688.c
 new file mode 100644
-index 000000000000..fab7ed410c46
+index 000000000000..81b950ecde27
 --- /dev/null
-+++ b/drivers/mfd/anx7688.c
-@@ -0,0 +1,87 @@
++++ b/drivers/gpu/drm/bridge/analogix/analogix-anx7688.c
+@@ -0,0 +1,135 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * HDMI to USB Type-C Bridge and Port Controller with MUX
++ * ANX7688 HDMI->DP bridge driver
 + *
 + * Copyright 2020 Google LLC
 + */
 +
-+#include <linux/i2c.h>
-+#include <linux/gpio/consumer.h>
 +#include <linux/mfd/anx7688.h>
 +#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/regulator/consumer.h>
++#include <linux/platform_device.h>
 +#include <linux/regmap.h>
++#include <drm/drm_bridge.h>
++#include <drm/drm_print.h>
 +
-+static const struct regmap_config anx7688_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
++struct anx7688_bridge_data {
++	struct drm_bridge bridge;
++	struct regmap *regmap;
++
++	bool filter;
 +};
 +
-+static int anx7688_i2c_probe(struct i2c_client *client)
++static inline struct anx7688_bridge_data *
++bridge_to_anx7688(struct drm_bridge *bridge)
 +{
-+	struct device *dev = &client->dev;
-+	struct anx7688 *anx7688;
-+	u16 vendor, device;
-+	u8 buffer[4];
-+	int ret;
-+
-+	anx7688 = devm_kzalloc(dev, sizeof(*anx7688), GFP_KERNEL);
-+	if (!anx7688)
-+		return -ENOMEM;
-+
-+	anx7688->client = client;
-+	i2c_set_clientdata(client, anx7688);
-+
-+	anx7688->regmap = devm_regmap_init_i2c(client, &anx7688_regmap_config);
-+
-+	/* Read both vendor and device id (4 bytes). */
-+	ret = regmap_bulk_read(anx7688->regmap, ANX7688_VENDOR_ID_REG,
-+			       buffer, 4);
-+	if (ret) {
-+		dev_err(dev, "Failed to read chip vendor/device id\n");
-+		return ret;
-+	}
-+
-+	vendor = (u16)buffer[1] << 8 | buffer[0];
-+	device = (u16)buffer[3] << 8 | buffer[2];
-+	if (vendor != ANX7688_VENDOR_ID || device != ANX7688_DEVICE_ID) {
-+		dev_err(dev, "Invalid vendor/device id %04x/%04x\n",
-+			vendor, device);
-+		return -ENODEV;
-+	}
-+
-+	ret = regmap_bulk_read(anx7688->regmap, ANX7688_FW_VERSION_REG,
-+			       buffer, 2);
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to read firmware version\n");
-+		return ret;
-+	}
-+
-+	anx7688->fw_version = (u16)buffer[0] << 8 | buffer[1];
-+	dev_info(dev, "ANX7688 firwmare version 0x%04x\n",
-+		 anx7688->fw_version);
-+
-+	return devm_of_platform_populate(dev);
++	return container_of(bridge, struct anx7688_bridge_data, bridge);
 +}
 +
-+static const struct of_device_id anx7688_match_table[] = {
-+	{ .compatible = "analogix,anx7688", },
++static bool anx7688_bridge_mode_fixup(struct drm_bridge *bridge,
++				      const struct drm_display_mode *mode,
++				      struct drm_display_mode *adjusted_mode)
++{
++	struct anx7688_bridge_data *data = bridge_to_anx7688(bridge);
++	int totalbw, requiredbw;
++	u8 dpbw, lanecount;
++	u8 regs[2];
++	int ret;
++
++	if (!data->filter)
++		return true;
++
++	/* Read both regs 0x85 (bandwidth) and 0x86 (lane count). */
++	ret = regmap_bulk_read(data->regmap, ANX7688_DP_BANDWIDTH_REG, regs,
++			       2);
++	if (ret < 0) {
++		DRM_ERROR("Failed to read bandwidth/lane count\n");
++		return false;
++	}
++	dpbw = regs[0];
++	lanecount = regs[1];
++
++	/* Maximum 0x19 bandwidth (6.75 Gbps Turbo mode), 2 lanes */
++	if (dpbw > 0x19 || lanecount > 2) {
++		DRM_ERROR("Invalid bandwidth/lane count (%02x/%d)\n", dpbw,
++			  lanecount);
++		return false;
++	}
++
++	/* Compute available bandwidth (kHz) */
++	totalbw = dpbw * lanecount * 270000 * 8 / 10;
++
++	/* Required bandwidth (8 bpc, kHz) */
++	requiredbw = mode->clock * 8 * 3;
++
++	DRM_DEBUG_KMS("DP bandwidth: %d kHz (%02x/%d); mode requires %d Khz\n",
++		      totalbw, dpbw, lanecount, requiredbw);
++
++	if (totalbw == 0) {
++		DRM_ERROR("Bandwidth/lane count are 0, not rejecting modes\n");
++		return true;
++	}
++
++	return totalbw >= requiredbw;
++}
++
++static const struct drm_bridge_funcs anx7688_bridge_funcs = {
++	.mode_fixup = anx7688_bridge_mode_fixup,
++};
++
++static int anx7688_bridge_probe(struct platform_device *pdev)
++{
++	struct anx7688 *anx7688 = dev_get_drvdata(pdev->dev.parent);
++	struct anx7688_bridge_data *data;
++	struct device *dev = &pdev->dev;
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->bridge.of_node = dev->of_node;
++	data->regmap = anx7688->regmap;
++
++	/* FW version >= 0.85 supports bandwidth/lane count registers */
++	if (anx7688->fw_version >= ANX7688_MINIMUM_FW_VERSION)
++		data->filter = true;
++	else
++		/* Warn, but not fail, for backwards compatibility */
++		DRM_WARN("Old ANX7688 FW version (0x%04x), not filtering\n",
++			 anx7688->fw_version);
++
++	data->bridge.funcs = &anx7688_bridge_funcs;
++	drm_bridge_add(&data->bridge);
++
++	return 0;
++}
++
++static int anx7688_bridge_remove(struct platform_device *pdev)
++{
++	struct anx7688_bridge_data *data = dev_get_drvdata(&pdev->dev);
++
++	drm_bridge_remove(&data->bridge);
++
++	return 0;
++}
++
++static const struct of_device_id anx7688_bridge_match_table[] = {
++	{ .compatible = "analogix,anx7688-bridge", },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, anx7688_match_table);
++MODULE_DEVICE_TABLE(of, anx7688_bridge_match_table);
 +
-+static struct i2c_driver anx7688_driver = {
-+	.probe_new = anx7688_i2c_probe,
++static struct platform_driver anx7688_bridge_driver = {
++	.probe = anx7688_bridge_probe,
++	.remove = anx7688_bridge_remove,
 +	.driver = {
-+		.name = "anx7688",
-+		.of_match_table = anx7688_match_table,
++		.name = "anx7688-bridge",
++		.of_match_table = anx7688_bridge_match_table,
 +	},
 +};
 +
-+module_i2c_driver(anx7688_driver);
++module_platform_driver(anx7688_bridge_driver);
 +
-+MODULE_DESCRIPTION("HDMI to USB Type-C Bridge and Port Controller with MUX driver");
++MODULE_DESCRIPTION("ANX7688 HDMI->DP bridge driver");
 +MODULE_AUTHOR("Nicolas Boichat <drinkcat@chromium.org>");
 +MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
 +MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/anx7688.h b/include/linux/mfd/anx7688.h
-new file mode 100644
-index 000000000000..f2760856f045
---- /dev/null
-+++ b/include/linux/mfd/anx7688.h
-@@ -0,0 +1,39 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * HDMI to USB Type-C Bridge and Port Controller with MUX
-+ *
-+ * Copyright 2020 Google LLC
-+ */
-+#ifndef __LINUX_MFD_ANX7688_H
-+#define __LINUX_MFD_ANX7688_H
-+
-+#include <linux/types.h>
-+
-+/* Register addresses */
-+#define ANX7688_VENDOR_ID_REG		0x00
-+#define ANX7688_DEVICE_ID_REG		0x02
-+
-+#define ANX7688_FW_VERSION_REG		0x80
-+
-+#define ANX7688_DP_BANDWIDTH_REG	0x85
-+#define ANX7688_DP_LANE_COUNT_REG	0x86
-+
-+#define ANX7688_VENDOR_ID		0x1f29
-+#define ANX7688_DEVICE_ID		0x7688
-+
-+/* First supported firmware version (0.85) */
-+#define ANX7688_MINIMUM_FW_VERSION	0x0085
-+
-+struct gpio_desc;
-+struct i2c_client;
-+struct regulator;
-+struct regmap;
-+
-+struct anx7688 {
-+	struct i2c_client *client;
-+	struct regmap *regmap;
-+
-+	u16 fw_version;
-+};
-+
-+#endif /* __LINUX_MFD_ANX7688_H */
 -- 
 2.25.1
 
