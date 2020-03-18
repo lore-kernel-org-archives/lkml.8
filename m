@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC6DC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C051AC4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7462F20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825F620777
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565459;
-	bh=XH1H5zeC/FZj89AH0p6G44QmPkkJ2E0jEIhQY8LvQn8=;
+	s=default; t=1584565467;
+	bh=ovwxs5KHo8EPOuJNmZo9thQmHIr+MGi/gA5XTsvX/qY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oqaL0ufQaPhaIwHgWIUQTPK69TIEtkFMW8UD7BsV8Txvxko/dmkHkDCBd3q3WpYyb
-	 Furoqf2bZXrJZ0hqMQbzShC6SuIcXG5SbZpedgqpyMbCPkVQi0rb+IF/SgwaNm6cNJ
-	 B8muhWUAIUFzaxXkvuQ1agBVWLem47svjX9FuVUc=
+	b=aZIKZsOgwYU8nA4OkB19Mm/A4zgmWzdQxuI1fNUyigJJo7/k7xMjDG0y2FEC545h3
+	 5K/2zkc7xIhA2vy06Ypt8u1srBWX9PPSVrLoqxFWetpZgwxpbNTp+9r6lf5hdqFzBp
+	 vfBJ1rdyRCvbMxnXONPizB7CmBO6bCRemREgm8Mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbgCRVEN (ORCPT
+        id S1728982AbgCRVE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:04:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55774 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:04:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728290AbgCRUzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:23 -0400
+        id S1728274AbgCRUzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A19A621841;
-        Wed, 18 Mar 2020 20:55:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39AD52098B;
+        Wed, 18 Mar 2020 20:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564923;
-        bh=XH1H5zeC/FZj89AH0p6G44QmPkkJ2E0jEIhQY8LvQn8=;
+        s=default; t=1584564920;
+        bh=ovwxs5KHo8EPOuJNmZo9thQmHIr+MGi/gA5XTsvX/qY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C//ToOkWw3CVU7mgzk7kTvBf6lXPGnDaaOA5y5bNl8K7OKoXHdXzQsYROHUjJBGs7
-         avnZhmQ4ZI7mr4SQ5rhl6ul1LYg7MMP+kxOrnB+1o1b4HShtEFJOrfrnKPEvSEti2G
-         ZUmpb1BEjRhEgwpWfJBLVbQJhAYbgEjVkBhuZnA0=
+        b=QCpcOxossPHf9zf/+vQS0IHTIybAowOkAymPjJGJc3ti0hsh5FJzGv4V7kg0YuJea
+         RsfWMHGzt9BZX1PG9pVq5UkJC1bCMjfxM/hFCrJGo3Sa1q4wCIQilGYyRfFam0x4V6
+         xdGdVrMN5xCRnesa0CpVoAmzHPtPlop8XTUrXiOE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
+Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 11/37] can: add missing attribute validation for termination
-Date:   Wed, 18 Mar 2020 16:54:43 -0400
-Message-Id: <20200318205509.17053-11-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/37] bnxt_en: reinitialize IRQs when MTU is modified
+Date:   Wed, 18 Mar 2020 16:54:40 -0400
+Message-Id: <20200318205509.17053-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
@@ -61,34 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit ab02ad660586b94f5d08912a3952b939cf4c4430 ]
+[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
 
-Add missing attribute validation for IFLA_CAN_TERMINATION
-to the netlink policy.
+MTU changes may affect the number of IRQs so we must call
+bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
+set to true.  The reason is that a larger MTU may require
+aggregation rings not needed with smaller MTU.  We may not be
+able to allocate the required number of aggregation rings and
+so we reduce the number of channels which will change the number
+of IRQs.  Without this patch, it may crash eventually in
+pci_disable_msix() when the IRQs are not properly unwound.
 
-Fixes: 12a6075cabc0 ("can: dev: add CAN interface termination API")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/dev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
-index 49b853f53f595..1545f2b299d06 100644
---- a/drivers/net/can/dev.c
-+++ b/drivers/net/can/dev.c
-@@ -892,6 +892,7 @@ static const struct nla_policy can_policy[IFLA_CAN_MAX + 1] = {
- 				= { .len = sizeof(struct can_bittiming) },
- 	[IFLA_CAN_DATA_BITTIMING_CONST]
- 				= { .len = sizeof(struct can_bittiming_const) },
-+	[IFLA_CAN_TERMINATION]	= { .type = NLA_U16 },
- };
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index c19d0eabeb526..911cea2e5aa58 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -8097,13 +8097,13 @@ static int bnxt_change_mtu(struct net_device *dev, int new_mtu)
+ 	struct bnxt *bp = netdev_priv(dev);
  
- static int can_validate(struct nlattr *tb[], struct nlattr *data[],
+ 	if (netif_running(dev))
+-		bnxt_close_nic(bp, false, false);
++		bnxt_close_nic(bp, true, false);
+ 
+ 	dev->mtu = new_mtu;
+ 	bnxt_set_ring_params(bp);
+ 
+ 	if (netif_running(dev))
+-		return bnxt_open_nic(bp, false, false);
++		return bnxt_open_nic(bp, true, false);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
