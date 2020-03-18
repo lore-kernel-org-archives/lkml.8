@@ -2,149 +2,182 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B04C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABB4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D76B22076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF922076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:48:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="raY6hGar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgCRLrj (ORCPT
+        id S1726894AbgCRLsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:47:39 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36791 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgCRLrj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:47:39 -0400
-Received: by mail-lf1-f68.google.com with SMTP id s1so20065073lfd.3;
-        Wed, 18 Mar 2020 04:47:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Nh4UhvTKl+29tzL3tROO0vjxlPcLXCH4Rq0vuGpKBTo=;
-        b=DJf98o1ZyGZxL3Ynw7UkcaeGLuODKM2tT8ZNhXD/7ssqjyhcWj7sVvRpH/zT6F5EiX
-         aIPxQKiVtq8fndzaXeiLTNN6+pQkqkkNrHj6px4i8ZBwallDW1MVExkf2u/nw5ZMdK8p
-         88sW/iMPI1nrjJp+B32FmwlA8IR/rdydFZziueqgLleuutX4KyD58pVVHmDiaAY0Olx6
-         fdkZC/4FwTxSl3ll539KMNzQD5Yb0UMUMxaLtZGhcwPLh1h8a1xLThrj/DLE0XfNiF5k
-         53h8tNkVvZFnmKk9TURWrOBLVvEzAjlhir843qin6vnxPWPxLr41i2vgsOALGZvwuv3e
-         cF0A==
-X-Gm-Message-State: ANhLgQ3ns7i6f2Cao6DKGVdMxKhtbgY9g0X6gBaH275HFHDuflDGY8w1
-        Ben2wanjGlv8oBftkZzf6aI=
-X-Google-Smtp-Source: ADFU+vsjRRiWnpOH9EnhBKIgi23BSkJ0RntNToXR/u1YBLe0+ADEn6zgC1soS/48g9U3/HpiP1jIPg==
-X-Received: by 2002:a05:6512:10c4:: with SMTP id k4mr2669210lfg.98.1584532057148;
-        Wed, 18 Mar 2020 04:47:37 -0700 (PDT)
-Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
-        by smtp.gmail.com with ESMTPSA id l205sm4377514lfd.50.2020.03.18.04.47.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 04:47:36 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 13:47:30 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-Subject: [PATCH v5 1/9] dt-bindings: battery: add new battery parameters
-Message-ID: <cfbd305c5ad1f2d9ff50ea3bab1c91f785092a8d.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 18 Mar 2020 07:48:01 -0400
+Received: from mail-db8eur05on2124.outbound.protection.outlook.com ([40.107.20.124]:44416
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726616AbgCRLsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 07:48:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dtzs2GW7vy0UmZRmF+m72Fpo4YleF9VH/w+g52Ued9FukFS2RmJIYi+MHnDyOFCD6ME27sKc8eaUUVLyC7IN2oGZ5qoe7h2rB7jMDulrsWTLEBmxthue2D4qazrjKxKq1zcDUVe5ETbIzhzYuiqEErj5K41VdaK2QpeV8qvCQMI9cMU7ovbPoAMHjNgsGCZ2h2gpT1da/kqWYWLCwv+MIaX7A/KKqV8yKpUqWlkBD6U7B1a8+cwk/zpxNPusCT+0D5KSumtr9IYJfFCTpUCsg4miBRyYx4vnHh+yq2n/1mxablP6G1eocVX25hLz/trvMgSQ5HTX85JS1z3/fcEzNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lP8agbcq2AYAILADyUgk5nJ/czwsxA8ATaSe+V6FyBs=;
+ b=BNZiGUHM1VYccOLplqeqjFdv9LGeVzXOaJ5ZQN1tz80pYeWdJYqMP7lG0qAtXZmt6KoRcAGJQ81NNKdkQEYvnnPaOwzpQCRNz2b8pcSACK9uZZQArJQI/7XjBUr09SQrL7Wua9H676/tZTjNkj+oxqkvwhVhuJi+4tybgbITEYhCkXCCb/dX+kX2313Pkw15DD76S6E5pnDG378ETKXe6TmZGlTBrSU3/YPPHyXf4SAy55mQ/8cRWzjw/DLsDauowhOpP5FB/w5gUJrHecvclx764TRgM5oTBcOB+G4Jq4Nn8UFrBHHzAWFQFHQ6ezW5cvhSIGIxXcHQi5HchEi3kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lP8agbcq2AYAILADyUgk5nJ/czwsxA8ATaSe+V6FyBs=;
+ b=raY6hGar69e12FrP/DIAVhCgnGos7uAR2lTW4uDkqcWc/mgg4e2cr3ZnjZXXAKaFGShfWzoVMH7P4dK2yxgyxSEOq9lF5sBH2+BgKOegmuEBACHawoTcAlCnIfXB/rZ2boE6fCJklSeCyPn8mOGKr1Y7N+grjcDUhLflPnZj+gM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
+ VI1PR05MB7086.eurprd05.prod.outlook.com (20.181.33.203) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.21; Wed, 18 Mar 2020 11:47:58 +0000
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
+ 11:47:57 +0000
+X-Gm-Message-State: ANhLgQ2nindBXB5yIHNfw8a4SEU2HyslFZ9xg9azQBzMnWEnTFx1qhIG
+        BojKT83PPo+dZpFKgGZh+Pf7B6/TOiulCqozTQk=
+X-Google-Smtp-Source: ADFU+vuIN9vi3EnzahwoHqBu0uZg9qdX6KincFfsWht2IbWF+j4fV2L42M4aXtG7Pv38JtpTaFmsRwkNpHNmxW/8YWA=
+X-Received: by 2002:a37:4fd4:: with SMTP id d203mr3613801qkb.249.1584532071685;
+ Wed, 18 Mar 2020 04:47:51 -0700 (PDT)
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com> <20200317174043.GA1464607@ulmo>
+In-Reply-To: <20200317174043.GA1464607@ulmo>
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Date:   Wed, 18 Mar 2020 13:47:40 +0200
+X-Gmail-Original-Message-ID: <CAGgjyvGDTD=ZgEjU540HLApQXCoM1a8bk_-eQbS44sge+GpeAg@mail.gmail.com>
+Message-ID: <CAGgjyvGDTD=ZgEjU540HLApQXCoM1a8bk_-eQbS44sge+GpeAg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+X-ClientProxiedBy: MN2PR05CA0020.namprd05.prod.outlook.com
+ (2603:10b6:208:c0::33) To VI1PR05MB3279.eurprd05.prod.outlook.com
+ (2603:10a6:802:1c::24)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mail-qk1-f179.google.com (209.85.222.179) by MN2PR05CA0020.namprd05.prod.outlook.com (2603:10b6:208:c0::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.12 via Frontend Transport; Wed, 18 Mar 2020 11:47:56 +0000
+Received: by mail-qk1-f179.google.com with SMTP id h14so38096020qke.5;        Wed, 18 Mar 2020 04:47:56 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2nindBXB5yIHNfw8a4SEU2HyslFZ9xg9azQBzMnWEnTFx1qhIG
+        BojKT83PPo+dZpFKgGZh+Pf7B6/TOiulCqozTQk=
+X-Google-Smtp-Source: ADFU+vuIN9vi3EnzahwoHqBu0uZg9qdX6KincFfsWht2IbWF+j4fV2L42M4aXtG7Pv38JtpTaFmsRwkNpHNmxW/8YWA=
+X-Received: by 2002:a37:4fd4:: with SMTP id
+ d203mr3613801qkb.249.1584532071685; Wed, 18 Mar 2020 04:47:51 -0700 (PDT)
+X-Gmail-Original-Message-ID: <CAGgjyvGDTD=ZgEjU540HLApQXCoM1a8bk_-eQbS44sge+GpeAg@mail.gmail.com>
+X-Originating-IP: [209.85.222.179]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 44ff6e5f-e0a7-4632-8fd3-08d7cb3232fc
+X-MS-TrafficTypeDiagnostic: VI1PR05MB7086:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB708653A6D05EA6C4D333DFEEF9F70@VI1PR05MB7086.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 03468CBA43
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(39850400004)(396003)(136003)(376002)(199004)(6862004)(450100002)(42186006)(54906003)(186003)(53546011)(44832011)(4326008)(52116002)(26005)(2906002)(107886003)(66946007)(66476007)(8936002)(66556008)(478600001)(8676002)(81156014)(81166006)(6666004)(316002)(5660300002)(9686003)(55446002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB7086;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: RtWCVng/DCbjFv6x8LHcC+17QRXXijEQKLf43aO8yq0pHHt/+QfaZXU/+gVGgylOdUcgRAn1vqnRjOncD2Ji4Ae18qFw8PQuGyvYayUB+FfEh0W0fy46ZwYU1Ido/iI2JpauL4j2dQtzIR4wtxO1SN3YWW2W/ELC0z6WAIMBA8zC2wRCW7rMSrIjjb/nWbYXiofHlnqr663SDmhRHd6WriZSGRcFcmAHCIA2dwJCKOTKpIIBS+md6uRnnk9sKRxkkDpgt8u4fRWD2PgjnZ4/lmkxfwBwSwxPjkDuUt/GkqyeFBtF9k6ByUz3SH9kOwHtkiY82GrbT4+wXByzsMkxPFooVQeIkBUEFcyFqtQahKFgekT8akl0MYm895lDFCcaEiLAjhnwS6IouZW7mkAfdl0UorMmIGqFSm7CRAIUUgR1RYwJ/Ef/1y3tDrsWmpq+
+X-MS-Exchange-AntiSpam-MessageData: yJyku39xAZnXhiEcq4BLI/0KPG1BsfxxQt94uADbYJ1seuNUTO/t8fkN3LY8dDaPdrzLSPjab57aiYy3hq0AgwH6yjbLAI9eSAykJtzG3+kl5hguFbmS3Tfnv96ebLLsrCUXTZsr+zXT7wmfic6TPw==
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44ff6e5f-e0a7-4632-8fd3-08d7cb3232fc
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 11:47:56.4878
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2ckb0Vx29Sh/fJO7GoM2lfyiS+DG7FhFtfv1o8gRwsdcm8AV/eTHHIpTAjmxRj3/7QjbWjKSBmxaW5kUcdKPDShtux4ufPp4+2gbrT3ejuo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB7086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add:
+On Tue, Mar 17, 2020 at 7:41 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> On Tue, Mar 17, 2020 at 02:32:25PM +0200, Oleksandr Suvorov wrote:
+> > The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
+> > Rename it to PWM_POLARITY_INVERTED.
+>
+> It isn't misspelled. "inversed" is a synonym for "inverted". Both
+> spellings are correct.
 
- - trickle-charge-current-microamp:
+> And as you noted in the cover letter, there's a conflict between the
+> macro defined in dt-bindings/pwm/pwm.txt. If they end up being included
+> in the wrong order you'll get a compile error.
 
-Some chargers have 3 charging stages. First one when battery is almost
-empty is often called as trickle-charge. Last state when battery has been
-"woken up" is usually called as fast-charge. In addition to this some
-chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
-pre-charge. Some batteries can benefit from this 3-phase charging
-[citation needed].
+This patch is a part of the patchset, which in result removes enum at all,
+so there will be no definition conflict.
 
-Introduce trickle-charge-current-microamp so that batteries can give
-charging current limit for all three states.
+> The enum was named this way on purpose to make it separate from the
+> definition for the DT bindings. Note that DT bindings are an ABI and can
+> never change, whereas the enum pwm_polarity is part of a Linux internal
+> API and doesn't have the same restrictions as an ABI.
 
- - precharge-upper-limit-microvolt:
+AFAIU, DTS files are not a part of ABI.
 
-When battery voltage has reached certain limit we change from
-trickle-charge to next charging state (pre-charge for BD99954). Allow
-battery to specify this limit.
+I understand that enums are better than macros for some reasons.
+However, I think it is dangerous to use duplicate definitions in
+different places when values of these definitions use in the same
+code.
+So, given that the enum cannot be used in DT, I left only macros.
 
- - re-charge-voltage-microvolt:
+You personally wrote that the enum pwm_polarity can change, so the
+desynchronization I quite possible.
 
-Allow giving a battery specific voltage limit for chargers which can
-automatically re-start charging when battery has discharghed down to
-this limit.
-
-- over-voltage-threshold-microvolt
-
-Allow specifying voltage threshold after which the battery is assumed to
-be faulty.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-index 3049cf88bdcf..5e29595edd74 100644
---- a/Documentation/devicetree/bindings/power/supply/battery.txt
-+++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-@@ -11,15 +11,21 @@ different type. This prevents unpredictable, potentially harmful,
- behavior should a replacement that changes the battery type occur
- without a corresponding update to the dtb.
- 
-+Please note that not all charger drivers respect all of the properties.
-+
- Required Properties:
-  - compatible: Must be "simple-battery"
- 
- Optional Properties:
-+ - over-voltage-threshold-microvolt: battery over-voltage limit
-+ - re-charge-voltage-microvolt: limit to automatically start charging again
-  - voltage-min-design-microvolt: drained battery voltage
-  - voltage-max-design-microvolt: fully charged battery voltage
-  - energy-full-design-microwatt-hours: battery design energy
-  - charge-full-design-microamp-hours: battery design capacity
-+ - trickle-charge-current-microamp: current for trickle-charge phase
-  - precharge-current-microamp: current for pre-charge phase
-+ - precharge-upper-limit-microvolt: limit when to change to constant charging
-  - charge-term-current-microamp: current for charge termination phase
-  - constant-charge-current-max-microamp: maximum constant input current
-  - constant-charge-voltage-max-microvolt: maximum constant input voltage
--- 
-2.21.0
+> As far as I'm concerned this is completely unnecessary churn that's
+> potentially going to come back and bite us, so I see no reason to accept
+> this.
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+>
+> Thierry
+--
+Best regards
+Oleksandr Suvorov
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+Toradex AG
+Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
