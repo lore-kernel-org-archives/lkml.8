@@ -2,140 +2,84 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FB8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0F7C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20AF02076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:17:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d9GVXd7A"
+	by mail.kernel.org (Postfix) with ESMTP id B9FE82076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:17:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbgCRKRW (ORCPT
+        id S1727641AbgCRKRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:17:22 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34953 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgCRKRV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:17:21 -0400
-Received: by mail-wm1-f68.google.com with SMTP id m3so2602912wmi.0;
-        Wed, 18 Mar 2020 03:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=H1EcxEfJM49avse1S2eIURNhiFA3z+ms1VeEZrzjwZo=;
-        b=d9GVXd7A+zm3/unbzuaX7CJe8B6oWEJRw+AxrHUCpCFDd81d8XWPSiUvAmeAoJNYm0
-         ZVZhJ/FmDvvqqYzaGmV3Gv6tFvigfoo4Mmk9cHKssyEXX0iHzDrD6T4Dxgl+dcqaW/V2
-         q3EOeQHiGIIxvgwkbwwGJSsOev25jfisRaItl+UGdrpgDwkrpFWr1opeqOqGqoIMsHdx
-         Ckpz9sSJPxc2v1KkyXMaOfEHVmfsjIRkHKlTSurm4QkgRNErzr4wJdpu0O23BO0jfizp
-         U/GGS0WFTBlmWCNlIkWDEz7Qj6ebbiQnGCOihy7C7oW4xxZMhKGliCmqDuvZk+SwGZxd
-         wHOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=H1EcxEfJM49avse1S2eIURNhiFA3z+ms1VeEZrzjwZo=;
-        b=dYOQyr9WZ2UWNF0E614/nLV276nd9QZXS79d/X/xPFWULqUBrzPKysKZ9l47TeDOMQ
-         PprcIuHbVRzhBhSNpPcO3Qy1PtxI09xP4IoTifeRxoJfCGS7JiIbqOy5thp/cLJq5Lzq
-         1rXtpIHk22ucOQ6VAW1fheJYdM2WapOvY1kjhwP/XtQE0zuGzkSmmB/eKwIgU5+vvGm6
-         EVIzuzYiIvcY/+b/ay16Ucis2B0xrtvYkLnPpAMgzzKTO83DoJdaYKwWZYTL3ust+Toe
-         tqoej3+ML+DvP73V4KTT7PpbQqMrL+nboFCfq36xAcQ8jkJyIpSD/kdE+o+00tS2TdEw
-         rvWg==
-X-Gm-Message-State: ANhLgQ1JAEckCv5TQP9nL0PnLMN01lJMZDyF2q01gZ0T7woCiU6PouwH
-        Yh5DIKYCRHSSeyYGBRKyXMHD5N0MOA7zVX+uvsdWfA==
-X-Google-Smtp-Source: ADFU+vu50GxlzsJlMPTfvmSeWgwJl4UJQOc8H4AxuzLJ3PtQNJCYc/ZJ9Cgtq7nUhgAU+Oom6rijjQtlReLkmpvwr6A=
-X-Received: by 2002:a7b:c92a:: with SMTP id h10mr4368871wml.26.1584526639622;
- Wed, 18 Mar 2020 03:17:19 -0700 (PDT)
+        Wed, 18 Mar 2020 06:17:41 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21179 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727503AbgCRKRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 06:17:41 -0400
+IronPort-SDR: gffmtxI7C6Fj+5FwShjeN+lPYmdXTwDgWbXBuvU3Q4eDfsbBCKMreO4jQccv27vwalQtrqeKUT
+ 4haj78V8ke9A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 03:05:26 -0700
+IronPort-SDR: PVmGYa6s/4SlBw7rAL0UALyV4G0Zc+YoYHVpfMvuAd7hV4GpJ7RsaIQBgu/+YxAA236+zZsEG4
+ K2JPwMnApV8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,566,1574150400"; 
+   d="scan'208";a="248122449"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.249.155.222]) ([10.249.155.222])
+  by orsmga006.jf.intel.com with ESMTP; 18 Mar 2020 03:05:22 -0700
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     tiwai@suse.com, pierre-louis.bossart@linux.intel.com,
+        liam.r.girdwood@linux.intel.com, yang.jie@linux.intel.com,
+        broonie@kernel.org, perex@perex.cz, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+References: <20200318063022.GA116342@light.dominikbrodowski.net>
+ <66c719b3-a66e-6a9f-fab8-721ba48d7ad8@intel.com>
+ <20200318095745.GA133849@light.dominikbrodowski.net>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <fafed002-5f7f-dd2b-0787-265da7ec7c7a@intel.com>
+Date:   Wed, 18 Mar 2020 11:05:21 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200318083120.13805-1-zhang.lyra@gmail.com> <20200318083120.13805-2-zhang.lyra@gmail.com>
- <CADBw62rSE+MrQB_HSOwVNos_W=x-mHMEuVrZN=jU0Yt1KXFGvw@mail.gmail.com>
- <CADBw62pWhA8n5rAgX2Hud06k9cvF9b3KDfZmH7oX1HEz=MWzYA@mail.gmail.com> <20200318101340.GA2081481@kroah.com>
-In-Reply-To: <20200318101340.GA2081481@kroah.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Wed, 18 Mar 2020 18:16:43 +0800
-Message-ID: <CAAfSe-t7e0Cd3Lm_x9u=OhuBBtTexx3+qyg-+F71LK=C1V5pNA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] serial: sprd: cleanup the sprd_port for error case
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Baolin Wang <baolin.wang7@gmail.com>, Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200318095745.GA133849@light.dominikbrodowski.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020 at 18:13, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Mar 18, 2020 at 06:06:05PM +0800, Baolin Wang wrote:
-> > On Wed, Mar 18, 2020 at 5:16 PM Baolin Wang <baolin.wang7@gmail.com> wr=
-ote:
-> > >
-> > > On Wed, Mar 18, 2020 at 4:31 PM Chunyan Zhang <zhang.lyra@gmail.com> =
-wrote:
-> > > >
-> > > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > >
-> > > > It would be better to cleanup the sprd_port for the device before
-> > > > return error.
-> > > >
-> > > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > > ---
-> > > >  drivers/tty/serial/sprd_serial.c | 4 +++-
-> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/=
-sprd_serial.c
-> > > > index 9f8c14ff6454..54477de9822f 100644
-> > > > --- a/drivers/tty/serial/sprd_serial.c
-> > > > +++ b/drivers/tty/serial/sprd_serial.c
-> > > > @@ -1204,8 +1204,10 @@ static int sprd_probe(struct platform_device=
- *pdev)
-> > > >         up->has_sysrq =3D IS_ENABLED(CONFIG_SERIAL_SPRD_CONSOLE);
-> > > >
-> > > >         ret =3D sprd_clk_init(up);
-> > > > -       if (ret)
-> > > > +       if (ret) {
-> > > > +               sprd_port[index] =3D NULL;
-> > >
-> > > =E5=A6=82=E6=9E=9C=E6=88=91=E4=BB=AC=E5=BC=BA=E5=88=B6=E4=BD=BF=E7=94=
-=A8alias, =E5=88=99=E8=BF=99=E9=87=8C=E5=BA=94=E8=AF=A5=E4=B9=9F=E6=97=A0=
-=E9=9C=80=E6=B8=85=E9=99=A4=E4=BA=86=EF=BC=8C=E5=9B=A0=E4=B8=BA=E4=B8=80=E8=
-=BF=9Bprobe=E5=B0=B1=E4=BC=9A=E7=BB=99=E5=AE=83=E9=87=8D=E6=96=B0=E8=B5=8B=
-=E5=80=BC=E3=80=82 =E8=BF=98=E6=98=AF=E6=88=91=E6=BC=8F=E4=BA=86=E4=BB=80=
-=E4=B9=88=EF=BC=9F
-> >
-> > Sorry, please ignore my previsous comment. I made a stupid mistake
-> > when talking with Chunyan.
-> >
-> > So what I mean is we should not add this clean up, cause we will
-> > always get the correct index with aliases, and it will be overlapped
-> > when probing again.
->
-> So ignore this patch and only take patch 1/2?  If so, can I get your
-> acked-by for it?
+On 2020-03-18 10:57, Dominik Brodowski wrote:
+>>>
+>>> Unfortunately, I cannot bisect this issue easily -- i915 was broken for
+>>> quite some time on this system[*], prohibiting boot...
+>>
+>> Hmm, sounds like that issue is quite old. DSP for Haswell and Broadwell is
+>> available for I2S devices only, so this relates directly to legacy HDA
+>> driver. Compared to Skylake+, HDAudio controller for older platforms is
+>> found within GPU. My advice is to notify the DRM guys about this issue.
+>>
+>> Takashi, are you aware of problems with HDMI on HSW/ BDW or should I just
+>> loop Jani and other DRM peps here?
+> 
+> Well, it works on v5.5, so this issue is not really "quite old" (the "no
+> context buffer need to restore!" message seen there seems harmless).
+> 
+> Thanks again, and best wishes,
+> 	Dominik
+> 
 
-Hi Greg,
+Was commenting the "i915 was broken for quite some time on this 
+system[*], prohibiting boot...". Unless I misunderstood you, this ain't 
+a DSP driver issue but HDAudio/iDisp one. Essentially, these are two 
+issues you mentioned here.
 
-There's something I need to modify on 1/2 as well, I will send the
-whole patch-set later, please ignore these two patches.
-
-Sorry for the noise!
-
-Thanks,
-Chunyan
-
->
-> thanks,
->
-> greg k-h
+Czarek
