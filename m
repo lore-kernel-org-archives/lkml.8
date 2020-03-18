@@ -2,212 +2,135 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C99C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5602DC5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 434DB20774
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C80A20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:39:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RP77wtqC"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="PmLTKI+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgCRNhq (ORCPT
+        id S1726973AbgCRNjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:37:46 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55825 "EHLO
+        Wed, 18 Mar 2020 09:39:00 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52093 "EHLO
         mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbgCRNhm (ORCPT
+        with ESMTP id S1726730AbgCRNi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:37:42 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 6so3390909wmi.5;
-        Wed, 18 Mar 2020 06:37:38 -0700 (PDT)
+        Wed, 18 Mar 2020 09:38:59 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c187so2117533wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 06:38:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RkKSunecrdPLKcnNKxzvmnKIsOoTfTKrhAcuZUmKydQ=;
-        b=RP77wtqCtz0C9CXiblsJHHFm1KESvKnIBb6foy4BlmsU/9zJhONAq8k1S3ON6ME4Y/
-         LIR8gcU2aNRExxCo2fjR3YDPMmnjmusjVXaUvSduMBObyJ0GqedeE6Epn1jKIaev40Te
-         5NJRcdVX7KW4lQ6JIrzJxadDxR0na/e2PION3gxi0PvB4MfW3Qcj6T90mYdZs7+ICI8Y
-         UlETYbNKTGiWFthR5Hd3pU2Ipf0XINEAbBlCQLOZE+m30FcYXKLbcoTQiliHAYh+u5fW
-         jBOrnChJbdMHQWkhrX847FCFeDvmWvUvG1iz5FWpIA2gec4q04jeUi8jbXsrwYA7ebRl
-         42lQ==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6R5xf9NqTS0jMDexNFwg03hIQwJWepjqVTqQml3+25g=;
+        b=PmLTKI+jZxj3t3dDPkHpXoEBiwtAI3ewtlXoBbpkAp+ImmLqcN8JC5QH7GPvRKLcPQ
+         +xOBx6iL47cZLqOw1xytvO34OdPn8T8YR3OiTiEnuRpQta9BzxuhKNSukZ9T/BIrdA1N
+         SYdLIlQuiwpi5pfQT+xJTLa+Zh7KNkvRsSHcE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RkKSunecrdPLKcnNKxzvmnKIsOoTfTKrhAcuZUmKydQ=;
-        b=GuRfy/kMCf3CQVtrSCVOwpLy/Z+7vAaiaK5W5AiTQircNt0HbgNfwxFKb4w6Or7fhi
-         TDB/gxcWjkeaB6jio7QCXzTP8RLWHvU7T1Mmf6uL38vPBtxOCYE6J8FsrN0D1ab1tdIB
-         6Duf5YEwk0Pgc19USeGGwHut0Q2Q6YGvC8B/qzVQliKjAOZWvf7RAUXCrKbCPoHwN6hc
-         kMWahsYIu5YNfAYFBJnhq1sjwj2mJcV2DihxiuIBOm4KaPpKLJRBMHazSj010YkU50K1
-         5Ax29jnesP3XdOXGqGEC5nBissK/+9w7dqx+6oRJn2yC2nzgTKEUUJQwGUGhgsfXC8O1
-         tuDQ==
-X-Gm-Message-State: ANhLgQ16aCpIAZpO2uuXRkdgRw25Av72Mxg62ACy6rr1cnCAkzec53Z1
-        G+Jso9Jv7B5S47ZEoFShTatfibuE
-X-Google-Smtp-Source: ADFU+vuXPQGMZO9dMLeAwWTcrRt2PozRD22INYKf21phIHVo2OKRP7l1FDC4rRmyz9r5KKEsnE8oHQ==
-X-Received: by 2002:a7b:c4cd:: with SMTP id g13mr5540064wmk.151.1584538657309;
-        Wed, 18 Mar 2020 06:37:37 -0700 (PDT)
-Received: from saturn.lan ([188.26.73.247])
-        by smtp.gmail.com with ESMTPSA id f15sm9444002wru.83.2020.03.18.06.37.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=6R5xf9NqTS0jMDexNFwg03hIQwJWepjqVTqQml3+25g=;
+        b=iY5e84bR1lQhlcuf3hcDt4L4dKWdj8HC3082eSNHtI5O8f8EjUXXVAuNBBQncknp5d
+         fSiqXwPU/D5mLhaf+eSZNtuZEDBdsviB5+nPGcUJz0o/9ZLRq4w2sqwJ9b0vNNCeBDRj
+         3ZVJrBVO3FIGx8/gEug5pS4wba3mDG7bW+KYtfVJUAo01TbjkJ44LkbAAF0H9D4f+d8V
+         RerDHjPiut8d8RAg366NeosCOPJ/sCw9AH/ym5Exy4mqbaMSF/cktVQaQ1z6CD2AncvS
+         Af8TkBZU/0V2DR6e2ZRuMZAHKsSmWu/WlNf2Amd8aXEcEOQUul5nA0GbhE4FNGazO02V
+         bg9w==
+X-Gm-Message-State: ANhLgQ1Fq8xlGtwxhzzJYdMc5103954qgabQMyJ7QgbZXtggN3wAb3OW
+        XKtkNbb+FF4F36ttyUhQXcb8RQ==
+X-Google-Smtp-Source: ADFU+vuUYj/OYML10zdOHlJ4Njc9aninKsXTvMVWhceXQ6IvYDvu1robtZJWgU11PbUN4ofmJi563Q==
+X-Received: by 2002:a05:600c:2319:: with SMTP id 25mr5364849wmo.106.1584538735341;
+        Wed, 18 Mar 2020 06:38:55 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id j11sm2065580wrt.14.2020.03.18.06.38.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 06:37:36 -0700 (PDT)
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-X-Google-Original-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Michael.Hennerich@analog.com, renatogeh@gmail.com, lars@metafoo.de,
-        jic23@kernel.org, mircea.caprioru@analog.com,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 3/5] iio: adc: ad7793: define/use own IIO channel macros
-Date:   Wed, 18 Mar 2020 15:40:40 +0200
-Message-Id: <20200318134042.30133-4-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318134042.30133-1-alexandru.ardelean@analog.com>
-References: <20200318134042.30133-1-alexandru.ardelean@analog.com>
+        Wed, 18 Mar 2020 06:38:54 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 14:38:52 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     daniel@ffwll.ch, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        anenbupt@gmail.com
+Subject: Re: [PATCH v2] drm/lease: fix WARNING in idr_destroy
+Message-ID: <20200318133852.GU2363188@phenom.ffwll.local>
+Mail-Followup-To: Qiujun Huang <hqjagain@gmail.com>,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, anenbupt@gmail.com
+References: <1584518030-4173-1-git-send-email-hqjagain@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584518030-4173-1-git-send-email-hqjagain@gmail.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver seems to use most of the AD_SD_*_CHANNEL. This change will move
-them in the driver. The intent is that if a new part comes along which
-would require tweaks per IIO channel, these should be doable in the driver.
+On Wed, Mar 18, 2020 at 03:53:50PM +0800, Qiujun Huang wrote:
+> drm_lease_create takes ownership of leases. And leases will be released
+> by drm_master_put.
+> 
+> drm_master_put
+>     ->drm_master_destroy
+>             ->idr_destroy
+> 
+> So we needn't call idr_destroy again.
+> 
+> Reported-and-tested-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
+> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/adc/ad7793.c | 95 ++++++++++++++++++++++++++++++----------
- 1 file changed, 71 insertions(+), 24 deletions(-)
+Thanks for the respin, and I've also seen the syzbot confirmation, so all
+great.
 
-diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
-index b747db97f78a..5592ae573e6b 100644
---- a/drivers/iio/adc/ad7793.c
-+++ b/drivers/iio/adc/ad7793.c
-@@ -546,47 +546,94 @@ static const struct iio_info ad7797_info = {
- 	.validate_trigger = ad_sd_validate_trigger,
- };
- 
-+#define __AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
-+	_storagebits, _shift, _extend_name, _type, _mask_all) \
-+	{ \
-+		.type = (_type), \
-+		.differential = (_channel2 == -1 ? 0 : 1), \
-+		.indexed = 1, \
-+		.channel = (_channel1), \
-+		.channel2 = (_channel2), \
-+		.address = (_address), \
-+		.extend_name = (_extend_name), \
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
-+			BIT(IIO_CHAN_INFO_OFFSET), \
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE), \
-+		.info_mask_shared_by_all = _mask_all, \
-+		.scan_index = (_si), \
-+		.scan_type = { \
-+			.sign = 'u', \
-+			.realbits = (_bits), \
-+			.storagebits = (_storagebits), \
-+			.shift = (_shift), \
-+			.endianness = IIO_BE, \
-+		}, \
-+	}
-+
-+#define AD7793_DIFF_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
-+	_storagebits, _shift) \
-+	__AD7793_CHANNEL(_si, _channel1, _channel2, _address, _bits, \
-+		_storagebits, _shift, NULL, IIO_VOLTAGE, \
-+		BIT(IIO_CHAN_INFO_SAMP_FREQ))
-+
-+#define AD7793_SHORTED_CHANNEL(_si, _channel, _address, _bits, \
-+	_storagebits, _shift) \
-+	__AD7793_CHANNEL(_si, _channel, _channel, _address, _bits, \
-+		_storagebits, _shift, "shorted", IIO_VOLTAGE, \
-+		BIT(IIO_CHAN_INFO_SAMP_FREQ))
-+
-+#define AD7793_TEMP_CHANNEL(_si, _address, _bits, _storagebits, _shift) \
-+	__AD7793_CHANNEL(_si, 0, -1, _address, _bits, \
-+		_storagebits, _shift, NULL, IIO_TEMP, \
-+		BIT(IIO_CHAN_INFO_SAMP_FREQ))
-+
-+#define AD7793_SUPPLY_CHANNEL(_si, _channel, _address, _bits, _storagebits, \
-+	_shift) \
-+	__AD7793_CHANNEL(_si, _channel, -1, _address, _bits, \
-+		_storagebits, _shift, "supply", IIO_VOLTAGE, \
-+		BIT(IIO_CHAN_INFO_SAMP_FREQ))
-+
- #define DECLARE_AD7793_CHANNELS(_name, _b, _sb, _s) \
- const struct iio_chan_spec _name##_channels[] = { \
--	AD_SD_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), (_s)), \
--	AD_SD_DIFF_CHANNEL(1, 1, 1, AD7793_CH_AIN2P_AIN2M, (_b), (_sb), (_s)), \
--	AD_SD_DIFF_CHANNEL(2, 2, 2, AD7793_CH_AIN3P_AIN3M, (_b), (_sb), (_s)), \
--	AD_SD_SHORTED_CHANNEL(3, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), (_s)), \
--	AD_SD_TEMP_CHANNEL(4, AD7793_CH_TEMP, (_b), (_sb), (_s)), \
--	AD_SD_SUPPLY_CHANNEL(5, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), (_s)), \
-+	AD7793_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), (_s)), \
-+	AD7793_DIFF_CHANNEL(1, 1, 1, AD7793_CH_AIN2P_AIN2M, (_b), (_sb), (_s)), \
-+	AD7793_DIFF_CHANNEL(2, 2, 2, AD7793_CH_AIN3P_AIN3M, (_b), (_sb), (_s)), \
-+	AD7793_SHORTED_CHANNEL(3, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), (_s)), \
-+	AD7793_TEMP_CHANNEL(4, AD7793_CH_TEMP, (_b), (_sb), (_s)), \
-+	AD7793_SUPPLY_CHANNEL(5, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), (_s)), \
- 	IIO_CHAN_SOFT_TIMESTAMP(6), \
- }
- 
- #define DECLARE_AD7795_CHANNELS(_name, _b, _sb) \
- const struct iio_chan_spec _name##_channels[] = { \
--	AD_SD_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
--	AD_SD_DIFF_CHANNEL(1, 1, 1, AD7793_CH_AIN2P_AIN2M, (_b), (_sb), 0), \
--	AD_SD_DIFF_CHANNEL(2, 2, 2, AD7793_CH_AIN3P_AIN3M, (_b), (_sb), 0), \
--	AD_SD_DIFF_CHANNEL(3, 3, 3, AD7795_CH_AIN4P_AIN4M, (_b), (_sb), 0), \
--	AD_SD_DIFF_CHANNEL(4, 4, 4, AD7795_CH_AIN5P_AIN5M, (_b), (_sb), 0), \
--	AD_SD_DIFF_CHANNEL(5, 5, 5, AD7795_CH_AIN6P_AIN6M, (_b), (_sb), 0), \
--	AD_SD_SHORTED_CHANNEL(6, 0, AD7795_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
--	AD_SD_TEMP_CHANNEL(7, AD7793_CH_TEMP, (_b), (_sb), 0), \
--	AD_SD_SUPPLY_CHANNEL(8, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), 0), \
-+	AD7793_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
-+	AD7793_DIFF_CHANNEL(1, 1, 1, AD7793_CH_AIN2P_AIN2M, (_b), (_sb), 0), \
-+	AD7793_DIFF_CHANNEL(2, 2, 2, AD7793_CH_AIN3P_AIN3M, (_b), (_sb), 0), \
-+	AD7793_DIFF_CHANNEL(3, 3, 3, AD7795_CH_AIN4P_AIN4M, (_b), (_sb), 0), \
-+	AD7793_DIFF_CHANNEL(4, 4, 4, AD7795_CH_AIN5P_AIN5M, (_b), (_sb), 0), \
-+	AD7793_DIFF_CHANNEL(5, 5, 5, AD7795_CH_AIN6P_AIN6M, (_b), (_sb), 0), \
-+	AD7793_SHORTED_CHANNEL(6, 0, AD7795_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
-+	AD7793_TEMP_CHANNEL(7, AD7793_CH_TEMP, (_b), (_sb), 0), \
-+	AD7793_SUPPLY_CHANNEL(8, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), 0), \
- 	IIO_CHAN_SOFT_TIMESTAMP(9), \
- }
- 
- #define DECLARE_AD7797_CHANNELS(_name, _b, _sb) \
- const struct iio_chan_spec _name##_channels[] = { \
--	AD_SD_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
--	AD_SD_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
--	AD_SD_TEMP_CHANNEL(2, AD7793_CH_TEMP, (_b), (_sb), 0), \
--	AD_SD_SUPPLY_CHANNEL(3, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), 0), \
-+	AD7793_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
-+	AD7793_SHORTED_CHANNEL(1, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
-+	AD7793_TEMP_CHANNEL(2, AD7793_CH_TEMP, (_b), (_sb), 0), \
-+	AD7793_SUPPLY_CHANNEL(3, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), 0), \
- 	IIO_CHAN_SOFT_TIMESTAMP(4), \
- }
- 
- #define DECLARE_AD7799_CHANNELS(_name, _b, _sb) \
- const struct iio_chan_spec _name##_channels[] = { \
--	AD_SD_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
--	AD_SD_DIFF_CHANNEL(1, 1, 1, AD7793_CH_AIN2P_AIN2M, (_b), (_sb), 0), \
--	AD_SD_DIFF_CHANNEL(2, 2, 2, AD7793_CH_AIN3P_AIN3M, (_b), (_sb), 0), \
--	AD_SD_SHORTED_CHANNEL(3, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
--	AD_SD_SUPPLY_CHANNEL(4, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), 0), \
-+	AD7793_DIFF_CHANNEL(0, 0, 0, AD7793_CH_AIN1P_AIN1M, (_b), (_sb), 0), \
-+	AD7793_DIFF_CHANNEL(1, 1, 1, AD7793_CH_AIN2P_AIN2M, (_b), (_sb), 0), \
-+	AD7793_DIFF_CHANNEL(2, 2, 2, AD7793_CH_AIN3P_AIN3M, (_b), (_sb), 0), \
-+	AD7793_SHORTED_CHANNEL(3, 0, AD7793_CH_AIN1M_AIN1M, (_b), (_sb), 0), \
-+	AD7793_SUPPLY_CHANNEL(4, 3, AD7793_CH_AVDD_MONITOR, (_b), (_sb), 0), \
- 	IIO_CHAN_SOFT_TIMESTAMP(5), \
- }
- 
+Merged to -fixes with a cc: stable.
+-Daniel
+
+> ---
+>  drivers/gpu/drm/drm_lease.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
+> index b481caf..825abe3 100644
+> --- a/drivers/gpu/drm/drm_lease.c
+> +++ b/drivers/gpu/drm/drm_lease.c
+> @@ -542,10 +542,12 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
+>  	}
+>  
+>  	DRM_DEBUG_LEASE("Creating lease\n");
+> +	/* lessee will take the ownership of leases */
+>  	lessee = drm_lease_create(lessor, &leases);
+>  
+>  	if (IS_ERR(lessee)) {
+>  		ret = PTR_ERR(lessee);
+> +		idr_destroy(&leases);
+>  		goto out_leases;
+>  	}
+>  
+> @@ -580,7 +582,6 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
+>  
+>  out_leases:
+>  	put_unused_fd(fd);
+> -	idr_destroy(&leases);
+>  
+>  	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
+>  	return ret;
+> -- 
+> 1.8.3.1
+> 
+
 -- 
-2.20.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
