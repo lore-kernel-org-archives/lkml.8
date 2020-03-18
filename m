@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF80C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF8BC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E63721473
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A882166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565099;
-	bh=ZkfJrT9V50vG+aQGnn9VvvlNy5AIoNeX22Kv/9I1x5I=;
+	s=default; t=1584565102;
+	bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NAUgqnEL6w0Tw1S5MIHPlpL8VCla+ta4/A+aJsKRHgLdsj1qH5aGOmdjxp2OXxInm
-	 DwJ+FfeKNztYEFKIjMufsJbzvISVMgEmNTkOswHBtYqfrC1Tg2C9HJqAKYNiYYI9Xh
-	 kDfSKh0VIWg4ei81RKk0CY07QJw2Ka9uQ4HaLhIs=
+	b=QKyx9TTd6BwsNsFYfFXZyym5V6eW+sq8nDu6AjJ7uatIEdx+GFcVuPW9y8UPuovX7
+	 e26uY/EQuqC1WBGx+qXdmArn6EX02S74BDONnOgHVTCxsFa0BtoKP3MAcJi9woj+pc
+	 0jBy838cy4S5fStH3/YPyOW0l/PB8hK2mV3/VGD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgCRU52 (ORCPT
+        id S1727216AbgCRU5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:57:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728666AbgCRU4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:44 -0400
+        id S1727990AbgCRU4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BBE720BED;
-        Wed, 18 Mar 2020 20:56:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EA0120A8B;
+        Wed, 18 Mar 2020 20:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584565004;
-        bh=ZkfJrT9V50vG+aQGnn9VvvlNy5AIoNeX22Kv/9I1x5I=;
+        s=default; t=1584564993;
+        bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tWQg9bQuMRpLJRowAoJRwyvLzUJDF6i4L9vPu6fZ8aTUW5g4Ng5a5YIyZqzumUG1f
-         IijVJC/BWeawYtx6tShvHtWOLzb/vr+DaPhoodDcvEt+GrsuYD5C0PhzcMo2IMUTKx
-         OUvadABs7Y2YMkjJUbX3O2NN+YG4SuReb6BM8buc=
+        b=T3RBPz+ID1umAXgzfJ6OG960u2jYixGKR8yxfYWZ7LE/cvoqNbLT4gRoegbAjg8iR
+         GSzROn6Y5G7pWXypkW7RTe32v1f6kyCwXN1Jnb7ZBRnd/7hQbJOyxvMhNBSE4rNhYq
+         X/Qp4utsh0vFHR1GmJPURvstS/0RSDFHXMwlCU3w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Cavallari <nicolas.cavallari@green-communications.fr>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 12/15] mac80211: Do not send mesh HWMP PREQ if HWMP is disabled
-Date:   Wed, 18 Mar 2020 16:56:26 -0400
-Message-Id: <20200318205629.17750-12-sashal@kernel.org>
+Cc:     Mike Gilbert <floppym@gentoo.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/15] cpupower: avoid multiple definition with gcc -fno-common
+Date:   Wed, 18 Mar 2020 16:56:17 -0400
+Message-Id: <20200318205629.17750-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205629.17750-1-sashal@kernel.org>
 References: <20200318205629.17750-1-sashal@kernel.org>
@@ -60,36 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
+From: Mike Gilbert <floppym@gentoo.org>
 
-[ Upstream commit ba32679cac50c38fdf488296f96b1f3175532b8e ]
+[ Upstream commit 2de7fb60a4740135e03cf55c1982e393ccb87b6b ]
 
-When trying to transmit to an unknown destination, the mesh code would
-unconditionally transmit a HWMP PREQ even if HWMP is not the current
-path selection algorithm.
+Building cpupower with -fno-common in CFLAGS results in errors due to
+multiple definitions of the 'cpu_count' and 'start_time' variables.
 
-Signed-off-by: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
-Link: https://lore.kernel.org/r/20200305140409.12204-1-cavallar@lri.fr
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+./utils/idle_monitor/snb_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
+multiple definition of `cpu_count';
+./utils/idle_monitor/nhm_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
+first defined here
+...
+./utils/idle_monitor/cpuidle_sysfs.o:./utils/idle_monitor/cpuidle_sysfs.c:22:
+multiple definition of `start_time';
+./utils/idle_monitor/amd_fam14h_idle.o:./utils/idle_monitor/amd_fam14h_idle.c:85:
+first defined here
+
+The -fno-common option will be enabled by default in GCC 10.
+
+Bug: https://bugs.gentoo.org/707462
+Signed-off-by: Mike Gilbert <floppym@gentoo.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_hwmp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
+ tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
+ tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
+ 4 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/net/mac80211/mesh_hwmp.c b/net/mac80211/mesh_hwmp.c
-index 5f4c228b82e56..f7eaa1051b5b2 100644
---- a/net/mac80211/mesh_hwmp.c
-+++ b/net/mac80211/mesh_hwmp.c
-@@ -1131,7 +1131,8 @@ int mesh_nexthop_resolve(struct ieee80211_sub_if_data *sdata,
- 		}
- 	}
+diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
+index 2116df9ad8325..c097a3748674f 100644
+--- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
++++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
+@@ -83,7 +83,7 @@ static struct pci_access *pci_acc;
+ static struct pci_dev *amd_fam14h_pci_dev;
+ static int nbp1_entered;
  
--	if (!(mpath->flags & MESH_PATH_RESOLVING))
-+	if (!(mpath->flags & MESH_PATH_RESOLVING) &&
-+	    mesh_path_sel_is_hwmp(sdata))
- 		mesh_queue_preq(mpath, PREQ_Q_F_START);
+-struct timespec start_time;
++static struct timespec start_time;
+ static unsigned long long timediff;
  
- 	if (skb_queue_len(&mpath->frame_queue) >= MESH_FRAME_QUEUE_LEN)
+ #ifdef DEBUG
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
+index 5b3205f162174..5277df27191f3 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
++++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
+@@ -21,7 +21,7 @@ struct cpuidle_monitor cpuidle_sysfs_monitor;
+ 
+ static unsigned long long **previous_count;
+ static unsigned long long **current_count;
+-struct timespec start_time;
++static struct timespec start_time;
+ static unsigned long long timediff;
+ 
+ static int cpuidle_get_count_percent(unsigned int id, double *percent,
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+index 05f953f0f0a0c..80a21cb67d94f 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
+@@ -29,6 +29,8 @@ struct cpuidle_monitor *all_monitors[] = {
+ 0
+ };
+ 
++int cpu_count;
++
+ static struct cpuidle_monitor *monitors[MONITORS_MAX];
+ static unsigned int avail_monitors;
+ 
+diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+index 9e43f3371fbc6..3558bbae2b5dc 100644
+--- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
++++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
+@@ -18,7 +18,7 @@
+ #define CSTATE_NAME_LEN 5
+ #define CSTATE_DESC_LEN 60
+ 
+-int cpu_count;
++extern int cpu_count;
+ 
+ /* Hard to define the right names ...: */
+ enum power_range_e {
 -- 
 2.20.1
 
