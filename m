@@ -2,120 +2,226 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5A9C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC39C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96ED020752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A8A20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjBEsemG"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XU11EO/F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgCRRP1 (ORCPT
+        id S1726926AbgCRRQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:15:27 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43953 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgCRRP1 (ORCPT
+        Wed, 18 Mar 2020 13:16:06 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3950 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgCRRQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:15:27 -0400
-Received: by mail-qt1-f195.google.com with SMTP id l13so21329372qtv.10;
-        Wed, 18 Mar 2020 10:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XxUwJet0pq87ma5H9uRR4f/E0DxPaM/eAomJtt++Wdw=;
-        b=DjBEsemG/jKOqxSvxcsYq29zun7ypTmpLQlvI1ddnFGNppkBPa5778wjuKJKsZDGlu
-         3Zm27jDFWKiXsSrxlqDpU0nCfpXFq2gC5OZ5+clXqP2yVzZqFyURbzLOQ93CI51pWG5r
-         Di+n5FOGn5h7LsdwPHcDObhKKDPaj3lRBf7PkJ39kkAmlfG1JSSZxddsxreA8dI77JZ7
-         aag2l+kVpPGquTTPvRAa9cAOgvquAR4UEyW8KQIo6igUQKOsQdLGggldAUrMRvfFkkCj
-         bjMNzxka5ko2dwdp4jpNCfKcvPnYk2bOGYJwVhDEzwIKwazryU1nhaiFpECKnPKdBXWU
-         J0HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XxUwJet0pq87ma5H9uRR4f/E0DxPaM/eAomJtt++Wdw=;
-        b=fg89ukY5udxVRVRkaWkyz+YVgtKPB92h0fit/BjVUvtNAvwUwQ2GYLTP+lMiey+K1f
-         WNnFpd9EK3yJ5eLdoGoUz7i6ZaI06yl2bOP5CfFWVFz5qoIcp4D/R3drKKWdSblMa8LZ
-         ekFDQnZ8OaOacytE+AZEmVTSWR1kEg5l1J9zbMrP9YWWFhHnZzpy8mNz932Qplf/938Q
-         5o+gidkHkJl30b/4/dLqRUsNUrxe2Ff88cROr2u/pxV3DRw5+cwHDsvXT0vBInz5ZrkA
-         ZDi0yHTlNjrr5RwFcY8OGVLPCvkCIVr/1qYRNuEBGLEvimz9bZiYoK6XEfcTaX/i4VC0
-         b7Vg==
-X-Gm-Message-State: ANhLgQ3H2YbXJVgyvEBN2PaFIGJUsb12ZTzhw3o60OaIr0C1P3baaqvy
-        yndEq7OBQgtEslq7tgKbaQW9OlYxGswWJwbz6BU=
-X-Google-Smtp-Source: ADFU+vt0lA5e23BmYcHnV5pD6m01L7MMTzT6+01UMHNRW+Plra58xvGh+bWIyVnJwqF4bumOrQysBnWAjSiMiv7iXmM=
-X-Received: by 2002:aed:200f:: with SMTP id 15mr5587101qta.152.1584551724821;
- Wed, 18 Mar 2020 10:15:24 -0700 (PDT)
+        Wed, 18 Mar 2020 13:16:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e7257480000>; Wed, 18 Mar 2020 10:15:52 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 18 Mar 2020 10:16:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 18 Mar 2020 10:16:05 -0700
+Received: from [10.2.175.141] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar
+ 2020 17:16:04 +0000
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+ <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
+ <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
+ <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
+ <5f54c018-5670-8193-7c68-969f9bde92f6@xs4all.nl>
+ <19081d90-62cc-e6eb-0337-f108fb6ca9bc@nvidia.com>
+ <061eabf1-4b6f-83c0-6851-df8a193a84e8@nvidia.com>
+Message-ID: <a5377068-3c70-1af4-6398-630d205e794b@nvidia.com>
+Date:   Wed, 18 Mar 2020 10:17:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200318161906.3340959-1-lains@archlinux.org>
-In-Reply-To: <20200318161906.3340959-1-lains@archlinux.org>
-From:   Mario Limonciello <superm1@gmail.com>
-Date:   Wed, 18 Mar 2020 12:15:13 -0500
-Message-ID: <CA+EcB1MoTXMaueJfRHf51A5PU4oiKSJXrHazfTEvifZK54OrLQ@mail.gmail.com>
-Subject: Re: [PATCH] HID: logitech-dj: issue udev change event on device connection
-To:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Richard Hughes <hughsient@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <061eabf1-4b6f-83c0-6851-df8a193a84e8@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584551752; bh=oBKNPTi9GLdtryL/j8HF1CfdlMDUDx2LP07rQWMZdTU=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=XU11EO/Fztnr3hGAYUHf3fIwU8CfkRR4/nx842XtN96L9Mhi1h+aWyNLvtQCdYkro
+         18M4Pb1niPTJifZ8vx0a1xDqE8jgIfYWRdyopv0/QqVsZ+1MJkb/UosfaVYN0Np3Q7
+         o9JSwPvj7qzGVang7q2bgTQLlSZhtkWDFpSwsPublH5QrFAb9rUWk2JNm3DqAo/zuR
+         +uugeK+19xm8ckxWwB0tSAvj2+lkDl4v2lqV3mZnIyc6laiIEt5DA6/sHl/krvG+p0
+         YOBRO0sC17o6Td8hVI//ptF8gilEfovPNpLAzHZJSirKQMqvZedZoP1El/DsJSRv/s
+         nMZY7U/HZvt1g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 11:19 AM Filipe La=C3=ADns <lains@archlinux.org> wr=
-ote:
->
-> As discussed in the mailing list:
->
-> > Right now the hid-logitech-dj driver will export one node for each
-> > connected device, even when the device is not connected. That causes
-> > some trouble because in userspace we don't have have any way to know if
-> > the device is connected or not, so when we try to communicate, if the
-> > device is disconnected it will fail.
->
-> The solution reached to solve this issue is to trigger an udev change
-> event when the device connects, this way userspace can just wait on
-> those connections instead of trying to ping the device.
->
-> Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
-> ---
->  drivers/hid/hid-logitech-dj.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.=
-c
-> index 48dff5d6b605..fcd481a0be1f 100644
-> --- a/drivers/hid/hid-logitech-dj.c
-> +++ b/drivers/hid/hid-logitech-dj.c
-> @@ -1464,6 +1464,8 @@ static int logi_dj_dj_event(struct hid_device *hdev=
-,
->                 if (dj_report->report_params[CONNECTION_STATUS_PARAM_STAT=
-US] =3D=3D
->                     STATUS_LINKLOSS) {
->                         logi_dj_recv_forward_null_report(djrcv_dev, dj_re=
-port);
-> +               } else {
-> +                       kobject_uevent(&hdev->dev.kobj, KOBJ_CHANGE);
->                 }
->                 break;
->         default:
-> --
-> 2.25.1
 
-The problem that will remain here is the transition period for
-userspace to start to rely upon
-this.  It will have no idea whether the kernel is expected to send
-events or not.  What do you
-think about adding a syfs attribute to indicate that events are being
-sent?  Or something similar?
+On 3/18/20 9:25 AM, Sowjanya Komatineni wrote:
+>
+> On 3/18/20 9:14 AM, Sowjanya Komatineni wrote:
+>>
+>> On 3/18/20 4:48 AM, Hans Verkuil wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On 2/24/20 5:45 AM, Sowjanya Komatineni wrote:
+>>>> On 2/20/20 11:11 AM, Sowjanya Komatineni wrote:
+>>>>> On 2/20/20 5:33 AM, Hans Verkuil wrote:
+>>>>>> External email: Use caution opening links or attachments
+>>>>>>
+>>>>>>
+>>>>>> (Replying to myself so I can explain this a bit more)
+>>>>>>
+>>>>>> On 2/20/20 1:44 PM, Hans Verkuil wrote:
+>>>>>>>> +
+>>>>>>>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
+>>>>>>>> +{
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct device_node *node =3D csi->dev->of_node=
+;
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int port_num;
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_csi_channel *item;
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int tpg_channels =3D csi->soc->csi_ma=
+x_channels;
+>>>>>>>> +
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 /* allocate CSI channel for each CSI x2 ports =
+*/
+>>>>>>>> +=C2=A0=C2=A0=C2=A0 for (port_num =3D 0; port_num < tpg_channels; =
+port_num++) {
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 item =3D devm_kzalloc(csi->dev, sizeof(*item),=20
+>>>>>>>> GFP_KERNEL);
+>>>>>>> Using devm_*alloc can be dangerous. If someone unbinds the=20
+>>>>>>> driver, then
+>>>>>>> all memory allocated with devm_ is immediately freed. But if an
+>>>>>>> application
+>>>>>>> still has a filehandle open, then when it closes it it might still
+>>>>>>> reference
+>>>>>>> this already-freed memory.
+>>>>>>>
+>>>>>>> I recommend that you avoid using devm_*alloc for media drivers.
+>>>>>> A good test is to unbind & bind the driver:
+>>>>>>
+>>>>>> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
+>>>>>> echo -n 54080000.vi >unbind
+>>>>>> echo -n 54080000.vi >bind
+>>>>>>
+>>>>>> First just do this without the driver being used. That already
+>>>>>> gives me 'list_del corruption' kernel messages (list debugging
+>>>>>> is turned on in my kernel).
+>>>> Will fix in v4 to use kzalloc and also proper release v4l2 to make=20
+>>>> sure
+>>>> unbind/bind works properly.
+>>>>
+>>>> BTW, tegra vi and csi are registered as clients to host1x video=20
+>>>> driver.
+>>>>
+>>>> So, unbind and bind should be done with host1x video driver=20
+>>>> "tegra-video"
+>>>>
+>>>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>>>> echo -n tegra-video > unbind
+>>>> echo -n tegra-video > bind
+>>> This still crashes with v4, at least if I am streaming with v4l2-ctl=20
+>>> --stream-mmap.
+>>> Is that known?
+>>>
+>>> It's not a big deal at this moment, just want to know if this will=20
+>>> be looked
+>>> at later.
+>>>
+>>> Regards,
+>>>
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Hans
+>>
+>> Weird, I tested streaming after unbind and bind as well and don't see=20
+>> crash. Did below steps and tried several times unbind/bind as well.
+>>
+>> ./v4l2-ctl --stream-mmap --stream-count=3D1 -d /dev/video3
+>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>> echo -n tegra-video > unbind
+>> sleep 1
+>> echo -n tegra-video > bind
+>> cd /home/ubuntu
+>> ./v4l2-ctl --stream-mmap --stream-count=3D1 -d /dev/video3
+>>
+>> Can you post call trace when you saw crash?
+>
+> Tried unbind when=C2=A0 node is open with v4l2-ctl --sleep 10 as well and=
+=20
+> bind back.
+>
+> I don't see crash. Will confirm on doing unbind/bind with stream-mmap...
+>
+Able to repro when unbind/bind happens while stream-mmap.
+
+Will look and have fix in v5.
+
+Thanks Hans.
+
+>>
+>>>>>> Note that this first test is basically identical to a rmmod/modprobe
+>>>>>> of the driver. But when I compiled the driver as a module it didn't
+>>>>>> create any video device nodes! Nor did I see any errors in the=20
+>>>>>> kernel
+>>>>>> log. I didn't pursue this, and perhaps I did something wrong, but=20
+>>>>>> it's
+>>>>>> worth taking a look at.
+>>>>>>
+>>>>>> The next step would be to have a video node open with:
+>>>>>>
+>>>>>> v4l2-ctl --sleep 10
+>>>>>>
+>>>>>> then while it is sleeping unbind the driver and see what happens
+>>>>>> when v4l2-ctl exits.
+>>>>>>
+>>>>>> Worst case is when you are streaming:
+>>>>>>
+>>>>>> v4l2-ctl --stream-mmap
+>>>>>>
+>>>>>> and then unbind.
+>>>>>>
+>>>>>> In general, the best way to get this to work correctly is:
+>>>>>>
+>>>>>> 1) don't use devm_*alloc
+>>>>>> 2) set the release callback of struct v4l2_device and do all freeing
+>>>>>> there.
+>>>>>> 3) in the platform remove() callback you call=20
+>>>>>> media_device_unregister()
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 and video_unregister_device().
+>>>>> Reg 3, in current patch, media_device_unregister is called in
+>>>>> host1x_video_remove
+>>>>> video_unregister_device happens during host1x_video_remove ->
+>>>>> host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
+>>>>>
+>>>>>> It's worth getting this right in this early stage, rather than=20
+>>>>>> fixing it
+>>>>>> in the future.
+>>>>>>
+>>>>>> Regards,
+>>>>>>
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Hans
