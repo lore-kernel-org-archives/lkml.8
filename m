@@ -2,75 +2,96 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0772C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3616AC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A374420768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B0120767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:56:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XSiquivy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbgCRPyP (ORCPT
+        id S1727046AbgCRP4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:54:15 -0400
-Received: from mga14.intel.com ([192.55.52.115]:50380 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbgCRPyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:54:15 -0400
-IronPort-SDR: dftVKVfMsgcCgoEaZUyRKqpsupQjKXkQkKliPLverLxhck2s7hzzWyeaqKvotVEu4+B8e7QbUQ
- g3SkeFz4ro6A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 08:54:15 -0700
-IronPort-SDR: Tjc3uIEmX3dQplYupWc5eSXp2BpVa6M28ayGV6FutVzKT/33/6CL3Y7l8bOV783m+C9pZZEp/l
- /8430xvsEc1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
-   d="scan'208";a="233880826"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 18 Mar 2020 08:54:12 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jEb1K-00Anye-UL; Wed, 18 Mar 2020 17:54:14 +0200
-Date:   Wed, 18 Mar 2020 17:54:14 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Heiko Stuebner <heiko@sntech.de>, gregkh@linuxfoundation.org,
-        jslaby@suse.com, matwey.kornilov@gmail.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] serial: 8250: Add rs485 emulation to 8250_dw
-Message-ID: <20200318155414.GR1922688@smile.fi.intel.com>
-References: <20200318142640.982763-1-heiko@sntech.de>
- <20200318144320.GL1922688@smile.fi.intel.com>
- <20200318153754.dctd4q7e2fodeqsw@wunner.de>
+        Wed, 18 Mar 2020 11:56:16 -0400
+Received: from mail-lf1-f45.google.com ([209.85.167.45]:46027 "EHLO
+        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbgCRP4P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 11:56:15 -0400
+Received: by mail-lf1-f45.google.com with SMTP id x143so4611011lff.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:56:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=DzOdrsW97KdLqXTxd9ksU9+GnyXc9/hhsBl/C1xbNT0=;
+        b=XSiquivyhfl3GaGYHiw+zEMxuIxvv0pXuF5G2LuCQRXPuaJSiOiGLR5p9S35kt+NI/
+         +NiUotKn6JvlxeHYeixqtObYKvAOMTpcfyLS+NqcjGnHbul/V2TZKdyhSXsGIF6rvLMQ
+         13+ZvUJwth3SezRXe8/flOko56JkqJlOEsygfvNhojFJhgXs+Auh1xAGPLiSc1q4V6Xx
+         Wqyl/D3E2ufsthHTXO+s0prGcolWaOIw1poDePkAp7WH7Tb3USbubsmH+CtNFN5P5t/J
+         MagQf9CZYtUlQq1NZ97mQxSwF+8C7Kzj/zreTyMH4UdPUCE8+PzlFAtpe7VnqCrvdACT
+         YSzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=DzOdrsW97KdLqXTxd9ksU9+GnyXc9/hhsBl/C1xbNT0=;
+        b=cl6YXZmxYtKOOIl2RtkSVi4Sf6Qqb93rtvMA1dgc4gY/hydzlu9NlAjK7FShwSPOpw
+         9zIvj/ooCmCLbcQHGvPxY55NXmtkhtdRLqQDGE3i3U4MqN8AlUFWhrPc+O0Be62sRshY
+         eoIm1eqkykO1pHurtI1rv0u3C5lzY3oMACREYLBOX0rNJCMjjZMVeJ0yqzlJwQ0cNhwE
+         UVnz6c5uCUz0AQerekAhmsQIjaEzOs0O2G4+iJyM50ac7/v0l3yaMqlWPdxhGHyhUl1E
+         6bRl/T2SSFV/OGpBEFEdMTMKH7RgEnzUU7jUNB4oT2nqJnRGLN3OVZtQBIzhfSzoOlTI
+         1FDQ==
+X-Gm-Message-State: ANhLgQ3gofrDDBj258tOgEEJ9tRutLVLMsr0867TVQbFcf2N8ndSrnLK
+        2EqU/5rqySW7blJ0f1wREgYrS4W0fH72f6bGzNGefA==
+X-Google-Smtp-Source: ADFU+vsDZbF18oB7HRyBSPzjs+IYS5tBn4pxKjv50NIP6u4ac+UT6Jp6ZtijUK5QhY8lAy9TtQ9x3BpoCJ4/RiHzx4M=
+X-Received: by 2002:ac2:5de1:: with SMTP id z1mr3225019lfq.95.1584546972965;
+ Wed, 18 Mar 2020 08:56:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318153754.dctd4q7e2fodeqsw@wunner.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 18 Mar 2020 21:26:01 +0530
+Message-ID: <CA+G9fYsT2B0WFPV0uohH=QT+CU09OscZvsUV3pnhG-xjPF+OqA@mail.gmail.com>
+Subject: =?UTF-8?B?a2VybmVsL3JjdS90YXNrcy5oOjEwNzA6Mzc6IGVycm9yOiDigJhyY3VfdGFza3NfcnVkZQ==?=
+        =?UTF-8?B?4oCZIHVuZGVjbGFyZWQ=?=
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        rcu@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, josh@joshtriplett.org,
+        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, Joel Fernandes <joel@joelfernandes.org>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 04:37:54PM +0100, Lukas Wunner wrote:
-> On Wed, Mar 18, 2020 at 04:43:20PM +0200, Andy Shevchenko wrote:
-> > On Wed, Mar 18, 2020 at 03:26:33PM +0100, Heiko Stuebner wrote:
-> > > This series tries to revive the work of Giulio Benetti from 2018 [0]
-> > > which seemed to have stalled at that time.
-> 
-> Oh dear. :-(  This needs a rebase on current tty-next.
+The arm64 build failed on linux-next master branch.
 
-That's what I was thinking when browsed thru the content, and thus commented in
-the same way to this cover letter :-)
+make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm64
+CROSS_COMPILE=3Daarch64-linux-gnu- HOSTCC=3Dgcc CC=3D"sccache
+aarch64-linux-gnu-gcc" O=3Dbuild Image
 
-Thank you for looking into this.
+In file included from ../kernel/rcu/update.c:562:
+ ../kernel/rcu/tasks.h: In function =E2=80=98show_rcu_tasks_gp_kthreads=E2=
+=80=99:
+ ../kernel/rcu/tasks.h:1070:37: error: =E2=80=98rcu_tasks_rude=E2=80=99 und=
+eclared
+(first use in this function); did you mean =E2=80=98rcu_tasks_qs=E2=80=99?
+  1070 |  show_rcu_tasks_generic_gp_kthread(&rcu_tasks_rude, "");
+       |                                     ^~~~~~~~~~~~~~
+       |                                     rcu_tasks_qs
+ ../kernel/rcu/tasks.h:1070:37: note: each undeclared identifier is
+reported only once for each function it appears in
 
--- 
-With Best Regards,
-Andy Shevchenko
+Ref:
+https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/476084417
 
-
+--=20
+Linaro LKFT
+https://lkft.linaro.org
