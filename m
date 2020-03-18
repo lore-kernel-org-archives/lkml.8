@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCBCC4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F01C55186
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24421208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8233020A8B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564906;
-	bh=r7+VUzxjLQB4PABrIOlLBl4f8gaO2eLJmpqEIWbWdWw=;
+	s=default; t=1584564908;
+	bh=Fw2Y7SJT1KxgyT/KkiFlJP+vzAotUhytvqgs9F+e2yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=df73VdTW3b8hQfA+ubKeMRcUz6hRD1g8XW0fBla2uF7x1Lcoz1Mo81QEL96OrGY6u
-	 ihGNT/thw4Hhb95ImC2IDV0uiS6WAU0JYWd6Z6T4R9pEeTtv95KvDqyP+iKolsG7ov
-	 iQRxx7X51EOx+thXi9p8CiNnukYhhs6MjtIW/Gfs=
+	b=dpz2aLvVWlLDS04ROK9MrdWnYl1D+evueBpbCU5KhtA6qPcjT4YmGNCMtukKlTi0F
+	 ly43rwZ1Heo+XxdGAPJZLIzdMDgEas28dzH1C534ntAVuPi38B1wVaEbscq5ucJfe2
+	 Gel3MMGFrmR8JlU+nyXFQCf+xXPU0C9tTgIo9op8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgCRUzF (ORCPT
+        id S1727239AbgCRUzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:55:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:55:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727259AbgCRUzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:00 -0400
+        id S1728167AbgCRUzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63A8F2173E;
-        Wed, 18 Mar 2020 20:54:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA275208FE;
+        Wed, 18 Mar 2020 20:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564900;
-        bh=r7+VUzxjLQB4PABrIOlLBl4f8gaO2eLJmpqEIWbWdWw=;
+        s=default; t=1584564902;
+        bh=Fw2Y7SJT1KxgyT/KkiFlJP+vzAotUhytvqgs9F+e2yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oga0jxxlqqSiGLSx1rFZGG/WmV4fwgFhf8+JlgkGodTwi3dqevJKc6UskhESU852z
-         lTFXZPk3z1jCL1kR1I9FgMcbesbqAtR3dMyCp4mu6MNCcU6OkED798NXdlYUvaQso4
-         1Wc+8dR/F8Pf63sHO6alVr9ICddq1yCq7dA5BJi0=
+        b=p2ppZ9trnB7rYkhUn0JRl+dHabjvRGdzdUPoWN1Rv5dCyJcibjWkAo/NnAF+noHk1
+         d0S1SHgAQlxxwsPvBfwm4K1Aj8XPp4uBUksD/Wa/eOy+CJ4zYil8V/YEx8Uw/y347z
+         ZAR/hKZgCyiZGOlm9TOG61fIWAMIznZ6KWsurgjo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 67/73] iommu/vt-d: quirk_ioat_snb_local_iommu: replace WARN_TAINT with pr_warn + add_taint
-Date:   Wed, 18 Mar 2020 16:53:31 -0400
-Message-Id: <20200318205337.16279-67-sashal@kernel.org>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 69/73] i2c: acpi: put device when verifying client fails
+Date:   Wed, 18 Mar 2020 16:53:33 -0400
+Message-Id: <20200318205337.16279-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -61,55 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit 81ee85d0462410de8eeeec1b9761941fd6ed8c7b ]
+[ Upstream commit 8daee952b4389729358665fb91949460641659d4 ]
 
-Quoting from the comment describing the WARN functions in
-include/asm-generic/bug.h:
+i2c_verify_client() can fail, so we need to put the device when that
+happens.
 
- * WARN(), WARN_ON(), WARN_ON_ONCE, and so on can be used to report
- * significant kernel issues that need prompt attention if they should ever
- * appear at runtime.
- *
- * Do not use these macros when checking for invalid external inputs
-
-The (buggy) firmware tables which the dmar code was calling WARN_TAINT
-for really are invalid external inputs. They are not under the kernel's
-control and the issues in them cannot be fixed by a kernel update.
-So logging a backtrace, which invites bug reports to be filed about this,
-is not helpful.
-
-Fixes: 556ab45f9a77 ("ioat2: catch and recover from broken vtd configurations v6")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Link: https://lore.kernel.org/r/20200309182510.373875-1-hdegoede@redhat.com
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=701847
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 525e6fabeae2 ("i2c / ACPI: add support for ACPI reconfigure notifications")
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/i2c/i2c-core-acpi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 9b3d169c6ff53..be39363244389 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -4129,10 +4129,11 @@ static void quirk_ioat_snb_local_iommu(struct pci_dev *pdev)
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index 62a1c92ab803d..ce70b5288472c 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -394,9 +394,17 @@ EXPORT_SYMBOL_GPL(i2c_acpi_find_adapter_by_handle);
+ static struct i2c_client *i2c_acpi_find_client_by_adev(struct acpi_device *adev)
+ {
+ 	struct device *dev;
++	struct i2c_client *client;
  
- 	/* we know that the this iommu should be at offset 0xa000 from vtbar */
- 	drhd = dmar_find_matched_drhd_unit(pdev);
--	if (WARN_TAINT_ONCE(!drhd || drhd->reg_base_addr - vtbar != 0xa000,
--			    TAINT_FIRMWARE_WORKAROUND,
--			    "BIOS assigned incorrect VT-d unit for Intel(R) QuickData Technology device\n"))
-+	if (!drhd || drhd->reg_base_addr - vtbar != 0xa000) {
-+		pr_warn_once(FW_BUG "BIOS assigned incorrect VT-d unit for Intel(R) QuickData Technology device\n");
-+		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
- 		pdev->dev.archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
-+	}
+ 	dev = bus_find_device_by_acpi_dev(&i2c_bus_type, adev);
+-	return dev ? i2c_verify_client(dev) : NULL;
++	if (!dev)
++		return NULL;
++
++	client = i2c_verify_client(dev);
++	if (!client)
++		put_device(dev);
++
++	return client;
  }
- DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_IOAT_SNB, quirk_ioat_snb_local_iommu);
  
+ static int i2c_acpi_notify(struct notifier_block *nb, unsigned long value,
 -- 
 2.20.1
 
