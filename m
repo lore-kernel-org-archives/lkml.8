@@ -2,107 +2,78 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD8DC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D4DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02C820754
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B02D20754
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:58:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="IGeCLBMH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgCRTyG (ORCPT
+        id S1726866AbgCRT6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:54:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1950 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726647AbgCRTyG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 15:54:06 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02IJXENF025898;
-        Wed, 18 Mar 2020 15:53:58 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yupjt6m4q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 15:53:57 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02IJZI8b005100;
-        Wed, 18 Mar 2020 19:53:56 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma01wdc.us.ibm.com with ESMTP id 2yrpw6jyjm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 19:53:56 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02IJrtfH38338984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 19:53:55 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8938BE04F;
-        Wed, 18 Mar 2020 19:53:55 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09626BE051;
-        Wed, 18 Mar 2020 19:53:54 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Mar 2020 19:53:54 +0000 (GMT)
-Subject: Re: [PATCH] tpm2: Export tpm2_get_cc_attrs_tbl for ibmvtpm driver as
- module
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        sachinp@linux.vnet.ibm.com, mpe@ellerman.id.au
-References: <20200317130819.720318-1-stefanb@linux.vnet.ibm.com>
- <20200318194247.GC48177@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <4b2949a9-b251-906d-d513-1b2ccef758a0@linux.ibm.com>
-Date:   Wed, 18 Mar 2020 15:53:54 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 18 Mar 2020 15:58:05 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37714 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbgCRT6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 15:58:04 -0400
+Received: from zn.tnic (p200300EC2F0B450051E70FD0A142DE40.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:4500:51e7:fd0:a142:de40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9DBDA1EC0985;
+        Wed, 18 Mar 2020 20:58:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584561483;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=lJ3lAL2e7UJQ2cm2VDUW2t8k97NFcKqCK7YFFba7WNg=;
+        b=IGeCLBMHFi/SWWFfusiiyWLLJPuXCPQnYm09f4c9tGeDWtsaNyhQalmDX94zXIgtq+hSdc
+        Xvb+pGHRUbGWYfVb4fMWN2ul6Dv6yWJlr2dC6pPnM4vO5KrQu+PeNMdo9kf1mRrO0Nbfh4
+        8pEOkb20OpPkLYw03d41p7NTctNamr8=
+Date:   Wed, 18 Mar 2020 20:58:04 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     gilad kleinman <dkgs1998@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/module: Fixed bug allowing invalid relocation
+ addresses.
+Message-ID: <20200318195803.GE4377@zn.tnic>
+References: <20200314213626.30936-1-dkgs1998@gmail.com>
+ <20200316125824.GB12561@hirez.programming.kicks-ass.net>
+ <CAOQ9fa-i3mW2jQ2P=+34Feh9sZzaqDFKHau9GrgEWR9d26AqDg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318194247.GC48177@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-18_07:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- impostorscore=0 phishscore=0 clxscore=1015 malwarescore=0 adultscore=0
- mlxlogscore=999 lowpriorityscore=0 spamscore=0 priorityscore=1501
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003180086
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAOQ9fa-i3mW2jQ2P=+34Feh9sZzaqDFKHau9GrgEWR9d26AqDg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/20 3:42 PM, Jarkko Sakkinen wrote:
-> On Tue, Mar 17, 2020 at 09:08:19AM -0400, Stefan Berger wrote:
->> From: Stefan Berger <stefanb@linux.ibm.com>
->>
->> This patch fixes the following problem when the ibmvtpm driver
->> is built as a module:
->>
->> ERROR: modpost: "tpm2_get_cc_attrs_tbl" [drivers/char/tpm/tpm_ibmvtpm.ko] undefined!
->> make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
->> make: *** [Makefile:1298: modules] Error 2
->>
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Hi, wrong tag (we use "tpm:"), missing fixes tag and please cc stable.
-> Thanks.
+On Wed, Mar 18, 2020 at 09:40:47PM +0200, gilad kleinman wrote:
+> When you load a bad module and the kernel crashes -- the panic message will
+> usually be related to the module and easily traced back. If you load a
+> module with a bad relocation table (because of a bit-flip \ bad toolchain),
 
-I did not add the fixes tag because I do not know the final commit hash, 
-or is it the final commit hash once it is in linux-next? I doubt it with 
-all the merging that can occur.
+First of all, please do not top-post.
 
+Then, if you're worried about corrupted module text, we have
+CONFIG_MODULE_SIG which verifies previously signed modules. AFAICT, that
+should take care of the issue you're talking about here.
 
-    Stefan
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
 
->
-> /Jarkko
-
-
+https://people.kernel.org/tglx/notes-about-netiquette
