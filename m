@@ -2,141 +2,270 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3EEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121DDC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBE02077F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:40:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E27E320780
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:42:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OlTrfFpz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RNshLByR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgCRSkV (ORCPT
+        id S1726813AbgCRSm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:40:21 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46722 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgCRSkV (ORCPT
+        Wed, 18 Mar 2020 14:42:56 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:34966 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbgCRSm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:40:21 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02IIcn3A042181;
-        Wed, 18 Mar 2020 18:40:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=sLjVWZvpMwWx2eXCxBSd4lEA29TaEzJvkHaAr3aH71E=;
- b=OlTrfFpzt3wNpk/1TwUZrjzjw/A6/Py5RD/7zvESyQEJsQPI/2sVmo0WrxFhINidH4DS
- p3ghzipq54NeyAjgm7G3LgstyyHx5nNqdCQUOdFY7KHI6rzZxOCJ961l0vS8WS+omfvy
- DaOZw4Ui1QLXfD+xDsa/3KMuCDKdWixwIQD8YEb7y2dlI+aiV5qrdl+ThYKyTAc59zl3
- +BdT8shtqFTshogdL5lRw47YfoY2prAD5WhviY8Ugx5BVjpSU0cPVfHJuLgLYBBB+56N
- UW5ap7rhG/8UGmb1H90TlY5orXhfUDykYtvBcn8uYRa4d/27ok8A0p+EY4kK0VHHgeb4 oA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2yrq7m49pf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 18:40:17 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02IIbe4b053965;
-        Wed, 18 Mar 2020 18:40:16 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2ys92has9y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 18:40:16 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02IIeFAQ020988;
-        Wed, 18 Mar 2020 18:40:15 GMT
-Received: from localhost.localdomain (/10.159.130.178)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Mar 2020 11:40:15 -0700
-Subject: Re: [PATCH] KVM: nSVM: check for EFER.SVME=1 before entering guest
-To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <1584535300-6571-1-git-send-email-pbonzini@redhat.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <b5cb03b1-9840-f8f5-843a-1eab680d5e8e@oracle.com>
-Date:   Wed, 18 Mar 2020 11:40:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 18 Mar 2020 14:42:56 -0400
+Received: by mail-pj1-f68.google.com with SMTP id j20so818540pjz.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 11:42:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FgQUeqczmCOiMLXJY/YgmlhiPodfwWFEQ6rmmnOqT2I=;
+        b=RNshLByRet19hMEwb8FtxHQ4qbBwmjLc285o6H3HiHgrUaqRFtLN58W3KdnKNDFM4a
+         IYWCrg7B/XijnDcoo2wLu4Gtt/R1vc/xnDhz0CeI9707c9g3g6nwxgPTVxujHeG0Vu5/
+         ec96267kJA4rrGMPZ0HQHOE0rZODIqhj99ULQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FgQUeqczmCOiMLXJY/YgmlhiPodfwWFEQ6rmmnOqT2I=;
+        b=bZwBLdrMRuQn0IC9tbCzfZtJIRx/EdNhe9zLXjRmCA1kh/M4F8t1P1x8n0GwndC/H/
+         1etXc9TmbB85vmDiIXI2HUlVI1oGrYWYFqO42SuUXhBho/r/O1EAGBbJ4LAugE5JgQYY
+         xDL3Dz9k3UkU/TVLjWJFlXijIVqiiIf4cJ9AhuZal5munJJ8Us9g6yBycbB129kGsKKi
+         LNRNgxfaATXCvBeIcZBjICvZpFFnTIPjo0UQemL28JbrBgpmORBccFZi6xlXYNXm9b00
+         e3JgyUrG57VNSK1yVwyj0PTZxbh8/nNgX7cYoU3c3QXg7NaePpsuJGC6kXbOlMyfCmTB
+         iHBQ==
+X-Gm-Message-State: ANhLgQ3vzOW5lmvZdvFNz+CnucMpRLmw6+shXTiSdzb+7GyWNtUIauQl
+        KwMJgbDhC9LYZtBJU1ClotwaBKTPxG4=
+X-Google-Smtp-Source: ADFU+vsRQSeuB84FI8YRbqpkqkMEhyPRSPoUqLTKWdOQ7eE+yK5gcWvfdV0oolcwy4+XxW2jmIZ3Cw==
+X-Received: by 2002:a17:902:9349:: with SMTP id g9mr5374705plp.16.1584556973360;
+        Wed, 18 Mar 2020 11:42:53 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l67sm3087706pjb.23.2020.03.18.11.42.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 11:42:52 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 11:42:50 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v2 08/11] blkoops: respect for device to pick recorders
+Message-ID: <202003181136.5F115BFCC1@keescook>
+References: <1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1581078355-19647-9-git-send-email-liaoweixiong@allwinnertech.com>
 MIME-Version: 1.0
-In-Reply-To: <1584535300-6571-1-git-send-email-pbonzini@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- mlxscore=0 spamscore=0 bulkscore=0 adultscore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003180083
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
- malwarescore=0 mlxscore=0 phishscore=0 impostorscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003180083
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581078355-19647-9-git-send-email-liaoweixiong@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In the subject and through-out:
 
-On 3/18/20 5:41 AM, Paolo Bonzini wrote:
-> EFER is set for L2 using svm_set_efer, which hardcodes EFER_SVME to 1 and hides
-> an incorrect value for EFER.SVME in the L1 VMCB.  Perform the check manually
-> to detect invalid guest state.
->
-> Reported-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+s/recorders/pstore front-ends/
+
+On Fri, Feb 07, 2020 at 08:25:52PM +0800, WeiXiong Liao wrote:
+> It's one of a series of patches for adaptive to MTD device.
+
+typo: adapting
+
+> 
+> MTD device is not block device. The sector of flash (MTD device) will be
+> broken if erase over limited cycles. Avoid damaging block so fast, we
+> can not write to a sector frequently. So, the recorders of pstore/blk
+> like console and ftrace recorder should not be supported.
+> 
+> Besides, mtd device need aligned write/erase size. To avoid
+> over-erasing/writing flash, we should keep a aligned cache and read old
+> data to cache before write/erase, which make codes more complex. So,
+> pmsg do not be supported now because it writes misaligned.
+> 
+> How about dmesg? Luckly, pstore/blk keeps several aligned chunks for
+> dmesg and uses one by one for wear balance.
+> 
+> So, MTD device for pstore should pick recorders, that is why the patch
+> here.
+> 
+> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
 > ---
->   arch/x86/kvm/svm.c | 3 +++
->   1 file changed, 3 insertions(+)
->
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 08568ae9f7a1..2125c6ae5951 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -3558,6 +3558,9 @@ static bool nested_svm_vmrun_msrpm(struct vcpu_svm *svm)
->   
->   static bool nested_vmcb_checks(struct vmcb *vmcb)
->   {
-> +	if ((vmcb->save.efer & EFER_SVME) == 0)
-> +		return false;
+>  Documentation/admin-guide/pstore-block.rst |  9 +++++++++
+>  fs/pstore/blkoops.c                        | 29 +++++++++++++++++++++--------
+>  include/linux/blkoops.h                    | 14 +++++++++++++-
+>  3 files changed, 43 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
+> index be865dfc1a28..299142b3d8e6 100644
+> --- a/Documentation/admin-guide/pstore-block.rst
+> +++ b/Documentation/admin-guide/pstore-block.rst
+> @@ -166,6 +166,15 @@ It is only required by block device which is registered by
+>  ``blkoops_register_blkdev``.  It's the major device number of registered
+>  devices, by which blkoops can get the matching driver for @blkdev.
+>  
+> +flags
+> +~~~~~
 > +
->   	if ((vmcb->control.intercept & (1ULL << INTERCEPT_VMRUN)) == 0)
->   		return false;
->   
+> +Refer to macro starting with *BLKOOPS_DEV_SUPPORT_* which is defined in
+> +*linux/blkoops.h*. They tell us that which pstore/blk recorders this device
+> +supports. Default zero means all recorders for compatible, witch is the same
 
-Ah! This now tells me that I forgot the KVM fix that was supposed to 
-accompany my patchset.
+typo: witch -> which
 
-Do we need this check in software ? I wasn't checking the bit in KVM and 
-instead I was just making sure that L0 sets that bit based on the 
-setting in nested vmcb:
+> +as BLKOOPS_DEV_SUPPORT_ALL. Recorder works only when chunk size is not zero
+> +and device support.
 
+There are already flags for this, please see "Supported frontends"
+in include/linux/pstore.h
 
-+static void nested_svm_set_efer(struct kvm_vcpu *vcpu, u64 
-nested_vmcb_efer)
-+{
-+       svm_set_efer(vcpu, nested_vmcb_efer);
-+
-+       if (!(nested_vmcb_efer & EFER_SVME))
-+               to_svm(vcpu)->vmcb->save.efer &= ~EFER_SVME;
-+}
-+
-  static int is_external_interrupt(u32 info)
-  {
-         info &= SVM_EVTINJ_TYPE_MASK | SVM_EVTINJ_VALID;
-@@ -3554,7 +3562,7 @@ static void enter_svm_guest_mode(struct vcpu_svm 
-*svm, u64
-         svm->vmcb->save.gdtr = nested_vmcb->save.gdtr;
-         svm->vmcb->save.idtr = nested_vmcb->save.idtr;
-         kvm_set_rflags(&svm->vcpu, nested_vmcb->save.rflags);
--       svm_set_efer(&svm->vcpu, nested_vmcb->save.efer);
-+       nested_svm_set_efer(&svm->vcpu, nested_vmcb->save.efer);
-         svm_set_cr0(&svm->vcpu, nested_vmcb->save.cr0);
-         svm_set_cr4(&svm->vcpu, nested_vmcb->save.cr4);
-         if (npt_enabled) {
+> +
+>  total_size
+>  ~~~~~~~~~~
+>  
+> diff --git a/fs/pstore/blkoops.c b/fs/pstore/blkoops.c
+> index c76bab671b0b..01170b344f00 100644
+> --- a/fs/pstore/blkoops.c
+> +++ b/fs/pstore/blkoops.c
+> @@ -128,9 +128,16 @@ int blkoops_register_device(struct blkoops_device *bo_dev)
+>  		return -ENOMEM;
+>  	}
+>  
+> -#define verify_size(name, defsize, alignsize) {				\
+> -		long _##name_ = (name);					\
+> -		if (_##name_ < 0)					\
+> +	/* zero means all recorders for compatible */
+> +	if (bo_dev->flags == BLKOOPS_DEV_SUPPORT_DEFAULT)
+> +		bo_dev->flags = BLKOOPS_DEV_SUPPORT_ALL;
+> +#define verify_size(name, defsize, alignsize, enable) {			\
+> +		long _##name_;						\
+> +		if (!(enable))						\
+> +			_##name_ = 0;					\
+> +		else if ((name) >= 0)					\
+> +			_##name_ = (name);				\
+> +		else							\
+>  			_##name_ = (defsize);				\
+>  		_##name_ = _##name_ <= 0 ? 0 : (_##name_ * 1024);	\
+>  		if (_##name_ & ((alignsize) - 1)) {			\
+> @@ -142,10 +149,14 @@ int blkoops_register_device(struct blkoops_device *bo_dev)
+>  		bzinfo->name = _##name_;				\
+>  	}
+>  
+> -	verify_size(dmesg_size, DEFAULT_DMESG_SIZE, 4096);
+> -	verify_size(pmsg_size, DEFAULT_PMSG_SIZE, 4096);
+> -	verify_size(console_size, DEFAULT_CONSOLE_SIZE, 4096);
+> -	verify_size(ftrace_size, DEFAULT_FTRACE_SIZE, 4096);
+> +	verify_size(dmesg_size, DEFAULT_DMESG_SIZE, 4096,
+> +			bo_dev->flags & BLKOOPS_DEV_SUPPORT_DMESG);
+> +	verify_size(pmsg_size, DEFAULT_PMSG_SIZE, 4096,
+> +			bo_dev->flags & BLKOOPS_DEV_SUPPORT_PMSG);
+> +	verify_size(console_size, DEFAULT_CONSOLE_SIZE, 4096,
+> +			bo_dev->flags & BLKOOPS_DEV_SUPPORT_CONSOLE);
+> +	verify_size(ftrace_size, DEFAULT_FTRACE_SIZE, 4096,
+> +			bo_dev->flags & BLKOOPS_DEV_SUPPORT_FTRACE);
 
+I'd kind of prefer this patch be moved much earlier in the series so
+that the later additions of front-end support doesn't have to be touched
+twice. i.e. when PMSG support is added, it is added as a whole here and
+does the flag check in that patch, etc.
+
+>  #undef verify_size
+>  	dump_oops = !!(dump_oops < 0 ? DEFAULT_DUMP_OOPS : dump_oops);
+>  
+> @@ -336,6 +347,7 @@ static ssize_t blkoops_blk_panic_write(const char *buf, size_t size,
+>   * register block device to blkoops
+>   * @major: the major device number of registering device
+>   * @panic_write: the write interface for panic case.
+> + * @flags: Refer to macro starting with BLKOOPS_DEV_SUPPORT.
+>   *
+>   * It is ONLY used for block device to register to blkoops. In this case,
+>   * the module parameter @blkdev must be valid. Generic read/write interfaces
+> @@ -349,7 +361,7 @@ static ssize_t blkoops_blk_panic_write(const char *buf, size_t size,
+>   * panic occurs but pstore/blk does not recover yet, the first zone of dmesg
+>   * will be used.
+>   */
+> -int blkoops_register_blkdev(unsigned int major,
+> +int blkoops_register_blkdev(unsigned int major, unsigned int flags,
+>  		blkoops_blk_panic_write_op panic_write)
+>  {
+>  	struct block_device *bdev;
+> @@ -372,6 +384,7 @@ int blkoops_register_blkdev(unsigned int major,
+>  	if (bo_dev.total_size == 0)
+>  		goto err_put_bdev;
+>  	bo_dev.panic_write = panic_write ? blkoops_blk_panic_write : NULL;
+> +	bo_dev.flags = flags;
+>  	bo_dev.read = blkoops_generic_blk_read;
+>  	bo_dev.write = blkoops_generic_blk_write;
+>  
+> diff --git a/include/linux/blkoops.h b/include/linux/blkoops.h
+> index 71c596fd4cc8..bc7665d14a98 100644
+> --- a/include/linux/blkoops.h
+> +++ b/include/linux/blkoops.h
+> @@ -6,6 +6,7 @@
+>  #include <linux/types.h>
+>  #include <linux/blkdev.h>
+>  #include <linux/pstore_blk.h>
+> +#include <linux/bitops.h>
+>  
+>  /**
+>   * struct blkoops_device - backend blkoops driver structure.
+> @@ -14,6 +15,10 @@
+>   * blkoops_register_device(). If block device, you are strongly recommended
+>   * to use blkoops_register_blkdev().
+>   *
+> + * @flags:
+> + *	Refer to macro starting with BLKOOPS_DEV_SUPPORT_. These macros tell
+> + *	us that which pstore/blk recorders this device supports. Zero means
+> + *	all recorders for compatible.
+>   * @total_size:
+>   *	The total size in bytes pstore/blk can use. It must be greater than
+>   *	4096 and be multiple of 4096.
+> @@ -38,6 +43,13 @@
+>   *	On error, negative number should be returned.
+>   */
+>  struct blkoops_device {
+> +	unsigned int flags;
+> +#define BLKOOPS_DEV_SUPPORT_ALL		UINT_MAX
+> +#define BLKOOPS_DEV_SUPPORT_DEFAULT	(0)
+> +#define BLKOOPS_DEV_SUPPORT_DMESG	BIT(0)
+> +#define BLKOOPS_DEV_SUPPORT_PMSG	BIT(1)
+> +#define BLKOOPS_DEV_SUPPORT_CONSOLE	BIT(2)
+> +#define BLKOOPS_DEV_SUPPORT_FTRACE	BIT(3)
+>  	unsigned long total_size;
+>  	blkz_read_op read;
+>  	blkz_write_op write;
+> @@ -54,7 +66,7 @@ typedef int (*blkoops_blk_panic_write_op)(const char *buf, sector_t start_sect,
+>  
+>  int  blkoops_register_device(struct blkoops_device *bo_dev);
+>  void blkoops_unregister_device(struct blkoops_device *bo_dev);
+> -int  blkoops_register_blkdev(unsigned int major,
+> +int  blkoops_register_blkdev(unsigned int major, unsigned int flags,
+>  		blkoops_blk_panic_write_op panic_write);
+>  void blkoops_unregister_blkdev(unsigned int major);
+>  int  blkoops_blkdev_info(dev_t *devt, sector_t *nr_sects, sector_t *start_sect);
+> -- 
+> 1.9.1
+> 
+
+-- 
+Kees Cook
