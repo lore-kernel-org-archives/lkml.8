@@ -2,170 +2,94 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608D5C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3C2C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EC120768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B4D20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:51:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E/81nzIa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tI8x03gE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbgCRKuI (ORCPT
+        id S1727710AbgCRKvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:50:08 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:43039 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbgCRKuH (ORCPT
+        Wed, 18 Mar 2020 06:51:25 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43805 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgCRKvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:50:07 -0400
-Received: by mail-ua1-f68.google.com with SMTP id q24so4371505ual.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:50:06 -0700 (PDT)
+        Wed, 18 Mar 2020 06:51:25 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u12so13455136pgb.10;
+        Wed, 18 Mar 2020 03:51:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2D4VLK9woLJ/gRcaJ6QDKOFST4uIYnbsZHB1rL9ChCY=;
-        b=E/81nzIaUVYCJup+L1XxtlH+uLrj5iQRaFlQy6E3/dBY1t0t/VHJ19Ra7Ctr9+BIij
-         u5JMkHAIFTm4LLZLQn83ylFk7deTVvUEuA6qsm5ONebElFZ4eyIy6Gs6SyFcMoLxv610
-         +hYMznHbyTSSQRewpj4Y0WU2/NLOj5bL9W4DNPoUE+HWpwqRKoAQ0LVIiOurdIvwCeir
-         I6r7I3+kyGr/uMDlEMTEjVMPe8siLyvlsr1+W7qRifM1Lh5Q1TFtfL9PO1/QH6HTI6Il
-         qEdo2FKC6Ooj0fpoNNvvnVUe0tjH6G/KTjOzOUI+OtkyKqyoxr96e10T/dv73EnvwXiJ
-         7B2A==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+T8jqrJiFE8MXB2JFZeGVn+grsmpYK2hVFCvI0CmrxU=;
+        b=tI8x03gE3mQ+xMaCjxvNT/wHe1Fsg2mW8nniW+2h4igvInO0fd/YS253J8MFTuZX4+
+         K962Dxih9pXwIY7xmBYS6se4WeG0a19U0chvkNE4/yCp+4ri2Yaj+G4uFuDZMTR5R4+a
+         yvKfOUNAredhjDKEpuqO4fhXcIyYY5b1T/zSnEON7lwKftzdGhloEwefD4FA3HXf65Jy
+         /qwPgTBdrMknS81dCs1clhqnNNaT0RLMzNB2xwoKj8src1S5ntxqvZs1s4RczjI3p3rw
+         zuRkGmzO3cjGPWMgSfxYBBSrv1o4RusPif7m8CZFmKGHVcR81fisDwRATdHtIBkuKwvk
+         PYqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2D4VLK9woLJ/gRcaJ6QDKOFST4uIYnbsZHB1rL9ChCY=;
-        b=f/h+S0O4LaeQesOM2SW9i3vhKTgS5/afELU3FyRvFoA2AcrN9IwP2YxUPxg0ZYSLSG
-         4qkwuq6sJO8HNWhY1cLFBfyvedaIeNkFCJ0PMQXZS15aRMpt/RiHyTga0gx8zkUHoHKd
-         kxkORKBbTg7Zr27+Ly6OltE1J8fLwFGpRVpfXRpfvVzo9DBcFVZxgIZQ8lPhs8AvV8ql
-         zCAWGxZrb0J5b3fkiF88GPuNR2k4Sp0OXRrpihXe2j/mLz8P7UFsZS83P06ORlL5KQEj
-         p55DF3D6O6IaY71cu8etBMkJZ7mGaSRT3qu8chy0QkmTBUq2KvHO9cprc0kiNbznCd7n
-         qgHA==
-X-Gm-Message-State: ANhLgQ0weG0hL6Hpd9i+KQkrGiwxQz0XCUAb7I0rXNE1DW70Q7Tew+/S
-        IE2Ku06eNUcts9Pv+KlVcMvmDoUQb67sf/cNkDwRQyA2KlI=
-X-Google-Smtp-Source: ADFU+vsbDhVCAtRkn3Xf8fAqKu/Khqon8tFNS8ablxsWi2YqF0MPMO75AJqn7DKJj92EjYVN42De0gpZnRkR/bwLmhw=
-X-Received: by 2002:ab0:20a:: with SMTP id 10mr2268852uas.19.1584528606336;
- Wed, 18 Mar 2020 03:50:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+T8jqrJiFE8MXB2JFZeGVn+grsmpYK2hVFCvI0CmrxU=;
+        b=pO1z2eI6hidJ12C0w4FqMcROwtQoRDpHjekw+uFrEEwcPiMpLigsXBQIqQUqvqgY6C
+         hF+03OQ8VRFELljhnZQPEBCNLbk9rsJPujX9GFIfz0Vv92F2fQ4IXMMP6EE53KYw2ZjE
+         ZeTpC5LBR/l7P5Eh6M96Oc0L32JxeZ0XJq2SnXKcU0GfghBjL7wjgYctBe8ZFqhB0sjy
+         AseT6HROptdj6fHDwJlkP+s+L/GpWCCpYXuo1nLyvXyw07x/hUXwq6rDMkSvLi0KDBhn
+         vzGTkN/szDCFiBrVlZIrwSWVU70zZPMYuh45IUOJ2f3GFYIqFyT1Bbd+UYhGnOY0fyef
+         rmBQ==
+X-Gm-Message-State: ANhLgQ3O3eUnWXgaHdnqZgI0I6uX4C4JbROtdsNEgITiwlwGgY9o6SYv
+        mP3oCRU1m3dE3dncQNXylkw=
+X-Google-Smtp-Source: ADFU+vtX6jV+UJkvP/lziezrvSGOizjPjmdwnY8OqD9PIrW+c6TCm6AepqIKFutMgysCZBWBzz7ViA==
+X-Received: by 2002:a63:b4d:: with SMTP id a13mr3836712pgl.77.1584528682609;
+        Wed, 18 Mar 2020 03:51:22 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id l25sm5799504pgn.47.2020.03.18.03.51.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 03:51:21 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH v3 0/2] two fixes on sprd serial driver
+Date:   Wed, 18 Mar 2020 18:50:47 +0800
+Message-Id: <20200318105049.19623-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200316210843.11678-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20200316210843.11678-1-daniel.lezcano@linaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 18 Mar 2020 11:49:30 +0100
-Message-ID: <CAPDyKFraE=JYehuLUER+tL=fyPbUwZDvu2PB4ebnYk5f6atWeA@mail.gmail.com>
-Subject: Re: [PATCH RFC] cpuidle: consolidate calls to time capture
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kevin Hilman <khilman@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Mar 2020 at 22:10, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> A few years ago, we changed the code in cpuidle to replace ktime_get()
-> by a local_clock() to get rid of potential seq lock in the path and an
-> extra latency.
->
-> Meanwhile, the code evolved and we are getting the time in some other
-> places like the power domain governor and in the future break even
-> deadline proposal.
->
-> Unfortunately, as the time must be compared across the CPU, we have no
-> other option than using the ktime_get() again. Hopefully, we can
-> factor out all the calls to local_clock() and ktime_get() into a
-> single one when the CPU is entering idle as the value will be reuse in
-> different places.
->
-> We can assume the time to go through the code path distance is small
-> enough between ktime_get() call in the cpuidle_enter() function and
-> the other users inspecting the value.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  drivers/base/power/domain_governor.c | 4 +++-
->  drivers/cpuidle/cpuidle.c            | 6 +++---
->  include/linux/cpuidle.h              | 1 +
->  3 files changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/base/power/domain_governor.c b/drivers/base/power/domain_governor.c
-> index daa8c7689f7e..bee97f7b7b8d 100644
-> --- a/drivers/base/power/domain_governor.c
-> +++ b/drivers/base/power/domain_governor.c
-> @@ -279,8 +279,10 @@ static bool cpu_power_down_ok(struct dev_pm_domain *pd)
->                 }
->         }
->
-> +       dev = per_cpu(cpuidle_devices, smp_processor_id());
-> +
->         /* The minimum idle duration is from now - until the next wakeup. */
-> -       idle_duration_ns = ktime_to_ns(ktime_sub(domain_wakeup, ktime_get()));
-> +       idle_duration_ns = ktime_to_ns(ktime_sub(domain_wakeup, dev->idle_start));
->         if (idle_duration_ns <= 0)
->                 return false;
->
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index c149d9e20dfd..9db14581759b 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -206,7 +206,7 @@ int cpuidle_enter_state(struct cpuidle_device *dev, struct cpuidle_driver *drv,
->
->         struct cpuidle_state *target_state = &drv->states[index];
->         bool broadcast = !!(target_state->flags & CPUIDLE_FLAG_TIMER_STOP);
-> -       ktime_t time_start, time_end;
-> +       ktime_t time_end;
->
->         /*
->          * Tell the time framework to switch to a broadcast timer because our
-> @@ -228,14 +228,14 @@ int cpuidle_enter_state(struct cpuidle_device *dev, struct cpuidle_driver *drv,
->         sched_idle_set_state(target_state);
->
->         trace_cpu_idle_rcuidle(index, dev->cpu);
-> -       time_start = ns_to_ktime(local_clock());
-> +       dev->idle_start = ktime_get();
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-I fully agree with Rafael, this is bad for all cases where the
-local_clock is sufficient.
+Changes from v2:
+* Return -EINVAL for both kinds of errors for calling of_alias_get_id(),
+to avoid return a positive value as error number if index is larger
+than the array size;
+* removed cleanup for sprd_port.
 
-To avoid the ktime_get() in the cpu_power_down_ok() for the genpd
-governor, I think a better option could be to use the
-"ts->idle_entrytime", that has been set in tick_nohz_start_idle().
+Chunyan Zhang (2):
+  serial: sprd: getting port index via serial alias only
+  serial: sprd: remove redundant sprd_port cleanup
 
->
->         stop_critical_timings();
->         entered_state = target_state->enter(dev, drv, index);
->         start_critical_timings();
->
->         sched_clock_idle_wakeup_event();
-> -       time_end = ns_to_ktime(local_clock());
-> +       time_end = ktime_get();
->         trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, dev->cpu);
->
->         /* The cpu is no longer idle or about to enter idle. */
-> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> index ec2ef63771f0..112494658e01 100644
-> --- a/include/linux/cpuidle.h
-> +++ b/include/linux/cpuidle.h
-> @@ -89,6 +89,7 @@ struct cpuidle_device {
->         unsigned int            poll_time_limit:1;
->         unsigned int            cpu;
->         ktime_t                 next_hrtimer;
-> +       ktime_t                 idle_start;
->
->         int                     last_state_idx;
->         u64                     last_residency_ns;
-> --
-> 2.17.1
->
+ drivers/tty/serial/sprd_serial.c | 40 +++++---------------------------
+ 1 file changed, 6 insertions(+), 34 deletions(-)
 
-Kind regards
-Uffe
+-- 
+2.20.1
+
