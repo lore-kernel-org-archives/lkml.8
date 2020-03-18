@@ -2,163 +2,132 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D33C5ACD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875E8C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2386D20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65DA820770
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbgCRHms (ORCPT
+        id S1727025AbgCRHuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 03:42:48 -0400
-Received: from twhmllg4.macronix.com ([211.75.127.132]:57395 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgCRHmr (ORCPT
+        Wed, 18 Mar 2020 03:50:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2416 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726553AbgCRHuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 03:42:47 -0400
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG4.macronix.com with ESMTP id 02I7gTOB041137;
-        Wed, 18 Mar 2020 15:42:31 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        bbrezillon@kernel.org
-Cc:     frieder.schrempf@kontron.de, tglx@linutronix.de, stefan@agner.ch,
-        juliensu@mxic.com.tw, s.hauer@pengutronix.de,
-        linux-kernel@vger.kernel.org, allison@lohutok.net,
-        linux-mtd@lists.infradead.org, yuehaibing@huawei.com,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v4 2/2] mtd: rawnand: macronix: Add support for deep power down mode
-Date:   Wed, 18 Mar 2020 15:42:28 +0800
-Message-Id: <1584517348-14486-3-git-send-email-masonccyang@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1584517348-14486-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1584517348-14486-1-git-send-email-masonccyang@mxic.com.tw>
-X-MAIL: TWHMLLG4.macronix.com 02I7gTOB041137
+        Wed, 18 Mar 2020 03:50:19 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02I7Y5kD034868
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:50:19 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu719fdq0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:50:18 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Wed, 18 Mar 2020 07:50:16 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Mar 2020 07:50:12 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02I7oBqa16973968
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 07:50:11 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E13B342064;
+        Wed, 18 Mar 2020 07:50:10 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD8D042047;
+        Wed, 18 Mar 2020 07:50:08 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Wed, 18 Mar 2020 07:50:08 +0000 (GMT)
+Date:   Wed, 18 Mar 2020 13:20:08 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christopher Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 3/3] mm/page_alloc: Keep memoryless cpuless node 0 offline
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200311110237.5731-1-srikar@linux.vnet.ibm.com>
+ <20200311110237.5731-4-srikar@linux.vnet.ibm.com>
+ <alpine.DEB.2.21.2003151416230.14449@www.lameter.com>
+ <20200316085425.GB11482@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20200316085425.GB11482@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 20031807-0008-0000-0000-0000035F30D3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031807-0009-0000-0000-00004A808A63
+Message-Id: <20200318075008.GE4879@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_02:2020-03-17,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 mlxscore=0 phishscore=0
+ priorityscore=1501 adultscore=0 clxscore=1015 bulkscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003180034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Macronix AD series support deep power down mode for a minimum
-power consumption state.
+* Michal Hocko <mhocko@kernel.org> [2020-03-16 09:54:25]:
 
-Overload nand_suspend() & nand_resume() in Macronix specific code to
-support deep power down mode.
+> On Sun 15-03-20 14:20:05, Cristopher Lameter wrote:
+> > On Wed, 11 Mar 2020, Srikar Dronamraju wrote:
+> > 
+> > > Currently Linux kernel with CONFIG_NUMA on a system with multiple
+> > > possible nodes, marks node 0 as online at boot.  However in practice,
+> > > there are systems which have node 0 as memoryless and cpuless.
+> > 
+> > Would it not be better and simpler to require that node 0 always has
+> > memory (and processors)? A  mininum operational set?
+> 
+> I do not think you can simply ignore the reality. I cannot say that I am
+> a fan of memoryless/cpuless numa configurations but they are a sad
+> reality of different LPAR configurations. We have to deal with them.
+> Besides that I do not really see any strong technical arguments to lack
+> a support for those crippled configurations. We do have zonelists that
+> allow to do reasonable decisions on memoryless nodes. So no, I do not
+> think that this is a viable approach.
+> 
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- drivers/mtd/nand/raw/nand_macronix.c | 74 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+I agree with Michal, kernel should accept the reality and work with
+different Lpar configurations.
 
-diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-index 3ff7ce0..756c175 100644
---- a/drivers/mtd/nand/raw/nand_macronix.c
-+++ b/drivers/mtd/nand/raw/nand_macronix.c
-@@ -6,11 +6,14 @@
-  * Author: Boris Brezillon <boris.brezillon@free-electrons.com>
-  */
- 
-+#include "linux/delay.h"
- #include "internals.h"
- 
- #define MACRONIX_READ_RETRY_BIT BIT(0)
- #define MACRONIX_NUM_READ_RETRY_MODES 6
- 
-+#define MXIC_CMD_POWER_DOWN 0xB9
-+
- struct nand_onfi_vendor_macronix {
- 	u8 reserved;
- 	u8 reliability_func;
-@@ -91,6 +94,76 @@ static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
- 		     ONFI_FEATURE_ADDR_TIMING_MODE, 1);
- }
- 
-+static int nand_power_down_op(struct nand_chip *chip)
-+{
-+	int ret;
-+
-+	if (nand_has_exec_op(chip)) {
-+		struct nand_op_instr instrs[] = {
-+			NAND_OP_CMD(MXIC_CMD_POWER_DOWN, 0),
-+		};
-+
-+		struct nand_operation op = NAND_OPERATION(chip->cur_cs, instrs);
-+
-+		ret = nand_exec_op(chip, &op);
-+		if (ret)
-+			return ret;
-+
-+	} else {
-+		chip->legacy.cmdfunc(chip, MXIC_CMD_POWER_DOWN, -1, -1);
-+	}
-+
-+	return 0;
-+}
-+
-+static int mxic_nand_suspend(struct nand_chip *chip)
-+{
-+	int ret;
-+
-+	nand_select_target(chip, 0);
-+	ret = nand_power_down_op(chip);
-+	if (ret < 0)
-+		pr_err("Suspending MXIC NAND chip failed (%d)\n", ret);
-+	nand_deselect_target(chip);
-+
-+	return ret;
-+}
-+
-+static void mxic_nand_resume(struct nand_chip *chip)
-+{
-+	/*
-+	 * Toggle #CS pin to resume NAND device and don't care
-+	 * of the others CLE, #WE, #RE pins status.
-+	 * A NAND controller ensure it is able to assert/de-assert #CS
-+	 * by sending any byte over the NAND bus.
-+	 * i.e.,
-+	 * NAND power down command or reset command w/o R/B# status checking.
-+	 */
-+	nand_select_target(chip, 0);
-+	nand_power_down_op(chip);
-+	/* The minimum of a recovery time tRDP is 35 us */
-+	usleep_range(35, 100);
-+	nand_deselect_target(chip);
-+}
-+
-+static void macronix_nand_deep_power_down_support(struct nand_chip *chip)
-+{
-+	int i;
-+	static const char * const deep_power_down_dev[] = {
-+		"MX30UF1G28AD",
-+		"MX30UF2G28AD",
-+		"MX30UF4G28AD",
-+	};
-+
-+	i = match_string(deep_power_down_dev, ARRAY_SIZE(deep_power_down_dev),
-+			 chip->parameters.model);
-+	if (i < 0)
-+		return;
-+
-+	chip->suspend = mxic_nand_suspend;
-+	chip->resume = mxic_nand_resume;
-+}
-+
- static int macronix_nand_init(struct nand_chip *chip)
- {
- 	if (nand_is_slc(chip))
-@@ -98,6 +171,7 @@ static int macronix_nand_init(struct nand_chip *chip)
- 
- 	macronix_nand_fix_broken_get_timings(chip);
- 	macronix_nand_onfi_init(chip);
-+	macronix_nand_deep_power_down_support(chip);
- 
- 	return 0;
- }
+> > We can dynamically number the nodes right? So just make sure that the
+> > firmware properly creates memory on node 0?
+> 
+> Are you suggesting that the OS would renumber NUMA nodes coming
+> from FW just to satisfy node 0 existence? If yes then I believe this is
+> really a bad idea because it would make HW/LPAR configuration matching
+> to the resulting memory layout really hard to follow.
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
+
+Michal, Vlastimil, Christoph and others, do you have any more comments,
+suggestions or any other feedback. If not, can you please add your
+reviewed-by, acked etc.
+
 -- 
-1.9.1
+Thanks and Regards
+Srikar Dronamraju
 
