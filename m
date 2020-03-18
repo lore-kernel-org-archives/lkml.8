@@ -2,95 +2,148 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909BAC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940BFC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB662076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC852076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:54:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="i0OAlQWb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbgCRVw1 (ORCPT
+        id S1727041AbgCRVyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:52:27 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:39504 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgCRVw1 (ORCPT
+        Wed, 18 Mar 2020 17:54:38 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37482 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCRVyh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:52:27 -0400
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 756462005E4;
-        Wed, 18 Mar 2020 21:52:25 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 91F5B20B1B; Wed, 18 Mar 2020 22:52:18 +0100 (CET)
-Date:   Wed, 18 Mar 2020 22:52:18 +0100
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com, broonie@kernel.org
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-Message-ID: <20200318215218.GA2439@light.dominikbrodowski.net>
-References: <20200318063022.GA116342@light.dominikbrodowski.net>
- <41d0b2b5-6014-6fab-b6a2-7a7dbc4fe020@linux.intel.com>
- <20200318123930.GA2433@light.dominikbrodowski.net>
- <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
- <20200318162029.GA3999@light.dominikbrodowski.net>
- <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+        Wed, 18 Mar 2020 17:54:37 -0400
+Received: by mail-ed1-f68.google.com with SMTP id b23so42158edx.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 14:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=au4UNn3QqNUChn3BLHtwX07oVBM4ryrMaWKZ7Y+L8CU=;
+        b=i0OAlQWb7N4fH+cATuHJJ3gHnCkllsUQZSxU/0N+JaZCg3q5a0REk7fN04Hg0BynOQ
+         fl0Zn6Fe/Ej7gV8cu0p/yfUiZD2zGlfhfnkIrTooHRW/6zbBqNjGSXpOhZ46bS3WF2d9
+         WPn0MwSm57hi09nyfpE8yyv1CvLqgv701gczo+pN8OuYjr4XqTgRgGV9GbpMTMbq9n9e
+         rw2IpMwgvMsHE2JjEbuR1ukxdWqn6oG5guRwl8cq3xxmlCYLGsVCrmRIFNF04ZX2BqWO
+         ryH2G5P2fDx+V0e87adNDb9A2ktzB2Iu6L14rhxCLJXC2STv3LiWSlpYYBvmSI1Jv9aO
+         M9LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=au4UNn3QqNUChn3BLHtwX07oVBM4ryrMaWKZ7Y+L8CU=;
+        b=G92myV3DU22RefOd1lX6XnZHnufpoRimxdgPw1iDjvs8CHKgCbSn3tktMeUt3ka8hW
+         JXPfWwfKax/LLT1BW/fsSwlt5mAql6wirN8nGWWhfyx13QeqIv3E0+fC5klFxV5IfmF6
+         NFsxg+zYVyZHcYeTHnFB52WfXgymteBnFsfDHf5ssWfpRfeOWbMfn0n+NG5adRC3LY0u
+         vxUAdiGVlkcezxiJcPt97pHXuj2bwX9Jd3cFDmy7phZT31EGEShHNSkQ38UJ2iateIHF
+         tQhTrGHtII88PRkj4gbG4MKAbbnLQauwf3j9mqzkAOqQPKec2FkOLZzsyxU0LC/QKjWO
+         8wLw==
+X-Gm-Message-State: ANhLgQ3UNTPlfnCicvWqUkOPyt5H2mXJUmDqbvrf5IBboY9PfAls5qKw
+        Q5w+aDCftfAqTC8xGJ06JGu/5wubXeK6ZJBIKp/qqSo=
+X-Google-Smtp-Source: ADFU+vutjASI3AztJGUCiHQ3hTXDBoQauisEgUSQ6bO954EQ6P7ghZ239siSSVuKzPqcgls4Wr6aYY1bVrErMIkhK3I=
+X-Received: by 2002:a17:906:7a46:: with SMTP id i6mr303161ejo.95.1584568475949;
+ Wed, 18 Mar 2020 14:54:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+References: <cover.1584480281.git.rgb@redhat.com> <3d591dc49fcb643890b93e5b9a8169612b1c96e1.1584480281.git.rgb@redhat.com>
+In-Reply-To: <3d591dc49fcb643890b93e5b9a8169612b1c96e1.1584480281.git.rgb@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 18 Mar 2020 17:54:25 -0400
+Message-ID: <CAHC9VhTQBxzFrGn=+b9MzoapV0iiccPOLvkwemdESSb6nOFGXQ@mail.gmail.com>
+Subject: Re: [PATCH ghak25 v3 1/3] audit: tidy and extend netfilter_cfg
+ x_tables and ebtables logging
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
+        tgraf@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 09:43:54PM +0100, Cezary Rojewski wrote:
-> On 2020-03-18 20:22, Dominik Brodowski wrote:
-> > On Wed, Mar 18, 2020 at 07:27:58PM +0100, Cezary Rojewski wrote:
-> 
-> > > 
-> > > Due to pandemic I'm working remotely and right now won't be able to test
-> > > audio quality so focusing on the stream==NULL issue. And thus we got to help
-> > > each other out : )
-> > 
-> > Sure, and thanks for taking a look at this!
-> > 
-> > > Could you verify issue reproduces on 5.6.0-rc1 on your machine?
-> > 
-> > It reproduces on 5.6.0-rc1 + i915-bugfix. I'm trying to bisect it further in
-> > the background, but that may take quite some time.
-> > 
-> 
-> Could you checkout v5.6-rc1 with following commit reverted:
-> 	ASoC: Intel: broadwell: change cpu_dai and platform components for SOF
-> 
-> For my working v5.6-rc1 commit id is:
-> 64df6afa0dab5eda95cc4cc2269e3d4e83b6b6ce.
+On Tue, Mar 17, 2020 at 5:31 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+>
+> NETFILTER_CFG record generation was inconsistent for x_tables and
+> ebtables configuration changes.  The call was needlessly messy and there
+> were supporting records missing at times while they were produced when
+> not requested.  Simplify the logging call into a new audit_log_nfcfg
+> call.  Honour the audit_enabled setting while more consistently
+> recording information including supporting records by tidying up dummy
+> checks.
+>
+> Add an op= field that indicates the operation being performed (register
+> or replace).
+>
+> Here is the enhanced sample record:
+>   type=NETFILTER_CFG msg=audit(1580905834.919:82970): table=filter family=2 entries=83 op=replace
+>
+> Generate audit NETFILTER_CFG records on ebtables table registration.
+> Previously this was being done for x_tables registration and replacement
+> operations and ebtables table replacement only.
+>
+> See: https://github.com/linux-audit/audit-kernel/issues/25
+> See: https://github.com/linux-audit/audit-kernel/issues/35
+> See: https://github.com/linux-audit/audit-kernel/issues/43
+>
+> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> ---
+>  include/linux/audit.h           | 19 +++++++++++++++++++
+>  kernel/auditsc.c                | 24 ++++++++++++++++++++++++
+>  net/bridge/netfilter/ebtables.c | 12 ++++--------
+>  net/netfilter/x_tables.c        | 12 +++---------
+>  4 files changed, 50 insertions(+), 17 deletions(-)
+>
+> diff --git a/include/linux/audit.h b/include/linux/audit.h
+> index f9ceae57ca8d..f4aed2b9be8d 100644
+> --- a/include/linux/audit.h
+> +++ b/include/linux/audit.h
+> @@ -94,6 +94,11 @@ struct audit_ntp_data {
+>  struct audit_ntp_data {};
+>  #endif
+>
+> +enum audit_nfcfgop {
+> +       AUDIT_XT_OP_REGISTER,
+> +       AUDIT_XT_OP_REPLACE,
+> +};
+> +
+>  extern int is_audit_feature_set(int which);
+>
+>  extern int __init audit_register_class(int class, unsigned *list);
+> @@ -379,6 +384,8 @@ extern int __audit_log_bprm_fcaps(struct linux_binprm *bprm,
+>  extern void __audit_fanotify(unsigned int response);
+>  extern void __audit_tk_injoffset(struct timespec64 offset);
+>  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
+> +extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
+> +                             enum audit_nfcfgop op);
+>
+>  static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
+>  {
+> @@ -514,6 +521,13 @@ static inline void audit_ntp_log(const struct audit_ntp_data *ad)
+>                 __audit_ntp_log(ad);
+>  }
+>
+> +static inline void audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
+> +                                  enum audit_nfcfgop op)
+> +{
+> +       if (audit_enabled)
+> +               __audit_log_nfcfg(name, af, nentries, op);
 
-Hm, no joy -- after suspend/resume, no sound at first, and if I twiggle some
-options with pulseaudio, I get garbled output (even when using
+Do we want a dummy check here too?  Or do we always want to generate
+this record (assuming audit is enabled) because it is a configuration
+related record?
 
-	aplay -f S16_LE -r 44100 -c 2 --device="sysdefault:CARD=broadwellrt286"
-
-). Will try to bisect further the next days.
-
-Thanks,
-	Dominik
+-- 
+paul moore
+www.paul-moore.com
