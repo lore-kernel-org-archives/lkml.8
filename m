@@ -2,133 +2,149 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4B4C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADD6C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9735220714
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EAC3206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:30:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="bSq+MvkG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbgCRCY2 (ORCPT
+        id S1726623AbgCRCa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 22:24:28 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:55920 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726229AbgCRCY2 (ORCPT
+        Tue, 17 Mar 2020 22:30:56 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34528 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgCRCa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 22:24:28 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tsuy4fR_1584498229;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tsuy4fR_1584498229)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 18 Mar 2020 10:23:50 +0800
-Subject: Re: [PATCH v2] sched: avoid scale real weight down to zero
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
-References: <38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com>
-Message-ID: <234bfc8a-c60d-c375-f681-e4230d8c5a20@linux.alibaba.com>
-Date:   Wed, 18 Mar 2020 10:23:49 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.2
+        Tue, 17 Mar 2020 22:30:56 -0400
+Received: by mail-io1-f65.google.com with SMTP id h131so23422665iof.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 19:30:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5oye20MCxRmnUT0eOUPv5vlxHxUcabu0iBJYepsiWW8=;
+        b=bSq+MvkGcpZ8+OqcY98WFYnTk4SLVtQJpleMXCowybtz67hdO2MrS/6LP8vEzxOWsH
+         sLz7xnqXTUkf+akjUsvVvApqBtnj4eoDj/PgfbXcRI/9i9eFrZyz7rriOUetQTmC7tGv
+         JXTpllKl4L5Hzo7tM8gvi4W7cHZDAKyZuNZcA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5oye20MCxRmnUT0eOUPv5vlxHxUcabu0iBJYepsiWW8=;
+        b=rjQQVK1akDBmyL/sUUPiiMP+3dXe6jm5FXcXS72FD59B00UIRkLfHIUgieynuGdbu/
+         6g1d+vE5SSJKsr/VCzxqaIfOCLrIVd6lVa6SpUpFhSscPh+lZfGbPczzOhaFUvtBHljM
+         WESGNwmvd3VqJIdmgLdnG/d5DVSEdrBbQJjZ9Z3saFe5Sk3nifO71Iho9PK0mITJ8ldv
+         1X2gQVrJe8byVjKYZHybjhw0BeyJZsZ8JXS54dBRUtF5gL5Wf0X3dMWJK5E9cnTZ/rw5
+         udCHj/pjvmxBEYhEb7Imbdcykez06vOX3EYOz5Lu2t50a+WxYnvmqpKRRK1tNPq1RWBZ
+         t7iw==
+X-Gm-Message-State: ANhLgQ2fHaKi6hNyzOaX6bRh2k3pqfs6MST/j/Tg8tHnIN6Wnfa3XHLd
+        MpFUFnCeY1umEUoEQN3yo3LOJkKOij2MWA1K8AUw4g==
+X-Google-Smtp-Source: ADFU+vuB42nhnTS0/DYMx9nhfIE/i914XA1+SoNt2D0oWnry7X7Uq2lAzBFOse2nnaMlgTL91mnfc5npmO8Kq5xECa0=
+X-Received: by 2002:a5d:93d3:: with SMTP id j19mr1675276ioo.75.1584498654904;
+ Tue, 17 Mar 2020 19:30:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200212230705.GA25315@sinkpad> <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
+ <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
+ <CANaguZC40mDHfL1H_9AA7H8cyd028t9PQVRqQ3kB4ha8R7hhqg@mail.gmail.com>
+ <CAERHkruPUrOzDjEp1FV3KY20p9CxLAVzKrZNe5QXsCFZdGskzA@mail.gmail.com>
+ <CANaguZBj_x_2+9KwbHCQScsmraC_mHdQB6uRqMTYMmvhBYfv2Q@mail.gmail.com>
+ <20200221232057.GA19671@sinkpad> <20200317005521.GA8244@google.com>
+ <ee268494-c35e-422f-1aaf-baab12191c38@linux.intel.com> <87imj2bs04.fsf@nanos.tec.linutronix.de>
+ <20200318010307.GA111608@google.com>
+In-Reply-To: <20200318010307.GA111608@google.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Tue, 17 Mar 2020 22:30:43 -0400
+Message-ID: <CAEXW_YT9QfbpnJLr+_fa8wiP7J=j6sXf3exquj5PVpnQreZoqA@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Ingo Molnar <mingo@kernel.org>, Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter, Vincent
+> On Tue, Mar 17, 2020 at 10:17:47PM +0100, Thomas Gleixner wrote:
+> [..]
+> > >> 4. HT1 is idle, and HT2 is running a victim process. Now HT1 starts running
+> > >>    hostile code on guest or host. HT2 is being forced idle. However, there is
+> > >>    an overlap between HT1 starting to execute hostile code and HT2's victim
+> > >>    process getting scheduled out.
+> > >>    Speaking to Vineeth, we discussed an idea to monitor the core_sched_seq
+> > >>    counter of the sibling being idled to detect that it is now idle.
+> > >>    However we discussed today that looking at this data, it is not really an
+> > >>    issue since it is such a small window.
+> >
+> > If the victim HT is kicked out of execution with an IPI then the overlap
+> > depends on the contexts:
+> >
+> >         HT1 (attack)          HT2 (victim)
+> >
+> >  A      idle -> user space      user space -> idle
+> >
+> >  B      idle -> user space      guest -> idle
+> >
+> >  C      idle -> guest           user space -> idle
+> >
+> >  D      idle -> guest           guest -> idle
+> >
+> > The IPI from HT1 brings HT2 immediately into the kernel when HT2 is in
+> > host user mode or brings it immediately into VMEXIT when HT2 is in guest
+> > mode.
+> >
+> > #A On return from handling the IPI HT2 immediately reschedules to idle.
+> >    To have an overlap the return to user space on HT1 must be faster.
+> >
+> > #B Coming back from VEMXIT into schedule/idle might take slightly longer
+> >    than #A.
+> >
+> > #C Similar to #A, but reentering guest mode in HT1 after sending the IPI
+> >    will probably take longer.
+> >
+> > #D Similar to #C if you make the assumption that VMEXIT on HT2 and
+> >    rescheduling into idle is not significantly slower than reaching
+> >    VMENTER after sending the IPI.
+> >
+> > In all cases the data exposed by a potential overlap shouldn't be that
+> > interesting (e.g. scheduler state), but that obviously depends on what
+> > the attacker is looking for.
+>
+> About the "shouldn't be that interesting" part, you are saying, the overlap
+> should not be that interesting because the act of one sibling IPI'ing the
+> other implies the sibling HT immediately entering kernel mode, right?
 
-My apologies to missing the case when CONFIG_FAIR_GROUP_SCHED
-is disabled, I've replaced the MIN_SHARE with 2UL as it was
-defined, sorry for the trouble...
+Hi Thomas,
 
-Regards,
-Michael Wang
+I see what you mean now. Basically after the IPI is sent, the HT
+sending the IPI would have buffers cleared before the attacker gets a
+chance to run on it. Because the victim HT enters into the IPI
+handler, all the attacker will get to see is possibly uninteresting
+data (e.g. scheduler state) as you mentioned.
 
-On 2020/3/18 上午10:15, 王贇 wrote:
-> During our testing, we found a case that shares no longer
-> working correctly, the cgroup topology is like:
-> 
->   /sys/fs/cgroup/cpu/A		(shares=102400)
->   /sys/fs/cgroup/cpu/A/B	(shares=2)
->   /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
-> 
->   /sys/fs/cgroup/cpu/D		(shares=1024)
->   /sys/fs/cgroup/cpu/D/E	(shares=1024)
->   /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
-> 
-> The same benchmark is running in group C & F, no other tasks are
-> running, the benchmark is capable to consumed all the CPUs.
-> 
-> We suppose the group C will win more CPU resources since it could
-> enjoy all the shares of group A, but it's F who wins much more.
-> 
-> The reason is because we have group B with shares as 2, since
-> A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
-> so A->cfs_rq.load.weight become very small.
-> 
-> And in calc_group_shares() we calculate shares as:
-> 
->   load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
->   shares = (tg_shares * load) / tg_weight;
-> 
-> Since the 'cfs_rq->load.weight' is too small, the load become 0
-> after scale down, although 'tg_shares' is 102400, shares of the se
-> which stand for group A on root cfs_rq become 2.
-> 
-> While the se of D on root cfs_rq is far more bigger than 2, so it
-> wins the battle.
-> 
-> Thus when scale_load_down() scale real weight down to 0, it's no
-> longer telling the real story, the caller will have the wrong
-> information and the calculation will be buggy.
-> 
-> This patch add check in scale_load_down(), so the real weight will
-> be >= MIN_SHARES after scale, after applied the group C wins as
-> expected.
-> 
-> Cc: Ben Segall <bsegall@google.com>
-> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
-> ---
-> v2:
->   * replace MIN_SHARE with 2UL to cover CONFIG_FAIR_GROUP_SCHED=n case
-> 
->  kernel/sched/sched.h | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 2a0caf394dd4..9bca26bd60d9 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -118,7 +118,13 @@ extern long calc_load_fold_active(struct rq *this_rq, long adjust);
->  #ifdef CONFIG_64BIT
->  # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
->  # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
-> -# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
-> +# define scale_load_down(w) \
-> +({ \
-> +	unsigned long __w = (w); \
-> +	if (__w) \
-> +		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
-> +	__w; \
-> +})
->  #else
->  # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
->  # define scale_load(w)		(w)
-> 
+Thanks!
+
+- Joel
