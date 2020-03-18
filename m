@@ -2,86 +2,164 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDBAC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E166C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64115208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565074;
-	bh=rFLv1ZfRcV+svX8JTmV+UQxowcY75lz27dYs4kS6JTk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=12tad9a7s7o1EhHC8K0k99daWGByeILPmWalbijuYEd8ASkytN+3D4tZhR/YQpmss
-	 m5oEY8xK+O74qS0DVSSwS6h/HooJDCsYC+NmXQKRpW/CcpnU6ggDjrtol9OzuXg/xi
-	 voIvwZGJdmAkthIWH89BdetVWqof7vxmA5To8Dx0=
+	by mail.kernel.org (Postfix) with ESMTP id 0DCAF2166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:57:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgCRU5v (ORCPT
+        id S1728864AbgCRU54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728339AbgCRU5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:57:10 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9674A208E0;
-        Wed, 18 Mar 2020 20:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584565029;
-        bh=rFLv1ZfRcV+svX8JTmV+UQxowcY75lz27dYs4kS6JTk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xljifAxNivUslQxB0dEZbzfkBmD+lKeG1i4Zu0f4ZRaU7QqI58Yeigqxo2i7lgJj3
-         No8I85DDU9TleHICnvT+UQMBEoeHcB/Cf6mFuyFNGH386BIT46hb59dGhDR4MXSMk6
-         IfsNELEx6AoL/oVqpy/sO2tX4ylZfDhlQ/aiJdiU=
-Date:   Wed, 18 Mar 2020 20:57:05 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Tuan Phan <tuanphan@os.amperecomputing.com>
-Cc:     patches@amperecomputing.com, Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        suzuki.poulose@arm.com
-Subject: Re: [PATCH 1/2] perf: dsu: Allow multiple devices share same IRQ.
-Message-ID: <20200318205704.GC8094@willie-the-truck>
-References: <1584491176-31358-1-git-send-email-tuanphan@os.amperecomputing.com>
+        Wed, 18 Mar 2020 16:57:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58465 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727573AbgCRU5x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:57:53 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jEfl8-0007O5-VD
+        for linux-kernel@vger.kernel.org; Wed, 18 Mar 2020 21:57:51 +0100
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id DF3411040C5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 21:57:48 +0100 (CET)
+Message-Id: <20200318204408.728747754@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Wed, 18 Mar 2020 21:43:15 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: [patch V2 13/15] lockdep: Add hrtimer context tracing bits
+References: <20200318204302.693307984@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584491176-31358-1-git-send-email-tuanphan@os.amperecomputing.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+Suzuki, since he wrote the driver]
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-On Tue, Mar 17, 2020 at 05:26:15PM -0700, Tuan Phan wrote:
-> Add IRQF_SHARED flag when register IRQ such that multiple dsu
-> devices can share same IRQ.
-> 
-> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
-> ---
->  drivers/perf/arm_dsu_pmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
-> index 70968c8..2622900 100644
-> --- a/drivers/perf/arm_dsu_pmu.c
-> +++ b/drivers/perf/arm_dsu_pmu.c
-> @@ -700,7 +700,7 @@ static int dsu_pmu_device_probe(struct platform_device *pdev)
->  	if (!name)
->  		return -ENOMEM;
->  	rc = devm_request_irq(&pdev->dev, irq, dsu_pmu_handle_irq,
-> -			      IRQF_NOBALANCING, name, dsu_pmu);
-> +			      IRQF_NOBALANCING | IRQF_SHARED, name, dsu_pmu);
->  	if (rc) {
->  		dev_warn(&pdev->dev, "Failed to request IRQ %d\n", irq);
->  		return rc;
-> -- 
-> 2.7.4
-> 
+Set current->irq_config = 1 for hrtimers which are not marked to expire in
+hard interrupt context during hrtimer_init(). These timers will expire in
+softirq context on PREEMPT_RT.
+
+Setting this allows lockdep to differentiate these timers. If a timer is
+marked to expire in hard interrupt context then the timer callback is not
+supposed to acquire a regular spinlock instead of a raw_spinlock in the
+expiry callback.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+
+---
+ include/linux/irqflags.h |   15 +++++++++++++++
+ include/linux/sched.h    |    1 +
+ kernel/locking/lockdep.c |    2 +-
+ kernel/time/hrtimer.c    |    6 +++++-
+ 4 files changed, 22 insertions(+), 2 deletions(-)
+
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -56,6 +56,19 @@ do {						\
+ do {						\
+ 	current->softirq_context--;		\
+ } while (0)
++
++# define lockdep_hrtimer_enter(__hrtimer)		\
++	  do {						\
++		  if (!__hrtimer->is_hard)		\
++			current->irq_config = 1;	\
++	  } while (0)
++
++# define lockdep_hrtimer_exit(__hrtimer)		\
++	  do {						\
++		  if (!__hrtimer->is_hard)		\
++			current->irq_config = 0;	\
++	  } while (0)
++
+ #else
+ # define trace_hardirqs_on()		do { } while (0)
+ # define trace_hardirqs_off()		do { } while (0)
+@@ -68,6 +81,8 @@ do {						\
+ # define trace_hardirq_exit()		do { } while (0)
+ # define lockdep_softirq_enter()	do { } while (0)
+ # define lockdep_softirq_exit()		do { } while (0)
++# define lockdep_hrtimer_enter(__hrtimer)		do { } while (0)
++# define lockdep_hrtimer_exit(__hrtimer)		do { } while (0)
+ #endif
+ 
+ #if defined(CONFIG_IRQSOFF_TRACER) || \
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -983,6 +983,7 @@ struct task_struct {
+ 	unsigned int			softirq_enable_event;
+ 	int				softirqs_enabled;
+ 	int				softirq_context;
++	int				irq_config;
+ #endif
+ 
+ #ifdef CONFIG_LOCKDEP
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3759,7 +3759,7 @@ static int check_wait_context(struct tas
+ 		/*
+ 		 * Check if force_irqthreads will run us threaded.
+ 		 */
+-		if (curr->hardirq_threaded)
++		if (curr->hardirq_threaded || curr->irq_config)
+ 			curr_inner = LD_WAIT_CONFIG;
+ 		else
+ 			curr_inner = LD_WAIT_SPIN;
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1404,7 +1404,7 @@ static void __hrtimer_init(struct hrtime
+ 	base = softtimer ? HRTIMER_MAX_CLOCK_BASES / 2 : 0;
+ 	base += hrtimer_clockid_to_base(clock_id);
+ 	timer->is_soft = softtimer;
+-	timer->is_hard = !softtimer;
++	timer->is_hard = !!(mode & HRTIMER_MODE_HARD);
+ 	timer->base = &cpu_base->clock_base[base];
+ 	timerqueue_init(&timer->node);
+ }
+@@ -1514,7 +1514,11 @@ static void __run_hrtimer(struct hrtimer
+ 	 */
+ 	raw_spin_unlock_irqrestore(&cpu_base->lock, flags);
+ 	trace_hrtimer_expire_entry(timer, now);
++	lockdep_hrtimer_enter(timer);
++
+ 	restart = fn(timer);
++
++	lockdep_hrtimer_exit(timer);
+ 	trace_hrtimer_expire_exit(timer);
+ 	raw_spin_lock_irq(&cpu_base->lock);
+ 
+
