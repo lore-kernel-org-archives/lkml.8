@@ -2,165 +2,174 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE321C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D421BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904B620773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584541001;
-	bh=tCwrNUH0wEi91/ICyI3DEO7ju+O7G22DnHL/K0ZmyCA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UM61Efg7Wm9JfuKWFpNkcCNM7liULKrixHwl1Js3jhc4qDfccc/8hXk9pNZs+PhPR
-	 Ep2aas91NqvoBqXVYJ7AozWz9Kc6ZJ2iVUBjlk3vwfbZgtgvU2vMbyYV3e0xu6/z6g
-	 a+6TrJ85Wn7Jfv9B/J3Iv3KDmiLwNld6p4nq0lT4=
+	by mail.kernel.org (Postfix) with ESMTP id 4470F20773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:18:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="wwAIv/a2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgCROQk (ORCPT
+        id S1727030AbgCROSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:16:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbgCROQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:16:40 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21AD020772;
-        Wed, 18 Mar 2020 14:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584540999;
-        bh=tCwrNUH0wEi91/ICyI3DEO7ju+O7G22DnHL/K0ZmyCA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PSNMOXkjPBQikNc6cmKJIkreczP/pS8nYA42jW3RgdJDdAoWitLFPU7TuYPXplgic
-         ttMV53POQqk7UEF0SvV74O10zCBGJ9QxOqiRh12fvL44axys2TjSPAdfIvCjvfE7hD
-         5elv0MajXB5LgwubYmN5btiq7zLxlKy2n7V+TAdc=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jEZUr-00DevC-Gn; Wed, 18 Mar 2020 14:16:37 +0000
+        Wed, 18 Mar 2020 10:18:02 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:40296 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726832AbgCROSC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 10:18:02 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 7C5D72E160B;
+        Wed, 18 Mar 2020 17:17:58 +0300 (MSK)
+Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id CaVSFTWyfA-HtYCaN8Y;
+        Wed, 18 Mar 2020 17:17:58 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1584541078; bh=fdQkn6uxD4cq3OcGYQ5wY/u9bHIKTLesrnrE/I7Gvn4=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=wwAIv/a29T8GFEPCSwPd6bQ8FPsD0RBSNSxihbdfon1FjMF8s9nNbdupafjpoTf0r
+         5rwWkTYtx0xTWV007HsCtgBzV59L153LooMNE820yJhoRPtNNTTm5lsxyHEXGeoAwz
+         uuIaPih24MSPAnTqSkoeN7uJ/4YKg8r8lUF0Ft8E=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:6709::1:1])
+        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id zgfxdoFQrA-Htb8H5Yb;
+        Wed, 18 Mar 2020 17:17:55 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] fs/namespace: handle mount(MS_BIND|MS_REMOUNT) without
+ locking sb->s_umount
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Date:   Wed, 18 Mar 2020 17:17:55 +0300
+Message-ID: <158454107541.4470.14819321770893756073.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 18 Mar 2020 14:16:37 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        chenxiang <chenxiang66@hisilicon.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>, luojiaxing@huawei.com
-Subject: Re: [PATCH v3 2/2] irqchip/gic-v3-its: Balance initial LPI affinity
- across CPUs
-In-Reply-To: <8b141d09-ac11-34ec-0922-c21c22f94f36@huawei.com>
-References: <20200316115433.9017-1-maz@kernel.org>
- <20200316115433.9017-3-maz@kernel.org>
- <2c367508-f81b-342e-eb05-8bbd1b056279@huawei.com>
- <9ce0b23455a06d92161c5302ac28152e@kernel.org>
- <8b141d09-ac11-34ec-0922-c21c22f94f36@huawei.com>
-Message-ID: <7b97c24ceced7560b5acb03edaf2cd70@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: john.garry@huawei.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, chenxiang66@hisilicon.com, wangzhou1@hisilicon.com, ming.lei@redhat.com, jason@lakedaemon.net, tglx@linutronix.de, luojiaxing@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-17 18:43, John Garry wrote:
->>> 
->>>> +        int this_count = its_read_lpi_count(d, tmp);
->>> 
->>> Not sure if it's intentional, but now there seems to be a subtle
->>> difference to what Thomas described for non-managed interrupts - for
->>> non-managed interrupts, x86 selects the CPU based on the total
->>> interrupt load per CPU (or, more specifically, lowest vector
->>> allocation count), and not just the non-managed load. Or maybe I
->>> misread it.
->> 
->> So far, I'm trying to keep the two allocation paths separate, as the
->> two systems I have access to have very different behaviours: D05 has
->> no managed interrupts to speak of, and my top-secret work machine
->> has almost no unmanaged interrupts, so the two sets are almost
->> completely disjoint.
-> 
-> Sure, but I'd say that it would be a more common scenario to have a
-> mixture of both.
-> 
->> 
->> Also, it all depends on the interrupt allocation order, and whether
->> something will rebalance the non-managed interrupts at a later time.
->> At least, these two patches make it easy to alter the placement policy
->> (the behaviour you describe above is a 2 line change).
->> 
->>> Anyway, we can test this now for NVMe with its managed interrupts.
->> 
->> Looking forward to hearing from you!
->> 
-> 
-> On my D06CS board (128 core), there seems to be something wrong, as
-> the q0 affinity mask looks incorrect:
-> 
-> PCI name is 81:00.0: nvme0n1
-> 
-> 
->         irq 322, cpu list 69, effective list 69
-> 
-> 
->         irq 325, cpu list 32-38, effective list 32
-> 
-> 
->         irq 326, cpu list 39-45, effective list 40
-> 
-> 
->         irq 327, cpu list 46-51, effective list 47
-> 
-> 
->         irq 328, cpu list 52-57, effective list 53
-> 
-> 
->         irq 329, cpu list 58-63, effective list 59
+Writeback grabs sb->s_umount for read during I/O. This blocks bind-remount
+for a long time. Bind-remount actually does not need sb->s_umount locked
+for read or write because it does not alter superblock, only mnt_flags.
+All mnt_flags are serialized by global mount_lock.
 
+This patch moves locking into callers to handle remount atomically.
+Also grab namespace_sem to synchronize with /proc/mounts and mountinfo.
+Function do_change_type() uses the same locking combination.
 
-Sorry, can you explain in more detail what you find wrong in this log?
-Is it that interrupt 322 has a single CPU affinity instead of a list?
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ fs/namespace.c |   26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-> And something stranger for my colleague Luo Jiaxing, specifically the
-> effective affinity:
-> 
-> PCI name is 85:00.0: nvme2n1
-> irq 196, cpu list 0-31, effective list 82
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 85b5f7bea82e..c6c03be5cc4e 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -459,11 +459,11 @@ void mnt_drop_write_file(struct file *file)
+ }
+ EXPORT_SYMBOL(mnt_drop_write_file);
+ 
++/* mount_lock must be held */
+ static int mnt_make_readonly(struct mount *mnt)
+ {
+ 	int ret = 0;
+ 
+-	lock_mount_hash();
+ 	mnt->mnt.mnt_flags |= MNT_WRITE_HOLD;
+ 	/*
+ 	 * After storing MNT_WRITE_HOLD, we'll read the counters. This store
+@@ -497,15 +497,14 @@ static int mnt_make_readonly(struct mount *mnt)
+ 	 */
+ 	smp_wmb();
+ 	mnt->mnt.mnt_flags &= ~MNT_WRITE_HOLD;
+-	unlock_mount_hash();
++
+ 	return ret;
+ }
+ 
++/* mount_lock must be held */
+ static int __mnt_unmake_readonly(struct mount *mnt)
+ {
+-	lock_mount_hash();
+ 	mnt->mnt.mnt_flags &= ~MNT_READONLY;
+-	unlock_mount_hash();
+ 	return 0;
+ }
+ 
+@@ -2440,6 +2439,7 @@ static bool can_change_locked_flags(struct mount *mnt, unsigned int mnt_flags)
+ 	return true;
+ }
+ 
++/* mount_lock must be held */
+ static int change_mount_ro_state(struct mount *mnt, unsigned int mnt_flags)
+ {
+ 	bool readonly_request = (mnt_flags & MNT_READONLY);
+@@ -2454,16 +2454,14 @@ static int change_mount_ro_state(struct mount *mnt, unsigned int mnt_flags)
+ }
+ 
+ /*
+- * Update the user-settable attributes on a mount.  The caller must hold
+- * sb->s_umount for writing.
++ * Update the user-settable attributes on a mount.
++ * mount_lock must be held.
+  */
+ static void set_mount_attributes(struct mount *mnt, unsigned int mnt_flags)
+ {
+-	lock_mount_hash();
+ 	mnt_flags |= mnt->mnt.mnt_flags & ~MNT_USER_SETTABLE_MASK;
+ 	mnt->mnt.mnt_flags = mnt_flags;
+ 	touch_mnt_namespace(mnt->mnt_ns);
+-	unlock_mount_hash();
+ }
+ 
+ static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *mnt)
+@@ -2495,7 +2493,6 @@ static void mnt_warn_timestamp_expiry(struct path *mountpoint, struct vfsmount *
+  */
+ static int do_reconfigure_mnt(struct path *path, unsigned int mnt_flags)
+ {
+-	struct super_block *sb = path->mnt->mnt_sb;
+ 	struct mount *mnt = real_mount(path->mnt);
+ 	int ret;
+ 
+@@ -2508,11 +2505,13 @@ static int do_reconfigure_mnt(struct path *path, unsigned int mnt_flags)
+ 	if (!can_change_locked_flags(mnt, mnt_flags))
+ 		return -EPERM;
+ 
+-	down_write(&sb->s_umount);
++	namespace_lock();
++	lock_mount_hash();
+ 	ret = change_mount_ro_state(mnt, mnt_flags);
+ 	if (ret == 0)
+ 		set_mount_attributes(mnt, mnt_flags);
+-	up_write(&sb->s_umount);
++	unlock_mount_hash();
++	namespace_unlock();
+ 
+ 	mnt_warn_timestamp_expiry(path, &mnt->mnt);
+ 
+@@ -2551,8 +2550,11 @@ static int do_remount(struct path *path, int ms_flags, int sb_flags,
+ 		err = -EPERM;
+ 		if (ns_capable(sb->s_user_ns, CAP_SYS_ADMIN)) {
+ 			err = reconfigure_super(fc);
+-			if (!err)
++			if (!err) {
++				lock_mount_hash();
+ 				set_mount_attributes(mnt, mnt_flags);
++				unlock_mount_hash();
++			}
+ 		}
+ 		up_write(&sb->s_umount);
+ 	}
 
-Right, this one we have seen in your other email. Being a non-managed
-interrupt, it lands on the closest socket.
-
-> irq 377, cpu list 32-38, effective list 32
-> irq 378, cpu list 39-45, effective list 39
-> irq 379, cpu list 46-51, effective list 46
-> 
-> But then v5.6-rc5 vanilla also looks to have this issue when I tested
-> on my board:
-> 
-> john@ubuntu:~$ more /proc/irq/322/smp_affinity_list
-> 
-> 
-> 69
-> 
-> My D06ES (96 core) board looks sensible for the affinity in this
-> regard (I did not try vanilla v5.6-rc5, but only with your patches on
-> top). I'll need to debug this.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
