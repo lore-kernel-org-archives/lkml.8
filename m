@@ -4,162 +4,335 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 612A3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C115C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31CD3205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6710620753
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Ws724cGh"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="gkQeXX6F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCRQcB (ORCPT
+        id S1727133AbgCRQcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:32:01 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35684 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgCRQcA (ORCPT
+        Wed, 18 Mar 2020 12:32:15 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:57145 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbgCRQcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 12:32:00 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k8so24978499oik.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 09:31:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ez9hpvifTc2STDnZtWKDhLfk74UGNnWXuwCGbU6A4rw=;
-        b=Ws724cGhkpDJrESIGX/4T3R9+qJJbPVIP3NXUhB8BNrmbiBj21FBy60UbqlLjSLNz7
-         xKFVpYYR88qi+iqmDYupAoTTc+twjo1LdLcZAmkHp9o8z2VCL/7KdhcQw87kxU01V4aD
-         1lRoWT482c+50v7UlLEtXLyPtI2Zkax61bzGU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ez9hpvifTc2STDnZtWKDhLfk74UGNnWXuwCGbU6A4rw=;
-        b=ajkI4Yy9WAsAQU5OkBhVro/DHaGyy8o3+iZMBx5VYJC+nXrzpOQRPc8tjgxH0JpCGy
-         obIW/Ox3ZuSaFYXXvmoVHr5DWTY9PmdVvuOTHfYsKraAD0GtPsTfMZl12oVEQIzXhBS1
-         FCaLZQe54TTeYCOLqimsADK8dCGv4e/MiCvi6uVQYIV1AWq/u2wS0OpOnAZAXJoEMOVC
-         8zjzgTOrVdVlmU6qNd+wK4+WAjSwVNbZs8EVKvKYG5S/W4e2FW33W0kznuVxmW9AU3J0
-         VNLlWl0hSNG5fsbElLRpJk5PL75qHMhwxqkKl+rkXkpmJyMKFtSEDN5xurOw7MeWAOlN
-         ZtXg==
-X-Gm-Message-State: ANhLgQ13pM8r6+SabEWBn2VyWBpFZFZR2BXmJOyw8yjyWpbLPjrdZ/Dg
-        l+YhLnxbVRG/mVadex7kB8e/gEU2xe3nn/TF78gMuA==
-X-Google-Smtp-Source: ADFU+vuoiOaP8HEDosLzk/qwSJgLByHWnhyt7zF/h7nFcLuR+AupnswWjQNZ/+htP3HpMXmztbG+XG7/OOKNLAEPmjQ=
-X-Received: by 2002:aca:5345:: with SMTP id h66mr3974889oib.110.1584549119226;
- Wed, 18 Mar 2020 09:31:59 -0700 (PDT)
+        Wed, 18 Mar 2020 12:32:14 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C2CFB23E23;
+        Wed, 18 Mar 2020 17:32:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1584549131;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Idl0BktXXRLYXkvi32poj/8TUpNGGgwAefDkjlqpqUs=;
+        b=gkQeXX6FAqcg2ySxBsYbjug7xWK3DT08VpOfgU9lly25Y/uHNmIofD1K4mR/Mos9noRHqJ
+        e3zXVOPfgApCY0JyctB3tLws5H/rcS4CP34uHAMKsp3bb5yRsP8aoqLq1cFuoFxjlhqOJ7
+        KFaPM+0/ZyEXsY+cvy2vxZHmCsbk1dc=
 MIME-Version: 1.0
-References: <20200310133121.27913-1-wambui.karugax@gmail.com>
- <20200310133121.27913-11-wambui.karugax@gmail.com> <20200318152627.GY2363188@phenom.ffwll.local>
- <alpine.LNX.2.21.99999.375.2003181857010.54051@wambui>
-In-Reply-To: <alpine.LNX.2.21.99999.375.2003181857010.54051@wambui>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 18 Mar 2020 17:31:47 +0100
-Message-ID: <CAKMK7uGwJ6nzLPzwtfUY79e1fSFxkrSgTfJuDeM4px6c0v13qg@mail.gmail.com>
-Subject: Re: [PATCH v2 10/17] drm/vram-helper: make drm_vram_mm_debugfs_init()
- return 0
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     Dave Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Mar 2020 17:32:03 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCH 14/18] hwmon: add support for the sl28cpld hardware
+ monitoring controller
+In-Reply-To: <11700297-affd-8bdc-2414-3dc7f2b62798@roeck-us.net>
+References: <20200317205017.28280-1-michael@walle.cc>
+ <20200317205017.28280-15-michael@walle.cc>
+ <11700297-affd-8bdc-2414-3dc7f2b62798@roeck-us.net>
+Message-ID: <a2639c58a45ce004e715f10aa9814531@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: C2CFB23E23
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[22];
+         NEURAL_HAM(-0.00)[-0.610];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,kernel.org,suse.com,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 5:03 PM Wambui Karuga <wambui.karugax@gmail.com> wrote:
->
->
->
-> On Wed, 18 Mar 2020, Daniel Vetter wrote:
->
-> > On Tue, Mar 10, 2020 at 04:31:14PM +0300, Wambui Karuga wrote:
-> >> Since 987d65d01356 (drm: debugfs: make
-> >> drm_debugfs_create_files() never fail), drm_debugfs_create_files() never
-> >> fails and should return void. Therefore, remove its use as the
-> >> return value of drm_vram_mm_debugfs_init(), and have the function
-> >> return 0 directly.
-> >>
-> >> v2: have drm_vram_mm_debugfs_init() return 0 instead of void to avoid
-> >> introducing build issues and build breakage.
-> >>
-> >> References: https://lists.freedesktop.org/archives/dri-devel/2020-February/257183.html
-> >> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-> >> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-> >> ---
-> >>  drivers/gpu/drm/drm_gem_vram_helper.c | 10 ++++------
-> >>  1 file changed, 4 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
-> >> index 92a11bb42365..c8bcc8609650 100644
-> >> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
-> >> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-> >> @@ -1048,14 +1048,12 @@ static const struct drm_info_list drm_vram_mm_debugfs_list[] = {
-> >>   */
-> >>  int drm_vram_mm_debugfs_init(struct drm_minor *minor)
-> >>  {
-> >> -    int ret = 0;
-> >> -
-> >>  #if defined(CONFIG_DEBUG_FS)
-> >
-> > Just noticed that this #if here is not needed, we already have a dummy
-> > function for that case. Care to write a quick patch to remove it? On top
-> > of this patch series here ofc, I'm in the processing of merging the entire
-> > pile.
-> >
-> > Thanks, Daniel
-> Hi Daniel,
-> Without this check here, and compiling without CONFIG_DEBUG_FS, this
-> function is run and the drm_debugfs_create_files() does not have access to
-> the parameters also protected by an #if above this function. So the change
-> throws an error for me. Is that correct?
+Hi Guenter,
 
-Hm right. Other drivers don't #ifdef out their debugfs file functions
-... kinda a bit disappointing that we can't do this in the neatest way
-possible.
+thanks for the review
 
-Greg, has anyone ever suggested to convert the debugfs_create_file
-function (and similar things) to macros that don't use any of the
-arguments, and then also annotating all the static functions/tables as
-__maybe_unused and let the compiler garbage collect everything?
-Instead of explicit #ifdef in all the drivers ...
--Daniel
+Am 2020-03-18 04:27, schrieb Guenter Roeck:
+> On 3/17/20 1:50 PM, Michael Walle wrote:
+>> This adds support for the hardware monitoring controller of the 
+>> sl28cpld
+>> board management controller. This driver is part of a multi-function
+>> device.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> ---
+>>  drivers/hwmon/Kconfig          |  10 +++
+>>  drivers/hwmon/Makefile         |   1 +
+>>  drivers/hwmon/sl28cpld-hwmon.c | 146 
+>> +++++++++++++++++++++++++++++++++
+> 
+> Please also provide Documentation/hwmon/sl28cpld.
+> 
+>>  3 files changed, 157 insertions(+)
+>>  create mode 100644 drivers/hwmon/sl28cpld-hwmon.c
+>> 
+>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+>> index 05a30832c6ba..c98716f78cfa 100644
+>> --- a/drivers/hwmon/Kconfig
+>> +++ b/drivers/hwmon/Kconfig
+>> @@ -1412,6 +1412,16 @@ config SENSORS_RASPBERRYPI_HWMON
+>>  	  This driver can also be built as a module. If so, the module
+>>  	  will be called raspberrypi-hwmon.
+>> 
+>> +config SENSORS_SL28CPLD
+>> +	tristate "Kontron's SMARC-sAL28 hardware monitoring driver"
+>> +	depends on MFD_SL28CPLD
+>> +	help
+>> +	  If you say yes here you get support for a fan connected to the
+>> +	  input of the SMARC connector of Kontron's SMARC-sAL28 module.
+>> +
+>> +	  This driver can also be built as a module.  If so, the module
+>> +	  will be called sl28cpld-hwmon.
+>> +
+>>  config SENSORS_SHT15
+>>  	tristate "Sensiron humidity and temperature sensors. SHT15 and 
+>> compat."
+>>  	depends on GPIOLIB || COMPILE_TEST
+>> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+>> index b0b9c8e57176..dfb0f8cda2dd 100644
+>> --- a/drivers/hwmon/Makefile
+>> +++ b/drivers/hwmon/Makefile
+>> @@ -155,6 +155,7 @@ obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
+>>  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
+>>  obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
+>>  obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
+>> +obj-$(CONFIG_SENSORS_SL28CPLD)	+= sl28cpld-hwmon.o
+>>  obj-$(CONFIG_SENSORS_SHT15)	+= sht15.o
+>>  obj-$(CONFIG_SENSORS_SHT21)	+= sht21.o
+>>  obj-$(CONFIG_SENSORS_SHT3x)	+= sht3x.o
+>> diff --git a/drivers/hwmon/sl28cpld-hwmon.c 
+>> b/drivers/hwmon/sl28cpld-hwmon.c
+>> new file mode 100644
+>> index 000000000000..7ac42bb0a48c
+>> --- /dev/null
+>> +++ b/drivers/hwmon/sl28cpld-hwmon.c
+>> @@ -0,0 +1,146 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * SMARC-sAL28 fan hardware monitoring driver.
+>> + *
+>> + * Copyright 2019 Kontron Europe GmbH
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/hwmon.h>
+>> +
+> Alphabetic order of include files, please.
 
->
-> Thanks,
-> wambui karuga
->
-> >> -    ret = drm_debugfs_create_files(drm_vram_mm_debugfs_list,
-> >> -                                   ARRAY_SIZE(drm_vram_mm_debugfs_list),
-> >> -                                   minor->debugfs_root, minor);
-> >> +    drm_debugfs_create_files(drm_vram_mm_debugfs_list,
-> >> +                             ARRAY_SIZE(drm_vram_mm_debugfs_list),
-> >> +                             minor->debugfs_root, minor);
-> >>  #endif
-> >> -    return ret;
-> >> +    return 0;
-> >>  }
-> >>  EXPORT_SYMBOL(drm_vram_mm_debugfs_init);
-> >>
-> >> --
-> >> 2.25.1
-> >>
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
-> >
+ok, I guess that applies to all of the new files.
 
 
+>> +#define FAN_INPUT		0
+>> +#define   FAN_SCALE_X8		BIT(7)
+>> +#define   FAN_VALUE_MASK	GENMASK(6, 0)
+>> +
+>> +struct sl28cpld_hwmon {
+>> +	struct regmap *regmap;
+>> +	u32 offset;
+>> +};
+>> +
+>> +static umode_t sl28cpld_hwmon_is_visible(const void *data,
+>> +					 enum hwmon_sensor_types type,
+>> +					 u32 attr, int channel)
+>> +{
+>> +	return 0444;
+>> +}
+>> +
+>> +static int sl28cpld_hwmon_read(struct device *dev,
+>> +			       enum hwmon_sensor_types type, u32 attr,
+>> +			       int channel, long *input)
+>> +{
+>> +	struct sl28cpld_hwmon *hwmon = dev_get_drvdata(dev);
+>> +	unsigned int value;
+>> +	int ret;
+>> +
+>> +	switch (attr) {
+>> +	case hwmon_fan_input:
+>> +		ret = regmap_read(hwmon->regmap, hwmon->offset + FAN_INPUT,
+>> +				  &value);
+>> +		if (ret)
+>> +			return ret;
+>> +		/*
+>> +		 * The register has a 7 bit value and 1 bit which indicates the
+>> +		 * scale. If the MSB is set, then the lower 7 bit has to be
+>> +		 * multiplied by 8, to get the correct reading.
+>> +		 */
+>> +		if (value & FAN_SCALE_X8)
+>> +			value = FIELD_GET(FAN_VALUE_MASK, value) << 3;
+>> +
+>> +		/*
+>> +		 * The counter period is 1000ms and the sysfs specification
+>> +		 * says we should asssume 2 pulses per revolution.
+>> +		 */
+>> +		value *= 60 / 2;
+>> +
+>> +		break;
+>> +	default:
+>> +		return -EOPNOTSUPP;
+>> +	}
+>> +
+>> +	*input = value;
+>> +	return 0;
+>> +}
+>> +
+>> +static const u32 sl28cpld_hwmon_fan_config[] = {
+>> +	HWMON_F_INPUT,
+>> +	0
+>> +};
+>> +
+>> +static const struct hwmon_channel_info sl28cpld_hwmon_fan = {
+>> +	.type = hwmon_fan,
+>> +	.config = sl28cpld_hwmon_fan_config,
+>> +};
+>> +
+>> +static const struct hwmon_channel_info *sl28cpld_hwmon_info[] = {
+>> +	&sl28cpld_hwmon_fan,
+>> +	NULL
+>> +};
+>> +
+>> +static const struct hwmon_ops sl28cpld_hwmon_ops = {
+>> +	.is_visible = sl28cpld_hwmon_is_visible,
+>> +	.read = sl28cpld_hwmon_read,
+>> +};
+>> +
+>> +static const struct hwmon_chip_info sl28cpld_hwmon_chip_info = {
+>> +	.ops = &sl28cpld_hwmon_ops,
+>> +	.info = sl28cpld_hwmon_info,
+>> +};
+>> +
+>> +static int sl28cpld_hwmon_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *hwmon_dev;
+>> +	struct sl28cpld_hwmon *hwmon;
+>> +	struct resource *res;
+>> +
+>> +	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
+>> +	if (!hwmon)
+>> +		return -ENOMEM;
+>> +
+>> +	if (!pdev->dev.parent)
+>> +		return -ENODEV;
+>> +
+> Maybe do this first ?
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+ok. like explained on another patch review comment, I had that
+together with the following dev_get_regmap() which uses this.
+But I was already not sure while writing the code whether I
+should do it first and don't have to undo the devm_ in case of
+an error. Well since already two reviewers stumbled on this,
+I'll do it first on all the patches.
+
+
+>> +	hwmon->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+>> +	if (!hwmon->regmap)
+>> +		return -ENODEV;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+>> +	if (!res)
+>> +		return -EINVAL;
+>> +	hwmon->offset = res->start;
+>> +
+>> +	hwmon_dev = devm_hwmon_device_register_with_info(&pdev->dev,
+>> +							 "sl28cpld_hwmon",
+>> +							 hwmon,
+>> +							 &sl28cpld_hwmon_chip_info,
+>> +							 NULL);
+>> +	if (IS_ERR(hwmon_dev)) {
+>> +		dev_err(&pdev->dev, "failed to register as hwmon device");
+>> +		return PTR_ERR(hwmon_dev);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct platform_device_id sl28cpld_hwmon_id_table[] = {
+>> +	{"sl28cpld-fan", 0},
+>> +};
+>> +MODULE_DEVICE_TABLE(platform, sl28cpld_hwmon_id_table);
+>> +
+>> +static struct platform_driver sl28cpld_hwmon_driver = {
+>> +	.probe = sl28cpld_hwmon_probe,
+>> +	.id_table = sl28cpld_hwmon_id_table,
+> 
+> I'd have expected an of_match_table.
+
+There was one, but, since I use mfd_add_devices() which uses the
+platform driver name (or the id_table) I removed it. While it
+doesn't really matter here in the hwmon part for now, the GPIO
+driver uses the id_table data to distinguish between different
+flavors of the GPIO controller. So there I'd have to duplicate
+data in the tables (eg. the id_table as well as the
+of_match_table) and get that data in the _probe(), although only
+the id_table data is used.
+
+-michael
+
+> 
+>> +	.driver = {
+>> +		.name = "sl28cpld-hwmon",
+>> +	},
+>> +};
+>> +module_platform_driver(sl28cpld_hwmon_driver);
+>> +
+>> +MODULE_DESCRIPTION("sl28cpld Hardware Monitoring Driver");
+>> +MODULE_LICENSE("GPL");
+>> 
