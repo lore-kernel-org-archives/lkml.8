@@ -2,154 +2,241 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 928A3C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB0FC5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F07020767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:58:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AwIcVtv+"
+	by mail.kernel.org (Postfix) with ESMTP id 0E2B220768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:00:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584540039;
+	bh=fHNjx1Je0rqY5ArsRVw0B54m7iTYdwrhSXjJxLK9WsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fXOl6iOviiB0iGaPYEyL1Irj133VY1HJ6guXuQg6tfkBCrirWEZKAWEE1kwFv2E7y
+	 uaag8rI/jJ1LfWQNxxkhMd6lkzqzTi6NhFP40/4QQ/ns8c3LHtnW/oZvgju7sDFveW
+	 iR6Gp05TfoV0M8GvPdIdFtfbOVz9c/zY80bo8+ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgCRN6v (ORCPT
+        id S1727065AbgCROAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:58:51 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:29147 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726877AbgCRN6u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:58:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584539929;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=F31yuOR6DS7mAZV1PpzPl5tjjIYKtGbdeccjup64HTg=;
-        b=AwIcVtv++30rjahmGEw8BAPE0uhOgS+1TOAk97GEBPYCaI/2M2VfcQ1Mtoy2ExY/3on/+N
-        tQ6tGZ8TvexrLi0P6K96JT/yXX0QfeXlFbT++4nC+xmRSCxC7i1K0O0glaOxZ9SpG7DHuM
-        wMCi0nttwKtaE4FSTG+01GdKe6psRwc=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-2opHq41zNweofLgKo3N0EQ-1; Wed, 18 Mar 2020 09:58:48 -0400
-X-MC-Unique: 2opHq41zNweofLgKo3N0EQ-1
-Received: by mail-wr1-f71.google.com with SMTP id u12so9964370wrw.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 06:58:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=F31yuOR6DS7mAZV1PpzPl5tjjIYKtGbdeccjup64HTg=;
-        b=avhPo6w4epGm54Sgd6NDNeEBPdqkTcxgALI7R37S0psBBF2BCE2+u1ZRH/yvY+9ixm
-         JifuG99l0Z57vj+BiK+cENKOaxW0trkeQTaCUpe/3gTScLzGCkYKdsSFxr+Xn4ZgoDxW
-         mZXIJoMP1Cig50o8E9wQoU5jOc0TJVs21CdrKwArw2p3HfTnI6O0hF07PQF2EhRivUvf
-         CqvPD9il2WWP8l/AAwh7zlZkcvQ/A8NlSZqvOcriVh/WPkwg0QoIDMkLsgzi8TjYQVUK
-         tiIZFbf9fD/3zUMPGdGscBQIjhLLqKJHeRz/8iRWT5GFpW/3Xo1BF7gwGFrMzuhABKcm
-         xrlg==
-X-Gm-Message-State: ANhLgQ0CcVkXNwxpEtQ2gLYkYwjFL/meAJs1qLbh2hYB3PjairFYE3ll
-        L9IRTaM83FSXBetq0FKmf9hfDzEfFyns0R3MfyWz4HEDODOENcuib/YWlNCSruJwSKxWXs+uWmU
-        TxZsZR0r2D5QPOMR3c/3OJcIE
-X-Received: by 2002:a1c:e442:: with SMTP id b63mr5559726wmh.174.1584539927046;
-        Wed, 18 Mar 2020 06:58:47 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vuOzuNgvDkbFkbElCg5edIwU+8StaNxg5QEC0tTkAdX0Cu7G9Ynuwj6chgem6WJSymuM5v0dQ==
-X-Received: by 2002:a1c:e442:: with SMTP id b63mr5559631wmh.174.1584539925803;
-        Wed, 18 Mar 2020 06:58:45 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id q10sm9136178wrx.12.2020.03.18.06.58.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 06:58:45 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Baoquan He <bhe@redhat.com>, David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Yumei Huang <yuhuang@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Eduardo Habkost <ehabkost@redhat.com>,
-        Milan Zamazal <mzamazal@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v2 0/8] mm/memory_hotplug: allow to specify a default online_type
-In-Reply-To: <20200318130517.GC30899@MiWiFi-R3L-srv>
-References: <20200317104942.11178-1-david@redhat.com> <20200318130517.GC30899@MiWiFi-R3L-srv>
-Date:   Wed, 18 Mar 2020 14:58:43 +0100
-Message-ID: <87d0993gto.fsf@vitty.brq.redhat.com>
+        Wed, 18 Mar 2020 10:00:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726851AbgCROAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 10:00:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31DA120768;
+        Wed, 18 Mar 2020 14:00:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584540036;
+        bh=fHNjx1Je0rqY5ArsRVw0B54m7iTYdwrhSXjJxLK9WsA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mtTYdb1+0C3A8g/B6HTuyocmdwDYXHRpLMFMNC0E67WquZ+pIrPCVK7pxew/8SHzw
+         a9VHaKpQPD0MtNTTleFgPjQMAB6J6Vy2BRGEmytQKAY/mDFf+U29QuKi7k+qeK8XZd
+         Ku85iRXH7ktqxS3QIBAFTCjV8da8747d1Pcqr4EY=
+Date:   Wed, 18 Mar 2020 15:00:34 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        arnd@arndb.de, smohanad@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/16] bus: mhi: core: Add support for registering MHI
+ client drivers
+Message-ID: <20200318140034.GA2805201@kroah.com>
+References: <20200220095854.4804-1-manivannan.sadhasivam@linaro.org>
+ <20200220095854.4804-4-manivannan.sadhasivam@linaro.org>
+ <20200318133626.GA2801580@kroah.com>
+ <db612e12-0033-31cc-60fc-62e45dda4342@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <db612e12-0033-31cc-60fc-62e45dda4342@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Baoquan He <bhe@redhat.com> writes:
+On Wed, Mar 18, 2020 at 07:54:30AM -0600, Jeffrey Hugo wrote:
+> On 3/18/2020 7:36 AM, Greg KH wrote:
+> > On Thu, Feb 20, 2020 at 03:28:41PM +0530, Manivannan Sadhasivam wrote:
+> > > This commit adds support for registering MHI client drivers with the
+> > > MHI stack. MHI client drivers binds to one or more MHI devices inorder
+> > > to sends and receive the upper-layer protocol packets like IP packets,
+> > > modem control messages, and diagnostics messages over MHI bus.
+> > > 
+> > > This is based on the patch submitted by Sujeev Dias:
+> > > https://lkml.org/lkml/2018/7/9/987
+> > > 
+> > > Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
+> > > Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> > > [mani: splitted and cleaned up for upstream]
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > ---
+> > >   drivers/bus/mhi/core/init.c | 149 ++++++++++++++++++++++++++++++++++++
+> > >   include/linux/mhi.h         |  39 ++++++++++
+> > >   2 files changed, 188 insertions(+)
+> > > 
+> > > diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+> > > index 6f24c21284ec..12e386862b3f 100644
+> > > --- a/drivers/bus/mhi/core/init.c
+> > > +++ b/drivers/bus/mhi/core/init.c
+> > > @@ -374,8 +374,157 @@ struct mhi_device *mhi_alloc_device(struct mhi_controller *mhi_cntrl)
+> > >   	return mhi_dev;
+> > >   }
+> > > +static int mhi_driver_probe(struct device *dev)
+> > > +{
+> > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> > > +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
+> > > +	struct device_driver *drv = dev->driver;
+> > > +	struct mhi_driver *mhi_drv = to_mhi_driver(drv);
+> > > +	struct mhi_event *mhi_event;
+> > > +	struct mhi_chan *ul_chan = mhi_dev->ul_chan;
+> > > +	struct mhi_chan *dl_chan = mhi_dev->dl_chan;
+> > > +
+> > > +	if (ul_chan) {
+> > > +		/*
+> > > +		 * If channel supports LPM notifications then status_cb should
+> > > +		 * be provided
+> > > +		 */
+> > > +		if (ul_chan->lpm_notify && !mhi_drv->status_cb)
+> > > +			return -EINVAL;
+> > > +
+> > > +		/* For non-offload channels then xfer_cb should be provided */
+> > > +		if (!ul_chan->offload_ch && !mhi_drv->ul_xfer_cb)
+> > > +			return -EINVAL;
+> > > +
+> > > +		ul_chan->xfer_cb = mhi_drv->ul_xfer_cb;
+> > > +	}
+> > > +
+> > > +	if (dl_chan) {
+> > > +		/*
+> > > +		 * If channel supports LPM notifications then status_cb should
+> > > +		 * be provided
+> > > +		 */
+> > > +		if (dl_chan->lpm_notify && !mhi_drv->status_cb)
+> > > +			return -EINVAL;
+> > > +
+> > > +		/* For non-offload channels then xfer_cb should be provided */
+> > > +		if (!dl_chan->offload_ch && !mhi_drv->dl_xfer_cb)
+> > > +			return -EINVAL;
+> > > +
+> > > +		mhi_event = &mhi_cntrl->mhi_event[dl_chan->er_index];
+> > > +
+> > > +		/*
+> > > +		 * If the channel event ring is managed by client, then
+> > > +		 * status_cb must be provided so that the framework can
+> > > +		 * notify pending data
+> > > +		 */
+> > > +		if (mhi_event->cl_manage && !mhi_drv->status_cb)
+> > > +			return -EINVAL;
+> > > +
+> > > +		dl_chan->xfer_cb = mhi_drv->dl_xfer_cb;
+> > > +	}
+> > > +
+> > > +	/* Call the user provided probe function */
+> > > +	return mhi_drv->probe(mhi_dev, mhi_dev->id);
+> > > +}
+> > > +
+> > > +static int mhi_driver_remove(struct device *dev)
+> > > +{
+> > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> > > +	struct mhi_driver *mhi_drv = to_mhi_driver(dev->driver);
+> > > +	struct mhi_chan *mhi_chan;
+> > > +	enum mhi_ch_state ch_state[] = {
+> > > +		MHI_CH_STATE_DISABLED,
+> > > +		MHI_CH_STATE_DISABLED
+> > > +	};
+> > > +	int dir;
+> > > +
+> > > +	/* Skip if it is a controller device */
+> > > +	if (mhi_dev->dev_type == MHI_DEVICE_CONTROLLER)
+> > > +		return 0;
+> > > +
+> > > +	/* Reset both channels */
+> > > +	for (dir = 0; dir < 2; dir++) {
+> > > +		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
+> > > +
+> > > +		if (!mhi_chan)
+> > > +			continue;
+> > > +
+> > > +		/* Wake all threads waiting for completion */
+> > > +		write_lock_irq(&mhi_chan->lock);
+> > > +		mhi_chan->ccs = MHI_EV_CC_INVALID;
+> > > +		complete_all(&mhi_chan->completion);
+> > > +		write_unlock_irq(&mhi_chan->lock);
+> > > +
+> > > +		/* Set the channel state to disabled */
+> > > +		mutex_lock(&mhi_chan->mutex);
+> > > +		write_lock_irq(&mhi_chan->lock);
+> > > +		ch_state[dir] = mhi_chan->ch_state;
+> > > +		mhi_chan->ch_state = MHI_CH_STATE_SUSPENDED;
+> > > +		write_unlock_irq(&mhi_chan->lock);
+> > > +
+> > > +		mutex_unlock(&mhi_chan->mutex);
+> > > +	}
+> > > +
+> > > +	mhi_drv->remove(mhi_dev);
+> > > +
+> > > +	/* De-init channel if it was enabled */
+> > > +	for (dir = 0; dir < 2; dir++) {
+> > > +		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
+> > > +
+> > > +		if (!mhi_chan)
+> > > +			continue;
+> > > +
+> > > +		mutex_lock(&mhi_chan->mutex);
+> > > +
+> > > +		mhi_chan->ch_state = MHI_CH_STATE_DISABLED;
+> > > +
+> > > +		mutex_unlock(&mhi_chan->mutex);
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +int mhi_driver_register(struct mhi_driver *mhi_drv)
+> > > +{
+> > > +	struct device_driver *driver = &mhi_drv->driver;
+> > > +
+> > > +	if (!mhi_drv->probe || !mhi_drv->remove)
+> > > +		return -EINVAL;
+> > > +
+> > > +	driver->bus = &mhi_bus_type;
+> > > +	driver->probe = mhi_driver_probe;
+> > > +	driver->remove = mhi_driver_remove;
+> > > +
+> > > +	return driver_register(driver);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(mhi_driver_register);
+> > 
+> > You don't care about module owners of the driver?  Odd :(
+> > 
+> > (hint, you probably should...)
+> > 
+> > greg k-h
+> > 
+> 
+> For my own education, can you please clarify your comment?  I'm not sure
+> that I understand the context of what you are saying (ie why is this export
+> a possible problem?).
 
-> On 03/17/20 at 11:49am, David Hildenbrand wrote:
->> Distributions nowadays use udev rules ([1] [2]) to specify if and
->> how to online hotplugged memory. The rules seem to get more complex with
->> many special cases. Due to the various special cases,
->> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE cannot be used. All memory hotplug
->> is handled via udev rules.
->> 
->> Everytime we hotplug memory, the udev rule will come to the same
->> conclusion. Especially Hyper-V (but also soon virtio-mem) add a lot of
->> memory in separate memory blocks and wait for memory to get onlined by user
->> space before continuing to add more memory blocks (to not add memory faster
->> than it is getting onlined). This of course slows down the whole memory
->> hotplug process.
->> 
->> To make the job of distributions easier and to avoid udev rules that get
->> more and more complicated, let's extend the mechanism provided by
->> - /sys/devices/system/memory/auto_online_blocks
->> - "memhp_default_state=" on the kernel cmdline
->> to be able to specify also "online_movable" as well as "online_kernel"
->
-> This patch series looks good, thanks. Since Andrew has merged it to -mm again,
-> I won't add my Reviewed-by to bother. 
->
-> Hi David, Vitaly
->
-> There are several things unclear to me.
->
-> So, these improved interfaces are used to alleviate the burden of the 
-> existing udev rules, or try to replace it? As you know, we have been
-> using udev rules to interact between kernel and user space on bare metal,
-> and guests who want to hot add/remove.
+Sorry, it didn't have to do with the export, it had to do with the fact
+that your driver_register() function does not pass in the owner of the
+module of the driver, like almost all other subsystems do.  That way you
+can try to protect the module from being unloaded if it has files open
+assigned to it.
 
-With 'auto_online_blocks' interface you don't need the udev rule. David
-is trying to make it more versatile.
+If you don't have any userspace accesses like that, to the driver, then
+nevermind, all is fine :)
 
->
-> And also the OOM issue in hyperV when onlining pages after adding memory
-> block. I am not a virt devel expert, could this happen on bare metal
-> system?
+thanks,
 
-Yes - in theory, very unlikely - in practice.
-
-The root cause of the problem here is adding more memory to the system
-requires memory (page tables, memmaps,..) so if your system is low on
-memory and you're trying to hotplug A LOT you may run into OOM before
-you're able to online anything. With bare metal it's usualy not the
-case: servers, which are able to hotplug memory, are usually booted with
-enough memory and memory hotplug is a manual action (you need to insert
-DIMMs!). But, if you boot your server with e.g. 4G, almost exhaust it
-and then try to hotplug e.g. 256G ... well, OOM is almost guaranteed.
-With virtual machines it's very common (e.g. with Hyper-V VMs) to boot
-them with low memory and hotplug it (automatically, by some management
-software) when neededm thus the problem is way more common.
-
--- 
-Vitaly
-
+greg k-h
