@@ -2,345 +2,294 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2066C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6F6C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1A820753
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BA9420724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="n31xjwa0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p9YlGBNd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgCRRgC (ORCPT
+        id S1726726AbgCRRix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:36:02 -0400
-Received: from mail-co1nam11on2060.outbound.protection.outlook.com ([40.107.220.60]:49184
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726619AbgCRRgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:36:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jU7A9oNPqnZy6zS6ZTC+iyVmVhgh96TApqG5Q0d2DHfbCpD4Y4umOyd8XlplfN4UJuwStepnXi076sImESSJf9vpbXad1c3EoWIy6tNBsF0721R3vu6tgj+d7PFH/5uxSPiB6nu3PtFJ6aTG3uTUEh1qmJUFIuqmW9rVT1BBwQr5Nf5Ss4oUNj89y5ufwLdNgK4SMqgtYYWwX8MdDF9/IflciLWTF/D+StMskrI9qP6vM3yMe/qPYgYRsle1XAdXxAwguuu+Ph0zitN3D8jPThNij+PEscmaUIpQ4qFSmisLlrgF/V8KZyjpvhQ8jMWL4R+Rlbs4Ps12PFj77Re4/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3CkXXnUXmwtBbdQzGmh5nd7fbu4EJQyb9XMEXNgRISM=;
- b=SuDCEdxGQba0BYIHOlhJ2s30LtnPMWNd1ghviwe/JP9EQM+FfN+QM8aZ4U2Mhn1AczcCLHw4VNS6NjXy3AF+rty9F4px6ZakHGNfF92DNzrwWPAmyzOBM2icnfMgz+EQYqMzCixPRoAeIUX0kvn543/LBVhB4RuhiON2Kmg/vr6M+qWNEa8JvRZHepEVep5ILaX9VGcGQgJPMR7MawtcmMxConmHGTZwF6C+xT4JCNI6KxMQO93YSW/RCxyBgOAi8W5Ly+r7zxXDHE+1In5M/Ey8q3xFMVkMCVNV1PVjmN6OxnRLfqypSAj8NgLtEMstRd/VrmVfBsIXr0bylRzqqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 18 Mar 2020 13:38:53 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40006 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgCRRix (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 13:38:53 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z12so4344051wmf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:38:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3CkXXnUXmwtBbdQzGmh5nd7fbu4EJQyb9XMEXNgRISM=;
- b=n31xjwa02FbiXtzr3nE7E8VHstZpVCDM1uGgFj/PtkYDXe8P7Fjkd9Dq5T85zSmem1fQlS6UwNjJAXTpnIpb6Lh3VIJ5a7sy246WrRWLu4LzloOZxBmtGY904LL4AoSVvG+xGt7XBm3nzKFi8K7N2sWnlAgKEYv78tfi4v5KaEQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=kim.phillips@amd.com; 
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
- by SN6PR12MB2766.namprd12.prod.outlook.com (2603:10b6:805:78::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.19; Wed, 18 Mar
- 2020 17:35:23 +0000
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2814.019; Wed, 18 Mar 2020
- 17:35:23 +0000
-Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
- information
-To:     maddy <maddy@linux.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        yao.jin@linux.intel.com, Robert Richter <robert.richter@amd.com>
-References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
- <20200302101332.GS18400@hirez.programming.kicks-ass.net>
- <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
- <df966d6e-8898-029f-e697-8496500a1663@amd.com>
- <2550ec4d-a015-4625-ca24-ff10632dbe2e@linux.ibm.com>
- <d3c82708-dd09-80e0-4e9f-1cbab118a169@amd.com>
- <8a4d966c-acc9-b2b7-8ab7-027aefab201c@linux.ibm.com>
- <f226f4c5-6310-fd6b-ee76-aebd938ec212@amd.com>
- <0c5e94a3-e86e-f7cb-d668-d542b3a8ae29@linux.ibm.com>
-From:   Kim Phillips <kim.phillips@amd.com>
-Message-ID: <8803550e-5d6d-2eda-39f5-e4594052188c@amd.com>
-Date:   Wed, 18 Mar 2020 12:35:18 -0500
+        d=linaro.org; s=google;
+        h=from:autocrypt:to:cc:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=AKNM+u4tFTDVzydrvk84DIfrMpJTc417JXmPwG7RBb0=;
+        b=p9YlGBNdGxZQio4WtosEf3HduBi/ENY6P4nSfz/+csfCH9mlN3lSi4927XUjv7R0FW
+         aHpzOoQmH7C2UxjlSdIRtpjeL9U6NjgqoUGLSDd+AtfhdW46XKnlz9Xy+0GbSDvlmktz
+         rKf3SXO3YkvrVHE7Hus0OHYrcXtfJVhxgl9G9RkinTFvJcnJngeTT9VnycuSeSgVK4/U
+         bkwNa0EaaAZNvjFyPqtuDNdNcYWpWFkdAPJ0sy8WiwJEAreVhwrwWMwCXGi7SZbIqHs1
+         sM97hpIRiHdejlCcl+vwWDiXP1xfn3FvJX/hszkAejqeL56wEp0pvQmHCx+wf1HP5wzn
+         zkdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:autocrypt:to:cc:subject:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=AKNM+u4tFTDVzydrvk84DIfrMpJTc417JXmPwG7RBb0=;
+        b=Y4EZvT7CawctNa/om3yARwE7g7KLb4A4zqrr7eoLV5ndiZ0L97SGJq9TbutuVVwJgn
+         8DdJzYXOo4lcQzBWleb9ezSrwuIvhycaHYbVzgeFnYc03typmMTPiKRQ7JkGsNDtdrND
+         0JQeDXWC3aB2kDemMcn9ZseSVdn8Z6cj4tlmyrj2rLDM5y2RysDfEZRlGnmJT/HdlEbn
+         MgneFyVWPSxRgVLEHBqZk9PIV/YrmysBTslkPeNEjrOe0AVR4AQ6YCZ2fDkrJYMYLGXg
+         pIpjuC+JPH7ZJyI62V7h+f4RQ7sxbjbyX6HuoMKO30ocN1tBw3cmyRURuwhcvrcSGVVR
+         IPvg==
+X-Gm-Message-State: ANhLgQ1uJOkHWbKWhPAVQaQkCBVahH4gbCoXNNOBT8aUeW8hNL00fNzz
+        Mho7rmYlvIfXy7GfFWA+C+0B7g==
+X-Google-Smtp-Source: ADFU+vv4cTBCkZd7IMohtBSAg1jnlEkZsSz+DOS0iaxyjqwKMhhENU8EPyFl3xYfDW4umPdi3fkVMQ==
+X-Received: by 2002:a7b:c414:: with SMTP id k20mr6241301wmi.119.1584553130878;
+        Wed, 18 Mar 2020 10:38:50 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:5d64:ea6:49bd:69d7? ([2a01:e34:ed2f:f020:5d64:ea6:49bd:69d7])
+        by smtp.googlemail.com with ESMTPSA id j6sm5319276wrx.85.2020.03.18.10.38.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Mar 2020 10:38:50 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Zhou Yanjie <zhouyanjie@wanyeetech.com>,
+        Suman Anna <s-anna@ti.com>,
+        Maarten ter Huurne <maarten@treewalker.org>,
+        Joel Stanley <joel@jms.id.au>, matheus@castello.eng.br,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [GIT PULL] timer drivers for v5.7
+Message-ID: <e6cd8adf-60df-437a-003f-58e3403e4697@linaro.org>
+Date:   Wed, 18 Mar 2020 18:38:48 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
-In-Reply-To: <0c5e94a3-e86e-f7cb-d668-d542b3a8ae29@linux.ibm.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BN6PR1201CA0003.namprd12.prod.outlook.com
- (2603:10b6:405:4c::13) To SN6PR12MB2845.namprd12.prod.outlook.com
- (2603:10b6:805:75::33)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.252.4.17] (165.204.84.11) by BN6PR1201CA0003.namprd12.prod.outlook.com (2603:10b6:405:4c::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Wed, 18 Mar 2020 17:35:20 +0000
-X-Originating-IP: [165.204.84.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 082f63c9-7a5c-4a3a-6921-08d7cb62bcb5
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2766:|SN6PR12MB2766:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB27660F799A67129B26C7940687F70@SN6PR12MB2766.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 03468CBA43
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(396003)(366004)(136003)(199004)(2616005)(956004)(31686004)(4326008)(2906002)(7416002)(26005)(186003)(44832011)(16526019)(478600001)(66946007)(6486002)(66476007)(110136005)(66556008)(54906003)(86362001)(5660300002)(31696002)(52116002)(53546011)(8676002)(36756003)(81166006)(81156014)(316002)(8936002)(16576012);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2766;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hDm37z0L3Wqg/NDwpgfC1C0xqmmxrZXPp1spAkzNGjUUi7DXEi4PDuvB6gWsiTEcw0Wkn5B4YjUVDZis0nds84P6jBwud6ZndUjAY93cqGvJDGXH98niGe7aijDRsS8jILFyix8EGHh4+BWvuudBK3ji0OqQN+PZ41WA2h7HMSjXpSzdxj+DGeCf3kvB/L1R2MPxdOnLfJhT8mJU+zRROoU/W7kleebfX7vVuJvh2RyQbMeYi+rnK9+h3aAW7iQ9fX+hD2/uVrc8IrYbnrCByFQbsqTYLJjzph8+VHJkwPzI4o0lwl6ojOT2H+u7vV6rofiCgPX3UXx7TJwYAKq+QBg9tLGNbNQkN6Tv/iNMqUy0iAYlK2+sEZv7Bl3P02TTfV5uZXMKlzXuOW6U1hxZw+qCeaAdyjf5sFRcJgAjRyL9rJzvaiCjD83D51uzuIls
-X-MS-Exchange-AntiSpam-MessageData: pASXu1u3JE5y9Ye/OaUy68aIX+dN9XPomRvrfnbWgMa+FJPS8LCWH3KNP/zOVf6yocNyWCEpi+8Mhj0aIUG/ZUubAHgqmy6ZRkoZVnw94D7FKaqio2Re4fBnpIHg431/+CdKkIde2jYphRUKCY/aHA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 082f63c9-7a5c-4a3a-6921-08d7cb62bcb5
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 17:35:23.4499
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T1yXH4ZwzZI8SsOnW9TaezoS1AOexK/8ly2+5nIVoPALlgLThchHziuOVORQZODZvCNu2W6r4pOQlGUXs7zE5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2766
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maddy,
 
-On 3/17/20 1:50 AM, maddy wrote:
-> On 3/13/20 4:08 AM, Kim Phillips wrote:
->> On 3/11/20 11:00 AM, Ravi Bangoria wrote:
->>> On 3/6/20 3:36 AM, Kim Phillips wrote:
->>>>> On 3/3/20 3:55 AM, Kim Phillips wrote:
->>>>>> On 3/2/20 2:21 PM, Stephane Eranian wrote:
->>>>>>> On Mon, Mar 2, 2020 at 2:13 AM Peter Zijlstra <peterz@infradead.org> wrote:
->>>>>>>> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
->>>>>>>>> Modern processors export such hazard data in Performance
->>>>>>>>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction Event
->>>>>>>>> Register' on IBM PowerPC[1][2] and 'Instruction-Based Sampling' on
->>>>>>>>> AMD[3] provides similar information.
->>>>>>>>>
->>>>>>>>> Implementation detail:
->>>>>>>>>
->>>>>>>>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is introduced.
->>>>>>>>> If it's set, kernel converts arch specific hazard information
->>>>>>>>> into generic format:
->>>>>>>>>
->>>>>>>>>      struct perf_pipeline_haz_data {
->>>>>>>>>             /* Instruction/Opcode type: Load, Store, Branch .... */
->>>>>>>>>             __u8    itype;
->>>>>>>>>             /* Instruction Cache source */
->>>>>>>>>             __u8    icache;
->>>>>>>>>             /* Instruction suffered hazard in pipeline stage */
->>>>>>>>>             __u8    hazard_stage;
->>>>>>>>>             /* Hazard reason */
->>>>>>>>>             __u8    hazard_reason;
->>>>>>>>>             /* Instruction suffered stall in pipeline stage */
->>>>>>>>>             __u8    stall_stage;
->>>>>>>>>             /* Stall reason */
->>>>>>>>>             __u8    stall_reason;
->>>>>>>>>             __u16   pad;
->>>>>>>>>      };
->>>>>>>> Kim, does this format indeed work for AMD IBS?
->>>>>> It's not really 1:1, we don't have these separations of stages
->>>>>> and reasons, for example: we have missed in L2 cache, for example.
->>>>>> So IBS output is flatter, with more cycle latency figures than
->>>>>> IBM's AFAICT.
->>>>> AMD IBS captures pipeline latency data incase Fetch sampling like the
->>>>> Fetch latency, tag to retire latency, completion to retire latency and
->>>>> so on. Yes, Ops sampling do provide more data on load/store centric
->>>>> information. But it also captures more detailed data for Branch instructions.
->>>>> And we also looked at ARM SPE, which also captures more details pipeline
->>>>> data and latency information.
->>>>>
->>>>>>> Personally, I don't like the term hazard. This is too IBM Power
->>>>>>> specific. We need to find a better term, maybe stall or penalty.
->>>>>> Right, IBS doesn't have a filter to only count stalled or otherwise
->>>>>> bad events.  IBS' PPR descriptions has one occurrence of the
->>>>>> word stall, and no penalty.  The way I read IBS is it's just
->>>>>> reporting more sample data than just the precise IP: things like
->>>>>> hits, misses, cycle latencies, addresses, types, etc., so words
->>>>>> like 'extended', or the 'auxiliary' already used today even
->>>>>> are more appropriate for IBS, although I'm the last person to
->>>>>> bikeshed.
->>>>> We are thinking of using "pipeline" word instead of Hazard.
->>>> Hm, the word 'pipeline' occurs 0 times in IBS documentation.
->>> NP. We thought pipeline is generic hw term so we proposed "pipeline"
->>> word. We are open to term which can be generic enough.
->>>
->>>> I realize there are a couple of core pipeline-specific pieces
->>>> of information coming out of it, but the vast majority
->>>> are addresses, latencies of various components in the memory
->>>> hierarchy, and various component hit/miss bits.
->>> Yes. we should capture core pipeline specific details. For example,
->>> IBS generates Branch unit information(IbsOpData1) and Icahce related
->>> data(IbsFetchCtl) which is something that shouldn't be extended as
->>> part of perf-mem, IMO.
->> Sure, IBS Op-side output is more 'perf mem' friendly, and so it
->> should populate perf_mem_data_src fields, just like POWER9 can:
->>
->> union perf_mem_data_src {
->> ...
->>                  __u64   mem_rsvd:24,
->>                          mem_snoopx:2,   /* snoop mode, ext */
->>                          mem_remote:1,   /* remote */
->>                          mem_lvl_num:4,  /* memory hierarchy level number */
->>                          mem_dtlb:7,     /* tlb access */
->>                          mem_lock:2,     /* lock instr */
->>                          mem_snoop:5,    /* snoop mode */
->>                          mem_lvl:14,     /* memory hierarchy level */
->>                          mem_op:5;       /* type of opcode */
->>
->>
->> E.g., SIER[LDST] SIER[A_XLATE_SRC] can be used to populate
->> mem_lvl[_num], SIER_TYPE can be used to populate 'mem_op',
->> 'mem_lock', and the Reload Bus Source Encoding bits can
->> be used to populate mem_snoop, right?
-> Hi Kim,
-> 
-> Yes. We do expose these data as part of perf-mem for POWER.
+Hi Thomas,
 
-OK, I see relevant PERF_MEM_S bits in arch/powerpc/perf/isa207-common.c:
-isa207_find_source now, thanks.
+here is the new material for v5.7.
 
->> For IBS, I see PERF_SAMPLE_ADDR and PERF_SAMPLE_PHYS_ADDR can be
->> used for the ld/st target addresses, too.
->>
->>>> What's needed here is a vendor-specific extended
->>>> sample information that all these technologies gather,
->>>> of which things like e.g., 'L1 TLB cycle latency' we
->>>> all should have in common.
->>> Yes. We will include fields to capture the latency cycles (like Issue
->>> latency, Instruction completion latency etc..) along with other pipeline
->>> details in the proposed structure.
->> Latency figures are just an example, and from what I
->> can tell, struct perf_sample_data already has a 'weight' member,
->> used with PERF_SAMPLE_WEIGHT, that is used by intel-pt to
->> transfer memory access latency figures.  Granted, that's
->> a bad name given all other vendors don't call latency
->> 'weight'.
->>
->> I didn't see any latency figures coming out of POWER9,
->> and do not expect this patchseries to implement those
->> of other vendors, e.g., AMD's IBS; leave each vendor
->> to amend perf to suit their own h/w output please.
-> 
-> Reference structure proposed in this patchset did not have members
-> to capture latency info for that exact reason. But idea here is to
-> abstract  as vendor specific as possible. So if we include u16 array,
-> then this format can also capture data from IBS since it provides
-> few latency details.
+It merges an immutable branch available for pwm on TI as asked by Tony
+Lindgren.
 
-OK, that sounds a bit different from the 6 x u8's + 1 u16 padded
-struct presented in this patchset.
+	https://lkml.org/lkml/2020/3/16/411
 
-IBS Ops can report e.g.:
+The following changes since commit 5fb1c2a5bbf79ccca8d17cf97f66085be5808027:
 
-15 tag-to-retire cycles bits,
-15 completion to retire count bits,
-15 L1 DTLB refill latency bits,
-15 DC miss latency bits,
-5 outstanding memory requests on mem refill bits, and so on.
+  posix-timers: Pass lockdep expression to RCU lists (2020-02-17
+20:12:19 +0100)
 
-IBS Fetch reports 15 bits of fetch latency, and another 16
-for iTLB latency, among others.
+are available in the Git repository at:
 
-Some of these may/may not be valid simultaneously, and
-there are IBS specific rules to establish validity.
+  https://git.linaro.org/people/daniel.lezcano/linux.git tags/timers-v5.7
 
->> My main point there, however, was that each vendor should
->> use streamlined record-level code to just copy the data
->> in the proprietary format that their hardware produces,
->> and then then perf tooling can synthesize the events
->> from the raw data at report/script/etc. time.
->>
->>>> I'm not sure why a new PERF_SAMPLE_PIPELINE_HAZ is needed
->>>> either.  Can we use PERF_SAMPLE_AUX instead?
->>> We took a look at PERF_SAMPLE_AUX. IIUC, PERF_SAMPLE_AUX is intended when
->>> large volume of data needs to be captured as part of perf.data without
->>> frequent PMIs. But proposed type is to address the capture of pipeline
->> SAMPLE_AUX shouldn't care whether the volume is large, or how frequent
->> PMIs are, even though it may be used in those environments.
->>
->>> information on each sample using PMI at periodic intervals. Hence proposing
->>> PERF_SAMPLE_PIPELINE_HAZ.
->> And that's fine for any extra bits that POWER9 has to convey
->> to its users beyond things already represented by other sample
->> types like PERF_SAMPLE_DATA_SRC, but the capturing of both POWER9
->> and other vendor e.g., AMD IBS data can be made vendor-independent
->> at record time by using SAMPLE_AUX, or SAMPLE_RAW even, which is
->> what IBS currently uses.
-> 
-> My bad. Not sure what you mean by this. We are trying to abstract
-> as much vendor specific data as possible with this (like perf-mem).
+for you to fetch changes up to 4f41fe386a94639cd9a1831298d4f85db5662f1e:
 
-Perhaps if I say it this way: instead of doing all the 
-isa207_get_phazard_data() work past the mfspr(SPRN_SIER)
-in patch 4/11, rather/instead just put the raw sier value in a 
-PERF_SAMPLE_RAW or _AUX event, and call perf_event_update_userpage.
-Specific SIER capabilities can be written as part of the perf.data
-header.  Then synthesize the true pipe events from the raw SIER
-values later, and in userspace.
+  clocksource/drivers/timer-probe: Avoid creating dead devices
+(2020-03-17 13:10:07 +0100)
 
-I guess it's technically optional, but I think that's how
-I'd do it in IBS, since it minimizes the record-time overhead.
+----------------------------------------------------------------
+- Avoid creating dead devices by flagging the driver with OF_POPULATED
+  in order to prevent the platform to create another device (Saravana
+Kannan)
 
-Thanks,
+- Remove unused includes from imx family drivers (Anson Huang)
 
-Kim
+- timer-dm-ti rework to prepare for pwm and suspend support (Lokesh Vutla)
 
-> Maddy
->>
->>>>   Take a look at
->>>> commit 98dcf14d7f9c "perf tools: Add kernel AUX area sampling
->>>> definitions".  The sample identifier can be used to determine
->>>> which vendor's sampling IP's data is in it, and events can
->>>> be recorded just by copying the content of the SIER, etc.
->>>> registers, and then events get synthesized from the aux
->>>> sample at report/inject/annotate etc. time.  This allows
->>>> for less sample recording overhead, and moves all the vendor
->>>> specific decoding and common event conversions for userspace
->>>> to figure out.
->>> When AUX buffer data is structured, tool side changes added to present the
->>> pipeline data can be re-used.
->> Not sure I understand: AUX data would be structured on
->> each vendor's raw h/w register formats.
->>
->> Thanks,
->>
->> Kim
->>
->>>>>>> Also worth considering is the support of ARM SPE (Statistical
->>>>>>> Profiling Extension) which is their version of IBS.
->>>>>>> Whatever gets added need to cover all three with no limitations.
->>>>>> I thought Intel's various LBR, PEBS, and PT supported providing
->>>>>> similar sample data in perf already, like with perf mem/c2c?
->>>>> perf-mem is more of data centric in my opinion. It is more towards
->>>>> memory profiling. So proposal here is to expose pipeline related
->>>>> details like stalls and latencies.
->>>> Like I said, I don't see it that way, I see it as "any particular
->>>> vendor's event's extended details', and these pipeline details
->>>> have overlap with existing infrastructure within perf, e.g., L2
->>>> cache misses.
->>>>
->>>> Kim
->>>>
-> 
+- Fix the rate for the global clock on the pit64b (Claudiu Beznea)
+
+- Fix timer-cs5535 by requesting an irq with non-NULL dev_id (Afzal
+Mohammed)
+
+- Replace setup_irq() by request_irq() (Afzal Mohammed)
+
+- Add support for the TCU of X1000 (Zhou Yanjie)
+
+- Drop the bogus omap_dm_timer_of_set_source() function (Suman Anna)
+
+- Do not update the counter when updating the period in order to
+  prevent a disruption when the pwm is used (Lokesh Vutla)
+
+- Improve owl_timer_init() failure messages (Matheus Castello)
+
+- Add driver for the Ingenic JZ47xx OST (Maarten ter Huurne)
+
+- Pass the interrupt and the shutdown callbacks in the init function
+  for ast2600 support (Joel Stanley)
+
+- Add the ast2600 compatible string for the fttmr010 (Joel Stanley)
+
+----------------------------------------------------------------
+Anson Huang (2):
+      clocksource/drivers/imx-tpm: Remove unused includes
+      clocksource/drivers/imx-sysctr: Remove unused includes
+
+Claudiu Beznea (1):
+      clocksource/drivers/timer-microchip-pit64b: Fix rate for gck
+
+Daniel Lezcano (1):
+      Merge branch 'timers/drivers/timer-ti-dm' into timers/drivers/next
+
+Joel Stanley (3):
+      clocksource/drivers/fttmr010: Parametrise shutdown
+      clocksource/drivers/fttmr010: Set interrupt and shutdown
+      dt-bindings: fttmr010: Add ast2600 compatible
+
+Lokesh Vutla (6):
+      clocksource/drivers/timer-ti-dm: Do not update counter on updating
+the period
+      clocksource/drivers/timer-ti-dm: Convert to SPDX identifier
+      clocksource/drivers/timer-ti-dm: Implement cpu_pm notifier for
+context save and restore
+      clocksource/drivers/timer-ti-dm: Do not update counter on updating
+the period
+      clocksource/drivers/timer-ti-dm: Add support to get pwm current status
+      clocksource/drivers/timer-ti-dm: Enable autoreload in set_pwm
+
+Maarten ter Huurne (1):
+      clocksource: Add driver for the Ingenic JZ47xx OST
+
+Matheus Castello (1):
+      clocksource/drivers/owl: Improve owl_timer_init fail messages
+
+Saravana Kannan (1):
+      clocksource/drivers/timer-probe: Avoid creating dead devices
+
+Suman Anna (1):
+      clocksource/drivers/timer-ti-dm: Drop bogus
+omap_dm_timer_of_set_source()
+
+Tony Lindgren (1):
+      clocksource/drivers/timer-ti-dm: Prepare for using cpuidle
+
+afzal mohammed (2):
+      clocksource: Replace setup_irq() by request_irq()
+      clocksource/drivers/timer-cs5535: Request irq with non-NULL dev_id
+
+周琰杰 (Zhou Yanjie) (2):
+      dt-bindings: timer: Add X1000 bindings.
+      clocksource/drivers/ingenic: Add support for TCU of X1000
+
+ .../devicetree/bindings/timer/faraday,fttmr010.txt |   1 +
+ .../devicetree/bindings/timer/ingenic,tcu.txt      |   1 +
+ drivers/clocksource/Kconfig                        |   8 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/bcm2835_timer.c                |   8 +-
+ drivers/clocksource/bcm_kona_timer.c               |  10 +-
+ drivers/clocksource/dw_apb_timer.c                 |  11 +-
+ drivers/clocksource/exynos_mct.c                   |  12 +-
+ drivers/clocksource/ingenic-ost.c                  | 189 ++++++++++++++++++
+ drivers/clocksource/ingenic-timer.c                |   3 +-
+ drivers/clocksource/mxs_timer.c                    |  10 +-
+ drivers/clocksource/nomadik-mtu.c                  |  11 +-
+ drivers/clocksource/samsung_pwm_timer.c            |  12 +-
+ drivers/clocksource/timer-atlas7.c                 |  50 +++--
+ drivers/clocksource/timer-cs5535.c                 |   9 +-
+ drivers/clocksource/timer-efm32.c                  |  10 +-
+ drivers/clocksource/timer-fsl-ftm.c                |  10 +-
+ drivers/clocksource/timer-fttmr010.c               |  68 +++++--
+ drivers/clocksource/timer-imx-gpt.c                |  10 +-
+ drivers/clocksource/timer-imx-sysctr.c             |   2 -
+ drivers/clocksource/timer-imx-tpm.c                |   2 -
+ drivers/clocksource/timer-integrator-ap.c          |  11 +-
+ drivers/clocksource/timer-meson6.c                 |  11 +-
+ drivers/clocksource/timer-microchip-pit64b.c       |   1 +
+ drivers/clocksource/timer-orion.c                  |   9 +-
+ drivers/clocksource/timer-owl.c                    |  15 +-
+ drivers/clocksource/timer-prima2.c                 |  14 +-
+ drivers/clocksource/timer-probe.c                  |   2 +
+ drivers/clocksource/timer-pxa.c                    |  10 +-
+ drivers/clocksource/timer-sp804.c                  |  11 +-
+ drivers/clocksource/timer-ti-dm.c                  | 217
++++++++++++----------
+ drivers/clocksource/timer-u300.c                   |   9 +-
+ drivers/clocksource/timer-vf-pit.c                 |  10 +-
+ drivers/clocksource/timer-vt8500.c                 |  11 +-
+ drivers/clocksource/timer-zevio.c                  |  13 +-
+ drivers/pwm/pwm-omap-dmtimer.c                     |   8 +-
+ include/clocksource/timer-ti-dm.h                  |   4 +-
+ include/linux/dw_apb_timer.h                       |   1 -
+ include/linux/platform_data/dmtimer-omap.h         |   6 +-
+ 39 files changed, 471 insertions(+), 330 deletions(-)
+ create mode 100644 drivers/clocksource/ingenic-ost.c
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
