@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C5FC55186
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C24EC41620
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57D121473
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCF12173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564887;
-	bh=St995Wd1RmOD++GY9bUxVb2UFud/otFNFnRTSJ7OFns=;
+	s=default; t=1584564889;
+	bh=pCcuB+pWkl42Rhm34auNydPrvo+nVOHuntQjPPkv8N0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NsQLLeUEHoCrea63UB+ksMHkvSRl3cqbMB2mr72GTesJc47MDTN/2/DHr0k1t+p5l
-	 XRXMfVavX2qyayrR5LB/OL1pesAgbkdIyQAJqovvQbb4NrNUJiOyCdp/zEbr/iH/Bt
-	 /N4IGy0iTZ+ou4hEPoq0r8QlCQqKS6kTHrI141MY=
+	b=r+5jjBK1dbxga0nzkWDwFXA7vitI3BrIHiDgpotnyobwdLtWwlh06wDfh0rVX+lLD
+	 I/Prxqww/zMIHqcvmhMFs/xkLewGyhnWQM3T2gUmnN4E1RTS1yTrpb4fBC7AER/aWZ
+	 keG9Jkn4Vt30P7+4c0/UMtcfygkNn+qUogKXs31U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgCRUyr (ORCPT
+        id S1727998AbgCRUys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:54:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54528 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:54:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727968AbgCRUyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:54:44 -0400
+        id S1727977AbgCRUyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 607F4208E0;
-        Wed, 18 Mar 2020 20:54:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 743A22173E;
+        Wed, 18 Mar 2020 20:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564884;
-        bh=St995Wd1RmOD++GY9bUxVb2UFud/otFNFnRTSJ7OFns=;
+        s=default; t=1584564885;
+        bh=pCcuB+pWkl42Rhm34auNydPrvo+nVOHuntQjPPkv8N0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QVV7HQgw6WFxJZHpShz4BvF2s1NzA4nxs2cPpoEAS4h1CygWakUHF8qmRbYTc+eZ1
-         3tgzUqhHlSkZR3PREs4oNR8xUemjccO/o9fxeJM8foMuIgobuvOVI15n070pgon4CL
-         YtmshjsbzeemIPTPmWgh0qgmVjmZWqFPTQVNf8bk=
+        b=tHpTrIw/ohUUD58W+TZkBjTO2yP8sRN/Btro6FSLybAkW5zHuyQ4WqX9MyXm8gxCn
+         Jzxuru+C/bGkT1FD1B6q2FPdhAIE3TGDzTH0eWldzpVPrunFmbAuIMBG20Y/Z7invw
+         heLjSIhRJPwmnfFx1OViI7QIaw8iH269BBZOaRuo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 53/73] s390/qeth: don't reset default_out_queue
-Date:   Wed, 18 Mar 2020 16:53:17 -0400
-Message-Id: <20200318205337.16279-53-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 54/73] s390/qeth: handle error when backing RX buffer
+Date:   Wed, 18 Mar 2020 16:53:18 -0400
+Message-Id: <20200318205337.16279-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -61,39 +61,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 240c1948491b81cfe40f84ea040a8f2a4966f101 ]
+[ Upstream commit 17413852804d7e86e6f0576cca32c1541817800e ]
 
-When an OSA device in prio-queue setup is reduced to 1 TX queue due to
-HW restrictions, we reset its the default_out_queue to 0.
+qeth_init_qdio_queues() fills the RX ring with an initial set of
+RX buffers. If qeth_init_input_buffer() fails to back one of the RX
+buffers with memory, we need to bail out and report the error.
 
-In the old code this was needed so that qeth_get_priority_queue() gets
-the queue selection right. But with proper multiqueue support we already
-reduced dev->real_num_tx_queues to 1, and so the stack puts all traffic
-on txq 0 without even calling .ndo_select_queue.
-
-Thus we can preserve the user's configuration, and apply it if the OSA
-device later re-gains support for multiple TX queues.
-
-Fixes: 73dc2daf110f ("s390/qeth: add TX multiqueue support for OSA devices")
+Fixes: 4a71df50047f ("qeth: new qeth device driver")
 Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/s390/net/qeth_core_main.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index b727d1e34523e..ac8ad951a4203 100644
+index ac8ad951a4203..fe70e9875bde0 100644
 --- a/drivers/s390/net/qeth_core_main.c
 +++ b/drivers/s390/net/qeth_core_main.c
-@@ -1244,7 +1244,6 @@ static int qeth_osa_set_output_queues(struct qeth_card *card, bool single)
- 	if (count == 1)
- 		dev_info(&card->gdev->dev, "Priority Queueing not supported\n");
+@@ -2633,12 +2633,12 @@ static int qeth_init_input_buffer(struct qeth_card *card,
+ 		buf->rx_skb = netdev_alloc_skb(card->dev,
+ 					       QETH_RX_PULL_LEN + ETH_HLEN);
+ 		if (!buf->rx_skb)
+-			return 1;
++			return -ENOMEM;
+ 	}
  
--	card->qdio.default_out_queue = single ? 0 : QETH_DEFAULT_QUEUE;
- 	card->qdio.no_out_queues = count;
- 	return 0;
- }
+ 	pool_entry = qeth_find_free_buffer_pool_entry(card);
+ 	if (!pool_entry)
+-		return 1;
++		return -ENOBUFS;
+ 
+ 	/*
+ 	 * since the buffer is accessed only from the input_tasklet
+@@ -2670,10 +2670,15 @@ int qeth_init_qdio_queues(struct qeth_card *card)
+ 	/* inbound queue */
+ 	qdio_reset_buffers(card->qdio.in_q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
+ 	memset(&card->rx, 0, sizeof(struct qeth_rx));
++
+ 	qeth_initialize_working_pool_list(card);
+ 	/*give only as many buffers to hardware as we have buffer pool entries*/
+-	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; ++i)
+-		qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
++	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; i++) {
++		rc = qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
++		if (rc)
++			return rc;
++	}
++
+ 	card->qdio.in_q->next_buf_to_init =
+ 		card->qdio.in_buf_pool.buf_count - 1;
+ 	rc = do_QDIO(CARD_DDEV(card), QDIO_FLAG_SYNC_INPUT, 0, 0,
 -- 
 2.20.1
 
