@@ -2,913 +2,276 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC70C5ACD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B573DC5ACDA
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01EF20770
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CDEC2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbgCRLrH (ORCPT
+        id S1727321AbgCRLrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:47:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:49076 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgCRLrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:47:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCBDB7FA;
-        Wed, 18 Mar 2020 04:47:05 -0700 (PDT)
-Received: from e123648.arm.com (unknown [10.37.12.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 75A663F534;
-        Wed, 18 Mar 2020 04:46:55 -0700 (PDT)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Wed, 18 Mar 2020 07:47:15 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35619 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgCRLrO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 07:47:14 -0400
+Received: by mail-lj1-f196.google.com with SMTP id u12so26654823ljo.2;
+        Wed, 18 Mar 2020 04:47:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Ab62Ifr6mdslEB8rNbBB2lyNK3id75uGbHTExJNuy2w=;
+        b=WG7AWvba1m7Bgi1xcFdbl9adYRZCezs4c7DEgzNGW4Ppp2gDney3qMECnpjEZ9ouxM
+         H44BiKKv1kIO4kfADVzWZi6BduIc0jvKC8b4hicZhkHaLJiY3Fjs8X/c2NyBO6VYzuMs
+         bNAikGIt0AS87EG3EXjKtpxq7KRQJ+BpUaJ+C9fwUfNf3/W5ys711vd3oRnzq/t+oEnm
+         /E14y0WDrXxJMSoFgn2SCrrQPhKB47PfagMsM63ovR6CpZB57ZqSKqHF3+wujuUqaoAy
+         reLYY0rhC5SEdNbKgZp4r8kRy/KC/dT+b43fXhl4vUF5hRbW6Djf7rWc4FWKYRpyEc5F
+         jU6g==
+X-Gm-Message-State: ANhLgQ2Bgm+5Xag58FsRI6ScpPCrXL6mbfHpff+LaAU5a4y2M4Jql4zR
+        7sYjBIqs2YQVPpGtX+TX1uM=
+X-Google-Smtp-Source: ADFU+vsjikg6Y2a5KjS3oadSfQozrw8fRFUY0OAeRSoGQxPf78q4+DaqJVZpkfQhudkt2r3G0F7+Xg==
+X-Received: by 2002:a2e:240e:: with SMTP id k14mr2152030ljk.228.1584532030161;
+        Wed, 18 Mar 2020 04:47:10 -0700 (PDT)
+Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
+        by smtp.gmail.com with ESMTPSA id 8sm17094lfy.21.2020.03.18.04.47.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 04:47:09 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 13:47:01 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrei Stefanescu <andrei.stefanescu@microchip.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-pm@vger.kernel.org, patches@opensource.cirrus.com,
         linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
-        javi.merino@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
-        patrick.bellasi@matbug.net, orjan.eide@arm.com,
-        rdunlap@infradead.org, mka@chromium.org
-Subject: [PATCH v5 4/5] thermal: devfreq_cooling: Refactor code and switch to use Energy Model
-Date:   Wed, 18 Mar 2020 11:45:47 +0000
-Message-Id: <20200318114548.19916-5-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200318114548.19916-1-lukasz.luba@arm.com>
-References: <20200318114548.19916-1-lukasz.luba@arm.com>
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+Subject: [PATCH v5 0/9] Support ROHM BD99954 charger IC
+Message-ID: <cover.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The overhauled Energy Model (EM) framework support also devfreq devices.
-The unified API interface of the EM can be used in the thermal subsystem to
-not duplicate code. The power table now is taken from EM structure and
-there is no need to maintain calculation for it locally. In case when the
-EM is not provided by the device a simple interface for cooling device is
-used.
+Support ROHM BD99954 Battery Management IC
 
-There is also an improvement in code related to enabling/disabling OPPs,
-which prevents from race condition with devfreq governors.
+ROHM BD99954 is a Battery Management IC for 1-4 cell Lithium-Ion
+secondary battery. BD99954 is intended to be used in space-constraint
+equipment such as Low profile Notebook PC, Tablets and other
+applications.
 
-[lkp: Reported the build warning]
-Reported-by: kbuild test robot <lkp@intel.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org> # for tracing code
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+Series extracts a "linear ranges" helper out of the regulator
+framework. Linear ranges helper is intended to help converting
+real-world values to register values when conversion is linear. I
+suspect this is useful also for power subsystem and possibly for clk.
+
+This version of series introduces new battry DT binding entries and
+adds the parsing in power_supply_get_battery_info().
+
+Changelog v5:
+ generic:
+   - rebased on top of 5.6-rc6.
+ DT-bindings:
+   - Dropped -charger extension from compatible and removed wildcard x.
+ regulators:
+   - squashed the regulator changes in one patch.
+ power-supply KConfig:
+   - fixed indentiation
+   - dropped unnecessary 'default N' from BD99954.
+
+Changelog v4:
+ generic:
+   - rebase and drop RFC.
+ DT-bindings:
+   - add I2C node address-cells and size-cells to fix yaml check errors
+   - uncomment multipleOf:
+ bd70528:
+   - add patch which renames driver internal linear_range struct to
+     avoid collision when regulator/driver.h (which gets included from
+     rohm generic header) introduces the linear_range struct.
+ regulators:
+   - rebase to v5.6-rc2 and convert also the two newly introduced
+     drivers to use linear_range struct instead of
+     regulator_linear_range.
+ linear_ranges:
+   - Fix kerneldoc.
+
+Changelog RFC-v3:
+ DT-bindings:
+   - fix the BD99954 binding (the *-microvolt Vs. *-microvolts issue is
+     still there. Not sure which one is correct)
+   - renabe tricklecharge-* binding to trickle-charge-* as suggested by
+     Rob.
+ - drop the linear-ranges helper which was written for BD70528 and
+   extract the linear-range code from regulator framework instead.
+ - refactor regulator framework to utilize extracted linear-ranges
+   code.
+ - change the struct regulator_linear_range to linear_range from
+   regulator drivers.
+ - refactor BD70528 to use regulator framework originated
+   linear-ranges code.
+ - change BD99954 to use linear-ranges code from regulator framework
+
+Changelog RFC-v2:
+ DT-bindings:
+   - Used the battery parameters described in battery.txt
+   - Added few new parameters to battery.txt
+   - Added ASCII art charging profile chart for BD99954 to explain
+     states and limits.
+ Linear ranges:
+   - Fixed division by zero error from linear-ranges code if step 0 is
+     used.
+ Power-supply core:
+   - Added parsing of new battery parameters.
+ BD99954 driver:
+   - converted to use battery parameters from battery node
+   - Added step 0 ranges for reg values which do not change voltage
+   - added dt-node to psy-config
+
+Patch 1:
+	DT binding docs for the new battery parameters
+Patch 2:
+	BD99954 charger DT binding docs
+Patch 3:
+	Linear ranges helpers
+Patch 4:
+	Rename driver internal struct linear_range from bd70528-power
+Patch 5:
+	Use linear-ranges helpers in regulator framework and
+	convert regulator drivers to use new linear_range struct.
+Patch 6:
+	Use linear-ranges helpers in bd70528 driver
+Patch 7:
+	Parsing of new battery parameters
+Patch 8:
+	ROHM BD99954 charger IC driver
+Patch 9:
+	Fix Kconfig help text indentiation for other entries as well.
+
 ---
- drivers/thermal/devfreq_cooling.c | 474 ++++++++++++++++--------------
- include/linux/devfreq_cooling.h   |  39 +--
- include/trace/events/thermal.h    |  19 +-
- 3 files changed, 277 insertions(+), 255 deletions(-)
 
-diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
-index f7f32e98331b..017743f1cd62 100644
---- a/drivers/thermal/devfreq_cooling.c
-+++ b/drivers/thermal/devfreq_cooling.c
-@@ -1,17 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * devfreq_cooling: Thermal cooling device implementation for devices using
-  *                  devfreq
-  *
-- * Copyright (C) 2014-2015 ARM Limited
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-+ * Copyright (C) 2014-2020 ARM Limited
-  *
-  * TODO:
-  *    - If OPPs are added or removed after devfreq cooling has
-@@ -41,36 +33,33 @@ static DEFINE_IDA(devfreq_ida);
-  * @cdev:	Pointer to associated thermal cooling device.
-  * @devfreq:	Pointer to associated devfreq device.
-  * @cooling_state:	Current cooling state.
-- * @power_table:	Pointer to table with maximum power draw for each
-- *			cooling state. State is the index into the table, and
-- *			the power is in mW.
-- * @freq_table:	Pointer to a table with the frequencies sorted in descending
-- *		order.  You can index the table by cooling device state
-- * @freq_table_size:	Size of the @freq_table and @power_table
-- * @power_ops:	Pointer to devfreq_cooling_power, used to generate the
-- *		@power_table.
-+ * @freq_table:        Pointer to a table with the frequencies.
-+ * @max_level:	It is the last index, that is, one less than the number of the
-+ *		OPPs
-+ * @power_ops:	Pointer to devfreq_cooling_power, a more precised model.
-  * @res_util:	Resource utilization scaling factor for the power.
-  *		It is multiplied by 100 to minimize the error. It is used
-  *		for estimation of the power budget instead of using
-- *		'utilization' (which is	'busy_time / 'total_time').
-- *		The 'res_util' range is from 100 to (power_table[state] * 100)
-- *		for the corresponding 'state'.
-- * @capped_state:	index to cooling state with in dynamic power budget
-+ *		'utilization' (which is	'busy_time' / 'total_time').
-+ *		The 'res_util' range is from 100 to power * 100	for the
-+ *		corresponding 'state'.
-  * @req_max_freq:	PM QoS request for limiting the maximum frequency
-  *			of the devfreq device.
-+ * @em:		Energy Model which represents the associated Devfreq device
-+ * @em_registered:	Devfreq cooling registered the EM and should free it.
-  */
- struct devfreq_cooling_device {
- 	int id;
- 	struct thermal_cooling_device *cdev;
- 	struct devfreq *devfreq;
- 	unsigned long cooling_state;
--	u32 *power_table;
- 	u32 *freq_table;
--	size_t freq_table_size;
-+	size_t max_level;
- 	struct devfreq_cooling_power *power_ops;
- 	u32 res_util;
--	int capped_state;
- 	struct dev_pm_qos_request req_max_freq;
-+	struct em_perf_domain *em;
-+	bool em_registered;
- };
- 
- static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
-@@ -78,7 +67,7 @@ static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
- {
- 	struct devfreq_cooling_device *dfc = cdev->devdata;
- 
--	*state = dfc->freq_table_size - 1;
-+	*state = dfc->max_level;
- 
- 	return 0;
- }
-@@ -106,10 +95,16 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
- 
- 	dev_dbg(dev, "Setting cooling state %lu\n", state);
- 
--	if (state >= dfc->freq_table_size)
-+	if (state > dfc->max_level)
- 		return -EINVAL;
- 
--	freq = dfc->freq_table[state];
-+	if (dfc->em) {
-+		/* Energy Model frequencies are in kHz */
-+		freq = dfc->em->table[dfc->max_level - state].frequency;
-+		freq *= 1000;
-+	} else {
-+		freq = dfc->freq_table[state];
-+	}
- 
- 	dev_pm_qos_update_request(&dfc->req_max_freq,
- 				  DIV_ROUND_UP(freq, HZ_PER_KHZ));
-@@ -120,11 +115,11 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
- }
- 
- /**
-- * freq_get_state() - get the cooling state corresponding to a frequency
-+ * freq_get_state() - get the performance index corresponding to a frequency
-  * @dfc:	Pointer to devfreq cooling device
-- * @freq:	frequency in Hz
-+ * @freq:	frequency in kHz
-  *
-- * Return: the cooling state associated with the @freq, or
-+ * Return: the performance index associated with the @freq, or
-  * THERMAL_CSTATE_INVALID if it wasn't found.
-  */
- static unsigned long
-@@ -132,8 +127,8 @@ freq_get_state(struct devfreq_cooling_device *dfc, unsigned long freq)
- {
- 	int i;
- 
--	for (i = 0; i < dfc->freq_table_size; i++) {
--		if (dfc->freq_table[i] == freq)
-+	for (i = 0; i <= dfc->max_level; i++) {
-+		if (dfc->em->table[i].frequency == freq)
- 			return i;
- 	}
- 
-@@ -168,132 +163,92 @@ static unsigned long get_voltage(struct devfreq *df, unsigned long freq)
- 	return voltage;
- }
- 
--/**
-- * get_static_power() - calculate the static power
-- * @dfc:	Pointer to devfreq cooling device
-- * @freq:	Frequency in Hz
-- *
-- * Calculate the static power in milliwatts using the supplied
-- * get_static_power().  The current voltage is calculated using the
-- * OPP library.  If no get_static_power() was supplied, assume the
-- * static power is negligible.
-- */
--static unsigned long
--get_static_power(struct devfreq_cooling_device *dfc, unsigned long freq)
-+static void dfc_em_get_requested_power(struct em_perf_domain *em,
-+				       struct devfreq_dev_status *status,
-+				       u32 *power, int em_perf_idx)
- {
--	struct devfreq *df = dfc->devfreq;
--	unsigned long voltage;
-+	*power = em->table[em_perf_idx].power;
- 
--	if (!dfc->power_ops->get_static_power)
--		return 0;
--
--	voltage = get_voltage(df, freq);
--
--	if (voltage == 0)
--		return 0;
--
--	return dfc->power_ops->get_static_power(df, voltage);
-+	/* Scale power for utilization */
-+	*power *= status->busy_time;
-+	*power /= status->total_time;
- }
- 
--/**
-- * get_dynamic_power - calculate the dynamic power
-- * @dfc:	Pointer to devfreq cooling device
-- * @freq:	Frequency in Hz
-- * @voltage:	Voltage in millivolts
-- *
-- * Calculate the dynamic power in milliwatts consumed by the device at
-- * frequency @freq and voltage @voltage.  If the get_dynamic_power()
-- * was supplied as part of the devfreq_cooling_power struct, then that
-- * function is used.  Otherwise, a simple power model (Pdyn = Coeff *
-- * Voltage^2 * Frequency) is used.
-- */
--static unsigned long
--get_dynamic_power(struct devfreq_cooling_device *dfc, unsigned long freq,
--		  unsigned long voltage)
-+static void _normalize_load(struct devfreq_dev_status *status)
- {
--	u64 power;
--	u32 freq_mhz;
--	struct devfreq_cooling_power *dfc_power = dfc->power_ops;
--
--	if (dfc_power->get_dynamic_power)
--		return dfc_power->get_dynamic_power(dfc->devfreq, freq,
--						    voltage);
--
--	freq_mhz = freq / 1000000;
--	power = (u64)dfc_power->dyn_power_coeff * freq_mhz * voltage * voltage;
--	do_div(power, 1000000000);
-+	/* Make some space if needed */
-+	if (status->busy_time > 0xffff) {
-+		status->busy_time >>= 10;
-+		status->total_time >>= 10;
-+	}
- 
--	return power;
--}
-+	if (status->busy_time > status->total_time)
-+		status->busy_time = status->total_time;
- 
-+	status->busy_time *= 100;
-+	status->busy_time /= status->total_time ? : 1;
- 
--static inline unsigned long get_total_power(struct devfreq_cooling_device *dfc,
--					    unsigned long freq,
--					    unsigned long voltage)
--{
--	return get_static_power(dfc, freq) + get_dynamic_power(dfc, freq,
--							       voltage);
-+	/* Avoid division by 0 */
-+	status->busy_time = status->busy_time ? : 1;
-+	status->total_time = 100;
- }
- 
--
- static int devfreq_cooling_get_requested_power(struct thermal_cooling_device *cdev,
- 					       struct thermal_zone_device *tz,
- 					       u32 *power)
- {
- 	struct devfreq_cooling_device *dfc = cdev->devdata;
- 	struct devfreq *df = dfc->devfreq;
--	struct devfreq_dev_status *status = &df->last_status;
--	unsigned long state;
--	unsigned long freq = status->current_frequency;
--	unsigned long voltage;
--	u32 dyn_power = 0;
--	u32 static_power = 0;
-+	struct devfreq_dev_status status;
-+	unsigned long voltage, freq;
-+	unsigned long em_perf_idx;
- 	int res;
- 
--	state = freq_get_state(dfc, freq);
--	if (state == THERMAL_CSTATE_INVALID) {
--		res = -EAGAIN;
--		goto fail;
--	}
-+	mutex_lock(&df->lock);
-+	res = df->profile->get_dev_status(df->dev.parent, &status);
-+	mutex_unlock(&df->lock);
-+	if (res)
-+		return res;
- 
--	if (dfc->power_ops->get_real_power) {
-+	freq = status.current_frequency;
-+
-+	/* Energy Model frequencies are in kHz */
-+	em_perf_idx = freq_get_state(dfc, freq / 1000);
-+	if (em_perf_idx == THERMAL_CSTATE_INVALID)
-+		return -EAGAIN;
-+
-+	/*
-+	 * If a more sophisticated cooling device model was not provided by the
-+	 * driver, use simple Energy Model power calculation.
-+	 */
-+	if (!dfc->power_ops || !dfc->power_ops->get_real_power) {
-+		_normalize_load(&status);
-+		dfc_em_get_requested_power(dfc->em, &status, power,
-+					   em_perf_idx);
-+	} else {
- 		voltage = get_voltage(df, freq);
- 		if (voltage == 0) {
--			res = -EINVAL;
--			goto fail;
-+			dfc->res_util = SCALE_ERROR_MITIGATION;
-+			return -EINVAL;
- 		}
- 
- 		res = dfc->power_ops->get_real_power(df, power, freq, voltage);
- 		if (!res) {
--			state = dfc->capped_state;
--			dfc->res_util = dfc->power_table[state];
-+			dfc->res_util = dfc->em->table[em_perf_idx].power;
- 			dfc->res_util *= SCALE_ERROR_MITIGATION;
- 
- 			if (*power > 1)
- 				dfc->res_util /= *power;
- 		} else {
--			goto fail;
-+			/* It is safe to set max in this case */
-+			dfc->res_util = SCALE_ERROR_MITIGATION;
-+			return res;
- 		}
--	} else {
--		dyn_power = dfc->power_table[state];
--
--		/* Scale dynamic power for utilization */
--		dyn_power *= status->busy_time;
--		dyn_power /= status->total_time;
--		/* Get static power */
--		static_power = get_static_power(dfc, freq);
--
--		*power = dyn_power + static_power;
- 	}
- 
--	trace_thermal_power_devfreq_get_power(cdev, status, freq, dyn_power,
--					      static_power, *power);
-+	trace_thermal_power_devfreq_get_power(cdev, &status, freq, *power);
- 
- 	return 0;
--fail:
--	/* It is safe to set max in this case */
--	dfc->res_util = SCALE_ERROR_MITIGATION;
--	return res;
- }
- 
- static int devfreq_cooling_state2power(struct thermal_cooling_device *cdev,
-@@ -302,16 +257,14 @@ static int devfreq_cooling_state2power(struct thermal_cooling_device *cdev,
- 				       u32 *power)
- {
- 	struct devfreq_cooling_device *dfc = cdev->devdata;
--	unsigned long freq;
--	u32 static_power;
-+	int idx;
- 
--	if (state >= dfc->freq_table_size)
-+	if (state > dfc->max_level)
- 		return -EINVAL;
- 
--	freq = dfc->freq_table[state];
--	static_power = get_static_power(dfc, freq);
-+	idx = dfc->max_level - state;
-+	*power = dfc->em->table[idx].power;
- 
--	*power = dfc->power_table[state] + static_power;
- 	return 0;
- }
- 
-@@ -321,39 +274,41 @@ static int devfreq_cooling_power2state(struct thermal_cooling_device *cdev,
- {
- 	struct devfreq_cooling_device *dfc = cdev->devdata;
- 	struct devfreq *df = dfc->devfreq;
--	struct devfreq_dev_status *status = &df->last_status;
--	unsigned long freq = status->current_frequency;
--	unsigned long busy_time;
--	s32 dyn_power;
--	u32 static_power;
--	s32 est_power;
-+	struct devfreq_dev_status status;
-+	u32 est_power = power;
-+	unsigned long freq;
- 	int i;
- 
--	if (dfc->power_ops->get_real_power) {
--		/* Scale for resource utilization */
--		est_power = power * dfc->res_util;
--		est_power /= SCALE_ERROR_MITIGATION;
--	} else {
--		static_power = get_static_power(dfc, freq);
-+	mutex_lock(&df->lock);
-+	status = df->last_status;
-+	mutex_unlock(&df->lock);
- 
--		dyn_power = power - static_power;
--		dyn_power = dyn_power > 0 ? dyn_power : 0;
-+	freq = status.current_frequency;
- 
--		/* Scale dynamic power for utilization */
--		busy_time = status->busy_time ?: 1;
--		est_power = (dyn_power * status->total_time) / busy_time;
-+	/*
-+	 * Scale for resource utilization. Use simple Energy Model power
-+	 * calculation if a more sophisticated cooling device model does
-+	 * not exist.
-+	 */
-+	if (!dfc->power_ops || !dfc->power_ops->get_real_power) {
-+		_normalize_load(&status);
-+		est_power *= status.total_time;
-+		est_power /= status.busy_time;
-+	} else {
-+		est_power *= dfc->res_util;
-+		est_power /= SCALE_ERROR_MITIGATION;
- 	}
- 
- 	/*
- 	 * Find the first cooling state that is within the power
--	 * budget for dynamic power.
-+	 * budget. The EM power table is sorted ascending.
- 	 */
--	for (i = 0; i < dfc->freq_table_size - 1; i++)
--		if (est_power >= dfc->power_table[i])
-+	for (i = dfc->max_level; i > 0; i--)
-+		if (est_power >= dfc->em->table[i].power)
- 			break;
- 
--	*state = i;
--	dfc->capped_state = i;
-+	*state = dfc->max_level - i;
-+
- 	trace_thermal_power_devfreq_limit(cdev, freq, *state, power);
- 	return 0;
- }
-@@ -365,91 +320,43 @@ static struct thermal_cooling_device_ops devfreq_cooling_ops = {
- };
- 
- /**
-- * devfreq_cooling_gen_tables() - Generate power and freq tables.
-- * @dfc: Pointer to devfreq cooling device.
-- *
-- * Generate power and frequency tables: the power table hold the
-- * device's maximum power usage at each cooling state (OPP).  The
-- * static and dynamic power using the appropriate voltage and
-- * frequency for the state, is acquired from the struct
-- * devfreq_cooling_power, and summed to make the maximum power draw.
-- *
-- * The frequency table holds the frequencies in descending order.
-- * That way its indexed by cooling device state.
-+ * devfreq_cooling_gen_tables() - Generate frequency table.
-+ * @dfc:	Pointer to devfreq cooling device.
-+ * @num_opps:	Number of OPPs
-  *
-- * The tables are malloced, and pointers put in dfc.  They must be
-- * freed when unregistering the devfreq cooling device.
-+ * Generate frequency table which holds the frequencies in descending
-+ * order. That way its indexed by cooling device state. This is for
-+ * compatibility with drivers which do not register Energy Model.
-  *
-  * Return: 0 on success, negative error code on failure.
-  */
--static int devfreq_cooling_gen_tables(struct devfreq_cooling_device *dfc)
-+static int devfreq_cooling_gen_tables(struct devfreq_cooling_device *dfc,
-+				      int num_opps)
- {
- 	struct devfreq *df = dfc->devfreq;
- 	struct device *dev = df->dev.parent;
--	int ret, num_opps;
- 	unsigned long freq;
--	u32 *power_table = NULL;
--	u32 *freq_table;
- 	int i;
- 
--	num_opps = dev_pm_opp_get_opp_count(dev);
--
--	if (dfc->power_ops) {
--		power_table = kcalloc(num_opps, sizeof(*power_table),
--				      GFP_KERNEL);
--		if (!power_table)
--			return -ENOMEM;
--	}
--
--	freq_table = kcalloc(num_opps, sizeof(*freq_table),
-+	dfc->freq_table = kcalloc(num_opps, sizeof(*dfc->freq_table),
- 			     GFP_KERNEL);
--	if (!freq_table) {
--		ret = -ENOMEM;
--		goto free_power_table;
--	}
-+	if (!dfc->freq_table)
-+		return -ENOMEM;
- 
- 	for (i = 0, freq = ULONG_MAX; i < num_opps; i++, freq--) {
--		unsigned long power, voltage;
- 		struct dev_pm_opp *opp;
- 
- 		opp = dev_pm_opp_find_freq_floor(dev, &freq);
- 		if (IS_ERR(opp)) {
--			ret = PTR_ERR(opp);
--			goto free_tables;
-+			kfree(dfc->freq_table);
-+			return PTR_ERR(opp);
- 		}
- 
--		voltage = dev_pm_opp_get_voltage(opp) / 1000; /* mV */
- 		dev_pm_opp_put(opp);
--
--		if (dfc->power_ops) {
--			if (dfc->power_ops->get_real_power)
--				power = get_total_power(dfc, freq, voltage);
--			else
--				power = get_dynamic_power(dfc, freq, voltage);
--
--			dev_dbg(dev, "Power table: %lu MHz @ %lu mV: %lu = %lu mW\n",
--				freq / 1000000, voltage, power, power);
--
--			power_table[i] = power;
--		}
--
--		freq_table[i] = freq;
-+		dfc->freq_table[i] = freq;
- 	}
- 
--	if (dfc->power_ops)
--		dfc->power_table = power_table;
--
--	dfc->freq_table = freq_table;
--	dfc->freq_table_size = num_opps;
--
- 	return 0;
--
--free_tables:
--	kfree(freq_table);
--free_power_table:
--	kfree(power_table);
--
--	return ret;
- }
- 
- /**
-@@ -474,7 +381,7 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
- 	struct thermal_cooling_device *cdev;
- 	struct devfreq_cooling_device *dfc;
- 	char dev_name[THERMAL_NAME_LENGTH];
--	int err;
-+	int err, num_opps;
- 
- 	dfc = kzalloc(sizeof(*dfc), GFP_KERNEL);
- 	if (!dfc)
-@@ -482,28 +389,45 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
- 
- 	dfc->devfreq = df;
- 
--	if (dfc_power) {
--		dfc->power_ops = dfc_power;
--
-+	dfc->em = em_pd_get(df->dev.parent);
-+	if (dfc->em) {
- 		devfreq_cooling_ops.get_requested_power =
- 			devfreq_cooling_get_requested_power;
- 		devfreq_cooling_ops.state2power = devfreq_cooling_state2power;
- 		devfreq_cooling_ops.power2state = devfreq_cooling_power2state;
-+
-+		dfc->power_ops = dfc_power;
-+
-+		num_opps = em_pd_nr_perf_states(dfc->em);
-+	} else {
-+		/* Backward compatibility for drivers which do not use IPA */
-+		dev_dbg(df->dev.parent, "missing EM for cooling device\n");
-+
-+		num_opps = dev_pm_opp_get_opp_count(df->dev.parent);
-+
-+		err = devfreq_cooling_gen_tables(dfc, num_opps);
-+		if (err)
-+			goto free_dfc;
- 	}
- 
--	err = devfreq_cooling_gen_tables(dfc);
--	if (err)
-+	if (num_opps <= 0) {
-+		err = -EINVAL;
- 		goto free_dfc;
-+	}
-+
-+	/* max_level is an index, not a counter */
-+	dfc->max_level = num_opps - 1;
- 
- 	err = dev_pm_qos_add_request(df->dev.parent, &dfc->req_max_freq,
- 				     DEV_PM_QOS_MAX_FREQUENCY,
- 				     PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
- 	if (err < 0)
--		goto free_tables;
-+		goto free_table;
- 
- 	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
- 	if (err < 0)
- 		goto remove_qos_req;
-+
- 	dfc->id = err;
- 
- 	snprintf(dev_name, sizeof(dev_name), "thermal-devfreq-%d", dfc->id);
-@@ -524,16 +448,16 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
- 
- release_ida:
- 	ida_simple_remove(&devfreq_ida, dfc->id);
--
- remove_qos_req:
- 	dev_pm_qos_remove_request(&dfc->req_max_freq);
--
--free_tables:
--	kfree(dfc->power_table);
-+free_table:
- 	kfree(dfc->freq_table);
- free_dfc:
- 	kfree(dfc);
- 
-+	if (dfc->em)
-+		em_pd_put(df->dev.parent);
-+
- 	return ERR_PTR(err);
- }
- EXPORT_SYMBOL_GPL(of_devfreq_cooling_register_power);
-@@ -561,25 +485,119 @@ struct thermal_cooling_device *devfreq_cooling_register(struct devfreq *df)
- }
- EXPORT_SYMBOL_GPL(devfreq_cooling_register);
- 
-+/**
-+ * devfreq_cooling_em_register_power() - Register devfreq cooling device with
-+ *		power information and attempt to register Energy Model (EM)
-+ * @df:		Pointer to devfreq device.
-+ * @dfc_power:	Pointer to devfreq_cooling_power.
-+ * @em_cb:	Callback functions providing the data of the EM
-+ *
-+ * Register a devfreq cooling device and attempt to register Energy Model. The
-+ * available OPPs must be registered for the device.
-+ *
-+ * If @dfc_power is provided, the cooling device is registered with the
-+ * power extensions. If @em_cb is provided it will be called for each OPP to
-+ * calculate power value and cost. If @em_cb is not provided then simple Energy
-+ * Model is going to be used, which requires "dynamic-power-coefficient" a
-+ * devicetree property.
-+ */
-+struct thermal_cooling_device *
-+devfreq_cooling_em_register_power(struct devfreq *df,
-+				  struct devfreq_cooling_power *dfc_power,
-+				  struct em_data_callback *em_cb)
-+{
-+	struct thermal_cooling_device *cdev;
-+	struct devfreq_cooling_device *dfc;
-+	struct device_node *np = NULL;
-+	struct device *dev;
-+	int nr_opp, ret;
-+
-+	if (IS_ERR_OR_NULL(df))
-+		return ERR_PTR(-EINVAL);
-+
-+	dev = df->dev.parent;
-+
-+	if (em_cb) {
-+		nr_opp = dev_pm_opp_get_opp_count(dev);
-+		if (nr_opp <= 0) {
-+			dev_err(dev, "No valid OPPs found\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+
-+		ret = em_register_perf_domain(dev, nr_opp, em_cb, NULL);
-+	} else {
-+		ret = dev_pm_opp_of_register_em(dev, NULL);
-+	}
-+
-+	if (ret)
-+		dev_warn(dev, "Unable to register EM for devfreq cooling device (%d)\n",
-+			 ret);
-+
-+	if (dev->of_node)
-+		np = of_node_get(dev->of_node);
-+
-+	cdev = of_devfreq_cooling_register_power(np, df, dfc_power);
-+
-+	if (np)
-+		of_node_put(np);
-+
-+	if (IS_ERR_OR_NULL(cdev)) {
-+		if (!ret)
-+			em_unregister_perf_domain(dev);
-+	} else {
-+		dfc = cdev->devdata;
-+		dfc->em_registered = !ret;
-+	}
-+
-+	return cdev;
-+}
-+EXPORT_SYMBOL_GPL(devfreq_cooling_em_register_power);
-+
-+/**
-+ * devfreq_cooling_em_register() - Register devfreq cooling device together
-+ *				with Energy Model.
-+ * @df:		Pointer to devfreq device.
-+ * @em_cb:	Callback functions providing the data of the Energy Model
-+ *
-+ * This function attempts to register Energy Model for devfreq device and then
-+ * register the devfreq cooling device.
-+ */
-+struct thermal_cooling_device *
-+devfreq_cooling_em_register(struct devfreq *df, struct em_data_callback *em_cb)
-+{
-+	return devfreq_cooling_em_register_power(df, NULL, em_cb);
-+}
-+EXPORT_SYMBOL_GPL(devfreq_cooling_em_register);
-+
- /**
-  * devfreq_cooling_unregister() - Unregister devfreq cooling device.
-  * @cdev: Pointer to devfreq cooling device to unregister.
-+ *
-+ * Unregisters devfreq cooling device and related Energy Model if it was
-+ * present.
-  */
- void devfreq_cooling_unregister(struct thermal_cooling_device *cdev)
- {
- 	struct devfreq_cooling_device *dfc;
-+	struct device *dev;
- 
--	if (!cdev)
-+	if (IS_ERR_OR_NULL(cdev))
- 		return;
- 
- 	dfc = cdev->devdata;
-+	dev = dfc->devfreq->dev.parent;
- 
- 	thermal_cooling_device_unregister(dfc->cdev);
- 	ida_simple_remove(&devfreq_ida, dfc->id);
- 	dev_pm_qos_remove_request(&dfc->req_max_freq);
--	kfree(dfc->power_table);
--	kfree(dfc->freq_table);
-+	em_pd_put(dev);
- 
-+	/* Check if devfreq cooling registered this EM and must free it. */
-+	if (dfc->em_registered)
-+		em_unregister_perf_domain(dev);
-+
-+	kfree(dfc->freq_table);
- 	kfree(dfc);
-+
- }
- EXPORT_SYMBOL_GPL(devfreq_cooling_unregister);
-diff --git a/include/linux/devfreq_cooling.h b/include/linux/devfreq_cooling.h
-index 4635f95000a4..5b24d4a5b6cc 100644
---- a/include/linux/devfreq_cooling.h
-+++ b/include/linux/devfreq_cooling.h
-@@ -18,22 +18,12 @@
- #define __DEVFREQ_COOLING_H__
- 
- #include <linux/devfreq.h>
-+#include <linux/energy_model.h>
- #include <linux/thermal.h>
- 
- 
- /**
-  * struct devfreq_cooling_power - Devfreq cooling power ops
-- * @get_static_power:	Take voltage, in mV, and return the static power
-- *			in mW.  If NULL, the static power is assumed
-- *			to be 0.
-- * @get_dynamic_power:	Take voltage, in mV, and frequency, in HZ, and
-- *			return the dynamic power draw in mW.  If NULL,
-- *			a simple power model is used.
-- * @dyn_power_coeff:	Coefficient for the simple dynamic power model in
-- *			mW/(MHz mV mV).
-- *			If get_dynamic_power() is NULL, then the
-- *			dynamic power is calculated as
-- *			@dyn_power_coeff * frequency * voltage^2
-  * @get_real_power:	When this is set, the framework uses it to ask the
-  *			device driver for the actual power.
-  *			Some devices have more sophisticated methods
-@@ -53,14 +43,8 @@
-  *			max total (static + dynamic) power value for each OPP.
-  */
- struct devfreq_cooling_power {
--	unsigned long (*get_static_power)(struct devfreq *devfreq,
--					  unsigned long voltage);
--	unsigned long (*get_dynamic_power)(struct devfreq *devfreq,
--					   unsigned long freq,
--					   unsigned long voltage);
- 	int (*get_real_power)(struct devfreq *df, u32 *power,
- 			      unsigned long freq, unsigned long voltage);
--	unsigned long dyn_power_coeff;
- };
- 
- #ifdef CONFIG_DEVFREQ_THERMAL
-@@ -72,6 +56,13 @@ struct thermal_cooling_device *
- of_devfreq_cooling_register(struct device_node *np, struct devfreq *df);
- struct thermal_cooling_device *devfreq_cooling_register(struct devfreq *df);
- void devfreq_cooling_unregister(struct thermal_cooling_device *dfc);
-+struct thermal_cooling_device *
-+devfreq_cooling_em_register_power(struct devfreq *df,
-+				  struct devfreq_cooling_power *dfc_power,
-+				  struct em_data_callback *em_cb);
-+struct thermal_cooling_device *
-+devfreq_cooling_em_register(struct devfreq *df,
-+			    struct em_data_callback *em_cb);
- 
- #else /* !CONFIG_DEVFREQ_THERMAL */
- 
-@@ -94,6 +85,20 @@ devfreq_cooling_register(struct devfreq *df)
- 	return ERR_PTR(-EINVAL);
- }
- 
-+static inline struct thermal_cooling_device *
-+devfreq_cooling_em_register_power(struct devfreq *df,
-+				  struct devfreq_cooling_power *dfc_power,
-+				  struct em_data_callback *em_cb)
-+{
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+static inline struct thermal_cooling_device *
-+devfreq_cooling_em_register(struct devfreq *df,	struct em_data_callback *em_cb)
-+{
-+	return ERR_PTR(-EINVAL);
-+}
-+
- static inline void
- devfreq_cooling_unregister(struct thermal_cooling_device *dfc)
- {
-diff --git a/include/trace/events/thermal.h b/include/trace/events/thermal.h
-index 135e5421f003..8a5f04888abd 100644
---- a/include/trace/events/thermal.h
-+++ b/include/trace/events/thermal.h
-@@ -153,31 +153,30 @@ TRACE_EVENT(thermal_power_cpu_limit,
- TRACE_EVENT(thermal_power_devfreq_get_power,
- 	TP_PROTO(struct thermal_cooling_device *cdev,
- 		 struct devfreq_dev_status *status, unsigned long freq,
--		u32 dynamic_power, u32 static_power, u32 power),
-+		u32 power),
- 
--	TP_ARGS(cdev, status,  freq, dynamic_power, static_power, power),
-+	TP_ARGS(cdev, status,  freq, power),
- 
- 	TP_STRUCT__entry(
- 		__string(type,         cdev->type    )
- 		__field(unsigned long, freq          )
--		__field(u32,           load          )
--		__field(u32,           dynamic_power )
--		__field(u32,           static_power  )
-+		__field(u32,           busy_time)
-+		__field(u32,           total_time)
- 		__field(u32,           power)
- 	),
- 
- 	TP_fast_assign(
- 		__assign_str(type, cdev->type);
- 		__entry->freq = freq;
--		__entry->load = (100 * status->busy_time) / status->total_time;
--		__entry->dynamic_power = dynamic_power;
--		__entry->static_power = static_power;
-+		__entry->busy_time = status->busy_time;
-+		__entry->total_time = status->total_time;
- 		__entry->power = power;
- 	),
- 
--	TP_printk("type=%s freq=%lu load=%u dynamic_power=%u static_power=%u power=%u",
-+	TP_printk("type=%s freq=%lu load=%u power=%u",
- 		__get_str(type), __entry->freq,
--		__entry->load, __entry->dynamic_power, __entry->static_power,
-+		__entry->total_time == 0 ? 0 :
-+			(100 * __entry->busy_time) / __entry->total_time,
- 		__entry->power)
- );
- 
+Matti Vaittinen (9):
+  dt-bindings: battery: add new battery parameters
+  dt_bindings: ROHM BD99954 Charger
+  drivers: base: add linear ranges helpers
+  power: supply: bd70528: rename linear_range to avoid collision
+  regulator: use linear_ranges helper
+  power: supply: bd70528: use linear ranges
+  power: supply: add battery parameters
+  power: supply: Support ROHM bd99954 charger
+  power: supply: Fix Kconfig help text indentiation
+
+ .../bindings/power/supply/battery.txt         |    6 +
+ .../bindings/power/supply/rohm,bd99954.yaml   |  155 +++
+ drivers/base/Kconfig                          |    3 +
+ drivers/base/Makefile                         |    1 +
+ drivers/base/linear_ranges.c                  |  246 ++++
+ drivers/power/supply/Kconfig                  |   34 +-
+ drivers/power/supply/Makefile                 |    1 +
+ drivers/power/supply/bd70528-charger.c        |  140 +-
+ drivers/power/supply/bd99954-charger.c        | 1171 +++++++++++++++++
+ drivers/power/supply/power_supply_core.c      |    8 +
+ drivers/regulator/88pg86x.c                   |    4 +-
+ drivers/regulator/88pm800-regulator.c         |    4 +-
+ drivers/regulator/Kconfig                     |    1 +
+ drivers/regulator/act8865-regulator.c         |    4 +-
+ drivers/regulator/act8945a-regulator.c        |    2 +-
+ drivers/regulator/arizona-ldo1.c              |    2 +-
+ drivers/regulator/arizona-micsupp.c           |    4 +-
+ drivers/regulator/as3711-regulator.c          |    6 +-
+ drivers/regulator/as3722-regulator.c          |    4 +-
+ drivers/regulator/axp20x-regulator.c          |   16 +-
+ drivers/regulator/bcm590xx-regulator.c        |    8 +-
+ drivers/regulator/bd70528-regulator.c         |    8 +-
+ drivers/regulator/bd71828-regulator.c         |   10 +-
+ drivers/regulator/bd718x7-regulator.c         |   26 +-
+ drivers/regulator/da903x.c                    |    2 +-
+ drivers/regulator/helpers.c                   |  130 +-
+ drivers/regulator/hi6421-regulator.c          |    4 +-
+ drivers/regulator/lochnagar-regulator.c       |    4 +-
+ drivers/regulator/lp873x-regulator.c          |    4 +-
+ drivers/regulator/lp87565-regulator.c         |    2 +-
+ drivers/regulator/lp8788-buck.c               |    2 +-
+ drivers/regulator/max77650-regulator.c        |    2 +-
+ drivers/regulator/mcp16502.c                  |    4 +-
+ drivers/regulator/mp8859.c                    |    2 +-
+ drivers/regulator/mt6323-regulator.c          |    6 +-
+ drivers/regulator/mt6358-regulator.c          |    8 +-
+ drivers/regulator/mt6380-regulator.c          |    6 +-
+ drivers/regulator/mt6397-regulator.c          |    6 +-
+ drivers/regulator/palmas-regulator.c          |    4 +-
+ drivers/regulator/qcom-rpmh-regulator.c       |    2 +-
+ drivers/regulator/qcom_rpm-regulator.c        |   14 +-
+ drivers/regulator/qcom_smd-regulator.c        |   70 +-
+ drivers/regulator/rk808-regulator.c           |   10 +-
+ drivers/regulator/s2mps11.c                   |   14 +-
+ drivers/regulator/sky81452-regulator.c        |    2 +-
+ drivers/regulator/stpmic1_regulator.c         |   18 +-
+ drivers/regulator/tps65086-regulator.c        |   10 +-
+ drivers/regulator/tps65217-regulator.c        |    4 +-
+ drivers/regulator/tps65218-regulator.c        |    6 +-
+ drivers/regulator/tps65912-regulator.c        |    4 +-
+ drivers/regulator/twl-regulator.c             |    4 +-
+ drivers/regulator/twl6030-regulator.c         |    2 +-
+ drivers/regulator/wm831x-dcdc.c               |    2 +-
+ drivers/regulator/wm831x-ldo.c                |    4 +-
+ drivers/regulator/wm8350-regulator.c          |    2 +-
+ drivers/regulator/wm8400-regulator.c          |    2 +-
+ include/linux/linear_range.h                  |   48 +
+ include/linux/power/bd99954-charger.h         | 1075 +++++++++++++++
+ include/linux/power_supply.h                  |    4 +
+ include/linux/regulator/driver.h              |   27 +-
+ 60 files changed, 3018 insertions(+), 356 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
+ create mode 100644 drivers/base/linear_ranges.c
+ create mode 100644 drivers/power/supply/bd99954-charger.c
+ create mode 100644 include/linux/linear_range.h
+ create mode 100644 include/linux/power/bd99954-charger.h
+
+
+base-commit: fb33c6510d55 ("Linux 5.6-rc6")
 -- 
-2.17.1
+2.21.0
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
