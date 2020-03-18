@@ -2,72 +2,112 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F97FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8843CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AEF320770
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C04F2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eJyQsthw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cADNuqVU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgCRKcS (ORCPT
+        id S1727904AbgCRKcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:32:18 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34660 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727572AbgCRKcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:32:16 -0400
-Received: from zn.tnic (p200300EC2F0B45003CD01F459A0D41B0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:4500:3cd0:1f45:9a0d:41b0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B61581EC0BEA;
-        Wed, 18 Mar 2020 11:32:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584527534;
+        Wed, 18 Mar 2020 06:32:33 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:58925 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727561AbgCRKcc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 06:32:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584527552;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=/OV7bmNavmDBih6YnNCbo6Axh98P53HfUokcmUccP4E=;
-        b=eJyQsthwWLJ1NZsg/zzf7W7rIbrR0am8FVcd3r3fx87R4zQWkT9yUQbKNyjISfj7D/4MXg
-        vQRkAl3dWGsd/0lA9BGDdA3A07fM4sXRwRJZBRLsf50R+EHhqR0MW74+c+efxRg72y0mTj
-        w+MiKfos/nnKYx7aBvdOYxMexQTIcbc=
-Date:   Wed, 18 Mar 2020 11:32:19 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/cpufeatures: make bits in cpu_caps_cleared[] and
- cpu_cpus_set[] exclusive
-Message-ID: <20200318103219.GA4377@zn.tnic>
-References: <20200318061624.150313-1-xiaoyao.li@intel.com>
+         in-reply-to:in-reply-to:references:references;
+        bh=Z3nbsiG+klM2sjKVktcnQOTdfzMlCDVbpVHCVvOHKDk=;
+        b=cADNuqVU7ZtzF6+CCxEfmnFPzEnbxYAO9TdBaC3OxRejKEhXJYZWqBxfXJVndiN6KgNIR0
+        8fytwEDWBwk9SZ0DmoTEyymFsyD3Ur4hx4POKRpZ72drBEut/UrNjnhnhm2KMqLYhoAtRP
+        NaN5PGhZ1s2eORCbLkff26Wf/LhsPlI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-69-6UrzpLuuNZyVHYkHpPN7sg-1; Wed, 18 Mar 2020 06:32:30 -0400
+X-MC-Unique: 6UrzpLuuNZyVHYkHpPN7sg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 69B1218A8C85;
+        Wed, 18 Mar 2020 10:32:28 +0000 (UTC)
+Received: from krava (unknown [10.40.195.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F2D7773865;
+        Wed, 18 Mar 2020 10:32:26 +0000 (UTC)
+Date:   Wed, 18 Mar 2020 11:32:24 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     zhe.he@windriver.com
+Cc:     acme@redhat.com, jolsa@kernel.org, ak@linux.intel.com,
+        meyerk@hpe.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: Add NULL pointer check for cpu_map iteration and
+ NULL assignment for all_cpus.
+Message-ID: <20200318103224.GE821557@krava>
+References: <1583665157-349023-1-git-send-email-zhe.he@windriver.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200318061624.150313-1-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1583665157-349023-1-git-send-email-zhe.he@windriver.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 02:16:24PM +0800, Xiaoyao Li wrote:
-> In apply_forced_caps(), cpu_caps_set[] overrides cpu_caps_cleared[], so
-> that setup_clear_cpu_cap() cannot clear one cap if setup_force_cpu_cap()
-> sets the cap before it.
+On Sun, Mar 08, 2020 at 06:59:17PM +0800, zhe.he@windriver.com wrote:
+> From: He Zhe <zhe.he@windriver.com>
+> 
+> NULL pointer may be passed to perf_cpu_map__cpu and then cause crash,
+> such as the one commit cb71f7d43ece ("libperf: Setup initial evlist::all_cpus value")
+> fix.
+> 
+> Signed-off-by: He Zhe <zhe.he@windriver.com>
 
-Context pls: what is the observation, what are you trying to do,
-reproducer, etc?
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-Thx.
+thanks,
+jirka
 
--- 
-Regards/Gruss,
-    Boris.
+> ---
+>  tools/perf/lib/cpumap.c | 2 +-
+>  tools/perf/lib/evlist.c | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+> index f93f4e7..ca02150 100644
+> --- a/tools/perf/lib/cpumap.c
+> +++ b/tools/perf/lib/cpumap.c
+> @@ -247,7 +247,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+>  
+>  int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
+>  {
+> -	if (idx < cpus->nr)
+> +	if (cpus && idx < cpus->nr)
+>  		return cpus->map[idx];
+>  
+>  	return -1;
+> diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+> index 5b9f2ca..f87a239 100644
+> --- a/tools/perf/lib/evlist.c
+> +++ b/tools/perf/lib/evlist.c
+> @@ -127,6 +127,7 @@ void perf_evlist__exit(struct perf_evlist *evlist)
+>  	perf_cpu_map__put(evlist->cpus);
+>  	perf_thread_map__put(evlist->threads);
+>  	evlist->cpus = NULL;
+> +	evlist->all_cpus = NULL;
+>  	evlist->threads = NULL;
+>  	fdarray__exit(&evlist->pollfd);
+>  }
+> -- 
+> 2.7.4
+> 
 
-https://people.kernel.org/tglx/notes-about-netiquette
