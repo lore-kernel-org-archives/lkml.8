@@ -2,119 +2,128 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44A5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319CAC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AADA820753
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D4A20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:34:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YL0EzBUP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbgCRId3 (ORCPT
+        id S1727426AbgCRIeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 04:33:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:46880 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgCRId3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 04:33:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DCCD31B;
-        Wed, 18 Mar 2020 01:33:28 -0700 (PDT)
-Received: from e123083-lin (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC73F3F52E;
-        Wed, 18 Mar 2020 01:33:26 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 09:33:24 +0100
-From:   Morten Rasmussen <morten.rasmussen@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH V2] sched: fair: Use the earliest break even
-Message-ID: <20200318083324.GB6103@e123083-lin>
-References: <20200311202625.13629-1-daniel.lezcano@linaro.org>
- <CAKfTPtAqeHhVCeSgE1DsaGGkM6nY-9oAvGw_6zWvv1bKyE85JQ@mail.gmail.com>
- <e6e8ff94-64f2-6404-e332-2e030fc7e332@linaro.org>
- <20200317075607.GE10914@e105550-lin.cambridge.arm.com>
- <3520b762-08f5-0db8-30cb-372709188bb9@linaro.org>
- <20200317143053.GF10914@e105550-lin.cambridge.arm.com>
- <CAKfTPtD+aWcgjjK35x1LWKCNS_AVGm9sFoBXgqW_qL+oUSPMiw@mail.gmail.com>
+        Wed, 18 Mar 2020 04:34:21 -0400
+Received: from mail-eopbgr130085.outbound.protection.outlook.com ([40.107.13.85]:27511
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726550AbgCRIeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 04:34:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kpO0vmbQbqqJkKcL1tiOwdwxLy0JKLdcstZyW1tkQ+o7Ad519B4XvIygCCDNJqrthyF+FSJEUyjpeb0WiweBKmq7l+2e1GlTHHvY0AePo90WxsWydY/4Auni/UpG6ki0SDxZcbGsHToMW6sy5auVwKynuSBdISt/2vY7HkYidnJhpQIEibj34THe98iLkZv18E6QAkep4jo3daIS9+G3f8Do0W6xkH4MqP/wXiINp9IVR+O8sAKBZ3F0RGRce8yeQU6k/8AmUvP2AzyMslQ3xSP/jSNSc6Z0VqfOPDNNSoMoQKaeilp80wLxDGYW3t1ozNu5/Dvpcj8AbrLQczYnsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1lrNo5icQrKFtI2XP+USq4GbjnDycHlt7Eke26fd0ec=;
+ b=gG35v0iYRXjZ40VTMwegTzWHnVkdrc+LWG4FO+3dUo0Er7lWF+XaDBCmq679Od0tBOQXRHbZOo3nYqprOn+RmKBgG4LBHnE2dHLexhZqnqdba09/zEztMTo5jl1y2S+UX2YSeIwfpWOVLwvrL455joy7cQ9XBttDhwiD1KToLreNHj2qZ2PKnz0drKF4pcUIwNwHujK58QxwBQMqmneVrrz6CXCIwOtlsfb3VevCfh/D7GmnukB6e6wqibs9hPOIDOyoKv50tTyGi1fl9Er9ZRyO6r6J/ORPwJ4z4yiNs4uO7VHb0LnQMCCTPFyLz1cQjn0iNEOtwX3yREDrftfdSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1lrNo5icQrKFtI2XP+USq4GbjnDycHlt7Eke26fd0ec=;
+ b=YL0EzBUPfyyiRR+9PmF+1o4+0/nW+Z6EjmPvyMJXhwIdU171mtj+urQ/mv5qLh3CYRHJ2u47Q2OZeQTXUPak1S+YREgIhFkqmMQk/Rfmhm4A3baToE5XRHSp0yiQaZkWdwhigG1LtRXoAZiv3F4IO35kouxHjxwU5AYkrb2wTXs=
+Received: from AM0PR0402MB3587.eurprd04.prod.outlook.com (52.133.51.20) by
+ AM0PR0402MB3779.eurprd04.prod.outlook.com (52.133.39.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.23; Wed, 18 Mar 2020 08:34:03 +0000
+Received: from AM0PR0402MB3587.eurprd04.prod.outlook.com
+ ([fe80::d9d3:bd30:8d1:3dc0]) by AM0PR0402MB3587.eurprd04.prod.outlook.com
+ ([fe80::d9d3:bd30:8d1:3dc0%3]) with mapi id 15.20.2835.017; Wed, 18 Mar 2020
+ 08:34:03 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     "Fuzzey, Martin" <martin.fuzzey@flowbird.group>
+CC:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [EXT] [PATCH 0/4] Fix Wake on lan with FEC on i.MX6
+Thread-Topic: [EXT] [PATCH 0/4] Fix Wake on lan with FEC on i.MX6
+Thread-Index: AQHV/HwfH3wTHDqsi0KQfAvD/Tjc/6hN41QggAAh8ICAAADusA==
+Date:   Wed, 18 Mar 2020 08:34:03 +0000
+Message-ID: <AM0PR0402MB3587ABEF56CD2C11EC805CBEFFF70@AM0PR0402MB3587.eurprd04.prod.outlook.com>
+References: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
+ <VI1PR0402MB3600DC7BB937553785165C2AFFF70@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+ <CANh8QzwPmbfr1y9Yz7ctbannX3gOWZBQG1_xDM6xit=3ZXD+pg@mail.gmail.com>
+In-Reply-To: <CANh8QzwPmbfr1y9Yz7ctbannX3gOWZBQG1_xDM6xit=3ZXD+pg@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fugang.duan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a7e26322-a662-4404-09b7-08d7cb171d62
+x-ms-traffictypediagnostic: AM0PR0402MB3779:|AM0PR0402MB3779:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR0402MB37796C4DF2CC02B5018BFB48FFF70@AM0PR0402MB3779.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 03468CBA43
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(376002)(136003)(396003)(199004)(33656002)(8936002)(81156014)(81166006)(8676002)(6916009)(316002)(54906003)(186003)(66446008)(478600001)(66556008)(64756008)(66476007)(66946007)(71200400001)(26005)(7696005)(55016002)(9686003)(4326008)(6506007)(5660300002)(52536014)(76116006)(86362001)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR0402MB3779;H:AM0PR0402MB3587.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6/GWtr/zYNt1Onw0veWdzeWapLCmu+TwvUFXGYx9SU8NvoBi8aveQ2etsaEuxdJjez6drszFXRZAS+NC7o7VMlyfWxJopV+jpus/IgiItIhA5SwloGTRrb+Zk57LhVadtz30M8dCVlPKlqN/b5A8fSs0UkW8HzCFIk3Xal9zFmwJoaO826AhEStnV0ZRIkK2l+mhEPNHIb8f3zTHTOchwyGKl89BaePDiV9lV2tzBVicn6fYvD35v08Cfgnl6pEmyy8j/kl60Th6feNhB1gy0Yosl5i7faYzfEbRClmlAFJ+WAt1mWO2AjNz0FaE2AvxtXO43Ry0A7RopoO5jL7iKzuULNsA3QUkb/Qf3vrT0pIK404sahdNParrKQFwxVmMtk6r0rdVp36y1SKuRFjMbZ7LpcJdUBwL6R/52W2DgbxinykbkZZ7JrQmHy5LO3LF
+x-ms-exchange-antispam-messagedata: DNmiIOhyKGzyBYpLY8TH9s1rICTPkbHa+KLZ0UlPaO2tifDbyOEiGqyXaYfQMAymw8Fz6GBJwM5BarYC4xpYftQJyxH2aAw1hv/VnEns+KZEShZrgvQJ0ZEDATefsg4uBsUtsabNNdgad7ttRIVSpg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtD+aWcgjjK35x1LWKCNS_AVGm9sFoBXgqW_qL+oUSPMiw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7e26322-a662-4404-09b7-08d7cb171d62
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 08:34:03.2525
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TQbDRko1TyyVGQtMt0wdptREbH0NgBKD6++ovhLXtVvhLB7mZg381XLdoW5JiiystBEdjhnkzUlK7/6D5GVwjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR0402MB3779
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 08:51:04AM +0100, Vincent Guittot wrote:
-> On Tue, 17 Mar 2020 at 15:30, Morten Rasmussen <morten.rasmussen@arm.com> wrote:
-> > On Tue, Mar 17, 2020 at 02:48:51PM +0100, Daniel Lezcano wrote:
-> > > On 17/03/2020 08:56, Morten Rasmussen wrote:
-> > > > On Thu, Mar 12, 2020 at 11:04:19AM +0100, Daniel Lezcano wrote:
-> > > >> On 12/03/2020 09:36, Vincent Guittot wrote:
-> > > >>> On Wed, 11 Mar 2020 at 21:28, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
-> > > >>>>
-> > > >>>> In the idle CPU selection process occuring in the slow path via the
-> > > >>>> find_idlest_group_cpu() function, we pick up in priority an idle CPU
-> > > >>>> with the shallowest idle state otherwise we fall back to the least
-> > > >>>> loaded CPU.
-> > > >>>
-> > > >>> The idea makes sense but this path is only used by fork and exec so
-> > > >>> I'm not sure about the real impact
-> > > >>
-> > > >> I agree the fork / exec path is called much less often than the wake
-> > > >> path but it makes more sense for the decision.
-> > > >
-> > > > Looking at the flow in find_idlest_cpu(), AFAICT,
-> > > > find_idlest_group_cpu() is not actually making the final choice of CPU,
-> > > > so going through a lot of trouble there looking at idle states is
-> > > > pointless. Is there something I don't see?
-> > > >
-> > > > We fellow sd->child until groups == CPUs which which means that
-> > > > find_idlest_group() actually makes the final choice as the final group
-> > > > passed to find_idlest_group_cpu() is single-CPU group. The flow has been
-> > > > like that for years. Even before you added the initial idle-state
-> > > > awareness.
-> > > >
-> > > > I agree with Vincent, if this should really make a difference it should
-> > > > include wake-ups existing tasks too. Although I'm aware it would be a
-> > > > more invasive change. As said from the beginning, the idea is fine, but
-> > > > the current implementation should not make any measurable difference?
-> > >
-> > > I'm seeing the wake-ups path so sensitive, I'm not comfortable to do any
-> > > changes in it. That is the reason why the patch only changes the slow path.
-> >
-> > Right. I'm not against being cautious at all. It would be interesting to
-> > evaluate how bad it really is. The extra time-stamping business cost is
-> > the same, so it really down how much we dare to use the information in
-> > the fast-path and change the CPU selection policy. And of course, how
-> > much can be gained by the change.
-> 
-> Hmm... the fast path not even parses all idle CPUs right now so it
-> will be difficult to make any comparison. Regarding wakeup path, the
-> only place that could make sense IMO is the EAS slow wakeup path
-> find_energy_efficient_cpu() which mitigates performance vs energy
-> consumption
-
-Agreed, it is not really compatible with the current fast-path policies.
-I would start with just hacking it in to evaluate the potential
-improvements to have an idea about what is on the table.
-
-As you say, it could live somewhere slightly out the way like the EAS
-path, but I'm not sure if actually fits well under EAS. EAS is disabled
-for symmetric CPU capacities, which is probably the systems that will
-benefit the most. Also, as mentioned already in this thread, I don't see
-how the idea brings any energy savings?
-
-Morten
+RnJvbTogRnV6emV5LCBNYXJ0aW4gPG1hcnRpbi5mdXp6ZXlAZmxvd2JpcmQuZ3JvdXA+IFNlbnQ6
+IFdlZG5lc2RheSwgTWFyY2ggMTgsIDIwMjAgNDoyOCBQTQ0KPiBIaSBBbmR5LA0KPiANCj4gDQo+
+IE9uIFdlZCwgMTggTWFyIDIwMjAgYXQgMDc6MjgsIEFuZHkgRHVhbiA8ZnVnYW5nLmR1YW5Abnhw
+LmNvbT4gd3JvdGU6DQo+ID4NCj4gPg0KPiA+IFRoZSBtb3N0IG9mIGNvZGUgaXMgcmV1c2VkIGZy
+b20gbnhwIGludGVybmFsIHRyZWUsIElmIHlvdSByZWZlciB0aGUNCj4gPiBwYXRjaGVzIGZyb20g
+bnhwIGtlcm5lbCB0cmVlLCBwbGVhc2Uga2VlcCB0aGUgc2lnbmVkLW9mZiB3aXRoIG9yaWdpbmFs
+DQo+ID4gYXV0aG9yLg0KPiA+DQoNCkl0IGRvZXNuJ3QgbWF0dGVyLCBJIGFtIGhhcHB5IHlvdSB1
+cHN0cmVhbSB0aGUgcGF0Y2guDQpKdXN0IGtlZXA6IFNpZ25lZC1vZmYtYnk6IEZ1Z2FuZyBEdWFu
+IDxmdWdhbmcuZHVhbkBueHAuY29tPg0KPiANCj4gT2ssIGxvb2tzIGxpa2UgaXQgd2FzIG9yaWdp
+bmFsbHkgZnJvbSB5b3UsIHNob3VsZCBJIGFkZCB5b3VyIGN1cnJlbnQgZW1haWwNCj4gYWRkcmVz
+cyBvciB0aGUgb25lIGF0IHRoZSB0aW1lIChCMzg2MTFAZnJlZXNjYWxlLmNvbSk/DQo+IA0KPiBB
+Y3R1YWxseSBJIGRvbid0IGhhdmUgdGhlIE5YUCB0cmVlIGJ1dCBhIERpZ2kgdHJlZSwgd2hpY2gg
+aXMgcHJvYmFibHkgYmFzZWQgb24NCj4gaXQuDQo+IA0KPiBJIHRoaW5rLCBnZW5lcmFsbHksIHRo
+aXMgaXMgYSBiaXQgb2YgYSBncmV5IGFyZWEuDQo+IA0KPiBXaGlsZSBJIHdvdWxkIGFsd2F5cyBr
+ZWVwIGEgU29CIGlmIEkgYmFzZSBhIHBhdGNoIG9uIGFuIG9sZCBtYWlsaW5nIGxpc3QgcGF0Y2gN
+Cj4gc3VibWlzc2lvbiAoYW5kIGNvbnRhY3QgdGhlIHBlcnNvbiBpZiBwb3NzaWJsZSBmaXJzdCB0
+bw0KPiBhc2spIEknbSBub3Qgc3VyZSBpZiBhIFNvQiBmcm9tIGEgInJhbmRvbSBnaXQgdHJlZSIg
+aW5kaWNhdGVzIHRoZXkgd2lzaCBhDQo+IG1haW5saW5lIHN1Ym1pc3Npb24gd2l0aCB0aGVpciBu
+YW1lIChzb21lIHBlb3BsZSBtYXkgd2FudCBjcmVkaXQgYW5kDQo+IG90aGVycyBub3Qgd2FudCB0
+byBiZSBjb25zaWRlcmVkIHJlc3BvbnNpYmxlIGZvciBidWdzLi4uKS4NCj4gSSBkaWRuJ3Qgc2Vl
+IGEgc3VibWlzc2lvbiBvZiB0aGlzIHZlcnNpb24gKHdpdGggdGhlIGdwciBpbmZvcm1hdGlvbiBj
+b21pbmcgZnJvbQ0KPiB0aGUgRFQpIG9uIHRoZSBtYWlsaW5nIGxpc3RzLCBvbmx5IHRoZSBpbml0
+aWFsIHZlcnNpb24gdXNpbmcgdGhlIHBsYXRmb3JtIGNhbGxiYWNrDQo+IHRoYXQgd2FzIE5BS2Qg
+KEkgbWF5IGhhdmUgbWlzc2VkIGl0IHRob3VnaCkuDQo+IA0KPiBSZWdhcmRzLA0KPiANCj4gTWFy
+dGluDQo=
