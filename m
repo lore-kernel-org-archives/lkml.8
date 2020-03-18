@@ -2,302 +2,202 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EC3C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1485EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1008220752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D091E20752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Bl0A/AzM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHeui0iF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbgCRAR2 (ORCPT
+        id S1727402AbgCRARb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 20:17:28 -0400
-Received: from mail-eopbgr770122.outbound.protection.outlook.com ([40.107.77.122]:38723
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727312AbgCRARU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 20:17:31 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41400 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbgCRARU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Mar 2020 20:17:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JQYSkBRs/y7WG7IgGqZOf/jTz1FKKWXvOsiU3usfvK+BOa2qJhlGgP23PFgj42DkTafZoiFNhzad2E+8Bq+pAVopgseULTjI7eBfkRMtwUVJGSq2nXU5hTgW/eoY6bBntcLpAytYyjOe38rbv0/u4ojOoUqjVuWagqhpHK4YcDugH4If2/TNIA5ghsb6+Vpv+cy9/x+jdgCPe+vaYlAhdphRJjB6KP3jBE8nSt6ZH3dnBjSaQ1fxruJMyqwjf7RPny3mQ2qrZPhcjKdhmYcFYXsYTXboTNLcqomvl4upkKNS8T9uVvI9Is/LJAaVpmog/gY8o4ezIRmFU6SQG1Xoyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/4BE2Y3jmGOlGrOr8p+fMDPMUkxaMal7Urz/ca6sNyQ=;
- b=aBtCqAHMZ11rqYKzPgzr9pRdyXWP14JK7/0wW/ioC6diXmtNtXehMrVkE+kQHk88kZQaN5WpJHhyt+JauPPRndahEq1mfvVUyn7gKoHAlYDq/AnntwWwn83Eqs5c0WGx+uVfO98+TmGUHEGWSUdsvH9zt18AnrmL8hyQ+NqChOjvquli6F62ngtJNUBG9Tr/S4VCHdVGFpUM0pA+HMONomQe8E9aIFYYmN97Xof6VNJdzwNWdx7ysWTXuZdqPMAF/BrC1/xLfOlLuVEvaRqQyf3WSnO/awD8UUEf9g8Zngg0I+48+6Jx7O4HXJbvX75NCr6/7J9nmepzQG2IQot9wA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/4BE2Y3jmGOlGrOr8p+fMDPMUkxaMal7Urz/ca6sNyQ=;
- b=Bl0A/AzMk0lM4Q6qwRwe0TeN598u/LW/9NV1W9CxnZR7O+pKAdyUAuHiNt9DNd5c3g+ME3dvZTG4UpZ40GUVi0037gOZW1UhYR4s5HK4vpd6SRwt/bR/pCAfE0nOdhC4NPurnhDaa8L2SUxkWuG+APn7OVk/A2io/xEfa5hqzEc=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1082.namprd21.prod.outlook.com (2603:10b6:302:a::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.7; Wed, 18 Mar
- 2020 00:17:16 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2835.003; Wed, 18 Mar 2020
- 00:17:16 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "will@kernel.org" <will@kernel.org>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "boqun.feng@gmail.com" <boqun.feng@gmail.com>
-Subject: RE: [PATCH v6 06/10] arm64: hyperv: Add kexec and panic handlers
-Thread-Topic: [PATCH v6 06/10] arm64: hyperv: Add kexec and panic handlers
-Thread-Index: AQHV+hZJl+uBzJDgl0y0o8ulo9cTn6hJ908AgAN0drA=
-Date:   Wed, 18 Mar 2020 00:17:16 +0000
-Message-ID: <MW2PR2101MB1052178631BA0F54B3940D90D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
-        <1584200119-18594-7-git-send-email-mikelley@microsoft.com>
- <86tv2pzdpr.wl-maz@kernel.org>
-In-Reply-To: <86tv2pzdpr.wl-maz@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-18T00:17:14.3914622Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=06d771c6-fa45-43a5-a66c-28d22cd31720;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 52277958-efeb-485b-8db4-08d7cad1b726
-x-ms-traffictypediagnostic: MW2PR2101MB1082:|MW2PR2101MB1082:|MW2PR2101MB1082:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB108239E533F6170E17ACFCCDD7F70@MW2PR2101MB1082.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03468CBA43
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(10290500003)(55016002)(498600001)(7696005)(5660300002)(9686003)(54906003)(2906002)(7416002)(8990500004)(33656002)(52536014)(6506007)(6916009)(76116006)(71200400001)(186003)(66946007)(66476007)(66446008)(64756008)(66556008)(4326008)(8676002)(86362001)(81156014)(8936002)(81166006)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1082;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6n84OLM6A5Iwmsbs3TjZP+KBHOqiyEnw9nqxfCwiFuB7RjTp58vYtzY25yNd7xlyQnr63FN8UwNFTf3iwHWhJ6S3OgshVCu/DYCA/rJiOD6Or8ZV4m5GSfhSTC69B0OFyseU0rHABi7PLQX8B1WJW9/Hu/YaYCyoGDvfp3uuEypj4mQIwIj/TmqNVx9dY5bn1uzFK5avOcgmv07FrQwf3FxutjLxI/MV9oDLEOgLhMjPNUszYUjckSgL9Yjd9pmEoLeawyRRQwi4MN8828qjA8jrE6jzq7dhZ0bvD9ygg2P2BpT0v+QJ36Y9TFh7XNoP8elP6q0GtsxgwHz7UWrrt5LlTRvXU+2gQ/CF3WSCNrKXHIUW045P7bAqX+qABCq9ykJ/206yr6TlyQ+xpqoU0mW9b1pCKnkyVHfMaH7HYNVvBNE68cKiXdFT+u5BjR5x
-x-ms-exchange-antispam-messagedata: aiWh54zu7vNKJv1MDmqHfppDTRIWMbApnZ9Ewim8f6SdPn8jJzhlrQdsZezmMLdNS5EkISEmu8wJ2O2w2ohffTmfIeQFZwvv4/Kn5PC2TRz6h4XV9v8ZOmvQZ5ibpszanA1VA/wZMPTxGCQ/asld/g==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52277958-efeb-485b-8db4-08d7cad1b726
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 00:17:16.4108
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9ai0XWvW77VjK8QV56HLlruDmO2FE/+dWEP0uI0AGMhgE9e/IVfpcTkGiwbWzPKlhgIb1oFteQZEghy2YIGTn7uVnI2F2I/0+NnEwTfOZB0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1082
+Received: by mail-wr1-f68.google.com with SMTP id f11so11315567wrp.8;
+        Tue, 17 Mar 2020 17:17:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=dbvFXr++MU/HIreOWScTU6cmRztuJ1BeSWU0vX/lVDQ=;
+        b=dHeui0iFI86MShMTkkkK4yVQ4udUyV54/uCPA9EgN/FntTBiJX7K5n1WmXzwuAHiTb
+         ia6L1qvLCph71EEc7P3YgRiwbdAygv6dD+q4NSoY744vx6nj0X7cgNwCocfm7is57jNV
+         Vu5KCj49OtJGOZWR5/WhagN5ufcZ+yC6wFTOxp0/DnlW9y7VPGB9NvBdL6z0d62b1lB7
+         Z+mgUD2IYjM6W6acMuR51So4538e3xWJ7e5W0BBvEpNMtQg+En3T42wiJFgOKC9Yen3S
+         P16BYfpLtXGaTEyzJcj9A17gpIBMrH4DMNShV+lqOWIv5ookfWhXMex3MEQ7HCyuUmiL
+         Q3sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=dbvFXr++MU/HIreOWScTU6cmRztuJ1BeSWU0vX/lVDQ=;
+        b=Xdr1TT8Ct6ahw+qF7qpYTDcWvRnQpaGdeoU9Y24YqJjXuCIf1MzW9oFsvuIEpljXvy
+         V8G3aOF9JTpTxGXoYSnZIHAoCpAO2uzzWODnbC85kAip4Oveobvmwmun1szz8L2QiQe9
+         Jf06qaOHP3oTpJEHlsm5kzii2L2363zW87p+VJFzdfa4o1ekv86sg/pxTvtPSLr3fRRy
+         LZ5iNMGfm7Yv0KjVIHVF8fmw8hHDJC8EHhGNXRUdW/xu2G9M9gP35uUQfopM9O0mAl65
+         OVD5o05itf09y8osRCxOnpBaTCA1z4LRod9fftlAVHvqyZalFXQs/2IIAAAHMbw31UTf
+         0Ytg==
+X-Gm-Message-State: ANhLgQ0lO2bBik+T4sC3937+3zeCLfJ6Jd41fZvDED6u/j//ozrfWySi
+        GCvAK9zwmaHAurBGWPeoMLM=
+X-Google-Smtp-Source: ADFU+vsn9i0us/0rHexiF9zR35isGlBBbO5WaP4lsV3v8HW+nsk58CiPOoYGHF22BzU3fKDChWVczw==
+X-Received: by 2002:adf:df04:: with SMTP id y4mr1595978wrl.318.1584490639120;
+        Tue, 17 Mar 2020 17:17:19 -0700 (PDT)
+Received: from localhost.localdomain ([79.115.60.40])
+        by smtp.gmail.com with ESMTPSA id i6sm6584600wru.40.2020.03.17.17.17.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 17:17:18 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
+        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
+        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
+Subject: [PATCH v5 09/12] spi: spi-fsl-dspi: Move invariant configs out of dspi_transfer_one_message
+Date:   Wed, 18 Mar 2020 02:16:00 +0200
+Message-Id: <20200318001603.9650-10-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200318001603.9650-1-olteanv@gmail.com>
+References: <20200318001603.9650-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>  Sent: Sunday, March 15, 2020 11:16 AM
->=20
-> On Sat, 14 Mar 2020 15:35:15 +0000,
-> Michael Kelley <mikelley@microsoft.com> wrote:
-> >
-> > Add functions to set up and remove kexec and panic
-> > handlers, and to inform Hyper-V about a guest panic.
-> > These functions are called from architecture independent
-> > code in the VMbus driver.
-> >
-> > This code is built only when CONFIG_HYPERV is enabled.
-> >
-> > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> > ---
-> >  arch/arm64/hyperv/hv_core.c  | 61
-> ++++++++++++++++++++++++++++++++++++++++++++
-> >  arch/arm64/hyperv/mshyperv.c | 26 +++++++++++++++++++
-> >  2 files changed, 87 insertions(+)
-> >
-> > diff --git a/arch/arm64/hyperv/hv_core.c b/arch/arm64/hyperv/hv_core.c
-> > index 4aa6b8f..8d6de9f 100644
-> > --- a/arch/arm64/hyperv/hv_core.c
-> > +++ b/arch/arm64/hyperv/hv_core.c
-> > @@ -199,3 +199,64 @@ void hv_get_vpreg_128(u32 msr, struct
-> hv_get_vp_register_output *res)
-> >  	kfree(output);
-> >  }
-> >  EXPORT_SYMBOL_GPL(hv_get_vpreg_128);
-> > +
-> > +void hyperv_report_panic(struct pt_regs *regs, long err)
-> > +{
-> > +	static bool panic_reported;
-> > +	u64 guest_id;
-> > +
-> > +	/*
-> > +	 * We prefer to report panic on 'die' chain as we have proper
-> > +	 * registers to report, but if we miss it (e.g. on BUG()) we need
-> > +	 * to report it on 'panic'.
-> > +	 */
-> > +	if (panic_reported)
-> > +		return;
-> > +	panic_reported =3D true;
->=20
-> How does this work when multiple vcpus are crashing at once? Are you
-> guaranteed to be single-threaded at this point?
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-I'll need to go research.  If not, the above should be an atomic
-test-and-set.
+The operating mode (DMA, XSPI, EOQ) is not going to change across the
+lifetime of the device. So it makes no sense to keep writing to SPI_RSER
+on each message. Move this configuration to dspi_init instead.
 
->=20
-> > +
-> > +	guest_id =3D hv_get_vpreg(HV_REGISTER_GUEST_OSID);
-> > +
-> > +	/*
-> > +	 * Hyper-V provides the ability to store only 5 values.
-> > +	 * Pick the passed in error value, the guest_id, and the PC.
-> > +	 * The first two general registers are added arbitrarily.
-> > +	 */
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_P0, err);
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_P1, guest_id);
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_P2, regs->pc);
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_P3, regs->regs[0]);
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_P4, regs->regs[1]);
->=20
-> How about reporting useful information, a pointer to some data
-> structure describing the fault? As it is, the usefulness of this is
-> pretty dubious.
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+Changes in v5:
+None.
 
-Yes, it is dubious.  The version with more data describing the fault is
-hyperv_report_panic_msg() below, which is provided by newer versions
-of Hyper-V, including all versions for ARM64.  So the above function
-should never get called on ARM64.  While we could stub it out, I'd
-like to keep the notification to Hyper-V just in case
-hyperv_report_panic_msg() is not available for some reason I can't
-currently anticipate.  The important thing is the notification, and
-the register values aren't really important.  I'll add a comment to
-that effect.
+Changes in v4:
+Patch is new.
 
->=20
-> > +
-> > +	/*
-> > +	 * Let Hyper-V know there is crash data available
-> > +	 */
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_CTL, HV_CRASH_CTL_CRASH_NOTIFY);
-> > +}
-> > +EXPORT_SYMBOL_GPL(hyperv_report_panic);
-> > +
-> > +/*
-> > + * hyperv_report_panic_msg - report panic message to Hyper-V
-> > + * @pa: physical address of the panic page containing the message
-> > + * @size: size of the message in the page
-> > + */
-> > +void hyperv_report_panic_msg(phys_addr_t pa, size_t size)
-> > +{
-> > +	/*
-> > +	 * P3 to contain the physical address of the panic page & P4 to
-> > +	 * contain the size of the panic data in that page. Rest of the
-> > +	 * registers are no-op when the NOTIFY_MSG flag is set.
-> > +	 */
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_P0, 0);
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_P1, 0);
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_P2, 0);
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_P3, pa);
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_P4, size);
-> > +
-> > +	/*
-> > +	 * Let Hyper-V know there is crash data available along with
-> > +	 * the panic message.
-> > +	 */
-> > +	hv_set_vpreg(HV_REGISTER_CRASH_CTL,
-> > +	       (HV_CRASH_CTL_CRASH_NOTIFY | HV_CRASH_CTL_CRASH_NOTIFY_MSG));
-> > +}
-> > +EXPORT_SYMBOL_GPL(hyperv_report_panic_msg);
-> > diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.=
-c
-> > index ae6ece6..c58940d 100644
-> > --- a/arch/arm64/hyperv/mshyperv.c
-> > +++ b/arch/arm64/hyperv/mshyperv.c
-> > @@ -23,6 +23,8 @@
-> >
-> >  static void (*vmbus_handler)(void);
-> >  static void (*hv_stimer0_handler)(void);
-> > +static void (*hv_kexec_handler)(void);
-> > +static void (*hv_crash_handler)(struct pt_regs *regs);
->=20
-> Why is this in the arch-specific code? Yes, it lives in the x86 arch
-> code too, but I don't see what prevents it from being moved to the
-> vmbus_drv.c code.
+ drivers/spi/spi-fsl-dspi.c | 55 ++++++++++++++++++++------------------
+ 1 file changed, 29 insertions(+), 26 deletions(-)
 
-OK -- I'll see about moving it to arch independent code.
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index fcc6f20b6631..5873752a091e 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -900,7 +900,6 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ {
+ 	struct fsl_dspi *dspi = spi_controller_get_devdata(ctlr);
+ 	struct spi_device *spi = message->spi;
+-	enum dspi_trans_mode trans_mode;
+ 	struct spi_transfer *transfer;
+ 	int status = 0;
+ 
+@@ -942,30 +941,11 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 		spi_take_timestamp_pre(dspi->ctlr, dspi->cur_transfer,
+ 				       dspi->progress, !dspi->irq);
+ 
+-		trans_mode = dspi->devtype_data->trans_mode;
+-		switch (trans_mode) {
+-		case DSPI_EOQ_MODE:
+-			regmap_write(dspi->regmap, SPI_RSER, SPI_RSER_EOQFE);
+-			dspi_fifo_write(dspi);
+-			break;
+-		case DSPI_XSPI_MODE:
+-			regmap_write(dspi->regmap, SPI_RSER, SPI_RSER_CMDTCFE);
+-			dspi_fifo_write(dspi);
+-			break;
+-		case DSPI_DMA_MODE:
+-			regmap_write(dspi->regmap, SPI_RSER,
+-				     SPI_RSER_TFFFE | SPI_RSER_TFFFD |
+-				     SPI_RSER_RFDFE | SPI_RSER_RFDFD);
++		if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
+ 			status = dspi_dma_xfer(dspi);
+-			break;
+-		default:
+-			dev_err(&dspi->pdev->dev, "unsupported trans_mode %u\n",
+-				trans_mode);
+-			status = -EINVAL;
+-			goto out;
+-		}
++		} else {
++			dspi_fifo_write(dspi);
+ 
+-		if (trans_mode != DSPI_DMA_MODE) {
+ 			if (dspi->irq) {
+ 				wait_for_completion(&dspi->xfer_done);
+ 				reinit_completion(&dspi->xfer_done);
+@@ -975,11 +955,12 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 				} while (status == -EINPROGRESS);
+ 			}
+ 		}
++		if (status)
++			break;
+ 
+ 		spi_transfer_delay_exec(transfer);
+ 	}
+ 
+-out:
+ 	message->status = status;
+ 	spi_finalize_current_message(ctlr);
+ 
+@@ -1170,7 +1151,7 @@ static const struct regmap_config dspi_xspi_regmap_config[] = {
+ 	},
+ };
+ 
+-static void dspi_init(struct fsl_dspi *dspi)
++static int dspi_init(struct fsl_dspi *dspi)
+ {
+ 	unsigned int mcr;
+ 
+@@ -1184,6 +1165,26 @@ static void dspi_init(struct fsl_dspi *dspi)
+ 
+ 	regmap_write(dspi->regmap, SPI_MCR, mcr);
+ 	regmap_write(dspi->regmap, SPI_SR, SPI_SR_CLEAR);
++
++	switch (dspi->devtype_data->trans_mode) {
++	case DSPI_EOQ_MODE:
++		regmap_write(dspi->regmap, SPI_RSER, SPI_RSER_EOQFE);
++		break;
++	case DSPI_XSPI_MODE:
++		regmap_write(dspi->regmap, SPI_RSER, SPI_RSER_CMDTCFE);
++		break;
++	case DSPI_DMA_MODE:
++		regmap_write(dspi->regmap, SPI_RSER,
++			     SPI_RSER_TFFFE | SPI_RSER_TFFFD |
++			     SPI_RSER_RFDFE | SPI_RSER_RFDFD);
++		break;
++	default:
++		dev_err(&dspi->pdev->dev, "unsupported trans_mode %u\n",
++			dspi->devtype_data->trans_mode);
++		return -EINVAL;
++	}
++
++	return 0;
+ }
+ 
+ static int dspi_slave_abort(struct spi_master *master)
+@@ -1339,7 +1340,9 @@ static int dspi_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto out_ctlr_put;
+ 
+-	dspi_init(dspi);
++	ret = dspi_init(dspi);
++	if (ret)
++		goto out_clk_put;
+ 
+ 	dspi->irq = platform_get_irq(pdev, 0);
+ 	if (dspi->irq <= 0) {
+-- 
+2.17.1
 
->=20
-> >
-> >  static int vmbus_irq;
-> >  static long __percpu *vmbus_evt;
-> > @@ -137,3 +139,27 @@ void hv_remove_stimer0_irq(int irq)
-> >  	}
-> >  }
-> >  EXPORT_SYMBOL_GPL(hv_remove_stimer0_irq);
-> > +
-> > +void hv_setup_kexec_handler(void (*handler)(void))
-> > +{
-> > +	hv_kexec_handler =3D handler;
-> > +}
-> > +EXPORT_SYMBOL_GPL(hv_setup_kexec_handler);
-> > +
-> > +void hv_remove_kexec_handler(void)
-> > +{
-> > +	hv_kexec_handler =3D NULL;
-> > +}
-> > +EXPORT_SYMBOL_GPL(hv_remove_kexec_handler);
-> > +
-> > +void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs))
-> > +{
-> > +	hv_crash_handler =3D handler;
-> > +}
-> > +EXPORT_SYMBOL_GPL(hv_setup_crash_handler);
-> > +
-> > +void hv_remove_crash_handler(void)
-> > +{
-> > +	hv_crash_handler =3D NULL;
-> > +}
-> > +EXPORT_SYMBOL_GPL(hv_remove_crash_handler);
-> > --
-> > 1.8.3.1
-> >
-> >
->=20
-> Thanks,
->=20
-> 	M.
->=20
-> --
-> Jazz is not dead, it just smells funny.
