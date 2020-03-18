@@ -2,55 +2,52 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC79CC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADFEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A02232073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA62E2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584493370;
-	bh=bjiUoRTSUmH/jxo33MwdGbJLSbtImgImlJ6ARVJq1+o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GlyCRiD8FiFp+qf2cnS2srGxclNWCaSVURXaakxI6U/ODF/IINnqKbInBLClP04an
-	 bz+NBOgwt3Uhddx3bYio6a6kowBfW0JFPLUQrD3ZXZBz1lm717iiC7bptuvBegVOoa
-	 wmgM6AFh0vN5+19Q+PHq33lhVIaFzjh/SYYuOVPk=
+	s=default; t=1584493377;
+	bh=tcjCeybNuJRsZmj83RJBz8VnEbgCTqO0RZq74UvCQZg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jfmekJnCVyOk4pGRpvuQxN98gpiHMo/kBb4fN52xx1csQ+8bSkwqFZzlpBFLNaqYU
+	 J41UYzJyggyziRqdOfmkJKVPlF5togOHTI65Hqn7ewLLSVXoLKze96HcxG+vsdHm5c
+	 ObYmt7qFstEHlevjAOxsWuX2Ntb8yIDVvQkbw92k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgCRBCt (ORCPT
+        id S1727269AbgCRBCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 21:02:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39280 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 21:02:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727210AbgCRBCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 21:02:31 -0400
+        id S1727071AbgCRBCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 21:02:30 -0400
 Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E36852075E;
-        Wed, 18 Mar 2020 01:02:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E57A9206EC;
+        Wed, 18 Mar 2020 01:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584493350;
-        bh=bjiUoRTSUmH/jxo33MwdGbJLSbtImgImlJ6ARVJq1+o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jRWb79wMyf9PVHHt/j37aPe/6M3LZBUQ6gpWKva9WVbObkzkVrlD7kiTP8MDD4VGH
-         +I6ZjB4HkAheVL4zu8uxr4g3+jTOWMIYNaSfa3k2457mK4EjwD690tdd0EcOfVjfF3
-         UXVlrL+hiQQ5l/qBC4AkV2Vhs1nWso/er3nxoAk4=
+        s=default; t=1584493349;
+        bh=tcjCeybNuJRsZmj83RJBz8VnEbgCTqO0RZq74UvCQZg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=2cG4r0SROkRS732NjhQ0ZG+vo2qO0rU8BNAKyHU6DM8NF3rRJggitA54ORZhpb6PR
+         RkVZxnmY+Q4WKjqbBuTRnLAKK5Uu6d0iEL58/xuvLKLznH2AyBhY/U4P99ymNFvw64
+         ddRGEq/b2winw0BYXSPe8BbIQD6YMUSu0Ldw0fQk=
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     keescook@chromium.org, shuah@kernel.org
 Cc:     netdev@vger.kernel.org, luto@amacapital.net, wad@chromium.org,
         linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com, Tim.Bird@sony.com,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH v5 2/5] kselftest: create fixture objects
-Date:   Tue, 17 Mar 2020 18:01:50 -0700
-Message-Id: <20200318010153.40797-3-kuba@kernel.org>
+Subject: [PATCH v5 0/5] kselftest: add fixture parameters
+Date:   Tue, 17 Mar 2020 18:01:48 -0700
+Message-Id: <20200318010153.40797-1-kuba@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200318010153.40797-1-kuba@kernel.org>
-References: <20200318010153.40797-1-kuba@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,146 +55,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Grouping tests by fixture will allow us to parametrize
-test runs. Create full objects for fixtures.
+Hi!
 
-Add a "global" fixture for tests without a fixture.
+Shuah please consider applying to the kselftest tree.
 
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Acked-by: Kees Cook <keescook@chromium.org>
----
-v5:
- - pass fixture as argument to __run_test() right away,
-   previously this change was made in the next patch.
----
- tools/testing/selftests/kselftest_harness.h | 51 +++++++++++++++------
- 1 file changed, 38 insertions(+), 13 deletions(-)
+This set is an attempt to make running tests for different
+sets of data easier. The direct motivation is the tls
+test which we'd like to run for TLS 1.2 and TLS 1.3,
+but currently there is no easy way to invoke the same
+tests with different parameters.
 
-diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index aaf58fffc8f7..2dc9b7a63467 100644
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@ -169,8 +169,10 @@
- #define __TEST_IMPL(test_name, _signal) \
- 	static void test_name(struct __test_metadata *_metadata); \
- 	static struct __test_metadata _##test_name##_object = \
--		{ .name = "global." #test_name, \
--		  .fn = &test_name, .termsig = _signal, \
-+		{ .name = #test_name, \
-+		  .fn = &test_name, \
-+		  .fixture = &_fixture_global, \
-+		  .termsig = _signal, \
- 		  .timeout = TEST_TIMEOUT_DEFAULT, }; \
- 	static void __attribute__((constructor)) _register_##test_name(void) \
- 	{ \
-@@ -212,10 +214,12 @@
-  * populated and cleaned up using FIXTURE_SETUP() and FIXTURE_TEARDOWN().
-  */
- #define FIXTURE(fixture_name) \
-+	static struct __fixture_metadata _##fixture_name##_fixture_object = \
-+		{ .name =  #fixture_name, }; \
- 	static void __attribute__((constructor)) \
- 	_register_##fixture_name##_data(void) \
- 	{ \
--		__fixture_count++; \
-+		__register_fixture(&_##fixture_name##_fixture_object); \
- 	} \
- 	FIXTURE_DATA(fixture_name)
- 
-@@ -309,8 +313,9 @@
- 	} \
- 	static struct __test_metadata \
- 		      _##fixture_name##_##test_name##_object = { \
--		.name = #fixture_name "." #test_name, \
-+		.name = #test_name, \
- 		.fn = &wrapper_##fixture_name##_##test_name, \
-+		.fixture = &_##fixture_name##_fixture_object, \
- 		.termsig = signal, \
- 		.timeout = tmout, \
- 	 }; \
-@@ -654,10 +659,33 @@
- 	} \
- }
- 
-+/* Contains all the information about a fixture. */
-+struct __fixture_metadata {
-+	const char *name;
-+	struct __fixture_metadata *prev, *next;
-+} _fixture_global __attribute__((unused)) = {
-+	.name = "global",
-+	.prev = &_fixture_global,
-+};
-+
-+static struct __fixture_metadata *__fixture_list = &_fixture_global;
-+static unsigned int __fixture_count;
-+static int __constructor_order;
-+
-+#define _CONSTRUCTOR_ORDER_FORWARD   1
-+#define _CONSTRUCTOR_ORDER_BACKWARD -1
-+
-+static inline void __register_fixture(struct __fixture_metadata *f)
-+{
-+	__fixture_count++;
-+	__LIST_APPEND(__fixture_list, f);
-+}
-+
- /* Contains all the information for test execution and status checking. */
- struct __test_metadata {
- 	const char *name;
- 	void (*fn)(struct __test_metadata *);
-+	struct __fixture_metadata *fixture;
- 	int termsig;
- 	int passed;
- 	int trigger; /* extra handler after the evaluation */
-@@ -670,11 +698,6 @@ struct __test_metadata {
- /* Storage for the (global) tests to be run. */
- static struct __test_metadata *__test_list;
- static unsigned int __test_count;
--static unsigned int __fixture_count;
--static int __constructor_order;
--
--#define _CONSTRUCTOR_ORDER_FORWARD   1
--#define _CONSTRUCTOR_ORDER_BACKWARD -1
- 
- /*
-  * Since constructors are called in reverse order, reverse the test
-@@ -701,14 +724,15 @@ static inline int __bail(int for_realz, bool no_print, __u8 step)
- 	return 0;
- }
- 
--void __run_test(struct __test_metadata *t)
-+void __run_test(struct __fixture_metadata *f,
-+		struct __test_metadata *t)
- {
- 	pid_t child_pid;
- 	int status;
- 
- 	t->passed = 1;
- 	t->trigger = 0;
--	printf("[ RUN      ] %s\n", t->name);
-+	printf("[ RUN      ] %s.%s\n", f->name, t->name);
- 	alarm(t->timeout);
- 	child_pid = fork();
- 	if (child_pid < 0) {
-@@ -757,7 +781,8 @@ void __run_test(struct __test_metadata *t)
- 				status);
- 		}
- 	}
--	printf("[     %4s ] %s\n", (t->passed ? "OK" : "FAIL"), t->name);
-+	printf("[     %4s ] %s.%s\n", (t->passed ? "OK" : "FAIL"),
-+	       f->name, t->name);
- 	alarm(0);
- }
- 
-@@ -774,7 +799,7 @@ static int test_harness_run(int __attribute__((unused)) argc,
- 	       __test_count, __fixture_count + 1);
- 	for (t = __test_list; t; t = t->next) {
- 		count++;
--		__run_test(t);
-+		__run_test(t->fixture, t);
- 		if (t->passed)
- 			pass_count++;
- 		else
+Tested all users of kselftest_harness.h.
+
+v2:
+ - don't run tests by fixture
+ - don't pass params as an explicit argument
+
+v3:
+ - go back to the orginal implementation with an extra
+   parameter, and running by fixture (Kees);
+ - add LIST_APPEND helper (Kees);
+ - add a dot between fixture and param name (Kees);
+ - rename the params to variants (Tim);
+
+v4:
+ - whitespace fixes.
+
+v5 (Kees):
+ - move a comment;
+ - remove a temporary variable;
+ - reword the commit message on patch 4.
+
+v1: https://lore.kernel.org/netdev/20200313031752.2332565-1-kuba@kernel.org/
+v2: https://lore.kernel.org/netdev/20200314005501.2446494-1-kuba@kernel.org/
+v3: https://lore.kernel.org/netdev/20200316225647.3129354-1-kuba@kernel.org/
+v4: https://lore.kernel.org/netdev/20200317010419.3268916-1-kuba@kernel.org/
+
+Jakub Kicinski (5):
+  kselftest: factor out list manipulation to a helper
+  kselftest: create fixture objects
+  kselftest: run tests by fixture
+  kselftest: add fixture variants
+  selftests: tls: run all tests for TLS 1.2 and TLS 1.3
+
+ Documentation/dev-tools/kselftest.rst       |   3 +-
+ tools/testing/selftests/kselftest_harness.h | 234 +++++++++++++++-----
+ tools/testing/selftests/net/tls.c           |  93 ++------
+ 3 files changed, 202 insertions(+), 128 deletions(-)
+
 -- 
 2.25.1
 
