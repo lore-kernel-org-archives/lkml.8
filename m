@@ -2,88 +2,93 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD439C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366A9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 824302076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E82E20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:44:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="auMuif27"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgCRFcp (ORCPT
+        id S1726954AbgCRFo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 01:32:45 -0400
-Received: from m177129.mail.qiye.163.com ([123.58.177.129]:15146 "EHLO
-        m177129.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgCRFcp (ORCPT
+        Wed, 18 Mar 2020 01:44:28 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:47074 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgCRFo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 01:32:45 -0400
-Received: from vivo.com (wm-2.qy.internal [127.0.0.1])
-        by m177129.mail.qiye.163.com (Hmail) with ESMTP id 1ABAA5C18EA;
-        Wed, 18 Mar 2020 13:32:28 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AG*ACQC2CEOOiVKFwxZXw4qM.3.1584509548085.Hmail.wenhu.wang@vivo.com>
-To:     Zheng Wei <wei.zheng@vivo.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yunfeng Ye <yeyunfeng@huawei.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@vivo.com, Will Deacon <will@kernel.org>
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gYXJtNjQ6IGFkZCBibGFuayBhZnRlciAnaWYn?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.227
-In-Reply-To: <20200317222823.GG20788@willie-the-truck>
+        Wed, 18 Mar 2020 01:44:28 -0400
+Received: by mail-pg1-f196.google.com with SMTP id y30so13027690pga.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 22:44:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qXY2yMRGwktYokk3pPFwmmTxw2SIkRhzk6Ye/AepEnM=;
+        b=auMuif27BF2tfyRqSNTt4zSVURfB7x5ZyhtvFy0jfEjowqXES6bMXaYbo9Rcjq9sOO
+         NkXoBSCwuP0ZDQF4xMbnZXE2eiWzYeLKBPHB0T+1ep2X1MfnosDT4wsHaJ9PVplBUgph
+         5joOAvaRgGFjqKtAtGLxOd6crzo+aegDG7PVY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qXY2yMRGwktYokk3pPFwmmTxw2SIkRhzk6Ye/AepEnM=;
+        b=aPaPvrdG0wC7nbkR0hMfwZFY4918POwsZx0wMQ68p7e10sAnAtjPf7eb/BcfABd7yp
+         /P6oKlkP9i5NYyvTNir7HAGjJ9RK6529GrrnqeG4vwGgVWaVal5Ci+XcHT10y0odauTz
+         yGyqpmUzX32cEpldl9n0EhMavjpXRBpYMtVQ0nnIEZnfcDE1YR4sIGNbk4UbWI6Nz9hF
+         ceTysdynu6ggiGs2jM8BDBwt+j7RJrgak7LQ897XT23GFjC+gxfByliYX0/sorxeuTe5
+         +G6pjLLYMurddL4r0LOgI8ZoGscDBw5Hq7YziE0rommp+T6CT74lIeTbOw+2qqKEw21Q
+         7Lxg==
+X-Gm-Message-State: ANhLgQ0m1Lqn3z7IzjcOWcwTq4wz794exPnjwfvoXNtVV3azhtyW07RY
+        d91IRM7sCKBMTAs2DTrCFxpD7r882IE=
+X-Google-Smtp-Source: ADFU+vsYBFmDXYadiM2XWYH/z8MFjrQ3chr28RyzZ4TN+iHPIz4KZzaFkI1eus8KAFNzwyVqrvROsA==
+X-Received: by 2002:a65:458e:: with SMTP id o14mr2875894pgq.323.1584510266817;
+        Tue, 17 Mar 2020 22:44:26 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id e11sm5005003pfj.95.2020.03.17.22.44.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 22:44:26 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: [PATCH] docs: locking: Add 'need' to hardirq section
+Date:   Tue, 17 Mar 2020 22:44:25 -0700
+Message-Id: <20200318054425.111928-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Wed, 18 Mar 2020 13:32:28 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Wed, 18 Mar 2020 13:32:28 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VJTkNCQkJDSU9OSUhCSFlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNTE9LTEJNQ0xPN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6PFE6OCo4STg#NDQSLTA9DAMhIwxPCjZVSFVKTkNPTktCTk5LSUNCVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlMWVdZCAFZQU9NQkw3Bg++
-X-HM-Tid: 0a70ec20f65c6447kurs1abaa5c18ea
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogV2lsbCBEZWFjb24gPHdpbGxAa2VybmVsLm9yZz4KRGF0ZTogMjAyMC0wMy0xOCAwNjoy
-ODoyNApUbzogIFpoZW5nIFdlaSA8d2VpLnpoZW5nQHZpdm8uY29tPgpDYzogIENhdGFsaW4gTWFy
-aW5hcyA8Y2F0YWxpbi5tYXJpbmFzQGFybS5jb20+LEhhbmp1biBHdW8gPGd1b2hhbmp1bkBodWF3
-ZWkuY29tPixFbnJpY28gV2VpZ2VsdCA8aW5mb0BtZXR1eC5uZXQ+LEFsbGlzb24gUmFuZGFsIDxh
-bGxpc29uQGxvaHV0b2submV0PixHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5k
-YXRpb24ub3JnPixUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4sWXVuZmVuZyBZ
-ZSA8eWV5dW5mZW5nQGh1YXdlaS5jb20+LGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZyxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLGtlcm5lbEB2aXZvLmNvbSx3ZW5odS53
-YW5nQHZpdm8uY29tClN1YmplY3Q6IFJlOiBbUEFUQ0hdIGFybTY0OiBhZGQgYmxhbmsgYWZ0ZXIg
-J2lmJz5PbiBGcmksIE1hciAxMywgMjAyMCBhdCAxMDo1NDowMlBNICswODAwLCBaaGVuZyBXZWkg
-d3JvdGU6Cj4+IGFkZCBibGFuayBhZnRlciAnaWYnIGZvciBhcm12OF9kZXByZWNhdGVkX2luaXQo
-KQo+PiB0byBtYWtlIGl0IGNvbXBseSB3aXRoIGtlcm5lbCBjb2Rpbmcgc3R5bGUuCj4+IAo+PiBT
-aWduZWQtb2ZmLWJ5OiBaaGVuZyBXZWkgPHdlaS56aGVuZ0B2aXZvLmNvbT4KPj4gLS0tCj4+ICBh
-cmNoL2FybTY0L2tlcm5lbC9hcm12OF9kZXByZWNhdGVkLmMgfCAyICstCj4+ICAxIGZpbGUgY2hh
-bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPj4gCj4+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybTY0L2tlcm5lbC9hcm12OF9kZXByZWNhdGVkLmMgYi9hcmNoL2FybTY0L2tlcm5lbC9h
-cm12OF9kZXByZWNhdGVkLmMKPj4gaW5kZXggNzgzMmIzMjE2MzcwLi40Y2M1ODFhZjJkOTYgMTAw
-NjQ0Cj4+IC0tLSBhL2FyY2gvYXJtNjQva2VybmVsL2FybXY4X2RlcHJlY2F0ZWQuYwo+PiArKysg
-Yi9hcmNoL2FybTY0L2tlcm5lbC9hcm12OF9kZXByZWNhdGVkLmMKPj4gQEAgLTYzMCw3ICs2MzAs
-NyBAQCBzdGF0aWMgaW50IF9faW5pdCBhcm12OF9kZXByZWNhdGVkX2luaXQodm9pZCkKPj4gIAkJ
-cmVnaXN0ZXJfaW5zbl9lbXVsYXRpb24oJmNwMTVfYmFycmllcl9vcHMpOwo+PiAgCj4+ICAJaWYg
-KElTX0VOQUJMRUQoQ09ORklHX1NFVEVORF9FTVVMQVRJT04pKSB7Cj4+IC0JCWlmKHN5c3RlbV9z
-dXBwb3J0c19taXhlZF9lbmRpYW5fZWwwKCkpCj4+ICsJCWlmIChzeXN0ZW1fc3VwcG9ydHNfbWl4
-ZWRfZW5kaWFuX2VsMCgpKQo+PiAgCQkJcmVnaXN0ZXJfaW5zbl9lbXVsYXRpb24oJnNldGVuZF9v
-cHMpOwo+PiAgCQllbHNlCj4+ICAJCQlwcl9pbmZvKCJzZXRlbmQgaW5zdHJ1Y3Rpb24gZW11bGF0
-aW9uIGlzIG5vdCBzdXBwb3J0ZWQgb24gdGhpcyBzeXN0ZW1cbiIpOwo+Cj4oQ2F0YWxpbjogSSdt
-IGp1c3QgYWNraW5nIHRoZXNlIHRyaXZpYWwgdHlwby9zdHlsZSBmaXhlcyB0byBnZXQgdGhlbSBv
-dXQKPm9mIG15IGluYm94OyBkbyB3aGF0ZXZlciB5b3UgbGlrZSB3aXRoIHRoZW0gOykKPgo+QWNr
-ZWQtYnk6IFdpbGwgRGVhY29uIDx3aWxsQGtlcm5lbC5vcmc+Cj4KPldpbGwKClNob3VsZG4ndCB5
-b3UgaGF2ZSBDYyB0cml2aWFsPHRyaXZpYWxAa2VybmVsLm9yZz4/CkFza2VkLWJ5OiBXYW5nIFdl
-bmh1IDx3ZW5odS53YW5nQHZpdm8uY29tPgoKV2VuaHUKDQoNCg==
+Add the missing word to make this sentence read properly.
+
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ Documentation/kernel-hacking/locking.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/kernel-hacking/locking.rst b/Documentation/kernel-hacking/locking.rst
+index a8518ac0d31d..9850c1e52607 100644
+--- a/Documentation/kernel-hacking/locking.rst
++++ b/Documentation/kernel-hacking/locking.rst
+@@ -263,7 +263,7 @@ by a hardware interrupt on another CPU. This is where
+ interrupts on that cpu, then grab the lock.
+ :c:func:`spin_unlock_irq()` does the reverse.
+ 
+-The irq handler does not to use :c:func:`spin_lock_irq()`, because
++The irq handler does not need to use :c:func:`spin_lock_irq()`, because
+ the softirq cannot run while the irq handler is running: it can use
+ :c:func:`spin_lock()`, which is slightly faster. The only exception
+ would be if a different hardware irq handler uses the same lock:
+
+base-commit: fb33c6510d5595144d585aa194d377cf74d31911
+-- 
+Sent by a computer, using git, on the internet
+
