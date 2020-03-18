@@ -6,108 +6,99 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0395CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D83AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D248F20754
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C2520738
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgCRDuX (ORCPT
+        id S1727193AbgCRDvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 23:50:23 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11657 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726229AbgCRDuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 23:50:23 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 0C22517E85C3098C7E5D;
-        Wed, 18 Mar 2020 11:50:21 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 18 Mar 2020
- 11:50:11 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <timo.teras@iki.fi>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] xfrm: policy: Fix doulbe free in xfrm_policy_timer
-Date:   Wed, 18 Mar 2020 11:48:39 +0800
-Message-ID: <20200318034839.57996-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 17 Mar 2020 23:51:12 -0400
+Received: from mga14.intel.com ([192.55.52.115]:57668 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726229AbgCRDvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 23:51:11 -0400
+IronPort-SDR: JiYt3whZZc5rWcXYQjE9lZ0QWtm+Lx4F1ybZGVxtr7O+lvkYsIwK7Mr5yLmjyIXlkER81tSf3q
+ a4C7MRwCGRLw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 20:51:11 -0700
+IronPort-SDR: 9bUF4H9QQNe3a8MQitbBFyw8f9tSiDyCfhjvRRegxTcaEa61P4rY7aAkTgy9i/WeNGTaHtWTYI
+ 3rVfHzAzi7vg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,566,1574150400"; 
+   d="scan'208";a="268215257"
+Received: from icx-2s.bj.intel.com ([10.240.192.138])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Mar 2020 20:51:09 -0700
+From:   Luwei Kang <luwei.kang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, Luwei Kang <luwei.kang@intel.com>
+Subject: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
+Date:   Wed, 18 Mar 2020 11:48:18 +0800
+Message-Id: <1584503298-18731-1-git-send-email-luwei.kang@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After xfrm_add_policy add a policy, its ref is 2, then
+If the logical processor is operating with Intel PT enabled (
+IA32_RTIT_CTL.TraceEn = 1) at the time of VM entry, the “load
+IA32_RTIT_CTL” VM-entry control must be 0(SDM 26.2.1.1).
 
-                             xfrm_policy_timer
-                               read_lock
-                               xp->walk.dead is 0
-                               ....
-                               mod_timer()
-xfrm_policy_kill
-  policy->walk.dead = 1
-  ....
-  del_timer(&policy->timer)
-    xfrm_pol_put //ref is 1
-  xfrm_pol_put  //ref is 0
-    xfrm_policy_destroy
-      call_rcu
-                                 xfrm_pol_hold //ref is 1
-                               read_unlock
-                               xfrm_pol_put //ref is 0
-                                 xfrm_policy_destroy
-                                  call_rcu
+The first disabled the host Intel PT(Clear TraceEn) will make all the
+buffered packets are flushed out of the processor and it may cause
+an Intel PT PMI. The host Intel PT will be re-enabled in the host Intel
+PT PMI handler.
 
-xfrm_policy_destroy is called twice, which may leads to
-double free.
+handle_pmi_common()
+    -> intel_pt_interrupt()
+            -> pt_config_start()
 
-Call Trace:
-RIP: 0010:refcount_warn_saturate+0x161/0x210
-...
- xfrm_policy_timer+0x522/0x600
- call_timer_fn+0x1b3/0x5e0
- ? __xfrm_decode_session+0x2990/0x2990
- ? msleep+0xb0/0xb0
- ? _raw_spin_unlock_irq+0x24/0x40
- ? __xfrm_decode_session+0x2990/0x2990
- ? __xfrm_decode_session+0x2990/0x2990
- run_timer_softirq+0x5c5/0x10e0
+This patch will disable the Intel PT twice to make sure the Intel PT
+is disabled before VM-Entry.
 
-Fix this by add write_lock_bh in xfrm_policy_kill.
-
-Fixes: ea2dea9dacc2 ("xfrm: remove policy lock when accessing policy->walk.dead")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Luwei Kang <luwei.kang@intel.com>
 ---
- net/xfrm/xfrm_policy.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kvm/vmx/vmx.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-index dbda08ec566e..ae0689174bbf 100644
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -434,6 +434,7 @@ EXPORT_SYMBOL(xfrm_policy_destroy);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 26f8f31..d936a91 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1095,6 +1095,8 @@ static inline void pt_save_msr(struct pt_ctx *ctx, u32 addr_range)
  
- static void xfrm_policy_kill(struct xfrm_policy *policy)
+ static void pt_guest_enter(struct vcpu_vmx *vmx)
  {
-+	write_lock_bh(&policy->lock);
- 	policy->walk.dead = 1;
++	u64 rtit_ctl;
++
+ 	if (pt_mode == PT_MODE_SYSTEM)
+ 		return;
  
- 	atomic_inc(&policy->genid);
-@@ -445,6 +446,7 @@ static void xfrm_policy_kill(struct xfrm_policy *policy)
- 	if (del_timer(&policy->timer))
- 		xfrm_pol_put(policy);
- 
-+	write_lock_bh(&policy->lock);
- 	xfrm_pol_put(policy);
- }
- 
+@@ -1103,8 +1105,14 @@ static void pt_guest_enter(struct vcpu_vmx *vmx)
+ 	 * Save host state before VM entry.
+ 	 */
+ 	rdmsrl(MSR_IA32_RTIT_CTL, vmx->pt_desc.host.ctl);
+-	if (vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN) {
++	if (vmx->pt_desc.host.ctl & RTIT_CTL_TRACEEN) {
+ 		wrmsrl(MSR_IA32_RTIT_CTL, 0);
++		rdmsrl(MSR_IA32_RTIT_CTL, rtit_ctl);
++		if (rtit_ctl)
++			wrmsrl(MSR_IA32_RTIT_CTL, 0);
++	}
++
++	if (vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN) {
+ 		pt_save_msr(&vmx->pt_desc.host, vmx->pt_desc.addr_range);
+ 		pt_load_msr(&vmx->pt_desc.guest, vmx->pt_desc.addr_range);
+ 	}
 -- 
-2.17.1
-
+1.8.3.1
 
