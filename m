@@ -2,310 +2,252 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A596C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49F1C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A6420780
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:35:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lYD74A1Y"
+	by mail.kernel.org (Postfix) with ESMTP id 9096420787
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgCRSfr (ORCPT
+        id S1727022AbgCRSgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:35:47 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52263 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgCRSfr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:35:47 -0400
-Received: by mail-pj1-f67.google.com with SMTP id ng8so1709154pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 11:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=v55B2a/Zwvx3CXP9CMik1IV/79dcJ/3V1375/GTUm0Y=;
-        b=lYD74A1YEKqfQWcC0viSFqQGwnB5cSq1cXqUxYr3DRclIOEclTe4uE4xnKn+c/TFEI
-         TgFMYTuBldFoGEpSwn518h1PhSB4dXuG1kDJwYT2qChOUHkeTkAc1KpM52NgW6tz9dNw
-         AQYpcDgNXsnZiPBoWJOsT4uyTHysJkmTwtsLs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v55B2a/Zwvx3CXP9CMik1IV/79dcJ/3V1375/GTUm0Y=;
-        b=W8c55Kv3vo+GF48GhtnoTXiCs1wlm9Le0xo6n8w+Iln4PeMis2IuOd6/OA07BFAGaN
-         7423IytKu+kiJO8LXPmsv5jzJmVjNjamiGH7FTZatvvppJv6k+YVp/R+RLPaaWec0h8/
-         PSTDo0qC60cS/+MLbj38ajVVABUWh/jB3rOLExtMCaqAYr4Un4zyE91bQfsc06e0Siu5
-         4Ti4/bl7zVIGT36TdHdZ+fZxqRpVdjdehX8E0ZAxYhnFofLexJM/OQAeV08hWpjmsVcv
-         RNyfRo4N7i/Dg8Jb2Ks1oD5mHW/hnPzvh63AEfGgNmsc6FrM09wXRDp/1j7k/5KdDXE1
-         fBiw==
-X-Gm-Message-State: ANhLgQ2bXa2rxn7jlKdAxNTlV+STxSaPD4EdCFaG68Bkv9K+zF3/LCjS
-        1+htOgSYwcvIJJKbW4ZoehgMaw==
-X-Google-Smtp-Source: ADFU+vuyzSHt8QatiGLYf6IYtJjZw1cG3ovV9vuH8DlYYljpVAflAybcftSCvIkQOgrM3h9WTPyyOg==
-X-Received: by 2002:a17:902:710c:: with SMTP id a12mr5020050pll.283.1584556545656;
-        Wed, 18 Mar 2020 11:35:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o33sm3249796pje.19.2020.03.18.11.35.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 11:35:44 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 11:35:43 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 07/11] pstore/blk: skip broken zone for mtd device
-Message-ID: <202003181131.3A8F861F@keescook>
-References: <1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1581078355-19647-8-git-send-email-liaoweixiong@allwinnertech.com>
+        Wed, 18 Mar 2020 14:36:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:53284 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726950AbgCRSgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 14:36:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2DA21FB;
+        Wed, 18 Mar 2020 11:36:08 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07E133F67D;
+        Wed, 18 Mar 2020 11:36:05 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 18:36:03 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-mips@vger.kernel.org, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
+ vgettimeofday
+Message-ID: <20200318183603.GF94111@arrakis.emea.arm.com>
+References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
+ <20200317122220.30393-19-vincenzo.frascino@arm.com>
+ <20200317143834.GC632169@arrakis.emea.arm.com>
+ <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
+ <20200317155031.GD632169@arrakis.emea.arm.com>
+ <83aaf9e1-0a8f-4908-577a-23766541b2ba@arm.com>
+ <20200317174806.GE632169@arrakis.emea.arm.com>
+ <93cfe94a-c2a3-1025-bc9c-e7c3fd891100@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581078355-19647-8-git-send-email-liaoweixiong@allwinnertech.com>
+In-Reply-To: <93cfe94a-c2a3-1025-bc9c-e7c3fd891100@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 08:25:51PM +0800, WeiXiong Liao wrote:
-> It's one of a series of patches for adaptive to MTD device.
+On Wed, Mar 18, 2020 at 04:14:26PM +0000, Vincenzo Frascino wrote:
+> On 3/17/20 5:48 PM, Catalin Marinas wrote:
+> > On Tue, Mar 17, 2020 at 04:40:48PM +0000, Vincenzo Frascino wrote:
+> >> On 3/17/20 3:50 PM, Catalin Marinas wrote:
+> >>> On Tue, Mar 17, 2020 at 03:04:01PM +0000, Vincenzo Frascino wrote:
+> >>>> On 3/17/20 2:38 PM, Catalin Marinas wrote:
+> >>>>> On Tue, Mar 17, 2020 at 12:22:12PM +0000, Vincenzo Frascino wrote:
+> >>>>
+> >>>> Can TASK_SIZE > UINTPTR_MAX on an arm64 system?
+> >>>
+> >>> TASK_SIZE yes on arm64 but not TASK_SIZE_32. I was asking about the
+> >>> arm32 check where TASK_SIZE < UINTPTR_MAX. How does the vdsotest return
+> >>> -EFAULT on arm32? Which code path causes this in the user vdso code?
+[...]
+> > So clock_gettime() on arm32 always falls back to the syscall?
 > 
-> MTD device is not block device. As the block of flash (MTD device) will
-> be broken, it's necessary for pstore/blk to skip the broken block
-> (bad block).
+> This seems not what you asked, and I think I answered accordingly. Anyway, in
+> the case of arm32 the error code path is handled via syscall fallback.
 > 
-> If device drivers return -ENEXT, pstore/blk will try next zone of dmesg.
+> Look at the code below as an example (I am using getres because I know this
+> email will be already too long, and I do not want to add pointless code, but the
+> concept is the same for gettime and the others):
 > 
-> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
-> ---
->  Documentation/admin-guide/pstore-block.rst |  3 +-
->  fs/pstore/blkzone.c                        | 74 +++++++++++++++++++++++-------
->  include/linux/blkoops.h                    |  4 +-
->  include/linux/pstore_blk.h                 |  4 ++
->  4 files changed, 66 insertions(+), 19 deletions(-)
+> static __maybe_unused
+> int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
+> {
+> 	int ret = __cvdso_clock_getres_common(clock, res);
 > 
-> diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
-> index c8a5f68960c3..be865dfc1a28 100644
-> --- a/Documentation/admin-guide/pstore-block.rst
-> +++ b/Documentation/admin-guide/pstore-block.rst
-> @@ -188,7 +188,8 @@ The parameter @offset of these interface is the relative position of the device.
->  Normally the number of bytes read/written should be returned, while for error,
->  negative number will be returned. The following return numbers mean more:
->  
-> --EBUSY: pstore/blk should try again later.
-> +1. -EBUSY: pstore/blk should try again later.
-> +#. -ENEXT: this zone is used or broken, pstore/blk should try next one.
->  
->  panic_write (for non-block device)
->  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> diff --git a/fs/pstore/blkzone.c b/fs/pstore/blkzone.c
-> index 442e5a5bbfda..205aeff28992 100644
-> --- a/fs/pstore/blkzone.c
-> +++ b/fs/pstore/blkzone.c
-> @@ -207,6 +207,9 @@ static int blkz_zone_write(struct blkz_zone *zone,
->  
->  	return 0;
->  set_dirty:
-> +	/* no need to mark dirty if going to try next zone */
-> +	if (wcnt == -ENEXT)
-> +		return -ENEXT;
->  	atomic_set(&zone->dirty, true);
->  	/* flush dirty zones nicely */
->  	if (wcnt == -EBUSY && !is_on_panic())
-> @@ -360,7 +363,11 @@ static int blkz_recover_dmesg_meta(struct blkz_context *cxt)
->  			return -EINVAL;
->  
->  		rcnt = info->read((char *)buf, len, zone->off);
-> -		if (rcnt != len) {
-> +		if (rcnt == -ENEXT) {
-> +			pr_debug("%s with id %lu may be broken, skip\n",
-> +					zone->name, i);
-> +			continue;
-> +		} else if (rcnt != len) {
->  			pr_err("read %s with id %lu failed\n", zone->name, i);
->  			return (int)rcnt < 0 ? (int)rcnt : -EIO;
->  		}
-> @@ -650,24 +657,58 @@ static void blkz_write_kmsg_hdr(struct blkz_zone *zone,
->  		hdr->counter = 0;
->  }
->  
-> +/*
-> + * In case zone is broken, which may occur to MTD device, we try each zones,
-> + * start at cxt->dmesg_write_cnt.
-> + */
->  static inline int notrace blkz_dmesg_write_do(struct blkz_context *cxt,
->  		struct pstore_record *record)
->  {
-> +	int ret = -EBUSY;
->  	size_t size, hlen;
->  	struct blkz_zone *zone;
-> -	unsigned int zonenum;
-> +	unsigned int i;
->  
-> -	zonenum = cxt->dmesg_write_cnt;
-> -	zone = cxt->dbzs[zonenum];
-> -	if (unlikely(!zone))
-> -		return -ENOSPC;
-> -	cxt->dmesg_write_cnt = (zonenum + 1) % cxt->dmesg_max_cnt;
-> +	for (i = 0; i < cxt->dmesg_max_cnt; i++) {
-> +		unsigned int zonenum, len;
-> +
-> +		zonenum = (cxt->dmesg_write_cnt + i) % cxt->dmesg_max_cnt;
-> +		zone = cxt->dbzs[zonenum];
-> +		if (unlikely(!zone))
-> +			return -ENOSPC;
->  
-> -	pr_debug("write %s to zone id %d\n", zone->name, zonenum);
-> -	blkz_write_kmsg_hdr(zone, record);
-> -	hlen = sizeof(struct blkz_dmesg_header);
-> -	size = min_t(size_t, record->size, zone->buffer_size - hlen);
-> -	return blkz_zone_write(zone, FLUSH_ALL, record->buf, size, hlen);
-> +		/* avoid destorying old data, allocate a new one */
-> +		len = zone->buffer_size + sizeof(*zone->buffer);
-> +		zone->oldbuf = zone->buffer;
-> +		zone->buffer = kzalloc(len, GFP_KERNEL);
-> +		if (!zone->buffer) {
-> +			zone->buffer = zone->oldbuf;
-> +			return -ENOMEM;
-> +		}
-> +		zone->buffer->sig = zone->oldbuf->sig;
-> +
-> +		pr_debug("write %s to zone id %d\n", zone->name, zonenum);
-> +		blkz_write_kmsg_hdr(zone, record);
-> +		hlen = sizeof(struct blkz_dmesg_header);
-> +		size = min_t(size_t, record->size, zone->buffer_size - hlen);
-> +		ret = blkz_zone_write(zone, FLUSH_ALL, record->buf, size, hlen);
-> +		if (likely(!ret || ret != -ENEXT)) {
-> +			cxt->dmesg_write_cnt = zonenum + 1;
-> +			cxt->dmesg_write_cnt %= cxt->dmesg_max_cnt;
-> +			/* no need to try next zone, free last zone buffer */
-> +			kfree(zone->oldbuf);
-> +			zone->oldbuf = NULL;
-> +			return ret;
-> +		}
-> +
-> +		pr_debug("zone %u may be broken, try next dmesg zone\n",
-> +				zonenum);
-> +		kfree(zone->buffer);
-> +		zone->buffer = zone->oldbuf;
-> +		zone->oldbuf = NULL;
-> +	}
-> +
-> +	return -EBUSY;
->  }
->  
->  static int notrace blkz_dmesg_write(struct blkz_context *cxt,
-> @@ -791,7 +832,6 @@ static int notrace blkz_pstore_write(struct pstore_record *record)
->  	}
->  }
->  
-> -#define READ_NEXT_ZONE ((ssize_t)(-1024))
->  static struct blkz_zone *blkz_read_next_zone(struct blkz_context *cxt)
->  {
->  	struct blkz_zone *zone = NULL;
-> @@ -852,7 +892,7 @@ static ssize_t blkz_dmesg_read(struct blkz_zone *zone,
->  	if (blkz_read_dmesg_hdr(zone, record)) {
->  		atomic_set(&zone->buffer->datalen, 0);
->  		atomic_set(&zone->dirty, 0);
-> -		return READ_NEXT_ZONE;
-> +		return -ENEXT;
->  	}
->  	size -= sizeof(struct blkz_dmesg_header);
->  
-> @@ -877,7 +917,7 @@ static ssize_t blkz_dmesg_read(struct blkz_zone *zone,
->  	if (unlikely(blkz_zone_read(zone, record->buf + hlen, size,
->  				sizeof(struct blkz_dmesg_header)) < 0)) {
->  		kfree(record->buf);
-> -		return READ_NEXT_ZONE;
-> +		return -ENEXT;
->  	}
->  
->  	return size + hlen;
-> @@ -891,7 +931,7 @@ static ssize_t blkz_record_read(struct blkz_zone *zone,
->  
->  	buf = (struct blkz_buffer *)zone->oldbuf;
->  	if (!buf)
-> -		return READ_NEXT_ZONE;
-> +		return -ENEXT;
->  
->  	size = atomic_read(&buf->datalen);
->  	start = atomic_read(&buf->start);
-> @@ -943,7 +983,7 @@ static ssize_t blkz_pstore_read(struct pstore_record *record)
->  	}
->  
->  	ret = readop(zone, record);
-> -	if (ret == READ_NEXT_ZONE)
-> +	if (ret == -ENEXT)
->  		goto next_zone;
->  	return ret;
->  }
-> diff --git a/include/linux/blkoops.h b/include/linux/blkoops.h
-> index 8f40f225545d..71c596fd4cc8 100644
-> --- a/include/linux/blkoops.h
-> +++ b/include/linux/blkoops.h
-> @@ -27,6 +27,7 @@
->   *	On error, negative number should be returned. The following returning
->   *	number means more:
->   *	  -EBUSY: pstore/blk should try again later.
-> + *	  -ENEXT: this zone is used or broken, pstore/blk should try next one.
->   * @panic_write:
->   *	The write operation only used for panic.
->   *
-> @@ -45,7 +46,8 @@ struct blkoops_device {
->  
->  /*
->   * Panic write for block device who should write alignmemt to SECTOR_SIZE.
-> - * On success, zero should be returned. Others mean error.
-> + * On success, zero should be returned. Others mean error except that -ENEXT
-> + * means the zone is used or broken, pstore/blk should try next one.
->   */
->  typedef int (*blkoops_blk_panic_write_op)(const char *buf, sector_t start_sect,
->  		sector_t sects);
-> diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
-> index 77704c1b404a..bbbe4fe37f7c 100644
-> --- a/include/linux/pstore_blk.h
-> +++ b/include/linux/pstore_blk.h
-> @@ -6,6 +6,9 @@
->  #include <linux/types.h>
->  #include <linux/blkdev.h>
->  
-> +/* read/write function return -ENEXT means try next zone */
-> +#define ENEXT ((ssize_t)(1024))
+> 	if (unlikely(ret))
+> 		return clock_getres_fallback(clock, res);
+> 	return 0;
+> }
+> 
+> When the return code of the "vdso" internal function returns an error the system
+> call is triggered.
 
-I really don't like inventing errno numbers. Can you just reuse an
-existing (but non-block) errno like ESRCH or ENOMSG or something?
+But when __cvdso_clock_getres_common() does *not* return an error, it
+means that it handled the clock_getres() call without a fallback to the
+syscall. I assume this is possible on arm32. When the clock_getres() is
+handled directly (not as a syscall), why doesn't arm32 need the same
+(res >= TASK_SIZE) check?
 
-> +
->  /**
->   * struct blkz_info - backend blkzone driver structure
->   *
-> @@ -42,6 +45,7 @@
->   *	On error, negative number should be returned. The following returning
->   *	number means more:
->   *	  -EBUSY: pstore/blk should try again later.
-> + *	  -ENEXT: this zone is used or broken, pstore/blk should try next one.
->   * @panic_write:
->   *	The write operation only used for panic. It's optional if you do not
->   *	care panic record. If panic occur but blkzone do not recover yet, the
-> -- 
-> 1.9.1
+> In general arm32 has been ported to the unified vDSO library hence it has a
+> proper implementation on par with all the other architectures supported by the
+> unified library.
+
+And that's what I do not fully understand. When the call doesn't fall
+back to a syscall, why does arm32 and arm64 compat need to differ in the
+implementation? I may be missing something here.
+
+> >>> My guess is that on arm32 it only fails with -EFAULT in the syscall
+> >>> fallback path since a copy_to_user() would fail the access_ok() check.
+> >>> Does it always take the fallback path if ts > TASK_SIZE?
+> >>
+> >> Correct, it goes via fallback. The return codes for these syscalls are specified
+> >> by the ABI [1]. Then I agree with you the way on which arm32 achieves it should
+> >> be via access_ok() check.
+> > 
+> > "it should be" or "it is" on arm32?
+[...]
+> SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
+> 		struct __kernel_timespec __user *, tp)
+[...]
+> This is the syscall on which we fallback when the "vdso" internal function
+> returns an error. The behavior of the vdso has to be exactly the same of the
+> syscall otherwise we end up in an ABI breakage.
+
+I agree. I just don't understand why on arm32 the vdso code doesn't need
+to check for tp >= TASK_SIZE while the arm64 compat one does when it
+does *not* fall back to a syscall. I understand the syscall fallback
+case, that's caused by how we handle access_ok(), but this doesn't
+explain the vdso-only case.
+
+> >>>>> This last check needs an explanation. If the clock_id is invalid but res
+> >>>>> is not NULL, we allow it. I don't see where the compatibility issue is,
+> >>>>> arm32 doesn't have such check.
+> >>>>
+> >>>> The case that you are describing has to return -EPERM per ABI spec. This case
+> >>>> has to return -EINVAL.
+> >>>>
+> >>>> The first case is taken care from the generic code. But if we don't do this
+> >>>> check before on arm64 compat we end up returning the wrong error code.
+> >>>
+> >>> I guess I have the same question as above. Where does the arm32 code
+> >>> return -EINVAL for that case? Did it work correctly before you removed
+> >>> the TASK_SIZE_32 check?
+> >>
+> >> I repeated the test and seems that it was failing even before I removed
+> >> TASK_SIZE_32. For reasons I can't explain I did not catch it before.
+> >>
+> >> The getres syscall should return -EINVAL in the cases specified in [1].
+> > 
+> > It states 'clk_id specified is not supported on this system'. Fair
+> > enough but it doesn't say that it returns -EINVAL only if res == NULL.
 > 
+> Actually it does, the description of getres() starts with:
+> 
+> 'The function clock_getres() finds the resolution (precision) of the
+> specified clock clk_id, and, if res is *non-NULL*, stores it in the
+> struct timespec pointed to by res.'
+> 
+> Please refer to the system call below of which we mimic the behavior in the vdso
+> (kernel/time/posix-timers.c):
+> 
+> SYSCALL_DEFINE2(clock_getres_time32, clockid_t, which_clock,
+> 		struct old_timespec32 __user *, tp)
+> {
+> 	const struct k_clock *kc = clockid_to_kclock(which_clock);
+> 	struct timespec64 ts;
+> 	int err;
+> 
+> 	if (!kc)
+> 		return -EINVAL;
+> 
+> 	err = kc->clock_getres(which_clock, &ts);
+> 	if (!err && tp && put_old_timespec32(&ts, tp))
+> 		return -EFAULT;
+> 
+> 	return err;
+> }
+> 
+> If the clock is bogus and res == NULL we are supposed to return -EINVAL and not
+> -EFAULT or something else.
+
+If the clock is bogus, the above returns 'err' irrespective of the value
+of 'tp'. I presume 'err' is -EINVAL in this case. But there is no
+condition that tp == NULL above.
+
+What the above tries to achieve is that if there is no error (err == 0)
+and tp != NULL, try to write the timespec to the user tp pointer. If
+put_old_timespec32() fails, that's when we return -EFAULT.
+
+> This is what the test is trying to verify. If the check below is not
+> in place on arm64 compat, I get error report from the test suite.
+> 	if (!VALID_CLOCK_ID(clock_id) && res == NULL)
+> 		return -EINVAL;
+
+I really don't get where you deduced that you need to check for res ==
+NULL. The above should be:
+
+	if (!VALID_CLOCK_ID(clock_id))
+		return -EINVAL;
+
+Furthermore, my assumption is that __cvdso_clock_getres_common() should
+handle this case already and we don't need it in the arch vdso code.
+
+> > You also don't explain why __cvdso_clock_getres_time32() doesn't already
+> > detect an invalid clk_id on arm64 compat (but does it on arm32).
+> > 
+> 
+> Thanks for asking to me this question, if I would not have spent the day trying
+> to explain it, I would not have found a bug in the getres() fallback:
+> 
+> diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+> index 1dd22da1c3a9..803039d504de 100644
+> --- a/arch/arm64/include/asm/unistd.h
+> +++ b/arch/arm64/include/asm/unistd.h
+> @@ -25,8 +25,8 @@
+>  #define __NR_compat_gettimeofday       78
+>  #define __NR_compat_sigreturn          119
+>  #define __NR_compat_rt_sigreturn       173
+> -#define __NR_compat_clock_getres       247
+>  #define __NR_compat_clock_gettime      263
+> +#define __NR_compat_clock_getres       264
+>  #define __NR_compat_clock_gettime64    403
+>  #define __NR_compat_clock_getres_time64        406
+> 
+> In particular compat getres is mis-numbered and that is what causes the issue.
+> 
+> I am going to add a patch to my v5 that addresses the issue (or probably a
+> separate one and cc stable since it fixes a bug) and in this patch I will remove
+> the check on VALID_CLOCK_ID.
+
+Please send this as a separate patch that should be merged as a fix, cc
+stable.
+
+> I hope that this long email helps you to have a clearer picture of what is going
+> on. Please let me know if there is still something missing.
+
+Not entirely. Sorry.
 
 -- 
-Kees Cook
+Catalin
