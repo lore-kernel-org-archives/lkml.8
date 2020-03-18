@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5CEC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067BEC4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8C020724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC5F7208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564829;
-	bh=41DXBGjIFS78mwqNahQaRX/x1oKwlEdRCUA3qcHJC94=;
+	s=default; t=1584564830;
+	bh=ePVB3mhFEyRGGn0YVF44FQkofOhQSp5ciqnPPMTYVzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iV/QTa6QADUg2MrqzIj6K2+F6fD2z9O0LD9nlE2N4lrELvHePy8LR2bQBbaaiqtMe
-	 rdc+ij7SvYf4xjyKURu8BL0VmERO0OwJdCNUlwZLc1VrJ58Y0PYguBTKyYRfh8ciAv
-	 aBJA4Idc3DNM3ITJHZBdGSkNaX7761NmYu127E88=
+	b=pveSPRs+Pu5bCt/vYWQXmMi0PxccpYERMB1WChuwc4igsKu4kmY9MO3eOL864LkBO
+	 1scOilLmUya2DrKmFgdSZvhlgsHBA2PheR3LDTOA3sxwCkrnBUB9Bq0eW1ZzOJnknW
+	 Brz56OejilWAQ37FN/T3xo/rYrk5NcGXQ0A6VWrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbgCRUxs (ORCPT
+        id S1727340AbgCRUxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:53:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52856 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:53:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727297AbgCRUxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:53:45 -0400
+        id S1727262AbgCRUxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:53:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77D5C208FE;
-        Wed, 18 Mar 2020 20:53:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9087B20724;
+        Wed, 18 Mar 2020 20:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564825;
-        bh=41DXBGjIFS78mwqNahQaRX/x1oKwlEdRCUA3qcHJC94=;
+        s=default; t=1584564826;
+        bh=ePVB3mhFEyRGGn0YVF44FQkofOhQSp5ciqnPPMTYVzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdylkQu4OzmRcKfAFpYrQlOMCXnQZuXSBS3TFr2DvbZR9keCKvPsDXqFHk79lIZge
-         mVi5o9jOXvtkAu0wLztgZMCEIFRRkIuB+TUizYXlcnZoRchR2Z4/a5TiRhIbtGJ5WP
-         x0q7i9ZPMpJ7qkten5xSwuki5sc0spd6167Rq1G4=
+        b=0keH5Kmk71gBT9xIw73R84/gVmmUhps1hdByTe328mc9m4hVLVdgrle1H1JZOq9Xi
+         cBtJZqhAdVT9PZPgbOXmdlHhMJPavHA/ymLfMK7UGHGJC47/kYXHtb3Tqdjukb34m1
+         /t3ypmUTaI7tTElZkQVhShR6StTJJF+y9XbKnDRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 06/73] pinctrl: imx: scu: Align imx sc msg structs to 4
-Date:   Wed, 18 Mar 2020 16:52:30 -0400
-Message-Id: <20200318205337.16279-6-sashal@kernel.org>
+Cc:     Scott Mayhew <smayhew@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 07/73] nfs: add minor version to nfs_server_key for fscache
+Date:   Wed, 18 Mar 2020 16:52:31 -0400
+Message-Id: <20200318205337.16279-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -59,45 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Scott Mayhew <smayhew@redhat.com>
 
-[ Upstream commit 4c48e549f39f8ed10cf8a0b6cb96f5eddf0391ce ]
+[ Upstream commit 55dee1bc0d72877b99805e42e0205087e98b9edd ]
 
-The imx SC api strongly assumes that messages are composed out of
-4-bytes words but some of our message structs have odd sizeofs.
+An NFS client that mounts multiple exports from the same NFS
+server with higher NFSv4 versions disabled (i.e. 4.2) and without
+forcing a specific NFS version results in fscache index cookie
+collisions and the following messages:
+[  570.004348] FS-Cache: Duplicate cookie detected
 
-This produces many oopses with CONFIG_KASAN=y.
+Each nfs_client structure should have its own fscache index cookie,
+so add the minorversion to nfs_server_key.
 
-Fix by marking with __aligned(4).
-
-Fixes: b96eea718bf6 ("pinctrl: fsl: add scu based pinctrl support")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Link: https://lore.kernel.org/r/bd7ad5fd755739a6d8d5f4f65e03b3ca4f457bd2.1582216144.git.leonard.crestez@nxp.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=200145
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/freescale/pinctrl-scu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/client.c     | 1 +
+ fs/nfs/fscache.c    | 2 ++
+ fs/nfs/nfs4client.c | 1 -
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-scu.c b/drivers/pinctrl/freescale/pinctrl-scu.c
-index 73bf1d9f9cc6f..23cf04bdfc55d 100644
---- a/drivers/pinctrl/freescale/pinctrl-scu.c
-+++ b/drivers/pinctrl/freescale/pinctrl-scu.c
-@@ -23,12 +23,12 @@ struct imx_sc_msg_req_pad_set {
- 	struct imx_sc_rpc_msg hdr;
- 	u32 val;
- 	u16 pad;
--} __packed;
-+} __packed __aligned(4);
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 30838304a0bf2..a05f77f9c21ed 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -153,6 +153,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	if ((clp = kzalloc(sizeof(*clp), GFP_KERNEL)) == NULL)
+ 		goto error_0;
  
- struct imx_sc_msg_req_pad_get {
- 	struct imx_sc_rpc_msg hdr;
- 	u16 pad;
--} __packed;
-+} __packed __aligned(4);
++	clp->cl_minorversion = cl_init->minorversion;
+ 	clp->cl_nfs_mod = cl_init->nfs_mod;
+ 	if (!try_module_get(clp->cl_nfs_mod->owner))
+ 		goto error_dealloc;
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index 3800ab6f08fa8..a6dcc2151e779 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -31,6 +31,7 @@ static DEFINE_SPINLOCK(nfs_fscache_keys_lock);
+ struct nfs_server_key {
+ 	struct {
+ 		uint16_t	nfsversion;		/* NFS protocol version */
++		uint32_t	minorversion;		/* NFSv4 minor version */
+ 		uint16_t	family;			/* address family */
+ 		__be16		port;			/* IP port */
+ 	} hdr;
+@@ -55,6 +56,7 @@ void nfs_fscache_get_client_cookie(struct nfs_client *clp)
  
- struct imx_sc_msg_resp_pad_get {
- 	struct imx_sc_rpc_msg hdr;
+ 	memset(&key, 0, sizeof(key));
+ 	key.hdr.nfsversion = clp->rpc_ops->version;
++	key.hdr.minorversion = clp->cl_minorversion;
+ 	key.hdr.family = clp->cl_addr.ss_family;
+ 
+ 	switch (clp->cl_addr.ss_family) {
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index da6204025a2db..914feab64702c 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -216,7 +216,6 @@ struct nfs_client *nfs4_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	INIT_LIST_HEAD(&clp->cl_ds_clients);
+ 	rpc_init_wait_queue(&clp->cl_rpcwaitq, "NFS client");
+ 	clp->cl_state = 1 << NFS4CLNT_LEASE_EXPIRED;
+-	clp->cl_minorversion = cl_init->minorversion;
+ 	clp->cl_mvops = nfs_v4_minor_ops[cl_init->minorversion];
+ 	clp->cl_mig_gen = 1;
+ #if IS_ENABLED(CONFIG_NFS_V4_1)
 -- 
 2.20.1
 
