@@ -2,193 +2,164 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9875C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C816C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98ED920757
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F87C20757
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:18:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oq350yYd"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="OYZA0aRr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbgCRAR7 (ORCPT
+        id S1727457AbgCRASF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 20:17:59 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51302 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726965AbgCRARL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 20:17:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c187so18176wme.1;
-        Tue, 17 Mar 2020 17:17:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pE6LjR29iwQf7D7RlG7d25qJJWFx3m2e6HQhVoX16AY=;
-        b=Oq350yYdRqcZoUIYFTMtYKriySyDk2r83F7XAZna+/BNzTaoUFmeBpLsVWHCK5O7fm
-         2cwUAa3dCAZbr9rQK8gV7p7WRYwiGP5Osw39oImS3PEr4RL/AXeDf289CQNQ3fFP8CcN
-         cD1N9KGwmhz+1067jVRAw1eHgwNbnZBwzxw0BWeV5/7sZ9CblzkwvkfEiqfyRddfVOmC
-         ADv9QaYagVJyGvwp3pR5BHBlLQUMtK/61BD87Juhk8G9BKH9BTkG3WX5dws9VgXjyMxs
-         tB7Fh6pSGDUBk8YV9/2FXaSb30XlpsvHm6xJTlXJldbBVsZlAiS1tF0lHBp15ScTuL8/
-         odoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=pE6LjR29iwQf7D7RlG7d25qJJWFx3m2e6HQhVoX16AY=;
-        b=HMYMC2UueQkvQdK6P6xSVitfMm0jYytdI19V8eTu/jWbtUD/8Dc8z8TBs9+FReOhxq
-         Yz9/yOMpwRjywHRcgCjWEAESt2uY4EuKoVlEtckO1d1F3a6I62QUzFAYaCsNrKIzCUsD
-         A7Li+9TLyaDi6t7ciul5Of55ClbApgHYgJH9wxW7hmffJMw0tObfxo2l+ReGo1pwBAch
-         02QF1+I/8SZ1nKuMmgfkUkChHDgJvn2Pwn/Q/rrXJOebhrGLewNSwOnUurqRBe+MWDk5
-         TpFPUoq9iYegbCE4vutSYk5alCRQzcgrUU6iiTjpgrEjmLEgE5TMtwm7C2fn7GuAKxlM
-         ssjg==
-X-Gm-Message-State: ANhLgQ3jKN30Opb5CRZrm5k1aXMoexLFCNCjK2m24s6KzxeGpxJVs97J
-        iiTkTP4tc2yfA3wSZNTqXYA=
-X-Google-Smtp-Source: ADFU+vtZK5FtJiMPU4xFtis1grhOnhh8z5/n3TB5GJ3/bsDZWnoQsfVvYFUJLe8SFtyTi8q75VqjEg==
-X-Received: by 2002:a1c:6a08:: with SMTP id f8mr1510919wmc.53.1584490629614;
-        Tue, 17 Mar 2020 17:17:09 -0700 (PDT)
-Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id i6sm6584600wru.40.2020.03.17.17.17.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 17:17:09 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v5 02/12] spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
-Date:   Wed, 18 Mar 2020 02:15:53 +0200
-Message-Id: <20200318001603.9650-3-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200318001603.9650-1-olteanv@gmail.com>
-References: <20200318001603.9650-1-olteanv@gmail.com>
+        Tue, 17 Mar 2020 20:18:05 -0400
+Received: from mail-bn8nam12on2136.outbound.protection.outlook.com ([40.107.237.136]:2010
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727298AbgCRASD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 20:18:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Hy77cvv+malbcyrxLEoi6e1E8b6buRGyGfjAuYd+h+TIxgrNwee6Szv0VjYTHZR8PjkJfXEpyLVP5pXogLvb9v5NnZyiHd1BtDPVcJbIQfnLavRTSLFma1MGUbUNWmmBYH7btj3c+N1Sedo9v8JHLoWvTxsCrIDAAh239fEK7H4z2BNN+wHRYlA1645S2r7teZNwhPKyMEuIewpHVOSwu9cyAigBjZCI8skq8h/i2s9qwOdLxIvT/UP4kIB7FoCEgExHeEXqDYhcijZKxFD5p+TD/aqmaZ5Tyb2+yEbYUf+ZavvVUt2rsorGiqIqAXVC/n1lBO/KvaQGqPxhd2RDhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HvHEQkwcYm+7QAi+r6uTyzhyE4KB2u8dQNEmo+rIuJ4=;
+ b=DD9F737v8cztkscd6g07tHNLQli3PvwJN0d5kELC0jX4uwgwei82cs3BLxUBZCa8hGIbrR0YGoI1Wb8WNJyYyV5OcDFDNOYkowHl69qDF+nxu+oIRkkXM34iD91v0ueVhOzfmhdlX+lmeiNm0mST8/xLqeoMxPyHXaBGb576g4aILrfOZd70XJ6nHsOvSFwcN0gjfsra3xhzvuzweuGeTSc2gFaVB972Qn/oEmgJFbdRNoeq+q84fnpcfvGgFxcdMiqmf9pw4gAD2x6DQ3eS8T/3DfkkO5VwVn+5uum7HBpSLTs2yBmdjmiGzLF2v/WqKHhC4X9rYwsJ5pwxK3uMIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HvHEQkwcYm+7QAi+r6uTyzhyE4KB2u8dQNEmo+rIuJ4=;
+ b=OYZA0aRrjyn1rh7oEzCHI0EGqX27Aa4MzesL/VgUDfHUmDWJKSaCvaC0hZCOE/k4/Z1af5bxt1K1MHIpz2S35qk7UvfZhlXMVoQtPZnBQrld47pbwr50Uli5o1hr26iYUcaSOuHC8l61WO2GD7PQBfy6QiFhfRAQ1OfnCmjklt8=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1082.namprd21.prod.outlook.com (2603:10b6:302:a::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.7; Wed, 18 Mar
+ 2020 00:17:59 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2835.003; Wed, 18 Mar 2020
+ 00:17:52 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: RE: [PATCH v6 07/10] arm64: hyperv: Initialize hypervisor on boot
+Thread-Topic: [PATCH v6 07/10] arm64: hyperv: Initialize hypervisor on boot
+Thread-Index: AQHV+hZK6CjhbGAo+02bGeTm+6xNTahK5fEAgAKKHkA=
+Date:   Wed, 18 Mar 2020 00:17:52 +0000
+Message-ID: <MW2PR2101MB1052281E5B197F2AA8E4D622D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+ <1584200119-18594-8-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a0+uBsurfQ4smjPDGkJQSkMe-TxJ4cWR_EZXgDR4-bAWQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a0+uBsurfQ4smjPDGkJQSkMe-TxJ4cWR_EZXgDR4-bAWQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-18T00:17:50.1944546Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=e59fc9d4-f8cd-4b2e-b09b-d342f5fdb9c4;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f19328fd-92fd-4dfd-cb7c-08d7cad1cca8
+x-ms-traffictypediagnostic: MW2PR2101MB1082:|MW2PR2101MB1082:|MW2PR2101MB1082:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB1082C6B1D3C2EB76541CF2A4D7F70@MW2PR2101MB1082.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 03468CBA43
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(376002)(396003)(39860400002)(366004)(199004)(10290500003)(55016002)(478600001)(7696005)(5660300002)(9686003)(54906003)(2906002)(7416002)(8990500004)(53546011)(33656002)(52536014)(6506007)(6916009)(76116006)(71200400001)(186003)(66946007)(66476007)(66446008)(64756008)(66556008)(4326008)(8676002)(316002)(86362001)(81156014)(8936002)(81166006)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1082;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vGYh/1fvtv/YhUVqZSDkITewYYnL70MSNfknuutc4eKxdZefL+5fdp47Bs426dktVRnMG+g9qBET+icqrZBCZQ1ahBH0ZMp/LWkbRc/FdAy108IfyI6dZMqZO0ZiPhfYhJI4mxCp7CAnyCa/+wUs921zX0tZBuHerENpUSmAQrS14Jw+32BkYVZRCDgt0o966omD/xCBOI94XWNUrYLeuWXnPAcxwbdaYLuxSyqRvpCE6/UAMlY6YkMZT4Lmwbh2juP2Zi1HtTGi7o69KJZwyz5/DuI8fKi8hnnKgYEtRX6wPRcAIjBT8OYsOdOUe63lVNZext+nV7ZpGtb3EdgkLNtAvfGtTiuFOLL4YspMZs8dGSs+0XIWet0CNWYO0I8tuJX6hkS+N8wqLAl9dYqeSzcLOxNu9DoFG0PUzhnlGdK1PflSzk0IbUBuzp0xdsd1
+x-ms-exchange-antispam-messagedata: IRDj5V1OO6EYvLyo5qAJSB6mabYxEga6awbmDCceQWmNf2CE370W6uSUozlRXZ5XFbR6nNksh5ly5dtl3SPaWj1L1Mr03nBfOIjB9HTha79o+0qoDZmTjXDUGav6pkvjEMQ1Ot6zohMamEUB57bpwg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f19328fd-92fd-4dfd-cb7c-08d7cad1cca8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 00:17:52.4415
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RF5DN/C7txRqQhWX33fo8RFIKSg5W3I+vB5v6xC+VQz6CDdzPDxkOiaEz6NCkLINFbAapVv4m1fNpbDRku4H3cRZmnFr439HTQhhw2terDQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-
-In XSPI mode, the 32-bit PUSHR register can be written to separately:
-the higher 16 bits are for commands and the lower 16 bits are for data.
-
-This has nicely been hacked around, by defining a second regmap with a
-width of 16 bits, and effectively splitting a 32-bit register into 2
-16-bit ones, from the perspective of this regmap_pushr.
-
-The problem is the assumption about the controller's endianness. If the
-controller is little endian (such as anything post-LS1046A), then the
-first 2 bytes, in the order imposed by memory layout, will actually hold
-the TXDATA, and the last 2 bytes will hold the CMD.
-
-So take the controller's endianness into account when performing split
-writes to PUSHR. The obvious and simple solution would have been to call
-regmap_get_val_endian(), but that is an internal regmap function and we
-don't want to change regmap just for this. Therefore, we just re-read
-the "big-endian" device tree property.
-
-Fixes: 58ba07ec79e6 ("spi: spi-fsl-dspi: Add support for XSPI mode registers")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
-Changes in v5:
-None.
-
-Changes in v4:
-None.
-
-Changes in v3:
-None.
-
-Changes in v2:
-Parse "big-endian" device tree bindings instead of taking the decision
-based on compatible SoC.
-
- drivers/spi/spi-fsl-dspi.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 6ca35881881b..be717776dd98 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -103,10 +103,6 @@
- #define SPI_FRAME_BITS(bits)		SPI_CTAR_FMSZ((bits) - 1)
- #define SPI_FRAME_EBITS(bits)		SPI_CTARE_FMSZE(((bits) - 1) >> 4)
- 
--/* Register offsets for regmap_pushr */
--#define PUSHR_CMD			0x0
--#define PUSHR_TX			0x2
--
- #define DMA_COMPLETION_TIMEOUT		msecs_to_jiffies(3000)
- 
- struct chip_data {
-@@ -240,6 +236,13 @@ struct fsl_dspi {
- 
- 	int					words_in_flight;
- 
-+	/*
-+	 * Offsets for CMD and TXDATA within SPI_PUSHR when accessed
-+	 * individually (in XSPI mode)
-+	 */
-+	int					pushr_cmd;
-+	int					pushr_tx;
-+
- 	void (*host_to_dev)(struct fsl_dspi *dspi, u32 *txdata);
- 	void (*dev_to_host)(struct fsl_dspi *dspi, u32 rxdata);
- };
-@@ -673,12 +676,12 @@ static void dspi_pushr_cmd_write(struct fsl_dspi *dspi, u16 cmd)
- 	 */
- 	if (dspi->len > dspi->oper_word_size)
- 		cmd |= SPI_PUSHR_CMD_CONT;
--	regmap_write(dspi->regmap_pushr, PUSHR_CMD, cmd);
-+	regmap_write(dspi->regmap_pushr, dspi->pushr_cmd, cmd);
- }
- 
- static void dspi_pushr_txdata_write(struct fsl_dspi *dspi, u16 txdata)
- {
--	regmap_write(dspi->regmap_pushr, PUSHR_TX, txdata);
-+	regmap_write(dspi->regmap_pushr, dspi->pushr_tx, txdata);
- }
- 
- static void dspi_xspi_write(struct fsl_dspi *dspi, int cnt, bool eoq)
-@@ -1259,6 +1262,7 @@ static int dspi_probe(struct platform_device *pdev)
- 	struct fsl_dspi *dspi;
- 	struct resource *res;
- 	void __iomem *base;
-+	bool big_endian;
- 
- 	ctlr = spi_alloc_master(&pdev->dev, sizeof(struct fsl_dspi));
- 	if (!ctlr)
-@@ -1284,6 +1288,7 @@ static int dspi_probe(struct platform_device *pdev)
- 
- 		/* Only Coldfire uses platform data */
- 		dspi->devtype_data = &devtype_data[MCF5441X];
-+		big_endian = true;
- 	} else {
- 
- 		ret = of_property_read_u32(np, "spi-num-chipselects", &cs_num);
-@@ -1305,6 +1310,15 @@ static int dspi_probe(struct platform_device *pdev)
- 			ret = -EFAULT;
- 			goto out_ctlr_put;
- 		}
-+
-+		big_endian = of_device_is_big_endian(np);
-+	}
-+	if (big_endian) {
-+		dspi->pushr_cmd = 0;
-+		dspi->pushr_tx = 2;
-+	} else {
-+		dspi->pushr_cmd = 2;
-+		dspi->pushr_tx = 0;
- 	}
- 
- 	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE)
--- 
-2.17.1
-
+RnJvbTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4gU2VudDogTW9uZGF5LCBNYXJjaCAx
+NiwgMjAyMCAxOjMwIEFNDQo+IA0KPiBPbiBTYXQsIE1hciAxNCwgMjAyMCBhdCA0OjM2IFBNIE1p
+Y2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQuY29tPiB3cm90ZToNCj4gPg0KPiA+IEFk
+ZCBBUk02NC1zcGVjaWZpYyBjb2RlIHRvIGluaXRpYWxpemUgdGhlIEh5cGVyLVYNCj4gPiBoeXBl
+cnZpc29yIHdoZW4gYm9vdGluZyBhcyBhIGd1ZXN0IFZNLiBQcm92aWRlIGZ1bmN0aW9ucw0KPiA+
+IGFuZCBkYXRhIHN0cnVjdHVyZXMgaW5kaWNhdGluZyBoeXBlcnZpc29yIHN0YXR1cyB0aGF0DQo+
+ID4gYXJlIG5lZWRlZCBieSBWTWJ1cyBkcml2ZXIuDQo+ID4NCj4gPiBUaGlzIGNvZGUgaXMgYnVp
+bHQgb25seSB3aGVuIENPTkZJR19IWVBFUlYgaXMgZW5hYmxlZC4NCj4gPg0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IE1pY2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQuY29tPg0KPiA+IC0tLQ0K
+PiA+ICBhcmNoL2FybTY0L2h5cGVydi9odl9jb3JlLmMgfCAxNTYNCj4gKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gDQo+IEFzIHlvdSBhcmUgZWZmZWN0aXZl
+bHkgYWRkaW5nIGEgbmV3IGNsb2Nrc291cmNlIGRyaXZlciBoZXJlLCBwbGVhc2UgbW92ZSB0aGUN
+Cj4gY29kZSB0byBkcml2ZXJzL2Nsb2Nrc291cmNlIGFuZCBzZW5kIHRoZSBwYXRjaCB0byB0aGUg
+cmVzcGVjdGl2ZSBtYWludGFpbmVycw0KPiAoYWRkZWQgdG8gQ2MgaGVyZSksIHNwbGl0dGluZyBp
+dCBvdXQgZnJvbSB0aGUgcmVzdCBvZiB0aGUgcGF0Y2guDQo+IA0KPiBZb3Ugc2hvdWxkIGFsc28g
+ZGVzY3JpYmUgd2h5IHlvdXIgcGxhdGZvcm0gZG9lc24ndCBqdXN0IHVzZSB0aGUgbm9ybWFsDQo+
+IGFyY2hpdGVjdGVkIHRpbWVyIGludGVyZmFjZS4NCj4gDQo+ID4gK1RJTUVSX0FDUElfREVDTEFS
+RShoeXBlcnYsIEFDUElfU0lHX0dURFQsIGh5cGVydl9pbml0KTsNCj4gDQo+IFRoaXMgbG9va3Mg
+bGlrZSBpdCByZWdpc3RlcnMgYSBkcml2ZXIgZm9yIHRoZSBzYW1lIGRldmljZSBhcyB0aGUgbm9y
+bWFsDQo+IGFyY2ggdGltZXIuIFdvbid0IHRoYXQgY2xhc2g/DQo+IA0KPiAgICAgIEFybmQNCg0K
+VGhlcmUgaXMgYSBIeXBlci1WIGNsb2Nrc291cmNlIGRyaXZlciBpbiBkcml2ZXJzL2Nsb2Nrc291
+cmNlL2h5cGVydl90aW1lci5jLg0KSXQgaXMgYXJjaGl0ZWN0dXJlIGluZGVwZW5kZW50IGFuZCB3
+b3JrcyBmb3IgYm90aCB4ODYgYW5kIEFSTTY0Lg0KDQpUaGUgcmVxdWlyZW1lbnQgaGVyZSBpcyBy
+ZWFsbHkgZm9yIGEgcGxhY2UgdG8gaGFuZyB0aGUgZ2VuZXJhbCBIeXBlci1WDQppbml0aWFsaXph
+dGlvbiBjb2RlLiAgIE9uIHRoZSB4ODYgc2lkZSwgdGhlcmUncyBpbmZyYXN0cnVjdHVyZSBhbHJl
+YWR5IGluIHBsYWNlDQp0byBkbyBoeXBlcnZpc29yIGluaXRpYWxpemF0aW9uLCBidXQgbm90aGlu
+ZyBjb3JyZXNwb25kaW5nIG9uIHRoZSBBUk02NCBzaWRlLg0KVGhlIFRJTUVSX0FDUElfREVDTEFS
+RSBob29rIGlzIGFkbWl0dGVkbHkgYSB0ZW1wb3JhcnkgYXBwcm9hY2gsIGFuZCBJJ20NCmhhcHB5
+IHRvIGhlYXIgaWYgc29tZW9uZSBoYXMgYSBiZXR0ZXIgd2F5IHRvIGhhbmRsZSB0aGlzLg0KDQpG
+V0lXLCBIeXBlci1WIGRvZXNuJ3QgY3VycmVudGx5IHZpcnR1YWxpemUgdGhlIEFSTSBhcmNoIGNv
+dW50ZXIvdGltZXIgZm9yDQpndWVzdCBWTXMuICBUaGUgSHlwZXItViBzeW50aGV0aWMgY291bnRl
+ci90aW1lciBpbiB0aGUgSHlwZXItViBjbG9ja3NvdXJjZQ0KZHJpdmVyIGlzIHVzZWQgb24gYm90
+aCBBUk02NCBhbmQgeDg2LiAgQnV0IHRoaXMgSHlwZXItViBpbml0IGNvZGUgZG9lc24ndCBhY3R1
+YWxseQ0KdG91Y2ggdGhlIEdURFQgZGV2aWNlLCBzbyBpdCB3b24ndCBpbnRlcmZlcmUgd2l0aCB0
+aGUgQVJNIGFyY2ggY291bnRlci90aW1lcg0Kd2hlbiBhIGZ1dHVyZSBIeXBlci1WIHZlcnNpb24g
+ZG9lcyB2aXJ0dWFsaXplIGl0Lg0KDQpNaWNoYWVsDQo=
