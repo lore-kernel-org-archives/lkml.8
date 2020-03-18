@@ -2,123 +2,208 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40244C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E267EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1395C2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9D4220767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:58:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L28rlUPx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f5IXPLPM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgCRP5p (ORCPT
+        id S1727024AbgCRP6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:57:45 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35056 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgCRP5o (ORCPT
+        Wed, 18 Mar 2020 11:58:31 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:25774 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726765AbgCRP6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:57:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h4so10480197wru.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:57:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WKs9IgnQjzOcey+yQmdz8NYqXjD7ApUhbxNTTHxXd2g=;
-        b=L28rlUPx3+TpmA+orVyq6GD2PU1T/wM4SozCe9wCtz2g1xoXdbyk4OJJ+6J1n781Eb
-         dr2y4h2+RXwrwe6flAUJt9VItB9pqnMYLBtpW3S7b/LguF+ylK3rEAZkIO+VNbiHxaXx
-         1sYHVX/U4w2gtxkDKU99iDO6NBLnx+qr6Z/ZrAOBEpnjjDui5+Hm8OcvZvzLDOEi0FQF
-         KuodKzde6MH+iNwZtXU6ClTVw6vsdU9SUW4fHe7cHCm+iKhYRS44N7QeevaWsTGz3mEc
-         +leQoJ3D+tP+fe5kn0kS2re2nZ92mlwO8xXUaOcUcNNhsYRW7iS+W8K0ZgZ8CwwtbPiz
-         rr7w==
+        Wed, 18 Mar 2020 11:58:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584547109;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=B6PGvx1icbG3tXj8E6e/64qZk/0Iq47yT74imlxqQuw=;
+        b=f5IXPLPMHr6aO0SBw75/h1W7RmsZFCDO4cOrfbqFJmTXy2kVpDZx94MjwYC5+FNjg11Vnm
+        13ZVGivmxQ/Y7xvx/oBcqYF0Vxi9lZBU+eqcWgLHW5endkK8Lm7IUF3nh2V9ZdtvyOMrrg
+        7UPOMjPlb4KVGligkKzxSU/uqag7mxU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-308-9yauU0mKMIq5sm1pJP_npg-1; Wed, 18 Mar 2020 11:58:28 -0400
+X-MC-Unique: 9yauU0mKMIq5sm1pJP_npg-1
+Received: by mail-wr1-f69.google.com with SMTP id 94so7877031wrr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:58:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WKs9IgnQjzOcey+yQmdz8NYqXjD7ApUhbxNTTHxXd2g=;
-        b=ZpXcuAt9NqdHnOwdykgEXG80NMeJTWXghHZ78DnelWkNDayK47b9K/qz5yimLAIPSs
-         5W+zgjX8WGsh09Mk9SjbjIjcCr11Zh9E3NwRiiYRP+/VBQtDHp5TeR7wjVURyEbK4IuJ
-         PQ6IQwiC2zEkKiSte5Zusw79kxpPCwab1nprOh6yKUTQ0s0XmXuF7rw+f/QcGqX5isqd
-         jx4nW7qXlNcOjA6ACtDOZwN8axsYMUgODPjQrMaLBOB/wBurvwPv6Ph8Wf/SnD3+vX9T
-         JqTpkT1xWM99ko2lkqqMTDS1Dik+2weKQ1UXV8sHyuBtlYKI6LjNfk02I3Iot5wlQ4Sw
-         rlpA==
-X-Gm-Message-State: ANhLgQ3o1ZSer0RdPotBAwUGHXow3p6chaWWJLxvPz3GtAQFjfF5+eTv
-        MU6/OGLoMGWkb5TaTDUMgYCGuw==
-X-Google-Smtp-Source: ADFU+vuoc90UFHCUoDzgGQkfj86K1CIpUWNNiBDamxA0TmJ2Xr8zId8gD3etAN/dAO1s4yZb9viTXA==
-X-Received: by 2002:a5d:474b:: with SMTP id o11mr5981930wrs.4.1584547060995;
-        Wed, 18 Mar 2020 08:57:40 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id f9sm10057253wro.47.2020.03.18.08.57.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Mar 2020 08:57:39 -0700 (PDT)
-Subject: Re: [PATCH 1/2] ASoC: qcom: sdm845: handle soundwire stream
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        linux-kernel@vger.kernel.org, vkoul@kernel.org
-References: <20200317095351.15582-1-srinivas.kandagatla@linaro.org>
- <20200317095351.15582-2-srinivas.kandagatla@linaro.org>
- <8daeeb26-851b-8311-30f5-5d285ccbc255@linux.intel.com>
- <69c72f5a-e72e-b7b3-90cb-a7354dcb175d@linaro.org>
- <cbc6cc9b-24f5-8c2a-b60d-b5dab08c128e@linux.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <fcf845bd-9803-ab04-d2a9-c258ddfcc972@linaro.org>
-Date:   Wed, 18 Mar 2020 15:57:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=B6PGvx1icbG3tXj8E6e/64qZk/0Iq47yT74imlxqQuw=;
+        b=hhUZeBImIGfnO+GNlsXA0x1AdC2UYSKgptjrQIqyNJjx1HaH1eJimMoQLMx8wl16q7
+         8J22fWnsmxXsTX74GGx2PF4lFrKoyUmJhkWKHJyCi3uZY0dMGswvTRpdYpKmHbn4O5In
+         ELvhspoFRuWEzI1lLLvSMoaARyJM/HvmZUcZa0ydoXThi0O8++we9iQ1kMf2W75BnjY5
+         NnpHiEFiLdUZ30SxvlwTkZAVgLFabxilhTllW+z2sFKel5hk8kynTL8jYRqC8Ff2eBUS
+         uzAk63bRHRdDqLjFym6q1CpSUcZbcUcvQT/h8dHRaqM0yTjMNULMy42ZL+lOauZIDL2V
+         946Q==
+X-Gm-Message-State: ANhLgQ0WpMJEmKEUy0SuDlNV5IDkpy0lCE4707ZbG3nnb5B9eQOI37DU
+        IZYw7ks4PRV+GSWbzQVX8vjC1MUItRMetR/hw1aRITn7zGrBb/IaEDqXCW+OD6j4KEcKiocZqhF
+        cyf5ebT+c4UW2+jX03rbcyxfH
+X-Received: by 2002:a05:6000:1203:: with SMTP id e3mr6638636wrx.166.1584547106462;
+        Wed, 18 Mar 2020 08:58:26 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtjCvuXMcOs5w1KWeJDGkuvTz8xovzZ8NGW9WL8cGrTCBgHDgeCsP0zhoZoCfieklc9vr3ULQ==
+X-Received: by 2002:a05:6000:1203:: with SMTP id e3mr6638599wrx.166.1584547106195;
+        Wed, 18 Mar 2020 08:58:26 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id v2sm10426967wrt.58.2020.03.18.08.58.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 08:58:25 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     ltykernel@gmail.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com
+Subject: Re: [PATCH 0/4] x86/Hyper-V: Unload vmbus channel in hv panic callback
+In-Reply-To: <20200317132523.1508-2-Tianyu.Lan@microsoft.com>
+References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com> <20200317132523.1508-2-Tianyu.Lan@microsoft.com>
+Date:   Wed, 18 Mar 2020 16:58:23 +0100
+Message-ID: <871rpp3ba8.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <cbc6cc9b-24f5-8c2a-b60d-b5dab08c128e@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ltykernel@gmail.com writes:
 
+> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>
+> Customer reported Hyper-V VM still responded network traffic
+> ack packets after kernel panic with kernel parameter "panic=0”.
+> This becauses vmbus driver interrupt handler still works
+> on the panic cpu after kernel panic. Panic cpu falls into
+> infinite loop of panic() with interrupt enabled at that point.
+> Vmbus driver can still handle network traffic.
+>
+> This confuses remote service that the panic system is still
+> alive when it gets ack packets. Unload vmbus channel in hv panic
+> callback and fix it.
+>
+> vmbus_initiate_unload() maybe double called during panic process
+> (e.g, hyperv_panic_event() and hv_crash_handler()). So check
+> and set connection state in vmbus_initiate_unload() to resolve
+> reenter issue.
+>
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+>  drivers/hv/channel_mgmt.c |  5 +++++
+>  drivers/hv/vmbus_drv.c    | 17 +++++++++--------
+>  2 files changed, 14 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+> index 0370364169c4..893493f2b420 100644
+> --- a/drivers/hv/channel_mgmt.c
+> +++ b/drivers/hv/channel_mgmt.c
+> @@ -839,6 +839,9 @@ void vmbus_initiate_unload(bool crash)
+>  {
+>  	struct vmbus_channel_message_header hdr;
+>  
+> +	if (vmbus_connection.conn_state == DISCONNECTED)
+> +		return;
+> +
 
-On 18/03/2020 15:26, Pierre-Louis Bossart wrote:
-> 
-> Same comment, how does the notion of cpu_dai come in the picture for a 
-> SoundWire dailink?
-> Would you mind listing what the components of the dailinks are?
+To make this less racy, can we do something like
 
-dais that I was referring here are all codec dais from backend-dai.
+	if (xchg(&vmbus_connection.conn_state, DISCONNECTED) == DISCONNECTED)
+		return;
 
-Device tree entries from
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/qcom/sdm845-db845c.dts?h=next-20200318#n538
+?
 
+>  	/* Pre-Win2012R2 hosts don't support reconnect */
+>  	if (vmbus_proto_version < VERSION_WIN8_1)
+>  		return;
+> @@ -857,6 +860,8 @@ void vmbus_initiate_unload(bool crash)
+>  		wait_for_completion(&vmbus_connection.unload_event);
+>  	else
+>  		vmbus_wait_for_unload();
+> +
+> +	vmbus_connection.conn_state = DISCONNECTED;
+>  }
+>  
+>  static void check_ready_for_resume_event(void)
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 029378c27421..b56b9fb9bd90 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -53,9 +53,12 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
+>  {
+>  	struct pt_regs *regs;
+>  
+> -	regs = current_pt_regs();
+> +	vmbus_initiate_unload(true);
+>  
+> -	hyperv_report_panic(regs, val);
+> +	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
 
-Frontend-dai:
-	mm1-dai-link {
-		link-name = "MultiMedia1";
-		cpu {
-			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA1>;
-		};
-	};
+With Michael's effors to make code in drivers/hv arch agnostic, I think
+we need a better, arch-neutral way.
 
-Backend-dai:
-	slim-dai-link {
-		link-name = "SLIM Playback";
-		cpu {
-			sound-dai = <&q6afedai SLIMBUS_0_RX>;
-		};
+> +		regs = current_pt_regs();
+> +		hyperv_report_panic(regs, val);
+> +	}
+>  	return NOTIFY_DONE;
+>  }
+>  
+> @@ -1391,10 +1394,12 @@ static int vmbus_bus_init(void)
+>  		}
+>  
+>  		register_die_notifier(&hyperv_die_block);
+> -		atomic_notifier_chain_register(&panic_notifier_list,
+> -					       &hyperv_panic_block);
+>  	}
+>  
+> +	/* Vmbus channel is unloaded in panic callback when panic happens.*/
+> +	atomic_notifier_chain_register(&panic_notifier_list,
+> +			       &hyperv_panic_block);
+> +
+>  	vmbus_request_offers();
+>  
+>  	return 0;
+> @@ -2204,8 +2209,6 @@ static int vmbus_bus_suspend(struct device *dev)
+>  
+>  	vmbus_initiate_unload(false);
+>  
+> -	vmbus_connection.conn_state = DISCONNECTED;
+> -
+>  	/* Reset the event for the next resume. */
+>  	reinit_completion(&vmbus_connection.ready_for_resume_event);
+>  
+> @@ -2289,7 +2292,6 @@ static void hv_kexec_handler(void)
+>  {
+>  	hv_stimer_global_cleanup();
+>  	vmbus_initiate_unload(false);
+> -	vmbus_connection.conn_state = DISCONNECTED;
+>  	/* Make sure conn_state is set as hv_synic_cleanup checks for it */
+>  	mb();
+>  	cpuhp_remove_state(hyperv_cpuhp_online);
+> @@ -2306,7 +2308,6 @@ static void hv_crash_handler(struct pt_regs *regs)
+>  	 * doing the cleanup for current CPU only. This should be sufficient
+>  	 * for kdump.
+>  	 */
+> -	vmbus_connection.conn_state = DISCONNECTED;
+>  	cpu = smp_processor_id();
+>  	hv_stimer_cleanup(cpu);
+>  	hv_synic_disable_regs(cpu);
 
-		platform {
-			sound-dai = <&q6routing>;
-		};
+-- 
+Vitaly
 
-		codec {
-			sound-dai =  <&left_spkr>, <&right_spkr>, <&swm 0>, <&wcd9340 0>;
-		};
-	};
-
-
---srini
