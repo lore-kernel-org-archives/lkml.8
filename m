@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01525C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90876C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFE06208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF29208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564900;
-	bh=isr2P6CX3Md6hzFCH0L0ehoLWHoCKsFwpn3jWPKTniQ=;
+	s=default; t=1584564902;
+	bh=iz8yaV+d9GVVgUHW8fsRVpVSmKPfctEmjJPAOf2gPFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vGAppmGotF0/2iAUuObmHlSdzhPFZ03YR7jCHn0dEoXGdapZJHKdnjnCgZhh3OnX8
-	 Oaxfh1Fg/XDeIoGWRAQcnNFfoWW1j1ls/bCdYRs6llef8Ou1fBHBIoUoYrNVTGk2ca
-	 Zn8gc9XAEkIc+uvcz546BnKUhxSwbVdtvUk3o4XU=
+	b=1Av4/lvZE8ggHNOlx2N904h2wxwGAjTU/cLgxgAyMRDjTgsJAKmM5tOOLSV4wXhs7
+	 94ok42YhKdMuZyllsUrR8zYf/wShwJI8yVHYCREa8EHTfnkSx5JxtkMTJBMz+1Yf2z
+	 M7z9CtIkUSw0DQyChZmTVHmsDOxjqHpNs9eTee1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgCRUy7 (ORCPT
+        id S1728157AbgCRUzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:54:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54922 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:55:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728113AbgCRUy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:54:57 -0400
+        id S1728133AbgCRUy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E949F2173E;
-        Wed, 18 Mar 2020 20:54:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AB6E2098B;
+        Wed, 18 Mar 2020 20:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564896;
-        bh=isr2P6CX3Md6hzFCH0L0ehoLWHoCKsFwpn3jWPKTniQ=;
+        s=default; t=1584564899;
+        bh=iz8yaV+d9GVVgUHW8fsRVpVSmKPfctEmjJPAOf2gPFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m+06ZxKOFbgXIy+dhjdfpMmBJjq/JvLm5KrazvC6I+zuJAs5N6FW5QK1oZVuEShAa
-         5rjSAJCh8miLhM7Ob3SCJHvvR4IUUlYZMinjC5Mu8LWLLYJuP4n9eQICZ+9bvYeqrm
-         nOrLDpHp/jwFdUR8/rbbHFbf/MiN7/qJp1m/Gh+g=
+        b=Cql1ur588wqsUgeMaY6RSqRVsQ2dun59lQARsWixXhJWTE4nbf5VzCYaya5CU0Wsl
+         dXW6hAtucX8AfAZA+3PnRl5GHf7hllwQ2u62zHxboJdF5vCrjm8cQSk0eZ4HEqPwkG
+         qWSQFiNJWLLTvUvOR9wnC35KPYxdMJs3YncsxyAA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Andrew Lunn <andrew@lunn.ch>,
+Cc:     Colin Ian King <colin.king@canonical.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 64/73] net: mvmdio: avoid error message for optional IRQ
-Date:   Wed, 18 Mar 2020 16:53:28 -0400
-Message-Id: <20200318205337.16279-64-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 66/73] net: systemport: fix index check to avoid an array out of bounds access
+Date:   Wed, 18 Mar 2020 16:53:30 -0400
+Message-Id: <20200318205337.16279-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -60,52 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit e1f550dc44a4d535da4e25ada1b0eaf8f3417929 ]
+[ Upstream commit c0368595c1639947839c0db8294ee96aca0b3b86 ]
 
-Per the dt-binding the interrupt is optional so use
-platform_get_irq_optional() instead of platform_get_irq(). Since
-commit 7723f4c5ecdb ("driver core: platform: Add an error message to
-platform_get_irq*()") platform_get_irq() produces an error message
+Currently the bounds check on index is off by one and can lead to
+an out of bounds access on array priv->filters_loc when index is
+RXCHK_BRCM_TAG_MAX.
 
-  orion-mdio f1072004.mdio: IRQ index 0 not found
-
-which is perfectly normal if one hasn't specified the optional property
-in the device tree.
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: bb9051a2b230 ("net: systemport: Add support for WAKE_FILTER")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvmdio.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bcmsysport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvmdio.c b/drivers/net/ethernet/marvell/mvmdio.c
-index 0b9e851f3da4f..d2e2dc5384287 100644
---- a/drivers/net/ethernet/marvell/mvmdio.c
-+++ b/drivers/net/ethernet/marvell/mvmdio.c
-@@ -347,7 +347,7 @@ static int orion_mdio_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 4a27577e137bc..ad86a186ddc5f 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -2135,7 +2135,7 @@ static int bcm_sysport_rule_set(struct bcm_sysport_priv *priv,
+ 		return -ENOSPC;
  
+ 	index = find_first_zero_bit(priv->filters, RXCHK_BRCM_TAG_MAX);
+-	if (index > RXCHK_BRCM_TAG_MAX)
++	if (index >= RXCHK_BRCM_TAG_MAX)
+ 		return -ENOSPC;
  
--	dev->err_interrupt = platform_get_irq(pdev, 0);
-+	dev->err_interrupt = platform_get_irq_optional(pdev, 0);
- 	if (dev->err_interrupt > 0 &&
- 	    resource_size(r) < MVMDIO_ERR_INT_MASK + 4) {
- 		dev_err(&pdev->dev,
-@@ -364,8 +364,8 @@ static int orion_mdio_probe(struct platform_device *pdev)
- 		writel(MVMDIO_ERR_INT_SMI_DONE,
- 			dev->regs + MVMDIO_ERR_INT_MASK);
- 
--	} else if (dev->err_interrupt == -EPROBE_DEFER) {
--		ret = -EPROBE_DEFER;
-+	} else if (dev->err_interrupt < 0) {
-+		ret = dev->err_interrupt;
- 		goto out_mdio;
- 	}
- 
+ 	/* Location is the classification ID, and index is the position
 -- 
 2.20.1
 
