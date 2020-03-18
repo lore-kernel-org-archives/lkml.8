@@ -2,90 +2,114 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594A2C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03728C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243832076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAA32076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:14:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584573233;
-	bh=oFy9zaUxFZZJmaRDFLzCKtAEprfj3oqdBpvxcG2rk8k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=eELfIf4TmMzSO8Pwt2dY7B/LUINw12GH070GTTfHkv2gDpoFbo9eqwA81shX8ETZF
-	 XozMCWz7rJrv1Nf73irmVl2NFToRNKmccD+hMG2Ckj5xnvSd//XZ0yYdToEVrzUrag
-	 5GsWRSCR+U3/3jAHswoR69KkyheA+STX8GBGkpaE=
+	s=default; t=1584573279;
+	bh=xnAd9aM1szJANZpOZYnjr6Q8kk/poW+SW49OK+6CBJA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0UoH/y5jR6DkXLNWoYoeDqDtxOwCvJ4we53ZtnvP4WdywvsJJi9zxlJXBtdp90eOa
+	 EfYbfQV+At6eOHYpv3pxyDN5z+iZQebkkpZaF9mNdvfJIHhtyZrAmFyMYip4m0v9x7
+	 iwPiGkL/d+/U3O7H8Oc4SLgWUE0KpHzzfEVHWnUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgCRXNw (ORCPT
+        id S1727148AbgCRXOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:13:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40224 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 19:14:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgCRXNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:13:51 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726619AbgCRXOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 19:14:38 -0400
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD2C92076C;
-        Wed, 18 Mar 2020 23:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FD6120774;
+        Wed, 18 Mar 2020 23:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584573231;
-        bh=oFy9zaUxFZZJmaRDFLzCKtAEprfj3oqdBpvxcG2rk8k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DzpZj5+8msW57avSvGgNIEAwIntQcyPVC0z0zfdOwSqCS4B8BIynnP/AjLzlVp87e
-         WmAel2zgAp0zu8KDdv9CPTxak6CuSCSIAHsuESHXVqryOJB7C5lUAUbPreMfNkpWHE
-         HrHEks/wwnAvs2pS0qX4q58qMpUYAEPdtDIps/eY=
-Date:   Wed, 18 Mar 2020 18:13:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andrew Maier <andrew.maier@eideticom.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        logang@deltatee.com
-Subject: Re: [PATCH v2] PCI/P2PDMA: Add the remaining Intel Sky Lake-E root
- ports to the whitelist
-Message-ID: <20200318231349.GA3278@google.com>
+        s=default; t=1584573277;
+        bh=xnAd9aM1szJANZpOZYnjr6Q8kk/poW+SW49OK+6CBJA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XT6D3puNAvAMgfndY1UkiEwX/BXNrV8lHFBJbFQ6C2BuScL9EglKJPh0UK+mThH/x
+         ZWjeAMvPdxvDLboxeGLkF8+cEq1dA3mTBTmQy/kzA3izx6PCAZUUdcteK+FqeqN0yW
+         0xnfVXckdm1wnESB6PRDBbRdUELl3okC9iiHjEKU=
+Received: by mail-qk1-f170.google.com with SMTP id j2so247188qkl.7;
+        Wed, 18 Mar 2020 16:14:37 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3UtG2Nn1hfO3OMVds5Yh0p1PH9+wp1p3qUtGRjEJKl+7gnDKJK
+        Kts/5yZzkVF9aaS+7v1oYW+PIB3O9y7VeV+NoQ==
+X-Google-Smtp-Source: ADFU+vuzTuEwzK4FnMMP68h9BVgs5HKeW7PynpJbTqVEa9tqOafe3uVDdXHxy4DHtPecBZfqcHfHBSgvLnWqgjn5B3c=
+X-Received: by 2002:a37:4a85:: with SMTP id x127mr338927qka.152.1584573276533;
+ Wed, 18 Mar 2020 16:14:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207221219.4309-1-andrew.maier@eideticom.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200306130341.9585-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130402.1F4F0803079F@mail.baikalelectronics.ru> <20200312211438.GA21883@bogus>
+ <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
+In-Reply-To: <20200313130231.wrvvcttm7ofaxbfo@ubsrv2.baikal.int>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 18 Mar 2020 17:14:25 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+W84r687zNV=2S-hj9=xbTQxkx9MpVNDTn6TOrBgiGUw@mail.gmail.com>
+Message-ID: <CAL_Jsq+W84r687zNV=2S-hj9=xbTQxkx9MpVNDTn6TOrBgiGUw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] dt-bindings: power: reset: Add regmap support to the
+ SYSCON reboot-mode bindings
+To:     Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 03:12:19PM -0700, Andrew Maier wrote:
-> Add the three remaining Intel Sky Lake-E host root ports to the
-> whitelist of p2pdma.
-> 
-> P2P has been tested and is working on this system.
-> 
-> Signed-off-by: Andrew Maier <andrew.maier@eideticom.com>
+On Fri, Mar 13, 2020 at 7:03 AM Sergey Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> On Thu, Mar 12, 2020 at 04:14:38PM -0500, Rob Herring wrote:
+> > On Fri, Mar 06, 2020 at 04:03:40PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > >
+> > > Optional regmap property will be used to refer to a syscon-controller
+> > > having a reboot tolerant register mapped.
+> >
+> > NAK. It should simply be a child node of the 'syscon-controller'.
+>
+> Hm, It's dilemma. The driver maintainer said ack, while you disagree.)
+> So the code change will be merged while the doc-part won't? Lets discuss then
+> to settle the issue.
+>
+> Why 'syscon-reboot' can be out of syscon-controller node, while
+> 'syscon-reboot-mode' can't?
 
-Applied with Logan's reviewed-by to pci/p2pdma for v5.7, thanks!
+Look at the history and you will see one was reviewed by DT
+maintainers and one wasn't.
 
-> ---
-> Resending this as I rebased it onto the latest patches.
->  drivers/pci/p2pdma.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 9a8a38384121..b73b10bce0df 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -291,6 +291,9 @@ static const struct pci_p2pdma_whitelist_entry {
->  	{PCI_VENDOR_ID_INTEL,	0x2f01, REQ_SAME_HOST_BRIDGE},
->  	/* Intel SkyLake-E */
->  	{PCI_VENDOR_ID_INTEL,	0x2030, 0},
-> +	{PCI_VENDOR_ID_INTEL,	0x2031, 0},
-> +	{PCI_VENDOR_ID_INTEL,	0x2032, 0},
-> +	{PCI_VENDOR_ID_INTEL,	0x2033, 0},
->  	{PCI_VENDOR_ID_INTEL,	0x2020, 0},
->  	{}
->  };
-> -- 
-> 2.17.1
-> 
+> They both belong to the same usecase: save
+> cause id and reboot. So having similar properties-set and declaring their
+> nodes someplace nearby is natural.
+
+Which is what I'm asking for. Where else in the tree does it make
+sense to locate the 'syscon-reboot-mode' node? Locate nodes where they
+logically belong.
+
+> According to the driver 'syscon-reboot'
+> can't lack the regmap property because it's mandatory, while here you refuse
+> to have even optional support. Additionally in most of the cases the
+> 'syscon-reboot' nodes aren't declared as a child of a system controller
+> node. Why 'syscon-reboot-mode' can't work in a similar way?
+
+There's plenty of bad or "don't follow current best practice" examples
+in the tree for all sorts of things. That is not a reason for doing
+something in a new binding or adding to an existing one.
+
+Rob
