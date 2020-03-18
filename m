@@ -2,322 +2,377 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=CHARSET_FARAWAY,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68219C5ACDA
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3029C5ACD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395FC20770
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F6E20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:08:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RCRpevtH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbgCRPIh (ORCPT
+        id S1727174AbgCRPIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:08:37 -0400
-Received: from m177134.mail.qiye.163.com ([123.58.177.134]:44735 "EHLO
-        m177134.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgCRPIg (ORCPT
+        Wed, 18 Mar 2020 11:08:41 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:41036 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727085AbgCRPIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:08:36 -0400
-Received: from lcc-VirtualBox.vivo.xyz (unknown [58.251.74.227])
-        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 7FAF7260F08;
-        Wed, 18 Mar 2020 23:08:26 +0800 (CST)
-From:   Chucheng Luo <luochucheng@vivo.com>
-To:     Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Chucheng Luo <luochucheng@vivo.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@vivo.com
-Subject: [PATCH] Translate Documentation/filesystems/debugfs.txt into Chinese
-Date:   Wed, 18 Mar 2020 23:07:30 +0800
-Message-Id: <20200318150743.13480-1-luochucheng@vivo.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Mar 2020 11:08:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584544116;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4hb+br6/yLvvjS3SIsiReuFnCPoYvxVQJJHD5lWxD5o=;
+        b=RCRpevtHQ7d1HNUmCWl/QAIGjWg2vetAQOHmjxBoL+Ngak0aIiQs54/g7odabNz8w2Ihaj
+        Wwk+HEMixkGm2IQbnVxdSNwhHVq4atbAsZFt8bxTdIBFTpqNI+F6CA+W6YMsWzqQo4G/g1
+        KDd91cnMBiZHDZaS5IXyhftCZAsZ6fs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-2c3qVJ-4NgyhaIElfYhmVQ-1; Wed, 18 Mar 2020 11:08:33 -0400
+X-MC-Unique: 2c3qVJ-4NgyhaIElfYhmVQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 57D8D107ACC7;
+        Wed, 18 Mar 2020 15:08:31 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D17B81001B3F;
+        Wed, 18 Mar 2020 15:08:28 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 02/13] fsinfo: Provide a bitmap of supported features [ver
+ #19]
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
+        christian@brauner.io, jannh@google.com, darrick.wong@oracle.com,
+        kzak@redhat.com, jlayton@redhat.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 18 Mar 2020 15:08:28 +0000
+Message-ID: <158454410812.2864823.11010161737903581107.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
+References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUlXWQgYFAkeWUFZTVVOTklLS0tLT05MTE1ITFlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Njo6KAw*CDgxDjQLDhgTOE83
-        Tj0wFE1VSlVKTkNPTk9PSktNQ0JNVTMWGhIXVRcOFBgTDhgTHhUcOw0SDRRVGBQWRVlXWRILWUFZ
-        TkNVSU5KVUxPVUlJTFlXWQgBWUFKSkNKQjcG
-X-HM-Tid: 0a70ee3049159375kuws7faf7260f08
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Chucheng Luo <luochucheng@vivo.com>
----
- .../zh_CN/filesystems/debugfs.rst             | 257 ++++++++++++++++++
- 1 file changed, 257 insertions(+)
- create mode 100755 Documentation/translations/zh_CN/filesystems/debugfs.rst
+Provide a bitmap of features that a filesystem may provide for the path
+being queried.  Features include such things as:
 
-diff --git a/Documentation/translations/zh_CN/filesystems/debugfs.rst b/Documentation/translations/zh_CN/filesystems/debugfs.rst
-new file mode 100755
-index 000000000000..69cd1fb8d3c6
---- /dev/null
-+++ b/Documentation/translations/zh_CN/filesystems/debugfs.rst
-@@ -0,0 +1,257 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+.. raw:: latex
-+
-+	\renewcommand\thesection*
-+	\renewcommand\thesubsection*
-+
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: :ref:`Documentation/filesystems/debugfs.txt`
-+
-+译者
-+::
-+
-+	中文版维护者： 罗楚成 Chucheng Luo <luochucheng@vivo.com>
-+	中文版翻译者： 罗楚成 Chucheng Luo <luochucheng@vivo.com>
-+	中文版校译者:  罗楚成 Chucheng Luo <luochucheng@vivo.com>
-+
-+
-+
-+
-+版权所有2009 Jonathan Corbet <corbet@lwn.net>
-+
-+介绍
-+====
-+
-+Debugfs是内核开发人员在用户空间获取信息的简单方法。
-+与/proc不同，proc只提供进程信息。也不像sysfs,具有严格的“每个文件一个值“的规则。
-+debugfs根本没有规则。开发人员可以放置他们想要的任何信息在那里。
-+debugfs文件系统也不能用作稳定的
-+ABI接口到用户空间；从理论上讲，文件在debugfs里导出没有任何稳定性的约束。
-+尽管[1]现实世界并不总是那么简单。
-+即使是debugfs接口，也最好根据需要进行设计
-+永远保持下去。
-+
-+用法
-+====
-+
-+Debugfs通常使用以下命令安装::
-+
-+    mount -t debugfs none /sys/kernel/debug
-+
-+（或等效的/etc/fstab行）。
-+debugfs根目录默认仅可由root用户访问。
-+要更改对树的访问，请使用“ uid”，“ gid”和“ mode”挂载选项。
-+
-+请注意，debugfs API仅导出为GPL到模块。
-+
-+使用debugfs的代码应包含<linux/debugfs.h>。然后，第一阶
-+业务将是创建至少一个目录来保存一组debugfs文件::
-+
-+    struct dentry *debugfs_create_dir(const char *name, struct dentry *parent);
-+
-+如果成功，此调用将在指定的父目录目录下创建一个名为name的目录。
-+如果parent为NULL，则目录为
-+在debugfs根目录中创建。成功时，返回值是一个结构
-+dentry指针，可用于在目录中创建文件（以及
-+最后将其清理干净）。 ERR_PTR（-ERROR）返回值表面出错。如果返回ERR_PTR（-ENODEV），则为
-+表明内核是在没有debugfs支持的情况下构建的，并且下述函数都不会起作用。
-+
-+在debugfs目录中创建文件的最通用方法是::
-+
-+    struct dentry *debugfs_create_file(const char *name, umode_t mode,
-+				       struct dentry *parent, void *data,
-+				       const struct file_operations *fops);
-+
-+在这里，name是要创建的文件的名称，mode描述了访问
-+文件应具有的权限，parent指向应该保存文件的目录
-+，data将存储在产生的inode结构的i_private字段中
-+，而fops是一组文件操作，其中
-+实现文件的行为。至少，read（）和/或write（）
-+操作应提供；其他可以根据需要包括在内。再次，
-+返回值将是指向创建文件的dentry指针，
-+错误时显示ERR_PTR（-ERROR），不支持debugfs时返回值为ERR_PTR（-ENODEV）。
-+
-+创建一个初始大小的文件，可以使用以下函数代替::
-+
-+    struct dentry *debugfs_create_file_size(const char *name, umode_t mode,
-+				struct dentry *parent, void *data,
-+				const struct file_operations *fops,
-+				loff_t file_size);
-+
-+file_size是初始文件大小。其他参数跟函数debugfs_create_file的相同。
-+
-+在许多情况下，创建一组文件操作不是
-+实际必要的，对于简单的情况。debugfs代码提供了许多帮助函数
-+。包含单个整数值的文件可以使用以下任何一项创建::
-+
-+    void debugfs_create_u8(const char *name, umode_t mode,
-+			   struct dentry *parent, u8 *value);
-+    void debugfs_create_u16(const char *name, umode_t mode,
-+			    struct dentry *parent, u16 *value);
-+    struct dentry *debugfs_create_u32(const char *name, umode_t mode,
-+				      struct dentry *parent, u32 *value);
-+    void debugfs_create_u64(const char *name, umode_t mode,
-+			    struct dentry *parent, u64 *value);
-+
-+这些文件支持读取和写入给定值。如果具体
-+不应写入文件，只需相应地设置模式位。的
-+这些文件中的值以十进制表示；如果十六进制更合适，
-+可以使用以下功能::
-+
-+    void debugfs_create_x8(const char *name, umode_t mode,
-+			   struct dentry *parent, u8 *value);
-+    void debugfs_create_x16(const char *name, umode_t mode,
-+			    struct dentry *parent, u16 *value);
-+    void debugfs_create_x32(const char *name, umode_t mode,
-+			    struct dentry *parent, u32 *value);
-+    void debugfs_create_x64(const char *name, umode_t mode,
-+			    struct dentry *parent, u64 *value);
-+
-+只要开发人员知道导出值的大小，这些功能就很有用。
-+某些类型在不同的架构上可以具有不同的宽度
-+但是，这样会使情况变得有些复杂。有
-+在以下特殊情况下可以提供帮助的功能::
-+
-+    void debugfs_create_size_t(const char *name, umode_t mode,
-+			       struct dentry *parent, size_t *value);
-+
-+不出所料，此函数将创建一个debugfs文件来表示
-+类型为size_t的变量。
-+
-+同样地，也有无符号长整型型变量的助手，以十进制表示
-+和十六进制::
-+
-+    struct dentry *debugfs_create_ulong(const char *name, umode_t mode,
-+					struct dentry *parent,
-+					unsigned long *value);
-+    void debugfs_create_xul(const char *name, umode_t mode,
-+			    struct dentry *parent, unsigned long *value);
-+
-+布尔值可以通过以下方式放置在debugfs中::
-+
-+    struct dentry *debugfs_create_bool(const char *name, umode_t mode,
-+				       struct dentry *parent, bool *value);
-+
-+
-+读取结果文件将产生Y（对于非零值）或
-+N，后跟换行符。如果写入，它将接受大写或
-+小写值或1或0。任何其他输入将被忽略。
-+
-+同样，可以使用以下命令将atomic_t值放置在debugfs中::
-+
-+    void debugfs_create_atomic_t(const char *name, umode_t mode,
-+				 struct dentry *parent, atomic_t *value)
-+
-+读取此文件将获得atomic_t值，并写入该文件
-+将设置atomic_t值。
-+
-+另一个选择是导出一个任意二进制数据块，
-+这个结构和功能::
-+
-+    struct debugfs_blob_wrapper {
-+	void *data;
-+	unsigned long size;
-+    };
-+
-+    struct dentry *debugfs_create_blob(const char *name, umode_t mode,
-+				       struct dentry *parent,
-+				       struct debugfs_blob_wrapper *blob);
-+
-+读取此文件将返回由指针指向debugfs_blob_wrapper结构
-+的数据。一些驱动使用“blobs”作为一种简单的方法
-+返回几行（静态）格式化文本输出。这个功能
-+可用于导出二进制信息，但似乎没有
-+在主线中执行此操作的任何代码。请注意，使用debugfs_create_blob（）命令创建的所有文件
-+是只读的。
-+
-+如果您要转储一个寄存器块（发生的事情相当
-+通常在开发过程中，即使很少有这样的代码到达主线。
-+Debugfs提供两个功能：一个用于创建仅寄存器文件，另一个
-+把一个寄存器块插入一个顺序文件中::
-+
-+    struct debugfs_reg32 {
-+	char *name;
-+	unsigned long offset;
-+    };
-+
-+    struct debugfs_regset32 {
-+	struct debugfs_reg32 *regs;
-+	int nregs;
-+	void __iomem *base;
-+    };
-+
-+    struct dentry *debugfs_create_regset32(const char *name, umode_t mode,
-+				     struct dentry *parent,
-+				     struct debugfs_regset32 *regset);
-+
-+    void debugfs_print_regs32(struct seq_file *s, struct debugfs_reg32 *regs,
-+			 int nregs, void __iomem *base, char *prefix);
-+
-+“base”参数可能为0，但您可能需要构建reg32数组
-+使用__stringify，实际上有许多寄存器名称（宏）
-+寄存器块的基址上的字节偏移量。
-+
-+如果要在debugfs中转储u32数组，可以使用以下命令创建文件::
-+
-+     void debugfs_create_u32_array(const char *name, umode_t mode,
-+			struct dentry *parent,
-+			u32 *array, u32 elements);
-+
-+“array”参数提供数据，而“elements”参数为
-+数组中元素的数量。注意：建立数组后，
-+大小无法更改。
-+
-+有一个帮助函数来创建与设备相关的seq_file::
-+
-+   struct dentry *debugfs_create_devm_seqfile(struct device *dev,
-+				const char *name,
-+				struct dentry *parent,
-+				int (*read_fn)(struct seq_file *s,
-+					void *data));
-+
-+“dev”参数是与此debugfs文件相关的设备，并且
-+“read_fn”是一个函数指针，将被调用以打印
-+seq_file内容。
-+
-+还有一些其他的面向目录的帮助器功能::
-+
-+    struct dentry *debugfs_rename(struct dentry *old_dir,
-+    				  struct dentry *old_dentry,
-+		                  struct dentry *new_dir,
-+				  const char *new_name);
-+
-+    struct dentry *debugfs_create_symlink(const char *name,
-+                                          struct dentry *parent,
-+				      	  const char *target);
-+
-+调用debugfs_rename()将为现有的debugfs文件提供一个新名称，
-+可能在其他目录中。 new_name函数调用之前不能存在；
-+返回值为old_dentry，其中包含更新的信息。
-+可以使用debugfs_create_symlink（）创建符号链接。
-+
-+所有debugfs用户必须考虑的一件事是：
-+没有自动清除在debugfs中创建的任何目录。如果一个
-+在不显式删除debugfs条目的情况下卸载模块，结果
-+将会有很多陈旧的指针，和没完没了的高度反社会行为。
-+因此，所有debugfs用户-至少是那些可以作为模块构建的用户-必须
-+准备删除在此创建的所有文件和目录。一份文件
-+可以通过以下方式删除::
-+
-+    void debugfs_remove(struct dentry *dentry);
-+
-+dentry值可以为NULL或错误值，在这种情况下，不会有任何结果
-+被删除。
-+
-+从前，debugfs用户需要记住该dentry
-+他们创建的每个debugfs文件的指针，以便所有文件都可以
-+清理。但是，我们现在生活在更加文明的时代，并且debugfs用户
-+能调用::
-+
-+    void debugfs_remove_recursive(struct dentry *dentry);
-+
-+如果传递了此函数，则对应于
-+顶层目录，该目录下的整个层次结构将会被删除。
-+
-+注意：
-+[1] http://lwn.net/Articles/309298/
--- 
-2.17.1
+ (1) The general class of filesystem, such as kernel-interface,
+     block-based, flash-based, network-based.
+
+ (2) Supported inode features, such as which timestamps are supported,
+     whether simple numeric user, group or project IDs are supported and
+     whether user identification is actually more complex behind the
+     scenes.
+
+ (3) Supported volume features, such as it having a UUID, a name or a
+     filesystem ID.
+
+ (4) Supported filesystem features, such as what types of file are
+     supported, whether sparse files, extended attributes and quotas are
+     supported.
+
+ (5) Supported interface features, such as whether locking and leases are
+     supported, what open flags are honoured and how i_version is managed.
+
+For some filesystems, this may be an immutable set and can just be memcpy'd
+into the reply buffer.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ fs/fsinfo.c                 |   30 +++++++++++++++++++
+ include/linux/fsinfo.h      |   38 ++++++++++++++++++++++++
+ include/uapi/linux/fsinfo.h |   67 ++++++++++++++++++++++++++++++++++++++++++
+ samples/vfs/test-fsinfo.c   |   69 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 204 insertions(+)
+
+diff --git a/fs/fsinfo.c b/fs/fsinfo.c
+index 1830c73f37a7..8aee78a6b584 100644
+--- a/fs/fsinfo.c
++++ b/fs/fsinfo.c
+@@ -121,6 +121,35 @@ int fsinfo_generic_supports(struct path *path, struct fsinfo_context *ctx)
+ }
+ EXPORT_SYMBOL(fsinfo_generic_supports);
+ 
++int fsinfo_generic_features(struct path *path, struct fsinfo_context *ctx)
++{
++	struct fsinfo_features *p = ctx->buffer;
++	struct super_block *sb = path->dentry->d_sb;
++
++	fsinfo_init_features(p);
++	if (sb->s_mtd)
++		fsinfo_set_feature(p, FSINFO_FEAT_IS_FLASH_FS);
++	else if (sb->s_bdev)
++		fsinfo_set_feature(p, FSINFO_FEAT_IS_BLOCK_FS);
++
++	if (sb->s_quota_types & QTYPE_MASK_USR)
++		fsinfo_set_feature(p, FSINFO_FEAT_USER_QUOTAS);
++	if (sb->s_quota_types & QTYPE_MASK_GRP)
++		fsinfo_set_feature(p, FSINFO_FEAT_GROUP_QUOTAS);
++	if (sb->s_quota_types & QTYPE_MASK_PRJ)
++		fsinfo_set_feature(p, FSINFO_FEAT_PROJECT_QUOTAS);
++	if (sb->s_d_op && sb->s_d_op->d_automount)
++		fsinfo_set_feature(p, FSINFO_FEAT_AUTOMOUNTS);
++	if (sb->s_id[0])
++		fsinfo_set_feature(p, FSINFO_FEAT_VOLUME_ID);
++
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_ATIME);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_CTIME);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_MTIME);
++	return sizeof(*p);
++}
++EXPORT_SYMBOL(fsinfo_generic_features);
++
+ static const struct fsinfo_timestamp_info fsinfo_default_timestamp_info = {
+ 	.atime = {
+ 		.minimum	= S64_MIN,
+@@ -196,6 +225,7 @@ static const struct fsinfo_attribute fsinfo_common_attributes[] = {
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_TIMESTAMP_INFO,	fsinfo_generic_timestamp_info),
+ 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_ID,		fsinfo_generic_volume_id),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_VOLUME_UUID,	fsinfo_generic_volume_uuid),
++	FSINFO_VSTRUCT	(FSINFO_ATTR_FEATURES,		fsinfo_generic_features),
+ 
+ 	FSINFO_LIST	(FSINFO_ATTR_FSINFO_ATTRIBUTES,	(void *)123UL),
+ 	FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, (void *)123UL),
+diff --git a/include/linux/fsinfo.h b/include/linux/fsinfo.h
+index bf806669b4fb..3f08e61c3270 100644
+--- a/include/linux/fsinfo.h
++++ b/include/linux/fsinfo.h
+@@ -67,6 +67,44 @@ extern int fsinfo_generic_supports(struct path *, struct fsinfo_context *);
+ extern int fsinfo_generic_limits(struct path *, struct fsinfo_context *);
+ extern int fsinfo_get_attribute(struct path *, struct fsinfo_context *,
+ 				const struct fsinfo_attribute *);
++extern int fsinfo_generic_features(struct path *, struct fsinfo_context *);
++
++static inline void fsinfo_init_features(struct fsinfo_features *p)
++{
++	p->nr_features = FSINFO_FEAT__NR;
++}
++
++static inline void fsinfo_set_feature(struct fsinfo_features *p,
++				      enum fsinfo_feature feature)
++{
++	p->features[feature / 8] |= 1 << (feature % 8);
++}
++
++static inline void fsinfo_clear_feature(struct fsinfo_features *p,
++					enum fsinfo_feature feature)
++{
++	p->features[feature / 8] &= ~(1 << (feature % 8));
++}
++
++/**
++ * fsinfo_set_unix_features - Set standard UNIX features.
++ * @f: The features mask to alter
++ */
++static inline void fsinfo_set_unix_features(struct fsinfo_features *p)
++{
++	fsinfo_set_feature(p, FSINFO_FEAT_UIDS);
++	fsinfo_set_feature(p, FSINFO_FEAT_GIDS);
++	fsinfo_set_feature(p, FSINFO_FEAT_DIRECTORIES);
++	fsinfo_set_feature(p, FSINFO_FEAT_SYMLINKS);
++	fsinfo_set_feature(p, FSINFO_FEAT_HARD_LINKS);
++	fsinfo_set_feature(p, FSINFO_FEAT_DEVICE_FILES);
++	fsinfo_set_feature(p, FSINFO_FEAT_UNIX_SPECIALS);
++	fsinfo_set_feature(p, FSINFO_FEAT_SPARSE);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_ATIME);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_CTIME);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_MTIME);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_INODE_NUMBERS);
++}
+ 
+ #endif /* CONFIG_FSINFO */
+ 
+diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
+index e9b35b9b7629..83c92e202f7b 100644
+--- a/include/uapi/linux/fsinfo.h
++++ b/include/uapi/linux/fsinfo.h
+@@ -23,6 +23,7 @@
+ #define FSINFO_ATTR_VOLUME_ID		0x05	/* Volume ID (string) */
+ #define FSINFO_ATTR_VOLUME_UUID		0x06	/* Volume UUID (LE uuid) */
+ #define FSINFO_ATTR_VOLUME_NAME		0x07	/* Volume name (string) */
++#define FSINFO_ATTR_FEATURES		0x08	/* Filesystem features (bits) */
+ 
+ #define FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO 0x100	/* Information about attr N (for path) */
+ #define FSINFO_ATTR_FSINFO_ATTRIBUTES	0x101	/* List of supported attrs (for path) */
+@@ -155,6 +156,72 @@ struct fsinfo_supports {
+ 
+ #define FSINFO_ATTR_SUPPORTS__STRUCT struct fsinfo_supports
+ 
++/*
++ * Information struct for fsinfo(FSINFO_ATTR_FEATURES).
++ *
++ * Bitmask indicating filesystem features where renderable as single bits.
++ */
++enum fsinfo_feature {
++	FSINFO_FEAT_IS_KERNEL_FS	= 0,	/* fs is kernel-special filesystem */
++	FSINFO_FEAT_IS_BLOCK_FS		= 1,	/* fs is block-based filesystem */
++	FSINFO_FEAT_IS_FLASH_FS		= 2,	/* fs is flash filesystem */
++	FSINFO_FEAT_IS_NETWORK_FS	= 3,	/* fs is network filesystem */
++	FSINFO_FEAT_IS_AUTOMOUNTER_FS	= 4,	/* fs is automounter special filesystem */
++	FSINFO_FEAT_IS_MEMORY_FS	= 5,	/* fs is memory-based filesystem */
++	FSINFO_FEAT_AUTOMOUNTS		= 6,	/* fs supports automounts */
++	FSINFO_FEAT_ADV_LOCKS		= 7,	/* fs supports advisory file locking */
++	FSINFO_FEAT_MAND_LOCKS		= 8,	/* fs supports mandatory file locking */
++	FSINFO_FEAT_LEASES		= 9,	/* fs supports file leases */
++	FSINFO_FEAT_UIDS		= 10,	/* fs supports numeric uids */
++	FSINFO_FEAT_GIDS		= 11,	/* fs supports numeric gids */
++	FSINFO_FEAT_PROJIDS		= 12,	/* fs supports numeric project ids */
++	FSINFO_FEAT_STRING_USER_IDS	= 13,	/* fs supports string user identifiers */
++	FSINFO_FEAT_GUID_USER_IDS	= 14,	/* fs supports GUID user identifiers */
++	FSINFO_FEAT_WINDOWS_ATTRS	= 15,	/* fs has windows attributes */
++	FSINFO_FEAT_USER_QUOTAS		= 16,	/* fs has per-user quotas */
++	FSINFO_FEAT_GROUP_QUOTAS	= 17,	/* fs has per-group quotas */
++	FSINFO_FEAT_PROJECT_QUOTAS	= 18,	/* fs has per-project quotas */
++	FSINFO_FEAT_XATTRS		= 19,	/* fs has xattrs */
++	FSINFO_FEAT_JOURNAL		= 20,	/* fs has a journal */
++	FSINFO_FEAT_DATA_IS_JOURNALLED	= 21,	/* fs is using data journalling */
++	FSINFO_FEAT_O_SYNC		= 22,	/* fs supports O_SYNC */
++	FSINFO_FEAT_O_DIRECT		= 23,	/* fs supports O_DIRECT */
++	FSINFO_FEAT_VOLUME_ID		= 24,	/* fs has a volume ID */
++	FSINFO_FEAT_VOLUME_UUID		= 25,	/* fs has a volume UUID */
++	FSINFO_FEAT_VOLUME_NAME		= 26,	/* fs has a volume name */
++	FSINFO_FEAT_VOLUME_FSID		= 27,	/* fs has a volume FSID */
++	FSINFO_FEAT_IVER_ALL_CHANGE	= 28,	/* i_version represents data + meta changes */
++	FSINFO_FEAT_IVER_DATA_CHANGE	= 29,	/* i_version represents data changes only */
++	FSINFO_FEAT_IVER_MONO_INCR	= 30,	/* i_version incremented monotonically */
++	FSINFO_FEAT_DIRECTORIES		= 31,	/* fs supports (sub)directories */
++	FSINFO_FEAT_SYMLINKS		= 32,	/* fs supports symlinks */
++	FSINFO_FEAT_HARD_LINKS		= 33,	/* fs supports hard links */
++	FSINFO_FEAT_HARD_LINKS_1DIR	= 34,	/* fs supports hard links in same dir only */
++	FSINFO_FEAT_DEVICE_FILES	= 35,	/* fs supports bdev, cdev */
++	FSINFO_FEAT_UNIX_SPECIALS	= 36,	/* fs supports pipe, fifo, socket */
++	FSINFO_FEAT_RESOURCE_FORKS	= 37,	/* fs supports resource forks/streams */
++	FSINFO_FEAT_NAME_CASE_INDEP	= 38,	/* Filename case independence is mandatory */
++	FSINFO_FEAT_NAME_NON_UTF8	= 39,	/* fs has non-utf8 names */
++	FSINFO_FEAT_NAME_HAS_CODEPAGE	= 40,	/* fs has a filename codepage */
++	FSINFO_FEAT_SPARSE		= 41,	/* fs supports sparse files */
++	FSINFO_FEAT_NOT_PERSISTENT	= 42,	/* fs is not persistent */
++	FSINFO_FEAT_NO_UNIX_MODE	= 43,	/* fs does not support unix mode bits */
++	FSINFO_FEAT_HAS_ATIME		= 44,	/* fs supports access time */
++	FSINFO_FEAT_HAS_BTIME		= 45,	/* fs supports birth/creation time */
++	FSINFO_FEAT_HAS_CTIME		= 46,	/* fs supports change time */
++	FSINFO_FEAT_HAS_MTIME		= 47,	/* fs supports modification time */
++	FSINFO_FEAT_HAS_ACL		= 48,	/* fs supports ACLs of some sort */
++	FSINFO_FEAT_HAS_INODE_NUMBERS	= 49,	/* fs has inode numbers */
++	FSINFO_FEAT__NR
++};
++
++struct fsinfo_features {
++	__u32	nr_features;	/* Number of supported features (FSINFO_FEAT__NR) */
++	__u8	features[(FSINFO_FEAT__NR + 7) / 8];
++};
++
++#define FSINFO_ATTR_FEATURES__STRUCT struct fsinfo_features
++
+ struct fsinfo_timestamp_one {
+ 	__s64	minimum;	/* Minimum timestamp value in seconds */
+ 	__s64	maximum;	/* Maximum timestamp value in seconds */
+diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
+index 2b53c735d330..bae9e6a46e72 100644
+--- a/samples/vfs/test-fsinfo.c
++++ b/samples/vfs/test-fsinfo.c
+@@ -184,6 +184,74 @@ static void dump_fsinfo_generic_supports(void *reply, unsigned int size)
+ 	printf("\twin_fattrs   : %x\n", f->win_file_attrs);
+ }
+ 
++#define FSINFO_FEATURE_NAME(C) [FSINFO_FEAT_##C] = #C
++static const char *fsinfo_feature_names[FSINFO_FEAT__NR] = {
++	FSINFO_FEATURE_NAME(IS_KERNEL_FS),
++	FSINFO_FEATURE_NAME(IS_BLOCK_FS),
++	FSINFO_FEATURE_NAME(IS_FLASH_FS),
++	FSINFO_FEATURE_NAME(IS_NETWORK_FS),
++	FSINFO_FEATURE_NAME(IS_AUTOMOUNTER_FS),
++	FSINFO_FEATURE_NAME(IS_MEMORY_FS),
++	FSINFO_FEATURE_NAME(AUTOMOUNTS),
++	FSINFO_FEATURE_NAME(ADV_LOCKS),
++	FSINFO_FEATURE_NAME(MAND_LOCKS),
++	FSINFO_FEATURE_NAME(LEASES),
++	FSINFO_FEATURE_NAME(UIDS),
++	FSINFO_FEATURE_NAME(GIDS),
++	FSINFO_FEATURE_NAME(PROJIDS),
++	FSINFO_FEATURE_NAME(STRING_USER_IDS),
++	FSINFO_FEATURE_NAME(GUID_USER_IDS),
++	FSINFO_FEATURE_NAME(WINDOWS_ATTRS),
++	FSINFO_FEATURE_NAME(USER_QUOTAS),
++	FSINFO_FEATURE_NAME(GROUP_QUOTAS),
++	FSINFO_FEATURE_NAME(PROJECT_QUOTAS),
++	FSINFO_FEATURE_NAME(XATTRS),
++	FSINFO_FEATURE_NAME(JOURNAL),
++	FSINFO_FEATURE_NAME(DATA_IS_JOURNALLED),
++	FSINFO_FEATURE_NAME(O_SYNC),
++	FSINFO_FEATURE_NAME(O_DIRECT),
++	FSINFO_FEATURE_NAME(VOLUME_ID),
++	FSINFO_FEATURE_NAME(VOLUME_UUID),
++	FSINFO_FEATURE_NAME(VOLUME_NAME),
++	FSINFO_FEATURE_NAME(VOLUME_FSID),
++	FSINFO_FEATURE_NAME(IVER_ALL_CHANGE),
++	FSINFO_FEATURE_NAME(IVER_DATA_CHANGE),
++	FSINFO_FEATURE_NAME(IVER_MONO_INCR),
++	FSINFO_FEATURE_NAME(DIRECTORIES),
++	FSINFO_FEATURE_NAME(SYMLINKS),
++	FSINFO_FEATURE_NAME(HARD_LINKS),
++	FSINFO_FEATURE_NAME(HARD_LINKS_1DIR),
++	FSINFO_FEATURE_NAME(DEVICE_FILES),
++	FSINFO_FEATURE_NAME(UNIX_SPECIALS),
++	FSINFO_FEATURE_NAME(RESOURCE_FORKS),
++	FSINFO_FEATURE_NAME(NAME_CASE_INDEP),
++	FSINFO_FEATURE_NAME(NAME_NON_UTF8),
++	FSINFO_FEATURE_NAME(NAME_HAS_CODEPAGE),
++	FSINFO_FEATURE_NAME(SPARSE),
++	FSINFO_FEATURE_NAME(NOT_PERSISTENT),
++	FSINFO_FEATURE_NAME(NO_UNIX_MODE),
++	FSINFO_FEATURE_NAME(HAS_ATIME),
++	FSINFO_FEATURE_NAME(HAS_BTIME),
++	FSINFO_FEATURE_NAME(HAS_CTIME),
++	FSINFO_FEATURE_NAME(HAS_MTIME),
++	FSINFO_FEATURE_NAME(HAS_ACL),
++	FSINFO_FEATURE_NAME(HAS_INODE_NUMBERS),
++};
++
++static void dump_fsinfo_generic_features(void *reply, unsigned int size)
++{
++	struct fsinfo_features *f = reply;
++	int i;
++
++	printf("\n\t");
++	for (i = 0; i < sizeof(f->features); i++)
++		printf("%02x", f->features[i]);
++	printf(" (nr=%u)\n", f->nr_features);
++	for (i = 0; i < FSINFO_FEAT__NR; i++)
++		if (f->features[i / 8] & (1 << (i % 8)))
++			printf("\t- %s\n", fsinfo_feature_names[i]);
++}
++
+ static void print_time(struct fsinfo_timestamp_one *t, char stamp)
+ {
+ 	printf("\t%ctime       : gran=%gs range=%llx-%llx\n",
+@@ -285,6 +353,7 @@ static const struct fsinfo_attribute fsinfo_attributes[] = {
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_IDS,		fsinfo_generic_ids),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_LIMITS,		fsinfo_generic_limits),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_SUPPORTS,		fsinfo_generic_supports),
++	FSINFO_VSTRUCT	(FSINFO_ATTR_FEATURES,		fsinfo_generic_features),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_TIMESTAMP_INFO,	fsinfo_generic_timestamp_info),
+ 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_ID,		string),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_VOLUME_UUID,	fsinfo_generic_volume_uuid),
+
 
