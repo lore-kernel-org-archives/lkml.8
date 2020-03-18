@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31C1C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCEEC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7008820409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB4020409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565437;
-	bh=I41Sg0VH3MhQ8yN+hre0/s5r5x55aDp8n7eIk54CK5g=;
+	s=default; t=1584565445;
+	bh=+wqXQMP6BQQqicEzBHUxYGlxNVU+mw9vgsEUq7O3Fzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gq4vBMosN4SPkZeunJ97A5qpQEqkd6F3QV2HTJU4nUeBkPpwPdHbISx/Tl0+qSecj
-	 bw026mHz++Y0x7zc0DUkf2OfTYfp1yfQjP52eyVdc8n/ZlaoC2G4hGLqmtXLSOjoCd
-	 HbcRuknBZZ1PCU+RB/aDzxSm2gb+D/6nX0Rfl9Ko=
+	b=fQ1H90gC6igzworz0tz+Tz3eaTjXvthKI1Nhp6dSUcvPxHAoMgqh8uieIF+EtJ/me
+	 yOuzWTog3sZFQ2Xhn4SIMQjBKt7Fbnj1NNrexoIpjW1siriECC6Y7Xv6eeVtjjFQ4H
+	 PzbUzIKgmIHLPFzm4iW0GK789FNTVfsEGBrd/Hec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgCRVD4 (ORCPT
+        id S1728956AbgCRVEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:03:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55898 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:04:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbgCRUz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:29 -0400
+        id S1728313AbgCRUz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DD47208FE;
-        Wed, 18 Mar 2020 20:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DE0520B1F;
+        Wed, 18 Mar 2020 20:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564929;
-        bh=I41Sg0VH3MhQ8yN+hre0/s5r5x55aDp8n7eIk54CK5g=;
+        s=default; t=1584564926;
+        bh=+wqXQMP6BQQqicEzBHUxYGlxNVU+mw9vgsEUq7O3Fzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=og5iBccPkMD8XqUHRsiS9KonVy+ZL7/TZ9plCm3D/cDUoHUsJBQFg+bIu8o1jBKy5
-         Y+YGGrz2ISXqWRBvfnmjEuOd23ACm89NvRnMghL8rU4si/zSOvDTCEiv80NRNLZJVS
-         ZhQcIK23Zc1D0K0AYSXX9la5C+ogj9HfikS6gZAg=
+        b=Av4SJGBE7aoTWySTwOeFsV98+hZ2fesyFCuzUDpiYL/tu1jQ0R89mVjc38mxrDP1S
+         Qj7uInamp0Q2aesIDn4nCMbFU3xZYKfnNmc32GStrAakgr/DQD3DCjxubfP8O459DN
+         156rW8GMCdSf0ahq8rY5gd0TUVoRt1pb4PbF8xI8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/37] netfilter: nft_payload: add missing attribute validation for payload csum flags
-Date:   Wed, 18 Mar 2020 16:54:48 -0400
-Message-Id: <20200318205509.17053-16-sashal@kernel.org>
+Cc:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/37] team: add missing attribute validation for array index
+Date:   Wed, 18 Mar 2020 16:54:46 -0400
+Message-Id: <20200318205509.17053-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
@@ -63,31 +61,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 9d6effb2f1523eb84516e44213c00f2fd9e6afff ]
+[ Upstream commit 669fcd7795900cd1880237cbbb57a7db66cb9ac8 ]
 
-Add missing attribute validation for NFTA_PAYLOAD_CSUM_FLAGS
+Add missing attribute validation for TEAM_ATTR_OPTION_ARRAY_INDEX
 to the netlink policy.
 
-Fixes: 1814096980bb ("netfilter: nft_payload: layer 4 checksum adjustment for pseudoheader fields")
+Fixes: b13033262d24 ("team: introduce array options")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_payload.c | 1 +
+ drivers/net/team/team.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/nft_payload.c b/net/netfilter/nft_payload.c
-index e110b0ebbf58b..19446a89a2a81 100644
---- a/net/netfilter/nft_payload.c
-+++ b/net/netfilter/nft_payload.c
-@@ -121,6 +121,7 @@ static const struct nla_policy nft_payload_policy[NFTA_PAYLOAD_MAX + 1] = {
- 	[NFTA_PAYLOAD_LEN]		= { .type = NLA_U32 },
- 	[NFTA_PAYLOAD_CSUM_TYPE]	= { .type = NLA_U32 },
- 	[NFTA_PAYLOAD_CSUM_OFFSET]	= { .type = NLA_U32 },
-+	[NFTA_PAYLOAD_CSUM_FLAGS]	= { .type = NLA_U32 },
+diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
+index 472641b5afd3e..95524c06e64c2 100644
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -2216,6 +2216,7 @@ team_nl_option_policy[TEAM_ATTR_OPTION_MAX + 1] = {
+ 	[TEAM_ATTR_OPTION_TYPE]			= { .type = NLA_U8 },
+ 	[TEAM_ATTR_OPTION_DATA]			= { .type = NLA_BINARY },
+ 	[TEAM_ATTR_OPTION_PORT_IFINDEX]		= { .type = NLA_U32 },
++	[TEAM_ATTR_OPTION_ARRAY_INDEX]		= { .type = NLA_U32 },
  };
  
- static int nft_payload_init(const struct nft_ctx *ctx,
+ static int team_nl_cmd_noop(struct sk_buff *skb, struct genl_info *info)
 -- 
 2.20.1
 
