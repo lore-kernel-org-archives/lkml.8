@@ -2,160 +2,111 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820CCC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C41C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5335B20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD52520757
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7g4r8lF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHEbKwNz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgCRDzz (ORCPT
+        id S1727219AbgCRD4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 23:55:55 -0400
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:42729 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbgCRDzy (ORCPT
+        Tue, 17 Mar 2020 23:56:22 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:56275 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726682AbgCRD4W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 23:55:54 -0400
-Received: by mail-qv1-f66.google.com with SMTP id ca9so12193848qvb.9;
-        Tue, 17 Mar 2020 20:55:53 -0700 (PDT)
+        Tue, 17 Mar 2020 23:56:22 -0400
+Received: by mail-pj1-f67.google.com with SMTP id mj6so709243pjb.5;
+        Tue, 17 Mar 2020 20:56:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4w0fVuhtcWUrWrEECdk2qkWG8xGkG11mQX5K+KieeCg=;
-        b=U7g4r8lFCvt3Z7d9CMTwyuOKIPtDFDsXdLFXgbkLDuO5hV2zFuFmKbdzb2DS83a+Pv
-         7RZMASrPmhL2C3+EUH8urNDPMt3Fb3QuowBcea3l+Ihqiwnd02uWvQ4tE1G0x8i7/gqL
-         o4Nzjpe68ER5PXAynfkZxELUqXWi+fq+8lHhpuj+4OxcUCDACuUu1ueB2EPvF3AHVDW4
-         dvqImW1EoOpDJzSYqdrFkeeidMIe67MdE6tzdrELEUbe63vtcORFETYow1IHw8i5TQO6
-         WCwubo2kpuyChIOOdQESHygGyGIGEbcjw8wXdQOIiWYMGFVHmUo+qkdak/ii4Dt4EUtF
-         W87A==
+         :content-disposition:in-reply-to:user-agent;
+        bh=NK4TxhSdGlT3RyaHAyy90ouA+8VP27Is6D344qdDM6M=;
+        b=fHEbKwNz3+0Z69LwHhYaC5BP8pxiny2S+1++vGSKnpzwYoxOmol5HQ+XNoJUs5HbY9
+         pjDpU8FZPYrT9aD5E0IxinhYB94tDvVX+wyNEazm80sPA7Y/KnVXzCAJJGFbP7aqONNv
+         /iwTg1/0XkEgsAdkkKlcNVYs85fX3YMccgxTS4atRcoFivksqEsuTXILnw6PLdtJoEr+
+         pLmQqwYl+72P5TW3tM0Q5TTwfg78OVz6bh6GXpzJKrPsoCzHS/s3PAuP/mFktgOt37zJ
+         4c8HLd2tEYOQu9S0WaiQQJlNG/SWkp0X3Itp7J2KDxuAaJ8nM/T/JdUv86ak8dAHoux3
+         NFRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4w0fVuhtcWUrWrEECdk2qkWG8xGkG11mQX5K+KieeCg=;
-        b=UII4nG6tMbq2r0TFPrFcN15x/zSBtSEurlrpTcYP5ByAw35+ZJl7//S7J3qeu8QsW8
-         TPY3bB1fDstgjiLv0FHnCheGNVtNCVIf03hIT8LLU4TOfjwqjOycYZD8PVqPMTe9fFWG
-         hwwR3HRSK/W8G8+C6DGZ0mKdx5WVu1sOz8AXfpDGxtvB9eJ3MKwA57kKTkWTMtQnuBka
-         nshPhJ76sMr7vMYOsIQ+HpiSm1jzpf4h7qJHS81ssiazKhKxf3vKrP13LgqvJGf0XFyT
-         qfL0gmQqTpSDbn43IARqtmyW1lSsJPj7T1HoP5zIz+2K8mxWE5dSIAkp6sM60ujC3t0A
-         Bvsg==
-X-Gm-Message-State: ANhLgQ2C93wFtWqrMKghMEfdfgXSONM+oHDEsolLp9fNPELuXpQDpRD6
-        JHm5/cod01adgwtV4AmqSOY=
-X-Google-Smtp-Source: ADFU+vsBEvZq/VSmCYpryFG8+yqe1CqMSCYGxnfsasmZm6OuNkNGUUqEOM++LKgciXgMQY1z7xc7Lg==
-X-Received: by 2002:ad4:5642:: with SMTP id bl2mr2430914qvb.11.1584503752892;
-        Tue, 17 Mar 2020 20:55:52 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f013:bfaf:5636:cd03:74f7:34b0])
-        by smtp.gmail.com with ESMTPSA id f26sm3338754qkl.119.2020.03.17.20.55.51
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NK4TxhSdGlT3RyaHAyy90ouA+8VP27Is6D344qdDM6M=;
+        b=N6V+T2KB0EmRXFNPfwtucLtfYnPo4c3Ov3MzmVB7FWri8ajgaXLjL6/XPzU11N6R/w
+         pwl3QLloaj+3sgBFWDvIDn1H+l+1to3Yu0no77GCSRBTIPTyg3lDdNiPhZiCi++1GY4x
+         6uqw26KPw8QwSYaQ41N3cLrjiWZOKaffbLE3+FzeX2AvvZPrhb1GAiO5kjLBw4vaUgDj
+         v8OairmilR6IiKisjKJVpbMMskSw6+rHAPVwgWyycSWlpuZzk7/9eUF/LIuEBBzfch+3
+         LAg4dqxQTdohVN194JzV+yDbO+VTni1dR3WafUy+f4wjoZLZvqpqXrtGLH4Qyg7m7moX
+         EW0A==
+X-Gm-Message-State: ANhLgQ3DkRZOVQq45NY9GCI7SOxyap1R9FG8iga3dxU3nN8r87lJx2Wd
+        N1A30h58FS8aU5dYIcdia0SUFp1c
+X-Google-Smtp-Source: ADFU+vvgXdabckkc06BWRVry2QDxUZPZhOjgCCY11Zh1afBfolpoS5R1lMm1NJt6yDOH6GRHQckQ+w==
+X-Received: by 2002:a17:902:820b:: with SMTP id x11mr1899205pln.196.1584503781187;
+        Tue, 17 Mar 2020 20:56:21 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id md20sm728809pjb.15.2020.03.17.20.56.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 20:55:52 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id DA47BC550F; Wed, 18 Mar 2020 00:55:49 -0300 (-03)
-Date:   Wed, 18 Mar 2020 00:55:49 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, Jakub Kicinski <kuba@kernel.org>,
-        linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, anenbupt@gmail.com
-Subject: Re: [PATCH v2] sctp: fix refcount bug in sctp_wfree
-Message-ID: <20200318035549.GC3756@localhost.localdomain>
-References: <20200317155536.10227-1-hqjagain@gmail.com>
- <20200317173039.GA3828@localhost.localdomain>
- <CAJRQjocwMzmBiYXwCnupE7hd8qYveBXtUiF2WKBe=TFfJLqcDw@mail.gmail.com>
+        Tue, 17 Mar 2020 20:56:20 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 20:56:18 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Harry Cutts <hcutts@chromium.org>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dtor@google.com, rajatxjain@gmail.com
+Subject: Re: [PATCH v3] Input: Allocate keycode for "Selective Screenshot" key
+Message-ID: <20200318035618.GG192640@dtor-ws>
+References: <20200313180333.75011-1-rajatja@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJRQjocwMzmBiYXwCnupE7hd8qYveBXtUiF2WKBe=TFfJLqcDw@mail.gmail.com>
+In-Reply-To: <20200313180333.75011-1-rajatja@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 10:45:51AM +0800, Qiujun Huang wrote:
-> On Wed, Mar 18, 2020 at 1:30 AM Marcelo Ricardo Leitner
-> <marcelo.leitner@gmail.com> wrote:
-> >
-> > Hi,
-> >
-> > On Tue, Mar 17, 2020 at 11:55:36PM +0800, Qiujun Huang wrote:
-> > > Do accounting for skb's real sk.
-> > > In some case skb->sk != asoc->base.sk:
-> > >
-> > > migrate routing        sctp_check_transmitted routing
-> > > ------------                    ---------------
-> >                                  sctp_close();
-> >                                    lock_sock(sk2);
-> >                                  sctp_primitive_ABORT();
-> >                                  sctp_do_sm();
-> >                                  sctp_cmd_interpreter();
-> >                                  sctp_cmd_process_sack();
-> >                                  sctp_outq_sack();
-> >                                  sctp_check_transmitted();
-> >
-> >   lock_sock(sk1);
-> >   sctp_getsockopt_peeloff();
-> >   sctp_do_peeloff();
-> >   sctp_sock_migrate();
-> > > lock_sock_nested(sk2);
-> > >                                mv the transmitted skb to
-> > >                                the it's local tlist
-> >
-> >
-> > How can sctp_do_sm() be called in the 2nd column so that it bypasses
-> > the locks in the left column, allowing this mv to happen?
-> >
-> > >
-> > > sctp_for_each_tx_datachunk(
-> > > sctp_clear_owner_w);
-> > > sctp_assoc_migrate();
-> > > sctp_for_each_tx_datachunk(
-> > > sctp_set_owner_w);
-> > >
-> > >                                put the skb back to the
-> > >                                assoc lists
-> > > ----------------------------------------------------
-> > >
-> > > The skbs which held bysctp_check_transmitted were not changed
-> > > to newsk. They were not dealt with by sctp_for_each_tx_datachunk
-> > > (sctp_clear_owner_w/sctp_set_owner_w).
-> >
-> > It would make sense but I'm missing one step earlier, I'm not seeing
-> > how the move to local list is allowed/possible in there. It really
-> > shouldn't be possible.
+On Fri, Mar 13, 2020 at 11:03:33AM -0700, Rajat Jain wrote:
+> New chromeos keyboards have a "snip" key that is basically a selective
+> screenshot (allows a user to select an area of screen to be copied).
+> Allocate a keycode for it.
 > 
-> I totally agree that.
-> My mistake. So I added some log in my test showing the case:
-> The backtrace:
-> sctp_close
-> sctp_primitive_ABORT
-> sctp_do_sm
-> sctp_association_free
-> __sctp_outq_teardown
->      /* Throw away unacknowledged chunks. */
->     list_for_each_entry(transport, &q->asoc->peer.transport_addr_list,
->     transports) {
->     printk("[%d]deal with transmitted %#llx from transport %#llx  %s,
-> %d\n", raw_smp_processor_id(),
->    &transport->transmitted, transport, __func__, __LINE__);
->    while ((lchunk = sctp_list_dequeue(&transport->transmitted)) != NULL) {
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+
+Applied, thank you.
+
+> ---
+> v3: Rename KEY_SNIP to KEY_SELECTIVE_SNAPSHOT
+> V2: Drop patch [1/2] and instead rebase this on top of Linus' tree.
 > 
-> The trouble skb is from another peer sk in the same asoc, but
-> accounted to the base.sk.
+>  include/uapi/linux/input-event-codes.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+> index 0f1db1cccc3fd..c4dbe2ee9c098 100644
+> --- a/include/uapi/linux/input-event-codes.h
+> +++ b/include/uapi/linux/input-event-codes.h
+> @@ -652,6 +652,8 @@
+>  /* Electronic privacy screen control */
+>  #define KEY_PRIVACY_SCREEN_TOGGLE	0x279
+>  
+> +#define KEY_SELECTIVE_SCREENSHOT	0x280
+> +
+>  /*
+>   * Some keyboards have keys which do not have a defined meaning, these keys
+>   * are intended to be programmed / bound to macros by the user. For most
+> -- 
+> 2.25.1.481.gfbce0eb801-goog
+> 
 
-Hmm, not sure how you got that out of that debug msg, but okay.
-Even if so, how would this trouble skb be accounted on the wrong sk by
-then?
-
-Asking because the fix that we want may be a better locking, to
-prevent this situation from happening, than compensating for it in
-sctp_wfree(). But for that we need to understand how this happened.
-
-  Marcelo
+-- 
+Dmitry
