@@ -6,86 +6,117 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FA2C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9A6C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44CC92076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBF420663
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbgCRKTL (ORCPT
+        id S1727691AbgCRKTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:19:11 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:50802 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbgCRKTK (ORCPT
+        Wed, 18 Mar 2020 06:19:14 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:60027 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727380AbgCRKTL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:19:10 -0400
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 2710F200ADE;
-        Wed, 18 Mar 2020 10:19:09 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id CE43220B19; Wed, 18 Mar 2020 11:19:04 +0100 (CET)
-Date:   Wed, 18 Mar 2020 11:19:04 +0100
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     tiwai@suse.com, pierre-louis.bossart@linux.intel.com,
-        liam.r.girdwood@linux.intel.com, yang.jie@linux.intel.com,
-        broonie@kernel.org, perex@perex.cz, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-Message-ID: <20200318101904.GA134370@light.dominikbrodowski.net>
-References: <20200318063022.GA116342@light.dominikbrodowski.net>
- <66c719b3-a66e-6a9f-fab8-721ba48d7ad8@intel.com>
- <20200318095745.GA133849@light.dominikbrodowski.net>
- <fafed002-5f7f-dd2b-0787-265da7ec7c7a@intel.com>
+        Wed, 18 Mar 2020 06:19:11 -0400
+Received: from mail-qv1-f44.google.com ([209.85.219.44]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MMGVE-1iyUZc2DLC-00JJln for <linux-kernel@vger.kernel.org>; Wed, 18 Mar
+ 2020 11:19:10 +0100
+Received: by mail-qv1-f44.google.com with SMTP id z13so6393581qvw.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:19:10 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1yNay6j/PxkstgmXa5ejMcMzZ5hdsCRTmBit01Qd2ScNC9nYTs
+        jhQ+C2R8dNKDIHiAtKywXslL6fl4VRztxwK9aWE=
+X-Google-Smtp-Source: ADFU+vtuQuYp6iTjljzJz66bWfoHPbGkarNkqvjP4G4fPNAhxKACZ2qYupUXWqRWV+mHx0qdrwoL46bNg5mdhQxv53g=
+X-Received: by 2002:a0c:b203:: with SMTP id x3mr3340934qvd.197.1584526749469;
+ Wed, 18 Mar 2020 03:19:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fafed002-5f7f-dd2b-0787-265da7ec7c7a@intel.com>
+References: <20200317083043.226593-1-areber@redhat.com>
+In-Reply-To: <20200317083043.226593-1-areber@redhat.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 18 Mar 2020 11:18:53 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
+Message-ID: <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
+Subject: Re: clone3: allow creation of time namespace with offset
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:9bf/+TYZkAaEp+9Cc/8X/2wDjONwsJhDkpThfDZE4LKluDMbwlT
+ SMx0e9Sq2uQeHw1CQqjyKlANwmjLMgJXAJ7FwlO3XsKsL9e3UPvJxB3JMdv6DcrotXzAXSe
+ p0DgQWnsL7zkxa576BcuC5a3LDygWgEJOAXyNJbxepcwYsbt1jXQr6Rt1KT8omgW7Ad6bqO
+ 49sE23xQxelUTnrm8AHdQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PNcvG8R74hg=:nQq4PCjgKKSJP1B6Gg8NFB
+ HNX+IEFH8Fncaymyd3nCR/qnfmtIgYE/qAXEq1VYYZw2IIY9pezyg/s0F36OXwYOhdk38oLOA
+ tLneV/tv0HPTbKtx2Q3PQpe3pad5oVW3cF3vkHUEN+MqPNgiWBaNTegF8jCCoJ8LsVDz/F729
+ mt4x4pcHLkPFHsgDA2VD82dcabJt2ojMxkmAVjZ2bid8iRqC5TLx0AKwqm2MoDm2SUIZAv54a
+ 7lprRzeyXfdaBM2YGNRgaIuNLMptRvJU5KwFlYF0AgMEXisqH0XirPdvUSjK9u+e/uORgmeSj
+ 08V1hVvOyKb/7sTmmZV6AQxCJRXR7Mj0nhu+ZeEZkOMj8NK9wkMPcPuTTLPecyoKcJsftFYuA
+ WA2rxQcOWNfsgw+a9bpHD1LLDUA2LZBVxSRi98orZSYzwFcS95ypAKr9GGfhAte8UZviIKqzu
+ Gbu7UWbalUlyhQXRS1+TQg3TC8bXA/2QBZXzgaQjQrs49aAfUlgR00xwa+uzORQoPzWntBqQb
+ ditnGSxuEvbvoLv4lyOim97cH5cqM/XAzUFjhnfNnx3M2zZzig+Af+DmNPTHAJ+hPU7Wd21or
+ 1l1IUG1qnhkgECr3yG5QObuQUjrskh3EZHaTwlcmftb1jwxCoKIcuqEK8nAp130fp8933iyOk
+ lIgzdJVwtpmYNfotDkfJebTZvKFgb5QkkZfcFSkQ7AMju+DMt11QPLcEw9/YUm4Dl0LvTOyTF
+ RrdSY9yzhRWM87eOaPQ5IQWteDhf06QTriOh5KXyiTBp4XJlB4JB9M8gZgSDmGBiGb4QvnaCO
+ 6s41bLxwXWi4/WzkwU9wv7Mthz9AwslyzQPDNq9+8/kkDvnWbM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 11:05:21AM +0100, Cezary Rojewski wrote:
-> On 2020-03-18 10:57, Dominik Brodowski wrote:
-> > > > 
-> > > > Unfortunately, I cannot bisect this issue easily -- i915 was broken for
-> > > > quite some time on this system[*], prohibiting boot...
-> > > 
-> > > Hmm, sounds like that issue is quite old. DSP for Haswell and Broadwell is
-> > > available for I2S devices only, so this relates directly to legacy HDA
-> > > driver. Compared to Skylake+, HDAudio controller for older platforms is
-> > > found within GPU. My advice is to notify the DRM guys about this issue.
-> > > 
-> > > Takashi, are you aware of problems with HDMI on HSW/ BDW or should I just
-> > > loop Jani and other DRM peps here?
-> > 
-> > Well, it works on v5.5, so this issue is not really "quite old" (the "no
-> > context buffer need to restore!" message seen there seems harmless).
-> > 
-> > Thanks again, and best wishes,
-> > 	Dominik
-> > 
-> 
-> Was commenting the "i915 was broken for quite some time on this system[*],
-> prohibiting boot...". Unless I misunderstood you, this ain't a DSP driver
-> issue but HDAudio/iDisp one. Essentially, these are two issues you mentioned
-> here.
+On Tue, Mar 17, 2020 at 9:32 AM Adrian Reber <areber@redhat.com> wrote:
+>
+> This is an attempt to add time namespace support to clone3(). I am not
+> really sure which way clone3() should handle time namespaces. The time
+> namespace through /proc cannot be used with clone3() because the offsets
+> for the time namespace need to be written before a process has been
+> created in that time namespace. This means it is necessary to somehow
+> tell clone3() the offsets for the clocks.
+>
+> The time namespace offers the possibility to set offsets for
+> CLOCK_MONOTONIC and CLOCK_BOOTTIME. My first approach was to extend
+> 'struct clone_args` with '__aligned_u64 monotonic_offset' and
+> '__aligned_u64 boottime_offset'. The problem with this approach was that
+> it was not possible to set nanoseconds for the clocks in the time
+> namespace.
+>
+> One of the motivations for clone3() with CLONE_NEWTIME was to enable
+> CRIU to restore a process in a time namespace with the corresponding
+> offsets. And although the nanosecond value can probably never be
+> restored to the same value it had during checkpointing, because the
+> clock keeps on running between CRIU pausing all processes and CRIU
+> actually reading the value of the clocks, the nanosecond value is still
+> necessary for CRIU to not restore a process where the clock jumps back
+> due to CRIU restoring it with a nanonsecond value that is too small.
+>
+> Requiring nanoseconds as well as seconds for two clocks during clone3()
+> means that it would require 4 additional members to 'struct clone_args':
+>
+>         __aligned_u64 tls;
+>         __aligned_u64 set_tid;
+>         __aligned_u64 set_tid_size;
+> +       __aligned_u64 boottime_offset_seconds;
+> +       __aligned_u64 boottime_offset_nanoseconds;
+> +       __aligned_u64 monotonic_offset_seconds;
+> +       __aligned_u64 monotonic_offset_nanoseconds;
+>  };
 
-Ah, sorry for the confusion. That issue was introduced post v5.5 as well,
-but fixed for v5.6-rc4 -- meaning that it works now, but that bisecting
-between v5.5 and v5.6-rc4 is not working as such.
+Wouldn't it be sufficient to have the two nanosecond values, rather
+than both seconds and nanoseconds? With 64-bit nanoseconds
+you can represent several hundred years, and these would
+always start at zero during boot.
 
-Thanks,
-	Dominik
+Regardless of this, I think you need a signed offset, not unsigned.
+
+          Arnd
