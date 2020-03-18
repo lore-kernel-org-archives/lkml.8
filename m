@@ -2,122 +2,128 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FF2C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B227C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C452076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584568655;
-	bh=xXmYhg130tNFTzMawHzwg46uGEn9yybotJE4N4htz1w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=WO/FbwTJ2P0IqX5p3TPyI844P3sLPwVP7Uq19K4Zd0bm35avK+u/BA+QMz6Mgtgcl
-	 ho9wtdvmXGh8PlRV88i439MOKypHpDNdIrQxF7k4Sur8KFutb9CCrV7mATwYAcX6vB
-	 NNMcye1jlWwWaFYY679nGyQjYKhx2vRcLMWrcXEE=
+	by mail.kernel.org (Postfix) with ESMTP id 5090420752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:00:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727261AbgCRV5e (ORCPT
+        id S1727134AbgCRWAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:57:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:55482 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726776AbgCRV5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:57:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0087330E;
-        Wed, 18 Mar 2020 14:57:33 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76D9C3F52E;
-        Wed, 18 Mar 2020 14:57:32 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 21:57:31 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: driver.h: fix regulator_map_* function names" to the regulator tree
-In-Reply-To:  <b9f5687bcf981a88c9d1fd04d759a540fda53a99.1584456635.git.mchehab+huawei@kernel.org>
-Message-Id:  <applied-b9f5687bcf981a88c9d1fd04d759a540fda53a99.1584456635.git.mchehab+huawei@kernel.org>
-X-Patchwork-Hint: ignore
+        Wed, 18 Mar 2020 18:00:20 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:58991 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCRWAT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 18:00:19 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jEgjP-0002kT-P7; Wed, 18 Mar 2020 23:00:09 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8769E1C228C;
+        Wed, 18 Mar 2020 22:59:59 +0100 (CET)
+Date:   Wed, 18 Mar 2020 21:59:59 -0000
+From:   "tip-bot2 for Jesse Brandeburg" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86: Fix bitops.h warning with a moved cast
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200310221747.2848474-1-jesse.brandeburg@intel.com>
+References: <20200310221747.2848474-1-jesse.brandeburg@intel.com>
+MIME-Version: 1.0
+Message-ID: <158456879920.28353.9358875954563849711.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+The following commit has been merged into the x86/asm branch of tip:
 
-   regulator: driver.h: fix regulator_map_* function names
+Commit-ID:     1651e700664b4597ddf4f8adfe435252a0d11277
+Gitweb:        https://git.kernel.org/tip/1651e700664b4597ddf4f8adfe435252a0d11277
+Author:        Jesse Brandeburg <jesse.brandeburg@intel.com>
+AuthorDate:    Tue, 10 Mar 2020 15:17:46 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 18 Mar 2020 12:30:19 +01:00
 
-has been applied to the regulator tree at
+x86: Fix bitops.h warning with a moved cast
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+Fix many sparse warnings when building with C=1. These are useless noise
+from the bitops.h file and getting rid of them helps developers make
+more use of the tools and possibly find real bugs.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+When the kernel is compiled with C=1, there are lots of messages like:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+  arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f becomes 7f)
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+CONST_MASK() is using a signed integer "1" to create the mask which is
+later cast to (u8), in order to yield an 8-bit value for the assembly
+instructions to use. Simplify the expressions used to clearly indicate
+they are working on 8-bit values only, which still keeps sparse happy
+without an accidental promotion to a 32 bit integer.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+The warning was occurring because certain bitmasks that end with a bit
+set next to a natural boundary like 7, 15, 23, 31, end up with a mask
+like 0x7f, which then results in sign extension due to the integer type
+promotion rules[1]. It was really only clear_bit() that was having
+problems, and it was only on some bit checks that resulted in a mask
+like 0xffffff7f being generated after the inversion.
 
-Thanks,
-Mark
+Verify with a test module (see next patch) and assembly inspection that
+the fix doesn't introduce any change in generated code.
 
-From bd3ebed9304acd2ccddde44675fedf963dbfdc71 Mon Sep 17 00:00:00 2001
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Date: Tue, 17 Mar 2020 15:54:26 +0100
-Subject: [PATCH] regulator: driver.h: fix regulator_map_* function names
+ [ bp: Massage. ]
 
-The toolchain produces a warning on this driver when building
-the docs:
-
-	./include/linux/regulator/driver.h:284: WARNING: Unknown target name: "regulator_regmap_x_voltage".
-
-While fixing it, we notices that there's no function names
-with the above pattern. It seems that some previous patch
-renamed it to regulator_map_* instead.
-
-So, change the function name, replacing "x" by "*", with is
-a more used way to add a wildcard, and escape those with
-``literal`` markup, in order to avoid the toolchain to think
-that this is a link to some existing document chapter.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Link: https://lore.kernel.org/r/b9f5687bcf981a88c9d1fd04d759a540fda53a99.1584456635.git.mchehab+huawei@kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+Acked-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://stackoverflow.com/questions/46073295/implicit-type-promotion-rules [1]
+Link: https://lkml.kernel.org/r/20200310221747.2848474-1-jesse.brandeburg@intel.com
 ---
- include/linux/regulator/driver.h | 4 ++--
+ arch/x86/include/asm/bitops.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-index 9a911bb5fb61..29d920516e0b 100644
---- a/include/linux/regulator/driver.h
-+++ b/include/linux/regulator/driver.h
-@@ -277,9 +277,9 @@ enum regulator_type {
-  * @curr_table: Current limit mapping table (if table based mapping)
-  *
-  * @vsel_range_reg: Register for range selector when using pickable ranges
-- *		    and regulator_regmap_X_voltage_X_pickable functions.
-+ *		    and ``regulator_map_*_voltage_*_pickable`` functions.
-  * @vsel_range_mask: Mask for register bitfield used for range selector
-- * @vsel_reg: Register for selector when using regulator_regmap_X_voltage_
-+ * @vsel_reg: Register for selector when using ``regulator_map_*_voltage_*``
-  * @vsel_mask: Mask for register bitfield used for selector
-  * @vsel_step: Specify the resolution of selector stepping when setting
-  *	       voltage. If 0, then no stepping is done (requested selector is
--- 
-2.20.1
-
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index 062cdec..53f246e 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
+ 	if (__builtin_constant_p(nr)) {
+ 		asm volatile(LOCK_PREFIX "orb %1,%0"
+ 			: CONST_MASK_ADDR(nr, addr)
+-			: "iq" ((u8)CONST_MASK(nr))
++			: "iq" (CONST_MASK(nr) & 0xff)
+ 			: "memory");
+ 	} else {
+ 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
+@@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
+ 	if (__builtin_constant_p(nr)) {
+ 		asm volatile(LOCK_PREFIX "andb %1,%0"
+ 			: CONST_MASK_ADDR(nr, addr)
+-			: "iq" ((u8)~CONST_MASK(nr)));
++			: "iq" (CONST_MASK(nr) ^ 0xff));
+ 	} else {
+ 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
+ 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
