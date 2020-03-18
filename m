@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF8BC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC45C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A882166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89367208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565102;
-	bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
+	s=default; t=1584565107;
+	bh=XzLnamPGAVWNo71FOyVtfuxzgn2GqCeijCwLwzNzh+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QKyx9TTd6BwsNsFYfFXZyym5V6eW+sq8nDu6AjJ7uatIEdx+GFcVuPW9y8UPuovX7
-	 e26uY/EQuqC1WBGx+qXdmArn6EX02S74BDONnOgHVTCxsFa0BtoKP3MAcJi9woj+pc
-	 0jBy838cy4S5fStH3/YPyOW0l/PB8hK2mV3/VGD4=
+	b=M5sM6uvwQXDwXaep6cQzGqU2M2jCCcSv/MEn+lbdNGe5fISvw/Wi5R/yNvBv26DTU
+	 mknAUTmBVLZGB93FkR57zbuAlWjlEPdgaGefBShPOndlXAJlpqnDD5NDzeuZxgFl5g
+	 2eBIfeNAmfF8lXcZBUuVewGPM7IFjFlwjwl7ClSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbgCRU5P (ORCPT
+        id S1728775AbgCRU5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:57:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57654 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:57:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727990AbgCRU4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:34 -0400
+        id S1727975AbgCRU4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EA0120A8B;
-        Wed, 18 Mar 2020 20:56:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D958C20BED;
+        Wed, 18 Mar 2020 20:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564993;
-        bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
+        s=default; t=1584564992;
+        bh=XzLnamPGAVWNo71FOyVtfuxzgn2GqCeijCwLwzNzh+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T3RBPz+ID1umAXgzfJ6OG960u2jYixGKR8yxfYWZ7LE/cvoqNbLT4gRoegbAjg8iR
-         GSzROn6Y5G7pWXypkW7RTe32v1f6kyCwXN1Jnb7ZBRnd/7hQbJOyxvMhNBSE4rNhYq
-         X/Qp4utsh0vFHR1GmJPURvstS/0RSDFHXMwlCU3w=
+        b=c3fu4bWVP6NsREdu+m1zjQrmWxoiqzBmAG14JJvr23h50urScQpKWxJXvHsUzSnvk
+         iJG5TrBK44bTxwkC8+a2Oq+5nWgXvop9JkckLOW91tVFB+IFjNg43qVQp8flq5Rja6
+         zLdBdW4+1hkuUceAPAxZDuMNMZkknR+qm8yyGayM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Gilbert <floppym@gentoo.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/15] cpupower: avoid multiple definition with gcc -fno-common
-Date:   Wed, 18 Mar 2020 16:56:17 -0400
-Message-Id: <20200318205629.17750-3-sashal@kernel.org>
+Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 02/15] bnxt_en: reinitialize IRQs when MTU is modified
+Date:   Wed, 18 Mar 2020 16:56:16 -0400
+Message-Id: <20200318205629.17750-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205629.17750-1-sashal@kernel.org>
 References: <20200318205629.17750-1-sashal@kernel.org>
@@ -59,88 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Gilbert <floppym@gentoo.org>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 2de7fb60a4740135e03cf55c1982e393ccb87b6b ]
+[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
 
-Building cpupower with -fno-common in CFLAGS results in errors due to
-multiple definitions of the 'cpu_count' and 'start_time' variables.
+MTU changes may affect the number of IRQs so we must call
+bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
+set to true.  The reason is that a larger MTU may require
+aggregation rings not needed with smaller MTU.  We may not be
+able to allocate the required number of aggregation rings and
+so we reduce the number of channels which will change the number
+of IRQs.  Without this patch, it may crash eventually in
+pci_disable_msix() when the IRQs are not properly unwound.
 
-./utils/idle_monitor/snb_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-multiple definition of `cpu_count';
-./utils/idle_monitor/nhm_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-first defined here
-...
-./utils/idle_monitor/cpuidle_sysfs.o:./utils/idle_monitor/cpuidle_sysfs.c:22:
-multiple definition of `start_time';
-./utils/idle_monitor/amd_fam14h_idle.o:./utils/idle_monitor/amd_fam14h_idle.c:85:
-first defined here
-
-The -fno-common option will be enabled by default in GCC 10.
-
-Bug: https://bugs.gentoo.org/707462
-Signed-off-by: Mike Gilbert <floppym@gentoo.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
- 4 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-index 2116df9ad8325..c097a3748674f 100644
---- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-@@ -83,7 +83,7 @@ static struct pci_access *pci_acc;
- static struct pci_dev *amd_fam14h_pci_dev;
- static int nbp1_entered;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index fbe3c2c114f93..736e550163e10 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -6439,13 +6439,13 @@ static int bnxt_change_mtu(struct net_device *dev, int new_mtu)
+ 		return -EINVAL;
  
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
+ 	if (netif_running(dev))
+-		bnxt_close_nic(bp, false, false);
++		bnxt_close_nic(bp, true, false);
  
- #ifdef DEBUG
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-index 5b3205f162174..5277df27191f3 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-@@ -21,7 +21,7 @@ struct cpuidle_monitor cpuidle_sysfs_monitor;
+ 	dev->mtu = new_mtu;
+ 	bnxt_set_ring_params(bp);
  
- static unsigned long long **previous_count;
- static unsigned long long **current_count;
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
+ 	if (netif_running(dev))
+-		return bnxt_open_nic(bp, false, false);
++		return bnxt_open_nic(bp, true, false);
  
- static int cpuidle_get_count_percent(unsigned int id, double *percent,
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-index 05f953f0f0a0c..80a21cb67d94f 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-@@ -29,6 +29,8 @@ struct cpuidle_monitor *all_monitors[] = {
- 0
- };
- 
-+int cpu_count;
-+
- static struct cpuidle_monitor *monitors[MONITORS_MAX];
- static unsigned int avail_monitors;
- 
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-index 9e43f3371fbc6..3558bbae2b5dc 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-@@ -18,7 +18,7 @@
- #define CSTATE_NAME_LEN 5
- #define CSTATE_DESC_LEN 60
- 
--int cpu_count;
-+extern int cpu_count;
- 
- /* Hard to define the right names ...: */
- enum power_range_e {
+ 	return 0;
+ }
 -- 
 2.20.1
 
