@@ -2,138 +2,137 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4945C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EA5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8011F20719
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E0520719
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JBORuCyp"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Vnjc0av1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgCRRjt (ORCPT
+        id S1726738AbgCRRlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:39:49 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39026 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgCRRjt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:39:49 -0400
-Received: by mail-oi1-f195.google.com with SMTP id d63so26646863oig.6
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kHYLZgvsf1hWg7wss08IWO7NiACgg0ycsHnQwwOGC/o=;
-        b=JBORuCypw8sBksHmM30bDIzjuQ7RWsVH6HMT8e5ZaAVU7E8G6gkLWQXlEXXe77DKFQ
-         MEA/XkeQop3sDtmPEZQHtrMj94AdEeN8yd8hg/I1C9cRQ6xjEE8qLKRT47rl3r+tzT40
-         6BsMYAkcZL536h8DRosc6/sOuEC/CAYbvmnqVZon/PlG100ssTNQ+6FH/8RzYwLGTpqu
-         rYSGNJL2N+7JGsIO7iIdNQIE8oK+Ss3njal+LQtaT1wlGTgK5+rBFdPMv9J8LObp45tO
-         tW5A2oDc//SHWgrjawQAy0iImOIi+JvH9jJRtWWByCfhxeehscEF31ycY5u8kMsPUM6o
-         FIZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kHYLZgvsf1hWg7wss08IWO7NiACgg0ycsHnQwwOGC/o=;
-        b=Pn44vQZl9UzkWZ4Kw1+0gvgIOPqPEJ3ENuJRRMJy4p0LWG/P7GJtwCkKMp0LL3Nxz4
-         nApIWM6gz/OCUXolPD5mqLwJre/78FNH/eQv4Ki6oUFonDMHSs/Ev/bImSK5Wj+vZZ90
-         Xb7646X88uRoSlU3mnSEcydvW0wgQEadfK2hRH6O9g3ixP16OACbkCXz9GnZuS8nvFfQ
-         Rdo4g7XWt16aS0XAU2qbga7RZnLw30FtOLft+ybeKXHyHQrUtAHNKUSvAYTfiqMW8D+P
-         T/wGjzAdJGOJCiH7QQEyfJivjbc2isXePS90zbdoiydhIo6ev0W0Pyo1z5rwG9h33hUV
-         YzvQ==
-X-Gm-Message-State: ANhLgQ2dExFNicGvbpiRsHq1h0mvcns338QdIM8h2J66rqubV6hjCobl
-        KXqQALQnyGDcKfCa2x9JVLQ7aiwiWoPK9A4u64HkPQ==
-X-Google-Smtp-Source: ADFU+vv61FyRVYmaA9PTdDt51tbofJ336O0XLQe2BKgEmzbR6+s801/WV/yc2hI80eFyXV6kWzP+gw13nONTF6vPPUI=
-X-Received: by 2002:a05:6808:495:: with SMTP id z21mr4194137oid.149.1584553188875;
- Wed, 18 Mar 2020 10:39:48 -0700 (PDT)
+        Wed, 18 Mar 2020 13:41:11 -0400
+Received: from mout.gmx.net ([212.227.15.18]:45143 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbgCRRlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 13:41:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1584553260;
+        bh=vCgXZ2I+Xf8X2pR7gWvHEO+dE4EhgtLquAj/ck7xEj8=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=Vnjc0av1x3dyOYUm1G/PujvpeZYIxuWq5g0K5EM1+bvDSRx97FEIyTPrlb0kwY3JO
+         cyOwYS2kLNsdSTPnvvj0Ldm1s/Ax7tK7PnGiHOtTLL4ySA+d0Cfcb1U1wlkL7zYPCI
+         oPqk0mkwTKn7k8JqhaVhg9Sp1qVCL9F9a7x+hb2A=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MgNh7-1jmYSq3rBv-00hyB0; Wed, 18 Mar 2020 18:41:00 +0100
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: vt6656: Use ARRAY_SIZE instead of hardcoded size
+Date:   Wed, 18 Mar 2020 18:40:15 +0100
+Message-Id: <20200318174015.7515-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158318760361.2216124.13612198312947463590.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAPcyv4hjgNruY84Kr9S5HZ6P03fNcPcmL7H2DN19Z+CbPZ7d+Q@mail.gmail.com> <CAJZ5v0heWeS1iZqHEZ5RB2a=UJbUQF0zAjeFfTa9qBxvQ193=w@mail.gmail.com>
-In-Reply-To: <CAJZ5v0heWeS1iZqHEZ5RB2a=UJbUQF0zAjeFfTa9qBxvQ193=w@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 18 Mar 2020 10:39:37 -0700
-Message-ID: <CAPcyv4hH55e-tm7erJGm_jVn4gWigQfVPSAUu-DBC4XkF+WZHg@mail.gmail.com>
-Subject: Re: [PATCH 1/5] ACPI: NUMA: Add 'nohmat' option
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:3Kz+2ZK4OkT6fKoYDfLfppenzBOKnJHXnSZKnWuc2wQdKuuSwgZ
+ LC7YodICd25iZrsFRfAefnR1nwcvgWMJRL83EWkr2AlFfxdcBUpBmw8z5LGAuKbTBxEekPu
+ cuhwcore9TN9yZRzgKZ7KtzQZUw4u+RoQT3ufB5V4eLBa4yNXTAocMGTRtXWWfDV9oVqZzK
+ A/6CatuXREpwgHSSz1LDA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:h0lERaXlW6w=:LJHAJpG0QQhm7qQW5MIU2W
+ vQ+W+2gzCPTT5SB/X/gU88eOYBHO07m1KgH8hhpaIcBe08pYO7dRN6QZ5Hobu/RCR5GYZ01zR
+ P6Tt6eY3CWToJgq1vZBKeHMHKVW1IRxUmKWkSTu1YHPZJ7HCilW7NJqEjSlfZds53dCHy38I1
+ Ne9myH0rDQY/1FI/JPnlEIemlkIHYmzwxRhyhBWsevC/5f7YuilKg9DEq9su1JaRyzYPgUE0u
+ zgHIW44TsadL3lkaFmcPgKhB32soxBDy7yXlsFiQfFC5PDxSsbCMwBy3FsbfVrTnsXweJO8tx
+ BqlBfyssM5r3KUjfOTr9cNQ7EXwJueeRMY1DDCef7yeGV714dYtZ3Shr7S820t/ck6QHyRgZ4
+ l9QAum7kjtV+PAuyH4/FQgPvwys2Fl53hkTfa9CESDTSUp1eqP6MEuuZMCbNvGLHOBlgZBxUu
+ hZZlXa39A1B+hARBRxpdq9Hpi9Vkw6Xwkg+V7L2qmRnw7EOZkUUN4AxVMLoOZOJX8e8Bh1xph
+ i9UXQYAGM0SNjZTgsqtWKA8vS1v+vXXAS0FyrYoySqQEBiGC4jg7GX0Gq1staQftKlaq65xUJ
+ sTbkhDI4sCVjqLpSzEf2+orp8+pIruLsGNqzFzW10FfEu/5MUDLKsTCiEGm/KkrkUFWIPidhE
+ ZW4z/+BuZGUxSEj13CziCEPo+Wc2kZD5jKQ/wv8WqArWQQwm7lAR+pfoVWhr9rGBdBRPdyDcL
+ gE5dM5f/F1jP93kjzy0nkR7NkQeOcYGf0D5bCOY81TsEPc/LehHZk4naBBT22Wq27xsJvcvtE
+ qBZp98MdjWZni8nL27ZUjhLFhk1TkeE4z/guwCT72ZG6GB0vLF8RvCJqLQyUYyGHSdTYX7Xck
+ XbfdDwHyclf/mQ/6RbQsU/nLGFKWqeERX+oLJjoVj8afThI2IQpe3P6KjbeiFyh+/vtULz9Xc
+ nEq/yAEretjrWwbR+dQf67pyKt/3vBjPJfoKCf+uIke5oRJiNcsDfKonGD7ljD5P+gyPG0dgf
+ vk/7iOVxtQ0SFMfm/va+3yaaDiCzeuo/T8lpFf1Lqhpp3dCtGrtClt6sthR7g+/JqOUaKj52C
+ XRpSKGnmDzGSVdczoroMl59+HLwAqj6FVgNlZaHyEwdJehnAPNZXpeG7ug8OofRoT/XTKcR3N
+ SwourUVrIriE3hOPWuGfszqhl3KlzYykplK9UDG0VvAvQuSJsyT9NCOmW6NgUmiOduWI8zN1P
+ HKfrbqiKZsYejCKP0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 1:24 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Wed, Mar 18, 2020 at 1:09 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Mon, Mar 2, 2020 at 2:36 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > Disable parsing of the HMAT for debug, to workaround broken platform
-> > > instances, or cases where it is otherwise not wanted.
-> >
-> > Rafael, any heartburn with this change to the numa= option?
-> >
-> > ...as I look at this I realize I failed to also update
-> > Documentation/x86/x86_64/boot-options.rst, will fix.
->
-> Thanks!
->
-> Apart from this just a minor nit below.
->
-> > >
-> > > Cc: x86@kernel.org
-> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > > Cc: Andy Lutomirski <luto@kernel.org>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > Cc: Borislav Petkov <bp@alien8.de>
-> > > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > > ---
-> > >  arch/x86/mm/numa.c       |    4 ++++
-> > >  drivers/acpi/numa/hmat.c |    3 ++-
-> > >  include/acpi/acpi_numa.h |    1 +
-> > >  3 files changed, 7 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> > > index 59ba008504dc..22de2e2610c1 100644
-> > > --- a/arch/x86/mm/numa.c
-> > > +++ b/arch/x86/mm/numa.c
-> > > @@ -44,6 +44,10 @@ static __init int numa_setup(char *opt)
-> > >  #ifdef CONFIG_ACPI_NUMA
-> > >         if (!strncmp(opt, "noacpi", 6))
-> > >                 acpi_numa = -1;
-> > > +#ifdef CONFIG_ACPI_HMAT
-> > > +       if (!strncmp(opt, "nohmat", 6))
-> > > +               hmat_disable = 1;
-> > > +#endif
->
-> I wonder if IS_ENABLED() would work here?
+Use ARRAY_SIZE to replace the hardcoded size so we will never have a
+mismatch.
 
-I took a look. hmat_disable, acpi_numa, and numa_emu_cmdline() are in
-other compilation units. I could wrap writing those variables with
-helper functions, and change numa_emu_cmdline(), to compile away when
-their respective configuration options are not present.
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+Changelog v1 -> v2
+- Use ARRAY_SIZE(priv->cck_pwr_tbl) everywhere instead of introducing a ne=
+w
+  variable to hold its value.
 
-Should we do that in general to have a touch point to report "you
-specified an option that is invalid for your current kernel
-configuration"? I'm happy to do that as a follow-on if you think it's
-worthwhile.
+ drivers/staging/vt6656/main_usb.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt6656/ma=
+in_usb.c
+index 5e48b3ddb94c..acfcc11c3b61 100644
+=2D-- a/drivers/staging/vt6656/main_usb.c
++++ b/drivers/staging/vt6656/main_usb.c
+@@ -23,6 +23,7 @@
+
+ #include <linux/etherdevice.h>
+ #include <linux/file.h>
++#include <linux/kernel.h>
+ #include "device.h"
+ #include "card.h"
+ #include "baseband.h"
+@@ -145,7 +146,7 @@ static int vnt_init_registers(struct vnt_private *priv=
+)
+
+ 	init_cmd->init_class =3D DEVICE_INIT_COLD;
+ 	init_cmd->exist_sw_net_addr =3D priv->exist_sw_net_addr;
+-	for (ii =3D 0; ii < 6; ii++)
++	for (ii =3D 0; ii < ARRAY_SIZE(init_cmd->sw_net_addr); ii++)
+ 		init_cmd->sw_net_addr[ii] =3D priv->current_net_addr[ii];
+ 	init_cmd->short_retry_limit =3D priv->short_retry_limit;
+ 	init_cmd->long_retry_limit =3D priv->long_retry_limit;
+@@ -184,7 +185,7 @@ static int vnt_init_registers(struct vnt_private *priv=
+)
+ 	priv->cck_pwr =3D priv->eeprom[EEP_OFS_PWR_CCK];
+ 	priv->ofdm_pwr_g =3D priv->eeprom[EEP_OFS_PWR_OFDMG];
+ 	/* load power table */
+-	for (ii =3D 0; ii < 14; ii++) {
++	for (ii =3D 0; ii < ARRAY_SIZE(priv->cck_pwr_tbl); ii++) {
+ 		priv->cck_pwr_tbl[ii] =3D
+ 			priv->eeprom[ii + EEP_OFS_CCK_PWR_TBL];
+ 		if (priv->cck_pwr_tbl[ii] =3D=3D 0)
+@@ -200,7 +201,7 @@ static int vnt_init_registers(struct vnt_private *priv=
+)
+ 	 * original zonetype is USA, but custom zonetype is Europe,
+ 	 * then need to recover 12, 13, 14 channels with 11 channel
+ 	 */
+-	for (ii =3D 11; ii < 14; ii++) {
++	for (ii =3D 11; ii < ARRAY_SIZE(priv->cck_pwr_tbl); ii++) {
+ 		priv->cck_pwr_tbl[ii] =3D priv->cck_pwr_tbl[10];
+ 		priv->ofdm_pwr_tbl[ii] =3D priv->ofdm_pwr_tbl[10];
+ 	}
+=2D-
+2.20.1
+
