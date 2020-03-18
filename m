@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0FAC4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B667C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8703920BED
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383FE21473
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565008;
-	bh=faaKf92XZb8ha1JViaiR2qkoV81/eV3bknNLU+VdQkk=;
+	s=default; t=1584565014;
+	bh=BEppHJSF0Q3dBGNXBQdv4LxwkkElFKHdTM/3CINeEuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hg9g4lJeH9uNH/HxTymWQ+zZdEdqH9FC1DrzmMhxq0IZVjN5ioYNLCgGWHNxC2Jnj
-	 lorkiSxFw+DNuz4AJwjmGOzjIV9q7vSXkS7Sr0ypyqM2d1/rWTvN0++c8RF+QoNd0g
-	 K0PMElaDxP3R7XY21DwyDz9m3Ab49B1V85iV+Y30=
+	b=O0S3vXYchC3WzR0VVLIT4FTvkXiibbAUeR55S/ot/ee+PgnJB1Z/obdn+oHqauHwu
+	 zJ/RnQKR9n5JuQbfuC1SOPGhwu2P0rEnuBm9DYGuLh4JuEqbcMHiYewUo6DsWa4MSC
+	 R9QXFYmZg6g8t4rDq1QqDySGfklqWfkPm4jvCuj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgCRU4r (ORCPT
+        id S1728714AbgCRU4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:56:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57000 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:56:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728541AbgCRU4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:10 -0400
+        id S1728560AbgCRU4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20FFD208CA;
-        Wed, 18 Mar 2020 20:56:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E682B208E4;
+        Wed, 18 Mar 2020 20:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564969;
-        bh=faaKf92XZb8ha1JViaiR2qkoV81/eV3bknNLU+VdQkk=;
+        s=default; t=1584564974;
+        bh=BEppHJSF0Q3dBGNXBQdv4LxwkkElFKHdTM/3CINeEuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VNctNMRrjg+SJKxCCy/0vYKoOQKEhNLPU9TgYZ/WEb4JQXrGiIl1iz/Z4i3FkevyB
-         wIUbnxR6/Do9GOjEy7r0r5p13LWHf2vyTKb8f5ZMsz7LDH5FKT/u2jemOOYJinu79F
-         CxtQzOk6x3LaBmv9FHDgAk74XAoJ23zbwmpKp/A8=
+        b=JAhG2WE7QPgbCPCmC7Nk7orbcE19Eg6e5+t8jYEFmiDQ6PvhY4XNEXlV4WQ8Ttcme
+         dEKPvavz3L7wNMM6jrnuvNllWtEC937E1OvY9Q7b4+ofS0FX+crKDnu6tLIhXdGtav
+         s27cSkCWAwLrPSAc67MfF9Dq3mglfO9aKdsgfQZg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/28] team: add missing attribute validation for array index
-Date:   Wed, 18 Mar 2020 16:55:39 -0400
-Message-Id: <20200318205555.17447-12-sashal@kernel.org>
+Cc:     Tycho Andersen <tycho@tycho.ws>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 16/28] cgroup1: don't call release_agent when it is ""
+Date:   Wed, 18 Mar 2020 16:55:43 -0400
+Message-Id: <20200318205555.17447-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
 References: <20200318205555.17447-1-sashal@kernel.org>
@@ -59,34 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Tycho Andersen <tycho@tycho.ws>
 
-[ Upstream commit 669fcd7795900cd1880237cbbb57a7db66cb9ac8 ]
+[ Upstream commit 2e5383d7904e60529136727e49629a82058a5607 ]
 
-Add missing attribute validation for TEAM_ATTR_OPTION_ARRAY_INDEX
-to the netlink policy.
+Older (and maybe current) versions of systemd set release_agent to "" when
+shutting down, but do not set notify_on_release to 0.
 
-Fixes: b13033262d24 ("team: introduce array options")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Since 64e90a8acb85 ("Introduce STATIC_USERMODEHELPER to mediate
+call_usermodehelper()"), we filter out such calls when the user mode helper
+path is "". However, when used in conjunction with an actual (i.e. non "")
+STATIC_USERMODEHELPER, the path is never "", so the real usermode helper
+will be called with argv[0] == "".
+
+Let's avoid this by not invoking the release_agent when it is "".
+
+Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/team/team.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/cgroup/cgroup-v1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
-index 01c51a1526ef1..3dba58fa34339 100644
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -2208,6 +2208,7 @@ team_nl_option_policy[TEAM_ATTR_OPTION_MAX + 1] = {
- 	[TEAM_ATTR_OPTION_TYPE]			= { .type = NLA_U8 },
- 	[TEAM_ATTR_OPTION_DATA]			= { .type = NLA_BINARY },
- 	[TEAM_ATTR_OPTION_PORT_IFINDEX]		= { .type = NLA_U32 },
-+	[TEAM_ATTR_OPTION_ARRAY_INDEX]		= { .type = NLA_U32 },
- };
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index d148965180893..545f29c5268d7 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -824,7 +824,7 @@ void cgroup1_release_agent(struct work_struct *work)
  
- static int team_nl_cmd_noop(struct sk_buff *skb, struct genl_info *info)
+ 	pathbuf = kmalloc(PATH_MAX, GFP_KERNEL);
+ 	agentbuf = kstrdup(cgrp->root->release_agent_path, GFP_KERNEL);
+-	if (!pathbuf || !agentbuf)
++	if (!pathbuf || !agentbuf || !strlen(agentbuf))
+ 		goto out;
+ 
+ 	spin_lock_irq(&css_set_lock);
 -- 
 2.20.1
 
