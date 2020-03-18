@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC45C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B41C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89367208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B57208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565107;
-	bh=XzLnamPGAVWNo71FOyVtfuxzgn2GqCeijCwLwzNzh+E=;
+	s=default; t=1584565109;
+	bh=iP6hm0yJs4kTV55tX+X3sI1qz2HYvoMDlmAoaQ1U2jU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M5sM6uvwQXDwXaep6cQzGqU2M2jCCcSv/MEn+lbdNGe5fISvw/Wi5R/yNvBv26DTU
-	 mknAUTmBVLZGB93FkR57zbuAlWjlEPdgaGefBShPOndlXAJlpqnDD5NDzeuZxgFl5g
-	 2eBIfeNAmfF8lXcZBUuVewGPM7IFjFlwjwl7ClSY=
+	b=i+VdgeEQi7q/NnAyTVMrMZcez9w/DP5qetCsEZX+P1dIahkC/LW5ZD4kNpoM+E8Fu
+	 M0b3Ujrb1VecOUJMM3isEBpRFtWHZlaGbl85DhwMJKAY9gKEwCOY3iO9Lbof2+qWcN
+	 5lqqzGj6RtrMqxJQ2KLZzCjAf0/m0IpDGcDgsT2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgCRU5I (ORCPT
+        id S1728765AbgCRU5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:57:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57612 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:57:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727975AbgCRU4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:33 -0400
+        id S1728615AbgCRU42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D958C20BED;
-        Wed, 18 Mar 2020 20:56:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84816216FD;
+        Wed, 18 Mar 2020 20:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564992;
-        bh=XzLnamPGAVWNo71FOyVtfuxzgn2GqCeijCwLwzNzh+E=;
+        s=default; t=1584564988;
+        bh=iP6hm0yJs4kTV55tX+X3sI1qz2HYvoMDlmAoaQ1U2jU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c3fu4bWVP6NsREdu+m1zjQrmWxoiqzBmAG14JJvr23h50urScQpKWxJXvHsUzSnvk
-         iJG5TrBK44bTxwkC8+a2Oq+5nWgXvop9JkckLOW91tVFB+IFjNg43qVQp8flq5Rja6
-         zLdBdW4+1hkuUceAPAxZDuMNMZkknR+qm8yyGayM=
+        b=i5VSuvEDppu6ROtfr8x3mjSk2SOn7d2ERr3LUNsI/e15RL0s3UaCrPLoFx9l8wsCG
+         HjED867KgZlKTnIjqKQMNEcVje4QqDn+dkp/8HkWF29ENM/IxX8tu2f6m5qN9xmWFe
+         UdaumsJesvkbUrOs7B98P+MBYqT5FEbSuoqg9ouw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/15] bnxt_en: reinitialize IRQs when MTU is modified
-Date:   Wed, 18 Mar 2020 16:56:16 -0400
-Message-Id: <20200318205629.17750-2-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.14 28/28] iommu/vt-d: Fix the wrong printing in RHSA parsing
+Date:   Wed, 18 Mar 2020 16:55:55 -0400
+Message-Id: <20200318205555.17447-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205629.17750-1-sashal@kernel.org>
-References: <20200318205629.17750-1-sashal@kernel.org>
+In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
+References: <20200318205555.17447-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,48 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
+[ Upstream commit b0bb0c22c4db623f2e7b1a471596fbf1c22c6dc5 ]
 
-MTU changes may affect the number of IRQs so we must call
-bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
-set to true.  The reason is that a larger MTU may require
-aggregation rings not needed with smaller MTU.  We may not be
-able to allocate the required number of aggregation rings and
-so we reduce the number of channels which will change the number
-of IRQs.  Without this patch, it may crash eventually in
-pci_disable_msix() when the IRQs are not properly unwound.
+When base address in RHSA structure doesn't match base address in
+each DRHD structure, the base address in last DRHD is printed out.
 
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This doesn't make sense when there are multiple DRHD units, fix it
+by printing the buggy RHSA's base address.
+
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Fixes: fd0c8894893cb ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/dmar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index fbe3c2c114f93..736e550163e10 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -6439,13 +6439,13 @@ static int bnxt_change_mtu(struct net_device *dev, int new_mtu)
- 		return -EINVAL;
- 
- 	if (netif_running(dev))
--		bnxt_close_nic(bp, false, false);
-+		bnxt_close_nic(bp, true, false);
- 
- 	dev->mtu = new_mtu;
- 	bnxt_set_ring_params(bp);
- 
- 	if (netif_running(dev))
--		return bnxt_open_nic(bp, false, false);
-+		return bnxt_open_nic(bp, true, false);
- 
- 	return 0;
- }
+diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+index 38d0128b8135d..fe849eff5cc10 100644
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -486,7 +486,7 @@ static int dmar_parse_one_rhsa(struct acpi_dmar_header *header, void *arg)
+ 		1, TAINT_FIRMWARE_WORKAROUND,
+ 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
+ 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+-		drhd->reg_base_addr,
++		rhsa->base_address,
+ 		dmi_get_system_info(DMI_BIOS_VENDOR),
+ 		dmi_get_system_info(DMI_BIOS_VERSION),
+ 		dmi_get_system_info(DMI_PRODUCT_VERSION));
 -- 
 2.20.1
 
