@@ -2,93 +2,175 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9BEC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16991C5ACD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A022071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E24072077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:10:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ozhfUHCH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgCRRJu (ORCPT
+        id S1727024AbgCRRKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:09:50 -0400
-Received: from mga17.intel.com ([192.55.52.151]:47863 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbgCRRJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:09:49 -0400
-IronPort-SDR: h02GEKXhz7PnlkLtprUzH4Ctpq4WyGcObZ5l69rwBWGi/5KYHA6/IIbxnJKo3aVZShYaXe98wq
- a3tOHPu7/rIg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 10:09:49 -0700
-IronPort-SDR: UVcgZx6Mh8VNXsKxOuwCi7v3mwayVYbsmLU3IHNTNFqkVJpQk7Ldt6TG8oRRTCzl3hv9h3ql7l
- 4XZTmsueq5mw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
-   d="scan'208";a="418019279"
-Received: from nali1-mobl3.amr.corp.intel.com (HELO [10.255.33.194]) ([10.255.33.194])
-  by orsmga005.jf.intel.com with ESMTP; 18 Mar 2020 10:09:47 -0700
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     cezary.rojewski@intel.com, alsa-devel@alsa-project.org,
-        curtis@malainey.com, Keyon Jie <yang.jie@linux.intel.com>,
-        tiwai@suse.com, linux-kernel@vger.kernel.org,
-        liam.r.girdwood@linux.intel.com, broonie@kernel.org
-References: <20200318063022.GA116342@light.dominikbrodowski.net>
- <41d0b2b5-6014-6fab-b6a2-7a7dbc4fe020@linux.intel.com>
- <20200318123930.GA2433@light.dominikbrodowski.net>
- <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
- <20200318162029.GA3999@light.dominikbrodowski.net>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <d974b46b-2899-03c2-0e98-88237f23f1e2@linux.intel.com>
-Date:   Wed, 18 Mar 2020 12:08:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200318162029.GA3999@light.dominikbrodowski.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 18 Mar 2020 13:10:18 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36228 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbgCRRKS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 13:10:18 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g2so8947698plo.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:10:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=5yGwpkpoYCkSquYVMeNxifwEPM4Bj0EGc5XBk9JmOnY=;
+        b=ozhfUHCHlEf6euXtb3Jfivrf6Bwe0s46ELrjWpUnUtwxM+h4cWvJyGuMlLbyn8MZJd
+         WgDPZzUU3LmcVpvf3aPcipNYySomfF6tgvOcD2KZlukUpLEjLHwS8SttdnNte2HKvhd5
+         f+BULZfA/fum0Dwde4TB1Cp+PEpwYJsjgUga0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5yGwpkpoYCkSquYVMeNxifwEPM4Bj0EGc5XBk9JmOnY=;
+        b=i+Irwsz2YOb8UtNWx/74/iqwk8jomgmuEM/5onGct9XkEg+R4moj4txOBBWTanAdjk
+         zu5DqkgNR8zai3bMWiQtgHOSO/1d0Ww/IOgLGYA51N9qNxwngUJvQU9FOMFu9zV8rahA
+         VHtWxQglqbHERCogK6MhMD0bZrl87Ts9ScvgSTGKuSCgvQoxJdDE7hkhfsK1EtCwem9K
+         2DDS6t0F4VOt2dSAojn9g/5RBSnM45jNLRDB5x5pEzWavY848Sfpao+1o1cllJKwf/B7
+         98PvLAX/9sM+ceomr5ajyRMBLhUxHnyuWhAeQ/NXaHpTLhVfi4gJaIiMrh2SDb2Q5bt5
+         PXmg==
+X-Gm-Message-State: ANhLgQ1OVEXVaq3WOiAWMTRh2pqWXyWJlMdYx3Yx8dh3m5+MNZGH2ZZ6
+        qRBlBw4C+hCsft4bbsgAk6AsAg==
+X-Google-Smtp-Source: ADFU+vs3pSg26MKGy0NO8bdDWzIPM310TMVJ0NBjABdW+8L95EeeR/4QVc5b3LfZCCwn0EU2UMO0lA==
+X-Received: by 2002:a17:902:9f87:: with SMTP id g7mr4757669plq.32.1584551415991;
+        Wed, 18 Mar 2020 10:10:15 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:1998:878c:c26e:b8be])
+        by smtp.gmail.com with ESMTPSA id e6sm6443869pgu.44.2020.03.18.10.10.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 10:10:15 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2 1/3] dt-bindings: display: panel: Convert feiyang,fy07024di26a30d to DT schema
+Date:   Wed, 18 Mar 2020 22:40:01 +0530
+Message-Id: <20200318171003.5179-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Convert the feiyang,fy07024di26a30d panel bindings to DT schema.
 
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v2:
+- fix dt_binding_check 
 
-On 3/18/20 11:20 AM, Dominik Brodowski wrote:
-> On Wed, Mar 18, 2020 at 10:13:54AM -0500, Pierre-Louis Bossart wrote:
->>
->>
->>>>> While 5.5.x works fine, mainline as of ac309e7744be (v5.6-rc6+) causes me
->>>>> some sound-related trouble: after boot, the sound works fine -- but once I
->>>>> suspend and resume my broadwell-based XPS13, I need to switch to headphone
->>>>> and back to speaker to hear something. But what I hear isn't music but
->>>>> garbled output.
->>
->> It's my understanding that the use of the haswell driver is opt-in for Dell
->> XPS13 9343. When we run the SOF driver on this device, we have to explicitly
->> bypass an ACPI quirk that forces HDAudio to be used:
->>
->> https://github.com/thesofproject/linux/commit/944b6a2d620a556424ed4195c8428485fcb6c2bd
->>
->> Have you tried to run in plain vanilla HDAudio mode?
-> 
-> I had (see 18d78b64fddc), but not any more in years (and I'd like to keep
-> using I2S, which has worked flawlessly in these years).
+ .../display/panel/feiyang,fy07024di26a30d.txt | 20 -------
+ .../panel/feiyang,fy07024di26a30d.yaml        | 57 +++++++++++++++++++
+ 2 files changed, 57 insertions(+), 20 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
 
-ok. I don't think Intel folks have this device available, or it's used 
-for other things, but if you want to bisect on you may want to use [1] 
-to solve DRM issues. I used it to make Broadwell/Samus work again with SOF.
+diff --git a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+deleted file mode 100644
+index 82caa7b65ae8..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-Feiyang FY07024DI26A30-D 7" MIPI-DSI LCD Panel
+-
+-Required properties:
+-- compatible: must be "feiyang,fy07024di26a30d"
+-- reg: DSI virtual channel used by that screen
+-- avdd-supply: analog regulator dc1 switch
+-- dvdd-supply: 3v3 digital regulator
+-- reset-gpios: a GPIO phandle for the reset pin
+-
+-Optional properties:
+-- backlight: phandle for the backlight control.
+-
+-panel@0 {
+-	compatible = "feiyang,fy07024di26a30d";
+-	reg = <0>;
+-	avdd-supply = <&reg_dc1sw>;
+-	dvdd-supply = <&reg_dldo2>;
+-	reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
+-	backlight = <&backlight>;
+-};
+diff --git a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+new file mode 100644
+index 000000000000..f292c57a5bd6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+@@ -0,0 +1,57 @@
++# SPDX-License-Identifier: (GPL-2.0+ OR X11)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/feiyang,fy07024di26a30d.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Feiyang FY07024DI26A30-D 7" MIPI-DSI LCD Panel
++
++maintainers:
++  - Jagan Teki <jagan@amarulasolutions.com>
++
++properties:
++  compatible:
++    const: feiyang,fy07024di26a30d
++
++  reg:
++    description: DSI virtual channel used by that screen
++
++  avdd-supply:
++    description: analog regulator dc1 switch
++
++  dvdd-supply:
++    description: 3v3 digital regulator
++
++  reset-gpios:
++    description: a GPIO phandle for the reset pin
++
++  backlight:
++    description: Backlight used by the panel
++    $ref: "/schemas/types.yaml#/definitions/phandle"
++
++required:
++  - compatible
++  - reg
++  - avdd-supply
++  - dvdd-supply
++  - reset-gpios
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        panel@0 {
++            compatible = "feiyang,fy07024di26a30d";
++            reg = <0>;
++            avdd-supply = <&reg_dc1sw>;
++            dvdd-supply = <&reg_dldo2>;
++            reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
++            backlight = <&backlight>;
++        };
++    };
+-- 
+2.17.1
 
-[1] 
-https://gitlab.freedesktop.org/drm/intel/uploads/ef10c6c27fdc53d114f827bb72b078aa/0001-drm-i915-psr-Force-PSR-probe-only-after-full-initial.patch.txt
-
-An alternate path would be to switch to SOF. It's still viewed as a 
-developer option but Broadwell/Samus work reliably for me and we have a 
-Broadwell-rt286 platform used for CI.
