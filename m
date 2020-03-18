@@ -2,123 +2,141 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D76C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45207C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673C22076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:05:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WbSvw57D"
+	by mail.kernel.org (Postfix) with ESMTP id 18E842076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:08:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584536923;
+	bh=IK7Y5ZSmtcwGdd99YOsDwYG87YcJBtNmXMYebt4itiw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fiTDU1eDh0Lec1VVB8hc9l/k4n2mokMMj43BsL0JMf8YkAlR9a3IyYqt/7pzfi8gZ
+	 pPnjOU1MWpjbDSfDeIZLvhmSTcEwoZrXEgK/HSZHUHHw1tMWKIK+Rn8bLWmZMTcpGW
+	 DHvj0LVspI7cplFREYVJW4wE85X02sSmkp7iLrsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgCRNFz (ORCPT
+        id S1727031AbgCRNIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:05:55 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:52327 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726821AbgCRNFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:05:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584536753;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rEc/Fi0HtCRksr3RR+jEtjuBFNtDmtlrQKs7EcBkpIE=;
-        b=WbSvw57DAGiLcl9VcxAaQ+2mRPv0PpUkrhVaZv5VwIzqlnPIaWtTp3+xnSYmrdxeTkWqGt
-        MouyxnN2SaFzMz3oqfY+6CmOx77/p/ku4jCVVJUw+pyMuiBKoAUOYjKFNn1IL5j3cVE74d
-        a9zZU00Rzcnyp6bCCCT2RnV7j0CKJ/E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319-Fx28kn8nP7-AcMX5JfSHgA-1; Wed, 18 Mar 2020 09:05:50 -0400
-X-MC-Unique: Fx28kn8nP7-AcMX5JfSHgA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 18 Mar 2020 09:08:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbgCRNIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 09:08:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61AF8107B7DD;
-        Wed, 18 Mar 2020 13:05:46 +0000 (UTC)
-Received: from localhost (ovpn-12-66.pek2.redhat.com [10.72.12.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 637AA67265;
-        Wed, 18 Mar 2020 13:05:20 +0000 (UTC)
-Date:   Wed, 18 Mar 2020 21:05:17 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Yumei Huang <yuhuang@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Eduardo Habkost <ehabkost@redhat.com>,
-        Milan Zamazal <mzamazal@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Paul Mackerras <paulus@samba.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id CD8B720724;
+        Wed, 18 Mar 2020 13:08:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584536920;
+        bh=IK7Y5ZSmtcwGdd99YOsDwYG87YcJBtNmXMYebt4itiw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ao/O4jIgBcUwSCsqm5OQ5agm3YDTJ5N6RbEIYQECoGVoyxucRrKGyKpCerM8428XJ
+         aCpTzqj+I0NJC510y9k85ukfosiquOlCq2FBoibr8MH08Gx24pBrpOzPgvjCPF6mp/
+         eCzNrbj4EaMiVzYfLuTKgiRZ5B8eYc1rCeEr4U3c=
+Date:   Wed, 18 Mar 2020 14:08:38 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v2 0/8] mm/memory_hotplug: allow to specify a default
- online_type
-Message-ID: <20200318130517.GC30899@MiWiFi-R3L-srv>
-References: <20200317104942.11178-1-david@redhat.com>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+Subject: Re: [PATCH v4 3/9] drivers: base: add linear ranges helpers
+Message-ID: <20200318130838.GB2769584@kroah.com>
+References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+ <01ac2439f9d33ae405999065c5d28c368bad4a28.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200317104942.11178-1-david@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <01ac2439f9d33ae405999065c5d28c368bad4a28.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/17/20 at 11:49am, David Hildenbrand wrote:
-> Distributions nowadays use udev rules ([1] [2]) to specify if and
-> how to online hotplugged memory. The rules seem to get more complex with
-> many special cases. Due to the various special cases,
-> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE cannot be used. All memory hotplug
-> is handled via udev rules.
+On Tue, Feb 25, 2020 at 10:53:01AM +0200, Matti Vaittinen wrote:
+> Many devices have control registers which control some measurable
+> property. Often a register contains control field so that change in
+> this field causes linear change in the controlled property. It is not
+> a rare case that user wants to give 'meaningful' control values and
+> driver needs to convert them to register field values. Even more
+> often user wants to 'see' the currently set value - again in
+> meaningful units - and driver needs to convert the values it reads
+> from register to these meaningful units. Examples of this include:
 > 
-> Everytime we hotplug memory, the udev rule will come to the same
-> conclusion. Especially Hyper-V (but also soon virtio-mem) add a lot of
-> memory in separate memory blocks and wait for memory to get onlined by user
-> space before continuing to add more memory blocks (to not add memory faster
-> than it is getting onlined). This of course slows down the whole memory
-> hotplug process.
+> - regulators, voltage/current configurations
+> - power, voltage/current configurations
+> - clk(?) NCOs
 > 
-> To make the job of distributions easier and to avoid udev rules that get
-> more and more complicated, let's extend the mechanism provided by
-> - /sys/devices/system/memory/auto_online_blocks
-> - "memhp_default_state=" on the kernel cmdline
-> to be able to specify also "online_movable" as well as "online_kernel"
+> and maybe others I can't think of right now.
+> 
+> Provide a linear_range helper which can do conversion from user value
+> to register value 'selector'.
+> 
+> The idea here is stolen from regulator framework and patches refactoring
+> the regulator helpers to use this are following.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> 
+> Changes since rfc-v3:
+>   - Kerneldoc fixes
+>   - Corrected commit message typo meaningfull => meaningful
+> 
+>  drivers/base/Kconfig         |   3 +
+>  drivers/base/Makefile        |   1 +
+>  drivers/base/linear_ranges.c | 246 +++++++++++++++++++++++++++++++++++
 
-This patch series looks good, thanks. Since Andrew has merged it to -mm again,
-I won't add my Reviewed-by to bother. 
+Why in drivers/base/ ?
 
-Hi David, Vitaly
+Why not in lib/ ?
 
-There are several things unclear to me.
+>  include/linux/linear_range.h |  48 +++++++
+>  4 files changed, 298 insertions(+)
+>  create mode 100644 drivers/base/linear_ranges.c
+>  create mode 100644 include/linux/linear_range.h
+> 
+> diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+> index 5f0bc74d2409..636b6fa8e499 100644
+> --- a/drivers/base/Kconfig
+> +++ b/drivers/base/Kconfig
+> @@ -209,4 +209,7 @@ config GENERIC_ARCH_TOPOLOGY
+>  	  appropriate scaling, sysfs interface for reading capacity values at
+>  	  runtime.
+>  
+> +config LINEAR_RANGES
+> +	tristate
 
-So, these improved interfaces are used to alleviate the burden of the 
-existing udev rules, or try to replace it? As you know, we have been
-using udev rules to interact between kernel and user space on bare metal,
-and guests who want to hot add/remove.
+No help text at all???
 
-And also the OOM issue in hyperV when onlining pages after adding memory
-block. I am not a virt devel expert, could this happen on bare metal
-system?
+> +EXPORT_SYMBOL(linear_range_values_in_range);
 
-Thanks
-Baoquan
+EXPORT_SYMBOL_GPL() for all of these?  I have to ask...
 
+> @@ -0,0 +1,48 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+
+Are you sure about the "or later"?  Again, I have to ask.
+
+> +/* Copyright (C) 2020 ROHM Semiconductors */
+> +
+> +#ifndef LINEAR_RANGE_H
+> +#define LINEAR_RANGE_H
+> +
+> +#include <linux/types.h>
+
+Why is this needed?
+
+thanks,
+
+greg k-h
