@@ -2,232 +2,113 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25ACC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 564D9C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8932D20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 275FD20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:02:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hSCslElY"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="BYDtUQgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgCRKB5 (ORCPT
+        id S1727612AbgCRKCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:01:57 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:34284 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727281AbgCRKB5 (ORCPT
+        Wed, 18 Mar 2020 06:02:04 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:47350 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727281AbgCRKCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:01:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584525715;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fIDPv0twhcfXNaP20R9DWcbGavIfGu/f+ml33xGXCTs=;
-        b=hSCslElYCYSQotwnLrH+x00JxZPuEFSFi8fSUQ6x2+mDxD6hIcuCXufepSbJ8FgK1eKVTe
-        5OGi2rL8NcKoF52evvgrQZS6KcaIft/O85iKh9jt8Rpnd4FkW5yXtSk3j+LLhMFcG7VCsY
-        OPNsJOJIswcNsGOu28Eewy164EfFUSY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-468-uRccquc5MfuCMZc-AM7fBg-1; Wed, 18 Mar 2020 06:01:51 -0400
-X-MC-Unique: uRccquc5MfuCMZc-AM7fBg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B6A2E8026B0;
-        Wed, 18 Mar 2020 10:01:49 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-30.pek2.redhat.com [10.72.8.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F3C805C545;
-        Wed, 18 Mar 2020 10:01:27 +0000 (UTC)
-Date:   Wed, 18 Mar 2020 18:01:23 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     axboe@kernel.dk, paolo.valente@linaro.org, ulf.hansson@linaro.org,
-        adrian.hunter@intel.com, arnd@arndb.de, linus.walleij@linaro.org,
-        orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        linux-mmc@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND RFC PATCH 2/8] block: Allow sending a batch of requests
- from the scheduler to hardware
-Message-ID: <20200318100123.GA27531@ming.t460p>
-References: <cover.1584350380.git.baolin.wang7@gmail.com>
- <c2e62e5a9942fb833dfc0cdc8c967a12f3c34b03.1584350380.git.baolin.wang7@gmail.com>
+        Wed, 18 Mar 2020 06:02:03 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 657F02E15CC;
+        Wed, 18 Mar 2020 13:02:00 +0300 (MSK)
+Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
+        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id tp1R23B0QU-1xfe8Xmc;
+        Wed, 18 Mar 2020 13:02:00 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1584525720; bh=/xw7fW2pdFx89LSiwTXQJ76K5tu31uzu2W1LtK1icL8=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=BYDtUQgAe4seyUyGP7FUF0T0PafYN1Rox75Oj9CntAoOAtdrUUGs2IMGOwozn8I+t
+         rnz3Ld/3IU9EMOnrW2bwnJ3n6dOx1g0z7ZqE5Gs9pzY3FT2Ax/aHMLf87JArGdTz+Q
+         X0ZOekAWilsqjKlny93+5FfcvyVRJI231frQhDO4=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:6709::1:1])
+        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id poCWEyjx0B-1xcitWcE;
+        Wed, 18 Mar 2020 13:01:59 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH 4.19 03/89] cgroup, netclassid: periodically release
+ file_lock on classid updating
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dmitry Yakunin <zeil@yandex-team.ru>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200317103259.744774526@linuxfoundation.org>
+ <20200317103300.173739219@linuxfoundation.org>
+ <20200318090253.GA32397@duo.ucw.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <2f3e0bdb-5c5f-541a-486e-b6385ad600bb@yandex-team.ru>
+Date:   Wed, 18 Mar 2020 13:01:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c2e62e5a9942fb833dfc0cdc8c967a12f3c34b03.1584350380.git.baolin.wang7@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200318090253.GA32397@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 06:01:19PM +0800, Baolin Wang wrote:
-> As we know, some SD/MMC host controllers can support packed request,
-> that means we can package several requests to host controller at one
-> time to improve performence. So the hardware driver expects the blk-mq
-> can dispatch a batch of requests at one time, and driver can use bd.last
-> to indicate if it is the last request in the batch to help to combine
-> requests as much as possible.
+On 18/03/2020 12.02, Pavel Machek wrote:
+> Hi!
 > 
-> Thus we should add batch requests setting from the block driver to tell
-> the scheduler how many requests can be dispatched in a batch, as well
-> as changing the scheduler to dispatch more than one request if setting
-> the maximum batch requests number.
+>> From: Dmitry Yakunin <zeil@yandex-team.ru>
+>>
+>> [ Upstream commit 018d26fcd12a75fb9b5fe233762aa3f2f0854b88 ]
+> ...
+>> Now update is non atomic and socket may be skipped using calls:
+>>
+>> dup2(oldfd, newfd);
+>> close(oldfd);
+>>
+>> But this case is not typical. Moreover before this patch skip is possible
+>> too by hiding socket fd in unix socket buffer.
 > 
+> Dunno. This makes interface even more interesting.
 
-I feel this batch dispatch style is more complicated, and some other
-drivers(virtio blk/scsi) still may get benefit if we can pass real 'last' flag in
-.queue_rq().
+This is part of brilliant cgroup-v1 design. =)
+Cgroup-v2 doesn't recolor sockets when task is moved.
 
-So what about the following way by extending .commit_rqs() to this usage?
-And you can do whatever batch processing in .commit_rqs() which will be
-guaranteed to be called if BLK_MQ_F_FORCE_COMMIT_RQS is set by driver.
+> 
+>> +
+>>   static int update_classid_sock(const void *v, struct file *file, unsigned n)
+>>   {
+>>   	int err;
+>> +	struct update_classid_context *ctx = (void *)v;
+>>   	struct socket *sock = sock_from_file(file, &err);
+>>
+> ...
+>> +	if (--ctx->batch == 0) {
+>> +		ctx->batch = UPDATE_CLASSID_BATCH;
+>> +		return n + 1;
+>> +	}
+>>   	return 0;
+>>   }
+> 
+> We take "const void *" and then write to it. That's asking for
+> trouble... right? Should the const annotation be removed, at least for
+> sake of humans trying to understand the code?
 
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index 856356b1619e..cd2bbe56f83f 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -85,11 +85,12 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
-  * its queue by itself in its completion handler, so we don't need to
-  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
-  */
--static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
-+static bool blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
- {
- 	struct request_queue *q = hctx->queue;
- 	struct elevator_queue *e = q->elevator;
- 	LIST_HEAD(rq_list);
-+	bool ret = false;
- 
- 	do {
- 		struct request *rq;
-@@ -112,7 +113,10 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
- 		 * in blk_mq_dispatch_rq_list().
- 		 */
- 		list_add(&rq->queuelist, &rq_list);
--	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
-+		ret = blk_mq_dispatch_rq_list(q, &rq_list, true);
-+	} while (ret);
-+
-+	return ret;
- }
- 
- static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
-@@ -131,11 +135,12 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
-  * its queue by itself in its completion handler, so we don't need to
-  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
-  */
--static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
-+static bool blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
- {
- 	struct request_queue *q = hctx->queue;
- 	LIST_HEAD(rq_list);
- 	struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
-+	bool ret = false;
- 
- 	do {
- 		struct request *rq;
-@@ -161,10 +166,12 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
- 
- 		/* round robin for fair dispatch */
- 		ctx = blk_mq_next_ctx(hctx, rq->mq_ctx);
--
--	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
-+		ret = blk_mq_dispatch_rq_list(q, &rq_list, true);
-+	} while (ret);
- 
- 	WRITE_ONCE(hctx->dispatch_from, ctx);
-+
-+	return ret;
- }
- 
- void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
-@@ -173,6 +180,7 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
- 	struct elevator_queue *e = q->elevator;
- 	const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
- 	LIST_HEAD(rq_list);
-+	bool dispatch_ret;
- 
- 	/* RCU or SRCU read lock is needed before checking quiesced flag */
- 	if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)))
-@@ -206,20 +214,26 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
- 	 */
- 	if (!list_empty(&rq_list)) {
- 		blk_mq_sched_mark_restart_hctx(hctx);
--		if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
-+		dispatch_ret = blk_mq_dispatch_rq_list(q, &rq_list, false);
-+		if (dispatch_ret) {
- 			if (has_sched_dispatch)
--				blk_mq_do_dispatch_sched(hctx);
-+				dispatch_ret = blk_mq_do_dispatch_sched(hctx);
- 			else
--				blk_mq_do_dispatch_ctx(hctx);
-+				dispatch_ret = blk_mq_do_dispatch_ctx(hctx);
- 		}
- 	} else if (has_sched_dispatch) {
--		blk_mq_do_dispatch_sched(hctx);
-+		dispatch_ret = blk_mq_do_dispatch_sched(hctx);
- 	} else if (hctx->dispatch_busy) {
- 		/* dequeue request one by one from sw queue if queue is busy */
--		blk_mq_do_dispatch_ctx(hctx);
-+		dispatch_ret = blk_mq_do_dispatch_ctx(hctx);
- 	} else {
- 		blk_mq_flush_busy_ctxs(hctx, &rq_list);
--		blk_mq_dispatch_rq_list(q, &rq_list, false);
-+		dispatch_ret = blk_mq_dispatch_rq_list(q, &rq_list, false);
-+	}
-+
-+	if (dispatch_ret) {
-+		if (hctx->flags & BLK_MQ_F_FORCE_COMMIT_RQS)
-+			hctx->queue->mq_ops->commit_rqs(hctx);
- 	}
- }
- 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 87c6699f35ae..9b46f5d6c7fd 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1238,11 +1238,15 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
- 		 * Flag last if we have no more requests, or if we have more
- 		 * but can't assign a driver tag to it.
- 		 */
--		if (list_empty(list))
--			bd.last = true;
--		else {
--			nxt = list_first_entry(list, struct request, queuelist);
--			bd.last = !blk_mq_get_driver_tag(nxt);
-+		if (!(hctx->flags & BLK_MQ_F_FORCE_COMMIT_RQS)) {
-+			if (list_empty(list))
-+				bd.last = true;
-+			else {
-+				nxt = list_first_entry(list, struct request, queuelist);
-+				bd.last = !blk_mq_get_driver_tag(nxt);
-+			}
-+		} else {
-+			bd.last = false;
- 		}
- 
- 		ret = q->mq_ops->queue_rq(hctx, &bd);
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 07fa767bff86..c0ef6990b698 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -394,6 +394,7 @@ enum {
- 	BLK_MQ_F_SHOULD_MERGE	= 1 << 0,
- 	BLK_MQ_F_TAG_SHARED	= 1 << 1,
- 	BLK_MQ_F_NO_MANAGED_IRQ	= 1 << 2,
-+	BLK_MQ_F_FORCE_COMMIT_RQS = 1 << 3,
- 	BLK_MQ_F_BLOCKING	= 1 << 5,
- 	BLK_MQ_F_NO_SCHED	= 1 << 6,
- 	BLK_MQ_F_ALLOC_POLICY_START_BIT = 8,
+Indeed, there is no much sense in opaque const void *.
+This is how iterate_fd() is declared.
 
-Thanks, 
-Ming
-
+> 
+> Best regards,
+> 									Pavel
+> 
