@@ -2,104 +2,186 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7961C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66445C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AA7320752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584569087;
-	bh=MtsLKAcKSatPHkT/xTuGpEEzgXJV4ETKAZof7HlpnP0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nX/VBVIGSiajFoxUdVx0MWFh6xFuvgrEHXhY0lcAEEfit5rtFzta5yrMc5ifDs8xS
-	 Pz8xcBZsGd7ttjH5RlB26da7pG82r7C98K03omnQ/ybYGx9hnGDEyIOAdYYaGr+KO1
-	 hUTuih+VX9y0UHOPZZnQiCS0Ifjrauv4Ll4fHQWQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2EA4520772
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:06:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="EGq9j8ta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbgCRWEq (ORCPT
+        id S1727216AbgCRWGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:04:46 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34968 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgCRWEq (ORCPT
+        Wed, 18 Mar 2020 18:06:15 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41886 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCRWGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:04:46 -0400
-Received: by mail-il1-f194.google.com with SMTP id v6so369791ilq.2;
-        Wed, 18 Mar 2020 15:04:45 -0700 (PDT)
+        Wed, 18 Mar 2020 18:06:14 -0400
+Received: by mail-ed1-f65.google.com with SMTP id v6so57732edw.8
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 15:06:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TDXZZkhqjusv291He84nhKQlMbFezXaGS9XY4w8phpE=;
+        b=EGq9j8ta0EzuoZHC99ctGlzz5FJgMcHEAbQAY1LzC7m2yp+tVJkMr4r617GRqI0ca6
+         Z6smPIs417FGSdP6HYXkQWHLvupus3gRbB6ttGrFxU6ommiXyDGunEw+TRP0TgHao1TU
+         4Zuy5cg6A3jg+knqeniLehrw6GKjBIxp7c/IQ4oZLNCTkhb+VBMb4rkbGmGRA69VSJR9
+         LYyO7JXPLwrPS+tF7PpR1NKN+psauSaajm2Y6qFCN6eNWY78mekonIly4LPjoSQO9Xwj
+         pnC3ZVehyi0uC3wqWOG172opZ0qSIKIrqp40cuBX5baeZ0IuWv1Udr4hof6nAKv0n3Rx
+         3PAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nvP10y4co7+lz1ui5VSoxULGIs1uH9GMl57cIOt93KU=;
-        b=TfGqSLGcvxRaLB/n/SEe7qM8tPG13jeJcmhPCovd/ddGpDkufRPIgJCjX6WdTxjsW6
-         nINd0rOGmMsx8wMV5VlE9sNR985z6pLXDmDE0E3cHxcj/i7IStGIB9ShNlapF06cMiSK
-         pZcKloBwDyjPnkX+JjUMD/Wg9AuDRX/bZnbjpWAML1FhXUMeKG4AGQqzvthRntSBeUPs
-         wqAKZbB7nTKgky0RALaZew68KoiwgdU5Ot1t/g11u+LAOMd9HwQt7Q8n1l6xAKxmvzE7
-         0pImvPOQAZFFAXWN3lqcWAMN+HcnnMUg1npg5dTrZRHtQnOkO50P6zlen7ZFVdS0Sx/c
-         YPbg==
-X-Gm-Message-State: ANhLgQ20llxf9dajzhQ6e2cIDbuNuj2fIjK7Tk+MwRo//CcXPNnvpyRq
-        19cC09vu+l+sMnSspOgvqg==
-X-Google-Smtp-Source: ADFU+vtrY4dt+9MXe/DeJN43InzVxlzOGFVmFX635slbQ1fD96a4nEurmq+8jIxCKSegB6jUOLy0Og==
-X-Received: by 2002:a92:7f01:: with SMTP id a1mr254571ild.132.1584569084977;
-        Wed, 18 Mar 2020 15:04:44 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id p2sm62743iln.22.2020.03.18.15.04.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 15:04:44 -0700 (PDT)
-Received: (nullmailer pid 16608 invoked by uid 1000);
-        Wed, 18 Mar 2020 22:04:43 -0000
-Date:   Wed, 18 Mar 2020 16:04:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v6 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-Message-ID: <20200318220443.GA16192@bogus>
-References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
- <1584211798-10332-2-git-send-email-tdas@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TDXZZkhqjusv291He84nhKQlMbFezXaGS9XY4w8phpE=;
+        b=R0vRgOqxV8R7PYG1KIgl/OioJyTwuAguQIHCI1EurCAlJZ6EJqdHWnkYZ68YOZeUS8
+         Er27IvSFHDaSN68CZV4bo9BHxZLw3cCroc5yJrzDFz2mzq4liSVbplZkwJ9EyQDrJmam
+         BonHPjd7SP/q/XMG67ZY+KDAcRLZ6HVTmWqD2zn9uoQE8fOg18HdwJNa5m9cTxJV/vVA
+         JRs2FxmrtlvzPI4JdOigGxzz7ppKp/+LB75p+CnNq2/e34i9woSojbqToUfT2fzn+yme
+         IKjQa/WpVjaXoWfmkA3Ipu1iAsjfn//tzex4M6G9XqqWRS56/I10MkbWySx3RzsnA3tp
+         A7kA==
+X-Gm-Message-State: ANhLgQ2SMRDhy8wr3PeX/Tnt4idt8h7Bl/A/LSm/UHa6EiB3ctrdoyDX
+        0bUQhte98lhwF3jXz4lwoW53V8dqP+q1/RVhxCtV
+X-Google-Smtp-Source: ADFU+vtW4mfjwnuF24IoXcYzayNDU8snpAdY8T07RFr+nxOE2IbbjW1zRxqJVYGpUJx8Vd5VOBHbcoPpD4xtj23EMDs=
+X-Received: by 2002:a17:906:cb93:: with SMTP id mf19mr378815ejb.272.1584569171696;
+ Wed, 18 Mar 2020 15:06:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584211798-10332-2-git-send-email-tdas@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
+ <3142237.YMNxv0uec1@x2> <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
+ <CAHC9VhS09b_fM19tn7pHZzxfyxcHnK+PJx80Z9Z1hn8-==4oLA@mail.gmail.com>
+ <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca> <CAHC9VhQoVOzy_b9W6h+kmizKr1rPkC4cy5aYoKT2i0ZgsceNDg@mail.gmail.com>
+ <20200313185900.y44yvrfm4zxa5lfk@madcap2.tricolour.ca> <CAHC9VhR2zCCE5bjH75rSwfLC7TJGFj4RBnrtcOoUiqVp9q5TaA@mail.gmail.com>
+ <20200318212630.mw2geg4ykhnbtr3k@madcap2.tricolour.ca> <CAHC9VhRYvGAru3aOMwWKCCWDktS+2pGr+=vV4SjHW_0yewD98A@mail.gmail.com>
+ <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca>
+In-Reply-To: <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 18 Mar 2020 18:06:00 -0400
+Message-ID: <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
+        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Mar 2020 00:19:56 +0530, Taniya Das wrote:
-> The Modem Subsystem clock provider have a bunch of generic properties
-> that are needed in a device tree. Add a YAML schemas for those.
-> 
-> Add clock ids for GCC MSS and MSS clocks which are required to bring
-> the modem out of reset.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
->  include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
->  3 files changed, 80 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
->  create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
-> 
+On Wed, Mar 18, 2020 at 5:56 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-03-18 17:42, Paul Moore wrote:
+> > On Wed, Mar 18, 2020 at 5:27 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2020-03-18 16:56, Paul Moore wrote:
+> > > > On Fri, Mar 13, 2020 at 2:59 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > On 2020-03-13 12:29, Paul Moore wrote:
+> > > > > > On Thu, Mar 12, 2020 at 3:30 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > > > > On 2020-02-13 16:44, Paul Moore wrote:
+> > > > > > > > This is a bit of a thread-hijack, and for that I apologize, but
+> > > > > > > > another thought crossed my mind while thinking about this issue
+> > > > > > > > further ... Once we support multiple auditd instances, including the
+> > > > > > > > necessary record routing and duplication/multiple-sends (the host
+> > > > > > > > always sees *everything*), we will likely need to find a way to "trim"
+> > > > > > > > the audit container ID (ACID) lists we send in the records.  The
+> > > > > > > > auditd instance running on the host/initns will always see everything,
+> > > > > > > > so it will want the full container ACID list; however an auditd
+> > > > > > > > instance running inside a container really should only see the ACIDs
+> > > > > > > > of any child containers.
+> > > > > > >
+> > > > > > > Agreed.  This should be easy to check and limit, preventing an auditd
+> > > > > > > from seeing any contid that is a parent of its own contid.
+> > > > > > >
+> > > > > > > > For example, imagine a system where the host has containers 1 and 2,
+> > > > > > > > each running an auditd instance.  Inside container 1 there are
+> > > > > > > > containers A and B.  Inside container 2 there are containers Y and Z.
+> > > > > > > > If an audit event is generated in container Z, I would expect the
+> > > > > > > > host's auditd to see a ACID list of "1,Z" but container 1's auditd
+> > > > > > > > should only see an ACID list of "Z".  The auditd running in container
+> > > > > > > > 2 should not see the record at all (that will be relatively
+> > > > > > > > straightforward).  Does that make sense?  Do we have the record
+> > > > > > > > formats properly designed to handle this without too much problem (I'm
+> > > > > > > > not entirely sure we do)?
+> > > > > > >
+> > > > > > > I completely agree and I believe we have record formats that are able to
+> > > > > > > handle this already.
+> > > > > >
+> > > > > > I'm not convinced we do.  What about the cases where we have a field
+> > > > > > with a list of audit container IDs?  How do we handle that?
+> > > > >
+> > > > > I don't understand the problem.  (I think you crossed your 1/2 vs
+> > > > > A/B/Y/Z in your example.) ...
+> > > >
+> > > > It looks like I did, sorry about that.
+> > > >
+> > > > > ... Clarifying the example above, if as you
+> > > > > suggest an event happens in container Z, the hosts's auditd would report
+> > > > >         Z,^2
+> > > > > and the auditd in container 2 would report
+> > > > >         Z,^2
+> > > > > but if there were another auditd running in container Z it would report
+> > > > >         Z
+> > > > > while the auditd in container 1 or A/B would see nothing.
+> > > >
+> > > > Yes.  My concern is how do we handle this to minimize duplicating and
+> > > > rewriting the records?  It isn't so much about the format, although
+> > > > the format is a side effect.
+> > >
+> > > Are you talking about caching, or about divulging more information than
+> > > necessary or even information leaks?  Or even noticing that records that
+> > > need to be generated to two audit daemons share the same contid field
+> > > values and should be generated at the same time or information shared
+> > > between them?  I'd see any of these as optimizations that don't affect
+> > > the api.
+> >
+> > Imagine a record is generated in a container which has more than one
+> > auditd in it's ancestry that should receive this record, how do we
+> > handle that without completely killing performance?  That's my
+> > concern.  If you've already thought up a plan for this - excellent,
+> > please share :)
+>
+> No, I haven't given that much thought other than the correctness and
+> security issues of making sure that each audit daemon is sufficiently
+> isolated to do its job but not jeopardize another audit domain.  Audit
+> already kills performance, according to some...
+>
+> We currently won't have that problem since there can only be one so far.
+> Fixing and optimizing this is part of the next phase of the challenge of
+> adding a second audit daemon.
+>
+> Let's work on correctness and reasonable efficiency for this phase and
+> not focus on a problem we don't yet have.  I wouldn't consider this
+> incurring technical debt at this point.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+I agree, one stage at a time, but the choice we make here is going to
+have a significant impact on what we can do later.  We need to get
+this as "right" as possible; this isn't something we should dismiss
+with a hand-wave as a problem for the next stage.  We don't need an
+implementation, but I would like to see a rough design of how we would
+address this problem.
 
-Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/clock/qcom,sc7180-mss.yaml#
+> I could see cacheing a contid string from one starting point, but it may
+> be more work to search that cached string to truncate it or add to it
+> when another audit daemon requests a copy of a similar string.  I
+> suppose every full contid string could be generated the first time it is
+> used and parts of it used (start/finish) as needed but that
+> search/indexing may not be worth it.
 
-See https://patchwork.ozlabs.org/patch/1254940
-Please check and re-submit.
+I hope we can do better than string manipulations in the kernel.  I'd
+much rather defer generating the ACID list (if possible), than
+generating a list only to keep copying and editing it as the record is
+sent.
+
+-- 
+paul moore
+www.paul-moore.com
