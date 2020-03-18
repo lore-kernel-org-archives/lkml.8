@@ -2,118 +2,229 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46597C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E328C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2783E206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FD820724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:44:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="StLJhlc9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbgCRCmk (ORCPT
+        id S1726664AbgCRCoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 22:42:40 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46613 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgCRCmj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 22:42:39 -0400
-Received: from mail-pf1-f199.google.com ([209.85.210.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <po-hsu.lin@canonical.com>)
-        id 1jEOfE-00084i-Kt
-        for linux-kernel@vger.kernel.org; Wed, 18 Mar 2020 02:42:36 +0000
-Received: by mail-pf1-f199.google.com with SMTP id d127so17056259pfa.7
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 19:42:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GsOy9t03XGdTipJAvqpux+ltTjSLmiQ456gUIIsZRek=;
-        b=eTXnKZJMDV4XVA3JYjWMGm4853iGScDZyorUWkWDcTRXnSMhGfG/4H/JmfpyY4LoXJ
-         2rU9yPA/BiWM5A3Y7gMuZzsCxJMsSnrp4Bm6inrCGzbt3qwoXZlNzzz3oZlJk2hflM8P
-         xuNsiBwwkkJc+BqnS5tXAlrAAjux7AuF2VCbwopxGfTCyzxzA+ZY6YCftdkWJ88K1Cfv
-         AJN7xo/R7LDEfq04bEKoglnHmzZ8hagnVMLkRrDWO2dGCadAf2depz44bOO+AP8lwYF5
-         j5bFnXx5v527CY2KV69+kq6zrOMRNF6cZC2+DNFNg78jqRy7fz/Qr6KfYRlPu/oVhwWo
-         aNCw==
-X-Gm-Message-State: ANhLgQ1vV3SEcGb87uJa9Rdmbr3tIk3oM14lYV6c8VModBWfKAe0kQJ8
-        IvAqTkEMdapembOKjv+nCjCBrWUcyDHfrm9vvv798odPEfCosbgWAohn5R1qKuojf45TWU5yrdh
-        gOo3eoI40liSOGN2zvkZAIBkMQgcdBl0BiEsFLdy7
-X-Received: by 2002:a63:ba59:: with SMTP id l25mr2360389pgu.68.1584499354984;
-        Tue, 17 Mar 2020 19:42:34 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vss9SUSECX13z9sVq6fy0RmtXj7ZGlEYGUBOwbZ+k+Decq1wFjFrELMFURMZeJhzOfZARn/NQ==
-X-Received: by 2002:a63:ba59:: with SMTP id l25mr2360365pgu.68.1584499354662;
-        Tue, 17 Mar 2020 19:42:34 -0700 (PDT)
-Received: from localhost.localdomain (114-136-162-243.emome-ip.hinet.net. [114.136.162.243])
-        by smtp.gmail.com with ESMTPSA id fz3sm613938pjb.41.2020.03.17.19.42.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 19:42:33 -0700 (PDT)
-From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
-To:     linux-kselftest@vger.kernel.org
-Cc:     shuah@kernel.org, sboyd@kernel.org, tglx@linutronix.de,
-        john.stultz@linaro.org, joe.lawrence@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCHv3] selftests/timers: Turn off timeout setting
-Date:   Wed, 18 Mar 2020 10:42:15 +0800
-Message-Id: <20200318024215.5270-1-po-hsu.lin@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 17 Mar 2020 22:44:39 -0400
+Received: from mail-eopbgr20042.outbound.protection.outlook.com ([40.107.2.42]:18646
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726229AbgCRCoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 22:44:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OETy3igWMFQw7J4RqrtOKRQ/vPT5ACUerCPOUxF1RrfHXt/WNh/R9b3EzfQajGde93V4FiexCtZpzT0Z7M8RyC5i80G3pXEAmB8iL7w0f5jgRKDvXdUQbm4nBKcE5buJBzEXjNxlM++DLTHNqGn51pdSr8kbMp4LT89CK32FI2b1b9TNNUFO33FI38fnAN+n+X3Q9iNfNyoYy+ME58skPm5wsd4Kw8O4wY/VR7Lii9z5wNUdiIexK6+04PuqKAGd4oo6amoigsMvrLoCC0A59mTK0fQm7SXSh941YilhIBwXzkGVEHB62ElvW2QVsYGduNGehfsFtPztP3M56Nf1lQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cr0u8xTUHeAA0G2piQ0Hr3ewjhnv4M+y82w+ZkXgKWE=;
+ b=n0+Wo7CgThCawoDcFEyyg0Ve+aY6SSN/FxXhdUoRl5RnFRROHjY1rQGpIRPjfDCHgr43Eeo1X2V241SO3WA7fjjlPd2awdDq0Xqln879gOwn2RkT2I4Nrvucmv5RaQpgG8P63eFsfQ1C/c68TmIEWsmjXWfYYKHb2GwjQYH1DzcFOTJ5eZn3nL1zzATzvkOfKmb+oA+8yZEeqVGIYBPJWwygw/PhbhWsqJwga54pa6FnKPwch+dQPwVxXWLglWpMXcu1epyzuBvSlBkVcvlD7lyuoFYWxZeadwnsRaJUGwqAqxeBU6dJlYg57ZvzyhpYAOwJvCT6sxq90qE/17N4mg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cr0u8xTUHeAA0G2piQ0Hr3ewjhnv4M+y82w+ZkXgKWE=;
+ b=StLJhlc9dzsvgwcA2mXs8ysWY11e4D3skGaPiUOJ0WAjfZKUPqqfeyj49iLzt2kIy4EZEH0FZbujr+nYonXy7xFj98G2QtuVsglXHZMSW0gCk+vczWSpJQ7NEBkFRtEIFzVVG1B/wdfhP4ZglVkTlnivD/3l0w913/3SuavkTe4=
+Received: from VI1PR04MB6941.eurprd04.prod.outlook.com (52.133.244.87) by
+ VI1PR04MB4447.eurprd04.prod.outlook.com (20.177.57.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.13; Wed, 18 Mar 2020 02:44:33 +0000
+Received: from VI1PR04MB6941.eurprd04.prod.outlook.com
+ ([fe80::289c:fdf8:faf0:3200]) by VI1PR04MB6941.eurprd04.prod.outlook.com
+ ([fe80::289c:fdf8:faf0:3200%2]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
+ 02:44:32 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V6 0/4] mailbox/firmware: imx: support SCU channel type
+Thread-Topic: [PATCH V6 0/4] mailbox/firmware: imx: support SCU channel type
+Thread-Index: AQHV8emRabKKTJAuM0OK7xtU5vZU9A==
+Date:   Wed, 18 Mar 2020 02:44:32 +0000
+Message-ID: <VI1PR04MB694108DF36F465324BA45E05EEF70@VI1PR04MB6941.eurprd04.prod.outlook.com>
+References: <1583300977-2327-1-git-send-email-peng.fan@nxp.com>
+ <VI1PR04MB7023455D0FE9766FFBE1EE5EEEFD0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <AM0PR04MB448123609B2FE8F5ECAF1F4388FA0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <AM0PR04MB4481D74E3C38B047562F419988FA0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 10ae6edb-df68-4914-4b60-08d7cae6499b
+x-ms-traffictypediagnostic: VI1PR04MB4447:|VI1PR04MB4447:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB44476673D4C7587B1E966A7CEEF70@VI1PR04MB4447.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 03468CBA43
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(366004)(39860400002)(376002)(199004)(5660300002)(33656002)(44832011)(54906003)(316002)(186003)(26005)(52536014)(86362001)(15650500001)(110136005)(9686003)(6506007)(53546011)(76116006)(8936002)(55016002)(91956017)(8676002)(66446008)(64756008)(2906002)(66556008)(66946007)(478600001)(66476007)(81166006)(81156014)(4326008)(71200400001)(7696005)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4447;H:VI1PR04MB6941.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +78itZQZ3Zk3LFDWuBQjcipNpQ/yl20tGRLevxtM2I5uDLQ2Tsay3VP1jeucBiVtQDbINKqi3MFOWEhMIJRP/xseWKxuro6cc8qS1xCgKhoOg6+4PcIsXKXDMR41lzBCC8pSX6UnsPNLK8XtPGL5kt8ZYkVbyUxSjW80/Ze1Ra6zq4apId1yRbbnpt0zYU507IxWpCUhEDbX1Cna+IVbUZPVBlXiffB8hQ0tPafcRwYQzLsuUCuraSSBieioUoAOJQkAiFJYMrIa2Vt8r6AndGKF/NqEz1+RxtUFnR0x3lXvemcvpQlRM7BBhOA2iaIxm45sP30is4XVGhXdXJBjlOMsIBSkQQnCyPBkGM8qzShY9bnbBwBu7qHYccaQA4Oj2AUtbG+UN0yiKlryLdm9A4tH/RjMIWk67oBevl0flGgrdDyPfiUBOk8Ryw1kfLvBkpkKBSUaIGZraOzMdr4KcDuHFh3WyeyeeAqgZOtwU4oVIW8RMrgQgwAkfayL3PS9HK9Lm4UjNPClnAng+QBYnQ==
+x-ms-exchange-antispam-messagedata: sK7nPOPORkyHnMxz14j+eV6P4dvsnOVLUjnllEOYsmKeGuJud769ohv6gPQIfhtFfpJoXH+x2U74BVHp+GKp9Nyqv8Aq2DcYyKXVsBcux60s36L7EShHXA+ZwdToYYsw5Vxp59pSfwBYZWEDDRqfgQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10ae6edb-df68-4914-4b60-08d7cae6499b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 02:44:32.1202
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: E90VmxLc2pXfyYKWXdcVnTDYpz7eg2iTpg8WKYNsZ9rIL7s5BtNIOwgbYEzotsY2ou+jbiLoJSXP0GAc5ZpPXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4447
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following 4 tests in timers can take longer than the default 45
-seconds that added in commit 852c8cbf34d3 ("selftests/kselftest/runner.sh:
-Add 45 second timeout per test") to run:
-  * nsleep-lat - 2m7.350s
-  * set-timer-lat - 2m0.66s
-  * inconsistency-check - 1m45.074s
-  * raw_skew - 2m0.013s
-
-Thus they will be marked as failed with the current 45s setting:
-  not ok 3 selftests: timers: nsleep-lat # TIMEOUT
-  not ok 4 selftests: timers: set-timer-lat # TIMEOUT
-  not ok 6 selftests: timers: inconsistency-check # TIMEOUT
-  not ok 7 selftests: timers: raw_skew # TIMEOUT
-
-Disable the timeout setting for timers can make these tests finish
-properly:
-  ok 3 selftests: timers: nsleep-lat
-  ok 4 selftests: timers: set-timer-lat
-  ok 6 selftests: timers: inconsistency-check
-  ok 7 selftests: timers: raw_skew
-
-https://bugs.launchpad.net/bugs/1864626
-Fixes: 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second timeout per test")
-Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
----
- tools/testing/selftests/timers/Makefile | 1 +
- tools/testing/selftests/timers/settings | 1 +
- 2 files changed, 2 insertions(+)
- create mode 100644 tools/testing/selftests/timers/settings
-
-diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
-index 7656c7c..0e73a16 100644
---- a/tools/testing/selftests/timers/Makefile
-+++ b/tools/testing/selftests/timers/Makefile
-@@ -13,6 +13,7 @@ DESTRUCTIVE_TESTS = alarmtimer-suspend valid-adjtimex adjtick change_skew \
- 
- TEST_GEN_PROGS_EXTENDED = $(DESTRUCTIVE_TESTS)
- 
-+TEST_FILES := settings
- 
- include ../lib.mk
- 
-diff --git a/tools/testing/selftests/timers/settings b/tools/testing/selftests/timers/settings
-new file mode 100644
-index 0000000..e7b9417
---- /dev/null
-+++ b/tools/testing/selftests/timers/settings
-@@ -0,0 +1 @@
-+timeout=0
--- 
-2.7.4
-
+On 2020-03-13 9:38 AM, Peng Fan wrote:=0A=
+>> Subject: RE: [PATCH V6 0/4] mailbox/firmware: imx: support SCU channel=
+=0A=
+>> type=0A=
+>>=0A=
+>> Hi Leonard,=0A=
+>>=0A=
+>>> Subject: Re: [PATCH V6 0/4] mailbox/firmware: imx: support SCU channel=
+=0A=
+>>> type=0A=
+>>>=0A=
+>>> On 2020-03-04 7:55 AM, Peng Fan wrote:=0A=
+>>>> From: Peng Fan <peng.fan@nxp.com>=0A=
+>>>>=0A=
+>>>> V6:=0A=
+>>>>    Add Oleksij's R-b tag=0A=
+>>>>    Patch 3/4, per=0A=
+>>> https://www.kernel.org/doc/Documentation/printk-formats.txt=0A=
+>>>>    should use %zu for printk sizeof=0A=
+>>>>=0A=
+>>>> V5:=0A=
+>>>>    Move imx_mu_dcfg below imx_mu_priv=0A=
+>>>>    Add init hooks to imx_mu_dcfg=0A=
+>>>>    drop __packed __aligned=0A=
+>>>>    Add more debug msg=0A=
+>>>>    code style cleanup=0A=
+>>>>=0A=
+>>>> V4:=0A=
+>>>>    Drop IMX_MU_TYPE_[GENERIC, SCU]=0A=
+>>>>    Pack MU chans init to separate function=0A=
+>>>>    Add separate function for SCU chans init and xlate=0A=
+>>>>    Add santity check to msg hdr.size=0A=
+>>>>    Limit SCU MU chans to 6, TX0/RX0/RXDB[0-3]=0A=
+>>>>=0A=
+>>>> V3:=0A=
+>>>>    Rebase to Shawn's for-next=0A=
+>>>>    Include fsl,imx8-mu-scu compatible=0A=
+>>>>    Per Oleksij's comments, introduce generic tx/rx and added scu mu ty=
+pe=0A=
+>>>>    Check fsl,imx8-mu-scu in firmware driver for fast_ipc=0A=
+>>>>=0A=
+>>>> V2:=0A=
+>>>>    Drop patch 1/3 which added fsl,scu property=0A=
+>>>>    Force to use scu channel type when machine has node compatible=0A=
+>>> "fsl,imx-scu"=0A=
+>>>>    Force imx-scu to use fast_ipc=0A=
+>>>>=0A=
+>>>>    I not found a generic method to make SCFW message generic enough,=
+=0A=
+>>> SCFW=0A=
+>>>>    message is not fixed length including TX and RX. And it use TR0/RR0=
+=0A=
+>>>>    interrupt.=0A=
+>>>>=0A=
+>>>> V1:=0A=
+>>>> Sorry to bind the mailbox/firmware patch together. This is make it=0A=
+>>>> to understand what changed to support using 1 TX and 1 RX channel=0A=
+>>>> for SCFW message.=0A=
+>>>>=0A=
+>>>> Per i.MX8QXP Reference mannual, there are several message using=0A=
+>>>> examples. One of them is:=0A=
+>>>> Passing short messages: Transmit register(s) can be used to pass=0A=
+>>>> short messages from one to four words in length. For example, when a=
+=0A=
+>>>> four-word message is desired, only one of the registers needs to=0A=
+>>>> have its corresponding interrupt enable bit set at the receiver side.=
+=0A=
+>>>>=0A=
+>>>> This patchset is to using this for SCFW message to replace four TX=0A=
+>>>> and four RX method.=0A=
+>>>=0A=
+>>> Tested-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
+>>>=0A=
+>>=0A=
+>> Thanks for the test.=0A=
+>>=0A=
+>>> My stress tests pass on imx8qxp with this patcheset, however=0A=
+>>> performance is not greatly improved. My guess is that this happens=0A=
+>>> because of too many interrupts.=0A=
+>>=0A=
+>> Might be. Could you share your testcase?=0A=
+=0A=
+https://github.com/cdleonard/imx-scu-test=0A=
+=0A=
+>>> Is there really a reason to enable TIE? Spinning on TE bits without=0A=
+>>> any interrupts should be just plain faster.=0A=
+>>=0A=
+>> I could try to disable TIE and give a try. If performance improves lot, =
+I could=0A=
+>> change to non TX interrupt.=0A=
+> =0A=
+> After rethinking about this, we need TX interrupt, otherwise we have to=
+=0A=
+> use TX_POLL which is slower or let the client kick the TX state machine.=
+=0A=
+> =0A=
+> Compared with original method, this already reduces to use 1 TX and 1 RX=
+=0A=
+> interrupt. This already good for system.=0A=
+=0A=
+Sorry, I missed that fact that your patches don't include the required =0A=
+DTS changes. Indeed that is only one TX and one RX irq per call now.=0A=
+=0A=
+Running my test now results in RX timeout :(=0A=
+=0A=
+-----=0A=
+=0A=
+On an unrelated note: are you sure it is appropriate to change the =0A=
+compat string here? Another way to implement direct SCU communication =0A=
+would be as another channel type, IMX_MU_TYPE_SCUTX.=0A=
+=0A=
+It also strange that you're adding a bool fast_ipc in imx-scu, do we =0A=
+really want to support the old path?=0A=
+=0A=
+If SCU protocol was implemented as a channel type then maybe we could =0A=
+sidestep mbox_request_channel_by_name, parse mboxes manually and always =0A=
+request MU_TYPE_SCUTX.=0A=
+=0A=
+--=0A=
+Regards,=0A=
+Leonard=0A=
