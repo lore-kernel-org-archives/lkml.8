@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6C1C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34261C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7F1B20773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064E8208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565177;
-	bh=+gcwa6UDdPL83YLFEWcz7sgnSrRd427fX6aCwkeNxDc=;
+	s=default; t=1584565182;
+	bh=JoWsthg4+dHaWeJW5+Ydz80NHjnHCFYlfmqtQlhVkqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MYLSSNg57Qw4hxFBl3k/zouvHFDzllgUtjfusks08o8PKP74s0m/WK5ud8i0AtWpE
-	 ydK5k7XSNCnmwIPCmS5my8zN6lqWi8KpW8DqDR6LMIxGL7lCVK5FG/HtoPHTUKeZ4a
-	 mTkWc6uTJVraVhUXh9DrSzWIyWsikR93Xqe2SLeM=
+	b=yTbpDTKar7/184Z5BMZhu+Fo3SusTtvddvw6+f6Qh9mm8dtbWKvmDxg+9lGhxj4iD
+	 k333nSj7TdVQHLuxCNxsMLXgQZupCvzGE92ZardxBFE7eQdu06hRdsHtBVNWtHg20/
+	 DdAjn9lJQUBKqH94j28EcxpRhaPNTUC6yCLDpnMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgCRU7g (ORCPT
+        id S1728800AbgCRU7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:59:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58106 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:59:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728691AbgCRU4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:47 -0400
+        id S1728685AbgCRU4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B388920A8B;
-        Wed, 18 Mar 2020 20:56:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9015F21973;
+        Wed, 18 Mar 2020 20:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584565007;
-        bh=+gcwa6UDdPL83YLFEWcz7sgnSrRd427fX6aCwkeNxDc=;
+        s=default; t=1584565006;
+        bh=JoWsthg4+dHaWeJW5+Ydz80NHjnHCFYlfmqtQlhVkqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yeBlUHDMtfMoZIXWHX/TPyOHw9cT+q4t4Q2SGYRRkcAzm6X9TVQmcQ9nKLID+FyBN
-         TippJyLy7mIf6qnOU2im1tPHXmDDKpXamgd3hlVTpnNW+E8QggRfyfNaTKgSrclR6D
-         TTkSRhVDSnEceSgzzapxFW6SiS4eYbJJ+85iOaso=
+        b=dIwEXNBFd1/6ifSNinzVmWHvYB+QEJb+OyDi5MqFTfSqp3HcWhK1pQd+zb3Xssc/v
+         u8TFlujkAcV3KN3KhAT9CIZJZJvaguwgCi+SAmkCP6t5iIwP9KEO++zv0hfJSXZt2s
+         pAJuXLfvyMbTpz750xFE2iiYk2uX7wwe9FhRLzcM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Lu Baolu <baolu.lu@linux.intel.com>,
         Joerg Roedel <jroedel@suse.de>,
         Sasha Levin <sashal@kernel.org>,
         iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.9 15/15] iommu/vt-d: Fix the wrong printing in RHSA parsing
-Date:   Wed, 18 Mar 2020 16:56:29 -0400
-Message-Id: <20200318205629.17750-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 14/15] iommu/vt-d: quirk_ioat_snb_local_iommu: replace WARN_TAINT with pr_warn + add_taint
+Date:   Wed, 18 Mar 2020 16:56:28 -0400
+Message-Id: <20200318205629.17750-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205629.17750-1-sashal@kernel.org>
 References: <20200318205629.17750-1-sashal@kernel.org>
@@ -61,38 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit b0bb0c22c4db623f2e7b1a471596fbf1c22c6dc5 ]
+[ Upstream commit 81ee85d0462410de8eeeec1b9761941fd6ed8c7b ]
 
-When base address in RHSA structure doesn't match base address in
-each DRHD structure, the base address in last DRHD is printed out.
+Quoting from the comment describing the WARN functions in
+include/asm-generic/bug.h:
 
-This doesn't make sense when there are multiple DRHD units, fix it
-by printing the buggy RHSA's base address.
+ * WARN(), WARN_ON(), WARN_ON_ONCE, and so on can be used to report
+ * significant kernel issues that need prompt attention if they should ever
+ * appear at runtime.
+ *
+ * Do not use these macros when checking for invalid external inputs
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Fixes: fd0c8894893cb ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
+The (buggy) firmware tables which the dmar code was calling WARN_TAINT
+for really are invalid external inputs. They are not under the kernel's
+control and the issues in them cannot be fixed by a kernel update.
+So logging a backtrace, which invites bug reports to be filed about this,
+is not helpful.
+
+Fixes: 556ab45f9a77 ("ioat2: catch and recover from broken vtd configurations v6")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Link: https://lore.kernel.org/r/20200309182510.373875-1-hdegoede@redhat.com
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=701847
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dmar.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/intel-iommu.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index d51734e0c3504..6e3ab76f29f1a 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -485,7 +485,7 @@ static int dmar_parse_one_rhsa(struct acpi_dmar_header *header, void *arg)
- 		1, TAINT_FIRMWARE_WORKAROUND,
- 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
- 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
--		drhd->reg_base_addr,
-+		rhsa->base_address,
- 		dmi_get_system_info(DMI_BIOS_VENDOR),
- 		dmi_get_system_info(DMI_BIOS_VERSION),
- 		dmi_get_system_info(DMI_PRODUCT_VERSION));
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 5c6e0a9fd2f36..0a125f1b9efe1 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -4085,10 +4085,11 @@ static void quirk_ioat_snb_local_iommu(struct pci_dev *pdev)
+ 
+ 	/* we know that the this iommu should be at offset 0xa000 from vtbar */
+ 	drhd = dmar_find_matched_drhd_unit(pdev);
+-	if (WARN_TAINT_ONCE(!drhd || drhd->reg_base_addr - vtbar != 0xa000,
+-			    TAINT_FIRMWARE_WORKAROUND,
+-			    "BIOS assigned incorrect VT-d unit for Intel(R) QuickData Technology device\n"))
++	if (!drhd || drhd->reg_base_addr - vtbar != 0xa000) {
++		pr_warn_once(FW_BUG "BIOS assigned incorrect VT-d unit for Intel(R) QuickData Technology device\n");
++		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+ 		pdev->dev.archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
++	}
+ }
+ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_IOAT_SNB, quirk_ioat_snb_local_iommu);
+ 
 -- 
 2.20.1
 
