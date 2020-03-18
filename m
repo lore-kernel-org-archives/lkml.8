@@ -2,80 +2,212 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1F1C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E6EC5ACD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E21420663
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F0F20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ox330UjF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgCRQWw (ORCPT
+        id S1727116AbgCRQYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:22:52 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:45488 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCRQWw (ORCPT
+        Wed, 18 Mar 2020 12:24:08 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2624 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCRQYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 12:22:52 -0400
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 65537200B32;
-        Wed, 18 Mar 2020 16:22:50 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 4EC3B20B1B; Wed, 18 Mar 2020 17:20:29 +0100 (CET)
-Date:   Wed, 18 Mar 2020 17:20:29 +0100
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Keyon Jie <yang.jie@linux.intel.com>, cezary.rojewski@intel.com,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com, broonie@kernel.org
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-Message-ID: <20200318162029.GA3999@light.dominikbrodowski.net>
-References: <20200318063022.GA116342@light.dominikbrodowski.net>
- <41d0b2b5-6014-6fab-b6a2-7a7dbc4fe020@linux.intel.com>
- <20200318123930.GA2433@light.dominikbrodowski.net>
- <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
+        Wed, 18 Mar 2020 12:24:07 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e724af50000>; Wed, 18 Mar 2020 09:23:17 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 18 Mar 2020 09:24:06 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 18 Mar 2020 09:24:06 -0700
+Received: from [10.2.175.141] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar
+ 2020 16:24:05 +0000
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+ <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
+ <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
+ <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
+ <5f54c018-5670-8193-7c68-969f9bde92f6@xs4all.nl>
+ <19081d90-62cc-e6eb-0337-f108fb6ca9bc@nvidia.com>
+Message-ID: <061eabf1-4b6f-83c0-6851-df8a193a84e8@nvidia.com>
+Date:   Wed, 18 Mar 2020 09:25:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
+In-Reply-To: <19081d90-62cc-e6eb-0337-f108fb6ca9bc@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584548597; bh=4AkSXVqHDrCp7I1KwaJ8XUtzUo2d9f+JxqC9kjrpnek=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=ox330UjFEh91bRxhmgIQsRxrtGNZ61NEwV6wSmfZk3KiOCM+oSZMDVdAnkmab/5kH
+         jcP4ZP+T58yGHrw5nHzb3hsj8d2XTQ3CNJ08vtxdalAvlfuXqwxUXJuAwpqZEMNQxY
+         b20NyBh3ceIY5Tb7EskrUHJUXQ6no8S4A9opXOTKKAySQSL4pBGk82Vylcam3ZWj82
+         IeCTa8pmJbwQJ3QcqRVK/shyGYXIpWyYaIq8GArYfl+wPP4Uf5+5/ByEfOXd/gfpZI
+         Vkshrk9+67NTbuh1Tlw6q/12BOKt1cC+QUPqDcXuNBVPes1cMHDuw514HaskrZ7ILQ
+         6uOdqTh9pIH1g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 10:13:54AM -0500, Pierre-Louis Bossart wrote:
-> 
-> 
-> > > > While 5.5.x works fine, mainline as of ac309e7744be (v5.6-rc6+) causes me
-> > > > some sound-related trouble: after boot, the sound works fine -- but once I
-> > > > suspend and resume my broadwell-based XPS13, I need to switch to headphone
-> > > > and back to speaker to hear something. But what I hear isn't music but
-> > > > garbled output.
-> 
-> It's my understanding that the use of the haswell driver is opt-in for Dell
-> XPS13 9343. When we run the SOF driver on this device, we have to explicitly
-> bypass an ACPI quirk that forces HDAudio to be used:
-> 
-> https://github.com/thesofproject/linux/commit/944b6a2d620a556424ed4195c8428485fcb6c2bd
-> 
-> Have you tried to run in plain vanilla HDAudio mode?
 
-I had (see 18d78b64fddc), but not any more in years (and I'd like to keep
-using I2S, which has worked flawlessly in these years).
+On 3/18/20 9:14 AM, Sowjanya Komatineni wrote:
+>
+> On 3/18/20 4:48 AM, Hans Verkuil wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> On 2/24/20 5:45 AM, Sowjanya Komatineni wrote:
+>>> On 2/20/20 11:11 AM, Sowjanya Komatineni wrote:
+>>>> On 2/20/20 5:33 AM, Hans Verkuil wrote:
+>>>>> External email: Use caution opening links or attachments
+>>>>>
+>>>>>
+>>>>> (Replying to myself so I can explain this a bit more)
+>>>>>
+>>>>> On 2/20/20 1:44 PM, Hans Verkuil wrote:
+>>>>>>> +
+>>>>>>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct device_node *node =3D csi->dev->of_node;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int port_num;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 int ret;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct tegra_csi_channel *item;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int tpg_channels =3D csi->soc->csi_max=
+_channels;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 /* allocate CSI channel for each CSI x2 ports *=
+/
+>>>>>>> +=C2=A0=C2=A0=C2=A0 for (port_num =3D 0; port_num < tpg_channels; p=
+ort_num++) {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ item =3D devm_kzalloc(csi->dev, sizeof(*item),=20
+>>>>>>> GFP_KERNEL);
+>>>>>> Using devm_*alloc can be dangerous. If someone unbinds the=20
+>>>>>> driver, then
+>>>>>> all memory allocated with devm_ is immediately freed. But if an
+>>>>>> application
+>>>>>> still has a filehandle open, then when it closes it it might still
+>>>>>> reference
+>>>>>> this already-freed memory.
+>>>>>>
+>>>>>> I recommend that you avoid using devm_*alloc for media drivers.
+>>>>> A good test is to unbind & bind the driver:
+>>>>>
+>>>>> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
+>>>>> echo -n 54080000.vi >unbind
+>>>>> echo -n 54080000.vi >bind
+>>>>>
+>>>>> First just do this without the driver being used. That already
+>>>>> gives me 'list_del corruption' kernel messages (list debugging
+>>>>> is turned on in my kernel).
+>>> Will fix in v4 to use kzalloc and also proper release v4l2 to make sure
+>>> unbind/bind works properly.
+>>>
+>>> BTW, tegra vi and csi are registered as clients to host1x video driver.
+>>>
+>>> So, unbind and bind should be done with host1x video driver=20
+>>> "tegra-video"
+>>>
+>>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>>> echo -n tegra-video > unbind
+>>> echo -n tegra-video > bind
+>> This still crashes with v4, at least if I am streaming with v4l2-ctl=20
+>> --stream-mmap.
+>> Is that known?
+>>
+>> It's not a big deal at this moment, just want to know if this will be=20
+>> looked
+>> at later.
+>>
+>> Regards,
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Hans
+>
+> Weird, I tested streaming after unbind and bind as well and don't see=20
+> crash. Did below steps and tried several times unbind/bind as well.
+>
+> ./v4l2-ctl --stream-mmap --stream-count=3D1 -d /dev/video3
+> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+> echo -n tegra-video > unbind
+> sleep 1
+> echo -n tegra-video > bind
+> cd /home/ubuntu
+> ./v4l2-ctl --stream-mmap --stream-count=3D1 -d /dev/video3
+>
+> Can you post call trace when you saw crash?
 
-Thanks,
-	Dominik
+Tried unbind when=C2=A0 node is open with v4l2-ctl --sleep 10 as well and=20
+bind back.
+
+I don't see crash. Will confirm on doing unbind/bind with stream-mmap...
+
+>
+>>>>> Note that this first test is basically identical to a rmmod/modprobe
+>>>>> of the driver. But when I compiled the driver as a module it didn't
+>>>>> create any video device nodes! Nor did I see any errors in the kernel
+>>>>> log. I didn't pursue this, and perhaps I did something wrong, but=20
+>>>>> it's
+>>>>> worth taking a look at.
+>>>>>
+>>>>> The next step would be to have a video node open with:
+>>>>>
+>>>>> v4l2-ctl --sleep 10
+>>>>>
+>>>>> then while it is sleeping unbind the driver and see what happens
+>>>>> when v4l2-ctl exits.
+>>>>>
+>>>>> Worst case is when you are streaming:
+>>>>>
+>>>>> v4l2-ctl --stream-mmap
+>>>>>
+>>>>> and then unbind.
+>>>>>
+>>>>> In general, the best way to get this to work correctly is:
+>>>>>
+>>>>> 1) don't use devm_*alloc
+>>>>> 2) set the release callback of struct v4l2_device and do all freeing
+>>>>> there.
+>>>>> 3) in the platform remove() callback you call=20
+>>>>> media_device_unregister()
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 and video_unregister_device().
+>>>> Reg 3, in current patch, media_device_unregister is called in
+>>>> host1x_video_remove
+>>>> video_unregister_device happens during host1x_video_remove ->
+>>>> host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
+>>>>
+>>>>> It's worth getting this right in this early stage, rather than=20
+>>>>> fixing it
+>>>>> in the future.
+>>>>>
+>>>>> Regards,
+>>>>>
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Hans
