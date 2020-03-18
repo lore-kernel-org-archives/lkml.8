@@ -2,83 +2,106 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E53AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34963C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B23520724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1231B20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgCRS5y (ORCPT
+        id S1727049AbgCRS6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:57:54 -0400
-Received: from namei.org ([65.99.196.166]:42030 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgCRS5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:57:54 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 02IIvYvj029893;
-        Wed, 18 Mar 2020 18:57:34 GMT
-Date:   Thu, 19 Mar 2020 05:57:34 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     David Howells <dhowells@redhat.com>
-cc:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-security-module@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
-        raven@themaw.net, christian@brauner.io, andres@anarazel.de,
-        jlayton@redhat.com, dray@redhat.com, kzak@redhat.com,
-        keyrings@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/17] security: Add a hook for the point of notification
- insertion [ver #5]
-In-Reply-To: <158454382138.2863966.4611034029343321389.stgit@warthog.procyon.org.uk>
-Message-ID: <alpine.LRH.2.21.2003190557200.29708@namei.org>
-References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk> <158454382138.2863966.4611034029343321389.stgit@warthog.procyon.org.uk>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Wed, 18 Mar 2020 14:58:19 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:48908 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgCRS6S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 14:58:18 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id D26128060A;
+        Wed, 18 Mar 2020 19:58:15 +0100 (CET)
+Date:   Wed, 18 Mar 2020 19:58:14 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH v2 3/3] MAINTAINERS: Update feiyang, st7701 panel
+ bindings converted as YAML
+Message-ID: <20200318185814.GB28092@ravnborg.org>
+References: <20200318171003.5179-1-jagan@amarulasolutions.com>
+ <20200318171003.5179-3-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318171003.5179-3-jagan@amarulasolutions.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=iP-xVBlJAAAA:8
+        a=20KFwNOVAAAA:8 a=WZHNqt2aAAAA:8 a=e5mUnYsNAAAA:8 a=9Nv2NtiChPkpYjpV1K0A:9
+        a=CjuIK1q_8ugA:10 a=lHLH-nfn2y1bM_0xSXwp:22 a=PrHl9onO2p7xFKlKy1af:22
+        a=Vxmtnl_E_bksehYqCbjh:22 a=pHzHmUro8NiASowvMSCR:22
+        a=nt3jZW36AmriUCFCBwmW:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020, David Howells wrote:
+On Wed, Mar 18, 2020 at 10:40:03PM +0530, Jagan Teki wrote:
+> The feiyang,fy07024di26a30d.txt and sitronix,st7701.txt has been
+> converted to YAML schemas, update MAINTAINERS to match them again.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 
-> Add a security hook that allows an LSM to rule on whether a notification
-> message is allowed to be inserted into a particular watch queue.
-> 
-> The hook is given the following information:
-> 
->  (1) The credentials of the triggerer (which may be init_cred for a system
->      notification, eg. a hardware error).
-> 
->  (2) The credentials of the whoever set the watch.
-> 
->  (3) The notification message.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Casey Schaufler <casey@schaufler-ca.com>
-> cc: Stephen Smalley <sds@tycho.nsa.gov>
-> cc: linux-security-module@vger.kernel.org
+The patch is fine.
+I just dislike we repeat the maintainer info in two places..
+
+	Sam
+
+
 > ---
+> Changes for v2:
+> - none
 > 
->  include/linux/lsm_hooks.h |   14 ++++++++++++++
->  include/linux/security.h  |   14 ++++++++++++++
->  security/security.c       |    9 +++++++++
->  3 files changed, 37 insertions(+)
-
-
-Acked-by: James Morris <jamorris@linux.microsoft.com>
-
-
--- 
-James Morris
-<jmorris@namei.org>
-
+>  MAINTAINERS | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6ba8b584bf95..b987f2588e6a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5273,7 +5273,7 @@ DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
+>  M:	Jagan Teki <jagan@amarulasolutions.com>
+>  S:	Maintained
+>  F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
+> -F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+> +F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+>  
+>  DRM DRIVER FOR GRAIN MEDIA GM12U320 PROJECTORS
+>  M:	Hans de Goede <hdegoede@redhat.com>
+> @@ -5416,7 +5416,7 @@ DRM DRIVER FOR SITRONIX ST7701 PANELS
+>  M:	Jagan Teki <jagan@amarulasolutions.com>
+>  S:	Maintained
+>  F:	drivers/gpu/drm/panel/panel-sitronix-st7701.c
+> -F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
+> +F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
+>  
+>  DRM DRIVER FOR SITRONIX ST7586 PANELS
+>  M:	David Lechner <david@lechnology.com>
+> -- 
+> 2.17.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
