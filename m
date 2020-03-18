@@ -2,84 +2,258 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B762C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DF4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4811620773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F072520774
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584541655;
+	bh=Dd0I6gJdFP3tdNKjkmqWtLsiTFWqQN9a4bmsiNfbQ5E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vbj33Z5h3N0s5/CHSD6CpBPJU+zE+l3s+lnurBGo+34Fxx+zFSsT6wez/avLhRRLh
+	 mlWubWhY/D08KoiY35sUcsrHtt8l8hJqfSmu0j/sLxlKmgtJDpUnV1vdFR8ycIgm8B
+	 6GiVfq1lRKpDOZ2wq1C6YLfUGLVUXxRe/uWF0haI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgCRO1V (ORCPT
+        id S1727256AbgCRO1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:27:21 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:37362 "EHLO gloria.sntech.de"
+        Wed, 18 Mar 2020 10:27:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726971AbgCRO1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:27:00 -0400
-Received: from [94.134.91.63] (helo=phil.fritz.box)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jEZeo-0004YX-VA; Wed, 18 Mar 2020 15:26:55 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     gregkh@linuxfoundation.org
-Cc:     jslaby@suse.com, andriy.shevchenko@linux.intel.com,
-        matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, heiko@sntech.de,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH 4/7] serial: 8250: Start rs485 after registering port if rs485 is enabled in probe
-Date:   Wed, 18 Mar 2020 15:26:37 +0100
-Message-Id: <20200318142640.982763-5-heiko@sntech.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200318142640.982763-1-heiko@sntech.de>
-References: <20200318142640.982763-1-heiko@sntech.de>
+        id S1726944AbgCRO1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 10:27:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D8BA20773;
+        Wed, 18 Mar 2020 14:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584541652;
+        bh=Dd0I6gJdFP3tdNKjkmqWtLsiTFWqQN9a4bmsiNfbQ5E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VH30heCq28kcoLu8iJMQy19+CyR0NGqsNDbMt32kzY9ihOAr0T+mY3FhRtdj45loj
+         /3keiDCn6/V5PMQoSRjG6eFFSh2hsPghb5UK/+3m0b+ogB9H1+NI5H6x5xTFUC5VKB
+         z4OEq4zln3D4ygwpwOJv0Wi5wpANcFaA6/MSuJq0=
+Date:   Wed, 18 Mar 2020 15:27:30 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>, arnd@arndb.de,
+        smohanad@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/16] bus: mhi: core: Add support for registering MHI
+ client drivers
+Message-ID: <20200318142730.GB2807628@kroah.com>
+References: <20200220095854.4804-1-manivannan.sadhasivam@linaro.org>
+ <20200220095854.4804-4-manivannan.sadhasivam@linaro.org>
+ <20200318133626.GA2801580@kroah.com>
+ <db612e12-0033-31cc-60fc-62e45dda4342@codeaurora.org>
+ <20200318140034.GA2805201@kroah.com>
+ <20200318142312.GA11494@Mani-XPS-13-9360>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318142312.GA11494@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+On Wed, Mar 18, 2020 at 07:53:12PM +0530, Manivannan Sadhasivam wrote:
+> Hi Greg,
+> 
+> On Wed, Mar 18, 2020 at 03:00:34PM +0100, Greg KH wrote:
+> > On Wed, Mar 18, 2020 at 07:54:30AM -0600, Jeffrey Hugo wrote:
+> > > On 3/18/2020 7:36 AM, Greg KH wrote:
+> > > > On Thu, Feb 20, 2020 at 03:28:41PM +0530, Manivannan Sadhasivam wrote:
+> > > > > This commit adds support for registering MHI client drivers with the
+> > > > > MHI stack. MHI client drivers binds to one or more MHI devices inorder
+> > > > > to sends and receive the upper-layer protocol packets like IP packets,
+> > > > > modem control messages, and diagnostics messages over MHI bus.
+> > > > > 
+> > > > > This is based on the patch submitted by Sujeev Dias:
+> > > > > https://lkml.org/lkml/2018/7/9/987
+> > > > > 
+> > > > > Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
+> > > > > Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> > > > > [mani: splitted and cleaned up for upstream]
+> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > > > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > > > ---
+> > > > >   drivers/bus/mhi/core/init.c | 149 ++++++++++++++++++++++++++++++++++++
+> > > > >   include/linux/mhi.h         |  39 ++++++++++
+> > > > >   2 files changed, 188 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+> > > > > index 6f24c21284ec..12e386862b3f 100644
+> > > > > --- a/drivers/bus/mhi/core/init.c
+> > > > > +++ b/drivers/bus/mhi/core/init.c
+> > > > > @@ -374,8 +374,157 @@ struct mhi_device *mhi_alloc_device(struct mhi_controller *mhi_cntrl)
+> > > > >   	return mhi_dev;
+> > > > >   }
+> > > > > +static int mhi_driver_probe(struct device *dev)
+> > > > > +{
+> > > > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> > > > > +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
+> > > > > +	struct device_driver *drv = dev->driver;
+> > > > > +	struct mhi_driver *mhi_drv = to_mhi_driver(drv);
+> > > > > +	struct mhi_event *mhi_event;
+> > > > > +	struct mhi_chan *ul_chan = mhi_dev->ul_chan;
+> > > > > +	struct mhi_chan *dl_chan = mhi_dev->dl_chan;
+> > > > > +
+> > > > > +	if (ul_chan) {
+> > > > > +		/*
+> > > > > +		 * If channel supports LPM notifications then status_cb should
+> > > > > +		 * be provided
+> > > > > +		 */
+> > > > > +		if (ul_chan->lpm_notify && !mhi_drv->status_cb)
+> > > > > +			return -EINVAL;
+> > > > > +
+> > > > > +		/* For non-offload channels then xfer_cb should be provided */
+> > > > > +		if (!ul_chan->offload_ch && !mhi_drv->ul_xfer_cb)
+> > > > > +			return -EINVAL;
+> > > > > +
+> > > > > +		ul_chan->xfer_cb = mhi_drv->ul_xfer_cb;
+> > > > > +	}
+> > > > > +
+> > > > > +	if (dl_chan) {
+> > > > > +		/*
+> > > > > +		 * If channel supports LPM notifications then status_cb should
+> > > > > +		 * be provided
+> > > > > +		 */
+> > > > > +		if (dl_chan->lpm_notify && !mhi_drv->status_cb)
+> > > > > +			return -EINVAL;
+> > > > > +
+> > > > > +		/* For non-offload channels then xfer_cb should be provided */
+> > > > > +		if (!dl_chan->offload_ch && !mhi_drv->dl_xfer_cb)
+> > > > > +			return -EINVAL;
+> > > > > +
+> > > > > +		mhi_event = &mhi_cntrl->mhi_event[dl_chan->er_index];
+> > > > > +
+> > > > > +		/*
+> > > > > +		 * If the channel event ring is managed by client, then
+> > > > > +		 * status_cb must be provided so that the framework can
+> > > > > +		 * notify pending data
+> > > > > +		 */
+> > > > > +		if (mhi_event->cl_manage && !mhi_drv->status_cb)
+> > > > > +			return -EINVAL;
+> > > > > +
+> > > > > +		dl_chan->xfer_cb = mhi_drv->dl_xfer_cb;
+> > > > > +	}
+> > > > > +
+> > > > > +	/* Call the user provided probe function */
+> > > > > +	return mhi_drv->probe(mhi_dev, mhi_dev->id);
+> > > > > +}
+> > > > > +
+> > > > > +static int mhi_driver_remove(struct device *dev)
+> > > > > +{
+> > > > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> > > > > +	struct mhi_driver *mhi_drv = to_mhi_driver(dev->driver);
+> > > > > +	struct mhi_chan *mhi_chan;
+> > > > > +	enum mhi_ch_state ch_state[] = {
+> > > > > +		MHI_CH_STATE_DISABLED,
+> > > > > +		MHI_CH_STATE_DISABLED
+> > > > > +	};
+> > > > > +	int dir;
+> > > > > +
+> > > > > +	/* Skip if it is a controller device */
+> > > > > +	if (mhi_dev->dev_type == MHI_DEVICE_CONTROLLER)
+> > > > > +		return 0;
+> > > > > +
+> > > > > +	/* Reset both channels */
+> > > > > +	for (dir = 0; dir < 2; dir++) {
+> > > > > +		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
+> > > > > +
+> > > > > +		if (!mhi_chan)
+> > > > > +			continue;
+> > > > > +
+> > > > > +		/* Wake all threads waiting for completion */
+> > > > > +		write_lock_irq(&mhi_chan->lock);
+> > > > > +		mhi_chan->ccs = MHI_EV_CC_INVALID;
+> > > > > +		complete_all(&mhi_chan->completion);
+> > > > > +		write_unlock_irq(&mhi_chan->lock);
+> > > > > +
+> > > > > +		/* Set the channel state to disabled */
+> > > > > +		mutex_lock(&mhi_chan->mutex);
+> > > > > +		write_lock_irq(&mhi_chan->lock);
+> > > > > +		ch_state[dir] = mhi_chan->ch_state;
+> > > > > +		mhi_chan->ch_state = MHI_CH_STATE_SUSPENDED;
+> > > > > +		write_unlock_irq(&mhi_chan->lock);
+> > > > > +
+> > > > > +		mutex_unlock(&mhi_chan->mutex);
+> > > > > +	}
+> > > > > +
+> > > > > +	mhi_drv->remove(mhi_dev);
+> > > > > +
+> > > > > +	/* De-init channel if it was enabled */
+> > > > > +	for (dir = 0; dir < 2; dir++) {
+> > > > > +		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
+> > > > > +
+> > > > > +		if (!mhi_chan)
+> > > > > +			continue;
+> > > > > +
+> > > > > +		mutex_lock(&mhi_chan->mutex);
+> > > > > +
+> > > > > +		mhi_chan->ch_state = MHI_CH_STATE_DISABLED;
+> > > > > +
+> > > > > +		mutex_unlock(&mhi_chan->mutex);
+> > > > > +	}
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +
+> > > > > +int mhi_driver_register(struct mhi_driver *mhi_drv)
+> > > > > +{
+> > > > > +	struct device_driver *driver = &mhi_drv->driver;
+> > > > > +
+> > > > > +	if (!mhi_drv->probe || !mhi_drv->remove)
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > > +	driver->bus = &mhi_bus_type;
+> > > > > +	driver->probe = mhi_driver_probe;
+> > > > > +	driver->remove = mhi_driver_remove;
+> > > > > +
+> > > > > +	return driver_register(driver);
+> > > > > +}
+> > > > > +EXPORT_SYMBOL_GPL(mhi_driver_register);
+> > > > 
+> > > > You don't care about module owners of the driver?  Odd :(
+> > > > 
+> > > > (hint, you probably should...)
+> > > > 
+> > > > greg k-h
+> > > > 
+> > > 
+> > > For my own education, can you please clarify your comment?  I'm not sure
+> > > that I understand the context of what you are saying (ie why is this export
+> > > a possible problem?).
+> > 
+> > Sorry, it didn't have to do with the export, it had to do with the fact
+> > that your driver_register() function does not pass in the owner of the
+> > module of the driver, like almost all other subsystems do.  That way you
+> > can try to protect the module from being unloaded if it has files open
+> > assigned to it.
+> > 
+> > If you don't have any userspace accesses like that, to the driver, then
+> > nevermind, all is fine :)
+> > 
+> 
+> This is not needed right now but I'll fix this anyway to avoid issues in
+> future :)
+> 
+> Btw, may I know the status of this series? Do you have any more comments
+> or do you happen to wait for more reviews?
 
-Before registering a port 8250 drivers may read devicetree information
-regarding rs485 emulation, but starting the em485 emulation at that point
-would only keep the em485 structure in the template uart port.
+It would be nice to get other reviews, but other than what I noticed
+above, it looks sane to me.  Am I the one supposed to take these
+patches?
 
-Also at that point before the port is registered possible gpios for
-rts/dtr are not acquired yet as well.
+thanks,
 
-So simply check after acquiring the port if the rs485-enable flag is set
-and start the config callback in that case.
-
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
----
- drivers/tty/serial/8250/8250_core.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index e682390ce0de..beab1c22b34d 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -1068,6 +1068,15 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
- 		if (up->dl_write)
- 			uart->dl_write = up->dl_write;
- 
-+		if (uart->port.rs485_config &&
-+		    (uart->port.rs485.flags & SER_RS485_ENABLED)) {
-+			dev_dbg(uart->port.dev, "starting in rs485 mode\n");
-+			ret = uart->port.rs485_config(&uart->port,
-+						      &uart->port.rs485);
-+			if (ret < 0)
-+				goto out_unlock;
-+		}
-+
- 		if (uart->port.type != PORT_8250_CIR) {
- 			if (serial8250_isa_config != NULL)
- 				serial8250_isa_config(0, &uart->port,
--- 
-2.24.1
-
+greg k-h
