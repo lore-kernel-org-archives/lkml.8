@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189E2C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D85EC4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D145520409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A60D20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565377;
-	bh=QwssEJY9YhkmdjyuruQXGe5BxtQkNAjH9XpgNWCscko=;
+	s=default; t=1584565383;
+	bh=PCQiCcLpjOfTjr2w4cHvIxBjxX8NXcJ9mXahb2ETR8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E27UDI1LruPLOaRZhsRfeMFgnkhAqK7ldoRdFeDmsaOyaKw/v9ntKbBBrVtApWE3b
-	 JjE26dc1aWSTWCwZNV8I2yAqzDEVBp+ugLhNlupfGM2mcoFvWt5vb6TchCt6wKSP+t
-	 bTcdSIGBFPs6iwWysoup9mZGZjED+lNAncIfRIhQ=
+	b=wula61pcxmX+HPz0qjcSSfTRFYsvflc4/uE8QssQjH5Em9dheu/TqVDYTHz2rWhRR
+	 wXN9Yi4JMlzl3DwvRxtmWwl6jaa8tOg4jygFkA3rabkjRY3rbOImXIB9lUMH7mqo1P
+	 msJA6NZgit3AN2xa6ZBU+luvrW/gJkXgItwQel0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgCRVC4 (ORCPT
+        id S1728441AbgCRUzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:02:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56296 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728453AbgCRUzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:47 -0400
+        id S1728371AbgCRUzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DC30208CA;
-        Wed, 18 Mar 2020 20:55:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C72EB208DB;
+        Wed, 18 Mar 2020 20:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564946;
-        bh=QwssEJY9YhkmdjyuruQXGe5BxtQkNAjH9XpgNWCscko=;
+        s=default; t=1584564938;
+        bh=PCQiCcLpjOfTjr2w4cHvIxBjxX8NXcJ9mXahb2ETR8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DjX3ctxqLrBZHbWDqJIUKIvjPEJwJ1Kmg3wpZXXgYV95IdeXpF8rPpR8WzZ1acjwZ
-         ULDV+2qCQvHrezSaos5pyRO7KhidOAmujnBt84pB87A/0ML5eljrSZj7An0Vuw9U9J
-         RhDuQbq2uS9I4/nTeTIAaPbDbSlzhFi2F7xf17Bs=
+        b=1CZk27v5Hizcf+vaPfM1MaaQmMY0mh78baAgcNFU/kT7Vknq/dyB/4Sfb3XZmN8am
+         hewM2OzyUVBbRCU649sJoYq8NR2jFPRXxePCSDB9KQRNUIZGCEiHq2qP7mUkjLsbi2
+         kzcQztzqLzLO9WnmuNQNaQk+Z+uCA28gj6J8yYCY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wen Xiong <wenxiong@linux.vnet.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 31/37] scsi: ipr: Fix softlockup when rescanning devices in petitboot
-Date:   Wed, 18 Mar 2020 16:55:03 -0400
-Message-Id: <20200318205509.17053-31-sashal@kernel.org>
+Cc:     Jiri Wiesner <jwiesner@suse.com>,
+        Per Sundstrom <per.sundstrom@redqube.se>,
+        Eric Dumazet <edumazet@google.com>,
+        Mahesh Bandewar <maheshb@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 24/37] ipvlan: do not add hardware address of master to its unicast filter list
+Date:   Wed, 18 Mar 2020 16:54:56 -0400
+Message-Id: <20200318205509.17053-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
@@ -59,105 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Xiong <wenxiong@linux.vnet.ibm.com>
+From: Jiri Wiesner <jwiesner@suse.com>
 
-[ Upstream commit 394b61711f3ce33f75bf70a3e22938464a13b3ee ]
+[ Upstream commit 63aae7b17344d4b08a7d05cb07044de4c0f9dcc6 ]
 
-When trying to rescan disks in petitboot shell, we hit the following
-softlockup stacktrace:
+There is a problem when ipvlan slaves are created on a master device that
+is a vmxnet3 device (ipvlan in VMware guests). The vmxnet3 driver does not
+support unicast address filtering. When an ipvlan device is brought up in
+ipvlan_open(), the ipvlan driver calls dev_uc_add() to add the hardware
+address of the vmxnet3 master device to the unicast address list of the
+master device, phy_dev->uc. This inevitably leads to the vmxnet3 master
+device being forced into promiscuous mode by __dev_set_rx_mode().
 
-Kernel panic - not syncing: System is deadlocked on memory
-[  241.223394] CPU: 32 PID: 693 Comm: sh Not tainted 5.4.16-openpower1 #1
-[  241.223406] Call Trace:
-[  241.223415] [c0000003f07c3180] [c000000000493fc4] dump_stack+0xa4/0xd8 (unreliable)
-[  241.223432] [c0000003f07c31c0] [c00000000007d4ac] panic+0x148/0x3cc
-[  241.223446] [c0000003f07c3260] [c000000000114b10] out_of_memory+0x468/0x4c4
-[  241.223461] [c0000003f07c3300] [c0000000001472b0] __alloc_pages_slowpath+0x594/0x6d8
-[  241.223476] [c0000003f07c3420] [c00000000014757c] __alloc_pages_nodemask+0x188/0x1a4
-[  241.223492] [c0000003f07c34a0] [c000000000153e10] alloc_pages_current+0xcc/0xd8
-[  241.223508] [c0000003f07c34e0] [c0000000001577ac] alloc_slab_page+0x30/0x98
-[  241.223524] [c0000003f07c3520] [c0000000001597fc] new_slab+0x138/0x40c
-[  241.223538] [c0000003f07c35f0] [c00000000015b204] ___slab_alloc+0x1e4/0x404
-[  241.223552] [c0000003f07c36c0] [c00000000015b450] __slab_alloc+0x2c/0x48
-[  241.223566] [c0000003f07c36f0] [c00000000015b754] kmem_cache_alloc_node+0x9c/0x1b4
-[  241.223582] [c0000003f07c3760] [c000000000218c48] blk_alloc_queue_node+0x34/0x270
-[  241.223599] [c0000003f07c37b0] [c000000000226574] blk_mq_init_queue+0x2c/0x78
-[  241.223615] [c0000003f07c37e0] [c0000000002ff710] scsi_mq_alloc_queue+0x28/0x70
-[  241.223631] [c0000003f07c3810] [c0000000003005b8] scsi_alloc_sdev+0x184/0x264
-[  241.223647] [c0000003f07c38a0] [c000000000300ba0] scsi_probe_and_add_lun+0x288/0xa3c
-[  241.223663] [c0000003f07c3a00] [c000000000301768] __scsi_scan_target+0xcc/0x478
-[  241.223679] [c0000003f07c3b20] [c000000000301c64] scsi_scan_channel.part.9+0x74/0x7c
-[  241.223696] [c0000003f07c3b70] [c000000000301df4] scsi_scan_host_selected+0xe0/0x158
-[  241.223712] [c0000003f07c3bd0] [c000000000303f04] store_scan+0x104/0x114
-[  241.223727] [c0000003f07c3cb0] [c0000000002d5ac4] dev_attr_store+0x30/0x4c
-[  241.223741] [c0000003f07c3cd0] [c0000000001dbc34] sysfs_kf_write+0x64/0x78
-[  241.223756] [c0000003f07c3cf0] [c0000000001da858] kernfs_fop_write+0x170/0x1b8
-[  241.223773] [c0000003f07c3d40] [c0000000001621fc] __vfs_write+0x34/0x60
-[  241.223787] [c0000003f07c3d60] [c000000000163c2c] vfs_write+0xa8/0xcc
-[  241.223802] [c0000003f07c3db0] [c000000000163df4] ksys_write+0x70/0xbc
-[  241.223816] [c0000003f07c3e20] [c00000000000b40c] system_call+0x5c/0x68
+Promiscuous mode is switched on the master despite the fact that there is
+still only one hardware address that the master device should use for
+filtering in order for the ipvlan device to be able to receive packets.
+The comment above struct net_device describes the uc_promisc member as a
+"counter, that indicates, that promiscuous mode has been enabled due to
+the need to listen to additional unicast addresses in a device that does
+not implement ndo_set_rx_mode()". Moreover, the design of ipvlan
+guarantees that only the hardware address of a master device,
+phy_dev->dev_addr, will be used to transmit and receive all packets from
+its ipvlan slaves. Thus, the unicast address list of the master device
+should not be modified by ipvlan_open() and ipvlan_stop() in order to make
+ipvlan a workable option on masters that do not support unicast address
+filtering.
 
-As a part of the scan process Linux will allocate and configure a
-scsi_device for each target to be scanned. If the device is not present,
-then the scsi_device is torn down. As a part of scsi_device teardown a
-workqueue item will be scheduled and the lockups we see are because there
-are 250k workqueue items to be processed.  Accoding to the specification of
-SIS-64 sas controller, max_channel should be decreased on SIS-64 adapters
-to 4.
-
-The patch fixes softlockup issue.
-
-Thanks for Oliver Halloran's help with debugging and explanation!
-
-Link: https://lore.kernel.org/r/1583510248-23672-1-git-send-email-wenxiong@linux.vnet.ibm.com
-Signed-off-by: Wen Xiong <wenxiong@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 2ad7bf3638411 ("ipvlan: Initial check-in of the IPVLAN driver")
+Reported-by: Per Sundstrom <per.sundstrom@redqube.se>
+Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Mahesh Bandewar <maheshb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ipr.c | 3 ++-
- drivers/scsi/ipr.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ipvlan/ipvlan_main.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/ipr.c b/drivers/scsi/ipr.c
-index 271990bc065b9..1b04a8223eb01 100644
---- a/drivers/scsi/ipr.c
-+++ b/drivers/scsi/ipr.c
-@@ -9958,6 +9958,7 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
- 	ioa_cfg->max_devs_supported = ipr_max_devs;
+diff --git a/drivers/net/ipvlan/ipvlan_main.c b/drivers/net/ipvlan/ipvlan_main.c
+index 0115a2868933c..87f605a33c37a 100644
+--- a/drivers/net/ipvlan/ipvlan_main.c
++++ b/drivers/net/ipvlan/ipvlan_main.c
+@@ -236,7 +236,6 @@ static void ipvlan_uninit(struct net_device *dev)
+ static int ipvlan_open(struct net_device *dev)
+ {
+ 	struct ipvl_dev *ipvlan = netdev_priv(dev);
+-	struct net_device *phy_dev = ipvlan->phy_dev;
+ 	struct ipvl_addr *addr;
  
- 	if (ioa_cfg->sis64) {
-+		host->max_channel = IPR_MAX_SIS64_BUSES;
- 		host->max_id = IPR_MAX_SIS64_TARGETS_PER_BUS;
- 		host->max_lun = IPR_MAX_SIS64_LUNS_PER_TARGET;
- 		if (ipr_max_devs > IPR_MAX_SIS64_DEVS)
-@@ -9966,6 +9967,7 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
- 					   + ((sizeof(struct ipr_config_table_entry64)
- 					       * ioa_cfg->max_devs_supported)));
- 	} else {
-+		host->max_channel = IPR_VSET_BUS;
- 		host->max_id = IPR_MAX_NUM_TARGETS_PER_BUS;
- 		host->max_lun = IPR_MAX_NUM_LUNS_PER_TARGET;
- 		if (ipr_max_devs > IPR_MAX_PHYSICAL_DEVS)
-@@ -9975,7 +9977,6 @@ static void ipr_init_ioa_cfg(struct ipr_ioa_cfg *ioa_cfg,
- 					       * ioa_cfg->max_devs_supported)));
- 	}
+ 	if (ipvlan->port->mode == IPVLAN_MODE_L3 ||
+@@ -250,7 +249,7 @@ static int ipvlan_open(struct net_device *dev)
+ 		ipvlan_ht_addr_add(ipvlan, addr);
+ 	rcu_read_unlock();
  
--	host->max_channel = IPR_VSET_BUS;
- 	host->unique_id = host->host_no;
- 	host->max_cmd_len = IPR_MAX_CDB_LEN;
- 	host->can_queue = ioa_cfg->max_cmds;
-diff --git a/drivers/scsi/ipr.h b/drivers/scsi/ipr.h
-index f6baa23513139..9fbcdc283cdbb 100644
---- a/drivers/scsi/ipr.h
-+++ b/drivers/scsi/ipr.h
-@@ -1313,6 +1313,7 @@ struct ipr_resource_entry {
- #define IPR_ARRAY_VIRTUAL_BUS			0x1
- #define IPR_VSET_VIRTUAL_BUS			0x2
- #define IPR_IOAFP_VIRTUAL_BUS			0x3
-+#define IPR_MAX_SIS64_BUSES			0x4
+-	return dev_uc_add(phy_dev, phy_dev->dev_addr);
++	return 0;
+ }
  
- #define IPR_GET_RES_PHYS_LOC(res) \
- 	(((res)->bus << 24) | ((res)->target << 8) | (res)->lun)
+ static int ipvlan_stop(struct net_device *dev)
+@@ -262,8 +261,6 @@ static int ipvlan_stop(struct net_device *dev)
+ 	dev_uc_unsync(phy_dev, dev);
+ 	dev_mc_unsync(phy_dev, dev);
+ 
+-	dev_uc_del(phy_dev, phy_dev->dev_addr);
+-
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(addr, &ipvlan->addrs, anode)
+ 		ipvlan_ht_addr_del(addr);
 -- 
 2.20.1
 
