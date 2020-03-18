@@ -2,147 +2,145 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373DCC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B9BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1247F20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584553692;
-	bh=nIRM+WY3P5vmQLvcggYZkzjwW+uq3nchuZAFnsr2gLY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uuusHe2sKpEN6IZ5l0oaD6XQs1bx6bO4jNqxnnGm1FPK8tHDQWU5UOFf7Z6MRtHaN
-	 2uOSaJPU9ayp4JnGm0jliP/BxisiQ6AVjwXhAZlPao7q1aluTezN22pViNJkMya9+/
-	 k+JpHISTb7wwMaRW5xag3KRC0tlbnYErRYAC80mE=
+	by mail.kernel.org (Postfix) with ESMTP id 70E0F2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:52:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="RiLItl+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgCRRsL (ORCPT
+        id S1726735AbgCRRv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:48:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbgCRRsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:48:10 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACB6B20752;
-        Wed, 18 Mar 2020 17:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584553688;
-        bh=nIRM+WY3P5vmQLvcggYZkzjwW+uq3nchuZAFnsr2gLY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=z2hysmjLTxToxZUAsYP5vyO0cdtXwbm0WB6Hl6cgzLv3k8l0WarkYNMKFynv6FLGk
-         JUru6IgeSJOZhqP5ir8e9kZrVXlgz3wG07V/yYMI9KmgtYxAS+ECM9O2a8WdhAMCC/
-         UKcnQM2rCMOf9pYvpZsAEEwZkxfPZ+vNxBtFaDOI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jEcnX-00Dhie-06; Wed, 18 Mar 2020 17:48:07 +0000
+        Wed, 18 Mar 2020 13:51:59 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46251 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgCRRv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 13:51:59 -0400
+Received: by mail-qk1-f193.google.com with SMTP id f28so40238347qkk.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=W0JooyDRbeGuBMVupYbPukHqUszgISMZep91jqIkGUg=;
+        b=RiLItl+HDnetbMERCcyRE4Cf16LHcogEpuj7cCaKCEJMbom3dVu9e4Gr3gvq/AKAFP
+         LpT6ZDCJcOxBhjgTo+vwbryV9IyK2BrwA7iOSVlxZgj3uJaZ65OizOG8kV6ZPAFyq5X+
+         0MrF+eR81QFiDC3UoVrdjeXZy52CQVhbYmaK0KBbMYtGroUNVZFjw12fQFr65YO2FUt4
+         tMeF8JdMt6Hna8ZxGesj+2et+M3jmmbIUOrhkbZaKz1pazB0x10KJ7kN69meyMzKaO1B
+         ku+yTYyPYMBFbbToOb6Dy7Ld0u0eZLdJ0qICLpayJU0ZvW37f1eusCWefuOzlFu7A3A9
+         G38w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=W0JooyDRbeGuBMVupYbPukHqUszgISMZep91jqIkGUg=;
+        b=hVSn61y8jACK8TJt7ARRakqFDN9TN7f5BXKDr2PhHEx7bhIYm+7yg6GOqRIfUhDn5U
+         +VjIDmVSQkHKJTv5Cm9Qfx0jcNV7QjK/PJxjYyn+dfi4jcm5f54qzjtBmzHTzrFqvwQ2
+         l+yTKip+Sk+Cdm170BQACl7T8M/8OT/dGr87UX+81h7IOYPsPiztXNXGjaja7MxZkLgX
+         FhpdPA5v80w/Y823Gg89Q0Mu1QuFrVJgrJC1+ZF2ve5LzZXU5KystVLXn0ke0j0rsqOT
+         uhFTDTwkGVU9YN15O6bYffrW0Xp3CoyLT8N/+UqBp1EuFEedXzNJ1dW7ptQ+asQbOpTt
+         zU5w==
+X-Gm-Message-State: ANhLgQ2fdPQxIBhMWMURoOzCqWkzitDLl9Hml0i2893QYJzgHBtbFKe6
+        wd4YdrCeUxUsET2UxBy3c4yBIg==
+X-Google-Smtp-Source: ADFU+vuaYpWrKiiQHqsdsWhN2g1kXkYNMhE/rdbZb3HSZq9R1i8+WtDZrQ8gVJFOvNNKhoNRm8hHfQ==
+X-Received: by 2002:a05:620a:146f:: with SMTP id j15mr5073420qkl.443.1584553918172;
+        Wed, 18 Mar 2020 10:51:58 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:a9a9])
+        by smtp.gmail.com with ESMTPSA id c12sm5317604qtb.49.2020.03.18.10.51.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 10:51:57 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 13:51:55 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     js1304@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Subject: Re: [PATCH v3 2/9] mm/vmscan: protect the workingset on anonymous LRU
+Message-ID: <20200318175155.GB154135@cmpxchg.org>
+References: <1584423717-3440-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1584423717-3440-3-git-send-email-iamjoonsoo.kim@lge.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 18 Mar 2020 17:48:06 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sungbo Eo <mans0n@gorani.run>
-Cc:     linux-oxnas@groups.io, Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] irqchip/versatile-fpga: Handle chained IRQs properly
-In-Reply-To: <20200318170904.1461278-1-mans0n@gorani.run>
-References: <20200318170904.1461278-1-mans0n@gorani.run>
-Message-ID: <112cdab389aa9cc30189c7aec0baded2@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: mans0n@gorani.run, linux-oxnas@groups.io, linus.walleij@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, narmstrong@baylibre.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584423717-3440-3-git-send-email-iamjoonsoo.kim@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sungbo,
+On Tue, Mar 17, 2020 at 02:41:50PM +0900, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> In current implementation, newly created or swap-in anonymous page
+> is started on active list. Growing active list results in rebalancing
+> active/inactive list so old pages on active list are demoted to inactive
+> list. Hence, the page on active list isn't protected at all.
+> 
+> Following is an example of this situation.
+> 
+> Assume that 50 hot pages on active list. Numbers denote the number of
+> pages on active/inactive list (active | inactive).
+> 
+> 1. 50 hot pages on active list
+> 50(h) | 0
+> 
+> 2. workload: 50 newly created (used-once) pages
+> 50(uo) | 50(h)
+> 
+> 3. workload: another 50 newly created (used-once) pages
+> 50(uo) | 50(uo), swap-out 50(h)
+> 
+> This patch tries to fix this issue.
+> Like as file LRU, newly created or swap-in anonymous pages will be
+> inserted to the inactive list. They are promoted to active list if
+> enough reference happens. This simple modification changes the above
+> example as following.
+> 
+> 1. 50 hot pages on active list
+> 50(h) | 0
+> 
+> 2. workload: 50 newly created (used-once) pages
+> 50(h) | 50(uo)
+> 
+> 3. workload: another 50 newly created (used-once) pages
+> 50(h) | 50(uo), swap-out 50(uo)
+> 
+> As you can see, hot pages on active list would be protected.
+> 
+> Note that, this implementation has a drawback that the page cannot
+> be promoted and will be swapped-out if re-access interval is greater than
+> the size of inactive list but less than the size of total(active+inactive).
+> To solve this potential issue, following patch will apply workingset
+> detection that is applied to file LRU some day before.
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-On 2020-03-18 17:09, Sungbo Eo wrote:
-> Enclose the chained handler with chained_irq_{enter,exit}(), so that 
-> the
-> muxed interrupts get properly acked.
-> 
-> This patch also fixes a reboot bug on OX820 SoC, where the jiffies 
-> timer
-> interrupt is never acked. The kernel waits a clock tick forever in
-> calibrate_delay_converge(), which leads to a boot hang.
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Nice catch.
-
-> 
-> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/irqchip/irq-versatile-fpga.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-versatile-fpga.c
-> b/drivers/irqchip/irq-versatile-fpga.c
-> index 928858dada75..08faab2fec3e 100644
-> --- a/drivers/irqchip/irq-versatile-fpga.c
-> +++ b/drivers/irqchip/irq-versatile-fpga.c
-> @@ -6,6 +6,7 @@
->  #include <linux/irq.h>
->  #include <linux/io.h>
->  #include <linux/irqchip.h>
-> +#include <linux/irqchip/chained_irq.h>
->  #include <linux/irqchip/versatile-fpga.h>
->  #include <linux/irqdomain.h>
->  #include <linux/module.h>
-> @@ -68,12 +69,15 @@ static void fpga_irq_unmask(struct irq_data *d)
-> 
->  static void fpga_irq_handle(struct irq_desc *desc)
+> -void lru_cache_add_active_or_unevictable(struct page *page,
+> +void lru_cache_add_inactive_or_unevictable(struct page *page,
+>  					 struct vm_area_struct *vma)
 >  {
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
->  	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
->  	u32 status = readl(f->base + IRQ_STATUS);
-> 
-> +	chained_irq_enter(chip, desc);
+> +	bool evictable;
 > +
+>  	VM_BUG_ON_PAGE(PageLRU(page), page);
+>  
+> -	if (likely((vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) != VM_LOCKED))
+> -		SetPageActive(page);
+> -	else if (!TestSetPageMlocked(page)) {
+> +	evictable = (vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) != VM_LOCKED;
+> +	if (!evictable && !TestSetPageMlocked(page)) {
 
-It's probably not a big deal, but I'm not fond of starting talking to
-the muxing irqchip before having done the chained_irq_enter() call.
-
-Moving that read here would probably be safer.
-
->  	if (status == 0) {
->  		do_bad_IRQ(desc);
-> -		return;
-> +		goto out;
->  	}
-> 
->  	do {
-> @@ -82,6 +86,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
->  		status &= ~(1 << irq);
->  		generic_handle_irq(irq_find_mapping(f->domain, irq));
->  	} while (status);
-> +
-> +out:
-> +	chained_irq_exit(chip, desc);
->  }
-> 
->  /*
-
-Otherwise looks good. If you send it again with the above fixed
-and a Fixes: tag, I'll queue it.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Minor point, but in case there is a v4: `unevictable` instead of
+!evictable would be a bit easier to read, match the function name,
+PageUnevictable etc.
