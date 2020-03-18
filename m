@@ -2,115 +2,83 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65784C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8F7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392BE20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:23:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rg1VIGcd"
+	by mail.kernel.org (Postfix) with ESMTP id 85F8020776
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:24:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584527045;
+	bh=SzEGn5r1AGDgVt7vbeRXmKq6T+/q5L8nfcLIKkGO7Ds=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mBkrayc6+REwU1snUvEdsLFvmk2cwhBX8vOYncDK1W0xPDkCsDRKnoaHIE8mRFoiV
+	 8DU88AdoFS5T7pzp4N2YjRxAxyTB+1vb0HwZTLlwBLmxyuHPna2pZBoGOCcRBaAzTB
+	 R5Mu/EcXy0m2PXYZsMJ/LsaRqmhfsk/M4BYsS0bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbgCRKXR (ORCPT
+        id S1727605AbgCRKYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:23:17 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:51104 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726310AbgCRKXQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:23:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584526995;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eQbwZedV0nkhvYUGX8gyCaRA65cSElbfrTc3COHZe40=;
-        b=Rg1VIGcdOaTYnhAPBB9VFak2UBcFBc3LgEmY93foq6srncQ4nGSyJnnl8oq3YtXMXZ5+lh
-        VpOJ4brMnFE6U7wNPe7M9OSC8o/4dzQeMeJ1PNxfl5c9d4pzMTDXyArK5FTsacxUw96Nc8
-        ybQ93KjLIPhWd6KglQc+u6rEdNA9ZTU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-127-GKAGB1blMR6bANhmUOdkxw-1; Wed, 18 Mar 2020 06:23:12 -0400
-X-MC-Unique: GKAGB1blMR6bANhmUOdkxw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 18 Mar 2020 06:24:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbgCRKYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 06:24:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3CBAF800D54;
-        Wed, 18 Mar 2020 10:23:09 +0000 (UTC)
-Received: from krava (unknown [10.40.195.82])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AD4A25C1BB;
-        Wed, 18 Mar 2020 10:22:58 +0000 (UTC)
-Date:   Wed, 18 Mar 2020 11:22:54 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 3621E20775;
+        Wed, 18 Mar 2020 10:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584527043;
+        bh=SzEGn5r1AGDgVt7vbeRXmKq6T+/q5L8nfcLIKkGO7Ds=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=v2JIq2Q21bNaR6uAYVtcb/dVQhma/0fAA66X6QFlF2BtiEH7OAeEE8tmFfoX8lL5c
+         hO4sOwe3j4whcWxJA9IDJJ1kc32TnlTfyP5BfopDdAddAd2/06Dd3R4N/WRYiai+jU
+         xu1tCs+OkMjOeBl1EsCNH9rkUBuZy7UdZxYrYmVk=
+Date:   Wed, 18 Mar 2020 11:24:01 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3] perf tools: add support for libpfm4
-Message-ID: <20200318102254.GC821557@krava>
-References: <20200311213613.210749-1-irogers@google.com>
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>
+Subject: Re: [PATCH 4/5] mm/vma: Replace all remaining open encodings with
+ vma_set_anonymous()
+Message-ID: <20200318102401.GA2126918@kroah.com>
+References: <1581915833-21984-1-git-send-email-anshuman.khandual@arm.com>
+ <1581915833-21984-5-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200311213613.210749-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <1581915833-21984-5-git-send-email-anshuman.khandual@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 02:36:13PM -0700, Ian Rogers wrote:
-> This patch links perf with the libpfm4 library if it is available and
-> NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
-> event tables for all processors supported by perf_events. It is a helper
-> library that helps convert from a symbolic event name to the event
-> encoding required by the underlying kernel interface. This
-> library is open-source and available from: http://perfmon2.sf.net.
+On Mon, Feb 17, 2020 at 10:33:52AM +0530, Anshuman Khandual wrote:
+> This replaces all remaining open encodings with vma_set_anonymous().
 > 
-> With this patch, it is possible to specify full hardware events
-> by name. Hardware filters are also supported. Events must be
-> specified via the --pfm-events and not -e option. Both options
-> are active at the same time and it is possible to mix and match:
-> 
-> $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
-> 
-> v3 is against acme/perf/core removes a diagnostic warning
-> v2 of this patch makes the --pfm-events man page documentation
-> conditional on libpfm4 behing configured. It tidies some of the
-> documentation and adds the feature test missed in the v1 patch.
-> 
-> Author: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Cc: Sudeep Dutt <sudeep.dutt@intel.com>
+> Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Kate Stewart <kstewart@linuxfoundation.org>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Richard Fontana <rfontana@redhat.com>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  drivers/misc/mic/scif/scif_mmap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-hi,
-is this the latest version? I can't apply it on Arnaldo's perf/core
-
-jirka
+The subject line does not match up with the file being modified here :(
 
