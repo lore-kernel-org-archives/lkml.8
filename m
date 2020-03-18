@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5BFC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9D6C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78FB20752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9840420752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:24:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="GPLloAQU"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="CIhGP8uP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgCRGYp (ORCPT
+        id S1727286AbgCRGY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 02:24:45 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17877 "EHLO
+        Wed, 18 Mar 2020 02:24:57 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17851 "EHLO
         sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726478AbgCRGYo (ORCPT
+        by vger.kernel.org with ESMTP id S1726478AbgCRGY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 02:24:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1584512582;
+        Wed, 18 Mar 2020 02:24:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1584512620;
         s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
         h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=yVxhTjIGSsBi1j8l4nZCtCI9CxiYbq8eizSoxYeSElA=;
-        b=GPLloAQUx8+ytqfQDi7UT8XXcUS3cn1EglwJeg1+Xwk78ruFbXYtfogNyWaCeMG+
-        efQEP+K11Kqx8TlF/Do9WB/Gp/BUiJuQvaH/aFoSDK3Y95C8KnUVG1o+HHlB+erlEbL
-        cyP1zRnTMFGaE5AzzxIe9H0kPUySmR9x+TCFwWK0=
+        bh=tegT7BNwrnblOt4r9BvqfNmbliEYdjXc09H5MiB7JLU=;
+        b=CIhGP8uP4fz7CvBzMtq+h+5SB5XgoVms7UEq7nILWCnmb1UV7Kyk2Siv+hCcUTBX
+        rUKfBUjZVMnz851PjZTTECIl+Von7AUgEMF9935UblDI3RQOAN/B4vfO+HMcX1mCdaP
+        /r0zQnWRy9wx/AyGoVEcYDHXbSuJd8Qm6foLsbRI=
 Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1584512581801223.36220452103066; Wed, 18 Mar 2020 14:23:01 +0800 (CST)
+        with SMTPS id 1584512617626468.72186225167457; Wed, 18 Mar 2020 14:23:37 +0800 (CST)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -46,9 +46,9 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Allison Randal <allison@lohutok.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <20200318062102.8145-3-jiaxun.yang@flygoat.com>
-Subject: [PATCH v5 02/11] irqchip: loongson-liointc: Workaround LPC IRQ Errata
-Date:   Wed, 18 Mar 2020 14:20:30 +0800
+Message-ID: <20200318062102.8145-5-jiaxun.yang@flygoat.com>
+Subject: [PATCH v5 04/11] irqchip: Add driver for Loongson-3 HyperTransport PIC controller
+Date:   Wed, 18 Mar 2020 14:20:32 +0800
 X-Mailer: git-send-email 2.26.0.rc2
 In-Reply-To: <20200318062102.8145-1-jiaxun.yang@flygoat.com>
 References: <20200318062102.8145-1-jiaxun.yang@flygoat.com>
@@ -61,72 +61,230 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 1.0 version of that controller has a bug that status bit
-of LPC IRQ sometimes doesn't get set correctly.
-
-So we can always blame LPC IRQ when spurious interrupt happens
-at the parent interrupt line which LPC IRQ supposed to route
-to.
+This controller appeared on Loongson-3 family of chips to receive interrupt=
+s
+from PCH PIC.
+It is a I8259 with optimized interrupt polling flow. We can poll interrupt =
+number
+from HT vector directly but still have to follow standard I8259 routines to=
+ mask,
+unmask and EOI.
 
 Co-developed-by: Huacai Chen <chenhc@lemote.com>
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- drivers/irqchip/irq-loongson-liointc.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-l=
-oongson-liointc.c
-index 8b6d7b8ddaca..d5054e90eab8 100644
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -32,6 +32,8 @@
+---
+v4-v5:
+=09Enhancements according to maz's suggestions:
+=09=09- Add static for private struct
+=09=09- Drop pointless rename
+=09=09- Fix DT parse bug
+=09=09- Clarifications in comments and commit message
+---
+ arch/mips/include/asm/i8259.h        |   1 +
+ drivers/irqchip/Kconfig              |  10 ++
+ drivers/irqchip/Makefile             |   1 +
+ drivers/irqchip/irq-loongson-htpic.c | 149 +++++++++++++++++++++++++++
+ 4 files changed, 161 insertions(+)
+ create mode 100644 drivers/irqchip/irq-loongson-htpic.c
+
+diff --git a/arch/mips/include/asm/i8259.h b/arch/mips/include/asm/i8259.h
+index 97a5e41ed1ab..a54b9649de22 100644
+--- a/arch/mips/include/asm/i8259.h
++++ b/arch/mips/include/asm/i8259.h
+@@ -36,6 +36,7 @@ extern raw_spinlock_t i8259A_lock;
+ extern void make_8259A_irq(unsigned int irq);
 =20
- #define LIOINTC_SHIFT_INTx=094
+ extern void init_i8259_irqs(void);
++extern struct irq_domain *__init_i8259_irqs(struct device_node *node);
 =20
-+#define LIOINTC_ERRATA_IRQ=0910
+ /**
+  * i8159_set_poll() - Override the i8259 polling function
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index c609eaa319d2..cae6f480c987 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -522,4 +522,14 @@ config LOONGSON_LIOINTC
+ =09help
+ =09  Support for the Loongson Local I/O Interrupt Controller.
+=20
++config LOONGSON_HTPIC
++=09bool "Loongson3 HyperTransport PIC Controller"
++=09depends on MACH_LOONGSON64
++=09default y
++=09select IRQ_DOMAIN
++=09select GENERIC_IRQ_CHIP
++=09select I8259
++=09help
++=09  Support for the Loongson-3 HyperTransport PIC Controller.
 +
- struct liointc_handler_data {
- =09struct liointc_priv=09*priv;
- =09u32=09=09=09parent_int_map;
-@@ -41,6 +43,7 @@ struct liointc_priv {
- =09struct irq_chip_generic=09=09*gc;
- =09struct liointc_handler_data=09handler[LIOINTC_NUM_PARENT];
- =09u8=09=09=09=09map_cache[LIOINTC_CHIP_IRQ];
-+=09bool=09=09=09=09have_lpc_irq_errata;
- };
-=20
- static void liointc_chained_handle_irq(struct irq_desc *desc)
-@@ -54,8 +57,14 @@ static void liointc_chained_handle_irq(struct irq_desc *=
-desc)
-=20
- =09pending =3D readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
-=20
--=09if (!pending)
--=09=09spurious_interrupt();
-+=09if (!pending) {
-+=09=09/* Always blame LPC IRQ if we have that bug and LPC IRQ is enabled *=
-/
-+=09=09if (handler->priv->have_lpc_irq_errata &&
-+=09=09=09(handler->parent_int_map & ~gc->mask_cache & BIT(LIOINTC_ERRATA_I=
-RQ)))
-+=09=09=09pending =3D BIT(LIOINTC_ERRATA_IRQ);
-+=09=09else
+ endmenu
+diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+index 5e7678efdfe6..37bbe39bf909 100644
+--- a/drivers/irqchip/Makefile
++++ b/drivers/irqchip/Makefile
+@@ -106,3 +106,4 @@ obj-$(CONFIG_LS1X_IRQ)=09=09=09+=3D irq-ls1x.o
+ obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)=09+=3D irq-ti-sci-intr.o
+ obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)=09+=3D irq-ti-sci-inta.o
+ obj-$(CONFIG_LOONGSON_LIOINTC)=09=09+=3D irq-loongson-liointc.o
++obj-$(CONFIG_LOONGSON_HTPIC)=09=09+=3D irq-loongson-htpic.o
+diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loo=
+ngson-htpic.c
+new file mode 100644
+index 000000000000..3391e472766d
+--- /dev/null
++++ b/drivers/irqchip/irq-loongson-htpic.c
+@@ -0,0 +1,149 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
++ *  Loongson HTPIC IRQ support
++ */
++
++#include <linux/init.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/irqchip.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/irq.h>
++#include <linux/io.h>
++#include <linux/syscore_ops.h>
++
++#include <asm/i8259.h>
++
++#define HTPIC_MAX_PARENT_IRQ=094
++#define HTINT_NUM_VECTORS=098
++#define HTINT_EN_OFF=09=090x20
++
++struct loongson_htpic {
++=09void __iomem *base;
++=09struct irq_domain *domain;
++};
++
++static struct loongson_htpic *htpic;
++
++static void htpic_irq_dispatch(struct irq_desc *desc)
++{
++=09struct loongson_htpic *priv =3D irq_desc_get_handler_data(desc);
++=09struct irq_chip *chip =3D irq_desc_get_chip(desc);
++=09uint32_t pending;
++
++=09chained_irq_enter(chip, desc);
++=09pending =3D readl(priv->base);
++=09/* Ack all IRQs at once, otherwise IRQ flood might happen */
++=09writel(pending, priv->base);
++
++=09if (!pending)
++=09=09spurious_interrupt();
++
++=09while (pending) {
++=09=09int bit =3D __ffs(pending);
++
++=09=09if (unlikely(bit > 15)) {
 +=09=09=09spurious_interrupt();
-+=09}
-=20
- =09while (pending) {
- =09=09int bit =3D __ffs(pending);
-@@ -164,6 +173,9 @@ int __init liointc_of_init(struct device_node *node,
- =09=09goto out_iounmap;
- =09}
-=20
-+=09if (of_device_is_compatible(node, "loongson,liointc-1.0"))
-+=09=09priv->have_lpc_irq_errata =3D true;
++=09=09=09break;
++=09=09}
 +
- =09sz =3D of_property_read_variable_u32_array(node, "loongson,parent_int_m=
-ap",
- =09=09=09=09=09=09&of_parent_int_map[0], LIOINTC_NUM_PARENT,
- =09=09=09=09=09=09LIOINTC_NUM_PARENT);
++=09=09generic_handle_irq(irq_linear_revmap(priv->domain, bit));
++=09=09pending &=3D ~BIT(bit);
++=09}
++=09chained_irq_exit(chip, desc);
++}
++
++static void htpic_reg_init(void)
++{
++=09int i;
++
++=09for (i =3D 0; i < HTINT_NUM_VECTORS; i++) {
++=09=09uint32_t val;
++
++=09=09/* Disable all HT Vectors */
++=09=09writel(0x0, htpic->base + HTINT_EN_OFF + i * 0x4);
++=09=09val =3D readl(htpic->base + i * 0x4);
++=09=09/* Ack all possible pending IRQs */
++=09=09writel(GENMASK(31, 0), htpic->base + i * 0x4);
++=09}
++
++=09/* Enable 16 vectors for PIC */
++=09writel(0xffff, htpic->base + HTINT_EN_OFF);
++}
++
++static void htpic_resume(void)
++{
++=09htpic_reg_init();
++}
++
++struct syscore_ops htpic_syscore_ops =3D {
++=09.resume=09=09=3D htpic_resume,
++};
++
++int __init htpic_of_init(struct device_node *node, struct device_node *par=
+ent)
++{
++=09unsigned int parent_irq[4];
++=09int i, err;
++=09int num_parents =3D 0;
++
++=09if (htpic) {
++=09=09pr_err("loongson-htpic: Only one HTPIC is allowed in the system\n");
++=09=09return -ENODEV;
++=09}
++
++=09htpic =3D kzalloc(sizeof(*htpic), GFP_KERNEL);
++=09if (!htpic) {
++=09=09err =3D -ENOMEM;
++=09=09goto out_free;
++=09}
++
++=09htpic->base =3D of_iomap(node, 0);
++=09if (!htpic->base) {
++=09=09err =3D -ENODEV;
++=09=09goto out_free;
++=09}
++
++=09htpic->domain =3D __init_i8259_irqs(node);
++=09if (!htpic->domain) {
++=09=09pr_err("loongson-htpic: Failed to initialize i8259 IRQs\n");
++=09=09err =3D -ENOMEM;
++=09=09goto out_iounmap;
++=09}
++
++=09/* Interrupt may come from any of the 4 interrupt line */
++=09for (i =3D 0; i < HTPIC_MAX_PARENT_IRQ; i++) {
++=09=09parent_irq[i] =3D irq_of_parse_and_map(node, i);
++=09=09if (parent_irq[i] < 0)
++=09=09=09break;
++
++=09=09num_parents++;
++=09}
++
++=09if (!num_parents) {
++=09=09pr_err("loongson-htpic: Failed to get parent irqs\n");
++=09=09err =3D -ENODEV;
++=09=09goto out_remove_domain;
++=09}
++
++=09htpic_reg_init();
++
++=09for (i =3D 0; i < num_parents; i++) {
++=09=09irq_set_chained_handler_and_data(parent_irq[i],
++=09=09=09=09=09=09htpic_irq_dispatch, htpic);
++=09}
++
++=09register_syscore_ops(&htpic_syscore_ops);
++
++=09return 0;
++
++out_remove_domain:
++=09irq_domain_remove(htpic->domain);
++out_iounmap:
++=09iounmap(htpic->base);
++out_free:
++=09kfree(htpic);
++=09return err;
++}
++
++IRQCHIP_DECLARE(loongson_htpic, "loongson,htpic-1.0", htpic_of_init);
 --=20
 2.26.0.rc2
 
