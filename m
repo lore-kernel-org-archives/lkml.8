@@ -2,164 +2,167 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A166BC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7776C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6911320724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8909020724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:52:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Io7cCr2U"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="TXeagcuv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbgCRAto (ORCPT
+        id S1727190AbgCRAwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 20:49:44 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45662 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726680AbgCRAto (ORCPT
+        Tue, 17 Mar 2020 20:52:51 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36706 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726680AbgCRAwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 20:49:44 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 2so12890656pfg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 17:49:41 -0700 (PDT)
+        Tue, 17 Mar 2020 20:52:51 -0400
+Received: by mail-io1-f68.google.com with SMTP id d15so23195368iog.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 17:52:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=joelfernandes.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mEZjMRu2hEVHCCshJE6Ur56JVGlCCroTKLH+YSFAD7w=;
-        b=Io7cCr2Ux3LNSgzS/WNfg+3Nv6rjTYHZTgDS03ZRcXDj93Q+S5moUxm0sRGywBHEbx
-         JVTRcyB58gDjfIZLSTC5eRL68oDPalq2F4KGkMgRXJKpmpNMnpomfkDzjGIQoOL74DSv
-         4ltNeOcpmHVfK6YMpE0JXoawQKT3dKELvrI6yVpSydusg7FHIkVDwtc6QakVETnsgZe2
-         GHezEWSDwKV2FLtll34AUtPmJhL2/YhvSmjRit+ui4U61ypowKhtxzUXMVU3zFXkbT2S
-         xqlz3lnuZnHbI7715ufXM/amo9ubX4Ro4NYNUbzlqZgWpC4ix0pwiaml58soZIeI9mfi
-         QT9Q==
+        bh=A0pviT+saHNFb6GStvZc+BnSpPWtHJjl67+d9zne4+Q=;
+        b=TXeagcuvI67YJ7BHqnPkM7lPun1ec/ejfepBsnzGKaZdiOOtTF1CQwDcO/J6lObXqG
+         IHeixhD39kz6hpJSdzSisES4Hy+69BNjXR/ZcHddL6L6h/KEFXKA+vBWNTMy2cvoCyPH
+         TAQZ+/dibGkcf69HegI9RPecgZdQEd43192Vg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mEZjMRu2hEVHCCshJE6Ur56JVGlCCroTKLH+YSFAD7w=;
-        b=ODbgDWdpMQvk3UAOPyRg8bEyWfwXiGbO5qBQ3o8KDEnY8izkcIp462ucK/k1VZdBOM
-         zIXjTuzcu55OQ1IPT93fB58as/rWWVaZ2O/u5e05czU81vzLQDfTNmoF7lR4SWDnO/Mz
-         VFCBSUcm49TqUs6LW/HczM/XIhsYra9UkZ6m0xOuZIYFywCiSF8pHtF02zHZZBrD4i4W
-         V7hsRBzZHE1Fs3/jS0N1e5HfJDIO0abgN0dd2qD7S1LO9HabgF3Z+buUYKnRoDbR3XVy
-         KwSyKRwBs5n9Kn3bmsl7kRRw45H2Mx3V62M3cFTMLgoN+94Bzk4i7T84c3SHmLrMUcZA
-         siyg==
-X-Gm-Message-State: ANhLgQ1PrfkJzWekLEqHd30KgRhi07QFayh+GauTq3DCzegQpVSm48Uw
-        XIZMpKuOPfW1Ticv+bSZ1nTLMGMdq19m+77BgTM=
-X-Google-Smtp-Source: ADFU+vulDfQJe56I6PtipWkmVU80PG2acfuR+y5k+u68pckhTDj9tsFiLPV2dZecfSsyzei9Czac70YRpukrXrlNl+Q=
-X-Received: by 2002:aa7:8dcc:: with SMTP id j12mr1528707pfr.57.1584492581383;
- Tue, 17 Mar 2020 17:49:41 -0700 (PDT)
+        bh=A0pviT+saHNFb6GStvZc+BnSpPWtHJjl67+d9zne4+Q=;
+        b=OW18ZD1D85DPtG+aMuLxlcO1p0lIV6xs7+orcF1bekuLrYnDRTxESRHRipPXTThp8v
+         9rbTOPaB1dOlC4/RFAxxGx5d0Hj+okDNPHPfBSKmkP2c7j8oX0HIQi+Hlbi6iUXKNjiO
+         U+tx31AeJiAa+ngXpkrkdE76+qSj/vLOG9AgY3FeQHgSboKMLVfuKWuKBTfqKT0R0ges
+         Zzi8Sq3d3s88tmmyjyGLh5dIJHOSnrgsif9Y1rbH2Nr6o5peOl4G6udusrPgPuvXV5uj
+         xan6785T+fl67H7muKdcz9q4AcTHGkKGt47XmyMcCq6ueDx/eTyWN54biUDI793GNBpg
+         yiuQ==
+X-Gm-Message-State: ANhLgQ2YFIKlwkjAjTOu0mf8GK3th433Jmyg93BfdkdR94fW7K/DV8DJ
+        9jLNNkzpg0knHreZTjTSyPKaYUKXohXpqqlNmXPguw==
+X-Google-Smtp-Source: ADFU+vv7dhG4pSGOtXjLLJKkqizdIVTD3D9y1fulW22UxohMDYKq54LmjGLHssmUViK9cFO05RyucarPxm1I4GBExSc=
+X-Received: by 2002:a02:a78c:: with SMTP id e12mr2043593jaj.42.1584492768383;
+ Tue, 17 Mar 2020 17:52:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHOvCC7ZLpOkdWPjY3art8LYOh2SJWwgqYRHRMVm-E4-kD06mA@mail.gmail.com>
- <20200317134043.GA22433@bombadil.infradead.org>
-In-Reply-To: <20200317134043.GA22433@bombadil.infradead.org>
-From:   JaeJoon Jung <rgbi3307@gmail.com>
-Date:   Wed, 18 Mar 2020 09:49:30 +0900
-Message-ID: <CAHOvCC4WSiCD93A=DyfY8_3uqZAGXrdj4=GA4cyQx6ZqdakUtg@mail.gmail.com>
-Subject: Re: [PATCH] Add next, prev pointer in xa_node at the lib/xarray.c
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     maple-tree@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>, koct9i@gmail.com
+References: <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+ <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+ <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com> <20200212230705.GA25315@sinkpad>
+ <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com> <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
+ <CANaguZC40mDHfL1H_9AA7H8cyd028t9PQVRqQ3kB4ha8R7hhqg@mail.gmail.com>
+ <CAERHkruPUrOzDjEp1FV3KY20p9CxLAVzKrZNe5QXsCFZdGskzA@mail.gmail.com>
+ <CANaguZBj_x_2+9KwbHCQScsmraC_mHdQB6uRqMTYMmvhBYfv2Q@mail.gmail.com>
+ <20200221232057.GA19671@sinkpad> <20200317005521.GA8244@google.com> <ee268494-c35e-422f-1aaf-baab12191c38@linux.intel.com>
+In-Reply-To: <ee268494-c35e-422f-1aaf-baab12191c38@linux.intel.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Tue, 17 Mar 2020 20:52:37 -0400
+Message-ID: <CAEXW_YS927Tc3sPHeK9wW7nL=qvqFDoCX23xxtbMZmVhtbO1xw@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+To:     Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Luck, Tony" <tony.luck@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthew,
-Thank you for your deep response.
-
-I think XArray is a very well-made structure that requires no further
-improvement if the indexes are dense in a 64-bit system.
-
-Since xa_node is 576 bytes and is set to fit 7 per 4kB page,
-adding a data type to xa_node is rather a memory waste problem.
-
-#define XA_CHUNK_SHIFT          (CONFIG_BASE_SMALL ? 4 : 6)
-XA_CHUNK_SIZE is 32 or 64
-
-XA_CHUNK_SIZE is 32 or 64, and currently XAarray is 64 optimized,
-so modifying it may have a counterproductive effect.
-
-There is a downside to the well-designed XArray, but if the indexes
-are not dense or deleted a lot, the memory of the slots in the xa_node
-is increased and the search cost for logn increases at f (n) = O
-(nlogn)
-
-My worries are here and I hope you understand my efforts to solve it.
-
-My attempts described below are meaningful when XA_CHUNK_SHIFT is 4 or
-2, and can solve the slowdown in search speed when indexes are deleted
-and not concentrated.
-
-When XA_CHUNK_SHIFT is 2(XA_CHUNK_SIZE is 4), the XArray configuration
-is as follows.
-(It is difficult to express the picture in text.)
-
-xarray->head : xa_node : index: 0  16  32  48
-                +---+---+---+
-                                |   |   |   |
-        +-----------------------+   |   |   +------------+
-        |              +------------+   |                |
-        |              |                |                |
-    0  4  8  12    16  20  24  28   32  36  40  44   48  52  56  60
-    +--+--+---+    +---+---+---+    +---+---+---+    +---+---+---+
-        |              |                |                |
-  +-----+              |                +-------+        +---------------+
-  |                    |                        |                        |
-  0 1 2 3 <==>... <==> 16 17 18 19 <==>... <==> 32 33 34 35 <==>...
-<==> 48 49 ..
-
-In the above, if xa_node is connected to next and prev, it does not
-search the parent node, so the logn disappears from f (n) = O (nlogn),
-which improves search efficiency with f (n) = O (n). In fact, this is
-already well-known in traditional algorithms, but I hope you can
-understand it with the effort applied to XArray.
-
-Best Regards,
-JaeJoon Jung.
-
-On Tue, 17 Mar 2020 at 22:40, Matthew Wilcox <willy@infradead.org> wrote:
+On Tue, Mar 17, 2020 at 3:07 PM Tim Chen <tim.c.chen@linux.intel.com> wrote:
 >
-> On Tue, Mar 17, 2020 at 04:32:34PM +0900, JaeJoon Jung wrote:
-> > Hi Matthew,
-> > I add next, prev pointer in the xa_node to improve search performance.
-> > XArray currently has the following search capabilities:
+> Joel,
+>
 > >
-> > Search algorithm performance is O(n) = n x log(n)
+> > Looks quite interesting. We are trying apply this work to ChromeOS. What we
+> > want to do is selectively marking tasks, instead of grouping sets of trusted
+> > tasks. I have a patch that adds a prctl which a task can call, and it works
+> > well (task calls prctl and gets a cookie which gives it a dedicated core).
+> >
+> > However, I have the following questions, in particular there are 4 scenarios
+> > where I feel the current patches do not resolve MDS/L1TF, would you guys
+> > please share your thoughts?
+> >
+> > 1. HT1 is running either hostile guest or host code.
+> >    HT2 is running an interrupt handler (victim).
+> >
+> >    In this case I see there is a possible MDS issue between HT1 and HT2.
 >
-> That's not how "big-O" notation is used.
-> https://en.wikipedia.org/wiki/Big_O_notation
+> Core scheduling mitigates the userspace to userspace attacks via MDS between the HT.
+> It does not prevent the userspace to kernel space attack.  That will
+> have to be mitigated via other means, e.g. redirecting interrupts to a core
+> that don't run potentially unsafe code.
+
+We have only 2 cores (4 HT) on many devices. It is not an option to
+dedicate a core to only running trusted code, that would kill
+performance. Another option is to designate a single HT of a
+particular core to run both untrusted code and an interrupt handler --
+but as Thomas pointed out, this does not work for per-CPU interrupts
+or managed interrupts, and the softirqs that they trigger. But if we
+just consider interrupts for which we can control the affinities (and
+assuming that most interrupts can be controlled like that), then maybe
+it will work? In the ChromeOS model, each untrusted task is in its own
+domain (cookie). So untrusted tasks cannot benefit from parallelism
+(in our case) anyway -- so it seems reasonable to run an affinable
+interrupt and an untrusted task, on a particular designated core.
+
+(Just thinking out loud...).  Another option could be a patch that
+Vineeth shared with me (that Peter experimentally wrote) where he
+sends IPI from an interrupt handler to a sibling running untrusted
+guest code which would result in it getting paused. I am hoping
+something like this could work on the host side as well (not just for
+guests). We could also set per-core state from the interrupted HT,
+possibly IPI'ing the untrusted sibling if we have to. If sibling runs
+untrusted code *after* the other's siblings interrupt already started,
+then the schedule() loop on the untrusted sibling would spin knowing
+the other sibling has an interrupt in progress. The softirq is a real
+problem though. Perhaps it can also set similar per-core state.
+Thoughts?
+
+> > 2. HT1 is executing hostile host code, and gets interrupted by a victim
+> >    interrupt. HT2 is idle.
+> >    In this case, I see there is a possible MDS issue between interrupt and
+> >    the host code on the same HT1.
 >
-> What you mean to say here is O(n.log(n)).
+> The cpu buffers are cleared before return to the hostile host code.  So
+> MDS shouldn't be an issue if interrupt handler and hostile code
+> runs on the same HT thread.
+
+Got it, agreed this is not an issue.
+
+> > 3. HT1 is executing hostile guest code, HT2 is executing a victim interrupt
+> >    handler on the host.
+> >
+> >    In this case, I see there is a possible L1TF issue between HT1 and HT2.
+> >    This issue does not happen if HT1 is running host code, since the host
+> >    kernel takes care of inverting PTE bits.
 >
-> > For example,
-> > XA_CHUNK_SHIFT 2
-> > XA_CHUNK_SIZE 4
->
-> I'm not really interested in the performance of a cut-down radix tree.
-> You can re-run the numbers with a SHIFT of 6 and SIZE of 64 to get a
-> more useful set of performance numbers.
->
-> > If you connect the leaf node with the next and prev pointers as follows,
-> > the search performance is improved to O (n) = n.
->
-> But that's not free.  Right now, the xa_node is finely tuned in
-> size to 576 bytes on 64-bit systems (32-bit systems are a secondary
-> consideration).  That gets us 7 nodes per page.  Increasing the size any
-> further reduces the number per page to 6, which is a pretty meaningful
-> increase in memory usage.
->
-> > @@ -1125,6 +1125,8 @@ struct xa_node {
-> >         unsigned char   count;          /* Total entry count */
-> >         unsigned char   nr_values;      /* Value entry count */
-> >         struct xa_node __rcu *parent;   /* NULL at top of tree */
-> > +        struct xa_node __rcu *prev;     /* previous node pointer */
-> > +        struct xa_node __rcu *next;     /* next node pointer */
->
-> You should be indenting with tabs, not spaces.  Or your mail system is
-> messing with your patches.
->
+> The interrupt handler will be run with PTE inverted.  So I don't think
+> there's a leak via L1TF in this scenario.
+
+As Thomas and you later pointed out, this is still an issue and will
+require a similar solution as described above.
+
+thanks,
+
+- Joel
