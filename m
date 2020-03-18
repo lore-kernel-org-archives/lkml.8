@@ -2,99 +2,97 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61B5C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C65C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8FC206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7CD206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:43:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P/5g06c1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEYjyoaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgCRDmt (ORCPT
+        id S1727166AbgCRDnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 23:42:49 -0400
-Received: from mail-pf1-f182.google.com ([209.85.210.182]:47033 "EHLO
-        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726478AbgCRDmt (ORCPT
+        Tue, 17 Mar 2020 23:43:02 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42518 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgCRDnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 23:42:49 -0400
-Received: by mail-pf1-f182.google.com with SMTP id c19so13112980pfo.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 20:42:47 -0700 (PDT)
+        Tue, 17 Mar 2020 23:43:02 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t3so10552156plz.9
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 20:42:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YT2L3T5m7F3H6k+5v6e5VkakCu+V5Gz4Jv1OOLQ4kEM=;
-        b=P/5g06c1DpJ7LAKi/lYSU6MGHOE5um6MEnr2MdvYL53DbXL2tXxAhOcmQyVxEkxYsT
-         i9ENJr145lFqrSLIiM68xjYHZwZDTMzJPbvVtMvTNIgtDH+lvT5qdChY0+4mPcVm3vcp
-         0M1P+cbZKp/IkINM5a7lAkbSzUQp3H+KEqWHKqe5k6hmhrKIEd+dNDrxptBXU1xzZ4A1
-         Rypzk9aQreoYKFrS5zwTGyLa8Bicr2Q38TCvi/cVQqKSXR28aVwiyxEIZ53EVIklHKNg
-         tSL+KN7OFCkxmNS+vjG/iicl9+gSwI638vzpAvxwoICylfsIzZejCl4r1iMElLdABJSK
-         5k8Q==
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=hn2QLLz9khl4vcZxxszhtActpJYIvuOW4xfhxWZL50c=;
+        b=PEYjyoazeRvjqPX8Fgm3qhBeOjYCp+u3knhdGXyXoA8V9dl0Uv8uoO+ZQhUM2vIrka
+         m9XI85e57E58VRno1fh/af3fsrVhshjv2u4H9dJqw4XKbIxseRGUwIVPFwIU/8eHo/0i
+         XnC6HoMESr2tWl7owoB+sRsYMfYZ+f5P7pY8j9rMJrobtYwpaCoKKxht03mwuAth34Pb
+         w/2+5fUtimk+QROIydFso1IXaM0XGrAxBvrCJx3N6bi8nTZBE+yx9T+SeFGTMYl1xzuz
+         /5Mf9X0NbfpH0uyM2SVeCWyff9xty8l+0I++5D1JIfw271+g+UBUehkP17oepua0jMD7
+         yhyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YT2L3T5m7F3H6k+5v6e5VkakCu+V5Gz4Jv1OOLQ4kEM=;
-        b=rsixXbebqs3d7xSZnzMzqksB/zs0J547Gv3BDUgDYOpM7q9AGmL9m7qCVezxc6pBmx
-         cHLuFqY27/2UTqtjoFseaqO3+j+MocYTRrKwkpke2wnGcB4uCfm9iSzBA6gFPMbIhR00
-         JGE2WV/Tt5t0c2LaYa9wxW/kAATd8XZNZ6W4O05p8yhhlz6er0nsws/TZbN2fXMs3IR+
-         Ol0OvcEuLHvMJ/Nuq6RKWkPtua7rMexNh7R4B6sD8MaI72K1znZuJOmIY7yzjtG/iVU8
-         MtInr2qj5yFNcGlIFAOdBzlIKHS65goIYQSNOv5eR/JzhLGlwTIW3Xy+W5j6KJMH0V4U
-         nwXQ==
-X-Gm-Message-State: ANhLgQ3IsjUXoyFyjk1mc3XFThed9AwvzxNgmFGQyY4Gf0hWSHEQYECS
-        MzgwKUC+QYGhHCJCVWFqaqBIeA==
-X-Google-Smtp-Source: ADFU+vvs80IxXmo0j7B4QexYEgl7/6zmcoA+fvJJBNRIUGhey7+3vtFC5iWY5s+rJOBy2o6U5QEkYQ==
-X-Received: by 2002:a62:3854:: with SMTP id f81mr2180721pfa.81.1584502966741;
-        Tue, 17 Mar 2020 20:42:46 -0700 (PDT)
-Received: from localhost ([122.171.122.128])
-        by smtp.gmail.com with ESMTPSA id q26sm4626903pff.63.2020.03.17.20.42.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Mar 2020 20:42:45 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 09:12:43 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
-        nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org
-Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-Message-ID: <20200318034243.o2metmggzuah6cqw@vireshk-i7>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=hn2QLLz9khl4vcZxxszhtActpJYIvuOW4xfhxWZL50c=;
+        b=TjsvLRW6Xh2J3G5j0212IFqydm0+zNM3veJUIFwhrLBSRg1VjBD+5a/OmyHByc1MfQ
+         SZS3GfaoxKePKnigcW6XCk7AjOKurRxh0EnbT1MHIEaQwMt+6e8kAMLrTy9t8byuVPj8
+         +Ht5sGmRY8EcL6xTCxKRrFDQIWQpqnM4oH6r+a69KLa3fNnvtfed6fYURCiaYNS/b3Zc
+         KobFIiSGvl6nE5KHJhVnHvaSv/CXjGTVJHDn5gOdN2EAM9jTZ8rdMX95GwtlKM4Sx6uo
+         xalp04yyeEv8ipPrtBWpAkw9p+h9q0KWFny6WprehuTV8bOGoQr2w/rl1JEsTbooE36y
+         cBgQ==
+X-Gm-Message-State: ANhLgQ0pqdWW2erP6oQgiy16It/FyfVPDABS9mDLyMWKIUhBN34gp8/G
+        6CFLxJ/geJruyH9cNnfsEPzF2kit
+X-Google-Smtp-Source: ADFU+vteli8ngKOiMutwQwv63fWPl8oGgc6GWSUuDOnhPhmYgfSTFR3jqlI+rcHMF6SijcpXNUBqsw==
+X-Received: by 2002:a17:902:9890:: with SMTP id s16mr1734679plp.77.1584502978982;
+        Tue, 17 Mar 2020 20:42:58 -0700 (PDT)
+Received: from [127.0.0.1] ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id e24sm4508817pfi.200.2020.03.17.20.42.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 20:42:58 -0700 (PDT)
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+From:   brookxu <brookxu.cn@gmail.com>
+Subject: [PATCH] mm: Fix a comment typo
+Message-ID: <0783042a-244c-0c2e-091d-e7002718d73f@gmail.com>
+Date:   Wed, 18 Mar 2020 11:42:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-03-20, 02:13, Sibi Sankar wrote:
-> On 2020-01-28 01:33, Sibi Sankar wrote:
-> > This RFC series aims to extend cpu based scaling support to L3/DDR on
-> > SDM845 and SC7180 SoCs.
-> > 
-> 
-> Hey Viresh/Saravana,
-> 
-> Ping! Can you take a stab at reviewing
-> the series, it has been on the list for
-> a while now.
+Signed-off-by: Chunguang Xu <brookxu@tencent.com>
 
-I believe this depends on Saravana's series on which I have raised
-some doubts few weeks back ? I am still waiting for them to get
-clarified by him.
+---
+ mm/page-writeback.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 2caf780..2acf754 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -1271,7 +1271,7 @@ static void wb_update_dirty_ratelimit(struct dirty_throttle_control *dtc,
+      */
+ 
+     /*
+-     * dirty_ratelimit will follow balanced_dirty_ratelimit iff
++     * dirty_ratelimit will follow balanced_dirty_ratelimit if
+      * task_ratelimit is on the same side of dirty_ratelimit, too.
+      * For example, when
+      * - dirty_ratelimit > balanced_dirty_ratelimit
 -- 
-viresh
+1.8.3.1
+
