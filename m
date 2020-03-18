@@ -2,51 +2,53 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7852EC43332
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E469C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2EE208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D910120A8B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564953;
-	bh=OtpKH4sa7WjFFEqXU6hQbOx0/zIIZm3na15gYI4GVjY=;
+	s=default; t=1584564959;
+	bh=686YRKAd4tXgH5ZOv46xNnA79jrJmQXA57XHnRANPoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IStPfwpgsir5K70CNzBFD//T8MTQf/TJi1mLEtgao4Q6xhi7CEVHoL2RQrmaZxlMG
-	 o+0WqwxYC3ksPiB5CKg7CF7qGwFvAafz/Q91/V88PWU3R7g79q+OY9POCpxZY20LG7
-	 oWuqHfHk2pBWPSwwyoOjsHRnIVnAsIt3UsEAnnuo=
+	b=SfB7FdR3dwWe1EHnJz6g8TAbPgTByjM/IjWs+36DS1a6KuDz45nYT+l2uBTPCuQkU
+	 gIn/n/qXRJJLo4G4Gtr+WsIKgReki9Oo4eoi2q+IUb/WD50naJtMpkgMcs9HVXkEio
+	 VAEJFznoZknzSJer2zc7CGOTw37OD2w32D2tYapY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgCRUzw (ORCPT
+        id S1728490AbgCRUz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:55:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56282 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:55:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728447AbgCRUzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:46 -0400
+        id S1728465AbgCRUzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF1F820A8B;
-        Wed, 18 Mar 2020 20:55:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D1F520A8B;
+        Wed, 18 Mar 2020 20:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564945;
-        bh=OtpKH4sa7WjFFEqXU6hQbOx0/zIIZm3na15gYI4GVjY=;
+        s=default; t=1584564949;
+        bh=686YRKAd4tXgH5ZOv46xNnA79jrJmQXA57XHnRANPoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lCWAILFi5ALnbhzQuO/m6tGMnozHNb/czFrbsg3Zt0O1hehOea1lgYlfyL5urQHc6
-         DoYbRaPJrDnXv3z8QPhx0NbZ2Rt9YQrbP1qbBb6JmU9YPVBieBTk6fQjgzx6VtVW74
-         GTGoMMdMMu+Ecq1hGJh7fhq2gkKnvG30K0wGnca8=
+        b=cJ9jcOzzcOqdhtFCcecw/wRZpR/4JP8pI9nzZ/aNddrYKiw7RyCdKekdkJ+E5DRrj
+         66vLEA6ktvyOQIlluPL1UePuJTHxq5pOMCHM8pJGEWBalwpQYNFqFQgyqcU6uj0nmu
+         L1QUg9AUajLfSTqcs6YFzRZINX/Yn4jdG48940ak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 30/37] s390/qeth: handle error when backing RX buffer
-Date:   Wed, 18 Mar 2020 16:55:02 -0400
-Message-Id: <20200318205509.17053-30-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 33/37] dpaa_eth: Remove unnecessary boolean expression in dpaa_get_headroom
+Date:   Wed, 18 Mar 2020 16:55:05 -0400
+Message-Id: <20200318205509.17053-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
@@ -59,59 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 17413852804d7e86e6f0576cca32c1541817800e ]
+[ Upstream commit 7395f62d95aafacdb9bd4996ec2f95b4a655d7e6 ]
 
-qeth_init_qdio_queues() fills the RX ring with an initial set of
-RX buffers. If qeth_init_input_buffer() fails to back one of the RX
-buffers with memory, we need to bail out and report the error.
+Clang warns:
 
-Fixes: 4a71df50047f ("qeth: new qeth device driver")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:2860:9: warning:
+converting the result of '?:' with integer constants to a boolean always
+evaluates to 'true' [-Wtautological-constant-compare]
+        return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
+               ^
+drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:131:34: note: expanded
+from macro 'DPAA_FD_DATA_ALIGNMENT'
+\#define DPAA_FD_DATA_ALIGNMENT  (fman_has_errata_a050385() ? 64 : 16)
+                                 ^
+1 warning generated.
+
+This was exposed by commit 3c68b8fffb48 ("dpaa_eth: FMan erratum A050385
+workaround") even though it appears to have been an issue since the
+introductory commit 9ad1a3749333 ("dpaa_eth: add support for DPAA
+Ethernet") since DPAA_FD_DATA_ALIGNMENT has never been able to be zero.
+
+Just replace the whole boolean expression with the true branch, as it is
+always been true.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/928
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index d99bfbfcafb76..5f59e2dfc7db9 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -2811,12 +2811,12 @@ static int qeth_init_input_buffer(struct qeth_card *card,
- 		buf->rx_skb = netdev_alloc_skb(card->dev,
- 					       QETH_RX_PULL_LEN + ETH_HLEN);
- 		if (!buf->rx_skb)
--			return 1;
-+			return -ENOMEM;
- 	}
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index d7736c9c6339a..4b21ae27a9fde 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -2764,9 +2764,7 @@ static inline u16 dpaa_get_headroom(struct dpaa_buffer_layout *bl)
+ 	headroom = (u16)(bl->priv_data_size + DPAA_PARSE_RESULTS_SIZE +
+ 		DPAA_TIME_STAMP_SIZE + DPAA_HASH_RESULTS_SIZE);
  
- 	pool_entry = qeth_find_free_buffer_pool_entry(card);
- 	if (!pool_entry)
--		return 1;
-+		return -ENOBUFS;
+-	return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
+-					      DPAA_FD_DATA_ALIGNMENT) :
+-					headroom;
++	return ALIGN(headroom, DPAA_FD_DATA_ALIGNMENT);
+ }
  
- 	/*
- 	 * since the buffer is accessed only from the input_tasklet
-@@ -2848,10 +2848,15 @@ int qeth_init_qdio_queues(struct qeth_card *card)
- 	/* inbound queue */
- 	qdio_reset_buffers(card->qdio.in_q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
- 	memset(&card->rx, 0, sizeof(struct qeth_rx));
-+
- 	qeth_initialize_working_pool_list(card);
- 	/*give only as many buffers to hardware as we have buffer pool entries*/
--	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; ++i)
--		qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
-+	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; i++) {
-+		rc = qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
-+		if (rc)
-+			return rc;
-+	}
-+
- 	card->qdio.in_q->next_buf_to_init =
- 		card->qdio.in_buf_pool.buf_count - 1;
- 	rc = do_QDIO(CARD_DDEV(card), QDIO_FLAG_SYNC_INPUT, 0, 0,
+ static int dpaa_eth_probe(struct platform_device *pdev)
 -- 
 2.20.1
 
