@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32794C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967D7C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFFA4208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63570208DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564927;
-	bh=/LbwP3v/MBgQAofFuzjmdhtM3bu7o/LCwq51sIZqGXo=;
+	s=default; t=1584564931;
+	bh=rGYPdi6emtE0fvx4uq4xHL8NUN4WHMxIqrLJuxPmA1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BTtyQL/q99Hfmij1uSxsKPUWeyi5sTmVbnRzRJMlByhp86u/UVR2EDuPqjMVYQBZO
-	 PMbLBMCZjlqCVw6+Ln1prWdpESdRUsmxpJlhTFS1gMDiRKouw3aJM055YLvqhBXpGr
-	 Lhl5WPMRbSUrJcT67zRU2j4ijeNZrqE6gWIH/z10=
+	b=v5g9bTSqpTMfugvb/ZoOUEaHc5Y3uokcevhb2cJL89mrDGFCWnsGsGFHR/bbAp0e0
+	 RXCCNvVQf5e4iTsydNFMphjvGR0rcXeCfZ35CQg4U77E5C1AH9qtwFVZuPtjXe0EZv
+	 5KWg/2p7e6QLwtTLMdV0VmV2AfYpOeTt1tlFCGRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgCRUzY (ORCPT
+        id S1728333AbgCRUza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:55:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55626 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:55:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbgCRUzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:18 -0400
+        id S1728295AbgCRUzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 084FF216FD;
-        Wed, 18 Mar 2020 20:55:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D835C216FD;
+        Wed, 18 Mar 2020 20:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564917;
-        bh=/LbwP3v/MBgQAofFuzjmdhtM3bu7o/LCwq51sIZqGXo=;
+        s=default; t=1584564924;
+        bh=rGYPdi6emtE0fvx4uq4xHL8NUN4WHMxIqrLJuxPmA1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A4HPH/R5kljBPf9yJ88XACD0AlqTTQdtjklZI3+/F4aF3agMHEZ8ByXooDYE48+BR
-         C7l/kYqnyB94jHcw3KMOlmMv3HvOYsevYb7ou6+Y9khBA7dDyaP7NRg/SsTwKNNTe+
-         VYHYrjmkum74rzKqS5eoLt/lu+EqN5q3csrqx+Po=
+        b=uBMNg7Y3DxqwV/QZzQtccYS8N0fbeQfdVI9Oo5J85GDUEYGAWhoS3eYWCStnSz9Dv
+         /JOGkcYNEiTBDT4qHLTvI6ty6Jmgz8giVgOm8NYEXSYd3kwLNsO+R/Q0Oed3Hm8l3T
+         HBczSe3fQY8nLih7VwwmjS/gWn5fWFdWy4KjRyFM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/37] pinctrl: core: Remove extra kref_get which blocks hogs being freed
-Date:   Wed, 18 Mar 2020 16:54:38 -0400
-Message-Id: <20200318205509.17053-6-sashal@kernel.org>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/37] macsec: add missing attribute validation for port
+Date:   Wed, 18 Mar 2020 16:54:44 -0400
+Message-Id: <20200318205509.17053-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
@@ -59,36 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit aafd56fc79041bf36f97712d4b35208cbe07db90 ]
+[ Upstream commit 31d9a1c524964bac77b7f9d0a1ac140dc6b57461 ]
 
-kref_init starts with the reference count at 1, which will be balanced
-by the pinctrl_put in pinctrl_unregister. The additional kref_get in
-pinctrl_claim_hogs will increase this count to 2 and cause the hogs to
-not get freed when pinctrl_unregister is called.
+Add missing attribute validation for IFLA_MACSEC_PORT
+to the netlink policy.
 
-Fixes: 6118714275f0 ("pinctrl: core: Fix pinctrl_register_and_init() with pinctrl_enable()")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200228154142.13860-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/macsec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index c6ff4d5fa482e..76638dee65d94 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -2008,7 +2008,6 @@ static int pinctrl_claim_hogs(struct pinctrl_dev *pctldev)
- 		return PTR_ERR(pctldev->p);
- 	}
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 10a8ef2d025a1..f7a6a82c9a551 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -2989,6 +2989,7 @@ static const struct device_type macsec_type = {
  
--	kref_get(&pctldev->p->users);
- 	pctldev->hog_default =
- 		pinctrl_lookup_state(pctldev->p, PINCTRL_STATE_DEFAULT);
- 	if (IS_ERR(pctldev->hog_default)) {
+ static const struct nla_policy macsec_rtnl_policy[IFLA_MACSEC_MAX + 1] = {
+ 	[IFLA_MACSEC_SCI] = { .type = NLA_U64 },
++	[IFLA_MACSEC_PORT] = { .type = NLA_U16 },
+ 	[IFLA_MACSEC_ICV_LEN] = { .type = NLA_U8 },
+ 	[IFLA_MACSEC_CIPHER_SUITE] = { .type = NLA_U64 },
+ 	[IFLA_MACSEC_WINDOW] = { .type = NLA_U32 },
 -- 
 2.20.1
 
