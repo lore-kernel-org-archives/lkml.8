@@ -2,93 +2,147 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B304CC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373DCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8570020753
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:46:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixZQfe2g"
+	by mail.kernel.org (Postfix) with ESMTP id 1247F20757
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584553692;
+	bh=nIRM+WY3P5vmQLvcggYZkzjwW+uq3nchuZAFnsr2gLY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uuusHe2sKpEN6IZ5l0oaD6XQs1bx6bO4jNqxnnGm1FPK8tHDQWU5UOFf7Z6MRtHaN
+	 2uOSaJPU9ayp4JnGm0jliP/BxisiQ6AVjwXhAZlPao7q1aluTezN22pViNJkMya9+/
+	 k+JpHISTb7wwMaRW5xag3KRC0tlbnYErRYAC80mE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgCRRqZ (ORCPT
+        id S1726747AbgCRRsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:46:25 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34097 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRRqZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:46:25 -0400
-Received: by mail-lj1-f195.google.com with SMTP id s13so28073084ljm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:46:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=iGcvkcUngLNOfO6036cGPDGn51b4oPN22Ez00N6emqg=;
-        b=ixZQfe2g+voe5aqc0HJY6gYLwCGURYPDWDwqHu4C9pXXBBJNn+sRQvB9xkB6TS6MOc
-         lknr5rj/D2hqFqNeZYcjQM20BCUD8/WxS+1YBp64qPsadk1+NWdIF5koBZs2Q/LZWSJR
-         zH69TpN7nnmMLPNdBggY7PhCz9o8eQ9Z3eDWmyE1LlUQyr2gdnzFhh6AtOx6dLnsP1Ur
-         9bOtIJwe3eQYcJUWswcVzI6P49yHDcBkZeVcCyCY5v4gcYnUMB6Kvr46zrhU0Kh/8Kdy
-         nCYVad+ahAg9+TvrPb3OXUi3P7X6EiFnukY6yCJLViRvil7OSPFU39emsXCEr1QPLnVf
-         jD/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iGcvkcUngLNOfO6036cGPDGn51b4oPN22Ez00N6emqg=;
-        b=oEd8fprrL7HQeyXqNtst+BRC1il/hYLpQdxCw8Lh3dAz6tsyGs7yHeMefVVeWM6N7w
-         VJ2aheYucOnmmbhcPeUoZDpoBdxWYpEvl7huP6Ah6VhtamsD+S7x9IfgQ2bQ+nnJM5RC
-         /xSmwkh1+A+38DkndPokRb7f1otaVPGPz80OAQdvlmcAf7IXOO2B5RLV36EKUus1XS3L
-         esDl50mPslOuztsObEkFOPhS3Sj6+RP3MQ0U+2N6mgY7CXAKGNpxPornu4RrqSzIv9zT
-         /uwIfnT3J+6VNCTvI9Am+CYjJWoH6xwXmwOYlPhPWkL6V8ihynPlNUQ60jLx7dobuuN0
-         5agQ==
-X-Gm-Message-State: ANhLgQ3SiGk2qG79i0/eKIIrptM9G1MCNRp5jT1q3C6cHocxVSAtq2XP
-        XuEH40ptahIgPn9Y27eAC4YUB2eV
-X-Google-Smtp-Source: ADFU+vvYJdyk3WGbSLY49KqHn2Rtl+y4apk2nirXHeTkZNZxAweJsm8hXxKXYh2FzcS8gkbwNMyTEg==
-X-Received: by 2002:a2e:93c9:: with SMTP id p9mr2948032ljh.136.1584553583274;
-        Wed, 18 Mar 2020 10:46:23 -0700 (PDT)
-Received: from localhost.localdomain (188.146.97.196.nat.umts.dynamic.t-mobile.pl. [188.146.97.196])
-        by smtp.gmail.com with ESMTPSA id y184sm4928967lfc.97.2020.03.18.10.46.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 10:46:22 -0700 (PDT)
-From:   mateusznosek0@gmail.com
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Mateusz Nosek <mateusznosek0@gmail.com>, akpm@linux-foundation.org
-Subject: [PATCH] mm/compaction.c: Clean code by removing unnecessary assignment
-Date:   Wed, 18 Mar 2020 18:45:09 +0100
-Message-Id: <20200318174509.15021-1-mateusznosek0@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Mar 2020 13:48:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbgCRRsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 13:48:10 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACB6B20752;
+        Wed, 18 Mar 2020 17:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584553688;
+        bh=nIRM+WY3P5vmQLvcggYZkzjwW+uq3nchuZAFnsr2gLY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=z2hysmjLTxToxZUAsYP5vyO0cdtXwbm0WB6Hl6cgzLv3k8l0WarkYNMKFynv6FLGk
+         JUru6IgeSJOZhqP5ir8e9kZrVXlgz3wG07V/yYMI9KmgtYxAS+ECM9O2a8WdhAMCC/
+         UKcnQM2rCMOf9pYvpZsAEEwZkxfPZ+vNxBtFaDOI=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jEcnX-00Dhie-06; Wed, 18 Mar 2020 17:48:07 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Mar 2020 17:48:06 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     linux-oxnas@groups.io, Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] irqchip/versatile-fpga: Handle chained IRQs properly
+In-Reply-To: <20200318170904.1461278-1-mans0n@gorani.run>
+References: <20200318170904.1461278-1-mans0n@gorani.run>
+Message-ID: <112cdab389aa9cc30189c7aec0baded2@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: mans0n@gorani.run, linux-oxnas@groups.io, linus.walleij@linaro.org, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, narmstrong@baylibre.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mateusz Nosek <mateusznosek0@gmail.com>
+Hi Sungbo,
 
-Previously 0 was assigned to variable 'last_migrated_pfn'. But the
-variable is not read after that, so the assignment can be removed.
+On 2020-03-18 17:09, Sungbo Eo wrote:
+> Enclose the chained handler with chained_irq_{enter,exit}(), so that 
+> the
+> muxed interrupts get properly acked.
+> 
+> This patch also fixes a reboot bug on OX820 SoC, where the jiffies 
+> timer
+> interrupt is never acked. The kernel waits a clock tick forever in
+> calibrate_delay_converge(), which leads to a boot hang.
 
-Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
----
- mm/compaction.c | 1 -
- 1 file changed, 1 deletion(-)
+Nice catch.
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 827d8a2b3164..4576d6c5afb5 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -2183,7 +2183,6 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
- 			ret = COMPACT_CONTENDED;
- 			putback_movable_pages(&cc->migratepages);
- 			cc->nr_migratepages = 0;
--			last_migrated_pfn = 0;
- 			goto out;
- 		case ISOLATE_NONE:
- 			if (update_cached) {
+> 
+> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/irqchip/irq-versatile-fpga.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-versatile-fpga.c
+> b/drivers/irqchip/irq-versatile-fpga.c
+> index 928858dada75..08faab2fec3e 100644
+> --- a/drivers/irqchip/irq-versatile-fpga.c
+> +++ b/drivers/irqchip/irq-versatile-fpga.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/io.h>
+>  #include <linux/irqchip.h>
+> +#include <linux/irqchip/chained_irq.h>
+>  #include <linux/irqchip/versatile-fpga.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/module.h>
+> @@ -68,12 +69,15 @@ static void fpga_irq_unmask(struct irq_data *d)
+> 
+>  static void fpga_irq_handle(struct irq_desc *desc)
+>  {
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+>  	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
+>  	u32 status = readl(f->base + IRQ_STATUS);
+> 
+> +	chained_irq_enter(chip, desc);
+> +
+
+It's probably not a big deal, but I'm not fond of starting talking to
+the muxing irqchip before having done the chained_irq_enter() call.
+
+Moving that read here would probably be safer.
+
+>  	if (status == 0) {
+>  		do_bad_IRQ(desc);
+> -		return;
+> +		goto out;
+>  	}
+> 
+>  	do {
+> @@ -82,6 +86,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
+>  		status &= ~(1 << irq);
+>  		generic_handle_irq(irq_find_mapping(f->domain, irq));
+>  	} while (status);
+> +
+> +out:
+> +	chained_irq_exit(chip, desc);
+>  }
+> 
+>  /*
+
+Otherwise looks good. If you send it again with the above fixed
+and a Fixes: tag, I'll queue it.
+
+Thanks,
+
+         M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
