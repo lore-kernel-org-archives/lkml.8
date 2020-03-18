@@ -2,112 +2,210 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9CCC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55DEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52902072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9227220777
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gGJ3ylio"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgCRT1z (ORCPT
+        id S1727002AbgCRT2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:27:55 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:44064 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgCRT1y (ORCPT
+        Wed, 18 Mar 2020 15:28:17 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36264 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgCRT2R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 15:27:54 -0400
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id 4BE1D1A33C6879;
-        Wed, 18 Mar 2020 19:27:52 +0000 (UTC)
-Received: from localhost.localdomain (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Wed, 18 Mar 2020 19:27:51 +0000 (UTC)
-From:   =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <superm1@gmail.com>,
-        Richard Hughes <hughsient@gmail.com>
-Cc:     =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
-Subject: [PATCH v2] HID: logitech-dj: issue udev change event on device connection
-Date:   Wed, 18 Mar 2020 19:27:21 +0000
-Message-Id: <20200318192721.390630-1-lains@archlinux.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200318161906.3340959-1-lains@archlinux.org>
-References: <20200318161906.3340959-1-lains@archlinux.org>
+        Wed, 18 Mar 2020 15:28:17 -0400
+Received: by mail-il1-f193.google.com with SMTP id h3so24853206ils.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 12:28:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6wSvFNeSvrwrWHabqMFqeJg5y2lotl/tDZpSYioL4/w=;
+        b=gGJ3ylioGwUY8mtuDb4IvtIKdCuSLqAPvC08OoMcjrn2EMkNc4Qn2my7edWXlG4NW3
+         PKpa2Qn72T7FgEFzle0ht3JsKNiwZIg4ZwXvJ997oQcLZOKItcgkqzcPYqlaKj8bNKb0
+         ykNxOhRG0ARNYkaTgY0EeYV+31ogrK9tmE6yNWESnsE/icD8iH9VPTEgWAGbfZDsQ+2h
+         xlNu08dXa7+2zStGNvHAyJhSpaEBfnv44uCvOcc4cxP7Iwvsl1oebmKaK7CP/KSgTYRg
+         vuqf+IGepjAx/c6P0OPGT7Q6WSmokll8MQg/LmlqcJxl3M5RPDNE3chnzUD1FTyeUF5R
+         WcFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6wSvFNeSvrwrWHabqMFqeJg5y2lotl/tDZpSYioL4/w=;
+        b=cxBy0lNEK6pgau3ALnCIag65PCkb83F7CYK1kL3T+bsS8DLwAlil0RylfryVU3C0/v
+         FnxusBdj0mz4vY386ZAPbTH7eXsIrMlOfofi2f+SGLyR0Tf2atDzUMQhz2RgQmCHix1g
+         +17AuFKpKNSB+zyFcYHsLXFiUOFEbAhhNjQgd0rLvG1mL6H1fDS4KDNUjVQs9svVa1ZC
+         bBUYHYIAU05jYCridsYLK32djWiXwBBVi33E5oGcmjX39nm9hMwsvBtoHl5KN+eyqFFY
+         8jqdZqxDKkFopPJT26sD92+8TGU0lVDYxe29gcxW1bE2T4X1/N9HJAo/W6DFz3NISsxx
+         UR3Q==
+X-Gm-Message-State: ANhLgQ0sElyilkoCGL7iSd78e/8i6gjmp3sEgB172gxnNgU0QLQnLvhS
+        zDPXXlzToAO1A3l+fFrZfUTM7BjbtfN4YYn2ayrHZg==
+X-Google-Smtp-Source: ADFU+vsCmumeXJiGvsvn4CUIHfWNv4/BAsJpbQyKznSLu9FUiOOO7JoeBJDknEh6xjYmBxUjTAtI6+JfUJyI9DEjvuc=
+X-Received: by 2002:a92:8352:: with SMTP id f79mr5487282ild.58.1584559696404;
+ Wed, 18 Mar 2020 12:28:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200309161748.31975-1-mathieu.poirier@linaro.org>
+ <20200309161748.31975-3-mathieu.poirier@linaro.org> <20200318131821.GA2789508@kroah.com>
+ <20200318181604.GB18359@xps15> <20200318182201.GA3235688@kroah.com>
+In-Reply-To: <20200318182201.GA3235688@kroah.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 18 Mar 2020 13:28:05 -0600
+Message-ID: <CANLsYkxkg1bCCN=iuSQBF_oG-wWwrSvEC2pLNVkP64EgTfVAvg@mail.gmail.com>
+Subject: Re: [PATCH 02/13] coresight: cti: Add sysfs coresight mgmt register access
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As discussed in the mailing list:
+On Wed, 18 Mar 2020 at 12:22, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Mar 18, 2020 at 12:16:04PM -0600, Mathieu Poirier wrote:
+> > On Wed, Mar 18, 2020 at 02:18:21PM +0100, Greg KH wrote:
+> > > On Mon, Mar 09, 2020 at 10:17:37AM -0600, Mathieu Poirier wrote:
+> > > > From: Mike Leach <mike.leach@linaro.org>
+> > > >
+> > > > Adds sysfs access to the coresight management registers.
+> > > >
+> > > > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > > > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > > [Fixed abbreviation in title]
+> > > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > > ---
+> > > >  .../hwtracing/coresight/coresight-cti-sysfs.c | 53 +++++++++++++++++++
+> > > >  drivers/hwtracing/coresight/coresight-priv.h  |  1 +
+> > > >  2 files changed, 54 insertions(+)
+> > > >
+> > > > diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> > > > index a832b8c6b866..507f8eb487fe 100644
+> > > > --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> > > > +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> > > > @@ -62,11 +62,64 @@ static struct attribute *coresight_cti_attrs[] = {
+> > > >   NULL,
+> > > >  };
+> > > >
+> > > > +/* register based attributes */
+> > > > +
+> > > > +/* macro to access RO registers with power check only (no enable check). */
+> > > > +#define coresight_cti_reg(name, offset)                  \
+> > > > +static ssize_t name##_show(struct device *dev,                           \
+> > > > +                    struct device_attribute *attr, char *buf)    \
+> > > > +{                                                                        \
+> > > > + struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);     \
+> > > > + u32 val = 0;                                                    \
+> > > > + pm_runtime_get_sync(dev->parent);                               \
+> > > > + spin_lock(&drvdata->spinlock);                                  \
+> > > > + if (drvdata->config.hw_powered)                                 \
+> > > > +         val = readl_relaxed(drvdata->base + offset);            \
+> > > > + spin_unlock(&drvdata->spinlock);                                \
+> > > > + pm_runtime_put_sync(dev->parent);                               \
+> > > > + return scnprintf(buf, PAGE_SIZE, "0x%x\n", val);                \
+> > > > +}                                                                        \
+> > > > +static DEVICE_ATTR_RO(name)
+> > > > +
+> > > > +/* coresight management registers */
+> > > > +coresight_cti_reg(devaff0, CTIDEVAFF0);
+> > > > +coresight_cti_reg(devaff1, CTIDEVAFF1);
+> > > > +coresight_cti_reg(authstatus, CORESIGHT_AUTHSTATUS);
+> > > > +coresight_cti_reg(devarch, CORESIGHT_DEVARCH);
+> > > > +coresight_cti_reg(devid, CORESIGHT_DEVID);
+> > > > +coresight_cti_reg(devtype, CORESIGHT_DEVTYPE);
+> > > > +coresight_cti_reg(pidr0, CORESIGHT_PERIPHIDR0);
+> > > > +coresight_cti_reg(pidr1, CORESIGHT_PERIPHIDR1);
+> > > > +coresight_cti_reg(pidr2, CORESIGHT_PERIPHIDR2);
+> > > > +coresight_cti_reg(pidr3, CORESIGHT_PERIPHIDR3);
+> > > > +coresight_cti_reg(pidr4, CORESIGHT_PERIPHIDR4);
+> > > > +
+> > > > +static struct attribute *coresight_cti_mgmt_attrs[] = {
+> > > > + &dev_attr_devaff0.attr,
+> > > > + &dev_attr_devaff1.attr,
+> > > > + &dev_attr_authstatus.attr,
+> > > > + &dev_attr_devarch.attr,
+> > > > + &dev_attr_devid.attr,
+> > > > + &dev_attr_devtype.attr,
+> > > > + &dev_attr_pidr0.attr,
+> > > > + &dev_attr_pidr1.attr,
+> > > > + &dev_attr_pidr2.attr,
+> > > > + &dev_attr_pidr3.attr,
+> > > > + &dev_attr_pidr4.attr,
+> > > > + NULL,
+> > > > +};
+> > > > +
+> > > >  static const struct attribute_group coresight_cti_group = {
+> > > >   .attrs = coresight_cti_attrs,
+> > > >  };
+> > > >
+> > > > +static const struct attribute_group coresight_cti_mgmt_group = {
+> > > > + .attrs = coresight_cti_mgmt_attrs,
+> > > > + .name = "mgmt",
+> > > > +};
+> > > > +
+> > > >  const struct attribute_group *coresight_cti_groups[] = {
+> > > >   &coresight_cti_group,
+> > > > + &coresight_cti_mgmt_group,
+> > > >   NULL,
+> > > >  };
+> > > > diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+> > > > index 82e563cdc879..aba6b789c969 100644
+> > > > --- a/drivers/hwtracing/coresight/coresight-priv.h
+> > > > +++ b/drivers/hwtracing/coresight/coresight-priv.h
+> > > > @@ -22,6 +22,7 @@
+> > > >  #define CORESIGHT_CLAIMCLR       0xfa4
+> > > >  #define CORESIGHT_LAR            0xfb0
+> > > >  #define CORESIGHT_LSR            0xfb4
+> > > > +#define CORESIGHT_DEVARCH        0xfbc
+> > > >  #define CORESIGHT_AUTHSTATUS     0xfb8
+> > > >  #define CORESIGHT_DEVID          0xfc8
+> > > >  #define CORESIGHT_DEVTYPE        0xfcc
+> > > > --
+> > > > 2.20.1
+> > > >
+> > >
+> > > I do not see any Documentation/ABI/ entries for these new sysfs files,
+> > > did I miss it somehow?  I can't take new sysfs code without
+> > > documentation.
+> >
+> > All the ABI is documented in this patch, which is part of this set.
+> >
+> > [1]. https://lkml.org/lkml/2020/3/9/642
+>
+> That is not in the required Documentation/ABI/ form that all sysfs files
+> should have.  If they don't, it's a bug.
 
-> Right now the hid-logitech-dj driver will export one node for each
-> connected device, even when the device is not connected. That causes
-> some trouble because in userspace we don't have have any way to know if
-> the device is connected or not, so when we try to communicate, if the
-> device is disconnected it will fail.
+Now I'm very confused...  As far as I can tell Mike has followed the
+(very loose) guidelines set out in the ABI documentation [1].  I have
+also taken a look at the patches that were merged in the v5.5 cycle -
+nothing is very different than what Mike has put together.  It is also
+based on the work I did a while back [2] that you merged.
 
-The solution reached to solve this issue is to trigger an udev change
-event when the device connects, this way userspace can just wait on
-those connections instead of trying to ping the device.
+The only thing I can see is that under "Contact", names are listed
+rather than name and email addresses - is this what you are referring
+to?  Is there another problem?  Can you point me to a file where the
+"right" format has been followed?
 
-Signed-off-by: Filipe Laíns <lains@archlinux.org>
+Thanks,
+Mathieu
 
----
+[1]. https://elixir.bootlin.com/linux/v5.6-rc6/source/Documentation/ABI/README
+[2]. https://elixir.bootlin.com/linux/v5.6-rc6/source/Documentation/ABI/testing/sysfs-bus-coresight-devices-etm4x
 
-v2:
-  - Issue udev change event on the connected hid device, not on the
-  receiver
-
----
- drivers/hid/hid-logitech-dj.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-index 48dff5d6b605..282e57dd467d 100644
---- a/drivers/hid/hid-logitech-dj.c
-+++ b/drivers/hid/hid-logitech-dj.c
-@@ -1412,6 +1412,7 @@ static int logi_dj_dj_event(struct hid_device *hdev,
- {
- 	struct dj_receiver_dev *djrcv_dev = hid_get_drvdata(hdev);
- 	struct dj_report *dj_report = (struct dj_report *) data;
-+	struct dj_device *dj_dev;
- 	unsigned long flags;
- 
- 	/*
-@@ -1447,7 +1448,9 @@ static int logi_dj_dj_event(struct hid_device *hdev,
- 
- 	spin_lock_irqsave(&djrcv_dev->lock, flags);
- 
--	if (!djrcv_dev->paired_dj_devices[dj_report->device_index]) {
-+	dj_dev = djrcv_dev->paired_dj_devices[dj_report->device_index];
-+
-+	if (!dj_dev) {
- 		/* received an event for an unknown device, bail out */
- 		logi_dj_recv_queue_notification(djrcv_dev, dj_report);
- 		goto out;
-@@ -1464,6 +1467,8 @@ static int logi_dj_dj_event(struct hid_device *hdev,
- 		if (dj_report->report_params[CONNECTION_STATUS_PARAM_STATUS] ==
- 		    STATUS_LINKLOSS) {
- 			logi_dj_recv_forward_null_report(djrcv_dev, dj_report);
-+		} else {
-+			kobject_uevent(&dj_dev->hdev->dev.kobj, KOBJ_CHANGE);
- 		}
- 		break;
- 	default:
--- 
-2.25.1
+>
+> Please use that format and do not make up your own, we already have
+> tools that parse these files.
+>
+> thanks,
+>
+> greg k-h
