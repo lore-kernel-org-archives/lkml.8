@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A687AC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC99C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782DF20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B261820409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565743;
-	bh=aajlEBPgsF9TWsTs1qzScjchYnUPHpC5ectjpFA3GQU=;
+	s=default; t=1584565760;
+	bh=2RbZQy9o2JoKpR7NM7jBOBCn95Y96OZN0YzOzbE9UTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ldnIB+2vHJXPYxqQr+IbCm0kW4HA9nKVdcXRf7suCPiBYvHVwGWSYpyT/kvfGuTY7
-	 kEuQWVQHBvpZjecS4PLkjCI2nOdLRweEjRsfP3hieZzayFtSLu6S72zWQkpEwMOnf7
-	 xAiSWuPsuVs2aDkQ2ZSi3caLKuVm/n4yyyCpPyVs=
+	b=GEEl1dGpPznuYGevTho2votbmY37qxwEypPTpMQ0jqvBYkTlG5bso7l/HbgpGKST+
+	 NB/hauzBYn6JK+eBOCpAJTUFKddsiEyKxmIqTDzSnypn5mHGXzuJMWb3ADU0JZ5QuF
+	 I9TBac7DfCO8QMSsjYbAo8ihUr5Ud7GC1JnE9qiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgCRVJC (ORCPT
+        id S1727932AbgCRVJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53130 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:09:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727368AbgCRUxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:53:55 -0400
+        id S1727345AbgCRUxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:53:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D3D0208FE;
-        Wed, 18 Mar 2020 20:53:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E09EA2098B;
+        Wed, 18 Mar 2020 20:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564834;
-        bh=aajlEBPgsF9TWsTs1qzScjchYnUPHpC5ectjpFA3GQU=;
+        s=default; t=1584564829;
+        bh=2RbZQy9o2JoKpR7NM7jBOBCn95Y96OZN0YzOzbE9UTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g5sn7sqvsYzIG/3jGfI/8O77ri3oIF0uD4j39Js3c+nKQkLN6MqOO7BRjKcIIqGmo
-         gFbLdteqLnOHdCDLTBlyBFpwZttSgiJb6/wwuIUeo+ad2YbeLPNUDT3UjyLKtcXW5S
-         psT19leKhpME/33XG8FgfakN9PqI+Iz7SoBXSuwg=
+        b=hVY1rJx3QxeFiNNYsbZZgTDpBK3kBFycySW6SKTDAEM2lK240vAW6LrB51TH3aCaG
+         tC7D5YNhCLP+kopCQ2EoxVGPlJCvKTunKayn4RjcKvmzL2KPVetWlxQhjiKrJNmNfX
+         95LnT73nNQ5H+AXT54s4MUu7r+dEcqYpWzbaNCIc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Gilbert <floppym@gentoo.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 14/73] cpupower: avoid multiple definition with gcc -fno-common
-Date:   Wed, 18 Mar 2020 16:52:38 -0400
-Message-Id: <20200318205337.16279-14-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 10/73] net: dsa: mv88e6xxx: fix lockup on warm boot
+Date:   Wed, 18 Mar 2020 16:52:34 -0400
+Message-Id: <20200318205337.16279-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -59,88 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Gilbert <floppym@gentoo.org>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 2de7fb60a4740135e03cf55c1982e393ccb87b6b ]
+[ Upstream commit 0395823b8d9a4d87bd1bf74359123461c2ae801b ]
 
-Building cpupower with -fno-common in CFLAGS results in errors due to
-multiple definitions of the 'cpu_count' and 'start_time' variables.
+If the switch is not hardware reset on a warm boot, interrupts can be
+left enabled, and possibly pending. This will cause us to enter an
+infinite loop trying to service an interrupt we are unable to handle,
+thereby preventing the kernel from booting.
 
-./utils/idle_monitor/snb_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-multiple definition of `cpu_count';
-./utils/idle_monitor/nhm_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-first defined here
-...
-./utils/idle_monitor/cpuidle_sysfs.o:./utils/idle_monitor/cpuidle_sysfs.c:22:
-multiple definition of `start_time';
-./utils/idle_monitor/amd_fam14h_idle.o:./utils/idle_monitor/amd_fam14h_idle.c:85:
-first defined here
+Ensure that the global 2 interrupt sources are disabled before we claim
+the parent interrupt.
 
-The -fno-common option will be enabled by default in GCC 10.
+Observed on the ZII development revision B and C platforms with
+reworked serdes support, and using reboot -f to reboot the platform.
 
-Bug: https://bugs.gentoo.org/707462
-Signed-off-by: Mike Gilbert <floppym@gentoo.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: dc30c35be720 ("net: dsa: mv88e6xxx: Implement interrupt support.")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
- 4 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/dsa/mv88e6xxx/global2.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-index 3f893b99b337c..555cb338a71a4 100644
---- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-@@ -82,7 +82,7 @@ static struct pci_access *pci_acc;
- static struct pci_dev *amd_fam14h_pci_dev;
- static int nbp1_entered;
+diff --git a/drivers/net/dsa/mv88e6xxx/global2.c b/drivers/net/dsa/mv88e6xxx/global2.c
+index bdbb72fc20ede..6240976679e1e 100644
+--- a/drivers/net/dsa/mv88e6xxx/global2.c
++++ b/drivers/net/dsa/mv88e6xxx/global2.c
+@@ -1083,6 +1083,13 @@ int mv88e6xxx_g2_irq_setup(struct mv88e6xxx_chip *chip)
+ {
+ 	int err, irq, virq;
  
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
- 
- #ifdef DEBUG
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-index f634aeb65c5f6..7fb4f7a291ad5 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-@@ -19,7 +19,7 @@ struct cpuidle_monitor cpuidle_sysfs_monitor;
- 
- static unsigned long long **previous_count;
- static unsigned long long **current_count;
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
- 
- static int cpuidle_get_count_percent(unsigned int id, double *percent,
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-index d3c3e6e7aa26c..3d54fd4336261 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-@@ -27,6 +27,8 @@ struct cpuidle_monitor *all_monitors[] = {
- 0
- };
- 
-+int cpu_count;
++	chip->g2_irq.masked = ~0;
++	mv88e6xxx_reg_lock(chip);
++	err = mv88e6xxx_g2_int_mask(chip, ~chip->g2_irq.masked);
++	mv88e6xxx_reg_unlock(chip);
++	if (err)
++		return err;
 +
- static struct cpuidle_monitor *monitors[MONITORS_MAX];
- static unsigned int avail_monitors;
+ 	chip->g2_irq.domain = irq_domain_add_simple(
+ 		chip->dev->of_node, 16, 0, &mv88e6xxx_g2_irq_domain_ops, chip);
+ 	if (!chip->g2_irq.domain)
+@@ -1092,7 +1099,6 @@ int mv88e6xxx_g2_irq_setup(struct mv88e6xxx_chip *chip)
+ 		irq_create_mapping(chip->g2_irq.domain, irq);
  
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-index a2d901d3bfaf9..eafef38f1982e 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-@@ -25,7 +25,7 @@
- #endif
- #define CSTATE_DESC_LEN 60
+ 	chip->g2_irq.chip = mv88e6xxx_g2_irq_chip;
+-	chip->g2_irq.masked = ~0;
  
--int cpu_count;
-+extern int cpu_count;
- 
- /* Hard to define the right names ...: */
- enum power_range_e {
+ 	chip->device_irq = irq_find_mapping(chip->g1_irq.domain,
+ 					    MV88E6XXX_G1_STS_IRQ_DEVICE);
 -- 
 2.20.1
 
