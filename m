@@ -2,104 +2,93 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE502C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F27C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B1320768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFAF920768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lA1QKFmt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgCRMlL (ORCPT
+        id S1726857AbgCRMlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 08:41:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45450 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726546AbgCRMlL (ORCPT
+        Wed, 18 Mar 2020 08:41:47 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33511 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbgCRMlq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:41:11 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ICWnO9076829
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:41:10 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu931vajh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:41:09 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Wed, 18 Mar 2020 12:41:07 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Mar 2020 12:41:03 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02ICf14949217756
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 12:41:01 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7E2DE5205A;
-        Wed, 18 Mar 2020 12:41:01 +0000 (GMT)
-Received: from [9.199.38.35] (unknown [9.199.38.35])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 12ADF5204F;
-        Wed, 18 Mar 2020 12:40:39 +0000 (GMT)
-Subject: Re: [PATCH 01/15] powerpc/watchpoint: Rename current DAWR macros
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
-        paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
- <20200309085806.155823-2-ravi.bangoria@linux.ibm.com>
- <6ae1865c-fcf6-5bef-2d93-e75b03ed8b44@c-s.fr>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Wed, 18 Mar 2020 18:10:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <6ae1865c-fcf6-5bef-2d93-e75b03ed8b44@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031812-0028-0000-0000-000003E6E48F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031812-0029-0000-0000-000024AC3C6E
-Message-Id: <217821bd-5a3e-8e0a-0d42-5f09bf8c4a4d@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-18_05:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
- clxscore=1015 spamscore=0 bulkscore=0 phishscore=0 mlxlogscore=999
- mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003180061
+        Wed, 18 Mar 2020 08:41:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a25so30200031wrd.0;
+        Wed, 18 Mar 2020 05:41:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id;
+        bh=8f0u3uYCqa658PohJX3v+iK274a06tw/ySj5+mHDlzA=;
+        b=lA1QKFmtAJu0DF/Qp0x2qESDwbw293Dcduj0/ib0aE+immiOhwJmlzB1eZWgO5InGO
+         Cs6Lp+afJwVMKya4VJnd5VIxIoChV/u1OHZG8PfaC5AvBE5rC5U9G7UDIUJG2EOgUZOw
+         YeV1Lgp2av+pMr3ivDZMQhcBaoW5sfVNpBILRq2h179PcXqTJo/ZK+auFlCYGwx5g8Ox
+         N5cwJgLWny1ryZ0ieImVqtUwY3zOmou6fQ4mZ41u/goOl5nS04t/ZSwWxXxkG94+/b/n
+         VdhcdhR/nyoDGmDtFha4sM6dfD8UKjku/NtaL9qi7bjjmCAvLspw7JypZOZZsYfDLUkS
+         GmKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=8f0u3uYCqa658PohJX3v+iK274a06tw/ySj5+mHDlzA=;
+        b=rdSlXMN4VnlUkL/dkfftzGYA+Eo4BWBrwjtuuU4GzR9UIjHP/5AtkoHRkcs9zOpIMg
+         0Pm1Etq2Exm7AlCI5fuB3f2VbXOBb7APBq20fwtc0IeVOnTbG6iAfnAaDDOVKj390XyQ
+         XmUUg8zi280srBT4M29Y8U1vZzOu34uvwhV4alw14uQecH+jidojyqOZFCo6HpYF7H/y
+         yKdMJQL8m9x2hYJl+boaLqYTUHhWPJg93GD10jXPVxmn2RuIe0sDTvpk+jh3cvgVxo5N
+         yZTadtaK3byEbeixNBW4R/iIo3GShtWKIPbIuSS3oujeZIs23ISivzm4KeuEOdlP+jfx
+         qUvw==
+X-Gm-Message-State: ANhLgQ1D4HulFLV4PtJafEi9kDLjYiNh5dkNXJ7a2R95YHKnSOXhvRMU
+        I2a9k4jmznT6iEBYlNIWG/IuFheJ
+X-Google-Smtp-Source: ADFU+vtf/D6MSULsPgcg3Ot8TazUpuJrBwQkuucH5iTNC5sbpCrGZMb1ZWS0I4LKHjIVMYRC8yzdNg==
+X-Received: by 2002:a5d:69c1:: with SMTP id s1mr5711074wrw.351.1584535304261;
+        Wed, 18 Mar 2020 05:41:44 -0700 (PDT)
+Received: from 640k.localdomain.com ([93.56.174.5])
+        by smtp.gmail.com with ESMTPSA id l8sm3752726wmj.2.2020.03.18.05.41.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Mar 2020 05:41:43 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] KVM: nSVM: check for EFER.SVME=1 before entering guest
+Date:   Wed, 18 Mar 2020 13:41:40 +0100
+Message-Id: <1584535300-6571-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+EFER is set for L2 using svm_set_efer, which hardcodes EFER_SVME to 1 and hides
+an incorrect value for EFER.SVME in the L1 VMCB.  Perform the check manually
+to detect invalid guest state.
 
+Reported-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/svm.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-On 3/17/20 3:44 PM, Christophe Leroy wrote:
-> 
-> 
-> Le 09/03/2020 à 09:57, Ravi Bangoria a écrit :
->> Future Power architecture is introducing second DAWR. Rename current
->> DAWR macros as:
->>   s/SPRN_DAWR/SPRN_DAWR0/
->>   s/SPRN_DAWRX/SPRN_DAWRX0/
-> 
-> I think you should tell that DAWR0 and DAWRX0 is the real name of the register as documented in (at least) power8 and power9 user manual.
-> 
-> Otherwise, we can't understand why you change the name of the register.
-
-Ok.
-
-Thanks,
-Ravi
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 08568ae9f7a1..2125c6ae5951 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -3558,6 +3558,9 @@ static bool nested_svm_vmrun_msrpm(struct vcpu_svm *svm)
+ 
+ static bool nested_vmcb_checks(struct vmcb *vmcb)
+ {
++	if ((vmcb->save.efer & EFER_SVME) == 0)
++		return false;
++
+ 	if ((vmcb->control.intercept & (1ULL << INTERCEPT_VMRUN)) == 0)
+ 		return false;
+ 
+-- 
+1.8.3.1
 
