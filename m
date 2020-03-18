@@ -2,128 +2,245 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6007C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947D4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39A020663
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5064720719
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:19:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pQvVOy0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgCRQSz (ORCPT
+        id S1727133AbgCRQTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:18:55 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46676 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgCRQSz (ORCPT
+        Wed, 18 Mar 2020 12:19:24 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41814 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbgCRQTY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 12:18:55 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jEbPA-0001Nh-JU; Wed, 18 Mar 2020 16:18:52 +0000
-Subject: Re: [PATCH] bnx2x: fix spelling mistake "pauseable" -> "pausable"
-To:     Joe Perches <joe@perches.com>, Ariel Elior <aelior@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        GR-everest-linux-l2@marvell.com,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200317182921.482606-1-colin.king@canonical.com>
- <8d9544fe6d413cdd600504e48f301e023b99e17b.camel@perches.com>
- <7ce6d58f-a2d0-7173-0163-f1e3b5f93e65@canonical.com>
- <1bcfc53c523f120a4cf0f19490de506c5704d306.camel@perches.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4920d5ae-a865-9445-3ebe-1683e668a1f8@canonical.com>
-Date:   Wed, 18 Mar 2020 16:18:52 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 12:19:24 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02IGJHdo120797;
+        Wed, 18 Mar 2020 11:19:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584548357;
+        bh=JoRXXGAZSEJHCSyleL2XBkBbbnRu/mpxxfYt8wd+af4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pQvVOy0i7LiO4yxpx8r7T+WaNd+DUoZud17nesU4d8Q9h9q2eDJxh84801rkKS/Zx
+         /WULUB6i5qP7Oj1+duPTq7SF0TrKAxP7UkT4YyTe7ins89txnmGgM+1f2H5TfowcvS
+         DpKo0x8K0DWjafKYQpBeO/37+5Q+LcpT7qXNWC6s=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02IGJHuA014013
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Mar 2020 11:19:17 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
+ Mar 2020 11:19:17 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 18 Mar 2020 11:19:17 -0500
+Received: from [10.250.35.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02IGJHWh124741;
+        Wed, 18 Mar 2020 11:19:17 -0500
+Subject: Re: [PATCH 1/2] remoteproc: fall back to using parent memory pool if
+ no dedicated available
+To:     Tero Kristo <t-kristo@ti.com>,
+        Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Loic PALLARDY <loic.pallardy@st.com>
+CC:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200305224108.21351-1-s-anna@ti.com>
+ <20200305224108.21351-2-s-anna@ti.com>
+ <ce37072d2f304214aa920e66fa3b30b1@SFHDAG3NODE1.st.com>
+ <d71d6061-2bfe-e8be-857b-67b22493aeab@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <46d1fadd-1935-ab63-db41-89afaac79e21@ti.com>
+Date:   Wed, 18 Mar 2020 11:19:17 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1bcfc53c523f120a4cf0f19490de506c5704d306.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d71d6061-2bfe-e8be-857b-67b22493aeab@ti.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/03/2020 16:13, Joe Perches wrote:
-> On Wed, 2020-03-18 at 09:16 +0000, Colin Ian King wrote:
->> On 18/03/2020 03:37, Joe Perches wrote:
->>> On Tue, 2020-03-17 at 18:29 +0000, Colin King wrote:
->>>> From: Colin Ian King <colin.king@canonical.com>
->>>>
->>>> Bulk rename of variables and literal strings. No functional
->>>> changes.
+Hi Arnaud,
+
+On 3/18/20 4:37 AM, Tero Kristo wrote:
+> On 13/03/2020 18:52, Arnaud POULIQUEN wrote:
+>> Hi Suman,
+>>
+>>> -----Original Message-----
+>>> From: Suman Anna <s-anna@ti.com>
+>>> Sent: jeudi 5 mars 2020 23:41
+>>> To: Bjorn Andersson <bjorn.andersson@linaro.org>; Loic PALLARDY
+>>> <loic.pallardy@st.com>
+>>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>; Arnaud POULIQUEN
+>>> <arnaud.pouliquen@st.com>; Tero Kristo <t-kristo@ti.com>; linux-
+>>> remoteproc@vger.kernel.org; linux-kernel@vger.kernel.org; Suman Anna
+>>> <s-anna@ti.com>
+>>> Subject: [PATCH 1/2] remoteproc: fall back to using parent memory
+>>> pool if no
+>>> dedicated available
 >>>
->>> I'm not sure either spelling is a "real" word and
->>> pauseable seems more intelligible and less likely
->>> to be intended to be a typo of "possible" to me.
->>
->> It's indeed of marginal benefit. However..
->>
->> https://www.yourdictionary.com/pausable
-> 
-> Then again there's this:
-> https://www.spellcheck.net/misspelled-words/pausable
-> 
-> Correct spelling for PAUSABLE
->         
->             We think the word pausable is a misspelling.
-> 
-> and
-> 
-> https://www.anagrammer.com/crossword/answer/pausable
-> 
-> The word PAUSABLE is NOT valid in any word game. (Sorry, you cannot play
-> PAUSABLE in Scrabble, Words With Friends etc) 
->     
+>>> From: Tero Kristo <t-kristo@ti.com>
+>>>
+>>> In some cases, like with OMAP remoteproc, we are not creating dedicated
+>>> memory pool for the virtio device. Instead, we use the same memory pool
+>>> for all shared memories. The current virtio memory pool handling
+>>> forces a
+>>> split between these two, as a separate device is created for it, causing
+>>> memory to be allocated from bad location if the dedicated pool is not
+>>> available. Fix this by falling back to using the parent device memory
+>>> pool if
+>>> dedicated is not available.
+>>>
+>>> Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific
+>>> dma
+>>> memory pool")
+>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>> ---
+>>>   drivers/remoteproc/remoteproc_virtio.c | 10 ++++++++++
+>>>   1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/drivers/remoteproc/remoteproc_virtio.c
+>>> b/drivers/remoteproc/remoteproc_virtio.c
+>>> index 8c07cb2ca8ba..4723ebe574b8 100644
+>>> --- a/drivers/remoteproc/remoteproc_virtio.c
+>>> +++ b/drivers/remoteproc/remoteproc_virtio.c
+>>> @@ -368,6 +368,16 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev,
+>>> int id)
+>>>                   goto out;
+>>>               }
+>>>           }
+>>> +    } else {
+>>> +        struct device_node *np = rproc->dev.parent->of_node;
+>>> +
+>>> +        /*
+>>> +         * If we don't have dedicated buffer, just attempt to
+>>> +         * re-assign the reserved memory from our parent.
+>>> +         * Failure is non-critical so don't check return value
+>>> +         * either.
+>>> +         */
+>>> +        of_reserved_mem_device_init_by_idx(dev, np, 0);
+>>>       }
+>> I aven't tested your patchset yet, but reviewing you code,  I wonder
+>> if you cannot declare your  memory pool
+>> in your platform driver using  rproc_of_resm_mem_entry_init. 
 
-OK, lets NAK this fix :-)  Apologies for the noise.
+The patch actually provides a fallback option and even now this path is
+entered only when there are no dedicated pools. This restores the code
+to how the allocations were made prior to the fixed memory carveout
+changes. If the remoteproc drivers themselves do not use any DMA/CMA
+pools, then nothing changes and allocations continue to be made from the
+global pools.
 
-Colin
+Something
+>> like:
+>>     struct device_node *mem_node;
+>>     struct reserved_mem *rmem;
+>>
+>>     mem_node = of_parse_phandle(dev->of_node, "memory-region", 0);
+>>     rmem = of_reserved_mem_lookup(mem_node);
+>>     mem = rproc_of_resm_mem_entry_init(dev, 0,
+>>                                rmem->size,
+>>                                rmem->base,
+>>                                " vdev0buffer");
+>>
+>> A main advantage of this implementation would be that the index of the
+>> memory region would not be hard coded to 0.
+
+The 0 is the default (equivalent to of_reserved_mem_device_init(), but
+we can't use that function here since dev and np are different).
+
+While your suggestion does work for us, this does bring in the knowledge
+of how many vdevs a remoteproc driver is supporting. It is fine for
+remoteproc drivers that are designed exactly for a known number of vdevs
+and/or fixed pools to use the above function, but every other remoteproc
+driver would have to repeat similar code. Given that the number of vdevs
+are currently defined through the resource table and can change from
+firmware to firmware, I think this fallback option patch is the better
+scalable solution.
+
+Let's see if others have any opinion on this.
+
+regards
+Suman
+
+> 
+> It seems like that would work for us also, and thus this patch can be
+> dropped. See the following patch. Suman, any comments on this? If this
+> seems acceptable, I can send this as a proper patch to the list.
+> 
+> ------
+> 
+> From: Tero Kristo <t-kristo@ti.com>
+> Date: Wed, 18 Mar 2020 11:22:58 +0200
+> Subject: [PATCH] remoteproc/omap: Allocate vdev0buffer memory from
+>  reserved memory pool
+> 
+> Since 086d08725d34 ("remoteproc: create vdev subdevice with specific dma
+> memory pool"), remoteprocs must allocate separate vdev memory buffer. As
+> OMAP remoteproc does not do this yet, the memory gets allocated from
+> default DMA pool, and this memory is not suitable for the use. To fix
+> the issue, map the vdev0buffer to use the same device reserved memory
+> pool as the rest of the remoteproc.
+> 
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  drivers/remoteproc/omap_remoteproc.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/omap_remoteproc.c
+> b/drivers/remoteproc/omap_remoteproc.c
+> index 29d19a608af8..024330e31a9e 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -1273,6 +1273,9 @@ static int omap_rproc_probe(struct platform_device
+> *pdev)
+>      const char *firmware;
+>      int ret;
+>      struct reset_control *reset;
+> +    struct device_node *mem_node;
+> +    struct reserved_mem *rmem;
+> +    struct rproc_mem_entry *mem;
+> 
+>      if (!np) {
+>          dev_err(&pdev->dev, "only DT-based devices are supported\n");
+> @@ -1335,6 +1338,19 @@ static int omap_rproc_probe(struct
+> platform_device *pdev)
+>          dev_warn(&pdev->dev, "device does not have specific CMA pool.\n");
+>          dev_warn(&pdev->dev, "Typically this should be provided,\n");
+>          dev_warn(&pdev->dev, "only omit if you know what you are
+> doing.\n");
+> +    } else {
+> +        mem_node = of_parse_phandle(pdev->dev.of_node, "memory-region",
+> +                        0);
+> +        rmem = of_reserved_mem_lookup(mem_node);
+> +        mem = rproc_of_resm_mem_entry_init(&pdev->dev, 0, rmem->size,
+> +                           rmem->base, "vdev0buffer");
+> +
+> +        if (!mem) {
+> +            ret = -ENOMEM;
+> +            goto release_mem;
+> +        }
+> +
+> +        rproc_add_carveout(rproc, mem);
+>      }
+> 
+>      platform_set_drvdata(pdev, rproc);
+
