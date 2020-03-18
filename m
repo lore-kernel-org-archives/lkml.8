@@ -2,102 +2,149 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8070C5ACD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08E3C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762F02076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37DB20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VTZJnlaV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mHuYa0ft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgCRIa4 (ORCPT
+        id S1727498AbgCRIbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 04:30:56 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:36114 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727435AbgCRIaz (ORCPT
+        Wed, 18 Mar 2020 04:31:31 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42357 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgCRIbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 04:30:55 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02I8UjQt041090;
-        Wed, 18 Mar 2020 03:30:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584520245;
-        bh=fV9yPr0b7SrHBE3GyD+MrAKcyMNE/+5Bvz6TvlvJFcA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=VTZJnlaVB8IZoKUSb4BLXJG5VX4kvH8URvWkWcKY6eZhDKDZM9Yt/5hN8BAW6g/SA
-         R3WzqsE/wRhenjUoCoGnjscXL0+NUk90cDz9PTz7Ezcj7UWzggWfrqkiTxa7aAhOvd
-         6Ci1uIX+QixsyRrwiLXY/LJWK1xFmOz18SiQIRGE=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02I8Uj5G033893
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 18 Mar 2020 03:30:45 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
- Mar 2020 03:30:44 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 18 Mar 2020 03:30:44 -0500
-Received: from a0393675ula.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02I8UQ8I108598;
-        Wed, 18 Mar 2020 03:30:41 -0500
-From:   Keerthy <j-keerthy@ti.com>
-To:     <rui.zhang@intel.com>, <robh+dt@kernel.org>,
-        <daniel.lezcano@linaro.org>
-CC:     <j-keerthy@ti.com>, <amit.kucheria@verdurent.com>,
-        <t-kristo@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <mark.rutland@arm.com>
-Subject: [RESEND PATCH v4 4/4] arm64: dts: ti: am6: Add VTM node
-Date:   Wed, 18 Mar 2020 14:00:28 +0530
-Message-ID: <20200318083028.9984-5-j-keerthy@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200318083028.9984-1-j-keerthy@ti.com>
-References: <20200318083028.9984-1-j-keerthy@ti.com>
+        Wed, 18 Mar 2020 04:31:31 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h8so13255419pgs.9;
+        Wed, 18 Mar 2020 01:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iZajfuLlwwvoieDzcgFOBiOg5tee4mEACfY8TbSb56U=;
+        b=mHuYa0ftHNzsfWROq+4uoaGwPMXRKtWUCRoxdnH72RRijhTqcF17Lu9Jx3xejPuoli
+         DuZwdmSq+QIOJ0fo9qx0yTipEuixYdC93etaJE/eAftr13kgVjmTe9st27MuRtTx0mGT
+         /GwmAEZuRNZFyxE67i7pqI/Wutmwi4++dpgWn8n8KBTnHuV1HFzQTOGHT2pM5eq+hIhk
+         3NFYqNsjZ3y7edVZaZm3u3GsAdWClNEK6/uaRSCKWZh/rveuDTiufntvbglUBdByZpXw
+         ksKxRgdWT5rex1mMsqMDjPZ5v4tEyD4zAaCHGuFsqbmreyWO7Q3IUWLmTJs7fptvWvZg
+         OMXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iZajfuLlwwvoieDzcgFOBiOg5tee4mEACfY8TbSb56U=;
+        b=B4R9xVgXgdW7Gsu/9NlHSDv58eSaLcuSv19Cv1AuQ5sT47Z6FX6s7ibAI1Ua031QM/
+         C/fimiY+6pnpkJTJerx/wtcNZNLgAqszD9m1uT4DFJPoFEV+nIHC5EQuEEHbDNOzDWij
+         5lQkMzgelsLiq2ADGfzFWz7c4x/j/rLdpjp9ChEKoY3rbKgbhMyR64wbpn6vCdYEnVN4
+         njgwR58MTY1Zlsuy9SvkYngV4Yf6sW/SYSZxbcUxEcB+4oHa8IItHuEcfLJmCRwOzBNb
+         RlRoIOsFeR+2Oib1DiosS6MWBUdvO3uemewzOZy9A6qxwkzcIoOXZjAdMKsA+af9q8+b
+         V7oQ==
+X-Gm-Message-State: ANhLgQ0n9Xj6wBz4qyKYw7BYKPPH2XJhj2z61eQDFKlV39YGkj6QjHKf
+        thdFbqNrVyeTt6Cp1IZjZV4=
+X-Google-Smtp-Source: ADFU+vsrdWvEkXSuFDD1PBY1foEOqE0caf8luPW6mZ73fdifDSNpPEZ/YAFbOaP/Rv8tTeBoZ7L2dg==
+X-Received: by 2002:aa7:9790:: with SMTP id o16mr3225388pfp.322.1584520290204;
+        Wed, 18 Mar 2020 01:31:30 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id c11sm5894326pfc.216.2020.03.18.01.31.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 01:31:29 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH v2 1/2] serial: sprd: getting port index via serial alias only
+Date:   Wed, 18 Mar 2020 16:31:19 +0800
+Message-Id: <20200318083120.13805-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VTM stands for voltage and thermal management. Add the vtm node and
-the associated thermal zones on the SoC.
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
+This patch simplifies the process of getting serial port number, with
+this patch, serial devices must have alias configured in devicetree.
+
+The serial port searched out via sprd_port array maybe wrong if we don't
+have serial alias defined in devicetree, and specify console with command
+line, we would get the wrong port number if other serial ports probe
+failed before console's. So using alias is mandatory.
+
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/tty/serial/sprd_serial.c | 36 +++++---------------------------
+ 1 file changed, 5 insertions(+), 31 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-index f4227e2743f2..e7ef96b621b3 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-@@ -89,4 +89,15 @@
- 		clocks = <&k3_clks 59 0>;
- 		clock-names = "gpio";
- 	};
-+
-+	vtm: thermal@42050000 {
-+		compatible = "ti,am654-vtm";
-+		reg = <0x42050000 0x25c>;
-+		power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
-+		#thermal-sensor-cells = <1>;
-+	};
-+
-+	thermal_zones: thermal-zones {
-+		#include "k3-am654-industrial-thermal.dtsi"
-+	};
+diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
+index 914862844790..9f8c14ff6454 100644
+--- a/drivers/tty/serial/sprd_serial.c
++++ b/drivers/tty/serial/sprd_serial.c
+@@ -1102,29 +1102,6 @@ static struct uart_driver sprd_uart_driver = {
+ 	.cons = SPRD_CONSOLE,
  };
+ 
+-static int sprd_probe_dt_alias(int index, struct device *dev)
+-{
+-	struct device_node *np;
+-	int ret = index;
+-
+-	if (!IS_ENABLED(CONFIG_OF))
+-		return ret;
+-
+-	np = dev->of_node;
+-	if (!np)
+-		return ret;
+-
+-	ret = of_alias_get_id(np, "serial");
+-	if (ret < 0)
+-		ret = index;
+-	else if (ret >= ARRAY_SIZE(sprd_port) || sprd_port[ret] != NULL) {
+-		dev_warn(dev, "requested serial port %d not available.\n", ret);
+-		ret = index;
+-	}
+-
+-	return ret;
+-}
+-
+ static int sprd_remove(struct platform_device *dev)
+ {
+ 	struct sprd_uart_port *sup = platform_get_drvdata(dev);
+@@ -1204,14 +1181,11 @@ static int sprd_probe(struct platform_device *pdev)
+ 	int index;
+ 	int ret;
+ 
+-	for (index = 0; index < ARRAY_SIZE(sprd_port); index++)
+-		if (sprd_port[index] == NULL)
+-			break;
+-
+-	if (index == ARRAY_SIZE(sprd_port))
+-		return -EBUSY;
+-
+-	index = sprd_probe_dt_alias(index, &pdev->dev);
++	index = of_alias_get_id(pdev->dev.of_node, "serial");
++	if (index < 0 || index >= ARRAY_SIZE(sprd_port)) {
++		dev_err(&pdev->dev, "got a wrong serial alias id %d\n", index);
++		return index;
++	}
+ 
+ 	sprd_port[index] = devm_kzalloc(&pdev->dev, sizeof(*sprd_port[index]),
+ 					GFP_KERNEL);
 -- 
-2.17.1
+2.20.1
 
