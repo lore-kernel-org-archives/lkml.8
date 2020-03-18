@@ -2,156 +2,154 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE030C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928A3C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B18C920767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F07020767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hVdKcg9J"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AwIcVtv+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgCRN4g (ORCPT
+        id S1727036AbgCRN6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:56:36 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:41387 "EHLO
+        Wed, 18 Mar 2020 09:58:51 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:29147 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726975AbgCRN4g (ORCPT
+        by vger.kernel.org with ESMTP id S1726877AbgCRN6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:56:36 -0400
+        Wed, 18 Mar 2020 09:58:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584539794;
+        s=mimecast20190719; t=1584539929;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UXRpaQxYrO/gvKAeP6md3e48aYoFmEEQesPUZqe43ME=;
-        b=hVdKcg9J99qAuN4dTbncKLvgYuxqzR8HQEcE3XZqoaDI0HueuTYiy/Ox4Ot9kBJ9ENfwkq
-        CTh66dNiAmhcUc+FKroquiZoRFCUP2f7s8cyhKnfHL5QzTyeeGtT9X1qXLgbf6qHpyl9aU
-        1umNioDnJeRAQ3LtA0Fse4BwzF97zgE=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-54-1G3apMiSOleAriC8fayIBQ-1; Wed, 18 Mar 2020 09:56:26 -0400
-X-MC-Unique: 1G3apMiSOleAriC8fayIBQ-1
-Received: by mail-wm1-f69.google.com with SMTP id x7so1079240wmi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 06:56:26 -0700 (PDT)
+        bh=F31yuOR6DS7mAZV1PpzPl5tjjIYKtGbdeccjup64HTg=;
+        b=AwIcVtv++30rjahmGEw8BAPE0uhOgS+1TOAk97GEBPYCaI/2M2VfcQ1Mtoy2ExY/3on/+N
+        tQ6tGZ8TvexrLi0P6K96JT/yXX0QfeXlFbT++4nC+xmRSCxC7i1K0O0glaOxZ9SpG7DHuM
+        wMCi0nttwKtaE4FSTG+01GdKe6psRwc=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-390-2opHq41zNweofLgKo3N0EQ-1; Wed, 18 Mar 2020 09:58:48 -0400
+X-MC-Unique: 2opHq41zNweofLgKo3N0EQ-1
+Received: by mail-wr1-f71.google.com with SMTP id u12so9964370wrw.10
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 06:58:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UXRpaQxYrO/gvKAeP6md3e48aYoFmEEQesPUZqe43ME=;
-        b=gg2UIm/plq0dPzWtH0idEKQfa+tNlpvU5hHqCbRhc7bf70/IW3WXOzejFei6n0rTiz
-         Lycih+bJuccoz6drQD2Md/vsYPiuHS8vjR1HL8CcVlBlzrPDKd9XA7WJFuwwUvOiuIlw
-         7UjApJt9GJ15j2o6+CtLShAMMsOEAnXlRUqBOXn6a+RLRIprULtLiUwERlZYAA5OCsLk
-         Y6DCfam/35nsxUrdVDeR+KwaCwUdz1XGNSf7dDcb/TJKeKN6pSPR6bJ0EHbciiBz13DL
-         BIswllNDhrx8c4E/9xkfyLtoztiChMFXPOzAN8fXLO4prQBm+Uus4xIO/vIdpuXx59kr
-         ahwA==
-X-Gm-Message-State: ANhLgQ1HFnTklz8R3fRFZjYogO26pO9OxzV2T6G02Rk8Ju0lym+vDeew
-        oB9qgvZJoIFVXtMKav0ZAqUvygxaCemghz83kLK6K+vuJPpfzJ+rv/T7VXpo2pEbuAzTN9OIPtr
-        JmXqregKSVnZ8Sb+wFeFKKnux
-X-Received: by 2002:a7b:c1da:: with SMTP id a26mr5439584wmj.45.1584539785327;
-        Wed, 18 Mar 2020 06:56:25 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtb1764SLhxHnGxs/fPAE7qJ0588Bl0/gSd2uZQ4GBTE49dIlkXOgxGNoiqRP7YGeBsiqCsow==
-X-Received: by 2002:a7b:c1da:: with SMTP id a26mr5439564wmj.45.1584539785096;
-        Wed, 18 Mar 2020 06:56:25 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id w67sm3982303wmb.41.2020.03.18.06.56.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Mar 2020 06:56:24 -0700 (PDT)
-Subject: Re: [PATCH v12 03/10] firmware: Rename FW_OPT_NOFALLBACK to
- FW_OPT_NOFALLBACK_SYSFS
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-References: <20200115163554.101315-1-hdegoede@redhat.com>
- <20200115163554.101315-4-hdegoede@redhat.com>
- <20200124085751.GA2957916@kroah.com>
- <d25d5d6e-0348-b19f-539e-048cfa70d6a6@redhat.com>
- <20200318132741.GA2794545@kroah.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <8fa336bd-339f-40e0-08fe-e6b968736679@redhat.com>
-Date:   Wed, 18 Mar 2020 14:56:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=F31yuOR6DS7mAZV1PpzPl5tjjIYKtGbdeccjup64HTg=;
+        b=avhPo6w4epGm54Sgd6NDNeEBPdqkTcxgALI7R37S0psBBF2BCE2+u1ZRH/yvY+9ixm
+         JifuG99l0Z57vj+BiK+cENKOaxW0trkeQTaCUpe/3gTScLzGCkYKdsSFxr+Xn4ZgoDxW
+         mZXIJoMP1Cig50o8E9wQoU5jOc0TJVs21CdrKwArw2p3HfTnI6O0hF07PQF2EhRivUvf
+         CqvPD9il2WWP8l/AAwh7zlZkcvQ/A8NlSZqvOcriVh/WPkwg0QoIDMkLsgzi8TjYQVUK
+         tiIZFbf9fD/3zUMPGdGscBQIjhLLqKJHeRz/8iRWT5GFpW/3Xo1BF7gwGFrMzuhABKcm
+         xrlg==
+X-Gm-Message-State: ANhLgQ0CcVkXNwxpEtQ2gLYkYwjFL/meAJs1qLbh2hYB3PjairFYE3ll
+        L9IRTaM83FSXBetq0FKmf9hfDzEfFyns0R3MfyWz4HEDODOENcuib/YWlNCSruJwSKxWXs+uWmU
+        TxZsZR0r2D5QPOMR3c/3OJcIE
+X-Received: by 2002:a1c:e442:: with SMTP id b63mr5559726wmh.174.1584539927046;
+        Wed, 18 Mar 2020 06:58:47 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuOzuNgvDkbFkbElCg5edIwU+8StaNxg5QEC0tTkAdX0Cu7G9Ynuwj6chgem6WJSymuM5v0dQ==
+X-Received: by 2002:a1c:e442:: with SMTP id b63mr5559631wmh.174.1584539925803;
+        Wed, 18 Mar 2020 06:58:45 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id q10sm9136178wrx.12.2020.03.18.06.58.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 06:58:45 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Baoquan He <bhe@redhat.com>, David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Yumei Huang <yuhuang@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Eduardo Habkost <ehabkost@redhat.com>,
+        Milan Zamazal <mzamazal@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v2 0/8] mm/memory_hotplug: allow to specify a default online_type
+In-Reply-To: <20200318130517.GC30899@MiWiFi-R3L-srv>
+References: <20200317104942.11178-1-david@redhat.com> <20200318130517.GC30899@MiWiFi-R3L-srv>
+Date:   Wed, 18 Mar 2020 14:58:43 +0100
+Message-ID: <87d0993gto.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318132741.GA2794545@kroah.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Baoquan He <bhe@redhat.com> writes:
 
-On 3/18/20 2:27 PM, Greg Kroah-Hartman wrote:
-> On Fri, Jan 24, 2020 at 10:16:48AM +0100, Hans de Goede wrote:
->> Hi,
->>
->> On 1/24/20 9:57 AM, Greg Kroah-Hartman wrote:
->>> On Wed, Jan 15, 2020 at 05:35:47PM +0100, Hans de Goede wrote:
->>>> This is a preparation patch for adding a new platform fallback mechanism,
->>>> which will have its own enable/disable FW_OPT_xxx option.
->>>>
->>>> Note this also fixes a typo in one of the re-wordwrapped comments:
->>>> enfoce -> enforce.
->>>>
->>>> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
->>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>
->>> I've taken this in my tree for now in a quest to try to get others to
->>> pay attention to this series...
->>
->> Thank you.
->>
->> As mentioned before I believe that this series is ready for merging now.
->>
->> Andy Lutomirski had one last change request for v12 of the second
->> patch in the series, specifically to replace the loop searching for
->> the prefix with a memem, but the kernel does not have memmem.
->>
->> Andy, are you ok with v12 as is, given that we don't have memmem ?
->>
->> Assuming Andy is ok with v12 as is, then to merge this we need
->> to probably wait for 5.6-rc1 and then have the x86/efi folks do
->> an immutable branch with the first 2 patches of the series.
-> 
-> Did this every happen?  Or do I need to dump this all into my tree?
+> On 03/17/20 at 11:49am, David Hildenbrand wrote:
+>> Distributions nowadays use udev rules ([1] [2]) to specify if and
+>> how to online hotplugged memory. The rules seem to get more complex with
+>> many special cases. Due to the various special cases,
+>> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE cannot be used. All memory hotplug
+>> is handled via udev rules.
+>> 
+>> Everytime we hotplug memory, the udev rule will come to the same
+>> conclusion. Especially Hyper-V (but also soon virtio-mem) add a lot of
+>> memory in separate memory blocks and wait for memory to get onlined by user
+>> space before continuing to add more memory blocks (to not add memory faster
+>> than it is getting onlined). This of course slows down the whole memory
+>> hotplug process.
+>> 
+>> To make the job of distributions easier and to avoid udev rules that get
+>> more and more complicated, let's extend the mechanism provided by
+>> - /sys/devices/system/memory/auto_online_blocks
+>> - "memhp_default_state=" on the kernel cmdline
+>> to be able to specify also "online_movable" as well as "online_kernel"
+>
+> This patch series looks good, thanks. Since Andrew has merged it to -mm again,
+> I won't add my Reviewed-by to bother. 
+>
+> Hi David, Vitaly
+>
+> There are several things unclear to me.
+>
+> So, these improved interfaces are used to alleviate the burden of the 
+> existing udev rules, or try to replace it? As you know, we have been
+> using udev rules to interact between kernel and user space on bare metal,
+> and guests who want to hot add/remove.
 
-Ard has done a immutable branch with just the 2 patches:
+With 'auto_online_blocks' interface you don't need the udev rule. David
+is trying to make it more versatile.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/tag/?h=stable-shared-branch-for-driver-tree
+>
+> And also the OOM issue in hyperV when onlining pages after adding memory
+> block. I am not a virt devel expert, could this happen on bare metal
+> system?
 
-I did not see any mails about this being pulled / merged, but I just
-checked and this has landed in the tip tree 10 days ago:
+Yes - in theory, very unlikely - in practice.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/include/linux/efi.h?h=efi/core
+The root cause of the problem here is adding more memory to the system
+requires memory (page tables, memmaps,..) so if your system is low on
+memory and you're trying to hotplug A LOT you may run into OOM before
+you're able to online anything. With bare metal it's usualy not the
+case: servers, which are able to hotplug memory, are usually booted with
+enough memory and memory hotplug is a manual action (you need to insert
+DIMMs!). But, if you boot your server with e.g. 4G, almost exhaust it
+and then try to hotplug e.g. 256G ... well, OOM is almost guaranteed.
+With virtual machines it's very common (e.g. with Hyper-V VMs) to boot
+them with low memory and hotplug it (automatically, by some management
+software) when neededm thus the problem is way more common.
 
-So if you merge the stable-shared-branch-for-driver-tree tag and then
-merge patches 3-8 of this series (or rather 4-8 since you already
-merged 3 IIRC) that would be great.
-
-Regards,
-
-Hans
+-- 
+Vitaly
 
