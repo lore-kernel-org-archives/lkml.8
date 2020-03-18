@@ -2,271 +2,133 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE329C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4B4C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32E520752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9735220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbgCRCXa (ORCPT
+        id S1727278AbgCRCY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 22:23:30 -0400
-Received: from mga18.intel.com ([134.134.136.126]:60388 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbgCRCXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 22:23:30 -0400
-IronPort-SDR: FRnQjKFgh7akFIo4hfzl/gXHkBpdlCMm3JOD1Xxg0HBp+NSey+r6F+72+M1HMwWj9H5COMXzPv
- 9OjnbdxnpklQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 19:23:29 -0700
-IronPort-SDR: pRGfGowyOQO+GnuSulWIqkLtj9f1bXAOBwNmg5OkvgsPZHbRFD2Av5rqhpOA2EQ949JFn031cW
- EJ4eyFBsa2gQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,565,1574150400"; 
-   d="scan'208";a="263239456"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 17 Mar 2020 19:23:27 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jEOMh-000CWj-5O; Wed, 18 Mar 2020 10:23:27 +0800
-Date:   Wed, 18 Mar 2020 10:22:27 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/mm] BUILD SUCCESS
- aa61ee7b9ee3cb84c0d3a842b0d17937bf024c46
-Message-ID: <5e7185e3.tQPt0DT9MgqAu+Gr%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 17 Mar 2020 22:24:28 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:55920 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726229AbgCRCY2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 22:24:28 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tsuy4fR_1584498229;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tsuy4fR_1584498229)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 18 Mar 2020 10:23:50 +0800
+Subject: Re: [PATCH v2] sched: avoid scale real weight down to zero
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+References: <38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com>
+Message-ID: <234bfc8a-c60d-c375-f681-e4230d8c5a20@linux.alibaba.com>
+Date:   Wed, 18 Mar 2020 10:23:49 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/mm
-branch HEAD: aa61ee7b9ee3cb84c0d3a842b0d17937bf024c46  x86/mm: Remove the now redundant N_MEMORY check
+Hi Peter, Vincent
 
-elapsed time: 485m
+My apologies to missing the case when CONFIG_FAIR_GROUP_SCHED
+is disabled, I've replaced the MIN_SHARE with 2UL as it was
+defined, sorry for the trouble...
 
-configs tested: 204
-configs skipped: 0
+Regards,
+Michael Wang
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-ia64                              allnoconfig
-parisc                            allnoconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200317
-x86_64               randconfig-a002-20200317
-x86_64               randconfig-a003-20200317
-i386                 randconfig-a001-20200317
-i386                 randconfig-a002-20200317
-i386                 randconfig-a003-20200317
-x86_64               randconfig-a001-20200318
-x86_64               randconfig-a002-20200318
-x86_64               randconfig-a003-20200318
-i386                 randconfig-a001-20200318
-i386                 randconfig-a002-20200318
-i386                 randconfig-a003-20200318
-alpha                randconfig-a001-20200318
-m68k                 randconfig-a001-20200318
-mips                 randconfig-a001-20200318
-nds32                randconfig-a001-20200318
-parisc               randconfig-a001-20200318
-riscv                randconfig-a001-20200318
-alpha                randconfig-a001-20200317
-m68k                 randconfig-a001-20200317
-mips                 randconfig-a001-20200317
-nds32                randconfig-a001-20200317
-parisc               randconfig-a001-20200317
-riscv                randconfig-a001-20200317
-c6x                  randconfig-a001-20200317
-h8300                randconfig-a001-20200317
-microblaze           randconfig-a001-20200317
-nios2                randconfig-a001-20200317
-sparc64              randconfig-a001-20200317
-c6x                  randconfig-a001-20200318
-h8300                randconfig-a001-20200318
-microblaze           randconfig-a001-20200318
-nios2                randconfig-a001-20200318
-sparc64              randconfig-a001-20200318
-csky                 randconfig-a001-20200318
-openrisc             randconfig-a001-20200318
-s390                 randconfig-a001-20200318
-sh                   randconfig-a001-20200318
-xtensa               randconfig-a001-20200318
-xtensa               randconfig-a001-20200317
-openrisc             randconfig-a001-20200317
-csky                 randconfig-a001-20200317
-sh                   randconfig-a001-20200317
-s390                 randconfig-a001-20200317
-x86_64               randconfig-b001-20200317
-x86_64               randconfig-b002-20200317
-x86_64               randconfig-b003-20200317
-i386                 randconfig-b001-20200317
-i386                 randconfig-b002-20200317
-i386                 randconfig-b003-20200317
-x86_64               randconfig-b001-20200318
-x86_64               randconfig-b002-20200318
-x86_64               randconfig-b003-20200318
-i386                 randconfig-b001-20200318
-i386                 randconfig-b002-20200318
-i386                 randconfig-b003-20200318
-x86_64               randconfig-c001-20200317
-x86_64               randconfig-c002-20200317
-x86_64               randconfig-c003-20200317
-i386                 randconfig-c001-20200317
-i386                 randconfig-c002-20200317
-i386                 randconfig-c003-20200317
-x86_64               randconfig-d001-20200317
-x86_64               randconfig-d002-20200317
-x86_64               randconfig-d003-20200317
-i386                 randconfig-d001-20200317
-i386                 randconfig-d002-20200317
-i386                 randconfig-d003-20200317
-x86_64               randconfig-e001-20200317
-x86_64               randconfig-e002-20200317
-x86_64               randconfig-e003-20200317
-i386                 randconfig-e001-20200317
-i386                 randconfig-e002-20200317
-i386                 randconfig-e003-20200317
-x86_64               randconfig-f001-20200317
-x86_64               randconfig-f002-20200317
-x86_64               randconfig-f003-20200317
-i386                 randconfig-f001-20200317
-i386                 randconfig-f002-20200317
-i386                 randconfig-f003-20200317
-x86_64               randconfig-g001-20200318
-x86_64               randconfig-g002-20200318
-x86_64               randconfig-g003-20200318
-i386                 randconfig-g001-20200318
-i386                 randconfig-g002-20200318
-i386                 randconfig-g003-20200318
-x86_64               randconfig-g001-20200317
-x86_64               randconfig-g002-20200317
-x86_64               randconfig-g003-20200317
-i386                 randconfig-g001-20200317
-i386                 randconfig-g002-20200317
-i386                 randconfig-g003-20200317
-x86_64               randconfig-h001-20200317
-x86_64               randconfig-h002-20200317
-x86_64               randconfig-h003-20200317
-i386                 randconfig-h001-20200317
-i386                 randconfig-h002-20200317
-i386                 randconfig-h003-20200317
-arc                  randconfig-a001-20200317
-ia64                 randconfig-a001-20200317
-arm                  randconfig-a001-20200317
-arm64                randconfig-a001-20200317
-powerpc              randconfig-a001-20200317
-sparc                randconfig-a001-20200317
-arc                  randconfig-a001-20200318
-arm                  randconfig-a001-20200318
-arm64                randconfig-a001-20200318
-ia64                 randconfig-a001-20200318
-powerpc              randconfig-a001-20200318
-sparc                randconfig-a001-20200318
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+On 2020/3/18 上午10:15, 王贇 wrote:
+> During our testing, we found a case that shares no longer
+> working correctly, the cgroup topology is like:
+> 
+>   /sys/fs/cgroup/cpu/A		(shares=102400)
+>   /sys/fs/cgroup/cpu/A/B	(shares=2)
+>   /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
+> 
+>   /sys/fs/cgroup/cpu/D		(shares=1024)
+>   /sys/fs/cgroup/cpu/D/E	(shares=1024)
+>   /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+> 
+> The same benchmark is running in group C & F, no other tasks are
+> running, the benchmark is capable to consumed all the CPUs.
+> 
+> We suppose the group C will win more CPU resources since it could
+> enjoy all the shares of group A, but it's F who wins much more.
+> 
+> The reason is because we have group B with shares as 2, since
+> A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
+> so A->cfs_rq.load.weight become very small.
+> 
+> And in calc_group_shares() we calculate shares as:
+> 
+>   load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
+>   shares = (tg_shares * load) / tg_weight;
+> 
+> Since the 'cfs_rq->load.weight' is too small, the load become 0
+> after scale down, although 'tg_shares' is 102400, shares of the se
+> which stand for group A on root cfs_rq become 2.
+> 
+> While the se of D on root cfs_rq is far more bigger than 2, so it
+> wins the battle.
+> 
+> Thus when scale_load_down() scale real weight down to 0, it's no
+> longer telling the real story, the caller will have the wrong
+> information and the calculation will be buggy.
+> 
+> This patch add check in scale_load_down(), so the real weight will
+> be >= MIN_SHARES after scale, after applied the group C wins as
+> expected.
+> 
+> Cc: Ben Segall <bsegall@google.com>
+> Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
+> ---
+> v2:
+>   * replace MIN_SHARE with 2UL to cover CONFIG_FAIR_GROUP_SCHED=n case
+> 
+>  kernel/sched/sched.h | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 2a0caf394dd4..9bca26bd60d9 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -118,7 +118,13 @@ extern long calc_load_fold_active(struct rq *this_rq, long adjust);
+>  #ifdef CONFIG_64BIT
+>  # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
+>  # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
+> -# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
+> +# define scale_load_down(w) \
+> +({ \
+> +	unsigned long __w = (w); \
+> +	if (__w) \
+> +		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
+> +	__w; \
+> +})
+>  #else
+>  # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
+>  # define scale_load(w)		(w)
+> 
