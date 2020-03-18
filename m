@@ -2,160 +2,104 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697CCC43332
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7961C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFA320752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:03:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bE09/JGP"
+	by mail.kernel.org (Postfix) with ESMTP id 8AA7320752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:04:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584569087;
+	bh=MtsLKAcKSatPHkT/xTuGpEEzgXJV4ETKAZof7HlpnP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nX/VBVIGSiajFoxUdVx0MWFh6xFuvgrEHXhY0lcAEEfit5rtFzta5yrMc5ifDs8xS
+	 Pz8xcBZsGd7ttjH5RlB26da7pG82r7C98K03omnQ/ybYGx9hnGDEyIOAdYYaGr+KO1
+	 hUTuih+VX9y0UHOPZZnQiCS0Ifjrauv4Ll4fHQWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgCRWD4 (ORCPT
+        id S1727259AbgCRWEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:03:56 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34018 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgCRWD4 (ORCPT
+        Wed, 18 Mar 2020 18:04:46 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:34968 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCRWEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:03:56 -0400
-Received: by mail-pj1-f65.google.com with SMTP id q16so1495966pje.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 15:03:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=/9wz4K28LAWC7NirvuQCrwV33aT0PUzfnYZQGhi4Hlc=;
-        b=bE09/JGP0nFOJl4NicZNT+WoaEKdFXVjqoww2q1tQvXBWFpwHjwf50C6qjErbHugg5
-         mNEaNVdU5zBo8sTuRUOrgZ10KUXDa2n+MGdGLt6YEh6baJASYuafJBmTTsV1tD4skcbi
-         ZZ8U/ee3X1jUtfAhmeJDYrPuh2NfK/sqYTMvJOw87fMMoFUe+DGBkZdb10AENNq8wKNZ
-         azFOLtmMIHIrOkgDtvadTDUS1xxbRN4LlSQSDBbNKy0Zyfcg1YkU7f9E1+QLBOdPEzER
-         nd1mBwQxyZX9RUteWlQmgT07J6uGqkZXd8t0Br1DN2nmIXXlD5t3Q0NUd4qB4YwwQHUM
-         Z/tA==
+        Wed, 18 Mar 2020 18:04:46 -0400
+Received: by mail-il1-f194.google.com with SMTP id v6so369791ilq.2;
+        Wed, 18 Mar 2020 15:04:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=/9wz4K28LAWC7NirvuQCrwV33aT0PUzfnYZQGhi4Hlc=;
-        b=lEfLafRIJLIUYIktU9MFrQBS0AnzYEXmxL2NXW+e5YiYvTUPgspMH2Q2joafdjQ9rI
-         rrBoWRBuSOaGxM+0qkuBa2oyiJvPmlh4l5EM4NQ802yfvs5G7WZDXMNYhumrWnzGL2AJ
-         N+2yrvsbGO8bhpaAZnvcP5Kl1EdKpDHgXkWSJ/oxM0Iyc+qFjTER8YVcoDtYTrFxAqDO
-         LpcoJyZdVRf/nksdfMOHx+oRW7i19Px60WYwmw6MKqLF6sdiGDRVJdb/mV3z3F2sku6H
-         FK1rdCmI96pGS75arOiqPkXjtvFiHCtSOcMduPl/BtgD5AREwEiFeQF9SGn1GndOftjt
-         ObDA==
-X-Gm-Message-State: ANhLgQ1jyIV1R9/fz6D1tc/2unS5THjPLmyHVNBc9Kf1UZHskXCMEbHF
-        sLrJ613bYEk1D0kiOgKB1olDYg==
-X-Google-Smtp-Source: ADFU+vtBDkETxunCzgQe26kKBNILm+Derdb82r7qdm8kcwr3IpF+l9jrHQVfBJm5/faZTii+JYfafA==
-X-Received: by 2002:a17:90a:9501:: with SMTP id t1mr349975pjo.108.1584569034517;
-        Wed, 18 Mar 2020 15:03:54 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id r14sm2687pjj.48.2020.03.18.15.03.53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nvP10y4co7+lz1ui5VSoxULGIs1uH9GMl57cIOt93KU=;
+        b=TfGqSLGcvxRaLB/n/SEe7qM8tPG13jeJcmhPCovd/ddGpDkufRPIgJCjX6WdTxjsW6
+         nINd0rOGmMsx8wMV5VlE9sNR985z6pLXDmDE0E3cHxcj/i7IStGIB9ShNlapF06cMiSK
+         pZcKloBwDyjPnkX+JjUMD/Wg9AuDRX/bZnbjpWAML1FhXUMeKG4AGQqzvthRntSBeUPs
+         wqAKZbB7nTKgky0RALaZew68KoiwgdU5Ot1t/g11u+LAOMd9HwQt7Q8n1l6xAKxmvzE7
+         0pImvPOQAZFFAXWN3lqcWAMN+HcnnMUg1npg5dTrZRHtQnOkO50P6zlen7ZFVdS0Sx/c
+         YPbg==
+X-Gm-Message-State: ANhLgQ20llxf9dajzhQ6e2cIDbuNuj2fIjK7Tk+MwRo//CcXPNnvpyRq
+        19cC09vu+l+sMnSspOgvqg==
+X-Google-Smtp-Source: ADFU+vtrY4dt+9MXe/DeJN43InzVxlzOGFVmFX635slbQ1fD96a4nEurmq+8jIxCKSegB6jUOLy0Og==
+X-Received: by 2002:a92:7f01:: with SMTP id a1mr254571ild.132.1584569084977;
+        Wed, 18 Mar 2020 15:04:44 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id p2sm62743iln.22.2020.03.18.15.04.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 15:03:53 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 15:03:52 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     Michal Hocko <mhocko@kernel.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Robert Kolchmeyer <rkolchmeyer@google.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [patch v3] mm, oom: prevent soft lockup on memcg oom for UP
- systems
-In-Reply-To: <alpine.DEB.2.21.2003181437270.70237@chino.kir.corp.google.com>
-Message-ID: <alpine.DEB.2.21.2003181458100.70237@chino.kir.corp.google.com>
-References: <8395df04-9b7a-0084-4bb5-e430efe18b97@i-love.sakura.ne.jp> <alpine.DEB.2.21.2003161648370.47327@chino.kir.corp.google.com> <202003170318.02H3IpSx047471@www262.sakura.ne.jp> <alpine.DEB.2.21.2003162107580.97351@chino.kir.corp.google.com>
- <alpine.DEB.2.21.2003171752030.115787@chino.kir.corp.google.com> <20200318094219.GE21362@dhcp22.suse.cz> <alpine.DEB.2.21.2003181437270.70237@chino.kir.corp.google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 18 Mar 2020 15:04:44 -0700 (PDT)
+Received: (nullmailer pid 16608 invoked by uid 1000);
+        Wed, 18 Mar 2020 22:04:43 -0000
+Date:   Wed, 18 Mar 2020 16:04:43 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+Message-ID: <20200318220443.GA16192@bogus>
+References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
+ <1584211798-10332-2-git-send-email-tdas@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584211798-10332-2-git-send-email-tdas@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a process is oom killed as a result of memcg limits and the victim
-is waiting to exit, nothing ends up actually yielding the processor back
-to the victim on UP systems with preemption disabled.  Instead, the
-charging process simply loops in memcg reclaim and eventually soft
-lockups.
+On Sun, 15 Mar 2020 00:19:56 +0530, Taniya Das wrote:
+> The Modem Subsystem clock provider have a bunch of generic properties
+> that are needed in a device tree. Add a YAML schemas for those.
+> 
+> Add clock ids for GCC MSS and MSS clocks which are required to bring
+> the modem out of reset.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
+>  include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
+>  3 files changed, 80 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
+> 
 
-For example, on an UP system with a memcg limited to 100MB, if three 
-processes each charge 40MB of heap with swap disabled, one of the charging 
-processes can loop endlessly trying to charge memory which starves the oom 
-victim.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Memory cgroup out of memory: Killed process 808 (repro) total-vm:41944kB, 
-anon-rss:35344kB, file-rss:504kB, shmem-rss:0kB, UID:0 pgtables:108kB 
-oom_score_adj:0
-watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [repro:806]
-CPU: 0 PID: 806 Comm: repro Not tainted 5.6.0-rc5+ #136
-RIP: 0010:shrink_lruvec+0x4e9/0xa40
-...
-Call Trace:
- shrink_node+0x40d/0x7d0
- do_try_to_free_pages+0x13f/0x470
- try_to_free_mem_cgroup_pages+0x16d/0x230
- try_charge+0x247/0xac0
- mem_cgroup_try_charge+0x10a/0x220
- mem_cgroup_try_charge_delay+0x1e/0x40
- handle_mm_fault+0xdf2/0x15f0
- do_user_addr_fault+0x21f/0x420
- page_fault+0x2f/0x40
+Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/clock/qcom,sc7180-mss.yaml#
 
-Make sure that once the oom killer has been called that we forcibly yield 
-if current is not the chosen victim regardless of priority to allow for 
-memory freeing.  The same situation can theoretically occur in the page 
-allocator, so do this after dropping oom_lock there as well.
-
-We used to have a short sleep after oom killing, but commit 9bfe5ded054b
-("mm, oom: remove sleep from under oom_lock") removed it because sleeping
-inside the oom_lock is dangerous. This patch restores the sleep outside of
-the lock.
-
-Suggested-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Tested-by: Robert Kolchmeyer <rkolchmeyer@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: David Rientjes <rientjes@google.com>
----
- mm/memcontrol.c | 6 ++++++
- mm/page_alloc.c | 6 ++++++
- 2 files changed, 12 insertions(+)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1576,6 +1576,12 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	 */
- 	ret = should_force_charge() || out_of_memory(&oc);
- 	mutex_unlock(&oom_lock);
-+        /*
-+         * Give a killed process a good chance to exit before trying to
-+         * charge memory again.
-+         */
-+	if (ret)
-+		schedule_timeout_killable(1);
- 	return ret;
- }
- 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3861,6 +3861,12 @@ __alloc_pages_may_oom(gfp_t gfp_mask, unsigned int order,
- 	}
- out:
- 	mutex_unlock(&oom_lock);
-+	/*
-+	 * Give a killed process a good chance to exit before trying to
-+	 * allocate memory again.
-+	 */
-+	if (*did_some_progress)
-+		schedule_timeout_killable(1);
- 	return page;
- }
- 
+See https://patchwork.ozlabs.org/patch/1254940
+Please check and re-submit.
