@@ -2,119 +2,151 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470ABC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA49C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B1F20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:11:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lkxzxSmP"
+	by mail.kernel.org (Postfix) with ESMTP id 8173F20754
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:13:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgCRTLV (ORCPT
+        id S1726954AbgCRTNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:11:21 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39206 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCRTLU (ORCPT
+        Wed, 18 Mar 2020 15:13:04 -0400
+Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:25980 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726733AbgCRTNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 15:11:20 -0400
-Received: by mail-ot1-f66.google.com with SMTP id r2so11324085otn.6
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 12:11:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YEcNvKoxRLNncmofEeVv4yeDWdrbk4dUuTY3/HM5SJg=;
-        b=lkxzxSmPoiFVrjW+D44Nlzoy7Y9BTyZ6PQpCllGw154b100MP5WuWaOD8/idtKRdN1
-         eW54dVH6b4J85Yh7iKi6bJJfbSelvRDFyXBx3wyvx0oFFus1AOlmctj2Z5JvbyIEHHUZ
-         /Jr09tDhinfXqXBq2oebzgol6mVeYcC+UyXyTHDzlp5RJD7V8dU38+VbiMAZuPGG6YF9
-         hvBVYwDFqmUd6ydHL8N8g88fq/GSAzaTFW8j6JuF/V3UyExsBxHJS4eMrACrNI4o5nLl
-         sC+7J1xx3mn9ikCZuhxsvKAh6qOSY243TaGZYevQ1VsO2EVhb25BOP3Gwdm7RCayZFKz
-         QIhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YEcNvKoxRLNncmofEeVv4yeDWdrbk4dUuTY3/HM5SJg=;
-        b=ZMnDtyIU4L1RoYSYQs1Gt4kckZ3UcOgmyOzEEVmuQBkDcF6j/z3C/U7nMBCdp3blL0
-         cfeb1cNC0L2QLoYCUVW5HUlIFwLKm2zcCNxSMFtCkEW4X6NmNJ0KOFikL6VccNPHbHGO
-         kZTSQSthOJOL+PaL4HSb2BvyyoSj96Fkk33kOunKbNGXuUXuidDMoJT920r5eF0Dkk61
-         XSVu5UuDJbPR3HrB0wD09sZYFaa9lUL+BNgbY1lesE5zfuQqAypYSnEZxMgXQsCtl5+d
-         G39QAMnHSTdtkc6ycYcS8YxW3YNj3NSM3qHQZMUJWlocmkrD6UmXZ+qGGF1u33qkMMs5
-         b/pQ==
-X-Gm-Message-State: ANhLgQ168M5RfNXVtMSe03FBgBavvqyzDx8uD2dxVlceC1NjQn82tr+n
-        EUecw73qJvbAfoB6HOdkxK5EzYAaIxwXl0sUPR2YqA==
-X-Google-Smtp-Source: ADFU+vuQqQyKYY3GzReouxvk6jJyqQUm+Irep1pzseE+uxctbZi52pzI8VMFuxyNWh599gkbGFQoVDq1JwgQY4XyDz8=
-X-Received: by 2002:a9d:6186:: with SMTP id g6mr5088006otk.236.1584558679434;
- Wed, 18 Mar 2020 12:11:19 -0700 (PDT)
+        Wed, 18 Mar 2020 15:13:04 -0400
+Received: from localhost.localdomain ([93.22.36.95])
+        by mwinf5d72 with ME
+        id FvCu22009239p2M03vCuqv; Wed, 18 Mar 2020 20:12:57 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 18 Mar 2020 20:12:57 +0100
+X-ME-IP: 93.22.36.95
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     vkoul@kernel.org, dan.j.williams@intel.com, peter.ujfalusi@ti.com,
+        grygorii.strashko@ti.com
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH V2] dmaengine: ti: k3-udma-glue: Fix an error handling path in 'k3_udma_glue_cfg_rx_flow()'
+Date:   Wed, 18 Mar 2020 20:12:09 +0100
+Message-Id: <20200318191209.1267-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200317065452.236670-1-saravanak@google.com>
-In-Reply-To: <20200317065452.236670-1-saravanak@google.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 18 Mar 2020 12:10:43 -0700
-Message-ID: <CAGETcx-uZ3YJHCYqFm3so8-woTvL3SSDY2deNonthTetcE+mXQ@mail.gmail.com>
-Subject: Re: [PATCH v1 0/6] Fix device links functional breakage in 4.19.99
-To:     stable <stable@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 11:54 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> As mentioned in an earlier email thread [1], 4.19.99 broke the ability
-> to create stateful and stateless device links between the same set of
-> devices when it pulled in a valid bug fix [2]. While the fix was valid,
-> it removes a functionality that was present before the bug fix.
->
-> This patch series attempts to fix that by pulling in more patches from
-> upstream. I've just done compilation testing so far. But wanted to send
-> out a v1 to see if this patch list was acceptable before I fixed up the
-> commit text format to match what's needed for stable mailing list.
->
-> Some of the patches are new functionality, but for a first pass, it was
-> easier to pull these in than try and fix the conflicts. If these patches
-> are okay to pull into stable, then all I need to do is fix the commit
-> text.
+All but one error handling paths in the 'k3_udma_glue_cfg_rx_flow()'
+function 'goto err' and call 'k3_udma_glue_release_rx_flow()'.
 
-I took a closer look at all the patches. Everyone of them is a bug fix
-except Patch 4/6. But Patch 4/6 is a fairly minimal change and I think
-it's easier/cleaner to just pick it up too instead of trying to
-resolve merge conflicts in the stable branch.
+This not correct because this function has a 'channel->flows_ready--;' at
+the end, but 'flows_ready' has not been incremented here, when we branch to
+the error handling path.
 
-1/6 - Fixes what appears to be a memory leak bug in upstream.
-2/6 - Fixes error in initial state of the device link if it's created
-under some circumstances.
-3/6 - Fixes a ref count bug in upstream. Looks like it can lead to memory leaks?
-4/6 - Adds a minor feature to kick off a probe attempt of a consumer
-5/6 - Fixes the break in functionality that happened in 4.19.99
-6/6 - Fixes bug in 5/6 (upstream bug)
+In order to keep a correct value in 'flows_ready', un-roll
+'k3_udma_glue_release_rx_flow()', simplify it, add some labels and branch
+at the correct places when an error is detected.
 
-Greg
+Doing so, we also NULLify 'flow->udma_rflow' in a path that was lacking it.
 
-Do these patches look okay for you to pull into 4.19 stable? If so,
-please let me know if you need me to send v2 with commit fix up.
+Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine user")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+V2: adjust subject
+    direct return in the first error handling path
+---
+ drivers/dma/ti/k3-udma-glue.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-The only fix up needed is to these patches at this point is changing
-"(cherry picked from commit ...)" with "[ Upstream commit ... ]". The
-SHAs themselves are the correct SHAs from upstream.
+diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+index dbccdc7c0ed5..890573eb1625 100644
+--- a/drivers/dma/ti/k3-udma-glue.c
++++ b/drivers/dma/ti/k3-udma-glue.c
+@@ -578,12 +578,12 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 	if (IS_ERR(flow->udma_rflow)) {
+ 		ret = PTR_ERR(flow->udma_rflow);
+ 		dev_err(dev, "UDMAX rflow get err %d\n", ret);
+-		goto err;
++		return ret;
+ 	}
+ 
+ 	if (flow->udma_rflow_id != xudma_rflow_get_id(flow->udma_rflow)) {
+-		xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto err_rflow_put;
+ 	}
+ 
+ 	/* request and cfg rings */
+@@ -592,7 +592,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 	if (!flow->ringrx) {
+ 		ret = -ENODEV;
+ 		dev_err(dev, "Failed to get RX ring\n");
+-		goto err;
++		goto err_rflow_put;
+ 	}
+ 
+ 	flow->ringrxfdq = k3_ringacc_request_ring(rx_chn->common.ringacc,
+@@ -600,19 +600,19 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 	if (!flow->ringrxfdq) {
+ 		ret = -ENODEV;
+ 		dev_err(dev, "Failed to get RXFDQ ring\n");
+-		goto err;
++		goto err_ringrx_free;
+ 	}
+ 
+ 	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
+-		goto err;
++		goto err_ringrxfdq_free;
+ 	}
+ 
+ 	ret = k3_ringacc_ring_cfg(flow->ringrxfdq, &flow_cfg->rxfdq_cfg);
+ 	if (ret) {
+ 		dev_err(dev, "Failed to cfg ringrxfdq %d\n", ret);
+-		goto err;
++		goto err_ringrxfdq_free;
+ 	}
+ 
+ 	if (rx_chn->remote) {
+@@ -662,7 +662,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 	if (ret) {
+ 		dev_err(dev, "flow%d config failed: %d\n", flow->udma_rflow_id,
+ 			ret);
+-		goto err;
++		goto err_ringrxfdq_free;
+ 	}
+ 
+ 	rx_chn->flows_ready++;
+@@ -670,8 +670,17 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+ 		flow->udma_rflow_id, rx_chn->flows_ready);
+ 
+ 	return 0;
+-err:
+-	k3_udma_glue_release_rx_flow(rx_chn, flow_idx);
++
++err_ringrxfdq_free:
++	k3_ringacc_ring_free(flow->ringrxfdq);
++
++err_ringrx_free:
++	k3_ringacc_ring_free(flow->ringrx);
++
++err_rflow_put:
++	xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
++	flow->udma_rflow = NULL;
++
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
 
-Thanks,
-Saravana
