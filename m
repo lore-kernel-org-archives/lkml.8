@@ -2,179 +2,136 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED0EC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2FCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516052076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C52642076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:07:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oe3sHENH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HhUGXkr7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgCRLHC (ORCPT
+        id S1727747AbgCRLHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:07:02 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51412 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgCRLHB (ORCPT
+        Wed, 18 Mar 2020 07:07:16 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:60303 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726733AbgCRLHQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:07:01 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c187so1452565wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 04:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=2GgzefCkHgQryfh05yVOXaqfrd16ZLleM2vVoWi7qKM=;
-        b=oe3sHENHLGinBcd6lMWtD0RoK45nqnzlQr19MySzk1H++IPzrafqn2QGKUgroirtAL
-         2lq94YtnruHw3iuab3e4AriYG2hEDA3sSolOFoDaKQO/bQhD2FD96GTdUwwCmputjbKG
-         g7lSYEHuwJu3WcZnQI9lIerjoQsv7upSxnLDekOD6qxMw84AKQEbNa92xHr9PfIQ3dl5
-         mIslOu/fiy47HYjRmxFu8oKAr7ybJSc4LKfDOGS1WidoyvshWGBgzbLDQgHcH7v1zN28
-         Y8o+y9bN5HwKnk6rN6N08F9Lz2wJMZBFYKJIDoQfJl51GthyZZ4KYQMAz1WwReFN8TlI
-         dKGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=2GgzefCkHgQryfh05yVOXaqfrd16ZLleM2vVoWi7qKM=;
-        b=B8mN65qucnjVDEd3+HmThAk2Q97N/P0LxNdSFTUrDhkkPZAQHdVCawo7XbdH0JE+cD
-         fdJDuX6IPDXd5cAcciFWlY7qY/0tspSNka9cbPN8bTaLRPa41MVN07UXjZo6V+lnGpgd
-         7/2gKFYBmyHEJhAuhST9RbArj8gSnkJu4DvsypVHlsPJSKErKbfGu8KHPvh0/BMaCmmB
-         BCWdzzEqDnu2+aYw8y2hk+uizXJLcpfKMFEZmAopTTbKOMyeuNXr91284z2YVngcC54o
-         03TA/AnLEh76CbPLEaFRPYFkAZKR7D8ZZesJJ5kyAzym1YzTloKyZ24MW3OYg/L6dGf1
-         zlcQ==
-X-Gm-Message-State: ANhLgQ3ZpaYWD1+Uvz7AA91XZYcHiFRA1Hdiy0WBZjU7lcaNr3ghIy97
-        ze3PV8+T1HWdPbdFO+UMzQQP2w==
-X-Google-Smtp-Source: ADFU+vvbOF4UPZ6d4YXj7X2uq/HVQ+u1hCqRdJ2NoMl/CAIeeiaxA9jFtRCN5cOgU3/Z12AVgesd0g==
-X-Received: by 2002:a1c:9693:: with SMTP id y141mr4595944wmd.23.1584529619351;
-        Wed, 18 Mar 2020 04:06:59 -0700 (PDT)
-Received: from [192.168.0.104] (88-147-64-186.dyn.eolo.it. [88.147.64.186])
-        by smtp.gmail.com with ESMTPSA id a186sm3427803wmh.33.2020.03.18.04.06.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Mar 2020 04:06:58 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] block, bfq: fix use-after-free in
- bfq_idle_slice_timer_body
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <241f9766-bfe6-485a-331c-fdc693738ffc@huawei.com>
-Date:   Wed, 18 Mar 2020 12:07:37 +0100
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>, renxudong <renxudong1@huawei.com>,
-        Louhongxiang <louhongxiang@huawei.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A7FFF605-BAA8-42C1-B648-1D5BA17D1286@linaro.org>
-References: <6c0d0b36-751b-a63a-418b-888a88ce58f4@huawei.com>
- <C69604D5-CBB7-4A5F-AD73-7A9C0B6B3360@linaro.org>
- <0a6e190a-3393-53f9-b127-d57d67cdcdc8@huawei.com>
- <4171EF13-7956-44DA-A5BF-0245E4926436@linaro.org>
- <241f9766-bfe6-485a-331c-fdc693738ffc@huawei.com>
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Wed, 18 Mar 2020 07:07:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584529634;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GJuHIBrfqORNK8Nk//tvsHAKGs0fyhu6IzH+S6F8COs=;
+        b=HhUGXkr7trnQMPN3WqkOZ6MJ75YbdY+NWJLi0hRrPNgnVUmeMLEt8PoVRNjwkwseISNYJR
+        5QNwkopcRj+yLkr5+WbtKulgp2gZbrAUqIOwCNvKeW6lDhKjIX2Vy1ve2Szx78vzlELyow
+        S6HVXwgfImkkXFr0ijaSRWp9KK8zT64=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-344-iNAxtlBPM4-TwZXDc3dohQ-1; Wed, 18 Mar 2020 07:07:10 -0400
+X-MC-Unique: iNAxtlBPM4-TwZXDc3dohQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B06E3477;
+        Wed, 18 Mar 2020 11:07:07 +0000 (UTC)
+Received: from krava (unknown [10.40.195.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D74F894956;
+        Wed, 18 Mar 2020 11:07:01 +0000 (UTC)
+Date:   Wed, 18 Mar 2020 12:06:59 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        John Garry <john.garry@huawei.com>,
+        Enrico Weigelt <info@metux.net>, linux-kernel@vger.kernel.org,
+        Mike Leach <mike.leach@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
+        Thomas Richter <tmricht@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3] perf symbols: Consolidate symbol fixup issue
+Message-ID: <20200318110659.GA845874@krava>
+References: <20200306015759.10084-1-leo.yan@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200306015759.10084-1-leo.yan@linaro.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 06, 2020 at 09:57:58AM +0800, Leo Yan wrote:
+> After copying Arm64's perf archive with object files and perf.data file
+> to x86 laptop, the x86's perf kernel symbol resolution fails.  It
+> outputs 'unknown' for all symbols parsing.
+> 
+> This issue is root caused by the function elf__needs_adjust_symbols(),
+> x86 perf tool uses one weak version, Arm64 (and powerpc) has rewritten
+> their own version.  elf__needs_adjust_symbols() decides if need to parse
+> symbols with the relative offset address; but x86 building uses the weak
+> function which misses to check for the elf type 'ET_DYN', so that it
+> cannot parse symbols in Arm DSOs due to the wrong result from
+> elf__needs_adjust_symbols().
+> 
+> The DSO parsing should not depend on any specific architecture perf
+> building; e.g. x86 perf tool can parse Arm and Arm64 DSOs, vice versa.
+> And confirmed by Naveen N. Rao that powerpc64 kernels are not being
+> built as ET_DYN anymore and change to ET_EXEC.
+> 
+> This patch removes the arch specific functions for Arm64 and powerpc and
+> changes elf__needs_adjust_symbols() as a common function.
+> 
+> In the common elf__needs_adjust_symbols(), it checks an extra condition
+> 'ET_DYN' for elf header type.  With this fixing, the Arm64 DSO can be
+> parsed properly with x86's perf tool.
+> 
+> Before:
+> 
+>   # perf script
+>   main  3258          1          branches:                 0 [unknown] ([unknown]) => ffff800010c4665c [unknown] ([kernel.kallsyms])
+>   main  3258          1          branches:  ffff800010c46670 [unknown] ([kernel.kallsyms]) => ffff800010c4eaec [unknown] ([kernel.kallsyms])
+>   main  3258          1          branches:  ffff800010c4eaec [unknown] ([kernel.kallsyms]) => ffff800010c4eb00 [unknown] ([kernel.kallsyms])
+>   main  3258          1          branches:  ffff800010c4eb08 [unknown] ([kernel.kallsyms]) => ffff800010c4e780 [unknown] ([kernel.kallsyms])
+>   main  3258          1          branches:  ffff800010c4e7a0 [unknown] ([kernel.kallsyms]) => ffff800010c4eeac [unknown] ([kernel.kallsyms])
+>   main  3258          1          branches:  ffff800010c4eebc [unknown] ([kernel.kallsyms]) => ffff800010c4ed80 [unknown] ([kernel.kallsyms])
+> 
+> After:
+> 
+>   # perf script
+>   main  3258          1          branches:                 0 [unknown] ([unknown]) => ffff800010c4665c coresight_timeout+0x54 ([kernel.kallsyms])
+>   main  3258          1          branches:  ffff800010c46670 coresight_timeout+0x68 ([kernel.kallsyms]) => ffff800010c4eaec etm4_enable_hw+0x3cc ([kernel.kallsyms])
+>   main  3258          1          branches:  ffff800010c4eaec etm4_enable_hw+0x3cc ([kernel.kallsyms]) => ffff800010c4eb00 etm4_enable_hw+0x3e0 ([kernel.kallsyms])
+>   main  3258          1          branches:  ffff800010c4eb08 etm4_enable_hw+0x3e8 ([kernel.kallsyms]) => ffff800010c4e780 etm4_enable_hw+0x60 ([kernel.kallsyms])
+>   main  3258          1          branches:  ffff800010c4e7a0 etm4_enable_hw+0x80 ([kernel.kallsyms]) => ffff800010c4eeac etm4_enable+0x2d4 ([kernel.kallsyms])
+>   main  3258          1          branches:  ffff800010c4eebc etm4_enable+0x2e4 ([kernel.kallsyms]) => ffff800010c4ed80 etm4_enable+0x1a8 ([kernel.kallsyms])
+> 
+> v3: Changed to check for ET_DYN across all architectures.
+> 
+> v2: Fixed Arm64 and powerpc native building.
+> 
+> Reported-by: Mike Leach <mike.leach@linaro.org>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Reviewed-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-> Il giorno 18 mar 2020, alle ore 10:52, Zhiqiang Liu =
-<liuzhiqiang26@huawei.com> ha scritto:
->=20
->=20
->=20
-> On 2020/3/18 16:45, Paolo Valente wrote:
->>=20
->>=20
->>>>> 	spin_lock_irqsave(&bfqd->lock, flags);
->>>>> -	bfq_clear_bfqq_wait_request(bfqq);
->>>>> -
->>>>> 	if (bfqq !=3D bfqd->in_service_queue) {
->>>>> 		spin_unlock_irqrestore(&bfqd->lock, flags);
->>>>> 		return;
->>>>> 	}
->>>>>=20
->>>>> +	bfq_clear_bfqq_wait_request(bfqq);
->>>>> +
->>>>=20
->>>> Please add a comment on why you (correctly) clear this flag only if =
-bfqq is in service.
->>>>=20
->>>> For the rest, seems ok to me.
->>>>=20
->>>> Thank you very much for spotting and fixing this bug,
->>>> Paolo
->>>>=20
->>> Thanks for your reply.
->>> Considering that the bfqq may be in race, we should firstly check =
-whether bfqq is in service before
->>> doing something on it.
->>>=20
->>=20
->> The comment you propose is correct, but the correctness issue I =
-raised
->> is essentially the opposite.  Sorry for not being clear.
->>=20
->> Let me put it the other way round: why is it still correct that, if
->> bfqq is not the queue in service, then that flag is not cleared at =
-all?
->> IOW, why is it not a problem that that flag remains untouched is bfqq
->> is not in service?
->>=20
->> Thanks,
->> Paolo
->>=20
-> Thanks for your patient.
-> As you comment in bfq_idle_slice_timer, there are two race situations =
-as follows,
-> a) bfqq is null
->   bfq_idle_slice_timer will not call bfq_idle_slice_timer_body ->no =
-problem
-> b) bfqq are not in service
->   1) bfqq is freed
->      it will cause use-after-free problem before calling =
-bfq_clear_bfqq_wait_request
->      in bfq_idle_slice_timer_body. -> use-after-free problem as =
-analyzed in the patch.
->   2) bfqq is not freed
->      it means in_service_queue has been set to a new bfqq. The old =
-bfqq has been expired
->      through __bfq_bfqq_expire func. Then the wait_request flags of =
-old bfqq will be cleared
->      in __bfq_bfqd_reset_in_service func. -> it is no a problem to =
-re-clear the wait_request
->      flags before checking whether bfqq is in service.
-
-Great, this item 2 is exactly what I meant.  We need a comment
-because, even if now this stuff is clear to you, imagine somebody
-else getting to your modified piece of code after reading hundreds of
-lines of code, about a non-trivial state machine as BFQ ...  :)
-
-Thanks,
-Paolo
-
->=20
-> In one word, the old bfqq in race has already cleared the wait_request =
-flag when switching in_service_queue.
->=20
-> Thanks,
-> Zhiqiang Liu
->=20
->>>>>=20
->>>>=20
->>>>=20
->>>> .
->>=20
->>=20
->> .
->>=20
->=20
+thanks,
+jirka
 
