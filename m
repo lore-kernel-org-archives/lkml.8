@@ -2,208 +2,236 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA297C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA92CC4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B847820777
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92DB820772
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:14:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UepFWvnW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgCRVNm (ORCPT
+        id S1727027AbgCRVOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:13:42 -0400
-Received: from mga07.intel.com ([134.134.136.100]:16234 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgCRVNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:13:42 -0400
-IronPort-SDR: 1afHXWylspGnHMAiDgSwnhYxxmqsT9BOXp1UbVfPa9K/GevnGEWNdEntLE8X3z5KtrLzzI4OWp
- mv999VhxJ9Yg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 14:13:41 -0700
-IronPort-SDR: K6lBN/lGkJmaHbRpCNSbFxqShfgmfVb7/FnsMVhd+MKl5JyYZNBUg6STTd4QzWpiB05LpQiojV
- hfGV2TjllezQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,569,1574150400"; 
-   d="scan'208";a="233966752"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 18 Mar 2020 14:13:39 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jEg0R-00018U-7J; Thu, 19 Mar 2020 05:13:39 +0800
-Date:   Thu, 19 Mar 2020 05:13:10 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 51565924ebd9dce938be77b1d5601c890075bb3b
-Message-ID: <5e728ee6.clmITcSOe9eZEcSr%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 18 Mar 2020 17:14:50 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38682 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbgCRVOu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 17:14:50 -0400
+Received: by mail-pf1-f196.google.com with SMTP id z5so157059pfn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 14:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=Vmp6BTOgydfHk10WrjIJ59FqwiTaCy2iSVS6aUYT3x8=;
+        b=UepFWvnW3WgXsvqf7yJKBzYbaQTnkPZzJYSMe0tY5iziZ7d3z6El7HggouvHTPRYCS
+         PtGu34mLgHEgMMUSwznq3A0DCmhC2cubSGCt1FqiydrXoU6PX+ZivB2Phb0bMZSoeunq
+         H5VbfsD+j5iApc5w1eDDjzT4u6y24p522GicM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=Vmp6BTOgydfHk10WrjIJ59FqwiTaCy2iSVS6aUYT3x8=;
+        b=KlM5o6UnCa0QoqXg0K2AncxstDQjXoEgLPwbTn75Ljr4TNdaitaNHs4TAnl9LeEoJ3
+         0KBIoSXFpYZR29OCwzizMzN7m6zIarkclVGVD0eV737Aq9oBcu44huGnj9INkJ4e2d1/
+         VH/tDwPue+K1y0KrRqwFZTz2Lkgy/2NlD4W0IYjSIIvBidREjBKMbxIqjjTKafUzAq8h
+         BQsAbTWIuyVOWZSudhuVvjAIm/MUXoaHuZhAWgwJ6hZr5LSWuXR/L7QBD5k7Eow89+5W
+         8VckP3xk7VVc9wQCrAhmUgqGKaff/sPZFeTYkR37t487BwDw79SpDLfzpCRZGsUhXR+w
+         xFnw==
+X-Gm-Message-State: ANhLgQ0jEKtIDBfgxPDcihcdZBhpBOLxPLJu1t9hEolRiMi7x2F4LOFh
+        Jjr94JMb1BN+f5Lx6ymjGV7eW+GYf70=
+X-Google-Smtp-Source: ADFU+vvIHkLqQlSnYlnmvZrr2UP9WLS9Yac5xsXL+7Ibk6gsHN0DjkGGu2rhb35tswU5HdgU+tc3/g==
+X-Received: by 2002:a63:2542:: with SMTP id l63mr6471985pgl.312.1584566087892;
+        Wed, 18 Mar 2020 14:14:47 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g7sm3114467pjl.17.2020.03.18.14.14.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 14:14:46 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <bc2f75bc-1223-68b5-3c64-8ea17ee677cf@codeaurora.org>
+References: <1584019379-12085-1-git-send-email-mkshah@codeaurora.org> <1584019379-12085-2-git-send-email-mkshah@codeaurora.org> <158441069917.88485.95270915247150166@swboyd.mtv.corp.google.com> <bc2f75bc-1223-68b5-3c64-8ea17ee677cf@codeaurora.org>
+Subject: Re: [RFC v2] irqchip: qcom: pdc: Introduce irq_set_wake call
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
+        maz@kernel.org, jason@lakedaemon.net, dianders@chromium.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, mka@chromium.org
+Date:   Wed, 18 Mar 2020 14:14:44 -0700
+Message-ID: <158456608487.152100.9336929115021414535@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 51565924ebd9dce938be77b1d5601c890075bb3b  Merge branch 'linus'
+Quoting Maulik Shah (2020-03-16 23:47:21)
+> Hi,
+>=20
+> On 3/17/2020 7:34 AM, Stephen Boyd wrote:
+> > Quoting Maulik Shah (2020-03-12 06:22:59)
+> >> Change the way interrupts get enabled at wakeup capable PDC irq chip.
+> >>
+> >> Introduce irq_set_wake call which lets interrupts enabled at PDC with
+> >> enable_irq_wake and disabled with disable_irq_wake with certain
+> >> conditions.
+> >>
+> >> Interrupt will get enabled in HW at PDC and its parent GIC if they are
+> >> either enabled is SW or marked as wake up capable.
+> > Shouldn't we only enable in PDC and GIC if it's marked wakeup capable
+> > and we're entering suspend? Otherwise we should let the hardware enable
+> > state follow the software irq enable state?
+> Not only during "sleep" but PDC (and GIC) have a role during "active" tim=
+e as well.
+> so we can not just enabled at PDC and GIC when entering to suspend, inter=
+rupt need
+> to keep interrupt enabled at PDC and GIC HW when out of suspend as well.
 
-elapsed time: 666m
+Yes, but if an interrupt is only marked for wakeup and not actually
+enabled we shouldn't deliver it to the GIC. That's what I'm asking
+about.
 
-configs tested: 141
-configs skipped: 0
+> >
+> >> interrupt will get disabled in HW at PDC and its parent GIC only if its
+> >> disabled in SW and also marked as non-wake up capable.
+> >>
+> >> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> >> ---
+> >>  drivers/irqchip/qcom-pdc.c | 124 ++++++++++++++++++++++++++++++++++++=
+++++++---
+> >>  1 file changed, 117 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+> >> index 6ae9e1f..d698cec 100644
+> >> --- a/drivers/irqchip/qcom-pdc.c
+> >> +++ b/drivers/irqchip/qcom-pdc.c
+> >> @@ -1,6 +1,6 @@
+[...]
+> >
+> >> +
+> >>         if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
+> >>                 return;
+> >> =20
+> >> -       pdc_enable_intr(d, false);
+> >> -       irq_chip_disable_parent(d);
+> >> +       raw_spin_lock(&pdc_lock);
+> >> +
+> >> +       clear_bit(d->hwirq, pdc_enabled_irqs);
+> > clear_bit() is atomic, so why inside the lock?
+> I will move it out of lock.
+> >
+> >> +       wake_status =3D test_bit(d->hwirq, pdc_wake_irqs);
+> >> +
+> >> +       /* Disable at PDC HW if wake_status also says same */
+> >> +       if (!wake_status)
+> > Should read as "if not wakeup_enabled".
+> I will update comment.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Hopefully the comment isn't useful and can just be removed if the code
+reads properly.
 
-arm64                            allyesconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-m68k                             allmodconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                      fuloong2e_defconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-i386                 randconfig-a003-20200318
-i386                 randconfig-a001-20200318
-x86_64               randconfig-a001-20200318
-x86_64               randconfig-a002-20200318
-i386                 randconfig-a002-20200318
-x86_64               randconfig-a003-20200318
-riscv                randconfig-a001-20200318
-m68k                 randconfig-a001-20200318
-nds32                randconfig-a001-20200318
-alpha                randconfig-a001-20200318
-parisc               randconfig-a001-20200318
-mips                 randconfig-a001-20200318
-h8300                randconfig-a001-20200318
-sparc64              randconfig-a001-20200318
-c6x                  randconfig-a001-20200318
-nios2                randconfig-a001-20200318
-microblaze           randconfig-a001-20200318
-xtensa               randconfig-a001-20200318
-csky                 randconfig-a001-20200318
-openrisc             randconfig-a001-20200318
-sh                   randconfig-a001-20200318
-s390                 randconfig-a001-20200318
-x86_64               randconfig-b001-20200318
-x86_64               randconfig-b002-20200318
-x86_64               randconfig-b003-20200318
-i386                 randconfig-b001-20200318
-i386                 randconfig-b002-20200318
-i386                 randconfig-b003-20200318
-x86_64               randconfig-c001-20200318
-i386                 randconfig-c001-20200318
-x86_64               randconfig-c002-20200318
-i386                 randconfig-c003-20200318
-x86_64               randconfig-c003-20200318
-i386                 randconfig-c002-20200318
-x86_64               randconfig-d001-20200318
-i386                 randconfig-d001-20200318
-i386                 randconfig-d003-20200318
-i386                 randconfig-d002-20200318
-x86_64               randconfig-d002-20200318
-x86_64               randconfig-d003-20200318
-x86_64               randconfig-f001-20200318
-x86_64               randconfig-f002-20200318
-x86_64               randconfig-f003-20200318
-i386                 randconfig-f001-20200318
-i386                 randconfig-f002-20200318
-i386                 randconfig-f003-20200318
-x86_64               randconfig-g001-20200318
-x86_64               randconfig-g002-20200318
-x86_64               randconfig-g003-20200318
-i386                 randconfig-g001-20200318
-i386                 randconfig-g002-20200318
-i386                 randconfig-g003-20200318
-arc                  randconfig-a001-20200318
-ia64                 randconfig-a001-20200318
-arm                  randconfig-a001-20200318
-arm64                randconfig-a001-20200318
-sparc                randconfig-a001-20200318
-powerpc              randconfig-a001-20200318
-riscv                          rv32_defconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+> >
+> >> +               pdc_enable_intr(d, false);
+> >> +
+> >> +       raw_spin_unlock(&pdc_lock);
+> >> +
+> >> +       /* Disable at GIC HW if wake_status also says same */
+> >> +       if (!wake_status)
+> > This happens outside the lock, so I'm confused why any locking is needed
+> > in this function.
+> Okay, since test_bit() is also atomic so i will keep locking inside pc_en=
+able_intr() as it is.
+> >
+> >> +               irq_chip_disable_parent(d);
+> >>  }
+> >> =20
+> >>  static void qcom_pdc_gic_enable(struct irq_data *d)
+> >> @@ -101,7 +116,16 @@ static void qcom_pdc_gic_enable(struct irq_data *=
+d)
+> >>         if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
+> >>                 return;
+> >> =20
+> >> +       raw_spin_lock(&pdc_lock);
+> >> +
+> >> +       set_bit(d->hwirq, pdc_enabled_irqs);
+> >> +
+> >> +       /* We can blindly enable at PDC HW as we are already in enable=
+ path */
+> >>         pdc_enable_intr(d, true);
+> >> +
+> >> +       raw_spin_unlock(&pdc_lock);
+> >> +
+> >> +       /* We can blindly enable at GIC HW as we are already in enable=
+ path */
+> >>         irq_chip_enable_parent(d);
+> >>  }
+> >> =20
+[...]
+> >> + */
+> >> +
+> >> +static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
+> >> +{
+> >> +       bool enabled_status;
+> >> +
+> >> +       if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
+> >> +               return 0;
+> >> +
+> >> +       raw_spin_lock(&pdc_lock);
+> >> +       enabled_status =3D test_bit(d->hwirq, pdc_enabled_irqs);
+> >> +       if (on) {
+> >> +               set_bit(d->hwirq, pdc_wake_irqs);
+> >> +               pdc_enable_intr(d, true);
+> >> +       } else {
+> >> +               clear_bit(d->hwirq, pdc_wake_irqs);
+> >> +               pdc_enable_intr(d, enabled_status);
+> >> +       }
+> >> +
+> >> +       raw_spin_unlock(&pdc_lock);
+> >> +
+> >> +       /* Either "wake" or "enabled" need same status at parent as we=
+ll */
+> >> +       if (on || enabled_status)
+> >> +               irq_chip_enable_parent(d);
+> >> +       else
+> >> +               irq_chip_disable_parent(d);
+> > What happens if irq is "disabled" in software, because this is the first
+> > function called on the irq, and we aren't in suspend yet. Then we get
+> > the irq. Won't we be interrupting the CPU because we've enabled in PDC
+> > and GIC hardware? Why doesn't this function update the wake bit and then
+> > leave the force on irq logic to suspend entry? Will we miss an interrupt
+> > while entering suspend because of that?
+> As PDC (and GIC) have a role during "active" time as well, interrupt shou=
+ld be
+> enabled in PDC and GIC HW.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Sure. When the irq is enabled we want to enable at the GIC, but if it
+isn't enabled and we're not in suspend I would think we don't want the
+irq enabled at the GIC. But this code is doing that. Why? I'd think we
+would want to make enable in the PDC driver enable the parent and then
+make the set_wake path just update some bitmap tracking wakeup enabled
+irqs.
+
+Then when we enter suspend we will enable any pdc interrupts only in the
+PDC so that we can wakeup from suspend if that interrupt comes in. When
+we wakeup we'll resend the edge interrupts to the GIC on the resume path
+and level interrupts will "just work" because they'll stay asserted
+throughout resume.
+
+The bigger problem would look to be suspend entry, but in that case we
+leave any interrupts enabled at the GIC on the path to suspend (see
+suspend_device_irq() and how it bails out early if it's marked for
+wakeup) so we should be able to have some suspend entry hook in pdc that
+enables the irq in the PDC if it's in the wakeup bitmap. Then on the
+path to suspend the GIC can lose power at any point after we enable the
+wakeup path in PDC and then the system should resume and get the
+interrupt through the resend mechanism.
