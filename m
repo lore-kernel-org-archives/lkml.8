@@ -2,104 +2,95 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF60CC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB95AC4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5B42076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFEF520773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:43:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ailZOps1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgCRUmR convert rfc822-to-8bit (ORCPT
+        id S1726971AbgCRUnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:42:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54825 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCRUmR (ORCPT
+        Wed, 18 Mar 2020 16:43:19 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:42300 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCRUnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:42:17 -0400
-Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <jay.vosburgh@canonical.com>)
-        id 1jEfVj-0004Va-6W; Wed, 18 Mar 2020 20:41:55 +0000
-Received: by famine.localdomain (Postfix, from userid 1000)
-        id 691DB630E4; Wed, 18 Mar 2020 13:41:53 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-        by famine.localdomain (Postfix) with ESMTP id 5DA87AC1DD;
-        Wed, 18 Mar 2020 13:41:53 -0700 (PDT)
-From:   Jay Vosburgh <jay.vosburgh@canonical.com>
-To:     Jarod Wilson <jarod@redhat.com>
-cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Moshe Levi <moshele@mellanox.com>,
-        Marcelo Ricardo Leitner <mleitner@redhat.com>,
-        Netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH net] ipv6: don't auto-add link-local address to lag ports
-In-reply-to: <CAKfmpSc0yea5-OfE1rnVdErDTeOza=owbL00QQEaH-M-A6Za7g@mail.gmail.com>
-References: <20200318140605.45273-1-jarod@redhat.com> <8a88d1c8-c6b1-ad85-7971-e6ae8c6fa0e4@gmail.com> <CAKfmpSc0yea5-OfE1rnVdErDTeOza=owbL00QQEaH-M-A6Za7g@mail.gmail.com>
-Comments: In-reply-to Jarod Wilson <jarod@redhat.com>
-   message dated "Wed, 18 Mar 2020 14:32:52 -0400."
-X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
+        Wed, 18 Mar 2020 16:43:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=oGlJP/cmQF74W01lZDvZS2p/EZnU4amRSfPq9wPSqKo=; b=ailZOps1Hhs1hW9bDTEgiRDWay
+        CJaNiGMFz4rag/E5zoMPMrXJVbBheUXhO7RccSK4AV+GYXMvZp1TQpPdKOQg3uNLxYEJlLwRsCTM+
+        nKOIhFRw2txYwRbdizMlmUIn2hv3t5pC21BLzulGFujEoKwF41BmkKdxa2GPyN29LLagPA1Lmf8bb
+        m9tPny7VpgDE4h+KjSZiicn9PT+e3HIFefRBBO1Yn2MhCIVxrlSpDnCQWccDXK5zpRxN/vZwDJHq1
+        YrMu/+R2vKajEMh0A6yprxRp1r/6pvIFegrnLpOk8elrcEqHQAuLd2E5vLBvS7blnSDNFMdWu0O7I
+        BCc+obkg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEfWm-0003uQ-Jb; Wed, 18 Mar 2020 20:43:00 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C0A9530047A;
+        Wed, 18 Mar 2020 21:42:57 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B29452038CEEB; Wed, 18 Mar 2020 21:42:57 +0100 (CET)
+Date:   Wed, 18 Mar 2020 21:42:57 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH 1/3 v2] perf/amd/uncore: Prepare L3 thread mask code for
+ Family 19h support
+Message-ID: <20200318204257.GL20730@hirez.programming.kicks-ass.net>
+References: <20200313231024.17601-1-kim.phillips@amd.com>
+ <CABPqkBS8TUMTEz_motpd+8xK599tLXAonUHwp-CWMyU2RhcbQg@mail.gmail.com>
+ <2581de5a-969b-93c7-0565-2eef51717900@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <25628.1584564113.1@famine>
-Content-Transfer-Encoding: 8BIT
-Date:   Wed, 18 Mar 2020 13:41:53 -0700
-Message-ID: <25629.1584564113@famine>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2581de5a-969b-93c7-0565-2eef51717900@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jarod Wilson <jarod@redhat.com> wrote:
+On Wed, Mar 18, 2020 at 09:46:41AM -0500, Kim Phillips wrote:
 
->On Wed, Mar 18, 2020 at 2:02 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->>
->> On 3/18/20 7:06 AM, Jarod Wilson wrote:
->> > Bonding slave and team port devices should not have link-local addresses
->> > automatically added to them, as it can interfere with openvswitch being
->> > able to properly add tc ingress.
->> >
->> > Reported-by: Moshe Levi <moshele@mellanox.com>
->> > CC: Marcelo Ricardo Leitner <mleitner@redhat.com>
->> > CC: netdev@vger.kernel.org
->> > Signed-off-by: Jarod Wilson <jarod@redhat.com>
->>
->>
->> This does not look a net candidate to me, unless the bug has been added recently ?
->>
->> The absence of Fixes: tag is a red flag for a net submission.
->>
->> By adding a Fixes: tag, you are doing us a favor, please.
->
->Yeah, wasn't entirely sure on this one. It fixes a problem, but it's
->not exactly a new one. A quick look at git history suggests this might
->actually be something that technically pre-dates the move to git in
->2005, but only really became a problem with some additional far more
->recent infrastructure (tc and friends). I can resubmit it as net-next
->if that's preferred.
+> > But this does not work with the cpumask programmed for the amd_l3 PMU. This mask
+> > shows, as it should, one CPU/CCX. So that means that when I do:
+> > 
+> > $ perf stat -a amd_l3/event=llc_event/
+> > 
+> > This only collects on the CPUs listed in the cpumask: 0,4,8,12 ....
+> > That means that L3 events generated by the other CPUs on the CCX are
+> > not monitored.
+> > I can easily see the problem by pinning a memory bound program to
+> > CPU64, for instance.
+> 
+> Right, the higher level code calls the driver with a single cpu==0
+> call if the perf tool is invoked with a simple -a style system-wide.
+> If the tool is invoked with supplemental switches to -a, like -C 0-255,
+> and -A, the driver gets called multiple times with all the unique cpu
+> values.  The latter is the expected invocation style when measuring
+> a benchmark pinned on a subset of cpus, i.e., when evaluating
+> the driver, and is the more deterministic behaviour for the driver
+> to have, given it cannot tell the difference otherwise.
 
-	Commit
-
-c2edacf80e15 bonding / ipv6: no addrconf for slaves separately from master
-
-	should (in theory) already prevent ipv6 link-local addrconf, at
-least for bonding slaves, and dates from 2007.  If something has changed
-to break the logic in this commit, then (a) you might need to do some
-research to find a candidate for your Fixes tag, and (b) I'd suggest
-also investigating whether or not the change added by c2edacf80e15 to
-addrconf_notify() no longer serves any purpose, and should be removed if
-that is the case.
-
-	Note also that the hyperv netvsc driver, in netvsc_vf_join(),
-sets IFF_SLAVE in order to trigger the addrconf prevention logic from
-c2edacf80e15; I'm not sure if your patch would affect its expectations
-(if c2edacf80e15 were removed).
-
-	-J
-
----
-	-Jay Vosburgh, jay.vosburgh@canonical.com
+That seems to suggest it is all horribly broken.
