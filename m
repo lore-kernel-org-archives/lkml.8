@@ -2,158 +2,119 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965CEC5ACD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC42C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5592076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584519854;
-	bh=Ht469kuWo7IjZVc9alNP9GEoy2tDdgvWDMtW+s/gkCM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=g8YPKGAeq/zIQLVDrsRCFWuo146QmHqZ4qMH1QBEGqID0sUGl6iq0EomeqOTmN/m6
-	 Dy43XJSpdRNZXquH4qC7prSGhSYhnl4GOtns99fDhdHV49iJjPh4Fb2k5giSBuQuHG
-	 HAo9HEOLaCJqzehgFy3pUcV/yIY69hQreKOdEwDI=
+	by mail.kernel.org (Postfix) with ESMTP id 07B2E2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727433AbgCRIYN (ORCPT
+        id S1727384AbgCRIZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 04:24:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:32864 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgCRIYM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 04:24:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id x26so7593854otk.0;
-        Wed, 18 Mar 2020 01:24:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IQ0AIpy6289Hs4+0vUajVZqxzUHEdUAVpK8eg8j+VHE=;
-        b=VpCXkmUMJ9vmCsRMm7NT0Xj8R6wNxNEUEmONuevzauY8IZt0iaDFp4Ar+rTotAJXRD
-         r1meyr6HfWoBaAXmgpHsz6Afkt3lufdid4UAZ1GzvWBDzKxqAAtb87WrYbwvSWL30y4z
-         kYL1ko3XwjOMwrmDnxPH9X5oNuGuBgRS1x5tF7dqu+4LjaksmC50s+2v9BwAXIhIjoST
-         j1tGDSnA2009rL7a7oek+Lro94SiBaYsFtT3JaqM/l68icGF+9RAAv6GXJdHpS4qSWv1
-         Ndq5u8GfqEiqs47bdc8NX67H/P+1KWlhwtbnB3vv6kge6KoaTB68ijUaUBtAsMUrKOqJ
-         NGug==
-X-Gm-Message-State: ANhLgQ1Pa1z55vj794HJIaAGAkXOnsZuiDpO/Io7GECI4TrVxk87QMIA
-        FccVBvA5+FKmGCCwyIkuZ2sWMg8+yIceqbHqUbY=
-X-Google-Smtp-Source: ADFU+vtDUu/ENup+aXfCBKJZoHwE4fbxddOCHcfz5Gp/eR5kvQBbgkz/udoMueN3CldSwYbzXoAKDhG5hexnUlr09kY=
-X-Received: by 2002:a9d:1d07:: with SMTP id m7mr2678697otm.167.1584519851446;
- Wed, 18 Mar 2020 01:24:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158318760361.2216124.13612198312947463590.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAPcyv4hjgNruY84Kr9S5HZ6P03fNcPcmL7H2DN19Z+CbPZ7d+Q@mail.gmail.com>
-In-Reply-To: <CAPcyv4hjgNruY84Kr9S5HZ6P03fNcPcmL7H2DN19Z+CbPZ7d+Q@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 18 Mar 2020 09:24:00 +0100
-Message-ID: <CAJZ5v0heWeS1iZqHEZ5RB2a=UJbUQF0zAjeFfTa9qBxvQ193=w@mail.gmail.com>
-Subject: Re: [PATCH 1/5] ACPI: NUMA: Add 'nohmat' option
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Wed, 18 Mar 2020 04:25:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:46606 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbgCRIZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 04:25:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A8D231B;
+        Wed, 18 Mar 2020 01:25:00 -0700 (PDT)
+Received: from e123083-lin (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 47BC23F52E;
+        Wed, 18 Mar 2020 01:24:58 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 09:24:52 +0100
+From:   Morten Rasmussen <morten.rasmussen@arm.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [PATCH V2] sched: fair: Use the earliest break even
+Message-ID: <20200318082452.GA6103@e123083-lin>
+References: <20200311202625.13629-1-daniel.lezcano@linaro.org>
+ <CAKfTPtAqeHhVCeSgE1DsaGGkM6nY-9oAvGw_6zWvv1bKyE85JQ@mail.gmail.com>
+ <e6e8ff94-64f2-6404-e332-2e030fc7e332@linaro.org>
+ <20200317075607.GE10914@e105550-lin.cambridge.arm.com>
+ <3520b762-08f5-0db8-30cb-372709188bb9@linaro.org>
+ <20200317143053.GF10914@e105550-lin.cambridge.arm.com>
+ <7cd04d35-3522-30fb-82e9-82fdf53d0957@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7cd04d35-3522-30fb-82e9-82fdf53d0957@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 1:09 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Mon, Mar 2, 2020 at 2:36 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > Disable parsing of the HMAT for debug, to workaround broken platform
-> > instances, or cases where it is otherwise not wanted.
->
-> Rafael, any heartburn with this change to the numa= option?
->
-> ...as I look at this I realize I failed to also update
-> Documentation/x86/x86_64/boot-options.rst, will fix.
+On Tue, Mar 17, 2020 at 06:07:43PM +0100, Daniel Lezcano wrote:
+> On 17/03/2020 15:30, Morten Rasmussen wrote:
+> > On Tue, Mar 17, 2020 at 02:48:51PM +0100, Daniel Lezcano wrote:
+> >> On 17/03/2020 08:56, Morten Rasmussen wrote:
+> >>> On Thu, Mar 12, 2020 at 11:04:19AM +0100, Daniel Lezcano wrote:
+> >>>>>> In order to be more energy efficient but without impacting the
+> >>>>>> performances, let's use another criteria: the break even deadline.
+> >>>>>>
+> >>>>>> At idle time, when we store the idle state the CPU is entering in, we
+> >>>>>> compute the next deadline where the CPU could be woken up without
+> >>>>>> spending more energy to sleep.
+> >>>
+> >>> I don't follow the argument that sleeping longer should improve energy
+> >>> consumption. 
+> >>
+> >> May be it is not explained correctly.
+> >>
+> >> The patch is about selecting a CPU with the smallest break even deadline
+> >> value. In a group of idle CPUs in the same idle state, we will pick the
+> >> one with the smallest break even dead line which is the one with the
+> >> highest probability it already reached its target residency.
+> >>
+> >> It is best effort.
+> > 
+> > Indeed. I get what the patch does, I just don't see how the patch
+> > improves energy efficiency.
+> 
+> If the CPU is woken up before it reached the break even, the idle state
+> cost in energy is greater than the energy it saved.
+> 
+> Am I misunderstanding your point?
 
-Thanks!
+Considering just the waking then yes, it reaches energy break-even.
+However, considering all the CPUs in the system, it just moves the idle
+entry/exit energy cost to a different CPU, it doesn't go away.
 
-Apart from this just a minor nit below.
+Whether you have:
 
-> >
-> > Cc: x86@kernel.org
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: Andy Lutomirski <luto@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  arch/x86/mm/numa.c       |    4 ++++
-> >  drivers/acpi/numa/hmat.c |    3 ++-
-> >  include/acpi/acpi_numa.h |    1 +
-> >  3 files changed, 7 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> > index 59ba008504dc..22de2e2610c1 100644
-> > --- a/arch/x86/mm/numa.c
-> > +++ b/arch/x86/mm/numa.c
-> > @@ -44,6 +44,10 @@ static __init int numa_setup(char *opt)
-> >  #ifdef CONFIG_ACPI_NUMA
-> >         if (!strncmp(opt, "noacpi", 6))
-> >                 acpi_numa = -1;
-> > +#ifdef CONFIG_ACPI_HMAT
-> > +       if (!strncmp(opt, "nohmat", 6))
-> > +               hmat_disable = 1;
-> > +#endif
+               |-BE-|
+           ____    ____
+CPU0:  ___/    \__/    \___
 
-I wonder if IS_ENABLED() would work here?
+CPU1:  ____________________
 
-> >  #endif
-> >         return 0;
-> >  }
-> > diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> > index 2c32cfb72370..d3db121e393a 100644
-> > --- a/drivers/acpi/numa/hmat.c
-> > +++ b/drivers/acpi/numa/hmat.c
-> > @@ -26,6 +26,7 @@
-> >  #include <linux/sysfs.h>
-> >
-> >  static u8 hmat_revision;
-> > +int hmat_disable __initdata;
-> >
-> >  static LIST_HEAD(targets);
-> >  static LIST_HEAD(initiators);
-> > @@ -814,7 +815,7 @@ static __init int hmat_init(void)
-> >         enum acpi_hmat_type i;
-> >         acpi_status status;
-> >
-> > -       if (srat_disabled())
-> > +       if (srat_disabled() || hmat_disable)
-> >                 return 0;
-> >
-> >         status = acpi_get_table(ACPI_SIG_SRAT, 0, &tbl);
-> > diff --git a/include/acpi/acpi_numa.h b/include/acpi/acpi_numa.h
-> > index fdebcfc6c8df..48ca468e9b61 100644
-> > --- a/include/acpi/acpi_numa.h
-> > +++ b/include/acpi/acpi_numa.h
-> > @@ -18,6 +18,7 @@ extern int node_to_pxm(int);
-> >  extern int acpi_map_pxm_to_node(int);
-> >  extern unsigned char acpi_srat_revision;
-> >  extern int acpi_numa __initdata;
-> > +extern int hmat_disable __initdata;
-> >
-> >  extern void bad_srat(void);
-> >  extern int srat_disabled(void);
-> >
+Or:
+               |-BE-|
+           ____
+CPU0:  ___/    \___________
+                   ____
+CPU1:  ___________/    \___
+
+_
+  = CPU busy = P_{busy}
+_ = CPU idle = P_{idle}
+/ = CPU idle exit = P_{exit}
+\ = CPU idle entry = P_{entry}
+
+The sum of areas under the curves is the same, i.e. the total energy is
+unchanged.
+
+Morten
