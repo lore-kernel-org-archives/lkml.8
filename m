@@ -7,61 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE46C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33DFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E078D20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC22020719
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X3InRhON"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mQjz/15G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbgCRRnM (ORCPT
+        id S1727264AbgCRRnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:43:12 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35736 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbgCRRnK (ORCPT
+        Wed, 18 Mar 2020 13:43:08 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40057 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbgCRRnG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:43:10 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h4so10922217wru.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:43:08 -0700 (PDT)
+        Wed, 18 Mar 2020 13:43:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f3so24566001wrw.7
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:43:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=UECOqhVXTO4WTSf9+88d/gPF4iTL0TltzwoS0jurVoE=;
-        b=X3InRhONf0y9chdNCyUrwGPBhyZzqitwLnWsrU8JjKupUxbqtkc7V6VC6HcfCXXOft
-         I0PXA8x/CCtdrIUiVr5p1NsD6Y8+0f8opR11H8+ILfj/m7q8NKrc/y/+JiKrwchtw2xz
-         qVbDcHVYC6ugoTW3Bu0l4I84g0EkoJyKniBXIdiQwNHLQuNyTRdzNgaFkxpnhvZPwhYR
-         hPygVET2zKSerO0oSB5EvdxVR5o6FQcBqz08D6y4ON0f/125tAA6qD6MuUzTEM2F5ZgS
-         oDxlfpl6Bkqt0+hfPY/dTx/p3bVSf1e63/dDsh4l5VhLXt476/lLeCfUGTUsXjOn3NvH
-         D9Zw==
+        bh=OLEdaXjtX2QvHFSvAxOKprkBjwmITNNowmzF7dtiz/s=;
+        b=mQjz/15GRRq88EJYvE0kMHybmWXH8Xj60dhiU5eD9Rfk0AhEh0M7o+nfRndV3f+nYd
+         WF8dK4Bn6fmO+5rHWJhEwVHtZsTV0GHiTDAiJn7LeZXRamhfrcJWkelHRxC18mzJasG8
+         8+kH9GfE4DgRVTONcCxAZAstaX1EAEPdCCjAhRBD/qi5jKTsba2kZh6zShA2DzkxonvO
+         xoNJoU2AClEKAqOEa5gRCRrqISdUI5LJFoNrq5PXSDRQi+DGE0EygM5ofOGAeqk8juNL
+         Vk30bQT4JnEvODf2k6Il9U2G6Ed+7YkQaKoNeA3aBNMYY3Xs9Qd3s4Fs4qUoQOVpgwsP
+         PwRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=UECOqhVXTO4WTSf9+88d/gPF4iTL0TltzwoS0jurVoE=;
-        b=iVd4MfeIIhzVGR2xX+o4gdIxnIIh44wahhHd8ezHOTWGwy16tySChlCp563zX4Gp6E
-         HvmG689cb89D0d7hszcdjEG/jPUSP9Pwl8PJVdgvYXcMtTh5Hqdbbpu9gpm+9jHBPExw
-         0YAw8n8DTrXuWK8jJwY2TepH4SUwy5F9XuALEkoAN8T/BZDqvOgYG+cOpX8MZ+NYBBZk
-         Sz1hUvmp3WnkkeWW6I0CWVKg5d+T8O5WWRhnkGO4J7DNPJz8/SntFKLK7VChfX64tADK
-         L2VA/ptq1VfLG+HjTWyUbGLTMMyavLA69yDNKlyxo+df8KO8nRZ5B0j/rT+TH0l5Egtu
-         E7Ew==
-X-Gm-Message-State: ANhLgQ3TfSfAWwEPMGbXoLqxGdiStJ2wCXKT/Yl0TGTUUN0dZJJa3Wqk
-        t/lcQvMFsKNDLjjWXpnod8WOa0hCRZY=
-X-Google-Smtp-Source: ADFU+vud5NUiK1Xg7GRmepVK9v8BtqMIWNpQAcqBlzhe/pCplTvWGIegZBPVKCyD/aLw2elX5DXkaA==
-X-Received: by 2002:a5d:490e:: with SMTP id x14mr7253568wrq.58.1584553387588;
-        Wed, 18 Mar 2020 10:43:07 -0700 (PDT)
+        bh=OLEdaXjtX2QvHFSvAxOKprkBjwmITNNowmzF7dtiz/s=;
+        b=NzfVQC2BsthfNv7/zaJKVczFLB/RQyOuJ37YpzumkSVKeDq5y/E3dKBsLghImzQcRz
+         KAA99PxtYxJtZbKPFL0YsMxiPzm5gm611ITXJ9rUAM6hxp0Ue85OxxMylrwqCUfjqDHO
+         2lCAlGpIX7XVXeJZj1sSiEZoj5QdhmPH8FjY9wuH6fmXr7tfY09JJTJySQtkR3kVMC+D
+         vUCG1Y7sJKQj/IOyB+61DWjjleB+QMdHzG/TgWEGbidAp7iHyOucgU7X3dNHB7fos3HI
+         jpTMpO1BIe1eOn9doqeFOpksQEk1ypkZb54Wp7r4EcGxFalthmBLbHAWDdMaDk8RVy25
+         z+kA==
+X-Gm-Message-State: ANhLgQ1p70CgMvPsXxMTy4tuk7S7t3+EDKCw95Vm6qPq85QrDx///Xak
+        usDzsCLJGKnEcVhnqkn5pUfATQ==
+X-Google-Smtp-Source: ADFU+vtrXDCNxqZAb1paHCpQ+8ecsai5Blo9z2pHfrC1Pris7MF8wb9y6tQKc9tzR2XpIF3JHbEHag==
+X-Received: by 2002:a5d:6a8d:: with SMTP id s13mr6677670wru.11.1584553384489;
+        Wed, 18 Mar 2020 10:43:04 -0700 (PDT)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:5d64:ea6:49bd:69d7])
-        by smtp.gmail.com with ESMTPSA id r3sm3787212wrm.35.2020.03.18.10.43.06
+        by smtp.gmail.com with ESMTPSA id r3sm3787212wrm.35.2020.03.18.10.43.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 10:43:07 -0700 (PDT)
+        Wed, 18 Mar 2020 10:43:03 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org,
-        Saravana Kannan <saravanak@google.com>
-Subject: [PATCH 21/21] clocksource/drivers/timer-probe: Avoid creating dead devices
-Date:   Wed, 18 Mar 2020 18:41:31 +0100
-Message-Id: <20200318174131.20582-21-daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
+        / MXC ARM ARCHITECTURE)
+Subject: [PATCH 19/21] clocksource/drivers/imx-tpm: Remove unused includes
+Date:   Wed, 18 Mar 2020 18:41:29 +0100
+Message-Id: <20200318174131.20582-19-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200318174131.20582-1-daniel.lezcano@linaro.org>
 References: <e6cd8adf-60df-437a-003f-58e3403e4697@linaro.org>
@@ -71,39 +77,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-Timer initialization is done during early boot way before the driver
-core starts processing devices and drivers. Timers initialized during
-this early boot period don't really need or use a struct device.
+There is nothing in use from of_address.h/of_irq.h, remove them.
 
-However, for timers represented as device tree nodes, the struct devices
-are still created and sit around unused and wasting memory. This change
-avoid this by marking the device tree nodes as "populated" if the
-corresponding timer is successfully initialized.
-
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200111052125.238212-1-saravanak@google.com
+Link: https://lore.kernel.org/r/1584412549-18354-1-git-send-email-Anson.Huang@nxp.com
 ---
- drivers/clocksource/timer-probe.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clocksource/timer-imx-tpm.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
-index ee9574da53c0..a10f28d750a9 100644
---- a/drivers/clocksource/timer-probe.c
-+++ b/drivers/clocksource/timer-probe.c
-@@ -27,8 +27,10 @@ void __init timer_probe(void)
+diff --git a/drivers/clocksource/timer-imx-tpm.c b/drivers/clocksource/timer-imx-tpm.c
+index c1d52d5264c2..6334a35fdc2f 100644
+--- a/drivers/clocksource/timer-imx-tpm.c
++++ b/drivers/clocksource/timer-imx-tpm.c
+@@ -8,8 +8,6 @@
+ #include <linux/clocksource.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+-#include <linux/of_address.h>
+-#include <linux/of_irq.h>
+ #include <linux/sched_clock.h>
  
- 		init_func_ret = match->data;
- 
-+		of_node_set_flag(np, OF_POPULATED);
- 		ret = init_func_ret(np);
- 		if (ret) {
-+			of_node_clear_flag(np, OF_POPULATED);
- 			if (ret != -EPROBE_DEFER)
- 				pr_err("Failed to initialize '%pOF': %d\n", np,
- 				       ret);
+ #include "timer-of.h"
 -- 
 2.17.1
 
