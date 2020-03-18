@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E232C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C338AC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3FF120775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83CAB20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565470;
-	bh=1vIZZUIQ9NvBWPaWtYPGp4B+x2X5+UeS5d1aLHKvgDc=;
+	s=default; t=1584565479;
+	bh=8gWxQB1hy2Rs45/USgNRR4m1Ti7GPXXLLt/ZXidVBr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CisIvgjWotPtsTmXUXth7DqwlA4RiArRzjLzL/Yg8wPFS1XyWQ0LFXVY35BqgKI8O
-	 B17+Oj527QzQzNOq9OngmvQLh3J5LdQopTlMZeIxhpYsBPgXifIomkkncDNV/szLlL
-	 PGVU+JD2l5hTnlGrfAUURj09EgbR0ofO35ak8FGM=
+	b=OWsXF083dh9BnL76/x62nAo/Eq2xNDgM4D74kdTQuOoXUq+V17u3lc3j06uS2mvzM
+	 N2h/Zwsxqk3DPLVWgLDFcxmg77kLlZo8UeQqYh6OPDhWXnfDgYfLRrXcaYiPhnqUn8
+	 yvol4lhF875OaYkLOL0JB4Aameach9CCM2cBTUsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgCRVEZ (ORCPT
+        id S1728429AbgCRVEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:04:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55706 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:04:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728285AbgCRUzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:21 -0400
+        id S1728257AbgCRUzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 739AD208E4;
-        Wed, 18 Mar 2020 20:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDA5F208E4;
+        Wed, 18 Mar 2020 20:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564921;
-        bh=1vIZZUIQ9NvBWPaWtYPGp4B+x2X5+UeS5d1aLHKvgDc=;
+        s=default; t=1584564916;
+        bh=8gWxQB1hy2Rs45/USgNRR4m1Ti7GPXXLLt/ZXidVBr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QAbEjf06Y9SNwpieSZYIGHQwzp4hzCG333kV5z5PqM+DCedV2HIRolJiR3uZMyoR1
-         Calfkh0PlbGM1YHTiDynweeLdxDkiML1Lyt9MrVQUZswSZMXfhSbbe0YqZt21lROro
-         khoYBzVt33JXEAbQBSZlFMuqTL1RxVU1bkV1NGGs=
+        b=gPE6kgigtu1BukX5TZmv3drvh2TSwTekEpAwY/i9zB58kex8uVL9r1iQHiZ1/abrh
+         iGbs/2eDvY6xUZsCIKdQXZrUvB8bqT+CvaDiOfgZZ3IZg9T/kBEZXfH6Y9WDHZ7nS1
+         4TC1mCGE6uZA3e5EN/IQBNtCFfDC7+iFqsD2eI58=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Gilbert <floppym@gentoo.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/37] cpupower: avoid multiple definition with gcc -fno-common
-Date:   Wed, 18 Mar 2020 16:54:41 -0400
-Message-Id: <20200318205509.17053-9-sashal@kernel.org>
+Cc:     Scott Mayhew <smayhew@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/37] nfs: add minor version to nfs_server_key for fscache
+Date:   Wed, 18 Mar 2020 16:54:37 -0400
+Message-Id: <20200318205509.17053-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
@@ -59,88 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Gilbert <floppym@gentoo.org>
+From: Scott Mayhew <smayhew@redhat.com>
 
-[ Upstream commit 2de7fb60a4740135e03cf55c1982e393ccb87b6b ]
+[ Upstream commit 55dee1bc0d72877b99805e42e0205087e98b9edd ]
 
-Building cpupower with -fno-common in CFLAGS results in errors due to
-multiple definitions of the 'cpu_count' and 'start_time' variables.
+An NFS client that mounts multiple exports from the same NFS
+server with higher NFSv4 versions disabled (i.e. 4.2) and without
+forcing a specific NFS version results in fscache index cookie
+collisions and the following messages:
+[  570.004348] FS-Cache: Duplicate cookie detected
 
-./utils/idle_monitor/snb_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-multiple definition of `cpu_count';
-./utils/idle_monitor/nhm_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-first defined here
-...
-./utils/idle_monitor/cpuidle_sysfs.o:./utils/idle_monitor/cpuidle_sysfs.c:22:
-multiple definition of `start_time';
-./utils/idle_monitor/amd_fam14h_idle.o:./utils/idle_monitor/amd_fam14h_idle.c:85:
-first defined here
+Each nfs_client structure should have its own fscache index cookie,
+so add the minorversion to nfs_server_key.
 
-The -fno-common option will be enabled by default in GCC 10.
-
-Bug: https://bugs.gentoo.org/707462
-Signed-off-by: Mike Gilbert <floppym@gentoo.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=200145
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
- 4 files changed, 5 insertions(+), 3 deletions(-)
+ fs/nfs/client.c     | 1 +
+ fs/nfs/fscache.c    | 2 ++
+ fs/nfs/nfs4client.c | 1 -
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-index 2116df9ad8325..c097a3748674f 100644
---- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-@@ -83,7 +83,7 @@ static struct pci_access *pci_acc;
- static struct pci_dev *amd_fam14h_pci_dev;
- static int nbp1_entered;
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 0a2b59c1ecb3d..07c5ddd5d6d50 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -157,6 +157,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	if ((clp = kzalloc(sizeof(*clp), GFP_KERNEL)) == NULL)
+ 		goto error_0;
  
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
++	clp->cl_minorversion = cl_init->minorversion;
+ 	clp->cl_nfs_mod = cl_init->nfs_mod;
+ 	if (!try_module_get(clp->cl_nfs_mod->owner))
+ 		goto error_dealloc;
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index a7bc4e0494f92..6f45b1a957397 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -35,6 +35,7 @@ static DEFINE_SPINLOCK(nfs_fscache_keys_lock);
+ struct nfs_server_key {
+ 	struct {
+ 		uint16_t	nfsversion;		/* NFS protocol version */
++		uint32_t	minorversion;		/* NFSv4 minor version */
+ 		uint16_t	family;			/* address family */
+ 		__be16		port;			/* IP port */
+ 	} hdr;
+@@ -59,6 +60,7 @@ void nfs_fscache_get_client_cookie(struct nfs_client *clp)
  
- #ifdef DEBUG
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-index 5b8c4956ff9a1..85a8f0cc01a19 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-@@ -21,7 +21,7 @@ struct cpuidle_monitor cpuidle_sysfs_monitor;
+ 	memset(&key, 0, sizeof(key));
+ 	key.hdr.nfsversion = clp->rpc_ops->version;
++	key.hdr.minorversion = clp->cl_minorversion;
+ 	key.hdr.family = clp->cl_addr.ss_family;
  
- static unsigned long long **previous_count;
- static unsigned long long **current_count;
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
- 
- static int cpuidle_get_count_percent(unsigned int id, double *percent,
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-index 051da0a7c4548..4a27c55d50d80 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-@@ -29,6 +29,8 @@ struct cpuidle_monitor *all_monitors[] = {
- 0
- };
- 
-+int cpu_count;
-+
- static struct cpuidle_monitor *monitors[MONITORS_MAX];
- static unsigned int avail_monitors;
- 
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-index 2ae50b499e0a6..06b3cd6de0180 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-@@ -27,7 +27,7 @@
- #endif
- #define CSTATE_DESC_LEN 60
- 
--int cpu_count;
-+extern int cpu_count;
- 
- /* Hard to define the right names ...: */
- enum power_range_e {
+ 	switch (clp->cl_addr.ss_family) {
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 86991bcfbeb12..faaabbedc891d 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -210,7 +210,6 @@ struct nfs_client *nfs4_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	INIT_LIST_HEAD(&clp->cl_ds_clients);
+ 	rpc_init_wait_queue(&clp->cl_rpcwaitq, "NFS client");
+ 	clp->cl_state = 1 << NFS4CLNT_LEASE_EXPIRED;
+-	clp->cl_minorversion = cl_init->minorversion;
+ 	clp->cl_mvops = nfs_v4_minor_ops[cl_init->minorversion];
+ 	clp->cl_mig_gen = 1;
+ #if IS_ENABLED(CONFIG_NFS_V4_1)
 -- 
 2.20.1
 
