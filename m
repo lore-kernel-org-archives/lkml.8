@@ -2,153 +2,101 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27394C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E484C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A1920658
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8C920658
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="PmkHFgaj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bLFpCGM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbgCRQGD (ORCPT
+        id S1726974AbgCRQI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:06:03 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34023 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgCRQGD (ORCPT
+        Wed, 18 Mar 2020 12:08:26 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38267 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgCRQIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 12:06:03 -0400
-Received: by mail-il1-f194.google.com with SMTP id c8so24232124ilm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 09:06:02 -0700 (PDT)
+        Wed, 18 Mar 2020 12:08:25 -0400
+Received: by mail-wm1-f68.google.com with SMTP id l20so86916wmi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 09:08:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q+E6phefA0/UCxZU68Ee5CkdpY/LreXqfKusKthyp5I=;
-        b=PmkHFgajk2/8VWOHdYUg8VCj1tVopeX6fqfrGgYm0sPb35e5EoxUjxowANbaw3zCwS
-         wqDhItzeSSD2F4OzNelMLAyDUKSqRDkOzITlg+Hge+tWY5LhXczVM8GuM5pTiPEM5aFa
-         ut6OlQnzTW2CXrIbgEnOI63xRs4UIkIGUhynA=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TLgXmNozvDp9BcNHyqTO6GFcWWQD94IGFBX9Q7VenQE=;
+        b=bLFpCGM+/IwvHNaiAYAKTJ9y34pV6nWf2+rHEQSvy03mgzPEO4Eu2TClVo3U1ojGo+
+         MW2vMGAJ91RENQgmwvOOduFqC618kHgdsyCOl+mRbmpUE5s9R7O6jYJjlhDxSGveezrh
+         tDWD7PhBoKOyFK4YOJ9xCfHH8mOxbszaAOCnzvWfA6gjEw7EeD+F1vPbQ28qBxFlt0/G
+         zUMhM0AUHeD1bh29CBy3NgN9vMqxg7I2QtnzNw3LCgukbTeifMPqb1YktEryS5HVYhKq
+         rT9vp0Ern543LnaI71qAkkJ+va1joW7gaRYjSsKkXfaTRkS+PwGG51CV0MBTwJlsCr/W
+         60mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q+E6phefA0/UCxZU68Ee5CkdpY/LreXqfKusKthyp5I=;
-        b=jU3jfmZ4g96igpnahYBrLDjqCfPpKs/pBY7Px2v7v7THOSCAVaj1LmFqIqdbCBqt2U
-         wzCrCtySH0KDZ9sj4BdO/NU/o1GybX/VDWhspAkSG1b5GZ0kje96sf545D6i1rWjNvtF
-         6kTsprhfyDL8ptFyMuz2IF8xG4bKPpd/+K/aul12K83HtdWRDO01OGuX2CSMol6Oz7Wn
-         l/M2hPJFNw0Q2FOfIYe2+IR06uRVTLyzNMaU1YWOsO2sysmS7TXzgQ3FmWYbUn/zio5C
-         zZLXrmK9p9N8t5eU84Tz4X0DG/DmGXuLfZtOrlWUYSGrJiK7n84zi7YSJrLHlgNi3EXr
-         Mpyw==
-X-Gm-Message-State: ANhLgQ31dr1cO+WBxKqNrTdIfMT4lzn71iC1lH2E4Tqlc/AnsjvRV4RK
-        GRE86vEu1dVHN3Z93Rs9ue8iII4C1Pxub0qCKRKr8Q==
-X-Google-Smtp-Source: ADFU+vseuj9ZXYFeMbS3X+5vGmRRSiZoxImF5rzfLQFjQscZDtBKPWLdRkROYV3TZYIAEV5wBxQF2hmZ0LlipmXRNY0=
-X-Received: by 2002:a92:5d52:: with SMTP id r79mr4664957ilb.212.1584547562099;
- Wed, 18 Mar 2020 09:06:02 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TLgXmNozvDp9BcNHyqTO6GFcWWQD94IGFBX9Q7VenQE=;
+        b=UyDfX/BeWFtJLcThKlXOJteM56ARFwfbK+I7BOthFqaAPvrTLN0Wv/GrZPSWKIS0Gk
+         tzT1NapL6UP0/nXCqH9de1Wp7S5oSp9TKnVSmrZsC54pAaM6FXqblvoNFw5VJ6qVfdyO
+         GcA0M4xi1wz8bisRCs23hLhukZpOjP5RL+yeF194aMJUsIUxBWrrXY7/PxWvNNZ8y6Nm
+         xlzdT3OqoBMwwzcNtxMULeF9i6EBC6/dXnK55zmzKZzZJo4ZzEJUaoQ9jntvkTEWjfA+
+         xwPt35t8yNmjOjnrpocIMrcxAdK26O9ylwj6Hy4Tx4hRZqALx8mW/I1vgQ6/Qz8A7bDO
+         F7nQ==
+X-Gm-Message-State: ANhLgQ1JdnO21VKzVJAVWlUaHFSYudbiNIwEUZIIElEDH80m3RTaouXP
+        8VfYYgLALF2NG2u1H2Zo6sofXw==
+X-Google-Smtp-Source: ADFU+vvOdrwm8NfsU9nb+Of9vMTUcgCmMgH1jK1yv5xSj4hnbY+LMIdHBHrDjM0VqevCarsbfAiXEA==
+X-Received: by 2002:a1c:b154:: with SMTP id a81mr5935380wmf.175.1584547703944;
+        Wed, 18 Mar 2020 09:08:23 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id h16sm9957414wrr.48.2020.03.18.09.08.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Mar 2020 09:08:21 -0700 (PDT)
+Subject: Re: [PATCH v5 1/1] nvmem: Add support for write-only instances
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <PSXP216MB0438D2F2D9B648BAF9A007A580F70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <1057389f-2bd0-909c-93c9-21a12af90660@linaro.org>
+Date:   Wed, 18 Mar 2020 16:08:20 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 18 Mar 2020 17:05:50 +0100
-Message-ID: <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com>
-Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Ian Kent <raven@themaw.net>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <PSXP216MB0438D2F2D9B648BAF9A007A580F70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 4:08 PM David Howells <dhowells@redhat.com> wrote:
 
-> ============================
-> WHY NOT USE PROCFS OR SYSFS?
-> ============================
->
-> Why is it better to go with a new system call rather than adding more magic
-> stuff to /proc or /sysfs for each superblock object and each mount object?
->
->  (1) It can be targetted.  It makes it easy to query directly by path.
->      procfs and sysfs cannot do this easily.
->
->  (2) It's more efficient as we can return specific binary data rather than
->      making huge text dumps.  Granted, sysfs and procfs could present the
->      same data, though as lots of little files which have to be
->      individually opened, read, closed and parsed.
 
-Asked this a number of times, but you haven't answered yet:  what
-application would require such a high efficiency?
+On 18/03/2020 15:20, Nicholas Johnson wrote:
+> There is at least one real-world use-case for write-only nvmem
+> instances. Refer to 03cd45d2e219 ("thunderbolt: Prevent crash if
+> non-active NVMem file is read").
+> 
+> Add support for write-only nvmem instances by adding attrs for 0200.
+> 
+> Change nvmem_register() to abort if NULL group is returned from
+> nvmem_sysfs_get_groups().
+> 
+> Return NULL from nvmem_sysfs_get_groups() in invalid cases.
+> 
+> Signed-off-by: Nicholas Johnson<nicholas.johnson-opensource@outlook.com.au>
+> ---
+>   drivers/nvmem/core.c        | 10 +++++--
+>   drivers/nvmem/nvmem-sysfs.c | 56 +++++++++++++++++++++++++++++++------
+>   2 files changed, 56 insertions(+), 10 deletions(-)
 
-Nobody's suggesting we move stat(2) to proc interfaces, and AFAIK
-nobody suggested we move /proc/PID/* to a binary syscall interface.
-Each one has its place, and I strongly feel that mount info belongs in
-the latter category.    Feel free to prove the opposite.
+Applied thanks,
 
->  (3) We wouldn't have the overhead of open and close (even adding a
->      self-contained readfile() syscall has to do that internally
-
-Busted: add f_op->readfile() and be done with all that.   For example
-DEFINE_SHOW_ATTRIBUTE() could be trivially moved to that interface.
-
-We could optimize existing proc, sys, etc. interfaces, but it's not
-been an issue, apparently.
-
->
->  (4) Opening a file in procfs or sysfs has a pathwalk overhead for each
->      file accessed.  We can use an integer attribute ID instead (yes, this
->      is similar to ioctl) - but could also use a string ID if that is
->      preferred.
->
->  (5) Can easily query cross-namespace if, say, a container manager process
->      is given an fs_context that hasn't yet been mounted into a namespace -
->      or hasn't even been fully created yet.
-
-Works with my patch.
-
->  (6) Don't have to create/delete a bunch of sysfs/procfs nodes each time a
->      mount happens or is removed - and since systemd makes much use of
->      mount namespaces and mount propagation, this will create a lot of
->      nodes.
-
-Not true.
-
-> The argument for doing this through procfs/sysfs/somemagicfs is that
-> someone using a shell can just query the magic files using ordinary text
-> tools, such as cat - and that has merit - but it doesn't solve the
-> query-by-pathname problem.
->
-> The suggested way around the query-by-pathname problem is to open the
-> target file O_PATH and then look in a magic directory under procfs
-> corresponding to the fd number to see a set of attribute files[*] laid out.
-> Bash, however, can't open by O_PATH or O_NOFOLLOW as things stand...
-
-Bash doesn't have fsinfo(2) either, so that's not really a good argument.
-
-Implementing a utility to show mount attribute(s) by path is trivial
-for the file based interface, while it would need to be updated for
-each extension of fsinfo(2).   Same goes for libc, language bindings,
-etc.
-
-Thanks,
-Miklos
+--srini
