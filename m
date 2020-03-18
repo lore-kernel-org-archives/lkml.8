@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D559C43332
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9154BC4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46AF320777
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AAC820777
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565294;
-	bh=GToXniXT+TcobdymTSjFYMLoF1tRlgZ/NIKKH8vjf6Y=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=wdKME/DUEXYrCCy5sgs5ScWAXRIV1JSo9z3mNHICsuW0jxwSNwmqQCm9HiBq/NPBb
-	 6Y47oAu9y1f4fAPg5667b8V8D84MxA7KVgZsfYu8uiGS3Y+2VWhntmOlanpcWQfVmj
-	 zvT4rJrxAg5vUU4/Of0V62HSxwW+sXKYfH+XLgVo=
+	s=default; t=1584565298;
+	bh=I41Sg0VH3MhQ8yN+hre0/s5r5x55aDp8n7eIk54CK5g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KG6wIefnO/IWzZUFgaBbu/hIMAXD+N9jWwtO/AuHOCUC9VbNXNptSOD3VnY9QmG86
+	 0NDf67mlILYWHZbGDJn3qz9qDVq5g1swDu3KCVJdKDdONSUdAxj7+HsPAnwgSQZHho
+	 c+Fz5eqNipjwvYFIfJWotLKRPKcpgkynOaydfjdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbgCRU4N (ORCPT
+        id S1728843AbgCRVBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:56:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56616 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:01:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728489AbgCRUz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:57 -0400
+        id S1728550AbgCRU4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 576C1208CA;
-        Wed, 18 Mar 2020 20:55:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78BD6208E4;
+        Wed, 18 Mar 2020 20:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564957;
-        bh=GToXniXT+TcobdymTSjFYMLoF1tRlgZ/NIKKH8vjf6Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XKZoGftecBNgUhOdAsYMtfKnX+t4kYXsYHxdGXHIKmgFZKnmTjeLRy/mlE481dw9A
-         xc1lXtRBCklHCIdq4UlaIfigDy2Boe7rOGjaYj1cQs1632jU70pk5PoZ785lCciaDF
-         j+3PwLkpvpdP7TwanRKwYHMVAsCYq6DgUgOlINLo=
+        s=default; t=1584564972;
+        bh=I41Sg0VH3MhQ8yN+hre0/s5r5x55aDp8n7eIk54CK5g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZKcqu68YkTDmNVD9ND5YStTSlt5CY210v723K3ic1bSIlvH/w7PqUPKzVDbulmAyj
+         19kCiTeFBgyK1/5ELeA3XH13GAagN6XKK6q4ebTsz1ZGVtlTJtsWy+EVO2UYdDGnvv
+         VQzzG101XabGbJd3nHGLiuW5BCZMWNOyBSRrwRJM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/28] cgroup-v1: cgroup_pidlist_next should update position index
-Date:   Wed, 18 Mar 2020 16:55:28 -0400
-Message-Id: <20200318205555.17447-1-sashal@kernel.org>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 14/28] netfilter: nft_payload: add missing attribute validation for payload csum flags
+Date:   Wed, 18 Mar 2020 16:55:41 -0400
+Message-Id: <20200318205555.17447-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
+References: <20200318205555.17447-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,58 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit db8dd9697238be70a6b4f9d0284cd89f59c0e070 ]
+[ Upstream commit 9d6effb2f1523eb84516e44213c00f2fd9e6afff ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+Add missing attribute validation for NFTA_PAYLOAD_CSUM_FLAGS
+to the netlink policy.
 
- # mount | grep cgroup
- # dd if=/mnt/cgroup.procs bs=1  # normal output
-...
-1294
-1295
-1296
-1304
-1382
-584+0 records in
-584+0 records out
-584 bytes copied
-
-dd: /mnt/cgroup.procs: cannot skip to specified offset
-83  <<< generates end of last line
-1383  <<< ... and whole last line once again
-0+1 records in
-0+1 records out
-8 bytes copied
-
-dd: /mnt/cgroup.procs: cannot skip to specified offset
-1386  <<< generates last line anyway
-0+1 records in
-0+1 records out
-5 bytes copied
-
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 1814096980bb ("netfilter: nft_payload: layer 4 checksum adjustment for pseudoheader fields")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cgroup/cgroup-v1.c | 1 +
+ net/netfilter/nft_payload.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index a2c05d2476ac5..d148965180893 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -501,6 +501,7 @@ static void *cgroup_pidlist_next(struct seq_file *s, void *v, loff_t *pos)
- 	 */
- 	p++;
- 	if (p >= end) {
-+		(*pos)++;
- 		return NULL;
- 	} else {
- 		*pos = *p;
+diff --git a/net/netfilter/nft_payload.c b/net/netfilter/nft_payload.c
+index e110b0ebbf58b..19446a89a2a81 100644
+--- a/net/netfilter/nft_payload.c
++++ b/net/netfilter/nft_payload.c
+@@ -121,6 +121,7 @@ static const struct nla_policy nft_payload_policy[NFTA_PAYLOAD_MAX + 1] = {
+ 	[NFTA_PAYLOAD_LEN]		= { .type = NLA_U32 },
+ 	[NFTA_PAYLOAD_CSUM_TYPE]	= { .type = NLA_U32 },
+ 	[NFTA_PAYLOAD_CSUM_OFFSET]	= { .type = NLA_U32 },
++	[NFTA_PAYLOAD_CSUM_FLAGS]	= { .type = NLA_U32 },
+ };
+ 
+ static int nft_payload_init(const struct nft_ctx *ctx,
 -- 
 2.20.1
 
