@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27342C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E35C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D9D20777
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA2620777
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565683;
-	bh=+3PT5ixSSczOWYJFYGUU1q4HgAMEEfKeUtxBoxFqb20=;
+	s=default; t=1584565691;
+	bh=QJg5dbPMMfu3F11UcTFkO03F2cyBYQMHfMbgC//ejzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AoEQK6D+VRdigotELKDMvosXzFeGCq5MHAFjPGVBAYg1dYNkNNbbO70uy7DPjvjL/
-	 5pKGMr0QC5J+JKD/nnLCbfm3YG2YUuX6msJ+jMu00zwxJrB5kXdbN5Ha0Di2aqUDzh
-	 GZ69I8EmGyYrxfEqRxMjBB/kPpVWKkRAsjgI1izw=
+	b=fu/PjX2V+AY0bFInmVXkpKr6WwVQSSInNyRKs2ovqIaNLOMzm+4r54ksK5iJKnsCm
+	 96luHw+KHTEIEqdEdb5QpU1jTcE9MIoEE2OyrZqFaPDYt1JiMoLodCeDGQXn1n0qL7
+	 8KkEYnT9EDVCyXMoHbOBI94+E4g60cmnGg/c8zNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgCRVIB (ORCPT
+        id S1728252AbgCRVIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:08:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53544 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727536AbgCRUyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:54:09 -0400
+        id S1727542AbgCRUyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D27292098B;
-        Wed, 18 Mar 2020 20:54:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83F1A20724;
+        Wed, 18 Mar 2020 20:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564848;
-        bh=+3PT5ixSSczOWYJFYGUU1q4HgAMEEfKeUtxBoxFqb20=;
+        s=default; t=1584564846;
+        bh=QJg5dbPMMfu3F11UcTFkO03F2cyBYQMHfMbgC//ejzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UknWaNHzdJBWeiPr8MQFiRXhbaHfEIerLhru2B1ZJvKAt5zNC9v13B7nqbJ5SiGvq
-         OUWCnMVudzpiOrOi9bP9r1B1gNG1u/VXq8Vhqq37+wGXmgj3DBeFEf/sCO+8OfyIMU
-         dGfFtMBAQpmY2M4UFLLeats0u5ZAHQVSKZwV73BY=
+        b=qle7w/cQGeSrdsEzBm/Flc5VE0zOgCE6R26GrhqAhoyEGoawMEsCyghHlrinI2ObG
+         t7xnUTH+1smGOsMLByNQGKx/3RkQ04fxeapp1cuuO69zCuXsfAkAQEpIqyev4gLrLx
+         KpesF3pJlb3t51M8LDZ/CHgEkis87wujTl4Wvka8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 26/73] netfilter: nf_tables: dump NFTA_CHAIN_FLAGS attribute
-Date:   Wed, 18 Mar 2020 16:52:50 -0400
-Message-Id: <20200318205337.16279-26-sashal@kernel.org>
+Cc:     Dajun Jin <adajunjin@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 24/73] drivers/of/of_mdio.c:fix of_mdiobus_register()
+Date:   Wed, 18 Mar 2020 16:52:48 -0400
+Message-Id: <20200318205337.16279-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -60,36 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Dajun Jin <adajunjin@gmail.com>
 
-[ Upstream commit d78008de6103c708171baff9650a7862645d23b0 ]
+[ Upstream commit 209c65b61d94344522c41a83cd6ce51aac5fd0a4 ]
 
-Missing NFTA_CHAIN_FLAGS netlink attribute when dumping basechain
-definitions.
+When registers a phy_device successful, should terminate the loop
+or the phy_device would be registered in other addr. If there are
+multiple PHYs without reg properties, it will go wrong.
 
-Fixes: c9626a2cbdb2 ("netfilter: nf_tables: add hardware offload support")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Dajun Jin <adajunjin@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/of/of_mdio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 23544842b6923..bd76ef77c03f5 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -1309,6 +1309,11 @@ static int nf_tables_fill_chain_info(struct sk_buff *skb, struct net *net,
- 					      lockdep_commit_lock_is_held(net));
- 		if (nft_dump_stats(skb, stats))
- 			goto nla_put_failure;
-+
-+		if ((chain->flags & NFT_CHAIN_HW_OFFLOAD) &&
-+		    nla_put_be32(skb, NFTA_CHAIN_FLAGS,
-+				 htonl(NFT_CHAIN_HW_OFFLOAD)))
-+			goto nla_put_failure;
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index bd6129db64178..c34a6df712adb 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -268,6 +268,7 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 				rc = of_mdiobus_register_phy(mdio, child, addr);
+ 				if (rc && rc != -ENODEV)
+ 					goto unregister;
++				break;
+ 			}
+ 		}
  	}
- 
- 	if (nla_put_be32(skb, NFTA_CHAIN_USE, htonl(chain->use)))
 -- 
 2.20.1
 
