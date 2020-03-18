@@ -2,109 +2,114 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6ADC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E141C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 676382071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5C22071C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="AU7eU4/3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XvXbUDKc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgCRRK1 (ORCPT
+        id S1726822AbgCRRLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:10:27 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:51702 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727092AbgCRRKZ (ORCPT
+        Wed, 18 Mar 2020 13:11:36 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:31697 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726619AbgCRRLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:10:25 -0400
-Received: by mail-pj1-f68.google.com with SMTP id hg10so1615955pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kzfdHSO2Eg/pCLBb9aj78kXEmbZ2vEcI/EKrPZigKxI=;
-        b=AU7eU4/3E2gmDQx59Lfw1/ryh1dsM3Kf2E6dy+bDEQvBh8/uU7w/X6bF4fznHSSASt
-         i9a1E9VmxE4DYH7eZKZ0cxcueWHrdKoa6z4ILBjN9BKMuZXFt/w8pxYRqIvTyG4YVPAA
-         9bbZIYZI2dDr7gbfsEXq5e4y4RoyIeJP3JSjo=
+        Wed, 18 Mar 2020 13:11:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584551494;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vzqv9I5Sh/5ugsjV1X2H8uxVVaA/U2JrzTHi1Jlr7RM=;
+        b=XvXbUDKc51v2LavXQLKC5ekDS5+QKhwvgzY6vxxUrZLKXhY5y1pcG8+VHwGqfON02S3WBn
+        LDhaO7GE7l0iEn4UDFDD5ga8XrkJr1vATvIlOAbSU0sY/JuDOW+rm1d4h9PCeLDaKr0SDT
+        Z+Fjp2LORzd++JUuUVMgQ+SxfztiYn0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-248-DY50MLRHN1qzGW8jSI0S0w-1; Wed, 18 Mar 2020 13:11:33 -0400
+X-MC-Unique: DY50MLRHN1qzGW8jSI0S0w-1
+Received: by mail-wm1-f72.google.com with SMTP id f9so1324193wme.7
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:11:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=kzfdHSO2Eg/pCLBb9aj78kXEmbZ2vEcI/EKrPZigKxI=;
-        b=ti4POv3D1mI6sO0Wdbs3I+s94KgWEfcIaksKRzciuOmUbe4627cbqJAOPvOUFPjrw/
-         QJ4uZtbuxAcqFw/z0d2/L+zOZjE7SrkPXsdT2ZphbvC+4MsOeZY3ydRnDJv2EVt5dA9S
-         25soUCc6ahkBEr+NBVDWHqhrdFNGPdBt/F+6Ct7YcsaIhtpOU3p4OFUpPic81N7r3zb3
-         xKm2DlCFt3c60AOAEhP3rh5I/sRg4Sk3R1sgRnTEm2H/GPxZ3UBePNbODHZihuVL/D3D
-         mzNB2mU+Qv+8zon2KqGKvCtgmuJurA9KIJXhIcOzSEeXX2hzG3Ia7WUpZ5IZ9a8j23Ci
-         sCJw==
-X-Gm-Message-State: ANhLgQ3qsRST/ZbFsojf+fuXry2z1d2VqjMLmqFKFnbXmz2WCTsZdeuL
-        dG7giZJmlmTM8ELqBNpg5m+RQw==
-X-Google-Smtp-Source: ADFU+vtu5mYYKn1aoaSPcvAoMeeiGoWtv0NZSu62f5Smu2NArdKXK3KRad7e8p6T+qn3WvIFv3X1nA==
-X-Received: by 2002:a17:90a:26ed:: with SMTP id m100mr5599112pje.130.1584551424263;
-        Wed, 18 Mar 2020 10:10:24 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:1998:878c:c26e:b8be])
-        by smtp.gmail.com with ESMTPSA id e6sm6443869pgu.44.2020.03.18.10.10.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 10:10:23 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 3/3] MAINTAINERS: Update feiyang, st7701 panel bindings converted as YAML
-Date:   Wed, 18 Mar 2020 22:40:03 +0530
-Message-Id: <20200318171003.5179-3-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200318171003.5179-1-jagan@amarulasolutions.com>
-References: <20200318171003.5179-1-jagan@amarulasolutions.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vzqv9I5Sh/5ugsjV1X2H8uxVVaA/U2JrzTHi1Jlr7RM=;
+        b=ren7SXlC1Fm2w8xCwMXbpQcmu71ekRXjLj7n2n3FtmB0CI8Ec2plY1Hyvbux+8Vct4
+         mf0KGPwROuVHtbBU6tCbxRIJkqg3CmiROpVIw9l+4ILrD/OEum6MdeFH4H5UcjM1Ov8O
+         BnSU1i0BLyJXs10oOZfpk57o4pfKk4xeOXYzkRXvfBSn7cPtsqjkEr7dr2VDGhh9bXGD
+         FvTcH4wiINbqzJ2cAguT3vE5LZTaOdEmVAQPSr+doBlKKEBiBhK9hjF+72Wh9Z7jrpxP
+         Suv0mmIrg0Dmvj8889jDhDpBcbpeKxNgEFkF5MLk6aGCl11LxdB7SJIW0aUJvkQgwEKI
+         MGJQ==
+X-Gm-Message-State: ANhLgQ1Caoux58Y7iCsvcTtaLESzhbEzym0fDXhNWPfXGEEYflAIEZma
+        vPlAZDM3X+OBWi9rKh7SBb/lyMxUtw+gH9XP5PGGHAe4sxhrP/Dj1bqbtQ6LHIvQbmWMPTsAPpP
+        D7EEtW3ts4pCpPYoTXbu6I1A0
+X-Received: by 2002:adf:a54a:: with SMTP id j10mr6885892wrb.188.1584551492179;
+        Wed, 18 Mar 2020 10:11:32 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vt9u608gYRp7tO/knBR6K2ZgiFKLlyGeKIepNlMrVma8HthryXIRHihp1d398V+IzLI8vt48w==
+X-Received: by 2002:adf:a54a:: with SMTP id j10mr6885860wrb.188.1584551491921;
+        Wed, 18 Mar 2020 10:11:31 -0700 (PDT)
+Received: from [192.168.178.58] ([151.21.15.43])
+        by smtp.gmail.com with ESMTPSA id l18sm10187921wrr.17.2020.03.18.10.11.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Mar 2020 10:11:31 -0700 (PDT)
+Subject: Re: [PATCH v2 31/32] KVM: nVMX: Don't flush TLB on nested VM
+ transition with EPT enabled
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        John Haxby <john.haxby@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
+ <20200317045238.30434-32-sean.j.christopherson@intel.com>
+ <97f91b27-65ac-9187-6b60-184e1562d228@redhat.com>
+ <20200317182251.GD12959@linux.intel.com>
+ <218d4dbd-20f1-5bf8-ca44-c53dd9345dab@redhat.com>
+ <20200318170241.GJ24357@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <3c3a4d9b-b213-dfc0-2857-a975e9c20770@redhat.com>
+Date:   Wed, 18 Mar 2020 18:11:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200318170241.GJ24357@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The feiyang,fy07024di26a30d.txt and sitronix,st7701.txt has been
-converted to YAML schemas, update MAINTAINERS to match them again.
+On 18/03/20 18:02, Sean Christopherson wrote:
+> So something like this?
+> 
+> 	if (!nested_ept)
+> 		kvm_mmu_new_cr3(vcpu, cr3, enable_ept ||
+> 					   nested_cpu_has_vpid(vmcs12));
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v2:
-- none
+... which is exactly nested_has_guest_tlb_tag(vcpu).  Well, not exactly
+but it's a bug in your code above. :)
 
- MAINTAINERS | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It completely makes sense to use that as the third argument, and while a
+comment is still needed it will be much smaller.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6ba8b584bf95..b987f2588e6a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5273,7 +5273,7 @@ DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
- M:	Jagan Teki <jagan@amarulasolutions.com>
- S:	Maintained
- F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
--F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
-+F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
- 
- DRM DRIVER FOR GRAIN MEDIA GM12U320 PROJECTORS
- M:	Hans de Goede <hdegoede@redhat.com>
-@@ -5416,7 +5416,7 @@ DRM DRIVER FOR SITRONIX ST7701 PANELS
- M:	Jagan Teki <jagan@amarulasolutions.com>
- S:	Maintained
- F:	drivers/gpu/drm/panel/panel-sitronix-st7701.c
--F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
-+F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
- 
- DRM DRIVER FOR SITRONIX ST7586 PANELS
- M:	David Lechner <david@lechnology.com>
--- 
-2.17.1
+Paolo
 
