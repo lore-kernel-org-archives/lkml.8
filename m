@@ -2,172 +2,269 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04EAC5ACD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2534C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBE82076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:48:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="iBdzVVXy"
+	by mail.kernel.org (Postfix) with ESMTP id B408B2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgCRLsv (ORCPT
+        id S1726847AbgCRLt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:48:51 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:54977 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726586AbgCRLsu (ORCPT
+        Wed, 18 Mar 2020 07:49:59 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33312 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgCRLt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:48:50 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id EXBkjlhXZfHuvEXBnjap5t; Wed, 18 Mar 2020 12:48:48 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1584532128; bh=khEp2I8LHm4HvDGtASxAHrHxJnhSF2yTyhJnoLBOGY4=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=iBdzVVXyhBP2nEUkOIPTZIiBjqoW5rADs11fygjelrCdLqvO6Cfk0nxMrfyDix/Tw
-         OHhOFr71S0sX6aE7kmemwv+pucArj/R6afCPEMybC+qMo8ucl/lxVgFRdDxMBfrPTr
-         i2FTj6qpDHdu6onnD07bEMVYyGMcYItJzNnCnoW9cY4k1bPlzzzh292J/MRV4S4jW2
-         SePonrJlg+tr6DhZZwdE/oujGLdGlxPBQQDeIYh1ypMUDObrcceGMWxmvK6QRd+FJt
-         cLyDH0Cu8eXOWhDC2Po7LYgRe/BQZ7vgApLxlXl46Dsv67NT8vuBA+VSCCgUcjXSE3
-         TzTdUIehjBNmg==
-Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        helen.koike@collabora.com, sboyd@kernel.org
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
- <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
- <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
- <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
- <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <5f54c018-5670-8193-7c68-969f9bde92f6@xs4all.nl>
-Date:   Wed, 18 Mar 2020 12:48:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 07:49:58 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f13so26673169ljp.0;
+        Wed, 18 Mar 2020 04:49:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FSX2KRPkbn5W9dakUVXlf3UmUaijxOrOQb/z1feN3Bo=;
+        b=nWDAiMVfDfHUBmRiSWoLV4DSc6MEgfZOL9gxo2GDglrxe2oRIFqd5y3wogyIlDSXWj
+         N4f9o55ysIL1v9SV0EHJbL+5Ig+2Cm/jUDCQ1RK40Di1vc2e5C/e/zW/0VLjy393zyjR
+         6G6VFdUjASpl3nmDo05Ky8G3oseXX/I++Zlhe0pUn3is7qkfv5KfxfqDvT6rFsf1aGUo
+         //D74tnyV1CIvPvVHNqIDkfXe8rdhu4EBoor/1s8JkLuOg8JuwLpiayJvuSJ+MQmQ9Kc
+         dGzACCDfAjebMG1E8SsqGt1npExqu+HmNuTl+jOS8zuISblrYzNHZUA9S42x/6UkbRMN
+         B6hg==
+X-Gm-Message-State: ANhLgQ0wDDqKD+WGWBpf4Ofkx3GEd9k6SSjP8M/JJo8VFLOjkTygRqYW
+        od3PypW56SNc/zQ7SDgE7Jg=
+X-Google-Smtp-Source: ADFU+vvYIRL1AoNCriE04/mFuYGDD1Z1+Cwqn+6pE+NpLNPDlUhAaQmy2avH0K4yozo+FWxO1hGlWA==
+X-Received: by 2002:a2e:151e:: with SMTP id s30mr2261463ljd.92.1584532195328;
+        Wed, 18 Mar 2020 04:49:55 -0700 (PDT)
+Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
+        by smtp.gmail.com with ESMTPSA id u1sm847992lju.95.2020.03.18.04.49.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 04:49:54 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 13:49:47 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+Subject: [PATCH v5 2/9] dt_bindings: ROHM BD99954 Charger
+Message-ID: <a697e85a2c21758e00a28ca64b6e55ff7fb2f7d0.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfNwp9oXmpvDLlU0y6yBiCGF+VBdilY6z9Cy/qdkxPcn40eWB/r6e9Te3ZFqwW+zTWphUslj27araajeEl8ItMcVphxVvmx1wOq4tJ77CiNTBKx/fCA9i
- tSRmFih2blN9n/2QWo2mKp6V+5uPegrVxr1k4/Xk2YNsZo3j8qn2EKGuoMUQkR9n1pqkbK+/45VI0fmfqVsqV5WYX9ZGdTVsbprlUS29sQzOqbjscRnE1rxf
- 0zTUZ556r9bxBGOEcnB//sy7dMF2Hde+ysTYNkl64I5t/S+3BmTpIPKDhTH2tWiYgx5BO6lkA3JSOOWVMu1cOtvSQo9IHEcXYFZKytgpzFxKJLoqjhu+4QNu
- TtsbR8Fm/pJbeLaPq1d3vdYZHKoPESD4eRiG1/9Bs/7zVLo4vibLr5x60bARuEe/M+aTyk0zwKm2oOm+9JTey4lC/R36GwU6lxN6nwFmi9CiVzqekAtPdZ7z
- H79/19gQ3cLu0Xopm3k9l187ks9LfJP006rO9SPx9WQ/J4W1D11EPk3NKB/MxL9z6S1611rFy0aiqMgJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/24/20 5:45 AM, Sowjanya Komatineni wrote:
-> 
-> On 2/20/20 11:11 AM, Sowjanya Komatineni wrote:
->>
->> On 2/20/20 5:33 AM, Hans Verkuil wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> (Replying to myself so I can explain this a bit more)
->>>
->>> On 2/20/20 1:44 PM, Hans Verkuil wrote:
->>>>> +
->>>>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
->>>>> +{
->>>>> +    struct device_node *node = csi->dev->of_node;
->>>>> +    unsigned int port_num;
->>>>> +    int ret;
->>>>> +    struct tegra_csi_channel *item;
->>>>> +    unsigned int tpg_channels = csi->soc->csi_max_channels;
->>>>> +
->>>>> +    /* allocate CSI channel for each CSI x2 ports */
->>>>> +    for (port_num = 0; port_num < tpg_channels; port_num++) {
->>>>> +            item = devm_kzalloc(csi->dev, sizeof(*item), GFP_KERNEL);
->>>> Using devm_*alloc can be dangerous. If someone unbinds the driver, then
->>>> all memory allocated with devm_ is immediately freed. But if an 
->>>> application
->>>> still has a filehandle open, then when it closes it it might still 
->>>> reference
->>>> this already-freed memory.
->>>>
->>>> I recommend that you avoid using devm_*alloc for media drivers.
->>> A good test is to unbind & bind the driver:
->>>
->>> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
->>> echo -n 54080000.vi >unbind
->>> echo -n 54080000.vi >bind
->>>
->>> First just do this without the driver being used. That already
->>> gives me 'list_del corruption' kernel messages (list debugging
->>> is turned on in my kernel).
-> 
-> Will fix in v4 to use kzalloc and also proper release v4l2 to make sure 
-> unbind/bind works properly.
-> 
-> BTW, tegra vi and csi are registered as clients to host1x video driver.
-> 
-> So, unbind and bind should be done with host1x video driver "tegra-video"
-> 
-> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
-> echo -n tegra-video > unbind
-> echo -n tegra-video > bind
+The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
+secondary battery. Intended to be used in space-constraint equipment such
+as Low profile Notebook PC, Tablets and other applications. BD99954
+provides a Dual-source Battery Charger, two port BC1.2 detection and a
+Battery Monitor.
 
-This still crashes with v4, at least if I am streaming with v4l2-ctl --stream-mmap.
-Is that known?
+Document the DT bindings for BD99954
 
-It's not a big deal at this moment, just want to know if this will be looked
-at later.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
 
-Regards,
 
-	Hans
+Changes since v4:
+ - change compatible name and file name accordingly
+ - Fix the title
 
-> 
->>>
->>> Note that this first test is basically identical to a rmmod/modprobe
->>> of the driver. But when I compiled the driver as a module it didn't
->>> create any video device nodes! Nor did I see any errors in the kernel
->>> log. I didn't pursue this, and perhaps I did something wrong, but it's
->>> worth taking a look at.
->>>
->>> The next step would be to have a video node open with:
->>>
->>> v4l2-ctl --sleep 10
->>>
->>> then while it is sleeping unbind the driver and see what happens
->>> when v4l2-ctl exits.
->>>
->>> Worst case is when you are streaming:
->>>
->>> v4l2-ctl --stream-mmap
->>>
->>> and then unbind.
->>>
->>> In general, the best way to get this to work correctly is:
->>>
->>> 1) don't use devm_*alloc
->>> 2) set the release callback of struct v4l2_device and do all freeing 
->>> there.
->>> 3) in the platform remove() callback you call media_device_unregister()
->>>     and video_unregister_device().
->> Reg 3, in current patch, media_device_unregister is called in 
->> host1x_video_remove
->> video_unregister_device happens during host1x_video_remove -> 
->> host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
->>
->>> It's worth getting this right in this early stage, rather than fixing it
->>> in the future.
->>>
->>> Regards,
->>>
->>>          Hans
 
+
+ .../bindings/power/supply/rohm,bd99954.yaml   | 155 ++++++++++++++++++
+ 1 file changed, 155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
+
+diff --git a/Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml b/Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
+new file mode 100644
+index 000000000000..7e0f73a898c7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/rohm,bd99954.yaml
+@@ -0,0 +1,155 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/supply/rohm,bd99954.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD99954 Battery charger
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++  - Markus Laine <markus.laine@fi.rohmeurope.com>
++  - Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
++
++description: |
++  The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
++  secondary battery intended to be used in space-constraint equipment such
++  as Low profile Notebook PC, Tablets and other applications. BD99954
++  provides a Dual-source Battery Charger, two port BC1.2 detection and a
++  Battery Monitor.
++
++
++properties:
++  compatible:
++    const: rohm,bd99954
++#
++#    The battery charging profile of BD99954.
++#
++#    Curve (1) represents charging current.
++#    Curve (2) represents battery voltage.
++#
++#    The BD99954 data sheet divides charging to three phases.
++#    a) Trickle-charge with constant current (8).
++#    b) pre-charge with constant current (6)
++#    c) fast-charge with:
++#       First a constant current (5) phase (CC)
++#       Then constant voltage (CV) phase (after the battery voltage has reached
++#       target level - until charging current has dropped to termination
++#       level (7)
++#
++#     V ^                                                        ^ I
++#       .                                                        .
++#       .                                                        .
++# (4)- -.- - - - - - - - - - - - - -  +++++++++++++++++++++++++++.
++#       .                            /                           .
++#       .                     ++++++/++ - - - - - - - - - - - - -.- - (5)
++#       .                     +    /  +                          .
++#       .                     +   -   --                         .
++#       .                     +  -     +                         .
++#       .                     +.-      -:                        .
++#       .                    .+         +`                       .
++#       .                  .- +       | `/                       .
++#       .               .."   +          .:                      .
++#       .             -"      +           --                     .
++#       .    (2)  ..."        +       |    :-                    .
++#       .    ...""            +             -:                   .
++# (3)- -.-.""- - - - -+++++++++ - - - - - - -.:- - - - - - - - - .- - (6)
++#       .             +                       `:.                .
++#       .             +               |         -:               .
++#       .             +                           -:             .
++#       .             +                             ..           .
++#       .   (1)       +               |               "+++- - - -.- - (7)
++#       -++++++++++++++- - - - - - - - - - - - - - - - - + - - - .- - (8)
++#       .                                                +       -
++#       -------------------------------------------------+++++++++-->
++#       |             |       |   CC   |      CV         |
++#       | --trickle-- | -pre- | ---------fast----------- |
++#
++#   The charger uses the following battery properties
++# - trickle-charge-current-microamp:
++#     Current used at trickle-charge phase (8 in above chart)
++#     minimum: 64000
++#     maximum: 1024000
++#     multipleOf: 64000
++# - precharge-current-microamp:
++#     Current used at pre-charge phase (6 in above chart)
++#     minimum: 64000
++#     maximum: 1024000
++#     multipleOf: 64000
++# - constant-charge-current-max-microamp
++#     Current used at fast charge constant current phase (5 in above chart)
++#     minimum: 64000
++#     maximum: 1024000
++#     multipleOf: 64000
++# - constant-charge-voltage-max-microvolt
++#     The constant voltage used in fast charging phase (4 in above chart)
++#     minimum: 2560000
++#     maximum: 19200000
++#     multipleOf: 16000
++# - precharge-upper-limit-microvolt
++#     charging mode is changed from trickle charging to pre-charging
++#     when battery voltage exceeds this limit voltage (3 in above chart)
++#     minimum: 2048000
++#     maximum: 19200000
++#     multipleOf: 64000
++# - re-charge-voltage-microvolt
++#     minimum: 2560000
++#     maximum: 19200000
++#     multipleOf: 16000
++#     re-charging is automatically started when battry has been discharging
++#     to the point where the battery voltage drops below this limit
++# - over-voltage-threshold-microvolt
++#     battery is expected to be faulty if battery voltage exceeds this limit.
++#     Charger will then enter to a "battery faulty" -state
++#     minimum: 2560000
++#     maximum: 19200000
++#     multipleOf: 16000
++# - charge-term-current-microamp
++#     minimum: 0
++#     maximum: 1024000
++#     multipleOf: 64000
++#     a charge cycle terminates when the battery voltage is above recharge
++#     threshold, and the current is below this setting (7 in above chart)
++#   See also Documentation/devicetree/bindings/power/supply/battery.txt
++
++  monitored-battery:
++    description:
++      phandle of battery characteristics devicetree node
++
++  rohm,vsys-regulation-microvolt:
++    description: system specific lower limit for system voltage.
++    minimum: 2560000
++    maximum: 19200000
++    multipleOf: 64000
++
++  rohm,vbus-input-current-limit-microamp:
++    description: system specific VBUS input current limit (in microamps).
++    minimum: 32000
++    maximum: 16352000
++    multipleOf: 32000
++
++  rohm,vcc-input-current-limit-microamp:
++    description: system specific VCC/VACP input current limit (in microamps).
++    minimum: 32000
++    maximum: 16352000
++    multipleOf: 32000
++
++required:
++  - compatible
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        charger@9 {
++            compatible = "rohm,bd99954";
++            monitored-battery = <&battery>;
++            reg = <0x9>;
++            interrupt-parent = <&gpio1>;
++            interrupts = <29 8>;
++            rohm,vsys-regulation-microvolt = <8960000>;
++            rohm,vbus-input-current-limit-microamp = <1472000>;
++            rohm,vcc-input-current-limit-microamp = <1472000>;
++        };
++    };
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
