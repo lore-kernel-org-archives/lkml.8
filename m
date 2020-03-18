@@ -2,75 +2,338 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A30C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FEBC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10BE920771
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584527517;
-	bh=DB/m/+0nA/txMV8sH3OXk1utW/NQ1JTcugVmYg3VzkQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uKWfcmYWj7GVyBkm3oOvAZZWgc7VqB6LCkmISrKASEmNjy4/0QoWUALSDGXA8vAQP
-	 LexuVgb5LiGwE0igTNK6nJ7IAzglJHHhnph8nGBj2BNRrCBO0zVP2dMA1FNJAuWpUG
-	 cGvmKSy1xkDga7N5KolY5Eq1FrXmgH/W20QZ493Q=
+	by mail.kernel.org (Postfix) with ESMTP id 2DECF20773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:31:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="A9PR2Pje"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgCRKb4 (ORCPT
+        id S1727830AbgCRKb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:31:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgCRKbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:31:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80B0B20771;
-        Wed, 18 Mar 2020 10:31:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584527513;
-        bh=DB/m/+0nA/txMV8sH3OXk1utW/NQ1JTcugVmYg3VzkQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mt+veHCb/UrmcTPHh3FdDR+QW4EjQqx6MztOqD37KXp2A7tMNhaZEPgGKsEYjunns
-         N5dgMyKSDrULMODxEeLVms8qWsNPksX9jB+zhS+6y9B+7pcs2th+9hLkTab5SYpd7o
-         KbfTrCiAv6ep7aMOwuESbWdaG+oBCtrz3qNAdgro=
-Date:   Wed, 18 Mar 2020 11:31:50 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: Re: [GIT PULL 6/6] intel_th: pci: Add Elkhart Lake CPU support
-Message-ID: <20200318103150.GD2183221@kroah.com>
-References: <20200317062215.15598-1-alexander.shishkin@linux.intel.com>
- <20200317062215.15598-7-alexander.shishkin@linux.intel.com>
+        Wed, 18 Mar 2020 06:31:58 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7086 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727800AbgCRKby (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 06:31:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e71f88c0001>; Wed, 18 Mar 2020 03:31:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 18 Mar 2020 03:31:53 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 18 Mar 2020 03:31:53 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar
+ 2020 10:31:53 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 18 Mar 2020 10:31:53 +0000
+Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e71f8950000>; Wed, 18 Mar 2020 03:31:52 -0700
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+To:     <kishon@ti.com>, <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <balbi@kernel.org>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <jckuo@nvidia.com>, Nagarjuna Kristam <nkristam@nvidia.com>
+Subject: [PATCH V1 4/8] phy: tegra: xusb: Add USB2 pad power control support for Tegra210
+Date:   Wed, 18 Mar 2020 16:01:03 +0530
+Message-ID: <1584527467-8058-5-git-send-email-nkristam@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
+References: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317062215.15598-7-alexander.shishkin@linux.intel.com>
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584527500; bh=tEoOEHoqSMKBOPIlCwlXMu5sLKIef0sdU0dEXS+YRvg=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=A9PR2Pjeeyv/r9rWLuSqTaDvorDmCFD2jUFnDPbUSnWFd+UsoZT2Xn/TOJny7iMkz
+         wRR0o8RO+VKKWMcNyPu5imyXKs6JS48BI6YggMwhpIn4DlTZ1CAZu+uKO279Vx61SV
+         cCGKWUWAHUsGLg+tHuWmgmG5h3D+YxpOV6OLfR/nVOt9Pe3RJpQeA+AmelWhvxc1D0
+         e1zS92w0DqaDh2PG5NjdY2ZN4YPDO61VCltCjQrPzjb4JyfTlL1EDwqpr9Gt1B6Lvl
+         B5qyBJQKkpI0rBP1xU5aIwqjkvKR/GedRgDwsfeI+hYMeR5+6QvGcJ/cHOr3LAf9bA
+         xjE7NiJ2AMoKA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 08:22:15AM +0200, Alexander Shishkin wrote:
-> This adds support for the Trace Hub in Elkhart Lake CPU.
-> 
-> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/hwtracing/intel_th/pci.c | 5 +++++
->  1 file changed, 5 insertions(+)
+Add USB2 pad power on and off API's for TEgra210 and provide its control
+via soc ops. It can be used by operations like charger detect to power on
+and off USB2 pad if needed.
 
-And again, for 5.6.
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+---
+ drivers/phy/tegra/xusb-tegra210.c | 190 ++++++++++++++++++++++++++------------
+ 1 file changed, 133 insertions(+), 57 deletions(-)
 
-Wow this pull request was messed up.  Let's go back to just normal patch
-series submissions please.  If I hadn't seen that build warning, this
-would have been a mess.
+diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
+index 54d6826..0841564 100644
+--- a/drivers/phy/tegra/xusb-tegra210.c
++++ b/drivers/phy/tegra/xusb-tegra210.c
+@@ -994,6 +994,128 @@ static int tegra210_xusb_padctl_id_override(struct tegra_xusb_padctl *padctl,
+ 	return 0;
+ }
+ 
++static void tegra210_usb2_bias_pad_power_on(struct tegra_xusb_usb2_pad *pad)
++{
++	struct tegra_xusb_padctl *padctl = pad->base.padctl;
++	u32 value;
++
++	if (pad->enable++ > 0)
++		return;
++
++	dev_dbg(padctl->dev, "power on BIAS PAD & USB2 tracking\n");
++
++	if (clk_prepare_enable(pad->clk))
++		dev_warn(padctl->dev, "failed to enable BIAS PAD & USB2 tracking\n");
++
++	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
++	value &= ~((XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_MASK <<
++		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
++		   (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_MASK <<
++		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT));
++	value |= (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_VAL <<
++		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
++		 (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_VAL <<
++		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT);
++	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
++
++	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
++	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
++	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
++
++	udelay(1);
++
++	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
++	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL1_PD_TRK;
++	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
++
++	udelay(50);
++}
++
++static void tegra210_usb2_bias_pad_power_off(struct tegra_xusb_usb2_pad *pad)
++{
++	struct tegra_xusb_padctl *padctl = pad->base.padctl;
++	u32 value;
++
++	if (WARN_ON(pad->enable == 0))
++		return;
++
++	if (--pad->enable > 0)
++		return;
++
++	dev_dbg(padctl->dev, "power off USB2 tracking\n");
++
++	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
++	value |= XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
++	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
++
++	clk_disable_unprepare(pad->clk);
++}
++
++/* must be called under padctl->lock */
++void tegra210_usb2_pad_power_on(struct phy *phy)
++{
++	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
++	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
++	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
++	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
++	unsigned int index = lane->index;
++	u32 value;
++
++	if (!phy)
++		return;
++
++	if (usb2->powered_on)
++		return;
++
++	dev_info(padctl->dev, "power on UTMI pads %d\n", index);
++
++	tegra210_usb2_bias_pad_power_on(pad);
++
++	udelay(2);
++
++	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
++	value &= ~XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD;
++	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
++
++	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
++	value &= ~XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_DR;
++	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
++
++	usb2->powered_on = true;
++}
++
++/* must be called under padctl->lock */
++void tegra210_usb2_pad_power_down(struct phy *phy)
++{
++	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
++	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
++	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
++	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
++	unsigned int index = lane->index;
++	u32 value;
++
++	if (!phy)
++		return;
++
++	if (!usb2->powered_on)
++		return;
++
++	dev_info(padctl->dev, "power down UTMI pad %d\n", index);
++
++	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
++	value |= XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD;
++	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
++
++	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
++	value |= XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_DR;
++	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL1(index));
++
++	udelay(2);
++
++	tegra210_usb2_bias_pad_power_off(pad);
++	usb2->powered_on = false;
++}
++
+ static int tegra210_usb2_phy_set_mode(struct phy *phy, enum phy_mode mode,
+ 				      int submode)
+ {
+@@ -1037,7 +1159,6 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
+ {
+ 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
+ 	struct tegra_xusb_usb2_lane *usb2 = to_usb2_lane(lane);
+-	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
+ 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
+ 	struct tegra210_xusb_padctl *priv;
+ 	struct tegra_xusb_usb2_port *port;
+@@ -1053,6 +1174,8 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
+ 
+ 	priv = to_tegra210_xusb_padctl(padctl);
+ 
++	mutex_lock(&padctl->lock);
++
+ 	if (port->usb3_port_fake != -1) {
+ 		value = padctl_readl(padctl, XUSB_PADCTL_SS_PORT_MAP);
+ 		value &= ~XUSB_PADCTL_SS_PORT_MAP_PORTX_MAP_MASK(
+@@ -1148,62 +1271,21 @@ static int tegra210_usb2_phy_power_on(struct phy *phy)
+ 
+ 	if (port->supply && port->mode == USB_DR_MODE_HOST) {
+ 		err = regulator_enable(port->supply);
+-		if (err)
++		if (err) {
++			mutex_unlock(&padctl->lock);
+ 			return err;
++		}
+ 	}
+ 
+-	mutex_lock(&padctl->lock);
+-
+-	if (pad->enable > 0) {
+-		pad->enable++;
+-		mutex_unlock(&padctl->lock);
+-		return 0;
+-	}
+-
+-	err = clk_prepare_enable(pad->clk);
+-	if (err)
+-		goto disable_regulator;
++	tegra210_usb2_pad_power_on(phy);
+ 
+-	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+-	value &= ~((XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_MASK <<
+-		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
+-		   (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_MASK <<
+-		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT));
+-	value |= (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_VAL <<
+-		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
+-		 (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_VAL <<
+-		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT);
+-	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+-
+-	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
+-	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
+-	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
+-
+-	udelay(1);
+-
+-	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+-	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL1_PD_TRK;
+-	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
+-
+-	udelay(50);
+-
+-	clk_disable_unprepare(pad->clk);
+-
+-	pad->enable++;
+ 	mutex_unlock(&padctl->lock);
+-
+ 	return 0;
+-
+-disable_regulator:
+-	regulator_disable(port->supply);
+-	mutex_unlock(&padctl->lock);
+-	return err;
+ }
+ 
+ static int tegra210_usb2_phy_power_off(struct phy *phy)
+ {
+ 	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
+-	struct tegra_xusb_usb2_pad *pad = to_usb2_pad(lane->pad);
+ 	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
+ 	struct tegra_xusb_usb2_port *port;
+ 	u32 value;
+@@ -1217,6 +1299,8 @@ static int tegra210_usb2_phy_power_off(struct phy *phy)
+ 
+ 	mutex_lock(&padctl->lock);
+ 
++	tegra210_usb2_pad_power_down(phy);
++
+ 	if (port->usb3_port_fake != -1) {
+ 		value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
+ 		value |= XUSB_PADCTL_ELPG_PROGRAM1_SSPX_ELPG_CLAMP_EN_EARLY(
+@@ -1243,18 +1327,8 @@ static int tegra210_usb2_phy_power_off(struct phy *phy)
+ 		padctl_writel(padctl, value, XUSB_PADCTL_SS_PORT_MAP);
+ 	}
+ 
+-	if (WARN_ON(pad->enable == 0))
+-		goto out;
+-
+-	if (--pad->enable > 0)
+-		goto out;
+-
+-	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
+-	value |= XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
+-	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
+-
+-out:
+ 	regulator_disable(port->supply);
++
+ 	mutex_unlock(&padctl->lock);
+ 	return 0;
+ }
+@@ -2210,6 +2284,8 @@ static const struct tegra_xusb_padctl_ops tegra210_xusb_padctl_ops = {
+ 	.hsic_set_idle = tegra210_hsic_set_idle,
+ 	.vbus_override = tegra210_xusb_padctl_vbus_override,
+ 	.utmi_port_reset = tegra210_utmi_port_reset,
++	.utmi_pad_power_on = tegra210_usb2_pad_power_on,
++	.utmi_pad_power_down = tegra210_usb2_pad_power_down,
+ };
+ 
+ static const char * const tegra210_xusb_padctl_supply_names[] = {
+-- 
+2.7.4
 
-greg k-h
