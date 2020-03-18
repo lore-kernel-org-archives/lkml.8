@@ -2,136 +2,130 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26052C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C0FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F206F20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:53:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="orY+w5pW"
+	by mail.kernel.org (Postfix) with ESMTP id E8C682076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:58:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgCRGxV (ORCPT
+        id S1727162AbgCRG6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 02:53:21 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37184 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbgCRGxU (ORCPT
+        Wed, 18 Mar 2020 02:58:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41814 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726553AbgCRG6V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 02:53:20 -0400
-Received: by mail-qk1-f195.google.com with SMTP id z25so32142196qkj.4;
-        Tue, 17 Mar 2020 23:53:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JIUU945tjKWn7G+uWGg7eqG/veZ5KU9jtb/2ZLYG2SI=;
-        b=orY+w5pWV/Z1rru//L4oMZleR46ybigSk519t/NT8ODjrzqN0iKGY3fsIKy0xLTzl5
-         IdNL50paLXTeHOk1UkqSXfvvdBCttWbGLY1+X7t8IzKo0HiALm8kp44W1BnqEnyDq542
-         8v5+DrK1CFN0pw+hyMwxOq+r34zRq9vYC93MaKCg0WbZYMgpPJIIMF+C5ceKrhzmFfk+
-         JrLVTwwxaiaMGcz6A2a3hK0fS5Ll73JDzeAK6F22skgeKcrrBQj5jAfpfv0xM1vQzKe7
-         /F7F8W4EY64HQtj8stzqxZjWxrfXm8F1VpP/7cwq6ksWlcsiwGEHMNX8nvBrCwQeIjsF
-         vDcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JIUU945tjKWn7G+uWGg7eqG/veZ5KU9jtb/2ZLYG2SI=;
-        b=tT8ztU3VKy57TaHTQmNvI594aBtzwAov+nGacP+UvLheO9+iRaYZ2xka92QN/XQOyn
-         WleAOG54Y3ekzzOPS+v8MsH+yl3CeenxkTeaWN4XIiX8CibmgoewRw4C3DPJWfk4sB6i
-         8qwCU4Kc4wgDz5o3QADyP9j7LiKz7Mw6JyJbvUDU7rnV25Qj51rAjLkCYoYjKE6agDAE
-         mcMc2yXVK+G1VpW7INKySJbW5YEhy/YwK/U4T0Y8wTOBDYx8594uPNnl861TY5KTOIvb
-         phQ/quSmm7CWuLPMx6cgC433wU2wZiyQN3A/heZB/u+ZTLNuuiXwfImGFIQmuAOjlMbf
-         SpOg==
-X-Gm-Message-State: ANhLgQ0NVtIjtdOC434/aCZq26qjTEcTxEYn97cW1533PViGTQ/zzmis
-        H8nN9rSmsCCM88GUAOD54oQpVlEqi9/1ZXat3Eg=
-X-Google-Smtp-Source: ADFU+vtGP9Ty7kCO4ONv73Nr7zNugirXg12VP1u3w7C+Ufpy9fPM+R053oz02WmqvcBe3SLlJ4igFy4Zf9q7wIDZHqE=
-X-Received: by 2002:a25:dc07:: with SMTP id y7mr3949038ybe.48.1584514399393;
- Tue, 17 Mar 2020 23:53:19 -0700 (PDT)
+        Wed, 18 Mar 2020 02:58:21 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02I6Xd4v004156
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 02:58:20 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8hv38my-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 02:58:20 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 18 Mar 2020 06:58:18 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Mar 2020 06:58:13 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02I6wCwY45678706
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 06:58:12 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53B114204B;
+        Wed, 18 Mar 2020 06:58:12 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 805CA42041;
+        Wed, 18 Mar 2020 06:57:30 +0000 (GMT)
+Received: from [9.199.53.244] (unknown [9.199.53.244])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Mar 2020 06:57:27 +0000 (GMT)
+Subject: Re: [PATCH 07/15] powerpc/watchpoint: Get watchpoint count
+ dynamically while disabling them
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
+        paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
+ <20200309085806.155823-8-ravi.bangoria@linux.ibm.com>
+ <c73b77fd-b983-2c5c-75bb-4b2f47a94d92@c-s.fr>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Wed, 18 Mar 2020 12:27:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <cover.1578560282.git.benchuanggli@gmail.com> <9f861920380df9d7a6d52c905fc47643eb25f33f.1578560282.git.benchuanggli@gmail.com>
- <add27a04-e018-d050-4d42-4fb5c532df8c@intel.com>
-In-Reply-To: <add27a04-e018-d050-4d42-4fb5c532df8c@intel.com>
-From:   Ben Chuang <benchuanggli@gmail.com>
-Date:   Wed, 18 Mar 2020 14:53:08 +0800
-Message-ID: <CACT4zj-M-BJKSwDNA7dRa88N8A4PBoX0GnMZiSMKum4GGiTiFA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/6] mmc: host: Add UHS-II support in host layer
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        greg.tu@genesyslogic.com.tw,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c73b77fd-b983-2c5c-75bb-4b2f47a94d92@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031806-0008-0000-0000-0000035F2A47
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031806-0009-0000-0000-00004A8083A4
+Message-Id: <cca28aeb-d1f8-5668-0743-2269f621e926@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_02:2020-03-17,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ phishscore=0 clxscore=1015 adultscore=0 malwarescore=0 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003180032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 4:18 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 9/01/20 11:14 am, Ben Chuang wrote:
-> > From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-> >
-> > Add UHS-II support in host layer
->
-> Split host layer changes from sdhci changes.
->
-> >
-> > Reported-by: kbuild test robot <lkp@intel.com>
->
-> Drop "Reported-by: kbuild test robot <lkp@intel.com>"
->
-> > Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-> > ---
-> >  drivers/mmc/host/Makefile                  |   1 +
-> >  drivers/mmc/host/{sdhci.c => sdhci-core.c} | 276 ++++++--
-> >  drivers/mmc/host/sdhci-milbeaut.c          |   4 +-
-> >  drivers/mmc/host/sdhci-of-arasan.c         |   4 +-
-> >  drivers/mmc/host/sdhci-of-at91.c           |   4 +-
-> >  drivers/mmc/host/sdhci-omap.c              |   2 +-
-> >  drivers/mmc/host/sdhci-pci-core.c          |   4 +-
-> >  drivers/mmc/host/sdhci-pxav3.c             |   4 +-
-> >  drivers/mmc/host/sdhci-uhs2.c              | 751 +++++++++++++++++++++
-> >  drivers/mmc/host/sdhci-uhs2.h              |  34 +
-> >  drivers/mmc/host/sdhci-xenon.c             |   4 +-
-> >  drivers/mmc/host/sdhci.h                   | 284 +++++++-
-> >  drivers/mmc/host/sdhci_am654.c             |   4 +-
-> >  include/linux/mmc/uhs2.h                   | 270 ++++++++
-> >  14 files changed, 1583 insertions(+), 63 deletions(-)
-> >  rename drivers/mmc/host/{sdhci.c => sdhci-core.c} (94%)
-> >  create mode 100644 drivers/mmc/host/sdhci-uhs2.c
-> >  create mode 100644 drivers/mmc/host/sdhci-uhs2.h
-> >  create mode 100644 include/linux/mmc/uhs2.h
->
-> Please make sdhci-uhs2 a module and do not rename sdhci.c.
->
-> References in sdhci.c to sdhci-uhs2.c will need to be enclosed by
-> #if IS_REACHABLE(CONFIG_SDHCI_UHS2)
->
-> Move all UHS-II definitions into sdhci-uhs2.h.  Things that are for V4 but
-> not necessarily UHS-II can be in sdhci.h
->
-> Make the set_power parameter change into a separate patch
->
-> Fix all spelling mistakes
->
-> Make comment style correct.
->
-> Review all checkpatch warnings and checks (i.e. --strict option)
->
-> If possible provide a link to a tree that contains the patches.
->
-> Re-base on Ulf's next branch
->
-> The patch set could use an overview of how UHS-II is different from regular SD.
->
-> In other patches there are a bunch of memory allocations on the I/O path.
-> That is a problem.  Memory needed should be allocated in advance.
 
-Thanks for your comments and guidance.
-There seems to be a lot of work to do. I will do my best to meet these.
+
+On 3/17/20 4:02 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 09/03/2020 à 09:57, Ravi Bangoria a écrit :
+>> Instead of disabling only one watchpooint, get num of available
+>> watchpoints dynamically and disable all of them.
+>>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>> ---
+>>   arch/powerpc/include/asm/hw_breakpoint.h | 15 +++++++--------
+>>   1 file changed, 7 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
+>> index 980ac7d9f267..ec61e2b7195c 100644
+>> --- a/arch/powerpc/include/asm/hw_breakpoint.h
+>> +++ b/arch/powerpc/include/asm/hw_breakpoint.h
+>> @@ -75,14 +75,13 @@ extern void ptrace_triggered(struct perf_event *bp,
+>>               struct perf_sample_data *data, struct pt_regs *regs);
+>>   static inline void hw_breakpoint_disable(void)
+>>   {
+>> -    struct arch_hw_breakpoint brk;
+>> -
+>> -    brk.address = 0;
+>> -    brk.type = 0;
+>> -    brk.len = 0;
+>> -    brk.hw_len = 0;
+>> -    if (ppc_breakpoint_available())
+>> -        __set_breakpoint(&brk, 0);
+>> +    int i;
+>> +    struct arch_hw_breakpoint null_brk = {0};
+>> +
+>> +    if (ppc_breakpoint_available()) {
+> 
+> I think this test should go into nr_wp_slots() which should return zero when no breakpoint is available.
+
+Seems possible. Will change it in next version.
+
+Thanks,
+Ravi
+
