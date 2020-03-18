@@ -2,80 +2,167 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36441C5ACD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FE4C5ACDA
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02E8820774
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:54:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584532497;
-	bh=vog5jmqIjkgcCbl6H/fzs7vG/KRa87L6309/v2uXLmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eSOQMATUQzOig586uuUOBVY5dNTBaMVYhx4PnK8MoiHVvPZPXemuQJygM+3YqNlaj
-	 nODlEUxP8CfxatXhrAKkhjMMZvKt9jbKYgAEi77kqUCjnfy74VNh7kj63EDU3px9Y3
-	 Wum12k459Q/fkXCqG5PJJqxEOLwqQzmRt1kkIRv4=
+	by mail.kernel.org (Postfix) with ESMTP id 62A182076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgCRLy4 (ORCPT
+        id S1727258AbgCRLzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:54:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbgCRLyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:54:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 622CD20772;
-        Wed, 18 Mar 2020 11:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584532494;
-        bh=vog5jmqIjkgcCbl6H/fzs7vG/KRa87L6309/v2uXLmg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Na1jsHhb8csDiM3dBjnzZmuz+N+26R0vSZ86fWmREdnGAB4HGA2NBCC6S53DM0nw4
-         FcwmizkX3yiGSLZQXZ4UWTLZwP/3vWBr2hMl4B55hBy6mbP7fFp1eM1Q9nKGCMBp/v
-         4PRO9wr9DnDjZHx69Nrz5eds7DM4CuCL2XTKR0Y0=
-Date:   Wed, 18 Mar 2020 12:54:52 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jolly Shah <jolly.shah@xilinx.com>
-Cc:     ard.biesheuvel@linaro.org, mingo@kernel.org,
-        matt@codeblueprint.co.uk, sudeep.holla@arm.com,
-        hkallweit1@gmail.com, keescook@chromium.org,
-        dmitry.torokhov@gmail.com, michal.simek@xilinx.com,
-        rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/24] firmware: xilinx: Add xilinx specific sysfs
- interface
-Message-ID: <20200318115452.GA2491827@kroah.com>
-References: <1583538452-1992-1-git-send-email-jolly.shah@xilinx.com>
+        Wed, 18 Mar 2020 07:55:06 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42700 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgCRLzG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 07:55:06 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t21so20092255lfe.9;
+        Wed, 18 Mar 2020 04:55:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7sJXjz6gA9YtOP+RJlI1J0evhNx2dtZTEe/jmIpCCm4=;
+        b=qEOicsMBm1kdi7OaUN327SYh4tb81EoMqC3qyUwuZZnUkIDg8fLcb855vscWLcnfIl
+         AUtIPJXr+dIL/DzoMDO5E5JUGJjjFG/qWXToRZxBwTnQjR1okgEYm8swEzKhsWRGJKW2
+         UHfI0UHganKw5rNJFeYXcS9JIhLKYkNDeWLa4syScdkJ+ry1FzUqIoMgrX6oyB6qjimX
+         cl1CfIU08queHC+8Pl3Q2px+qcZ+YSqE5CnMDt86Loi10puttMVO/zhPSvKwOLEp3BXs
+         atYEQPwuMvVLyMIQsVinU0AHDv0rdSpeN4BwoWl8+RdUHc55Hc/VnjDjyk5l9v6BgbUz
+         lW2w==
+X-Gm-Message-State: ANhLgQ3b6J0MvDpQqabyJdnkgae/c4dFAvouBa3yi2EgWu8BQ6HmTSoQ
+        tf517AmK22ydRmwJsZstOyvtLwnF
+X-Google-Smtp-Source: ADFU+vvfxQ6GnE6kuOTm/THwxhnjVqNcrjXtge7LtlFjAz/hwwfOS7vsAbCPRbHG0gaPERkYHsyFwQ==
+X-Received: by 2002:ac2:5473:: with SMTP id e19mr2702157lfn.24.1584532503372;
+        Wed, 18 Mar 2020 04:55:03 -0700 (PDT)
+Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
+        by smtp.gmail.com with ESMTPSA id a18sm4145783ljn.85.2020.03.18.04.55.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 04:55:02 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 13:54:55 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
+Subject: [PATCH v5 9/9] power: supply: Fix Kconfig help text indentiation
+Message-ID: <9d0b68790885d32b108c8ad75a793c8c92ba8420.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1583538452-1992-1-git-send-email-jolly.shah@xilinx.com>
+In-Reply-To: <cover.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 03:47:08PM -0800, Jolly Shah wrote:
-> This patch series adds xilinx specific sysfs interface for below
-> purposes:
-> - Register access
-> - Set shutdown scope
-> - Set boot health status bit
-> 
-> Also this patch series removes eemi ops and adds API
-> corresponding to each eemi ops.
+Indent the help text as explained in
+Documentation/process/coding-style.rst
 
-I've applied the first 19 patches here, they looked good, thanks for
-doing that work, makes things a lot more "obvious" as to what is going
-on here.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
 
-The rest, please see my review comments and redo.
+I just learned the help text in Kconfigs should be indented by two
+spaces. I fixed this for BD99954 as suggested by Randy and decided
+that I could do this for few other entries as well while I was at
+it anyways.
 
-thanks,
+ drivers/power/supply/Kconfig | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-greg k-h
+diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+index af96d7fa56b1..f606ba069e4e 100644
+--- a/drivers/power/supply/Kconfig
++++ b/drivers/power/supply/Kconfig
+@@ -415,7 +415,7 @@ config CHARGER_PCF50633
+ 	tristate "NXP PCF50633 MBC"
+ 	depends on MFD_PCF50633
+ 	help
+-	 Say Y to include support for NXP PCF50633 Main Battery Charger.
++	  Say Y to include support for NXP PCF50633 Main Battery Charger.
+ 
+ config BATTERY_RX51
+ 	tristate "Nokia RX-51 (N900) battery driver"
+@@ -609,15 +609,15 @@ config CHARGER_TPS65090
+ 	tristate "TPS65090 battery charger driver"
+ 	depends on MFD_TPS65090
+ 	help
+-	 Say Y here to enable support for battery charging with TPS65090
+-	 PMIC chips.
++	  Say Y here to enable support for battery charging with TPS65090
++	  PMIC chips.
+ 
+ config CHARGER_TPS65217
+ 	tristate "TPS65217 battery charger driver"
+ 	depends on MFD_TPS65217
+ 	help
+-	 Say Y here to enable support for battery charging with TPS65217
+-	 PMIC chips.
++	  Say Y here to enable support for battery charging with TPS65217
++	  PMIC chips.
+ 
+ config BATTERY_GAUGE_LTC2941
+ 	tristate "LTC2941/LTC2943 Battery Gauge Driver"
+@@ -671,16 +671,16 @@ config CHARGER_SC2731
+ 	tristate "Spreadtrum SC2731 charger driver"
+ 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
+ 	help
+-	 Say Y here to enable support for battery charging with SC2731
+-	 PMIC chips.
++	  Say Y here to enable support for battery charging with SC2731
++	  PMIC chips.
+ 
+ config FUEL_GAUGE_SC27XX
+ 	tristate "Spreadtrum SC27XX fuel gauge driver"
+ 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
+ 	depends on IIO
+ 	help
+-	 Say Y here to enable support for fuel gauge with SC27XX
+-	 PMIC chips.
++	  Say Y here to enable support for fuel gauge with SC27XX
++	  PMIC chips.
+ 
+ config CHARGER_UCS1002
+ 	tristate "Microchip UCS1002 USB Port Power Controller"
+@@ -698,9 +698,9 @@ config CHARGER_BD70528
+ 	select LINEAR_RANGES
+ 	default n
+ 	help
+-	 Say Y here to enable support for getting battery status
+-	 information and altering charger configurations from charger
+-	 block of the ROHM BD70528 Power Management IC.
++	  Say Y here to enable support for getting battery status
++	  information and altering charger configurations from charger
++	  block of the ROHM BD70528 Power Management IC.
+ 
+ config CHARGER_BD99954
+ 	tristate "ROHM bd99954 charger driver"
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
