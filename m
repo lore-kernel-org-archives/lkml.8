@@ -2,143 +2,165 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E90D6C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 835A9C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C241720768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB9F20754
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:04:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Tsb9fURA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i146djn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgCRTDb (ORCPT
+        id S1726958AbgCRTEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:03:31 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:43647 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgCRTDb (ORCPT
+        Wed, 18 Mar 2020 15:04:16 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46741 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgCRTEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 15:03:31 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 5513123F27;
-        Wed, 18 Mar 2020 20:03:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1584558208;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dOp+Q10aNwI+UYVrwdygu1rxeT9KhHvcajdkwSJHkkM=;
-        b=Tsb9fURAvN+x5CkSFEW2TdBb5KXCI1JXLKf0R0HbHyyNOGa9E+T1KSOKHlFkGZQRBJhI1z
-        Tve698+u7Vjo7k35bvgXMh6ARTCYFvEFSt9G+h9cjzP2u3ih8cjKZJ2oZO20hZfaQVhy+A
-        1bri3ZjtkWG0N+tjVr+dhUHa0PbYdfI=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 18 Mar 2020 20:03:28 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     broonie@kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
-        andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
-        mhosny@nvidia.com, peng.ma@nxp.com
-Subject: Re: [PATCH v5 00/12] NXP DSPI bugfixes and support for LS1028A
-In-Reply-To: <20200318001603.9650-1-olteanv@gmail.com>
-References: <20200318001603.9650-1-olteanv@gmail.com>
-Message-ID: <d37b6e0f8a35ae61bbfe147cd5809ec2@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 5513123F27
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[15];
-         NEURAL_HAM(-0.00)[-0.599];
-         FREEMAIL_TO(0.00)[gmail.com];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,arm.com,deif.com,sysam.it,gmail.com,embeddedor.com,nvidia.com,nxp.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+        Wed, 18 Mar 2020 15:04:15 -0400
+Received: by mail-pl1-f195.google.com with SMTP id r3so3541712pls.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 12:04:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=9sJyPIS9MqiGD0DkB/0XejsZsmuSIXG8S6Q+9dvyB0E=;
+        b=i146djn3/XFsXRqyCdh52CCACkJdrCMQ4DY2IU9cmSWFAg7wmi3yuFfQXSGy11xx63
+         Ex7oICQ2hMFta1eTmsejUjSNbUEBlnpI8Fv2dvySf5tmBbCd/EzgdhcPVJFxPIlriQJd
+         chXKEOzl1rzrZpwhPVz4zw9Va2rFqzlczu9/rVi2s0f8lFCDjIWtcfrey+SKHfrpHpDJ
+         +fQroK0d4W6tEpmI2sccXQ0rXse1JQuzBHiwyOuDXcqOsUKkkDDguZj03PGYADTJJBrB
+         rM55iVC55h9iLUNM+dgwgnpl1e5iaNnGlLIqU/4ScQeFPJnpZN3ajXrotLu659R/7Dkn
+         VnCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9sJyPIS9MqiGD0DkB/0XejsZsmuSIXG8S6Q+9dvyB0E=;
+        b=LlqZFfW3UdNXwEcea8MeOFNNZTLF457ViTes1cY5C7i8kQXfwuPRMB39jBNE1/+0kZ
+         5UhFphKzgnRm77yU2WrqRmZWpu+uTRxkJhVd3jjxSuyKsZw6DywCE5rVXFOtAg0f61Zy
+         qaMDdRbGic9r2jHAAhlTSmnpl9jvFdh+MnQb7EDr3vz299U/i5ACNbzpXyHECRtsoRDT
+         22z2l3RJq80oLszKLCHvFpP0L5d4bqSBr8BHvVKGydnCx1RHvCbFiv0UGv9Uk6gBdX3l
+         /8sn9QAMzQCu2h6AXhPaKuBEe026ZilWMrqW2j1vVpsZKcfOYb2KznrpYG0q6ecgNhLQ
+         dS2A==
+X-Gm-Message-State: ANhLgQ3fKpe5pjdcrNpljLbhcO9BaMt6zu6dBj6j18gxYXh/qxB9ePSB
+        FMLDqpjOMEyTyMugVuMOrkY=
+X-Google-Smtp-Source: ADFU+vsHoAUXbycPZi4v06uuQqoaoVPe6Uvo02jHlgFXB3NOurpeZ+/f9VeTMFabv0G/mNEIyUHZEg==
+X-Received: by 2002:a17:90b:f16:: with SMTP id br22mr5821444pjb.170.1584558254608;
+        Wed, 18 Mar 2020 12:04:14 -0700 (PDT)
+Received: from lenovo.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id e126sm7267968pfa.122.2020.03.18.12.04.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 18 Mar 2020 12:04:13 -0700 (PDT)
+From:   Orson Zhai <orson.unisoc@gmail.com>
+To:     Jason Baron <jbaron@akamai.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Gary Hook <Gary.Hook@amd.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        David Gow <davidgow@google.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     orsonzhai@gmail.com, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Orson Zhai <orson.unisoc@gmail.com>
+Subject: [RFC PATCH] dynamic_debug: Add config option of DYNAMIC_DEBUG_CORE
+Date:   Thu, 19 Mar 2020 03:03:06 +0800
+Message-Id: <1584558186-23373-1-git-send-email-orson.unisoc@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-03-18 01:15, schrieb Vladimir Oltean:
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> 
-> This series addresses a few issues that were missed during the previous
-> series "[PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver", on
-> SoCs other than LS1021A and LS1043A. DMA mode has been completely 
-> broken
-> by that series, and XSPI mode never worked on little-endian 
-> controllers.
-> 
-> Then it introduces support for the LS1028A chip, whose compatible has
-> recently been documented here:
-> 
-> https://lore.kernel.org/linux-devicetree/20200218171418.18297-1-michael@walle.cc/
-> 
-> The device tree for the LS1028A SoC is extended with DMA channels
-> definition, such that even though the default operating mode is XSPI,
-> one can simply change DSPI_XSPI_MODE to DSPI_DMA_MODE in the
-> devtype_data structure of the driver and use that instead.
-> 
-> Compared to earlier v4, the only change is in patch 05/12 to fix a race
-> condition signaled by Michael Walle here:
-> https://lkml.org/lkml/2020/3/17/740
-> 
-> I don't expect the "fixes" patches to reach very far down the stable
-> pipe, since there has been pretty heavy refactoring in this driver.
-> 
-> For testing, benchmarking and debugging, the mikroBUS connector on the
-> LS1028A-RDB is made available via spidev.
+There is the requirement from new Android that kernel image (GKI) and
+kernel modules are supposed to be built at differnet places. Some people
+want to enable dynamic debug for kernel modules only but not for kernel
+image itself with the consideration of binary size increased or more
+memory being used.
 
-Patches 1-11:
-Tested-by: Michael Walle <michael@walle.cc>
+By this patch, dynamic debug is divided into core part (the defination of
+functions) and macro replacement part. We can only have the core part to
+be built-in and do not have to activate the debug output from kenrel image.
 
-Thanks Vladimir for the great work.
+Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
+---
+ include/linux/dynamic_debug.h |  2 +-
+ lib/Kconfig.debug             | 18 ++++++++++++++++--
+ lib/Makefile                  |  2 +-
+ 3 files changed, 18 insertions(+), 4 deletions(-)
 
--michael
+diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
+index 4cf02ec..abcd5fd 100644
+--- a/include/linux/dynamic_debug.h
++++ b/include/linux/dynamic_debug.h
+@@ -48,7 +48,7 @@ struct _ddebug {
+ 
+ 
+ 
+-#if defined(CONFIG_DYNAMIC_DEBUG)
++#if defined(CONFIG_DYNAMIC_DEBUG_CORE)
+ int ddebug_add_module(struct _ddebug *tab, unsigned int n,
+ 				const char *modname);
+ extern int ddebug_remove_module(const char *mod_name);
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 69def4a..78a7256 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -97,8 +97,7 @@ config BOOT_PRINTK_DELAY
+ config DYNAMIC_DEBUG
+ 	bool "Enable dynamic printk() support"
+ 	default n
+-	depends on PRINTK
+-	depends on DEBUG_FS
++	select DYNAMIC_DEBUG_CORE
+ 	help
+ 
+ 	  Compiles debug level messages into the kernel, which would not
+@@ -164,6 +163,21 @@ config DYNAMIC_DEBUG
+ 	  See Documentation/admin-guide/dynamic-debug-howto.rst for additional
+ 	  information.
+ 
++config DYNAMIC_DEBUG_CORE
++	bool "Enable core functions of dynamic debug support"
++	depends on PRINTK
++	depends on DEBUG_FS
++	help
++	  Enable this option to build ddebug_* and __dynamic_* routines
++	  into kernel. If you want enable whole dynamic debug features,
++	  select CONFIG_DYNAMIC_DEBUG directly and this option will be
++	  automatically selected.
++
++	  This option is selected when you want to enable dynamic debug
++	  for kernel modules only but not for the kernel base. Especailly
++	  in the case that kernel modules are built out of the place where
++	  kernel base is built.
++
+ config SYMBOLIC_ERRNAME
+ 	bool "Support symbolic error names in printf"
+ 	default y if PRINTK
+diff --git a/lib/Makefile b/lib/Makefile
+index 611872c..2096d83 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -183,7 +183,7 @@ lib-$(CONFIG_GENERIC_BUG) += bug.o
+ 
+ obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
+ 
+-obj-$(CONFIG_DYNAMIC_DEBUG) += dynamic_debug.o
++obj-$(CONFIG_DYNAMIC_DEBUG_CORE) += dynamic_debug.o
+ obj-$(CONFIG_SYMBOLIC_ERRNAME) += errname.o
+ 
+ obj-$(CONFIG_NLATTR) += nlattr.o
+-- 
+2.7.4
 
-> 
-> Vladimir Oltean (12):
->   spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
->   spi: spi-fsl-dspi: Fix little endian access to PUSHR CMD and TXDATA
->   spi: spi-fsl-dspi: Fix bits-per-word acceleration in DMA mode
->   spi: spi-fsl-dspi: Avoid reading more data than written in EOQ mode
->   spi: spi-fsl-dspi: Protect against races on dspi->words_in_flight
->   spi: spi-fsl-dspi: Replace interruptible wait queue with a simple
->     completion
->   spi: spi-fsl-dspi: Avoid NULL pointer in dspi_slave_abort for non-DMA
->     mode
->   spi: spi-fsl-dspi: Fix interrupt-less DMA mode taking an XSPI code
->     path
->   spi: spi-fsl-dspi: Move invariant configs out of
->     dspi_transfer_one_message
->   spi: spi-fsl-dspi: Add support for LS1028A
->   arm64: dts: ls1028a: Specify the DMA channels for the DSPI 
-> controllers
->   arm64: dts: ls1028a-rdb: Add a spidev node for the mikroBUS
-> 
->  .../boot/dts/freescale/fsl-ls1028a-rdb.dts    |  14 +
->  .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   6 +
->  drivers/spi/spi-fsl-dspi.c                    | 324 +++++++++---------
->  3 files changed, 182 insertions(+), 162 deletions(-)
