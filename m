@@ -2,136 +2,200 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A2EC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BFEC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA1920674
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675DC20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:03:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="LwOldjIv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zqtk37f7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbgCRG7e (ORCPT
+        id S1726638AbgCRHDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 02:59:34 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:45526 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgCRG7e (ORCPT
+        Wed, 18 Mar 2020 03:03:46 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:34948 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgCRHDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 02:59:34 -0400
-Received: by mail-vs1-f68.google.com with SMTP id x82so15705422vsc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 23:59:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=84CyLEGDeMMgsgG4RaCNG98bUTLvwTeDFWdvNMzaPgc=;
-        b=LwOldjIv9TqBbm3bBdPv/TQV8lbNHF8shtoJW2FMp8B3D2bBVrSgEsPCIkAtEqPYbU
-         I1qFGJ3K/bhCA9x3HBsCSvcLQhiYFZA8dFbYbPO9nVI9p6ODNGY0lQ1FP4Cp9zAKK3FQ
-         Jn49klaQ01J+PXjtnf1R6VXsPD9gOhXntyEW0f7TxTnMUWWol8eXkzYpJy5S7lxerAyr
-         rIJjzEeox7glZZW878CS1FUKgUgVzZvyf//7SIpZCj/yLac9BICSdfQVDTDPXsFrjDnX
-         7NC0nASlTgTVINlRuLnV9e0asZGS40JTZjcbyuJcqGP6j4Up+IgU20KVC+dTzcPM5Pcz
-         Yr7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=84CyLEGDeMMgsgG4RaCNG98bUTLvwTeDFWdvNMzaPgc=;
-        b=PcMpnaI3QVcSXTQfkE8/nAdYxhHKVEDdLaVOo3E1K7EChmMMDt3O7rji6xF+4zJ/qT
-         9ahgRSfTqwmXi0O3sLWk1PPSpBdMqOc26uAGDexZVNPucjw8ZTOFpFxIBaeEK11v+iIX
-         bfrHYXQd3cMWSJsn7V6eDpYXJ66vqxkalVePAEA4H7ZAlElmZT+t8VxLt5JmaxTa8nGD
-         FTIFxJlugvRsqPLSrpZdibkAXf0M7O7WWYZzJRfSAdk5IYSDAfm9SsN3S/BXQ4g8Qqh6
-         ZI1/zUlCDvAe4IjoJ7ZNIwJm6KZqHr4k9OPlnPxkeZmzohn8VXPWPlW7UkNzOWAywEY9
-         Qbhw==
-X-Gm-Message-State: ANhLgQ1zJ5TfL+m3HPGth4bGpgy6ly5ZbzSQwcUtHuvmSRoEc8P30h+S
-        cytu2hqo5DW5XdMRvXBoA/XHpFevY1kpIhmCSxmqlA==
-X-Google-Smtp-Source: ADFU+vtVXVGVP6/sC09G6kPLC+J4DVM6zjb4y8Uz1uz/zwJi6/gkkfTNntH/yl/SPpinD1c3hcUGGWJYLvYcTAfuXc8=
-X-Received: by 2002:a05:6102:1cf:: with SMTP id s15mr1919044vsq.109.1584514771785;
- Tue, 17 Mar 2020 23:59:31 -0700 (PDT)
+        Wed, 18 Mar 2020 03:03:46 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02I73g2E110851;
+        Wed, 18 Mar 2020 02:03:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584515022;
+        bh=s84pMpvP+sKCmwJIMIK+lqik+PaKJfBiqAnv1uQ88rw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Zqtk37f78UahoZXtiMgZ7ZR6ETIw5vD4dzmToFok0WrjihjOqvNkgts171bFBN1n3
+         NYdl1S66HCvGdLsM/nA6N5vrYLfnbpbeqk5hkituX+db2LyKV9os2DO3DAdiD6ydYU
+         Jn0TMnFe/AHNpwjmAYxep/nsOFR8T/fN7yLxJBxM=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02I73fbQ113946
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Mar 2020 02:03:41 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
+ Mar 2020 02:03:42 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 18 Mar 2020 02:03:42 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02I73dp3080708;
+        Wed, 18 Mar 2020 02:03:40 -0500
+Subject: Re: [PATCH] dmaengine: ti: k3-udma: Fix an error handling path in
+ 'k3_udma_glue_cfg_rx_flow()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        <vkoul@kernel.org>, <dan.j.williams@intel.com>,
+        <grygorii.strashko@ti.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20200315155015.27303-1-christophe.jaillet@wanadoo.fr>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <5d714664-d8c3-a710-8e14-65492b4cd99e@ti.com>
+Date:   Wed, 18 Mar 2020 09:03:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200312083341.9365-1-jian-hong@endlessm.com> <20200312104643.GA15619@zn.tnic>
- <CAPpJ_eetjhmPwXXXn2y-vibRCK6rrKsFZgC+YGzxO4fMrCKpuQ@mail.gmail.com> <20200316100201.GG26126@zn.tnic>
-In-Reply-To: <20200316100201.GG26126@zn.tnic>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Wed, 18 Mar 2020 14:58:54 +0800
-Message-ID: <CAPpJ_echFt1LbMbjka4r=gPBF9XqGbFUOmUmB8Wi5p9TVK2wuA@mail.gmail.com>
-Subject: Re: [PATCH] Revert "x86/reboot, efi: Use EFI reboot for Acer
- TravelMate X514-51T"
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, x86@kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200315155015.27303-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Borislav Petkov <bp@alien8.de> =E6=96=BC 2020=E5=B9=B43=E6=9C=8816=E6=97=A5=
- =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=886:01=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Mon, Mar 16, 2020 at 05:17:56PM +0800, Jian-Hong Pan wrote:
-> > But, that will raise another question:  Since the original quirk works
-> > for all Acer X514-51T and the quirk cannot be removed for older BIOS.
-> > Why not keep only original matching items for all Acer X514-51T
-> > laptops?
->
-> What does the "original matching items" mean?
+Hi Christophe,
 
-I should make it more clearly.
+On 15/03/2020 17.50, Christophe JAILLET wrote:
+> All but one error handling paths in the 'k3_udma_glue_cfg_rx_flow()'
+> function 'goto err' and call 'k3_udma_glue_release_rx_flow()'.
+> 
+> This not correct because this function has a 'channel->flows_ready--;' at
+> the end, but 'flows_ready' has not been incremented here, when we branch to
+> the error handling path.
+> 
+> In order to keep a correct value in 'flows_ready', un-roll
+> 'k3_udma_glue_release_rx_flow()', simplify it, add some labels and branch
+> at the correct places when an error is detected.
+> 
+> Doing so, we also NULLify 'flow->udma_rflow' in a path that was lacking it.
+> 
+> Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine user")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-The quirk's original matching items for Acer TravelMate X514-51T from
-commit 0082517fa4bc ("x86/reboot, efi: Use EFI reboot for Acer
-TravelMate X514-51T"):
+Can you change the subject to:
+dmaengine: ti: k3-udma-glue: ...
 
-        {       /* Handle reboot issue on Acer TravelMate X514-51T */
-                .callback =3D set_efi_reboot,
-                .ident =3D "Acer TravelMate X514-51T",
-                .matches =3D {
-                        DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-                        DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
-                },
-        },
+> ---
+> Not sure that the last point of the description is correct. Maybe, the
+> 'xudma_rflow_put / return -ENODEV;' should be kept in order not to
+> override 'flow->udma_rflow'.
+> ---
+>  drivers/dma/ti/k3-udma-glue.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+> index dbccdc7c0ed5..890573eb1625 100644
+> --- a/drivers/dma/ti/k3-udma-glue.c
+> +++ b/drivers/dma/ti/k3-udma-glue.c
+> @@ -578,12 +578,12 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (IS_ERR(flow->udma_rflow)) {
+>  		ret = PTR_ERR(flow->udma_rflow);
+>  		dev_err(dev, "UDMAX rflow get err %d\n", ret);
+> -		goto err;
+> +		goto err_return;
 
-These matching items make all Acer TravelMate X514-51Ts apply the quirk.
+return ret;
 
-If BIOS version condition is added like:
+>  	}
+>  
+>  	if (flow->udma_rflow_id != xudma_rflow_get_id(flow->udma_rflow)) {
+> -		xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto err_rflow_put;
+>  	}
+>  
+>  	/* request and cfg rings */
+> @@ -592,7 +592,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (!flow->ringrx) {
+>  		ret = -ENODEV;
+>  		dev_err(dev, "Failed to get RX ring\n");
+> -		goto err;
+> +		goto err_rflow_put;
+>  	}
+>  
+>  	flow->ringrxfdq = k3_ringacc_request_ring(rx_chn->common.ringacc,
+> @@ -600,19 +600,19 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (!flow->ringrxfdq) {
+>  		ret = -ENODEV;
+>  		dev_err(dev, "Failed to get RXFDQ ring\n");
+> -		goto err;
+> +		goto err_ringrx_free;
+>  	}
+>  
+>  	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
+> -		goto err;
+> +		goto err_ringrxfdq_free;
+>  	}
+>  
+>  	ret = k3_ringacc_ring_cfg(flow->ringrxfdq, &flow_cfg->rxfdq_cfg);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to cfg ringrxfdq %d\n", ret);
+> -		goto err;
+> +		goto err_ringrxfdq_free;
+>  	}
+>  
+>  	if (rx_chn->remote) {
+> @@ -662,7 +662,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (ret) {
+>  		dev_err(dev, "flow%d config failed: %d\n", flow->udma_rflow_id,
+>  			ret);
+> -		goto err;
+> +		goto err_ringrxfdq_free;
+>  	}
+>  
+>  	rx_chn->flows_ready++;
+> @@ -670,8 +670,18 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  		flow->udma_rflow_id, rx_chn->flows_ready);
+>  
+>  	return 0;
+> -err:
+> -	k3_udma_glue_release_rx_flow(rx_chn, flow_idx);
+> +
+> +err_ringrxfdq_free:
+> +	k3_ringacc_ring_free(flow->ringrxfdq);
+> +
+> +err_ringrx_free:
+> +	k3_ringacc_ring_free(flow->ringrx);
+> +
+> +err_rflow_put:
+> +	xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
+> +	flow->udma_rflow = NULL;
+> +
+> +err_return:
 
-        {       /* Handle reboot issue on Acer TravelMate X514-51T */
-                .callback =3D set_efi_reboot,
-                .ident =3D "Acer TravelMate X514-51T",
-                .matches =3D {
-                        DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-                        DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
-                        DMI_MATCH(DMI_BIOS_VERSION, "V1.0"),
-                },
-        },
+and you don't need this label.
 
-Then, only Acer TravelMate X514-51T with older BIOS (1.04 and before,
-according BIOS version listed on Acer's website [1]) will apply the
-quirk.
-The one with newer BIOS's reboot type will be defined later by the codes.
+>  	return ret;
+>  }
+>  
+> 
 
-[1] https://www.acer.com/ac/en/US/content/support-product/7889?b=3D1
+With these changes:
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-> > I am not sure which option is better.  Any comment?
->
-> If you mean, "let's not do anything and fix it only when there's really
-> a need to fix anything", then yes, I agree.
+- Péter
 
-Got it!
-
-Thanks,
-Jian-Hong Pan
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
