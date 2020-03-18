@@ -2,151 +2,127 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC870C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F80C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E60E2071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCB5A2071C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S2QUz9ye"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SUl4y5Z3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgCRUEt (ORCPT
+        id S1727118AbgCRUFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:04:49 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44419 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbgCRUEt (ORCPT
+        Wed, 18 Mar 2020 16:05:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52636 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCRUFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:04:49 -0400
-Received: by mail-qk1-f195.google.com with SMTP id j4so24469187qkc.11;
-        Wed, 18 Mar 2020 13:04:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=38dh2PPgRMJiQBHEOQZk8qLC6LiToJV7VKtFihH5uCo=;
-        b=S2QUz9yegmtGVcrI7PALOueg3LtX9+Y2nePW+iw5nOd27fLOvhFveOVNqqoCGKlU/W
-         uYXQyyaPeu+z+OKPX8EArPMONYuIn/S9PXwL9ifgyZ7SWBci3Z+iQ0vjQ6IS4ClRWEDU
-         EMInQlnpoo7pRo8tPD27X/CCgGf4xT2RdFjbJyRf4jMdwP712PDy0Xg7zBgwxpLkT/Sy
-         jUZvwTRL63AdlRVkx094XlBR5ATs9z7oYWkCu/xx2vodDdp9rzrBGhJ4y0a5d4RwmDRo
-         EVIetQwg86Me4BW0MZajBDpBSNXBxVW0fuVcH99t3XrFmM0JifVvUq8el7SIn+Vo4hIN
-         OVWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=38dh2PPgRMJiQBHEOQZk8qLC6LiToJV7VKtFihH5uCo=;
-        b=nd4pjWkB92JEXtr3yv+fWRkFvAXK3VQ5FNsiNpSTtQ8v9pZApgQAPun7Y8i+Fhh9HZ
-         P0ZWWCjKdzuC0nmwq4jGYp5+KvKPcC+nD6UaiSJalv6b78a0EHlNuQWfQVptQF/zci9g
-         t5Fkaqg1NNNCKLYhvzOKYXoxul9Osyl8uSUmXrTHV/gbDAOlOLRGd0pKEySNbJeB6vEv
-         9GbOiRPSGyQ77mKbTTMHpMzIqfL92uSyV23CBXoA8KokR+Q2yBnkRVC7yvWDShRDhe/n
-         EvJrvnojyJ85rCS1W923ReEtfy4FYngeat8Vcilc8Ylo/CcshFRQWterjj4uF+ewmRCE
-         MnXA==
-X-Gm-Message-State: ANhLgQ2sD6oZNnv8yE0HiN4ZYAAmQzBDkyRygsPqxl2LV5kFbiEod0Mj
-        iQxUHC6ovBzBYnAyQC+x8Ws=
-X-Google-Smtp-Source: ADFU+vvSSx/aLP75QAsnIJH0zFusURLXxn/xtb6hp26t1ylsdl0h08PyN4efd2W5Ph3BJ9qMq9MWSQ==
-X-Received: by 2002:a37:8346:: with SMTP id f67mr5748951qkd.61.1584561886685;
-        Wed, 18 Mar 2020 13:04:46 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id t43sm3463626qtc.14.2020.03.18.13.04.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 13:04:45 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 63BF3404E4; Wed, 18 Mar 2020 17:04:43 -0300 (-03)
-Date:   Wed, 18 Mar 2020 17:04:43 -0300
-To:     Vijay Thakkar <vijaythakkar@me.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v6 0/3] perf vendor events amd: latest PMU events for
- zen1/zen2
-Message-ID: <20200318200443.GA29668@kernel.org>
-References: <20200318190002.307290-1-vijaythakkar@me.com>
+        Wed, 18 Mar 2020 16:05:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=gkorsAd3/7p8i8lrK7OdE0hB+8nbrVh0s1P6M0zluoI=; b=SUl4y5Z3PgoJ4Tx8P7YHb3xZSm
+        1lLwge50z34Q5sqZY0MMIEc0eMOubZkce41p6fbuXSbpxY70gXBcpambdUeh19eLa5T/WRmLYjf6L
+        jqgOV6ZnQiFSQbWpghciQk3+wlAnBnn7FlNneweuDHmdgob2rKSolR1dCP2WU1hFWcgA4s13nJ7FJ
+        ziI7xzGDYRD+uzAhp7OrL2MKqas3IbZrc+SlqffAsxAi2BYhRsI6XMeLYcRRUrZlJC4X0AJREvonh
+        XRXWuxOB03BrRGd3aBPNIoDhO5TS7D9b7fRHo8Ro85YFzqnuabXqfW+q9PzC3pA8QWZiOati+wm/y
+        x3NTmaAA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEewi-0004bA-No; Wed, 18 Mar 2020 20:05:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 85DA73010C2;
+        Wed, 18 Mar 2020 21:05:42 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4950B28528244; Wed, 18 Mar 2020 21:05:42 +0100 (CET)
+Date:   Wed, 18 Mar 2020 21:05:42 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: linux-next: Tree for Mar 18 (objtool)
+Message-ID: <20200318200542.GK20730@hirez.programming.kicks-ass.net>
+References: <20200318220920.48df2e76@canb.auug.org.au>
+ <d7dc5b4a-9a7e-ccf7-e00e-2e7f0e79a9bc@infradead.org>
+ <20200318182352.2dgwwl4ugbwndi4x@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200318190002.307290-1-vijaythakkar@me.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200318182352.2dgwwl4ugbwndi4x@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Mar 18, 2020 at 02:59:59PM -0400, Vijay Thakkar escreveu:
-> This series of patches brings the PMU events for AMD family 17h series
-> of processors up to date with the latest versions of the AMD processor
-> programming reference manuals.
+On Wed, Mar 18, 2020 at 01:23:52PM -0500, Josh Poimboeuf wrote:
+> On Wed, Mar 18, 2020 at 09:48:01AM -0700, Randy Dunlap wrote:
+> > On 3/18/20 4:09 AM, Stephen Rothwell wrote:
+> > > Hi all,
+> > > 
+> > > Changes since 20200317:
+> > > 
+> > 
+> > Hi,
+> > 
+> > For some reason, the attached .config file generates over 350 objtool warnings.
+> > There are all "unreachable instruction" warnings.
+> > 
+> > Here is a small sample:
+> > 
+> > mm/page-writeback.o: warning: objtool: __set_page_dirty_nobuffers()+0x25b: unreachable instruction
+> > kernel/sched/fair.o: warning: objtool: load_balance()+0x54c: unreachable instruction
+> > kernel/power/process.o: warning: objtool: freeze_kernel_threads()+0x115: unreachable instruction
+> > mm/readahead.o: warning: objtool: read_cache_pages_invalidate_page()+0x1b5: unreachable instruction
+> > kernel/power/suspend.o: warning: objtool: suspend_devices_and_enter()+0x101f: unreachable instruction
+> > kernel/sched/rt.o: warning: objtool: dequeue_top_rt_rq()+0x67: unreachable instruction
 > 
-> The first patch changes the pmu events mapfile to be more selective for
-> the model number rather than blanket detecting all f17h processors to
-> have the same events directory. This is required for the later patch
-> where we add events for zen2 based processors.
+> This seems to be caused by 
 > 
-> The second patch adds the PMU events for zen2.
+>   545ed6816b72 ("ubsan: add trap instrumentation option")
+> 
+> Kees, any idea why that commit causes at least some BUG() statements to
+> output an extra UD2?
 
-Thanks, re-tested and applied.
+"Built-in Function: void __builtin_trap (void)
 
-- Arnaldo
- 
-> Finally the third patch updates the zen1 PMU events to be in accordance
-> with the latest PPR version and bumps up the events version to v2.
-> 
-> Vijay Thakkar (3):
->   perf vendor events amd: restrict model detection for zen1 based
->     processors
->   perf vendor events amd: add Zen2 events
->   perf vendor events amd: update Zen1 events to V2
-> 
->  .../pmu-events/arch/x86/amdfam17h/branch.json |  12 -
->  .../pmu-events/arch/x86/amdfam17h/cache.json  | 329 -----------------
->  .../pmu-events/arch/x86/amdfam17h/other.json  |  65 ----
->  .../pmu-events/arch/x86/amdzen1/branch.json   |  23 ++
->  .../pmu-events/arch/x86/amdzen1/cache.json    | 294 +++++++++++++++
->  .../arch/x86/{amdfam17h => amdzen1}/core.json |  15 +-
->  .../floating-point.json                       |  64 +++-
->  .../x86/{amdfam17h => amdzen1}/memory.json    |  82 +++--
->  .../pmu-events/arch/x86/amdzen1/other.json    |  56 +++
->  .../pmu-events/arch/x86/amdzen2/branch.json   |  52 +++
->  .../pmu-events/arch/x86/amdzen2/cache.json    | 338 +++++++++++++++++
->  .../pmu-events/arch/x86/amdzen2/core.json     | 130 +++++++
->  .../arch/x86/amdzen2/floating-point.json      | 140 +++++++
->  .../pmu-events/arch/x86/amdzen2/memory.json   | 341 ++++++++++++++++++
->  .../pmu-events/arch/x86/amdzen2/other.json    | 115 ++++++
->  tools/perf/pmu-events/arch/x86/mapfile.csv    |   3 +-
->  16 files changed, 1606 insertions(+), 453 deletions(-)
->  delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/branch.json
->  delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
->  delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/branch.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/cache.json
->  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/core.json (87%)
->  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/floating-point.json (61%)
->  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json (63%)
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/branch.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/core.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/floating-point.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/other.json
-> 
-> -- 
-> 2.25.2
-> 
+    This function causes the program to exit abnormally. GCC implements
+    this function by using a target-dependent mechanism (such as
+    intentionally executing an illegal instruction) or by calling abort.
+    The mechanism used may vary from release to release so you should
+    not rely on any particular implementation."
 
--- 
+Sounds encouraging :-(
 
-- Arnaldo
+Clearly it now emits UD2, but who knows what it'll do next week.
+
+I think what happens is that we have code that does:
+
+	if (cond)
+		BUG()/WARN()
+
+And ubsan figures that @cond is something undefined, and then we get
+transformed into:
+
+	if (cond) {
+		__builtin_trap();
+		BUG()/WARN()
+	}
+
+And presto, double UD2.
+
+Since x86 has GENERIC_BUG unconditionally, we should actually have
+__bug_table entries for each BUG()/WARN() instance, which should allow
+us to distinguish between a proper BUG()/WARN() and this
+__builtin_trap() nonsense.
+
+
