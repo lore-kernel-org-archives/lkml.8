@@ -2,151 +2,262 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C89C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECE0C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0D920768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453C420768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:45:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lgprW6Nd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ST6aOXwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgCRElh (ORCPT
+        id S1726722AbgCREpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 00:41:37 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46840 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbgCRElg (ORCPT
+        Wed, 18 Mar 2020 00:45:10 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:60377 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726227AbgCREpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 00:41:36 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02I4fTiH070612;
-        Tue, 17 Mar 2020 23:41:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584506489;
-        bh=LoiZ6h8ajGkis0ecLv9Oq8+1K9qCoWExGRKwcLAtTJ0=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=lgprW6NdXpMlSIhwZrRHCmav/dErsb0lZDEwnDEDpKhJrUyzAL1wq1c2wG168x+hR
-         VdEB2v1w0QOnlT1/zjWulJ/LXWRJDOYZQlPTmgoQ8u24NrhBjQhcOrcvaJ7u06xZTo
-         leJA9xftRaiGmI3M00S89aOo4ZU+csQsS1fuU1AM=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02I4fTah100007;
-        Tue, 17 Mar 2020 23:41:29 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 17
- Mar 2020 23:41:29 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 17 Mar 2020 23:41:29 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02I4fQBT096749;
-        Tue, 17 Mar 2020 23:41:26 -0500
-Subject: Re: [PATCH v3 4/5] pwm: omap-dmtimer: Do not disable pwm before
- changing period/duty_cycle
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Vignesh R <vigneshr@ti.com>,
-        <kernel@pengutronix.de>
-References: <20200312042210.17344-1-lokeshvutla@ti.com>
- <20200312042210.17344-5-lokeshvutla@ti.com>
- <20200312064042.p7himm3odxjyzroi@pengutronix.de>
- <f250549f-1e7c-06d6-b2a4-7ae01c06725b@ti.com>
- <20200312084739.isixgdo3txr6rjzg@pengutronix.de>
- <2a5a06cd-7aca-c450-b048-33329d058eca@ti.com>
-Message-ID: <12f9a721-efd5-d5c0-1468-995b5674ff13@ti.com>
-Date:   Wed, 18 Mar 2020 10:10:37 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <2a5a06cd-7aca-c450-b048-33329d058eca@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 18 Mar 2020 00:45:09 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584506708; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=0eFB1VlZc93rqDDQYQs0Ze91zTgTIOMxR3L9uNrGImk=; b=ST6aOXwGKUcnxqF6WhQWJdyBmJD6t66gGBZz4xFVZpcNM3UGvh+5433Q6NsgfSR4posCT71H
+ MVZ/smMdmQUkq/khneJKWSJ83R1VFT+UXBKxmgi2DdZLxkSJ8B4Ng7p6UalIvPcF6e5EBGVw
+ D/3WCWlUz3co+zoUsZv6jBL67lE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e71a750.7fedda7507a0-smtp-out-n02;
+ Wed, 18 Mar 2020 04:45:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0C193C433BA; Wed, 18 Mar 2020 04:45:04 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 328DEC433D2;
+        Wed, 18 Mar 2020 04:45:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 328DEC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] f2fs: fix long latency due to discard during umount
+Date:   Wed, 18 Mar 2020 10:14:49 +0530
+Message-Id: <1584506689-5041-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+F2FS already has a default timeout of 5 secs for discards that
+can be issued during umount, but it can take more than the 5 sec
+timeout if the underlying UFS device queue is already full and there
+are no more available free tags to be used. In that case, submit_bio()
+will wait for the already queued discard requests to complete to get
+a free tag, which can potentially take way more than 5 sec.
 
-On 12/03/20 4:14 PM, Lokesh Vutla wrote:
-> Hi Uwe,
-> 
-> On 12/03/20 2:17 PM, Uwe Kleine-König wrote:
->> On Thu, Mar 12, 2020 at 01:35:32PM +0530, Lokesh Vutla wrote:
->>> On 12/03/20 12:10 PM, Uwe Kleine-König wrote:
->>>> On Thu, Mar 12, 2020 at 09:52:09AM +0530, Lokesh Vutla wrote:
->>>>> Only the Timer control register(TCLR) cannot be updated when the timer
->>>>> is running. Registers like Counter register(TCRR), loader register(TLDR),
->>>>> match register(TMAR) can be updated when the counter is running. Since
->>>>> TCLR is not updated in pwm_omap_dmtimer_config(), do not stop the
->>>>> timer for period/duty_cycle update.
->>>>
->>>> I'm not sure what is sensible here. Stopping the PWM for a short period
->>>> is bad, but maybe emitting a wrong period isn't better. You can however
->>>> optimise it if only one of period or duty_cycle changes.
->>>>
->>>> @Thierry, what is your position here? I tend to say a short stop is
->>>> preferable.
->>>
->>> Short stop has side effects especially in the case where 1PPS is generated using
->>> this PWM. In this case where PWM period is continuously synced with PTP clock,
->>> cannot expect any breaks in PWM. This doesn't fall in the above limitations as
->>> well. as duty_cycle is not a worry and only the rising edge is all that matters.
->>>
->>> Also any specific reason why you wanted to stop rather than having the mentioned
->>> limitation? it is just a corner anyway and doesn't happen all the time.
->>
->> I'm a bit torn here. Which of the two steps out of line is worse depends
->> on what is driven by the PWM in question. And also I think ignoring
->> "just corner cases" is a reliable way into trouble.
-> 
-> I do agree that corner cases should not be ignored. But in this particular
-> driver, just trying to explain the effect of this corner case. On dynamic pwm
-> period update, the current pwm cycle might generate a period with mixed
-> settings. IMHO, it is okay to live with it and mark it as a limitation as you
-> pointed out in case of sifive driver[0].
+Fix this by submitting the discard requests with REQ_NOWAIT
+flags during umount. This will return -EAGAIN for UFS queue/tag full
+scenario without waiting in the context of submit_bio(). The FS can
+then handle these requests by retrying again within the stipulated
+discard timeout period to avoid long latencies.
 
-Not sure what is the conclusion here. If there are no objections on this series,
-can it be merged?
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+---
+v2:
+- Handle the case where a dc can have multiple bios associated with it
 
-Thanks and regards,
-Lokesh
+ fs/f2fs/f2fs.h    |  1 +
+ fs/f2fs/segment.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 74 insertions(+), 10 deletions(-)
 
-> 
-> 
->>
->> The usual PWM contributer (understandably) cares mostly about their own
->> problem they have to solve. If however you take a step back and care
->> about the PWM framework as a whole to be capable to solve problems in
->> general, such that any consumer just has to know that there is a PWM and
->> start requesting specific settings for their work to get done, it gets
->> obvious that you want some kind of uniform behaviour of each hardware
->> driver. And then a short inactive break between two periods is more
->> common and better understandable than a mixed period.
-> 
-> But the problem here is that inactive breaks between two periods is not desired.
-> Because the pwm is used to generate a 1PPS signal and is continuously
-> synchronized with PTP clock.
-> 
-> I am up if this can be solved generically. But updating period is very specific
-> to hardware implementation. Not sure what generic solution can be brought out of
-> this. Please correct me if I am wrong.
-> 
-> [0]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pwm/pwm-sifive.c#n7
-> 
-> Thanks and regards,
-> Lokesh
-> 
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 12a197e..67b8dcc 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -340,6 +340,7 @@ struct discard_cmd_control {
+ 	struct list_head pend_list[MAX_PLIST_NUM];/* store pending entries */
+ 	struct list_head wait_list;		/* store on-flushing entries */
+ 	struct list_head fstrim_list;		/* in-flight discard from fstrim */
++	struct list_head retry_list;		/* list of cmds to retry */
+ 	wait_queue_head_t discard_wait_queue;	/* waiting queue for wake-up */
+ 	unsigned int discard_wake;		/* to wake up discard thread */
+ 	struct mutex cmd_lock;
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index fb3e531..4162c76 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
+ 	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
+ 	unsigned long flags;
+ 
+-	dc->error = blk_status_to_errno(bio->bi_status);
+-
+ 	spin_lock_irqsave(&dc->lock, flags);
++	if (!dc->error)
++		dc->error = blk_status_to_errno(bio->bi_status);
++
+ 	dc->bio_ref--;
+-	if (!dc->bio_ref && dc->state == D_SUBMIT) {
+-		dc->state = D_DONE;
+-		complete_all(&dc->wait);
++	if (!dc->bio_ref) {
++		if (dc->error || dc->state == D_SUBMIT) {
++			dc->state = D_DONE;
++			complete_all(&dc->wait);
++		}
+ 	}
+ 	spin_unlock_irqrestore(&dc->lock, flags);
+ 	bio_put(bio);
+@@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+ 	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
+ 					&(dcc->fstrim_list) : &(dcc->wait_list);
+-	int flag = dpolicy->sync ? REQ_SYNC : 0;
+-	block_t lstart, start, len, total_len;
++	int flag;
++	block_t lstart, start, len, total_len, orig_len;
+ 	int err = 0;
+ 
++	flag = dpolicy->sync ? REQ_SYNC : 0;
++	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
++
+ 	if (dc->state != D_PREP)
+ 		return 0;
+ 
+@@ -1139,7 +1145,7 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 	lstart = dc->lstart;
+ 	start = dc->start;
+ 	len = dc->len;
+-	total_len = len;
++	orig_len = total_len = len;
+ 
+ 	dc->len = 0;
+ 
+@@ -1203,6 +1209,14 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 		bio->bi_end_io = f2fs_submit_discard_endio;
+ 		bio->bi_opf |= flag;
+ 		submit_bio(bio);
++		if (flag & REQ_NOWAIT) {
++			if (dc->error == -EAGAIN) {
++				dc->len = orig_len;
++				list_move(&dc->list, &dcc->retry_list);
++				err = dc->error;
++				break;
++			}
++		}
+ 
+ 		atomic_inc(&dcc->issued_discard);
+ 
+@@ -1463,6 +1477,40 @@ static unsigned int __issue_discard_cmd_orderly(struct f2fs_sb_info *sbi,
+ 	return issued;
+ }
+ 
++static bool __should_discard_retry(struct f2fs_sb_info *sbi,
++		struct discard_policy *dpolicy)
++{
++	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
++	struct discard_cmd *dc, *tmp;
++	bool retry = false;
++	unsigned long flags;
++
++	if (dpolicy->type != DPOLICY_UMOUNT)
++		f2fs_bug_on(sbi, 1);
++
++	mutex_lock(&dcc->cmd_lock);
++	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
++		if (dpolicy->timeout != 0 &&
++			f2fs_time_over(sbi, dpolicy->timeout)) {
++			retry = false;
++			break;
++		}
++
++		spin_lock_irqsave(&dc->lock, flags);
++		if (!dc->bio_ref) {
++			dc->state = D_PREP;
++			dc->error = 0;
++			reinit_completion(&dc->wait);
++			__relocate_discard_cmd(dcc, dc);
++			retry = true;
++		}
++		spin_unlock_irqrestore(&dc->lock, flags);
++	}
++	mutex_unlock(&dcc->cmd_lock);
++
++	return retry;
++}
++
+ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 					struct discard_policy *dpolicy)
+ {
+@@ -1470,12 +1518,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 	struct list_head *pend_list;
+ 	struct discard_cmd *dc, *tmp;
+ 	struct blk_plug plug;
+-	int i, issued = 0;
++	int i, err, issued = 0;
+ 	bool io_interrupted = false;
+ 
+ 	if (dpolicy->timeout != 0)
+ 		f2fs_update_time(sbi, dpolicy->timeout);
+ 
++retry:
+ 	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+ 		if (dpolicy->timeout != 0 &&
+ 				f2fs_time_over(sbi, dpolicy->timeout))
+@@ -1509,7 +1558,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 				break;
+ 			}
+ 
+-			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
++			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
++			if (err == -EAGAIN)
++				congestion_wait(BLK_RW_ASYNC,
++						DEFAULT_IO_TIMEOUT);
+ 
+ 			if (issued >= dpolicy->max_requests)
+ 				break;
+@@ -1522,6 +1574,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 			break;
+ 	}
+ 
++	if (!list_empty(&dcc->retry_list) &&
++		__should_discard_retry(sbi, dpolicy))
++		goto retry;
++
+ 	if (!issued && io_interrupted)
+ 		issued = -1;
+ 
+@@ -1613,6 +1669,12 @@ static unsigned int __wait_discard_cmd_range(struct f2fs_sb_info *sbi,
+ 		goto next;
+ 	}
+ 
++	if (dpolicy->type == DPOLICY_UMOUNT &&
++		!list_empty(&dcc->retry_list)) {
++		wait_list = &dcc->retry_list;
++		goto next;
++	}
++
+ 	return trimmed;
+ }
+ 
+@@ -2051,6 +2113,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
+ 	for (i = 0; i < MAX_PLIST_NUM; i++)
+ 		INIT_LIST_HEAD(&dcc->pend_list[i]);
+ 	INIT_LIST_HEAD(&dcc->wait_list);
++	INIT_LIST_HEAD(&dcc->retry_list);
+ 	INIT_LIST_HEAD(&dcc->fstrim_list);
+ 	mutex_init(&dcc->cmd_lock);
+ 	atomic_set(&dcc->issued_discard, 0);
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
