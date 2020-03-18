@@ -2,151 +2,75 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA49C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D367C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8173F20754
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E550320768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:13:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="AnPqBJmG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbgCRTNE (ORCPT
+        id S1726975AbgCRTNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:13:04 -0400
-Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:25980 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726733AbgCRTNE (ORCPT
+        Wed, 18 Mar 2020 15:13:51 -0400
+Received: from mr85p00im-hyfv06021301.me.com ([17.58.23.188]:36227 "EHLO
+        mr85p00im-hyfv06021301.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726619AbgCRTNv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 15:13:04 -0400
-Received: from localhost.localdomain ([93.22.36.95])
-        by mwinf5d72 with ME
-        id FvCu22009239p2M03vCuqv; Wed, 18 Mar 2020 20:12:57 +0100
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 18 Mar 2020 20:12:57 +0100
-X-ME-IP: 93.22.36.95
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     vkoul@kernel.org, dan.j.williams@intel.com, peter.ujfalusi@ti.com,
-        grygorii.strashko@ti.com
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH V2] dmaengine: ti: k3-udma-glue: Fix an error handling path in 'k3_udma_glue_cfg_rx_flow()'
-Date:   Wed, 18 Mar 2020 20:12:09 +0100
-Message-Id: <20200318191209.1267-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Wed, 18 Mar 2020 15:13:51 -0400
+X-Greylist: delayed 365 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Mar 2020 15:13:51 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+        t=1584558466; bh=W59Q3IPZStTRzJwL89Y5ugagdGKYOmdfb4lMadn5858=;
+        h=Date:From:To:Subject:Message-ID:Content-Type;
+        b=AnPqBJmG/gxtXlxn6ikbZ2lUFHd4lUdRyszLf66hRwppzIMevNhJu34ZqVHam1Q70
+         jSEzKskcyyzibosxKvojqCElJ41tkusxHzPodSkoHZh19opy4AwNWgyU52KVSIfhHg
+         h3GMVOneegyr9/HDJg5Q1mHiz9f5PMJ4t7O/8ljXavAUhhJ4sbs97ltPpTp9zdmS0O
+         AXm+0NNIeDeK5HiAipwPbDPXbv9+IlOx+xXp25qwXjwm5zFBC2cF3D9H01L3RyZDXa
+         j1L5DWZ5NJxyeQf4j/A5JzjeAYwxf+HnKzcVhQpGCX5/mcREK6eVSgmujAm4rCMUGa
+         sRhpJVn0oVs2Q==
+Received: from shwetrath.localdomain (unknown [66.199.8.131])
+        by mr85p00im-hyfv06021301.me.com (Postfix) with ESMTPSA id 6847B403FB;
+        Wed, 18 Mar 2020 19:07:45 +0000 (UTC)
+Date:   Wed, 18 Mar 2020 15:07:43 -0400
+From:   Vijay Thakkar <vijaythakkar@me.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] perf vendor events amd: add Zen2 events
+Message-ID: <20200318190743.GA307603@shwetrath.localdomain>
+References: <20200316225238.150154-1-vijaythakkar@me.com>
+ <20200316225238.150154-3-vijaythakkar@me.com>
+ <20200318142057.GD11531@kernel.org>
+ <20200318152112.GA231037@shwetrath.localdomain>
+ <20200318155245.GJ11531@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318155245.GJ11531@kernel.org>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-03-18_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=890 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-2003180086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All but one error handling paths in the 'k3_udma_glue_cfg_rx_flow()'
-function 'goto err' and call 'k3_udma_glue_release_rx_flow()'.
+Okay, should be updated now in the v6 series. Sorry for the last minute
+change, and thanks for your patience.
 
-This not correct because this function has a 'channel->flows_ready--;' at
-the end, but 'flows_ready' has not been incremented here, when we branch to
-the error handling path.
-
-In order to keep a correct value in 'flows_ready', un-roll
-'k3_udma_glue_release_rx_flow()', simplify it, add some labels and branch
-at the correct places when an error is detected.
-
-Doing so, we also NULLify 'flow->udma_rflow' in a path that was lacking it.
-
-Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine user")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-V2: adjust subject
-    direct return in the first error handling path
----
- drivers/dma/ti/k3-udma-glue.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index dbccdc7c0ed5..890573eb1625 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -578,12 +578,12 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 	if (IS_ERR(flow->udma_rflow)) {
- 		ret = PTR_ERR(flow->udma_rflow);
- 		dev_err(dev, "UDMAX rflow get err %d\n", ret);
--		goto err;
-+		return ret;
- 	}
- 
- 	if (flow->udma_rflow_id != xudma_rflow_get_id(flow->udma_rflow)) {
--		xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto err_rflow_put;
- 	}
- 
- 	/* request and cfg rings */
-@@ -592,7 +592,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 	if (!flow->ringrx) {
- 		ret = -ENODEV;
- 		dev_err(dev, "Failed to get RX ring\n");
--		goto err;
-+		goto err_rflow_put;
- 	}
- 
- 	flow->ringrxfdq = k3_ringacc_request_ring(rx_chn->common.ringacc,
-@@ -600,19 +600,19 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 	if (!flow->ringrxfdq) {
- 		ret = -ENODEV;
- 		dev_err(dev, "Failed to get RXFDQ ring\n");
--		goto err;
-+		goto err_ringrx_free;
- 	}
- 
- 	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
- 	if (ret) {
- 		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
--		goto err;
-+		goto err_ringrxfdq_free;
- 	}
- 
- 	ret = k3_ringacc_ring_cfg(flow->ringrxfdq, &flow_cfg->rxfdq_cfg);
- 	if (ret) {
- 		dev_err(dev, "Failed to cfg ringrxfdq %d\n", ret);
--		goto err;
-+		goto err_ringrxfdq_free;
- 	}
- 
- 	if (rx_chn->remote) {
-@@ -662,7 +662,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 	if (ret) {
- 		dev_err(dev, "flow%d config failed: %d\n", flow->udma_rflow_id,
- 			ret);
--		goto err;
-+		goto err_ringrxfdq_free;
- 	}
- 
- 	rx_chn->flows_ready++;
-@@ -670,8 +670,17 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
- 		flow->udma_rflow_id, rx_chn->flows_ready);
- 
- 	return 0;
--err:
--	k3_udma_glue_release_rx_flow(rx_chn, flow_idx);
-+
-+err_ringrxfdq_free:
-+	k3_ringacc_ring_free(flow->ringrxfdq);
-+
-+err_ringrx_free:
-+	k3_ringacc_ring_free(flow->ringrx);
-+
-+err_rflow_put:
-+	xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
-+	flow->udma_rflow = NULL;
-+
- 	return ret;
- }
- 
--- 
-2.20.1
-
+-Vijay
