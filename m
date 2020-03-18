@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69C3C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842EFC4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF0C20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5964920773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565278;
-	bh=42J0861Sc9p/xPMPpZePXMkomnaCTvjQRTecYhjzpUA=;
+	s=default; t=1584565281;
+	bh=msM6rF/T7MRcktcKru7zqr7Zy+aSiyzC2Mf1ziwsCYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pfQ7qA/TthWKmdjLgQJnELNkPkl24TwZmkhNOytDD5FZl+2RlnAM3d0WQM7vJrbah
-	 8jrfgHCYpZJ2HDmahqGvUSvnlywLoqzQsVkQFuBj7aLKAdiX7Uit9qaP1kJn9va6e0
-	 pouI8vnd3Z02WXhF9+DytWQKp6O1g+MASh2do7Ls=
+	b=xfOSoT6plsYuiBR4dffTtYEZbON0HTe6OoYVWNdpQxW4bUw30CBJiUTTmtafaXqte
+	 pYzdVaItpXdGdDmSpIrliSCbQC1DS4uTa+Pl5F9SaS2JrUwp3lnQMBvpZw3tZpu3PR
+	 AXqh/BHFjUJCMoJzAns02e2Ywx3Fg/ylVgYJ/YYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbgCRVBR (ORCPT
+        id S1728568AbgCRU4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:01:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57158 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbgCRU4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:19 -0400
+        id S1728493AbgCRUz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 561D420B1F;
-        Wed, 18 Mar 2020 20:56:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70291208E4;
+        Wed, 18 Mar 2020 20:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564979;
-        bh=42J0861Sc9p/xPMPpZePXMkomnaCTvjQRTecYhjzpUA=;
+        s=default; t=1584564958;
+        bh=msM6rF/T7MRcktcKru7zqr7Zy+aSiyzC2Mf1ziwsCYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ycejR//NFAk/yqrhHfNbUyjL5gaXotJAFo45Hsss3odDq4bz3aO5KkpUa+Cx3DkLf
-         gMSsTCPgpFNE8wtBO7E0tb5N6mVbnoKxQ8ZkxtVB7cY3L68eiMhoF0zfapLYlrO+Y5
-         HzNcogGlNekaKFnZtaVaIEyUgdO0c8K3qgSypVOo=
+        b=FswIspnUtu6MgHsNVIv/WIsdy/z13onnm+7GVPlig6+luINjpZNV15T5YZzCXehL8
+         pTxzdrlwb0+7gv9Va2iEfNUNyfiQVb09fvdvkVwM9Ib8Ki/5XEKpfTtTp16NKfP+87
+         cTfPq4egqfbmWPAlejCgp78KxPRwxGBF80cTq2JA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Halil Pasic <pasic@linux.ibm.com>, Jens Axboe <axboe@kernel.dk>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 20/28] virtio-blk: fix hw_queue stopped on arbitrary error
-Date:   Wed, 18 Mar 2020 16:55:47 -0400
-Message-Id: <20200318205555.17447-20-sashal@kernel.org>
+Cc:     =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        cgroups@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/28] cgroup: Iterate tasks that did not finish do_exit()
+Date:   Wed, 18 Mar 2020 16:55:29 -0400
+Message-Id: <20200318205555.17447-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
 References: <20200318205555.17447-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,53 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Halil Pasic <pasic@linux.ibm.com>
+From: Michal Koutný <mkoutny@suse.com>
 
-[ Upstream commit f5f6b95c72f7f8bb46eace8c5306c752d0133daa ]
+[ Upstream commit 9c974c77246460fa6a92c18554c3311c8c83c160 ]
 
-Since nobody else is going to restart our hw_queue for us, the
-blk_mq_start_stopped_hw_queues() is in virtblk_done() is not sufficient
-necessarily sufficient to ensure that the queue will get started again.
-In case of global resource outage (-ENOMEM because mapping failure,
-because of swiotlb full) our virtqueue may be empty and we can get
-stuck with a stopped hw_queue.
+PF_EXITING is set earlier than actual removal from css_set when a task
+is exitting. This can confuse cgroup.procs readers who see no PF_EXITING
+tasks, however, rmdir is checking against css_set membership so it can
+transitionally fail with EBUSY.
 
-Let us not stop the queue on arbitrary errors, but only on -EONSPC which
-indicates a full virtqueue, where the hw_queue is guaranteed to get
-started by virtblk_done() before when it makes sense to carry on
-submitting requests. Let us also remove a stale comment.
+Fix this by listing tasks that weren't unlinked from css_set active
+lists.
+It may happen that other users of the task iterator (without
+CSS_TASK_ITER_PROCS) spot a PF_EXITING task before cgroup_exit(). This
+is equal to the state before commit c03cd7738a83 ("cgroup: Include dying
+leaders with live threads in PROCS iterations") but it may be reviewed
+later.
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Fixes: f7728002c1c7 ("virtio_ring: fix return code on DMA mapping fails")
-Link: https://lore.kernel.org/r/20200213123728.61216-2-pasic@linux.ibm.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Reported-by: Suren Baghdasaryan <surenb@google.com>
+Fixes: c03cd7738a83 ("cgroup: Include dying leaders with live threads in PROCS iterations")
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/virtio_blk.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ include/linux/cgroup.h |  1 +
+ kernel/cgroup/cgroup.c | 23 ++++++++++++++++-------
+ 2 files changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 8767401f75e04..19d226ff15ef8 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -271,10 +271,12 @@ static blk_status_t virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
- 		err = virtblk_add_req(vblk->vqs[qid].vq, vbr, vbr->sg, num);
- 	if (err) {
- 		virtqueue_kick(vblk->vqs[qid].vq);
--		blk_mq_stop_hw_queue(hctx);
-+		/* Don't stop the queue if -ENOMEM: we may have failed to
-+		 * bounce the buffer due to global resource outage.
-+		 */
-+		if (err == -ENOSPC)
-+			blk_mq_stop_hw_queue(hctx);
- 		spin_unlock_irqrestore(&vblk->vqs[qid].lock, flags);
--		/* Out of mem doesn't actually happen, since we fall back
--		 * to direct descriptors */
- 		if (err == -ENOMEM || err == -ENOSPC)
- 			return BLK_STS_RESOURCE;
- 		return BLK_STS_IOERR;
+diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
+index 0e21619f1c03c..61ab21c348661 100644
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -61,6 +61,7 @@ struct css_task_iter {
+ 	struct list_head		*mg_tasks_head;
+ 	struct list_head		*dying_tasks_head;
+ 
++	struct list_head		*cur_tasks_head;
+ 	struct css_set			*cur_cset;
+ 	struct css_set			*cur_dcset;
+ 	struct task_struct		*cur_task;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 829943aad7beb..b275f0d0211aa 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4051,12 +4051,16 @@ static void css_task_iter_advance_css_set(struct css_task_iter *it)
+ 		}
+ 	} while (!css_set_populated(cset) && list_empty(&cset->dying_tasks));
+ 
+-	if (!list_empty(&cset->tasks))
++	if (!list_empty(&cset->tasks)) {
+ 		it->task_pos = cset->tasks.next;
+-	else if (!list_empty(&cset->mg_tasks))
++		it->cur_tasks_head = &cset->tasks;
++	} else if (!list_empty(&cset->mg_tasks)) {
+ 		it->task_pos = cset->mg_tasks.next;
+-	else
++		it->cur_tasks_head = &cset->mg_tasks;
++	} else {
+ 		it->task_pos = cset->dying_tasks.next;
++		it->cur_tasks_head = &cset->dying_tasks;
++	}
+ 
+ 	it->tasks_head = &cset->tasks;
+ 	it->mg_tasks_head = &cset->mg_tasks;
+@@ -4114,10 +4118,14 @@ static void css_task_iter_advance(struct css_task_iter *it)
+ 		else
+ 			it->task_pos = it->task_pos->next;
+ 
+-		if (it->task_pos == it->tasks_head)
++		if (it->task_pos == it->tasks_head) {
+ 			it->task_pos = it->mg_tasks_head->next;
+-		if (it->task_pos == it->mg_tasks_head)
++			it->cur_tasks_head = it->mg_tasks_head;
++		}
++		if (it->task_pos == it->mg_tasks_head) {
+ 			it->task_pos = it->dying_tasks_head->next;
++			it->cur_tasks_head = it->dying_tasks_head;
++		}
+ 		if (it->task_pos == it->dying_tasks_head)
+ 			css_task_iter_advance_css_set(it);
+ 	} else {
+@@ -4136,11 +4144,12 @@ static void css_task_iter_advance(struct css_task_iter *it)
+ 			goto repeat;
+ 
+ 		/* and dying leaders w/o live member threads */
+-		if (!atomic_read(&task->signal->live))
++		if (it->cur_tasks_head == it->dying_tasks_head &&
++		    !atomic_read(&task->signal->live))
+ 			goto repeat;
+ 	} else {
+ 		/* skip all dying ones */
+-		if (task->flags & PF_EXITING)
++		if (it->cur_tasks_head == it->dying_tasks_head)
+ 			goto repeat;
+ 	}
+ }
 -- 
 2.20.1
 
