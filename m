@@ -2,102 +2,111 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A642EC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FED8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AABD20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A8220753
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:31:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n9Fpd1Nu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bg0ZFkiW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgCRRbs (ORCPT
+        id S1727056AbgCRRb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:31:48 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44764 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbgCRRbs (ORCPT
+        Wed, 18 Mar 2020 13:31:58 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:41470 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726671AbgCRRb5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:31:48 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b72so14245401pfb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:31:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=0oVbpGrGaY5Fn00wldsg1aTGnPnQCIYKyx4rmQ1e970=;
-        b=n9Fpd1NuTWVQu9epcV+JGD/nHGepi9Ph3ZkaXkMfpihjmZaS+QMz8V/HlkgjbLLACj
-         LorPwwfzVo/KefRYCqMYchP1ZOL5nqZ/4o2aZ9miAMO1ZyUHoMsHJq3vbyOQSCVFAG5v
-         7Sm2quzm5bDNKFBNtlt5kO9ipfd2Wdp2KZa2o=
+        Wed, 18 Mar 2020 13:31:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584552716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bIEdAWs2IdQALzDuEkemxXWdr2rAA5T/LFwoILQOC80=;
+        b=Bg0ZFkiWarRj0LI+ktYqCH68UBXBuBXiF7LCEAxs+SPMc5n2po3o/qpDs5QsVHfre37yTF
+        ovLz6eG+w8Kpjxn0Erb0hoEDz9g8JdIqq6xBOJvhtRCsTmvxxu/GdjwMxpln2M2ahH5X4C
+        msgeuglfEe6s9SpKB9q4D78nUqFJJSs=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-144-0CGrEspdMTe-dwDWNeCVtQ-1; Wed, 18 Mar 2020 13:31:55 -0400
+X-MC-Unique: 0CGrEspdMTe-dwDWNeCVtQ-1
+Received: by mail-wr1-f71.google.com with SMTP id u12so10261501wrw.10
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:31:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=0oVbpGrGaY5Fn00wldsg1aTGnPnQCIYKyx4rmQ1e970=;
-        b=g2H9OHvit1D6mkrdphomlZdzOcw+LWjw+cy7zhd9QhjmnHVAYmRgM13roVdPD2H2Kp
-         VNwLyedYxPDjmv/FlCFMOHg13r3MEY6IRPrHyFE2GoRei91QzIo7TR7JLgg6OWdjxvxC
-         BAeNLrqNkkK867j4iN9xyTUCCgsdO9CVllGWl9b00tFscFiebaHm5VPO8ybHFwcPrS8M
-         uDSMzxwxtQ9XYEcd+5KHr2Msg6BkH4qWkSuawzcz5HKPExEM15ayUUcdkymSnIixWqML
-         F0Shk5QP13NkvBLH0p8pG6+s0BaVCnElFYJC4YsvVTT8domNhB7+VocV7qGqJreK/H+i
-         uiYQ==
-X-Gm-Message-State: ANhLgQ0fNJyh4Xg0meJUbGv6Ma4fWa6PDx9iWeyAZNGdwIdRIsPQ6/cJ
-        79EmQ5OvmH4gQfM7XoCJGhKkItxP+7c=
-X-Google-Smtp-Source: ADFU+vuzc7K3+9m1BhQ+oGkfVeBCP83NSpJFatT09znpgGeh3rcLWxfIVkWImKTQR4sb5hCcgwyFTQ==
-X-Received: by 2002:aa7:8087:: with SMTP id v7mr5297772pff.96.1584552706680;
-        Wed, 18 Mar 2020 10:31:46 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k24sm7180866pgm.61.2020.03.18.10.31.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 10:31:46 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bIEdAWs2IdQALzDuEkemxXWdr2rAA5T/LFwoILQOC80=;
+        b=ZjYEwOjNQ52Sw4McHOvDH4xuQv/vnJ3ivsq+mI8zTz9Sbsywa6hwqLMk9LKDoReDzr
+         p7wZ3M/yU2Oat8naLXF0A//nw8ohIL03o2WY73qGSsu8mcFxZJlA5Zrue33qHj/lSo/X
+         bnSWmk7YLbH7nQ86zoh+LdrG3uBaeiFeN5PUXx2N+Q4KXTSbvljHR9px0nJqGTn/nMFN
+         Ms5cEBVt2u0NjYaKeigp3Rmv10n0f2eqB1/CgWc09kH49uOmMTi1C/gCqMGgTFs0tdY7
+         hGFVsdQI1nVIZOdTIxzNM/cQXQr/O+1P3SnCg3rjLoiUbiwUPT9OGdUMyJCVC1aSsrJy
+         SXpQ==
+X-Gm-Message-State: ANhLgQ30ELJLzAZ9x7uCCPFhQX6bisL2IPGkBJEdujCI/9afs+O5RGwy
+        Br0WUF43S5b05kcdP5+NQuvm4M8ds/ct6E5g83MrmyVcqeTrvrgeElI52FbC/kbPJl0LmcqMSTz
+        NBTQdlnD9jMVACdPzX4CN+qBg
+X-Received: by 2002:adf:a4d2:: with SMTP id h18mr6943176wrb.90.1584552713813;
+        Wed, 18 Mar 2020 10:31:53 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvMOb5pOQOV0P/ATjTil/qiszSghckBJJr6fWehPfragC3y/9MOIQObyV9hSemvUTYNKmqFBA==
+X-Received: by 2002:adf:a4d2:: with SMTP id h18mr6943159wrb.90.1584552713550;
+        Wed, 18 Mar 2020 10:31:53 -0700 (PDT)
+Received: from [192.168.178.58] ([151.21.15.43])
+        by smtp.gmail.com with ESMTPSA id p8sm10385903wrw.19.2020.03.18.10.31.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Mar 2020 10:31:53 -0700 (PDT)
+Subject: Re: [PATCH v4 0/2] KVM: VMX: cleanup VMXON region allocation
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200318171752.173073-1-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <3d992436-ada6-3674-9085-060f930a949e@redhat.com>
+Date:   Wed, 18 Mar 2020 18:31:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200318085542.081ca750@lwn.net>
-References: <20200318054425.111928-1-swboyd@chromium.org> <20200318085542.081ca750@lwn.net>
-Subject: Re: [PATCH] docs: locking: Add 'need' to hardirq section
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-To:     Jonathan Corbet <corbet@lwn.net>
-Date:   Wed, 18 Mar 2020 10:31:45 -0700
-Message-ID: <158455270522.152100.5382041841043211189@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <20200318171752.173073-1-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jonathan Corbet (2020-03-18 07:55:42)
-> On Tue, 17 Mar 2020 22:44:25 -0700
-> Stephen Boyd <swboyd@chromium.org> wrote:
->=20
-> > Add the missing word to make this sentence read properly.
-> >=20
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > ---
-> >  Documentation/kernel-hacking/locking.rst | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/kernel-hacking/locking.rst b/Documentation/k=
-ernel-hacking/locking.rst
-> > index a8518ac0d31d..9850c1e52607 100644
-> > --- a/Documentation/kernel-hacking/locking.rst
-> > +++ b/Documentation/kernel-hacking/locking.rst
-> > @@ -263,7 +263,7 @@ by a hardware interrupt on another CPU. This is whe=
-re
-> >  interrupts on that cpu, then grab the lock.
-> >  :c:func:`spin_unlock_irq()` does the reverse.
-> > =20
-> > -The irq handler does not to use :c:func:`spin_lock_irq()`, because
-> > +The irq handler does not need to use :c:func:`spin_lock_irq()`, because
->=20
-> Please take out the :c:func: stuff while you're at it, we don't need that
-> anymore.  Just spin_lock_irq() will do the right thing.
->=20
+On 18/03/20 18:17, Vitaly Kuznetsov wrote:
+> Minor cleanup with no functional change (intended):
+> - Rename 'kvm_area' to 'vmxon_region'
+> - Simplify setting revision_id for VMXON region when eVMCS is in use
+> 
+> Changes since v3:
+> - Rebase to kvm/queue
+> - Added Krish's Reviewed-by: tag to PATCH1
+> - Re-name 'enum vmcs_type' members [Sean Christopherson]
+> 
+> Vitaly Kuznetsov (2):
+>   KVM: VMX: rename 'kvm_area' to 'vmxon_region'
+>   KVM: VMX: untangle VMXON revision_id setting when using eVMCS
+> 
+>  arch/x86/kvm/vmx/nested.c |  2 +-
+>  arch/x86/kvm/vmx/vmx.c    | 44 ++++++++++++++++++---------------------
+>  arch/x86/kvm/vmx/vmx.h    | 12 ++++++++---
+>  3 files changed, 30 insertions(+), 28 deletions(-)
+> 
 
-Ok. I'll make two patches then to remove func throughout this file and
-you can decide to squash them or not.
+Queued, thanks.
+
+Paolo
+
