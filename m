@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C57C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A77C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC3920775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D4A3208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565238;
-	bh=hvwALjSpKoynKhiNQhcQrr2uB1Vf0tnBZy5zFLdjeNY=;
+	s=default; t=1584565241;
+	bh=iJZPY2XCJJqf+q0YIQZeuGZz/f3L0OnPZZ1p69G+r/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O/xwJYBQfWqpaBElQHx8+0JixAIppcGFWIdiE/oEWTxBncFJahRByryKb7wi2/dDH
-	 x1OR365MXMxOvqlPhqsV0+1sY4VoMu0Dbt2zR0rxC11CyCOBRb7XrJpWtyEutLz0cx
-	 AuDeXQWe2EBmIy+WNEQyB4CxoM14XGFVJGd7OWQ0=
+	b=UnNhy65AnkvFXHk+WvK4EfLbiNEqNMYsdKgnsVZ8kK7F62JzKiCfJ+g2PAlgjiU5s
+	 5VXA8Tk67A1mygjAqVebkAL/O+QqSZzBB6rUw6a0V725sTIYc3TsRTfkKNF8g/O/BF
+	 ccczdwt0dpJpXnlJ4kD9mgO4/3ZMsHlcCGjwUUns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgCRU40 (ORCPT
+        id S1727832AbgCRVAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56710 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726858AbgCRU4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:01 -0400
+        id S1727509AbgCRU41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0646320BED;
-        Wed, 18 Mar 2020 20:55:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6826A208E0;
+        Wed, 18 Mar 2020 20:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564960;
-        bh=hvwALjSpKoynKhiNQhcQrr2uB1Vf0tnBZy5zFLdjeNY=;
+        s=default; t=1584564987;
+        bh=iJZPY2XCJJqf+q0YIQZeuGZz/f3L0OnPZZ1p69G+r/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RyD0xRTeHS2LkmboLiBJUJ8MB6TD/OctojKpOlH+t32oEnyFAqPqETYiY9iLJDLvm
-         iiqRlC81yc0ktiw9yLxNQk3YcRWaMUQW/KNlcDqO9Wu7gQSKr0Qh3SfToqmhNNXLjo
-         WuXgabQ94l5sgYbyKrJaP2nxWtN+IQgl/evh2EZE=
+        b=fjf6RrXZN56TuZQgRGKe73uZm5l7bni/IVHmU/3gOtaz7zgD/apNmyvMr/6m4tjfq
+         2dnYM3CPKdvRh4jRB8miPIS8B5Vw+TPEK+sjsROp9rC74UE+3uZPv8XjuZC1lmdNL0
+         HMsykPgt2rLCJQocMoUacd7ws1GuyMuuK9fygMI8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 04/28] pinctrl: core: Remove extra kref_get which blocks hogs being freed
-Date:   Wed, 18 Mar 2020 16:55:31 -0400
-Message-Id: <20200318205555.17447-4-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.14 27/28] iommu/vt-d: quirk_ioat_snb_local_iommu: replace WARN_TAINT with pr_warn + add_taint
+Date:   Wed, 18 Mar 2020 16:55:54 -0400
+Message-Id: <20200318205555.17447-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
 References: <20200318205555.17447-1-sashal@kernel.org>
@@ -59,36 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit aafd56fc79041bf36f97712d4b35208cbe07db90 ]
+[ Upstream commit 81ee85d0462410de8eeeec1b9761941fd6ed8c7b ]
 
-kref_init starts with the reference count at 1, which will be balanced
-by the pinctrl_put in pinctrl_unregister. The additional kref_get in
-pinctrl_claim_hogs will increase this count to 2 and cause the hogs to
-not get freed when pinctrl_unregister is called.
+Quoting from the comment describing the WARN functions in
+include/asm-generic/bug.h:
 
-Fixes: 6118714275f0 ("pinctrl: core: Fix pinctrl_register_and_init() with pinctrl_enable()")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200228154142.13860-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+ * WARN(), WARN_ON(), WARN_ON_ONCE, and so on can be used to report
+ * significant kernel issues that need prompt attention if they should ever
+ * appear at runtime.
+ *
+ * Do not use these macros when checking for invalid external inputs
+
+The (buggy) firmware tables which the dmar code was calling WARN_TAINT
+for really are invalid external inputs. They are not under the kernel's
+control and the issues in them cannot be fixed by a kernel update.
+So logging a backtrace, which invites bug reports to be filed about this,
+is not helpful.
+
+Fixes: 556ab45f9a77 ("ioat2: catch and recover from broken vtd configurations v6")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Link: https://lore.kernel.org/r/20200309182510.373875-1-hdegoede@redhat.com
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=701847
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/core.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/iommu/intel-iommu.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index c55517312485d..08ea74177de29 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -2031,7 +2031,6 @@ static int pinctrl_claim_hogs(struct pinctrl_dev *pctldev)
- 		return PTR_ERR(pctldev->p);
- 	}
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index b48666849dbed..b8aa5e60e4c3c 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -3984,10 +3984,11 @@ static void quirk_ioat_snb_local_iommu(struct pci_dev *pdev)
  
--	kref_get(&pctldev->p->users);
- 	pctldev->hog_default =
- 		pinctrl_lookup_state(pctldev->p, PINCTRL_STATE_DEFAULT);
- 	if (IS_ERR(pctldev->hog_default)) {
+ 	/* we know that the this iommu should be at offset 0xa000 from vtbar */
+ 	drhd = dmar_find_matched_drhd_unit(pdev);
+-	if (WARN_TAINT_ONCE(!drhd || drhd->reg_base_addr - vtbar != 0xa000,
+-			    TAINT_FIRMWARE_WORKAROUND,
+-			    "BIOS assigned incorrect VT-d unit for Intel(R) QuickData Technology device\n"))
++	if (!drhd || drhd->reg_base_addr - vtbar != 0xa000) {
++		pr_warn_once(FW_BUG "BIOS assigned incorrect VT-d unit for Intel(R) QuickData Technology device\n");
++		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+ 		pdev->dev.archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
++	}
+ }
+ DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_IOAT_SNB, quirk_ioat_snb_local_iommu);
+ 
 -- 
 2.20.1
 
