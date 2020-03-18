@@ -2,212 +2,129 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898EEC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282E2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6232720754
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E5E206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:31:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Va/WbQ0y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgCRCbQ (ORCPT
+        id S1726774AbgCRCbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 22:31:16 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56452 "EHLO huawei.com"
+        Tue, 17 Mar 2020 22:31:22 -0400
+Received: from mail-vi1eur05on2079.outbound.protection.outlook.com ([40.107.21.79]:6045
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726478AbgCRCbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 22:31:15 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 38324C200335D6B87610;
-        Wed, 18 Mar 2020 10:31:09 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 18 Mar 2020
- 10:30:58 +0800
-To:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>
-CC:     linux-block <linux-block@vger.kernel.org>,
+        id S1726478AbgCRCbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 22:31:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PDt1H0ujHlPZUlF/bbCoWYQHu7nGZI4nE99yIH72t0Uza1dMemxk+E18UqhK6RrODHviDGOJSjlbP/Bs6pTOkPLcKn2YEvM9QghLYSBc3IL7EIBzV6TGGRUIkbVKz31xnZ3cSmcwFtJON/UL9PJFuh+kUYWNTnZJue15Rqwgi9m3zmeV4BDMtTQxQbVhBrbZomWJKxZYeEv46dRatHplj3WNuqyWilDSIOO5lxduC8SvI5umdj+1z66xtY6VVO10DkCGV96iNS6IPz8HdJvZ1GIWv5dfXy+5Vb9YaBTSruE5bUp09eKPi7Oyo6iBQMUmIcdFoZ2D0HJ+mY04gc3GGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RNjyaZ8kvy5vEnQIA/hNqeM5YhtRN61kTCWYNtIba7w=;
+ b=OjIvEYOqMotkCGPF5s5Q0t+O/hk2P3NjlAgPAdWMBrqgkelTZm3cf8D3xX9MTJ1mua9t6dlMkoE/23IHDrktHRruUnCf2EyLWQxa7FoeUVsruZIN+HgghhVbbXZbhk0KmtvhkPsBFGx2C+Gm+mKG8WLv3254ClQMTJNC8jo0Hz2VjRKJ+iY4x+x0UMxBHQ0g8bNHrTQFMfgnTJ/dk0KhMAEgL3l4UcftTCGXkQgZYs8OwdFQsTTmo2WfdfMlJbDTMHKWhjRlMIJjo9vubZ/xohC7RT2g2zK4CS8/qjORzerryjRdTbHEuMFM/xXrY7HkQzfRpV5Ph15jPqe+gggYrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RNjyaZ8kvy5vEnQIA/hNqeM5YhtRN61kTCWYNtIba7w=;
+ b=Va/WbQ0ykzjNwOrcwtsc3OWF+ZTN8NR1t6kEDEItZ4h8IL1KoBJs5raShzsezqJ8m2Rc+9rHcL+OPwBFv6c5Je8ZSpSP8+GbE+PpkoKDiWPxhdWrB3xas3uaDapJI0JR8dSIHsI9/7dyksI+yCWnFtsIr/PcWMDJ3Y69PKSOXTg=
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (20.177.51.151) by
+ VI1PR05MB7118.eurprd05.prod.outlook.com (20.181.34.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.22; Wed, 18 Mar 2020 02:31:18 +0000
+Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::8cea:6c66:19fe:fbc2]) by VI1PR05MB5102.eurprd05.prod.outlook.com
+ ([fe80::8cea:6c66:19fe:fbc2%7]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
+ 02:31:18 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "dledford@redhat.com" <dledford@redhat.com>
+CC:     "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>, <wubo40@huawei.comwubo>,
-        renxudong <renxudong1@huawei.com>,
-        Louhongxiang <louhongxiang@huawei.com>, <wangwang2@huawei.com>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH V2] block, bfq: fix use-after-free in
- bfq_idle_slice_timer_body
-Message-ID: <29201d0a-fcda-abb4-2849-c6294f34bf4a@huawei.com>
-Date:   Wed, 18 Mar 2020 10:30:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        "leon@kernel.org" <leon@kernel.org>
+Subject: Re: linux-next: build warning after merge of the mlx5-next tree
+Thread-Topic: linux-next: build warning after merge of the mlx5-next tree
+Thread-Index: AQHV+yL1tTMEOsS9OkKcAGfcGgwCsqhNnSGAgAAHLwA=
+Date:   Wed, 18 Mar 2020 02:31:17 +0000
+Message-ID: <a6612dbf3cd0ecdde7c0e4c8d35ebf470e2cf346.camel@mellanox.com>
+References: <20200316103913.659d3a5e@canb.auug.org.au>
+         <20200318130531.1df149c7@canb.auug.org.au>
+In-Reply-To: <20200318130531.1df149c7@canb.auug.org.au>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [73.15.39.150]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bed863be-31d9-4b14-fd8e-08d7cae47039
+x-ms-traffictypediagnostic: VI1PR05MB7118:|VI1PR05MB7118:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB711871072A0BD54E16D5D717BEF70@VI1PR05MB7118.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:68;
+x-forefront-prvs: 03468CBA43
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(39860400002)(366004)(396003)(199004)(81166006)(8936002)(81156014)(8676002)(966005)(478600001)(2616005)(6512007)(316002)(6506007)(110136005)(54906003)(26005)(186003)(36756003)(2906002)(71200400001)(6486002)(76116006)(86362001)(66556008)(66946007)(66476007)(5660300002)(64756008)(91956017)(66446008)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB7118;H:VI1PR05MB5102.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SVQZhI3Ube1+SIPmq2EnSBSSQMgHIe5xePfEyASrZXL/SJVcQ1VFaxgyWLtiL81bSl2CTchLfBZ8tsVcNqbd//tJCnhdcUfnMinAQMluTLkzoWhVRh5kVMoV8CqxoNNpFqPe0FCeuIdJr6KjthWVKBEFEzrwQqmH7iepE6uUVjxp1m5VWRigBVOWXAXIeZbjvGP0CZHWLHGT56K7uy4ZfbQxpNy10jdzTPsg7YTUQ+RVWiHGyJ5PBHlcrOIBc7Q614gD7y8SfHWaZV5LKciIW6N7oj8DGSjCZPXqkgKcdYIgSd23Cc+c6/lwzjKUtgQ4UP6LoJKSHizrNFmAM+goXCJseXGrXSJlgsiiozkGp/6E2Un6n/rmp0dmUYucveXiW75FxjiFgA8bTHvrCo8BvnKsRKcMoyQY4dE2/B+LbK2hDlZ/4LPy1tvdnDp26rA3wvLrMKRFu/aU2uSNVMyiMNn61NSnpa5JAslz7wy6I+vq54/Qr9UQOJZgU1GkTydfiFDTWMOHmL+Zp6M0ULSEZA==
+x-ms-exchange-antispam-messagedata: wiNoECjCEiJU50CsdR8yRzF26w78BwH1Q/9ddgf2u9tdHWHtwLGq/ehJ7KFMPLKZbDyFqi61v95CsSVsn9o9EqctJMu2smkPPVqXlzGFayf4x91miTqjQoyU/33psB4lg5rIN0/Dzf8GTMr+T6F8EA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <682EB244EBD7D84F999645F301E598A5@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bed863be-31d9-4b14-fd8e-08d7cae47039
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 02:31:17.9028
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QcJKSQxreWUK6aqyMAj2agKuyGhsFSgt5FVeS8B+efqWXrLXDvBeNr4P2KtfzCdDVSEuktmejXOWeBbr7xw41A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB7118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-In bfq_idle_slice_timer func, bfqq = bfqd->in_service_queue is
-not in bfqd-lock critical section. The bfqq, which is not
-equal to NULL in bfq_idle_slice_timer, may be freed after passing
-to bfq_idle_slice_timer_body. So we will access the freed memory.
-
-In addition, considering the bfqq may be in race, we should
-firstly check whether bfqq is in service before doing something
-on it in bfq_idle_slice_timer_body func.
-
-KASAN log is given as follows:
-[13058.354613] ==================================================================
-[13058.354640] BUG: KASAN: use-after-free in bfq_idle_slice_timer+0xac/0x290
-[13058.354644] Read of size 8 at addr ffffa02cf3e63f78 by task fork13/19767
-[13058.354646]
-[13058.354655] CPU: 96 PID: 19767 Comm: fork13
-[13058.354661] Call trace:
-[13058.354667]  dump_backtrace+0x0/0x310
-[13058.354672]  show_stack+0x28/0x38
-[13058.354681]  dump_stack+0xd8/0x108
-[13058.354687]  print_address_description+0x68/0x2d0
-[13058.354690]  kasan_report+0x124/0x2e0
-[13058.354697]  __asan_load8+0x88/0xb0
-[13058.354702]  bfq_idle_slice_timer+0xac/0x290
-[13058.354707]  __hrtimer_run_queues+0x298/0x8b8
-[13058.354710]  hrtimer_interrupt+0x1b8/0x678
-[13058.354716]  arch_timer_handler_phys+0x4c/0x78
-[13058.354722]  handle_percpu_devid_irq+0xf0/0x558
-[13058.354731]  generic_handle_irq+0x50/0x70
-[13058.354735]  __handle_domain_irq+0x94/0x110
-[13058.354739]  gic_handle_irq+0x8c/0x1b0
-[13058.354742]  el1_irq+0xb8/0x140
-[13058.354748]  do_wp_page+0x260/0xe28
-[13058.354752]  __handle_mm_fault+0x8ec/0x9b0
-[13058.354756]  handle_mm_fault+0x280/0x460
-[13058.354762]  do_page_fault+0x3ec/0x890
-[13058.354765]  do_mem_abort+0xc0/0x1b0
-[13058.354768]  el0_da+0x24/0x28
-[13058.354770]
-[13058.354773] Allocated by task 19731:
-[13058.354780]  kasan_kmalloc+0xe0/0x190
-[13058.354784]  kasan_slab_alloc+0x14/0x20
-[13058.354788]  kmem_cache_alloc_node+0x130/0x440
-[13058.354793]  bfq_get_queue+0x138/0x858
-[13058.354797]  bfq_get_bfqq_handle_split+0xd4/0x328
-[13058.354801]  bfq_init_rq+0x1f4/0x1180
-[13058.354806]  bfq_insert_requests+0x264/0x1c98
-[13058.354811]  blk_mq_sched_insert_requests+0x1c4/0x488
-[13058.354818]  blk_mq_flush_plug_list+0x2d4/0x6e0
-[13058.354826]  blk_flush_plug_list+0x230/0x548
-[13058.354830]  blk_finish_plug+0x60/0x80
-[13058.354838]  read_pages+0xec/0x2c0
-[13058.354842]  __do_page_cache_readahead+0x374/0x438
-[13058.354846]  ondemand_readahead+0x24c/0x6b0
-[13058.354851]  page_cache_sync_readahead+0x17c/0x2f8
-[13058.354858]  generic_file_buffered_read+0x588/0xc58
-[13058.354862]  generic_file_read_iter+0x1b4/0x278
-[13058.354965]  ext4_file_read_iter+0xa8/0x1d8 [ext4]
-[13058.354972]  __vfs_read+0x238/0x320
-[13058.354976]  vfs_read+0xbc/0x1c0
-[13058.354980]  ksys_read+0xdc/0x1b8
-[13058.354984]  __arm64_sys_read+0x50/0x60
-[13058.354990]  el0_svc_common+0xb4/0x1d8
-[13058.354994]  el0_svc_handler+0x50/0xa8
-[13058.354998]  el0_svc+0x8/0xc
-[13058.354999]
-[13058.355001] Freed by task 19731:
-[13058.355007]  __kasan_slab_free+0x120/0x228
-[13058.355010]  kasan_slab_free+0x10/0x18
-[13058.355014]  kmem_cache_free+0x288/0x3f0
-[13058.355018]  bfq_put_queue+0x134/0x208
-[13058.355022]  bfq_exit_icq_bfqq+0x164/0x348
-[13058.355026]  bfq_exit_icq+0x28/0x40
-[13058.355030]  ioc_exit_icq+0xa0/0x150
-[13058.355035]  put_io_context_active+0x250/0x438
-[13058.355038]  exit_io_context+0xd0/0x138
-[13058.355045]  do_exit+0x734/0xc58
-[13058.355050]  do_group_exit+0x78/0x220
-[13058.355054]  __wake_up_parent+0x0/0x50
-[13058.355058]  el0_svc_common+0xb4/0x1d8
-[13058.355062]  el0_svc_handler+0x50/0xa8
-[13058.355066]  el0_svc+0x8/0xc
-[13058.355067]
-[13058.355071] The buggy address belongs to the object at ffffa02cf3e63e70#012 which belongs to the cache bfq_queue of size 464
-[13058.355075] The buggy address is located 264 bytes inside of#012 464-byte region [ffffa02cf3e63e70, ffffa02cf3e64040)
-[13058.355077] The buggy address belongs to the page:
-[13058.355083] page:ffff7e80b3cf9800 count:1 mapcount:0 mapping:ffff802db5c90780 index:0xffffa02cf3e606f0 compound_mapcount: 0
-[13058.366175] flags: 0x2ffffe0000008100(slab|head)
-[13058.370781] raw: 2ffffe0000008100 ffff7e80b53b1408 ffffa02d730c1c90 ffff802db5c90780
-[13058.370787] raw: ffffa02cf3e606f0 0000000000370023 00000001ffffffff 0000000000000000
-[13058.370789] page dumped because: kasan: bad access detected
-[13058.370791]
-[13058.370792] Memory state around the buggy address:
-[13058.370797]  ffffa02cf3e63e00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fb fb
-[13058.370801]  ffffa02cf3e63e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[13058.370805] >ffffa02cf3e63f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[13058.370808]                                                                 ^
-[13058.370811]  ffffa02cf3e63f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[13058.370815]  ffffa02cf3e64000: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-[13058.370817] ==================================================================
-[13058.370820] Disabling lock debugging due to kernel taint
-
-Here, we directly pass the bfqd to bfq_idle_slice_timer_body func.
-
----
-V1->V2: add one comment, and add Fixes and Reported-by tag.
-
-Fixes: aee69d78d ("block, bfq: introduce the BFQ-v0 I/O scheduler as an extra scheduler")
-Reported-by: Wang Wang <wangwang2@huawei.com>
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Signed-off-by: Feilong Lin <linfeilong@huawei.com>
----
- block/bfq-iosched.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 8c436abfaf14..304e9ccaa301 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -6215,20 +6215,25 @@ static struct bfq_queue *bfq_init_rq(struct request *rq)
- 	return bfqq;
- }
-
--static void bfq_idle_slice_timer_body(struct bfq_queue *bfqq)
-+static void
-+bfq_idle_slice_timer_body(struct bfq_data *bfqd, struct bfq_queue *bfqq)
- {
--	struct bfq_data *bfqd = bfqq->bfqd;
- 	enum bfqq_expiration reason;
- 	unsigned long flags;
-
- 	spin_lock_irqsave(&bfqd->lock, flags);
--	bfq_clear_bfqq_wait_request(bfqq);
-
-+	/*
-+	 * Considering that bfqq may be in race, we should firstly check
-+	 * whether bfqq is in service before doing something on it.
-+	 */
- 	if (bfqq != bfqd->in_service_queue) {
- 		spin_unlock_irqrestore(&bfqd->lock, flags);
- 		return;
- 	}
-
-+	bfq_clear_bfqq_wait_request(bfqq);
-+
- 	if (bfq_bfqq_budget_timeout(bfqq))
- 		/*
- 		 * Also here the queue can be safely expired
-@@ -6273,7 +6278,7 @@ static enum hrtimer_restart bfq_idle_slice_timer(struct hrtimer *timer)
- 	 * early.
- 	 */
- 	if (bfqq)
--		bfq_idle_slice_timer_body(bfqq);
-+		bfq_idle_slice_timer_body(bfqd, bfqq);
-
- 	return HRTIMER_NORESTART;
- }
--- 
-2.19.1
-
+T24gV2VkLCAyMDIwLTAzLTE4IGF0IDEzOjA1ICsxMTAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
+Og0KPiBIaSBhbGwsDQo+IA0KPiBPbiBNb24sIDE2IE1hciAyMDIwIDEwOjM5OjEzICsxMTAwIFN0
+ZXBoZW4gUm90aHdlbGwgPA0KPiBzZnJAY2FuYi5hdXVnLm9yZy5hdT4gd3JvdGU6DQo+ID4gSGkg
+YWxsLA0KPiA+IA0KPiA+IEFmdGVyIG1lcmdpbmcgdGhlIG1seDUtbmV4dCB0cmVlLCB0b2RheSdz
+IGxpbnV4LW5leHQgYnVpbGQgKHg4Nl82NA0KPiA+IGFsbG1vZGNvbmZpZykgcHJvZHVjZWQgdGhp
+cyB3YXJuaW5nOg0KPiA+IA0KPiA+IEluIGZpbGUgaW5jbHVkZWQgZnJvbSBpbmNsdWRlL2xpbnV4
+L3ByaW50ay5oOjMzMSwNCj4gPiAgICAgICAgICAgICAgICAgIGZyb20gaW5jbHVkZS9saW51eC9r
+ZXJuZWwuaDoxNSwNCj4gPiAgICAgICAgICAgICAgICAgIGZyb20NCj4gPiBkcml2ZXJzL25ldC9l
+dGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbXIuYzozMzoNCj4gPiBkcml2ZXJzL25ldC9ldGhl
+cm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvbXIuYzogSW4gZnVuY3Rpb24NCj4gPiAnbWx4NV9jb3Jl
+X2NyZWF0ZV9ta2V5JzoNCj4gPiBpbmNsdWRlL2xpbnV4L2R5bmFtaWNfZGVidWcuaDoxNTc6MjU6
+IHdhcm5pbmc6ICdrZXknIG1heSBiZSB1c2VkDQo+ID4gdW5pbml0aWFsaXplZCBpbiB0aGlzIGZ1
+bmN0aW9uIFstV21heWJlLXVuaW5pdGlhbGl6ZWRdDQo+ID4gICAxNTcgfCAgX2R5bmFtaWNfZnVu
+Y19jYWxsKGZtdCxfX2R5bmFtaWNfZGV2X2RiZywgICBcDQo+ID4gICAgICAgfCAgICAgICAgICAg
+ICAgICAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fg0KPiA+IGRyaXZlcnMvbmV0L2V0aGVybmV0
+L21lbGxhbm94L21seDUvY29yZS9tci5jOjQ3OjU6IG5vdGU6ICdrZXknIHdhcw0KPiA+IGRlY2xh
+cmVkIGhlcmUNCj4gPiAgICA0NyB8ICB1OCBrZXk7DQo+ID4gICAgICAgfCAgICAgXn5+DQo+ID4g
+DQo+ID4gUHJvYmFibHkgaW50cm9kdWNlZCBieSBjb21taXQNCj4gPiANCj4gPiAgIGZjNmE5Zjg2
+ZjA4YSAoIntJQixuZXR9L21seDU6IEFzc2lnbiBta2V5IHZhcmlhbnQgaW4gbWx4NV9pYg0KPiA+
+IG9ubHkiKQ0KPiANCj4gVGhpcyB3YXJuaW5nIG5vdyBhcHBlYXJzIGluIHRoZSByZG1hIHRyZWUu
+DQo+IA0KDQp0aGFua3MgU3RlcGhlbiwNCg0KYWN0dWFsbCBhIGZpeCBwYXRjaCB3YXMgbWVyZ2Vk
+IHllc3RlcmRheSBpbnRvIG1seDUtbmV4dCBbMV0NCg0KYW5kIHNob3VsZCBhbHJlYWR5IGJlIGlu
+IGxpbnV4LW5leHQgYnVpbGQsIGFuZCB3aWxsIHNvb24gbGFuZCBpbiByZG1hDQp0cmVlLg0KDQpU
+aGFua3MsDQpTYWVlZC4NCg0KWzFdIA0KaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xp
+bnV4L2tlcm5lbC9naXQvbWVsbGFub3gvbGludXguZ2l0L2NvbW1pdC8/aD1tbHg1LW5leHQmaWQ9
+ODI2MDk2ZDg0ZjUwOWQ5NWVlOGY3MjcyOGZlMTljNDRmYmI5ZGY2Yg0K
