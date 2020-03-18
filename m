@@ -2,233 +2,173 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFE1C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCF7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB7AE20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:08:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFE5B2T7"
+	by mail.kernel.org (Postfix) with ESMTP id 5D0FF20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbgCRKIJ (ORCPT
+        id S1727502AbgCRKI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:08:09 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37706 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgCRKIJ (ORCPT
+        Wed, 18 Mar 2020 06:08:57 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:50399 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726310AbgCRKI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:08:09 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f16so10976566plj.4;
-        Wed, 18 Mar 2020 03:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pIvA0oesXfA4T0Iz+rrGcY1FoQcleU40920J5Q/l79M=;
-        b=YFE5B2T7Co1QYAx4+PGIDS8NR7Pup3Kq7+dp0xyYRKfmaRw2ymHwnrK9zGYA4G/eXL
-         +UH4Hk3m/CrJn1OsgrrdqbDbEleek8uiuTcvYMUuzGILtxcoCrqvuF4uRhHgL1rq4elx
-         Q46ZO8JD/Mw/GltinCGR1VZSUFHZdUKGBJB7OSZyaZZ55NkugJoi9OUg2bQQMvlrhkuG
-         Bj33Wpm+Ne5PIGFrrcUq/t5TGZxh+kyXU7xma25sVeU/br8ftOffIR8BP9JhZHq1UCDs
-         Up+jQwwNIAa5nLUnIG40i3ciNfX9vuFBWbUzJbs+apscdOTnsa2s+tEKhBLIB2xvnPl6
-         QavA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pIvA0oesXfA4T0Iz+rrGcY1FoQcleU40920J5Q/l79M=;
-        b=n9hR6Qrsn2OOZxxoUdt2ZAvYNyNyIWQb1wstGqPWrytsCMUzUEcF9EoXfFXalj341E
-         yYa0yOM7v7uTU5KjccBSu6Wx/5EGiaa5sUxZXs71nu8lusgjwDgHKKA27cdqF1q6Duf8
-         jnFwfh7F4YaITJ/nvoMmw2NNJfqQxI1X6RWtnEsTrw2lqOXpmB+Rg15rifRlgyUFNDma
-         5swXH7LXfpNHUGU1e6/N9Tj8Nir5eYefp91X0hg50gDzhB2YRk4M9CBcoEk3ue96G/39
-         JK1tMYtN99ZWtwXyb8qPQv7mD5Rkk/0WYQrTJcg00TRhP0XhI9R58SEddWzmjZu5Ihjt
-         2nSw==
-X-Gm-Message-State: ANhLgQ1FQx1pqS9h6yUZh0+25C+9aVkXf00S2u4OCPPWoJvFpLVSM5RF
-        TwvYTDMu+A9Tir2SGL5uEhHpr1qH
-X-Google-Smtp-Source: ADFU+vsInvAoOo1ffPR2KfqqgywprzsAZwIMZQynJiOUG5npfvIvl5DuB6ovInauebQBjU4ecMidew==
-X-Received: by 2002:a17:902:ac85:: with SMTP id h5mr3005096plr.76.1584526087081;
-        Wed, 18 Mar 2020 03:08:07 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:6086:470e:bc8d:c185:c429:a95b])
-        by smtp.gmail.com with ESMTPSA id g75sm1919565pje.37.2020.03.18.03.08.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 03:08:06 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        nish.malpani25@gmail.com, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers: iio: Drop unnecessary explicit casting
-Date:   Wed, 18 Mar 2020 15:37:54 +0530
-Message-Id: <20200318100754.25667-1-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 18 Mar 2020 06:08:56 -0400
+X-IronPort-AV: E=Sophos;i="5.70,566,1574092800"; 
+   d="scan'208";a="86537415"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 18 Mar 2020 18:08:49 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id 78DDB49DF12A;
+        Wed, 18 Mar 2020 17:58:45 +0800 (CST)
+Received: from [10.167.220.69] (10.167.220.69) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 18 Mar 2020 18:08:49 +0800
+Message-ID: <5E71F32E.20300@cn.fujitsu.com>
+Date:   Wed, 18 Mar 2020 18:08:46 +0800
+From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
 MIME-Version: 1.0
+To:     Masahiro Yamada <masahiroy@kernel.org>
+CC:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] modpost: Get proper section index by get_secindex() instead
+ of st_shndx
+References: <20200316122820.11032-1-yangx.jy@cn.fujitsu.com> <5E702236.8070109@cn.fujitsu.com> <CAK7LNARcs_ouquXPWJfKkfpikXV-4t=2YVCjEWeDzaNhFjmaeA@mail.gmail.com>
+In-Reply-To: <CAK7LNARcs_ouquXPWJfKkfpikXV-4t=2YVCjEWeDzaNhFjmaeA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.220.69]
+X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
+X-yoursite-MailScanner-ID: 78DDB49DF12A.AD4C3
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide correct specifiers while printing error logs to discard the use
-of unnecessary explicit casting.
+On 2020/3/18 17:49, Masahiro Yamada wrote:
+> On Tue, Mar 17, 2020 at 10:05 AM Xiao Yang<yangx.jy@cn.fujitsu.com>  wrote:
+>>
+>> On 2020/3/16 20:28, Xiao Yang wrote:
+>
+> Thanks for catching this bug.
+>
+>
+>>> (uint16_t) st_shndx is limited to 65535(i.e. SHN_XINDEX) so sym_get_data() gets
+>>> wrong section index by st_shndx if object file(e.g. vmlinux.o) has more than
+>> Hi,
+>>
+>> It seems better to say that sym_get_data() gets wrong section index by
+>> st_shndx if requested symbol contains extended section index that is
+>> more than 65535.
+>
+>
+> Sounds good to me.
+>
+>
+>> Thanks,
+>> Xiao Yang
+>>> 65535 sessions.  In this case, we need to get proper section index by .symtab_shndx
+>>> section.
+>>>
+>>> Module.symvers generated by building kernel with "-ffunction-sections -fdata-sections"
+>>> shows the issue(i.e. cannot get 89902 by st_shndx):
+>>> -------------------------------------------------------------------
+>>> [root@Fedora-30 linux]# file Module.symvers
+>>> Module.symvers: data
+>>> [root@Fedora-30 linux]# head -n1 Module.symvers
+>>> 0x5caf3011      ipv6_chk_custom_prefix  ▒▒▒▒▒▒▒▒        vmlinux EXPORT_SYMBOL
+>
+>
+> Could you delete this dump?
+> I'd like to avoid garbling where possible.
+>
+Hi Masahiro,
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
----
+Sure, it is OK to delete it.
 
-Based on previous conversations which can be found here [1].
+>
+>>> ...
+>>> [root@Fedora-30 linux]# readelf -s -W vmlinux.o | grep __kstrtabns_ipv6_chk_custom_prefix
+>>> 199174: 0000000000032578     1 OBJECT  LOCAL  DEFAULT 89902 __kstrtabns_ipv6_chk_custom_prefix
+>>> [root@Fedora-30 linux]# readelf -S -W vmlinux.o | grep 89902
+>>>     [89902] __ksymtab_strings PROGBITS        0000000000000000 a94e00 0345a2 00   A  0   0  1
+>>> -------------------------------------------------------------------
+>>>
+>>> Fixes: afa0459daa7b ("modpost: add a helper to get data pointed by a symbol")
+>
+> Strictly speaking, this commit does not introduce any bug.
+>
+> The CRC bug for MODVERSIONS exists since
+> 56067812d5b0 ("kbuild: modversions: add infrastructure for emitting
+> relative CRCs")
+>
 
-[1] https://marc.info/?l=linux-iio&m=158427554607223&w=2
----
- drivers/iio/accel/kxsd9-i2c.c              | 4 ++--
- drivers/iio/gyro/bmg160_i2c.c              | 4 ++--
- drivers/iio/gyro/bmg160_spi.c              | 4 ++--
- drivers/iio/gyro/mpu3050-i2c.c             | 4 ++--
- drivers/iio/imu/bmi160/bmi160_i2c.c        | 4 ++--
- drivers/iio/imu/bmi160/bmi160_spi.c        | 4 ++--
- drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c  | 4 ++--
- drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c  | 4 ++--
- drivers/iio/magnetometer/bmc150_magn_spi.c | 4 ++--
- 9 files changed, 18 insertions(+), 18 deletions(-)
+Will replace it with your suggested commit.
 
-diff --git a/drivers/iio/accel/kxsd9-i2c.c b/drivers/iio/accel/kxsd9-i2c.c
-index 38411e1c155b..6a2fb2e84170 100644
---- a/drivers/iio/accel/kxsd9-i2c.c
-+++ b/drivers/iio/accel/kxsd9-i2c.c
-@@ -21,8 +21,8 @@ static int kxsd9_i2c_probe(struct i2c_client *i2c,
- 
- 	regmap = devm_regmap_init_i2c(i2c, &config);
- 	if (IS_ERR(regmap)) {
--		dev_err(&i2c->dev, "Failed to register i2c regmap %d\n",
--			(int)PTR_ERR(regmap));
-+		dev_err(&i2c->dev, "Failed to register i2c regmap %ld\n",
-+			PTR_ERR(regmap));
- 		return PTR_ERR(regmap);
- 	}
- 
-diff --git a/drivers/iio/gyro/bmg160_i2c.c b/drivers/iio/gyro/bmg160_i2c.c
-index 4fc9c6a3321f..abb11855e1b2 100644
---- a/drivers/iio/gyro/bmg160_i2c.c
-+++ b/drivers/iio/gyro/bmg160_i2c.c
-@@ -21,8 +21,8 @@ static int bmg160_i2c_probe(struct i2c_client *client,
- 
- 	regmap = devm_regmap_init_i2c(client, &bmg160_regmap_i2c_conf);
- 	if (IS_ERR(regmap)) {
--		dev_err(&client->dev, "Failed to register i2c regmap %d\n",
--			(int)PTR_ERR(regmap));
-+		dev_err(&client->dev, "Failed to register i2c regmap %ld\n",
-+			PTR_ERR(regmap));
- 		return PTR_ERR(regmap);
- 	}
- 
-diff --git a/drivers/iio/gyro/bmg160_spi.c b/drivers/iio/gyro/bmg160_spi.c
-index 182a59c42507..104f1bac7805 100644
---- a/drivers/iio/gyro/bmg160_spi.c
-+++ b/drivers/iio/gyro/bmg160_spi.c
-@@ -19,8 +19,8 @@ static int bmg160_spi_probe(struct spi_device *spi)
- 
- 	regmap = devm_regmap_init_spi(spi, &bmg160_regmap_spi_conf);
- 	if (IS_ERR(regmap)) {
--		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
--			(int)PTR_ERR(regmap));
-+		dev_err(&spi->dev, "Failed to register spi regmap %ld\n",
-+			PTR_ERR(regmap));
- 		return PTR_ERR(regmap);
- 	}
- 
-diff --git a/drivers/iio/gyro/mpu3050-i2c.c b/drivers/iio/gyro/mpu3050-i2c.c
-index afa8018b9238..9de9ca295742 100644
---- a/drivers/iio/gyro/mpu3050-i2c.c
-+++ b/drivers/iio/gyro/mpu3050-i2c.c
-@@ -51,8 +51,8 @@ static int mpu3050_i2c_probe(struct i2c_client *client,
- 
- 	regmap = devm_regmap_init_i2c(client, &mpu3050_i2c_regmap_config);
- 	if (IS_ERR(regmap)) {
--		dev_err(&client->dev, "Failed to register i2c regmap %d\n",
--			(int)PTR_ERR(regmap));
-+		dev_err(&client->dev, "Failed to register i2c regmap %ld\n",
-+			PTR_ERR(regmap));
- 		return PTR_ERR(regmap);
- 	}
- 
-diff --git a/drivers/iio/imu/bmi160/bmi160_i2c.c b/drivers/iio/imu/bmi160/bmi160_i2c.c
-index e36f5e82d400..6179d60d3968 100644
---- a/drivers/iio/imu/bmi160/bmi160_i2c.c
-+++ b/drivers/iio/imu/bmi160/bmi160_i2c.c
-@@ -24,8 +24,8 @@ static int bmi160_i2c_probe(struct i2c_client *client,
- 
- 	regmap = devm_regmap_init_i2c(client, &bmi160_regmap_config);
- 	if (IS_ERR(regmap)) {
--		dev_err(&client->dev, "Failed to register i2c regmap %d\n",
--			(int)PTR_ERR(regmap));
-+		dev_err(&client->dev, "Failed to register i2c regmap %ld\n",
-+			PTR_ERR(regmap));
- 		return PTR_ERR(regmap);
- 	}
- 
-diff --git a/drivers/iio/imu/bmi160/bmi160_spi.c b/drivers/iio/imu/bmi160/bmi160_spi.c
-index c19e3df35559..38fc4d124cc0 100644
---- a/drivers/iio/imu/bmi160/bmi160_spi.c
-+++ b/drivers/iio/imu/bmi160/bmi160_spi.c
-@@ -20,8 +20,8 @@ static int bmi160_spi_probe(struct spi_device *spi)
- 
- 	regmap = devm_regmap_init_spi(spi, &bmi160_regmap_config);
- 	if (IS_ERR(regmap)) {
--		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
--			(int)PTR_ERR(regmap));
-+		dev_err(&spi->dev, "Failed to register spi regmap %ld\n",
-+			PTR_ERR(regmap));
- 		return PTR_ERR(regmap);
- 	}
- 	return bmi160_core_probe(&spi->dev, regmap, id->name, true);
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-index 6993d3b87bb0..90f1f4c79605 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-@@ -122,8 +122,8 @@ static int inv_mpu_probe(struct i2c_client *client,
- 
- 	regmap = devm_regmap_init_i2c(client, &inv_mpu_regmap_config);
- 	if (IS_ERR(regmap)) {
--		dev_err(&client->dev, "Failed to register i2c regmap %d\n",
--			(int)PTR_ERR(regmap));
-+		dev_err(&client->dev, "Failed to register i2c regmap %ld\n",
-+			PTR_ERR(regmap));
- 		return PTR_ERR(regmap);
- 	}
- 
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-index 673b198e6368..7ee275547531 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-@@ -53,8 +53,8 @@ static int inv_mpu_probe(struct spi_device *spi)
- 
- 	regmap = devm_regmap_init_spi(spi, &inv_mpu_regmap_config);
- 	if (IS_ERR(regmap)) {
--		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
--			(int)PTR_ERR(regmap));
-+		dev_err(&spi->dev, "Failed to register spi regmap %ld\n",
-+			PTR_ERR(regmap));
- 		return PTR_ERR(regmap);
- 	}
- 
-diff --git a/drivers/iio/magnetometer/bmc150_magn_spi.c b/drivers/iio/magnetometer/bmc150_magn_spi.c
-index ed9be0490d77..f4afad0c44cc 100644
---- a/drivers/iio/magnetometer/bmc150_magn_spi.c
-+++ b/drivers/iio/magnetometer/bmc150_magn_spi.c
-@@ -22,8 +22,8 @@ static int bmc150_magn_spi_probe(struct spi_device *spi)
- 
- 	regmap = devm_regmap_init_spi(spi, &bmc150_magn_regmap_config);
- 	if (IS_ERR(regmap)) {
--		dev_err(&spi->dev, "Failed to register spi regmap %d\n",
--			(int)PTR_ERR(regmap));
-+		dev_err(&spi->dev, "Failed to register spi regmap %ld\n",
-+			PTR_ERR(regmap));
- 		return PTR_ERR(regmap);
- 	}
- 	return bmc150_magn_probe(&spi->dev, regmap, spi->irq, id->name);
--- 
-2.20.1
+>
+>>> Fixes: 5545322c86d9 ("modpost: refactor namespace_from_kstrtabns() to not hard-code section name")
+>
+> This commit hash is wrong.
+> The correct one is
+>
+> Fixes: e84f9fbbece1 ("modpost: refactor namespace_from_kstrtabns() to
+> not hard-code section name")
+>
+>
+
+Sorry for the wrong commit hash.
+
+Thanks a lot for your quick review.
+I will send v2 patch soon.
+
+Best Regards,
+Xiao Yang
+
+>
+>
+>
+>>> Signed-off-by: Xiao Yang<yangx.jy@cn.fujitsu.com>
+>>> ---
+>>>    scripts/mod/modpost.c | 3 ++-
+>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+>>> index d9418c58a8c0..c1fec8cac257 100644
+>>> --- a/scripts/mod/modpost.c
+>>> +++ b/scripts/mod/modpost.c
+>>> @@ -310,7 +310,8 @@ static const char *sec_name(struct elf_info *elf, int secindex)
+>>>
+>>>    static void *sym_get_data(const struct elf_info *info, const Elf_Sym *sym)
+>>>    {
+>>> -     Elf_Shdr *sechdr =&info->sechdrs[sym->st_shndx];
+>>> +     unsigned int secindex = get_secindex(info, sym);
+>>> +     Elf_Shdr *sechdr =&info->sechdrs[secindex];
+>>>        unsigned long offset;
+>>>
+>>>        offset = sym->st_value;
+>>
+>>
+>>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
+>
+>
+> .
+>
+
+
 
