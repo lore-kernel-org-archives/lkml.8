@@ -2,103 +2,217 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF81C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 019BBC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C968E20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E632076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584570162;
+	bh=Xz/0EvZI1ZYMODHoYRMl9J+dOM/tsbfHznYvsE+DY4A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=K/AMhsTuVem0yMU+f1kGJR3cbK5Glkp1YvFxS/xpko03fz919KLrMY5mpRxyuBB+E
+	 8Kl9fqWfIQ/R+VyJLZfoIkA85UgfEmXo0LZLcofYvfpR1TUh3F49dnieQOagD3S0GK
+	 Ch/oitFdvfuvUrQaxP35rkpUrYvbLjJxIny8bulk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgCRWU7 (ORCPT
+        id S1727112AbgCRWWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:20:59 -0400
-Received: from mga18.intel.com ([134.134.136.126]:19068 "EHLO mga18.intel.com"
+        Wed, 18 Mar 2020 18:22:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgCRWU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:20:59 -0400
-IronPort-SDR: uKxUIrPef57yofenjjnSiHD9vwRiai7S9VytKX/fkip/u8mcs+yvKr2XwEzOS4UfBL6vS7Dw4r
- zqg/GH+iXS5A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 15:20:58 -0700
-IronPort-SDR: 2SCiifmS6rxHGZhXP96YyEjN50BdilZG47iR22cF96i4uSIa1+rhuIUG/g2+WuJCq1uvtQ1Hmz
- Spj2sdjFoA/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,569,1574150400"; 
-   d="scan'208";a="238315637"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.249.155.222]) ([10.249.155.222])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Mar 2020 15:20:56 -0700
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com, broonie@kernel.org
-References: <20200318063022.GA116342@light.dominikbrodowski.net>
- <41d0b2b5-6014-6fab-b6a2-7a7dbc4fe020@linux.intel.com>
- <20200318123930.GA2433@light.dominikbrodowski.net>
- <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
- <20200318162029.GA3999@light.dominikbrodowski.net>
- <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Message-ID: <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
-Date:   Wed, 18 Mar 2020 23:20:55 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1726663AbgCRWWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 18:22:41 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6804D20714;
+        Wed, 18 Mar 2020 22:22:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584570160;
+        bh=Xz/0EvZI1ZYMODHoYRMl9J+dOM/tsbfHznYvsE+DY4A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TeaROXeqtIiOuPZEJEeYWnIPHrh1Ask7srNIxIYhwTpKsUqP2jP8EVgIYJM33HfwF
+         1jFMhhapjJedYXzGwqqv6NFwF3Nch7XWO1iNLYfMzXCjEK5TU34+g7gYssJdkFOM1b
+         DGF8UtEi5MxA8pPt6Acsc8nHRD8W/OlpKBw98Rb4=
+Date:   Wed, 18 Mar 2020 17:22:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Aman Sharma <amanharitsh123@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Mans Rullgard <mans@mansr.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 4/5] pci: handled return value of platform_get_irq
+ correctly
+Message-ID: <20200318222238.GA247500@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318215218.GA2439@light.dominikbrodowski.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874kulbwyv.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-18 22:52, Dominik Brodowski wrote:
-> On Wed, Mar 18, 2020 at 09:43:54PM +0100, Cezary Rojewski wrote:
->> On 2020-03-18 20:22, Dominik Brodowski wrote:
->>> On Wed, Mar 18, 2020 at 07:27:58PM +0100, Cezary Rojewski wrote:
->>
->>>>
->>>> Due to pandemic I'm working remotely and right now won't be able to test
->>>> audio quality so focusing on the stream==NULL issue. And thus we got to help
->>>> each other out : )
->>>
->>> Sure, and thanks for taking a look at this!
->>>
->>>> Could you verify issue reproduces on 5.6.0-rc1 on your machine?
->>>
->>> It reproduces on 5.6.0-rc1 + i915-bugfix. I'm trying to bisect it further in
->>> the background, but that may take quite some time.
->>>
->>
->> Could you checkout v5.6-rc1 with following commit reverted:
->> 	ASoC: Intel: broadwell: change cpu_dai and platform components for SOF
->>
->> For my working v5.6-rc1 commit id is:
->> 64df6afa0dab5eda95cc4cc2269e3d4e83b6b6ce.
+On Wed, Mar 18, 2020 at 02:42:48PM +0100, Thomas Gleixner wrote:
+> Bjorn Helgaas <helgaas@kernel.org> writes:
+> > On Fri, Mar 13, 2020 at 04:56:42PM -0500, Bjorn Helgaas wrote:
+> >> On Fri, Mar 13, 2020 at 10:05:58PM +0100, Thomas Gleixner wrote:
+> >> > >   I think the best pattern is:
+> >> > >
+> >> > >     irq = platform_get_irq(pdev, i);
+> >> > >     if (irq < 0)
+> >> > >       return irq;
+> >> > 
+> >> > Careful. 0 is not a valid interrupt.
+> >> 
+> >> Should callers of platform_get_irq() check for a 0 return value?
+> >> About 900 of them do not.
 > 
-> Hm, no joy -- after suspend/resume, no sound at first, and if I twiggle some
-> options with pulseaudio, I get garbled output (even when using
+> I don't know what I was looking at.
 > 
-> 	aplay -f S16_LE -r 44100 -c 2 --device="sysdefault:CARD=broadwellrt286"
+> platform_get_irq() does the right thing already, so checking for irq < 0
+> is sufficient.
 > 
-> ). Will try to bisect further the next days.
-> 
+> Sorry for the confusion!
 
-Thanks for quick reply. Revert of said commit fixes stream==NULL issue 
-for me. See if there were any changes in dmesg.
-Will ask technicians to assist me on site tomorrow.
+Thanks, I was indeed confused!  Maybe we could reduce future confusion
+by strengthening the comments slightly, e.g.,
 
-Regards,
-Czarek
+  - * Return: IRQ number on success, negative error number on failure.
+  + * Return: non-zero IRQ number on success, negative error number on failure.
+
+I don't want to push my luck, but it's pretty hard to prove that
+platform_get_irq() never returns 0.  What would you think of something
+like the following?
+
+@@ -133,23 +133,24 @@ EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
+  *		if (irq < 0)
+  *			return irq;
+  *
+- * Return: IRQ number on success, negative error number on failure.
++ * Return: non-zero IRQ number on success, negative error number on failure.
+  */
+ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+ {
++	int ret;
+ #ifdef CONFIG_SPARC
+ 	/* sparc does not have irqs represented as IORESOURCE_IRQ resources */
+ 	if (!dev || num >= dev->archdata.num_irqs)
+ 		return -ENXIO;
+-	return dev->archdata.irqs[num];
++	ret = dev->archdata.irqs[num];
++	goto out;
+ #else
+ 	struct resource *r;
+-	int ret;
+ 
+ 	if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node) {
+ 		ret = of_irq_get(dev->dev.of_node, num);
+ 		if (ret > 0 || ret == -EPROBE_DEFER)
+-			return ret;
++			goto out;
+ 	}
+ 
+ 	r = platform_get_resource(dev, IORESOURCE_IRQ, num);
+@@ -157,7 +158,7 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+ 		if (r && r->flags & IORESOURCE_DISABLED) {
+ 			ret = acpi_irq_get(ACPI_HANDLE(&dev->dev), num, r);
+ 			if (ret)
+-				return ret;
++				goto out;
+ 		}
+ 	}
+ 
+@@ -171,13 +172,17 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+ 		struct irq_data *irqd;
+ 
+ 		irqd = irq_get_irq_data(r->start);
+-		if (!irqd)
+-			return -ENXIO;
++		if (!irqd) {
++			ret = -ENXIO;
++			goto out;
++		}
+ 		irqd_set_trigger_type(irqd, r->flags & IORESOURCE_BITS);
+ 	}
+ 
+-	if (r)
+-		return r->start;
++	if (r) {
++		ret = r->start;
++		goto out;
++	}
+ 
+ 	/*
+ 	 * For the index 0 interrupt, allow falling back to GpioInt
+@@ -190,11 +195,14 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
+ 		ret = acpi_dev_gpio_irq_get(ACPI_COMPANION(&dev->dev), num);
+ 		/* Our callers expect -ENXIO for missing IRQs. */
+ 		if (ret >= 0 || ret == -EPROBE_DEFER)
+-			return ret;
++			goto out;
+ 	}
+ 
+-	return -ENXIO;
++	ret = -ENXIO;
+ #endif
++out:
++	WARN(ret == 0, "0 is an invalid IRQ number\n");
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(platform_get_irq_optional);
+ 
+@@ -212,7 +220,7 @@ EXPORT_SYMBOL_GPL(platform_get_irq_optional);
+  *		if (irq < 0)
+  *			return irq;
+  *
+- * Return: IRQ number on success, negative error number on failure.
++ * Return: non-zero IRQ number on success, negative error number on failure.
+  */
+ int platform_get_irq(struct platform_device *dev, unsigned int num)
+ {
+@@ -284,8 +292,10 @@ static int __platform_get_irq_byname(struct platform_device *dev,
+ 	}
+ 
+ 	r = platform_get_resource_byname(dev, IORESOURCE_IRQ, name);
+-	if (r)
++	if (r) {
++		WARN(r->start == 0, "0 is an invalid IRQ number\n");
+ 		return r->start;
++	}
+ 
+ 	return -ENXIO;
+ }
+@@ -297,7 +307,7 @@ static int __platform_get_irq_byname(struct platform_device *dev,
+  *
+  * Get an IRQ like platform_get_irq(), but then by name rather then by index.
+  *
+- * Return: IRQ number on success, negative error number on failure.
++ * Return: non-zero IRQ number on success, negative error number on failure.
+  */
+ int platform_get_irq_byname(struct platform_device *dev, const char *name)
+ {
+@@ -319,7 +329,7 @@ EXPORT_SYMBOL_GPL(platform_get_irq_byname);
+  * Get an optional IRQ by name like platform_get_irq_byname(). Except that it
+  * does not print an error message if an IRQ can not be obtained.
+  *
+- * Return: IRQ number on success, negative error number on failure.
++ * Return: non-zero IRQ number on success, negative error number on failure.
+  */
+ int platform_get_irq_byname_optional(struct platform_device *dev,
+ 				     const char *name)
