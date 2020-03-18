@@ -2,82 +2,85 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E16C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60347C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5EA22076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584519790;
-	bh=jDvHCpypzcLcBBKtNJAnHnUIbtmoHA4If+zu0bErYGc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iD0JPc8mAz0u5xBLvJ8pQloMHUm3xHPxVa2FJrtl3hB5SMd4MU0kXQnJ06vJRf0jW
-	 DajgvHmQUR9IXtN3+8MMwc7l28BAuaA/J0CpU+jZva487qpITuQ5tIiqhnHw7sKVS6
-	 +bPFLstVYhieikAV5X2VMuPGsuq9YvQ9+IyJV0FE=
+	by mail.kernel.org (Postfix) with ESMTP id 2786120770
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:23:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y0r8NXkM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbgCRIXI (ORCPT
+        id S1727400AbgCRIXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 04:23:08 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50829 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgCRIXI (ORCPT
+        Wed, 18 Mar 2020 04:23:20 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:45485 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726994AbgCRIXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 04:23:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z13so2164054wml.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 01:23:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u1Vg0mBLvEo3DD8HGaqtItvQ6lzE59walEAWqglake0=;
-        b=iwgJSpDTnLWgPGlIafKKXkISo2ettNMoVsYX1VmWBKmuthXkzNBRDrJt27iICh8DyX
-         8Zb5nyPqUYZSEs5Cnl4wzsevuoWXldMYvcKQZLFeiU/X6qRzpHIY2y/2RivVCfpokiti
-         ecKl61GPlgnLR7lWUt3QtjDQWvblnYhFV8sHPNRTRoGtZnqzGsvkI0Rv+VN5sbOzSZdp
-         5nPawOENPGWDfoKDi4ddFoPxloKfkSEvY7LahmnVUOzuh9Q6F7ZHq1tlxISHVyiDarjt
-         X2xwikwJ4ANY7XQenNxC+NpL6RAiXhvXuCwPphZ4cAFBLzeSZAd4IDce/HXlVQZDtIPM
-         m4CQ==
-X-Gm-Message-State: ANhLgQ3FNt+wEKmdWU7VTTJfqIHBNZtmJdZx+zT2mCd5FFkRKh+PKpaG
-        sZB81tR9xud5mnifS+ZN8VPE2t54
-X-Google-Smtp-Source: ADFU+vv9coRwTHLE3umhggTpYzUH3ioL4391no4/tGzs7VITeqhq16r6w1jTqgWDnBBfQ6gbdU5Wng==
-X-Received: by 2002:a7b:c414:: with SMTP id k20mr3787266wmi.119.1584519352976;
-        Wed, 18 Mar 2020 01:15:52 -0700 (PDT)
-Received: from localhost (ip-37-188-180-89.eurotel.cz. [37.188.180.89])
-        by smtp.gmail.com with ESMTPSA id k3sm508962wmf.16.2020.03.18.01.15.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 01:15:51 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 09:15:51 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>, shakeelb@google.com,
-        vbabka@suse.cz, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v3 PATCH 1/2] mm: swap: make page_evictable() inline
-Message-ID: <20200318081551.GC21362@dhcp22.suse.cz>
-References: <1584466971-110029-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200317190411.GD22433@bombadil.infradead.org>
+        Wed, 18 Mar 2020 04:23:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584519798;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=c5ZmniDWtOGgirD0ysXPKxoDj8zWagjtTzwo7m2KYVo=;
+        b=Y0r8NXkMi7FThx6FhibC1nb1o//S89dYspxFVuLGQ/kDNl0XOuEd+ZGG+RKYYGow/l1Qc3
+        ZfDW7RDIgYgPO983Wae7fXqmToLJu125iW1AHOwaAzJJ3izkUNvF9hmkqU/ZZu+0sJyh+g
+        tpd+M5pYXoNPcsf+iOEOhcs8kNiIQiM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-UnVQ4uV7PpGJbTpejA56sQ-1; Wed, 18 Mar 2020 04:23:15 -0400
+X-MC-Unique: UnVQ4uV7PpGJbTpejA56sQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 240158010C8;
+        Wed, 18 Mar 2020 08:23:12 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A427B60BEC;
+        Wed, 18 Mar 2020 08:23:05 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200317194140.6031-3-longman@redhat.com>
+References: <20200317194140.6031-3-longman@redhat.com> <20200317194140.6031-1-longman@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     dhowells@redhat.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH v4 2/4] KEYS: Remove __user annotation from rxrpc_read()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317190411.GD22433@bombadil.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2831785.1584519784.1@warthog.procyon.org.uk>
+Date:   Wed, 18 Mar 2020 08:23:04 +0000
+Message-ID: <2831786.1584519784@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 17-03-20 12:04:11, Matthew Wilcox wrote:
-[...]
-> In fact, since it's only called by those three files, perhaps it should
-> be in mm/internal.h?  I don't see it becoming a terribly popular function
-> to call outside of the core mm code.
+Patch 2 and 3 need to be rolled into patch 1 otherwise sparse will give
+warnings about mismatches in address spaces on patch 1.
 
-Agreed. I do not see any strong reasons why anything outside of the core
-MM should care about evictability. So if moving it to internal.h is
-reasonable without too much churn then I would that way.
+Thanks,
+David
 
--- 
-Michal Hocko
-SUSE Labs
