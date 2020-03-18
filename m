@@ -2,1119 +2,336 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E29C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AC9C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40B920757
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B027420770
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:38:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZubS8MZ0"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="at0OUZVl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbgCRQiW (ORCPT
+        id S1727367AbgCRQi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:38:22 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:57444 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727318AbgCRQiV (ORCPT
+        Wed, 18 Mar 2020 12:38:29 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:50047 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbgCRQi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 12:38:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584549498;
+        Wed, 18 Mar 2020 12:38:27 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 9C4CC23E23;
+        Wed, 18 Mar 2020 17:38:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1584549503;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TNg8gDxburzran1TkJOjKtov2fZ8L8QD1CyBpnyHJRM=;
-        b=ZubS8MZ0qmm/NUMku9Vp9A1ljnoXfvgh5tQE5EgxDTEqi8I85A96cQ8G1Ivl1RFQGgWiCY
-        k797UtD3BjUZ2eQUnUX/e3H5Qu8mbqH3BddwqiKveAJ+iKwP+U2LyHBSJ6gtkeZ4DVMtAv
-        kSUbfOxLuRQC5MbOwmh4ruVRju/a35A=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-209-LBn0H_iZOjuBFzExhFP4Xg-1; Wed, 18 Mar 2020 12:38:02 -0400
-X-MC-Unique: LBn0H_iZOjuBFzExhFP4Xg-1
-Received: by mail-wr1-f70.google.com with SMTP id p2so10072498wrw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 09:38:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TNg8gDxburzran1TkJOjKtov2fZ8L8QD1CyBpnyHJRM=;
-        b=IFVxsZyRJfFJ8Be59W6MMkY6/e+BCVPwlQ5ydXgubEbhkZ56mCdY6LMmWzoaLFOhWm
-         QiLorzlwtGq55gJTTkQUCTx7YEL0l1ppOEfMYBngUeZYf9KOg12oqWat0/VjPjlBe3Vq
-         BKdfHdf+0W6fNQC1H+6z2Z++pAKqbX/woF9+j+OznDa9aS1VDDbhDVzi2giBalnjRje7
-         FUhKjOF+nRnEyaWkmxO8UkBA6uxKgWS2SsfKa+KbYoNDa8PlW1pL3fo5dU/JD/4zPnA0
-         zIVj27pKxDwTnLr0Nnw84Wr9oWy4tR1WvkWkOpCIjb84f+r0uZGIW1PyqieYW0Q2NKnL
-         VBMw==
-X-Gm-Message-State: ANhLgQ0QUp3knDVdG6XKaxGK36hPgxhYc0P+Jb4k4zZvz32w+GtAWJqo
-        RDly0fUz5L5DQAp7S8BxKb+KxWlGxF5+Pl3NYC4yiQ+m0LHufjjB0F1qjKXFRs3lE3nN5qmmnQU
-        03Gekez4Sh38SY0N7tgaoowQT
-X-Received: by 2002:a7b:ca41:: with SMTP id m1mr5769630wml.127.1584549480449;
-        Wed, 18 Mar 2020 09:38:00 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vscSU4MLpVt36OaKO0+PmGxnlIpnMr8n8hU0o/JRRZrNgwQLpTgBdoOje6u6p61Gfn6/ck+0w==
-X-Received: by 2002:a7b:ca41:: with SMTP id m1mr5769553wml.127.1584549479591;
-        Wed, 18 Mar 2020 09:37:59 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id e5sm1869784wru.92.2020.03.18.09.37.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 09:37:59 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>, peterx@redhat.com,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Lei Cao <lei.cao@stratus.com>
-Subject: [PATCH v7 05/14] KVM: X86: Implement ring-based dirty memory tracking
-Date:   Wed, 18 Mar 2020 12:37:11 -0400
-Message-Id: <20200318163720.93929-6-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200318163720.93929-1-peterx@redhat.com>
-References: <20200318163720.93929-1-peterx@redhat.com>
+        bh=IkS8jJMv9wh5cSPJlxUZcqKz2rH3rVn5T/65gMAnXqA=;
+        b=at0OUZVlamT2Rl+xqkcMU4i6fddcaaUExruxrtpDBMq+/6zLKQgmuVz7mAmraQiW/Dv/mZ
+        NXbUVPgUan/HDRw4Qz6x7o9PFgN0E/AnyEmZTX/UGXxL0BAV+6SRIkgLV9jXe/RhFMY+AR
+        uNf9dkArNwlub5PmHpKxGMf9G5MEEHM=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Mar 2020 17:38:23 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCH 05/18] mfd: Add support for Kontron sl28cpld management
+ controller
+In-Reply-To: <1ea0ae38-c91d-810b-1474-71f17b66fbd0@roeck-us.net>
+References: <20200317205017.28280-1-michael@walle.cc>
+ <20200317205017.28280-6-michael@walle.cc>
+ <1ea0ae38-c91d-810b-1474-71f17b66fbd0@roeck-us.net>
+Message-ID: <9648f3e4cf30c9303a28c89d08519513@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 9C4CC23E23
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[22];
+         NEURAL_HAM(-0.00)[-0.621];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,kernel.org,suse.com,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is heavily based on previous work from Lei Cao
-<lei.cao@stratus.com> and Paolo Bonzini <pbonzini@redhat.com>. [1]
+Am 2020-03-18 04:28, schrieb Guenter Roeck:
+> On 3/17/20 1:50 PM, Michael Walle wrote:
+>> This patch adds core support for the board management controller found
+>> on the SMARC-sAL28 board. It consists of the following functions:
+>>  - watchdog
+>>  - GPIO controller
+>>  - PWM controller
+>>  - fan sensor
+>>  - interrupt controller
+>> 
+>> At the moment, this controller is used on the Kontron SMARC-sAL28 
+>> board.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> ---
+>>  drivers/mfd/Kconfig    |  21 ++++++
+>>  drivers/mfd/Makefile   |   2 +
+>>  drivers/mfd/sl28cpld.c | 155 
+>> +++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 178 insertions(+)
+>>  create mode 100644 drivers/mfd/sl28cpld.c
+>> 
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 3c547ed575e6..01588c366476 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -2059,5 +2059,26 @@ config SGI_MFD_IOC3
+>>  	  If you have an SGI Origin, Octane, or a PCI IOC3 card,
+>>  	  then say Y. Otherwise say N.
+>> 
+>> +config MFD_SL28CPLD
+>> +	tristate "Kontron sl28 core driver"
+>> +	depends on I2C=y
+> 
+> Why I2C=y and not just I2C ?
 
-KVM currently uses large bitmaps to track dirty memory.  These bitmaps
-are copied to userspace when userspace queries KVM for its dirty page
-information.  The use of bitmaps is mostly sufficient for live
-migration, as large parts of memory are be dirtied from one log-dirty
-pass to another.  However, in a checkpointing system, the number of
-dirty pages is small and in fact it is often bounded---the VM is
-paused when it has dirtied a pre-defined number of pages. Traversing a
-large, sparsely populated bitmap to find set bits is time-consuming,
-as is copying the bitmap to user-space.
+Oh this should be changed in the next patch which adds
+interrupt controller support, where I2C=y is needed, correct?
 
-A similar issue will be there for live migration when the guest memory
-is huge while the page dirty procedure is trivial.  In that case for
-each dirty sync we need to pull the whole dirty bitmap to userspace
-and analyse every bit even if it's mostly zeros.
+-michael
 
-The preferred data structure for above scenarios is a dense list of
-guest frame numbers (GFN).  This patch series stores the dirty list in
-kernel memory that can be memory mapped into userspace to allow speedy
-harvesting.
-
-This patch enables dirty ring for X86 only.  However it should be
-easily extended to other archs as well.
-
-[1] https://patchwork.kernel.org/patch/10471409/
-
-Signed-off-by: Lei Cao <lei.cao@stratus.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- Documentation/virt/kvm/api.rst  | 116 +++++++++++++++++++
- arch/x86/include/asm/kvm_host.h |   3 +
- arch/x86/include/uapi/asm/kvm.h |   1 +
- arch/x86/kvm/Makefile           |   3 +-
- arch/x86/kvm/mmu/mmu.c          |   6 +
- arch/x86/kvm/vmx/vmx.c          |   7 ++
- arch/x86/kvm/x86.c              |   9 ++
- include/linux/kvm_dirty_ring.h  | 103 +++++++++++++++++
- include/linux/kvm_host.h        |  13 +++
- include/trace/events/kvm.h      |  78 +++++++++++++
- include/uapi/linux/kvm.h        |  53 +++++++++
- virt/kvm/dirty_ring.c           | 195 ++++++++++++++++++++++++++++++++
- virt/kvm/kvm_main.c             | 112 +++++++++++++++++-
- 13 files changed, 697 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/kvm_dirty_ring.h
- create mode 100644 virt/kvm/dirty_ring.c
-
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 158d1186d103..99ee9cfc20c4 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -249,6 +249,7 @@ Based on their initialization different VMs may have different capabilities.
- It is thus encouraged to use the vm ioctl to query for capabilities (available
- with KVM_CAP_CHECK_EXTENSION_VM on the vm fd)
- 
-+
- 4.5 KVM_GET_VCPU_MMAP_SIZE
- --------------------------
- 
-@@ -262,6 +263,18 @@ The KVM_RUN ioctl (cf.) communicates with userspace via a shared
- memory region.  This ioctl returns the size of that region.  See the
- KVM_RUN documentation for details.
- 
-+Besides the size of the KVM_RUN communication region, other areas of
-+the VCPU file descriptor can be mmap-ed, including:
-+
-+- if KVM_CAP_COALESCED_MMIO is available, a page at
-+  KVM_COALESCED_MMIO_PAGE_OFFSET * PAGE_SIZE; for historical reasons,
-+  this page is included in the result of KVM_GET_VCPU_MMAP_SIZE.
-+  KVM_CAP_COALESCED_MMIO is not documented yet.
-+
-+- if KVM_CAP_DIRTY_LOG_RING is available, a number of pages at
-+  KVM_DIRTY_LOG_PAGE_OFFSET * PAGE_SIZE.  For more information on
-+  KVM_CAP_DIRTY_LOG_RING, see section 8.3.
-+
- 
- 4.6 KVM_SET_MEMORY_REGION
- -------------------------
-@@ -6086,3 +6099,106 @@ KVM can therefore start protected VMs.
- This capability governs the KVM_S390_PV_COMMAND ioctl and the
- KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
- guests when the state change is invalid.
-+
-+8.24 KVM_CAP_DIRTY_LOG_RING
-+
-+Architectures: x86
-+Parameters: args[0] - size of the dirty log ring
-+
-+KVM is capable of tracking dirty memory using ring buffers that are
-+mmaped into userspace; there is one dirty ring per vcpu.
-+
-+One dirty ring is defined as below internally:
-+
-+struct kvm_dirty_ring {
-+	u32 dirty_index;
-+	u32 reset_index;
-+	u32 size;
-+	u32 soft_limit;
-+	struct kvm_dirty_gfn *dirty_gfns;
-+	int index;
-+};
-+
-+Dirty GFNs (Guest Frame Numbers) are stored in the dirty_gfns array.
-+For each of the dirty entry it's defined as:
-+
-+struct kvm_dirty_gfn {
-+        __u32 flags;
-+        __u32 slot; /* as_id | slot_id */
-+        __u64 offset;
-+};
-+
-+Each GFN is a state machine itself.  The state is embeded in the flags
-+field, as defined in the uapi header:
-+
-+/*
-+ * KVM dirty GFN flags, defined as:
-+ *
-+ * |---------------+---------------+--------------|
-+ * | bit 1 (reset) | bit 0 (dirty) | Status       |
-+ * |---------------+---------------+--------------|
-+ * |             0 |             0 | Invalid GFN  |
-+ * |             0 |             1 | Dirty GFN    |
-+ * |             1 |             X | GFN to reset |
-+ * |---------------+---------------+--------------|
-+ *
-+ * Lifecycle of a dirty GFN goes like:
-+ *
-+ *      dirtied         collected        reset
-+ * 00 -----------> 01 -------------> 1X -------+
-+ *  ^                                          |
-+ *  |                                          |
-+ *  +------------------------------------------+
-+ *
-+ * The userspace program is only responsible for the 01->1X state
-+ * conversion (to collect dirty bits).  Also, it must not skip any
-+ * dirty bits so that dirty bits are always collected in sequence.
-+ */
-+#define KVM_DIRTY_GFN_F_DIRTY           BIT(0)
-+#define KVM_DIRTY_GFN_F_RESET           BIT(1)
-+#define KVM_DIRTY_GFN_F_MASK            0x3
-+
-+Userspace calls KVM_ENABLE_CAP ioctl right after KVM_CREATE_VM ioctl
-+to enable this capability for the new guest and set the size of the
-+rings.  It is only allowed before creating any vCPU, and the size of
-+the ring must be a power of two.  The larger the ring buffer, the less
-+likely the ring is full and the VM is forced to exit to userspace. The
-+optimal size depends on the workload, but it is recommended that it be
-+at least 64 KiB (4096 entries).
-+
-+Just like for dirty page bitmaps, the buffer tracks writes to
-+all user memory regions for which the KVM_MEM_LOG_DIRTY_PAGES flag was
-+set in KVM_SET_USER_MEMORY_REGION.  Once a memory region is registered
-+with the flag set, userspace can start harvesting dirty pages from the
-+ring buffer.
-+
-+To harvest the dirty pages, userspace accesses the mmaped ring buffer
-+to read the dirty GFNs starting from zero.  If the flags has the DIRTY
-+bit set (at this stage the RESET bit must be cleared), then it means
-+this GFN is a dirty GFN.  The userspace should collect this GFN and
-+mark the flags from state 01b to 1Xb (bit 0 will be ignored by KVM,
-+but bit 1 must be set to show that this GFN is collected and waiting
-+for a reset), and move on to the next GFN.  The userspace should
-+continue to do this until when the flags of a GFN has the DIRTY bit
-+cleared, it means we've collected all the dirty GFNs we have for now.
-+It's not a must that the userspace collects the all dirty GFNs in
-+once.  However it must collect the dirty GFNs in sequence, i.e., the
-+userspace program cannot skip one dirty GFN to collect the one next to
-+it.
-+
-+After processing one or more entries in the ring buffer, userspace
-+calls the VM ioctl KVM_RESET_DIRTY_RINGS to notify the kernel about
-+it, so that the kernel will reprotect those collected GFNs.
-+Therefore, the ioctl must be called *before* reading the content of
-+the dirty pages.
-+
-+The dirty ring interface has a major difference comparing to the
-+KVM_GET_DIRTY_LOG interface in that, when reading the dirty ring from
-+userspace it's still possible that the kernel has not yet flushed the
-+hardware dirty buffers into the kernel buffer (the flushing was
-+previously done by the KVM_GET_DIRTY_LOG ioctl).  To achieve that, one
-+needs to kick the vcpu out for a hardware buffer flush (vmexit) to
-+make sure all the existing dirty gfns are flushed to the dirty rings.
-+
-+The dirty ring can gets full.  When it happens, the KVM_RUN of the
-+vcpu will return with exit reason KVM_EXIT_DIRTY_LOG_FULL.
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index a8c68f626fb5..970770bfafbd 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1201,6 +1201,7 @@ struct kvm_x86_ops {
- 					   struct kvm_memory_slot *slot,
- 					   gfn_t offset, unsigned long mask);
- 	int (*write_log_dirty)(struct kvm_vcpu *vcpu);
-+	int (*cpu_dirty_log_size)(void);
- 
- 	/* pmu operations of sub-arch */
- 	const struct kvm_pmu_ops *pmu_ops;
-@@ -1693,4 +1694,6 @@ static inline int kvm_cpu_get_apicid(int mps_cpu)
- #define GET_SMSTATE(type, buf, offset)		\
- 	(*(type *)((buf) + (offset) - 0x7e00))
- 
-+int kvm_cpu_dirty_log_size(void);
-+
- #endif /* _ASM_X86_KVM_HOST_H */
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 3f3f780c8c65..99b15ce39e75 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -12,6 +12,7 @@
- 
- #define KVM_PIO_PAGE_OFFSET 1
- #define KVM_COALESCED_MMIO_PAGE_OFFSET 2
-+#define KVM_DIRTY_LOG_PAGE_OFFSET 64
- 
- #define DE_VECTOR 0
- #define DB_VECTOR 1
-diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-index 4654e97a05cc..9562cb4063da 100644
---- a/arch/x86/kvm/Makefile
-+++ b/arch/x86/kvm/Makefile
-@@ -6,7 +6,8 @@ ccflags-y += -Werror
- KVM := ../../../virt/kvm
- 
- kvm-y			+= $(KVM)/kvm_main.o $(KVM)/coalesced_mmio.o \
--				$(KVM)/eventfd.o $(KVM)/irqchip.o $(KVM)/vfio.o
-+				$(KVM)/eventfd.o $(KVM)/irqchip.o $(KVM)/vfio.o \
-+				$(KVM)/dirty_ring.o
- kvm-$(CONFIG_KVM_ASYNC_PF)	+= $(KVM)/async_pf.o
- 
- kvm-y			+= x86.o emulate.o i8259.o irq.o lapic.o \
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 560e85ebdf22..e770a5dd0c30 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -1749,7 +1749,13 @@ int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu)
- {
- 	if (kvm_x86_ops->write_log_dirty)
- 		return kvm_x86_ops->write_log_dirty(vcpu);
-+	return 0;
-+}
- 
-+int kvm_cpu_dirty_log_size(void)
-+{
-+	if (kvm_x86_ops->cpu_dirty_log_size)
-+		return kvm_x86_ops->cpu_dirty_log_size();
- 	return 0;
- }
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a1e4fa1a61ff..a5f64afe1af5 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7752,6 +7752,7 @@ static __init int hardware_setup(void)
- 		kvm_x86_ops->slot_disable_log_dirty = NULL;
- 		kvm_x86_ops->flush_log_dirty = NULL;
- 		kvm_x86_ops->enable_log_dirty_pt_masked = NULL;
-+		kvm_x86_ops->cpu_dirty_log_size = NULL;
- 	}
- 
- 	if (!cpu_has_vmx_preemption_timer())
-@@ -7826,6 +7827,11 @@ static bool vmx_check_apicv_inhibit_reasons(ulong bit)
- 	return supported & BIT(bit);
- }
- 
-+static int vmx_cpu_dirty_log_size(void)
-+{
-+	return enable_pml ? PML_ENTITY_NUM : 0;
-+}
-+
- static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
- 	.cpu_has_kvm_support = cpu_has_kvm_support,
- 	.disabled_by_bios = vmx_disabled_by_bios,
-@@ -7936,6 +7942,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
- 	.flush_log_dirty = vmx_flush_log_dirty,
- 	.enable_log_dirty_pt_masked = vmx_enable_log_dirty_pt_masked,
- 	.write_log_dirty = vmx_write_pml_buffer,
-+	.cpu_dirty_log_size = vmx_cpu_dirty_log_size,
- 
- 	.pre_block = vmx_pre_block,
- 	.post_block = vmx_post_block,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a5123a0aa7d6..98a21f6734e2 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8171,6 +8171,15 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 
- 	bool req_immediate_exit = false;
- 
-+	/* Forbid vmenter if vcpu dirty ring is soft-full */
-+	if (unlikely(vcpu->kvm->dirty_ring_size &&
-+		     kvm_dirty_ring_soft_full(&vcpu->dirty_ring))) {
-+		vcpu->run->exit_reason = KVM_EXIT_DIRTY_RING_FULL;
-+		trace_kvm_dirty_ring_exit(vcpu);
-+		r = 0;
-+		goto out;
-+	}
-+
- 	if (kvm_request_pending(vcpu)) {
- 		if (kvm_check_request(KVM_REQ_GET_VMCS12_PAGES, vcpu)) {
- 			if (unlikely(!kvm_x86_ops->get_vmcs12_pages(vcpu))) {
-diff --git a/include/linux/kvm_dirty_ring.h b/include/linux/kvm_dirty_ring.h
-new file mode 100644
-index 000000000000..120e5e90fa1d
---- /dev/null
-+++ b/include/linux/kvm_dirty_ring.h
-@@ -0,0 +1,103 @@
-+#ifndef KVM_DIRTY_RING_H
-+#define KVM_DIRTY_RING_H
-+
-+#include <linux/kvm.h>
-+
-+/**
-+ * kvm_dirty_ring: KVM internal dirty ring structure
-+ *
-+ * @dirty_index: free running counter that points to the next slot in
-+ *               dirty_ring->dirty_gfns, where a new dirty page should go
-+ * @reset_index: free running counter that points to the next dirty page
-+ *               in dirty_ring->dirty_gfns for which dirty trap needs to
-+ *               be reenabled
-+ * @size:        size of the compact list, dirty_ring->dirty_gfns
-+ * @soft_limit:  when the number of dirty pages in the list reaches this
-+ *               limit, vcpu that owns this ring should exit to userspace
-+ *               to allow userspace to harvest all the dirty pages
-+ * @dirty_gfns:  the array to keep the dirty gfns
-+ * @index:       index of this dirty ring
-+ */
-+struct kvm_dirty_ring {
-+	u32 dirty_index;
-+	u32 reset_index;
-+	u32 size;
-+	u32 soft_limit;
-+	struct kvm_dirty_gfn *dirty_gfns;
-+	int index;
-+};
-+
-+#if (KVM_DIRTY_LOG_PAGE_OFFSET == 0)
-+/*
-+ * If KVM_DIRTY_LOG_PAGE_OFFSET not defined, kvm_dirty_ring.o should
-+ * not be included as well, so define these nop functions for the arch.
-+ */
-+static inline u32 kvm_dirty_ring_get_rsvd_entries(void)
-+{
-+	return 0;
-+}
-+
-+static inline int kvm_dirty_ring_alloc(struct kvm_dirty_ring *ring,
-+				       int index, u32 size)
-+{
-+	return 0;
-+}
-+
-+static inline struct kvm_dirty_ring *kvm_dirty_ring_get(struct kvm *kvm)
-+{
-+	return NULL;
-+}
-+
-+static inline int kvm_dirty_ring_reset(struct kvm *kvm,
-+				       struct kvm_dirty_ring *ring)
-+{
-+	return 0;
-+}
-+
-+static inline void kvm_dirty_ring_push(struct kvm_dirty_ring *ring,
-+				       u32 slot, u64 offset)
-+{
-+}
-+
-+static inline struct page *kvm_dirty_ring_get_page(struct kvm_dirty_ring *ring,
-+						   u32 offset)
-+{
-+	return NULL;
-+}
-+
-+static inline void kvm_dirty_ring_free(struct kvm_dirty_ring *ring)
-+{
-+}
-+
-+static inline bool kvm_dirty_ring_soft_full(struct kvm_dirty_ring *ring)
-+{
-+	return true;
-+}
-+
-+#else /* KVM_DIRTY_LOG_PAGE_OFFSET == 0 */
-+
-+u32 kvm_dirty_ring_get_rsvd_entries(void);
-+int kvm_dirty_ring_alloc(struct kvm_dirty_ring *ring, int index, u32 size);
-+struct kvm_dirty_ring *kvm_dirty_ring_get(struct kvm *kvm);
-+
-+/*
-+ * called with kvm->slots_lock held, returns the number of
-+ * processed pages.
-+ */
-+int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring);
-+
-+/*
-+ * returns =0: successfully pushed
-+ *         <0: unable to push, need to wait
-+ */
-+void kvm_dirty_ring_push(struct kvm_dirty_ring *ring, u32 slot, u64 offset);
-+
-+/* for use in vm_operations_struct */
-+struct page *kvm_dirty_ring_get_page(struct kvm_dirty_ring *ring, u32 offset);
-+
-+void kvm_dirty_ring_free(struct kvm_dirty_ring *ring);
-+bool kvm_dirty_ring_soft_full(struct kvm_dirty_ring *ring);
-+
-+#endif /* KVM_DIRTY_LOG_PAGE_OFFSET == 0 */
-+
-+#endif	/* KVM_DIRTY_RING_H */
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 2def86edcd65..9bcfb7109aec 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -34,6 +34,7 @@
- #include <linux/kvm_types.h>
- 
- #include <asm/kvm_host.h>
-+#include <linux/kvm_dirty_ring.h>
- 
- #ifndef KVM_MAX_VCPU_ID
- #define KVM_MAX_VCPU_ID KVM_MAX_VCPUS
-@@ -319,6 +320,7 @@ struct kvm_vcpu {
- 	bool ready;
- 	struct kvm_vcpu_arch arch;
- 	struct dentry *debugfs_dentry;
-+	struct kvm_dirty_ring dirty_ring;
- };
- 
- static inline int kvm_vcpu_exiting_guest_mode(struct kvm_vcpu *vcpu)
-@@ -504,6 +506,7 @@ struct kvm {
- 	struct srcu_struct srcu;
- 	struct srcu_struct irq_srcu;
- 	pid_t userspace_pid;
-+	u32 dirty_ring_size;
- };
- 
- #define kvm_err(fmt, ...) \
-@@ -1419,4 +1422,14 @@ int kvm_vm_create_worker_thread(struct kvm *kvm, kvm_vm_thread_fn_t thread_fn,
- 				uintptr_t data, const char *name,
- 				struct task_struct **thread_ptr);
- 
-+/*
-+ * This defines how many reserved entries we want to keep before we
-+ * kick the vcpu to the userspace to avoid dirty ring full.  This
-+ * value can be tuned to higher if e.g. PML is enabled on the host.
-+ */
-+#define  KVM_DIRTY_RING_RSVD_ENTRIES  64
-+
-+/* Max number of entries allowed for each kvm dirty ring */
-+#define  KVM_DIRTY_RING_MAX_ENTRIES  65536
-+
- #endif
-diff --git a/include/trace/events/kvm.h b/include/trace/events/kvm.h
-index 2c735a3e6613..3d850997940c 100644
---- a/include/trace/events/kvm.h
-+++ b/include/trace/events/kvm.h
-@@ -399,6 +399,84 @@ TRACE_EVENT(kvm_halt_poll_ns,
- #define trace_kvm_halt_poll_ns_shrink(vcpu_id, new, old) \
- 	trace_kvm_halt_poll_ns(false, vcpu_id, new, old)
- 
-+TRACE_EVENT(kvm_dirty_ring_push,
-+	TP_PROTO(struct kvm_dirty_ring *ring, u32 slot, u64 offset),
-+	TP_ARGS(ring, slot, offset),
-+
-+	TP_STRUCT__entry(
-+		__field(int, index)
-+		__field(u32, dirty_index)
-+		__field(u32, reset_index)
-+		__field(u32, slot)
-+		__field(u64, offset)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->index          = ring->index;
-+		__entry->dirty_index    = ring->dirty_index;
-+		__entry->reset_index    = ring->reset_index;
-+		__entry->slot           = slot;
-+		__entry->offset         = offset;
-+	),
-+
-+	TP_printk("ring %d: dirty 0x%x reset 0x%x "
-+		  "slot %u offset 0x%llx (used %u)",
-+		  __entry->index, __entry->dirty_index,
-+		  __entry->reset_index,  __entry->slot, __entry->offset,
-+		  __entry->dirty_index - __entry->reset_index)
-+);
-+
-+TRACE_EVENT(kvm_dirty_ring_reset,
-+	TP_PROTO(struct kvm_dirty_ring *ring),
-+	TP_ARGS(ring),
-+
-+	TP_STRUCT__entry(
-+		__field(int, index)
-+		__field(u32, dirty_index)
-+		__field(u32, reset_index)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->index          = ring->index;
-+		__entry->dirty_index    = ring->dirty_index;
-+		__entry->reset_index    = ring->reset_index;
-+	),
-+
-+	TP_printk("ring %d: dirty 0x%x reset 0x%x (used %u)",
-+		  __entry->index, __entry->dirty_index, __entry->reset_index,
-+		  __entry->dirty_index - __entry->reset_index)
-+);
-+
-+TRACE_EVENT(kvm_dirty_ring_waitqueue,
-+	TP_PROTO(bool enter),
-+	TP_ARGS(enter),
-+
-+	TP_STRUCT__entry(
-+	    __field(bool, enter)
-+	),
-+
-+	TP_fast_assign(
-+	    __entry->enter = enter;
-+	),
-+
-+	TP_printk("%s", __entry->enter ? "wait" : "awake")
-+);
-+
-+TRACE_EVENT(kvm_dirty_ring_exit,
-+	TP_PROTO(struct kvm_vcpu *vcpu),
-+	TP_ARGS(vcpu),
-+
-+	TP_STRUCT__entry(
-+	    __field(int, vcpu_id)
-+	),
-+
-+	TP_fast_assign(
-+	    __entry->vcpu_id = vcpu->vcpu_id;
-+	),
-+
-+	TP_printk("vcpu %d", __entry->vcpu_id)
-+);
-+
- #endif /* _TRACE_KVM_MAIN_H */
- 
- /* This part must be outside protection */
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 5e6234cb25a6..876003b946dd 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -236,6 +236,7 @@ struct kvm_hyperv_exit {
- #define KVM_EXIT_IOAPIC_EOI       26
- #define KVM_EXIT_HYPERV           27
- #define KVM_EXIT_ARM_NISV         28
-+#define KVM_EXIT_DIRTY_RING_FULL  29
- 
- /* For KVM_EXIT_INTERNAL_ERROR */
- /* Emulate instruction failed. */
-@@ -1016,6 +1017,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_ARM_INJECT_EXT_DABT 178
- #define KVM_CAP_S390_VCPU_RESETS 179
- #define KVM_CAP_S390_PROTECTED 180
-+#define KVM_CAP_DIRTY_LOG_RING 181
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-@@ -1517,6 +1519,9 @@ struct kvm_pv_cmd {
- /* Available with KVM_CAP_S390_PROTECTED */
- #define KVM_S390_PV_COMMAND		_IOWR(KVMIO, 0xc5, struct kvm_pv_cmd)
- 
-+/* Available with KVM_CAP_DIRTY_LOG_RING */
-+#define KVM_RESET_DIRTY_RINGS		_IO(KVMIO, 0xc6)
-+
- /* Secure Encrypted Virtualization command */
- enum sev_cmd_id {
- 	/* Guest initialization commands */
-@@ -1670,4 +1675,52 @@ struct kvm_hyperv_eventfd {
- #define KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE    (1 << 0)
- #define KVM_DIRTY_LOG_INITIALLY_SET            (1 << 1)
- 
-+/*
-+ * Arch needs to define the macro after implementing the dirty ring
-+ * feature.  KVM_DIRTY_LOG_PAGE_OFFSET should be defined as the
-+ * starting page offset of the dirty ring structures.
-+ */
-+#ifndef KVM_DIRTY_LOG_PAGE_OFFSET
-+#define KVM_DIRTY_LOG_PAGE_OFFSET 0
-+#endif
-+
-+/*
-+ * KVM dirty GFN flags, defined as:
-+ *
-+ * |---------------+---------------+--------------|
-+ * | bit 1 (reset) | bit 0 (dirty) | Status       |
-+ * |---------------+---------------+--------------|
-+ * |             0 |             0 | Invalid GFN  |
-+ * |             0 |             1 | Dirty GFN    |
-+ * |             1 |             X | GFN to reset |
-+ * |---------------+---------------+--------------|
-+ *
-+ * Lifecycle of a dirty GFN goes like:
-+ *
-+ *      dirtied         collected        reset
-+ * 00 -----------> 01 -------------> 1X -------+
-+ *  ^                                          |
-+ *  |                                          |
-+ *  +------------------------------------------+
-+ *
-+ * The userspace program is only responsible for the 01->1X state
-+ * conversion (to collect dirty bits).  Also, it must not skip any
-+ * dirty bits so that dirty bits are always collected in sequence.
-+ */
-+#define KVM_DIRTY_GFN_F_DIRTY           BIT(0)
-+#define KVM_DIRTY_GFN_F_RESET           BIT(1)
-+#define KVM_DIRTY_GFN_F_MASK            0x3
-+
-+/*
-+ * KVM dirty rings should be mapped at KVM_DIRTY_LOG_PAGE_OFFSET of
-+ * per-vcpu mmaped regions as an array of struct kvm_dirty_gfn.  The
-+ * size of the gfn buffer is decided by the first argument when
-+ * enabling KVM_CAP_DIRTY_LOG_RING.
-+ */
-+struct kvm_dirty_gfn {
-+	__u32 flags;
-+	__u32 slot;
-+	__u64 offset;
-+};
-+
- #endif /* __LINUX_KVM_H */
-diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
-new file mode 100644
-index 000000000000..12d09802b8a7
---- /dev/null
-+++ b/virt/kvm/dirty_ring.c
-@@ -0,0 +1,195 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * KVM dirty ring implementation
-+ *
-+ * Copyright 2019 Red Hat, Inc.
-+ */
-+#include <linux/kvm_host.h>
-+#include <linux/kvm.h>
-+#include <linux/vmalloc.h>
-+#include <linux/kvm_dirty_ring.h>
-+#include <trace/events/kvm.h>
-+
-+int __weak kvm_cpu_dirty_log_size(void)
-+{
-+	return 0;
-+}
-+
-+u32 kvm_dirty_ring_get_rsvd_entries(void)
-+{
-+	return KVM_DIRTY_RING_RSVD_ENTRIES + kvm_cpu_dirty_log_size();
-+}
-+
-+static u32 kvm_dirty_ring_used(struct kvm_dirty_ring *ring)
-+{
-+	return READ_ONCE(ring->dirty_index) - READ_ONCE(ring->reset_index);
-+}
-+
-+bool kvm_dirty_ring_soft_full(struct kvm_dirty_ring *ring)
-+{
-+	return kvm_dirty_ring_used(ring) >= ring->soft_limit;
-+}
-+
-+bool kvm_dirty_ring_full(struct kvm_dirty_ring *ring)
-+{
-+	return kvm_dirty_ring_used(ring) >= ring->size;
-+}
-+
-+struct kvm_dirty_ring *kvm_dirty_ring_get(struct kvm *kvm)
-+{
-+	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
-+
-+	WARN_ON_ONCE(vcpu->kvm != kvm);
-+
-+	return &vcpu->dirty_ring;
-+}
-+
-+static void kvm_reset_dirty_gfn(struct kvm *kvm, u32 slot, u64 offset, u64 mask)
-+{
-+	struct kvm_memory_slot *memslot;
-+	int as_id, id;
-+
-+	as_id = slot >> 16;
-+	id = (u16)slot;
-+	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
-+		return;
-+
-+	memslot = id_to_memslot(__kvm_memslots(kvm, as_id), id);
-+	if (offset >= memslot->npages)
-+		return;
-+
-+	spin_lock(&kvm->mmu_lock);
-+	kvm_arch_mmu_enable_log_dirty_pt_masked(kvm, memslot, offset, mask);
-+	spin_unlock(&kvm->mmu_lock);
-+}
-+
-+int kvm_dirty_ring_alloc(struct kvm_dirty_ring *ring, int index, u32 size)
-+{
-+	ring->dirty_gfns = vmalloc(size);
-+	if (!ring->dirty_gfns)
-+		return -ENOMEM;
-+	memset(ring->dirty_gfns, 0, size);
-+
-+	ring->size = size / sizeof(struct kvm_dirty_gfn);
-+	ring->soft_limit = ring->size - kvm_dirty_ring_get_rsvd_entries();
-+	ring->dirty_index = 0;
-+	ring->reset_index = 0;
-+	ring->index = index;
-+
-+	return 0;
-+}
-+
-+static inline void kvm_dirty_gfn_set_invalid(struct kvm_dirty_gfn *gfn)
-+{
-+	gfn->flags = 0;
-+}
-+
-+static inline void kvm_dirty_gfn_set_dirtied(struct kvm_dirty_gfn *gfn)
-+{
-+	gfn->flags = KVM_DIRTY_GFN_F_DIRTY;
-+}
-+
-+static inline bool kvm_dirty_gfn_invalid(struct kvm_dirty_gfn *gfn)
-+{
-+	return gfn->flags == 0;
-+}
-+
-+static inline bool kvm_dirty_gfn_collected(struct kvm_dirty_gfn *gfn)
-+{
-+	return gfn->flags & KVM_DIRTY_GFN_F_RESET;
-+}
-+
-+int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring)
-+{
-+	u32 cur_slot, next_slot;
-+	u64 cur_offset, next_offset;
-+	unsigned long mask;
-+	int count = 0;
-+	struct kvm_dirty_gfn *entry;
-+	bool first_round = true;
-+
-+	/* This is only needed to make compilers happy */
-+	cur_slot = cur_offset = mask = 0;
-+
-+	while (true) {
-+		entry = &ring->dirty_gfns[ring->reset_index & (ring->size - 1)];
-+
-+		if (!kvm_dirty_gfn_collected(entry))
-+			break;
-+
-+		next_slot = READ_ONCE(entry->slot);
-+		next_offset = READ_ONCE(entry->offset);
-+
-+		/* Update the flags to reflect that this GFN is reset */
-+		kvm_dirty_gfn_set_invalid(entry);
-+
-+		ring->reset_index++;
-+		count++;
-+		/*
-+		 * Try to coalesce the reset operations when the guest is
-+		 * scanning pages in the same slot.
-+		 */
-+		if (!first_round && next_slot == cur_slot) {
-+			s64 delta = next_offset - cur_offset;
-+
-+			if (delta >= 0 && delta < BITS_PER_LONG) {
-+				mask |= 1ull << delta;
-+				continue;
-+			}
-+
-+			/* Backwards visit, careful about overflows!  */
-+			if (delta > -BITS_PER_LONG && delta < 0 &&
-+			    (mask << -delta >> -delta) == mask) {
-+				cur_offset = next_offset;
-+				mask = (mask << -delta) | 1;
-+				continue;
-+			}
-+		}
-+		kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
-+		cur_slot = next_slot;
-+		cur_offset = next_offset;
-+		mask = 1;
-+		first_round = false;
-+	}
-+
-+	kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
-+
-+	trace_kvm_dirty_ring_reset(ring);
-+
-+	return count;
-+}
-+
-+void kvm_dirty_ring_push(struct kvm_dirty_ring *ring, u32 slot, u64 offset)
-+{
-+	struct kvm_dirty_gfn *entry;
-+
-+	/* It should never get full */
-+	WARN_ON_ONCE(kvm_dirty_ring_full(ring));
-+
-+	entry = &ring->dirty_gfns[ring->dirty_index & (ring->size - 1)];
-+
-+	/* It should always be an invalid entry to fill in */
-+	WARN_ON_ONCE(!kvm_dirty_gfn_invalid(entry));
-+
-+	entry->slot = slot;
-+	entry->offset = offset;
-+	/*
-+	 * Make sure the data is filled in before we publish this to
-+	 * the userspace program.  There's no paired kernel-side reader.
-+	 */
-+	smp_wmb();
-+	kvm_dirty_gfn_set_dirtied(entry);
-+	ring->dirty_index++;
-+	trace_kvm_dirty_ring_push(ring, slot, offset);
-+}
-+
-+struct page *kvm_dirty_ring_get_page(struct kvm_dirty_ring *ring, u32 offset)
-+{
-+	return vmalloc_to_page((void *)ring->dirty_gfns + offset * PAGE_SIZE);
-+}
-+
-+void kvm_dirty_ring_free(struct kvm_dirty_ring *ring)
-+{
-+	vfree(ring->dirty_gfns);
-+	ring->dirty_gfns = NULL;
-+}
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 6838dc6ba394..54a1e893d17b 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -64,6 +64,8 @@
- #define CREATE_TRACE_POINTS
- #include <trace/events/kvm.h>
- 
-+#include <linux/kvm_dirty_ring.h>
-+
- /* Worst case buffer size needed for holding an integer. */
- #define ITOA_MAX_LEN 12
- 
-@@ -358,6 +360,7 @@ static void kvm_vcpu_init(struct kvm_vcpu *vcpu, struct kvm *kvm, unsigned id)
- 
- void kvm_vcpu_destroy(struct kvm_vcpu *vcpu)
- {
-+	kvm_dirty_ring_free(&vcpu->dirty_ring);
- 	kvm_arch_vcpu_destroy(vcpu);
- 
- 	/*
-@@ -2565,8 +2568,13 @@ static void mark_page_dirty_in_slot(struct kvm *kvm,
- {
- 	if (memslot && memslot->dirty_bitmap) {
- 		unsigned long rel_gfn = gfn - memslot->base_gfn;
-+		u32 slot = (memslot->as_id << 16) | memslot->id;
- 
--		set_bit_le(rel_gfn, memslot->dirty_bitmap);
-+		if (kvm->dirty_ring_size)
-+			kvm_dirty_ring_push(kvm_dirty_ring_get(kvm),
-+					    slot, rel_gfn);
-+		else
-+			set_bit_le(rel_gfn, memslot->dirty_bitmap);
- 	}
- }
- 
-@@ -2913,6 +2921,16 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *me, bool yield_to_kernel_mode)
- }
- EXPORT_SYMBOL_GPL(kvm_vcpu_on_spin);
- 
-+static bool kvm_page_in_dirty_ring(struct kvm *kvm, unsigned long pgoff)
-+{
-+	if (!KVM_DIRTY_LOG_PAGE_OFFSET)
-+		return false;
-+
-+	return (pgoff >= KVM_DIRTY_LOG_PAGE_OFFSET) &&
-+	    (pgoff < KVM_DIRTY_LOG_PAGE_OFFSET +
-+	     kvm->dirty_ring_size / PAGE_SIZE);
-+}
-+
- static vm_fault_t kvm_vcpu_fault(struct vm_fault *vmf)
- {
- 	struct kvm_vcpu *vcpu = vmf->vma->vm_file->private_data;
-@@ -2928,6 +2946,10 @@ static vm_fault_t kvm_vcpu_fault(struct vm_fault *vmf)
- 	else if (vmf->pgoff == KVM_COALESCED_MMIO_PAGE_OFFSET)
- 		page = virt_to_page(vcpu->kvm->coalesced_mmio_ring);
- #endif
-+	else if (kvm_page_in_dirty_ring(vcpu->kvm, vmf->pgoff))
-+		page = kvm_dirty_ring_get_page(
-+		    &vcpu->dirty_ring,
-+		    vmf->pgoff - KVM_DIRTY_LOG_PAGE_OFFSET);
- 	else
- 		return kvm_arch_vcpu_fault(vcpu, vmf);
- 	get_page(page);
-@@ -2941,6 +2963,14 @@ static const struct vm_operations_struct kvm_vcpu_vm_ops = {
- 
- static int kvm_vcpu_mmap(struct file *file, struct vm_area_struct *vma)
- {
-+	struct kvm_vcpu *vcpu = file->private_data;
-+	unsigned long pages = (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
-+
-+	if ((kvm_page_in_dirty_ring(vcpu->kvm, vma->vm_pgoff) ||
-+	     kvm_page_in_dirty_ring(vcpu->kvm, vma->vm_pgoff + pages - 1)) &&
-+	    ((vma->vm_flags & VM_EXEC) || !(vma->vm_flags & VM_SHARED)))
-+		return -EINVAL;
-+
- 	vma->vm_ops = &kvm_vcpu_vm_ops;
- 	return 0;
- }
-@@ -3034,6 +3064,13 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
- 	if (r)
- 		goto vcpu_free_run_page;
- 
-+	if (kvm->dirty_ring_size) {
-+		r = kvm_dirty_ring_alloc(&vcpu->dirty_ring,
-+					 id, kvm->dirty_ring_size);
-+		if (r)
-+			goto arch_vcpu_destroy;
-+	}
-+
- 	kvm_create_vcpu_debugfs(vcpu);
- 
- 	mutex_lock(&kvm->lock);
-@@ -3069,6 +3106,8 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, u32 id)
- unlock_vcpu_destroy:
- 	mutex_unlock(&kvm->lock);
- 	debugfs_remove_recursive(vcpu->debugfs_dentry);
-+	kvm_dirty_ring_free(&vcpu->dirty_ring);
-+arch_vcpu_destroy:
- 	kvm_arch_vcpu_destroy(vcpu);
- vcpu_free_run_page:
- 	free_page((unsigned long)vcpu->run);
-@@ -3540,12 +3579,78 @@ static long kvm_vm_ioctl_check_extension_generic(struct kvm *kvm, long arg)
- #endif
- 	case KVM_CAP_NR_MEMSLOTS:
- 		return KVM_USER_MEM_SLOTS;
-+	case KVM_CAP_DIRTY_LOG_RING:
-+#ifdef CONFIG_X86
-+		return KVM_DIRTY_RING_MAX_ENTRIES * sizeof(struct kvm_dirty_gfn);
-+#else
-+		return 0;
-+#endif
- 	default:
- 		break;
- 	}
- 	return kvm_vm_ioctl_check_extension(kvm, arg);
- }
- 
-+static int kvm_vm_ioctl_enable_dirty_log_ring(struct kvm *kvm, u32 size)
-+{
-+	int r;
-+
-+	if (!KVM_DIRTY_LOG_PAGE_OFFSET)
-+		return -EINVAL;
-+
-+	/* the size should be power of 2 */
-+	if (!size || (size & (size - 1)))
-+		return -EINVAL;
-+
-+	/* Should be bigger to keep the reserved entries, or a page */
-+	if (size < kvm_dirty_ring_get_rsvd_entries() *
-+	    sizeof(struct kvm_dirty_gfn) || size < PAGE_SIZE)
-+		return -EINVAL;
-+
-+	if (size > KVM_DIRTY_RING_MAX_ENTRIES *
-+	    sizeof(struct kvm_dirty_gfn))
-+		return -E2BIG;
-+
-+	/* We only allow it to set once */
-+	if (kvm->dirty_ring_size)
-+		return -EINVAL;
-+
-+	mutex_lock(&kvm->lock);
-+
-+	if (kvm->created_vcpus) {
-+		/* We don't allow to change this value after vcpu created */
-+		r = -EINVAL;
-+	} else {
-+		kvm->dirty_ring_size = size;
-+		r = 0;
-+	}
-+
-+	mutex_unlock(&kvm->lock);
-+	return r;
-+}
-+
-+static int kvm_vm_ioctl_reset_dirty_pages(struct kvm *kvm)
-+{
-+	int i;
-+	struct kvm_vcpu *vcpu;
-+	int cleared = 0;
-+
-+	if (!kvm->dirty_ring_size)
-+		return -EINVAL;
-+
-+	mutex_lock(&kvm->slots_lock);
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm)
-+		cleared += kvm_dirty_ring_reset(vcpu->kvm, &vcpu->dirty_ring);
-+
-+	mutex_unlock(&kvm->slots_lock);
-+
-+	if (cleared)
-+		kvm_flush_remote_tlbs(kvm);
-+
-+	return cleared;
-+}
-+
- int __attribute__((weak)) kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 						  struct kvm_enable_cap *cap)
- {
-@@ -3569,6 +3674,8 @@ static int kvm_vm_ioctl_enable_cap_generic(struct kvm *kvm,
- 		return 0;
- 	}
- #endif
-+	case KVM_CAP_DIRTY_LOG_RING:
-+		return kvm_vm_ioctl_enable_dirty_log_ring(kvm, cap->args[0]);
- 	default:
- 		return kvm_vm_ioctl_enable_cap(kvm, cap);
- 	}
-@@ -3756,6 +3863,9 @@ static long kvm_vm_ioctl(struct file *filp,
- 	case KVM_CHECK_EXTENSION:
- 		r = kvm_vm_ioctl_check_extension_generic(kvm, arg);
- 		break;
-+	case KVM_RESET_DIRTY_RINGS:
-+		r = kvm_vm_ioctl_reset_dirty_pages(kvm);
-+		break;
- 	default:
- 		r = kvm_arch_vm_ioctl(filp, ioctl, arg);
- 	}
--- 
-2.24.1
-
+> 
+>> +	depends on OF
+>> +	select REGMAP_I2C
+>> +	select REGMAP_IRQ
+>> +	select SL28CPLD_IRQ
+>> +	select MFD_CORE
+>> +	help
+>> +	  This option enables support for the board management controller
+>> +	  found on the Kontron sl28 CPLD. You have to select individual
+>> +	  functions, such as watchdog, GPIO, etc, under the corresponding 
+>> menus
+>> +	  in order to enable them.
+>> +
+>> +	  Currently supported boards are:
+>> +
+>> +		Kontron SMARC-sAL28
+>> +
+>> +	  To compile this driver as a module, choose M here: the module will 
+>> be
+>> +	  called sl28cpld.
+>> +
+>>  endmenu
+>>  endif
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index f935d10cbf0f..9bc38863b9c7 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -259,3 +259,5 @@ obj-$(CONFIG_MFD_ROHM_BD718XX)	+= rohm-bd718x7.o
+>>  obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+>> 
+>>  obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+>> +
+>> +obj-$(CONFIG_MFD_SL28CPLD)	+= sl28cpld.o
+>> diff --git a/drivers/mfd/sl28cpld.c b/drivers/mfd/sl28cpld.c
+>> new file mode 100644
+>> index 000000000000..789f21f90752
+>> --- /dev/null
+>> +++ b/drivers/mfd/sl28cpld.c
+>> @@ -0,0 +1,155 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * MFD core for the CPLD on a SMARC-sAL28 board.
+>> + *
+>> + * Copyright 2019 Kontron Europe GmbH
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/mfd/core.h>
+>> +
+>> +#define SL28CPLD_VERSION 0x03
+>> +#define SL28CPLD_WATCHDOG_BASE 0x4
+>> +#define SL28CPLD_HWMON_FAN_BASE 0xb
+>> +#define SL28CPLD_PWM0_BASE 0xc
+>> +#define SL28CPLD_PWM1_BASE 0xe
+>> +#define SL28CPLD_GPIO0_BASE 0x10
+>> +#define SL28CPLD_GPIO1_BASE 0x15
+>> +#define SL28CPLD_GPO_BASE 0x1a
+>> +#define SL28CPLD_GPI_BASE 0x1b
+>> +#define SL28CPLD_INTC_BASE 0x1c
+>> +
+>> +/* all subdevices share the same IRQ */
+>> +#define SL28CPLD_IRQ 0
+>> +
+>> +#define SL28CPLD_MIN_REQ_VERSION 14
+>> +
+>> +struct sl28cpld {
+>> +	struct device *dev;
+>> +	struct regmap *regmap;
+>> +};
+>> +
+>> +static const struct regmap_config sl28cpld_regmap_config = {
+>> +	.reg_bits = 8,
+>> +	.val_bits = 8,
+>> +	.reg_stride = 1,
+>> +};
+>> +
+>> +static struct resource sl28cpld_watchdog_resources[] = {
+>> +	DEFINE_RES_REG(SL28CPLD_WATCHDOG_BASE, 1),
+>> +};
+>> +
+>> +static struct resource sl28cpld_hwmon_fan_resources[] = {
+>> +	DEFINE_RES_REG(SL28CPLD_HWMON_FAN_BASE, 1),
+>> +};
+>> +
+>> +static struct resource sl28cpld_pwm0_resources[] = {
+>> +	DEFINE_RES_REG(SL28CPLD_PWM0_BASE, 1),
+>> +};
+>> +
+>> +static struct resource sl28cpld_pwm1_resources[] = {
+>> +	DEFINE_RES_REG(SL28CPLD_PWM1_BASE, 1),
+>> +};
+>> +
+>> +static struct resource sl28cpld_gpio0_resources[] = {
+>> +	DEFINE_RES_REG(SL28CPLD_GPIO0_BASE, 1),
+>> +	DEFINE_RES_IRQ(SL28CPLD_IRQ),
+>> +};
+>> +
+>> +static struct resource sl28cpld_gpio1_resources[] = {
+>> +	DEFINE_RES_REG(SL28CPLD_GPIO1_BASE, 1),
+>> +	DEFINE_RES_IRQ(SL28CPLD_IRQ),
+>> +};
+>> +
+>> +static struct resource sl28cpld_gpo_resources[] = {
+>> +	DEFINE_RES_REG(SL28CPLD_GPO_BASE, 1),
+>> +};
+>> +
+>> +static struct resource sl28cpld_gpi_resources[] = {
+>> +	DEFINE_RES_REG(SL28CPLD_GPI_BASE, 1),
+>> +};
+>> +
+>> +static struct resource sl28cpld_intc_resources[] = {
+>> +	DEFINE_RES_REG(SL28CPLD_INTC_BASE, 1),
+>> +	DEFINE_RES_IRQ(SL28CPLD_IRQ),
+>> +};
+>> +
+>> +static const struct mfd_cell sl28cpld_devs[] = {
+>> +	OF_MFD_CELL("sl28cpld-wdt", sl28cpld_watchdog_resources, NULL, 0, 0,
+>> +		    "kontron,sl28cpld-wdt"),
+>> +	OF_MFD_CELL("sl28cpld-fan", sl28cpld_hwmon_fan_resources, NULL, 0, 
+>> 0,
+>> +		    "kontron,sl28cpld-fan"),
+>> +	OF_MFD_CELL("sl28cpld-pwm", sl28cpld_pwm0_resources, NULL, 0, 0,
+>> +		    "kontron,sl28cpld-pwm"),
+>> +	OF_MFD_CELL("sl28cpld-pwm", sl28cpld_pwm1_resources, NULL, 0, 1,
+>> +		    "kontron,sl28cpld-pwm"),
+>> +	OF_MFD_CELL("sl28cpld-gpio", sl28cpld_gpio0_resources, NULL, 0, 0,
+>> +		    "kontron,sl28cpld-gpio"),
+>> +	OF_MFD_CELL("sl28cpld-gpio", sl28cpld_gpio1_resources, NULL, 0, 1,
+>> +		    "kontron,sl28cpld-gpio"),
+>> +	OF_MFD_CELL("sl28cpld-gpo", sl28cpld_gpo_resources, NULL, 0, 0,
+>> +		    "kontron,sl28cpld-gpo"),
+>> +	OF_MFD_CELL("sl28cpld-gpi", sl28cpld_gpi_resources, NULL, 0, 0,
+>> +		    "kontron,sl28cpld-gpi"),
+>> +	OF_MFD_CELL("sl28cpld-intc", sl28cpld_intc_resources, NULL, 0, 0,
+>> +		    "kontron,sl28cpld-intc"),
+>> +};
+>> +
+>> +static int sl28cpld_probe(struct i2c_client *i2c)
+>> +{
+>> +	struct sl28cpld *sl28cpld;
+>> +	struct device *dev = &i2c->dev;
+>> +	unsigned int cpld_version;
+>> +	int ret;
+>> +
+>> +	sl28cpld = devm_kzalloc(dev, sizeof(*sl28cpld), GFP_KERNEL);
+>> +	if (!sl28cpld)
+>> +		return -ENOMEM;
+>> +
+>> +	sl28cpld->regmap = devm_regmap_init_i2c(i2c, 
+>> &sl28cpld_regmap_config);
+>> +	if (IS_ERR(sl28cpld->regmap))
+>> +		return PTR_ERR(sl28cpld->regmap);
+>> +
+>> +	ret = regmap_read(sl28cpld->regmap, SL28CPLD_VERSION, 
+>> &cpld_version);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (cpld_version < SL28CPLD_MIN_REQ_VERSION) {
+>> +		dev_err(dev, "unsupported CPLD version %d\n", cpld_version);
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	sl28cpld->dev = dev;
+>> +	i2c_set_clientdata(i2c, sl28cpld);
+>> +
+>> +	dev_info(dev, "successfully probed. CPLD version %d\n", 
+>> cpld_version);
+>> +
+>> +	return devm_mfd_add_devices(dev, -1, sl28cpld_devs,
+>> +				    ARRAY_SIZE(sl28cpld_devs), NULL,
+>> +				    i2c->irq, NULL);
+>> +}
+>> +
+>> +static const struct of_device_id sl28cpld_of_match[] = {
+>> +	{ .compatible = "kontron,sl28cpld", },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sl28cpld_of_match);
+>> +
+>> +static struct i2c_driver sl28cpld_driver = {
+>> +	.probe_new = sl28cpld_probe,
+>> +	.driver = {
+>> +		.name = "sl28cpld",
+>> +		.of_match_table = of_match_ptr(sl28cpld_of_match),
+>> +	},
+>> +};
+>> +module_i2c_driver(sl28cpld_driver);
+>> +
+>> +MODULE_DESCRIPTION("sl28cpld MFD Core Driver");
+>> +MODULE_LICENSE("GPL");
+>> 
