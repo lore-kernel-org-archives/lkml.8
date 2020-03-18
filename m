@@ -2,175 +2,107 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A063C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E36C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E41AD20772
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:38:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsUlFx+E"
+	by mail.kernel.org (Postfix) with ESMTP id E19A120772
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584571128;
+	bh=cj77KJI2g3gNsfOIkifrEx2FO9HePVuMfCHiT2A3g4U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oj4AUdjba7eghsVM37PsU11o5ZjvcuHC0eShBkVMsucF/j53s6unPg9m7FYZgltS8
+	 QdzsXCkfoN0Ei2ZW2jFkx+x+gzgAm30XyTlqm3ipua8Y8enEQy5eqABKqy+9DR/WeA
+	 6uPCU92XrwW7fUEzHWtYay1TO545qFkHIspdBWiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgCRWiM (ORCPT
+        id S1727348AbgCRWiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:38:12 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35556 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727174AbgCRWiL (ORCPT
+        Wed, 18 Mar 2020 18:38:46 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35102 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgCRWiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:38:11 -0400
-Received: by mail-ot1-f66.google.com with SMTP id k26so411801otr.2;
-        Wed, 18 Mar 2020 15:38:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OEbb45cGPFZm8qmmQB3oPZ+2/N+3osCrsUq9riyORzM=;
-        b=PsUlFx+EpgrcwOaqknrsFqpYwVWuwwev8sFr4FUn9wBNgafRsum7+is+Jdjs/1e9SA
-         xTt+RNNSUP8M/ypsUaWm5BAbDqRbmLNrnPCvfpkchubePG8n2S9Pac5fRF+BPLDdqZfA
-         JwMMxaQYOy1gbmYrnuK/8T5Cw+L/pwew14vhbixQGdOOL9284sb0hGl8IvNKVPHsgfu5
-         LkkeA18Zw8wqFUtY/lBa0koAgl0zxPkJTo5uM3AEvxATxvO8o6dITmUIzCwuIQteGsdF
-         gHL1CXZ6f6w7MCwZ5/j88CO8QyvtWJhwsJTXYo8Ngee36RIBI4SW9YRESBeBbfobwX7g
-         qf/w==
+        Wed, 18 Mar 2020 18:38:46 -0400
+Received: by mail-io1-f66.google.com with SMTP id h8so276270iob.2;
+        Wed, 18 Mar 2020 15:38:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OEbb45cGPFZm8qmmQB3oPZ+2/N+3osCrsUq9riyORzM=;
-        b=TN9loXTkxyQ2mg4yVfHcYZQdNfZMo/TG4F5eJnuDl9ycTkgASU7guiujA4MpMDgEwh
-         8DvbxgQtAxQc/X7JoveB969vOASdfNl8JZg20Jw0BpId/aowB9W90Gr+V717zJbw0WCM
-         ZiemhE/PiCrEh1F8ZUMrRZuwG4QGtST/t/aVFAxwqTIj9CCEIzFT6cAFAuXsVKEaNy5D
-         AD0GuZmvqPZSEx9WtdnJhfJfrn6ZOHgJCGguasZx9Wd6AW4KYqkvZZLHagiAP3H95EJ5
-         d7WMvBaETB0yJrtlmjBKjjFVxUkE10/jXFvpazufD9SzStpBLaaBN/zzeCJ7/dH3K8Jr
-         QDrA==
-X-Gm-Message-State: ANhLgQ1RiIMDWM5q0C03gOLstgLjDXjwAU8mO+W98hZ+zQ3Bm+SGQBZZ
-        qIeQx3+YLNn6yYrqFJ7K/txAN7/43D9mSwDV+tY3zCB/CHe15Q==
-X-Google-Smtp-Source: ADFU+vsGjSRTwN0zvpiH0XKK8o/xfFABGdDrIZJqfgKbP/+BTkeCH7RyeEQaJfxXTomJkxqErvu7d/IlyGNsJEijbF0=
-X-Received: by 2002:a9d:64ca:: with SMTP id n10mr6023292otl.325.1584571089403;
- Wed, 18 Mar 2020 15:38:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200313212012.GL4751@pendragon.ideasonboard.com> <OSBPR01MB35905D6D72DCBF154FCF7C88AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
- <20200313212717.GO4751@pendragon.ideasonboard.com> <CA+V-a8veXbwMrda8UEu2mN6gGgrBJA8Mp7gdN7Q3-iXNw9c4pg@mail.gmail.com>
- <20200318223311.GH24538@pendragon.ideasonboard.com>
-In-Reply-To: <20200318223311.GH24538@pendragon.ideasonboard.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 18 Mar 2020 22:37:42 +0000
-Message-ID: <CA+V-a8u5Tn+i22h-X5OMUjJfSuhjHqsfDX87o5X94r8M+N1e5w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to assigned-clock-rates
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hjd4cWdqxb7vqLIGudSEI03tN+skbBZc4IaGVCWe4bE=;
+        b=Zz2jKlW5sJ9GuCj0KoknSaW9kXeZXmeWitNKJ51/MjyeOlt2GrZTXwHaMpcXoQuniB
+         6AhDT4GIah9N8/i9v5hALFgFBE2AiJPzTUf7UtgCTO0sA0lAj2hxF3UKk698ouYK528D
+         QvmH2EuOhNhiki2vdMuqiJV1CIqVbcog1rbOL+tKZ8QiWw1Wx7nIipbovu3bNyOEuWY1
+         VN2m0EFXLz+PTTDbyDcFZdT+d17nKdeOXE9bfOp4Th4KD9c8D+2wKnDH8bbr32jIQ66V
+         mGwgon9KIfrhxOLzREytWyooMFX9RSjrllajzTjV3h+Pa59PsZ1uhPfx0GUrcWke55/B
+         3zrA==
+X-Gm-Message-State: ANhLgQ36v8ENLxxyevqHdsqEE5m3k+DHbcH9IrYvFozwJwvMO+TDZxjj
+        UStz5B/Ic+wcrPjkY0GV9w==
+X-Google-Smtp-Source: ADFU+vuWOZ5C5oLxE9dB/U/jglteCOUaH90nZHmvZdWYJLWdri0o66f9VabHUrjNFihG7WzqU2uzrA==
+X-Received: by 2002:a5d:958f:: with SMTP id a15mr70087ioo.170.1584571125436;
+        Wed, 18 Mar 2020 15:38:45 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id h29sm96397ili.19.2020.03.18.15.38.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 15:38:44 -0700 (PDT)
+Received: (nullmailer pid 31930 invoked by uid 1000);
+        Wed, 18 Mar 2020 22:38:42 -0000
+Date:   Wed, 18 Mar 2020 16:38:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+Subject: Re: [PATCH v3 1/6] dt-bindings: pinctrl: add bindings for MediaTek
+ MT6779 SoC
+Message-ID: <20200318223842.GA31707@bogus>
+References: <1584454007-2115-1-git-send-email-hanks.chen@mediatek.com>
+ <1584454007-2115-2-git-send-email-hanks.chen@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584454007-2115-2-git-send-email-hanks.chen@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+On Tue, 17 Mar 2020 22:06:42 +0800, Hanks Chen wrote:
+> From: Andy Teng <andy.teng@mediatek.com>
+> 
+> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
+> 
+> Change-Id: I92586369564948f2628f70421bcd70668f132c4f
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> ---
+>  .../bindings/pinctrl/mediatek,mt6779-pinctrl.yaml  |  208 ++++++++++++++++++++
+>  1 file changed, 208 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+> 
 
-On Wed, Mar 18, 2020 at 10:33 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, Mar 18, 2020 at 08:13:00PM +0000, Lad, Prabhakar wrote:
-> > On Fri, Mar 13, 2020 at 9:27 PM Laurent Pinchart wrote:
-> > > On Fri, Mar 13, 2020 at 09:25:01PM +0000, Prabhakar Mahadev Lad wrote:
-> > >> On Sent: 13 March 2020 21:20, Laurent Pinchart wrote:
-> > >>> On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
-> > >>>> Use assigned-clock-rates to specify the clock rate. Also mark
-> > >>>> clock-frequency property as deprecated.
-> > >>>
-> > >>> I would phrase it the other way around, this patch mainly deprecates clock-
-> > >>> frequency, and as a side effect recommends usage of assigned-clock-rates.
-> > >>>
-> > >>> "Deprecate usage of the clock-frequency propertly. The preferred method
-> > >>> to set clock rates is to use assigned-clock-rates."
-> > >>
-> > >> Agreed will do that.
-> > >>
-> > >>>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >>>> ---
-> > >>>>  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
-> > >>>>  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >>>>
-> > >>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > >>>> b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > >>>> index 72ad992..e62fe82 100644
-> > >>>> --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > >>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > >>>> @@ -8,7 +8,7 @@ Required Properties:
-> > >>>>  - compatible: Value should be "ovti,ov5645".
-> > >>>>  - clocks: Reference to the xclk clock.
-> > >>>>  - clock-names: Should be "xclk".
-> > >>>> -- clock-frequency: Frequency of the xclk clock.
-> > >>>> +- clock-frequency (deprecated): Frequency of the xclk clock.
-> > >>>
-> > >>> I would drop this completely. Drivers need to ensure backward compatibility,
-> > >>> but DT bindings should only document the latest version, the history is
-> > >>> available in git.
-> > >>
-> > >> Sure will drop it.
-> > >>
-> > >>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > >>>
-> > >>> While at it, can I enlist you to convert these bindings to yaml ? :-)
-> > >>>
-> > >> Sure will do the honours , will make sure yaml patch is ontop of this patch too.
-> >
-> > Shall I enlist you as the maintainer  in the json-schema ?
-> > dt_binding_check says  'maintainers' is a required property.
->
-> Do you want to be the new maintainer ? :-) Sakari is maintaining sensor
-> drivers (in his spare time though) so maybe he could be listed in the DT
-> bindings too if he wants. Otherwise, I could do it.
->
-OK I will add myself and Sakari for now and post a v4.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Cheers,
---Prabhakar
+warning: no schema found in file: Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml: ignoring, error parsing file
+Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml:  while parsing a block collection
+  in "<unicode string>", line 28, column 5
+did not find expected '-' indicator
+  in "<unicode string>", line 29, column 5
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dts] Error 1
+Makefile:1262: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-> > > Thank you :-)
-> > >
-> > >>>>  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > >>>>    to the hardware pin PWDNB which is physically active low.
-> > >>>>  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > >>>> @@ -37,7 +37,8 @@ Example:
-> > >>>>
-> > >>>>  clocks = <&clks 200>;
-> > >>>>  clock-names = "xclk";
-> > >>>> -clock-frequency = <24000000>;
-> > >>>> +assigned-clocks = <&clks 200>;
-> > >>>> +assigned-clock-rates = <24000000>;
-> > >>>>
-> > >>>>  vdddo-supply = <&camera_dovdd_1v8>;
-> > >>>>  vdda-supply = <&camera_avdd_2v8>;
->
-> --
-> Regards,
->
-> Laurent Pinchart
+See https://patchwork.ozlabs.org/patch/1256429
+Please check and re-submit.
