@@ -2,140 +2,104 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11422C5ACD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F918C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8572076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 736D620724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J5xD/o01"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ODsBolDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgCRNLt (ORCPT
+        id S1727005AbgCRNNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:11:49 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:52067 "EHLO
+        Wed, 18 Mar 2020 09:13:43 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:50748 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726821AbgCRNLt (ORCPT
+        by vger.kernel.org with ESMTP id S1726759AbgCRNNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:11:49 -0400
+        Wed, 18 Mar 2020 09:13:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584537108;
+        s=mimecast20190719; t=1584537221;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xlChmMy4SLafuKQTGlyJ3sDvLZdWy+MYwHrLdWFHRXE=;
-        b=J5xD/o01nwW6XbfHWaTSAq3k+rsMOOgL4ikiUv6BEV8iVrLq+YzFiaCdewtrR10/ccBsZX
-        ZqRHFws7lwpX1jl7aOH/8UKdeuFmvpCDfHo3sLS3EHBnfgzGA1xXlItGUwUD65n15Ay1/K
-        zFkge/+OL+7drpX1GCyTKp04Z+ht4JU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-448-5utA3yAaM5-5gQspvcypOg-1; Wed, 18 Mar 2020 09:11:44 -0400
-X-MC-Unique: 5utA3yAaM5-5gQspvcypOg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26F7218A5502;
-        Wed, 18 Mar 2020 13:11:43 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.36.110.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E94AC19C6A;
-        Wed, 18 Mar 2020 13:11:33 +0000 (UTC)
-Date:   Wed, 18 Mar 2020 09:11:28 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org
-Cc:     fw@strlen.de, ebiederm@xmission.com, twoerner@redhat.com,
-        eparis@parisplace.org, tgraf@infradead.org
-Subject: Re: [PATCH ghak25 v3 3/3] audit: add subj creds to NETFILTER_CFG
- record to cover async unregister
-Message-ID: <20200318131128.axyddgotzck7cit2@madcap2.tricolour.ca>
-References: <cover.1584480281.git.rgb@redhat.com>
- <13ef49b2f111723106d71c1bdeedae09d9b300d8.1584480281.git.rgb@redhat.com>
+        bh=PxBoqIBbe7s8BPyTsCZ02RzESp7E1oZC6kxy/vfpBRo=;
+        b=ODsBolDURrG3BqnfW4yy0khAwv1hqx65glxBLG8PfjzWpxnDOJMfs7pVJs7+odzQNsZout
+        R5n1WvlUbwoJ5oQX6+dmWH8xbthAkWI8RBRINx8RIQW46zNL+GsueyeIIanTDnSqkE/4B0
+        Zm8YymEbVZkIgDYg0oiMDtN4xcH9hZA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-474-vWrmkd0ZNlCVfEuUB02FfA-1; Wed, 18 Mar 2020 09:13:40 -0400
+X-MC-Unique: vWrmkd0ZNlCVfEuUB02FfA-1
+Received: by mail-wm1-f70.google.com with SMTP id s20so1076520wmj.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 06:13:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PxBoqIBbe7s8BPyTsCZ02RzESp7E1oZC6kxy/vfpBRo=;
+        b=gjRDxbpUymMZ3y2DDl2cUEWGo0lYyiLIWi609KjFdPYSMIloynUjHPvTvC4qT1vm0w
+         IvQ/v664VM82BMRoiRAgfaSq6hHgcPjfhAQlCplqF0iawP4M0eMwylmSUfMAEXEGWVay
+         h2PhbrXpgDRB+ausy1hCMJmJVBU0xxse+h+fgxN1z2DeRuN9DBIg9E69CiDSaO8mpxc6
+         V1jtDeGfqiYSrQIx/87m9d7TJP0n93yygZsU+njPHGJkVGGqwVP35kmsbUIKqvLioPXP
+         RwyV7VGB/P0LAcFLzXpcjW4G2PgUK2cZlPtXV+KtAtbI+fCkdPzU64aUpn1o0FsxEO2y
+         e+3g==
+X-Gm-Message-State: ANhLgQ1afYwlcx9myeplnWajQ4VCz3T/NMB8bbybNUoNc7tLL5OAP7O1
+        FmwbTA71jiK7HGcxU2c26q6smXrq1QGM9fam6RtoTYTgzlWpLpewxIloVpLCGZIy5eusp/MWVmp
+        i5qstY/h7ihn5bxfuKcS/GnAX
+X-Received: by 2002:a7b:c4c3:: with SMTP id g3mr5126517wmk.131.1584537218884;
+        Wed, 18 Mar 2020 06:13:38 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vs+9a05PJ9MjSVvgvmjIy/7AfVl4jvUgyfkQTDqBDQ0QhqKsWXVBZhmLJxegqv36zeZ+Qbawg==
+X-Received: by 2002:a7b:c4c3:: with SMTP id g3mr5126491wmk.131.1584537218610;
+        Wed, 18 Mar 2020 06:13:38 -0700 (PDT)
+Received: from [192.168.178.58] ([151.21.15.43])
+        by smtp.gmail.com with ESMTPSA id n186sm3807573wme.25.2020.03.18.06.13.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Mar 2020 06:13:38 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Fix errors when try to build kvm selftests on
+To:     Xiaoyao Li <xiaoyao.li@intel.com>, Shuah Khan <shuah@kernel.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20200315093425.33600-1-xiaoyao.li@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <7f7a2945-300d-d62c-e5f5-de55c2e3fd2f@redhat.com>
+Date:   Wed, 18 Mar 2020 14:13:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <13ef49b2f111723106d71c1bdeedae09d9b300d8.1584480281.git.rgb@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200315093425.33600-1-xiaoyao.li@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-17 17:30, Richard Guy Briggs wrote:
-> Some table unregister actions seem to be initiated by the kernel to
-> garbage collect unused tables that are not initiated by any userspace
-> actions.  It was found to be necessary to add the subject credentials to
-> cover this case to reveal the source of these actions.  A sample record:
+On 15/03/20 10:34, Xiaoyao Li wrote:
+> I attempted to build KVM selftests on a specified dir, unfortunately
+> neither	"make O=~/mydir TARGETS=kvm" in tools/testing/selftests, nor
+> "make OUTPUT=~/mydir" in tools/testing/selftests/kvm work.
 > 
->   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat family=bridge entries=0 op=unregister pid=153 uid=root auid=unset tty=(none) ses=unset subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2 exe=(null)
-
-Given the precedent set by bpf unload, I'd really rather drop this patch
-that adds subject credentials.
-
-Similarly with ghak25's subject credentials, but they were already
-present and that would change an existing record format, so it isn't
-quite as justifiable in that case.
-
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  kernel/auditsc.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> This series aims to make both work.
 > 
-> diff --git a/kernel/auditsc.c b/kernel/auditsc.c
-> index dbb056feccb9..6c233076dfb7 100644
-> --- a/kernel/auditsc.c
-> +++ b/kernel/auditsc.c
-> @@ -2557,12 +2557,30 @@ void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
->  		       enum audit_nfcfgop op)
->  {
->  	struct audit_buffer *ab;
-> +	const struct cred *cred;
-> +	struct tty_struct *tty;
-> +	char comm[sizeof(current->comm)];
->  
->  	ab = audit_log_start(audit_context(), GFP_KERNEL, AUDIT_NETFILTER_CFG);
->  	if (!ab)
->  		return;
->  	audit_log_format(ab, "table=%s family=%u entries=%u op=%s",
->  			 name, af, nentries, audit_nfcfgs[op].s);
-> +
-> +	cred = current_cred();
-> +	tty = audit_get_tty();
-> +	audit_log_format(ab, " pid=%u uid=%u auid=%u tty=%s ses=%u",
-> +			 task_pid_nr(current),
-> +			 from_kuid(&init_user_ns, cred->uid),
-> +			 from_kuid(&init_user_ns, audit_get_loginuid(current)),
-> +			 tty ? tty_name(tty) : "(none)",
-> +			 audit_get_sessionid(current));
-> +	audit_put_tty(tty);
-> +	audit_log_task_context(ab); /* subj= */
-> +	audit_log_format(ab, " comm=");
-> +	audit_log_untrustedstring(ab, get_task_comm(comm, current));
-> +	audit_log_d_path_exe(ab, current->mm); /* exe= */
-> +
->  	audit_log_end(ab);
->  }
->  EXPORT_SYMBOL_GPL(__audit_log_nfcfg);
-> -- 
-> 1.8.3.1
+> Xiaoyao Li (2):
+>   kvm: selftests: Fix no directory error when OUTPUT specified
+>   selftests: export INSTALL_HDR_PATH if using "O" to specify output dir
 > 
-> --
-> Linux-audit mailing list
-> Linux-audit@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-audit
+>  tools/testing/selftests/Makefile     | 6 +++++-
+>  tools/testing/selftests/kvm/Makefile | 3 ++-
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+> 
 
-- RGB
+Queued, thanks.
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+Paolo
 
