@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F60C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 402D5C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1588620A8B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF3620A8B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564991;
-	bh=l6XDXJrfeQwv1WCOxswPCxkQXUA1zqUxLnPLuVDTJZQ=;
+	s=default; t=1584565005;
+	bh=h8qI3TUvyEaVDgUUv50i3tEfzr3ss5KSUl9j5hb/Ews=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epUppWmxgA9YaWcL78zmQaE4bZip5Mylwact8LxArABf6tMdWRtBVBmWhbrI3Jf+7
-	 YWs1m24gJOgqp3OjUPG252qeySbUZFSbqygSDVDh+5pIZXwEIaJ6JT4gZKWCWJQ1Sf
-	 Yxvc64p61T428Kbtz4MOVwhRerR8J1Of+UZo0o5M=
+	b=kUxDIfAdWUOYGB6Zr6l7VtfB/+/i0aLOwJzC/HSgAV6LxHd8kClGig65Up7ytzuU4
+	 UxwvNU8PlLi71XbeECAQIf9yR5QWod5pfSi48HP78JZCqc1TADLH+1GmqG9DIldETB
+	 hekKM/14XBA8AfDE7iaRUKvtAKzWQp6Vw4cJfuRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbgCRU43 (ORCPT
+        id S1728668AbgCRU4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:56:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56748 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:56:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727122AbgCRU4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:03 -0400
+        id S1727303AbgCRU4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 335BE21473;
-        Wed, 18 Mar 2020 20:56:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E351D21973;
+        Wed, 18 Mar 2020 20:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564963;
-        bh=l6XDXJrfeQwv1WCOxswPCxkQXUA1zqUxLnPLuVDTJZQ=;
+        s=default; t=1584564967;
+        bh=h8qI3TUvyEaVDgUUv50i3tEfzr3ss5KSUl9j5hb/Ews=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l9G+uGSK+AzQMd9AK/sJhowMz2Z/D1q2b0eP7a7a8tQsUcidX0oJrrVLBJiCUKjOt
-         byYHsdW0RD4ZCQYPSduTTPQtjXTapYNptxicSFPHPTJmf+NYYYfBNhY3JyG2jBpGbO
-         4/dSfZhh8sSt6JqlZ5C01kMGaAaLIBh2VvjkwNLE=
+        b=yGj4ebar36wMKYMZZECgozq9JcGV8WT6QQTEv0bFpg/xdNwdf2nm6Y6J6/Qfyysc2
+         MFgWaopE4PpZFKQGYvweIlBN4+9L86w00da+8Jszi53eYUzheL17iT62v3hv00FKez
+         kS4xOGWj9hyfB5bNC8MGq0Fy3qkilSeO1agw4XiY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+Cc:     Jakub Kicinski <kuba@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/28] bnxt_en: reinitialize IRQs when MTU is modified
-Date:   Wed, 18 Mar 2020 16:55:33 -0400
-Message-Id: <20200318205555.17447-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 10/28] macsec: add missing attribute validation for port
+Date:   Wed, 18 Mar 2020 16:55:37 -0400
+Message-Id: <20200318205555.17447-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
 References: <20200318205555.17447-1-sashal@kernel.org>
@@ -60,48 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
+[ Upstream commit 31d9a1c524964bac77b7f9d0a1ac140dc6b57461 ]
 
-MTU changes may affect the number of IRQs so we must call
-bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
-set to true.  The reason is that a larger MTU may require
-aggregation rings not needed with smaller MTU.  We may not be
-able to allocate the required number of aggregation rings and
-so we reduce the number of channels which will change the number
-of IRQs.  Without this patch, it may crash eventually in
-pci_disable_msix() when the IRQs are not properly unwound.
+Add missing attribute validation for IFLA_MACSEC_PORT
+to the netlink policy.
 
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/macsec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 41bc7820d2dde..5163da01e54f8 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -7310,13 +7310,13 @@ static int bnxt_change_mtu(struct net_device *dev, int new_mtu)
- 	struct bnxt *bp = netdev_priv(dev);
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 9bb65e0af7dd7..d6c92263bebef 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -2974,6 +2974,7 @@ static const struct device_type macsec_type = {
  
- 	if (netif_running(dev))
--		bnxt_close_nic(bp, false, false);
-+		bnxt_close_nic(bp, true, false);
- 
- 	dev->mtu = new_mtu;
- 	bnxt_set_ring_params(bp);
- 
- 	if (netif_running(dev))
--		return bnxt_open_nic(bp, false, false);
-+		return bnxt_open_nic(bp, true, false);
- 
- 	return 0;
- }
+ static const struct nla_policy macsec_rtnl_policy[IFLA_MACSEC_MAX + 1] = {
+ 	[IFLA_MACSEC_SCI] = { .type = NLA_U64 },
++	[IFLA_MACSEC_PORT] = { .type = NLA_U16 },
+ 	[IFLA_MACSEC_ICV_LEN] = { .type = NLA_U8 },
+ 	[IFLA_MACSEC_CIPHER_SUITE] = { .type = NLA_U64 },
+ 	[IFLA_MACSEC_WINDOW] = { .type = NLA_U32 },
 -- 
 2.20.1
 
