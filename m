@@ -3,133 +3,188 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A4FC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A404C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822002076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E73520754
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:19:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="X3wMKCoh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tr/MLtrz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbgCRXTG (ORCPT
+        id S1727434AbgCRXTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:19:06 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:41564 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRXTF (ORCPT
+        Wed, 18 Mar 2020 19:19:16 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37397 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCRXTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:19:05 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6269B5F;
-        Thu, 19 Mar 2020 00:19:02 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584573542;
-        bh=/zedXgBTnib8ZFBNicYJfz7d9YDzUXZrVfIpem0oI00=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X3wMKCohj+Eri0noSK4cxXv2J+Tdk+etLcebTplD2XwAu0mnpUCJBz9JoBTVtgKyB
-         BuYND21PycYFWMRG2CDc0GZ8rvrsDLqV+vZKMIO3R3FRv4+AgQPZ59Gq234fNiH5Z5
-         CrBG+MYpU8w1RzkF6O4stmkROcCdhibfo+U67x8I=
-Date:   Thu, 19 Mar 2020 01:18:56 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/4] media: i2c: ov5645: Set maximum leverage of
- external clock frequency to 24480000
-Message-ID: <20200318231856.GI24538@pendragon.ideasonboard.com>
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200313212345.GM4751@pendragon.ideasonboard.com>
- <OSBPR01MB359079EAA32E0DCBF63C6886AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+        Wed, 18 Mar 2020 19:19:15 -0400
+Received: by mail-wm1-f66.google.com with SMTP id d1so86075wmb.2;
+        Wed, 18 Mar 2020 16:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wk9Jes33zSj3Kw2yVreKxXzV9X49Jzg3gDaEC7oofOE=;
+        b=tr/MLtrzi/TDBPB81G6Q/H4lrfUMirPjp0B7c1ghxiTk2Z9CgwIWrQ9KMwDOqpAnUG
+         W4CZ1accbRYoVC4PAfByNG/8OIsl1KftiqIXAd+g34tSvDXPBNP5ZF2c3F9DqMl9OFyo
+         lu3OhnqENIzK2GE58Nz51Jbvc3KmMtVQF4rEk2QdsrTYVSsntWJStH8RW91GknqdUHe6
+         MlLjbL9D+sxMRJlkP3os2gTGdg0UczkwNNDFl6P1wFGC8FR+kdhjznKHC9ZsgRvDiMUQ
+         9rEIJN/377iehSPx+gKUT405yfYEFMIePbAbt4l69HoADxJWm0xshF32RiQMOlwjcFJn
+         /9Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wk9Jes33zSj3Kw2yVreKxXzV9X49Jzg3gDaEC7oofOE=;
+        b=uLdQXRjHYmQhUHGf7zAk1d9gj6TNwQNv86QoqVimUiSx+1NELKdq+DPfdwXz0V4Vut
+         cSJyrzN1xUtkNSPFJb8IuKGqHmUqz1k8RnjozxtxdSH4+3WyNcWqiVdTb0t3eW51Sa0i
+         91LXoLzyk83mGSxRJ1TuWr1FjigAT3sirtSbvxlXtjPgK4ZXDDqCDvROTkwRGjcfrtA+
+         8tfDk24MsosCt+MdjjVC61nkd38j6k08qZRPDLtPmQc83+i35BSVoiaZWEQT3FbjO24W
+         uW0IY5o4cF3Zl/miv+0HIWD1kH6zlaixf1fUO/eCcxsUsLFZDe8hj26IvCKp4Hoj1lXB
+         mNbg==
+X-Gm-Message-State: ANhLgQ0tjs5cyCD9urMAn7sGWgHgNNYTFR5YNx4p0XI3BriC51DRELou
+        VKAZ7IbDeMtFB3q9aIq4mXs=
+X-Google-Smtp-Source: ADFU+vvTdDD6+HPKBLWOKIIiTQzUvgDQ+DaK6FP3mTVRqybt+Soq0hm0RUZ+tq0cLd1rxtGj2M8Jmw==
+X-Received: by 2002:a1c:7207:: with SMTP id n7mr89228wmc.138.1584573553118;
+        Wed, 18 Mar 2020 16:19:13 -0700 (PDT)
+Received: from localhost (pD9E51CDC.dip0.t-ipconnect.de. [217.229.28.220])
+        by smtp.gmail.com with ESMTPSA id q8sm588893wrc.8.2020.03.18.16.19.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 16:19:11 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 00:19:10 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/7] dt-bindings: pwm: document the PWM polarity flag
+Message-ID: <20200318231910.GA2885069@ulmo>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-3-oleksandr.suvorov@toradex.com>
+ <20200317174344.GB1464607@ulmo>
+ <20200317213056.futfiwn4qgr2njye@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
 Content-Disposition: inline
-In-Reply-To: <OSBPR01MB359079EAA32E0DCBF63C6886AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200317213056.futfiwn4qgr2njye@pengutronix.de>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
 
-On Fri, Mar 13, 2020 at 09:31:25PM +0000, Prabhakar Mahadev Lad wrote:
-> On 13 March 2020 21:24, Laurent Pinchart wrote:
-> > On Fri, Mar 13, 2020 at 09:12:33PM +0000, Lad Prabhakar wrote:
-> > > While testing on Renesas RZ/G2E platform, noticed the clock frequency
-> > > to be 24242424 as a result the probe failed. However increasing the
-> > > maximum leverage of external clock frequency to 24480000 fixes this
-> > > issue. Since this difference is small enough and is insignificant set
-> > > the same in the driver.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+--J/dobhs11T7y2rNN
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 17, 2020 at 10:30:56PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Thierry,
+>=20
+> On Tue, Mar 17, 2020 at 06:43:44PM +0100, Thierry Reding wrote:
+> > On Tue, Mar 17, 2020 at 02:32:26PM +0200, Oleksandr Suvorov wrote:
+> > > Add the description of PWM_POLARITY_NORMAL flag.
+> > >=20
+> > > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 > > > ---
-> > >  drivers/media/i2c/ov5645.c | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
-> > > index 4fbabf3..b49359b 100644
-> > > --- a/drivers/media/i2c/ov5645.c
-> > > +++ b/drivers/media/i2c/ov5645.c
-> > > @@ -1107,8 +1107,10 @@ static int ov5645_probe(struct i2c_client *client)
-> > >  }
-> > >
-> > >  xclk_freq = clk_get_rate(ov5645->xclk);
-> > > -/* external clock must be 24MHz, allow 1% tolerance */
-> > > -if (xclk_freq < 23760000 || xclk_freq > 24240000) {
-> > > +/* external clock must be 24MHz, allow a minimum 1% and a maximum of 2%
-> > > + * tolerance
-> >
-> > So where do these numbers come from ? I understand that 2% is what you
-> > need to make your clock fit in the range, but why -1%/+2% instead of -
-> > 2%/+2% ? And why not 2.5 or 3% ? The sensor datasheet documents the
-> > range of supported xvclk frequencies to be 6MHz to 54MHz. I understand
-> > that PLL parameters depend on the clock frequency, but could they be
-> > calculated instead of hardcoded, to avoid requiring an exact 24MHz input
-> > frequency ?
->
-> To be honest I don't have the datasheet for ov5645, the flyer says 6-54Mhz but the
-> logs/comment says 24Mhz.
+> > >=20
+> > >  Documentation/devicetree/bindings/pwm/pwm.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Document=
+ation/devicetree/bindings/pwm/pwm.txt
+> > > index 084886bd721e..440c6b9a6a4e 100644
+> > > --- a/Documentation/devicetree/bindings/pwm/pwm.txt
+> > > +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+> > > @@ -46,6 +46,7 @@ period in nanoseconds.
+> > >  Optionally, the pwm-specifier can encode a number of flags (defined =
+in
+> > >  <dt-bindings/pwm/pwm.h>) in a third cell:
+> > >  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
+> > > +- PWM_POLARITY_NORMAL: don't invert the PWM signal polarity
+> >=20
+> > This doesn't make sense. PWM_POLARITY_NORMAL is not part of the DT ABI.
+>=20
+> "is not part of the DT ABI" is hardly a good reason. If it's sensible to
+> be used, it is sensible to define it.
 
-The OV5645 clock topology is fairly complex, with two PLLs and different
-set of output dividers. It however shouldn't be impossible to calculate
-the PLL configuration in the driver, but would require some dedication,
-and is probably not worth it.
+That's exactly it. It's not sensible at all to use it. If you define it
+here it means people are allowed to do stuff like this:
 
-I've discussed the matter with Sakari, and we concluded that this is
-just a sanity check. We advise increasing the tolerance by a bigger
-amount to avoid patching this for every new board (completely
-arbitrarily, +/- 5%), and turning the fatal error into a dev_warn,
-dropping the return -EINVAL statement.
+	pwms =3D <&pwm 1234 PWM_POLARITY_INVERTED | PWM_POLARITY_NORMAL>;
 
-> > > + */
-> > > +if (xclk_freq < 23760000 || xclk_freq > 24480000) {
-> > >  dev_err(dev, "external clock frequency %u is not supported\n",
-> > >  xclk_freq);
-> > >  return -EINVAL;
+which doesn't make sense. What's more, it impossible for the code to
+even notice that you're being silly because | PWM_POLARITY_NORMAL is
+just | 0 and that's just a nop.
 
--- 
-Regards,
+Thierry
 
-Laurent Pinchart
+> > The third cell of the specifier is a bitmask of flags.
+> >=20
+> > PWM_POLARITY_NORMAL is an enumeration value that evaluates to 0, so it
+> > makes absolutely no sense as a flag.
+>=20
+> Using 0 or PWM_POLARITY_NORMAL doesn't have an effect on the compiled
+> device tree, that's true. But having the term PWM_POLARITY_NORMAL (in
+> contrast to a plain 0) in a dts file is useful in my eyes for human
+> readers.
+
+Yes, I suppose that's true.
+
+> > PWM signals are considered to be "normal" by default, so no flag is
+> > necessary to specify that.
+>=20
+> GPIOs are considered to be active high by default, still there is
+> GPIO_ACTIVE_HIGH (which also evaluates to 0). Also there is
+> IRQ_TYPE_NONE.
+
+I'm aware of these. They carry the same risks as I mentioned above,
+though. You can easily make mistakes that no software will be able to
+detect. If you make a GPIO GPIO_ACTIVE_HIGH | GPIO_ACTIVE_LOW, it
+becomes really confusing as to what that means. It really means that the
+GPIO will be active-low because GPIO_ACTIVE_HIGH doesn't do anything.
+But just reading that may make you think that perhaps HIGH is better
+(because, well, it's high, or perhaps because it is listed first).
+Having both may also be interpreted as "don't care".
+
+In my opinion things become much easier when you don't have any of the
+alternatives. If you don't specify PWM_POLARITY_INVERTED, well, it's
+just not going to be inverted, it's going to be normal. No need to be
+extra verbose about that.
+
+Thierry
+
+--J/dobhs11T7y2rNN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5yrGsACgkQ3SOs138+
+s6GzIg//UvHOxZqlcH1vZ9Mk4woahJF0Ehmg2m0b721XHppS/6hPoiKUnJfZqdbm
+Hu5rFUsxIo01XT33yNQtyojogLEvT1JHAaBCxkcBlVc43Dee/2nsf5SehFBtUE7z
+suJ7rZVOQpC73QYpLTrDgHcexR4KDjqS2Lxiv9PcY+VCAYW+M2GruTmjKfTB87hU
+ApZRs24AfFywg8hX48tsPRQwNA3SkOO8sl2gsDKeSRlwFMTtL4aTCIGKXmQyYydv
+Eyjz9NR1GIt95FPh5MeKR5SwrzIrau3qZm1KAcvUydrkP908H28/plRG0/I2FJCa
+7bqlsavzrQFeFlal70N/+lPtnsB2SXVVPjCxa3yD5x4a+Gm0CGT3F2wXLdWhXP/T
+Wpw9NoQi4SwzBiobOv+TgqjOU5eb7kJ5a+AHU58PCz1bIQZq4jMExU9pCb9N9KAz
+SDSsKHX9GrLLuTf6xO/sbctvo8vnoUS2pxWxhWnxCoNP04TzJzjewWRu/wLpnzPC
++R4QaSeEJOBLORqA9skXqqLPY3hD/s1vU0au54a+S2nEZtZCNjdMevQd3pisLghX
+pm2htChiGjHBCvrZhc4GeW1BHHZ1qdLuSzPAZdYiz8Tl9/BJ2PvIwgrsj2ejmtPI
+9mKe9+bB4fAK1MvN+N7hFEkNKPdyK2dPaoV4NGULSwJEoHcGSSU=
+=CkUz
+-----END PGP SIGNATURE-----
+
+--J/dobhs11T7y2rNN--
