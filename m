@@ -2,148 +2,125 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD70C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EAEC4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A4E208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:30:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584567007;
-	bh=AKZ5wSrqySyD7FEQCwdnhmME3FkgJSof5Wl3vt7foe8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=M4QjyhF98bCc7zDrOJVlJjy4Ck4GicBCccbYQ8K/E6vgsGcdKe62diyFCGSiomjpl
-	 M5Fe/K4c55VR3S8x7X0618mFmoCSaHVZqPggSlhaZgg1dLqyJGy/R1dmw5SzrswQkM
-	 f1KAfAuW7Q/bguyXIlLU+esRjba/b9lisHcX+flk=
+	by mail.kernel.org (Postfix) with ESMTP id 34BBF20752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:33:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ix5Z/nym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgCRVaG (ORCPT
+        id S1727108AbgCRVdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:30:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35087 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgCRVaG (ORCPT
+        Wed, 18 Mar 2020 17:33:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57520 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgCRVdU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:30:06 -0400
-Received: by mail-ot1-f66.google.com with SMTP id k26so233761otr.2;
-        Wed, 18 Mar 2020 14:30:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CLiBZtpr4e56p2g/o11hfAKRe9jeKBAJwiRBOQ3WAnY=;
-        b=BECAOQbJs7Cy+AZvv/gInHpkqj/nY6B/SO4zEjo9swMB39IZwShfeXaUI5UtK2biOP
-         vcmu85QGwCfcwZ4gFfmjmU/zCPsUiaXRdLMGFete/uEkJ019x38W1rRVcFkPwRza0YXO
-         bBgzAk5cvd8KE4B78vWOb/Lo9HTRhSjzxt2yQFwhz/abFJ5t79gMVDKcgaDvz5xSH0Eu
-         P2nQ3QyEbBfv7TazaMDGD3wZZsOjfzqwGTBvE9D2HHi95Sg3lCmh9NspTj33924Upsto
-         dZi4X/gIWtUw89D6RHH88HYAvpxC0kEqsQd3FYpBop0ksNT2pSOEuAnkcLnOQ+l8eOvo
-         ejNg==
-X-Gm-Message-State: ANhLgQ1wHxptzfSEyj0uUj3496uZaOpBXvWnlX6RU+dyvUhgJC4IyBkw
-        EsnGqPe+oNVwRVFtBjDfiPmYS8KtzjG6wfaM3J8=
-X-Google-Smtp-Source: ADFU+vuxickbFyRcIty7lM9IaclCHNf1VAH/8QnH6PATSgt1jsbljLQUn/9lceImpYF6c+RmcTIg7Ei6qm1POuD/8pY=
-X-Received: by 2002:a05:6830:1e96:: with SMTP id n22mr5524399otr.189.1584567005337;
- Wed, 18 Mar 2020 14:30:05 -0700 (PDT)
+        Wed, 18 Mar 2020 17:33:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=7C99gg0dFQ88jekGFXdIQKCeI7+noYOSr4It/4IKhXs=; b=ix5Z/nym4gWSAkSZ3dwnCjogYk
+        g5HR2B8EKYlPJK4VmyBlhL7mGkwQG3+OmTvnXENcd19BI/COJXrw0nvngsrx68Uxd94L9l/y3s2sy
+        Nn6BZjIZAzT/UgoHNldFa6UrSGGbHygCxL713OcmqBp7g9RwCy46xDTYDHRksUdAOrtUjQoR6oT+w
+        SAtYLEuiHIuGTs0GRPNQsvrb65dUWWmvrL9nARiblnFNgyuD6yF+/ZPTiT+YU4o2bRDhk2x9W7Ej+
+        fNR6Pjn2EUy0rGQn/b2Im/K3KWNmuib8j3OJSfuKI1m5jIOkyTvIfTQkig/3ZEAHxIdSKSZRcEeaG
+        L5yHMdog==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEgJU-0007sv-7q; Wed, 18 Mar 2020 21:33:20 +0000
+To:     Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] mm/hugetlb.c: fix printk format warning for 32-bit
+ phys_addr_t
+Message-ID: <b74dcb60-ef35-f06e-de2d-b165ed38036a@infradead.org>
+Date:   Wed, 18 Mar 2020 14:33:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200316210843.11678-1-daniel.lezcano@linaro.org>
- <2605374.f08NWHE4iP@kreacher> <669fe03f-0d65-8ca9-53dc-1323e0397c53@linaro.org>
- <93da445f-ebfd-4d2e-c8b4-cd81e54892c0@linaro.org>
-In-Reply-To: <93da445f-ebfd-4d2e-c8b4-cd81e54892c0@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 18 Mar 2020 22:29:53 +0100
-Message-ID: <CAJZ5v0g6fPu5mhUgy9ADb7fo7Q_WngVcADewVY9Pii3R=SMzZg@mail.gmail.com>
-Subject: Re: [PATCH RFC] cpuidle: consolidate calls to time capture
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kevin Hilman <khilman@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 3:32 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 18/03/2020 12:04, Daniel Lezcano wrote:
-> >
-> > Hi Rafael,
-> >
-> > On 18/03/2020 11:17, Rafael J. Wysocki wrote:
-> >> On Monday, March 16, 2020 10:08:43 PM CET Daniel Lezcano wrote:
-> >>> A few years ago, we changed the code in cpuidle to replace ktime_get()
-> >>> by a local_clock() to get rid of potential seq lock in the path and an
-> >>> extra latency.
-> >>>
-> >>> Meanwhile, the code evolved and we are getting the time in some other
-> >>> places like the power domain governor and in the future break even
-> >>> deadline proposal.
-> >>
-> >> Hmm?
-> >>
-> >> Have any patches been posted for that?
-> >
-> > https://lkml.org/lkml/2020/3/11/1113
-> >
-> > https://lkml.org/lkml/2020/3/13/466
-> >
-> > but there is no consensus yet if that has a benefit or not.
-> >
-> >>> Unfortunately, as the time must be compared across the CPU, we have no
-> >>> other option than using the ktime_get() again. Hopefully, we can
-> >>> factor out all the calls to local_clock() and ktime_get() into a
-> >>> single one when the CPU is entering idle as the value will be reuse in
-> >>> different places.
-> >>
-> >> So there are cases in which it is not necessary to synchronize the time
-> >> between CPUs and those would take the overhead unnecessarily.
-> >>
-> >> This change looks premature to me at least.
-> >
-> > The idea is to call one time ktime_get() when entering idle and store
-> > the result in the struct cpuidle_device, so we have the information when
-> > we entered idle.
-> >
-> > Moreover, ktime_get() is called in do_idle() via:
-> >
-> > tick_nohz_idle_enter()
-> >   tick_nohz_start_idle()
-> >     ts->idle_entrytime = ktime_get();
-> >
-> > This is called at the first loop level. The idle loop is exiting and
-> > re-entering again without passing through tick_nohz_idle_enter() in the
-> > second loop level in case of interrupt processing, thus the
-> > idle_entrytime is not updated and the return of
-> > tick_nohz_get_sleep_length() will be greater than what is expected.
-> >
-> > May be we can consider ktime_get_mono_fast_ns() which is lockless with a
-> > particular care of the non-monotonic aspect if needed. Given the
-> > description at [1] the time jump could a few nanoseconds in case of NMI.
-> >
-> > The local_clock() can no be inspected across CPUs, the gap is too big
-> > and continues to increase during system lifetime.
->
-> I took the opportunity to measure the duration to a call to ktime_get,
-> ktime_get_mono_fast_ns and local_clock.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-The results you get depend a good deal on the conditions of the test,
-the system on which they were obtained and so on.  Without this
-information it is hard to draw any conclusions from those results.  In
-particular, ktime_get() is not significantly slower than local_clock()
-if there is no contention AFAICS, and the lack of contention cannot be
-guaranteed here.
+Fix printk format warnings when phys_addr_t is 32 bits, i.e.,
+CONFIG_PHYS_ADDR_T_64BIT is not set/enabled.
 
-Generally speaking, the problem is that it is not sufficient to
-measure the time before running the governor and after the CPU wakes
-up, because in the cases that really care about the latency of that
-operation the time needed to run the governor may be a significant
-fraction of the entire overhead.  So it is necessary to take time
-stamps in several places and putting ktime_get() in all of them
-doesn't sound particularly attractive.
+Fixes these build warnings:
+  CC      mm/hugetlb.o
+In file included from ../include/linux/printk.h:7:0,
+                 from ../include/linux/kernel.h:15,
+                 from ../include/linux/list.h:9,
+                 from ../mm/hugetlb.c:6:
+../mm/hugetlb.c: In function ‘hugetlb_cma_reserve’:
+../include/linux/kern_levels.h:5:18: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 4 has type ‘unsigned int’ [-Wformat=]
+ #define KERN_SOH "\001"  /* ASCII Start Of Header */
+                  ^
+../include/linux/kern_levels.h:12:22: note: in expansion of macro ‘KERN_SOH’
+ #define KERN_WARNING KERN_SOH "4" /* warning conditions */
+                      ^~~~~~~~
+../include/linux/printk.h:306:9: note: in expansion of macro ‘KERN_WARNING’
+  printk(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
+         ^~~~~~~~~~~~
+../mm/hugetlb.c:5472:4: note: in expansion of macro ‘pr_warn’
+    pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
+    ^~~~~~~
+../mm/hugetlb.c:5472:67: note: format string is defined here
+    pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
+                                                                ~~~^
+                                                                %u
+In file included from ../include/linux/printk.h:7:0,
+                 from ../include/linux/kernel.h:15,
+                 from ../include/linux/list.h:9,
+                 from ../mm/hugetlb.c:6:
+../include/linux/kern_levels.h:5:18: warning: format ‘%llu’ expects argument of type ‘long long unsigned int’, but argument 5 has type ‘unsigned int’ [-Wformat=]
+ #define KERN_SOH "\001"  /* ASCII Start Of Header */
+                  ^
+../include/linux/kern_levels.h:12:22: note: in expansion of macro ‘KERN_SOH’
+ #define KERN_WARNING KERN_SOH "4" /* warning conditions */
+                      ^~~~~~~~
+../include/linux/printk.h:306:9: note: in expansion of macro ‘KERN_WARNING’
+  printk(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
+         ^~~~~~~~~~~~
+../mm/hugetlb.c:5472:4: note: in expansion of macro ‘pr_warn’
+    pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
+    ^~~~~~~
+../mm/hugetlb.c:5472:73: note: format string is defined here
+    pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
+                                                                      ~~~^
+                                                                      %u
 
-Anyway, there is no real need to make this change AFAICS, so I'm not
-really sure what the entire argument is about.
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+---
+ mm/hugetlb.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+--- linux-next-20200318.orig/mm/hugetlb.c
++++ linux-next-20200318/mm/hugetlb.c
+@@ -5469,8 +5469,10 @@ void __init hugetlb_cma_reserve(int orde
+ 					     0, false,
+ 					     "hugetlb", &hugetlb_cma[nid]);
+ 		if (res) {
+-			pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%llu, %llu)",
+-				res, nid, PFN_PHYS(min_pfn), PFN_PHYS(max_pfn));
++			phys_addr_t begpa = PFN_PHYS(min_pfn);
++			phys_addr_t endpa = PFN_PHYS(max_pfn);
++			pr_warn("hugetlb_cma: reservation failed: err %d, node %d, [%pap, %pap)",
++				res, nid, &begpa, &endpa);
+ 			break;
+ 		}
+ 
+
