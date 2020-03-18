@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801BDC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C6CC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 522E8208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06FD220409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565399;
-	bh=Mvf0nlAPOIsBi6bXbdEjMKe94UpF17RxnZ9l1Xzf/ag=;
+	s=default; t=1584565405;
+	bh=CZB+KZiYdArxmr34T50wC1U0sriUX3k/RvRcHsuKGS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hD/Kdkit/T8mWMjypqgZxCBLX8haht4J09uU124QqAQh0wrOaghRaaL7z83Sdu1Bh
-	 FG/XNP6OfwIknWrOeBjP6JV5ivgPUcWOktF4PrOGy0NbJLKEzVbg18cFddgdf6kuJW
-	 cVuBk1EvN3GKZM1oi5kKG1E+3j88YliMZvhe56gQ=
+	b=lXOUQh5tUHXBDIkXFUdDmP52qbNR0a34V2j4MScozb/tqjTURLdDXAfiPP4c1vNlm
+	 nfkW0EH8/6kPP4fT2AM4ZEGXkv5ECVcPrdtzIinc0eFTerTyapeWfVFocUjBWITPad
+	 nerzjp9fLkzHvQ6jB/w1NnxgMdzjMNLGAQVKY5Jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbgCRVDS (ORCPT
+        id S1727534AbgCRUzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:03:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56184 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:55:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728359AbgCRUzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:41 -0400
+        id S1728348AbgCRUzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 620AC208E0;
-        Wed, 18 Mar 2020 20:55:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12B3D20BED;
+        Wed, 18 Mar 2020 20:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564941;
-        bh=Mvf0nlAPOIsBi6bXbdEjMKe94UpF17RxnZ9l1Xzf/ag=;
+        s=default; t=1584564932;
+        bh=CZB+KZiYdArxmr34T50wC1U0sriUX3k/RvRcHsuKGS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hdid3Yv4vDnPO5apwlycxxfJvbgAzmvl0FK/Jb9ZO38wfCakKTcwN6hxJXVPxEk0Q
-         nSL6OkCUlf/xEonR5UVILaObuLuBegSw2w7kpFeJu4jyxOiwDtMRvWoEFn7Zj2MuFG
-         eW4EzoqTmq26ULqfQEpbOh+HYGe5B3IC4BmZR2As=
+        b=phPvVC6O5fVNmxyP1UYkBIAzD33fMGIIHF8aPMjiVW0dLx/sI+pQnHDVA0uGSNGWb
+         1KSdtD8d9ap4om8glS8LVf7/mePVgsW/XS9vbyBY5sRbEoB0/qdUTPtPHqMUGl5FKv
+         b98hzqeK7owxdsupzgerKz/diFpjzi28YhnnWdYs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mahesh Bandewar <maheshb@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 26/37] ipvlan: don't deref eth hdr before checking it's set
-Date:   Wed, 18 Mar 2020 16:54:58 -0400
-Message-Id: <20200318205509.17053-26-sashal@kernel.org>
+Cc:     Tycho Andersen <tycho@tycho.ws>, Tejun Heo <tj@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/37] cgroup1: don't call release_agent when it is ""
+Date:   Wed, 18 Mar 2020 16:54:51 -0400
+Message-Id: <20200318205509.17053-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,57 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mahesh Bandewar <maheshb@google.com>
+From: Tycho Andersen <tycho@tycho.ws>
 
-[ Upstream commit ad8192767c9f9cf97da57b9ffcea70fb100febef ]
+[ Upstream commit 2e5383d7904e60529136727e49629a82058a5607 ]
 
-IPvlan in L3 mode discards outbound multicast packets but performs
-the check before ensuring the ether-header is set or not. This is
-an error that Eric found through code browsing.
+Older (and maybe current) versions of systemd set release_agent to "" when
+shutting down, but do not set notify_on_release to 0.
 
-Fixes: 2ad7bf363841 (“ipvlan: Initial check-in of the IPVLAN driver.”)
-Signed-off-by: Mahesh Bandewar <maheshb@google.com>
-Reported-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Since 64e90a8acb85 ("Introduce STATIC_USERMODEHELPER to mediate
+call_usermodehelper()"), we filter out such calls when the user mode helper
+path is "". However, when used in conjunction with an actual (i.e. non "")
+STATIC_USERMODEHELPER, the path is never "", so the real usermode helper
+will be called with argv[0] == "".
+
+Let's avoid this by not invoking the release_agent when it is "".
+
+Signed-off-by: Tycho Andersen <tycho@tycho.ws>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ipvlan/ipvlan_core.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ kernel/cgroup/cgroup-v1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ipvlan/ipvlan_core.c b/drivers/net/ipvlan/ipvlan_core.c
-index 1a8132eb2a3ec..9b5aaafea1549 100644
---- a/drivers/net/ipvlan/ipvlan_core.c
-+++ b/drivers/net/ipvlan/ipvlan_core.c
-@@ -504,19 +504,21 @@ static int ipvlan_process_outbound(struct sk_buff *skb)
- 	struct ethhdr *ethh = eth_hdr(skb);
- 	int ret = NET_XMIT_DROP;
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index c9628b9a41d23..dd8bdbfbbde1e 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -812,7 +812,7 @@ void cgroup1_release_agent(struct work_struct *work)
  
--	/* In this mode we dont care about multicast and broadcast traffic */
--	if (is_multicast_ether_addr(ethh->h_dest)) {
--		pr_debug_ratelimited("Dropped {multi|broad}cast of type=[%x]\n",
--				     ntohs(skb->protocol));
--		kfree_skb(skb);
--		goto out;
--	}
--
- 	/* The ipvlan is a pseudo-L2 device, so the packets that we receive
- 	 * will have L2; which need to discarded and processed further
- 	 * in the net-ns of the main-device.
- 	 */
- 	if (skb_mac_header_was_set(skb)) {
-+		/* In this mode we dont care about
-+		 * multicast and broadcast traffic */
-+		if (is_multicast_ether_addr(ethh->h_dest)) {
-+			pr_debug_ratelimited(
-+				"Dropped {multi|broad}cast of type=[%x]\n",
-+				ntohs(skb->protocol));
-+			kfree_skb(skb);
-+			goto out;
-+		}
-+
- 		skb_pull(skb, sizeof(*ethh));
- 		skb->mac_header = (typeof(skb->mac_header))~0U;
- 		skb_reset_network_header(skb);
+ 	pathbuf = kmalloc(PATH_MAX, GFP_KERNEL);
+ 	agentbuf = kstrdup(cgrp->root->release_agent_path, GFP_KERNEL);
+-	if (!pathbuf || !agentbuf)
++	if (!pathbuf || !agentbuf || !strlen(agentbuf))
+ 		goto out;
+ 
+ 	spin_lock_irq(&css_set_lock);
 -- 
 2.20.1
 
