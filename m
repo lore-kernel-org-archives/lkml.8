@@ -2,107 +2,104 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C4AC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF60CC4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4CB2076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:37:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=omicronenergy.com header.i=@omicronenergy.com header.b="AruF/0wj"
+	by mail.kernel.org (Postfix) with ESMTP id BC5B42076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgCRUhp (ORCPT
+        id S1726930AbgCRUmR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:37:45 -0400
-Received: from ns.omicron.at ([212.183.10.25]:53970 "EHLO ns.omicron.at"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbgCRUho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:37:44 -0400
-X-Greylist: delayed 525 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Mar 2020 16:37:43 EDT
-Received: from MGW02-ATKLA.omicron.at ([172.25.62.35])
-        by ns.omicron.at (8.15.2/8.15.2) with ESMTPS id 02IKSuVT027520
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 18 Mar 2020 21:28:57 +0100
-DKIM-Filter: OpenDKIM Filter v2.11.0 ns.omicron.at 02IKSuVT027520
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=omicronenergy.com;
-        s=default; t=1584563337;
-        bh=TZ4EahDLI/A01zegYlJj0zs+tkxDyl9TX5N0Nk//S44=;
-        h=From:To:CC:Subject:Date:From;
-        b=AruF/0wjIjJmmgE05JBtlIQsakzGgN4gMj2hNO/uH8c/kQuk1LTO7p+dyikTGrDH5
-         apfDBd36iiSygLaItUAI8r9cScOd15qJS4oBM/JEb0dUx766VjW/aWpd/NVLamuUdp
-         JnV6giHAz2Xh5SEDBO115ZOk0AHJl+M6a+JZGa9A=
-Received: from MGW02-ATKLA.omicron.at (localhost [127.0.0.1])
-        by MGW02-ATKLA.omicron.at (Postfix) with ESMTP id C8614A0141;
-        Wed, 18 Mar 2020 21:28:56 +0100 (CET)
-Received: from MGW01-ATKLA.omicron.at (unknown [172.25.62.34])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by MGW02-ATKLA.omicron.at (Postfix) with ESMTPS id C315AA018C;
-        Wed, 18 Mar 2020 21:28:56 +0100 (CET)
-Received: from EXC03-ATKLA.omicron.at ([172.22.100.188])
-        by MGW01-ATKLA.omicron.at  with ESMTP id 02IKSuYW014882-02IKSuYY014882
-        (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=CAFAIL);
-        Wed, 18 Mar 2020 21:28:56 +0100
-Received: from thogra00ll01.omicron.at (172.29.5.144) by
- EXC03-ATKLA.omicron.at (172.22.100.188) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 18 Mar 2020 21:28:55 +0100
-From:   Thomas Graziadei <thomas.graziadei@omicronenergy.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <bigeasy@linutronix.de>, <rostedt@goodmis.org>,
-        <tglx@linutronix.de>, <linux-rt-users@vger.kernel.org>,
-        Thomas Graziadei <thomas.graziadei@omicronenergy.com>
-Subject: [PATCH] powerpc: Fix lazy preemption for powerpc 32bit
-Date:   Wed, 18 Mar 2020 21:26:40 +0100
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Mar 2020 16:42:17 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54825 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCRUmR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:42:17 -0400
+Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <jay.vosburgh@canonical.com>)
+        id 1jEfVj-0004Va-6W; Wed, 18 Mar 2020 20:41:55 +0000
+Received: by famine.localdomain (Postfix, from userid 1000)
+        id 691DB630E4; Wed, 18 Mar 2020 13:41:53 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+        by famine.localdomain (Postfix) with ESMTP id 5DA87AC1DD;
+        Wed, 18 Mar 2020 13:41:53 -0700 (PDT)
+From:   Jay Vosburgh <jay.vosburgh@canonical.com>
+To:     Jarod Wilson <jarod@redhat.com>
+cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Moshe Levi <moshele@mellanox.com>,
+        Marcelo Ricardo Leitner <mleitner@redhat.com>,
+        Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH net] ipv6: don't auto-add link-local address to lag ports
+In-reply-to: <CAKfmpSc0yea5-OfE1rnVdErDTeOza=owbL00QQEaH-M-A6Za7g@mail.gmail.com>
+References: <20200318140605.45273-1-jarod@redhat.com> <8a88d1c8-c6b1-ad85-7971-e6ae8c6fa0e4@gmail.com> <CAKfmpSc0yea5-OfE1rnVdErDTeOza=owbL00QQEaH-M-A6Za7g@mail.gmail.com>
+Comments: In-reply-to Jarod Wilson <jarod@redhat.com>
+   message dated "Wed, 18 Mar 2020 14:32:52 -0400."
+X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.29.5.144]
-X-ClientProxiedBy: EXC04-ATKLA.omicron.at (172.22.100.189) To
- EXC03-ATKLA.omicron.at (172.22.100.188)
-Message-ID: <0c91d808-b077-408c-b120-99e806efaeb5@EXC03-ATKLA.omicron.at>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <25628.1584564113.1@famine>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 18 Mar 2020 13:41:53 -0700
+Message-ID: <25629.1584564113@famine>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Graziadei <thomas.graziadei@omicronenergy.com>
+Jarod Wilson <jarod@redhat.com> wrote:
 
-The 32bit powerpc assembler implementation of the lazy preemption
-set the _TIF_PERSYSCALL_MASK on the low word. This could lead to
-modprobe segfaults and a kernel panic - not syncing: Attempt to
-kill init! issue.
+>On Wed, Mar 18, 2020 at 2:02 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>>
+>> On 3/18/20 7:06 AM, Jarod Wilson wrote:
+>> > Bonding slave and team port devices should not have link-local addresses
+>> > automatically added to them, as it can interfere with openvswitch being
+>> > able to properly add tc ingress.
+>> >
+>> > Reported-by: Moshe Levi <moshele@mellanox.com>
+>> > CC: Marcelo Ricardo Leitner <mleitner@redhat.com>
+>> > CC: netdev@vger.kernel.org
+>> > Signed-off-by: Jarod Wilson <jarod@redhat.com>
+>>
+>>
+>> This does not look a net candidate to me, unless the bug has been added recently ?
+>>
+>> The absence of Fixes: tag is a red flag for a net submission.
+>>
+>> By adding a Fixes: tag, you are doing us a favor, please.
+>
+>Yeah, wasn't entirely sure on this one. It fixes a problem, but it's
+>not exactly a new one. A quick look at git history suggests this might
+>actually be something that technically pre-dates the move to git in
+>2005, but only really became a problem with some additional far more
+>recent infrastructure (tc and friends). I can resubmit it as net-next
+>if that's preferred.
 
-Fixed by shifting the mask by 16 bit using andis and lis.
+	Commit
 
-Signed-off-by: Thomas Graziadei <thomas.graziadei@omicronenergy.com>
+c2edacf80e15 bonding / ipv6: no addrconf for slaves separately from master
+
+	should (in theory) already prevent ipv6 link-local addrconf, at
+least for bonding slaves, and dates from 2007.  If something has changed
+to break the logic in this commit, then (a) you might need to do some
+research to find a candidate for your Fixes tag, and (b) I'd suggest
+also investigating whether or not the change added by c2edacf80e15 to
+addrconf_notify() no longer serves any purpose, and should be removed if
+that is the case.
+
+	Note also that the hyperv netvsc driver, in netvsc_vf_join(),
+sets IFF_SLAVE in order to trigger the addrconf prevention logic from
+c2edacf80e15; I'm not sure if your patch would affect its expectations
+(if c2edacf80e15 were removed).
+
+	-J
+
 ---
- arch/powerpc/kernel/entry_32.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index 172dfb567c25..ab609d63d644 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -533,12 +533,12 @@ syscall_exit_work:
- 
- 1:	stw	r6,RESULT(r1)	/* Save result */
- 	stw	r3,GPR3(r1)	/* Update return value */
--2:	andi.	r0,r9,(_TIF_PERSYSCALL_MASK)@h
-+2:	andis.	r0,r9,(_TIF_PERSYSCALL_MASK)@h
- 	beq	4f
- 
- 	/* Clear per-syscall TIF flags if any are set.  */
- 
--	li	r11,_TIF_PERSYSCALL_MASK@h
-+	lis	r11,(_TIF_PERSYSCALL_MASK)@h
- 	addi	r12,r2,TI_FLAGS
- 3:	lwarx	r8,0,r12
- 	andc	r8,r8,r11
--- 
-2.17.1
-
+	-Jay Vosburgh, jay.vosburgh@canonical.com
