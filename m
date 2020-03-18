@@ -2,370 +2,113 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FB0C5ACD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04145C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4013620770
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC90C20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JGNpe8pU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Da1jSNe6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgCRLbZ (ORCPT
+        id S1727811AbgCRLbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:31:25 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:23024 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgCRLbY (ORCPT
+        Wed, 18 Mar 2020 07:31:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40611 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbgCRLbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:31:24 -0400
+        Wed, 18 Mar 2020 07:31:47 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e19so4021859otj.7;
+        Wed, 18 Mar 2020 04:31:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1584531084; x=1616067084;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Gz1TacAIoe7eEilKrgWA9QhMe33T33CzRWdxDRA3U50=;
-  b=JGNpe8pUg3ezj0h5CJsQi8f51WqH4Tf+JzrbuudjEBS8D/mdtzGRrijw
-   +H5x0Pa7UeIPSqT1KtSBvX58KClGGc7Qspcahvgzvv1JT8f994ZnYyROG
-   00kCB0mAjXR/OKgyLpliT9WczHVPuyv7NwIpbbJa+qCPgE9jA1knDe56M
-   g=;
-IronPort-SDR: s/i5SgHJv+MZoUH8Bxx5k4MF3WW0QocPzQAs0cJ79QDOq8+JW6UambIaoUQDmZo0kexIA2gVkP
- 105ZvVy9yzdg==
-X-IronPort-AV: E=Sophos;i="5.70,567,1574121600"; 
-   d="scan'208";a="23517497"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 18 Mar 2020 11:31:21 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id 11C07A2BC2;
-        Wed, 18 Mar 2020 11:31:10 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Wed, 18 Mar 2020 11:31:10 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.235) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 18 Mar 2020 11:30:51 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 03/15] mm: Introduce Data Access MONitor (DAMON)
-Date:   Wed, 18 Mar 2020 12:27:10 +0100
-Message-ID: <20200318112722.30143-4-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200318112722.30143-1-sjpark@amazon.com>
-References: <20200318112722.30143-1-sjpark@amazon.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NjD2GamyBEc3sKrO1F2PZeSZdHhFZ3Ii1Pkm+OVNywQ=;
+        b=Da1jSNe6xlZ/GBGCQJZ7qqQIRteleIHOErt7JIc00/AfTtQzZEK0B6IBoRe3w+p1J0
+         GZ5cNqkjGNxzSYjCqwjwvEeiCt9fgX2Q4ulDbn2xrpFAqVOahRi9LJO+n+xUxR4qT3kI
+         IV5Ojt0xWxy5OXylEWpRqgbUD2dY70GNJJhgk0aHCK9N2aZI6n5g6XiWhUVmS1IftoRG
+         cwHw0sJberSdtUyouOMD2eSP3edYAoUxg0TnK33UPw0thLJxPzb/uTPpm4+u+l6Kw3M4
+         p1uBpIhLhtchxOg3LF82qKMVd6bTLPZxD0AGxYmw51iHKC8iiLmRqwhCP5616WJnVSJb
+         rKeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NjD2GamyBEc3sKrO1F2PZeSZdHhFZ3Ii1Pkm+OVNywQ=;
+        b=abbMLaFsA1XDEvfeteOiyH+kYR8aKzfR1FQp/baQjMb9J38/Q1wKG+HJw3Lp1exb+M
+         1Ps5YbK1K8vp1/OKTWvjSgR0riY2+aHrmyN4/4CvGfs1WPpWhdfsAknfBfS7EPUN60M+
+         XKnud2YKuYzmKEstTTFDJwxJljY+DYk3LG7Hu1gUbkCrIb/Uf74dtgJqJN0/zNToSObh
+         q6uRJk1eLFoKuj8WIjmwV5gDbCqE8Znh56e1P0bVGXnOGPFhx8AFJp3L2qmOWaprk1m1
+         pkHvOvDfz/ur7zhRLpFj3xggemPSYnaegw6RNN8PONXoEBiNd6MUkMh8XVX4L+kBpGH5
+         hgZg==
+X-Gm-Message-State: ANhLgQ1ZeHU9LheteWAyxviHsUPzYTSh8D5TyC3i6Xa0H/kABhXrI34u
+        nFXsW06mcw3B0iAMtCabk0AVIXQNtIKGU42v19I=
+X-Google-Smtp-Source: ADFU+vtzJZKy3xkB3VSgaCd/spw1j4x/jxGImWuqnB3Bj4i1qWxwbtcjbyCUDiuoi+1rbybTHgsJkXydu4Q/NCLEdno=
+X-Received: by 2002:a05:6830:1195:: with SMTP id u21mr3175391otq.351.1584531105983;
+ Wed, 18 Mar 2020 04:31:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.235]
-X-ClientProxiedBy: EX13D28UWC001.ant.amazon.com (10.43.162.166) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+References: <20200316224023.1.I002569822232363cfbb5af1f33a293ea390c24c7@changeid>
+ <4DF7C709-1AD3-42FF-A0C2-EF488D82F083@holtmann.org>
+In-Reply-To: <4DF7C709-1AD3-42FF-A0C2-EF488D82F083@holtmann.org>
+From:   Emil Lenngren <emil.lenngren@gmail.com>
+Date:   Wed, 18 Mar 2020 12:31:35 +0100
+Message-ID: <CAO1O6sdfdVavo9U0UKewbS9YAjCVzdXDYms-OJZNEJVzMmkgMg@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: Do not cancel advertising when starting a scan
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Manish Mandlik <mmandlik@google.com>,
+        Yoni Shavit <yshavit@chromium.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        Dmitry Grinberg <dmitrygr@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+Hi,
 
-This commit introduces a kernel module named DAMON.  Note that this
-commit is implementing only the stub for the module load/unload, basic
-data structures, and simple manipulation functions of the structures to
-keep the size of commit small.  The core mechanisms of DAMON will be
-implemented one by one by following commits.
+Den ons 18 mars 2020 kl 12:27 skrev Marcel Holtmann <marcel@holtmann.org>:
+>
+> Hi Manish,
+>
+> > BlueZ cancels adv when starting a scan, but does not cancel a scan when
+> > starting to adv. Neither is required, so this brings both to a
+> > consistent state (of not affecting each other). Some very rare (I've
+> > never seen one) BT 4.0 chips will fail to do both at once. Even this is
+> > ok since the command that will fail will be the second one, and thus th=
+e
+> > common sense logic of first-come-first-served is preserved for BLE
+> > requests.
+> >
+> > Signed-off-by: Dmitry Grinberg <dmitrygr@google.com>
+> > Signed-off-by: Manish Mandlik <mmandlik@google.com>
+> > ---
+> >
+> > net/bluetooth/hci_request.c | 17 -----------------
+> > 1 file changed, 17 deletions(-)
+>
+> patch has been applied to bluetooth-next tree.
+>
+> If you know the controller that doesn=E2=80=99t support this, can we blac=
+klist that one and just disable advertising (peripheral mode) for that cont=
+roller.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/linux/damon.h |  38 +++++++++
- mm/Kconfig            |  11 +++
- mm/Makefile           |   1 +
- mm/damon.c            | 189 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 239 insertions(+)
- create mode 100644 include/linux/damon.h
- create mode 100644 mm/damon.c
+Can't the "LE Supported States" be inspected instead to figure out
+what simultaneous capabilities are supported? It seems a bit rough to
+always assume the worst.
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-new file mode 100644
-index 000000000000..7117bb7e7544
---- /dev/null
-+++ b/include/linux/damon.h
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * DAMON api
-+ *
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
-+ *
-+ * Author: SeongJae Park <sjpark@amazon.de>
-+ */
-+
-+#ifndef _DAMON_H_
-+#define _DAMON_H_
-+
-+#include <linux/random.h>
-+#include <linux/types.h>
-+
-+/* Represents a monitoring target region on the virtual address space */
-+struct damon_region {
-+	unsigned long vm_start;
-+	unsigned long vm_end;
-+	unsigned long sampling_addr;
-+	unsigned int nr_accesses;
-+	struct list_head list;
-+};
-+
-+/* Represents a monitoring target task */
-+struct damon_task {
-+	unsigned long pid;
-+	struct list_head regions_list;
-+	struct list_head list;
-+};
-+
-+struct damon_ctx {
-+	struct rnd_state rndseed;
-+
-+	struct list_head tasks_list;	/* 'damon_task' objects */
-+};
-+
-+#endif
-diff --git a/mm/Kconfig b/mm/Kconfig
-index ab80933be65f..79da00d15604 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -739,4 +739,15 @@ config ARCH_HAS_HUGEPD
- config MAPPING_DIRTY_HELPERS
-         bool
- 
-+config DAMON
-+	tristate "Data Access Monitor"
-+	depends on MMU
-+	help
-+	  Provides data access monitoring.
-+
-+	  DAMON is a kernel module that allows users to monitor the actual
-+	  memory access pattern of specific user-space processes.  It aims to
-+	  be 1) accurate enough to be useful for performance-centric domains,
-+	  and 2) sufficiently light-weight so that it can be applied online.
-+
- endmenu
-diff --git a/mm/Makefile b/mm/Makefile
-index 1937cc251883..2911b3832c90 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -108,3 +108,4 @@ obj-$(CONFIG_ZONE_DEVICE) += memremap.o
- obj-$(CONFIG_HMM_MIRROR) += hmm.o
- obj-$(CONFIG_MEMFD_CREATE) += memfd.o
- obj-$(CONFIG_MAPPING_DIRTY_HELPERS) += mapping_dirty_helpers.o
-+obj-$(CONFIG_DAMON) += damon.o
-diff --git a/mm/damon.c b/mm/damon.c
-new file mode 100644
-index 000000000000..d7e6226ab7f1
---- /dev/null
-+++ b/mm/damon.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Data Access Monitor
-+ *
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
-+ *
-+ * Author: SeongJae Park <sjpark@amazon.de>
-+ */
-+
-+#define pr_fmt(fmt) "damon: " fmt
-+
-+#include <linux/damon.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+
-+#define damon_get_task_struct(t) \
-+	(get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
-+
-+#define damon_next_region(r) \
-+	(container_of(r->list.next, struct damon_region, list))
-+
-+#define damon_prev_region(r) \
-+	(container_of(r->list.prev, struct damon_region, list))
-+
-+#define damon_for_each_region(r, t) \
-+	list_for_each_entry(r, &t->regions_list, list)
-+
-+#define damon_for_each_region_safe(r, next, t) \
-+	list_for_each_entry_safe(r, next, &t->regions_list, list)
-+
-+#define damon_for_each_task(ctx, t) \
-+	list_for_each_entry(t, &(ctx)->tasks_list, list)
-+
-+#define damon_for_each_task_safe(ctx, t, next) \
-+	list_for_each_entry_safe(t, next, &(ctx)->tasks_list, list)
-+
-+/* Get a random number in [l, r) */
-+#define damon_rand(ctx, l, r) (l + prandom_u32_state(&ctx->rndseed) % (r - l))
-+
-+/*
-+ * Construct a damon_region struct
-+ *
-+ * Returns the pointer to the new struct if success, or NULL otherwise
-+ */
-+static struct damon_region *damon_new_region(struct damon_ctx *ctx,
-+				unsigned long vm_start, unsigned long vm_end)
-+{
-+	struct damon_region *region;
-+
-+	region = kmalloc(sizeof(*region), GFP_KERNEL);
-+	if (!region)
-+		return NULL;
-+
-+	region->vm_start = vm_start;
-+	region->vm_end = vm_end;
-+	region->nr_accesses = 0;
-+	region->sampling_addr = damon_rand(ctx, vm_start, vm_end);
-+	INIT_LIST_HEAD(&region->list);
-+
-+	return region;
-+}
-+
-+/*
-+ * Add a region between two other regions
-+ */
-+static inline void damon_insert_region(struct damon_region *r,
-+		struct damon_region *prev, struct damon_region *next)
-+{
-+	__list_add(&r->list, &prev->list, &next->list);
-+}
-+
-+static void damon_add_region(struct damon_region *r, struct damon_task *t)
-+{
-+	list_add_tail(&r->list, &t->regions_list);
-+}
-+
-+static void damon_del_region(struct damon_region *r)
-+{
-+	list_del(&r->list);
-+}
-+
-+static void damon_free_region(struct damon_region *r)
-+{
-+	kfree(r);
-+}
-+
-+static void damon_destroy_region(struct damon_region *r)
-+{
-+	damon_del_region(r);
-+	damon_free_region(r);
-+}
-+
-+/*
-+ * Construct a damon_task struct
-+ *
-+ * Returns the pointer to the new struct if success, or NULL otherwise
-+ */
-+static struct damon_task *damon_new_task(unsigned long pid)
-+{
-+	struct damon_task *t;
-+
-+	t = kmalloc(sizeof(*t), GFP_KERNEL);
-+	if (!t)
-+		return NULL;
-+
-+	t->pid = pid;
-+	INIT_LIST_HEAD(&t->regions_list);
-+
-+	return t;
-+}
-+
-+/* Returns n-th damon_region of the given task */
-+struct damon_region *damon_nth_region_of(struct damon_task *t, unsigned int n)
-+{
-+	struct damon_region *r;
-+	unsigned int i = 0;
-+
-+	damon_for_each_region(r, t) {
-+		if (i++ == n)
-+			return r;
-+	}
-+
-+	return NULL;
-+}
-+
-+static void damon_add_task(struct damon_ctx *ctx, struct damon_task *t)
-+{
-+	list_add_tail(&t->list, &ctx->tasks_list);
-+}
-+
-+static void damon_del_task(struct damon_task *t)
-+{
-+	list_del(&t->list);
-+}
-+
-+static void damon_free_task(struct damon_task *t)
-+{
-+	struct damon_region *r, *next;
-+
-+	damon_for_each_region_safe(r, next, t)
-+		damon_free_region(r);
-+	kfree(t);
-+}
-+
-+static void damon_destroy_task(struct damon_task *t)
-+{
-+	damon_del_task(t);
-+	damon_free_task(t);
-+}
-+
-+static unsigned int nr_damon_tasks(struct damon_ctx *ctx)
-+{
-+	struct damon_task *t;
-+	unsigned int nr_tasks = 0;
-+
-+	damon_for_each_task(ctx, t)
-+		nr_tasks++;
-+
-+	return nr_tasks;
-+}
-+
-+static unsigned int nr_damon_regions(struct damon_task *t)
-+{
-+	struct damon_region *r;
-+	unsigned int nr_regions = 0;
-+
-+	damon_for_each_region(r, t)
-+		nr_regions++;
-+
-+	return nr_regions;
-+}
-+
-+static int __init damon_init(void)
-+{
-+	return 0;
-+}
-+
-+static void __exit damon_exit(void)
-+{
-+	return;
-+}
-+
-+module_init(damon_init);
-+module_exit(damon_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("SeongJae Park <sjpark@amazon.de>");
-+MODULE_DESCRIPTION("DAMON: Data Access MONitor");
--- 
-2.17.1
-
+/Emil
