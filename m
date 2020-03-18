@@ -2,83 +2,92 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732CEC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D41EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE9A20770
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6CE2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:16:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="ebpeu+ga"
+	dkim=pass (1024-bit key) header.d=emersion.fr header.i=@emersion.fr header.b="Do8Uytcv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbgCRKP4 (ORCPT
+        id S1727560AbgCRKQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:15:56 -0400
-Received: from www381.your-server.de ([78.46.137.84]:44976 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgCRKP4 (ORCPT
+        Wed, 18 Mar 2020 06:16:19 -0400
+Received: from mail2.protonmail.ch ([185.70.40.22]:35756 "EHLO
+        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbgCRKQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:15:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=uePrIDfqBZFnSgWVkXPSgRpt9QzNhv5Xk2uw/MF+wAQ=; b=ebpeu+gagAEFuS42nV1oG3kE5e
-        NSy2cJXISlUO+nuF+TnQD3ezVwRoApVQ79s4wa8Q0ncqZSe9NbQn9L29j2bpPM34EVtHy7OYxySgd
-        2AUMT3vm59/S72rSK9Ru/FKCiR04au/QfQ7uiqIapoPgUjn/UJ2Ozpm90/X90rjKkGgKBbEVAirCA
-        +WAFjq1w1pudGk48EJz8QlVFr812Mfdryvf7QoQBHWjrLj9htPoSu2K2JGb8ptQSfajmzS32jlX/E
-        wHeftb4Ubx8/x+dNOrMtpYgCauBAPGh9xVQYbsohCBq62Abi+5eghYiUULjnc+oFzTK9K/hl+bcLY
-        As2fU0FQ==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <lars@metafoo.de>)
-        id 1jEVjt-0006lh-Li; Wed, 18 Mar 2020 11:15:53 +0100
-Received: from [93.104.115.49] (helo=[192.168.178.20])
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1jEVjt-0007Fn-Eg; Wed, 18 Mar 2020 11:15:53 +0100
-Subject: Re: [PATCH v3 3/4] iio: accel: adxl372: add additional events ABIs
-To:     Alexandru Tachici <tachicialex@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jic23@kernel.org
-References: <20200318110958.8621-1-alexandru.tachici@analog.com>
- <20200318110958.8621-4-alexandru.tachici@analog.com>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <c140a2ab-2da8-2c56-3ab6-193bb52a46cb@metafoo.de>
-Date:   Wed, 18 Mar 2020 11:15:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 06:16:18 -0400
+Date:   Wed, 18 Mar 2020 10:16:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
+        s=protonmail; t=1584526575;
+        bh=01MHuTHqNXmoKioUDGcRkUpZS1pvvS0nJPIk9ir/Q0Y=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=Do8UytcvmJJ8nANDCqp720vh0trtOLOccnZxDiiYcjdYwVY7VHb35kATIoegxJAOB
+         q/m9/c9sSBh8waQIyHnmNZNQkI3C8bVg+CvoDVPdQOsFZ2PlRfziGvAHWiRGCCb0Qs
+         G/Hzl5QJG+zYF6yuj5v0kslrUDUA52c7rIlw9CEA=
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+From:   Simon Ser <contact@emersion.fr>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "christian@brauner.io" <christian@brauner.io>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>
+Reply-To: Simon Ser <contact@emersion.fr>
+Subject: Re: SO_PEERCRED and pidfd
+Message-ID: <WuCKXl7CWZrfvKTWuYiwL6tkPq2YgA_j1lyVVczFB48s8ozWz_setJou9JO-VqsL2kJtRV8r4yOvyQhI5LsdCdIaSKYZpY1_9Bf3DwpQIMg=@emersion.fr>
+In-Reply-To: <20200317181843.iq3jaboqid2xfktv@wittgenstein>
+References: <go0RLOS7_DdxyAmfrDR38QPUloZuUtiFdXe2Ey3EkGGuvmW7z18Dvt4fY1qZ1k-Y75-YZSxqVWnZpWRGN7TZ6OPbDczfL7HI25bXLIYq1y4=@emersion.fr>
+ <20200317181843.iq3jaboqid2xfktv@wittgenstein>
+Feedback-ID: FsVprHBOgyvh0T8bxcZ0CmvJCosWkwVUg658e_lOUQMnA9qynD8O1lGeniuBDfPSkDAUuhiKfOIXUZBfarMyvA==:Ext:ProtonMail
 MIME-Version: 1.0
-In-Reply-To: <20200318110958.8621-4-alexandru.tachici@analog.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25754/Tue Mar 17 14:09:15 2020)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/20 12:09 PM, Alexandru Tachici wrote:
-> Adxl372 uses the standard event interface. The additional
-> ABIs aim to explain to the user that the values set in
-> ./events/thresh_falling_period and ./events/thresh_rising_period
-> control the state of the device, not just the events timings.
-> 
+On Tuesday, March 17, 2020 7:18 PM, Christian Brauner <christian.brauner@ub=
+untu.com> wrote:
 
-Hi,
+> On Tue, Mar 17, 2020 at 05:54:47PM +0000, Simon Ser wrote:
+>
+> > Hi all,
+> > I'm a Wayland developer and I've been working on protocol security,
+> > which involves identifying the process on the other end of a Unix
+> > socket [1]. This is already done by e.g. D-Bus via the PID, however
+> > this is racy [2].
+> > Getting the PID is done via SO_PEERCRED. Would there be interest in
+> > adding a way to get a pidfd out of a Unix socket to fix the race?
+>
+> Puh, I knew this would happen. I've been asked to add this feature by
+> the systemd people as well and also at a conference last year. And
+> honestly, I don't know yet. pidfds right now are mostly about
+> guaranteeing (stable) identity and they come with the necessary
+> restrictions in place to prevent shenanigans (such as signaling across
+> pid namespaces a restriction I'd like to lift at some point). But I
+> have been thinking about attaching some capability like features to
+> pidfds soon as that has been an even more frequent request. At that
+> point having them receivable this way might be problematic unless we put
+> restrictions in place.
 
-I'm not convinced this is a good idea. Since this is non-standard ABI 
-the user would likely have to consult the documentation to figure out 
-what this means. So we might as well document in the documentation that 
-for peak mode the thresholds are configured through the event API.
+Wouldn't this new mechanism just be an atomic getsockopt+pidfd_open?
+(It would make sure the process is still alive of course.)
 
-- Lars
+Can you elaborate wrt. capabilities? I'm not sure I understand what
+that means.
+
+> I would like to go through codepaths for SO_PEERCRED as I don't have
+> them in my head and so can't really say something definitely about this
+> just now.
+> (From the top of my head it seems that if we were to do this it might
+> need to be a separate SO_* flag? Mainly so people don't suddenly receive
+> fds they didn't expect.)
+
+Yeah, this would need to be either a separate SO_* flag or a completely
+different thing to prevent surprises.
