@@ -2,360 +2,231 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA17C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F237C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B308C20752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:12:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="kr7KOnMY"
+	by mail.kernel.org (Postfix) with ESMTP id 457C620724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbgCRBM1 (ORCPT
+        id S1727180AbgCRBfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 21:12:27 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:45899 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbgCRBL6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 21:11:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1584493918; x=1616029918;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vKrUz+xg5193R5R2QD6sHPvXr4GmfWWm9BHn5r97q2U=;
-  b=kr7KOnMYydcu5abvB57Cpb1TY2LS1I0fFxUod98q6at3g/scFIi6QTao
-   eKE9AaVgr1bm8zTdhMCPGwJpricaECziMFtLhPH4xEUJniTblQ+9QlaYN
-   SxbLLpZb0oqNHmVWs2TWR5SSd7MlinwFDq2i+PCyCxAcgz895wXt7uO3S
-   g1Hn21xLR2JMaCNo90Y6Z4v759Rdbj5Yyle8ylnLpmFXA9uNE4QgNoelB
-   dDhRjZm5c/qmLwPkZqWQh/ArOll6iibY5zB3UYMOIHWG4/qikacpyHkG1
-   XEJaI0nPynuNTtDGIKX3sFG3J/1sEDlIZpFkgkMrXNAjPitzi79+o9BU3
-   A==;
-IronPort-SDR: q6E+M2nacpdUb70AJ2Dh/m7EvNJe+mIgRyvqfqFcYghBwVX91Rfa13DjL4l5XHUaqobnZNrUHz
- GLFgmcWoXs08qBCsnrfQgiLjKsjdk+tSj1tNIwyIapLGNFq3C8dwD7DaesUOxw1lsxiCei4q9o
- a75a7bkllb+Aq2aUqpucfrWDdz4Y4T1qCG6fylVqOw22Put5/CA5nSvy5521oebUdN8lAWuf01
- 3/M36goRUj3ip84YMX/db8S/2AoWcWDv0DRsh7HllCLSlB6Hr7kr95iuWVoF0BqZSakEJi5+68
- SGo=
-X-IronPort-AV: E=Sophos;i="5.70,565,1574092800"; 
-   d="scan'208";a="133241508"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 18 Mar 2020 09:11:58 +0800
-IronPort-SDR: xhQVD81Vmv75k4eeGenx4czPnG48pc/jChSUdsdc0/pifRdgwyPaKCSErTqTD3XCcxuQ9jJt+q
- ncVf2kTvyh2cx5EWGiFFVlCuoVA4pPZyl2+3vFvapaenbV1Q0RCdCNh4R13VylF6PIB3GBIhK8
- xReJPJRgUkJof79JL7S1WrORXxXgLXjnhp7a1Hk4J93tuhAKeyp7pC+EtfzsagHRZXoxWsaEX0
- OKR+FF1ZZYDQVnE0qyzoh01M4ffH3Om6nrn+BCe9q5X5dx0eyJW8CEoxAp9+tC7sYGKTRJl5u6
- pCLJQMlMAQaKhIs4aLrs6NGF
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 18:03:48 -0700
-IronPort-SDR: Zzsqh3K4c1R/p9+SJYJMtUAf/6eUSBi6C4L6SjmedTFMfvS8C9LfXtLTZlXfe3QzQjJNsX9pYo
- tn+JeQzbvcw6rsi2HEd+YDe6xdAeWfIZFqgE3fqqGrnoBLsUfDZy0bEqRPl9lPq2BrM/8axL9m
- RZSsaJuMoRA7Lr6ajmfgxep3Vh2JJtl25oOQFF4HyWQAz/NsH4LGVEc7cUG8g9q9Dy5oEypxwa
- hMtYo5pJ83rxXPZJqY7yOJG2WYGnfZGBRboTUoZHwnn93CT1A9Zq0ADUyyxwcTphxEs6ZIujdc
- gM8=
-WDCIronportException: Internal
-Received: from mccorma-lt.ad.shared (HELO yoda.hgst.com) ([10.86.54.125])
-  by uls-op-cesaip01.wdc.com with ESMTP; 17 Mar 2020 18:11:58 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
-        Albert Ou <aou@eecs.berkeley.edu>, Gary Guo <gary@garyguo.net>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        linux-riscv@lists.infradead.org, Mao Han <han_mao@c-sky.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Zong Li <zong.li@sifive.com>, Bin Meng <bmeng.cn@gmail.com>
-Subject: [PATCH v11 04/11] RISC-V: Introduce a new config for SBI v0.1
-Date:   Tue, 17 Mar 2020 18:11:37 -0700
-Message-Id: <20200318011144.91532-5-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200318011144.91532-1-atish.patra@wdc.com>
-References: <20200318011144.91532-1-atish.patra@wdc.com>
+        Tue, 17 Mar 2020 21:35:50 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48508 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726735AbgCRBft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 21:35:49 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 99E943A8A22EE1B9E395;
+        Wed, 18 Mar 2020 09:35:37 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.183) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 18 Mar 2020
+ 09:37:32 +0800
+Subject: Re: [PATCH] block, bfq: fix use-after-free in
+ bfq_idle_slice_timer_body
+To:     Paolo Valente <paolo.valente@linaro.org>
+CC:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>,
+        Yanxiaodan <yanxiaodan@huawei.com>,
+        "wubo (T)" <wubo40@huawei.com>, renxudong <renxudong1@huawei.com>,
+        Louhongxiang <louhongxiang@huawei.com>
+References: <6c0d0b36-751b-a63a-418b-888a88ce58f4@huawei.com>
+ <C69604D5-CBB7-4A5F-AD73-7A9C0B6B3360@linaro.org>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Message-ID: <0a6e190a-3393-53f9-b127-d57d67cdcdc8@huawei.com>
+Date:   Wed, 18 Mar 2020 09:35:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <C69604D5-CBB7-4A5F-AD73-7A9C0B6B3360@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.183]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We now have SBI v0.2 which is more scalable and extendable to handle
-future needs for RISC-V supervisor interfaces.
 
-Introduce a new config and move all SBI v0.1 code under that config.
-This allows to implement the new replacement SBI extensions cleanly
-and remove v0.1 extensions easily in future. Currently, the config
-is enabled by default. Once all M-mode software, with v0.1, is no
-longer in use, this config option and all relevant code can be easily
-removed.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
----
- arch/riscv/Kconfig           |   7 ++
- arch/riscv/include/asm/sbi.h |   2 +
- arch/riscv/kernel/sbi.c      | 132 +++++++++++++++++++++++++++++------
- 3 files changed, 118 insertions(+), 23 deletions(-)
+On 2020/3/18 1:44, Paolo Valente wrote:
+> 
+> 
+>> Il giorno 17 mar 2020, alle ore 15:06, Zhiqiang Liu <liuzhiqiang26@huawei.com> ha scritto:
+>>
+>> In bfq_idle_slice_timer func, bfqq = bfqd->in_service_queue is
+>> not in bfqd-lock critical section. The bfqq, which is not
+>> equal to NULL in bfq_idle_slice_timer, may be freed after passing
+>> to bfq_idle_slice_timer_body. So we will access the freed memory.
+>>
+>> KASAN log is given as follows:
+>> [13058.354613] ==================================================================
+>> [13058.354640] BUG: KASAN: use-after-free in bfq_idle_slice_timer+0xac/0x290
+>> [13058.354644] Read of size 8 at addr ffffa02cf3e63f78 by task fork13/19767
+>> [13058.354646]
+>> [13058.354655] CPU: 96 PID: 19767 Comm: fork13
+>> [13058.354661] Call trace:
+>> [13058.354667]  dump_backtrace+0x0/0x310
+>> [13058.354672]  show_stack+0x28/0x38
+>> [13058.354681]  dump_stack+0xd8/0x108
+>> [13058.354687]  print_address_description+0x68/0x2d0
+>> [13058.354690]  kasan_report+0x124/0x2e0
+>> [13058.354697]  __asan_load8+0x88/0xb0
+>> [13058.354702]  bfq_idle_slice_timer+0xac/0x290
+>> [13058.354707]  __hrtimer_run_queues+0x298/0x8b8
+>> [13058.354710]  hrtimer_interrupt+0x1b8/0x678
+>> [13058.354716]  arch_timer_handler_phys+0x4c/0x78
+>> [13058.354722]  handle_percpu_devid_irq+0xf0/0x558
+>> [13058.354731]  generic_handle_irq+0x50/0x70
+>> [13058.354735]  __handle_domain_irq+0x94/0x110
+>> [13058.354739]  gic_handle_irq+0x8c/0x1b0
+>> [13058.354742]  el1_irq+0xb8/0x140
+>> [13058.354748]  do_wp_page+0x260/0xe28
+>> [13058.354752]  __handle_mm_fault+0x8ec/0x9b0
+>> [13058.354756]  handle_mm_fault+0x280/0x460
+>> [13058.354762]  do_page_fault+0x3ec/0x890
+>> [13058.354765]  do_mem_abort+0xc0/0x1b0
+>> [13058.354768]  el0_da+0x24/0x28
+>> [13058.354770]
+>> [13058.354773] Allocated by task 19731:
+>> [13058.354780]  kasan_kmalloc+0xe0/0x190
+>> [13058.354784]  kasan_slab_alloc+0x14/0x20
+>> [13058.354788]  kmem_cache_alloc_node+0x130/0x440
+>> [13058.354793]  bfq_get_queue+0x138/0x858
+>> [13058.354797]  bfq_get_bfqq_handle_split+0xd4/0x328
+>> [13058.354801]  bfq_init_rq+0x1f4/0x1180
+>> [13058.354806]  bfq_insert_requests+0x264/0x1c98
+>> [13058.354811]  blk_mq_sched_insert_requests+0x1c4/0x488
+>> [13058.354818]  blk_mq_flush_plug_list+0x2d4/0x6e0
+>> [13058.354826]  blk_flush_plug_list+0x230/0x548
+>> [13058.354830]  blk_finish_plug+0x60/0x80
+>> [13058.354838]  read_pages+0xec/0x2c0
+>> [13058.354842]  __do_page_cache_readahead+0x374/0x438
+>> [13058.354846]  ondemand_readahead+0x24c/0x6b0
+>> [13058.354851]  page_cache_sync_readahead+0x17c/0x2f8
+>> [13058.354858]  generic_file_buffered_read+0x588/0xc58
+>> [13058.354862]  generic_file_read_iter+0x1b4/0x278
+>> [13058.354965]  ext4_file_read_iter+0xa8/0x1d8 [ext4]
+>> [13058.354972]  __vfs_read+0x238/0x320
+>> [13058.354976]  vfs_read+0xbc/0x1c0
+>> [13058.354980]  ksys_read+0xdc/0x1b8
+>> [13058.354984]  __arm64_sys_read+0x50/0x60
+>> [13058.354990]  el0_svc_common+0xb4/0x1d8
+>> [13058.354994]  el0_svc_handler+0x50/0xa8
+>> [13058.354998]  el0_svc+0x8/0xc
+>> [13058.354999]
+>> [13058.355001] Freed by task 19731:
+>> [13058.355007]  __kasan_slab_free+0x120/0x228
+>> [13058.355010]  kasan_slab_free+0x10/0x18
+>> [13058.355014]  kmem_cache_free+0x288/0x3f0
+>> [13058.355018]  bfq_put_queue+0x134/0x208
+>> [13058.355022]  bfq_exit_icq_bfqq+0x164/0x348
+>> [13058.355026]  bfq_exit_icq+0x28/0x40
+>> [13058.355030]  ioc_exit_icq+0xa0/0x150
+>> [13058.355035]  put_io_context_active+0x250/0x438
+>> [13058.355038]  exit_io_context+0xd0/0x138
+>> [13058.355045]  do_exit+0x734/0xc58
+>> [13058.355050]  do_group_exit+0x78/0x220
+>> [13058.355054]  __wake_up_parent+0x0/0x50
+>> [13058.355058]  el0_svc_common+0xb4/0x1d8
+>> [13058.355062]  el0_svc_handler+0x50/0xa8
+>> [13058.355066]  el0_svc+0x8/0xc
+>> [13058.355067]
+>> [13058.355071] The buggy address belongs to the object at ffffa02cf3e63e70#012 which belongs to the cache bfq_queue of size 464
+>> [13058.355075] The buggy address is located 264 bytes inside of#012 464-byte region [ffffa02cf3e63e70, ffffa02cf3e64040)
+>> [13058.355077] The buggy address belongs to the page:
+>> [13058.355083] page:ffff7e80b3cf9800 count:1 mapcount:0 mapping:ffff802db5c90780 index:0xffffa02cf3e606f0 compound_mapcount: 0
+>> [13058.366175] flags: 0x2ffffe0000008100(slab|head)
+>> [13058.370781] raw: 2ffffe0000008100 ffff7e80b53b1408 ffffa02d730c1c90 ffff802db5c90780
+>> [13058.370787] raw: ffffa02cf3e606f0 0000000000370023 00000001ffffffff 0000000000000000
+>> [13058.370789] page dumped because: kasan: bad access detected
+>> [13058.370791]
+>> [13058.370792] Memory state around the buggy address:
+>> [13058.370797]  ffffa02cf3e63e00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fb fb
+>> [13058.370801]  ffffa02cf3e63e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>> [13058.370805] >ffffa02cf3e63f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>> [13058.370808]                                                                 ^
+>> [13058.370811]  ffffa02cf3e63f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>> [13058.370815]  ffffa02cf3e64000: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>> [13058.370817] ==================================================================
+>> [13058.370820] Disabling lock debugging due to kernel taint
+>>
+>> Here, we directly pass the bfqd to bfq_idle_slice_timer_body func.
+>>
+>> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+>> Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+>> ---
+>> block/bfq-iosched.c | 10 +++++-----
+>> 1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+>> index 8c436abfaf14..f470b9daa98b 100644
+>> --- a/block/bfq-iosched.c
+>> +++ b/block/bfq-iosched.c
+>> @@ -6215,20 +6215,20 @@ static struct bfq_queue *bfq_init_rq(struct request *rq)
+>> 	return bfqq;
+>> }
+>>
+>> -static void bfq_idle_slice_timer_body(struct bfq_queue *bfqq)
+>> +static void
+>> +bfq_idle_slice_timer_body(struct bfq_data *bfqd, struct bfq_queue *bfqq)
+>> {
+>> -	struct bfq_data *bfqd = bfqq->bfqd;
+>> 	enum bfqq_expiration reason;
+>> 	unsigned long flags;
+>>
+>> 	spin_lock_irqsave(&bfqd->lock, flags);
+>> -	bfq_clear_bfqq_wait_request(bfqq);
+>> -
+>> 	if (bfqq != bfqd->in_service_queue) {
+>> 		spin_unlock_irqrestore(&bfqd->lock, flags);
+>> 		return;
+>> 	}
+>>
+>> +	bfq_clear_bfqq_wait_request(bfqq);
+>> +
+> 
+> Please add a comment on why you (correctly) clear this flag only if bfqq is in service.
+> 
+> For the rest, seems ok to me.
+> 
+> Thank you very much for spotting and fixing this bug,
+> Paolo
+> 
+Thanks for your reply.
+Considering that the bfqq may be in race, we should firstly check whether bfqq is in service before
+doing something on it.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 1a3b5a5276be..20c6191399ea 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -308,6 +308,13 @@ config SECCOMP
- 	  and the task is only allowed to execute a few safe syscalls
- 	  defined by each seccomp mode.
- 
-+config RISCV_SBI_V01
-+	bool "SBI v0.1 support"
-+	default y
-+	depends on RISCV_SBI
-+	help
-+	  This config allows kernel to use SBI v0.1 APIs. This will be
-+	  deprecated in future once legacy M-mode software are no longer in use.
- endmenu
- 
- menu "Boot options"
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index f68b6ed10a18..d712b61f8dbc 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -11,6 +11,7 @@
- 
- #ifdef CONFIG_RISCV_SBI
- enum sbi_ext_id {
-+#ifdef CONFIG_RISCV_SBI_V01
- 	SBI_EXT_0_1_SET_TIMER = 0x0,
- 	SBI_EXT_0_1_CONSOLE_PUTCHAR = 0x1,
- 	SBI_EXT_0_1_CONSOLE_GETCHAR = 0x2,
-@@ -20,6 +21,7 @@ enum sbi_ext_id {
- 	SBI_EXT_0_1_REMOTE_SFENCE_VMA = 0x6,
- 	SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID = 0x7,
- 	SBI_EXT_0_1_SHUTDOWN = 0x8,
-+#endif
- 	SBI_EXT_BASE = 0x10,
- 	SBI_EXT_TIME = 0x54494D45,
- 	SBI_EXT_IPI = 0x735049,
-diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-index 4aee0b49df3c..1368da62ec82 100644
---- a/arch/riscv/kernel/sbi.c
-+++ b/arch/riscv/kernel/sbi.c
-@@ -13,6 +13,12 @@
- unsigned long sbi_spec_version = SBI_SPEC_VERSION_DEFAULT;
- EXPORT_SYMBOL(sbi_spec_version);
- 
-+static void (*__sbi_set_timer)(uint64_t stime);
-+static int (*__sbi_send_ipi)(const unsigned long *hart_mask);
-+static int (*__sbi_rfence)(int fid, const unsigned long *hart_mask,
-+			   unsigned long start, unsigned long size,
-+			   unsigned long arg4, unsigned long arg5);
-+
- struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
- 			unsigned long arg1, unsigned long arg2,
- 			unsigned long arg3, unsigned long arg4,
-@@ -57,6 +63,7 @@ static int sbi_err_map_linux_errno(int err)
- 	};
- }
- 
-+#ifdef CONFIG_RISCV_SBI_V01
- /**
-  * sbi_console_putchar() - Writes given character to the console device.
-  * @ch: The data to be written to the console.
-@@ -85,12 +92,34 @@ int sbi_console_getchar(void)
- EXPORT_SYMBOL(sbi_console_getchar);
- 
- /**
-- * sbi_set_timer() - Program the timer for next timer event.
-+ * sbi_shutdown() - Remove all the harts from executing supervisor code.
-+ *
-+ * Return: None
-+ */
-+void sbi_shutdown(void)
-+{
-+	sbi_ecall(SBI_EXT_0_1_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0);
-+}
-+EXPORT_SYMBOL(sbi_set_timer);
-+
-+/**
-+ * sbi_clear_ipi() - Clear any pending IPIs for the calling hart.
-+ *
-+ * Return: None
-+ */
-+void sbi_clear_ipi(void)
-+{
-+	sbi_ecall(SBI_EXT_0_1_CLEAR_IPI, 0, 0, 0, 0, 0, 0, 0);
-+}
-+EXPORT_SYMBOL(sbi_shutdown);
-+
-+/**
-+ * sbi_set_timer_v01() - Program the timer for next timer event.
-  * @stime_value: The value after which next timer event should fire.
-  *
-  * Return: None
-  */
--void sbi_set_timer(uint64_t stime_value)
-+static void __sbi_set_timer_v01(uint64_t stime_value)
- {
- #if __riscv_xlen == 32
- 	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value,
-@@ -99,27 +128,78 @@ void sbi_set_timer(uint64_t stime_value)
- 	sbi_ecall(SBI_EXT_0_1_SET_TIMER, 0, stime_value, 0, 0, 0, 0, 0);
- #endif
- }
--EXPORT_SYMBOL(sbi_set_timer);
- 
--/**
-- * sbi_shutdown() - Remove all the harts from executing supervisor code.
-- *
-- * Return: None
-- */
--void sbi_shutdown(void)
-+static int __sbi_send_ipi_v01(const unsigned long *hart_mask)
- {
--	sbi_ecall(SBI_EXT_0_1_SHUTDOWN, 0, 0, 0, 0, 0, 0, 0);
-+	sbi_ecall(SBI_EXT_0_1_SEND_IPI, 0, (unsigned long)hart_mask,
-+		  0, 0, 0, 0, 0);
-+	return 0;
- }
--EXPORT_SYMBOL(sbi_shutdown);
-+
-+static int __sbi_rfence_v01(int fid, const unsigned long *hart_mask,
-+			    unsigned long start, unsigned long size,
-+			    unsigned long arg4, unsigned long arg5)
-+{
-+	int result = 0;
-+
-+	/* v0.2 function IDs are equivalent to v0.1 extension IDs */
-+	switch (fid) {
-+	case SBI_EXT_RFENCE_REMOTE_FENCE_I:
-+		sbi_ecall(SBI_EXT_0_1_REMOTE_FENCE_I, 0,
-+			  (unsigned long)hart_mask, 0, 0, 0, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA:
-+		sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA, 0,
-+			  (unsigned long)hart_mask, start, size,
-+			  0, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID:
-+		sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, 0,
-+			  (unsigned long)hart_mask, start, size,
-+			  arg4, 0, 0);
-+		break;
-+	default:
-+		pr_err("SBI call [%d]not supported in SBI v0.1\n", fid);
-+		result = -EINVAL;
-+	}
-+
-+	return result;
-+}
-+#else
-+static void __sbi_set_timer_v01(uint64_t stime_value)
-+{
-+	pr_warn("Timer extension is not available in SBI v%lu.%lu\n",
-+		sbi_major_version(), sbi_minor_version());
-+}
-+
-+static int __sbi_send_ipi_v01(const unsigned long *hart_mask)
-+{
-+	pr_warn("IPI extension is not available in SBI v%lu.%lu\n",
-+		sbi_major_version(), sbi_minor_version());
-+
-+	return 0;
-+}
-+
-+static int __sbi_rfence_v01(int fid, const unsigned long *hart_mask,
-+			    unsigned long start, unsigned long size,
-+			    unsigned long arg4, unsigned long arg5)
-+{
-+	pr_warn("remote fence extension is not available in SBI v%lu.%lu\n",
-+		sbi_major_version(), sbi_minor_version());
-+
-+	return 0;
-+}
-+#endif /* CONFIG_RISCV_SBI_V01 */
- 
- /**
-- * sbi_clear_ipi() - Clear any pending IPIs for the calling hart.
-+ * sbi_set_timer() - Program the timer for next timer event.
-+ * @stime_value: The value after which next timer event should fire.
-  *
-  * Return: None
-  */
--void sbi_clear_ipi(void)
-+void sbi_set_timer(uint64_t stime_value)
- {
--	sbi_ecall(SBI_EXT_0_1_CLEAR_IPI, 0, 0, 0, 0, 0, 0, 0);
-+	__sbi_set_timer(stime_value);
- }
- 
- /**
-@@ -130,8 +210,7 @@ void sbi_clear_ipi(void)
-  */
- void sbi_send_ipi(const unsigned long *hart_mask)
- {
--	sbi_ecall(SBI_EXT_0_1_SEND_IPI, 0, (unsigned long)hart_mask,
--		  0, 0, 0, 0, 0);
-+	__sbi_send_ipi(hart_mask);
- }
- EXPORT_SYMBOL(sbi_send_ipi);
- 
-@@ -143,8 +222,8 @@ EXPORT_SYMBOL(sbi_send_ipi);
-  */
- void sbi_remote_fence_i(const unsigned long *hart_mask)
- {
--	sbi_ecall(SBI_EXT_0_1_REMOTE_FENCE_I, 0, (unsigned long)hart_mask,
--		  0, 0, 0, 0, 0);
-+	__sbi_rfence(SBI_EXT_RFENCE_REMOTE_FENCE_I,
-+		     hart_mask, 0, 0, 0, 0);
- }
- EXPORT_SYMBOL(sbi_remote_fence_i);
- 
-@@ -161,8 +240,8 @@ void sbi_remote_sfence_vma(const unsigned long *hart_mask,
- 			   unsigned long start,
- 			   unsigned long size)
- {
--	sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA, 0,
--		  (unsigned long)hart_mask, start, size, 0, 0, 0);
-+	__sbi_rfence(SBI_EXT_RFENCE_REMOTE_SFENCE_VMA,
-+		     hart_mask, start, size, 0, 0);
- }
- EXPORT_SYMBOL(sbi_remote_sfence_vma);
- 
-@@ -182,8 +261,8 @@ void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
- 				unsigned long size,
- 				unsigned long asid)
- {
--	sbi_ecall(SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID, 0,
--		  (unsigned long)hart_mask, start, size, asid, 0, 0);
-+	__sbi_rfence(SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID,
-+		     hart_mask, start, size, asid, 0);
- }
- EXPORT_SYMBOL(sbi_remote_sfence_vma_asid);
- 
-@@ -249,8 +328,15 @@ int __init sbi_init(void)
- 
- 	pr_info("SBI specification v%lu.%lu detected\n",
- 		sbi_major_version(), sbi_minor_version());
--	if (!sbi_spec_is_0_1())
-+
-+	if (!sbi_spec_is_0_1()) {
- 		pr_info("SBI implementation ID=0x%lx Version=0x%lx\n",
- 			sbi_get_firmware_id(), sbi_get_firmware_version());
-+	}
-+
-+	__sbi_set_timer = __sbi_set_timer_v01;
-+	__sbi_send_ipi	= __sbi_send_ipi_v01;
-+	__sbi_rfence	= __sbi_rfence_v01;
-+
- 	return 0;
- }
--- 
-2.25.1
+I will add a comment before 'if (bfqq != bfqd->in_service_queue) {'
+
+In addition, the fix tag is missing. I will add it in v2 patch.
+
+>> 	if (bfq_bfqq_budget_timeout(bfqq))
+>> 		/*
+>> 		 * Also here the queue can be safely expired
+>> @@ -6273,7 +6273,7 @@ static enum hrtimer_restart bfq_idle_slice_timer(struct hrtimer *timer)
+>> 	 * early.
+>> 	 */
+>> 	if (bfqq)
+>> -		bfq_idle_slice_timer_body(bfqq);
+>> +		bfq_idle_slice_timer_body(bfqd, bfqq);
+>>
+>> 	return HRTIMER_NORESTART;
+>> }
+>> -- 
+>> 2.19.1
+>>
+>>
+> 
+> 
+> .
+> 
 
