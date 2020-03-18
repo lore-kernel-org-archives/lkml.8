@@ -2,151 +2,121 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E93C9C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303B5C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD6E820768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B49720719
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:02:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HXz2X7B/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgCRR7C (ORCPT
+        id S1726795AbgCRSCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:59:02 -0400
-Received: from smtprelay0200.hostedemail.com ([216.40.44.200]:45808 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726506AbgCRR7C (ORCPT
+        Wed, 18 Mar 2020 14:02:10 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40408 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgCRSCK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:59:02 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 7007F180295A5;
-        Wed, 18 Mar 2020 17:59:01 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: hate21_3184fa5e40703
-X-Filterd-Recvd-Size: 4340
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 18 Mar 2020 17:59:00 +0000 (UTC)
-Message-ID: <a421ed974d7c675a7d41405d483c7645004d4125.camel@perches.com>
-Subject: Re: [PATCH 2/2] staging: rtl8192u: Corrects 'Avoid CamelCase' for
- variables
-From:   Joe Perches <joe@perches.com>
-To:     Camylla Cantanheide <c.cantanheide@gmail.com>,
-        dan.carpenter@oracle.com
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, LKML <linux-kernel@vger.kernel.org>,
-        lkcamp@lists.libreplanetbr.org
-Date:   Wed, 18 Mar 2020 10:57:11 -0700
-In-Reply-To: <CAG3pEr+9tuSYw==qgp3J8r--SdAd8DBMNQqSHCZQc-mkVVuE6w@mail.gmail.com>
-References: <20200317085130.21213-1-c.cantanheide@gmail.com>
-         <20200317085130.21213-2-c.cantanheide@gmail.com>
-         <20200317134329.GC4650@kadam>
-         <ee182711405229e85b5b5a44c683d5a2609b5ba3.camel@perches.com>
-         <CAG3pEr+9tuSYw==qgp3J8r--SdAd8DBMNQqSHCZQc-mkVVuE6w@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 18 Mar 2020 14:02:10 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t24so14105447pgj.7;
+        Wed, 18 Mar 2020 11:02:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9X7tDrmUL0L//7N8M2i92Ik51zKFFPsFFM40oxZGF0U=;
+        b=HXz2X7B/GeGwgkG0XWRn8Bjf8YZUjh9/2lnZ6gFpCKc5VvEfx3dtQfm1BVjYRtJT3l
+         C+v2PnoLKGVTXWB3Jqq6ZmzVzUr8adya2B3iYNPy4CUlbSt8KmkXnE0EK/XLES1cUbzR
+         avMzO49dt87P2JFhASIqHSWDIuNp3HalGpEo373pXd7EEivTUojCNMdSUSaMwsDowxuF
+         tp8+UqFk+cCxRN4+bz09t1yqlChMnkOuVvjC1HsoEUpyZ2crjaqRGsYb8iNoXepbCdNG
+         /VOc7950xI1cTFaiwsWG1zCUKdoqpR020f8LQ9KMQXrUJ9sT2fcYpgmpKLnc9qNoTQHX
+         TwuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9X7tDrmUL0L//7N8M2i92Ik51zKFFPsFFM40oxZGF0U=;
+        b=LdqptBPkYmy+QMisu6QzZPyeFNufCY2xUyV1jfFvo32CHGkDs1KIpfD9iF2Zl2E4c0
+         8abHjlVczlewQX2GNuE/xQRLlY3u/lYKc15p9MpYnJqOu9w/K3wfpLyNrr98Bq3em6En
+         qSBnnarO6hoAYUahuStvemBK6Nk+fk18x7oJaPeke45Fg5RZ1Ly6teN5ACeGUYegLy//
+         WUv7eXkCdcoG8NWFG57ObMSIWTTUbi1HSCKf7WMSEAGelLnibhyCf4MKj5kMR0crst/C
+         d/2Z4EC0dj2ncvfWU+5LD8uu45tMCFiXe5qFMqzCl2mx0eQAcRPqzpb7bXbFj6hEVooV
+         kNfw==
+X-Gm-Message-State: ANhLgQ2KYdC2KOuv0X5R+VZadyU6LvXn92aaxEeBWjQZFamN3Km0lAeA
+        23GtFegbCdUeC6TsNd1lpDvD2Uaw
+X-Google-Smtp-Source: ADFU+vv9CafcsMN4KTE3Q3A608AdB9Pfgiokt/+7lncsqo674RymhuMEObUUbvu3u0K6QrqKNFOZ/w==
+X-Received: by 2002:aa7:9790:: with SMTP id o16mr5607556pfp.322.1584554524630;
+        Wed, 18 Mar 2020 11:02:04 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id z11sm7119471pfa.149.2020.03.18.11.02.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Mar 2020 11:02:03 -0700 (PDT)
+Subject: Re: [PATCH net] ipv6: don't auto-add link-local address to lag ports
+To:     Jarod Wilson <jarod@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Moshe Levi <moshele@mellanox.com>,
+        Marcelo Ricardo Leitner <mleitner@redhat.com>,
+        netdev@vger.kernel.org
+References: <20200318140605.45273-1-jarod@redhat.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <8a88d1c8-c6b1-ad85-7971-e6ae8c6fa0e4@gmail.com>
+Date:   Wed, 18 Mar 2020 11:02:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200318140605.45273-1-jarod@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-18 at 14:31 -0300, Camylla Cantanheide wrote:
-> Dear Dan Carpenter and Joe Perches,
+
+
+On 3/18/20 7:06 AM, Jarod Wilson wrote:
+> Bonding slave and team port devices should not have link-local addresses
+> automatically added to them, as it can interfere with openvswitch being
+> able to properly add tc ingress.
 > 
-> Thank you very much for the suggestions, I found the evaluation of both
-> very significant. Now, I have another perspective on variables.
+> Reported-by: Moshe Levi <moshele@mellanox.com>
+> CC: Marcelo Ricardo Leitner <mleitner@redhat.com>
+> CC: netdev@vger.kernel.org
+> Signed-off-by: Jarod Wilson <jarod@redhat.com>
+
+
+This does not look a net candidate to me, unless the bug has been added recently ?
+
+The absence of Fixes: tag is a red flag for a net submission.
+
+By adding a Fixes: tag, you are doing us a favor, please.
+
+Thanks.
+
+> ---
+>  net/ipv6/addrconf.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> I solved the problem for the *setKey *function, however, when executing the
-> checkpatch, more *Checks* of the same type appeared.
+> diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+> index 46d614b611db..aed891695084 100644
+> --- a/net/ipv6/addrconf.c
+> +++ b/net/ipv6/addrconf.c
+> @@ -3296,6 +3296,10 @@ static void addrconf_addr_gen(struct inet6_dev *idev, bool prefix_route)
+>  	if (netif_is_l3_master(idev->dev))
+>  		return;
+>  
+> +	/* no link local addresses on bond slave or team port devices */
+> +	if (netif_is_lag_port(idev->dev))
+> +		return;
+> +
+>  	ipv6_addr_set(&addr, htonl(0xFE800000), 0, 0, 0);
+>  
+>  	switch (idev->cnf.addr_gen_mode) {
 > 
-> Should I send the second version of the patch, only to the *setKey*
-> function or do I resolve all *Checks* for the entire file?
-
-A single patch refactoring the function would be fine.
-
-Also perhaps a name change as a separate patch later as
-setKey is a relatively generic name and not obviously
-specific to the rtl8192u..
-
-Perhaps a first refactoring patch like the below
-then a renaming one.
-
-(untested)
----
- drivers/staging/rtl8192u/r8192U_core.c | 50 ++++++++++++++++------------------
- 1 file changed, 23 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/staging/rtl8192u/r8192U_core.c b/drivers/staging/rtl8192u/r8192U_core.c
-index 89dd1fb..0c0cb08 100644
---- a/drivers/staging/rtl8192u/r8192U_core.c
-+++ b/drivers/staging/rtl8192u/r8192U_core.c
-@@ -4880,7 +4880,7 @@ void EnableHWSecurityConfig8192(struct net_device *dev)
- void setKey(struct net_device *dev, u8 EntryNo, u8 KeyIndex, u16 KeyType,
- 	    u8 *MacAddr, u8 DefaultKey, u32 *KeyContent)
- {
--	u32 TargetCommand = 0;
-+	u32 TargetCommand = CAM_CONTENT_COUNT * EntryNo |  BIT(31) | BIT(16);
- 	u32 TargetContent = 0;
- 	u16 usConfig = 0;
- 	u8 i;
-@@ -4897,32 +4897,28 @@ void setKey(struct net_device *dev, u8 EntryNo, u8 KeyIndex, u16 KeyType,
- 	else
- 		usConfig |= BIT(15) | (KeyType << 2) | KeyIndex;
- 
--	for (i = 0; i < CAM_CONTENT_COUNT; i++) {
--		TargetCommand  = i + CAM_CONTENT_COUNT * EntryNo;
--		TargetCommand |= BIT(31) | BIT(16);
--
--		if (i == 0) { /* MAC|Config */
--			TargetContent = (u32)(*(MacAddr + 0)) << 16 |
--					(u32)(*(MacAddr + 1)) << 24 |
--					(u32)usConfig;
--
--			write_nic_dword(dev, WCAMI, TargetContent);
--			write_nic_dword(dev, RWCAM, TargetCommand);
--		} else if (i == 1) { /* MAC */
--			TargetContent = (u32)(*(MacAddr + 2))	 |
--					(u32)(*(MacAddr + 3)) <<  8 |
--					(u32)(*(MacAddr + 4)) << 16 |
--					(u32)(*(MacAddr + 5)) << 24;
--			write_nic_dword(dev, WCAMI, TargetContent);
--			write_nic_dword(dev, RWCAM, TargetCommand);
--		} else {
--			/* Key Material */
--			if (KeyContent) {
--				write_nic_dword(dev, WCAMI,
--						*(KeyContent + i - 2));
--				write_nic_dword(dev, RWCAM, TargetCommand);
--			}
--		}
-+	TargetContent = MacAddr[0] << 16 |
-+			MacAddr[0] << 24 |
-+			(u32)usConfig;
-+
-+	write_nic_dword(dev, WCAMI, TargetContent);
-+	write_nic_dword(dev, RWCAM, TargetCommand++);
-+
-+	 /* MAC */
-+	TargetContent = MacAddr[2]	 |
-+			MacAddr[3] <<  8 |
-+			MacAddr[4] << 16 |
-+			MacAddr[5] << 24;
-+	write_nic_dword(dev, WCAMI, TargetContent);
-+	write_nic_dword(dev, RWCAM, TargetCommand++);
-+
-+	/* Key Material */
-+	if (!KeyContent)
-+		return;
-+
-+	for (i = 2; i < CAM_CONTENT_COUNT; i++) {
-+		write_nic_dword(dev, WCAMI, *KeyContent++);
-+		write_nic_dword(dev, RWCAM, TargetCommand++);
- 	}
- }
- 
-
