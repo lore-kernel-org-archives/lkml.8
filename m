@@ -2,138 +2,92 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 854BEC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79E1C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5158C20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43E72076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:45:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3FPub1D"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="q+YVXz8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbgCRXnU (ORCPT
+        id S1727198AbgCRXpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:43:20 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38478 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbgCRXnU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:43:20 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h5so356902edn.5;
-        Wed, 18 Mar 2020 16:43:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T6rxV8z4faDRzhqK467Xv2a7dOy/TE520C3YV3WjV8c=;
-        b=i3FPub1DIHkvCD+yi/2Y0pX69MrTIvO1RmbzVf6wk00DV0ApmY13YfnnFpks/NVTLs
-         G1QplMy/+0w+GsFrwD1fV1STvoKneEr8NQlSW0vIhii6MAK+xDn8ddbmfxyIfh+bWkPE
-         NEeRdRZ2QE6MO1YpPwSPzXvQKexEK5sr8Dox9C9jyfSyvqP6X6trr48Ms86RoFLn9dAG
-         92zK1vRSIdLYDibQabEa5foOn7Ajn4QGZfbFS6XCk1yr6R/d+WaM4jqJ31uE4ljyQmMb
-         YiomgNSyyErYriEW6Abwe6sruyYqTy62RHKzpwUnN7Vinym7R/FBnsL8LzowJAa3l8q2
-         3Z7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T6rxV8z4faDRzhqK467Xv2a7dOy/TE520C3YV3WjV8c=;
-        b=O1nEDNd9FSAUNGQHVc6BjpCTY0iaCckSwTESS23JEBb0jXNfg5aYUNZTspKC6t0Hwz
-         oqGpUYH3lGjOcp6jNX6IjK6LJadyknTgTLB1qLKyu1PBz308HsUwASFx6zVO+rSznWDo
-         lZgm4bDogt7Th5zeWaRMbKvFZ3MYOvCfpaChIR3T/Yp6FJdQkxMcoz2AmisY5ktxpUwr
-         jNFKV6+Q7nRA+y+1gG8diMlNd63E8NlMdZnmHU+D39wOubdDwH02CV2y9d9jGkFje0jF
-         G/Pvvutb53oYWTEmlvqvo/Qvmi/a6XWcA8PyTGInBH0ctZJMmbsS08S4kXJBbmh5zPoH
-         abyA==
-X-Gm-Message-State: ANhLgQ1kLEpvZznWhcEJx/I0rWwTN15B9sE9k1mHG4S6K3M+6ZslQHZP
-        Fp2x09LPQmAO5wIswFRP/+iWh9d3q3KhaciAjFDStbvC
-X-Google-Smtp-Source: ADFU+vunbg/mabJAoT4ECckSo9VlWXEI7Tk7MCM2NEIzGX//dTyumqWFksHG62C18XwPsVHwF/wqELk+aHHpZR6UYqI=
-X-Received: by 2002:a17:906:b888:: with SMTP id hb8mr686525ejb.166.1584574997823;
- Wed, 18 Mar 2020 16:43:17 -0700 (PDT)
+        Wed, 18 Mar 2020 19:45:40 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:39549 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbgCRXpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 19:45:40 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 61a86ec8;
+        Wed, 18 Mar 2020 23:39:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-transfer-encoding;
+         s=mail; bh=Mi5YhE72SdMzw/1uGPsgnecyYHI=; b=q+YVXz8dZd7X/A/U1Zm5
+        KFIOHvmPa//FtTeI30+4HhUkygu8EtzIQIeb1QD71+yVFbqzvVcFzsLj18OfJD0t
+        IeV5zqNTci3wQeSmJNhtEAV5Cd55sk5Nqaw+NF0BunsP36+t15K+inZ40OltsQJb
+        LbOFW+We7Yxm6A8nmRxEWw7YZ5K2Zm+Upyy4w6BfrhYtlz9BTZqqdQF4r2kX/Cd6
+        8GMfMLktgK0TBoSSdZU/HPcT9s8qXuyhQrKltQsffboIMYsF+tYxv22k0h2Q7il5
+        dB9pkm7K7HquUHxWqSlg90IEDosXqwSF1FLBHcBiq7ysWosVD2HIDtKS21kOtt9I
+        Uw==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e5df53bb (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Wed, 18 Mar 2020 23:39:13 +0000 (UTC)
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Ard Biesheuvel <ardb@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH URGENT crypto] crypto: arm64/chacha - correctly walk through blocks
+Date:   Wed, 18 Mar 2020 17:45:18 -0600
+Message-Id: <20200318234518.83906-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-References: <1580249770-1088-1-git-send-email-jcrouse@codeaurora.org>
- <1580249770-1088-3-git-send-email-jcrouse@codeaurora.org> <20200318224840.GA10796@willie-the-truck>
-In-Reply-To: <20200318224840.GA10796@willie-the-truck>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 18 Mar 2020 16:43:07 -0700
-Message-ID: <CAF6AEGu-hj6=3rsCe5XeBq_ffoq9VFmL+ycrQ8N=iv89DZf=8Q@mail.gmail.com>
-Subject: Re: [PATCH v1 2/6] arm/smmu: Add auxiliary domain support for arm-smmuv2
-To:     Will Deacon <will@kernel.org>
-Cc:     Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 3:48 PM Will Deacon <will@kernel.org> wrote:
->
-> On Tue, Jan 28, 2020 at 03:16:06PM -0700, Jordan Crouse wrote:
-> > Support auxiliary domains for arm-smmu-v2 to initialize and support
-> > multiple pagetables for a single SMMU context bank. Since the smmu-v2
-> > hardware doesn't have any built in support for switching the pagetable
-> > base it is left as an exercise to the caller to actually use the pagetable.
-> >
-> > Aux domains are supported if split pagetable (TTBR1) support has been
-> > enabled on the master domain.  Each auxiliary domain will reuse the
-> > configuration of the master domain. By default the a domain with TTBR1
-> > support will have the TTBR0 region disabled so the first attached aux
-> > domain will enable the TTBR0 region in the hardware and conversely the
-> > last domain to be detached will disable TTBR0 translations.  All subsequent
-> > auxiliary domains create a pagetable but not touch the hardware.
-> >
-> > The leaf driver will be able to query the physical address of the
-> > pagetable with the DOMAIN_ATTR_PTBASE attribute so that it can use the
-> > address with whatever means it has to switch the pagetable base.
-> >
-> > Following is a pseudo code example of how a domain can be created
-> >
-> >  /* Check to see if aux domains are supported */
-> >  if (iommu_dev_has_feature(dev, IOMMU_DEV_FEAT_AUX)) {
-> >        iommu = iommu_domain_alloc(...);
-> >
-> >        if (iommu_aux_attach_device(domain, dev))
-> >                return FAIL;
-> >
-> >       /* Save the base address of the pagetable for use by the driver
-> >       iommu_domain_get_attr(domain, DOMAIN_ATTR_PTBASE, &ptbase);
-> >  }
->
-> I'm not really understanding what the pagetable base gets used for here and,
-> to be honest with you, the whole thing feels like a huge layering violation
-> with the way things are structured today. Why doesn't the caller just
-> interface with io-pgtable directly?
->
-> Finally, if we need to support context-switching TTBR0 for a live domain
-> then that code really needs to live inside the SMMU driver because the
-> ASID and TLB management necessary to do that safely doesn't belong anywhere
-> else.
+Prior, passing in chunks of 2, 3, or 4, followed by any additional
+chunks would result in the chacha state counter getting out of sync,
+resulting in incorrect encryption/decryption, which is a pretty nasty
+crypto vuln, dating back to 2018. WireGuard users never experienced this
+prior, because we have always, out of tree, used a different crypto
+library, until the recent Frankenzinc addition. This commit fixes the
+issue by advancing the pointers and state counter by the actual size
+processed.
 
-Hi Will,
+Fixes: f2ca1cbd0fb5 ("crypto: arm64/chacha - optimize for arbitrary length inputs")
+Reported-and-tested-by: Emil Renner Berthing <kernel@esmil.dk>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ arch/arm64/crypto/chacha-neon-glue.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-We do in fact need live domain switching, that is really the whole
-point.  The GPU CP (command processor/parser) is directly updating
-TTBR0 and triggering TLB flush, asynchronously from the CPU.
+diff --git a/arch/arm64/crypto/chacha-neon-glue.c b/arch/arm64/crypto/chacha-neon-glue.c
+index c1f9660d104c..debb1de0d3dd 100644
+--- a/arch/arm64/crypto/chacha-neon-glue.c
++++ b/arch/arm64/crypto/chacha-neon-glue.c
+@@ -55,10 +55,10 @@ static void chacha_doneon(u32 *state, u8 *dst, const u8 *src,
+ 			break;
+ 		}
+ 		chacha_4block_xor_neon(state, dst, src, nrounds, l);
+-		bytes -= CHACHA_BLOCK_SIZE * 5;
+-		src += CHACHA_BLOCK_SIZE * 5;
+-		dst += CHACHA_BLOCK_SIZE * 5;
+-		state[12] += 5;
++		bytes -= l;
++		src += l;
++		dst += l;
++		state[12] += round_up(l, CHACHA_BLOCK_SIZE) / CHACHA_BLOCK_SIZE;
+ 	}
+ }
+ 
+-- 
+2.25.1
 
-And I think the answer about ASID is easy (on current hw).. it must be zero[*].
-
-BR,
--R
-
-[*] my rough theory/plan there, and to solve the issue with drm/msm
-getting dma-iommu ops when it really would rather not (since
-blacklisting idea wasn't popular and I couldn't figure out a way to
-deal with case where device gets attached before driver shows up) is
-to invent some API that drm/msm can call to unhook the dma-iommu ops
-and detatch the DMA domain.  Hopefully that at least gets us closer to
-the point where, when drm/msm attaches it's UNMANAGED domain, we get
-cbidx/asid zero.
