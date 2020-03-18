@@ -2,93 +2,100 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95A8C43332
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21D5C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F9420772
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A947C20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584569036;
+	bh=0bm+0pdaJQJUVPyT/SDf163gdktmLQW+yzXeDuWfHKk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xi/l3/L1NV9R27+RqL3ikqxXJu8LctiQd9rvxPj+SKOoqMH1oGab1u0LJRMGm5yiZ
+	 90L1qeEDYA8Ov01KgOCK3KrMYoI5Y6cCZ5HpmD3B944+EsDgOMfD/wOQOkpCBEUYxz
+	 inggp9XCNny109vZ4RO2qye3cCkTw1I9hb0f6IKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbgCRWB0 (ORCPT
+        id S1727116AbgCRWDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:01:26 -0400
-Received: from mga07.intel.com ([134.134.136.100]:19359 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgCRWB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:01:26 -0400
-IronPort-SDR: /qFH/8WYaDf8WdFopJwqO8iPeoOiObVOVwkjAM+xRk0JcETESwlaBLfx3GgU+pAA+4Hd7xNL9S
- zVSRtKUChNaw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 15:01:25 -0700
-IronPort-SDR: Klu9TMou3EoHttQci5ZkRO0GJktwXeHEn6BrhsoQgdQ1qZn/HGT5fyX1pRRbe5f+p84CBjTjn1
- GoGgtXe6EjpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,569,1574150400"; 
-   d="scan'208";a="244961234"
-Received: from mbeldzik-mobl.ger.corp.intel.com (HELO localhost) ([10.252.55.127])
-  by orsmga003.jf.intel.com with ESMTP; 18 Mar 2020 15:01:15 -0700
-Date:   Thu, 19 Mar 2020 00:01:14 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200318220114.GB52244@linux.intel.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
- <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
- <20200315012523.GC208715@linux.intel.com>
- <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
- <7f9f2efe-e9af-44da-6719-040600f5b351@fortanix.com>
- <20200316225534.GK24267@linux.intel.com>
- <7634c48d-a8e2-7366-6f04-06a27f8e5eaf@intel.com>
+        Wed, 18 Mar 2020 18:03:55 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43931 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCRWDz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 18:03:55 -0400
+Received: by mail-il1-f196.google.com with SMTP id d14so319531ilq.10;
+        Wed, 18 Mar 2020 15:03:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CLoQVPlkFQlDLsX88susr2K6YisyFa9CiuJkaW6E9dA=;
+        b=UMcptopukAum83IYaNJoip+VggBL1p4Ny5I574HW1bAJhAOQuEWKqLtuRSzIwyshU3
+         bDVrj14MIZcLLX7D/UBUzEGERSzn8jFnE73n7Cx1gzI1QH0zm3nlPf+cOi7isO421zSi
+         dAQJvkgEOp1v+Pl1SOFyhDAOAUwLKkfaql2PfRpxfg9KrHcBD4lijynlSd8VqnRFdbl9
+         UZP2W5EiVbRn2azsStwVAk1oEI4jXOJER4+JJF5NFIchSkcf3voVxy2paNoWmTsqOp1Z
+         iRUcKFW6kobkL5Icx7OjhbPextLI9RlWw5biPaf0+tDm51WrEaxqP8aCjReiM76Z3Tuz
+         Su9Q==
+X-Gm-Message-State: ANhLgQ0ERduPvaVSztagbjZN06S8DtppM8LINahhqPz3meoHbuyyLZXO
+        J5ySeePnB4uAcilkcLUhmA==
+X-Google-Smtp-Source: ADFU+vv4evE0zvIh+m02yfxSH4HvSOfUSbGzEPyA/4x25WbIY5vIBPXUgkquwrjgTTv7rlSougLazw==
+X-Received: by 2002:a05:6e02:c62:: with SMTP id f2mr204406ilj.167.1584569034577;
+        Wed, 18 Mar 2020 15:03:54 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id l26sm69517ioc.1.2020.03.18.15.03.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 15:03:53 -0700 (PDT)
+Received: (nullmailer pid 15282 invoked by uid 1000);
+        Wed, 18 Mar 2020 22:03:52 -0000
+Date:   Wed, 18 Mar 2020 16:03:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Wesley Cheng <wcheng@codeaurora.org>
+Subject: Re: [PATCH 1/4] dt-bindings: phy: Add binding for qcom,usb-hs-7nm
+Message-ID: <20200318220352.GA12501@bogus>
+References: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
+ <1584147293-6763-2-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7634c48d-a8e2-7366-6f04-06a27f8e5eaf@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1584147293-6763-2-git-send-email-wcheng@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 04:56:42PM -0700, Xing, Cedric wrote:
-> On 3/16/2020 3:55 PM, Sean Christopherson wrote:
-> > On Mon, Mar 16, 2020 at 02:31:36PM +0100, Jethro Beekman wrote:
-> > > Can someone remind me why we're not passing TCS in RBX but on the stack?
-> > 
-> > I finally remembered why.  It's pulled off the stack and passed into the
-> > exit handler.  I'm pretty sure the vDSO could take it in %rbx and manually
-> > save it on the stack, but I'd rather keep the current behavior so that the
-> > vDSO is callable from C (assuming @leaf is changed to be passed via %rcx).
-> > 
-> The idea is that the caller of this vDSO API is C callable, hence it cannot
-> receive TCS in %rbx anyway. Then it has to either MOV to %rbx or PUSH to
-> stack. Either way the complexity is the same. The vDSO API however has to
-> always save it on stack for exit handler. So receiving it via stack ends up
-> in simplest code.
+On Fri, 13 Mar 2020 17:54:50 -0700, Wesley Cheng wrote:
+> This binding shows the descriptions and properties for the
+> 7nm Synopsis HS USB PHY used on QCOM platforms.
+> 
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  .../devicetree/bindings/phy/qcom,usb-hs-7nm.yaml   | 74 ++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+> 
 
-It is never C callable anyway given that not following the ABI so
-who cares about being C callable anyway?
+My bot found errors running 'make dt_binding_check' on your patch:
 
-/Jarkko
+warning: no schema found in file: Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml: ignoring, error parsing file
+Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml:  while scanning a block scalar
+  in "<unicode string>", line 59, column 5
+found a tab character where an indentation space is expected
+  in "<unicode string>", line 73, column 1
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts] Error 1
+Makefile:1262: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1254748
+Please check and re-submit.
