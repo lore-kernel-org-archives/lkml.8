@@ -2,95 +2,160 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB95AC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE7AC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFEF520773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ailZOps1"
+	by mail.kernel.org (Postfix) with ESMTP id E33D720775
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgCRUnT (ORCPT
+        id S1727021AbgCRUn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:43:19 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42300 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCRUnT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:43:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=oGlJP/cmQF74W01lZDvZS2p/EZnU4amRSfPq9wPSqKo=; b=ailZOps1Hhs1hW9bDTEgiRDWay
-        CJaNiGMFz4rag/E5zoMPMrXJVbBheUXhO7RccSK4AV+GYXMvZp1TQpPdKOQg3uNLxYEJlLwRsCTM+
-        nKOIhFRw2txYwRbdizMlmUIn2hv3t5pC21BLzulGFujEoKwF41BmkKdxa2GPyN29LLagPA1Lmf8bb
-        m9tPny7VpgDE4h+KjSZiicn9PT+e3HIFefRBBO1Yn2MhCIVxrlSpDnCQWccDXK5zpRxN/vZwDJHq1
-        YrMu/+R2vKajEMh0A6yprxRp1r/6pvIFegrnLpOk8elrcEqHQAuLd2E5vLBvS7blnSDNFMdWu0O7I
-        BCc+obkg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEfWm-0003uQ-Jb; Wed, 18 Mar 2020 20:43:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C0A9530047A;
-        Wed, 18 Mar 2020 21:42:57 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B29452038CEEB; Wed, 18 Mar 2020 21:42:57 +0100 (CET)
-Date:   Wed, 18 Mar 2020 21:42:57 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH 1/3 v2] perf/amd/uncore: Prepare L3 thread mask code for
- Family 19h support
-Message-ID: <20200318204257.GL20730@hirez.programming.kicks-ass.net>
-References: <20200313231024.17601-1-kim.phillips@amd.com>
- <CABPqkBS8TUMTEz_motpd+8xK599tLXAonUHwp-CWMyU2RhcbQg@mail.gmail.com>
- <2581de5a-969b-93c7-0565-2eef51717900@amd.com>
+        Wed, 18 Mar 2020 16:43:29 -0400
+Received: from mga14.intel.com ([192.55.52.115]:12608 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbgCRUn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:43:28 -0400
+IronPort-SDR: Z5XBmzZupuY2pX0gsQZS1NCjXnDUu17ml90/Ca90Uup0PpF3OvykjqLVmz2tK36FMVYkVwty9P
+ JnvbekD/CMVw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 13:43:24 -0700
+IronPort-SDR: E8lgAwVq5wdZduiyLz5G/pTtWPWcpTbsCS3o1RpV488drpCa3ZPiAo0kzYW+LgabRnEno0nyGZ
+ QjNIVZeyMq7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
+   d="scan'208";a="263509707"
+Received: from mbeldzik-mobl.ger.corp.intel.com (HELO localhost) ([10.252.55.127])
+  by orsmga002.jf.intel.com with ESMTP; 18 Mar 2020 13:43:20 -0700
+Date:   Wed, 18 Mar 2020 22:43:18 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     George Wilson <gcwilson@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Nayna Jain <nayna@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        Linh Pham <phaml@us.ibm.com>
+Subject: Re: [PATCH v2] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
+Message-ID: <20200318204318.GA48352@linux.intel.com>
+References: <20200317214600.9561-1-gcwilson@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2581de5a-969b-93c7-0565-2eef51717900@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317214600.9561-1-gcwilson@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 09:46:41AM -0500, Kim Phillips wrote:
-
-> > But this does not work with the cpumask programmed for the amd_l3 PMU. This mask
-> > shows, as it should, one CPU/CCX. So that means that when I do:
-> > 
-> > $ perf stat -a amd_l3/event=llc_event/
-> > 
-> > This only collects on the CPUs listed in the cpumask: 0,4,8,12 ....
-> > That means that L3 events generated by the other CPUs on the CCX are
-> > not monitored.
-> > I can easily see the problem by pinning a memory bound program to
-> > CPU64, for instance.
+On Tue, Mar 17, 2020 at 05:46:00PM -0400, George Wilson wrote:
+> tpm_ibmvtpm_send() can fail during PowerVM Live Partition Mobility resume
+> with an H_CLOSED return from ibmvtpm_send_crq().  The PAPR says, 'The
+> “partner partition suspended” transport event disables the associated CRQ
+> such that any H_SEND_CRQ hcall() to the associated CRQ returns H_Closed
+> until the CRQ has been explicitly enabled using the H_ENABLE_CRQ hcall.'
+> This patch adds a check in tpm_ibmvtpm_send() for an H_CLOSED return from
+> ibmvtpm_send_crq() and in that case calls tpm_ibmvtpm_resume() and
+> retries the ibmvtpm_send_crq() once.
 > 
-> Right, the higher level code calls the driver with a single cpu==0
-> call if the perf tool is invoked with a simple -a style system-wide.
-> If the tool is invoked with supplemental switches to -a, like -C 0-255,
-> and -A, the driver gets called multiple times with all the unique cpu
-> values.  The latter is the expected invocation style when measuring
-> a benchmark pinned on a subset of cpus, i.e., when evaluating
-> the driver, and is the more deterministic behaviour for the driver
-> to have, given it cannot tell the difference otherwise.
+> Reported-by: Linh Pham <phaml@us.ibm.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Signed-off-by: George Wilson <gcwilson@linux.ibm.com>
+> Tested-by: Linh Pham <phaml@us.ibm.com>
 
-That seems to suggest it is all horribly broken.
+I think this should have a fixes tag.
+
+> ---
+>  drivers/char/tpm/tpm_ibmvtpm.c | 23 ++++++++++++++++++-----
+>  1 file changed, 18 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
+> index 78cc52690177..ba3bd503e080 100644
+> --- a/drivers/char/tpm/tpm_ibmvtpm.c
+> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /*
+> - * Copyright (C) 2012 IBM Corporation
+> + * Copyright (C) 2012-2020 IBM Corporation
+>   *
+>   * Author: Ashley Lai <ashleydlai@gmail.com>
+>   *
+> @@ -25,6 +25,8 @@
+>  #include "tpm.h"
+>  #include "tpm_ibmvtpm.h"
+>  
+> +static int tpm_ibmvtpm_resume(struct device *dev);
+> +
+
+Instead, reposition this function before tpm_ibmvtpm_send().
+
+>  static const char tpm_ibmvtpm_driver_name[] = "tpm_ibmvtpm";
+>  
+>  static const struct vio_device_id tpm_ibmvtpm_device_table[] = {
+> @@ -147,6 +149,7 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
+>  {
+>  	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
+>  	int rc, sig;
+> +	bool retry = true;
+
+Cosmetic: would be nice to have inits when possible in reverse
+Christmas tree order i.e.
+
+	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
+	bool retry = true;
+	int rc, sig;
+
+It is way more pleasing for the eye when you have to read the source
+code.
+
+>  	if (!ibmvtpm->rtce_buf) {
+>  		dev_err(ibmvtpm->dev, "ibmvtpm device is not ready\n");
+> @@ -179,18 +182,28 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
+>  	 */
+>  	ibmvtpm->tpm_processing_cmd = true;
+>  
+> +again:
+>  	rc = ibmvtpm_send_crq(ibmvtpm->vdev,
+>  			IBMVTPM_VALID_CMD, VTPM_TPM_COMMAND,
+>  			count, ibmvtpm->rtce_dma_handle);
+> +
+
+A dangling newline character.
+
+>  	if (rc != H_SUCCESS) {
+> +		/*
+> +		 * H_CLOSED can be returned after LPM resume.  Call
+> +		 * tpm_ibmvtpm_resume() to re-enable the CRQ then retry
+> +		 * ibmvtpm_send_crq() once before failing.
+> +		 */
+> +		if (rc == H_CLOSED && retry) {
+> +			tpm_ibmvtpm_resume(ibmvtpm->dev);
+> +			retry = false;
+> +			goto again;
+> +		}
+>  		dev_err(ibmvtpm->dev, "tpm_ibmvtpm_send failed rc=%d\n", rc);
+> -		rc = 0;
+>  		ibmvtpm->tpm_processing_cmd = false;
+> -	} else
+> -		rc = 0;
+> +	}
+>  
+>  	spin_unlock(&ibmvtpm->rtce_lock);
+> -	return rc;
+> +	return 0;
+>  }
+>  
+>  static void tpm_ibmvtpm_cancel(struct tpm_chip *chip)
+> -- 
+> 2.24.1
+> 
+
+/Jarkko
