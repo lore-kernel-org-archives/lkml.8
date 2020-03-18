@@ -2,223 +2,115 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C91C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3482C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0435820714
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584567706;
-	bh=nMjIsklxCd3S37mFBSyAWNRDRIuPEOZT9quj6s/qhjE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=JMlWY3oUk01pTjDLR72zwF8enRra4cTbLBi/p8ZerXn5b+nIpDXhzs23cUoKveOIA
-	 YyUtRWXY+rdJEMMpVvr7rjww+GTITM+QDZ+L5URfEO3aP6zGoOaxS5gLibfQNoEjND
-	 7jnVv2fWPFasQd4qrWaB29GI+tJt6d12z3gXsQZ8=
+	by mail.kernel.org (Postfix) with ESMTP id 95BB120714
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:41:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rosalinux.ru header.i=@rosalinux.ru header.b="EFozWfUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbgCRVlo (ORCPT
+        id S1727202AbgCRVlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:41:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:55276 "EHLO foss.arm.com"
+        Wed, 18 Mar 2020 17:41:51 -0400
+Received: from mail.rosalinux.ru ([195.19.76.54]:34312 "EHLO mail.rosalinux.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726777AbgCRVlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:41:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9094FFEC;
-        Wed, 18 Mar 2020 14:41:43 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13C463F67D;
-        Wed, 18 Mar 2020 14:41:42 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 21:41:41 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        pierre-louis.bossart@linux.intel.com, vkoul@kernel.org
-Subject: Applied "ASoC: qcom: sdm845: handle soundwire stream" to the asoc tree
-In-Reply-To:  <20200317151233.8763-2-srinivas.kandagatla@linaro.org>
-Message-Id:  <applied-20200317151233.8763-2-srinivas.kandagatla@linaro.org>
-X-Patchwork-Hint: ignore
+        id S1726777AbgCRVlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 17:41:50 -0400
+X-Greylist: delayed 588 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Mar 2020 17:41:50 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.rosalinux.ru (Postfix) with ESMTP id 59136D6F76F95;
+        Thu, 19 Mar 2020 00:32:01 +0300 (MSK)
+Received: from mail.rosalinux.ru ([127.0.0.1])
+        by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id vEBJrQ_agJiR; Thu, 19 Mar 2020 00:31:46 +0300 (MSK)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.rosalinux.ru (Postfix) with ESMTP id ED54BD68A0074;
+        Thu, 19 Mar 2020 00:31:45 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rosalinux.ru ED54BD68A0074
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosalinux.ru;
+        s=A1AAD92A-9767-11E6-A27F-AC75C9F78EF4; t=1584567106;
+        bh=OLZmYDkiQvs3u1GvR5c0MQQi01rmIE2Bh3XgwpIg5yA=;
+        h=To:From:Message-ID:Date:MIME-Version;
+        b=EFozWfUN30D/226h7IZAyPnKysjfb5/TW6iRx1ekEq1nmPTVDV7/ZMt40AFGgNSVr
+         q1BSkzqnB2coScnRPnWDajGI3Bu+YLKHuAg0EBFQ40SZV7bWXmCuzAEbXMYfH9yrmM
+         BPHCmhi+EqX6Ibk6cQtABx4Wr2vorrtAppFyItvaK939ogUJjXg5ZB4QwWGldAcvdH
+         1MLUV54Y9AhWlgA0xYPJtJvRU9wLdEJsEe0BDF8+mLUMFNcxqKIve8iumQF7cP5wyg
+         iU1ZmmTfd6sQ8H8juqOM/C3tIDjEaycAejTL5PP1f+gh6iUBzhEoUS9EClEe80B3C3
+         5rJnFV+k2MCtA==
+X-Virus-Scanned: amavisd-new at rosalinux.ru
+Received: from mail.rosalinux.ru ([127.0.0.1])
+        by localhost (mail.rosalinux.ru [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Um9Klry3hGBe; Thu, 19 Mar 2020 00:31:45 +0300 (MSK)
+Received: from [192.168.1.173] (broadband-90-154-70-24.ip.moscow.rt.ru [90.154.70.24])
+        by mail.rosalinux.ru (Postfix) with ESMTPSA id BC344D688A072;
+        Thu, 19 Mar 2020 00:31:45 +0300 (MSK)
+To:     keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mikhail Novosyolov <m.novosyolov@rosalinux.ru>
+From:   Mikhail Novosyolov <m.novosyolov@rosalinux.ru>
+Subject: sign-file: full functionality with modern LibreSSL
+Message-ID: <f13b4174-bcfa-6569-0601-65a9bfc9bb92@rosalinux.ru>
+Date:   Thu, 19 Mar 2020 00:31:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: ru-RU
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   ASoC: qcom: sdm845: handle soundwire stream
+Current pre-release version of LibreSSL has enabled CMS support,
+and now sign-file is fully functional with it.
 
-has been applied to the asoc tree at
+See https://github.com/libressl-portable/openbsd/commits/master
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+To test buildability with current LibreSSL:
+~$ git clone https://github.com/libressl-portable/portable.git
+~$ cd portable && ./autogen.sh
+~$ ./configure --prefix=3D/opt/libressl
+~$ make
+~# make install
+Go to the kernel source tree and:
+~$ gcc -I/opt/libressl/include -L /opt/libressl/lib -lcrypto -Wl,-rpath,/=
+opt/libressl/lib scripts/sign-file.c -o scripts/sign-file
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Fixes: f8688017 ("sign-file: fix build error in sign-file.c with libressl=
+")
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 1b93a88431470ea0b943157999084d9c7e6e3bd3 Mon Sep 17 00:00:00 2001
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Date: Tue, 17 Mar 2020 15:12:32 +0000
-Subject: [PATCH] ASoC: qcom: sdm845: handle soundwire stream
-
-In existing setup WSA881x codec handles soundwire stream,
-however DB845c and other machines based on SDM845c have 2
-instances for WSA881x codec. This will force soundwire stream
-to be prepared/enabled twice or multiple times.
-Handling SoundWire Stream in machine driver would fix this issue.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200317151233.8763-2-srinivas.kandagatla@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Mikhail Novosyolov <m.novosyolov@rosalinux.ru>
 ---
- sound/soc/qcom/Kconfig  |  2 +-
- sound/soc/qcom/sdm845.c | 67 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 68 insertions(+), 1 deletion(-)
+=C2=A0scripts/sign-file.c | 7 ++++---
+=C2=A01 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-index 6530d2462a9e..f51b28d1b94d 100644
---- a/sound/soc/qcom/Kconfig
-+++ b/sound/soc/qcom/Kconfig
-@@ -99,7 +99,7 @@ config SND_SOC_MSM8996
- 
- config SND_SOC_SDM845
- 	tristate "SoC Machine driver for SDM845 boards"
--	depends on QCOM_APR && CROS_EC && I2C
-+	depends on QCOM_APR && CROS_EC && I2C && SOUNDWIRE
- 	select SND_SOC_QDSP6
- 	select SND_SOC_QCOM_COMMON
- 	select SND_SOC_RT5663
-diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
-index 3ac02204a706..67a55edf755f 100644
---- a/sound/soc/qcom/sdm845.c
-+++ b/sound/soc/qcom/sdm845.c
-@@ -11,6 +11,7 @@
- #include <sound/pcm_params.h>
- #include <sound/jack.h>
- #include <sound/soc.h>
-+#include <linux/soundwire/sdw.h>
- #include <uapi/linux/input-event-codes.h>
- #include "common.h"
- #include "qdsp6/q6afe.h"
-@@ -31,10 +32,12 @@
- struct sdm845_snd_data {
- 	struct snd_soc_jack jack;
- 	bool jack_setup;
-+	bool stream_prepared[SLIM_MAX_RX_PORTS];
- 	struct snd_soc_card *card;
- 	uint32_t pri_mi2s_clk_count;
- 	uint32_t sec_mi2s_clk_count;
- 	uint32_t quat_tdm_clk_count;
-+	struct sdw_stream_runtime *sruntime[SLIM_MAX_RX_PORTS];
- };
- 
- static unsigned int tdm_slot_offset[8] = {0, 4, 8, 12, 16, 20, 24, 28};
-@@ -45,11 +48,18 @@ static int sdm845_slim_snd_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
- 	struct snd_soc_dai *codec_dai;
-+	struct sdm845_snd_data *pdata = snd_soc_card_get_drvdata(rtd->card);
- 	u32 rx_ch[SLIM_MAX_RX_PORTS], tx_ch[SLIM_MAX_TX_PORTS];
-+	struct sdw_stream_runtime *sruntime;
- 	u32 rx_ch_cnt = 0, tx_ch_cnt = 0;
- 	int ret = 0, i;
- 
- 	for_each_rtd_codec_dais(rtd, i, codec_dai) {
-+		sruntime = snd_soc_dai_get_sdw_stream(codec_dai,
-+						      substream->stream);
-+		if (sruntime != ERR_PTR(-ENOTSUPP))
-+			pdata->sruntime[cpu_dai->id] = sruntime;
-+
- 		ret = snd_soc_dai_get_channel_map(codec_dai,
- 				&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
- 
-@@ -425,8 +435,65 @@ static void  sdm845_snd_shutdown(struct snd_pcm_substream *substream)
- 	}
- }
- 
-+static int sdm845_snd_prepare(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct sdm845_snd_data *data = snd_soc_card_get_drvdata(rtd->card);
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct sdw_stream_runtime *sruntime = data->sruntime[cpu_dai->id];
-+	int ret;
-+
-+	if (!sruntime)
-+		return 0;
-+
-+	if (data->stream_prepared[cpu_dai->id]) {
-+		sdw_disable_stream(sruntime);
-+		sdw_deprepare_stream(sruntime);
-+		data->stream_prepared[cpu_dai->id] = false;
-+	}
-+
-+	ret = sdw_prepare_stream(sruntime);
-+	if (ret)
-+		return ret;
-+
-+	/**
-+	 * NOTE: there is a strict hw requirement about the ordering of port
-+	 * enables and actual WSA881x PA enable. PA enable should only happen
-+	 * after soundwire ports are enabled if not DC on the line is
-+	 * accumulated resulting in Click/Pop Noise
-+	 * PA enable/mute are handled as part of codec DAPM and digital mute.
-+	 */
-+
-+	ret = sdw_enable_stream(sruntime);
-+	if (ret) {
-+		sdw_deprepare_stream(sruntime);
-+		return ret;
-+	}
-+	data->stream_prepared[cpu_dai->id] = true;
-+
-+	return ret;
-+}
-+
-+static int sdm845_snd_hw_free(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct sdm845_snd_data *data = snd_soc_card_get_drvdata(rtd->card);
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct sdw_stream_runtime *sruntime = data->sruntime[cpu_dai->id];
-+
-+	if (sruntime && data->stream_prepared[cpu_dai->id]) {
-+		sdw_disable_stream(sruntime);
-+		sdw_deprepare_stream(sruntime);
-+		data->stream_prepared[cpu_dai->id] = false;
-+	}
-+
-+	return 0;
-+}
-+
- static const struct snd_soc_ops sdm845_be_ops = {
- 	.hw_params = sdm845_snd_hw_params,
-+	.hw_free = sdm845_snd_hw_free,
-+	.prepare = sdm845_snd_prepare,
- 	.startup = sdm845_snd_startup,
- 	.shutdown = sdm845_snd_shutdown,
- };
--- 
+diff --git a/scripts/sign-file.c b/scripts/sign-file.c
+index fbd34b8e8f57..fd4d7c31d1bf 100644
+--- a/scripts/sign-file.c
++++ b/scripts/sign-file.c
+@@ -41,9 +41,10 @@
+=C2=A0 * signing with anything other than SHA1 - so we're stuck with that=
+ if such is
+=C2=A0 * the case.
+=C2=A0 */
+-#if defined(LIBRESSL_VERSION_NUMBER) || \
+-=C2=A0=C2=A0=C2=A0 OPENSSL_VERSION_NUMBER < 0x10000000L || \
+-=C2=A0=C2=A0=C2=A0 defined(OPENSSL_NO_CMS)
++#if defined(OPENSSL_NO_CMS) || \
++=C2=A0=C2=A0=C2=A0 ( defined(LIBRESSL_VERSION_NUMBER) \
++=C2=A0=C2=A0=C2=A0 && (LIBRESSL_VERSION_NUMBER < 0x3010000fL) ) || \
++=C2=A0=C2=A0=C2=A0 OPENSSL_VERSION_NUMBER < 0x10000000L
+=C2=A0#define USE_PKCS7
+=C2=A0#endif
+=C2=A0#ifndef USE_PKCS7
+--=20
 2.20.1
+
 
