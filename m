@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0366C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AF6C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D77120409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D1020409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565346;
-	bh=UznoJOSHLBhMhOVJNFY5p5Oz83QB4h1QIyL4ApQmhD8=;
+	s=default; t=1584565354;
+	bh=I5hn+26qGqtFIORQfWtcZqngIEBWE6NORvMAshb68Ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=leY2zcBIiDQ3DBSl0otEVyExurC6Bzs+Cfi+5tHNob1GXRR7AFBSNdW6I23CqG1hL
-	 zmqqUnnb1/LwfQjbw1zMs2bwFbdGpA9sGHU7ikv7BWiWddghKsLXrDguyd3MmOThN1
-	 +shvFFMM4jKxzeOvugXV0ofsdCLHnOUDwP9gaooM=
+	b=qlmYjWh1AZmAYLvvFt50Pn6QPcz55bOmtuvrxY27NI1I384D7tdIrhMVbM2MCOCVY
+	 INyxDD5Sq4XaEUi+6Ow67y0DQrF7ZJrhEjU+5w93wmR9b9kdIEwWsZK9Wur2jBTW7y
+	 3pQgts1nJhN1X/ZSw7KxVx8MAk3I6wfTnvvHzgOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgCRVCZ (ORCPT
+        id S1728892AbgCRVCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:02:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56662 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:02:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728500AbgCRU4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:00 -0400
+        id S1727231AbgCRUzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 976732098B;
-        Wed, 18 Mar 2020 20:55:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 829E6208CA;
+        Wed, 18 Mar 2020 20:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564959;
-        bh=UznoJOSHLBhMhOVJNFY5p5Oz83QB4h1QIyL4ApQmhD8=;
+        s=default; t=1584564951;
+        bh=I5hn+26qGqtFIORQfWtcZqngIEBWE6NORvMAshb68Ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0PwUoRVX51pQgh026TxTMQ4vLoeez2A3jIL74kEOWEzw6s+kr3JSQZJSi6kWY3uaw
-         flVCf4/NSFh6F4lLpNMCuNbJ6O7/nu//T0E+Ccir++7Cgq7HokdvF/+YrTYx3KyICb
-         nLah6hMVymC+Kr+yT0AQpmvZIRwHQ0QmhAjRIiqw=
+        b=o+07VRsg9QTwKuKlSvY/i5PDDPm2PCB2F7wIcVytCe41+i+DtRVO88b1YDrf5cdFG
+         ckKYF9otA+wPbO3qHRi8sfrx/eYfa/tYEJ6FJKDKaFpNyN1cq6ytaIOoehLthqh9TT
+         5KrP232vrNZCqP1caNPQL1zePReUzAr9VRB3vawc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com,
-        syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/28] batman-adv: Don't schedule OGM for disabled interface
-Date:   Wed, 18 Mar 2020 16:55:30 -0400
-Message-Id: <20200318205555.17447-3-sashal@kernel.org>
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 35/37] net: systemport: fix index check to avoid an array out of bounds access
+Date:   Wed, 18 Mar 2020 16:55:07 -0400
+Message-Id: <20200318205509.17053-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
-References: <20200318205555.17447-1-sashal@kernel.org>
+In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
+References: <20200318205509.17053-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,45 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 8e8ce08198de193e3d21d42e96945216e3d9ac7f ]
+[ Upstream commit c0368595c1639947839c0db8294ee96aca0b3b86 ]
 
-A transmission scheduling for an interface which is currently dropped by
-batadv_iv_ogm_iface_disable could still be in progress. The B.A.T.M.A.N. V
-is simply cancelling the workqueue item in an synchronous way but this is
-not possible with B.A.T.M.A.N. IV because the OGM submissions are
-intertwined.
+Currently the bounds check on index is off by one and can lead to
+an out of bounds access on array priv->filters_loc when index is
+RXCHK_BRCM_TAG_MAX.
 
-Instead it has to stop submitting the OGM when it detect that the buffer
-pointer is set to NULL.
-
-Reported-by: syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com
-Reported-by: syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com
-Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Cc: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: bb9051a2b230 ("net: systemport: Add support for WAKE_FILTER")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/bat_iv_ogm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/broadcom/bcmsysport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/batman-adv/bat_iv_ogm.c b/net/batman-adv/bat_iv_ogm.c
-index 8b3f9441b3a01..5d5e5401a9ea2 100644
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -926,6 +926,10 @@ static void batadv_iv_ogm_schedule(struct batadv_hard_iface *hard_iface)
- 	    (hard_iface->if_status == BATADV_IF_TO_BE_REMOVED))
- 		return;
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 6f8649376ff06..3fdf135bad56e 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -2168,7 +2168,7 @@ static int bcm_sysport_rule_set(struct bcm_sysport_priv *priv,
+ 		return -ENOSPC;
  
-+	/* interface already disabled by batadv_iv_ogm_iface_disable */
-+	if (!*ogm_buff)
-+		return;
-+
- 	/* the interface gets activated here to avoid race conditions between
- 	 * the moment of activating the interface in
- 	 * hardif_activate_interface() where the originator mac is set and
+ 	index = find_first_zero_bit(priv->filters, RXCHK_BRCM_TAG_MAX);
+-	if (index > RXCHK_BRCM_TAG_MAX)
++	if (index >= RXCHK_BRCM_TAG_MAX)
+ 		return -ENOSPC;
+ 
+ 	/* Location is the classification ID, and index is the position
 -- 
 2.20.1
 
