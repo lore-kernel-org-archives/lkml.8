@@ -2,104 +2,123 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22ADC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB0AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42F020663
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:46:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DyUKc0Wo"
+	by mail.kernel.org (Postfix) with ESMTP id A43F32076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgCRFqY (ORCPT
+        id S1727134AbgCRFvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 01:46:24 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46536 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbgCRFqX (ORCPT
+        Wed, 18 Mar 2020 01:51:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3394 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726550AbgCRFvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 01:46:23 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c19so13277432pfo.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 22:46:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wP5msWs+H65dtiCoHZMzY1KxEhCfiPf43beyeK96JJo=;
-        b=DyUKc0WoN764jAONlN34IdUIF+JaIJ/8zjaKAOm62CXLomzbzdcCvDBbscthJO+/4/
-         HUQc5JeCIlCKeDJVSNGIztS+uufYFrp0cNZ9um/3WnFzpTchsPxWJ3X7Dt6YWGIPCuIh
-         lopK9XbixgTN7jbqM7R8gah+p0UmkOXGLsBlHi53U+nSXKrTf9DcyKdStD4Bk/vZR+5n
-         62E4hBBBKmbeuU+9U0SSm2hVD12MwJHDVQxwE/lj3Y+nBEQ7oZKeEwxhko2qBkX1TZVq
-         Wctb6+M6NBIsjTnYIRYV/jOIMAUXnrZGNPWNEBAyoojAA5goIXBO970mvCRMnrEDA/a5
-         DkIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wP5msWs+H65dtiCoHZMzY1KxEhCfiPf43beyeK96JJo=;
-        b=HwKWDcUZLLuSAcrgj8cAZK1oEaKuBd28gjiJjJGE0Fn64RRRSJW7Vm74bdxvlm8sfG
-         0cu+sl3hhyrB60lJoq39vl1RPUuBW2bWkWgIZ0hukPFEzEHkkSph9dmo+YVAuHAwiatL
-         6qhDDnHpRZDoYW82pO7g15JCbgeMaZ3V0BPDtaGLI21yoU4LrRKGM7Asl4M31sDDDBIv
-         6UDHSJku5X1cvCCjhdRV6f7gaQ8aE8ZXNUEKExomoDhj5En7Ry6RGPnqSSkGqSEKe02k
-         9Mul7fT0uGcdi1aVi3lMffKV6dpjp2TsdY0BwgWSf/Er2H5X2ouh7GJGpbFA6orqLOTn
-         Y0Aw==
-X-Gm-Message-State: ANhLgQ2eZ7ug2OL3kix5KE6Us79JOMQuG07K6O6ftTcarTh+NkgRmWSB
-        wGqC7SQwT8a2tztkNApVs1xJbw==
-X-Google-Smtp-Source: ADFU+vuDWULEK8ztlmXQd1G6mb8a4Xbgj98e4GwLuLlGS8GYoD7fM220tTPWyUhythBWGnl8atQ+9g==
-X-Received: by 2002:a62:cdcc:: with SMTP id o195mr2579575pfg.323.1584510380719;
-        Tue, 17 Mar 2020 22:46:20 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u5sm5128686pfb.153.2020.03.17.22.46.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 22:46:20 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: msm8996: Reduce vdd_apc voltage
-Date:   Tue, 17 Mar 2020 22:44:42 -0700
-Message-Id: <20200318054442.3066726-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        Wed, 18 Mar 2020 01:51:51 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02I5e2La029912
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 01:50:49 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu931fua3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 01:50:49 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 18 Mar 2020 05:50:47 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Mar 2020 05:50:42 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02I5oeF847972436
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 05:50:40 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE1BBA405C;
+        Wed, 18 Mar 2020 05:50:40 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 13DADA4064;
+        Wed, 18 Mar 2020 05:50:10 +0000 (GMT)
+Received: from [9.199.62.91] (unknown [9.199.62.91])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Mar 2020 05:50:07 +0000 (GMT)
+Subject: Re: [PATCH 03/15] powerpc/watchpoint: Introduce function to get nr
+ watchpoints dynamically
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
+        paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
+ <20200309085806.155823-4-ravi.bangoria@linux.ibm.com>
+ <53b8bf54-200f-6f37-5870-e641b35f373c@c-s.fr>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Wed, 18 Mar 2020 11:20:01 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <53b8bf54-200f-6f37-5870-e641b35f373c@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031805-0008-0000-0000-0000035F212C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031805-0009-0000-0000-00004A807A65
+Message-Id: <76ed70d0-c892-780f-338d-da8f35fa14c6@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_02:2020-03-17,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
+ clxscore=1015 spamscore=0 bulkscore=0 phishscore=0 mlxlogscore=802
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003180028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some msm8996 based devices are unstable when run with VDD_APC of 1.23V,
-which is listed as the maximum voltage in "Turbo" mode. Given that the
-CPU cluster is not run in "Turbo" mode, reduce this to 0.98V - the
-maximum voltage for nominal operation.
 
-Fixes: 7a2a2231ef22 ("arm64: dts: apq8096-db820c: Fix VDD core voltage")
-Cc: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>> diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
+>> index f2f8d8aa8e3b..741c4f7573c4 100644
+>> --- a/arch/powerpc/include/asm/hw_breakpoint.h
+>> +++ b/arch/powerpc/include/asm/hw_breakpoint.h
+>> @@ -43,6 +43,8 @@ struct arch_hw_breakpoint {
+>>   #define DABR_MAX_LEN    8
+>>   #define DAWR_MAX_LEN    512
+>> +extern int nr_wp_slots(void);
+> 
+> 'extern' keyword is unneeded and irrelevant here. Please remove it. Even checkpatch is unhappy (https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/12172//artifact/linux/checkpatch.log)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index af87350b5547..4692b7ad16b7 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -658,8 +658,8 @@ s10 {
- 	s11 {
- 		qcom,saw-leader;
- 		regulator-always-on;
--		regulator-min-microvolt = <1230000>;
--		regulator-max-microvolt = <1230000>;
-+		regulator-min-microvolt = <980000>;
-+		regulator-max-microvolt = <980000>;
- 	};
- };
- 
--- 
-2.24.0
+Sure.
+
+...
+>> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+>> index 110db94cdf3c..6d4b029532e2 100644
+>> --- a/arch/powerpc/kernel/process.c
+>> +++ b/arch/powerpc/kernel/process.c
+>> @@ -835,6 +835,12 @@ static inline bool hw_brk_match(struct arch_hw_breakpoint *a,
+>>       return true;
+>>   }
+>> +/* Returns total number of data breakpoints available. */
+>> +int nr_wp_slots(void)
+>> +{
+>> +    return HBP_NUM_MAX;
+>> +}
+>> +
+> 
+> This is not worth a global function. At least it should be a static function located in hw_breakpoint.c. But it would be even better to have it as a static inline in asm/hw_breakpoint.h
+
+Makes sense. Will change it.
+
+Thanks.
 
