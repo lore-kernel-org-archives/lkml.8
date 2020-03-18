@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0093FC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7852EC43332
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC991208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2EE208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564950;
-	bh=FWsmFzMQ/sS1qgsZvfWpRuNBoguZ6P0zBx2PZK6IJv0=;
+	s=default; t=1584564953;
+	bh=OtpKH4sa7WjFFEqXU6hQbOx0/zIIZm3na15gYI4GVjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2lQxnQQlFJzMjol2s0CHjLFociVsyHytcpyfeaam55C2FxnqJ8inm0YO/eYpq9wld
-	 X0zcfyVzkneoXWKpgzsS1mCdugWwof8nUEehUqsDGnQb0K4uwQZtSBmYDm01YULBKT
-	 FXkfwMQ/QhPv13NxXy9jPB7/YvinNO4ctOtt7S+M=
+	b=IStPfwpgsir5K70CNzBFD//T8MTQf/TJi1mLEtgao4Q6xhi7CEVHoL2RQrmaZxlMG
+	 o+0WqwxYC3ksPiB5CKg7CF7qGwFvAafz/Q91/V88PWU3R7g79q+OY9POCpxZY20LG7
+	 oWuqHfHk2pBWPSwwyoOjsHRnIVnAsIt3UsEAnnuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgCRUzt (ORCPT
+        id S1728477AbgCRUzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:55:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56248 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:55:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728420AbgCRUzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:44 -0400
+        id S1728447AbgCRUzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A96B720BED;
-        Wed, 18 Mar 2020 20:55:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF1F820A8B;
+        Wed, 18 Mar 2020 20:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564943;
-        bh=FWsmFzMQ/sS1qgsZvfWpRuNBoguZ6P0zBx2PZK6IJv0=;
+        s=default; t=1584564945;
+        bh=OtpKH4sa7WjFFEqXU6hQbOx0/zIIZm3na15gYI4GVjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z+pIyildjqARsh4yF03ajwJb9ia51qRAkKLg7Bp7xh8z6YAeFYwMg0qFQqeCkilTa
-         0BRFiWXebnT7lOuBf40y8BDPXYBoyD9PP6u6gOIU936bqOie+VARkNHEHhpc6mrIDA
-         5ZTiddse5aWu5Lvue74F/91RoQsnejRX9VzqXYYE=
+        b=lCWAILFi5ALnbhzQuO/m6tGMnozHNb/czFrbsg3Zt0O1hehOea1lgYlfyL5urQHc6
+         DoYbRaPJrDnXv3z8QPhx0NbZ2Rt9YQrbP1qbBb6JmU9YPVBieBTk6fQjgzx6VtVW74
+         GTGoMMdMMu+Ecq1hGJh7fhq2gkKnvG30K0wGnca8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Mahesh Bandewar <maheshb@google.com>,
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 28/37] ipvlan: do not use cond_resched_rcu() in ipvlan_process_multicast()
-Date:   Wed, 18 Mar 2020 16:55:00 -0400
-Message-Id: <20200318205509.17053-28-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 30/37] s390/qeth: handle error when backing RX buffer
+Date:   Wed, 18 Mar 2020 16:55:02 -0400
+Message-Id: <20200318205509.17053-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
@@ -60,46 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit afe207d80a61e4d6e7cfa0611a4af46d0ba95628 ]
+[ Upstream commit 17413852804d7e86e6f0576cca32c1541817800e ]
 
-Commit e18b353f102e ("ipvlan: add cond_resched_rcu() while
-processing muticast backlog") added a cond_resched_rcu() in a loop
-using rcu protection to iterate over slaves.
+qeth_init_qdio_queues() fills the RX ring with an initial set of
+RX buffers. If qeth_init_input_buffer() fails to back one of the RX
+buffers with memory, we need to bail out and report the error.
 
-This is breaking rcu rules, so lets instead use cond_resched()
-at a point we can reschedule
-
-Fixes: e18b353f102e ("ipvlan: add cond_resched_rcu() while processing muticast backlog")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Mahesh Bandewar <maheshb@google.com>
+Fixes: 4a71df50047f ("qeth: new qeth device driver")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ipvlan/ipvlan_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/net/qeth_core_main.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ipvlan/ipvlan_core.c b/drivers/net/ipvlan/ipvlan_core.c
-index 6fe24721e4856..40ac60904c8dd 100644
---- a/drivers/net/ipvlan/ipvlan_core.c
-+++ b/drivers/net/ipvlan/ipvlan_core.c
-@@ -282,7 +282,6 @@ void ipvlan_process_multicast(struct work_struct *work)
- 			}
- 			ipvlan_count_rx(ipvlan, len, ret == NET_RX_SUCCESS, true);
- 			local_bh_enable();
--			cond_resched_rcu();
- 		}
- 		rcu_read_unlock();
- 
-@@ -299,6 +298,7 @@ void ipvlan_process_multicast(struct work_struct *work)
- 		}
- 		if (dev)
- 			dev_put(dev);
-+		cond_resched();
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index d99bfbfcafb76..5f59e2dfc7db9 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -2811,12 +2811,12 @@ static int qeth_init_input_buffer(struct qeth_card *card,
+ 		buf->rx_skb = netdev_alloc_skb(card->dev,
+ 					       QETH_RX_PULL_LEN + ETH_HLEN);
+ 		if (!buf->rx_skb)
+-			return 1;
++			return -ENOMEM;
  	}
- }
  
+ 	pool_entry = qeth_find_free_buffer_pool_entry(card);
+ 	if (!pool_entry)
+-		return 1;
++		return -ENOBUFS;
+ 
+ 	/*
+ 	 * since the buffer is accessed only from the input_tasklet
+@@ -2848,10 +2848,15 @@ int qeth_init_qdio_queues(struct qeth_card *card)
+ 	/* inbound queue */
+ 	qdio_reset_buffers(card->qdio.in_q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
+ 	memset(&card->rx, 0, sizeof(struct qeth_rx));
++
+ 	qeth_initialize_working_pool_list(card);
+ 	/*give only as many buffers to hardware as we have buffer pool entries*/
+-	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; ++i)
+-		qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
++	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; i++) {
++		rc = qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
++		if (rc)
++			return rc;
++	}
++
+ 	card->qdio.in_q->next_buf_to_init =
+ 		card->qdio.in_buf_pool.buf_count - 1;
+ 	rc = do_QDIO(CARD_DDEV(card), QDIO_FLAG_SYNC_INPUT, 0, 0,
 -- 
 2.20.1
 
