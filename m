@@ -2,98 +2,106 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76938C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B834BC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5057620724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 946B62072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584557383;
+	bh=m4cbPVk0gn7Y6oT8HwTSVAuobPlopKWPy7rT39Co20w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=F3ngr40e5mgo0r08CX9TAipoq7uhIKzc9k+wAo/p3729bG+VInLyeJdNWtBVm3mhM
+	 eCbnUtWWw5yPYkjNqqTfLMyQN16ABhP9ZVIWYZ+h95aQk+we02h/iD9EfFXbgJ40El
+	 oWOFdaH8wiGDXrg+zEKw295PVPMRayoh8J8Nku1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgCRStS convert rfc822-to-8bit (ORCPT
+        id S1726903AbgCRStm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:49:18 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39054 "EHLO gloria.sntech.de"
+        Wed, 18 Mar 2020 14:49:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbgCRStR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:49:17 -0400
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jEdkb-0005cf-6S; Wed, 18 Mar 2020 19:49:09 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
+        id S1726619AbgCRStm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 14:49:42 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66AC020724;
+        Wed, 18 Mar 2020 18:49:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584557381;
+        bh=m4cbPVk0gn7Y6oT8HwTSVAuobPlopKWPy7rT39Co20w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=PkApTePJZik35M+XbXXxSMGMQsmJfHgLTzOWT94R0zCsUHXCHOnRwbCtdgwOCQZDC
+         gGkjkz1pp+VAKTPRN5WmwHlyybtimFIDOE51JoFUHbiRr2b0Z6T6Jp6E/TBG4EOssZ
+         GBK4OUNkaChrKGS70Vi7a/wvbIWILG8EI+Id9pVY=
+Date:   Wed, 18 Mar 2020 13:49:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Rob Herring <robh@kernel.org>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] serial: 8250: Add rs485 emulation to 8250_dw
-Date:   Wed, 18 Mar 2020 19:49:08 +0100
-Message-ID: <5640842.EtOnNDtpGh@diego>
-In-Reply-To: <20200318153754.dctd4q7e2fodeqsw@wunner.de>
-References: <20200318142640.982763-1-heiko@sntech.de> <20200318144320.GL1922688@smile.fi.intel.com> <20200318153754.dctd4q7e2fodeqsw@wunner.de>
+Subject: Re: [PATCH] MAINTAINERS: correct typo in new NXP LAYERSCAPE GEN4
+Message-ID: <20200318184939.GA209856@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200314142559.13505-1-lukas.bulwahn@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Am Mittwoch, 18. März 2020, 16:37:54 CET schrieb Lukas Wunner:
-> On Wed, Mar 18, 2020 at 04:43:20PM +0200, Andy Shevchenko wrote:
-> > On Wed, Mar 18, 2020 at 03:26:33PM +0100, Heiko Stuebner wrote:
-> > > This series tries to revive the work of Giulio Benetti from 2018 [0]
-> > > which seemed to have stalled at that time.
+On Sat, Mar 14, 2020 at 03:25:59PM +0100, Lukas Bulwahn wrote:
+> Commit 3edeb49525bb ("dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4
+> controller") includes a new entry in MAINTAINERS, but slipped in a typo in
+> one of the file entries.
 > 
-> Oh dear. :-(  This needs a rebase on current tty-next.
-
-Looking at tty-next I notice that you're right. When I started working
-on this I only found the stuff from 2018 I linked to but didn't imagine
-that in that exact moment someone else would also work on that area.
-
-So no worries, I'll adapt my code ;-)
-
-
-> Patch [7/7] is already in tty-next as commit fe7f0fa43cef ("serial:
-> 8250: Support rs485 devicetree properties").
->
-> Patch [4/7] likewise.  Note that it's not safe to call ->rs485_config()
-> already in serial8250_register_8250_port() if the driver uses UPF_IOREMAP
-> because ioremapping happens later via serial8250_config_port() ->
-> serial8250_request_std_resource(), so you'll get an oops for those
-> drivers when deasserting RTS early on.  Been there... :-(
+> Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
 > 
-> Patch [6/7]:  Ugh, another duplication of the ->rs485_config() callback.
-> Just use the generic one introduced by commit 283e096ffb70 ("serial:
-> 8250: Deduplicate ->rs485_config() callback") if possible.
+>   warning: no file matches F: \
+>     drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
 > 
-> The other patches appear to handle chip-specific needs.  It's now
-> possible to implement these in ->rs485_start_tx() and ->rs485_stop_tx()
-> hooks, as introduced by commit 058bc104f7ca ("serial: 8250: Generalize
-> rs485 software emulation").  Refer to commit f93bf7589114 ("serial:
-> 8250_bcm2835aux: Support rs485 software emulation") for an example.
+> Correct the typo in PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> applies cleanly on next-20200313
+> 
+> Hou, please ack.
+> Rob, please pick this patch (it is not urgent, though).
 
-Thanks for the pointers and also doing all that ground work :-)
+3edeb49525bb ("dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4
+controller") is on Lorenzo's pci/mobiveil branch and queued for v5.7.
 
+But it hasn't been merged upstream yet, so we should squash this fix
+into Lorenzo's branch so we don't need a fixup commit.
 
-> The DTR-for-RE thing seems a bit nonstandard, I'm not sure if this is
-> eligible for mainline or if it's something that should be kept in your
-> downstream tree.  But no harm in submitting it to the list.
-
-I'm fine either way - maybe I also get a pointer on what may be a better
-approach ;-)
-
-At least DTR as "Data Terminal Ready" did sound somewhat matching for
-the "Receive Enable" of RS485 (and it's also the only other output pin
-in the mctrl gpio list).
-
-
-Heiko
-
-
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 32a95d162f06..77eede976d0f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12858,7 +12858,7 @@ L:	linux-pci@vger.kernel.org
+>  L:	linux-arm-kernel@lists.infradead.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+> -F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
+> +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
+>  
+>  PCI DRIVER FOR GENERIC OF HOSTS
+>  M:	Will Deacon <will@kernel.org>
+> 
+> base-commit: 2e602db729948ce577bf07e2b113f2aa806b62c7
+> -- 
+> 2.17.1
+> 
