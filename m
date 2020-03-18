@@ -2,127 +2,278 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67187C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2981C5ACDA
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FCB420753
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9925F20757
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:06:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="JbQK6/uy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgCRRCt (ORCPT
+        id S1727005AbgCRRGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:02:49 -0400
-Received: from mga03.intel.com ([134.134.136.65]:13839 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbgCRRCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:02:48 -0400
-IronPort-SDR: GW29u5MqL4Q8TtV2DWHAvHtSWbFdDCJfe1XKgdYVSbJN22Yc/+XM7KNr8Dm4aXAINDi256qQpf
- Dxz2kSePep/Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 10:02:41 -0700
-IronPort-SDR: lvUm8X+7IdYPGh9PtUcxWuWLT07MuzXrRMbkxoFh+siGmQn+69FHUjG/Eogg9Axe8F5cIsxP9w
- y4hOLekTV9tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
-   d="scan'208";a="244885698"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga003.jf.intel.com with ESMTP; 18 Mar 2020 10:02:41 -0700
-Date:   Wed, 18 Mar 2020 10:02:41 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v2 31/32] KVM: nVMX: Don't flush TLB on nested VM
- transition with EPT enabled
-Message-ID: <20200318170241.GJ24357@linux.intel.com>
-References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
- <20200317045238.30434-32-sean.j.christopherson@intel.com>
- <97f91b27-65ac-9187-6b60-184e1562d228@redhat.com>
- <20200317182251.GD12959@linux.intel.com>
- <218d4dbd-20f1-5bf8-ca44-c53dd9345dab@redhat.com>
+        Wed, 18 Mar 2020 13:06:21 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:38449 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbgCRRGU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 13:06:20 -0400
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 0B25323E23;
+        Wed, 18 Mar 2020 18:06:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1584551176;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+BzEmMtMkIm9pkTWsaE8j06DDMEY6BVuLsFQGlnKcJ0=;
+        b=JbQK6/uyWu+wXuG4LMc3Czk4oN6bNCGoRTGV4FgIJ+Da0Ixwllyo6pL7iT/iynMiv4myfR
+        pgzGQMsrZyhrOilkRSGJ8ABf+H3KdDVaOMok58DDupsTHqFqVh58oJfgP1he+JUeffsAL8
+        xZwd9d2c4cOoABs8aiJCyWy5FLgD61w=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <218d4dbd-20f1-5bf8-ca44-c53dd9345dab@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 18 Mar 2020 18:06:15 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCH 06/18] irqchip: add sl28cpld interrupt controller support
+In-Reply-To: <d204c3b0-c3d0-0422-75d9-07718ba2134e@roeck-us.net>
+References: <20200317205017.28280-1-michael@walle.cc>
+ <20200317205017.28280-7-michael@walle.cc>
+ <d204c3b0-c3d0-0422-75d9-07718ba2134e@roeck-us.net>
+Message-ID: <b9661afeda9fc6413b2fe392f254c685@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.10
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 0B25323E23
+X-Spamd-Result: default: False [1.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         FREEMAIL_ENVRCPT(0.00)[gmail.com];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_TWELVE(0.00)[22];
+         NEURAL_HAM(-0.00)[-0.616];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,baylibre.com,kernel.org,suse.com,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 11:36:04AM +0100, Paolo Bonzini wrote:
-> On 17/03/20 19:22, Sean Christopherson wrote:
-> > On Tue, Mar 17, 2020 at 06:18:37PM +0100, Paolo Bonzini wrote:
-> >> On 17/03/20 05:52, Sean Christopherson wrote:
-> >>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> >>> index d816f1366943..a77eab5b0e8a 100644
-> >>> --- a/arch/x86/kvm/vmx/nested.c
-> >>> +++ b/arch/x86/kvm/vmx/nested.c
-> >>> @@ -1123,7 +1123,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
-> >>>  	}
-> >>>  
-> >>>  	if (!nested_ept)
-> >>> -		kvm_mmu_new_cr3(vcpu, cr3, false);
-> >>> +		kvm_mmu_new_cr3(vcpu, cr3, enable_ept);
-> >>
-> >> Even if enable_ept == false, we could have already scheduled or flushed
-> >> the TLB soon due to one of 1) nested_vmx_transition_tlb_flush 2)
-> >> vpid_sync_context in prepare_vmcs02 3) the processor doing it for
-> >> !enable_vpid.
-> >>
-> >> So for !enable_ept only KVM_REQ_MMU_SYNC is needed, not
-> >> KVM_REQ_TLB_FLUSH_CURRENT I think.  Worth adding a TODO?
-> > 
-> > Now that you point it out, I think it makes sense to unconditionally pass
-> > %true here, i.e. rely 100% on nested_vmx_transition_tlb_flush() to do the
-> > right thing.
+Am 2020-03-18 17:53, schrieb Guenter Roeck:
+> On 3/17/20 1:50 PM, Michael Walle wrote:
+>> This patch adds support for the interrupt controller inside the sl28
+>> CPLD management controller.
+>> 
+>> Signed-off-by: Michael Walle <michael@walle.cc>
+>> ---
+>>  drivers/irqchip/Kconfig        |  3 ++
+>>  drivers/irqchip/Makefile       |  1 +
+>>  drivers/irqchip/irq-sl28cpld.c | 92 
+>> ++++++++++++++++++++++++++++++++++
+>>  drivers/mfd/Kconfig            |  4 +-
+>>  4 files changed, 98 insertions(+), 2 deletions(-)
+>>  create mode 100644 drivers/irqchip/irq-sl28cpld.c
+>> 
+>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+>> index 24fe08702ef7..3fd7415c8b55 100644
+>> --- a/drivers/irqchip/Kconfig
+>> +++ b/drivers/irqchip/Kconfig
+>> @@ -246,6 +246,9 @@ config RENESAS_RZA1_IRQC
+>>  	  Enable support for the Renesas RZ/A1 Interrupt Controller, to use 
+>> up
+>>  	  to 8 external interrupts with configurable sense select.
+>> 
+>> +config SL28CPLD_INTC
+>> +	bool
+>> +
+>>  config ST_IRQCHIP
+>>  	bool
+>>  	select REGMAP
+>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+>> index eae0d78cbf22..0f4a37782609 100644
+>> --- a/drivers/irqchip/Makefile
+>> +++ b/drivers/irqchip/Makefile
+>> @@ -105,3 +105,4 @@ obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
+>>  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+>>  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
+>>  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
+>> +obj-$(CONFIG_SL28CPLD_INTC)		+= irq-sl28cpld.o
+>> diff --git a/drivers/irqchip/irq-sl28cpld.c 
+>> b/drivers/irqchip/irq-sl28cpld.c
+>> new file mode 100644
+>> index 000000000000..fa52ed79137b
+>> --- /dev/null
+>> +++ b/drivers/irqchip/irq-sl28cpld.c
+>> @@ -0,0 +1,92 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * SMARC-sAL28 Interrupt core driver.
+>> + *
+>> + * Copyright 2019 Kontron Europe GmbH
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/mfd/core.h>
+>> +
+>> +#define INTC_IE 0
+>> +#define INTC_IP 1
+>> +
+>> +static const struct regmap_irq sl28cpld_irqs[] = {
+>> +	REGMAP_IRQ_REG_LINE(0, 8),
+>> +	REGMAP_IRQ_REG_LINE(1, 8),
+>> +	REGMAP_IRQ_REG_LINE(2, 8),
+>> +	REGMAP_IRQ_REG_LINE(3, 8),
+>> +	REGMAP_IRQ_REG_LINE(4, 8),
+>> +	REGMAP_IRQ_REG_LINE(5, 8),
+>> +	REGMAP_IRQ_REG_LINE(6, 8),
+>> +	REGMAP_IRQ_REG_LINE(7, 8),
+>> +};
+>> +
+>> +struct sl28cpld_intc {
+>> +	struct regmap *regmap;
+>> +	struct regmap_irq_chip chip;
+>> +	struct regmap_irq_chip_data *irq_data;
+>> +};
+>> +
+>> +static int sl28cpld_intc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct sl28cpld_intc *irqchip;
+>> +	struct resource *res;
+>> +	unsigned int irq;
+>> +	int ret;
+>> +
+>> +	irqchip = devm_kzalloc(&pdev->dev, sizeof(*irqchip), GFP_KERNEL);
+>> +	if (!irqchip)
+>> +		return -ENOMEM;
+>> +
+>> +	if (!pdev->dev.parent)
+>> +		return -ENODEV;
+>> +
+>> +	irqchip->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+>> +	if (!irqchip->regmap)
+>> +		return -ENODEV;
+>> +
+>> +	irq = platform_get_irq(pdev, 0);
+>> +	if (irq < 0)
+>> +		return irq;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+>> +	if (!res)
+>> +		return -EINVAL;
+>> +
+>> +	irqchip->chip.name = "sl28cpld-intc";
+>> +	irqchip->chip.irqs = sl28cpld_irqs;
+>> +	irqchip->chip.num_irqs = ARRAY_SIZE(sl28cpld_irqs);
+>> +	irqchip->chip.num_regs = 1;
+>> +	irqchip->chip.status_base = res->start + INTC_IP;
+>> +	irqchip->chip.mask_base = res->start + INTC_IE;
+>> +	irqchip->chip.mask_invert = true,
+>> +	irqchip->chip.ack_base = res->start + INTC_IP;
+>> +
+>> +	ret = devm_regmap_add_irq_chip(&pdev->dev, irqchip->regmap, irq,
+>> +				       IRQF_SHARED | IRQF_ONESHOT, 0,
+>> +				       &irqchip->chip, &irqchip->irq_data);
+>> +	if (ret)
+>> +		return ret;
+>> +	dev_info(&pdev->dev, "registered IRQ %d\n", irq);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver sl28cpld_intc_driver = {
+>> +	.probe	= sl28cpld_intc_probe,
+>> +	.driver = {
+>> +		.name = "sl28cpld-intc",
+>> +	}
+>> +};
+>> +module_platform_driver(sl28cpld_intc_driver);
+>> +
+>> +MODULE_DESCRIPTION("sl28cpld Interrupt Controller Driver");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 01588c366476..4f741d640705 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -2060,12 +2060,12 @@ config SGI_MFD_IOC3
+>>  	  then say Y. Otherwise say N.
+>> 
+>>  config MFD_SL28CPLD
+>> -	tristate "Kontron sl28 core driver"
+>> +	bool "Kontron sl28 core driver"
 > 
-> Why doesn't it need KVM_REQ_MMU_SYNC either?
+> This is .... unusual. Why declare it tristate only to re-declare it
+> bool in the next patch ?
 
-Hmm, so if L1 is using VPID, we're ok without a sync.  Junaid's INVVPID
-patch earlier in this series ensures cached roots won't retain unsync'd
-SPTEs when L1 does INVVPID.  If L1 doesn't flush L2's TLB on VM-Entry, it
-can't expect L2 to recognize changes in the PTEs since the last INVVPID.
+I though it was a good idea to have that gradually build up, esp. since
+these patches might go through different reviewers/trees. That being 
+said,
+I'll change it though.
 
-Per Intel's SDM, INVLPG (and INVPCID) are only required to invalidate
-entries for the current VPID, i.e. virtual VPID=0 when executed by L1.
+> It does explain the I2C=y, but I really think it should be bool from
+> the start if it ends up
+> there.
 
-  Operations that architecturally invalidate entries in the TLBs or
-  paging-structure caches independent of VMX operation (e.g., the INVLPG and
-  INVPCID instructions) invalidate linear mappings and combined mappings.
-  They are required to do so only for the current VPID.
-                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+Ok.
 
-If L1 isn't using VPID and L0 isn't using EPT, then a sync is required as
-L1 would expect PTE changes to be recognized without an explicit INVLPG
-prior to VM-Ennter.
+> 
+>>  	depends on I2C=y
+>>  	depends on OF
+>>  	select REGMAP_I2C
+>>  	select REGMAP_IRQ
+>> -	select SL28CPLD_IRQ
+>> +	select SL28CPLD_INTC
+> 
+> What is the point of introducing SL28CPLD_IRQ in the first place ?
 
-So something like this?
+oh damn. this is a left-over which slipped through. There should just
+be a SL28CPLD_INTC.
 
-	if (!nested_ept)
-		kvm_mmu_new_cr3(vcpu, cr3, enable_ept ||
-					   nested_cpu_has_vpid(vmcs12));
+-michael
 
-The KVM_REQ_TLB_FLUSH_CURRENT request would be redundant with
-nested_vmx_transition_tlb_flush() when VPID is enabled, and is a (big) nop
-when VPID is disabled.  In either case the overhead is negligible.  Ideally
-this logic would tie into nested_vmx_transition_tlb_flush() in some way,
-but making that happen may be wishful thinking.
-
-> All this should be in a comment as well, of course.
-
-Heh, in hindsight that's painfully obvious.
+> 
+>>  	select MFD_CORE
+>>  	help
+>>  	  This option enables support for the board management controller
+>> 
