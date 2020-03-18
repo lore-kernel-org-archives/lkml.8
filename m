@@ -2,127 +2,104 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 480DFC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA7CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA0620768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:14:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oQcwWiss"
+	by mail.kernel.org (Postfix) with ESMTP id 54C6820752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgCRGOP (ORCPT
+        id S1727078AbgCRGTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 02:14:15 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:10000 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726553AbgCRGOO (ORCPT
+        Wed, 18 Mar 2020 02:19:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13066 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726478AbgCRGTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 02:14:14 -0400
-X-UUID: 22fa5feead5a409f898dea7616000ecb-20200318
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=gv0c5/3tvz4dQesZfQxOdDx8ye9ZpCqR4KhwIKL8Yyw=;
-        b=oQcwWisshxa/A4CUOwZr8eMmCS4JoPdDTlcJ5wgYRN5yrlk+Bb8d5E7mpT7T51T9OQ3P8VZf77ecmHFZbEUNJtCIVoC0Ky1KnO5DJ02KTO0OXIo+tAOXC3CvCzeUL07nBRg2NvvDlNv1/5+vDYb1BzrXgW6snaozr7E9azAdgAM=;
-X-UUID: 22fa5feead5a409f898dea7616000ecb-20200318
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1161069609; Wed, 18 Mar 2020 14:14:08 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 18 Mar 2020 14:11:49 +0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 18 Mar 2020 14:11:05 +0800
-Message-ID: <1584512047.14250.56.camel@mtksdccf07>
-Subject: Re: [PATCH v6 3/7] scsi: ufs: introduce common delay function
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Bart Van Assche <bvanassche@acm.org>
-CC:     <linux-scsi@vger.kernel.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
-        <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>
-Date:   Wed, 18 Mar 2020 14:14:07 +0800
-In-Reply-To: <b7a6045e-9615-0cd2-9812-2871bf9ba44c@acm.org>
-References: <20200316085303.20350-1-stanley.chu@mediatek.com>
-         <20200316085303.20350-4-stanley.chu@mediatek.com>
-         <fdf91490-9c7d-df34-1c1f-e03e12855378@acm.org>
-         <1584404000.14250.28.camel@mtksdccf07>
-         <b7a6045e-9615-0cd2-9812-2871bf9ba44c@acm.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 18 Mar 2020 02:19:47 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02I63VJC092800
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 02:19:45 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu931gjet-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 02:19:45 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 18 Mar 2020 06:19:43 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Mar 2020 06:19:38 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02I6JbgL62259362
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 06:19:37 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B639A405C;
+        Wed, 18 Mar 2020 06:19:37 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DDB4CA4060;
+        Wed, 18 Mar 2020 06:18:43 +0000 (GMT)
+Received: from [9.199.62.91] (unknown [9.199.62.91])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Mar 2020 06:18:35 +0000 (GMT)
+Subject: Re: [PATCH 05/15] powerpc/watchpoint: Provide DAWR number to set_dawr
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
+        paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
+ <20200309085806.155823-6-ravi.bangoria@linux.ibm.com>
+ <4704ba5d-2bc3-38f6-8097-b8a850592461@c-s.fr>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Wed, 18 Mar 2020 11:48:32 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <4704ba5d-2bc3-38f6-8097-b8a850592461@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031806-0016-0000-0000-000002F2FFC3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031806-0017-0000-0000-000033568365
+Message-Id: <16bc7420-0e46-0600-62b4-e5ac97f833fb@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_02:2020-03-17,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
+ clxscore=1015 spamscore=0 bulkscore=0 phishscore=0 mlxlogscore=755
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003180028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KFNvcnJ5IHRvIHJlc2VuZCB0aGlzIG1haWwgd2l0aCAiW1NQQU1dIiBwcmVmaXggcmVtb3ZlZCBp
-biB0aXRsZSkNCg0KSGkgQmFydCwNCg0KT24gTW9uLCAyMDIwLTAzLTE2IGF0IDIwOjU5IC0wNzAw
-LCBCYXJ0IFZhbiBBc3NjaGUgd3JvdGU6DQo+IE9uIDIwMjAtMDMtMTYgMTc6MTMsIFN0YW5sZXkg
-Q2h1IHdyb3RlOg0KPiA+IE9uIE1vbiwgMjAyMC0wMy0xNiBhdCAwOToyMyAtMDcwMCwgQmFydCBW
-YW4gQXNzY2hlIHdyb3RlOg0KPiA+PiBPbiAzLzE2LzIwIDE6NTIgQU0sIFN0YW5sZXkgQ2h1IHdy
-b3RlOg0KPiA+Pj4gK3ZvaWQgdWZzaGNkX3dhaXRfdXModW5zaWduZWQgbG9uZyB1cywgdW5zaWdu
-ZWQgbG9uZyB0b2xlcmFuY2UsIGJvb2wgY2FuX3NsZWVwKQ0KPiA+Pj4gK3sNCj4gPj4+ICsJaWYg
-KCF1cykNCj4gPj4+ICsJCXJldHVybjsNCj4gPj4+ICsNCj4gPj4+ICsJaWYgKHVzIDwgMTAgfHwg
-IWNhbl9zbGVlcCkNCj4gPj4+ICsJCXVkZWxheSh1cyk7DQo+ID4+PiArCWVsc2UNCj4gPj4+ICsJ
-CXVzbGVlcF9yYW5nZSh1cywgdXMgKyB0b2xlcmFuY2UpOw0KPiA+Pj4gK30NCj4gPj4+ICtFWFBP
-UlRfU1lNQk9MX0dQTCh1ZnNoY2Rfd2FpdF91cyk7DQo+ID4+DQo+ID4+IEkgZG9uJ3QgbGlrZSB0
-aGlzIGZ1bmN0aW9uIGJlY2F1c2UgSSB0aGluayBpdCBtYWtlcyB0aGUgVUZTIGNvZGUgaGFyZGVy
-IA0KPiA+PiB0byByZWFkIGluc3RlYWQgb2YgZWFzaWVyLiBUaGUgJ2Nhbl9zbGVlcCcgYXJndW1l
-bnQgaXMgb25seSBzZXQgYnkgb25lIA0KPiA+PiBjYWxsZXIgd2hpY2ggSSB0aGluayBpcyBhIHN0
-cm9uZyBhcmd1bWVudCB0byByZW1vdmUgdGhhdCBhcmd1bWVudCBhZ2FpbiANCj4gPj4gYW5kIHRv
-IG1vdmUgdGhlIGNvZGUgdGhhdCBkZXBlbmRzIG9uIHRoYXQgYXJndW1lbnQgZnJvbSB0aGUgYWJv
-dmUgDQo+ID4+IGZ1bmN0aW9uIGludG8gdGhlIGNhbGxlci4gQWRkaXRpb25hbGx5LCBpdCBpcyBu
-b3QgcG9zc2libGUgdG8gY29tcHJlaGVuZCANCj4gPj4gd2hhdCBhIHVmc2hjZF93YWl0X3VzKCkg
-Y2FsbCBkb2VzIHdpdGhvdXQgbG9va2luZyB1cCB0aGUgZnVuY3Rpb24gDQo+ID4+IGRlZmluaXRp
-b24gdG8gc2VlIHdoYXQgdGhlIG1lYW5pbmcgb2YgdGhlIHRoaXJkIGFyZ3VtZW50IGlzLg0KPiA+
-Pg0KPiA+PiBQbGVhc2UgZHJvcCB0aGlzIHBhdGNoLg0KPiA+IA0KPiA+IFRoYW5rcyBmb3IgeW91
-ciByZXZpZXcgYW5kIGNvbW1lbnRzLg0KPiA+IA0KPiA+IElmIHRoZSBwcm9ibGVtIGlzIHRoZSB0
-aGlyZCBhcmd1bWVudCAnY2FuX3NsZWVwJyB3aGljaCBtYWtlcyB0aGUgY29kZQ0KPiA+IG5vdCBi
-ZSBlYXNpbHkgY29tcHJlaGVuc2libGUsIGhvdyBhYm91dCBqdXN0IHJlbW92aW5nICdjYW5fc2xl
-ZXAnIGZyb20NCj4gPiB0aGlzIGZ1bmN0aW9uIGFuZCBrZWVwaW5nIGxlZnQgcGFydHMgYmVjYXVz
-ZSB0aGlzIGZ1bmN0aW9uIHByb3ZpZGVzIGdvb2QNCj4gPiBmbGV4aWJpbGl0eSB0byB1c2VycyB0
-byBjaG9vc2UgdWRlbGF5IG9yIHVzbGVlcF9yYW5nZSBhY2NvcmRpbmcgdG8gdGhlDQo+ID4gJ3Vz
-JyBhcmd1bWVudD8NCj4gDQo+IEhpIFN0YW5sZXksDQo+IA0KPiBJIHRoaW5rIHRoYXQgd2UgbmVl
-ZCB0byBnZXQgcmlkIG9mICdjYW5fc2xlZXAnIGFjcm9zcyB0aGUgZW50aXJlIFVGUw0KPiBkcml2
-ZXIuIEFzIGZhciBhcyBJIGNhbiBzZWUgdGhlIG9ubHkgY29udGV4dCBmcm9tIHdoaWNoICdjYW5f
-c2xlZXAnIGlzDQo+IHNldCB0byB0cnVlIGlzIHVmc2hjZF9ob3N0X3Jlc2V0X2FuZF9yZXN0b3Jl
-KCkgYW5kICdjYW5fc2xlZXAnIGlzIHNldCB0bw0KPiB0cnVlIGJlY2F1c2UgdWZzaGNkX2hiYV9z
-dG9wKCkgaXMgY2FsbGVkIHdpdGggYSBzcGlubG9jayBoZWxkLiBEbyB5b3UNCj4gYWdyZWUgdGhh
-dCBpdCBpcyB3cm9uZyB0byBjYWxsIHVkZWxheSgpIHdoaWxlIGhvbGRpbmcgYSBzcGlubG9jaygp
-IGFuZA0KPiB0aGF0IGRvaW5nIHNvIGhhcyBhIGJhZCBpbXBhY3Qgb24gdGhlIGVuZXJneSBjb25z
-dW1wdGlvbiBvZiB0aGUgVUZTDQo+IGRyaXZlcj8NCg0KVGhhbmtzIGZvciB5b3VyIHBvc2l0aXZl
-IHN1Z2dlc3Rpb24uDQoNCkluZGVlZCB1c2luZyB1ZGVsYXkoKSB3aXRoIHNwaW5sb2NrIGhlbGQg
-bWF5IGhhdmUgcGVyZm9ybWFuY2Ugb3IgcG93ZXINCmNvbnN1bXB0aW9uIGNvbmNlcm5zLiBIb3dl
-dmVyIHRoZSBjb25jZXJuIGluIHVmc2hjZF9oYmFfc3RvcCgpIGNvdWxkIGJlDQppZ25vcmVkIGlu
-IG1vc3QgY2FzZXMgc2luY2UgdGhlIGV4ZWN1dGlvbiBwZXJpb2Qgb2YgY2hhbmdpbmcgYml0IDAg
-aW4NClJFR19DT05UUk9MTEVSX0VOQUJMRSBmcm9tIDEgdG8gMCBzaGFsbCBiZSB2ZXJ5IGZhc3Qu
-IEluIG15IGxvY2FsDQplbnZpcm9ubWVudCwgaXQgY291bGQgaGF2ZSBvbmx5IHNldmVyYWwgJ25z
-JyBsYXRlbmN5IHRodXMgdWRlbGF5KCkgd2FzDQpuZXZlciBleGVjdXRlZCBkdXJpbmcgdGhlIHN0
-cmVzcyB0ZXN0LiBUaGUgZGVsYXkgaGVyZSBtYXkgYmUgcmVxdWlyZWQNCmZvciByYXJlIGNhc2Vz
-IHRoYXQgaG9zdCBpcyB1bmRlciBhbiBhYm5vcm1hbCBzdGF0ZS4NCg0KDQo+IEhhcyBpdCBhbHJl
-YWR5IGJlZW4gY29uc2lkZXJlZCB0byB1c2UgYW5vdGhlciBtZWNoYW5pc20gdG8NCj4gc2VyaWFs
-aXplIFJFR19DT05UUk9MTEVSX0VOQUJMRSBjaGFuZ2VzLCBlLmcuIGEgbXV0ZXg/DQoNCkkgdGhp
-bmsgbXV0ZXggaXMgbm90IHN1aXRhYmxlIGZvciBSRUdfQ09OVFJPTExFUl9FTkFCTEUgY2FzZSBi
-ZWNhdXNlDQpzdG9wcGluZyBob3N0IChieSB3aGF0IHVmc2hjZF9oYmFfc3RvcCBkb2VzKSB3aWxs
-IHJlc2V0IGRvb3JiZWxsIGJpdHMgaW4NCnRoZSBzYW1lIHRpbWUgYnkgaG9zdCwgYW5kIHRob3Nl
-IGRvb3JiZWxsIGJpdHMgYXJlIGxvb2tlZCB1cCBieSBVRlMNCmludGVycnVwdCByb3V0aW5lIGZv
-ciByZXF1ZXN0IGNvbXBsZXRpb24gZmxvdyBhcyB3ZWxsLg0KDQpJIGFncmVlIHRoYXQgImNhbl9z
-bGVlcCIgY2FuIGJlIGltcHJvdmVkIGFuZCBtYXkgaGF2ZSBvdGhlciBvcHRpbWl6ZWQNCndheSBi
-dXQgdGhpcyBpcyBiZXlvbmQgdGhpcyBwYXRjaCBzZXQuIEkgd291bGQgbGlrZSB0byByZW1vdmUg
-dGhlDQoiY2FuX3NsZWVwIiByZWxhdGVkIG1vZGlmaWNhdGlvbiBmcm9tIHRoaXMgcGF0Y2ggc2V0
-IGZpcnN0Lg0KDQpUaGFua3MsDQpTdGFubGV5IENodQ0KDQo=
+
+
+On 3/17/20 3:58 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 09/03/2020 à 09:57, Ravi Bangoria a écrit :
+>> Introduce new parameter 'nr' to set_dawr() which indicates which DAWR
+>> should be programed.
+> 
+> While we are at it (In another patch I think), we should do the same to set_dabr() so that we can use both DABR and DABR2
+
+This series is for DAWR only and does not support DABR2. I'll look
+at how other book3s family processors provides DABR2 supports.
+
+Thanks,
+Ravi
 
