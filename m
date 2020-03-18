@@ -2,297 +2,139 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91FCC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4242DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7068D20754
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A9C52071C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:11:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VhOm5g8v"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="buSa8Rvh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgCRUKh (ORCPT
+        id S1727095AbgCRULP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:10:37 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:42780 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbgCRUKg (ORCPT
+        Wed, 18 Mar 2020 16:11:15 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38437 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCRULO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:10:36 -0400
-Received: by mail-vs1-f67.google.com with SMTP id i25so24035vsq.9
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 13:10:35 -0700 (PDT)
+        Wed, 18 Mar 2020 16:11:14 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z5so71451pfn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 13:11:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=deicxPfTPIgTvqDWUgB6URC9CH6HcGABwiA2ln5QVsQ=;
-        b=VhOm5g8vgPzKXgB1wxBrfDRHebq6hpAgVw1slq3jmk/AEcsv6D3PyCqQGBR12NtWJF
-         hnYmbthIJ7zUw2d4PM53OlROlAZ/HPO4l51c0lEpcQyKwwE4kUg2Tx4tFM5W48l0JpjT
-         BR68pIYwnvW24eISPw74viaADRr5xnB5UlIl8=
+        bh=uyesW/I7eVgVyicQueL0CdgpIWranWUqdWTYkhPayEw=;
+        b=buSa8RvhjkGTpbBdwHw59o+jZbhgGKbLiBhfH2emwRGZx+wImu/ULynC+CYcg4rbnN
+         7u/sZ5xGCoq+T5kYpewP2vLW85uO1fq4YujHF493zxwEabsXuLVHqEVBgMO0yperyLOQ
+         AtTa0SNg0Vpxa9cnuaCRmnDgdd6OUlcFvuwrqY2yQKESkO6+71cCLK0W7op0OVEM+m71
+         bmHlAQZyTzrYwa9K+oAbP/9IT2f1hX4tKoj3P+qQzuyNSpl9vHmuXGkCkfMgsGFs75PI
+         mWxN19hhTjPvb5ClZNqP2xO8sPSOSOpXKlWhnpcOAQxMrQLi1lorTBOjOJgOlh1AkNit
+         ImZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=deicxPfTPIgTvqDWUgB6URC9CH6HcGABwiA2ln5QVsQ=;
-        b=E/iATs0gFHylIkjFu5M4rR3Xid63mONNLgcRvzIItNfhkhy/1DNn/4etO800t/tdHM
-         oj4B/4ikB73T8IO+sq6/AqrDZnTz0Jq7zFfG6CgwpTtdNOoZsrhowGjMemjlH+jxAFC7
-         ipD9rHEOBdkibgprmAvgugG6qnp1nG05oOJRyNBJtnVgtkloZhQwZvRE8W6hqFb+Q/5p
-         R7EGrszxUiqpWB1Bbg63QL6Gm4aZoWrdDCnqY7uqXC+dEV/I6DnJN+YnlNbyJX0u+toa
-         bsZHd5nEi/6XG/+RM3AfEUzBTlXj6QABdES0lx6VtyGrkfn0BMZCSlWZyGM79pvzSLfg
-         bxUw==
-X-Gm-Message-State: ANhLgQ0WhGQ8HnG+I+o4CcCezFoWfQSKjpeViv/awdMsMCsdmKH5K85J
-        S+t1Jb/H3fKHSUsN3KFBFby6aoVfw38=
-X-Google-Smtp-Source: ADFU+vscZgj6btnZI7oS7rpp+T52SCiedmmZURjSyCSt1xmtay//D657UdRwnrGEq00LEBtVy2aV2g==
-X-Received: by 2002:a67:2ecf:: with SMTP id u198mr4744131vsu.29.1584562234561;
-        Wed, 18 Mar 2020 13:10:34 -0700 (PDT)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id m82sm9183vke.53.2020.03.18.13.10.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Mar 2020 13:10:33 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id o16so9992966uap.6
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 13:10:33 -0700 (PDT)
-X-Received: by 2002:ab0:2881:: with SMTP id s1mr4346871uap.8.1584562232303;
- Wed, 18 Mar 2020 13:10:32 -0700 (PDT)
+        bh=uyesW/I7eVgVyicQueL0CdgpIWranWUqdWTYkhPayEw=;
+        b=nzuy8zmUAfLxKntOyZuiMHW3fvunIxXVnUOGvHCGSQeuCEhhE4HSvgU4dGTZth1EdQ
+         uQmGOdkVDWSRyNlb9y3+wyBl5/XNDa1WICVF/74ZAWlhRDI5eVfRWCLAysymj2pfxZtZ
+         th7+A9MA3gIyFDj4NKkAawN/YTEH1Jvu0hVNd7S95wDBfUTu1faPnzjBmKyCtzMTHJDU
+         Lv+U6MFEzSQhNf4QLlN3dGGkqtuWa3B/jgWVWb69mjZ9vW8LNaMXwq3B4vLDC5llm4lZ
+         gSrkjodN2Ad0BCJT0vHeIn2KuAqF0yCq76oF5qfEpZ7DajO6P1xUhFUT3tVAVpkKyVJw
+         TnVQ==
+X-Gm-Message-State: ANhLgQ0vBa8/3WSR72Pwo6O+T8hb6O4g/7R7b6HULGmlVFp0nosZ5xzg
+        CwE7VJkkMHA9Lq5WOIrzq3JPbsVSUp+GFXeqLZgE5A==
+X-Google-Smtp-Source: ADFU+vsvmlakcRCCZHYwnyZMgY3Y37TRHQ0ECfXdqwlx7G77wz0frDIB6p4cU0iSRnIO6PsnQPSCLbvLu8yOZe6YOM8=
+X-Received: by 2002:a63:4d6:: with SMTP id 205mr6229525pge.10.1584562273205;
+ Wed, 18 Mar 2020 13:11:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200317133653.v2.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
- <158448096503.88485.8894151453752608519@swboyd.mtv.corp.google.com>
- <CAD=FV=U+c4GZU1p3xYT3t=0Q2cLFxoiM=vqc8SsxOKehxbZPXw@mail.gmail.com> <158451865253.88485.11351400745937437114@swboyd.mtv.corp.google.com>
-In-Reply-To: <158451865253.88485.11351400745937437114@swboyd.mtv.corp.google.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 18 Mar 2020 13:10:20 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WzaOk1S+oXPa5JT9HMC_t19xdpSQmiQdEhtxUTcaDVQg@mail.gmail.com>
-Message-ID: <CAD=FV=WzaOk1S+oXPa5JT9HMC_t19xdpSQmiQdEhtxUTcaDVQg@mail.gmail.com>
-Subject: Re: [PATCH v2] spi: spi-geni-qcom: Speculative fix of "nobody cared"
- about interrupt
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+References: <20200318002500.52471-1-natechancellor@gmail.com>
+In-Reply-To: <20200318002500.52471-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 18 Mar 2020 13:11:00 -0700
+Message-ID: <CAKwvOdkzdBYgixrSKKfo7=god4Q0GaMORmFWUfrJ27JiGhBx2Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdgpu: Initialize shadow to false in gfx_v9_0_rlcg_wreg
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Wed, Mar 18, 2020 at 1:04 AM Stephen Boyd <swboyd@chromium.org> wrote:
+On Tue, Mar 17, 2020 at 5:25 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> > * Most of the cases I saw of the "nobody cared" for geni-spi was on a
-> > mostly idle system (presumably still doing periodic SPI transactions
-> > to the EC, though).  It seems weird that one of these other interrupts
-> > would suddenly fire.  It seems more likely that we just happened to
-> > win a race of some sort.
+> clang warns:
 >
-> Sure, I'm mostly interested in understanding what that race is. I think
-> it is something like cur_mcmd being stale when it's tested in the irq
-> handler because the IO access triggers the irq before mas->cur_mcmd can
-> be updated due to out of order execution. Nothing stops
-> spi_geni_set_cs() from being reordered like this, especially because
-> there isn't any sort of barrier besides the compiler barrier of asm
-> volatile inside geni_set_setup_m_cmd():
+> drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:754:6: warning: variable 'shadow'
+> is used uninitialized whenever 'if' condition is
+> false [-Wsometimes-uninitialized]
+>         if (offset == grbm_cntl || offset == grbm_idx)
+>             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:757:6: note: uninitialized use
+> occurs here
+>         if (shadow) {
+>             ^~~~~~
+> drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:754:2: note: remove the 'if' if
+> its condition is always true
+>         if (offset == grbm_cntl || offset == grbm_idx)
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:738:13: note: initialize the
+> variable 'shadow' to silence this warning
+>         bool shadow;
+>                    ^
+>                     = 0
+> 1 warning generated.
 >
->   CPU0 (device write overtakes CPU)  CPU1
->   ----                               ----
->   mas->cur_mcmd = CMD_NONE;
->   geni_se_setup_m_cmd(...)
->                                      geni_spi_isr()
->                                       <tests cur_mcmd and it's still NONE>
->   mas->cur_mcmd = CMD_CS;
+> It is not wrong so initialize shadow to false to ensure shadow is always
+> used initialized.
 
-This is my assumption about what must have happened, yes.  I have no
-proof, though.
+Yep, thanks for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-
-> > > > +       /* Check for spurious interrupt */
-> > > > +       if (!m_irq) {
-> > > > +               ret = IRQ_NONE;
-> > > > +               goto exit;
-> > >
-> > > I ask because it could be simplified by reading the status and then
-> > > immediately returning IRQ_NONE if no bits are set without having to do
-> > > the lock/unlock dance. And does writing 0 to the irq clear register do
-> > > anything?
-> >
-> > Sure.  I'll move it if you want.  It felt nicer to just keep the whole
-> > thing under lock so I didn't have to think about whether it mattered.
-> > ...and anyone else looking at it didn't need to think about if it
-> > mattered, too.  It it is very easy to say that it doesn't _hurt_ to
-> > have it under lock other than having one extra memory read under lock.
-> > ...and presumably the case where the optimization matters is
-> > incredibly rare (a spurious interrupt) and we just spent a whole lot
-> > of cycles calling the interrupt handler to begin with for this
-> > spurious interrupt.
-> >
-> > I would have a hard time believing that a write of 0 to a "write 1 to
-> > clear" register would have any impact.  It would be a pretty bad
-> > hardware design...
 >
-> This is a writel to a device so it may take some time for the memory
-> barrier to drain any other writes with the full memory barrier in there.
-> Not sure if we care about getting super high performance here but that's
-> a concern.
-
-Right, but I guess the spurious interrupt case wasn't one I'm
-optimizing for.  ...and if it's a real problem we should figure out
-how to avoid so many spurious interrupts.  Presumably all the overhead
-that the Linux kernel did to call our interrupt handler in the first
-place is much more serious.
-
-
-> > So I guess in summary, I'm not planning to spin for any of these
-> > things unless you really insist or you say I'm wrong about something
-> > above or someone else says my opinions are the wrong opinions.
-> >
+> Fixes: 2e0cc4d48b91 ("drm/amdgpu: revise RLCG access path")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/936
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Why do we need such large locking areas?
-
-We probably don't, but it's unlikely to matter at all and the large
-locking areas mean we don't have to spend time thinking about it.
-It's super clear that the locking is safe.
-
-
-In general there shouldn't be tons of downside to have large locking
-areas because there shouldn't be contention for this lock.  As you
-said, much of this is synchronized at higher levels, so mostly we're
-just worried about synchronizing with our interrupt handler and one
-would hope the interrupt handler wasn't firing at times we don't
-expect.
-
-...but I guess there is the downside that local interrupts are fully
-disabled for this whole large locking area and that does feel like
-something that might be worth optimizing for...
-
-
-In theory we _could_ just have a lock around updating 'cur_mcmd' and
-kicking off the transfer.  That would make sure that 'cur_mcmd' was
-definitely updated by the time the interrupt fired.  It feels at least
-a little awkward to me, though, because there is more shared state
-between the interrupt handler and the functions kicking off the
-transfers and we're really just using the lock as a poor man's memory
-barrier, but maybe it's OK.  I can give a shot at this approach if it
-feels viable to you.
-
-
-> Why can't we remove the enum
-> software tracking stuff and look at mas->cur_xfer to figure out if a cs
-> change is happening or not? I suppose mas->cur_xfer could be stale, so
-> we need to make sure that is modified and checked under a lock, and then
-> mas->rx_rem_bytes/tx_rem_bytes also need to be under a lock because
-> they're modified inside and outside the irq handler, but otherwise I
-> don't see any need to hold the lock over the register reads/writes. Most
-> other things are synchronized with the completions or in higher layers
-> of the SPI core.
-
-In general it's a big-ish change to code that's largely already tested
-and that (IMO) it makes readability slightly worse.  It can be worth
-it to make big changes for big gain, but I don't see it here.  It
-might have a slight performance boost, but seems like premature
-optimization since there's no evidence that the existing performance
-(even after my big locking patch) is a problem.
-
-If we want to go forward with your suggestion, I'd have to spend more
-time thinking about the cancel/abort cases, especially, which I'm not
-sure how to test super well.  Specifically does cancel/abort cause the
-"done" bit to be set?  If so your new code will finalize the current
-transfer, but the old code didn't.  I have no idea if this matters.
-You also removed the spinlock from handle_fifo_timeout() and I don't
-know if (for instance) it was important to clear the TX watermark
-register after firing off the abort command but before the interrupt
-handler could run.  It also doesn't necessarily appear that
-reinit_completion() has any safety, so is there some chance that the
-interrupt could fire and we'd still have the re-init pending on our
-side, then clear "done" back to zero after the interrupt handler
-completed us?
-
-...one extra thing to think about with all this is that (I think)
-handle_fifo_timeout() will be called if someone kicks off a SPI
-transfer and then hits "Ctrl-C" partway.  In this case
-spi_transfer_wait() will return -EINTR and I think that will change
-the chip select and then call "handle_err".  I have no idea if that
-works well today, but I have a feeling it will be harder to get right
-without an extra state variable.
-
-
-> I do wonder if we need to hold the lock again when we update the rx/tx
-> remaining bytes counter but I can't convince myself that the irq can run
-> on another CPU in parallel with the CPU that ran the irq first. That
-> seems impossible given that the interrupt would have to come again and
-> the irq controller would need to send it to a different CPU at the same
-> time. We should only need to grab the lock to make sure that cur_xfer
-> and remaining bytes is published by the CPU triggering the rx/tx
-> transfers and then assume the irq handler code is synchronous with
-> itself.
-
-At least needs a comment?
-
-...but even with a comment, what exactly are you gaining here by
-making me and all future readers of the code think about this?  One of
-your main goals here is to eliminate the need to have the spin lock
-locked for the whole of the IRQ handler, right?  If we're in the
-interrupt handler, local interrupts are already off, right?  That
-means that the only thing you can gain (in terms of speed) by
-decreasing the number of lines "under lock" is that you could allow
-someone else trying to get the same lock to run sooner.  As you've
-pointed out, there's already a lot of synchronization at higher
-layers, and many of the arguments you make are assuming that the other
-code isn't running anyway.
-
-So this overall seems like trying to shorten the amount of time that
-the lock is held just for the sheer principle of having spin locks
-held for the fewest lines of code, but not for any real gain?
-
-To get into micro-optimizations, too, I will also say that having fine
-grained locking in the interrupt handler also will lead to more than
-one call to spin_lock() per IRQ.  I put traces in and I often saw "rx"
-and "cmd_done" fall together and both separately lock in your code.
-In general isn't reducing the number of calls to spin_lock() (which I
-think has some overhead) more important?
-
-
-> -       if ((m_irq & M_CMD_CANCEL_EN) || (m_irq & M_CMD_ABORT_EN)) {
-> -               mas->cur_mcmd = CMD_NONE;
-> +       /* Wake up spi_geni_set_cs() or handle_fifo_timeout() */
-> +       if (cs_change || (m_irq & M_CMD_CANCEL_EN) || (m_irq & M_CMD_ABORT_EN))
->                 complete(&mas->xfer_done);
-> -       }
+> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+> index 7bc2486167e7..affbff76758c 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+> @@ -735,7 +735,7 @@ void gfx_v9_0_rlcg_wreg(struct amdgpu_device *adev, u32 offset, u32 v)
+>         static void *spare_int;
+>         static uint32_t grbm_cntl;
+>         static uint32_t grbm_idx;
+> -       bool shadow;
+> +       bool shadow = false;
 >
->         writel(m_irq, se->base + SE_GENI_M_IRQ_CLEAR);
-> -       spin_unlock_irqrestore(&mas->lock, flags);
-> +
-
-It doesn't feel legit to release the spinlock before this writel().
-Once you complete(), can't (in theory) another transfer kick off on
-another CPU, and then cause an interrupt to fire?  You'd be clearing
-someone else's interrupt, perhaps?  Maybe this actually happens in
-handle_fifo_timeout() which (after your patch) waits for the
-completion and then immediate (with no locking) fires off an abort.
-
-As an aisde and unrelated to your change, I never like it when
-interrupt handler clear their IRQ bits at the end anyway because it
-always feels like a race.  The only time you clear at the end is if
-you have "latched level" interrupts (interrupts that are latched but
-will continually re-assert unless the thing that caused them goes
-away).  I have no idea of these bits are "latched level", but it feels
-unlikely.
+>         scratch_reg0 = adev->rmmio + (adev->reg_offset[GC_HWIP][0][mmSCRATCH_REG0_BASE_IDX] + mmSCRATCH_REG0)*4;
+>         scratch_reg1 = adev->rmmio + (adev->reg_offset[GC_HWIP][0][mmSCRATCH_REG1_BASE_IDX] + mmSCRATCH_REG1)*4;
+> --
+> 2.26.0.rc1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200318002500.52471-1-natechancellor%40gmail.com.
 
 
-NOTE: I didn't do a complete review of your patch because (I think) I
-already found a few issues and am still not convinced it's a good use
-of time to fully re-architect the control flow of this driver.  If you
-still think this is something we need to do, I will try to make time
-to work through all the corner cases in my head and try my best to
-make sure there are no weird memory-ordering issues, but I can't
-promise I won't miss anything.
 
-
--Doug
+-- 
+Thanks,
+~Nick Desaulniers
