@@ -2,46 +2,46 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FE9C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43688C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BB220724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284592077E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgCRS4g (ORCPT
+        id S1726934AbgCRS5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:56:36 -0400
-Received: from namei.org ([65.99.196.166]:42008 "EHLO namei.org"
+        Wed, 18 Mar 2020 14:57:08 -0400
+Received: from gentwo.org ([3.19.106.255]:43780 "EHLO gentwo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbgCRS4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:56:35 -0400
+        id S1726506AbgCRS5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 14:57:07 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 1FEAA3EF51; Wed, 18 Mar 2020 18:57:07 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id 02IIu8gs029803;
-        Wed, 18 Mar 2020 18:56:08 GMT
-Date:   Thu, 19 Mar 2020 05:56:08 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     David Howells <dhowells@redhat.com>
-cc:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-security-module@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>, nicolas.dichtel@6wind.com,
-        raven@themaw.net, christian@brauner.io, andres@anarazel.de,
-        jlayton@redhat.com, dray@redhat.com, kzak@redhat.com,
-        keyrings@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/17] security: Add hooks to rule on setting a watch
- [ver #5]
-In-Reply-To: <158454381028.2863966.13720387027986442186.stgit@warthog.procyon.org.uk>
-Message-ID: <alpine.LRH.2.21.2003190555450.29708@namei.org>
-References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk> <158454381028.2863966.13720387027986442186.stgit@warthog.procyon.org.uk>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        by gentwo.org (Postfix) with ESMTP id 1DA593EF50;
+        Wed, 18 Mar 2020 18:57:07 +0000 (UTC)
+Date:   Wed, 18 Mar 2020 18:57:07 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Michal Hocko <mhocko@kernel.org>
+cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 3/3] mm/page_alloc: Keep memoryless cpuless node 0
+ offline
+In-Reply-To: <20200316085425.GB11482@dhcp22.suse.cz>
+Message-ID: <alpine.DEB.2.21.2003181855260.18605@www.lameter.com>
+References: <20200311110237.5731-1-srikar@linux.vnet.ibm.com> <20200311110237.5731-4-srikar@linux.vnet.ibm.com> <alpine.DEB.2.21.2003151416230.14449@www.lameter.com> <20200316085425.GB11482@dhcp22.suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,29 +49,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020, David Howells wrote:
+On Mon, 16 Mar 2020, Michal Hocko wrote:
 
-> Add security hooks that will allow an LSM to rule on whether or not a watch
-> may be set.  More than one hook is required as the watches watch different
-> types of object.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Casey Schaufler <casey@schaufler-ca.com>
-> cc: Stephen Smalley <sds@tycho.nsa.gov>
-> cc: linux-security-module@vger.kernel.org
-> ---
-> 
->  include/linux/lsm_hooks.h |   24 ++++++++++++++++++++++++
->  include/linux/security.h  |   17 +++++++++++++++++
->  security/security.c       |   14 ++++++++++++++
->  3 files changed, 55 insertions(+)
-> 
+> > We can dynamically number the nodes right? So just make sure that the
+> > firmware properly creates memory on node 0?
+>
+> Are you suggesting that the OS would renumber NUMA nodes coming
+> from FW just to satisfy node 0 existence? If yes then I believe this is
+> really a bad idea because it would make HW/LPAR configuration matching
+> to the resulting memory layout really hard to follow.
 
-
-Acked-by: James Morris <jamorris@linux.microsoft.com>
-
-
--- 
-James Morris
-<jmorris@namei.org>
+NUMA nodes are created by the OS based on information provided by the
+firmware. Either the FW would need to ensure that a viable node 0 exists
+or the bootstrap arch code could setup things to the same effect.
 
