@@ -2,131 +2,116 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A33AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC147C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 371E920768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B3B2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584526365;
+	bh=6Qp/xUEdfDHiwOlzFgHXZUcDvRvQ4RUplGy2llBeWXo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FULCliY3jGTr6wjBHydpxmSDDB4XUemhpTQ7zfP4JgsvEIxA8Ek7O6KAyJJy0ctOB
+	 VCR9uqF0axUepj4goM/JJSM8Pns7v1PawHwOLaIQgLZcVkyynhBy3to1aRyiZZVZQ8
+	 tqgLzsB4Tuz9mL/ZWY18xjPzr+hP0cvoRu0wwTzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbgCRKKn (ORCPT
+        id S1727366AbgCRKMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:10:43 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52156 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgCRKKm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:10:42 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c187so1240229wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:10:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=FPQ5osnkg/HoY+TfdL7F+oUq1R09ELZh/2W0X/IdEWM=;
-        b=lN6vgKIY/PNcLocORpGpncAF73DefTsojjnrc0JNMXu3NTt/+SRZnpRqdWddUoiS+o
-         gVbwOi4JsMJARIY8aDH/6HYRtAOQUOJcxhEtJD1nWTO/Q0Oe1Q5vrhqgGrUwLqPCsgvZ
-         DKok91zEmbVZVwzC/um9bgvLEdrzRGfRjQKsXOxPfVi9lFwbDV0ZEuUV3tNJ418JpJsG
-         uycwWdnWH1i/es+FyQ3D0fA/8BY8SComWYX8eVjO9elO4a/GwMJepv5PKSwcbi7PpgaI
-         i1Uv6gk1Qa7UH8QbCmPiZ4nrVWJqm/h/cLekeQYMpWiWR8Spof0/DmnxizexSEfxi962
-         aBAQ==
-X-Gm-Message-State: ANhLgQ3LJ/Fumu/IK7I1+88z7CtDheVgzkb4Xb/90q4GEj6GM185PtGz
-        7mC0LPc4hWeRUTa0Qsr4UmU=
-X-Google-Smtp-Source: ADFU+vt5jLSujl/oZI8dD/y4Eng93u0/Y3mAAVvSk7ykgxDapqO0OoQPOtPPhVm0Q+U1cnZkVGZ+Kg==
-X-Received: by 2002:a7b:c218:: with SMTP id x24mr4557128wmi.48.1584526241535;
-        Wed, 18 Mar 2020 03:10:41 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id d21sm8638297wrb.51.2020.03.18.03.10.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Mar 2020 03:10:40 -0700 (PDT)
-Subject: Re: [PATCH] vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual
- console
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        Eric Dumazet <edumazet@google.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-References: <0000000000006663de0598d25ab1@google.com>
- <20200224071247.283098-1-ebiggers@kernel.org>
- <8fb00b38-abd0-6895-3ad2-85a6f05ee6cf@suse.com>
- <20200224081913.GA299238@sol.localdomain> <20200302212306.GA78660@gmail.com>
- <20200318100612.GA2044908@kroah.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ced58bef-31ac-7f4e-ffed-ccbcde7b7bb6@suse.cz>
-Date:   Wed, 18 Mar 2020 11:10:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 06:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbgCRKMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 06:12:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4663B20768;
+        Wed, 18 Mar 2020 10:12:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584526363;
+        bh=6Qp/xUEdfDHiwOlzFgHXZUcDvRvQ4RUplGy2llBeWXo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pZHE5tlEzKgLpX+C7exwsPfM44nFiUWegCKqbBq8fYIx3Nr0wNC65Me80ZLTadDNo
+         Ettdk6W3Z89nMnYoDSlz0B+Lw01hyCo/vC8D1n+pdbS2yWLHarWZjOgGHUGAAhVwhK
+         cec0eWw3w3MA0yChNt1HntUFpLLiW15NzPAGLbC8=
+Date:   Wed, 18 Mar 2020 11:12:40 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Li Tao <tao.li@vivo.com>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Sergey Organov <sorganov@gmail.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wenhu.wang@vivo.com
+Subject: Re: [PATCH] usb: gadget: serial: Fixed KASAN null-ptr-deref in
+ tty_wakeup
+Message-ID: <20200318101240.GA2067041@kroah.com>
+References: <20200318025606.2058-1-tao.li@vivo.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318100612.GA2044908@kroah.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318025606.2058-1-tao.li@vivo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18. 03. 20, 11:06, Greg Kroah-Hartman wrote:
->> Jiri, can you explain what you meant here?  I don't see how your suggestion
->> would solve the problem.
->>
->> Greg, any opinion?
+On Wed, Mar 18, 2020 at 10:56:01AM +0800, Li Tao wrote:
+> The port->port.tty maybe reset as NULL, If gs_close() was invoked
+> unexpectedly during running gserial_connect().
 > 
-> I'll defer to Jiri here :)
+> BUG: KASAN: null-ptr-deref in tty_wakeup+0x1c/0x84
+> Call trace:
+> [<0000000095c3c837>] dump_backtrace+0x0/0x6d4
+> [<0000000047726bb8>] show_stack+0x18/0x20
+> [<00000000bedb4c1e>] --dump_stack+0x20/0x28
+> [<00000000722f2e2a>] dump_stack+0x84/0xb0
+> [<00000000325683d4>] kasan_report_error+0x178/0x1e4
+> [<0000000053079998>] kasan_report_error+0x0/0x1e4
+> [<00000000b6d33afa>] --asan_load8+0x150/0x15c
+> [<00000000188745b8>] tty_wakeup+0x1c/0x84
+> [<0000000064f6dd21>] gs_start_io+0xd0/0x11c
+> [<0000000063d67b6c>] gserial_connect+0x15c/0x1b0
+> [<00000000faf7c0f9>] dm_set_alt+0xa8/0x190
+> [<000000008deb1909>] composite_setup+0xde4/0x1edc
+> [<00000000792ee16d>] android_setup+0x210/0x294
+> [<00000000ab32ef30>] dwc3_ep0_delegate_req+0x48/0x68
+> [<0000000054e26fd2>] dwc3_ep0_interrupt+0xf2c/0x16fc
+> [<0000000050cb2262>] dwc3_interrupt+0x464/0x1f44
+> [<00000000fdcaa6e9>] --handle_irq_event_percpu+0x184/0x398
+> [<000000003b24ff56>] handle_irq_event_percpu+0xa0/0x134
+> [<00000000aedda5ee>] handle_irq_event+0x60/0xa0
+> [<000000005f51a570>] handle_fasteoi_irq+0x23c/0x31c
+> [<000000008db2608d>] generic_handle_irq+0x70/0xa4
+> [<00000000098683fc>] --handle_domain_irq+0x84/0xe0
+> [<000000008ed23b46>] gic_handle_irq+0x98/0xb8
+> 
+> Signed-off-by: Li Tao <tao.li@vivo.com>
+> ---
+>  drivers/usb/gadget/function/u_serial.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+> index 8167d379e115..3c109a8f9ec4 100644
+> --- a/drivers/usb/gadget/function/u_serial.c
+> +++ b/drivers/usb/gadget/function/u_serial.c
+> @@ -565,7 +565,8 @@ static int gs_start_io(struct gs_port *port)
+>  		gs_start_tx(port);
+>  		/* Unblock any pending writes into our circular buffer, in case
+>  		 * we didn't in gs_start_tx() */
+> -		tty_wakeup(port->port.tty);
+> +		if (port->port.tty)
+> +			tty_wakeup(port->port.tty);
 
-Heh, thanks.
+What prevents port.tty from being set to NULL between the check and the
+call to tty_wakeup?
 
-I started looking into this yesterday, but was interrupted by other
-tasks. Stay tuned.
+Shouldn't gs_close() and gserial_connect() have some sort of locking to
+prevent this?
 
-regards,
--- 
-js
-suse labs
+thanks,
+
+greg k-h
