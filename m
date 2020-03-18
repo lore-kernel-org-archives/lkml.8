@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44173C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9FFC4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185F42076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D76702076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584572783;
-	bh=dUCSWxYUurc+Drotp7J4F6yRdq0QEiO/fiS1TK31ano=;
+	s=default; t=1584572785;
+	bh=iA4iRH5ParVxc6ngAWHhdo0smaECQuztq6rFSmiI6do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xQN88qr4+S4kvZF5LJeiU3f4Of2CVyFj6zXxb0DgGoYy14tVy4wGU0OFtbOxsYu3t
-	 /OPyMPXcDe1r8vGugnvX1AD3YUiufm8eeIBHlOxIX9OtrVyh04L0ajeoKH5/Jo0wrU
-	 ph5D1vpPhwvFDOIjzkIQKxQTx8D83720pnrTKXdo=
+	b=2lYlNsU2XqhJB8UXRykEUQu5Rljzc8rYVGNvDRRpeDyOjDi408RjkvxqJJpFG/J07
+	 wP8itloX9gihGPsnp15THjYiL7rFXJnmAg5hE4YlstIJ8p7g0qtAuKmPWLhvLNfAQC
+	 9OVOwtgJAtQHzvdo1gIFESUcEJTKNv+LCH4lgS5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbgCRXGS (ORCPT
+        id S1727339AbgCRXGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:06:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37510 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 19:06:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgCRXGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726704AbgCRXGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Mar 2020 19:06:15 -0400
 Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5184320776;
-        Wed, 18 Mar 2020 23:06:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03EE20773;
+        Wed, 18 Mar 2020 23:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1584572774;
-        bh=dUCSWxYUurc+Drotp7J4F6yRdq0QEiO/fiS1TK31ano=;
+        bh=iA4iRH5ParVxc6ngAWHhdo0smaECQuztq6rFSmiI6do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QsyBzEdN1TPH7R3GZId7GXtYOTZUr5WTh3bM+hnXjhBu4XAwnXe+fQQzjwVZqRyuP
-         pylThAiKxfGXAbl4vGLRWOFH7PUBSAQDVkzZcbZC/tGBPgoGH+m20J9oJ54c/jt4zs
-         15rXAobX2Hmnq4tN5y0TiAikCBzl/3ASt9H6G4GU=
+        b=K7n3940TmKjDZZUjGD/r0rhJcUawtJPJWhmYbB1g/1Y0qJSduBNhQuqwRFJ78/J/k
+         qApz3T1b/xKD6Kix/jd5d91bYAY69FlQ29vkS2bM3eYZsWWTbwEmN+ohvakQXoCyIn
+         oVWsOGDevBluna/ahCA5jDlPkwGc8N4GghxrMc8w=
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
@@ -49,9 +49,9 @@ Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
         NeilBrown <neilb@suse.com>, stable@vger.kernel.org
-Subject: [PATCH v4 2/5] fs/filesystems.c: downgrade user-reachable WARN_ONCE() to pr_warn_once()
-Date:   Wed, 18 Mar 2020 16:05:12 -0700
-Message-Id: <20200318230515.171692-3-ebiggers@kernel.org>
+Subject: [PATCH v4 1/5] kmod: make request_module() return an error when autoloading is disabled
+Date:   Wed, 18 Mar 2020 16:05:11 -0700
+Message-Id: <20200318230515.171692-2-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200318230515.171692-1-ebiggers@kernel.org>
 References: <20200318230515.171692-1-ebiggers@kernel.org>
@@ -64,49 +64,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-After request_module(), nothing is stopping the module from being
-unloaded until someone takes a reference to it via try_get_module().
+It's long been possible to disable kernel module autoloading completely
+(while still allowing manual module insertion) by setting
+/proc/sys/kernel/modprobe to the empty string.  This can be preferable
+to setting it to a nonexistent file since it avoids the overhead of an
+attempted execve(), avoids potential deadlocks, and avoids the call to
+security_kernel_module_request() and thus on SELinux-based systems
+eliminates the need to write SELinux rules to dontaudit module_request.
 
-The WARN_ONCE() in get_fs_type() is thus user-reachable, via userspace
-running 'rmmod' concurrently.
+However, when module autoloading is disabled in this way,
+request_module() returns 0.  This is broken because callers expect 0 to
+mean that the module was successfully loaded.
 
-Since WARN_ONCE() is for kernel bugs only, not for user-reachable
-situations, downgrade this warning to pr_warn_once().
+Apparently this was never noticed because this method of disabling
+module autoloading isn't used much, and also most callers don't use the
+return value of request_module() since it's always necessary to check
+whether the module registered its functionality or not anyway.  But
+improperly returning 0 can indeed confuse a few callers, for example
+get_fs_type() in fs/filesystems.c where it causes a WARNING to be hit:
 
-Keep it printed once only, since the intent of this warning is to detect
-a bug in modprobe at boot time.  Printing the warning more than once
-wouldn't really provide any useful extra information.
+	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
+		fs = __get_fs_type(name, len);
+		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
+	}
 
-Fixes: 41124db869b7 ("fs: warn in case userspace lied about modprobe return")
+This is easily reproduced with:
+
+	echo > /proc/sys/kernel/modprobe
+	mount -t NONEXISTENT none /
+
+It causes:
+
+	request_module fs-NONEXISTENT succeeded, but still no fs?
+	WARNING: CPU: 1 PID: 1106 at fs/filesystems.c:275 get_fs_type+0xd6/0xf0
+	[...]
+
+This should actually use pr_warn_once() rather than WARN_ONCE(), since
+it's also user-reachable if userspace immediately unloads the module.
+Regardless, request_module() should correctly return an error when it
+fails.  So let's make it return -ENOENT, which matches the error when
+the modprobe binary doesn't exist.
+
+I've also sent patches to document and test this case.
+
 Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 Reviewed-by: Jessica Yu <jeyu@kernel.org>
-Cc: <stable@vger.kernel.org> # v4.13+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: stable@vger.kernel.org
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Kees Cook <keescook@chromium.org>
 Cc: NeilBrown <neilb@suse.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- fs/filesystems.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/kmod.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/filesystems.c b/fs/filesystems.c
-index 77bf5f95362da..90b8d879fbaf3 100644
---- a/fs/filesystems.c
-+++ b/fs/filesystems.c
-@@ -272,7 +272,9 @@ struct file_system_type *get_fs_type(const char *name)
- 	fs = __get_fs_type(name, len);
- 	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
- 		fs = __get_fs_type(name, len);
--		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
-+		if (!fs)
-+			pr_warn_once("request_module fs-%.*s succeeded, but still no fs?\n",
-+				     len, name);
- 	}
+diff --git a/kernel/kmod.c b/kernel/kmod.c
+index bc6addd9152b4..a2de58de6ab62 100644
+--- a/kernel/kmod.c
++++ b/kernel/kmod.c
+@@ -120,7 +120,7 @@ static int call_modprobe(char *module_name, int wait)
+  * invoke it.
+  *
+  * If module auto-loading support is disabled then this function
+- * becomes a no-operation.
++ * simply returns -ENOENT.
+  */
+ int __request_module(bool wait, const char *fmt, ...)
+ {
+@@ -137,7 +137,7 @@ int __request_module(bool wait, const char *fmt, ...)
+ 	WARN_ON_ONCE(wait && current_is_async());
  
- 	if (dot && fs && !(fs->fs_flags & FS_HAS_SUBTYPE)) {
+ 	if (!modprobe_path[0])
+-		return 0;
++		return -ENOENT;
+ 
+ 	va_start(args, fmt);
+ 	ret = vsnprintf(module_name, MODULE_NAME_LEN, fmt, args);
 -- 
 2.25.1
 
