@@ -2,157 +2,270 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EEFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A462C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B807E20773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D36920770
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:38:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584542312;
+	bh=ruUacygRA1pYuADNBjr/rlPAjaaGReif+YMpRHqema4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ntW85hayII8k9/rip6KZzmf2vOEVEJYrDqCmeDAHWj4EAoBPIbYnHHZmzkQj57yCb
+	 E7tc4XsihuTEXM8ZmgU9TCdcAp72KnUPsGTTWPhomb+kKHnnhWMqq5eqKP3lrxoIdL
+	 AaY18uW+2w3iFZ4lAWNZPsiF/TCZHWTrI0W/0ihg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgCROi3 (ORCPT
+        id S1727101AbgCROib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:38:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:50832 "EHLO foss.arm.com"
+        Wed, 18 Mar 2020 10:38:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbgCROi3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:38:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FF8331B;
-        Wed, 18 Mar 2020 07:38:28 -0700 (PDT)
-Received: from e123083-lin (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45E2D3F52E;
-        Wed, 18 Mar 2020 07:38:26 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 15:38:23 +0100
-From:   Morten Rasmussen <morten.rasmussen@arm.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH V2] sched: fair: Use the earliest break even
-Message-ID: <20200318143823.GC6103@e123083-lin>
-References: <20200311202625.13629-1-daniel.lezcano@linaro.org>
- <CAKfTPtAqeHhVCeSgE1DsaGGkM6nY-9oAvGw_6zWvv1bKyE85JQ@mail.gmail.com>
- <e6e8ff94-64f2-6404-e332-2e030fc7e332@linaro.org>
- <20200317075607.GE10914@e105550-lin.cambridge.arm.com>
- <3520b762-08f5-0db8-30cb-372709188bb9@linaro.org>
- <20200317143053.GF10914@e105550-lin.cambridge.arm.com>
- <7cd04d35-3522-30fb-82e9-82fdf53d0957@linaro.org>
- <20200318082452.GA6103@e123083-lin>
- <798e9bde-a207-3a0e-0f13-0e27d60fd286@linaro.org>
+        id S1726643AbgCROia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 10:38:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B23E20770;
+        Wed, 18 Mar 2020 14:38:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584542308;
+        bh=ruUacygRA1pYuADNBjr/rlPAjaaGReif+YMpRHqema4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=obwKPMMwxgm26AkB2TdPXJf0rWoAu8a2wvzMukGG49p3Xnp91RXX+4ZxD2kK6FRsu
+         bPBTIq+2AeL6FmIR9E/qzMp4OWXZjg1/DPHUTqyWfQDDuYkMFh4bk1fvoHEa5bHiN7
+         5deHfj3boMLUCD8MQ5+GcXbhSglqi5AQGgB5aP6M=
+Date:   Wed, 18 Mar 2020 15:38:26 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>, arnd@arndb.de,
+        smohanad@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/16] bus: mhi: core: Add support for registering MHI
+ client drivers
+Message-ID: <20200318143826.GA2809114@kroah.com>
+References: <20200220095854.4804-1-manivannan.sadhasivam@linaro.org>
+ <20200220095854.4804-4-manivannan.sadhasivam@linaro.org>
+ <20200318133626.GA2801580@kroah.com>
+ <db612e12-0033-31cc-60fc-62e45dda4342@codeaurora.org>
+ <20200318140034.GA2805201@kroah.com>
+ <20200318142312.GA11494@Mani-XPS-13-9360>
+ <20200318142730.GB2807628@kroah.com>
+ <20200318143145.GA12341@Mani-XPS-13-9360>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <798e9bde-a207-3a0e-0f13-0e27d60fd286@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200318143145.GA12341@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 11:17:49AM +0100, Daniel Lezcano wrote:
-> On 18/03/2020 09:24, Morten Rasmussen wrote:
-> > On Tue, Mar 17, 2020 at 06:07:43PM +0100, Daniel Lezcano wrote:
-> >> On 17/03/2020 15:30, Morten Rasmussen wrote:
-> >>> On Tue, Mar 17, 2020 at 02:48:51PM +0100, Daniel Lezcano wrote:
-> >>>> On 17/03/2020 08:56, Morten Rasmussen wrote:
-> >>>>> On Thu, Mar 12, 2020 at 11:04:19AM +0100, Daniel Lezcano wrote:
-> >>>>>>>> In order to be more energy efficient but without impacting the
-> >>>>>>>> performances, let's use another criteria: the break even deadline.
-> >>>>>>>>
-> >>>>>>>> At idle time, when we store the idle state the CPU is entering in, we
-> >>>>>>>> compute the next deadline where the CPU could be woken up without
-> >>>>>>>> spending more energy to sleep.
-> >>>>>
-> >>>>> I don't follow the argument that sleeping longer should improve energy
-> >>>>> consumption. 
-> >>>>
-> >>>> May be it is not explained correctly.
-> >>>>
-> >>>> The patch is about selecting a CPU with the smallest break even deadline
-> >>>> value. In a group of idle CPUs in the same idle state, we will pick the
-> >>>> one with the smallest break even dead line which is the one with the
-> >>>> highest probability it already reached its target residency.
-> >>>>
-> >>>> It is best effort.
-> >>>
-> >>> Indeed. I get what the patch does, I just don't see how the patch
-> >>> improves energy efficiency.
-> >>
-> >> If the CPU is woken up before it reached the break even, the idle state
-> >> cost in energy is greater than the energy it saved.
-> >>
-> >> Am I misunderstanding your point?
+On Wed, Mar 18, 2020 at 08:01:45PM +0530, Manivannan Sadhasivam wrote:
+> On Wed, Mar 18, 2020 at 03:27:30PM +0100, Greg KH wrote:
+> > On Wed, Mar 18, 2020 at 07:53:12PM +0530, Manivannan Sadhasivam wrote:
+> > > Hi Greg,
+> > > 
+> > > On Wed, Mar 18, 2020 at 03:00:34PM +0100, Greg KH wrote:
+> > > > On Wed, Mar 18, 2020 at 07:54:30AM -0600, Jeffrey Hugo wrote:
+> > > > > On 3/18/2020 7:36 AM, Greg KH wrote:
+> > > > > > On Thu, Feb 20, 2020 at 03:28:41PM +0530, Manivannan Sadhasivam wrote:
+> > > > > > > This commit adds support for registering MHI client drivers with the
+> > > > > > > MHI stack. MHI client drivers binds to one or more MHI devices inorder
+> > > > > > > to sends and receive the upper-layer protocol packets like IP packets,
+> > > > > > > modem control messages, and diagnostics messages over MHI bus.
+> > > > > > > 
+> > > > > > > This is based on the patch submitted by Sujeev Dias:
+> > > > > > > https://lkml.org/lkml/2018/7/9/987
+> > > > > > > 
+> > > > > > > Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
+> > > > > > > Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> > > > > > > [mani: splitted and cleaned up for upstream]
+> > > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > > > Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > > > > > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > > > > > ---
+> > > > > > >   drivers/bus/mhi/core/init.c | 149 ++++++++++++++++++++++++++++++++++++
+> > > > > > >   include/linux/mhi.h         |  39 ++++++++++
+> > > > > > >   2 files changed, 188 insertions(+)
+> > > > > > > 
+> > > > > > > diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+> > > > > > > index 6f24c21284ec..12e386862b3f 100644
+> > > > > > > --- a/drivers/bus/mhi/core/init.c
+> > > > > > > +++ b/drivers/bus/mhi/core/init.c
+> > > > > > > @@ -374,8 +374,157 @@ struct mhi_device *mhi_alloc_device(struct mhi_controller *mhi_cntrl)
+> > > > > > >   	return mhi_dev;
+> > > > > > >   }
+> > > > > > > +static int mhi_driver_probe(struct device *dev)
+> > > > > > > +{
+> > > > > > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> > > > > > > +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
+> > > > > > > +	struct device_driver *drv = dev->driver;
+> > > > > > > +	struct mhi_driver *mhi_drv = to_mhi_driver(drv);
+> > > > > > > +	struct mhi_event *mhi_event;
+> > > > > > > +	struct mhi_chan *ul_chan = mhi_dev->ul_chan;
+> > > > > > > +	struct mhi_chan *dl_chan = mhi_dev->dl_chan;
+> > > > > > > +
+> > > > > > > +	if (ul_chan) {
+> > > > > > > +		/*
+> > > > > > > +		 * If channel supports LPM notifications then status_cb should
+> > > > > > > +		 * be provided
+> > > > > > > +		 */
+> > > > > > > +		if (ul_chan->lpm_notify && !mhi_drv->status_cb)
+> > > > > > > +			return -EINVAL;
+> > > > > > > +
+> > > > > > > +		/* For non-offload channels then xfer_cb should be provided */
+> > > > > > > +		if (!ul_chan->offload_ch && !mhi_drv->ul_xfer_cb)
+> > > > > > > +			return -EINVAL;
+> > > > > > > +
+> > > > > > > +		ul_chan->xfer_cb = mhi_drv->ul_xfer_cb;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	if (dl_chan) {
+> > > > > > > +		/*
+> > > > > > > +		 * If channel supports LPM notifications then status_cb should
+> > > > > > > +		 * be provided
+> > > > > > > +		 */
+> > > > > > > +		if (dl_chan->lpm_notify && !mhi_drv->status_cb)
+> > > > > > > +			return -EINVAL;
+> > > > > > > +
+> > > > > > > +		/* For non-offload channels then xfer_cb should be provided */
+> > > > > > > +		if (!dl_chan->offload_ch && !mhi_drv->dl_xfer_cb)
+> > > > > > > +			return -EINVAL;
+> > > > > > > +
+> > > > > > > +		mhi_event = &mhi_cntrl->mhi_event[dl_chan->er_index];
+> > > > > > > +
+> > > > > > > +		/*
+> > > > > > > +		 * If the channel event ring is managed by client, then
+> > > > > > > +		 * status_cb must be provided so that the framework can
+> > > > > > > +		 * notify pending data
+> > > > > > > +		 */
+> > > > > > > +		if (mhi_event->cl_manage && !mhi_drv->status_cb)
+> > > > > > > +			return -EINVAL;
+> > > > > > > +
+> > > > > > > +		dl_chan->xfer_cb = mhi_drv->dl_xfer_cb;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	/* Call the user provided probe function */
+> > > > > > > +	return mhi_drv->probe(mhi_dev, mhi_dev->id);
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +static int mhi_driver_remove(struct device *dev)
+> > > > > > > +{
+> > > > > > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> > > > > > > +	struct mhi_driver *mhi_drv = to_mhi_driver(dev->driver);
+> > > > > > > +	struct mhi_chan *mhi_chan;
+> > > > > > > +	enum mhi_ch_state ch_state[] = {
+> > > > > > > +		MHI_CH_STATE_DISABLED,
+> > > > > > > +		MHI_CH_STATE_DISABLED
+> > > > > > > +	};
+> > > > > > > +	int dir;
+> > > > > > > +
+> > > > > > > +	/* Skip if it is a controller device */
+> > > > > > > +	if (mhi_dev->dev_type == MHI_DEVICE_CONTROLLER)
+> > > > > > > +		return 0;
+> > > > > > > +
+> > > > > > > +	/* Reset both channels */
+> > > > > > > +	for (dir = 0; dir < 2; dir++) {
+> > > > > > > +		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
+> > > > > > > +
+> > > > > > > +		if (!mhi_chan)
+> > > > > > > +			continue;
+> > > > > > > +
+> > > > > > > +		/* Wake all threads waiting for completion */
+> > > > > > > +		write_lock_irq(&mhi_chan->lock);
+> > > > > > > +		mhi_chan->ccs = MHI_EV_CC_INVALID;
+> > > > > > > +		complete_all(&mhi_chan->completion);
+> > > > > > > +		write_unlock_irq(&mhi_chan->lock);
+> > > > > > > +
+> > > > > > > +		/* Set the channel state to disabled */
+> > > > > > > +		mutex_lock(&mhi_chan->mutex);
+> > > > > > > +		write_lock_irq(&mhi_chan->lock);
+> > > > > > > +		ch_state[dir] = mhi_chan->ch_state;
+> > > > > > > +		mhi_chan->ch_state = MHI_CH_STATE_SUSPENDED;
+> > > > > > > +		write_unlock_irq(&mhi_chan->lock);
+> > > > > > > +
+> > > > > > > +		mutex_unlock(&mhi_chan->mutex);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	mhi_drv->remove(mhi_dev);
+> > > > > > > +
+> > > > > > > +	/* De-init channel if it was enabled */
+> > > > > > > +	for (dir = 0; dir < 2; dir++) {
+> > > > > > > +		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
+> > > > > > > +
+> > > > > > > +		if (!mhi_chan)
+> > > > > > > +			continue;
+> > > > > > > +
+> > > > > > > +		mutex_lock(&mhi_chan->mutex);
+> > > > > > > +
+> > > > > > > +		mhi_chan->ch_state = MHI_CH_STATE_DISABLED;
+> > > > > > > +
+> > > > > > > +		mutex_unlock(&mhi_chan->mutex);
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	return 0;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +int mhi_driver_register(struct mhi_driver *mhi_drv)
+> > > > > > > +{
+> > > > > > > +	struct device_driver *driver = &mhi_drv->driver;
+> > > > > > > +
+> > > > > > > +	if (!mhi_drv->probe || !mhi_drv->remove)
+> > > > > > > +		return -EINVAL;
+> > > > > > > +
+> > > > > > > +	driver->bus = &mhi_bus_type;
+> > > > > > > +	driver->probe = mhi_driver_probe;
+> > > > > > > +	driver->remove = mhi_driver_remove;
+> > > > > > > +
+> > > > > > > +	return driver_register(driver);
+> > > > > > > +}
+> > > > > > > +EXPORT_SYMBOL_GPL(mhi_driver_register);
+> > > > > > 
+> > > > > > You don't care about module owners of the driver?  Odd :(
+> > > > > > 
+> > > > > > (hint, you probably should...)
+> > > > > > 
+> > > > > > greg k-h
+> > > > > > 
+> > > > > 
+> > > > > For my own education, can you please clarify your comment?  I'm not sure
+> > > > > that I understand the context of what you are saying (ie why is this export
+> > > > > a possible problem?).
+> > > > 
+> > > > Sorry, it didn't have to do with the export, it had to do with the fact
+> > > > that your driver_register() function does not pass in the owner of the
+> > > > module of the driver, like almost all other subsystems do.  That way you
+> > > > can try to protect the module from being unloaded if it has files open
+> > > > assigned to it.
+> > > > 
+> > > > If you don't have any userspace accesses like that, to the driver, then
+> > > > nevermind, all is fine :)
+> > > > 
+> > > 
+> > > This is not needed right now but I'll fix this anyway to avoid issues in
+> > > future :)
+> > > 
+> > > Btw, may I know the status of this series? Do you have any more comments
+> > > or do you happen to wait for more reviews?
 > > 
-> > Considering just the waking then yes, it reaches energy break-even.
-> > However, considering all the CPUs in the system, it just moves the idle
-> > entry/exit energy cost to a different CPU, it doesn't go away.
+> > It would be nice to get other reviews, but other than what I noticed
+> > above, it looks sane to me.  Am I the one supposed to take these
+> > patches?
 > > 
-> > Whether you have:
-> > 
-> >                |-BE-|
-> >            ____    ____
-> > CPU0:  ___/    \__/    \___
-> > 
-> > CPU1:  ____________________
-> > 
-> > Or:
-> >                |-BE-|
-> >            ____
-> > CPU0:  ___/    \___________
-> >                    ____
-> > CPU1:  ___________/    \___
-> > 
-> > _
-> >   = CPU busy = P_{busy}
-> > _ = CPU idle = P_{idle}
-> > / = CPU idle exit = P_{exit}
-> > \ = CPU idle entry = P_{entry}
-> > 
-> > The sum of areas under the curves is the same, i.e. the total energy is
-> > unchanged.
 > 
-> It is a counter-intuitive comment, now I get it, thanks for the
-> clarification. It is a good point.
+> I guess so ;) Do you think I need to sent another revision incorporating
+> the module owner fix or it can come as an incremental patch? Btw, I do
+> have few more in pipeline :)
 
-No problem.
+I'll just go take these now and you can send a follow-on patch for the
+module owner.  Let's see if 0-day complains about it :)
 
-> Taking into consideration the dynamic, in the case #1, the break even is
-> not reached, the idle duration is smaller and that leads the governor to
-> choose shallower idle states after and consequently CPU0 will be used in
-> priority. We end up with CPU0 in a shallow state and CPU1 in a deep state.
+thanks,
 
-Indeed. I was speculating earlier if the opposite could happen too. If
-we extended the second case to form a repeating pattern, could we
-prevent somehow prevent CPU1 from reaching a deeper state? Could we have
-pattern that would keep both CPUs in shallow state where it would have
-been more efficient to consolidate the wake-ups on CPU0 and let CPU1
-enter deeper states?
-
-> 
-> With the case #2, we can have the CPUs in both deep state and the
-> governor should be keeping choosing the same idle state.
-
-Ideally yes. However it depends on the break-even times of the deeper
-states and when the next wake-ups happen.
-
-> I don't know what is more energy/perf efficient. IMO this is very
-> workload dependent. The only way to check is to test. Hopefully I can
-> find a platform for that.
-
-Moving the wake-up shouldn't impact energy directly, although it have a
-positive latency impact as you are more likely to avoid waking up CPUs
-that haven't finished the idle entry sequence. However, changing the
-wake-up pattern could have an indirect energy impact, positive or
-negative. It isn't clear to me either what outcome to expect.
-
-Morten
+greg k-h
