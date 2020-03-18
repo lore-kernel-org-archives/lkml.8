@@ -2,132 +2,116 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A0DC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319FBC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2532076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E4620767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTYuvhIl"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="pkpalXpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbgCRJKO (ORCPT
+        id S1727505AbgCRJLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:10:14 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38167 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727441AbgCRJKF (ORCPT
+        Wed, 18 Mar 2020 05:11:07 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:35699 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726994AbgCRJLG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:10:05 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t13so2317167wmi.3;
-        Wed, 18 Mar 2020 02:10:04 -0700 (PDT)
+        Wed, 18 Mar 2020 05:11:06 -0400
+Received: by mail-vs1-f65.google.com with SMTP id m9so15945626vso.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 02:10:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1qY8BT7NEM8WO/54r+PXheg5D2wrkRuhnMEwuwFmHY0=;
-        b=dTYuvhIl6cMRpnG0aqsXBF2Iqh6KWdOu8Ngcmw+wAKAmnNvehNz5F+/bbgSi7OJKJF
-         pk1iztncDKAutvsxu4y0xOExsFkpVDOUklQ8cAwJNwYKNhb7R30tRgWW1apTzdpUPxMn
-         mFTkhq7wJjOMdASyhROeGWcIR06/GlKhOfDqE9s8/HUGVqtJT+ZeEE6k888W8qwfG4uo
-         +/ei75yb3Tj4HGUlWf7rKHRfZGgsTG8R3H4SJd+zSzs1NUVd1wtS4YEZqYs2UMpb3NMD
-         7sXa+K1NjryJ+OQbROF15toMn2T4kicMbNdI0E6xsnZPTwycsYmKYu+HEAB7i7MEjAKK
-         dqnQ==
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z5Zpp1lwuKFsHZwyKtq5kZrgcIvyGzbMByBBkkzuDxo=;
+        b=pkpalXpFb+LL0W1iA6cUhuZFLFQQWCdIT3oY0LwzC4hspvtZVvFHSYVcP2yXDKjrKD
+         i1BD6uReLlgKC/zyVdUmwvNkjERphnlcbXdkUaIUrK5b3I0dcrrQ1qbIZLCJADdxIZSp
+         CtKBzRK6vS+GBJmKAxH7cUSC+IMpZyT9//fFOjqvlLxYJzndi22u6BRM/0rJ0w9jGniO
+         c9+RK6axNk/1Crwuh6WrmiTuHFPAUIbVhpZC+m4hGCjVJsLlG4iksQy6vmY1b8tnaQ/8
+         cVHLdJQQoDCXM/0mWrDUG8J1hSQadZzpNsvKXO/0TRyAXHBUENBwHVhVtHtKAPPdtyuc
+         B/Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1qY8BT7NEM8WO/54r+PXheg5D2wrkRuhnMEwuwFmHY0=;
-        b=lllpvn9ZTApxJbGbZKIuTQvzwqkQkc7OlkbhwJ1HmZ+bfr38+nccoIH6AAKqTFRE1y
-         qMqtzU68RaR+F/nn4w+ZcDRMF6WiUyd4PpviYJer+A9p7Pt8yXl1sHYz8Igc/gg39C3P
-         Yyf4jL9t/ffYEimzJ4cSCnXuoOXdzFDgDSv24EGWsb/ZOoGWWn9dQuHoFCudPVbbvGr4
-         rGIBBzw6+5yAF4iHzqchQMNcMbXCSZYo6+voo9yHfrH2YyZPCIrMCEmO2nwm83lx1b5c
-         gub11SdEaoG1CWZQgjx5QYvgibZmxmDDsoxcgne2qLx89nzzpY08VoybXTnN7ca2m6+D
-         LSuw==
-X-Gm-Message-State: ANhLgQ3XNdp6xw4zV4ZVIXAZoYAHexJZyZopEzepyPZ0PnxzLDVzsDcB
-        PF/uhCfNkUzmNSuhUOvBH92LWIsP/DQ=
-X-Google-Smtp-Source: ADFU+vtw4K9zgs6h2h2IKqVcow3L3BdgbwiQHBcjCX5xIaLCpTkSgR9IPGbBhMNvhT7TXA61WXnkiA==
-X-Received: by 2002:a1c:6745:: with SMTP id b66mr4124850wmc.30.1584522603669;
-        Wed, 18 Mar 2020 02:10:03 -0700 (PDT)
-Received: from localhost.localdomain ([95.77.248.51])
-        by smtp.gmail.com with ESMTPSA id w1sm2823986wmc.11.2020.03.18.02.10.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 02:10:02 -0700 (PDT)
-From:   Alexandru Tachici <tachicialex@gmail.com>
-X-Google-Original-From: Alexandru Tachici <alexandru.tachici@analog.com>
-To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     jic23@kernel.org
-Subject: [PATCH v3 3/4] iio: accel: adxl372: add additional events ABIs
-Date:   Wed, 18 Mar 2020 13:09:57 +0200
-Message-Id: <20200318110958.8621-4-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318110958.8621-1-alexandru.tachici@analog.com>
-References: <20200318110958.8621-1-alexandru.tachici@analog.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z5Zpp1lwuKFsHZwyKtq5kZrgcIvyGzbMByBBkkzuDxo=;
+        b=ndVuceE/trA+IaHtrFB6vqx+Wtqg5UjdbX8M37UwevaWtBHhuLSFIgn26XgdaDuT/M
+         8TxalH9lC9PogmXmNrTHmi22Md1juOggQNpviIuVxrp+/5aFnwBnp0dbsCxKxYqsfRQ8
+         0kz+iI4ELOXP1RRi1Oy9VS8pMQaa85dW6rMUDiYz5zF6zwNO2ekYv97aiut20APcxhgP
+         pEv8LxnI6ngku+33wccE/4qVBB225Kp6YBpHIq9oslHLsHuGhBIaYYZdRjnWs3OV3CIN
+         XlXGfN4WMM5xb3Qo30II+X68BwDXu4HWS6B0kXRU1w7e7sQvAzDpP0OGdDl//iheFZjG
+         K71Q==
+X-Gm-Message-State: ANhLgQ1GXZRN7bRoMowbaXUSrjavXIcAPzaINVfXSpYU9w/n09jS/JRJ
+        L+rLV421XBFUbm3ONJFSUNQu0oSlZrizyk5LM0B2Rw==
+X-Google-Smtp-Source: ADFU+vt11ShWCw4hpQ84mzHUvKXgXfobrzKPRozN+fntpbNeo4Ni35ZtpB5EIB9Vn3LrVZ0Zn5Iq8e6kqWTCDgf80T8=
+X-Received: by 2002:a67:69d5:: with SMTP id e204mr2123868vsc.159.1584522658467;
+ Wed, 18 Mar 2020 02:10:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1584430804-8343-1-git-send-email-rkambl@codeaurora.org>
+ <CAD=FV=VLZ4RQQuji=1kKE5EnqrpY0M=U_G8XigAWAaZ8mxc=eg@mail.gmail.com> <fc7f250e-aa85-0835-8bc4-8274235c74d0@codeaurora.org>
+In-Reply-To: <fc7f250e-aa85-0835-8bc4-8274235c74d0@codeaurora.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Wed, 18 Mar 2020 14:40:47 +0530
+Message-ID: <CAHLCerMCrNdKUmRww4EFctU8cojh6Fqhs7gpux3SNCSwYUBOvQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Changed polling-delay in
+ Thermal-zones node
+To:     "Rajeshwari Ravindra Kamble (Temp)" <rkambl@codeaurora.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        sivaa@codeaurora.org, Sandeep Maheswaram <sanm@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adxl372 uses the standard event interface. The additional
-ABIs aim to explain to the user that the values set in
-./events/thresh_falling_period and ./events/thresh_rising_period
-control the state of the device, not just the events timings.
+On Wed, Mar 18, 2020 at 11:49 AM Rajeshwari Ravindra Kamble (Temp)
+<rkambl@codeaurora.org> wrote:
+>
+>
+> On 3/17/2020 10:20 PM, Doug Anderson wrote:
+>
+> Hi,
+>
+> On Tue, Mar 17, 2020 at 12:42 AM Rajeshwari <rkambl@codeaurora.org> wrote:
+>
+> Changed polling-delay and polling-delay-passive to zero as per
+> the requirement.
+>
+> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 100 +++++++++++++++++------------------
+>  1 file changed, 50 insertions(+), 50 deletions(-)
+>
+> It probably wouldn't hurt to mention in the commit message that this
+> is because the thermal sensor interrupts are all hooked up and thus
+> the polling is not a useful thing to do.  ...but other than that:
+>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+>
+>
+> Hi Douglas
+>
+> I didn't  get your comment.
+>
+> Thanks,
+> Rajeshwari
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- drivers/iio/accel/adxl372.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+I think he means that you haven't mentioned WHY this patch is needed
+in the message. The reason you should mention is "to disable polling
+mode of the framework since interrupts for tsens are already
+configured."
 
-diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-index d8f95c9f9587..1122c27fc37e 100644
---- a/drivers/iio/accel/adxl372.c
-+++ b/drivers/iio/accel/adxl372.c
-@@ -239,6 +239,29 @@ static const struct adxl372_axis_lookup adxl372_axis_lookup_table[] = {
- 	{ BIT(0) | BIT(1) | BIT(2), ADXL372_XYZ_FIFO },
- };
- 
-+static ssize_t adxl372_read_detect_event(struct iio_dev *indio_dev, uintptr_t p,
-+					 const struct iio_chan_spec *chan,
-+					 char *buf)
-+{
-+	return sprintf(buf, "%s", (const char *)p);
-+}
-+
-+static const struct iio_chan_spec_ext_info adxl372_ext_info[] = {
-+	{
-+		.name = "activity_detect_event",
-+		.shared = IIO_SHARED_BY_ALL,
-+		.read = adxl372_read_detect_event,
-+		.private = (uintptr_t)"in_accel_thresh_x_rising\n",
-+	},
-+	{
-+		.name = "inactivity_detect_event",
-+		.shared = IIO_SHARED_BY_ALL,
-+		.read = adxl372_read_detect_event,
-+		.private = (uintptr_t)"in_accel_thresh_x_falling\n",
-+	},
-+	{},
-+};
-+
- static const struct iio_event_spec adxl372_events[] = {
- 	{
- 		.type = IIO_EV_TYPE_THRESH,
-@@ -272,7 +295,8 @@ static const struct iio_event_spec adxl372_events[] = {
- 		.shift = 4,						\
- 	},								\
- 	.event_spec = adxl372_events,					\
--	.num_event_specs = 2						\
-+	.num_event_specs = 2,						\
-+	.ext_info = adxl372_ext_info,					\
- }
- 
- static const struct iio_chan_spec adxl372_channels[] = {
--- 
-2.20.1
-
+Regards,
+Amit
