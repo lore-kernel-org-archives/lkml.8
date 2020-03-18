@@ -2,164 +2,125 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FD2C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 158CCC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7E7120780
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2CAA20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:00:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qcv8iiyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgCRTAo (ORCPT
+        id S1727093AbgCRTAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:00:44 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2578 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726855AbgCRTAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 15:00:44 -0400
-Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 2DBE48E3E47C5998BBDF;
-        Wed, 18 Mar 2020 19:00:42 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 18 Mar 2020 19:00:41 +0000
-Received: from [127.0.0.1] (10.210.167.248) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Wed, 18 Mar
- 2020 19:00:40 +0000
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v3 2/2] irqchip/gic-v3-its: Balance initial LPI affinity
- across CPUs
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Jason Cooper <jason@lakedaemon.net>,
-        luojiaxing <luojiaxing@huawei.com>,
-        <linux-kernel@vger.kernel.org>, Ming Lei <ming.lei@redhat.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200316115433.9017-1-maz@kernel.org>
- <20200316115433.9017-3-maz@kernel.org>
- <d3a6435b-bc1f-e518-6461-2ebff72bbc59@huawei.com>
- <d74f9cb3df708335a56aec62963aa281@kernel.org>
- <894aabcc-9676-3945-7a62-70fb930fd8a5@huawei.com>
- <a24fad17d178209d35bbcb9f270c84ff@kernel.org>
-Message-ID: <a5132a5f-efe8-4305-07dd-d120b51b1360@huawei.com>
-Date:   Wed, 18 Mar 2020 19:00:27 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 18 Mar 2020 15:00:54 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33781 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727069AbgCRTAy (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 15:00:54 -0400
+Received: by mail-qk1-f195.google.com with SMTP id p6so1846358qkm.0
+        for <Linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 12:00:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NCPvdLN8939vZPMxozowr4/88mIqH8EmpduD2QRUtkM=;
+        b=Qcv8iiyjAj4cRMxa+L5QuL2pFGxOPSawEy9XDsHtt6KzJ2jC1TP6z5Gv3x0jFuYlsd
+         /sNt+DmgzbI72z1SsiXXBkkQJr2FmLm/P+29V3Gyck4B9QiQnUwFYEUkNvvNjMaPvGZ1
+         o1keQMZXjMwt1NivMUTEc3F3LvDexShjTtlc7Xd0u5PB6a2REGJ7FhVEDK+FpVJJOxWv
+         00FxAmOSRar0rv/n56mLwD6F/ljjrdUVgr1sqXeRkSIa+/CZZKladK7Ds4JKczF7wEk5
+         k4HK605Ai2hOqbxaT9nEAydN5Uu22xbw0bnwVrPX7mr4lazLfHLsv+5AvG3R43dLAQRV
+         rlAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NCPvdLN8939vZPMxozowr4/88mIqH8EmpduD2QRUtkM=;
+        b=k9Y5kJkRTcvkpb3z2O82XqrhPJFaG3XrZrg2X5r+TptBp5qDrMukJkkmzoEDnvRm+n
+         +NTRlfWnMZd9ALMjyAAUmOy00flWGX20unZw3HEUlW8wsgDRKEvWf3vhOmBCQKWA10Qt
+         iQC4MsoU+oO5trlVCPdTxNPjeZA7TxC/DFrfmlgUF3Jl4CPjsVR5J7sTNROi5xPsxlj3
+         70OzCCkayeCwmmKYbRpQqcV+4Kl/t7b7oLWMW4rnzfSz3kSG1k92daAzELAaF+Z37jMQ
+         SZN5EvD76QfcT43YsynG3K81n8If+LxKI3vSg7PRdA871i0a5RTsbSIVkYnpfdAAnZjB
+         sUeA==
+X-Gm-Message-State: ANhLgQ0H85lpEmIchoypM2/FufapydPTpboZpxk3auXS3+EU28ovFaXS
+        hn5i01WQLeVs++jeW0wri1s=
+X-Google-Smtp-Source: ADFU+vtp8+WNV/mfAETLwj+rtiCgqdcqlCYxVXIyYK4cr0BZdAEHvcslZpJqrTNCj96rAt7mf0xZQw==
+X-Received: by 2002:a37:9e8a:: with SMTP id h132mr5508309qke.314.1584558052415;
+        Wed, 18 Mar 2020 12:00:52 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id v187sm4431033qkc.29.2020.03.18.12.00.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 12:00:51 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 46296404E4; Wed, 18 Mar 2020 16:00:49 -0300 (-03)
+Date:   Wed, 18 Mar 2020 16:00:49 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jin Yao <yao.jin@linux.intel.com>, jolsa@kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH] perf stat: Align the output for interval aggregation mode
+Message-ID: <20200318190049.GM11531@kernel.org>
+References: <20200218071614.25736-1-yao.jin@linux.intel.com>
+ <20200220105355.GA553812@krava>
 MIME-Version: 1.0
-In-Reply-To: <a24fad17d178209d35bbcb9f270c84ff@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.210.167.248]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220105355.GA553812@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
->> And for some reason fancied cpu62.
+Em Thu, Feb 20, 2020 at 11:53:55AM +0100, Jiri Olsa escreveu:
+> On Tue, Feb 18, 2020 at 03:16:14PM +0800, Jin Yao wrote:
+> > There is a slight misalignment in -A -I output.
+> > 
+> > For example,
+> > 
+> >  perf stat -e cpu/event=cpu-cycles/ -a -A -I 1000
+> > 
+> >  #           time CPU                    counts unit events
+> >       1.000440863 CPU0               1,068,388      cpu/event=cpu-cycles/
+> >       1.000440863 CPU1                 875,954      cpu/event=cpu-cycles/
+> >       1.000440863 CPU2               3,072,538      cpu/event=cpu-cycles/
+> >       1.000440863 CPU3               4,026,870      cpu/event=cpu-cycles/
+> >       1.000440863 CPU4               5,919,630      cpu/event=cpu-cycles/
+> >       1.000440863 CPU5               2,714,260      cpu/event=cpu-cycles/
+> >       1.000440863 CPU6               2,219,240      cpu/event=cpu-cycles/
+> >       1.000440863 CPU7               1,299,232      cpu/event=cpu-cycles/
+> > 
+> > The value of counts is not aligned with the column "counts" and
+> > the event name is not aligned with the column "events".
+> > 
+> > With this patch, the output is,
+> > 
+> >  perf stat -e cpu/event=cpu-cycles/ -a -A -I 1000
+> > 
+> >  #           time CPU                    counts unit events
+> >       1.000423009 CPU0                  997,421      cpu/event=cpu-cycles/
+> >       1.000423009 CPU1                1,422,042      cpu/event=cpu-cycles/
+> >       1.000423009 CPU2                  484,651      cpu/event=cpu-cycles/
+> >       1.000423009 CPU3                  525,791      cpu/event=cpu-cycles/
+> >       1.000423009 CPU4                1,370,100      cpu/event=cpu-cycles/
+> >       1.000423009 CPU5                  442,072      cpu/event=cpu-cycles/
+> >       1.000423009 CPU6                  205,643      cpu/event=cpu-cycles/
+> >       1.000423009 CPU7                1,302,250      cpu/event=cpu-cycles/
+> > 
+> > Now output is aligned.
+> > 
+> > Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 > 
-> Hmmm. OK. I'm surprised that irqbalance dries to set a range of CPUs, 
-> instead of
-> a particular CPU though.
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-It does seem strange. But also quite consistent. I will check again on that.
+thanks, tested and applied.
 
->>>
->>> But it has the mask for CPUs that are best suited for this interrupt,
->>> right?
->>> If I understand the topology of your machine, it has an ITS per 64 CPUs,
->>> and
->>> this device is connected to the ITS that serves the second socket.
->>
->> No, this one (D06ES) has a single ITS:
->>
->> john@ubuntu:~/kernel-dev$ dmesg | grep ITS
->> [    0.000000] SRAT: PXM 0 -> ITS 0 -> Node 0
->> [    0.000000] ITS [mem 0x202100000-0x20211ffff]
->> [    0.000000] ITS@0x0000000202100000: Using ITS number 0
->> [    0.000000] ITS@0x0000000202100000: allocated 8192 Devices
->> @23ea9f0000 (indirect, esz 8, psz 16K, shr 1)
->> [    0.000000] ITS@0x0000000202100000: allocated 2048 Virtual CPUs
->> @23ea9d8000 (indirect, esz 16, psz 4K, shr 1)
->> [    0.000000] ITS@0x0000000202100000: allocated 256 Interrupt
->> Collections @23ea9d3000 (flat, esz 16, psz 4K, shr 1)
->> [    0.000000] ITS: Using DirectLPI for VPE invalidation
->> [    0.000000] ITS: Enabling GICv4 support
->> [    0.044034] Platform MSI: ITS@0x202100000 domain created
->> [    0.044042] PCI/MSI: ITS@0x202100000 domain created
-> 
-> There's something I'm missing here. If there's a single ITS in the system,
-> node affinity must cover the whole system, not half of it.
-> 
->> D06CS has 2x ITS, as you may know :)
->>
->> And, FWIW, the device is on the 2nd socket, numa node #2.
-> 
-> You've lost me. Single ITS, but two sockets?
-
-Yeah, right, so I think that a single ITS is used due to some HW bug in 
-the ES chip, fixed in the CS chip.
-
-And some more background on the D05, D06ES, D06CS topology:
-
-Even though the system is 2x socket, we model as 4x NUMA nodes, i.e. 2x 
-nodes per socket. This is because each node has an associated memory 
-controller in the socket, i.e. 2x memory controllers per socket. As 
-such, for this D06ES system, a NUMA node is 24 cores.
-
-I will be the first to admit that it does make things more complicated. 
-Even more especially (and arguably broken) when we need to assign a 
-proximity domain to devices in either socket, considering they are 
-equidistant from either memory controller/CPU cluster in that socket.
-
-> 
->>
->> So the cpu mask of node #0 (where the ITS lives) is 0-23. So no
->> intersection with what userspace requested.
->>
->>>>     if (cpu < 0 || cpu >= nr_cpu_ids)
->>>>         return -EINVAL;
->>>>
->>>>     if (cpu != its_dev->event_map.col_map[id]) {
->>>>         its_inc_lpi_count(d, cpu);
->>>>         its_dec_lpi_count(d, its_dev->event_map.col_map[id]);
->>>>         target_col = &its_dev->its->collections[cpu];
->>>>         its_send_movi(its_dev, target_col, id);
->>>>         its_dev->event_map.col_map[id] = cpu;
->>>>         irq_data_update_effective_affinity(d, cpumask_of(cpu));
->>>>     }
->>>>
->>>> So cpu may not be a member of mask_val. Hence the inconsistency of the
->>>> affinity list and effective affinity. We could just drop the AND of
->>>> the ITS node mask in its_select_cpu().
->>>
->>> That would be a departure from the algorithm Thomas proposed, which made
->>> a lot of sense in my opinion. What its_select_cpu() does in this case is
->>> probably the best that can be achieved from a latency perspective,
->>> as it keeps the interrupt local to the socket that generated it.
->>
->> We seem to be following what Thomas described for a non-managed
->> interrupt bound to a node. But is this interrupt bound to the node?
-> 
-> If the ITS advertizes affinity to a node (through SRAT, for example),
-> we should use that. And that's what we have in this patch.
-
-Right, but my system is incompatible. Reason being, SRAT says ITS is 
-NUMA node #0 (I think choosing node #0 over #1 may be just arbitrary), 
-and the cpu mask for NUMA node #0 is 0-23, as above. And I figure even 
-for D06CS with 2x ITS, again, is incompatible for the same reason.
-
-So your expectation for a single ITS system would be that the NUMA node 
-cpu mask for the ITS would cover all cpus. Sadly, it doesn't here...
-
-Much appreciated,
-John
+- Arnaldo
