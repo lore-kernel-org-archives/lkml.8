@@ -2,39 +2,40 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1ECFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D89FC10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A0720754
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5222820754
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="yJbuHbEf"
+	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="Zn0CsnuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgCRTAM (ORCPT
+        id S1726950AbgCRTAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:00:12 -0400
-Received: from ms11p00im-qufo17291701.me.com ([17.58.38.46]:43380 "EHLO
+        Wed, 18 Mar 2020 15:00:16 -0400
+Received: from ms11p00im-qufo17291701.me.com ([17.58.38.46]:43651 "EHLO
         ms11p00im-qufo17291701.me.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726506AbgCRTAM (ORCPT
+        by vger.kernel.org with ESMTP id S1726872AbgCRTAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 15:00:12 -0400
+        Wed, 18 Mar 2020 15:00:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-        t=1584558008; bh=Wx3SLcGZbU7wK702DkuJhWDsfT3JOl+X/0ZhHZWG+9Q=;
-        h=From:To:Subject:Date:Message-Id:Content-Type;
-        b=yJbuHbEfX2NujboAIQTVDGAu5WfhdMVC/lg/2pNrzNDVdh5Q3mFVLpfTHvct6++Q3
-         BDDDNIGdA4p2MJ13xwDmAdXYWPiVP0EcGu4Fsh54SQPSQsKBJl4qRX7ptPW12wJlBb
-         URnD/kCq/Sa1U74/Bp1QJwVK2k+p3mJm+LhtFvT9hMBKk2DYtHUmHm245XkcmZmx/9
-         jrmvt9aPPjIu3TF7IWTrLvZC49QfKI36k8D/NHCmX5/lTUBygrfpuN3dIaDDnSJ3zg
-         7M8rQGoDwOvDxAl7H5MoXmesVyg/FiCznFhW0IB8vWDKHVWrCN40wJ2HY3eQixumPI
-         sahhNy1XEcftw==
+        t=1584558013; bh=VWC7iuVNbFfmnLJdW2nCQ3TYKwyJfOM9vG5XYr+UluY=;
+        h=From:To:Subject:Date:Message-Id;
+        b=Zn0CsnuIH9gBELPe2XUwomMZ8bhGxapW5jhVTKJUKiazvZT8AKUl2qt7Kb7bGv9ad
+         JtPZ5tyoQVWcd6FRCpIm10QwVIQaDe/xymhB6xmLyz/fej2hMhYTXZAQZFjVxm5rGW
+         HyfcxWrtHqeC5/sXF1Y8sJUUSP+h9BOPY2Ys7Kqv7ieewy+G0YWFNT3v+FK4yLwYUx
+         MJ9gkuAnMqXV/2ebmPKP3Zgez+laovGZwbKp5Ryj4WwZ0Itq4aJv6ZffsP71LggJIB
+         7de9Uvr8wu0ilbS0gVOBnbM/UZtnHhvZ7rhGwecwTq3uTqe8Gws31pdlVIMF9tqAn6
+         cqCEXoowVcUjg==
 Received: from shwetrath.localdomain (unknown [66.199.8.131])
-        by ms11p00im-qufo17291701.me.com (Postfix) with ESMTPSA id C6BE76409A4;
-        Wed, 18 Mar 2020 19:00:07 +0000 (UTC)
+        by ms11p00im-qufo17291701.me.com (Postfix) with ESMTPSA id 1879A640939;
+        Wed, 18 Mar 2020 19:00:13 +0000 (UTC)
 From:   Vijay Thakkar <vijaythakkar@me.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Vijay Thakkar <vijaythakkar@me.com>,
@@ -47,12 +48,13 @@ Cc:     Vijay Thakkar <vijaythakkar@me.com>,
         =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
         Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH v6 0/3] perf vendor events amd: latest PMU events for zen1/zen2
-Date:   Wed, 18 Mar 2020 14:59:59 -0400
-Message-Id: <20200318190002.307290-1-vijaythakkar@me.com>
+Subject: [PATCH v6 1/3] perf vendor events amd: restrict model detection for zen1 based processors
+Date:   Wed, 18 Mar 2020 15:00:00 -0400
+Message-Id: <20200318190002.307290-2-vijaythakkar@me.com>
 X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200318190002.307290-1-vijaythakkar@me.com>
+References: <20200318190002.307290-1-vijaythakkar@me.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-03-18_07:,,
  signatures=0
@@ -65,59 +67,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series of patches brings the PMU events for AMD family 17h series
-of processors up to date with the latest versions of the AMD processor
-programming reference manuals.
+This patch changes the previous blanket detection of AMD Family 17h
+processors to be more specific to Zen1 core based products only by
+replacing model detection regex pattern [[:xdigit:]]+ with
+([12][0-9A-F]|[0-9A-F]), restricting to models 0 though 2f only.
 
-The first patch changes the pmu events mapfile to be more selective for
-the model number rather than blanket detecting all f17h processors to
-have the same events directory. This is required for the later patch
-where we add events for zen2 based processors.
+This change is required to allow for the addition of separate PMU events
+for Zen2 core based models in the following patches as those belong to family
+17h but have different PMCs. Current PMU events directory has also been
+renamed to "amdzen1" from "amdfam17h" to reflect this specificity.
 
-The second patch adds the PMU events for zen2.
+Note that although this change does not break PMU counters for existing
+zen1 based systems, it does disable the current set of counters for zen2
+based systems. Counters for zen2 have been added in the following
+patches in this patchset.
 
-Finally the third patch updates the zen1 PMU events to be in accordance
-with the latest PPR version and bumps up the events version to v2.
+Signed-off-by: Vijay Thakkar <vijaythakkar@me.com>
 
-Vijay Thakkar (3):
-  perf vendor events amd: restrict model detection for zen1 based
-    processors
-  perf vendor events amd: add Zen2 events
-  perf vendor events amd: update Zen1 events to V2
+---
+Changes in v2:
+    - Correct the UMasks for fpu_pipe_assignment.dual* by left shifting
+    all by 4 bits.
+    - Correct UMask for ls_mab_alloc.loads
+    - add bp_dyn_ind_pred (PMC0x08E)
+    - add bp_de_redirect  (PMC0x091)
+Changes in v3:
+    - Correct the pipe numbers for fpu_pipe_assignment counters
+    - Correct ls_mab_alloc.* public descriptions
+Changes in v4:
+    - PMC 0x46 add missing subcounters for types 0 and 1 of tablewalker
+    allocation
+    - PMC 0x60 and 0x61: add missing detail on brief descriptions
+    - change descriptions of many of the events to bring them in-line
+    with improvements made in patch 2/3. These were for counters that
+    did not change between zen1 to zen2. Patch reviews for zen2 lead
+    these descriptions to be changed and improved, and many of these
+    have been carried here in this version of patch 3.
 
- .../pmu-events/arch/x86/amdfam17h/branch.json |  12 -
- .../pmu-events/arch/x86/amdfam17h/cache.json  | 329 -----------------
- .../pmu-events/arch/x86/amdfam17h/other.json  |  65 ----
- .../pmu-events/arch/x86/amdzen1/branch.json   |  23 ++
- .../pmu-events/arch/x86/amdzen1/cache.json    | 294 +++++++++++++++
- .../arch/x86/{amdfam17h => amdzen1}/core.json |  15 +-
- .../floating-point.json                       |  64 +++-
- .../x86/{amdfam17h => amdzen1}/memory.json    |  82 +++--
- .../pmu-events/arch/x86/amdzen1/other.json    |  56 +++
- .../pmu-events/arch/x86/amdzen2/branch.json   |  52 +++
- .../pmu-events/arch/x86/amdzen2/cache.json    | 338 +++++++++++++++++
- .../pmu-events/arch/x86/amdzen2/core.json     | 130 +++++++
- .../arch/x86/amdzen2/floating-point.json      | 140 +++++++
- .../pmu-events/arch/x86/amdzen2/memory.json   | 341 ++++++++++++++++++
- .../pmu-events/arch/x86/amdzen2/other.json    | 115 ++++++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   3 +-
- 16 files changed, 1606 insertions(+), 453 deletions(-)
- delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/branch.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/branch.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/cache.json
- rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/core.json (87%)
- rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/floating-point.json (61%)
- rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json (63%)
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/branch.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/core.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/floating-point.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/other.json
+ .../perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/branch.json | 0
+ .../perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/cache.json  | 0
+ tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/core.json | 0
+ .../arch/x86/{amdfam17h => amdzen1}/floating-point.json         | 0
+ .../perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json | 0
+ .../perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/other.json  | 0
+ tools/perf/pmu-events/arch/x86/mapfile.csv                      | 2 +-
+ 7 files changed, 1 insertion(+), 1 deletion(-)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/branch.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/cache.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/core.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/floating-point.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/other.json (100%)
 
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/branch.json b/tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/branch.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/cache.json b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/core.json b/tools/perf/pmu-events/arch/x86/amdzen1/core.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/core.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/core.json
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/floating-point.json b/tools/perf/pmu-events/arch/x86/amdzen1/floating-point.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/floating-point.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/floating-point.json
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/memory.json b/tools/perf/pmu-events/arch/x86/amdzen1/memory.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/memory.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/memory.json
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/other.json b/tools/perf/pmu-events/arch/x86/amdzen1/other.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/other.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/other.json
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index 745ced083844..82a9db00125e 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -36,4 +36,4 @@ GenuineIntel-6-55-[56789ABCDEF],v1,cascadelakex,core
+ GenuineIntel-6-7D,v1,icelake,core
+ GenuineIntel-6-7E,v1,icelake,core
+ GenuineIntel-6-86,v1,tremontx,core
+-AuthenticAMD-23-[[:xdigit:]]+,v1,amdfam17h,core
++AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v1,amdzen1,core
 -- 
 2.25.2
 
