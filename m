@@ -2,70 +2,79 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CDAC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618E8C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D27F2077E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D7B20752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:29:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCRS2V convert rfc822-to-8bit (ORCPT
+        id S1726839AbgCRS3R convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:28:21 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:38898 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726506AbgCRS2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:28:20 -0400
-Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1jEdQK-0005XX-W0; Wed, 18 Mar 2020 19:28:13 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH 7/7] serial: 8250_dw: allow enable rs485 at boot time
-Date:   Wed, 18 Mar 2020 19:28:12 +0100
-Message-ID: <13430289.tR4kZXp1X6@diego>
-In-Reply-To: <20200318151615.GP1922688@smile.fi.intel.com>
-References: <20200318142640.982763-1-heiko@sntech.de> <20200318142640.982763-8-heiko@sntech.de> <20200318151615.GP1922688@smile.fi.intel.com>
+        Wed, 18 Mar 2020 14:29:17 -0400
+Received: from poy.remlab.net ([94.23.215.26]:39584 "EHLO
+        ns207790.ip-94-23-215.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgCRS3Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 14:29:16 -0400
+Received: from basile.remlab.net (87-92-31-51.bb.dnainternet.fi [87.92.31.51])
+        (Authenticated sender: remi)
+        by ns207790.ip-94-23-215.eu (Postfix) with ESMTPSA id 7E4E95FB07;
+        Wed, 18 Mar 2020 19:29:13 +0100 (CET)
+From:   =?ISO-8859-1?Q?R=E9mi?= Denis-Courmont <remi@remlab.net>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     mark.rutland@arm.com, will@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] arm64: clean up trampoline vector loads
+Date:   Wed, 18 Mar 2020 20:29:12 +0200
+Message-ID: <8127163.Epc2VWTDuo@basile.remlab.net>
+Organization: Remlab
+In-Reply-To: <20200318180630.GE94111@arrakis.emea.arm.com>
+References: <20200316124046.103844-1-remi@remlab.net> <20200318175709.GD94111@arrakis.emea.arm.com> <20200318180630.GE94111@arrakis.emea.arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 18. M�rz 2020, 16:16:15 CET schrieb Andy Shevchenko:
-> On Wed, Mar 18, 2020 at 03:26:40PM +0100, Heiko Stuebner wrote:
-> > From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Le keskiviikkona 18. maaliskuuta 2020, 20.06.30 EET Catalin Marinas a écrit :
+> On Wed, Mar 18, 2020 at 05:57:09PM +0000, Catalin Marinas wrote:
+> > On Mon, Mar 16, 2020 at 02:40:44PM +0200, Rémi Denis-Courmont wrote:
+> > > From: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
+> > > 
+> > > This switches from custom instruction patterns to the regular large
+> > > memory model sequence with ADRP and LDR. In doing so, the ADD
+> > > instruction can be eliminated in the SDEI handler, and the code no
+> > > longer assumes that the trampoline vectors and the vectors address both
+> > > start on a page boundary.
+> > > 
+> > > Signed-off-by: Rémi Denis-Courmont <remi.denis.courmont@huawei.com>
 > > 
-> > If "linux,rs485-enabled-at-boot-time" is specified need to setup 485
-> > in probe function.
-> > 
-> > Call uart_get_rs485_mode() to get rs485 configuration, then call
-> > rs485_config() callback directly to setup port as rs485.
+> > I queued the 3 trampoline patches for 5.7. Thanks.
 > 
-> I think you really need to Cc the new version of this to Lukas.
-> Because I have a deja vu that I have seen half of this to be similar what he
-> had done in his work.
+> ... and removed. I applied them on top of arm64 for-next/asm-annotations
+> and with defconfig I get:
+> 
+>   LD      .tmp_vmlinux1
+> arch/arm64/kernel/entry.o: in function `tramp_vectors':
+> arch/arm64/kernel/entry.S:838:(.entry.tramp.text+0x43c): relocation
+> truncated to fit: R_AARCH64_LDST64_ABS_LO12_NC against symbol
+> `__entry_tramp_data_start' defined in .rodata section in
+> 
+> I haven't bisected to see which patch caused this issue.
 
-Could you give me a pointer to that work?
+Uho, right :-( It only builds with SDEI enabled :-$
 
-When I initially searched for previous rs485 on 8250_dw stuff I only
-found the series from 2018 I linked to in the cover-letter, so if there
-is other work somewhere else a pointer to it would be very helpful
-for me.
+I'll check further.
 
-Thanks
-Heiko
+-- 
+Rémi Denis-Courmont
+http://www.remlab.net/
 
 
 
