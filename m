@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E0DC4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB177C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02EA620409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F44020775
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565639;
-	bh=0H/mgTxHED+MukhexfpZh7oqusfR3tQHOtZTdFpL1OU=;
+	s=default; t=1584565644;
+	bh=JPCMMDsUwERJIXy175RNLP9ZgO/AEaV/j6hHU6P+eJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uG2Nm6tpmeu/bZaepZFL0MHlog5D4rKVfincQ/KmrhOlivUbeScj0wt6GmTCEpvdB
-	 R1HNwhfAVLr20riteMPlGMEOIpbVffsoAyQF38PwAvu2affvhOpJ7ftLNerA9xwnO7
-	 fyK9r8pxR+axQKkjpA0Kxw35anjtwOvnwPkeLph4=
+	b=aJymBI+qIDzVODrLFUjHIotYDRFW/kU1RCVlIKMRZ+ang1+RguwrnYlgZOZYFN5i3
+	 kz2s7Hy3N6SwbQgiEPozgXRorCiPN1j26Uun3SLxRdyDyl8ArjvaHOBWUDMHbZ9VE+
+	 NYDHQTVyI85VNAZuX5ntwCKIM/IQnFf/BKsRf+KU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbgCRUyR (ORCPT
+        id S1727976AbgCRVHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:07:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727562AbgCRUyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:54:12 -0400
+        id S1727005AbgCRUyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62C7E208DB;
-        Wed, 18 Mar 2020 20:54:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A5FC2145D;
+        Wed, 18 Mar 2020 20:54:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564852;
-        bh=0H/mgTxHED+MukhexfpZh7oqusfR3tQHOtZTdFpL1OU=;
+        s=default; t=1584564856;
+        bh=JPCMMDsUwERJIXy175RNLP9ZgO/AEaV/j6hHU6P+eJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JBcwzH5COnDrFrfuZF9N25HBgSesS2Y1HyQKXnr32vzZkMTYAW2qyrS/j96pTfkL1
-         2e29u9Qg9iZ/y/Ts+UEY5+AGfvdFBO3ncNxB1Amz7PAalfB4cb68qRxyWDo2ZKZA5/
-         /SjdhOHax5c1YOYEF45BEzDzBSTUSX6VrtSjH87c=
+        b=woTZTwDlQ53U5XhFet+jLj+j4oe5eL/Ld9gUP8BbJ13fj6Rmk2HF3E2lFu3jbbmXd
+         DWqL5BQBfAdLgFMGhxUEP14/5bd+HEarpQPDMaTlE6Vvz/Ryoc8XX2p9xElpsXz4Uv
+         wQu0lNOk1qGROM8GXhsrAlKg2Zdrp6Xc90770acI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 29/73] net: hns3: fix a not link up issue when fibre port supports autoneg
-Date:   Wed, 18 Mar 2020 16:52:53 -0400
-Message-Id: <20200318205337.16279-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 33/73] arm64: dts: ls1043a: FMan erratum A050385
+Date:   Wed, 18 Mar 2020 16:52:57 -0400
+Message-Id: <20200318205337.16279-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -60,54 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Madalin Bucur <madalin.bucur@nxp.com>
 
-[ Upstream commit 68e1006f618e509fc7869259fe83ceec4a95dac3 ]
+[ Upstream commit b54d3900862374e1bb2846e6b39d79c896c0b200 ]
 
-When fibre port supports auto-negotiation, the IMP(Intelligent
-Management Process) processes the speed of auto-negotiation
-and the  user's speed separately.
-For below case, the port will get a not link up problem.
-step 1: disables auto-negotiation and sets speed to A, then
-the driver's MAC speed will be updated to A.
-step 2: enables auto-negotiation and MAC gets negotiated
-speed B, then the driver's MAC speed will be updated to B
-through querying in periodical task.
-step 3: MAC gets new negotiated speed A.
-step 4: disables auto-negotiation and sets speed to B before
-periodical task query new MAC speed A, the driver will  ignore
-the speed configuration.
+The LS1043A SoC is affected by the A050385 erratum stating that
+FMAN DMA read or writes under heavy traffic load may cause FMAN
+internal resource leak thus stopping further packet processing.
 
-This patch fixes it by skipping speed and duplex checking when
-fibre port supports auto-negotiation.
-
-Fixes: 22f48e24a23d ("net: hns3: add autoneg and change speed support for fibre port")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index c01cf8ef69df9..d4652dea4569b 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2417,10 +2417,12 @@ static int hclge_cfg_mac_speed_dup_hw(struct hclge_dev *hdev, int speed,
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
+index 6082ae0221364..d237162a87446 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
+@@ -20,6 +20,8 @@
+ };
  
- int hclge_cfg_mac_speed_dup(struct hclge_dev *hdev, int speed, u8 duplex)
- {
-+	struct hclge_mac *mac = &hdev->hw.mac;
- 	int ret;
- 
- 	duplex = hclge_check_speed_dup(duplex, speed);
--	if (hdev->hw.mac.speed == speed && hdev->hw.mac.duplex == duplex)
-+	if (!mac->support_autoneg && mac->speed == speed &&
-+	    mac->duplex == duplex)
- 		return 0;
- 
- 	ret = hclge_cfg_mac_speed_dup_hw(hdev, speed, duplex);
+ &fman0 {
++	fsl,erratum-a050385;
++
+ 	/* these aliases provide the FMan ports mapping */
+ 	enet0: ethernet@e0000 {
+ 	};
 -- 
 2.20.1
 
