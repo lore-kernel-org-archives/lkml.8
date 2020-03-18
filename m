@@ -2,231 +2,189 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F237C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D183C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457C620724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27AD920724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:40:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mLJNxZyc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgCRBfu (ORCPT
+        id S1727230AbgCRBkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 21:35:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48508 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726735AbgCRBft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 21:35:49 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 99E943A8A22EE1B9E395;
-        Wed, 18 Mar 2020 09:35:37 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 18 Mar 2020
- 09:37:32 +0800
-Subject: Re: [PATCH] block, bfq: fix use-after-free in
- bfq_idle_slice_timer_body
-To:     Paolo Valente <paolo.valente@linaro.org>
-CC:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>, renxudong <renxudong1@huawei.com>,
-        Louhongxiang <louhongxiang@huawei.com>
-References: <6c0d0b36-751b-a63a-418b-888a88ce58f4@huawei.com>
- <C69604D5-CBB7-4A5F-AD73-7A9C0B6B3360@linaro.org>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <0a6e190a-3393-53f9-b127-d57d67cdcdc8@huawei.com>
-Date:   Wed, 18 Mar 2020 09:35:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 17 Mar 2020 21:40:51 -0400
+Received: from ozlabs.org ([203.11.71.1]:40361 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726680AbgCRBku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 21:40:50 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ht666PH8z9sNg;
+        Wed, 18 Mar 2020 12:40:46 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584495647;
+        bh=anDP3nx12ruwkIJDh64jQV8DzkTYUP30jaeOxQMxsgY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mLJNxZyco2WMBPmJPM8uj5tOvbVITfxvKZHeIeby3yWz6h0nWWK+b5QGiSky8Drgt
+         83qzpPqXpf8DLw0potVWfWHyeldo07AS3VykWPjVuY2lHjmkrQetzZsgfm+PWz5Znu
+         iAFJKC2pFoc1n7XpL4VQiWWeLY/s4Llv8Zs5JrBLbAvlOmn2nM0x6I8y0FnvAKP3pg
+         5jntUAoNItIR7mxv2DRu16cdGvKN5NcSNepW+0J6NBGUzQr4E5g7e53yd7HA0mxIyj
+         /BkJ1GD/LXde7IE8HTCZyvd2Lg1PrDOSpg7Oz/f5YS+hk/kfTvHAxB9f5K+w6Pszsc
+         jpz2vhFXS3y/w==
+Date:   Wed, 18 Mar 2020 12:40:33 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Kiss <daniel.kiss@arm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: linux-next: manual merge of the jc_docs tree with the arm64 tree
+Message-ID: <20200318124033.6c523374@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <C69604D5-CBB7-4A5F-AD73-7A9C0B6B3360@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/uK=nKxU3a1Nu0GPtSHTU0E_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/uK=nKxU3a1Nu0GPtSHTU0E_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2020/3/18 1:44, Paolo Valente wrote:
-> 
-> 
->> Il giorno 17 mar 2020, alle ore 15:06, Zhiqiang Liu <liuzhiqiang26@huawei.com> ha scritto:
->>
->> In bfq_idle_slice_timer func, bfqq = bfqd->in_service_queue is
->> not in bfqd-lock critical section. The bfqq, which is not
->> equal to NULL in bfq_idle_slice_timer, may be freed after passing
->> to bfq_idle_slice_timer_body. So we will access the freed memory.
->>
->> KASAN log is given as follows:
->> [13058.354613] ==================================================================
->> [13058.354640] BUG: KASAN: use-after-free in bfq_idle_slice_timer+0xac/0x290
->> [13058.354644] Read of size 8 at addr ffffa02cf3e63f78 by task fork13/19767
->> [13058.354646]
->> [13058.354655] CPU: 96 PID: 19767 Comm: fork13
->> [13058.354661] Call trace:
->> [13058.354667]  dump_backtrace+0x0/0x310
->> [13058.354672]  show_stack+0x28/0x38
->> [13058.354681]  dump_stack+0xd8/0x108
->> [13058.354687]  print_address_description+0x68/0x2d0
->> [13058.354690]  kasan_report+0x124/0x2e0
->> [13058.354697]  __asan_load8+0x88/0xb0
->> [13058.354702]  bfq_idle_slice_timer+0xac/0x290
->> [13058.354707]  __hrtimer_run_queues+0x298/0x8b8
->> [13058.354710]  hrtimer_interrupt+0x1b8/0x678
->> [13058.354716]  arch_timer_handler_phys+0x4c/0x78
->> [13058.354722]  handle_percpu_devid_irq+0xf0/0x558
->> [13058.354731]  generic_handle_irq+0x50/0x70
->> [13058.354735]  __handle_domain_irq+0x94/0x110
->> [13058.354739]  gic_handle_irq+0x8c/0x1b0
->> [13058.354742]  el1_irq+0xb8/0x140
->> [13058.354748]  do_wp_page+0x260/0xe28
->> [13058.354752]  __handle_mm_fault+0x8ec/0x9b0
->> [13058.354756]  handle_mm_fault+0x280/0x460
->> [13058.354762]  do_page_fault+0x3ec/0x890
->> [13058.354765]  do_mem_abort+0xc0/0x1b0
->> [13058.354768]  el0_da+0x24/0x28
->> [13058.354770]
->> [13058.354773] Allocated by task 19731:
->> [13058.354780]  kasan_kmalloc+0xe0/0x190
->> [13058.354784]  kasan_slab_alloc+0x14/0x20
->> [13058.354788]  kmem_cache_alloc_node+0x130/0x440
->> [13058.354793]  bfq_get_queue+0x138/0x858
->> [13058.354797]  bfq_get_bfqq_handle_split+0xd4/0x328
->> [13058.354801]  bfq_init_rq+0x1f4/0x1180
->> [13058.354806]  bfq_insert_requests+0x264/0x1c98
->> [13058.354811]  blk_mq_sched_insert_requests+0x1c4/0x488
->> [13058.354818]  blk_mq_flush_plug_list+0x2d4/0x6e0
->> [13058.354826]  blk_flush_plug_list+0x230/0x548
->> [13058.354830]  blk_finish_plug+0x60/0x80
->> [13058.354838]  read_pages+0xec/0x2c0
->> [13058.354842]  __do_page_cache_readahead+0x374/0x438
->> [13058.354846]  ondemand_readahead+0x24c/0x6b0
->> [13058.354851]  page_cache_sync_readahead+0x17c/0x2f8
->> [13058.354858]  generic_file_buffered_read+0x588/0xc58
->> [13058.354862]  generic_file_read_iter+0x1b4/0x278
->> [13058.354965]  ext4_file_read_iter+0xa8/0x1d8 [ext4]
->> [13058.354972]  __vfs_read+0x238/0x320
->> [13058.354976]  vfs_read+0xbc/0x1c0
->> [13058.354980]  ksys_read+0xdc/0x1b8
->> [13058.354984]  __arm64_sys_read+0x50/0x60
->> [13058.354990]  el0_svc_common+0xb4/0x1d8
->> [13058.354994]  el0_svc_handler+0x50/0xa8
->> [13058.354998]  el0_svc+0x8/0xc
->> [13058.354999]
->> [13058.355001] Freed by task 19731:
->> [13058.355007]  __kasan_slab_free+0x120/0x228
->> [13058.355010]  kasan_slab_free+0x10/0x18
->> [13058.355014]  kmem_cache_free+0x288/0x3f0
->> [13058.355018]  bfq_put_queue+0x134/0x208
->> [13058.355022]  bfq_exit_icq_bfqq+0x164/0x348
->> [13058.355026]  bfq_exit_icq+0x28/0x40
->> [13058.355030]  ioc_exit_icq+0xa0/0x150
->> [13058.355035]  put_io_context_active+0x250/0x438
->> [13058.355038]  exit_io_context+0xd0/0x138
->> [13058.355045]  do_exit+0x734/0xc58
->> [13058.355050]  do_group_exit+0x78/0x220
->> [13058.355054]  __wake_up_parent+0x0/0x50
->> [13058.355058]  el0_svc_common+0xb4/0x1d8
->> [13058.355062]  el0_svc_handler+0x50/0xa8
->> [13058.355066]  el0_svc+0x8/0xc
->> [13058.355067]
->> [13058.355071] The buggy address belongs to the object at ffffa02cf3e63e70#012 which belongs to the cache bfq_queue of size 464
->> [13058.355075] The buggy address is located 264 bytes inside of#012 464-byte region [ffffa02cf3e63e70, ffffa02cf3e64040)
->> [13058.355077] The buggy address belongs to the page:
->> [13058.355083] page:ffff7e80b3cf9800 count:1 mapcount:0 mapping:ffff802db5c90780 index:0xffffa02cf3e606f0 compound_mapcount: 0
->> [13058.366175] flags: 0x2ffffe0000008100(slab|head)
->> [13058.370781] raw: 2ffffe0000008100 ffff7e80b53b1408 ffffa02d730c1c90 ffff802db5c90780
->> [13058.370787] raw: ffffa02cf3e606f0 0000000000370023 00000001ffffffff 0000000000000000
->> [13058.370789] page dumped because: kasan: bad access detected
->> [13058.370791]
->> [13058.370792] Memory state around the buggy address:
->> [13058.370797]  ffffa02cf3e63e00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fb fb
->> [13058.370801]  ffffa02cf3e63e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> [13058.370805] >ffffa02cf3e63f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> [13058.370808]                                                                 ^
->> [13058.370811]  ffffa02cf3e63f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> [13058.370815]  ffffa02cf3e64000: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
->> [13058.370817] ==================================================================
->> [13058.370820] Disabling lock debugging due to kernel taint
->>
->> Here, we directly pass the bfqd to bfq_idle_slice_timer_body func.
->>
->> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
->> Signed-off-by: Feilong Lin <linfeilong@huawei.com>
->> ---
->> block/bfq-iosched.c | 10 +++++-----
->> 1 file changed, 5 insertions(+), 5 deletions(-)
->>
->> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
->> index 8c436abfaf14..f470b9daa98b 100644
->> --- a/block/bfq-iosched.c
->> +++ b/block/bfq-iosched.c
->> @@ -6215,20 +6215,20 @@ static struct bfq_queue *bfq_init_rq(struct request *rq)
->> 	return bfqq;
->> }
->>
->> -static void bfq_idle_slice_timer_body(struct bfq_queue *bfqq)
->> +static void
->> +bfq_idle_slice_timer_body(struct bfq_data *bfqd, struct bfq_queue *bfqq)
->> {
->> -	struct bfq_data *bfqd = bfqq->bfqd;
->> 	enum bfqq_expiration reason;
->> 	unsigned long flags;
->>
->> 	spin_lock_irqsave(&bfqd->lock, flags);
->> -	bfq_clear_bfqq_wait_request(bfqq);
->> -
->> 	if (bfqq != bfqd->in_service_queue) {
->> 		spin_unlock_irqrestore(&bfqd->lock, flags);
->> 		return;
->> 	}
->>
->> +	bfq_clear_bfqq_wait_request(bfqq);
->> +
-> 
-> Please add a comment on why you (correctly) clear this flag only if bfqq is in service.
-> 
-> For the rest, seems ok to me.
-> 
-> Thank you very much for spotting and fixing this bug,
-> Paolo
-> 
-Thanks for your reply.
-Considering that the bfqq may be in race, we should firstly check whether bfqq is in service before
-doing something on it.
+Today's linux-next merge of the jc_docs tree got a conflict in:
 
-I will add a comment before 'if (bfqq != bfqd->in_service_queue) {'
+  Documentation/filesystems/proc.rst
 
-In addition, the fix tag is missing. I will add it in v2 patch.
+between commit:
 
->> 	if (bfq_bfqq_budget_timeout(bfqq))
->> 		/*
->> 		 * Also here the queue can be safely expired
->> @@ -6273,7 +6273,7 @@ static enum hrtimer_restart bfq_idle_slice_timer(struct hrtimer *timer)
->> 	 * early.
->> 	 */
->> 	if (bfqq)
->> -		bfq_idle_slice_timer_body(bfqq);
->> +		bfq_idle_slice_timer_body(bfqd, bfqq);
->>
->> 	return HRTIMER_NORESTART;
->> }
->> -- 
->> 2.19.1
->>
->>
-> 
-> 
-> .
-> 
+  424037b77519 ("mm: smaps: Report arm64 guarded pages in smaps")
 
+from the arm64 tree and commit:
+
+  c33e97efa9d9 ("docs: filesystems: convert proc.txt to ReST")
+
+from the jc_docs tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/filesystems/proc.rst
+index ed5465d0f435,38b606991065..000000000000
+--- a/Documentation/filesystems/proc.rst
++++ b/Documentation/filesystems/proc.rst
+@@@ -489,37 -511,39 +511,40 @@@ does not take into account swapped out=20
+  "THPeligible" indicates whether the mapping is eligible for allocating THP
+  pages - 1 if true, 0 otherwise. It just shows the current status.
+ =20
+- "VmFlags" field deserves a separate description. This member represents t=
+he kernel
+- flags associated with the particular virtual memory area in two letter en=
+coded
+- manner. The codes are the following:
+-     rd  - readable
+-     wr  - writeable
+-     ex  - executable
+-     sh  - shared
+-     mr  - may read
+-     mw  - may write
+-     me  - may execute
+-     ms  - may share
+-     gd  - stack segment growns down
+-     pf  - pure PFN range
+-     dw  - disabled write to the mapped file
+-     lo  - pages are locked in memory
+-     io  - memory mapped I/O area
+-     sr  - sequential read advise provided
+-     rr  - random read advise provided
+-     dc  - do not copy area on fork
+-     de  - do not expand area on remapping
+-     ac  - area is accountable
+-     nr  - swap space is not reserved for the area
+-     ht  - area uses huge tlb pages
+-     ar  - architecture specific flag
+-     dd  - do not include area into core dump
+-     sd  - soft-dirty flag
+-     mm  - mixed map area
+-     hg  - huge page advise flag
+-     nh  - no-huge page advise flag
+-     mg  - mergable advise flag
++ "VmFlags" field deserves a separate description. This member represents t=
+he
++ kernel flags associated with the particular virtual memory area in two le=
+tter
++ encoded manner. The codes are the following:
++=20
++     =3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++     rd    readable
++     wr    writeable
++     ex    executable
++     sh    shared
++     mr    may read
++     mw    may write
++     me    may execute
++     ms    may share
++     gd    stack segment growns down
++     pf    pure PFN range
++     dw    disabled write to the mapped file
++     lo    pages are locked in memory
++     io    memory mapped I/O area
++     sr    sequential read advise provided
++     rr    random read advise provided
++     dc    do not copy area on fork
++     de    do not expand area on remapping
++     ac    area is accountable
++     nr    swap space is not reserved for the area
++     ht    area uses huge tlb pages
++     ar    architecture specific flag
++     dd    do not include area into core dump
++     sd    soft dirty flag
++     mm    mixed map area
++     hg    huge page advise flag
++     nh    no huge page advise flag
++     mg    mergable advise flag
+++    bt    arm64 BTI guarded page
++     =3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ =20
+  Note that there is no guarantee that every flag and associated mnemonic w=
+ill
+  be present in all further kernel releases. Things get changed, the flags =
+may
+
+--Sig_/uK=nKxU3a1Nu0GPtSHTU0E_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5xfBIACgkQAVBC80lX
+0GyOQgf/TwsXkd50WM3hZbWNlmomsyCOrJEg8CqVbiEyrF24ncfkxJ9OoBzBg+SM
+rlJE73yy/Pcf6Qidaa2FOMl86UjNirH55xBZ1c4kY+yXMNpXIK+5DcsYmhoZghaj
+nCZnTS/u5brQXyS6hTQbofMkLU3Qcw084LKa42cnKYTO+Y2NpPeB6k411kUJybuK
+60/Is1QPKzYNxMHd3K6NtL6x3wk9ZTtqtH8moi/pyM/K9Eima1aE2q+8Ehp4bfFB
+vQlE2LgazsCo90DB7a8MIZ717OG0nJhMntT8ISHYJKVIEMCJy7HhybkQdFoRvb9A
+samJZL/kYIF0/JC0EJI0qEjc0VsflA==
+=SM/t
+-----END PGP SIGNATURE-----
+
+--Sig_/uK=nKxU3a1Nu0GPtSHTU0E_--
