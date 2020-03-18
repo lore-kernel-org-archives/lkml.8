@@ -2,128 +2,161 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B227C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAEEC4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5090420752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B091720752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:00:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dVMh+Pfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbgCRWAU (ORCPT
+        id S1727193AbgCRWAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:00:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58991 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRWAT (ORCPT
+        Wed, 18 Mar 2020 18:00:46 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:50233 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726619AbgCRWAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:00:19 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEgjP-0002kT-P7; Wed, 18 Mar 2020 23:00:09 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8769E1C228C;
-        Wed, 18 Mar 2020 22:59:59 +0100 (CET)
-Date:   Wed, 18 Mar 2020 21:59:59 -0000
-From:   "tip-bot2 for Jesse Brandeburg" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86: Fix bitops.h warning with a moved cast
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200310221747.2848474-1-jesse.brandeburg@intel.com>
-References: <20200310221747.2848474-1-jesse.brandeburg@intel.com>
+        Wed, 18 Mar 2020 18:00:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584568844;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qG7boIVK6OX8dp/ludWC81+XEBL3Mxw2bGuQhTDae7o=;
+        b=dVMh+PfwrzKeZhJHQahJvKZ7Y6RfVIQWpR3dhsYRMCXDXC3T6DISd7hbuzyd8jsaNMKRj1
+        p8JRcL5RmYWLRPEv+Z0hg9VZkNi3vGOHQ1dE+TkZnIH91qal88mdBwgv0z3oACyQAlzXvl
+        eu1/NQrwUTRIWLRrXFwPCvNWmb0loc8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-fC-cl_zrMReDbm8tqbN0mQ-1; Wed, 18 Mar 2020 18:00:43 -0400
+X-MC-Unique: fC-cl_zrMReDbm8tqbN0mQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 67CAF8014CC;
+        Wed, 18 Mar 2020 22:00:41 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.36.110.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D979C5D9E5;
+        Wed, 18 Mar 2020 22:00:16 +0000 (UTC)
+Date:   Wed, 18 Mar 2020 18:00:12 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
+        tgraf@infradead.org
+Subject: Re: [PATCH ghak25 v3 1/3] audit: tidy and extend netfilter_cfg
+ x_tables and ebtables logging
+Message-ID: <20200318220012.xeeoeidz5vs6x7g4@madcap2.tricolour.ca>
+References: <cover.1584480281.git.rgb@redhat.com>
+ <3d591dc49fcb643890b93e5b9a8169612b1c96e1.1584480281.git.rgb@redhat.com>
+ <CAHC9VhTQBxzFrGn=+b9MzoapV0iiccPOLvkwemdESSb6nOFGXQ@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <158456879920.28353.9358875954563849711.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhTQBxzFrGn=+b9MzoapV0iiccPOLvkwemdESSb6nOFGXQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/asm branch of tip:
+On 2020-03-18 17:54, Paul Moore wrote:
+> On Tue, Mar 17, 2020 at 5:31 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> >
+> > NETFILTER_CFG record generation was inconsistent for x_tables and
+> > ebtables configuration changes.  The call was needlessly messy and there
+> > were supporting records missing at times while they were produced when
+> > not requested.  Simplify the logging call into a new audit_log_nfcfg
+> > call.  Honour the audit_enabled setting while more consistently
+> > recording information including supporting records by tidying up dummy
+> > checks.
+> >
+> > Add an op= field that indicates the operation being performed (register
+> > or replace).
+> >
+> > Here is the enhanced sample record:
+> >   type=NETFILTER_CFG msg=audit(1580905834.919:82970): table=filter family=2 entries=83 op=replace
+> >
+> > Generate audit NETFILTER_CFG records on ebtables table registration.
+> > Previously this was being done for x_tables registration and replacement
+> > operations and ebtables table replacement only.
+> >
+> > See: https://github.com/linux-audit/audit-kernel/issues/25
+> > See: https://github.com/linux-audit/audit-kernel/issues/35
+> > See: https://github.com/linux-audit/audit-kernel/issues/43
+> >
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> >  include/linux/audit.h           | 19 +++++++++++++++++++
+> >  kernel/auditsc.c                | 24 ++++++++++++++++++++++++
+> >  net/bridge/netfilter/ebtables.c | 12 ++++--------
+> >  net/netfilter/x_tables.c        | 12 +++---------
+> >  4 files changed, 50 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > index f9ceae57ca8d..f4aed2b9be8d 100644
+> > --- a/include/linux/audit.h
+> > +++ b/include/linux/audit.h
+> > @@ -94,6 +94,11 @@ struct audit_ntp_data {
+> >  struct audit_ntp_data {};
+> >  #endif
+> >
+> > +enum audit_nfcfgop {
+> > +       AUDIT_XT_OP_REGISTER,
+> > +       AUDIT_XT_OP_REPLACE,
+> > +};
+> > +
+> >  extern int is_audit_feature_set(int which);
+> >
+> >  extern int __init audit_register_class(int class, unsigned *list);
+> > @@ -379,6 +384,8 @@ extern int __audit_log_bprm_fcaps(struct linux_binprm *bprm,
+> >  extern void __audit_fanotify(unsigned int response);
+> >  extern void __audit_tk_injoffset(struct timespec64 offset);
+> >  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
+> > +extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
+> > +                             enum audit_nfcfgop op);
+> >
+> >  static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
+> >  {
+> > @@ -514,6 +521,13 @@ static inline void audit_ntp_log(const struct audit_ntp_data *ad)
+> >                 __audit_ntp_log(ad);
+> >  }
+> >
+> > +static inline void audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
+> > +                                  enum audit_nfcfgop op)
+> > +{
+> > +       if (audit_enabled)
+> > +               __audit_log_nfcfg(name, af, nentries, op);
+> 
+> Do we want a dummy check here too?  Or do we always want to generate
+> this record (assuming audit is enabled) because it is a configuration
+> related record?
 
-Commit-ID:     1651e700664b4597ddf4f8adfe435252a0d11277
-Gitweb:        https://git.kernel.org/tip/1651e700664b4597ddf4f8adfe435252a0d11277
-Author:        Jesse Brandeburg <jesse.brandeburg@intel.com>
-AuthorDate:    Tue, 10 Mar 2020 15:17:46 -07:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 18 Mar 2020 12:30:19 +01:00
+This is an audit configuration change, so it is mandatory unless there
+is a rule that excludes it.  I talked about this in the cover letter,
+but perhaps my wording wasn't as clear as it could have been.
 
-x86: Fix bitops.h warning with a moved cast
+audit_dummy_context was deliberately removed to make this record
+delivered by default.
 
-Fix many sparse warnings when building with C=1. These are useless noise
-from the bitops.h file and getting rid of them helps developers make
-more use of the tools and possibly find real bugs.
+> paul moore
 
-When the kernel is compiled with C=1, there are lots of messages like:
+- RGB
 
-  arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f becomes 7f)
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
-CONST_MASK() is using a signed integer "1" to create the mask which is
-later cast to (u8), in order to yield an 8-bit value for the assembly
-instructions to use. Simplify the expressions used to clearly indicate
-they are working on 8-bit values only, which still keeps sparse happy
-without an accidental promotion to a 32 bit integer.
-
-The warning was occurring because certain bitmasks that end with a bit
-set next to a natural boundary like 7, 15, 23, 31, end up with a mask
-like 0x7f, which then results in sign extension due to the integer type
-promotion rules[1]. It was really only clear_bit() that was having
-problems, and it was only on some bit checks that resulted in a mask
-like 0xffffff7f being generated after the inversion.
-
-Verify with a test module (see next patch) and assembly inspection that
-the fix doesn't introduce any change in generated code.
-
- [ bp: Massage. ]
-
-Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Acked-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://stackoverflow.com/questions/46073295/implicit-type-promotion-rules [1]
-Link: https://lkml.kernel.org/r/20200310221747.2848474-1-jesse.brandeburg@intel.com
----
- arch/x86/include/asm/bitops.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index 062cdec..53f246e 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
- 	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "orb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" ((u8)CONST_MASK(nr))
-+			: "iq" (CONST_MASK(nr) & 0xff)
- 			: "memory");
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-@@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
- 	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "andb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" ((u8)~CONST_MASK(nr)));
-+			: "iq" (CONST_MASK(nr) ^ 0xff));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
- 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
