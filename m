@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9D6C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7092BC5ACD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9840420752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3639F20752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:25:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="CIhGP8uP"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="HtxXEXRc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbgCRGY5 (ORCPT
+        id S1727320AbgCRGZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 02:24:57 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17851 "EHLO
+        Wed, 18 Mar 2020 02:25:00 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17882 "EHLO
         sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726478AbgCRGY5 (ORCPT
+        by vger.kernel.org with ESMTP id S1726553AbgCRGZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 02:24:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1584512620;
+        Wed, 18 Mar 2020 02:25:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1584512566;
         s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
         h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=tegT7BNwrnblOt4r9BvqfNmbliEYdjXc09H5MiB7JLU=;
-        b=CIhGP8uP4fz7CvBzMtq+h+5SB5XgoVms7UEq7nILWCnmb1UV7Kyk2Siv+hCcUTBX
-        rUKfBUjZVMnz851PjZTTECIl+Von7AUgEMF9935UblDI3RQOAN/B4vfO+HMcX1mCdaP
-        /r0zQnWRy9wx/AyGoVEcYDHXbSuJd8Qm6foLsbRI=
+        bh=4GS+fzgHRhPzfIm1JsnxfQzRHz6CyvzmhR6kJTWisc4=;
+        b=HtxXEXRcsSeAiNJecHlQufJhtu67In+pVzTVm5+O+7WAkPwje/tYEQVmj1aUwx2/
+        dORL6mK0TmBwq74S1grMvUrtZDBZRv7k5SvAOihThNakXBl8KxZvD35z5mlbrMdnp8H
+        RuQtSgWuF8FA6KPXnuMGYEzMDV8GvXqgEZwoUI0M=
 Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1584512617626468.72186225167457; Wed, 18 Mar 2020 14:23:37 +0800 (CST)
+        with SMTPS id 1584512564081798.6091422416087; Wed, 18 Mar 2020 14:22:44 +0800 (CST)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -43,12 +43,12 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <20200318062102.8145-5-jiaxun.yang@flygoat.com>
-Subject: [PATCH v5 04/11] irqchip: Add driver for Loongson-3 HyperTransport PIC controller
-Date:   Wed, 18 Mar 2020 14:20:32 +0800
+Message-ID: <20200318062102.8145-2-jiaxun.yang@flygoat.com>
+Subject: [PATCH v5 01/11] irqchip: Add driver for Loongson I/O Local Interrupt Controller
+Date:   Wed, 18 Mar 2020 14:20:29 +0800
 X-Mailer: git-send-email 2.26.0.rc2
 In-Reply-To: <20200318062102.8145-1-jiaxun.yang@flygoat.com>
 References: <20200318062102.8145-1-jiaxun.yang@flygoat.com>
@@ -61,118 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This controller appeared on Loongson-3 family of chips to receive interrupt=
-s
-from PCH PIC.
-It is a I8259 with optimized interrupt polling flow. We can poll interrupt =
-number
-from HT vector directly but still have to follow standard I8259 routines to=
- mask,
-unmask and EOI.
+This controller appeared on Loongson family of chips as the primary
+package interrupt source.
 
 Co-developed-by: Huacai Chen <chenhc@lemote.com>
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
 ---
 v4-v5:
-=09Enhancements according to maz's suggestions:
-=09=09- Add static for private struct
-=09=09- Drop pointless rename
-=09=09- Fix DT parse bug
-=09=09- Clarifications in comments and commit message
+=09Resolve suggestions from maz:
+=09=09- Remove DT validation
+=09=09- Simplify unnucessary functions & variables
 ---
- arch/mips/include/asm/i8259.h        |   1 +
- drivers/irqchip/Kconfig              |  10 ++
- drivers/irqchip/Makefile             |   1 +
- drivers/irqchip/irq-loongson-htpic.c | 149 +++++++++++++++++++++++++++
- 4 files changed, 161 insertions(+)
- create mode 100644 drivers/irqchip/irq-loongson-htpic.c
+ drivers/irqchip/Kconfig                |   9 +
+ drivers/irqchip/Makefile               |   1 +
+ drivers/irqchip/irq-loongson-liointc.c | 259 +++++++++++++++++++++++++
+ 3 files changed, 269 insertions(+)
+ create mode 100644 drivers/irqchip/irq-loongson-liointc.c
 
-diff --git a/arch/mips/include/asm/i8259.h b/arch/mips/include/asm/i8259.h
-index 97a5e41ed1ab..a54b9649de22 100644
---- a/arch/mips/include/asm/i8259.h
-+++ b/arch/mips/include/asm/i8259.h
-@@ -36,6 +36,7 @@ extern raw_spinlock_t i8259A_lock;
- extern void make_8259A_irq(unsigned int irq);
-=20
- extern void init_i8259_irqs(void);
-+extern struct irq_domain *__init_i8259_irqs(struct device_node *node);
-=20
- /**
-  * i8159_set_poll() - Override the i8259 polling function
 diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index c609eaa319d2..cae6f480c987 100644
+index 6d397732138d..c609eaa319d2 100644
 --- a/drivers/irqchip/Kconfig
 +++ b/drivers/irqchip/Kconfig
-@@ -522,4 +522,14 @@ config LOONGSON_LIOINTC
- =09help
- =09  Support for the Loongson Local I/O Interrupt Controller.
+@@ -513,4 +513,13 @@ config EXYNOS_IRQ_COMBINER
+ =09  Say yes here to add support for the IRQ combiner devices embedded
+ =09  in Samsung Exynos chips.
 =20
-+config LOONGSON_HTPIC
-+=09bool "Loongson3 HyperTransport PIC Controller"
++config LOONGSON_LIOINTC
++=09bool "Loongson Local I/O Interrupt Controller"
 +=09depends on MACH_LOONGSON64
 +=09default y
 +=09select IRQ_DOMAIN
 +=09select GENERIC_IRQ_CHIP
-+=09select I8259
 +=09help
-+=09  Support for the Loongson-3 HyperTransport PIC Controller.
++=09  Support for the Loongson Local I/O Interrupt Controller.
 +
  endmenu
 diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 5e7678efdfe6..37bbe39bf909 100644
+index eae0d78cbf22..5e7678efdfe6 100644
 --- a/drivers/irqchip/Makefile
 +++ b/drivers/irqchip/Makefile
-@@ -106,3 +106,4 @@ obj-$(CONFIG_LS1X_IRQ)=09=09=09+=3D irq-ls1x.o
+@@ -105,3 +105,4 @@ obj-$(CONFIG_MADERA_IRQ)=09=09+=3D irq-madera.o
+ obj-$(CONFIG_LS1X_IRQ)=09=09=09+=3D irq-ls1x.o
  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)=09+=3D irq-ti-sci-intr.o
  obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)=09+=3D irq-ti-sci-inta.o
- obj-$(CONFIG_LOONGSON_LIOINTC)=09=09+=3D irq-loongson-liointc.o
-+obj-$(CONFIG_LOONGSON_HTPIC)=09=09+=3D irq-loongson-htpic.o
-diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loo=
-ngson-htpic.c
++obj-$(CONFIG_LOONGSON_LIOINTC)=09=09+=3D irq-loongson-liointc.o
+diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-l=
+oongson-liointc.c
 new file mode 100644
-index 000000000000..3391e472766d
+index 000000000000..8b6d7b8ddaca
 --- /dev/null
-+++ b/drivers/irqchip/irq-loongson-htpic.c
-@@ -0,0 +1,149 @@
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -0,0 +1,259 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *  Loongson HTPIC IRQ support
++ *  Loongson Local IO Interrupt Controller support
 + */
 +
++#include <linux/errno.h>
 +#include <linux/init.h>
++#include <linux/types.h>
++#include <linux/interrupt.h>
++#include <linux/ioport.h>
++#include <linux/irqchip.h>
 +#include <linux/of_address.h>
 +#include <linux/of_irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irq.h>
 +#include <linux/io.h>
-+#include <linux/syscore_ops.h>
++#include <linux/smp.h>
++#include <linux/irqchip/chained_irq.h>
 +
-+#include <asm/i8259.h>
++#include <boot_param.h>
 +
-+#define HTPIC_MAX_PARENT_IRQ=094
-+#define HTINT_NUM_VECTORS=098
-+#define HTINT_EN_OFF=09=090x20
++#define LIOINTC_CHIP_IRQ=0932
++#define LIOINTC_NUM_PARENT 4
 +
-+struct loongson_htpic {
-+=09void __iomem *base;
-+=09struct irq_domain *domain;
++#define LIOINTC_INTC_CHIP_START=090x20
++
++#define LIOINTC_REG_INTC_STATUS=09(LIOINTC_INTC_CHIP_START + 0x20)
++#define LIOINTC_REG_INTC_EN_STATUS=09(LIOINTC_INTC_CHIP_START + 0x04)
++#define LIOINTC_REG_INTC_ENABLE=09(LIOINTC_INTC_CHIP_START + 0x08)
++#define LIOINTC_REG_INTC_DISABLE=09(LIOINTC_INTC_CHIP_START + 0x0c)
++#define LIOINTC_REG_INTC_POL=09(LIOINTC_INTC_CHIP_START + 0x10)
++#define LIOINTC_REG_INTC_EDGE=09(LIOINTC_INTC_CHIP_START + 0x14)
++
++#define LIOINTC_SHIFT_INTx=094
++
++struct liointc_handler_data {
++=09struct liointc_priv=09*priv;
++=09u32=09=09=09parent_int_map;
 +};
 +
-+static struct loongson_htpic *htpic;
++struct liointc_priv {
++=09struct irq_chip_generic=09=09*gc;
++=09struct liointc_handler_data=09handler[LIOINTC_NUM_PARENT];
++=09u8=09=09=09=09map_cache[LIOINTC_CHIP_IRQ];
++};
 +
-+static void htpic_irq_dispatch(struct irq_desc *desc)
++static void liointc_chained_handle_irq(struct irq_desc *desc)
 +{
-+=09struct loongson_htpic *priv =3D irq_desc_get_handler_data(desc);
++=09struct liointc_handler_data *handler =3D irq_desc_get_handler_data(desc=
+);
 +=09struct irq_chip *chip =3D irq_desc_get_chip(desc);
-+=09uint32_t pending;
++=09struct irq_chip_generic *gc =3D handler->priv->gc;
++=09u32 pending;
 +
 +=09chained_irq_enter(chip, desc);
-+=09pending =3D readl(priv->base);
-+=09/* Ack all IRQs at once, otherwise IRQ flood might happen */
-+=09writel(pending, priv->base);
++
++=09pending =3D readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
 +
 +=09if (!pending)
 +=09=09spurious_interrupt();
@@ -180,111 +176,207 @@ index 000000000000..3391e472766d
 +=09while (pending) {
 +=09=09int bit =3D __ffs(pending);
 +
-+=09=09if (unlikely(bit > 15)) {
-+=09=09=09spurious_interrupt();
-+=09=09=09break;
-+=09=09}
-+
-+=09=09generic_handle_irq(irq_linear_revmap(priv->domain, bit));
++=09=09generic_handle_irq(irq_find_mapping(gc->domain, bit));
 +=09=09pending &=3D ~BIT(bit);
 +=09}
++
 +=09chained_irq_exit(chip, desc);
 +}
 +
-+static void htpic_reg_init(void)
++static void liointc_set_bit(struct irq_chip_generic *gc,
++=09=09=09=09unsigned int offset,
++=09=09=09=09u32 mask, bool set)
 +{
++=09if (set)
++=09=09writel(readl(gc->reg_base + offset) | mask,
++=09=09=09=09gc->reg_base + offset);
++=09else
++=09=09writel(readl(gc->reg_base + offset) & ~mask,
++=09=09=09=09gc->reg_base + offset);
++}
++
++static int liointc_set_type(struct irq_data *data, unsigned int type)
++{
++=09struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(data);
++=09u32 mask =3D data->mask;
++=09unsigned long flags;
++
++=09irq_gc_lock_irqsave(gc, flags);
++=09switch (type) {
++=09case IRQ_TYPE_LEVEL_HIGH:
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
++=09=09break;
++=09case IRQ_TYPE_LEVEL_LOW:
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
++=09=09break;
++=09case IRQ_TYPE_EDGE_RISING:
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
++=09=09break;
++=09case IRQ_TYPE_EDGE_FALLING:
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
++=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
++=09=09break;
++=09default:
++=09=09return -EINVAL;
++=09}
++=09irq_gc_unlock_irqrestore(gc, flags);
++
++=09irqd_set_trigger_type(data, type);
++=09return 0;
++}
++
++static void liointc_resume(struct irq_chip_generic *gc)
++{
++=09struct liointc_priv *priv =3D gc->private;
++=09unsigned long flags;
 +=09int i;
 +
-+=09for (i =3D 0; i < HTINT_NUM_VECTORS; i++) {
-+=09=09uint32_t val;
-+
-+=09=09/* Disable all HT Vectors */
-+=09=09writel(0x0, htpic->base + HTINT_EN_OFF + i * 0x4);
-+=09=09val =3D readl(htpic->base + i * 0x4);
-+=09=09/* Ack all possible pending IRQs */
-+=09=09writel(GENMASK(31, 0), htpic->base + i * 0x4);
-+=09}
-+
-+=09/* Enable 16 vectors for PIC */
-+=09writel(0xffff, htpic->base + HTINT_EN_OFF);
++=09irq_gc_lock_irqsave(gc, flags);
++=09/* Disable all at first */
++=09writel(0xffffffff, gc->reg_base + LIOINTC_REG_INTC_DISABLE);
++=09/* Revert map cache */
++=09for (i =3D 0; i < LIOINTC_CHIP_IRQ; i++)
++=09=09writeb(priv->map_cache[i], gc->reg_base + i);
++=09/* Revert mask cache */
++=09writel(~gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
++=09irq_gc_unlock_irqrestore(gc, flags);
 +}
 +
-+static void htpic_resume(void)
++static const char const *parent_names[] =3D {"int0", "int1", "int2", "int3=
+"};
++
++int __init liointc_of_init(struct device_node *node,
++=09=09=09=09struct device_node *parent)
 +{
-+=09htpic_reg_init();
-+}
++=09struct irq_chip_generic *gc;
++=09struct irq_domain *domain;
++=09struct irq_chip_type *ct;
++=09struct liointc_priv *priv;
++=09void __iomem *base;
++=09u32 of_parent_int_map[LIOINTC_NUM_PARENT];
++=09int parent_irq[LIOINTC_NUM_PARENT];
++=09bool have_parent =3D FALSE;
++=09int sz, i, err =3D 0;
 +
-+struct syscore_ops htpic_syscore_ops =3D {
-+=09.resume=09=09=3D htpic_resume,
-+};
++=09priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
++=09if (!priv)
++=09=09return -ENOMEM;
 +
-+int __init htpic_of_init(struct device_node *node, struct device_node *par=
-ent)
-+{
-+=09unsigned int parent_irq[4];
-+=09int i, err;
-+=09int num_parents =3D 0;
-+
-+=09if (htpic) {
-+=09=09pr_err("loongson-htpic: Only one HTPIC is allowed in the system\n");
-+=09=09return -ENODEV;
-+=09}
-+
-+=09htpic =3D kzalloc(sizeof(*htpic), GFP_KERNEL);
-+=09if (!htpic) {
-+=09=09err =3D -ENOMEM;
-+=09=09goto out_free;
-+=09}
-+
-+=09htpic->base =3D of_iomap(node, 0);
-+=09if (!htpic->base) {
++=09base =3D of_iomap(node, 0);
++=09if (!base) {
 +=09=09err =3D -ENODEV;
-+=09=09goto out_free;
++=09=09goto out_free_priv;
 +=09}
 +
-+=09htpic->domain =3D __init_i8259_irqs(node);
-+=09if (!htpic->domain) {
-+=09=09pr_err("loongson-htpic: Failed to initialize i8259 IRQs\n");
-+=09=09err =3D -ENOMEM;
++=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++) {
++=09=09parent_irq[i] =3D of_irq_get_byname(node, parent_names[i]);
++=09=09if (parent_irq[i] > 0)
++=09=09=09have_parent =3D TRUE;
++=09}
++=09if (!have_parent) {
++=09=09err =3D -ENODEV;
 +=09=09goto out_iounmap;
 +=09}
 +
-+=09/* Interrupt may come from any of the 4 interrupt line */
-+=09for (i =3D 0; i < HTPIC_MAX_PARENT_IRQ; i++) {
-+=09=09parent_irq[i] =3D irq_of_parse_and_map(node, i);
-+=09=09if (parent_irq[i] < 0)
-+=09=09=09break;
-+
-+=09=09num_parents++;
-+=09}
-+
-+=09if (!num_parents) {
-+=09=09pr_err("loongson-htpic: Failed to get parent irqs\n");
++=09sz =3D of_property_read_variable_u32_array(node, "loongson,parent_int_m=
+ap",
++=09=09=09=09=09=09&of_parent_int_map[0], LIOINTC_NUM_PARENT,
++=09=09=09=09=09=09LIOINTC_NUM_PARENT);
++=09if (sz < 4) {
++=09=09pr_err("loongson-liointc: No parent_int_map\n");
 +=09=09err =3D -ENODEV;
-+=09=09goto out_remove_domain;
++=09=09goto out_iounmap;
 +=09}
 +
-+=09htpic_reg_init();
++=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++)
++=09=09priv->handler[i].parent_int_map =3D of_parent_int_map[i];
 +
-+=09for (i =3D 0; i < num_parents; i++) {
++=09/* Setup IRQ domain */
++=09domain =3D irq_domain_add_linear(node, 32,
++=09=09=09=09=09&irq_generic_chip_ops, priv);
++=09if (!domain) {
++=09=09pr_err("loongson-liointc: cannot add IRQ domain\n");
++=09=09err =3D -EINVAL;
++=09=09goto out_iounmap;
++=09}
++
++=09err =3D irq_alloc_domain_generic_chips(domain, 32, 1,
++=09=09=09=09=09node->full_name, handle_level_irq,
++=09=09=09=09=09IRQ_NOPROBE, 0, 0);
++=09if (err) {
++=09=09pr_err("loongson-liointc: unable to register IRQ domain\n");
++=09=09goto out_free_domain;
++=09}
++
++
++=09/* Disable all IRQs */
++=09writel(0xffffffff, base + LIOINTC_REG_INTC_DISABLE);
++=09/* Set to level triggered */
++=09writel(0x0, base + LIOINTC_REG_INTC_EDGE);
++
++=09/* Generate parent INT part of map cache */
++=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++) {
++=09=09u32 pending =3D priv->handler[i].parent_int_map;
++
++=09=09while (pending) {
++=09=09=09int bit =3D __ffs(pending);
++
++=09=09=09priv->map_cache[bit] =3D BIT(i) << LIOINTC_SHIFT_INTx;
++=09=09=09pending &=3D ~BIT(bit);
++=09=09}
++=09}
++
++=09for (i =3D 0; i < LIOINTC_CHIP_IRQ; i++) {
++=09=09/* Generate core part of map cache */
++=09=09priv->map_cache[i] |=3D BIT(loongson_sysconf.boot_cpu_id);
++=09=09writeb(priv->map_cache[i], base + i);
++=09}
++
++=09gc =3D irq_get_domain_generic_chip(domain, 0);
++=09gc->private =3D priv;
++=09gc->reg_base =3D base;
++=09gc->domain =3D domain;
++=09gc->resume =3D liointc_resume;
++
++=09ct =3D gc->chip_types;
++=09ct->regs.enable =3D LIOINTC_REG_INTC_ENABLE;
++=09ct->regs.disable =3D LIOINTC_REG_INTC_DISABLE;
++=09ct->chip.irq_unmask =3D irq_gc_unmask_enable_reg;
++=09ct->chip.irq_mask =3D irq_gc_mask_disable_reg;
++=09ct->chip.irq_mask_ack =3D irq_gc_mask_disable_reg;
++=09ct->chip.irq_set_type =3D liointc_set_type;
++
++=09gc->mask_cache =3D 0xffffffff;
++=09priv->gc =3D gc;
++
++=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++) {
++=09=09if (parent_irq[i] <=3D 0)
++=09=09=09continue;
++
++=09=09priv->handler[i].priv =3D priv;
 +=09=09irq_set_chained_handler_and_data(parent_irq[i],
-+=09=09=09=09=09=09htpic_irq_dispatch, htpic);
++=09=09=09=09liointc_chained_handle_irq, &priv->handler[i]);
 +=09}
-+
-+=09register_syscore_ops(&htpic_syscore_ops);
 +
 +=09return 0;
 +
-+out_remove_domain:
-+=09irq_domain_remove(htpic->domain);
++out_free_domain:
++=09irq_domain_remove(domain);
 +out_iounmap:
-+=09iounmap(htpic->base);
-+out_free:
-+=09kfree(htpic);
++=09iounmap(base);
++out_free_priv:
++=09kfree(priv);
++
 +=09return err;
 +}
 +
-+IRQCHIP_DECLARE(loongson_htpic, "loongson,htpic-1.0", htpic_of_init);
++IRQCHIP_DECLARE(loongson_liointc_1_0, "loongson,liointc-1.0", liointc_of_i=
+nit);
++IRQCHIP_DECLARE(loongson_liointc_1_0a, "loongson,liointc-1.0a", liointc_of=
+_init);
 --=20
 2.26.0.rc2
 
