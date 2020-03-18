@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E13C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1210EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9D92076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5E420674
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgCRHHj (ORCPT
+        id S1727291AbgCRHHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 03:07:39 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40236 "EHLO
+        Wed, 18 Mar 2020 03:07:42 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40254 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgCRHHj (ORCPT
+        with ESMTP id S1726473AbgCRHHl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 03:07:39 -0400
+        Wed, 18 Mar 2020 03:07:41 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 0C0FD292457
+        with ESMTPSA id 3DB422924A1
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>,
         Andrzej Hajda <a.hajda@samsung.com>, icenowy@aosc.io,
         anarsoul@gmail.com, Neil Armstrong <narmstrong@baylibre.com>,
         matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        megous@megous.com, Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH v4 1/4] dt-bindings: Add binding for the Analogix ANX7688 chip
-Date:   Wed, 18 Mar 2020 08:07:27 +0100
-Message-Id: <20200318070730.4012371-1-enric.balletbo@collabora.com>
+        megous@megous.com, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v4 2/4] mfd: anx7688: Add driver for Analogix ANX7688 chip
+Date:   Wed, 18 Mar 2020 08:07:28 +0100
+Message-Id: <20200318070730.4012371-2-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200318070730.4012371-1-enric.balletbo@collabora.com>
+References: <20200318070730.4012371-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,78 +48,197 @@ The ANX7688 chip is a Type-C Port Controller, HDMI to DP converter and
 USB-C mux between USB 3.0 lanes and the DP output.
 
 For our use case a big part of the chip, like power supplies, control
-gpios and the usb-c part is managed by an Embedded Controller, hence,
-this is its simplest form of the binding. We'd prefer introduce these
-properties for someone with a different use case so they can test
-on their hardware.
+gpios and usb-c parts are managed by an Embedded Controller, hence,
+this is its simplest form of it. Other users of this chip might
+introduce new functionalities as per their requirements.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
 Changes in v4: None
-Changes in v3:
-- Add binding for ANX7688 multi-function device.
-
+Changes in v3: None
 Changes in v2: None
 
- .../bindings/mfd/analogix,anx7688.yaml        | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+ drivers/mfd/Kconfig         | 11 +++++
+ drivers/mfd/Makefile        |  1 +
+ drivers/mfd/anx7688.c       | 87 +++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/anx7688.h | 39 +++++++++++++++++
+ 4 files changed, 138 insertions(+)
+ create mode 100644 drivers/mfd/anx7688.c
+ create mode 100644 include/linux/mfd/anx7688.h
 
-diff --git a/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml b/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 2b203290e7b9..ac4ef4f20518 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -51,6 +51,17 @@ config MFD_ACT8945A
+ 	  linear regulators, along with a complete ActivePath battery
+ 	  charger.
+ 
++config MFD_ANX7688
++	tristate "Analogix ANX7688"
++	select MFD_CORE
++	select REGMAP_I2C
++	depends on I2C && OF
++	help
++	  Support the ANX7688 from Analogix. This device features a USB
++	  Type-C Port Controller (TCPC), and HDMI to DP converter, and
++	  USB-C mux between USB 3.0 lanes and the DP output of the
++	  embedded converter.
++
+ config MFD_SUN4I_GPADC
+ 	tristate "Allwinner sunxi platforms' GPADC MFD driver"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index b83f172545e1..4c6ca8a7d260 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_MFD_88PM800)	+= 88pm800.o 88pm80x.o
+ obj-$(CONFIG_MFD_88PM805)	+= 88pm805.o 88pm80x.o
+ obj-$(CONFIG_MFD_ACT8945A)	+= act8945a.o
+ obj-$(CONFIG_MFD_SM501)		+= sm501.o
++obj-$(CONFIG_MFD_ANX7688)	+= anx7688.o
+ obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
+ obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
+ obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
+diff --git a/drivers/mfd/anx7688.c b/drivers/mfd/anx7688.c
 new file mode 100644
-index 000000000000..bb95a4e87188
+index 000000000000..fab7ed410c46
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/analogix,anx7688.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/analogix,anx7688.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/mfd/anx7688.c
+@@ -0,0 +1,87 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * HDMI to USB Type-C Bridge and Port Controller with MUX
++ *
++ * Copyright 2020 Google LLC
++ */
 +
-+title: Analogix ANX7688 HDMI to USB Type-C Bridge (Port Controller with MUX)
++#include <linux/i2c.h>
++#include <linux/gpio/consumer.h>
++#include <linux/mfd/anx7688.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/regulator/consumer.h>
++#include <linux/regmap.h>
 +
-+maintainers:
-+  - Nicolas Boichat <drinkcat@chromium.org>
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
++static const struct regmap_config anx7688_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++};
 +
-+description: |
-+  ANX7688 converts HDMI 2.0 to DisplayPort 1.3 Ultra-HDi (4096x2160p60)
-+  including an intelligent crosspoint switch to support USB Type-C (USB-C).
-+  The integrated crosspoint switch supports USB 3.1 data transfer along with
-+  the DisplayPort Alternate Mode signaling over USB Type-C. Additionally,
-+  an on-chip microcontroller (OCM) is available to manage the signal switching,
-+  Channel Configuration (CC) detection, USB Power Delivery (USB-PD), Vendor
-+  Defined Message (VDM) protocol support and other functions as defined in the
-+  USB TypeC and USB Power Delivery specifications.
++static int anx7688_i2c_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct anx7688 *anx7688;
++	u16 vendor, device;
++	u8 buffer[4];
++	int ret;
 +
-+  As a result, a multi-function device is exposed as parent of the video
-+  bridge, TCPC and MUX blocks.
++	anx7688 = devm_kzalloc(dev, sizeof(*anx7688), GFP_KERNEL);
++	if (!anx7688)
++		return -ENOMEM;
 +
-+properties:
-+  compatible:
-+    const: analogix,anx7688
++	anx7688->client = client;
++	i2c_set_clientdata(client, anx7688);
 +
-+  reg:
-+    maxItems: 1
-+    description: I2C address of the device
++	anx7688->regmap = devm_regmap_init_i2c(client, &anx7688_regmap_config);
 +
-+required:
-+  - compatible
-+  - reg
++	/* Read both vendor and device id (4 bytes). */
++	ret = regmap_bulk_read(anx7688->regmap, ANX7688_VENDOR_ID_REG,
++			       buffer, 4);
++	if (ret) {
++		dev_err(dev, "Failed to read chip vendor/device id\n");
++		return ret;
++	}
 +
-+examples:
-+  - |
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
++	vendor = (u16)buffer[1] << 8 | buffer[0];
++	device = (u16)buffer[3] << 8 | buffer[2];
++	if (vendor != ANX7688_VENDOR_ID || device != ANX7688_DEVICE_ID) {
++		dev_err(dev, "Invalid vendor/device id %04x/%04x\n",
++			vendor, device);
++		return -ENODEV;
++	}
 +
-+        anx7688: anx7688@2c {
-+            compatible = "analogix,anx7688";
-+            reg = <0x2c>;
-+        };
-+    };
++	ret = regmap_bulk_read(anx7688->regmap, ANX7688_FW_VERSION_REG,
++			       buffer, 2);
++	if (ret) {
++		dev_err(&client->dev, "Failed to read firmware version\n");
++		return ret;
++	}
++
++	anx7688->fw_version = (u16)buffer[0] << 8 | buffer[1];
++	dev_info(dev, "ANX7688 firwmare version 0x%04x\n",
++		 anx7688->fw_version);
++
++	return devm_of_platform_populate(dev);
++}
++
++static const struct of_device_id anx7688_match_table[] = {
++	{ .compatible = "analogix,anx7688", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, anx7688_match_table);
++
++static struct i2c_driver anx7688_driver = {
++	.probe_new = anx7688_i2c_probe,
++	.driver = {
++		.name = "anx7688",
++		.of_match_table = anx7688_match_table,
++	},
++};
++
++module_i2c_driver(anx7688_driver);
++
++MODULE_DESCRIPTION("HDMI to USB Type-C Bridge and Port Controller with MUX driver");
++MODULE_AUTHOR("Nicolas Boichat <drinkcat@chromium.org>");
++MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/anx7688.h b/include/linux/mfd/anx7688.h
+new file mode 100644
+index 000000000000..f2760856f045
+--- /dev/null
++++ b/include/linux/mfd/anx7688.h
+@@ -0,0 +1,39 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * HDMI to USB Type-C Bridge and Port Controller with MUX
++ *
++ * Copyright 2020 Google LLC
++ */
++#ifndef __LINUX_MFD_ANX7688_H
++#define __LINUX_MFD_ANX7688_H
++
++#include <linux/types.h>
++
++/* Register addresses */
++#define ANX7688_VENDOR_ID_REG		0x00
++#define ANX7688_DEVICE_ID_REG		0x02
++
++#define ANX7688_FW_VERSION_REG		0x80
++
++#define ANX7688_DP_BANDWIDTH_REG	0x85
++#define ANX7688_DP_LANE_COUNT_REG	0x86
++
++#define ANX7688_VENDOR_ID		0x1f29
++#define ANX7688_DEVICE_ID		0x7688
++
++/* First supported firmware version (0.85) */
++#define ANX7688_MINIMUM_FW_VERSION	0x0085
++
++struct gpio_desc;
++struct i2c_client;
++struct regulator;
++struct regmap;
++
++struct anx7688 {
++	struct i2c_client *client;
++	struct regmap *regmap;
++
++	u16 fw_version;
++};
++
++#endif /* __LINUX_MFD_ANX7688_H */
 -- 
 2.25.1
 
