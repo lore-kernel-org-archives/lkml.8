@@ -2,96 +2,123 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3616AC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40244C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B0120767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1395C2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XSiquivy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L28rlUPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgCRP4Q (ORCPT
+        id S1726979AbgCRP5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:56:16 -0400
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:46027 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgCRP4P (ORCPT
+        Wed, 18 Mar 2020 11:57:45 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35056 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbgCRP5o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:56:15 -0400
-Received: by mail-lf1-f45.google.com with SMTP id x143so4611011lff.12
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:56:13 -0700 (PDT)
+        Wed, 18 Mar 2020 11:57:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h4so10480197wru.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:57:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=DzOdrsW97KdLqXTxd9ksU9+GnyXc9/hhsBl/C1xbNT0=;
-        b=XSiquivyhfl3GaGYHiw+zEMxuIxvv0pXuF5G2LuCQRXPuaJSiOiGLR5p9S35kt+NI/
-         +NiUotKn6JvlxeHYeixqtObYKvAOMTpcfyLS+NqcjGnHbul/V2TZKdyhSXsGIF6rvLMQ
-         13+ZvUJwth3SezRXe8/flOko56JkqJlOEsygfvNhojFJhgXs+Auh1xAGPLiSc1q4V6Xx
-         Wqyl/D3E2ufsthHTXO+s0prGcolWaOIw1poDePkAp7WH7Tb3USbubsmH+CtNFN5P5t/J
-         MagQf9CZYtUlQq1NZ97mQxSwF+8C7Kzj/zreTyMH4UdPUCE8+PzlFAtpe7VnqCrvdACT
-         YSzg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WKs9IgnQjzOcey+yQmdz8NYqXjD7ApUhbxNTTHxXd2g=;
+        b=L28rlUPx3+TpmA+orVyq6GD2PU1T/wM4SozCe9wCtz2g1xoXdbyk4OJJ+6J1n781Eb
+         dr2y4h2+RXwrwe6flAUJt9VItB9pqnMYLBtpW3S7b/LguF+ylK3rEAZkIO+VNbiHxaXx
+         1sYHVX/U4w2gtxkDKU99iDO6NBLnx+qr6Z/ZrAOBEpnjjDui5+Hm8OcvZvzLDOEi0FQF
+         KuodKzde6MH+iNwZtXU6ClTVw6vsdU9SUW4fHe7cHCm+iKhYRS44N7QeevaWsTGz3mEc
+         +leQoJ3D+tP+fe5kn0kS2re2nZ92mlwO8xXUaOcUcNNhsYRW7iS+W8K0ZgZ8CwwtbPiz
+         rr7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=DzOdrsW97KdLqXTxd9ksU9+GnyXc9/hhsBl/C1xbNT0=;
-        b=cl6YXZmxYtKOOIl2RtkSVi4Sf6Qqb93rtvMA1dgc4gY/hydzlu9NlAjK7FShwSPOpw
-         9zIvj/ooCmCLbcQHGvPxY55NXmtkhtdRLqQDGE3i3U4MqN8AlUFWhrPc+O0Be62sRshY
-         eoIm1eqkykO1pHurtI1rv0u3C5lzY3oMACREYLBOX0rNJCMjjZMVeJ0yqzlJwQ0cNhwE
-         UVnz6c5uCUz0AQerekAhmsQIjaEzOs0O2G4+iJyM50ac7/v0l3yaMqlWPdxhGHyhUl1E
-         6bRl/T2SSFV/OGpBEFEdMTMKH7RgEnzUU7jUNB4oT2nqJnRGLN3OVZtQBIzhfSzoOlTI
-         1FDQ==
-X-Gm-Message-State: ANhLgQ3gofrDDBj258tOgEEJ9tRutLVLMsr0867TVQbFcf2N8ndSrnLK
-        2EqU/5rqySW7blJ0f1wREgYrS4W0fH72f6bGzNGefA==
-X-Google-Smtp-Source: ADFU+vsDZbF18oB7HRyBSPzjs+IYS5tBn4pxKjv50NIP6u4ac+UT6Jp6ZtijUK5QhY8lAy9TtQ9x3BpoCJ4/RiHzx4M=
-X-Received: by 2002:ac2:5de1:: with SMTP id z1mr3225019lfq.95.1584546972965;
- Wed, 18 Mar 2020 08:56:12 -0700 (PDT)
+        bh=WKs9IgnQjzOcey+yQmdz8NYqXjD7ApUhbxNTTHxXd2g=;
+        b=ZpXcuAt9NqdHnOwdykgEXG80NMeJTWXghHZ78DnelWkNDayK47b9K/qz5yimLAIPSs
+         5W+zgjX8WGsh09Mk9SjbjIjcCr11Zh9E3NwRiiYRP+/VBQtDHp5TeR7wjVURyEbK4IuJ
+         PQ6IQwiC2zEkKiSte5Zusw79kxpPCwab1nprOh6yKUTQ0s0XmXuF7rw+f/QcGqX5isqd
+         jx4nW7qXlNcOjA6ACtDOZwN8axsYMUgODPjQrMaLBOB/wBurvwPv6Ph8Wf/SnD3+vX9T
+         JqTpkT1xWM99ko2lkqqMTDS1Dik+2weKQ1UXV8sHyuBtlYKI6LjNfk02I3Iot5wlQ4Sw
+         rlpA==
+X-Gm-Message-State: ANhLgQ3o1ZSer0RdPotBAwUGHXow3p6chaWWJLxvPz3GtAQFjfF5+eTv
+        MU6/OGLoMGWkb5TaTDUMgYCGuw==
+X-Google-Smtp-Source: ADFU+vuoc90UFHCUoDzgGQkfj86K1CIpUWNNiBDamxA0TmJ2Xr8zId8gD3etAN/dAO1s4yZb9viTXA==
+X-Received: by 2002:a5d:474b:: with SMTP id o11mr5981930wrs.4.1584547060995;
+        Wed, 18 Mar 2020 08:57:40 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id f9sm10057253wro.47.2020.03.18.08.57.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Mar 2020 08:57:39 -0700 (PDT)
+Subject: Re: [PATCH 1/2] ASoC: qcom: sdm845: handle soundwire stream
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        broonie@kernel.org
+Cc:     alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org
+References: <20200317095351.15582-1-srinivas.kandagatla@linaro.org>
+ <20200317095351.15582-2-srinivas.kandagatla@linaro.org>
+ <8daeeb26-851b-8311-30f5-5d285ccbc255@linux.intel.com>
+ <69c72f5a-e72e-b7b3-90cb-a7354dcb175d@linaro.org>
+ <cbc6cc9b-24f5-8c2a-b60d-b5dab08c128e@linux.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <fcf845bd-9803-ab04-d2a9-c258ddfcc972@linaro.org>
+Date:   Wed, 18 Mar 2020 15:57:38 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 18 Mar 2020 21:26:01 +0530
-Message-ID: <CA+G9fYsT2B0WFPV0uohH=QT+CU09OscZvsUV3pnhG-xjPF+OqA@mail.gmail.com>
-Subject: =?UTF-8?B?a2VybmVsL3JjdS90YXNrcy5oOjEwNzA6Mzc6IGVycm9yOiDigJhyY3VfdGFza3NfcnVkZQ==?=
-        =?UTF-8?B?4oCZIHVuZGVjbGFyZWQ=?=
-To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        rcu@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, josh@joshtriplett.org,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        jiangshanlai@gmail.com, Joel Fernandes <joel@joelfernandes.org>,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <cbc6cc9b-24f5-8c2a-b60d-b5dab08c128e@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The arm64 build failed on linux-next master branch.
 
-make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm64
-CROSS_COMPILE=3Daarch64-linux-gnu- HOSTCC=3Dgcc CC=3D"sccache
-aarch64-linux-gnu-gcc" O=3Dbuild Image
 
-In file included from ../kernel/rcu/update.c:562:
- ../kernel/rcu/tasks.h: In function =E2=80=98show_rcu_tasks_gp_kthreads=E2=
-=80=99:
- ../kernel/rcu/tasks.h:1070:37: error: =E2=80=98rcu_tasks_rude=E2=80=99 und=
-eclared
-(first use in this function); did you mean =E2=80=98rcu_tasks_qs=E2=80=99?
-  1070 |  show_rcu_tasks_generic_gp_kthread(&rcu_tasks_rude, "");
-       |                                     ^~~~~~~~~~~~~~
-       |                                     rcu_tasks_qs
- ../kernel/rcu/tasks.h:1070:37: note: each undeclared identifier is
-reported only once for each function it appears in
+On 18/03/2020 15:26, Pierre-Louis Bossart wrote:
+> 
+> Same comment, how does the notion of cpu_dai come in the picture for a 
+> SoundWire dailink?
+> Would you mind listing what the components of the dailinks are?
 
-Ref:
-https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/476084417
+dais that I was referring here are all codec dais from backend-dai.
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Device tree entries from
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/qcom/sdm845-db845c.dts?h=next-20200318#n538
+
+
+Frontend-dai:
+	mm1-dai-link {
+		link-name = "MultiMedia1";
+		cpu {
+			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA1>;
+		};
+	};
+
+Backend-dai:
+	slim-dai-link {
+		link-name = "SLIM Playback";
+		cpu {
+			sound-dai = <&q6afedai SLIMBUS_0_RX>;
+		};
+
+		platform {
+			sound-dai = <&q6routing>;
+		};
+
+		codec {
+			sound-dai =  <&left_spkr>, <&right_spkr>, <&swm 0>, <&wcd9340 0>;
+		};
+	};
+
+
+--srini
