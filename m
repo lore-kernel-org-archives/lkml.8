@@ -2,225 +2,82 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7DCC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4668C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A13920768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C44020768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:42:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TyFmmsmH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgCRGfb (ORCPT
+        id S1727056AbgCRGmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 02:35:31 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37890 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726478AbgCRGfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 02:35:31 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 687BA464783BCDA51C81;
-        Wed, 18 Mar 2020 14:35:13 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Wed, 18 Mar 2020
- 14:35:07 +0800
-Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
- selection in the distributor
-To:     Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-21-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
-Date:   Wed, 18 Mar 2020 14:34:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Wed, 18 Mar 2020 02:42:17 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:25484 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726478AbgCRGmQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 02:42:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584513736;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PPs09uZ6i6ElWTAW3541z8pnB9L17d/mtUgzs6Ul94Q=;
+        b=TyFmmsmH0tlW5FuCWxxYhXZKddGjK+H7jlT9Zord1OQq10FYqLAID5YCmRhGgjvUcPErRN
+        3Ol/3pmnR4PwhC+sshaOOFFlilnagaO1WNgJhIRQm+EqkuzlaQgTBc0+ajJzob27V1p2dF
+        NXpkraDfJW6JEbIDRsWBXtFg1bLZUdg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-403-WhmNS_73OdaTi778wON5Sw-1; Wed, 18 Mar 2020 02:42:14 -0400
+X-MC-Unique: WhmNS_73OdaTi778wON5Sw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B23A8017CC;
+        Wed, 18 Mar 2020 06:42:12 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-112-49.ams2.redhat.com [10.36.112.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C1D487E323;
+        Wed, 18 Mar 2020 06:42:11 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 2070717444; Wed, 18 Mar 2020 07:42:11 +0100 (CET)
+Date:   Wed, 18 Mar 2020 07:42:11 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org, marmarek@invisiblethingslab.com,
+        David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] drm/bochs: downgrade pci_request_region failure from
+ error to warning
+Message-ID: <20200318064211.rg5s4sgrnqhht3f4@sirius.home.kraxel.org>
+References: <20200313084152.2734-1-kraxel@redhat.com>
+ <20200317164941.GP2363188@phenom.ffwll.local>
 MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-21-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317164941.GP2363188@phenom.ffwll.local>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2020/3/5 4:33, Marc Zyngier wrote:
-> The GICv4.1 architecture gives the hypervisor the option to let
-> the guest choose whether it wants the good old SGIs with an
-> active state, or the new, HW-based ones that do not have one.
+On Tue, Mar 17, 2020 at 05:49:41PM +0100, Daniel Vetter wrote:
+> On Fri, Mar 13, 2020 at 09:41:52AM +0100, Gerd Hoffmann wrote:
+> > Shutdown of firmware framebuffer has a bunch of problems.  Because
+> > of this the framebuffer region might still be reserved even after
+> > drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
 > 
-> For this, plumb the configuration of SGIs into the GICv3 MMIO
-> handling, present the GICD_TYPER2.nASSGIcap to the guest,
-> and handle the GICD_CTLR.nASSGIreq setting.
-> 
-> In order to be able to deal with the restore of a guest, also
-> apply the GICD_CTLR.nASSGIreq setting at first run so that we
-> can move the restored SGIs to the HW if that's what the guest
-> had selected in a previous life.
+> Is that still the fbdev lifetime fun where the cleanup might be delayed if
+> the char device node is still open?
 
-I'm okay with the restore path.  But it seems that we still fail to
-save the pending state of vSGI - software pending_latch of HW-based
-vSGIs will not be updated (and always be false) because we directly
-inject them through ITS, so vgic_v3_uaccess_read_pending() can't
-tell the correct pending state to user-space (the correct one should
-be latched in HW).
+Yes.
 
-It would be good if we can sync the hardware state into pending_latch
-at an appropriate time (just before save), but not sure if we can...
-
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->   virt/kvm/arm/vgic/vgic-mmio-v3.c | 48 ++++++++++++++++++++++++++++++--
->   virt/kvm/arm/vgic/vgic-v3.c      |  2 ++
->   2 files changed, 48 insertions(+), 2 deletions(-)
-> 
-> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> index de89da76a379..442f3b8c2559 100644
-> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-> @@ -3,6 +3,7 @@
->    * VGICv3 MMIO handling functions
->    */
->   
-> +#include <linux/bitfield.h>
->   #include <linux/irqchip/arm-gic-v3.h>
->   #include <linux/kvm.h>
->   #include <linux/kvm_host.h>
-> @@ -70,6 +71,8 @@ static unsigned long vgic_mmio_read_v3_misc(struct kvm_vcpu *vcpu,
->   		if (vgic->enabled)
->   			value |= GICD_CTLR_ENABLE_SS_G1;
->   		value |= GICD_CTLR_ARE_NS | GICD_CTLR_DS;
-> +		if (kvm_vgic_global_state.has_gicv4_1 && vgic->nassgireq)
-
-Looking at how we handle the GICD_CTLR.nASSGIreq setting, I think
-"nassgireq==true" already indicates "has_gicv4_1==true".  So this
-can be simplified.
-
-But I wonder that should we use nassgireq to *only* keep track what
-the guest had written into the GICD_CTLR.nASSGIreq.  If not, we may
-lose the guest-request bit after migration among hosts with different
-has_gicv4_1 settings.
-
-
-The remaining patches all look good to me :-). I will wait for you to
-confirm these two concerns.
-
-
-Thanks,
-Zenghui
-
-> +			value |= GICD_CTLR_nASSGIreq;
->   		break;
->   	case GICD_TYPER:
->   		value = vgic->nr_spis + VGIC_NR_PRIVATE_IRQS;
-> @@ -81,6 +84,10 @@ static unsigned long vgic_mmio_read_v3_misc(struct kvm_vcpu *vcpu,
->   			value |= (INTERRUPT_ID_BITS_SPIS - 1) << 19;
->   		}
->   		break;
-> +	case GICD_TYPER2:
-> +		if (kvm_vgic_global_state.has_gicv4_1)
-> +			value = GICD_TYPER2_nASSGIcap;
-> +		break;
->   	case GICD_IIDR:
->   		value = (PRODUCT_ID_KVM << GICD_IIDR_PRODUCT_ID_SHIFT) |
->   			(vgic->implementation_rev << GICD_IIDR_REVISION_SHIFT) |
-> @@ -98,17 +105,43 @@ static void vgic_mmio_write_v3_misc(struct kvm_vcpu *vcpu,
->   				    unsigned long val)
->   {
->   	struct vgic_dist *dist = &vcpu->kvm->arch.vgic;
-> -	bool was_enabled = dist->enabled;
->   
->   	switch (addr & 0x0c) {
-> -	case GICD_CTLR:
-> +	case GICD_CTLR: {
-> +		bool was_enabled, is_hwsgi;
-> +
-> +		mutex_lock(&vcpu->kvm->lock);
-> +
-> +		was_enabled = dist->enabled;
-> +		is_hwsgi = dist->nassgireq;
-> +
->   		dist->enabled = val & GICD_CTLR_ENABLE_SS_G1;
->   
-> +		/* Not a GICv4.1? No HW SGIs */
-> +		if (!kvm_vgic_global_state.has_gicv4_1)
-> +			val &= ~GICD_CTLR_nASSGIreq;
-> +
-> +		/* Dist stays enabled? nASSGIreq is RO */
-> +		if (was_enabled && dist->enabled) {
-> +			val &= ~GICD_CTLR_nASSGIreq;
-> +			val |= FIELD_PREP(GICD_CTLR_nASSGIreq, is_hwsgi);
-> +		}
-> +
-> +		/* Switching HW SGIs? */
-> +		dist->nassgireq = val & GICD_CTLR_nASSGIreq;
-> +		if (is_hwsgi != dist->nassgireq)
-> +			vgic_v4_configure_vsgis(vcpu->kvm);
-> +
->   		if (!was_enabled && dist->enabled)
->   			vgic_kick_vcpus(vcpu->kvm);
-> +
-> +		mutex_unlock(&vcpu->kvm->lock);
->   		break;
-> +	}
->   	case GICD_TYPER:
-> +	case GICD_TYPER2:
->   	case GICD_IIDR:
-> +		/* This is at best for documentation purposes... */
->   		return;
->   	}
->   }
-> @@ -117,10 +150,21 @@ static int vgic_mmio_uaccess_write_v3_misc(struct kvm_vcpu *vcpu,
->   					   gpa_t addr, unsigned int len,
->   					   unsigned long val)
->   {
-> +	struct vgic_dist *dist = &vcpu->kvm->arch.vgic;
-> +
->   	switch (addr & 0x0c) {
->   	case GICD_IIDR:
->   		if (val != vgic_mmio_read_v3_misc(vcpu, addr, len))
->   			return -EINVAL;
-> +		return 0;
-> +	case GICD_CTLR:
-> +		/* Not a GICv4.1? No HW SGIs */
-> +		if (!kvm_vgic_global_state.has_gicv4_1)
-> +			val &= ~GICD_CTLR_nASSGIreq;
-> +
-> +		dist->enabled = val & GICD_CTLR_ENABLE_SS_G1;
-> +		dist->nassgireq = val & GICD_CTLR_nASSGIreq;
-> +		return 0;
->   	}
->   
->   	vgic_mmio_write_v3_misc(vcpu, addr, len, val);
-> diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
-> index 1bc09b523486..2c9fc13e2c59 100644
-> --- a/virt/kvm/arm/vgic/vgic-v3.c
-> +++ b/virt/kvm/arm/vgic/vgic-v3.c
-> @@ -540,6 +540,8 @@ int vgic_v3_map_resources(struct kvm *kvm)
->   		goto out;
->   	}
->   
-> +	if (kvm_vgic_global_state.has_gicv4_1)
-> +		vgic_v4_configure_vsgis(kvm);
->   	dist->ready = true;
->   
->   out:
-> 
+cheers,
+  Gerd
 
