@@ -2,90 +2,83 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B9DC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A53C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1990A20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:14:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OixeC8J5"
+	by mail.kernel.org (Postfix) with ESMTP id EAD7820757
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:15:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbgCRPOh (ORCPT
+        id S1727191AbgCRPPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:14:37 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:40664 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727035AbgCRPOg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:14:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584544475;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rDahFV9TPWnSHYGEo4pu2LmiluREcgL9pHQHEehqYmE=;
-        b=OixeC8J5rWvPM1HvR4PADk47xq4+qPr5lrz4KoHSeL30EOX9RKsD7nfzdj1wrhdV5wxf5B
-        u5IDcKW6ceyVQdpR1XWgAWqwJqYwzTISc/dgEiEWMBKjNfTMAvrYrmzkfEFt8OB5y+tCEB
-        g/ag96fPTgyi4laZED0PaMe6mluUgsY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-115-zLovBwwuOPCXLkjvjN2tvw-1; Wed, 18 Mar 2020 11:14:34 -0400
-X-MC-Unique: zLovBwwuOPCXLkjvjN2tvw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97683107ACC7;
-        Wed, 18 Mar 2020 15:14:31 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0851A5C1D8;
-        Wed, 18 Mar 2020 15:14:25 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <e47bef56-9271-93e0-0e59-c77c253babea@redhat.com>
-References: <e47bef56-9271-93e0-0e59-c77c253babea@redhat.com> <20200317194140.6031-5-longman@redhat.com> <20200317194140.6031-1-longman@redhat.com> <2832139.1584520054@warthog.procyon.org.uk>
-To:     Waiman Long <longman@redhat.com>
-Cc:     dhowells@redhat.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
+        Wed, 18 Mar 2020 11:15:08 -0400
+Received: from mga17.intel.com ([192.55.52.151]:36495 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726958AbgCRPPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 11:15:07 -0400
+IronPort-SDR: HTeISfOC4CGs7Jlyob+Qgsx/jrCjaPt9SRTjj1CrKkeee533VgGHgXm7/JdR7GuUm21Auce8IT
+ aQg0qHJ02rbQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 08:15:06 -0700
+IronPort-SDR: FO9JYybt6/tWOkD0i8MwbkuhJu09rhOiIDlGB9PXcO5Snk06sS/bBcmbsc6uuW2SYMWaQ9Tz4M
+ mseSYVmPezEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
+   d="scan'208";a="291343056"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Mar 2020 08:15:04 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jEaPN-00AnMz-9v; Wed, 18 Mar 2020 17:15:01 +0200
+Date:   Wed, 18 Mar 2020 17:15:01 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-Subject: Re: [PATCH v4 4/4] KEYS: Avoid false positive ENOMEM error on key read
+        Giulio Benetti <giulio.benetti@micronovasrl.com>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH 6/7] serial: 8250_dw: add em485 support
+Message-ID: <20200318151501.GO1922688@smile.fi.intel.com>
+References: <20200318142640.982763-1-heiko@sntech.de>
+ <20200318142640.982763-7-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2866041.1584544464.1@warthog.procyon.org.uk>
-Date:   Wed, 18 Mar 2020 15:14:24 +0000
-Message-ID: <2866042.1584544464@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318142640.982763-7-heiko@sntech.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Waiman Long <longman@redhat.com> wrote:
+On Wed, Mar 18, 2020 at 03:26:39PM +0100, Heiko Stuebner wrote:
+> From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> 
+> Need to use rs485 transceiver so let's use existing em485 485 emulation
+> layer on top of 8250.
+> 
+> Add rs485_config callback to port.
 
-> Doing this is micro-optimization. As the keys subsystem is that
-> performance critical, do we need to do that to save a cycle or two while
-> making the code a bit harder to read?
+Synopsys DesignWare UART is being supported in three modules right now:
+8250_dw (platform driver), 8250_dwlib (some library functions for this driver)
+and 8250_lpss (PCI driver).
 
-It was more sort of a musing comment.  Feel free to ignore it.  kvfree()
-doesn't do this.
+Can we do in a way that both platform and PCI drivers will get advantage by the change?
 
-David
+> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>  drivers/tty/serial/8250/8250_dw.c | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
