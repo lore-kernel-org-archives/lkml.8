@@ -2,195 +2,131 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E09C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A33AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF9420768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371E920768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:10:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgCRKK2 (ORCPT
+        id S1727661AbgCRKKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:10:28 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:57155 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726310AbgCRKK1 (ORCPT
+        Wed, 18 Mar 2020 06:10:43 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52156 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgCRKKm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:10:27 -0400
-Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MfYDO-1jlMQi0Qg4-00fxps; Wed, 18 Mar 2020 11:10:24 +0100
-Received: by mail-qk1-f173.google.com with SMTP id h14so37696429qke.5;
-        Wed, 18 Mar 2020 03:10:23 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3gSZgWkdJWHoe5WeZY5cW3/nvNMwgMzj5hms8APhafXakm590l
-        9NJGnWJhwlf82cGKUu9D65XKxdX7Vl3aaBMUyyo=
-X-Google-Smtp-Source: ADFU+vvAakuOMd3ErCSUomMX8z0py4x5kF0p1NXkPKJUf0Yfay59WpIhVqcU89UsHhxlAYx4b/h6YAwzOwru6S0xj2Q=
-X-Received: by 2002:a37:6455:: with SMTP id y82mr3173930qkb.286.1584526222619;
- Wed, 18 Mar 2020 03:10:22 -0700 (PDT)
+        Wed, 18 Mar 2020 06:10:42 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c187so1240229wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:10:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=FPQ5osnkg/HoY+TfdL7F+oUq1R09ELZh/2W0X/IdEWM=;
+        b=lN6vgKIY/PNcLocORpGpncAF73DefTsojjnrc0JNMXu3NTt/+SRZnpRqdWddUoiS+o
+         gVbwOi4JsMJARIY8aDH/6HYRtAOQUOJcxhEtJD1nWTO/Q0Oe1Q5vrhqgGrUwLqPCsgvZ
+         DKok91zEmbVZVwzC/um9bgvLEdrzRGfRjQKsXOxPfVi9lFwbDV0ZEuUV3tNJ418JpJsG
+         uycwWdnWH1i/es+FyQ3D0fA/8BY8SComWYX8eVjO9elO4a/GwMJepv5PKSwcbi7PpgaI
+         i1Uv6gk1Qa7UH8QbCmPiZ4nrVWJqm/h/cLekeQYMpWiWR8Spof0/DmnxizexSEfxi962
+         aBAQ==
+X-Gm-Message-State: ANhLgQ3LJ/Fumu/IK7I1+88z7CtDheVgzkb4Xb/90q4GEj6GM185PtGz
+        7mC0LPc4hWeRUTa0Qsr4UmU=
+X-Google-Smtp-Source: ADFU+vt5jLSujl/oZI8dD/y4Eng93u0/Y3mAAVvSk7ykgxDapqO0OoQPOtPPhVm0Q+U1cnZkVGZ+Kg==
+X-Received: by 2002:a7b:c218:: with SMTP id x24mr4557128wmi.48.1584526241535;
+        Wed, 18 Mar 2020 03:10:41 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id d21sm8638297wrb.51.2020.03.18.03.10.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Mar 2020 03:10:40 -0700 (PDT)
+Subject: Re: [PATCH] vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual
+ console
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        Eric Dumazet <edumazet@google.com>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+References: <0000000000006663de0598d25ab1@google.com>
+ <20200224071247.283098-1-ebiggers@kernel.org>
+ <8fb00b38-abd0-6895-3ad2-85a6f05ee6cf@suse.com>
+ <20200224081913.GA299238@sol.localdomain> <20200302212306.GA78660@gmail.com>
+ <20200318100612.GA2044908@kroah.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ced58bef-31ac-7f4e-ffed-ccbcde7b7bb6@suse.cz>
+Date:   Wed, 18 Mar 2020 11:10:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
- <1584200119-18594-2-git-send-email-mikelley@microsoft.com>
- <CAK8P3a1GFDUY4mXzst4Ds+S-4SGXso6-jfpsYyy-eHyceAC1Zg@mail.gmail.com> <MW2PR2101MB10524879CD685710A51AB740D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-In-Reply-To: <MW2PR2101MB10524879CD685710A51AB740D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 18 Mar 2020 11:10:06 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a02EULGxyuKFq8YnbG8BQ_m-RKciaNEc9ZbdP2yz9dt+Q@mail.gmail.com>
-Message-ID: <CAK8P3a02EULGxyuKFq8YnbG8BQ_m-RKciaNEc9ZbdP2yz9dt+Q@mail.gmail.com>
-Subject: Re: [PATCH v6 01/10] arm64: hyperv: Add core Hyper-V include files
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:smUb2w4heNdSNB9yZ7n4eJSJIj6+13Vm+vxn/gMm+oubjVt2Lco
- t8yfV/Ua7OQdDkxM7g3doew78zjj7ezzCeYrKRQq/mroH4od0IXyB1IdDIo+PTu94Sn+UOK
- mK3mx6EplklCazvbzSQW6nJwYey6gq+cQ0XWbZxZ5D3OAJmUxiqLaIK4K/WRYbgyH2sn8tq
- TGfToRBZx6AAlkPN5T+Ng==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zssKbvN/uHk=:jBOpXsKPnuklkLOyBfwouw
- 0cLBo+4jc+SDTrVRt0sQZkDldoP8lRoj12f9Ov0RJ8v/gU21hdbXpWaGYHRY3yqvMrDAx6VvI
- JKJHdu+gCG/b2SwxARWLawNOqKFpqEKkhEGa+ixW//T5D0hE7L49ciubbucsUNAavij0/+K3N
- RM4PoAXhqlWU3mbwTbPhTtviaVkyg58dEoK8hV4k4UvoTy4512AGrKKPTpf+nFN663V3e7d4B
- Za4fwWotIYQgZsPU25u+YUpOrhuBQmEwURv8JQhnI8EwDuZgP0I2F0qNrh2sjs1DgNT3C7PUc
- RCMAPUPD8h/eUGKl9vM1ULsq+8CO8NNmt6MZTdrTZIbvQw0UBazlXScKq9kMriBkSZZGHK7gA
- TnlyeynkGylrq6SSucAZwszmIsyqCTolyn4ScYCgfMI4C3tUORVM/E+jhte2MG3HOG0D3CZKO
- TAYFLCGpz39POJTAQ9FQGam6gQpysbbN6MA/9r6s4wBxV8g3xZedmUua+w011fOxeBKEAQX3v
- d3gCZs3eBLcVfSVWB9X5BlG5F3x1D5HmYND2iYVSokNs9fveBTVFIoQjR/xD1v7lghJAbNNtb
- CXd7JrcUFIQaDJ8nuTevvoatIrircKhEtk3Wnd4mu6a79DODD9VrntsT9u6bx62EaKCuvJofo
- iiE0vjgUvyrYL+JP4Nkj5AmvIwkJID5at4RP4ZtCBnDkETtUhNrhEQz/d+gbrzzD06OdqJ7Re
- KDdo+OvgT5Hi46VmnA/+aCqr7OvBbhxaB0IiltQyy5ihG/XVib6QEiHRYWTP8FmJAqIXck4FG
- EsIP+Jqfnuw4KCDdli1myGaGs9CtqR/L3j+bbSUwKsp+7VPuv8=
+In-Reply-To: <20200318100612.GA2044908@kroah.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 1:12 AM Michael Kelley <mikelley@microsoft.com> wrote:
-> From: Arnd Bergmann <arnd@arndb.de> Sent: Monday, March 16, 2020 1:48 AM
-> > On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
-> >
-> > > +
-> > > +/* Define input and output layout for Get VP Register hypercall */
-> > > +struct hv_get_vp_register_input {
-> > > +       u64 partitionid;
-> > > +       u32 vpindex;
-> > > +       u8  inputvtl;
-> > > +       u8  padding[3];
-> > > +       u32 name0;
-> > > +       u32 name1;
-> > > +} __packed;
-> >
-> > Are you sure these need to be made byte-aligned according to the
-> > specification? If the structure itself is aligned to 64 bit, better mark only
-> > the individual fields that are misaligned as __packed.
-> >
-> > If the structure is aligned to only 32-bit addresses instead of
-> > 64-bit, mark it as "__packed __aligned(4)" to let the compiler
-> > generate better code for accessing it.
->
-> None of the fields are misaligned and it will always be aligned to 64-bit
-> addresses, so there should be no padding needed or added.  There was
-> a discussion of __packed and the Hyper-V data structures in general on
-> LKML here:  https://lkml.org/lkml/2018/11/30/848.  Adding __packed was
-> done as a preventative measure, not because anything was actually
-> broken.  Marking as __aligned(8) here would indicate the correct intent,
-> though the use of the structure always ensures 64-bit alignment.
+On 18. 03. 20, 11:06, Greg Kroah-Hartman wrote:
+>> Jiri, can you explain what you meant here?  I don't see how your suggestion
+>> would solve the problem.
+>>
+>> Greg, any opinion?
+> 
+> I'll defer to Jiri here :)
 
-Just drop the __packed annotations then, they just confuse the compiler
-in this case. In particular, when the compiler thinks that a structure is
-misaligned, it tries to avoid using load/store instructions on it that are
-inefficient or trap with misaligned code, so having default alignment
-produces better object code.
+Heh, thanks.
 
-> > Also, in order to write portable code, it would be helpful to mark
-> > all the fields as explicitly little-endian, and use __le32_to_cpu()
-> > etc for accessing them.
->
-> There's an opening comment in this file stating that all data
-> structures shared between Hyper-V and a guest VM are little
-> endian.  Is there some other marking to consider using?
+I started looking into this yesterday, but was interrupted by other
+tasks. Stay tuned.
 
-Yes, device drivers should generally define data structures using
-the __le32, __le64 etc types, and use the conversion functions
-to access them. Building with 'make C=1' usually tells you when
-you have mismatched annotations.
-
-> We have definitely not allowed for the case of Hyper-V running on
-> a big endian architecture.  There are a *lot* of messages and data
-> structures passed between the guest and Hyper-V, and coding
-> to handle either endianness is a big project.  I'm doubtful
-> of the value until and unless we actually have a need for it.
-
-In general, the use of big-endian software on Linux is declining, however
-
-- arm64 as an architecture is meant to support both endian types,
-  and we still try to ensure it works either way as long as there are
-  users that depend on it.
-
-- The remaining users of big-endian software are probably
-  more likely to run on virtual machines than on real hardware
-
-- Any device driver should generally be written against portable
-  interfaces, even if you think you know how it will be used. As
-  driver writers tend to look at existing code for new drivers, it's
-  better to have them all be portable. (This is a similar argument
-  to the irqchip interface).
-
-Even if you don't convert any of the existing architecture independent
-code to run both ways, I see no reason to not do it for new drivers.
-
-> > > +/* Define synthetic interrupt controller message flags. */
-> > > +union hv_message_flags {
-> > > +       __u8 asu8;
-> > > +       struct {
-> > > +               __u8 msg_pending:1;
-> > > +               __u8 reserved:7;
-> > > +       } __packed;
-> > > +};
-> >
-> > For similar reasons, please avoid bit fields and just use a
-> > bit mask on the first member of the union.
->
-> Unfortunately, changing to a bit mask ripples into
-> architecture independent code and into the x86
-> implementation.  I'd prefer not to drag that complexity
-> into this patch set.
-
-How so? If this file is arm64 specific, there should be no need to make
-x86 do the same change.
-
-> > > + * Use the Hyper-V provided stimer0 as the timer that is made
-> > > + * available to the architecture independent Hyper-V drivers.
-> > > + */
-> > > +#define hv_init_timer(timer, tick) \
-> > > +               hv_set_vpreg(HV_REGISTER_STIMER0_COUNT + (2*timer), tick)
-> > > +#define hv_init_timer_config(timer, val) \
-> > > +               hv_set_vpreg(HV_REGISTER_STIMER0_CONFIG + (2*timer), val)
-> > > +#define hv_get_current_tick(tick) \
-> > > +               (tick = hv_get_vpreg(HV_REGISTER_TIME_REFCOUNT))
-> >
-> > In general, we prefer inline functions over macros in header files.
->
-> I can change the "set" calls to inline functions.  As you can see, the "get"
-> functions are coded and used in architecture independent code and on
-> the x86 side in a way that won't convert to inline functions.
-
-Ok.
-
-        Arnd
+regards,
+-- 
+js
+suse labs
