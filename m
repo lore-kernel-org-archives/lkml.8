@@ -2,150 +2,215 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F062C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2B4C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E70F5208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:33:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="RqALiKWB"
+	by mail.kernel.org (Postfix) with ESMTP id 5146220772
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:34:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584570847;
+	bh=wCFIzWLWMkiT8lTa8V+0C/JqIcP9mF/QSeauJauOzpI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZJaYHrO9V1fRvOasECP6p2TmomUu24TSf6JKoDknzwV64eSbdD813DbdwGfle88A9
+	 iJGroV9ECDecCI/mbcFdLQ2iXxQt8gBjA+dBWR98EJaOOkjS6cd6NQjlhiPQ2W6rWY
+	 X9978Tt9+DRNDIDYqsaHf3Z6KL/70g9LY4MiwIKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgCRWdU (ORCPT
+        id S1727279AbgCRWeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:33:20 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39604 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgCRWdU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:33:20 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7603A5F;
-        Wed, 18 Mar 2020 23:33:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584570797;
-        bh=9m1GSY/Y0chTObQdUK2o5uaKcyUnJ2AtolcRgJvxcRI=;
+        Wed, 18 Mar 2020 18:34:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbgCRWeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 18:34:06 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B80E2076F;
+        Wed, 18 Mar 2020 22:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584570845;
+        bh=wCFIzWLWMkiT8lTa8V+0C/JqIcP9mF/QSeauJauOzpI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RqALiKWBqa3oEj6gO5QaKcF2+D0Q54zVl+tnIJcm64PY3+pAw74SREjMR0VoUXZl7
-         Bxhj8v/Gih5fORg6/cH+QmbyhmHQxT1lNDBcMZe9bL+6oiBzPs4Q7CtlzJRtILAioN
-         vFQ69xXygRCGcB2oHWZgVtjBQL7nPdGcBH8z+xzs=
-Date:   Thu, 19 Mar 2020 00:33:11 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to
- assigned-clock-rates
-Message-ID: <20200318223311.GH24538@pendragon.ideasonboard.com>
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200313212012.GL4751@pendragon.ideasonboard.com>
- <OSBPR01MB35905D6D72DCBF154FCF7C88AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
- <20200313212717.GO4751@pendragon.ideasonboard.com>
- <CA+V-a8veXbwMrda8UEu2mN6gGgrBJA8Mp7gdN7Q3-iXNw9c4pg@mail.gmail.com>
+        b=jmjErUMUP3x8nQ2xrxHLZ7HcxmyYxXZuBqYoP0HKb8n1iNax7keZ66Z5nV2hT9Xwy
+         ZYI1GsHQyJsEab3G+3TvMJqIQu3rsUe1b4WZw0dapl4Hf1XBCMN5GmNgLQg8HCgPes
+         UaPg5INpoTdSpoqu9rNcUV9ovHMuUyc5w8bNNfLU=
+Date:   Wed, 18 Mar 2020 22:34:00 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     iommu@lists.linux-foundation.org, robin.murphy@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v5 2/5] iommu/arm-smmu: Add support for TTBR1
+Message-ID: <20200318223400.GA10304@willie-the-truck>
+References: <1580248819-12644-1-git-send-email-jcrouse@codeaurora.org>
+ <1580248819-12644-3-git-send-email-jcrouse@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+V-a8veXbwMrda8UEu2mN6gGgrBJA8Mp7gdN7Q3-iXNw9c4pg@mail.gmail.com>
+In-Reply-To: <1580248819-12644-3-git-send-email-jcrouse@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Tue, Jan 28, 2020 at 03:00:16PM -0700, Jordan Crouse wrote:
+> Add support to enable TTBR1 if the domain requests it via the
+> DOMAIN_ATTR_SPLIT_TABLES attribute. If enabled by the hardware
+> and pagetable configuration the driver will configure the TTBR1 region
+> and program the domain pagetable on TTBR1. TTBR0 will be disabled.
+> 
+> After attaching the device the value of he domain attribute can
+> be queried to see if the split pagetables were successfully programmed.
+> The domain geometry will be updated as well so that the caller can
+> determine the active region for the pagetable that was programmed.
+> 
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+> 
+>  drivers/iommu/arm-smmu.c | 48 +++++++++++++++++++++++++++++++++++++++++-------
+>  drivers/iommu/arm-smmu.h | 22 ++++++++++++++++------
+>  2 files changed, 57 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 16c4b87..23b22fa 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -557,11 +557,17 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+>  			cb->ttbr[0] = pgtbl_cfg->arm_v7s_cfg.ttbr;
+>  			cb->ttbr[1] = 0;
+>  		} else {
+> -			cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> -			cb->ttbr[0] |= FIELD_PREP(ARM_SMMU_TTBRn_ASID,
+> -						  cfg->asid);
+> -			cb->ttbr[1] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
+> -						 cfg->asid);
 
-On Wed, Mar 18, 2020 at 08:13:00PM +0000, Lad, Prabhakar wrote:
-> On Fri, Mar 13, 2020 at 9:27 PM Laurent Pinchart wrote:
-> > On Fri, Mar 13, 2020 at 09:25:01PM +0000, Prabhakar Mahadev Lad wrote:
-> >> On Sent: 13 March 2020 21:20, Laurent Pinchart wrote:
-> >>> On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
-> >>>> Use assigned-clock-rates to specify the clock rate. Also mark
-> >>>> clock-frequency property as deprecated.
-> >>>
-> >>> I would phrase it the other way around, this patch mainly deprecates clock-
-> >>> frequency, and as a side effect recommends usage of assigned-clock-rates.
-> >>>
-> >>> "Deprecate usage of the clock-frequency propertly. The preferred method
-> >>> to set clock rates is to use assigned-clock-rates."
-> >>
-> >> Agreed will do that.
-> >>
-> >>>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >>>> ---
-> >>>>  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
-> >>>>  1 file changed, 3 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> >>>> b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> >>>> index 72ad992..e62fe82 100644
-> >>>> --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> >>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> >>>> @@ -8,7 +8,7 @@ Required Properties:
-> >>>>  - compatible: Value should be "ovti,ov5645".
-> >>>>  - clocks: Reference to the xclk clock.
-> >>>>  - clock-names: Should be "xclk".
-> >>>> -- clock-frequency: Frequency of the xclk clock.
-> >>>> +- clock-frequency (deprecated): Frequency of the xclk clock.
-> >>>
-> >>> I would drop this completely. Drivers need to ensure backward compatibility,
-> >>> but DT bindings should only document the latest version, the history is
-> >>> available in git.
-> >>
-> >> Sure will drop it.
-> >>
-> >>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >>>
-> >>> While at it, can I enlist you to convert these bindings to yaml ? :-)
-> >>>
-> >> Sure will do the honours , will make sure yaml patch is ontop of this patch too.
->
-> Shall I enlist you as the maintainer  in the json-schema ?
-> dt_binding_check says  'maintainers' is a required property.
+I think it would be clearer if you set the ASID in TTBR0 unconditionally
+here...
 
-Do you want to be the new maintainer ? :-) Sakari is maintaining sensor
-drivers (in his spare time though) so maybe he could be listed in the DT
-bindings too if he wants. Otherwise, I could do it.
+> +			if (pgtbl_cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
+> +				cb->ttbr[0] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
+> +							 cfg->asid);
+> +				cb->ttbr[1] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> +			} else {
+> +				cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+> +				cb->ttbr[0] |= FIELD_PREP(ARM_SMMU_TTBRn_ASID,
+> +							  cfg->asid);
 
-> > Thank you :-)
-> >
-> >>>>  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> >>>>    to the hardware pin PWDNB which is physically active low.
-> >>>>  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> >>>> @@ -37,7 +37,8 @@ Example:
-> >>>>
-> >>>>  clocks = <&clks 200>;
-> >>>>  clock-names = "xclk";
-> >>>> -clock-frequency = <24000000>;
-> >>>> +assigned-clocks = <&clks 200>;
-> >>>> +assigned-clock-rates = <24000000>;
-> >>>>
-> >>>>  vdddo-supply = <&camera_dovdd_1v8>;
-> >>>>  vdda-supply = <&camera_avdd_2v8>;
+... and then OR'd in the TTBR base here.
 
--- 
-Regards,
+> +				cb->ttbr[1] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
+> +							 cfg->asid);
+> +			}
+>  		}
+>  	} else {
+>  		cb->ttbr[0] = pgtbl_cfg->arm_lpae_s2_cfg.vttbr;
+> @@ -675,6 +681,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>  	enum io_pgtable_fmt fmt;
+>  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>  	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> +	unsigned long quirks = 0;
+>  
+>  	mutex_lock(&smmu_domain->init_mutex);
+>  	if (smmu_domain->smmu)
+> @@ -743,6 +750,14 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>  		oas = smmu->ipa_size;
+>  		if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH64) {
+>  			fmt = ARM_64_LPAE_S1;
+> +
+> +			/*
+> +			 * We are assuming that split pagetables will always use
+> +			 * SEP_UPSTREAM so we don't need to reduce the size of
+> +			 * the ias to account for the sign extension bit
+> +			 */
+> +			if (smmu_domain->split_pagetables)
+> +				quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
+>  		} else if (cfg->fmt == ARM_SMMU_CTX_FMT_AARCH32_L) {
+>  			fmt = ARM_32_LPAE_S1;
+>  			ias = min(ias, 32UL);
+> @@ -812,6 +827,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>  		.coherent_walk	= smmu->features & ARM_SMMU_FEAT_COHERENT_WALK,
+>  		.tlb		= smmu_domain->flush_ops,
+>  		.iommu_dev	= smmu->dev,
+> +		.quirks		= quirks,
+>  	};
+>  
+>  	if (smmu_domain->non_strict)
+> @@ -825,8 +841,15 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>  
+>  	/* Update the domain's page sizes to reflect the page table format */
+>  	domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
+> -	domain->geometry.aperture_end = (1UL << ias) - 1;
+> -	domain->geometry.force_aperture = true;
+> +
+> +	if (pgtbl_cfg.quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
+> +		domain->geometry.aperture_start = ~0UL << ias;
+> +		domain->geometry.aperture_end = ~0UL;
+> +	} else {
+> +		domain->geometry.aperture_end = (1UL << ias) - 1;
+> +		domain->geometry.force_aperture = true;
+> +		smmu_domain->split_pagetables = false;
+> +	}
 
-Laurent Pinchart
+Why do you only force the aperture for TTBR0?
+
+> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> index 8d1cd54..53053fd 100644
+> --- a/drivers/iommu/arm-smmu.h
+> +++ b/drivers/iommu/arm-smmu.h
+> @@ -172,6 +172,7 @@ enum arm_smmu_cbar_type {
+>  #define ARM_SMMU_TCR_SH0		GENMASK(13, 12)
+>  #define ARM_SMMU_TCR_ORGN0		GENMASK(11, 10)
+>  #define ARM_SMMU_TCR_IRGN0		GENMASK(9, 8)
+> +#define ARM_SMMU_TCR_EPD0		BIT(7)
+>  #define ARM_SMMU_TCR_T0SZ		GENMASK(5, 0)
+>  
+>  #define ARM_SMMU_VTCR_RES1		BIT(31)
+> @@ -343,16 +344,25 @@ struct arm_smmu_domain {
+>  	struct mutex			init_mutex; /* Protects smmu pointer */
+>  	spinlock_t			cb_lock; /* Serialises ATS1* ops and TLB syncs */
+>  	struct iommu_domain		domain;
+> +	bool				split_pagetables;
+>  };
+>  
+>  static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
+>  {
+> -	return ARM_SMMU_TCR_EPD1 |
+> -	       FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+> -	       FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+> -	       FIELD_PREP(ARM_SMMU_TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
+> -	       FIELD_PREP(ARM_SMMU_TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
+> -	       FIELD_PREP(ARM_SMMU_TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
+> +	u32 tcr = FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+> +		FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+> +		FIELD_PREP(ARM_SMMU_TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
+> +		FIELD_PREP(ARM_SMMU_TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
+> +		FIELD_PREP(ARM_SMMU_TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
+> +
+> +       /*
+> +	* When TTBR1 is selected shift the TCR fields by 16 bits and disable
+> +	* translation in TTBR0
+> +	*/
+> +	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1)
+> +		return (tcr << 16) | ARM_SMMU_TCR_EPD0;
+> +
+> +	return tcr | ARM_SMMU_TCR_EPD1;
+>  }
+
+Please give this a single return statement, i.e.
+
+	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1)
+		tcr = (tcr << 16) | ARM_SMMU_TCR_EPD0;
+	else
+		tcr |= ARM_SMMU_TCR_EPD1;
+
+	return tcr;
+
+Will
