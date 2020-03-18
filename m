@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969A4C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8F2C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD29208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7220F20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564852;
-	bh=0geW2N5yklwjKb6rivq1v7IxgkL4xJnOpRV3pgTthvg=;
+	s=default; t=1584564854;
+	bh=wFVAbSXXnLviOvnVsJg1EPq85ZisqHoqs4AhjG/CuEE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C5MLhjlGbUBE94dvnrM0wSnIwl/NqFMJB9XWIhe/TPlht/s1nSyEkQ2gYBsvuhGhp
-	 jt5jxWnQwlT3sIRrkn+/KD9B/tDf0vlinbLZh/C3UcxhgMsOQoToQqYglpClncHQNE
-	 fXrpSH/iqR2oM2ZkrVwrC0VINa273diWgFd1lO+o=
+	b=MZBV29VdbJ9jgO0vOpB3GGguzPNL0CQUSl8GI8f58yFhMFJzpZGseugbdPbdxEPmR
+	 BoRQs3hZFWbtGtFb9+/30TlpEVyXMhCqUIKdn5l8EOXomQBDluOsTc+cuGB7Ne+UOz
+	 OcGcRLjJG8p5JE9FFJmQ30HhJXfq8ImhG6tMRyYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbgCRUyL (ORCPT
+        id S1727650AbgCRUyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53508 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:54:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727562AbgCRUyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:54:08 -0400
+        id S1727610AbgCRUyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA5BA208E4;
-        Wed, 18 Mar 2020 20:54:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A583208D6;
+        Wed, 18 Mar 2020 20:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564847;
-        bh=0geW2N5yklwjKb6rivq1v7IxgkL4xJnOpRV3pgTthvg=;
+        s=default; t=1584564851;
+        bh=wFVAbSXXnLviOvnVsJg1EPq85ZisqHoqs4AhjG/CuEE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WP39XUgrySw46+NnDtGuF3S5N0/h7hM+2w0wipJ4OzloiEwWsG6C0GN/NKJ7qZKb6
-         L9ROFnGf2hR+DRhjDOpxTHZU9rZqnSclx8rRh/tXymKAQWAz8ntk0+LTpROrA1HgFM
-         ZtO3OIuEMV31o8/hWhwEjotYxnMonACcQq+o1FFQ=
+        b=zu7YtM3aHozIPgf6CnV6h0w63+e8kFYUKTJzWXacv6UtnU+uL1ytJDgDZC6WjwbNA
+         iP5FSr01Nr2UQjXuvpfU+Ax2cSwMhOIOGJ93++ttb57WdFYMVpVIZV9kjFW6YeGOLI
+         /D99n/MSfeF6jJ0Q/raSvHa+ngQ/bVTj0S3MgScI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tycho Andersen <tycho@tycho.ws>, Tejun Heo <tj@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 25/73] cgroup1: don't call release_agent when it is ""
-Date:   Wed, 18 Mar 2020 16:52:49 -0400
-Message-Id: <20200318205337.16279-25-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 28/73] slip: make slhc_compress() more robust against malicious packets
+Date:   Wed, 18 Mar 2020 16:52:52 -0400
+Message-Id: <20200318205337.16279-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -58,41 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tycho Andersen <tycho@tycho.ws>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 2e5383d7904e60529136727e49629a82058a5607 ]
+[ Upstream commit 110a40dfb708fe940a3f3704d470e431c368d256 ]
 
-Older (and maybe current) versions of systemd set release_agent to "" when
-shutting down, but do not set notify_on_release to 0.
+Before accessing various fields in IPV4 network header
+and TCP header, make sure the packet :
 
-Since 64e90a8acb85 ("Introduce STATIC_USERMODEHELPER to mediate
-call_usermodehelper()"), we filter out such calls when the user mode helper
-path is "". However, when used in conjunction with an actual (i.e. non "")
-STATIC_USERMODEHELPER, the path is never "", so the real usermode helper
-will be called with argv[0] == "".
+- Has IP version 4 (ip->version == 4)
+- Has not a silly network length (ip->ihl >= 5)
+- Is big enough to hold network and transport headers
+- Has not a silly TCP header size (th->doff >= sizeof(struct tcphdr) / 4)
 
-Let's avoid this by not invoking the release_agent when it is "".
+syzbot reported :
 
-Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+BUG: KMSAN: uninit-value in slhc_compress+0x5b9/0x2e60 drivers/net/slip/slhc.c:270
+CPU: 0 PID: 11728 Comm: syz-executor231 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ slhc_compress+0x5b9/0x2e60 drivers/net/slip/slhc.c:270
+ ppp_send_frame drivers/net/ppp/ppp_generic.c:1637 [inline]
+ __ppp_xmit_process+0x1902/0x2970 drivers/net/ppp/ppp_generic.c:1495
+ ppp_xmit_process+0x147/0x2f0 drivers/net/ppp/ppp_generic.c:1516
+ ppp_write+0x6bb/0x790 drivers/net/ppp/ppp_generic.c:512
+ do_loop_readv_writev fs/read_write.c:717 [inline]
+ do_iter_write+0x812/0xdc0 fs/read_write.c:1000
+ compat_writev+0x2df/0x5a0 fs/read_write.c:1351
+ do_compat_pwritev64 fs/read_write.c:1400 [inline]
+ __do_compat_sys_pwritev fs/read_write.c:1420 [inline]
+ __se_compat_sys_pwritev fs/read_write.c:1414 [inline]
+ __ia32_compat_sys_pwritev+0x349/0x3f0 fs/read_write.c:1414
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f7cd99
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffdb84ac EFLAGS: 00000217 ORIG_RAX: 000000000000014e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000200001c0
+RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000040047459 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
+ slab_alloc_node mm/slub.c:2793 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1051 [inline]
+ ppp_write+0x115/0x790 drivers/net/ppp/ppp_generic.c:500
+ do_loop_readv_writev fs/read_write.c:717 [inline]
+ do_iter_write+0x812/0xdc0 fs/read_write.c:1000
+ compat_writev+0x2df/0x5a0 fs/read_write.c:1351
+ do_compat_pwritev64 fs/read_write.c:1400 [inline]
+ __do_compat_sys_pwritev fs/read_write.c:1420 [inline]
+ __se_compat_sys_pwritev fs/read_write.c:1414 [inline]
+ __ia32_compat_sys_pwritev+0x349/0x3f0 fs/read_write.c:1414
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+
+Fixes: b5451d783ade ("slip: Move the SLIP drivers")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cgroup/cgroup-v1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/slip/slhc.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index 2db582706ec5c..f684c82efc2ea 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -784,7 +784,7 @@ void cgroup1_release_agent(struct work_struct *work)
+diff --git a/drivers/net/slip/slhc.c b/drivers/net/slip/slhc.c
+index 58a69f830d29b..f78ceba42e57e 100644
+--- a/drivers/net/slip/slhc.c
++++ b/drivers/net/slip/slhc.c
+@@ -232,7 +232,7 @@ slhc_compress(struct slcompress *comp, unsigned char *icp, int isize,
+ 	struct cstate *cs = lcs->next;
+ 	unsigned long deltaS, deltaA;
+ 	short changes = 0;
+-	int hlen;
++	int nlen, hlen;
+ 	unsigned char new_seq[16];
+ 	unsigned char *cp = new_seq;
+ 	struct iphdr *ip;
+@@ -248,6 +248,8 @@ slhc_compress(struct slcompress *comp, unsigned char *icp, int isize,
+ 		return isize;
  
- 	pathbuf = kmalloc(PATH_MAX, GFP_KERNEL);
- 	agentbuf = kstrdup(cgrp->root->release_agent_path, GFP_KERNEL);
--	if (!pathbuf || !agentbuf)
-+	if (!pathbuf || !agentbuf || !strlen(agentbuf))
- 		goto out;
+ 	ip = (struct iphdr *) icp;
++	if (ip->version != 4 || ip->ihl < 5)
++		return isize;
  
- 	spin_lock_irq(&css_set_lock);
+ 	/* Bail if this packet isn't TCP, or is an IP fragment */
+ 	if (ip->protocol != IPPROTO_TCP || (ntohs(ip->frag_off) & 0x3fff)) {
+@@ -258,10 +260,14 @@ slhc_compress(struct slcompress *comp, unsigned char *icp, int isize,
+ 			comp->sls_o_tcp++;
+ 		return isize;
+ 	}
+-	/* Extract TCP header */
++	nlen = ip->ihl * 4;
++	if (isize < nlen + sizeof(*th))
++		return isize;
+ 
+-	th = (struct tcphdr *)(((unsigned char *)ip) + ip->ihl*4);
+-	hlen = ip->ihl*4 + th->doff*4;
++	th = (struct tcphdr *)(icp + nlen);
++	if (th->doff < sizeof(struct tcphdr) / 4)
++		return isize;
++	hlen = nlen + th->doff * 4;
+ 
+ 	/*  Bail if the TCP packet isn't `compressible' (i.e., ACK isn't set or
+ 	 *  some other control bit is set). Also uncompressible if
 -- 
 2.20.1
 
