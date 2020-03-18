@@ -2,265 +2,206 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF77DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFA8C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2DA20770
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28AAB20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:00:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e99U5fAA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=adit-jv.com header.i=@adit-jv.com header.b="8TueuV3c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbgCRI7E (ORCPT
+        id S1727411AbgCRJAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 04:59:04 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:40948 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgCRI7E (ORCPT
+        Wed, 18 Mar 2020 05:00:39 -0400
+Received: from ma-dnext03.denso.co.jp ([133.192.181.78]:44480 "EHLO
+        ma-dnext03.denso.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgCRJAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 04:59:04 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200318085900epoutp019b9ef564039138c753c7e095d0b31ac7~9Wk9kd-vC0621106211epoutp01q
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:59:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200318085900epoutp019b9ef564039138c753c7e095d0b31ac7~9Wk9kd-vC0621106211epoutp01q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584521940;
-        bh=8hp0ir/q4A6JVzf2d3zvuRx34xSSf5M6YWyVyROQOYk=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=e99U5fAA3CsZykXbBQ0zAUnLWTmTrBvFcK1zthDuQp8iUEldLmM7+Q6GyDmzTCKNr
-         2N6MHkkf9KBs9XLxSfyFpKx03jmKflv2WNnoB0ZVexz4fqG4sRnd6prUIKq/AdQFKU
-         dPKxJsfUcqsOMQ6M6VlvaBlhdOexZhRrnzPNVKC4=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200318085900epcas1p49752c01f1811c2d185fd9c30270ec7a2~9Wk87rUeM1498014980epcas1p4k;
-        Wed, 18 Mar 2020 08:59:00 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.164]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 48j3ql1tzlzMqYlt; Wed, 18 Mar
-        2020 08:58:59 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        E6.C3.04160.3D2E17E5; Wed, 18 Mar 2020 17:58:59 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200318085858epcas1p444511493e8c9cc67e83ed82fc879ff36~9Wk7hRtNL0093600936epcas1p4t;
-        Wed, 18 Mar 2020 08:58:58 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200318085858epsmtrp186bc86de093ebb1e7b47be6924a5d0e2~9Wk7fWXz90885308853epsmtrp1F;
-        Wed, 18 Mar 2020 08:58:58 +0000 (GMT)
-X-AuditID: b6c32a38-297ff70000001040-31-5e71e2d39929
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A4.E0.04158.2D2E17E5; Wed, 18 Mar 2020 17:58:58 +0900 (KST)
-Received: from [10.253.104.82] (unknown [10.253.104.82]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200318085857epsmtip12aa87c451df1609921004458ce2715df~9Wk6hrdFV0789707897epsmtip1m;
-        Wed, 18 Mar 2020 08:58:57 +0000 (GMT)
-Subject: Re: [RFC PATCH 0/3] meminfo: introduce extra meminfo
-To:     Leon Romanovsky <leon@kernel.org>,
-        Jaewon Kim <jaewon31.kim@gmail.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, adobriyan@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>, minchan@kernel.org,
-        ngupta@vflare.org, sergey.senozhatsky.work@gmail.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>
-From:   Jaewon Kim <jaewon31.kim@samsung.com>
-Message-ID: <5E71E2CB.4030704@samsung.com>
-Date:   Wed, 18 Mar 2020 17:58:51 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
-        Thunderbird/38.7.2
+        Wed, 18 Mar 2020 05:00:38 -0400
+Received: from grdma01h.denso.co.jp (unknown [133.192.24.24])
+        by ma-dnext03.denso.co.jp (Postfix) with ESMTP id 3117A5D024C;
+        Wed, 18 Mar 2020 18:00:36 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=adit-jv.com;
+        s=jpadit-jvmail2011; t=1584522036;
+        bh=MJNLb+QUlzHddJJCWYqXFByLkk81A4pksiBWvdYtaZM=;
+        h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+         Content-Type:Content-Transfer-Encoding:In-Reply-To;
+        b=8TueuV3cLIbWFLV7WdQnl/jc8S05NMxWUWR4FaAmWLAglFfr6sTsgFKQ3L4XLcFOL
+         wUfDIc+YAdRXTAAUmpWzbs6VmLrn6/c3qezoor1sSc0HcYrtnMCwRGo+iXnkkzJqAF
+         uqMsi1Q73gisa4aUm+AZWg5pM+Ls3Y3SbTrK72dPG9A2Q+FRiT4RI/324+cy3NFFHK
+         w+wJ0Oq2fZoCeg8RST4F1IB/y4MacAftLXCZyt4U8piydnOk42qEzTlirWt9rZ5QUa
+         3shjvKZ8YtdQNvec3Q49CocZ7vF/TmutteOKiliMYBeOvsFD8IfHgtND309NBv2K4y
+         TaWY1vUfWsgow==
+Received: by grdma01h.denso.co.jp (Postfix, from userid 0)
+        id 2E0F8C04E05; Wed, 18 Mar 2020 18:00:36 +0900 (JST)
+Received: from smtp0.denso.co.jp [133.192.24.87] 
+         by grdma01h. with ESMTP id UAA15964;
+         Wed, 18 Mar 2020 18:00:36 +0900
+Received: from ky0exch01.adit-jv.com ([10.71.113.8])
+        by smtp00.denso.co.jp (MOS 4.4.7-GA)
+        with ESMTP id FNI36647;
+        Wed, 18 Mar 2020 18:00:34 +0900
+Received: from jp-u0004 (10.71.112.120) by ky0exch01.adit-jv.com (10.71.113.8)
+ with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 18 Mar 2020 18:00:34
+ +0900
+Date:   Wed, 18 Mar 2020 18:00:29 +0900
+From:   Suresh Udipi <sudipi@jp.adit-jv.com>
+To:     Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+CC:     Suresh Udipi <sudipi@jp.adit-jv.com>, <akiyama@nds-osk.co.jp>,
+        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>,
+        <hverkuil-cisco@xs4all.nl>, <jacopo+renesas@jmondi.org>,
+        <laurent.pinchart@ideasonboard.com>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>, <mrodin@de.adit-jv.com>,
+        <securitycheck@denso.co.jp>
+Subject: Re: [PATCH v2] [RFC] rcar-vin: rcar-csi2: Correct the selection of
+ hsfreqrange
+Message-ID: <20200318090029.GA22842@jp-u0004>
+References: <20200316130247.GA2258968@oden.dyn.berto.se>
+ <1584428905-21560-1-git-send-email-sudipi@jp.adit-jv.com>
+ <20200317103756.GC2496015@oden.dyn.berto.se>
 MIME-Version: 1.0
-In-Reply-To: <20200317143715.GI3351@unreal>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDJsWRmVeSWpSXmKPExsWy7bCmnu7lR4VxBvNO8FhMb/SymLN+DZtF
-        9+aZjBYr9/xgspjyaymzxebvHWwWl3fNYbO4t+Y/q8Wyr+/ZLTa0zGK3eDRhEpPFqbuf2S1m
-        N/YxOvB67Jx1l91j06pONo9Nnyaxe9y5tofN48SM3ywe7/ddZfM4s+AIu8fOT5tZPT5vkgvg
-        jMqxyUhNTEktUkjNS85PycxLt1XyDo53jjc1MzDUNbS0MFdSyEvMTbVVcvEJ0HXLzAG6W0mh
-        LDGnFCgUkFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYGhQoFecmFtcmpeul5yfa2VoYGBkClSZ
-        kJPx8rhhwQqDijVtM1gaGBvUuxg5OSQETCTmrvvK3MXIxSEksINR4nfDXFYI5xOjxOQv85kg
-        nG+MEu8adrB3MXKAtdydZAAR38so8eRJBwuE85ZR4vTsNiaQucICthIv/x9gBrFFBLwk9s47
-        zAZSxCxwi0ni0pI/7CAJNgFtifcLJrGC2LwCWhLXXn4Ea2ARUJWYcaQTzBYViJDYMfcjI0SN
-        oMTJmU9YQGxOoN491+6AxZkF5CWat84Ge0JCYDq7RO/knYwQ37lI7H/wgQnCFpZ4dXwLO4Qt
-        JfGyv40doqGZUeLtzM2MEE4Lo8TdTb1Q3cYSvT0XmEGeZhbQlFi/Sx8irCix8/dcqM18Eu++
-        9rBCwoVXoqNNCKJETaLl2VdWCFtG4u+/Z1C2h8TuD5fBbCGBHmaJ+7vtJzAqzELy2ywk/8xC
-        WLyAkXkVo1hqQXFuemqxYYEJchRvYgSnZC2LHYx7zvkcYhTgYFTi4eXYUBAnxJpYVlyZe4hR
-        goNZSYR3cWF+nBBvSmJlVWpRfnxRaU5q8SFGU2BwT2SWEk3OB+aLvJJ4Q1MjY2NjCxMzczNT
-        YyVx3qnXc+KEBNITS1KzU1MLUotg+pg4OKUaGHdyRxo7sc/fvWI3m0TU37apjoy/Nl7zirDb
-        P/uuWYrmkWxJe8ni+acs7+wR37koaN39/49urHSs9psVEiV5rS6gzanO20Px0t8/E6Karb/4
-        SNuamTy799VUbUnKXuHSrZlGMU5pTw+/WDp11jYL7tJ+BQUPS8nfW0+UHLnwYHfyG9dbc4Ky
-        9JRYijMSDbWYi4oTAVRsv/zfAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDIsWRmVeSWpSXmKPExsWy7bCSnO6lR4VxBnvfqVtMb/SymLN+DZtF
-        9+aZjBYr9/xgspjyaymzxebvHWwWl3fNYbO4t+Y/q8Wyr+/ZLTa0zGK3eDRhEpPFqbuf2S1m
-        N/YxOvB67Jx1l91j06pONo9Nnyaxe9y5tofN48SM3ywe7/ddZfM4s+AIu8fOT5tZPT5vkgvg
-        jOKySUnNySxLLdK3S+DKeHncsGCFQcWathksDYwN6l2MHBwSAiYSdycZdDFycQgJ7GaUONHV
-        zt7FyAkUl5F4c/4pC0SNsMThw8UQNa8ZJd7smMcIUiMsYCvx8v8BZhBbRMBLYu+8w2wQRT3M
-        Em/PTwRzmAXuMEksv/cZbCqbgLbE+wWTWEFsXgEtiWsvP4J1swioSsw40glmiwpESKxed40Z
-        okZQ4uTMJywgNidQ755rd8A2MwuoS/yZd4kZwpaXaN46m3kCo+AsJC2zkJTNQlK2gJF5FaNk
-        akFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZGcJxpae1gPHEi/hCjAAejEg9vwqaCOCHWxLLi
-        ytxDjBIczEoivIsL8+OEeFMSK6tSi/Lji0pzUosPMUpzsCiJ88rnH4sUEkhPLEnNTk0tSC2C
-        yTJxcEo1MCrl3UnbEfty9/vHetdmLV4t1mxRo97qEMLWfTJki7zllO/iM/0UI6SXXtOXOtTZ
-        dvXKW++NOjccWVqdlt513Gey1GOlYnO+PhOnVZBSduYE3Qs3Yz5X3T+brio9z/BM5uXCu6vF
-        7vrLf6vtuVy7N/8a77ReibQ4N8dVr2qtNJf2/f52MaMhV4mlOCPRUIu5qDgRABY3izGvAgAA
-X-CMS-MailID: 20200318085858epcas1p444511493e8c9cc67e83ed82fc879ff36
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200311034454epcas1p2ef0c0081971dd82282583559398e58b2
-References: <CGME20200311034454epcas1p2ef0c0081971dd82282583559398e58b2@epcas1p2.samsung.com>
-        <20200311034441.23243-1-jaewon31.kim@samsung.com>
-        <af4ace34-0db2-dd17-351f-eaa806f0a6ac@suse.cz>
-        <20200313174827.GA67638@unreal> <5E6EFB6C.7050105@samsung.com>
-        <20200316083154.GF8510@unreal>
-        <CAJrd-UvttDDSL=q1RXC6Z+jvZAGsN2iM8C8xOSrpJFdLb0e-3g@mail.gmail.com>
-        <20200317143715.GI3351@unreal>
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317103756.GC2496015@oden.dyn.berto.se>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.71.112.120]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 17, 2020 at 11:37:56AM +0100, Niklas Söderlund wrote:
+> Hi Suresh,
+> 
+> Thanks for your work.
+> 
+> On 2020-03-17 16:08:25 +0900, Suresh Udipi wrote:
+> > hsfreqrange should be chosen based on the calculated mbps which
+> > is closer to the default bit rate  and within the range as per
+> > table[1]. But current calculation always selects first value which
+> > is greater than or equal to the calculated mbps which may lead
+> > to chosing a wrong range in some cases.
+> > 
+> > For example for 360 mbps for H3/M3N
+> > Existing logic selects
+> > Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
+> > 
+> > This hsfreqrange is out of range.
+> > 
+> > The logic is changed to get the default value which is closest to the
+> > calculated value [1]
+> > 
+> > Calculated value 360Mbps : Default 350Mbps  Range [320.625 -380.625 mpbs]
+> > 
+> > [1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
+> > 
+> > There is one exectpion value 227Mbps, which may cause out of
+> > range.
+> 
+> Then something else is needed I think :-)
+> 
+> I liked v1 of this RFC more, where you added a u16 min and max to struct 
+> rcsi2_mbps_reg. I think that is the right solution.
+> 
+> What I tried to express in my review of v1 was
+> 
+> - You should remove the mbps member from struct rcsi2_mbps_reg.
+> - Update the walk of the array in rcsi2_set_phypll() so that it finds 
+>   the first entry where the calculated target value is between min and 
+>   max and use the reg setting for that entry.
+> 
+> Would that solution make sens too you? Sorry if I expressed myself a but 
+> muddy in v1 about this.
+ 
+Thank you for your feedback. Checking the range make more sense.
 
+We can further optimize it, by checking only the Max range value.
 
-On 2020년 03월 17일 23:37, Leon Romanovsky wrote:
-> On Tue, Mar 17, 2020 at 12:04:46PM +0900, Jaewon Kim wrote:
->> 2020년 3월 16일 (월) 오후 5:32, Leon Romanovsky <leon@kernel.org>님이 작성:
->>> On Mon, Mar 16, 2020 at 01:07:08PM +0900, Jaewon Kim wrote:
->>>>
->>>> On 2020년 03월 14일 02:48, Leon Romanovsky wrote:
->>>>> On Fri, Mar 13, 2020 at 04:19:36PM +0100, Vlastimil Babka wrote:
->>>>>> +CC linux-api, please include in future versions as well
->>>>>>
->>>>>> On 3/11/20 4:44 AM, Jaewon Kim wrote:
->>>>>>> /proc/meminfo or show_free_areas does not show full system wide memory
->>>>>>> usage status. There seems to be huge hidden memory especially on
->>>>>>> embedded Android system. Because it usually have some HW IP which do not
->>>>>>> have internal memory and use common DRAM memory.
->>>>>>>
->>>>>>> In Android system, most of those hidden memory seems to be vmalloc pages
->>>>>>> , ion system heap memory, graphics memory, and memory for DRAM based
->>>>>>> compressed swap storage. They may be shown in other node but it seems to
->>>>>>> useful if /proc/meminfo shows all those extra memory information. And
->>>>>>> show_mem also need to print the info in oom situation.
->>>>>>>
->>>>>>> Fortunately vmalloc pages is alread shown by commit 97105f0ab7b8
->>>>>>> ("mm: vmalloc: show number of vmalloc pages in /proc/meminfo"). Swap
->>>>>>> memory using zsmalloc can be seen through vmstat by commit 91537fee0013
->>>>>>> ("mm: add NR_ZSMALLOC to vmstat") but not on /proc/meminfo.
->>>>>>>
->>>>>>> Memory usage of specific driver can be various so that showing the usage
->>>>>>> through upstream meminfo.c is not easy. To print the extra memory usage
->>>>>>> of a driver, introduce following APIs. Each driver needs to count as
->>>>>>> atomic_long_t.
->>>>>>>
->>>>>>> int register_extra_meminfo(atomic_long_t *val, int shift,
->>>>>>>                      const char *name);
->>>>>>> int unregister_extra_meminfo(atomic_long_t *val);
->>>>>>>
->>>>>>> Currently register ION system heap allocator and zsmalloc pages.
->>>>>>> Additionally tested on local graphics driver.
->>>>>>>
->>>>>>> i.e) cat /proc/meminfo | tail -3
->>>>>>> IonSystemHeap:    242620 kB
->>>>>>> ZsPages:          203860 kB
->>>>>>> GraphicDriver:    196576 kB
->>>>>>>
->>>>>>> i.e.) show_mem on oom
->>>>>>> <6>[  420.856428]  Mem-Info:
->>>>>>> <6>[  420.856433]  IonSystemHeap:32813kB ZsPages:44114kB GraphicDriver::13091kB
->>>>>>> <6>[  420.856450]  active_anon:957205 inactive_anon:159383 isolated_anon:0
->>>>>> I like the idea and the dynamic nature of this, so that drivers not present
->>>>>> wouldn't add lots of useless zeroes to the output.
->>>>>> It also makes simpler the decisions of "what is important enough to need its own
->>>>>> meminfo entry".
->>>>>>
->>>>>> The suggestion for hunting per-driver /sys files would only work if there was a
->>>>>> common name to such files so once can find(1) them easily.
->>>>>> It also doesn't work for the oom/failed alloc warning output.
->>>>> Of course there is a need to have a stable name for such an output, this
->>>>> is why driver/core should be responsible for that and not drivers authors.
->>>>>
->>>>> The use case which I had in mind slightly different than to look after OOM.
->>>>>
->>>>> I'm interested to optimize our drivers in their memory footprint to
->>>>> allow better scale in SR-IOV mode where one device creates many separate
->>>>> copies of itself. Those copies easily can take gigabytes of RAM due to
->>>>> the need to optimize for high-performance networking. Sometimes the
->>>>> amount of memory and not HW is actually limits the scale factor.
->>>>>
->>>>> So I would imagine this feature being used as an aid for the driver
->>>>> developers and not for the runtime decisions.
->>>>>
->>>>> My 2-cents.
->>>>>
->>>>> Thanks
->>>>>
->>>>>
->>>> Thank you for your comment.
->>>> My idea, I think, may be able to help each driver developer to see their memory usage.
->>>> But I'd like to see overall memory usage through the one node.
->>> It is more than enough :).
->>>
->>>> Let me know if you have more comment.
->>>> I am planning to move my logic to be shown on a new node, /proc/meminfo_extra at v2.
->>> Can you please help me to understand how that file will look like once
->>> many drivers will start to use this interface? Will I see multiple
->>> lines?
->>>
->>> Something like:
->>> driver1 ....
->>> driver2 ....
->>> driver3 ....
->>> ...
->>> driver1000 ....
->>>
->>> How can we extend it to support subsystems core code?
->> I do not have a plan to support subsystem core.
-> Fair enough.
->
->> I just want the /proc/meminfo_extra to show size of alloc_pages APIs
->> rather than slub size. It is to show hidden huge memory.
->> I think most of drivers do not need to register its size to
->> /proc/meminfo_extra because
->> drivers usually use slub APIs and rather than alloc_pages APIs.
->> /proc/slabinfo helps for slub size in detail.
-> The problem with this statement that the drivers that consuming memory
-> are the ones who are interested in this interface. I can be not accurate
-> here, but I think that all RDMA and major NICs will want to get this
-> information.
->
-> On my machine, it is something like 6 devices.
->
->> As a candidate of /proc/meminfo_extra, I hope only few drivers using
->> huge memory like over 100 MB got from alloc_pages APIs.
->>
->> As you say, if there is a static node on /sys for each driver, it may
->> be used for all the drivers.
->> I think sysfs class way may be better to show categorized sum size.
->> But /proc/meminfo_extra can be another way to show those hidden huge memory.
->> I mean your idea and my idea is not exclusive.
-> It is just better to have one interface.
-Sorry about that one interface.
+- Remove mbps and min member from struct rcsi2_mbps_reg.
+- Update the walk of the array in rcsi2_set_phypll() so that it finds
+  the first entry where the calculated bit rate is less than the max.
 
-If we need to create a-meminfo_extra-like node on /sysfs, then
-I think further discussion with more people is needed.
-If there is no logical problem on creating /proc/meminfo_extra,
-I'd like to prepare v2 patch and get more comment on that v2
-patch. Please help again for further discussion.
+Lower bit rates less than 80Mbps 
+like 48Mbps(Raspberry pi camera 640x480 connected to Kingfisher)
+can also be supported by selecting the lowest default bit rate 80Mbps
+as done before this fix.
 
-Thank you
->
->> Thank you
->>> Thanks
->>>
->>>> Thank you
->>>> Jaewon Kim
->
+Please let me know your opinion on the same.
+Meanwhile iam working on creating the patch, test it and update the same.
+> > 
+> > Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
+> > 
+> > Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+> > Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
+> > ---
+> > Changes in v2:
+> >   - Added the boundary check for the maximum bit rate.
+> >   
+> >   - Simplified the logic by remmoving range check 
+> >     as only the closest default value covers most 
+> >     of the use cases.
+> > 
+> >   - Aligning the commit message based on the above change
+> > 
+> >  drivers/media/platform/rcar-vin/rcar-csi2.c | 18 +++++++++++++-----
+> >  1 file changed, 13 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > index faa9fb2..6573625 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > @@ -199,6 +199,7 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
+> >  /* PHY Frequency Control */
+> >  #define PHYPLL_REG			0x68
+> >  #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
+> > +#define PHYPLL_HSFREQRANGE_MAX		1500
+> >  
+> >  static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
+> >  	{ .mbps =   80, .reg = 0x00 },
+> > @@ -431,16 +432,23 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
+> >  static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
+> >  {
+> >  	const struct rcsi2_mbps_reg *hsfreq;
+> > +	const struct rcsi2_mbps_reg *hsfreq_prev = NULL;
+> >  
+> > -	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
+> > -		if (hsfreq->mbps >= mbps)
+> > -			break;
+> > -
+> > -	if (!hsfreq->mbps) {
+> > +	if (mbps > PHYPLL_HSFREQRANGE_MAX) {
+> >  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+> >  		return -ERANGE;
+> >  	}
+> >  
+> > +	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
+> > +		if (hsfreq->mbps >= mbps)
+> > +			break;
+> > +		hsfreq_prev = hsfreq;
+> > +	}
+> > +
+> > +	if (hsfreq_prev &&
+> > +	    ((mbps - hsfreq_prev->mbps) <= (hsfreq->mbps - mbps)))
+> > +		hsfreq = hsfreq_prev;
+> > +
+> >  	rcsi2_write(priv, PHYPLL_REG, PHYPLL_HSFREQRANGE(hsfreq->reg));
+> >  
+> >  	return 0;
+> > -- 
+> > 2.7.4
+> > 
+> 
+> -- 
+> Regards,
+> Niklas Söderlund
 
+-- 
+Best Regards,
+Suresh Udipi.
