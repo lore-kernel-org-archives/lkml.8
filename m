@@ -2,79 +2,113 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7241C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2DCC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6B4206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F45920738
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:05:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HUjlpHPw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgCRB7E (ORCPT
+        id S1727256AbgCRCFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 21:59:04 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:39298 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbgCRB7E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 21:59:04 -0400
-Received: by mail-il1-f200.google.com with SMTP id w76so12786321ila.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 18:59:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=0HNo1qd7HDCjZwp/AckavVWsU51cjSgzVKKMqeaV0/Q=;
-        b=GSFtrhCUq1zK0KMMBhySxLHQ3zf5BILUtXExEe/XxmVsDWPewgyaPEeqlxy6OQMeqd
-         ohtnmm4iOKpXVh4jvVUSmyMHuT+tzj18e+PVpccG7xDY31o0mzUSnU3HDxllNuOHn6lg
-         +MvZ9LaYp1W7Kc1XAn8zLaJfgJm03RhFW7JRSjupkjXI9ubjB/AiqGQOqenZEGFJFXsY
-         qETOpz2W5/2FE3d6rRSn9tU2B+P4p5ZnhnqttCJwXQt+YViUKNMwCgm8+CjpJvqeL7/m
-         Yu4B/4SuBF977I/Aw37h3CFOcupp4Ome3OcA3YLIYvR/eRit00UKHYg+giCDHmV8j7ld
-         O1oA==
-X-Gm-Message-State: ANhLgQ1VshLJDBxatXcE6x5+7l/G8n8UdL1A+GsW8DtogXbnPni7Pqa7
-        JFkOC3idvISfOeyWDPXzKt0e3NTJ/snnVkGNHlXcnKJMPDM9
-X-Google-Smtp-Source: ADFU+vsJ30sc+Dzh9VHBJOAI0emX3Sfo1QftuTzYodRR9NKuh9cYqsuC48zEhQnxNxrdJ3ulsDA9CbCBEePqgxPvqlJYkrCy3Jwf
+        Tue, 17 Mar 2020 22:05:41 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42701 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726871AbgCRCFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 22:05:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48htfp56vwz9sNg;
+        Wed, 18 Mar 2020 13:05:38 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584497139;
+        bh=ODSzlO0kO5hWcTZeHNNs9tVOUUI5xO0GzBFK5kFt5/E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HUjlpHPwdybPdv0+gf/57bWMC30tGK5rYLCvx1CbKgusB/GCWuCVoS8TJqxZu4Q8d
+         LZVTnZAgdfr1wlw525WTsFZZC4YP5I8tw1s+/Kv9iqq+GCX90VI0w59Osk15Y4zSI8
+         0xq4woXAcA9d3y1zWdwIuxZJ8T8xLx+JTeuxMVFs1hDOkCldG0oPxAc3CmPCvhZONm
+         thnXdT6qeHI+Mp1BFmz326IXFTWFi3bw4flvnaUdgB5DNxvBmS/8HpzD/rYqtyqLvO
+         5Uq1BPi5OCtobyFeXGQWDhVlPvZ/ntpETqgBowdTFX6M2ftvFtuc/J5v9U06/Nn7JG
+         zBhjXUt3G3wow==
+Date:   Wed, 18 Mar 2020 13:05:31 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: Re: linux-next: build warning after merge of the mlx5-next tree
+Message-ID: <20200318130531.1df149c7@canb.auug.org.au>
+In-Reply-To: <20200316103913.659d3a5e@canb.auug.org.au>
+References: <20200316103913.659d3a5e@canb.auug.org.au>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8f96:: with SMTP id l22mr1608247iol.19.1584496743564;
- Tue, 17 Mar 2020 18:59:03 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 18:59:03 -0700
-In-Reply-To: <00000000000088487805a116880c@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008c4f0805a11765a0@google.com>
-Subject: Re: KASAN: use-after-free Write in tcindex_change
-From:   syzbot <syzbot+ba4bcf1563f90386910f@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/4RF4C6asXy+CYm2goqxefSy";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+--Sig_/4RF4C6asXy+CYm2goqxefSy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-commit 599be01ee567b61f4471ee8078870847d0a11e8e
-Author: Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon Feb 3 05:14:35 2020 +0000
+Hi all,
 
-    net_sched: fix an OOB access in cls_tcindex
+On Mon, 16 Mar 2020 10:39:13 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Hi all,
+>=20
+> After merging the mlx5-next tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
+>=20
+> In file included from include/linux/printk.h:331,
+>                  from include/linux/kernel.h:15,
+>                  from drivers/net/ethernet/mellanox/mlx5/core/mr.c:33:
+> drivers/net/ethernet/mellanox/mlx5/core/mr.c: In function 'mlx5_core_crea=
+te_mkey':
+> include/linux/dynamic_debug.h:157:25: warning: 'key' may be used uninitia=
+lized in this function [-Wmaybe-uninitialized]
+>   157 |  _dynamic_func_call(fmt,__dynamic_dev_dbg,   \
+>       |                         ^~~~~~~~~~~~~~~~~
+> drivers/net/ethernet/mellanox/mlx5/core/mr.c:47:5: note: 'key' was declar=
+ed here
+>    47 |  u8 key;
+>       |     ^~~
+>=20
+> Probably introduced by commit
+>=20
+>   fc6a9f86f08a ("{IB,net}/mlx5: Assign mkey variant in mlx5_ib only")
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14dbc973e00000
-start commit:   fb33c651 Linux 5.6-rc6
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=16dbc973e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12dbc973e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=6dfa02302d6db985
-dashboard link: https://syzkaller.appspot.com/bug?extid=ba4bcf1563f90386910f
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1748dfdde00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16afffdde00000
+This warning now appears in the rdma tree.
 
-Reported-by: syzbot+ba4bcf1563f90386910f@syzkaller.appspotmail.com
-Fixes: 599be01ee567 ("net_sched: fix an OOB access in cls_tcindex")
+--=20
+Cheers,
+Stephen Rothwell
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+--Sig_/4RF4C6asXy+CYm2goqxefSy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5xgesACgkQAVBC80lX
+0Gw/YQgAoRxC9pa50M/cNJWv3ZI9Hk7i1j2lgpe16D+mPWcF7wo1qQoY+U45EWfG
+Rxcx84wGr0xZen1LEor0L42jwxYZt4+EvZU65PIZtbHMwuNqjNJTnPsYyVkZnowu
+WSnOe5zjNI6DKqL5Rh5aABGLek08zccLhprP5iBmeVliuxyRqK0ThwMThzP02f28
+6Wnc3V6DQM1Gppczpn3eH4q0WGWXigIW77oI/9SuZ+pSQtXPa5o2beANQY2U0Ofw
+GKgtZsRXDHERwH2XyeWp42M4YUMnXXFPYItnB001Oxfx22+KRd0KkSi2IypOqscv
+88F6mdht1ORR4StPgz4ApeM1bGKHaw==
+=apSN
+-----END PGP SIGNATURE-----
+
+--Sig_/4RF4C6asXy+CYm2goqxefSy--
