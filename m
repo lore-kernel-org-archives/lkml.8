@@ -2,126 +2,139 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4D5C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4D8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E5F2072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631C22072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4Ejzfsi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgCRTXQ (ORCPT
+        id S1727099AbgCRTXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:23:16 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:43296 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727027AbgCRTXP (ORCPT
+        Wed, 18 Mar 2020 15:23:52 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32814 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbgCRTXw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 15:23:15 -0400
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id E11721A33B3EAB;
-        Wed, 18 Mar 2020 19:23:12 +0000 (UTC)
-Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Wed, 18 Mar 2020 19:23:11 +0000 (UTC)
-Message-ID: <5404e421520419a8031593179798b95bd0970bd8.camel@archlinux.org>
-Subject: Re: [PATCH] HID: logitech-dj: issue udev change event on device
- connection
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <superm1@gmail.com>,
-        Richard Hughes <hughsient@gmail.com>
-In-Reply-To: <20200318161906.3340959-1-lains@archlinux.org>
-References: <20200318161906.3340959-1-lains@archlinux.org>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-ciTeMDtrJBxBOS7lKYqJ"
-Date:   Wed, 18 Mar 2020 19:23:10 +0000
+        Wed, 18 Mar 2020 15:23:52 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m5so14234662pgg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 12:23:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mx7muvFpVwHYEDvvTglqZzExN2fbeOuxHjC1bhgAdgU=;
+        b=V4EjzfsifivBZOeNVuf5E/ZzbAnVnqdfIMiQvM1YbdrGSyKpF5Ml2X/4Az3TaQi+7w
+         7dUesMGQ9koBCSta2yamXw51TOIW34jToym2oh9aCFOoM0BIefPs0qwpO2oHp64amlJz
+         4An+Bj5TxrdDP80duXSfpjyLydXYYiCIvQLDSiJ5Ll6K4/HLzzqJOdCJmioNEx53LJn8
+         jehHbZ9S10lOoiHoDS1fBZEKO+ogq1yJks6GXozGN4KDHFQBhif+shUSGG66civ9LkG5
+         p7UEhhcJqoGwNtvnxTH+77ZtvDSuk08Zbi/UXx37nDUIcquagjOFmhml7X2LefyhCXhy
+         qpQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mx7muvFpVwHYEDvvTglqZzExN2fbeOuxHjC1bhgAdgU=;
+        b=kcpSZLttQOeU3OLTSvXjGOE8T1e6lUAXAc3Fj3KP3QUZS1UA093uEICAPBdilztR/0
+         kRZ8RVNbQsWD13WvRyxEXk9HBZBWxJnhm7LFaJdFYv4YcBVV/+34zAgbqO9qLZbFeQkX
+         XExb40E2MjaX4YGx2IrQ9PjUWl6TFUa7sXY1acr17/PcJdwniUL83gUyxlkBZ0ahFOt2
+         nBExPawup9zIdKrqQVc+KpoMY9gO0QLHOK+FT9n7JZm2ArZXhvoMjRwE02K9j3slo4CZ
+         ST2qucuf5Tzhv4bSw86JobgRXd+5QgZw7dRsz1bijYK+4dtnDfHSKz1qDjFBfx7XajNv
+         aS2w==
+X-Gm-Message-State: ANhLgQ2yLDvB9+LfjH4IpFE+Hi3RRbSL3ZTjXr8bfD+so9AG+FXWz2uj
+        YcVDIEBlZRNFWcMXcP+AqUUf05akP7eKHkiMeIA=
+X-Google-Smtp-Source: ADFU+vsztW0CPkfoqp5zgMnAbt86npw32Qm1LlSQGgGA6f6ZZBN8DkpiV9F51CfijF1pOJ+F5vM+YRJA3l1N8PERFKA=
+X-Received: by 2002:aa7:8149:: with SMTP id d9mr5779069pfn.170.1584559430809;
+ Wed, 18 Mar 2020 12:23:50 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Evolution 3.36.0 
+References: <1584558186-23373-1-git-send-email-orson.unisoc@gmail.com>
+In-Reply-To: <1584558186-23373-1-git-send-email-orson.unisoc@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 18 Mar 2020 21:23:43 +0200
+Message-ID: <CAHp75VezrovVaHOdKoxXvvHr0v7uRT8tJoHLh9BoJYedj=hjHQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] dynamic_debug: Add config option of DYNAMIC_DEBUG_CORE
+To:     Orson Zhai <orson.unisoc@gmail.com>
+Cc:     Jason Baron <jbaron@akamai.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Gary Hook <Gary.Hook@amd.com>, David Gow <davidgow@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, orsonzhai@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 18, 2020 at 9:04 PM Orson Zhai <orson.unisoc@gmail.com> wrote:
+>
+> There is the requirement from new Android that kernel image (GKI) and
+> kernel modules are supposed to be built at differnet places. Some people
+> want to enable dynamic debug for kernel modules only but not for kernel
+> image itself with the consideration of binary size increased or more
+> memory being used.
+>
+> By this patch, dynamic debug is divided into core part (the defination of
+> functions) and macro replacement part. We can only have the core part to
+> be built-in and do not have to activate the debug output from kenrel image.
+>
 
---=-ciTeMDtrJBxBOS7lKYqJ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+There are few grammar typos in above...
 
-On Wed, 2020-03-18 at 16:19 +0000, Filipe La=C3=ADns wrote:
-> As discussed in the mailing list:
->=20
-> > Right now the hid-logitech-dj driver will export one node for each
-> > connected device, even when the device is not connected. That
-> > causes
-> > some trouble because in userspace we don't have have any way to
-> > know if
-> > the device is connected or not, so when we try to communicate, if
-> > the
-> > device is disconnected it will fail.
->=20
-> The solution reached to solve this issue is to trigger an udev change
-> event when the device connects, this way userspace can just wait on
-> those connections instead of trying to ping the device.
->=20
-> Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
-> ---
->  drivers/hid/hid-logitech-dj.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
-> logitech-dj.c
-> index 48dff5d6b605..fcd481a0be1f 100644
-> --- a/drivers/hid/hid-logitech-dj.c
-> +++ b/drivers/hid/hid-logitech-dj.c
-> @@ -1464,6 +1464,8 @@ static int logi_dj_dj_event(struct hid_device
-> *hdev,
->  		if (dj_report-
-> >report_params[CONNECTION_STATUS_PARAM_STATUS] =3D=3D
->  		    STATUS_LINKLOSS) {
->  			logi_dj_recv_forward_null_report(djrcv_dev,
-> dj_report);
-> +		} else {
-> +			kobject_uevent(&hdev->dev.kobj, KOBJ_CHANGE);
->  		}
->  		break;
->  	default:
+>  config DYNAMIC_DEBUG
+>         bool "Enable dynamic printk() support"
+>         default n
 
-Just noticed I was issuing the udev event on the receiver instead of
-the connected device. I will send a v2.
+> -       depends on PRINTK
+> -       depends on DEBUG_FS
 
-Filipe La=C3=ADns
+You may not touch this. By removing them you effectively removed
+dependencies :-(
 
---=-ciTeMDtrJBxBOS7lKYqJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+> +       select DYNAMIC_DEBUG_CORE
+>         help
+>
+>           Compiles debug level messages into the kernel, which would not
+> @@ -164,6 +163,21 @@ config DYNAMIC_DEBUG
+>           See Documentation/admin-guide/dynamic-debug-howto.rst for additional
+>           information.
+>
+> +config DYNAMIC_DEBUG_CORE
+> +       bool "Enable core functions of dynamic debug support"
+> +       depends on PRINTK
+> +       depends on DEBUG_FS
+> +       help
+> +         Enable this option to build ddebug_* and __dynamic_* routines
+> +         into kernel. If you want enable whole dynamic debug features,
+> +         select CONFIG_DYNAMIC_DEBUG directly and this option will be
+> +         automatically selected.
+> +
+> +         This option is selected when you want to enable dynamic debug
 
------BEGIN PGP SIGNATURE-----
+> +         for kernel modules only but not for the kernel base. Especailly
 
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl5ydR4ACgkQ+JPGdIFq
-qV1RJBAAj8gSKs5gc9e2B7HN6c0ThwipBVm0xPCzfKpvXHga7vYi5ouUNcfCxQoo
-wLEbEtbkUWjxh/ooQQEudjA5PBCDIkcjrNpxttxEZuVM2UPrGLYKvnRusV8cCxnR
-o08Rgbx+882R0me5IMl1806TUfF8bPk3bhKXn7pry1sCAl0I2uYJGCoNU17e8DDC
-Q0c8IZg4+Kd1vEOJ9GjmFV4Tx4lX4m8kqZsxZ0Ku0KDdjM4mM9CDAT4Zh0oRfcce
-nfEs2I1w1a/aJRaIAI6VWFgaqXauSA+DTKeS/slit64tLdWhOhL6xbtOqCTqqPgv
-hkDISj8IZ6BDfkTWAp5ttxvm79m9qI7iK8GVX6KqLzBtuFHm1Xm4OnTMLFZMu8vi
-DrfqMrgezkoczFQja8PttcfITJQ/SaKTPt0rgxEXExt0JNDR2cuF1TPNkIaGI3DV
-nRbKN5vRkq66d/BoG4UFHQGHjitUcoZdoo17dd9A5qcM6LXVXi2J4kWHP98aYzxX
-CJmg+k8UlMUO8OuHQQXdAkYjfnZf/uDnxRGaRpfupeCh0PJp8bzBtmVNdhRFLa3s
-Hksu0F75X+Ujx5NtH6RG10iyN9sJtBsvnbJn0iuxeYMEJJIK+3vGfU31E1EqDjtH
-BUII0wcvBB/q9h23bkcIaNW+o7vW764gyEeDUZi0meA5eFEqNP4=
-=gWhb
------END PGP SIGNATURE-----
+Typo.
 
---=-ciTeMDtrJBxBOS7lKYqJ--
+> +         in the case that kernel modules are built out of the place where
+> +         kernel base is built.
+
+Highly recommend to ask somebody to do proof read.
+
+-- 
+With Best Regards,
+Andy Shevchenko
