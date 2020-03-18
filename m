@@ -2,191 +2,300 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D092EC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D01CC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A43DD20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:13:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MkFrRgcr"
+	by mail.kernel.org (Postfix) with ESMTP id 549772071C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgCRQNI (ORCPT
+        id S1727138AbgCRQOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:13:08 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17015 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgCRQNI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 12:13:08 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7248320000>; Wed, 18 Mar 2020 09:11:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 18 Mar 2020 09:13:07 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 18 Mar 2020 09:13:07 -0700
-Received: from [10.2.175.141] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar
- 2020 16:13:06 +0000
-Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
-To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
-        <helen.koike@collabora.com>, <sboyd@kernel.org>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
- <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
- <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
- <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
- <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
- <5f54c018-5670-8193-7c68-969f9bde92f6@xs4all.nl>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <19081d90-62cc-e6eb-0337-f108fb6ca9bc@nvidia.com>
-Date:   Wed, 18 Mar 2020 09:14:13 -0700
+        Wed, 18 Mar 2020 12:14:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:51872 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726864AbgCRQOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 12:14:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68C8631B;
+        Wed, 18 Mar 2020 09:14:03 -0700 (PDT)
+Received: from [10.37.12.228] (unknown [10.37.12.228])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AE9F3F52E;
+        Wed, 18 Mar 2020 09:13:57 -0700 (PDT)
+Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
+ vgettimeofday
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-mips@vger.kernel.org, x86@kernel.org,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
+ <20200317122220.30393-19-vincenzo.frascino@arm.com>
+ <20200317143834.GC632169@arrakis.emea.arm.com>
+ <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
+ <20200317155031.GD632169@arrakis.emea.arm.com>
+ <83aaf9e1-0a8f-4908-577a-23766541b2ba@arm.com>
+ <20200317174806.GE632169@arrakis.emea.arm.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <93cfe94a-c2a3-1025-bc9c-e7c3fd891100@arm.com>
+Date:   Wed, 18 Mar 2020 16:14:26 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <5f54c018-5670-8193-7c68-969f9bde92f6@xs4all.nl>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200317174806.GE632169@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584547890; bh=tIHZbQLtSkJ53RrtKu9vilUV11m0jEsmcYMmUk3NErg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=MkFrRgcrqQAzQJcI2+1Q40+Pr9qGESvro4Iislxt2Izw1pDw9+uxYindJKOuhauPP
-         9TnHwD3EhYiI9hppup43ZWHvkPwGzWf67CXtKZSkssNgDM3QHbkyRu4XknC4xIkJy7
-         0VRO3RaUv2p+fnA2Kajs5enDYxis8R1g8z7tPlWDF3k7kRjOE3LkpGyu+5G8+/bdcC
-         ueokh3NujrDWrfILfiHFTGU7F7JTdXIZY/aE/vkbfUQBaLofWMZ6Dbm81SZRzCUkjt
-         LbstXrBXFK4BuI8wySVdDQHWo/JL1vu0Nq7eKTKkHG4j+nzsKG8kZDPLJ05SKHrEMk
-         jVKoZVqhUP0IQ==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Catalin,
 
-On 3/18/20 4:48 AM, Hans Verkuil wrote:
-> External email: Use caution opening links or attachments
->
->
-> On 2/24/20 5:45 AM, Sowjanya Komatineni wrote:
->> On 2/20/20 11:11 AM, Sowjanya Komatineni wrote:
->>> On 2/20/20 5:33 AM, Hans Verkuil wrote:
->>>> External email: Use caution opening links or attachments
+On 3/17/20 5:48 PM, Catalin Marinas wrote:
+> On Tue, Mar 17, 2020 at 04:40:48PM +0000, Vincenzo Frascino wrote:
+>> On 3/17/20 3:50 PM, Catalin Marinas wrote:
+>>> On Tue, Mar 17, 2020 at 03:04:01PM +0000, Vincenzo Frascino wrote:
+>>>> On 3/17/20 2:38 PM, Catalin Marinas wrote:
+>>>>> On Tue, Mar 17, 2020 at 12:22:12PM +0000, Vincenzo Frascino wrote:
 >>>>
->>>>
->>>> (Replying to myself so I can explain this a bit more)
->>>>
->>>> On 2/20/20 1:44 PM, Hans Verkuil wrote:
->>>>>> +
->>>>>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
->>>>>> +{
->>>>>> +    struct device_node *node = csi->dev->of_node;
->>>>>> +    unsigned int port_num;
->>>>>> +    int ret;
->>>>>> +    struct tegra_csi_channel *item;
->>>>>> +    unsigned int tpg_channels = csi->soc->csi_max_channels;
->>>>>> +
->>>>>> +    /* allocate CSI channel for each CSI x2 ports */
->>>>>> +    for (port_num = 0; port_num < tpg_channels; port_num++) {
->>>>>> +            item = devm_kzalloc(csi->dev, sizeof(*item), GFP_KERNEL);
->>>>> Using devm_*alloc can be dangerous. If someone unbinds the driver, then
->>>>> all memory allocated with devm_ is immediately freed. But if an
->>>>> application
->>>>> still has a filehandle open, then when it closes it it might still
->>>>> reference
->>>>> this already-freed memory.
->>>>>
->>>>> I recommend that you avoid using devm_*alloc for media drivers.
->>>> A good test is to unbind & bind the driver:
->>>>
->>>> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
->>>> echo -n 54080000.vi >unbind
->>>> echo -n 54080000.vi >bind
->>>>
->>>> First just do this without the driver being used. That already
->>>> gives me 'list_del corruption' kernel messages (list debugging
->>>> is turned on in my kernel).
->> Will fix in v4 to use kzalloc and also proper release v4l2 to make sure
->> unbind/bind works properly.
->>
->> BTW, tegra vi and csi are registered as clients to host1x video driver.
->>
->> So, unbind and bind should be done with host1x video driver "tegra-video"
->>
->> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
->> echo -n tegra-video > unbind
->> echo -n tegra-video > bind
-> This still crashes with v4, at least if I am streaming with v4l2-ctl --stream-mmap.
-> Is that known?
->
-> It's not a big deal at this moment, just want to know if this will be looked
-> at later.
->
-> Regards,
->
->          Hans
-
-Weird, I tested streaming after unbind and bind as well and don't see 
-crash. Did below steps and tried several times unbind/bind as well.
-
-./v4l2-ctl --stream-mmap --stream-count=1 -d /dev/video3
-cd /sys/devices/platform/50000000.host1x/tegra-video/driver
-echo -n tegra-video > unbind
-sleep 1
-echo -n tegra-video > bind
-cd /home/ubuntu
-./v4l2-ctl --stream-mmap --stream-count=1 -d /dev/video3
-
-Can you post call trace when you saw crash?
-
->>>> Note that this first test is basically identical to a rmmod/modprobe
->>>> of the driver. But when I compiled the driver as a module it didn't
->>>> create any video device nodes! Nor did I see any errors in the kernel
->>>> log. I didn't pursue this, and perhaps I did something wrong, but it's
->>>> worth taking a look at.
->>>>
->>>> The next step would be to have a video node open with:
->>>>
->>>> v4l2-ctl --sleep 10
->>>>
->>>> then while it is sleeping unbind the driver and see what happens
->>>> when v4l2-ctl exits.
->>>>
->>>> Worst case is when you are streaming:
->>>>
->>>> v4l2-ctl --stream-mmap
->>>>
->>>> and then unbind.
->>>>
->>>> In general, the best way to get this to work correctly is:
->>>>
->>>> 1) don't use devm_*alloc
->>>> 2) set the release callback of struct v4l2_device and do all freeing
->>>> there.
->>>> 3) in the platform remove() callback you call media_device_unregister()
->>>>      and video_unregister_device().
->>> Reg 3, in current patch, media_device_unregister is called in
->>> host1x_video_remove
->>> video_unregister_device happens during host1x_video_remove ->
->>> host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
+>>>> Can TASK_SIZE > UINTPTR_MAX on an arm64 system?
 >>>
->>>> It's worth getting this right in this early stage, rather than fixing it
->>>> in the future.
+>>> TASK_SIZE yes on arm64 but not TASK_SIZE_32. I was asking about the
+>>> arm32 check where TASK_SIZE < UINTPTR_MAX. How does the vdsotest return
+>>> -EFAULT on arm32? Which code path causes this in the user vdso code?
+>>
+>> Sorry I got confused because you referred to arch/arm/vdso/vgettimeofday.c which
+>> is the arm64 implementation, not the compat one :)
+> 
+> You figured out (in your subsequent reply) that I was indeed talking
+> about arm32 ;).
+> 
+
+From when I do not drink coffee, afternoon gets more difficult ;)
+
+>> In the case of arm32 everything is handled via syscall fallback.
+> 
+> So clock_gettime() on arm32 always falls back to the syscall?
+> 
+
+This seems not what you asked, and I think I answered accordingly. Anyway, in
+the case of arm32 the error code path is handled via syscall fallback.
+
+Look at the code below as an example (I am using getres because I know this
+email will be already too long, and I do not want to add pointless code, but the
+concept is the same for gettime and the others):
+
+static __maybe_unused
+int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
+{
+	int ret = __cvdso_clock_getres_common(clock, res);
+
+	if (unlikely(ret))
+		return clock_getres_fallback(clock, res);
+	return 0;
+}
+
+When the return code of the "vdso" internal function returns an error the system
+call is triggered.
+
+In general arm32 has been ported to the unified vDSO library hence it has a
+proper implementation on par with all the other architectures supported by the
+unified library.
+
+>>> My guess is that on arm32 it only fails with -EFAULT in the syscall
+>>> fallback path since a copy_to_user() would fail the access_ok() check.
+>>> Does it always take the fallback path if ts > TASK_SIZE?
+>>
+>> Correct, it goes via fallback. The return codes for these syscalls are specified
+>> by the ABI [1]. Then I agree with you the way on which arm32 achieves it should
+>> be via access_ok() check.
+> 
+> "it should be" or "it is" on arm32?
+> 
+
+What I meant is that I did not check how copy_from_user() implementation on
+arm32 before answering but I did imagine at that point that it would use
+access_ok(), as it does.
+
+For better clarification look at the code below (kernel/time/posix-timers.c if
+you want to have a look at the rest of the code):
+
+SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
+		struct __kernel_timespec __user *, tp)
+{
+	const struct k_clock *kc = clockid_to_kclock(which_clock);
+	struct timespec64 kernel_tp;
+	int error;
+
+	if (!kc)
+		return -EINVAL;
+
+	error = kc->clock_get_timespec(which_clock, &kernel_tp);
+
+	if (!error && put_timespec64(&kernel_tp, tp))
+		error = -EFAULT;
+
+	return error;
+}
+
+This is the syscall on which we fallback when the "vdso" internal function
+returns an error. The behavior of the vdso has to be exactly the same of the
+syscall otherwise we end up in an ABI breakage.
+
+The path followed by put_timespec64() is:
+
+put_timespec64() -> copy_to_user() -> _copy_to_user() ->  access_ok()
+
+and this path is true for every architecture being this common code.
+
+Hope this provides better insight on my previous answer.
+
+> If, on arm32, clock_gettime() is (would be?) handled in the vdso
+> entirely, who checks for the pointer outside the accessible address
+> space (as per the clock_gettime man page)?
+> 
+> I'm fine with such check as long as it is consistent across arm32 and
+> arm64 compat. Or even on arm64 native between syscall fallback and vdso
+> execution. I haven't figured out yet whether this is the case.
+> 
+
+Just to contextualize again we are discussing here the check:
+
+	if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
+		return -EFAULT;
+
+On all the architectures we return -EFAULT if copy_to_user() fails due to
+access_ok() failing (kernel/time/time.c):
+
+int put_timespec64(const struct timespec64 *ts,
+		   struct __kernel_timespec __user *uts)
+{
+	[...]
+
+	return copy_to_user(uts, &kts, sizeof(kts)) ? -EFAULT : 0;
+}
+
+On arm64 compat it gets tricky, because arm64 uses USER_DS (addr_limit set
+happens in arch/arm64/kernel/entry.S), which is defined as (1 << VA_BITS), as
+access_ok() validation even on compat tasks and since arm64 supports up to 52bit
+VA, this does not detect the end of the user address space for a 32 bit task.
+
+So to be logically consistent with the ABI on arm32 and arm64 (and all the other
+architectures) we need to make an explicit check in the case of arm64 compat.
+
+>>>>> This last check needs an explanation. If the clock_id is invalid but res
+>>>>> is not NULL, we allow it. I don't see where the compatibility issue is,
+>>>>> arm32 doesn't have such check.
 >>>>
->>>> Regards,
+>>>> The case that you are describing has to return -EPERM per ABI spec. This case
+>>>> has to return -EINVAL.
 >>>>
->>>>           Hans
+>>>> The first case is taken care from the generic code. But if we don't do this
+>>>> check before on arm64 compat we end up returning the wrong error code.
+>>>
+>>> I guess I have the same question as above. Where does the arm32 code
+>>> return -EINVAL for that case? Did it work correctly before you removed
+>>> the TASK_SIZE_32 check?
+>>
+>> I repeated the test and seems that it was failing even before I removed
+>> TASK_SIZE_32. For reasons I can't explain I did not catch it before.
+>>
+>> The getres syscall should return -EINVAL in the cases specified in [1].
+> 
+> It states 'clk_id specified is not supported on this system'. Fair
+> enough but it doesn't say that it returns -EINVAL only if res == NULL.
+
+Actually it does, the description of getres() starts with:
+
+'The function clock_getres() finds the resolution (precision) of the
+specified clock clk_id, and, if res is *non-NULL*, stores it in the
+struct timespec pointed to by res.'
+
+Please refer to the system call below of which we mimic the behavior in the vdso
+(kernel/time/posix-timers.c):
+
+SYSCALL_DEFINE2(clock_getres_time32, clockid_t, which_clock,
+		struct old_timespec32 __user *, tp)
+{
+	const struct k_clock *kc = clockid_to_kclock(which_clock);
+	struct timespec64 ts;
+	int err;
+
+	if (!kc)
+		return -EINVAL;
+
+	err = kc->clock_getres(which_clock, &ts);
+	if (!err && tp && put_old_timespec32(&ts, tp))
+		return -EFAULT;
+
+	return err;
+}
+
+If the clock is bogus and res == NULL we are supposed to return -EINVAL and not
+-EFAULT or something else. This is what the test is trying to verify. If the
+check below is not in place on arm64 compat, I get error report from the test suite.
+	if (!VALID_CLOCK_ID(clock_id) && res == NULL)
+		return -EINVAL;
+
+error message from vdsotest:
+
+passing bogus clock id and NULL to clock_getres (VDSO): unexpected errno 14 (Bad
+address), expected 22 (Invalid argument)
+passing bogus clock id and NULL to clock_getres (VDSO): exited with status 1,
+expected 0
+clock-getres-monotonic-coarse/abi: 1 failures/inconsistencies encountered
+
+> You also don't explain why __cvdso_clock_getres_time32() doesn't already
+> detect an invalid clk_id on arm64 compat (but does it on arm32).
+> 
+
+Thanks for asking to me this question, if I would not have spent the day trying
+to explain it, I would not have found a bug in the getres() fallback:
+
+diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+index 1dd22da1c3a9..803039d504de 100644
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -25,8 +25,8 @@
+ #define __NR_compat_gettimeofday       78
+ #define __NR_compat_sigreturn          119
+ #define __NR_compat_rt_sigreturn       173
+-#define __NR_compat_clock_getres       247
+ #define __NR_compat_clock_gettime      263
++#define __NR_compat_clock_getres       264
+ #define __NR_compat_clock_gettime64    403
+ #define __NR_compat_clock_getres_time64        406
+
+In particular compat getres is mis-numbered and that is what causes the issue.
+
+I am going to add a patch to my v5 that addresses the issue (or probably a
+separate one and cc stable since it fixes a bug) and in this patch I will remove
+the check on VALID_CLOCK_ID.
+
+I hope that this long email helps you to have a clearer picture of what is going
+on. Please let me know if there is still something missing.
+
+-- 
+Regards,
+Vincenzo
