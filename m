@@ -2,110 +2,248 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD828C5ACD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF639C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F2B2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:15:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QJqSNg8P"
+	by mail.kernel.org (Postfix) with ESMTP id 90F372076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbgCRJPa (ORCPT
+        id S1727507AbgCRJPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:15:30 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36681 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbgCRJPa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:15:30 -0400
-Received: by mail-qk1-f194.google.com with SMTP id u25so37511792qkk.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 02:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8+ePRCjp2COuxHOwe4fehGApC+vyauxE5AKc9JXm2Bc=;
-        b=QJqSNg8Psy4iKtjCBvszKB2g2XSpz9hUQBtOUZRdQsBtrZF/T5Vkx30wbzKCtfTnMv
-         HX9EgYZNdRvnkRyxansVwKdnvaIVQ69xRf5SHo6o9rr8nB2nq/r0TtpsaPkFnszstZD+
-         YI5dw0bxrtOBN7cMH4nKiW1GrnGWMEPu4wB/rZ4cZJPGt/BiLvg97OBHd4gNwvf5e1HP
-         LCI3txsnGbaQBmw5BTW4NaroF79V/WoRY6qzU8xMXhdNjuvqs9KjvjHNTRHJkNnob80I
-         AXleCzpdbpi8fWr5pO4IBOFBFRmmtiG+p0HlCKaqs2Nm2RVxsCbOQedeixq8BvW7fsFe
-         TY7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8+ePRCjp2COuxHOwe4fehGApC+vyauxE5AKc9JXm2Bc=;
-        b=e+dpIkLJcnmrmx7LIsfWqPCO9NQbblCaTTGwAA7KnYL0bvuKyLwzCKlFqJnEISawq/
-         AXinC5g+2BpWr6wh23+cyLYBOhOwfEIg0f8Dx1yF38ltSveFpXkmWX8XfP/8RBc1lsI0
-         16aO4zMS4tKj/GJZmk+Xs4ygFUq4CqLhvuWoKe9xyO3C9B0bmOg5XVsUy16+1pB/PXKx
-         gpEXazmwj0XmP71LKQxIqWEHZ/VVNJuBKYtUoq31KNlpwlOeh24kAREmqf+qYODLOW4H
-         9ifykjUtf/gUO/LJ5/TZFrXFigX9LnAtClK1f1ySEqst3ly78jCzK1O3k+HrNqGCNqcL
-         xLVg==
-X-Gm-Message-State: ANhLgQ0m6ukMaNe4rFAtC5E8+0dWBnzUPhrM+wUed5B9dduE42KMq/7c
-        oHu6+kQrnf/ZXSFf50RaeEi5OQs6gW/7njg19nylMxwT
-X-Google-Smtp-Source: ADFU+vucljXV9cDR4psrQ9kMHd8pH3XRVFw7ths8JrGC+4S1GOKCYJkhhHl0AMAeLANHqBbRNLg2ovvvEI52ejnn8IQ=
-X-Received: by 2002:a37:3c9:: with SMTP id 192mr3031931qkd.330.1584522927690;
- Wed, 18 Mar 2020 02:15:27 -0700 (PDT)
+        Wed, 18 Mar 2020 05:15:34 -0400
+Received: from mga17.intel.com ([192.55.52.151]:7367 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727113AbgCRJPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 05:15:33 -0400
+IronPort-SDR: h80wbmJgEQtgY3IiJrR6+dCI6CeVDscX7tQdrsaFnU+Zq8Bm72nlP4iMsolie90nHopLvu7Io1
+ J2EQn/YdDEpg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 02:15:32 -0700
+IronPort-SDR: t0n0N9Rb6hjyZ/6StG8DNDrxu56ikUlGASs8jBOdg/hug7WIbn1+S/vbj2nmnPMY4pVQtussNN
+ 48tFJTyUoXJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,566,1574150400"; 
+   d="scan'208";a="391378387"
+Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
+  by orsmga004.jf.intel.com with ESMTP; 18 Mar 2020 02:15:30 -0700
+Date:   Wed, 18 Mar 2020 16:54:26 +0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH v2 4/7] fpga: dfl: afu: add interrupt support for error
+ reporting
+Message-ID: <20200318085426.GA12088@hao-dev>
+References: <1584332222-26652-1-git-send-email-yilun.xu@intel.com>
+ <1584332222-26652-5-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
-References: <cover.1584456635.git.mchehab+huawei@kernel.org> <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
-In-Reply-To: <51197e3568f073e22c280f0584bfa20b44436708.1584456635.git.mchehab+huawei@kernel.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 18 Mar 2020 10:15:16 +0100
-Message-ID: <CAMpxmJXW51AhqL8EMch6myth9fLQ2XnO6nC8NztJL3=ZiH0kdA@mail.gmail.com>
-Subject: Re: [PATCH 12/17] gpio: gpiolib.c: fix a doc warning
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584332222-26652-5-git-send-email-yilun.xu@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 17 mar 2020 o 15:54 Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> napisa=C5=82(a):
->
-> Use a different markup for the ERR_PTR, as %FOO doesn't work
-> if there are parenthesis. So, use, instead:
->
->         ``ERR_PTR(-EINVAL)``
->
-> This fixes the following warning:
->
->         ./drivers/gpio/gpiolib.c:139: WARNING: Inline literal start-strin=
-g without end-string.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+On Mon, Mar 16, 2020 at 12:16:59PM +0800, Xu Yilun wrote:
+> Error reporting interrupt is very useful to notify users that some
+> errors are detected by the hardware. Once users are notified, they
+> could query hardware logged error states, no need to continuously
+> poll on these states.
+> 
+> This patch follows the common DFL interrupt notification and handling
+> mechanism, implements two ioctl commands below for user to query
+> number of irqs supported, and set/unset interrupt triggers.
+> 
+>  Ioctls:
+>  * DFL_FPGA_PORT_ERR_GET_IRQ_NUM
+>    get the number of irqs, which is used to determine whether/how many
+>    interrupts error reporting feature supports.
+> 
+>  * DFL_FPGA_PORT_ERR_SET_IRQ
+>    set/unset given eventfds as error interrupt triggers.
+> 
+> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> ----
+> v2: use DFL_FPGA_PORT_ERR_GET_IRQ_NUM instead of
+>     DFL_FPGA_PORT_ERR_GET_INFO
+>     Delete flag field for DFL_FPGA_PORT_ERR_SET_IRQ param
 > ---
->  drivers/gpio/gpiolib.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index f31b1d46599e..74d8973025da 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -136,7 +136,7 @@ EXPORT_SYMBOL_GPL(gpio_to_desc);
->   * @hwnum: hardware number of the GPIO for this chip
->   *
->   * Returns:
-> - * A pointer to the GPIO descriptor or %ERR_PTR(-EINVAL) if no GPIO exis=
-ts
-> + * A pointer to the GPIO descriptor or ``ERR_PTR(-EINVAL)`` if no GPIO e=
-xists
->   * in the given chip for the specified hardware number.
+>  drivers/fpga/dfl-afu-error.c  | 64 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/fpga/dfl-afu-main.c   |  4 +++
+>  include/uapi/linux/fpga-dfl.h | 29 ++++++++++++++++++++
+>  3 files changed, 97 insertions(+)
+> 
+> diff --git a/drivers/fpga/dfl-afu-error.c b/drivers/fpga/dfl-afu-error.c
+> index c1467ae..4d478b2f 100644
+> --- a/drivers/fpga/dfl-afu-error.c
+> +++ b/drivers/fpga/dfl-afu-error.c
+> @@ -15,6 +15,7 @@
 >   */
->  struct gpio_desc *gpiochip_get_desc(struct gpio_chip *chip,
-> --
-> 2.24.1
->
+>  
+>  #include <linux/uaccess.h>
+> +#include <linux/fpga-dfl.h>
+>  
+>  #include "dfl-afu.h"
+>  
+> @@ -219,6 +220,68 @@ static void port_err_uinit(struct platform_device *pdev,
+>  	afu_port_err_mask(&pdev->dev, true);
+>  }
+>  
+> +static long
+> +port_err_get_num_irqs(struct platform_device *pdev,
+> +		      struct dfl_feature *feature, unsigned long arg)
+> +{
+> +	if (copy_to_user((void __user *)arg, &feature->nr_irqs,
+> +			 sizeof(feature->nr_irqs)))
+> +		return -EFAULT;
 
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+maybe use put_user is simpler here.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static long port_err_set_irq(struct platform_device *pdev,
+> +			     struct dfl_feature *feature, unsigned long arg)
+> +{
+> +	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> +	struct dfl_fpga_irq_set hdr;
+> +	s32 *fds;
+> +	long ret;
+> +
+> +	if (!feature->nr_irqs)
+> +		return -ENOENT;
+> +
+> +	if (copy_from_user(&hdr, (void __user *)arg, sizeof(hdr)))
+> +		return -EFAULT;
+> +
+> +	if (!hdr.count || (hdr.start + hdr.count > feature->nr_irqs) ||
+> +	    (hdr.start + hdr.count < hdr.start))
+> +		return -EINVAL;
+> +
+> +	fds = memdup_user((void __user *)(arg + sizeof(hdr)),
+> +			  hdr.count * sizeof(s32));
+> +	if (IS_ERR(fds))
+> +		return PTR_ERR(fds);
+> +
+> +	mutex_lock(&pdata->lock);
+> +	ret = dfl_fpga_set_irq_triggers(feature, hdr.start, hdr.count, fds);
+> +	mutex_unlock(&pdata->lock);
+> +
+> +	kfree(fds);
+> +	return ret;
+> +}
+> +
+> +static long
+> +port_err_ioctl(struct platform_device *pdev, struct dfl_feature *feature,
+> +	       unsigned int cmd, unsigned long arg)
+> +{
+> +	long ret = -ENODEV;
+> +
+> +	switch (cmd) {
+> +	case DFL_FPGA_PORT_ERR_GET_IRQ_NUM:
+> +		ret = port_err_get_num_irqs(pdev, feature, arg);
+> +		break;
+> +	case DFL_FPGA_PORT_ERR_SET_IRQ:
+> +		ret = port_err_set_irq(pdev, feature, arg);
+> +		break;
+> +	default:
+> +		dev_dbg(&pdev->dev, "%x cmd not handled", cmd);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  const struct dfl_feature_id port_err_id_table[] = {
+>  	{.id = PORT_FEATURE_ID_ERROR,},
+>  	{0,}
+> @@ -227,4 +290,5 @@ const struct dfl_feature_id port_err_id_table[] = {
+>  const struct dfl_feature_ops port_err_ops = {
+>  	.init = port_err_init,
+>  	.uinit = port_err_uinit,
+> +	.ioctl = port_err_ioctl,
+>  };
+> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+> index 435bde4..fc8b9cf 100644
+> --- a/drivers/fpga/dfl-afu-main.c
+> +++ b/drivers/fpga/dfl-afu-main.c
+> @@ -577,6 +577,7 @@ static int afu_release(struct inode *inode, struct file *filp)
+>  {
+>  	struct platform_device *pdev = filp->private_data;
+>  	struct dfl_feature_platform_data *pdata;
+> +	struct dfl_feature *feature;
+>  
+>  	dev_dbg(&pdev->dev, "Device File Release\n");
+>  
+> @@ -586,6 +587,9 @@ static int afu_release(struct inode *inode, struct file *filp)
+>  	dfl_feature_dev_use_end(pdata);
+>  
+>  	if (!dfl_feature_dev_use_count(pdata)) {
+> +		dfl_fpga_dev_for_each_feature(pdata, feature)
+> +			dfl_fpga_set_irq_triggers(feature, 0,
+> +						  feature->nr_irqs, NULL);
+>  		__port_reset(pdev);
+>  		afu_dma_region_destroy(pdata);
+>  	}
+> diff --git a/include/uapi/linux/fpga-dfl.h b/include/uapi/linux/fpga-dfl.h
+> index ec70a0746..ced859d 100644
+> --- a/include/uapi/linux/fpga-dfl.h
+> +++ b/include/uapi/linux/fpga-dfl.h
+> @@ -151,6 +151,35 @@ struct dfl_fpga_port_dma_unmap {
+>  
+>  #define DFL_FPGA_PORT_DMA_UNMAP		_IO(DFL_FPGA_MAGIC, DFL_PORT_BASE + 4)
+>  
+> +/**
+> + * DFL_FPGA_PORT_ERR_GET_IRQ_NUM - _IOR(DFL_FPGA_MAGIC, DFL_PORT_BASE + 5,
+> + *								__u32 num_irqs)
+> + *
+> + * Get the number of irqs supported by the fpga port error reporting private
+> + * feature.
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +#define DFL_FPGA_PORT_ERR_GET_IRQ_NUM	_IOR(DFL_FPGA_MAGIC,	\
+> +					     DFL_PORT_BASE + 5, __u32)
+> +
+> +/**
+> + * DFL_FPGA_PORT_ERR_SET_IRQ - _IOW(DFL_FPGA_MAGIC, DFL_PORT_BASE + 6,
+> + *						struct dfl_fpga_irq_set)
+> + *
+> + * Set fpga port error reporting interrupt trigger if evtfds[n] is valid.
+> + * Unset related interrupt trigger if evtfds[n] is a NULL or negative value.
+
+Looks like the code only unset trigger if fd < 0, right?
+
+> + * Return: 0 on success, -errno on failure.
+> + */
+> +struct dfl_fpga_irq_set {
+> +	__u32 start;		/* First irq number */
+
+Sounds a little confusing, what about index of the first irq?
+
+
+Thanks
+Hao
+
+> +	__u32 count;		/* The number of eventfd handler */
+> +	__s32 evtfds[];		/* Eventfd handler */
+> +};
+> +
+> +#define DFL_FPGA_PORT_ERR_SET_IRQ	_IOW(DFL_FPGA_MAGIC,	\
+> +					     DFL_PORT_BASE + 6,	\
+> +					     struct dfl_fpga_irq_set)
+> +
+>  /* IOCTLs for FME file descriptor */
+>  
+>  /**
+> -- 
+> 2.7.4
