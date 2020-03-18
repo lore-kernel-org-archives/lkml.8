@@ -2,111 +2,120 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FED8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2082C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A8220753
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C37520757
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:34:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bg0ZFkiW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="B0xM0xac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgCRRb6 (ORCPT
+        id S1726855AbgCRReG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:31:58 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:41470 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726671AbgCRRb5 (ORCPT
+        Wed, 18 Mar 2020 13:34:06 -0400
+Received: from www381.your-server.de ([78.46.137.84]:40248 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCRReG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:31:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584552716;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bIEdAWs2IdQALzDuEkemxXWdr2rAA5T/LFwoILQOC80=;
-        b=Bg0ZFkiWarRj0LI+ktYqCH68UBXBuBXiF7LCEAxs+SPMc5n2po3o/qpDs5QsVHfre37yTF
-        ovLz6eG+w8Kpjxn0Erb0hoEDz9g8JdIqq6xBOJvhtRCsTmvxxu/GdjwMxpln2M2ahH5X4C
-        msgeuglfEe6s9SpKB9q4D78nUqFJJSs=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-0CGrEspdMTe-dwDWNeCVtQ-1; Wed, 18 Mar 2020 13:31:55 -0400
-X-MC-Unique: 0CGrEspdMTe-dwDWNeCVtQ-1
-Received: by mail-wr1-f71.google.com with SMTP id u12so10261501wrw.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:31:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bIEdAWs2IdQALzDuEkemxXWdr2rAA5T/LFwoILQOC80=;
-        b=ZjYEwOjNQ52Sw4McHOvDH4xuQv/vnJ3ivsq+mI8zTz9Sbsywa6hwqLMk9LKDoReDzr
-         p7wZ3M/yU2Oat8naLXF0A//nw8ohIL03o2WY73qGSsu8mcFxZJlA5Zrue33qHj/lSo/X
-         bnSWmk7YLbH7nQ86zoh+LdrG3uBaeiFeN5PUXx2N+Q4KXTSbvljHR9px0nJqGTn/nMFN
-         Ms5cEBVt2u0NjYaKeigp3Rmv10n0f2eqB1/CgWc09kH49uOmMTi1C/gCqMGgTFs0tdY7
-         hGFVsdQI1nVIZOdTIxzNM/cQXQr/O+1P3SnCg3rjLoiUbiwUPT9OGdUMyJCVC1aSsrJy
-         SXpQ==
-X-Gm-Message-State: ANhLgQ30ELJLzAZ9x7uCCPFhQX6bisL2IPGkBJEdujCI/9afs+O5RGwy
-        Br0WUF43S5b05kcdP5+NQuvm4M8ds/ct6E5g83MrmyVcqeTrvrgeElI52FbC/kbPJl0LmcqMSTz
-        NBTQdlnD9jMVACdPzX4CN+qBg
-X-Received: by 2002:adf:a4d2:: with SMTP id h18mr6943176wrb.90.1584552713813;
-        Wed, 18 Mar 2020 10:31:53 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvMOb5pOQOV0P/ATjTil/qiszSghckBJJr6fWehPfragC3y/9MOIQObyV9hSemvUTYNKmqFBA==
-X-Received: by 2002:adf:a4d2:: with SMTP id h18mr6943159wrb.90.1584552713550;
-        Wed, 18 Mar 2020 10:31:53 -0700 (PDT)
-Received: from [192.168.178.58] ([151.21.15.43])
-        by smtp.gmail.com with ESMTPSA id p8sm10385903wrw.19.2020.03.18.10.31.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Mar 2020 10:31:53 -0700 (PDT)
-Subject: Re: [PATCH v4 0/2] KVM: VMX: cleanup VMXON region allocation
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Jim Mattson <jmattson@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200318171752.173073-1-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <3d992436-ada6-3674-9085-060f930a949e@redhat.com>
-Date:   Wed, 18 Mar 2020 18:31:52 +0100
+        Wed, 18 Mar 2020 13:34:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=55s4KdzIkIbrPk24SHC9GIhNl5gysbT015bgWowvoYE=; b=B0xM0xac8I/sAY/v4Fy1CC5a1d
+        IUZx+cRKdtENa8HeY/f41HzkgA37T0SiEPmsCqf92GOSYBIC/wzXZYqA+T8PsPMfgqFcqjp3Ba8Ln
+        0alyli/aojkBt9KY391U0dtUsPQnTvXT9zIlVsCC5bgULlR+Uxb67nKnV7kq6t7zAznYkwAQCHP7G
+        43VPflDV+bY3NloMR7c8wyLSE9TFDydqTX4iua24yizb7Nzb276m9+6MQ3YcwfnvGWumM1ePBMphQ
+        yJkFBIhWW9oqEax/H4z+YZKFiaOBA0RlH0aPrSSF3OVZOaSwIFUvri2zVmlB5F9xyyYNUkcvWc7iC
+        fCTCrmUA==;
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jEcZr-0004ZL-PW; Wed, 18 Mar 2020 18:34:00 +0100
+Received: from [93.104.115.49] (helo=[192.168.178.20])
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jEcZr-000P08-Fy; Wed, 18 Mar 2020 18:33:59 +0100
+Subject: Re: [PATCH 2/3] iio: dac: ad5686: add of_match_table
+To:     Michael Auchter <michael.auchter@ni.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     linux-pm@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200318153434.62833-1-michael.auchter@ni.com>
+ <20200318153434.62833-2-michael.auchter@ni.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <b67c7147-e35c-2408-8324-c688af4e82b7@metafoo.de>
+Date:   Wed, 18 Mar 2020 18:33:58 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200318171752.173073-1-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200318153434.62833-2-michael.auchter@ni.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25755/Wed Mar 18 14:14:00 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/03/20 18:17, Vitaly Kuznetsov wrote:
-> Minor cleanup with no functional change (intended):
-> - Rename 'kvm_area' to 'vmxon_region'
-> - Simplify setting revision_id for VMXON region when eVMCS is in use
+On 3/18/20 4:34 PM, Michael Auchter wrote:
+> Add of_match_table to this driver, so devices can be probed based on
+> device tree contents.
 > 
-> Changes since v3:
-> - Rebase to kvm/queue
-> - Added Krish's Reviewed-by: tag to PATCH1
-> - Re-name 'enum vmcs_type' members [Sean Christopherson]
+> Signed-off-by: Michael Auchter <michael.auchter@ni.com>
+> ---
+>   drivers/iio/dac/ad5696-i2c.c | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
 > 
-> Vitaly Kuznetsov (2):
->   KVM: VMX: rename 'kvm_area' to 'vmxon_region'
->   KVM: VMX: untangle VMXON revision_id setting when using eVMCS
-> 
->  arch/x86/kvm/vmx/nested.c |  2 +-
->  arch/x86/kvm/vmx/vmx.c    | 44 ++++++++++++++++++---------------------
->  arch/x86/kvm/vmx/vmx.h    | 12 ++++++++---
->  3 files changed, 30 insertions(+), 28 deletions(-)
-> 
+> diff --git a/drivers/iio/dac/ad5696-i2c.c b/drivers/iio/dac/ad5696-i2c.c
+> index f100a5fe4219..26818bccffa2 100644
+> --- a/drivers/iio/dac/ad5696-i2c.c
+> +++ b/drivers/iio/dac/ad5696-i2c.c
+> @@ -88,9 +88,28 @@ static const struct i2c_device_id ad5686_i2c_id[] = {
+>   };
+>   MODULE_DEVICE_TABLE(i2c, ad5686_i2c_id);
+>   
+> +static const struct of_device_id ad5686_of_match[] = {
+> +	{ .compatible = "adi,ad5311r" },
+> +	{ .compatible = "adi,ad5671r" },
+> +	{ .compatible = "adi,ad5675r" },
+> +	{ .compatible = "adi,ad5691r" },
+> +	{ .compatible = "adi,ad5692r" },
+> +	{ .compatible = "adi,ad5693" },
+> +	{ .compatible = "adi,ad5693r" },
+> +	{ .compatible = "adi,ad5694" },
+> +	{ .compatible = "adi,ad5694r" },
+> +	{ .compatible = "adi,ad5695r" },
+> +	{ .compatible = "adi,ad5696" },
+> +	{ .compatible = "adi,ad5696r" },
+> +	{ .compatible = "adi,ad5338r" },
 
-Queued, thanks.
+Same here, table should be ordered.
 
-Paolo
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, ad5686_of_match);
+> +
+>   static struct i2c_driver ad5686_i2c_driver = {
+>   	.driver = {
+>   		.name = "ad5696",
+> +		.of_match_table = of_match_ptr(ad5686_of_match),
+>   	},
+>   	.probe = ad5686_i2c_probe,
+>   	.remove = ad5686_i2c_remove,
+> 
 
