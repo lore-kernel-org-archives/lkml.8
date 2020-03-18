@@ -2,125 +2,120 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A85CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00198C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29AD2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C931E20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:27:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYKHpY6n"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="ZF1wbRC9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgCRAZN (ORCPT
+        id S1727156AbgCRA1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 20:25:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36544 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbgCRAZN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 20:25:13 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 39so8355092otu.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 17:25:12 -0700 (PDT)
+        Tue, 17 Mar 2020 20:27:10 -0400
+Received: from mail-bn7nam10on2134.outbound.protection.outlook.com ([40.107.92.134]:41056
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726934AbgCRA1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 20:27:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U0Drd8JKgsw7B9QoP2hijJTnVo9tWRXRMmGMLsIm0YKFr+FXH37DuHcSx/t9BfTgI8aaNq0yns3C1GZAy2iTaEnYOtKLp0zBiBeCb+QaQcJSnvtZGAhbWBZpqWNXltEzWFUv6Df0d3OJW6tKkAyQ8FGTwF0Nef+9HMC1IWiD5tumpQs7SrcVVgqYIDhPx54SaMRAiaPLu4MtooFSboYX11oZk8CkoeFXtmh22XIhqNM+9bjJ1cGQ7aO67YQK7vUYWfvrvxs1EmE3d7sc6NbroHcGLeAXppZkxEvhzpwMAVEx6s8wKcsnktVD9zhHiVqJOB2J59tjA/YAJECsdmuqEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5WsIjoykrLE9Q/cz4sELP6Y7dOKs5qTZE23AAvhhKx4=;
+ b=GaMGO2S3y1Ymrr8JTKgrGRCzirWZsa5p6nbaKwlUZWg9FvEc279g/OtkJvevoiAwHmyT6cedspmVfs9QmiuCsbmX/byqro1B7qaG5ab6+X//9SEQcZIeL5CsLpaOrd5SEzV8fln1nJcrrQ6Ho+nit0AiIzWHokPiS/pKB3qhBXyp7nPOZtZDcfAbQTjna2dyLT7z6iLOI7usNVNBUlA8cf1273esCazvaCdIzE+bNMaGUoXCkvrLGYQhfS4hDLLVsusvio8+WuHZSQ3ea0c8vZ8T8g5VF/EiwwX0fQsLFapSHxxzEjlgv9N+M6Q1LLUCWHCYOIhYASHumSMJ7vH7Eg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RthWSSAwfQ1m/fIyaMgHoqmV5M148uMDMgR2Z75pZn8=;
-        b=nYKHpY6nByhG0uRCsowUHUQJDn8lvAmj1r6pTXxO+446VW4lMe+YgRICjtX4GAia1C
-         niVY8FgXbE31dNwHG5RfG1MjyEthgGJTIdiuHqLgzLyfjtmtr8WqehWj1A/7hbst7MvT
-         TxuNCCpWqcMTj3ehMffTAne8xCq1PVAGU3OpM/AuUmCRblWQHrtl+9BLgz8VdKDHSMeS
-         GTnKkvg+dZHvUevq3Bv8Rsx5l7r4PDB5ZKT8kO72UvOF3UhK+DkJF5nH+C4ffxUeimVt
-         2iAkONfQ+6AmNmy3q0v1aR2mp+UJyCK3F2P/Ey32/jCril3wDx3aMfDdNeaRcfwgipZ4
-         qYUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RthWSSAwfQ1m/fIyaMgHoqmV5M148uMDMgR2Z75pZn8=;
-        b=k3QxzQ82QGBxKmPPb7B08k1iE6ZqSSbQWUPGqcZd65NjkloWo0NJoNU1rghXlKgHTR
-         +1DngBEGrEXiq4dN+23Lt3wbQd2W7rCyS3DtAZ3MgBLNq2YLZVIoLmkcHecSQV0ze12q
-         Vpi7qi2TMlP/f6hdqgOjPquJns0p7hqzMVbj24/y6j3uXzEvdUQCpsClsQN6oHIRwYYu
-         j2UiQ7Yb5IxS+V0DVTZNF8X891nDI4ohqrpRQtwNydn1bleVHzO0wWfvsd72a2wZJ8nG
-         IQwWL8nI4M9rtu5yggv3QnMOWL1x2OaZuIT90MIW/JgpS5J1NJyK5bL59KPEMwoW/fw0
-         vrFg==
-X-Gm-Message-State: ANhLgQ20PAxVnTIRHVYaRpyw+e8Ndrj8i5twBWwdfKB+QrUcoz9+cncs
-        lESMHYJow6cwjB/i/Y7+Kcw=
-X-Google-Smtp-Source: ADFU+vtt2GDTqaDqobRqfbJiRXx+3kKCoi5fhOgvoNclVJWr5EiPhuO5Az9mcy0rzvDzM8NfX7xUGA==
-X-Received: by 2002:a9d:53c2:: with SMTP id i2mr1714115oth.11.1584491112227;
-        Tue, 17 Mar 2020 17:25:12 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id b26sm1569129oti.3.2020.03.17.17.25.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 17:25:11 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] drm/amdgpu: Initialize shadow to false in gfx_v9_0_rlcg_wreg
-Date:   Tue, 17 Mar 2020 17:25:00 -0700
-Message-Id: <20200318002500.52471-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.0.rc1
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5WsIjoykrLE9Q/cz4sELP6Y7dOKs5qTZE23AAvhhKx4=;
+ b=ZF1wbRC9pns6YjDDffJlfWGJUuEdYx8kA8R8kC3Z3UaH4zkOlNyggMr3Ps/fwyKGSmu3DC288bpAwlJKk/wSLT+SVjanVPpjhNv4Mv6eD9ledsYk88++fFDo0rQw/KCMhizS0/P1VE7tZdppNFOuLNmTibSzqnjxuLk/VU7fQxY=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=tuanphan@os.amperecomputing.com; 
+Received: from MWHPR01MB2317.prod.exchangelabs.com (2603:10b6:300:28::16) by
+ MWHPR01MB3232.prod.exchangelabs.com (2603:10b6:300:fc::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.14; Wed, 18 Mar 2020 00:27:05 +0000
+Received: from MWHPR01MB2317.prod.exchangelabs.com
+ ([fe80::5151:bb2b:8ed2:b53c]) by MWHPR01MB2317.prod.exchangelabs.com
+ ([fe80::5151:bb2b:8ed2:b53c%12]) with mapi id 15.20.2814.021; Wed, 18 Mar
+ 2020 00:27:05 +0000
+From:   Tuan Phan <tuanphan@os.amperecomputing.com>
+Cc:     patches@amperecomputing.com, Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] perf: dsu: Allow multiple devices share same IRQ.
+Date:   Tue, 17 Mar 2020 17:26:15 -0700
+Message-Id: <1584491176-31358-1-git-send-email-tuanphan@os.amperecomputing.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR07CA0089.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::30) To MWHPR01MB2317.prod.exchangelabs.com
+ (2603:10b6:300:28::16)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from aptiov-dev-Latitude-E7470.amperecomputing.com (4.28.12.214) by BYAPR07CA0089.namprd07.prod.outlook.com (2603:10b6:a03:12b::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2814.21 via Frontend Transport; Wed, 18 Mar 2020 00:27:03 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [4.28.12.214]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8920fc1e-25f9-44ff-2dc2-08d7cad31554
+X-MS-TrafficTypeDiagnostic: MWHPR01MB3232:|MWHPR01MB3232:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MWHPR01MB32327D82E9F3062B7857E025E0F70@MWHPR01MB3232.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:538;
+X-Forefront-PRVS: 03468CBA43
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39840400004)(366004)(396003)(136003)(346002)(376002)(199004)(478600001)(8936002)(316002)(16526019)(52116002)(6666004)(186003)(81156014)(54906003)(81166006)(8676002)(26005)(6506007)(66556008)(66476007)(86362001)(66946007)(956004)(2616005)(4744005)(6486002)(5660300002)(2906002)(6512007)(109986005)(4326008)(266003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR01MB3232;H:MWHPR01MB2317.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
+Received-SPF: None (protection.outlook.com: os.amperecomputing.com does not
+ designate permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0PirM2wqn83jBczku1fbRYeGu0QAAcV8I5JM59LiFld+JxfV20G3EkHG26ob0L2eTMYv0hhoGdtH6h9VUHoARCsSC8AHQ+uaPLQPvf0K3+FMPSkIzVcUFkuxT/XPjzpSpEOUJVZTSa+IAPNVFnWiineWi6UPKyogXyJmoEY66Ucw9wWSUfIGUzJfk1rjKwft7seuBz3Ov2N9lNkfuHQs9YvHVqQJlcb6SO2GYyq0IakYY6F1jTKd3PXnN63qtk24i1lCemuRE2DUW2maoFwxvQGCI28sy0zO+y1j77Q/zIAqzHiWNpEzPWf08okS05o69iWwTw/njjdlUSFSwDgggrMuCkx4GdUvXTTenQV+r5OPYPfhbEiFqW7V5LYxWyAn3fElwqTQTKh20moJGCS5mpilkrD2Yic5/ZWTjsEsXCHkp8fr9R21ml8iSIeuHaWhhDZRXiqjwsMzqRLEza9EXE6ZqGsX0midzRjvuUBwOC0=
+X-MS-Exchange-AntiSpam-MessageData: jLSd6nK3ynuETQGFn+p2GVnfRkEoq/AlD7xAf2EzaKWf9f8XzQWNFc9vJZJP04SkmdjTD/MrQqiV30s6X8cZxO89segWNUGhMCZt7IiHh/+35hHizC2ckGKVT3USvXe19lXB4fkgp7sa12+IIp2wWw==
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8920fc1e-25f9-44ff-2dc2-08d7cad31554
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 00:27:04.6700
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UOak2g+KCMsaepcmDdBrAhX9RvYZIrY1p8G/5DmWTBtwHE+06+uYdNkj2V3lsDzaHah9JtS2S0Fkh+PDKn2slceNyRqfaBuZog+YYHL1ggwy3wudufmGQgEypZpw3E2n
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR01MB3232
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang warns:
+Add IRQF_SHARED flag when register IRQ such that multiple dsu
+devices can share same IRQ.
 
-drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:754:6: warning: variable 'shadow'
-is used uninitialized whenever 'if' condition is
-false [-Wsometimes-uninitialized]
-        if (offset == grbm_cntl || offset == grbm_idx)
-            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:757:6: note: uninitialized use
-occurs here
-        if (shadow) {
-            ^~~~~~
-drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:754:2: note: remove the 'if' if
-its condition is always true
-        if (offset == grbm_cntl || offset == grbm_idx)
-        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:738:13: note: initialize the
-variable 'shadow' to silence this warning
-        bool shadow;
-                   ^
-                    = 0
-1 warning generated.
-
-It is not wrong so initialize shadow to false to ensure shadow is always
-used initialized.
-
-Fixes: 2e0cc4d48b91 ("drm/amdgpu: revise RLCG access path")
-Link: https://github.com/ClangBuiltLinux/linux/issues/936
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 2 +-
+ drivers/perf/arm_dsu_pmu.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-index 7bc2486167e7..affbff76758c 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -735,7 +735,7 @@ void gfx_v9_0_rlcg_wreg(struct amdgpu_device *adev, u32 offset, u32 v)
- 	static void *spare_int;
- 	static uint32_t grbm_cntl;
- 	static uint32_t grbm_idx;
--	bool shadow;
-+	bool shadow = false;
- 
- 	scratch_reg0 = adev->rmmio + (adev->reg_offset[GC_HWIP][0][mmSCRATCH_REG0_BASE_IDX] + mmSCRATCH_REG0)*4;
- 	scratch_reg1 = adev->rmmio + (adev->reg_offset[GC_HWIP][0][mmSCRATCH_REG1_BASE_IDX] + mmSCRATCH_REG1)*4;
+diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
+index 70968c8..2622900 100644
+--- a/drivers/perf/arm_dsu_pmu.c
++++ b/drivers/perf/arm_dsu_pmu.c
+@@ -700,7 +700,7 @@ static int dsu_pmu_device_probe(struct platform_device *pdev)
+ 	if (!name)
+ 		return -ENOMEM;
+ 	rc = devm_request_irq(&pdev->dev, irq, dsu_pmu_handle_irq,
+-			      IRQF_NOBALANCING, name, dsu_pmu);
++			      IRQF_NOBALANCING | IRQF_SHARED, name, dsu_pmu);
+ 	if (rc) {
+ 		dev_warn(&pdev->dev, "Failed to request IRQ %d\n", irq);
+ 		return rc;
 -- 
-2.26.0.rc1
+2.7.4
 
