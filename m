@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05110C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA97C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB262076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937DF2076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584572795;
-	bh=xmE3yElXSaLPkHmEr4QxRVGER8+rZ3BdqvEa3ZNkdF8=;
+	s=default; t=1584572799;
+	bh=pyfoelTFUrUS8nqrG9mSLUHYjidpQeeIpDUHP53gjl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=csO1kGSYRD1V4mfeoM0KKYNtMT/SQgbYdLxrAGnHUOf8SeUhe2Ho1MmFveGCW6hWo
-	 Tje+Nglx+Kwzb1h1lvcKJGHiWCSirTPXbycoSA3qEYi1fbfgjD0TCn53dv8P6RjX8z
-	 PH8B3R/qEI4KmBAPiCbhT/ZEqfq6+nxpbzxBZGik=
+	b=grt3pX1lU8fRZp2QXXGmN99OiaKm/HnUz+JfqizxtOk2t9g3RT4f5kQ1xPIPv5tMx
+	 /FwDNyghBb9O8pgaToMGAeFPtM+T/eVQmxNlarm2r00YQlVhGG60W7ALGk/1s82mJ0
+	 bF80nk/f+9RRB0jRvegaIkyxSlVolxTQD+/DgghU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgCRXGe (ORCPT
+        id S1727456AbgCRXGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:06:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37510 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 19:06:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbgCRXGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:06:16 -0400
+        id S1726934AbgCRXGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 19:06:15 -0400
 Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FDBA2076F;
-        Wed, 18 Mar 2020 23:06:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C36EE20772;
+        Wed, 18 Mar 2020 23:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1584572775;
-        bh=xmE3yElXSaLPkHmEr4QxRVGER8+rZ3BdqvEa3ZNkdF8=;
+        bh=pyfoelTFUrUS8nqrG9mSLUHYjidpQeeIpDUHP53gjl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tBM+mtpjchueINOvzNZpxN2IDRCAxiG81X0PxlbMekTYiu9iXIIxqaIcKY8t+UnLo
-         2IrsiYs4JUcgA/C7duJWM0hZAqA7SEYXsFFNIP/1q2LSJIIPiWSv1gXgauA8f2t9cc
-         +aChfDbgOhlxlLrgLWbzCkzQJbp7NM5ZljfPdHSI=
+        b=S8AP04gTBXOjxzF4km8U9zuui3lKYHUGGlBhXVxY7kAOk6pg/6g11nTfyqHxWFA8x
+         W+cppg3wRVybvoenstFvJIaQeJsJg/jSf/ofDBk6rnTWoma3zxw5F8lX4YIEI8bWFg
+         yzNOYEOVUsFday93oOH4XOBSxIYVnCzpay8/SqUE=
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
@@ -49,9 +49,9 @@ Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
         NeilBrown <neilb@suse.com>
-Subject: [PATCH v4 4/5] selftests: kmod: fix handling test numbers above 9
-Date:   Wed, 18 Mar 2020 16:05:14 -0700
-Message-Id: <20200318230515.171692-5-ebiggers@kernel.org>
+Subject: [PATCH v4 3/5] docs: admin-guide: document the kernel.modprobe sysctl
+Date:   Wed, 18 Mar 2020 16:05:13 -0700
+Message-Id: <20200318230515.171692-4-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200318230515.171692-1-ebiggers@kernel.org>
 References: <20200318230515.171692-1-ebiggers@kernel.org>
@@ -64,55 +64,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-get_test_count() and get_test_enabled() were broken for test numbers
-above 9 due to awk interpreting a field specification like '$0010' as
-octal rather than decimal.  Fix it by stripping the leading zeroes.
+Document the kernel.modprobe sysctl in the same place that all the other
+kernel.* sysctls are documented.  Make sure to mention how to use this
+sysctl to completely disable module autoloading, and how this sysctl
+relates to CONFIG_STATIC_USERMODEHELPER.
 
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jeff Vander Stoep <jeffv@google.com>
 Cc: Jessica Yu <jeyu@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
 Cc: NeilBrown <neilb@suse.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- tools/testing/selftests/kmod/kmod.sh | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ Documentation/admin-guide/sysctl/kernel.rst | 25 ++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
-index 8b944cf042f6c..315a43111e046 100755
---- a/tools/testing/selftests/kmod/kmod.sh
-+++ b/tools/testing/selftests/kmod/kmod.sh
-@@ -505,18 +505,23 @@ function test_num()
- 	fi
- }
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index def074807cee9..e3c15660ee5d9 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -49,7 +49,7 @@ show up in /proc/sys/kernel:
+ - kexec_load_disabled
+ - kptr_restrict
+ - l2cr                        [ PPC only ]
+-- modprobe                    ==> Documentation/debugging-modules.txt
++- modprobe
+ - modules_disabled
+ - msg_next_id		      [ sysv ipc ]
+ - msgmax
+@@ -444,6 +444,29 @@ l2cr: (PPC only)
+ This flag controls the L2 cache of G3 processor boards. If
+ 0, the cache is disabled. Enabled if nonzero.
  
--function get_test_count()
-+function get_test_data()
- {
- 	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	local field_num=$(echo $1 | sed 's/^0*//')
-+	echo $ALL_TESTS | awk '{print $'$field_num'}'
-+}
++modprobe:
++=========
 +
-+function get_test_count()
-+{
-+	TEST_DATA=$(get_test_data $1)
- 	LAST_TWO=${TEST_DATA#*:*}
- 	echo ${LAST_TWO%:*}
- }
++The path to the usermode helper for autoloading kernel modules, by
++default "/sbin/modprobe".  This binary is executed when the kernel
++requests a module.  For example, if userspace passes an unknown
++filesystem type to mount(), then the kernel will automatically request
++the corresponding filesystem module by executing this usermode helper.
++This usermode helper should insert the needed module into the kernel.
++
++This sysctl only affects module autoloading.  It has no effect on the
++ability to explicitly insert modules.
++
++If this sysctl is set to the empty string, then module autoloading is
++completely disabled.  The kernel will not try to execute a usermode
++helper at all, nor will it call the kernel_module_request LSM hook.
++
++If CONFIG_STATIC_USERMODEHELPER=y is set in the kernel configuration,
++then the configured static usermode helper overrides this sysctl,
++except that the empty string is still accepted to completely disable
++module autoloading as described above.
++
++Also see Documentation/debugging-modules.txt.
  
- function get_test_enabled()
- {
--	test_num $1
--	TEST_DATA=$(echo $ALL_TESTS | awk '{print $'$1'}')
-+	TEST_DATA=$(get_test_data $1)
- 	echo ${TEST_DATA#*:*:}
- }
- 
+ modules_disabled:
+ =================
 -- 
 2.25.1
 
