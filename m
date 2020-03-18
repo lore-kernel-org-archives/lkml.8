@@ -2,189 +2,90 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D183C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07452C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27AD920724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3BD920724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:43:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mLJNxZyc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="qgSndENZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgCRBkv (ORCPT
+        id S1727210AbgCRBnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 21:40:51 -0400
-Received: from ozlabs.org ([203.11.71.1]:40361 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbgCRBku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 21:40:50 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48ht666PH8z9sNg;
-        Wed, 18 Mar 2020 12:40:46 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584495647;
-        bh=anDP3nx12ruwkIJDh64jQV8DzkTYUP30jaeOxQMxsgY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mLJNxZyco2WMBPmJPM8uj5tOvbVITfxvKZHeIeby3yWz6h0nWWK+b5QGiSky8Drgt
-         83qzpPqXpf8DLw0potVWfWHyeldo07AS3VykWPjVuY2lHjmkrQetzZsgfm+PWz5Znu
-         iAFJKC2pFoc1n7XpL4VQiWWeLY/s4Llv8Zs5JrBLbAvlOmn2nM0x6I8y0FnvAKP3pg
-         5jntUAoNItIR7mxv2DRu16cdGvKN5NcSNepW+0J6NBGUzQr4E5g7e53yd7HA0mxIyj
-         /BkJ1GD/LXde7IE8HTCZyvd2Lg1PrDOSpg7Oz/f5YS+hk/kfTvHAxB9f5K+w6Pszsc
-         jpz2vhFXS3y/w==
-Date:   Wed, 18 Mar 2020 12:40:33 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Kiss <daniel.kiss@arm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: linux-next: manual merge of the jc_docs tree with the arm64 tree
-Message-ID: <20200318124033.6c523374@canb.auug.org.au>
+        Tue, 17 Mar 2020 21:43:08 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38090 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726680AbgCRBnI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 21:43:08 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z12so142436qtq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 18:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L0b5WLsdgfiR/hAFOY1sB2eFKdHn+83f5OZv1AD8it0=;
+        b=qgSndENZddrIR2I4cydy7JaMW73b0CxPToIjxG1ZE0TTzbN2xWQkQgAB/xpbnei++o
+         8+ebYrUn4HIId2ID/7hF/AT+Py0Cc51GHAs1RWc1vIiTAdFv8daz1CDkgCdfuRTLAEJJ
+         vSbTLizg2KByfTFCtEKLzEypie6jjTJfLM3jP7Y8Cafouwlpj7hsDhIZCqGGCaMmccqU
+         uJGQ+Xaj1pDqnqXaCVL8fQiVRKzSrFa50cCMrZuLfYEOuyvk5B6cYrQDbc4pqZniw/G7
+         bflk1ORZkn5pn4F5zVGX1og+bhSnpOoc/FHNp8IKXCqmP21ru52ngcV3/jJRP7h3Pbek
+         BNYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L0b5WLsdgfiR/hAFOY1sB2eFKdHn+83f5OZv1AD8it0=;
+        b=t4e//WtG/NrNRYXdtbs50KE1b9+jVREJd4Q6JoectlQ5vG/xAoMIb1xRFR6OnXeBkw
+         tZ2elVnlIAXifo6faph/WBHfvlktsHIs3mS3CmTE28CrSGDLresHGMj2AvPTTHjzyWlD
+         D9PpAfQW95EaGe37yqooWSJpRl1wcen0MicbZOH0HXWlqj26rzQGo8qN7mDw7pI+t2wg
+         9UZfxb1Lyl5FCAR5imoh/ra45VlSHwHtw0LQdNV0quuKUgj3I8qRDZuBVQwPsCkqwQPC
+         dasx5nPHI5qEa0dFek3f3tqO3C9o+GnC2XKultZjfvnghsmsd+ReOwj+60LWF/JEDpDk
+         HcjQ==
+X-Gm-Message-State: ANhLgQ25+2k+c9+v+w2SU5Ea6fBC1u8jojfpf6D/Oh6Wxo91Ykn9/RL3
+        mBDGTakJIs+rVlXYmb79oPLvnQ==
+X-Google-Smtp-Source: ADFU+vt4qdtqYNp0md5miZ5EokE2sD2apk116S3hvJDV9bEIEBdSJqnmsCcM5zkMCg2rdg2MlKSUKA==
+X-Received: by 2002:aed:2ee1:: with SMTP id k88mr2212557qtd.268.1584495786865;
+        Tue, 17 Mar 2020 18:43:06 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id m1sm3740883qtm.22.2020.03.17.18.43.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 18:43:06 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+Cc:     willy@infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH 0/2] xarrary: Fix warnings reported by checkpatch
+Date:   Tue, 17 Mar 2020 22:43:01 -0300
+Message-Id: <cover.1584494902.git.vitor@massaru.org>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uK=nKxU3a1Nu0GPtSHTU0E_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uK=nKxU3a1Nu0GPtSHTU0E_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+This patch series fixes checkpatch warnings in xarray.h:
 
-Today's linux-next merge of the jc_docs tree got a conflict in:
+ * Add identifier names for function definition arguments;
+ * Add missing blank line after declaration;
 
-  Documentation/filesystems/proc.rst
+Vitor Massaru Iha (2):
+  xarray: Add identifier names for function definition arguments
+  xarray: Add missing blank line after declaration
 
-between commit:
+ include/linux/xarray.h | 88 +++++++++++++++++++++---------------------
+ 1 file changed, 45 insertions(+), 43 deletions(-)
 
-  424037b77519 ("mm: smaps: Report arm64 guarded pages in smaps")
+-- 
+2.21.1
 
-from the arm64 tree and commit:
-
-  c33e97efa9d9 ("docs: filesystems: convert proc.txt to ReST")
-
-from the jc_docs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/filesystems/proc.rst
-index ed5465d0f435,38b606991065..000000000000
---- a/Documentation/filesystems/proc.rst
-+++ b/Documentation/filesystems/proc.rst
-@@@ -489,37 -511,39 +511,40 @@@ does not take into account swapped out=20
-  "THPeligible" indicates whether the mapping is eligible for allocating THP
-  pages - 1 if true, 0 otherwise. It just shows the current status.
- =20
-- "VmFlags" field deserves a separate description. This member represents t=
-he kernel
-- flags associated with the particular virtual memory area in two letter en=
-coded
-- manner. The codes are the following:
--     rd  - readable
--     wr  - writeable
--     ex  - executable
--     sh  - shared
--     mr  - may read
--     mw  - may write
--     me  - may execute
--     ms  - may share
--     gd  - stack segment growns down
--     pf  - pure PFN range
--     dw  - disabled write to the mapped file
--     lo  - pages are locked in memory
--     io  - memory mapped I/O area
--     sr  - sequential read advise provided
--     rr  - random read advise provided
--     dc  - do not copy area on fork
--     de  - do not expand area on remapping
--     ac  - area is accountable
--     nr  - swap space is not reserved for the area
--     ht  - area uses huge tlb pages
--     ar  - architecture specific flag
--     dd  - do not include area into core dump
--     sd  - soft-dirty flag
--     mm  - mixed map area
--     hg  - huge page advise flag
--     nh  - no-huge page advise flag
--     mg  - mergable advise flag
-+ "VmFlags" field deserves a separate description. This member represents t=
-he
-+ kernel flags associated with the particular virtual memory area in two le=
-tter
-+ encoded manner. The codes are the following:
-+=20
-+     =3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+     rd    readable
-+     wr    writeable
-+     ex    executable
-+     sh    shared
-+     mr    may read
-+     mw    may write
-+     me    may execute
-+     ms    may share
-+     gd    stack segment growns down
-+     pf    pure PFN range
-+     dw    disabled write to the mapped file
-+     lo    pages are locked in memory
-+     io    memory mapped I/O area
-+     sr    sequential read advise provided
-+     rr    random read advise provided
-+     dc    do not copy area on fork
-+     de    do not expand area on remapping
-+     ac    area is accountable
-+     nr    swap space is not reserved for the area
-+     ht    area uses huge tlb pages
-+     ar    architecture specific flag
-+     dd    do not include area into core dump
-+     sd    soft dirty flag
-+     mm    mixed map area
-+     hg    huge page advise flag
-+     nh    no huge page advise flag
-+     mg    mergable advise flag
-++    bt    arm64 BTI guarded page
-+     =3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- =20
-  Note that there is no guarantee that every flag and associated mnemonic w=
-ill
-  be present in all further kernel releases. Things get changed, the flags =
-may
-
---Sig_/uK=nKxU3a1Nu0GPtSHTU0E_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5xfBIACgkQAVBC80lX
-0GyOQgf/TwsXkd50WM3hZbWNlmomsyCOrJEg8CqVbiEyrF24ncfkxJ9OoBzBg+SM
-rlJE73yy/Pcf6Qidaa2FOMl86UjNirH55xBZ1c4kY+yXMNpXIK+5DcsYmhoZghaj
-nCZnTS/u5brQXyS6hTQbofMkLU3Qcw084LKa42cnKYTO+Y2NpPeB6k411kUJybuK
-60/Is1QPKzYNxMHd3K6NtL6x3wk9ZTtqtH8moi/pyM/K9Eima1aE2q+8Ehp4bfFB
-vQlE2LgazsCo90DB7a8MIZ717OG0nJhMntT8ISHYJKVIEMCJy7HhybkQdFoRvb9A
-samJZL/kYIF0/JC0EJI0qEjc0VsflA==
-=SM/t
------END PGP SIGNATURE-----
-
---Sig_/uK=nKxU3a1Nu0GPtSHTU0E_--
