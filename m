@@ -2,105 +2,292 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7E7C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B351CC43332
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442FB2076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:35:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="WhrVOzIZ"
+	by mail.kernel.org (Postfix) with ESMTP id 7BFDB20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584571091;
+	bh=h2tPbIwaFRFhQaSi75kDBvH4/tYSSRHaaEn6nhZmdr0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=owU5tGM75GdwYJgP28iLrLJVRb1JXk+XbNr0nrCiFSSLBm9N6xpHxfjmbYnOrsVAA
+	 Lt7+2R+o3APHlVIqDOVOIXKy25Hc8nn6TvSg+Qq2vPoNy4lEVTgYLL6xmeHmGmSBWQ
+	 k2/20F1om9HbRUfrZ/HwUXFa9ElQTAiBcfiRhiEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgCRWfp (ORCPT
+        id S1727275AbgCRWiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:35:45 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46695 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRWfo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:35:44 -0400
-Received: by mail-qt1-f194.google.com with SMTP id t13so127223qtn.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 15:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RhKkOM3b73+SqbFIo7hXR89joO3mVm2xuh2r9R0UJAU=;
-        b=WhrVOzIZjfGqMtoJLSU/8B+vpAX0KzmrPOyRaB4p44ABZ1rfa8h22X3W23XhQtZlVe
-         EHFXfkIIpM/l63+xuvfsrAx+/Vw/G0YR8aAjcHfmNThjmxBPkRn0z1hKG+F+S8pZQmjz
-         hBqrw21HhngX5cnWexV+yppEao+OT6MuIzBuQXfiBbw1/GIW7nMiI7JZ30uPU+yqbnrd
-         vsRT926fuCX58mQo6tbDjkA7VrjhyRu+OYElRqlRNbIC7AgFdkoo/bOyfQzQsUCzqYRo
-         yPg2GBD24ka+n8MvuwSUBKFed13j6xdXVHfsIg3DfWsMWyoJnfr9zHPEdv2cnEYwMUU+
-         Thkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RhKkOM3b73+SqbFIo7hXR89joO3mVm2xuh2r9R0UJAU=;
-        b=IWaijXNvuqU6jRJqc43R2nQ52BD6j78lSphqVm1E+Vkgygg5nU6/kAWx/cu4wkJCEh
-         hN53zt9CG2YNSEcnJpBT8GP5f0dOzC+Iewh2dmoqRS1xOuUHN4Cx8EnN6mJ4ApunS8nc
-         nwFIZ7t4Q6blW6ld//TXJg0rBHOQ5+pT2e5zSH7qJ4oIyEjd66T6vowYCWFqvbzHq/xY
-         +K5Y8AUMU6MzzDxmERpr4JKLQCsvuj/5WoN/2zAzVqrXIqArtU4JYmcLuNRs5/4w9UTv
-         abm+6ufqKwG0eI9VuouJrqtRIFHrcVi2Y6j/lkevvbO1Pm5S09sh+SEFNMegYlUJw8Ej
-         TtsA==
-X-Gm-Message-State: ANhLgQ0W0HNHiy1gVQZFmkBoBQnhvpNyS0YtaTuvudSpugg9qnSUCIFQ
-        uiWoppMppxx1iRshmGmjnTF56v/yomnHzA==
-X-Google-Smtp-Source: ADFU+vuIGfOWs5zpaMxj9pIV+cXJGTA7IPUuUJDipiGDUwSNYNmjn9yaBO/yPCkYnT8wT6e0VL8Hrw==
-X-Received: by 2002:aed:2be5:: with SMTP id e92mr7243738qtd.374.1584570943737;
-        Wed, 18 Mar 2020 15:35:43 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id x5sm145093qti.5.2020.03.18.15.35.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Mar 2020 15:35:43 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jEhHq-0000C1-LW; Wed, 18 Mar 2020 19:35:42 -0300
-Date:   Wed, 18 Mar 2020 19:35:42 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     George Wilson <gcwilson@linux.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Nayna Jain <nayna@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, Linh Pham <phaml@us.ibm.com>
-Subject: Re: [PATCH v2] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
-Message-ID: <20200318223542.GD20941@ziepe.ca>
-References: <20200317214600.9561-1-gcwilson@linux.ibm.com>
- <20200318204318.GA48352@linux.intel.com>
+        Wed, 18 Mar 2020 18:38:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgCRWiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 18:38:09 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F0A3208D6;
+        Wed, 18 Mar 2020 22:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584571087;
+        bh=h2tPbIwaFRFhQaSi75kDBvH4/tYSSRHaaEn6nhZmdr0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kRfNA+9TdnyBzO10nx07GysVFZDKOEyZXyN8sBPtBgPClUs4D1pLwH1u86QGHRVLI
+         VhUv0WyTisoDnDbPIwbBadfuS+0br3IgNJYuxEyNep50K1HIzxTFFk4DSvdoP4Cc0a
+         lMfsOmO1OAURjbaxeaLs+C5fAoANSbhjfQwAzweA=
+Received: by mail-qt1-f171.google.com with SMTP id i26so154650qtq.8;
+        Wed, 18 Mar 2020 15:38:07 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1e37ELRDgpPS1nBHSGnpkzOYv2pzVidmM0gJBYMfBJOmpFX0W0
+        pDr4IxegCI+qzH9NqQ7O6GthVxvMxUIq/IuRoA==
+X-Google-Smtp-Source: ADFU+vvinsamjh03SlRMcAjEI9q54HjLWIwQqxaVLevloh2bB0C7//yNJi1GoxR+dLv32cxF/ysQBxwkILHfmpn8xBI=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr5558qtg.110.1584571086256; Wed,
+ 18 Mar 2020 15:38:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318204318.GA48352@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200317093922.20785-1-lkundrak@v3.sk> <20200317093922.20785-20-lkundrak@v3.sk>
+In-Reply-To: <20200317093922.20785-20-lkundrak@v3.sk>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 18 Mar 2020 16:37:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK-z+yx6vMv_vUCc-QCigDnN8K3zPkbWM_CgXj02FGY2w@mail.gmail.com>
+Message-ID: <CAL_JsqK-z+yx6vMv_vUCc-QCigDnN8K3zPkbWM_CgXj02FGY2w@mail.gmail.com>
+Subject: Re: [PATCH 19/28] dt-bindings: mmc: Convert sdhci-pxa to json-schema
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 10:43:18PM +0200, Jarkko Sakkinen wrote:
-> >  static const char tpm_ibmvtpm_driver_name[] = "tpm_ibmvtpm";
-> >  
-> >  static const struct vio_device_id tpm_ibmvtpm_device_table[] = {
-> > @@ -147,6 +149,7 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> >  {
-> >  	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
-> >  	int rc, sig;
-> > +	bool retry = true;
-> 
-> Cosmetic: would be nice to have inits when possible in reverse
-> Christmas tree order i.e.
-> 
-> 	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
-> 	bool retry = true;
-> 	int rc, sig;
-> 
-> It is way more pleasing for the eye when you have to read the source
-> code.
+On Tue, Mar 17, 2020 at 3:40 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+>
+> Convert the sdhci-pxa binding to DT schema format using json-schema.
 
-I thought only netdev insisted on that :O
+Ignore what my bot said, I see you addressed that earlier in the series.
 
-Jason
+> At the same time, fix a couple of issues with the examples discovered by
+> the validation tool -- a semicolon instead of a comma and wrong node names.
+>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  .../devicetree/bindings/mmc/sdhci-pxa.txt     |  50 ---------
+>  .../devicetree/bindings/mmc/sdhci-pxa.yaml    | 101 ++++++++++++++++++
+>  2 files changed, 101 insertions(+), 50 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt b/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+> deleted file mode 100644
+> index 3d1b449d6097d..0000000000000
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-pxa.txt
+> +++ /dev/null
+> @@ -1,50 +0,0 @@
+> -* Marvell sdhci-pxa v2/v3 controller
+> -
+> -This file documents differences between the core properties in mmc.txt
+> -and the properties used by the sdhci-pxav2 and sdhci-pxav3 drivers.
+> -
+> -Required properties:
+> -- compatible: Should be "mrvl,pxav2-mmc", "mrvl,pxav3-mmc" or
+> -  "marvell,armada-380-sdhci".
+> -- reg:
+> -  * for "mrvl,pxav2-mmc" and "mrvl,pxav3-mmc", one register area for
+> -    the SDHCI registers.
+> -
+> -  * for "marvell,armada-380-sdhci", three register areas. The first
+> -    one for the SDHCI registers themselves, the second one for the
+> -    AXI/Mbus bridge registers of the SDHCI unit, the third one for the
+> -    SDIO3 Configuration register
+> -- reg names: should be "sdhci", "mbus", "conf-sdio3". only mandatory
+> -  for "marvell,armada-380-sdhci"
+> -- clocks: Array of clocks required for SDHCI; requires at least one for
+> -    I/O clock.
+> -- clock-names: Array of names corresponding to clocks property; shall be
+> -    "io" for I/O clock and "core" for optional core clock.
+> -
+> -Optional properties:
+> -- mrvl,clk-delay-cycles: Specify a number of cycles to delay for tuning.
+> -
+> -Example:
+> -
+> -sdhci@d4280800 {
+> -       compatible = "mrvl,pxav3-mmc";
+> -       reg = <0xd4280800 0x800>;
+> -       bus-width = <8>;
+> -       interrupts = <27>;
+> -       clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
+> -       clock-names = "io", "core";
+> -       non-removable;
+> -       mrvl,clk-delay-cycles = <31>;
+> -};
+> -
+> -sdhci@d8000 {
+> -       compatible = "marvell,armada-380-sdhci";
+> -       reg-names = "sdhci", "mbus", "conf-sdio3";
+> -       reg = <0xd8000 0x1000>,
+> -               <0xdc000 0x100>;
+> -               <0x18454 0x4>;
+> -       interrupts = <0 25 0x4>;
+> -       clocks = <&gateclk 17>;
+> -       clock-names = "io";
+> -       mrvl,clk-delay-cycles = <0x1F>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+> new file mode 100644
+> index 0000000000000..4ae0926ac294f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-pxa.yaml
+> @@ -0,0 +1,101 @@
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mmc/sdhci-pxa.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Marvell PXA SDHCI v2/v3 bindings
+> +
+> +maintainers:
+> +  - devicetree@vger.kernel.org
+> +
+> +allOf:
+> +  - $ref: mmc-controller.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: marvell,armada-380-sdhci
+> +    then:
+> +      properties:
+> +        regs:
+> +          minItems: 3
+> +          maxItems: 3
+
+Here, you just need minItems.
+
+> +        reg-names:
+> +          items:
+> +            - const: sdhci
+> +            - const: mbus
+> +            - const: conf-sdio3
+
+This should be under the main definition of 'reg-names' and then just
+'minItems: 3' here.
+
+> +      required:
+> +        - reg-names
+> +    else:
+> +      properties:
+> +        regs:
+> +          minItems: 1
+> +          maxItems: 1
+
+Just 'maxItems' is sufficient.
+
+> +        reg-names:
+> +          minItems: 1
+> +          maxItems: 1
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mrvl,pxav2-mmc
+> +      - mrvl,pxav3-mmc
+> +      - marvell,armada-380-sdhci
+> +
+> +  reg: true
+
+Here you should have:
+
+minItems: 1
+maxItems: 3
+
+> +
+> +  reg-names: true
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: io
+> +      - const: core
+> +
+> +  mrvl,clk-delay-cycles:
+> +    description: Specify a number of cycles to delay for tuning.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+
+No range of valid values?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/berlin2.h>
+> +    mmc@d4280800 {
+> +        compatible = "mrvl,pxav3-mmc";
+> +        reg = <0xd4280800 0x800>;
+> +        bus-width = <8>;
+> +        interrupts = <27>;
+> +        clocks = <&chip CLKID_SDIO1XIN>, <&chip CLKID_SDIO1>;
+> +        clock-names = "io", "core";
+> +        non-removable;
+> +        mrvl,clk-delay-cycles = <31>;
+> +    };
+> +  - |
+> +    mmc@d8000 {
+> +        compatible = "marvell,armada-380-sdhci";
+> +        reg-names = "sdhci", "mbus", "conf-sdio3";
+> +        reg = <0xd8000 0x1000>,
+> +              <0xdc000 0x100>,
+> +              <0x18454 0x4>;
+> +        interrupts = <0 25 0x4>;
+> +        clocks = <&gateclk 17>;
+> +        clock-names = "io";
+> +        mrvl,clk-delay-cycles = <0x1F>;
+> +    };
+> +
+> +...
+> --
+> 2.25.1
+>
