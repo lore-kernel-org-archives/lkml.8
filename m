@@ -2,134 +2,138 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B018AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A25C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 805C820775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E171C2076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584537765;
-	bh=CKEreA8CUxYmEbiSZgNzqX5KgmCpM63Ng+o18LXBl38=;
+	s=default; t=1584537808;
+	bh=MS122+MI8HvaX7QgTFw/2hADw9MT/NgSAmlg4rviq4Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kPRJ+iK6vZS4XihESW6iFg+6XK9XQlhCRx3S2grYh/wSi1LpADVtZUB2G+ol5EOmq
-	 Kb9JoDraE7EuyI2mf+hg4xWDmslMPe8zAlic7l2BLnOviyyyzhbRElS6Y6M4iRpA2h
-	 ooP+DHfvZNw8njMS+/O/yeM8xOO0eutPVSsFFTWY=
+	b=mhwUkCHETlLTOgQQEPywLLliRXErkj5SCbcXh2dos1ZMrI5a2xzK7gEkjv6TZAenA
+	 cQiIU6MgSnddHmKy4+og9rdwaMegV0CDXycFGO8QjjbbNUmuORG/rDTKqZDhgs3Iy0
+	 cFMcxE9+l0Kz9Sj8DAdW/i9SsN97HmBOTGP6DQ0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgCRNWo (ORCPT
+        id S1727063AbgCRNX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:22:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34220 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 09:23:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbgCRNWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:22:44 -0400
+        id S1726796AbgCRNX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 09:23:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00DA32076F;
-        Wed, 18 Mar 2020 13:22:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58F372076F;
+        Wed, 18 Mar 2020 13:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584537763;
-        bh=CKEreA8CUxYmEbiSZgNzqX5KgmCpM63Ng+o18LXBl38=;
+        s=default; t=1584537805;
+        bh=MS122+MI8HvaX7QgTFw/2hADw9MT/NgSAmlg4rviq4Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JorCG4C+ZGySiVuSu/z2+zdsj8FFbdzJ/Mp1MEZsbo/dyOHhwA/+Mw/1buc1hJZkx
-         lOo2bzLYuiL6RFah4WngRMZW5fEq0OyfOlc8GblgkDZG5603FFUj+eWm4DEUKSAsZi
-         joOSh8U3p8fA7Jx9In9dBPuZhzY5YPFNM1LDPeWI=
-Date:   Wed, 18 Mar 2020 14:22:41 +0100
+        b=GpMwXcj8lqA4iW5RxQBBrJVd+qMgBVPfjSNN4WJBRjsMU7d8Yk1aMNAv8JOXZCoNN
+         YNv1YD14IL/Pz+Dy5gs1Wdoc3pKe5v/9E+NQWPwpvjgve8Ok22jkKnZUeuiXyo1cr/
+         cgOv8pXsr6CD1wNmMGyIJxKcDtQAr4r3Jtp0FjWQ=
+Date:   Wed, 18 Mar 2020 14:23:22 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/13] coresight: cti: Initial CoreSight CTI Driver
-Message-ID: <20200318132241.GB2789508@kroah.com>
+Subject: Re: [PATCH 03/13] coresight: cti: Add sysfs access to program
+ function registers
+Message-ID: <20200318132322.GC2789508@kroah.com>
 References: <20200309161748.31975-1-mathieu.poirier@linaro.org>
- <20200309161748.31975-2-mathieu.poirier@linaro.org>
+ <20200309161748.31975-4-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200309161748.31975-2-mathieu.poirier@linaro.org>
+In-Reply-To: <20200309161748.31975-4-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 10:17:36AM -0600, Mathieu Poirier wrote:
+On Mon, Mar 09, 2020 at 10:17:38AM -0600, Mathieu Poirier wrote:
 > From: Mike Leach <mike.leach@linaro.org>
 > 
-> This introduces a baseline CTI driver and associated configuration files.
-> 
-> Uses the platform agnostic naming standard for CoreSight devices, along
-> with a generic platform probing method that currently supports device
-> tree descriptions, but allows for the ACPI bindings to be added once these
-> have been defined for the CTI devices.
-> 
-> Driver will probe for the device on the AMBA bus, and load the CTI driver
-> on CoreSight ID match to CTI IDs in tables.
-> 
-> Initial sysfs support for enable / disable provided.
-> 
-> Default CTI interconnection data is generated based on hardware
-> register signal counts, with no additional connection information.
+> Adds in sysfs programming support for the CTI function register sets.
+> Allows direct manipulation of channel / trigger association registers.
 > 
 > Signed-off-by: Mike Leach <mike.leach@linaro.org>
 > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> [Fixed abbreviation in title]
 > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
-You didn't cc: all of them to get review comments?  I've added it
-above...
-
-And signed-off-by implies reviewed-by.
-
-> +/* basic attributes */
-> +static ssize_t enable_show(struct device *dev,
-> +			   struct device_attribute *attr,
-> +			   char *buf)
+> ---
+>  drivers/hwtracing/coresight/Kconfig           |   9 +
+>  .../hwtracing/coresight/coresight-cti-sysfs.c | 361 ++++++++++++++++++
+>  drivers/hwtracing/coresight/coresight-cti.c   |  19 +
+>  drivers/hwtracing/coresight/coresight-cti.h   |   8 +
+>  4 files changed, 397 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+> index 45d3822c8c8c..83e841be1081 100644
+> --- a/drivers/hwtracing/coresight/Kconfig
+> +++ b/drivers/hwtracing/coresight/Kconfig
+> @@ -122,4 +122,13 @@ config CORESIGHT_CTI
+>  	  halt compared to disabling sources and sinks normally in driver
+>  	  software.
+>  
+> +config CORESIGHT_CTI_INTEGRATION_REGS
+> +	bool "Access CTI CoreSight Integration Registers"
+> +	depends on CORESIGHT_CTI
+> +	help
+> +	  This option adds support for the CoreSight integration registers on
+> +	  this device. The integration registers allow the exploration of the
+> +	  CTI trigger connections between this and other devices.These
+> +	  registers are not used in normal operation and can leave devices in
+> +	  an inconsistent state.
+>  endif
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> index 507f8eb487fe..f687e07b68b0 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> @@ -109,6 +109,361 @@ static struct attribute *coresight_cti_mgmt_attrs[] = {
+>  	NULL,
+>  };
+>  
+> +/* CTI low level programming registers */
+> +
+> +/*
+> + * Show a simple 32 bit value if enabled and powered.
+> + * If inaccessible & pcached_val not NULL then show cached value.
+> + */
+> +static ssize_t cti_reg32_show(struct device *dev, char *buf,
+> +			      u32 *pcached_val, int reg_offset)
 > +{
-> +	int enable_req;
-> +	bool enabled, powered;
+> +	u32 val = 0;
 > +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-> +	ssize_t size = 0;
+> +	struct cti_config *config = &drvdata->config;
 > +
-> +	enable_req = atomic_read(&drvdata->config.enable_req_count);
 > +	spin_lock(&drvdata->spinlock);
-> +	powered = drvdata->config.hw_powered;
-> +	enabled = drvdata->config.hw_enabled;
+> +	if ((reg_offset >= 0) && cti_active(config)) {
+> +		CS_UNLOCK(drvdata->base);
+> +		val = readl_relaxed(drvdata->base + reg_offset);
+> +		if (pcached_val)
+> +			*pcached_val = val;
+> +		CS_LOCK(drvdata->base);
+> +	} else if (pcached_val) {
+> +		val = *pcached_val;
+> +	}
 > +	spin_unlock(&drvdata->spinlock);
-> +
-> +	if (powered) {
-> +		size = scnprintf(buf, PAGE_SIZE, "cti %s; powered;\n",
-> +				 enabled ? "enabled" : "disabled");
-> +	} else {
-> +		size = scnprintf(buf, PAGE_SIZE, "cti %s; unpowered;\n",
-> +				 enable_req ? "enable req" : "disabled");
+> +	return scnprintf(buf, PAGE_SIZE, "%#x\n", val);
 
-sysfs files should never need scnprintf() as you "know" a single value
-will fit into a PAGE_SIZE.
+Fix all of the scnprintf() calls.
 
-And shouldn't this just be a single value, this looks like it is 2
-values in one line, that then needs to be parsed, is that to be
-expected?
+And again, no documentation?
 
-Where is the documentation for this new sysfs file?
+I'll stop here on this series, as much the same comments belong on the
+other patches in here.
 
-> +const struct attribute_group *coresight_cti_groups[] = {
-> +	&coresight_cti_group,
-> +	NULL,
-> +};
-
-ATTRIBUTE_GROUPS()?
-
-> +static struct amba_driver cti_driver = {
-> +	.drv = {
-> +		.name	= "coresight-cti",
-> +		.owner = THIS_MODULE,
-
-Aren't amba drivers smart enough to set this properly on their own?
-{sigh}
+thanks,
 
 greg k-h
