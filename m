@@ -2,160 +2,86 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE7AC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C5DC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E33D720775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 730272076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgCRUn3 (ORCPT
+        id S1727036AbgCRUn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:43:29 -0400
-Received: from mga14.intel.com ([192.55.52.115]:12608 "EHLO mga14.intel.com"
+        Wed, 18 Mar 2020 16:43:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:21315 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726647AbgCRUn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:43:28 -0400
-IronPort-SDR: Z5XBmzZupuY2pX0gsQZS1NCjXnDUu17ml90/Ca90Uup0PpF3OvykjqLVmz2tK36FMVYkVwty9P
- JnvbekD/CMVw==
+        id S1726647AbgCRUn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:43:59 -0400
+IronPort-SDR: h5LTaqX+TF5IyvHijae6FwuSsiAxqZr1GpuhdMCZaxMthmsBzCzMisDxUIGqQM2J+sv4AI5Q63
+ c1yG+I+xyg6w==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 13:43:24 -0700
-IronPort-SDR: E8lgAwVq5wdZduiyLz5G/pTtWPWcpTbsCS3o1RpV488drpCa3ZPiAo0kzYW+LgabRnEno0nyGZ
- QjNIVZeyMq7Q==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 13:43:58 -0700
+IronPort-SDR: hnAFtkem/0RpY0/6OofqBa2ypUL03MUicEUJuekqAX1X0jwCOC/oEcgHrsZwVtv8Sgd57+FRBi
+ a0SRj1QCHxsw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
-   d="scan'208";a="263509707"
-Received: from mbeldzik-mobl.ger.corp.intel.com (HELO localhost) ([10.252.55.127])
-  by orsmga002.jf.intel.com with ESMTP; 18 Mar 2020 13:43:20 -0700
-Date:   Wed, 18 Mar 2020 22:43:18 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     George Wilson <gcwilson@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Nayna Jain <nayna@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-        Linh Pham <phaml@us.ibm.com>
-Subject: Re: [PATCH v2] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
-Message-ID: <20200318204318.GA48352@linux.intel.com>
-References: <20200317214600.9561-1-gcwilson@linux.ibm.com>
+   d="scan'208";a="238294014"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.249.155.222]) ([10.249.155.222])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Mar 2020 13:43:55 -0700
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, curtis@malainey.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        liam.r.girdwood@linux.intel.com, broonie@kernel.org
+References: <20200318063022.GA116342@light.dominikbrodowski.net>
+ <41d0b2b5-6014-6fab-b6a2-7a7dbc4fe020@linux.intel.com>
+ <20200318123930.GA2433@light.dominikbrodowski.net>
+ <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
+ <20200318162029.GA3999@light.dominikbrodowski.net>
+ <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+Date:   Wed, 18 Mar 2020 21:43:54 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200317214600.9561-1-gcwilson@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200318192213.GA2987@light.dominikbrodowski.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 05:46:00PM -0400, George Wilson wrote:
-> tpm_ibmvtpm_send() can fail during PowerVM Live Partition Mobility resume
-> with an H_CLOSED return from ibmvtpm_send_crq().  The PAPR says, 'The
-> “partner partition suspended” transport event disables the associated CRQ
-> such that any H_SEND_CRQ hcall() to the associated CRQ returns H_Closed
-> until the CRQ has been explicitly enabled using the H_ENABLE_CRQ hcall.'
-> This patch adds a check in tpm_ibmvtpm_send() for an H_CLOSED return from
-> ibmvtpm_send_crq() and in that case calls tpm_ibmvtpm_resume() and
-> retries the ibmvtpm_send_crq() once.
+On 2020-03-18 20:22, Dominik Brodowski wrote:
+> On Wed, Mar 18, 2020 at 07:27:58PM +0100, Cezary Rojewski wrote:
+
+>>
+>> Due to pandemic I'm working remotely and right now won't be able to test
+>> audio quality so focusing on the stream==NULL issue. And thus we got to help
+>> each other out : )
 > 
-> Reported-by: Linh Pham <phaml@us.ibm.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> Signed-off-by: George Wilson <gcwilson@linux.ibm.com>
-> Tested-by: Linh Pham <phaml@us.ibm.com>
-
-I think this should have a fixes tag.
-
-> ---
->  drivers/char/tpm/tpm_ibmvtpm.c | 23 ++++++++++++++++++-----
->  1 file changed, 18 insertions(+), 5 deletions(-)
+> Sure, and thanks for taking a look at this!
 > 
-> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
-> index 78cc52690177..ba3bd503e080 100644
-> --- a/drivers/char/tpm/tpm_ibmvtpm.c
-> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /*
-> - * Copyright (C) 2012 IBM Corporation
-> + * Copyright (C) 2012-2020 IBM Corporation
->   *
->   * Author: Ashley Lai <ashleydlai@gmail.com>
->   *
-> @@ -25,6 +25,8 @@
->  #include "tpm.h"
->  #include "tpm_ibmvtpm.h"
->  
-> +static int tpm_ibmvtpm_resume(struct device *dev);
-> +
-
-Instead, reposition this function before tpm_ibmvtpm_send().
-
->  static const char tpm_ibmvtpm_driver_name[] = "tpm_ibmvtpm";
->  
->  static const struct vio_device_id tpm_ibmvtpm_device_table[] = {
-> @@ -147,6 +149,7 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
->  {
->  	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
->  	int rc, sig;
-> +	bool retry = true;
-
-Cosmetic: would be nice to have inits when possible in reverse
-Christmas tree order i.e.
-
-	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
-	bool retry = true;
-	int rc, sig;
-
-It is way more pleasing for the eye when you have to read the source
-code.
-
->  	if (!ibmvtpm->rtce_buf) {
->  		dev_err(ibmvtpm->dev, "ibmvtpm device is not ready\n");
-> @@ -179,18 +182,28 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
->  	 */
->  	ibmvtpm->tpm_processing_cmd = true;
->  
-> +again:
->  	rc = ibmvtpm_send_crq(ibmvtpm->vdev,
->  			IBMVTPM_VALID_CMD, VTPM_TPM_COMMAND,
->  			count, ibmvtpm->rtce_dma_handle);
-> +
-
-A dangling newline character.
-
->  	if (rc != H_SUCCESS) {
-> +		/*
-> +		 * H_CLOSED can be returned after LPM resume.  Call
-> +		 * tpm_ibmvtpm_resume() to re-enable the CRQ then retry
-> +		 * ibmvtpm_send_crq() once before failing.
-> +		 */
-> +		if (rc == H_CLOSED && retry) {
-> +			tpm_ibmvtpm_resume(ibmvtpm->dev);
-> +			retry = false;
-> +			goto again;
-> +		}
->  		dev_err(ibmvtpm->dev, "tpm_ibmvtpm_send failed rc=%d\n", rc);
-> -		rc = 0;
->  		ibmvtpm->tpm_processing_cmd = false;
-> -	} else
-> -		rc = 0;
-> +	}
->  
->  	spin_unlock(&ibmvtpm->rtce_lock);
-> -	return rc;
-> +	return 0;
->  }
->  
->  static void tpm_ibmvtpm_cancel(struct tpm_chip *chip)
-> -- 
-> 2.24.1
+>> Could you verify issue reproduces on 5.6.0-rc1 on your machine?
+> 
+> It reproduces on 5.6.0-rc1 + i915-bugfix. I'm trying to bisect it further in
+> the background, but that may take quite some time.
 > 
 
-/Jarkko
+Could you checkout v5.6-rc1 with following commit reverted:
+	ASoC: Intel: broadwell: change cpu_dai and platform components for SOF
+
+For my working v5.6-rc1 commit id is: 
+64df6afa0dab5eda95cc4cc2269e3d4e83b6b6ce.
+
+Czarek
