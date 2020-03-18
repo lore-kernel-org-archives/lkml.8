@@ -4,106 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5A2C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302E5C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 946F72076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C0B12076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:42:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vNF0650A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XXJS2Shz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgCRRmp (ORCPT
+        id S1727177AbgCRRmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:42:45 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50239 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgCRRme (ORCPT
+        Wed, 18 Mar 2020 13:42:50 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44856 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbgCRRmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:42:34 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z13so4455864wml.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:42:33 -0700 (PDT)
+        Wed, 18 Mar 2020 13:42:46 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y2so16027767wrn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:42:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=SXYvZUKw48+Ck5Wybv4+Su9NrVtZlX39A1lTy9a75F4=;
-        b=vNF0650AC6FtDq0LXoHq3IdM/z961LETQCOwPFrilDlesnvTcHlUvUpgnuuABKIu89
-         vcUt9IWuryOXKaIIf4sdK38VBEhbA84Uf1wM1Ank/fSw3I53Qb+9jY2DV8j1xFY8OGN/
-         ObbNP2s+SXbeM67fY7tDS1vbb9HW1f29Vu4EZp73FIwYevcVn1UMmPbGEGuhrSrMwBqD
-         5kS/3FeEtkU8QImMf92zP7edal013wOMP97NUr0R04F9fcw9ASn2N6uvZwPmslkj8hRh
-         BIUsxBjCfXT2ROupoCbtUz+IKCqWcDKOrAjao+tQlzpiRBrzQTm/fdJo+b7RyqFglVV1
-         R1BQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=f15f74ppT2riuw2oQxxbxtXEiKKBOa/p7uG21adrcxA=;
+        b=XXJS2ShzmjXsJivWn9bj5g4jBm4X7ktoDPO5+jLIGyehUbBbJIdNNU180AQAWTEzhQ
+         JXK/07q827hqZScxSeCL6lgNvUgpovOBGsCBCm8wkHMlRsK0fWB35tm88+rkerNkD2WM
+         jdXL/OTAyKuh8Y+RwugQpVj3uzjxkzMa7USuWlD7ChR6BZllxEp1XaulHO65tS7GeprE
+         tA1tXi9Y/r6mpo97fX4zfAeb/9weZlJ8R841vvrRyS3yQ27caQ0OItHO+VszhRzy20pV
+         JkU111VO0NRCB47QrykGY50pQ9kScKTB8zVm88yEVIOesdM/TzPczTo3KyWq0tp+wtPU
+         dsew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=SXYvZUKw48+Ck5Wybv4+Su9NrVtZlX39A1lTy9a75F4=;
-        b=QfssYPKNyLfRVQ21TMutqPiFy+lI1MEOnStMkIOA8J4py0QwOwAuAmUXFu/rTZvqnH
-         ntGTZDHvEIw1I0f7UfQ6uA6IBXY+A0899kcekaVxtLT0aOV5WPz4onXLY+VO2ZZE3zi/
-         ThHl6xbELPC9PsuNkCsyZzR+ZcRJiLBpehXptgyNWBYjTm1+rSDQ40YG0JzIWQu2nA53
-         G7uqFIIT3pVC2oNCbd9qR5xcpuPr3AFcYHccDr8XrLMRzhvcaXlQi9XDppvqOp8h+Ii0
-         aoRGogYb6cYbiXPrBMp3ek7aPtmMfcqIJOXyzrkg4+5/8ZI1z5IsPpVWL4X+4j0YNfsi
-         Z2qw==
-X-Gm-Message-State: ANhLgQ1iYdcYgAphQkY/RbFfU34PZQ7nUK8MMuhwdLa0wpjjDhMQm9tT
-        2z6NGyHWaXX3PABK+niBj7Tngw==
-X-Google-Smtp-Source: ADFU+vtKJ52lknJzAyioRURlbAqNI2fcsTUsrCdYnAxXI6ZEw5gSqT4pj0RiVYMMWskZDNC0qn/69A==
-X-Received: by 2002:a1c:25c5:: with SMTP id l188mr6650191wml.105.1584553352549;
-        Wed, 18 Mar 2020 10:42:32 -0700 (PDT)
+         :references;
+        bh=f15f74ppT2riuw2oQxxbxtXEiKKBOa/p7uG21adrcxA=;
+        b=qOqH/sAfvY+mdFqTUIxdKVN7TKXooPCr/L8j8IWUEgdL1x3/jmKdox65UzasOrRnIA
+         /YKW1jHAGpozKVrnkr+ewBStcIiZg26JhGNszBJLTEFY4g/Pvbgw7Z6OUc1hezmnUSkB
+         +ibbZVGCxgdrve8y3iIbo7ALdc/vGYq/JPtwW/KKG4DQkFftxroayFXaR3OS8b/CKvuo
+         79GNaBEsy/PUxTW+TqFs1AP/3QuPY7I9yAEKpeHiCicQ31Q+7Ckyjd4u04FdhlcAjzle
+         tHSksVOd8COatjqJ4bez/ZZStNQJjbJC8B6t1YBnd0iG3OF/ftOeK13AKfEnfJfpOTMp
+         emNA==
+X-Gm-Message-State: ANhLgQ0YwzYT66r1qrYdH9ul8Yo0d02jSKNPSb0WSxxiLNE4u2Q7V1tv
+        GbnW8+znUthTjf5woUH3vLZJs/u0j6c=
+X-Google-Smtp-Source: ADFU+vvb7l9m2SU8dH5i3a9GXPWS8qQJQPZaAqIvAMxo7bs9mWP8zyQbhIgly/ph0vNXGIZkzD9DLg==
+X-Received: by 2002:adf:bbcd:: with SMTP id z13mr6677074wrg.389.1584553364567;
+        Wed, 18 Mar 2020 10:42:44 -0700 (PDT)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:5d64:ea6:49bd:69d7])
-        by smtp.gmail.com with ESMTPSA id r3sm3787212wrm.35.2020.03.18.10.42.31
+        by smtp.gmail.com with ESMTPSA id r3sm3787212wrm.35.2020.03.18.10.42.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 10:42:32 -0700 (PDT)
+        Wed, 18 Mar 2020 10:42:43 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>, Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS)
-Subject: [PATCH 08/21] dt-bindings: timer: Add X1000 bindings.
-Date:   Wed, 18 Mar 2020 18:41:18 +0100
-Message-Id: <20200318174131.20582-8-daniel.lezcano@linaro.org>
+        afzal mohammed <afzal.mohd.ma@gmail.com>
+Subject: [PATCH 11/21] clocksource/drivers/timer-cs5535: Request irq with non-NULL dev_id
+Date:   Wed, 18 Mar 2020 18:41:21 +0100
+Message-Id: <20200318174131.20582-11-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200318174131.20582-1-daniel.lezcano@linaro.org>
 References: <e6cd8adf-60df-437a-003f-58e3403e4697@linaro.org>
  <20200318174131.20582-1-daniel.lezcano@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+From: afzal mohammed <afzal.mohd.ma@gmail.com>
 
-Add the timer bindings for the X1000 Soc from Ingenic.
+Recently all usages of setup_irq() was replaced by request_irq().
+request_irq() does a few sanity checks that were not done in
+setup_irq(), if they fail irq registration will fail. One of the check
+is to ensure that non-NULL dev_id is passed in the case of shared irq.
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Fix it by passing non-NULL dev_id while registering the shared irq.
+
+Fixes: cc2550b421aa ("clocksource: Replace setup_irq() by request_irq()")
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1582100974-129559-3-git-send-email-zhouyanjie@wanyeetech.com
+Link: https://lore.kernel.org/r/20200312064817.19000-1-afzal.mohd.ma@gmail.com
 ---
- Documentation/devicetree/bindings/timer/ingenic,tcu.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clocksource/timer-cs5535.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-index 0b63cebc5f45..91f704951845 100644
---- a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-+++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-@@ -10,6 +10,7 @@ Required properties:
-   * ingenic,jz4740-tcu
-   * ingenic,jz4725b-tcu
-   * ingenic,jz4770-tcu
-+  * ingenic,x1000-tcu
-   followed by "simple-mfd".
- - reg: Should be the offset/length value corresponding to the TCU registers
- - clocks: List of phandle & clock specifiers for clocks external to the TCU.
+diff --git a/drivers/clocksource/timer-cs5535.c b/drivers/clocksource/timer-cs5535.c
+index 51ea0509fb25..d47acfe848ae 100644
+--- a/drivers/clocksource/timer-cs5535.c
++++ b/drivers/clocksource/timer-cs5535.c
+@@ -133,6 +133,7 @@ static irqreturn_t mfgpt_tick(int irq, void *dev_id)
+ 
+ static int __init cs5535_mfgpt_init(void)
+ {
++	unsigned long flags = IRQF_NOBALANCING | IRQF_TIMER | IRQF_SHARED;
+ 	struct cs5535_mfgpt_timer *timer;
+ 	int ret;
+ 	uint16_t val;
+@@ -152,9 +153,7 @@ static int __init cs5535_mfgpt_init(void)
+ 	}
+ 
+ 	/* And register it with the kernel */
+-	ret = request_irq(timer_irq, mfgpt_tick,
+-			  IRQF_NOBALANCING | IRQF_TIMER | IRQF_SHARED,
+-			  DRV_NAME, NULL);
++	ret = request_irq(timer_irq, mfgpt_tick, flags, DRV_NAME, timer);
+ 	if (ret) {
+ 		printk(KERN_ERR DRV_NAME ": Unable to set up the interrupt.\n");
+ 		goto err_irq;
 -- 
 2.17.1
 
