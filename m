@@ -2,286 +2,95 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB76C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA48C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637A920773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF5C20773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:32:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="POMY8fPb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PEyCbtua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgCROb4 (ORCPT
+        id S1727135AbgCROca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:31:56 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34796 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgCRObz (ORCPT
+        Wed, 18 Mar 2020 10:32:30 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:41533 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727069AbgCROc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:31:55 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a23so11278636plm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 07:31:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DmmTGaSjeqq+jzq5ZT2MLYTKtFgmSl1BRjYtNldMmbI=;
-        b=POMY8fPbUNV/jr8If7/jHJFueLIaZ+73yXyvmAdqo6hIwl6cREome2vcdULSitcYUu
-         wTq/HLTirVksGjI4TLE02tebYJ6w9Oodng0qO/qFLnTCE2uTm8rDWrnOu+7hhwp0TCM5
-         FVOlxqatgLivXFZwrBmDWs0/5p7ktckk/apkuCtPF+fV4CZllBWUaMEHrehip48C3Xx5
-         BDINY4mAMZzm4Iru6tBFiwzaOmslDDvt0OPKZ3WtlkYGqcFSfWLsIWMsCHPgqpTuBXv7
-         b44N0yjhZHoYxIKp4SICquSzwE9NQHG61M/9Uh371XllKBh7Ad0adwVUOnvD6qSg5ETN
-         +7aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DmmTGaSjeqq+jzq5ZT2MLYTKtFgmSl1BRjYtNldMmbI=;
-        b=LP2xkYnS+hQMhTrtMm7zpbUVsoRDysry3NLMUBlzEmRw+3WGSALUkWi3qGXKgQNw5V
-         AHh0JoeE0E/XeIcUzyz4IZXxfrLGyxeIyWBQ8Vb5za3xHapS+Cgnykfkjp2WeCM7tUlc
-         Wq2cSB85nROm2npW3cEbc9UTODE4cfUa9ExbULpuMGk2s1hTjs6aUbAdcw72JeXXrbkq
-         fqMCw8+ADxDcckctdOJzMaMv7NiYKpAyQrOF+q2pl0vV3r6V8OFoWR1eFHQ5UaHjYDTj
-         EQoJ7Qpz7JMJwWvBTHnPN7J0ePJFaW4jdaHoIGVcI1bmt/ckl5NMAjYBTleXU43WBDIf
-         aSzw==
-X-Gm-Message-State: ANhLgQ155w11elXtOOrJaK+YGyFOL4ElBBNXGTM/mJKXK97QQy/ZRcxt
-        29KKnjDKnwvQ/R640F4VoZNw
-X-Google-Smtp-Source: ADFU+vsjma8hHv5QJXOF+7qzjW6QaoJynz5FZg2WXJunlvy1G4jiBx8etuUAd1vkNC1K3SC94iP3Zw==
-X-Received: by 2002:a17:90a:2109:: with SMTP id a9mr4916326pje.12.1584541914308;
-        Wed, 18 Mar 2020 07:31:54 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:199:25eb:1005:91b8:c500:d4b4])
-        by smtp.gmail.com with ESMTPSA id 19sm6237036pgx.63.2020.03.18.07.31.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Mar 2020 07:31:53 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 20:01:45 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Jeffrey Hugo <jhugo@codeaurora.org>, arnd@arndb.de,
-        smohanad@codeaurora.org, kvalo@codeaurora.org,
-        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 03/16] bus: mhi: core: Add support for registering MHI
- client drivers
-Message-ID: <20200318143145.GA12341@Mani-XPS-13-9360>
-References: <20200220095854.4804-1-manivannan.sadhasivam@linaro.org>
- <20200220095854.4804-4-manivannan.sadhasivam@linaro.org>
- <20200318133626.GA2801580@kroah.com>
- <db612e12-0033-31cc-60fc-62e45dda4342@codeaurora.org>
- <20200318140034.GA2805201@kroah.com>
- <20200318142312.GA11494@Mani-XPS-13-9360>
- <20200318142730.GB2807628@kroah.com>
+        Wed, 18 Mar 2020 10:32:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584541948;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=O4Lls9UoDb9uKTNqm5ZPP3fEFfUNHwPy6zZuzCAlNcw=;
+        b=PEyCbtuaeC8fe66Nm9su9fSJRqQBFXK094Np0i1G33i5uyqOWMniIInaD64Vf/ypPmfViB
+        miq+x0j0Y6nUTAo9rgFdPSW4zUTOocVMwR/smaHdJiPVbLzd7Au+fKveQHr0ppLtVvnYOp
+        6j6F4ZwumRPf2AskaZEaGScHo/MwXd8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-202-ftqBYlSBOgiVh8uJpfOpng-1; Wed, 18 Mar 2020 10:32:25 -0400
+X-MC-Unique: ftqBYlSBOgiVh8uJpfOpng-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 78E1E800D50;
+        Wed, 18 Mar 2020 14:32:22 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-120-114.rdu2.redhat.com [10.10.120.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D818B5C1D8;
+        Wed, 18 Mar 2020 14:32:19 +0000 (UTC)
+Subject: Re: [PATCH v4 2/4] KEYS: Remove __user annotation from rxrpc_read()
+To:     David Howells <dhowells@redhat.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+References: <20200317194140.6031-3-longman@redhat.com>
+ <20200317194140.6031-1-longman@redhat.com>
+ <2831786.1584519784@warthog.procyon.org.uk>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <fc537b1b-36f5-eac7-111b-e50f41fd01ff@redhat.com>
+Date:   Wed, 18 Mar 2020 10:32:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318142730.GB2807628@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <2831786.1584519784@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 03:27:30PM +0100, Greg KH wrote:
-> On Wed, Mar 18, 2020 at 07:53:12PM +0530, Manivannan Sadhasivam wrote:
-> > Hi Greg,
-> > 
-> > On Wed, Mar 18, 2020 at 03:00:34PM +0100, Greg KH wrote:
-> > > On Wed, Mar 18, 2020 at 07:54:30AM -0600, Jeffrey Hugo wrote:
-> > > > On 3/18/2020 7:36 AM, Greg KH wrote:
-> > > > > On Thu, Feb 20, 2020 at 03:28:41PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > This commit adds support for registering MHI client drivers with the
-> > > > > > MHI stack. MHI client drivers binds to one or more MHI devices inorder
-> > > > > > to sends and receive the upper-layer protocol packets like IP packets,
-> > > > > > modem control messages, and diagnostics messages over MHI bus.
-> > > > > > 
-> > > > > > This is based on the patch submitted by Sujeev Dias:
-> > > > > > https://lkml.org/lkml/2018/7/9/987
-> > > > > > 
-> > > > > > Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
-> > > > > > Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
-> > > > > > [mani: splitted and cleaned up for upstream]
-> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > > Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> > > > > > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> > > > > > ---
-> > > > > >   drivers/bus/mhi/core/init.c | 149 ++++++++++++++++++++++++++++++++++++
-> > > > > >   include/linux/mhi.h         |  39 ++++++++++
-> > > > > >   2 files changed, 188 insertions(+)
-> > > > > > 
-> > > > > > diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-> > > > > > index 6f24c21284ec..12e386862b3f 100644
-> > > > > > --- a/drivers/bus/mhi/core/init.c
-> > > > > > +++ b/drivers/bus/mhi/core/init.c
-> > > > > > @@ -374,8 +374,157 @@ struct mhi_device *mhi_alloc_device(struct mhi_controller *mhi_cntrl)
-> > > > > >   	return mhi_dev;
-> > > > > >   }
-> > > > > > +static int mhi_driver_probe(struct device *dev)
-> > > > > > +{
-> > > > > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
-> > > > > > +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-> > > > > > +	struct device_driver *drv = dev->driver;
-> > > > > > +	struct mhi_driver *mhi_drv = to_mhi_driver(drv);
-> > > > > > +	struct mhi_event *mhi_event;
-> > > > > > +	struct mhi_chan *ul_chan = mhi_dev->ul_chan;
-> > > > > > +	struct mhi_chan *dl_chan = mhi_dev->dl_chan;
-> > > > > > +
-> > > > > > +	if (ul_chan) {
-> > > > > > +		/*
-> > > > > > +		 * If channel supports LPM notifications then status_cb should
-> > > > > > +		 * be provided
-> > > > > > +		 */
-> > > > > > +		if (ul_chan->lpm_notify && !mhi_drv->status_cb)
-> > > > > > +			return -EINVAL;
-> > > > > > +
-> > > > > > +		/* For non-offload channels then xfer_cb should be provided */
-> > > > > > +		if (!ul_chan->offload_ch && !mhi_drv->ul_xfer_cb)
-> > > > > > +			return -EINVAL;
-> > > > > > +
-> > > > > > +		ul_chan->xfer_cb = mhi_drv->ul_xfer_cb;
-> > > > > > +	}
-> > > > > > +
-> > > > > > +	if (dl_chan) {
-> > > > > > +		/*
-> > > > > > +		 * If channel supports LPM notifications then status_cb should
-> > > > > > +		 * be provided
-> > > > > > +		 */
-> > > > > > +		if (dl_chan->lpm_notify && !mhi_drv->status_cb)
-> > > > > > +			return -EINVAL;
-> > > > > > +
-> > > > > > +		/* For non-offload channels then xfer_cb should be provided */
-> > > > > > +		if (!dl_chan->offload_ch && !mhi_drv->dl_xfer_cb)
-> > > > > > +			return -EINVAL;
-> > > > > > +
-> > > > > > +		mhi_event = &mhi_cntrl->mhi_event[dl_chan->er_index];
-> > > > > > +
-> > > > > > +		/*
-> > > > > > +		 * If the channel event ring is managed by client, then
-> > > > > > +		 * status_cb must be provided so that the framework can
-> > > > > > +		 * notify pending data
-> > > > > > +		 */
-> > > > > > +		if (mhi_event->cl_manage && !mhi_drv->status_cb)
-> > > > > > +			return -EINVAL;
-> > > > > > +
-> > > > > > +		dl_chan->xfer_cb = mhi_drv->dl_xfer_cb;
-> > > > > > +	}
-> > > > > > +
-> > > > > > +	/* Call the user provided probe function */
-> > > > > > +	return mhi_drv->probe(mhi_dev, mhi_dev->id);
-> > > > > > +}
-> > > > > > +
-> > > > > > +static int mhi_driver_remove(struct device *dev)
-> > > > > > +{
-> > > > > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
-> > > > > > +	struct mhi_driver *mhi_drv = to_mhi_driver(dev->driver);
-> > > > > > +	struct mhi_chan *mhi_chan;
-> > > > > > +	enum mhi_ch_state ch_state[] = {
-> > > > > > +		MHI_CH_STATE_DISABLED,
-> > > > > > +		MHI_CH_STATE_DISABLED
-> > > > > > +	};
-> > > > > > +	int dir;
-> > > > > > +
-> > > > > > +	/* Skip if it is a controller device */
-> > > > > > +	if (mhi_dev->dev_type == MHI_DEVICE_CONTROLLER)
-> > > > > > +		return 0;
-> > > > > > +
-> > > > > > +	/* Reset both channels */
-> > > > > > +	for (dir = 0; dir < 2; dir++) {
-> > > > > > +		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
-> > > > > > +
-> > > > > > +		if (!mhi_chan)
-> > > > > > +			continue;
-> > > > > > +
-> > > > > > +		/* Wake all threads waiting for completion */
-> > > > > > +		write_lock_irq(&mhi_chan->lock);
-> > > > > > +		mhi_chan->ccs = MHI_EV_CC_INVALID;
-> > > > > > +		complete_all(&mhi_chan->completion);
-> > > > > > +		write_unlock_irq(&mhi_chan->lock);
-> > > > > > +
-> > > > > > +		/* Set the channel state to disabled */
-> > > > > > +		mutex_lock(&mhi_chan->mutex);
-> > > > > > +		write_lock_irq(&mhi_chan->lock);
-> > > > > > +		ch_state[dir] = mhi_chan->ch_state;
-> > > > > > +		mhi_chan->ch_state = MHI_CH_STATE_SUSPENDED;
-> > > > > > +		write_unlock_irq(&mhi_chan->lock);
-> > > > > > +
-> > > > > > +		mutex_unlock(&mhi_chan->mutex);
-> > > > > > +	}
-> > > > > > +
-> > > > > > +	mhi_drv->remove(mhi_dev);
-> > > > > > +
-> > > > > > +	/* De-init channel if it was enabled */
-> > > > > > +	for (dir = 0; dir < 2; dir++) {
-> > > > > > +		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
-> > > > > > +
-> > > > > > +		if (!mhi_chan)
-> > > > > > +			continue;
-> > > > > > +
-> > > > > > +		mutex_lock(&mhi_chan->mutex);
-> > > > > > +
-> > > > > > +		mhi_chan->ch_state = MHI_CH_STATE_DISABLED;
-> > > > > > +
-> > > > > > +		mutex_unlock(&mhi_chan->mutex);
-> > > > > > +	}
-> > > > > > +
-> > > > > > +	return 0;
-> > > > > > +}
-> > > > > > +
-> > > > > > +int mhi_driver_register(struct mhi_driver *mhi_drv)
-> > > > > > +{
-> > > > > > +	struct device_driver *driver = &mhi_drv->driver;
-> > > > > > +
-> > > > > > +	if (!mhi_drv->probe || !mhi_drv->remove)
-> > > > > > +		return -EINVAL;
-> > > > > > +
-> > > > > > +	driver->bus = &mhi_bus_type;
-> > > > > > +	driver->probe = mhi_driver_probe;
-> > > > > > +	driver->remove = mhi_driver_remove;
-> > > > > > +
-> > > > > > +	return driver_register(driver);
-> > > > > > +}
-> > > > > > +EXPORT_SYMBOL_GPL(mhi_driver_register);
-> > > > > 
-> > > > > You don't care about module owners of the driver?  Odd :(
-> > > > > 
-> > > > > (hint, you probably should...)
-> > > > > 
-> > > > > greg k-h
-> > > > > 
-> > > > 
-> > > > For my own education, can you please clarify your comment?  I'm not sure
-> > > > that I understand the context of what you are saying (ie why is this export
-> > > > a possible problem?).
-> > > 
-> > > Sorry, it didn't have to do with the export, it had to do with the fact
-> > > that your driver_register() function does not pass in the owner of the
-> > > module of the driver, like almost all other subsystems do.  That way you
-> > > can try to protect the module from being unloaded if it has files open
-> > > assigned to it.
-> > > 
-> > > If you don't have any userspace accesses like that, to the driver, then
-> > > nevermind, all is fine :)
-> > > 
-> > 
-> > This is not needed right now but I'll fix this anyway to avoid issues in
-> > future :)
-> > 
-> > Btw, may I know the status of this series? Do you have any more comments
-> > or do you happen to wait for more reviews?
-> 
-> It would be nice to get other reviews, but other than what I noticed
-> above, it looks sane to me.  Am I the one supposed to take these
-> patches?
-> 
+On 3/18/20 4:23 AM, David Howells wrote:
+> Patch 2 and 3 need to be rolled into patch 1 otherwise sparse will give
+> warnings about mismatches in address spaces on patch 1.
+>
+> Thanks,
+> David
 
-I guess so ;) Do you think I need to sent another revision incorporating
-the module owner fix or it can come as an incremental patch? Btw, I do
-have few more in pipeline :)
+I separated them because they spans different domain. Sure, I will
+repost it to merge the first three.
 
-Thanks,
-Mani
+Cheers,
+Longman
 
-> thanks,
-> 
-> greg k-h
