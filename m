@@ -2,162 +2,125 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32F1C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFB3C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C42C220724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D02C20773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:49:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uGbqiKgB"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jJIEU+TN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgCRNrU (ORCPT
+        id S1727052AbgCRNtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:47:20 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38308 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbgCRNrU (ORCPT
+        Wed, 18 Mar 2020 09:49:14 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34958 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726857AbgCRNtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:47:20 -0400
-Received: by mail-qk1-f195.google.com with SMTP id h14so38734017qke.5
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 06:47:19 -0700 (PDT)
+        Wed, 18 Mar 2020 09:49:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id m3so3456113wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 06:49:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ef1D/U85592FyqWL6PuhxvAtbNbUDjLIuJcIAna7dEU=;
-        b=uGbqiKgBUG7nuKMTIdv8jEQTLX5zSDUquL6p2L6A6NfYuqA/QW+HWI7egj93ai7/PB
-         jE2IB5a4vs4r6oWDLGB20UT3E1lKTTJsnsx45nm8kZMr0so/wEAB3a3QtBIX/7P60sRK
-         /yJJ3FJj36i0hSOxKkO5imUQXDZZRAwe30dogGLH6NCMUOo78d+DVKF41WcDtwKTfury
-         Oy4PdOCNb5B564kQF9P3YDbBUU1KzTHzXNeTzgpmey3HmZZo4F1vjuFl+3YTlV63qhXv
-         BxoJWEBps13e/IcSVwPrCPCx/TdkQyIxsAljvKgaVIhBviNR6lS5tVMorQT9HqNV+XJS
-         jYMA==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nhjSzraoBOeWPVT3LQo7Ng/qwFROJg9Ku7xc0QPbKjI=;
+        b=jJIEU+TNBKOQ4016fYVaddPzkMst3rQ/3p4Xx3wFIZf72OaeRdXqtmSGdKlWghdzNC
+         VpteDO5ULaAuOLTMOG3h73tSIo+42mAS/8SC2fcV9B1nVUpFMsICMGHTsKjANBqMSymI
+         vUdJNQpr3MUfg1nQcTUJV3WCigBgClEDXWlLI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ef1D/U85592FyqWL6PuhxvAtbNbUDjLIuJcIAna7dEU=;
-        b=mxq/Mfw67HUxJ2jE2RvTdGN5d8aC6qdbQOPCiqaUC4DFHgQdnTcgc3FdPi6rGDiOiB
-         39am1cEY8ixYH8UWtzGlots9VztjoH9aJ0SgnsPBOONMr3sWrpbFB36/rGEpK/PPYzL6
-         sG7G7yQGjlaY5GQxbuKpiSLro7t7e1DWy0Xp5MZPO/JFfu6x0tLLxXCuetNNEV0yuCT4
-         TXhYBu5v933PYOBesxCIGswm9gr+ilRY62YUCEAidAtyP5va9lpgaPr0waHZ83NxoebY
-         CJ7wYaARR6CBFkTgbRbH2foGGqQY/IScxVngIL/Po7vhaBalqeZM0+cYHr8mMybYb4bS
-         muIA==
-X-Gm-Message-State: ANhLgQ1fhYY9MVqfimiAy26YotdVpIqj4yqUxuBisv29HeKTdcatCfBb
-        GGaDuuLXuCmC/9+0O5tjykg=
-X-Google-Smtp-Source: ADFU+vsgFC5AeU7VvAuf5OJd4G0TmyaKlofklu0nZT1KZUsegSaJqCj75156VmvQorBTBpvXZResZw==
-X-Received: by 2002:a37:9542:: with SMTP id x63mr4274685qkd.82.1584539239429;
-        Wed, 18 Mar 2020 06:47:19 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id u13sm4089617qku.92.2020.03.18.06.47.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=nhjSzraoBOeWPVT3LQo7Ng/qwFROJg9Ku7xc0QPbKjI=;
+        b=aSoTkM+tgi9BIYinM271Fu1Uja4sCKqFhDtpspvAZd+Rca9gC7Ha+7IbtbwBMLYwtd
+         H+lBMuDg5xMyaiSxl1TyWWsJvSxGY2PdSm1AwYawzw1FM7Xfz2ddnLbHFkyJjTOC0Sd7
+         aMrsxTBXNM5/vezGTRQVIMwstxc+EBCFzjz+nIU5heg500l8Tb30wspocdwnS6VspZBY
+         FtqOnPXyClOVCNR59+OHkCnFfeX4UEiRwxE3nb7m+WBdluV3nG+H2Ai81kFLt1wWhqhc
+         DaURIhOWqqXMBjZveuY5gE1wF+N6X5p3oHKzI+5uLPSkmFM6ojysGhYB6j+4ZHYOSpsB
+         ZWOg==
+X-Gm-Message-State: ANhLgQ2SAcRVq4IQ/gApAAYQAiE9ajdFPpEK2IaqT6RRa5EZ93aZ/ekh
+        QBURUiOzMeXgfRRd9bDXbAzuAA==
+X-Google-Smtp-Source: ADFU+vs5ilQvxkbVvgYWAdqliMhxQa+MQFIS4q+2x/7fT0/rVzc8bp98oG9vOKtAIrgiSeNYnlDm7g==
+X-Received: by 2002:a1c:a950:: with SMTP id s77mr5281804wme.176.1584539351962;
+        Wed, 18 Mar 2020 06:49:11 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id t1sm9719981wrq.36.2020.03.18.06.49.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 06:47:18 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A2703404E4; Wed, 18 Mar 2020 10:47:15 -0300 (-03)
-Date:   Wed, 18 Mar 2020 10:47:15 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] perf parse-events: fix 3 use after frees
-Message-ID: <20200318134715.GC11531@kernel.org>
-References: <20200314170356.62914-1-irogers@google.com>
- <20200318102827.GD821557@krava>
+        Wed, 18 Mar 2020 06:49:10 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 14:49:09 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Joe Perches <joe@perches.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] drm: drm_vm: Use fallthrough;
+Message-ID: <20200318134909.GW2363188@phenom.ffwll.local>
+Mail-Followup-To: Joe Perches <joe@perches.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1584040050.git.joe@perches.com>
+ <398db73cdc8a584fd7f34f5013c04df13ba90f64.1584040050.git.joe@perches.com>
+ <20200317164806.GO2363188@phenom.ffwll.local>
+ <623eb1bc61951ed3c68a9224b9aa99a25e763913.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200318102827.GD821557@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <623eb1bc61951ed3c68a9224b9aa99a25e763913.camel@perches.com>
+X-Operating-System: Linux phenom 5.3.0-3-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Mar 18, 2020 at 11:28:27AM +0100, Jiri Olsa escreveu:
-> On Sat, Mar 14, 2020 at 10:03:56AM -0700, Ian Rogers wrote:
-> > Reproducible with a clang asan build and then running perf test in
-> > particular 'Parse event definition strings'.
+On Tue, Mar 17, 2020 at 03:13:29PM -0700, Joe Perches wrote:
+> On Tue, 2020-03-17 at 17:48 +0100, Daniel Vetter wrote:
+> > On Thu, Mar 12, 2020 at 12:17:12PM -0700, Joe Perches wrote:
+> > > Convert /* fallthrough */ style comments to fallthrough;
+> > > 
+> > > Convert the various uses of fallthrough comments to fallthrough;
+> > > 
+> > > Done via script
+> > > Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
+> > > 
+> > > And by hand:
+> > > 
+> > > This file has a fallthrough comment outside of an #ifdef block
+> > > that causes gcc to emit a warning if converted in-place.
+> > > 
+> > > So move the new fallthrough; inside the containing #ifdef/#endif too.
+> > > 
+> > > Signed-off-by: Joe Perches <joe@perches.com>
 > > 
-> > v2 frees the evsel->pmu_name avoiding a memory leak.
+> > Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 > > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > I'm assuming this all lands through a special pull? Or should I apply
+> > this?
 > 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-Thanks, applied.
-
-- Arnaldo
- 
-> thanks,
-> jirka
+> Hi Daniel.
 > 
-> > ---
-> >  tools/perf/util/evsel.c        | 1 +
-> >  tools/perf/util/parse-events.c | 6 +++---
-> >  2 files changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 816d930d774e..15ccd193483f 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -1287,6 +1287,7 @@ void perf_evsel__exit(struct evsel *evsel)
-> >  	perf_thread_map__put(evsel->core.threads);
-> >  	zfree(&evsel->group_name);
-> >  	zfree(&evsel->name);
-> > +	zfree(&evsel->pmu_name);
-> >  	perf_evsel__object.fini(evsel);
-> >  }
-> >  
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> > index a14995835d85..593b6b03785d 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -1449,7 +1449,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
-> >  		evsel = __add_event(list, &parse_state->idx, &attr, NULL, pmu, NULL,
-> >  				    auto_merge_stats, NULL);
-> >  		if (evsel) {
-> > -			evsel->pmu_name = name;
-> > +			evsel->pmu_name = name ? strdup(name) : NULL;
-> >  			evsel->use_uncore_alias = use_uncore_alias;
-> >  			return 0;
-> >  		} else {
-> > @@ -1497,7 +1497,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
-> >  		evsel->snapshot = info.snapshot;
-> >  		evsel->metric_expr = info.metric_expr;
-> >  		evsel->metric_name = info.metric_name;
-> > -		evsel->pmu_name = name;
-> > +		evsel->pmu_name = name ? strdup(name) : NULL;
-> >  		evsel->use_uncore_alias = use_uncore_alias;
-> >  		evsel->percore = config_term_percore(&evsel->config_terms);
-> >  	}
-> > @@ -1547,7 +1547,7 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
-> >  				if (!parse_events_add_pmu(parse_state, list,
-> >  							  pmu->name, head,
-> >  							  true, true)) {
-> > -					pr_debug("%s -> %s/%s/\n", config,
-> > +					pr_debug("%s -> %s/%s/\n", str,
-> >  						 pmu->name, alias->str);
-> >  					ok++;
-> >  				}
-> > -- 
-> > 2.25.1.481.gfbce0eb801-goog
-> > 
+> I think you should apply this.
 > 
+> The idea here is to allow a scripted conversion at some
+> point and this patch is necessary to avoid new compiler
+> warnings after running the script.
 
+Ok, put into the queue but missed the 5.7 feature freeze for drm so 5.8
+probably.
+
+Thanks, Daniel
 -- 
-
-- Arnaldo
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
