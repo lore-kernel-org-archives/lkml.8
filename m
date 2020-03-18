@@ -2,25 +2,25 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FD3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E3DC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6FC820768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA7D20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:00:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgCRQAH (ORCPT
+        id S1727091AbgCRQA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:00:07 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52540 "EHLO huawei.com"
+        Wed, 18 Mar 2020 12:00:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52592 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726473AbgCRQAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 12:00:07 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6DE90C19703925D4B0E4;
+        id S1726765AbgCRQA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 12:00:27 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A2418FC2FB6FF7DC0FC8;
         Wed, 18 Mar 2020 23:59:49 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
@@ -32,12 +32,10 @@ CC:     <okaya@kernel.org>, <bhelgaas@google.com>,
         <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
         <olof@lixom.net>, <jiaxun.yang@flygoat.com>,
         "John Garry" <john.garry@huawei.com>
-Subject: [PATCH 2/3] logic_pio: Improve macro argument name
-Date:   Wed, 18 Mar 2020 23:55:34 +0800
-Message-ID: <1584546935-75393-3-git-send-email-john.garry@huawei.com>
+Subject: [PATCH 0/3] io.h, logic_pio: Allow barriers for inX() and outX() be overridden
+Date:   Wed, 18 Mar 2020 23:55:32 +0800
+Message-ID: <1584546935-75393-1-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1584546935-75393-1-git-send-email-john.garry@huawei.com>
-References: <1584546935-75393-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.58]
@@ -47,78 +45,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Macro argument "bw" is used for building byte, word, and long-based
-functions. Use "bwl" instead, to include long.
+Since commits a7851aa54c0c ("io: change outX() to have their own IO
+barrier overrides") and 87fe2d543f81 ("io: change inX() to have their own
+IO barrier overrides"), the outX() and inX() functions have memory
+barriers which can be overridden per-arch.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- lib/logic_pio.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+However, under CONFIG_INDIRECT_PIO, logic_pio defines its own version of
+inX() and outX(), which still use readb et al. For these, the barrier
+after a raw read is weaker than it otherwise would be. 
 
-diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-index f511a99bb389..21dc731bec88 100644
---- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -229,13 +229,13 @@ unsigned long logic_pio_trans_cpuaddr(resource_size_t addr)
- }
- 
- #if defined(CONFIG_INDIRECT_PIO) && defined(PCI_IOBASE)
--#define BUILD_LOGIC_IO(bw, type)					\
--type logic_in##bw(unsigned long addr)					\
-+#define BUILD_LOGIC_IO(bwl, type)					\
-+type logic_in##bwl(unsigned long addr)					\
- {									\
- 	type ret = (type)~0;						\
- 									\
- 	if (addr < MMIO_UPPER_LIMIT) {					\
--		ret = read##bw(PCI_IOBASE + addr);			\
-+		ret = read##bwl(PCI_IOBASE + addr);			\
- 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
- 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
- 									\
-@@ -248,10 +248,10 @@ type logic_in##bw(unsigned long addr)					\
- 	return ret;							\
- }									\
- 									\
--void logic_out##bw(type value, unsigned long addr)			\
-+void logic_out##bwl(type value, unsigned long addr)			\
- {									\
- 	if (addr < MMIO_UPPER_LIMIT) {					\
--		write##bw(value, PCI_IOBASE + addr);			\
-+		write##bwl(value, PCI_IOBASE + addr);			\
- 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
- 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
- 									\
-@@ -263,11 +263,11 @@ void logic_out##bw(type value, unsigned long addr)			\
- 	}								\
- }									\
- 									\
--void logic_ins##bw(unsigned long addr, void *buffer,			\
--		   unsigned int count)					\
-+void logic_ins##bwl(unsigned long addr, void *buffer,			\
-+		    unsigned int count)					\
- {									\
- 	if (addr < MMIO_UPPER_LIMIT) {					\
--		reads##bw(PCI_IOBASE + addr, buffer, count);		\
-+		reads##bwl(PCI_IOBASE + addr, buffer, count);		\
- 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
- 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
- 									\
-@@ -280,11 +280,11 @@ void logic_ins##bw(unsigned long addr, void *buffer,			\
- 									\
- }									\
- 									\
--void logic_outs##bw(unsigned long addr, const void *buffer,		\
--		    unsigned int count)					\
-+void logic_outs##bwl(unsigned long addr, const void *buffer,		\
-+		     unsigned int count)				\
- {									\
- 	if (addr < MMIO_UPPER_LIMIT) {					\
--		writes##bw(PCI_IOBASE + addr, buffer, count);		\
-+		writes##bwl(PCI_IOBASE + addr, buffer, count);		\
- 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
- 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
- 									\
+This series generates consistent behaviour for logic_pio, by defining
+generic _inX() and _outX() in asm-generic/io.h, and using those in
+logic_pio. Generic _inX() and _outX() have per-arch overrideable
+barriers.
+
+The topic was discussed there originally:
+https://lore.kernel.org/lkml/2e80d7bc-32a0-cc40-00a9-8a383a1966c2@huawei.com/
+
+A small tidy-up patch is included.
+
+I hope that series can go through the arm-soc tree, as with other recent
+logic_pio changes.
+
+John Garry (3):
+  io: Provide _inX() and _outX()
+  logic_pio: Improve macro argument name
+  logic_pio: Use _inX() and _outX()
+
+ include/asm-generic/io.h | 64 +++++++++++++++++++++++++++++++++---------------
+ lib/logic_pio.c          | 22 ++++++++---------
+ 2 files changed, 55 insertions(+), 31 deletions(-)
+
 -- 
 2.12.3
 
