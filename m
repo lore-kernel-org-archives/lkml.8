@@ -2,104 +2,174 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62859C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6993BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E7D20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B92520724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584525025;
+	bh=h1sqElW5tfuolMtTUIsxAnKq9mwnCARkWAFtMOVhhwc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZAh13zv+hedSYMn7RE9TGpdwjcA9ozNGfmrm5GyxZKtv73G3kZ8U9o4X9CZKwSNqi
+	 YCz59vsektKbR0lUXGy4QRgNIbCBQjTZr6CV0+Y8B67wCbU3sIQE7Pzy9HHGHNXt6A
+	 KS4SQiaVQPBW9KfeFqh2oyBVmxOm4ImneiYQfyFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbgCRJtx (ORCPT
+        id S1727552AbgCRJuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:49:53 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:45189 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgCRJtx (ORCPT
+        Wed, 18 Mar 2020 05:50:24 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:24579 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgCRJuY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:49:53 -0400
-Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M7ayR-1jD8Pi3tHx-0080EA; Wed, 18 Mar 2020 10:49:52 +0100
-Received: by mail-qt1-f181.google.com with SMTP id n5so20097201qtv.7;
-        Wed, 18 Mar 2020 02:49:51 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ074gg76hLHWhbR90Ftqsgg0fDdbaD+R5o+qXfuEDh0sBhsXjBs
-        Ufgp8B/uRgMiosC+zw7VqPTeENzXPJ/DqD2VgE8=
-X-Google-Smtp-Source: ADFU+vuZatV17Zl74+SHt/QiM6dlAWSwco+C3yE07S6yC/qyO02awDJyibHaLjvX8iQIPaB1c+EJ0/kfYHZL62HxXJ8=
-X-Received: by 2002:aed:3b4c:: with SMTP id q12mr3400957qte.18.1584524990718;
- Wed, 18 Mar 2020 02:49:50 -0700 (PDT)
+        Wed, 18 Mar 2020 05:50:24 -0400
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02I9oKQL003768;
+        Wed, 18 Mar 2020 18:50:20 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02I9oKQL003768
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1584525021;
+        bh=chiklVzBctTlLbxGf2Dcd0qlUqvFAB8Y+B4FfJ0EYR8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VCGDYdMO0tYz6eQOpRT7lOOmN+don6FrPMQ7LUkqhlZZRIfOVFfTRE3Klz/yMqj9y
+         7Dx3bTg4/hYPpT1iutfMzHx7nfOY+0nqRRiqjctxE2RMFLbyg8oUjUMYILChPHFPUM
+         JWHcn5/Yae/acuLqnqadMyva9Y99VNhlnI2uKeTMEDZCNDeiUtzyOTqBOf1FJ9TPHT
+         T2PHuVFVGliZXp6qQ0IGsl6vkym8a14J3GfGXxlAgFt9ycPOZiagCS4PIl6/5/ZHTT
+         +aYPJv7qlKgimdPWExK8atFjrp+vL/LDBirJImsDQ6R4+nJgthLz5SIjte5dV8fcoN
+         6xIqWSuenQDRA==
+X-Nifty-SrcIP: [209.85.217.43]
+Received: by mail-vs1-f43.google.com with SMTP id z125so15965087vsb.13;
+        Wed, 18 Mar 2020 02:50:20 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0qWZftZTWvPbzmzKhD5GM6LcXukZs9co57dkk81fq4cpfMoXNe
+        pHkgMfIEvbtyJmlUy75xOYDo5npeOn87P33TQME=
+X-Google-Smtp-Source: ADFU+vudeX7j1H0dbtItU0YyqPX05lGkToRiAw6PSpkDne2hG2HjXS+0Fd2/2e1rrZ/Caj1eQ0JgUQGVn+ttmDXXUZ0=
+X-Received: by 2002:a67:3201:: with SMTP id y1mr2566856vsy.54.1584525019426;
+ Wed, 18 Mar 2020 02:50:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1584473399.git.gurus@codeaurora.org> <587f9ccae68ad7e1ce97fa8da6037292af1a5095.1584473399.git.gurus@codeaurora.org>
- <CAK8P3a2Hi_AoRC3g7qKth4e_Y1jZrbBDhWUb3YPZm10FWMu-ig@mail.gmail.com> <20200317233003.GA11350@codeaurora.org>
-In-Reply-To: <20200317233003.GA11350@codeaurora.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 18 Mar 2020 10:49:34 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2a-QEwFfDE5FbFCVdDS+t9jirgbHWJQQv0i5_OMCYXJg@mail.gmail.com>
-Message-ID: <CAK8P3a2a-QEwFfDE5FbFCVdDS+t9jirgbHWJQQv0i5_OMCYXJg@mail.gmail.com>
-Subject: Re: [PATCH v9 04/11] pwm: clps711x: Use 64-bit division macro
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Shiyan <shc_work@mail.ru>
+References: <20200316122820.11032-1-yangx.jy@cn.fujitsu.com> <5E702236.8070109@cn.fujitsu.com>
+In-Reply-To: <5E702236.8070109@cn.fujitsu.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 18 Mar 2020 18:49:43 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARcs_ouquXPWJfKkfpikXV-4t=2YVCjEWeDzaNhFjmaeA@mail.gmail.com>
+Message-ID: <CAK7LNARcs_ouquXPWJfKkfpikXV-4t=2YVCjEWeDzaNhFjmaeA@mail.gmail.com>
+Subject: Re: [PATCH] modpost: Get proper section index by get_secindex()
+ instead of st_shndx
+To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:GJNg+zbJ/QTr93mXo+ZUGvwLJZcrToMwk5hiStg0JKtSAfJ+jkx
- DL/IFajK7amfBNdOpRZrLp3YsL1MG6AZdEAQ43ycfvw6LP36azEprK7WI+3ip29mhwwpaDQ
- +hDpiajVtmgeYQBAbNZXGjIZ/boPADTXjK2MYiy4jeGywZpEarMgjXAH0dC6iF9PNm4aVVs
- HjBwlYP2A+LbTzmWmQdiQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:D1cv3uqKd2M=:9LvQjGE/K8Nz7rkz10WynY
- X0ykvFjkbkQ/SxwFchNgiEsqf9I3+6PElY3eKR4TS4iSkJi5F+IvrfYrY4r6yzonpJKAiDHec
- epvr46nsD3ezZIyJB/tB5d5gLXNLiGNUfGE/Pw4V30el+aH8AWXcS8zDVeJoKVlrlnjRK4bOw
- fq4vWIvaDOvIejDr2ny58Hbdmvx3xLeDevtNvxBaEBuFuSYNDRmnaYkS7tKW0auvPs4MvRFOw
- XdMD2+Q/SqpsRaRzR+8BiURjoQk5+kjzKhSdydhZXJrhBtF7sdmwlsvWUDI1D4rlA+yfm6cdb
- c3G93BUVhNax1ObtZcDurv2zuUe6912f4PQIC2Zi7rFhufP1iytyfrcHoX4sw8gXb0WzVrJOY
- xZKLJP2dD9QrmEI5bFdLwovK+v95vrUj9N/eZlOFGzTvRw0mdTycPGmpfCEXDJR1uIazq/vaV
- MkzhRo4N5Rr6gL+BhtTfK9Ss4k73SUHIvLE2u7mJO1nIyB6fTz1f7WdoiZGyi2zdDrYWESz8c
- 2JRo0uhyyyl51u4pFPSocchxQoo/Cb64Dj7FnvmAj7glkNfwrdbISxxYYUN9aTnKqwl+zXsqA
- fN2Tm0aetkdLpfcbLwmu3etv5xclhzMVFuRrH6qo9mXhIf2bAsRt2n2c+OGr31QJTR96IN446
- HLZKvnvLKKvOW/X9KAIO/0/dgsHUi5NVPYD13+Xj3IOL3rFqTch6XZAkKXBWlEDPqCkmaj6so
- RbQHgnZa5hwMh+CAU08G8HtP+S2hIfAxerNKQLxdrL2OC4iL+wPq1s+ITJgrwIMnkztPyl7Dj
- 5NAJW07sFqtSAB8B1QSbYjJ6rITMPWxfD9veMDwrAoucC8RUuo=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 12:30 AM Guru Das Srinagesh
-<gurus@codeaurora.org> wrote:
+On Tue, Mar 17, 2020 at 10:05 AM Xiao Yang <yangx.jy@cn.fujitsu.com> wrote:
 >
-> On Tue, Mar 17, 2020 at 11:22:06PM +0100, Arnd Bergmann wrote:
-> > > diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-> > > index 924d39a..ba9500a 100644
-> > > --- a/drivers/pwm/pwm-clps711x.c
-> > > +++ b/drivers/pwm/pwm-clps711x.c
-> > > @@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
-> > >  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
-> > >  {
-> > >         /* Duty cycle 0..15 max */
-> > > -       return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-> > > +       return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-> > >  }
+> On 2020/3/16 20:28, Xiao Yang wrote:
+
+Thanks for catching this bug.
+
+
+> > (uint16_t) st_shndx is limited to 65535(i.e. SHN_XINDEX) so sym_get_dat=
+a() gets
+> > wrong section index by st_shndx if object file(e.g. vmlinux.o) has more=
+ than
+> Hi,
+>
+> It seems better to say that sym_get_data() gets wrong section index by
+> st_shndx if requested symbol contains extended section index that is
+> more than 65535.
+
+
+Sounds good to me.
+
+
+> Thanks,
+> Xiao Yang
+> > 65535 sessions.  In this case, we need to get proper section index by .=
+symtab_shndx
+> > section.
 > >
-> > Is it actually going to exceed U32_MAX? If not, a type cast may be
-> > more appropriate here than the expensive 64-bit division.
+> > Module.symvers generated by building kernel with "-ffunction-sections -=
+fdata-sections"
+> > shows the issue(i.e. cannot get 89902 by st_shndx):
+> > -------------------------------------------------------------------
+> > [root@Fedora-30 linux]# file Module.symvers
+> > Module.symvers: data
+> > [root@Fedora-30 linux]# head -n1 Module.symvers
+> > 0x5caf3011      ipv6_chk_custom_prefix  =E2=96=92=E2=96=92=E2=96=92=E2=
+=96=92=E2=96=92=E2=96=92=E2=96=92=E2=96=92        vmlinux EXPORT_SYMBOL
+
+
+Could you delete this dump?
+I'd like to avoid garbling where possible.
+
+
+> > ...
+> > [root@Fedora-30 linux]# readelf -s -W vmlinux.o | grep __kstrtabns_ipv6=
+_chk_custom_prefix
+> > 199174: 0000000000032578     1 OBJECT  LOCAL  DEFAULT 89902 __kstrtabns=
+_ipv6_chk_custom_prefix
+> > [root@Fedora-30 linux]# readelf -S -W vmlinux.o | grep 89902
+> >    [89902] __ksymtab_strings PROGBITS        0000000000000000 a94e00 03=
+45a2 00   A  0   0  1
+> > -------------------------------------------------------------------
+> >
+> > Fixes: afa0459daa7b ("modpost: add a helper to get data pointed by a sy=
+mbol")
+
+Strictly speaking, this commit does not introduce any bug.
+
+The CRC bug for MODVERSIONS exists since
+56067812d5b0 ("kbuild: modversions: add infrastructure for emitting
+relative CRCs")
+
+
+> > Fixes: 5545322c86d9 ("modpost: refactor namespace_from_kstrtabns() to n=
+ot hard-code section name")
+
+This commit hash is wrong.
+The correct one is
+
+Fixes: e84f9fbbece1 ("modpost: refactor namespace_from_kstrtabns() to
+not hard-code section name")
+
+
+
+
+
+> > Signed-off-by: Xiao Yang<yangx.jy@cn.fujitsu.com>
+> > ---
+> >   scripts/mod/modpost.c | 3 ++-
+> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> > index d9418c58a8c0..c1fec8cac257 100644
+> > --- a/scripts/mod/modpost.c
+> > +++ b/scripts/mod/modpost.c
+> > @@ -310,7 +310,8 @@ static const char *sec_name(struct elf_info *elf, i=
+nt secindex)
+> >
+> >   static void *sym_get_data(const struct elf_info *info, const Elf_Sym =
+*sym)
+> >   {
+> > -     Elf_Shdr *sechdr =3D&info->sechdrs[sym->st_shndx];
+> > +     unsigned int secindex =3D get_secindex(info, sym);
+> > +     Elf_Shdr *sechdr =3D&info->sechdrs[secindex];
+> >       unsigned long offset;
+> >
+> >       offset =3D sym->st_value;
 >
-> With the final change in this patch series, the framework will support
-> periods that exceed U32_MAX. My concern is that using a typecast would
-> mean that in those cases, this driver will not support > U32_MAX values.
-> Using DIV64_U64_ROUND_CLOSEST makes the driver future proof and able to
-> handle > U32_MAX values correctly. What do you think?
+>
+>
 
-Ah, so if the period can actually be larger than U32_MAX, you need to
-handle that case. However, I see that the divident in this code (v * 0xf)
-is still a 32-bit number, so a correct and efficient implementation could be
 
-   if (pwm->args.period > (UINT_MAX / 0xf))
-          return 0;
-   return DIV_ROUND_CLOSEST(v * 0xf, (u32)pwm->args.period);
-
-        Arnd
+--
+Best Regards
+Masahiro Yamada
