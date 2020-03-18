@@ -2,179 +2,153 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F38C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9CFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995ED20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:19:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="orQAqFg4"
+	by mail.kernel.org (Postfix) with ESMTP id C650120768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbgCRHTw (ORCPT
+        id S1727031AbgCRHc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 03:19:52 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38608 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgCRHTw (ORCPT
+        Wed, 18 Mar 2020 03:32:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17732 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726586AbgCRHc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 03:19:52 -0400
-Received: by mail-pf1-f195.google.com with SMTP id z5so13420119pfn.5;
-        Wed, 18 Mar 2020 00:19:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ntc/lC+0lJ6yYNxW0plx8U2OvYjUOf42pIvCB4jmx7A=;
-        b=orQAqFg4WmrI4PrZKdYeg3WvkW2Mg/qBOdGVmytn6TwK13yLp3azzmm/RhijcDv63w
-         EMZDVnjh5Vf1S/qsYIuIGxYZNvFpkAwBGlnrJ6gIr/iuX2ECbOR/ocYctyKtjszsa7qb
-         zjcPoajZQEoRLVmvRCXHSj9IRVMr5HuZffYYr2DyMPQK9hwz55RyG+yYFdsZ45Jsf0lw
-         tmS96WEzAH8OSL/hPPQ9TLLPe9Eth7MBZzAja+mGUbPB5gtvIveFbNVm5Jm6LtZzggpz
-         yDqxOLqaeU5UMXup0zw+2xkOaZ5yRKpzH6S1vWCiQFJx9pK7hqU5XAWSZL+DggxF/fhj
-         27Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Ntc/lC+0lJ6yYNxW0plx8U2OvYjUOf42pIvCB4jmx7A=;
-        b=P8TNNmhbTbSQr3PCIIdR68DwB744vrCzYdx7EDzPP7AiXiu5GFTdHcPay4oYVJFeyi
-         8KAzRWkbIt8BSLc196yrl2lt+tv4cvbpSFnCvjBfrrQoxsk5DqrrXMRyFlo13zKx9xk3
-         olXKn0LcRRYp7IZahoSIws30GV3gEePBGL0f1dqRa/gkfs4L52dmLlyqJ5KnPoVMNkTt
-         sVHw3k1DME1t67wtkQLu1Mo9xJZdOHNvC4h95iTAeoogGfFJRHqleLiRwVNGp9B628/K
-         3E9otBauGxz2Z6xMD7xO5V6dGLAf2x4FCEsRn+X0uu0B9D9ocZhvWKd3q7lGeN7AukSX
-         d8TQ==
-X-Gm-Message-State: ANhLgQ0sZQkMtj5kdbsFmAq8XwCAKhkaPDaNvtKj77bJiWVoOhIngxXS
-        A5UPVoxBYBfDoiL50rHVq3Ix+UmO
-X-Google-Smtp-Source: ADFU+vvv7naQJrSr7Arvd2x0lASQjE60hLdv54iT681tXBkew6P05e66s0GirF8GoabRbZV7ApY4hg==
-X-Received: by 2002:aa7:963d:: with SMTP id r29mr2801692pfg.87.1584515990993;
-        Wed, 18 Mar 2020 00:19:50 -0700 (PDT)
-Received: from nish-HP-Pavilion ([2409:4072:6086:470e:bc8d:c185:c429:a95b])
-        by smtp.gmail.com with ESMTPSA id e187sm5202529pfe.143.2020.03.18.00.19.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 00:19:50 -0700 (PDT)
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-To:     jic23@kernel.org, robh+dt@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mark.rutland@arm.com, nish.malpani25@gmail.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4] dt-bindings: iio: tsl2563: convert bindings to YAML
-Date:   Wed, 18 Mar 2020 12:49:40 +0530
-Message-Id: <20200318071940.12220-1-nish.malpani25@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 18 Mar 2020 03:32:56 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02I73UCE137367
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:32:55 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8br4w5w-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:32:55 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 18 Mar 2020 07:32:52 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Mar 2020 07:32:47 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02I7Wkcn44499008
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 07:32:46 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3289CA4062;
+        Wed, 18 Mar 2020 07:32:46 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 92E91A405C;
+        Wed, 18 Mar 2020 07:32:37 +0000 (GMT)
+Received: from [9.199.43.180] (unknown [9.199.43.180])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Mar 2020 07:32:36 +0000 (GMT)
+Subject: Re: [PATCH 08/15] powerpc/watchpoint: Disable all available
+ watchpoints when !dawr_force_enable
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
+        paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
+ <20200309085806.155823-9-ravi.bangoria@linux.ibm.com>
+ <1381b9f9-4999-0e03-8344-af84a88fa074@c-s.fr>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Wed, 18 Mar 2020 13:02:35 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <1381b9f9-4999-0e03-8344-af84a88fa074@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031807-0012-0000-0000-00000393063F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031807-0013-0000-0000-000021CFE7B7
+Message-Id: <8c97ae26-e0df-1e71-e70f-5d1b1b4e1097@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_02:2020-03-17,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=887 spamscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003180034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the TSL2563 device tree bindings to the new YAML format.
 
-Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
----
 
-Changes in v4:
-  - Change $id property to reflect corrected relative path.
+On 3/17/20 4:05 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 09/03/2020 à 09:57, Ravi Bangoria a écrit :
+>> Instead of disabling only first watchpoint, disable all available
+>> watchpoints while clearing dawr_force_enable.
+>>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>> ---
+>>   arch/powerpc/kernel/dawr.c | 10 +++++++---
+>>   1 file changed, 7 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/powerpc/kernel/dawr.c b/arch/powerpc/kernel/dawr.c
+>> index 311e51ee09f4..5c882f07ac7d 100644
+>> --- a/arch/powerpc/kernel/dawr.c
+>> +++ b/arch/powerpc/kernel/dawr.c
+>> @@ -50,9 +50,13 @@ int set_dawr(struct arch_hw_breakpoint *brk, int nr)
+>>       return 0;
+>>   }
+>> -static void set_dawr_cb(void *info)
+>> +static void disable_dawrs(void *info)
+> 
+> Can you explain a bit more what you do exactly ? Why do you change the name of the function and why the parameter becomes NULL ? And why it doens't take into account the parameter anymore ?
 
-Changes in v3:
-  - Include the complete diff (changes from v1).
+Before:
+   static void set_dawr_cb(void *info)
+   {
+           set_dawr(info);
+   }
+   
+   static ssize_t dawr_write_file_bool(...)
+   {
+   	...
+           /* If we are clearing, make sure all CPUs have the DAWR cleared */
+           if (!dawr_force_enable)
+                   smp_call_function(set_dawr_cb, &null_brk, 0);
+   }
 
-Changes in v2:
-  - Rename the dt-bindings to include manufacturer's name.
-  - Synchronize the bindings with the driver.
----
- .../bindings/iio/light/amstaos,tsl2563.yaml   | 49 +++++++++++++++++++
- .../devicetree/bindings/iio/light/tsl2563.txt | 19 -------
- 2 files changed, 49 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
+After:
+   static void disable_dawrs(void *info)
+   {
+           struct arch_hw_breakpoint null_brk = {0};
+           int i;
+   
+           for (i = 0; i < nr_wp_slots(); i++)
+                   set_dawr(&null_brk, i);
+   }
+   
+   static ssize_t dawr_write_file_bool(...)
+   {
+   	...
+           /* If we are clearing, make sure all CPUs have the DAWR cleared */
+           if (!dawr_force_enable)
+                   smp_call_function(disable_dawrs, NULL, 0);
+   }
 
-diff --git a/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
-new file mode 100644
-index 000000000000..efd2eba5f23c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/amstaos,tsl2563.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: AMS TAOS TSL2563 ambient light sensor
-+
-+maintainers:
-+  - Sebastian Reichel <sre@kernel.org>
-+
-+description: |
-+  Ambient light sensor with an i2c interface.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - amstaos,tsl2560
-+      - amstaos,tsl2561
-+      - amstaos,tsl2562
-+      - amstaos,tsl2563
-+
-+  reg:
-+    maxItems: 1
-+
-+  amstaos,cover-comp-gain:
-+    description: Multiplier for gain compensation
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [1, 16]
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      light-sensor@29 {
-+        compatible = "amstaos,tsl2563";
-+        reg = <0x29>;
-+        amstaos,cover-comp-gain = <16>;
-+      };
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-deleted file mode 100644
-index f91e809e736e..000000000000
---- a/Documentation/devicetree/bindings/iio/light/tsl2563.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--* AMS TAOS TSL2563 ambient light sensor
--
--Required properties:
--
--  - compatible : should be "amstaos,tsl2563"
--  - reg : the I2C address of the sensor
--
--Optional properties:
--
--  - amstaos,cover-comp-gain : integer used as multiplier for gain
--                              compensation (default = 1)
--
--Example:
--
--tsl2563@29 {
--	compatible = "amstaos,tsl2563";
--	reg = <0x29>;
--	amstaos,cover-comp-gain = <16>;
--};
--- 
-2.20.1
+We use callback function only for disabling watchpoint. Thus I renamed
+it to disable_dawrs(). And we are passing null_brk as parameter which
+is not really required while disabling watchpoint. So removed it.
+
+Thanks,
+Ravi
 
