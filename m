@@ -1,260 +1,281 @@
-Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66ADC4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225BAC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734AC2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584575432;
-	bh=qig1wOJ7IgBTZ7kXTk2gpe9JQRnJPM+buCwo1cSu+mA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cr9OquFpCrABmiplkI3bzbYapwpQ8dLzSs08TWOg6LgFKP4unDUQDeeAJ64MCz/6u
-	 Jjcb20u+JGemeHuKxR0PO/eylRJ2nbFRcs3jvkkoT8Nv2ddcr/bu0lgXucbUETm/BB
-	 ZBVGc1vtXUTb6oo/io4yXiKwrTZD7L39f597tv9U=
+	by mail.kernel.org (Postfix) with ESMTP id D86AB20754
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbgCRXub (ORCPT
+        id S1727112AbgCSAD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:50:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgCRXub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:50:31 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC06D2076C;
-        Wed, 18 Mar 2020 23:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584575430;
-        bh=qig1wOJ7IgBTZ7kXTk2gpe9JQRnJPM+buCwo1cSu+mA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cLazMcVbX0OWV/lh16fimWRUd6291oIO/HK2kz1wmJ4/LN6IdsggqAO+W7egB78hU
-         8Mrq85fS+WqwPTN3GH6FdGeaWIxq/B6yucDw7/gchrGZRBwlW7Ev4pTmC2qVEN9nUC
-         kqqD58YMRbY1JkKpM6h8y0iLcYzcEiSnOJ+2VY08=
-Received: by mail-qk1-f170.google.com with SMTP id c145so331486qke.12;
-        Wed, 18 Mar 2020 16:50:29 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0SpCuip+/mozR9E45uQxNTxqt+B4isGGsh9zbH1e9efXQpmIM2
-        gmpMbOQGwq/R2FIgWLeCgGsc7TFL4aVEdvUF3Q==
-X-Google-Smtp-Source: ADFU+vsGgf3CiWdZiuk9hVpaRnFNqJkCyylwUsiB5EVfVsqRfIvJJ3ipMxAlOst4B0glkuDEqDWtIgLMddwWogY9zU8=
-X-Received: by 2002:a37:4a85:: with SMTP id x127mr464472qka.152.1584575428917;
- Wed, 18 Mar 2020 16:50:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306111353.12906-1-daniel.baluta@oss.nxp.com>
- <20200306111353.12906-2-daniel.baluta@oss.nxp.com> <20200312202306.GA18767@bogus>
- <CAEnQRZCLa+NAk=3M84MxjgOzYQdJXGY9S84dU6HO8GG64Lm_mQ@mail.gmail.com>
-In-Reply-To: <CAEnQRZCLa+NAk=3M84MxjgOzYQdJXGY9S84dU6HO8GG64Lm_mQ@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 18 Mar 2020 17:50:17 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLNeiPc_isukXKt9wgwNS+kPDujx-Q24V1HJrUv0Fq77w@mail.gmail.com>
-Message-ID: <CAL_JsqLNeiPc_isukXKt9wgwNS+kPDujx-Q24V1HJrUv0Fq77w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: sound: Add FSL CPU DAI bindings
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-Cc:     Daniel Baluta <daniel.baluta@oss.nxp.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>, Takashi Iwai <tiwai@suse.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wed, 18 Mar 2020 20:03:26 -0400
+Received: from mailfilter02-out31.webhostingserver.nl ([141.138.168.75]:58827
+        "EHLO mailfilter02-out31.webhostingserver.nl" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726776AbgCSAD0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 20:03:26 -0400
+X-Greylist: delayed 964 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Mar 2020 20:03:24 EDT
+X-Halon-ID: ce0cb097-6972-11ea-a736-001a4a4cb922
+Received: from s198.webhostingserver.nl (unknown [195.211.72.171])
+        by mailfilter02.webhostingserver.nl (Halon) with ESMTPSA
+        id ce0cb097-6972-11ea-a736-001a4a4cb922;
+        Thu, 19 Mar 2020 00:47:19 +0100 (CET)
+Received: from cust-178-250-146-69.breedbanddelft.nl ([178.250.146.69] helo=[10.8.0.6])
+        by s198.webhostingserver.nl with esmtpa (Exim 4.92.3)
+        (envelope-from <fntoth@gmail.com>)
+        id 1jEiP9-003Hky-2e; Thu, 19 Mar 2020 00:47:19 +0100
+Subject: Re: [PATCH v1 1/3] driver core: Break infinite loop when deferred
+ probe can't be satisfied
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+        Grant Likely <grant.likely@linaro.org>,
         Peter Ujfalusi <peter.ujfalusi@ti.com>,
         Mark Brown <broonie@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        sound-open-firmware@alsa-project.org
-Content-Type: text/plain; charset="UTF-8"
+        Felipe Balbi <balbi@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>
+References: <20200309141111.40576-1-andriy.shevchenko@linux.intel.com>
+From:   Ferry Toth <fntoth@gmail.com>
+Message-ID: <5b751d5b-53ec-9c99-d977-68b71dd303f8@gmail.com>
+Date:   Thu, 19 Mar 2020 00:47:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200309141111.40576-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SendingUser: hidden
+X-SendingServer: hidden
+X-Antivirus-Scanner: Clean mail though you should still use an Antivirus
+X-Authenticated-Id: hidden
+X-SendingUser: hidden
+X-SendingServer: hidden
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 7:01 AM Daniel Baluta <daniel.baluta@gmail.com> wrote:
->
-> Thanks Rob for review. See my comments inline:
->
-> <snip>
->
-> > > +# SPDX-License-Identifier: GPL-2.0
-> >
-> > Dual license new bindings please:
-> >
-> > (GPL-2.0-only OR BSD-2-Clause)
->
-> Ok, will do.
->
-> >
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/sound/fsl,dai.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Generic CPU FSL DAI driver for resource management
-> >
-> > Bindings are for h/w devices, not drivers.
->
-> Indeed. I think I will change it to something like this.
->
-> title: 'FSL CPU DAI for resource management'
->
-> The explanation are already in patch 2/2 of this series but let e
-> explain again what I'm
-> trying to do here and let me know if this makes sense to you.
->
-> Digital Audio Interface device (DAI) are configured by the firmware
-> running on the DSP. The only
-> trouble we have is that we cannot easily handle 'resources' like:
-> clocks, pinctrl, power domains from
-> firmware.
->
-> This is because our architecture is like this:
->
-> M core [running System Controller Firmware]
->             |
->             |
-> A core [Linux]<----> DSP core [SOF firmware]
->
-> In theory, it is possible for DSP core to communicate with M core, but
-> this needs a huge
-> amount of work in order to make it work. We have this on our plans for
-> the future,
-> but we are now trying to do resource management from A core because
-> the infrastructure is already in place.
+Op 09-03-2020 om 15:11 schreef Andy Shevchenko:
+> Consider the following scenario.
+> 
+> The main driver of USB OTG controller (dwc3-pci), which has the following
+> functional dependencies on certain platform:
+> - ULPI (tusb1210)
+> - extcon (tested with extcon-intel-mrfld)
+> 
+> Note, that first driver, tusb1210, is available at the moment of
+> dwc3-pci probing, while extcon-intel-mrfld is built as a module and
+> won't appear till user space does something about it.
+> 
+> This is depicted by kernel configuration excerpt:
+> 
+> 	CONFIG_PHY_TUSB1210=y
+> 	CONFIG_USB_DWC3=y
+> 	CONFIG_USB_DWC3_ULPI=y
+> 	CONFIG_USB_DWC3_DUAL_ROLE=y
+> 	CONFIG_USB_DWC3_PCI=y
+> 	CONFIG_EXTCON_INTEL_MRFLD=m
+> 
+> In the Buildroot environment the modules are probed by alphabetical ordering
+> of their modaliases. The latter comes to the case when USB OTG driver will be
+> probed first followed by extcon one.
+> 
+> So, if the platform anticipates extcon device to be appeared, in the above case
+> we will get deferred probe of USB OTG, because of ordering.
+> 
+> Since current implementation, done by the commit 58b116bce136 ("drivercore:
+> deferral race condition fix") counts the amount of triggered deferred probe,
+> we never advance the situation -- the change makes it to be an infinite loop.
+> 
+> ---8<---8<---
+> 
+> [   22.187127] driver_deferred_probe_trigger <<< 1
+> 
+> ...here is the late initcall triggers deferred probe...
+> 
+> [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
+> 
+> ...dwc3.0.auto is the only device in the deferred list...
+> 
+> [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
+> 
+> ...the counter before mutex is unlocked is kept the same...
+> 
+> [   22.205663] platform dwc3.0.auto: Retrying from deferred list
+> 
+> ...mutes has been unlocked, we try to re-probe the driver...
+> 
+> [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
+> [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
+> [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
+> [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
+> [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
+> [   22.263723] driver_deferred_probe_trigger <<< 2
+> 
+> ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
+> 
+> [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
+> [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
+> 
+> ...but extcon driver is still missing...
+> 
+> [   22.283174] platform dwc3.0.auto: Added to deferred list
+> [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
+> 
+> ...and since we had a successful probe, we got counter mismatch...
+> 
+> [   22.297490] driver_deferred_probe_trigger <<< 3
+> [   22.302074] platform dwc3.0.auto: deferred_probe_work_func 2 <<< counter 3
+> 
+> ...at the end we have a new counter and loop repeats again, see 22.198727...
+> 
+> ---8<---8<---
+> 
+> Revert of the commit helps, but it is probably not helpful for the initially
+> found regression. Artem Bityutskiy suggested to use counter of the successful
+> probes instead. This fixes above mentioned case and shouldn't prevent driver
+> to reprobe deferred ones.
+> 
+> Fixes: 58b116bce136 ("drivercore: deferral race condition fix")
+> Suggested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Andrzej Hajda <a.hajda@samsung.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-When you change things in the future, Linux gets to keep supporting
-both ways of doing things? I'd rather just support one way.
+Tested-by: Ferry Toth <fntoth@gmail.com>
 
-> So, the curent driver introduced in this series acts like a Generic
-> resource driver for DAI device. We can
-> have multiple types of DAIs but most of them need the same types of
-> resources (clocks, pinctrl, pm) sof
-> for this reason I made it generic.
->
->
-> >
-> > > +
-> > > +maintainers:
-> > > +  - Daniel Baluta <daniel.baluta@nxp.com>
-> > > +
-> > > +description: |
-> > > +  On platforms with a DSP we need to split the resource handling between
-> > > +  Application Processor (AP) and DSP. On platforms where the DSP doesn't
-> > > +  have an easy access to resources, the AP will take care of
-> > > +  configuring them. Resources handled by this generic driver are: clocks,
-> > > +  power domains, pinctrl.
-> >
-> > The DT should define a DSP node with resources that are part of the
-> > DSP. What setup the AP has to do should be implied by the compatible
-> > string and possibly what resources are described.
->
-> We already have a DSP node: Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-> but I thought that the resources attached to DAIs are separated from
-> the resources
-> attached to the DSP device.
+> ---
+>   drivers/base/dd.c | 39 +++++++++++++++++++++------------------
+>   1 file changed, 21 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index b25bcab2a26b..43720beb5300 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -53,7 +53,6 @@
+>   static DEFINE_MUTEX(deferred_probe_mutex);
+>   static LIST_HEAD(deferred_probe_pending_list);
+>   static LIST_HEAD(deferred_probe_active_list);
+> -static atomic_t deferred_trigger_count = ATOMIC_INIT(0);
+>   static struct dentry *deferred_devices;
+>   static bool initcalls_done;
+>   
+> @@ -147,17 +146,6 @@ static bool driver_deferred_probe_enable = false;
+>    * This functions moves all devices from the pending list to the active
+>    * list and schedules the deferred probe workqueue to process them.  It
+>    * should be called anytime a driver is successfully bound to a device.
+> - *
+> - * Note, there is a race condition in multi-threaded probe. In the case where
+> - * more than one device is probing at the same time, it is possible for one
+> - * probe to complete successfully while another is about to defer. If the second
+> - * depends on the first, then it will get put on the pending list after the
+> - * trigger event has already occurred and will be stuck there.
+> - *
+> - * The atomic 'deferred_trigger_count' is used to determine if a successful
+> - * trigger has occurred in the midst of probing a driver. If the trigger count
+> - * changes in the midst of a probe, then deferred processing should be triggered
+> - * again.
+>    */
+>   static void driver_deferred_probe_trigger(void)
+>   {
+> @@ -170,7 +158,6 @@ static void driver_deferred_probe_trigger(void)
+>   	 * into the active list so they can be retried by the workqueue
+>   	 */
+>   	mutex_lock(&deferred_probe_mutex);
+> -	atomic_inc(&deferred_trigger_count);
+>   	list_splice_tail_init(&deferred_probe_pending_list,
+>   			      &deferred_probe_active_list);
+>   	mutex_unlock(&deferred_probe_mutex);
+> @@ -350,6 +337,19 @@ static void __exit deferred_probe_exit(void)
+>   }
+>   __exitcall(deferred_probe_exit);
+>   
+> +/*
+> + * Note, there is a race condition in multi-threaded probe. In the case where
+> + * more than one device is probing at the same time, it is possible for one
+> + * probe to complete successfully while another is about to defer. If the second
+> + * depends on the first, then it will get put on the pending list after the
+> + * trigger event has already occurred and will be stuck there.
+> + *
+> + * The atomic 'probe_okay' is used to determine if a successful probe has
+> + * occurred in the midst of probing another driver. If the count changes in
+> + * the midst of a probe, then deferred processing should be triggered again.
+> + */
+> +static atomic_t probe_okay = ATOMIC_INIT(0);
+> +
+>   /**
+>    * device_is_bound() - Check if device is bound to a driver
+>    * @dev: device to check
+> @@ -375,6 +375,7 @@ static void driver_bound(struct device *dev)
+>   	pr_debug("driver: '%s': %s: bound to device '%s'\n", dev->driver->name,
+>   		 __func__, dev_name(dev));
+>   
+> +	atomic_inc(&probe_okay);
+>   	klist_add_tail(&dev->p->knode_driver, &dev->driver->p->klist_devices);
+>   	device_links_driver_bound(dev);
+>   
+> @@ -481,18 +482,18 @@ static atomic_t probe_count = ATOMIC_INIT(0);
+>   static DECLARE_WAIT_QUEUE_HEAD(probe_waitqueue);
+>   
+>   static void driver_deferred_probe_add_trigger(struct device *dev,
+> -					      int local_trigger_count)
+> +					      int local_probe_okay_count)
+>   {
+>   	driver_deferred_probe_add(dev);
+>   	/* Did a trigger occur while probing? Need to re-trigger if yes */
+> -	if (local_trigger_count != atomic_read(&deferred_trigger_count))
+> +	if (local_probe_okay_count != atomic_read(&probe_okay))
+>   		driver_deferred_probe_trigger();
+>   }
+>   
+>   static int really_probe(struct device *dev, struct device_driver *drv)
+>   {
+>   	int ret = -EPROBE_DEFER;
+> -	int local_trigger_count = atomic_read(&deferred_trigger_count);
+> +	int local_probe_okay_count = atomic_read(&probe_okay);
+>   	bool test_remove = IS_ENABLED(CONFIG_DEBUG_TEST_DRIVER_REMOVE) &&
+>   			   !drv->suppress_bind_attrs;
+>   
+> @@ -509,7 +510,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+>   
+>   	ret = device_links_check_suppliers(dev);
+>   	if (ret == -EPROBE_DEFER)
+> -		driver_deferred_probe_add_trigger(dev, local_trigger_count);
+> +		driver_deferred_probe_add_trigger(dev, local_probe_okay_count);
+>   	if (ret)
+>   		return ret;
+>   
+> @@ -619,7 +620,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+>   	case -EPROBE_DEFER:
+>   		/* Driver requested deferred probing */
+>   		dev_dbg(dev, "Driver %s requests probe deferral\n", drv->name);
+> -		driver_deferred_probe_add_trigger(dev, local_trigger_count);
+> +		driver_deferred_probe_add_trigger(dev, local_probe_okay_count);
+>   		break;
+>   	case -ENODEV:
+>   	case -ENXIO:
+> @@ -1148,6 +1149,8 @@ static void __device_release_driver(struct device *dev, struct device *parent)
+>   		dev_pm_set_driver_flags(dev, 0);
+>   
+>   		klist_remove(&dev->p->knode_driver);
+> +		atomic_dec(&probe_okay);
+> +
+>   		device_pm_check_callbacks(dev);
+>   		if (dev->bus)
+>   			blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
+> 
 
-I'd agree if the DAI was fully described in the DT.
-
-> In the great scheme of ALSA we usually have things like this:
->
-> FE         <----->       BE
->
-> In the SOF world FE are defined by topology framework. Back ends are
-> defined by the machine driver:
->
-> On the BE side we have:
-> - codec  -> this is the specific code
-> - platform -> this is the DSP
-> - cpu -> this is our Generic DAI device
->
-> Now, I'm wondering if we can get rid of cpu here and make platform
-> node (dsp) take care of every
-> resource (this looks not natural).
-
-I would think about how the DT will look when the DSP manages all
-these resources itself and how the kernel drivers evolve. I think
-perhaps if you can get rid of the DT part and just define the
-resources in the driver, then the future transition would be easier.
-
-> Perhaps Mark, Liam or Pierre can help me with this.
->
->
-> >
-> > Or maybe the audio portion of the DSP is a child node...
-> >
-> > > +
-> > > +properties:
-> > > +  '#sound-dai-cells':
-> > > +    const: 0
-> > > +
-> > > +  compatible:
-> > > +    enum:
-> > > +      - fsl,esai-dai
-> > > +      - fsl,sai-dai
-> >
-> > Not very specific. There's only 2 versions of the DSP and ways it is
-> > integrated?
->
-> As I said above this is not about the DSP, but about the Digital Audio
-> Intraface. On i.MX
-> NXP boards we have two types of DAIs: SAI and ESAI.
->
-> <snip>
->
-> > > +  pinctrl-0:
-> > > +    description: Should specify pin control groups used for this controller.
-> > > +
-> > > +  pinctrl-names:
-> > > +    const: default
-> >
-> > pinctrl properties are implicitly allowed an don't have to be listed
-> > here.
->
-> Great.
->
-> >
-> > > +
-> > > +  power-domains:
-> > > +    $ref: '/schemas/types.yaml#/definitions/phandle-array'
-> >
-> > Don't need a type.
-> >
-> > > +    description:
-> > > +      List of phandles and PM domain specifiers, as defined by bindings of the
-> > > +      PM domain provider.
-> >
-> > Don't need to re-define common properties.
-> >
-> > You do need to say how many power domains (maxItems: 1?).
->
-> We support multiple power domains, so technically there is no upper
-> limit. What should I put here in this case?
-
-There's an upper limit in the h/w so there should be some sort of limit.
-
-
-> > > +  fsl,dai-index:
-> > > +    $ref: '/schemas/types.yaml#/definitions/uint32'
-> > > +    description: Physical DAI index, must match the index from topology file
-> >
-> > Sorry, we don't do indexes in DT.
-> >
-> > What's a topology file?
->
-> Topology files are binary blobs that contain the description of an
-> audio pipeline. They are built
-> are written in a specific format and compiled with alsa-tplg tools in userspace.
->
-> Then loaded via firmware interface inside the kernel.
-
-Sounds like a kernel-userspace issue that has nothing to do with DT.
-How do other platforms deal with mulitple DAIs?
-
-Rob
