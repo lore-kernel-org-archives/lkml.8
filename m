@@ -2,149 +2,195 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB2CC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A64C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D6C2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:40:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="W3My0/kq"
+	by mail.kernel.org (Postfix) with ESMTP id 1C1BE20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbgCRXkh (ORCPT
+        id S1727282AbgCRXlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:40:37 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38675 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCRXkh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:40:37 -0400
-Received: by mail-lj1-f194.google.com with SMTP id w1so382346ljh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 16:40:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dXfbgXntHAqJkORLDplPcK3uRdwwGaipj0NNSSNRkKE=;
-        b=W3My0/kqe4GSUvBRYSNeCxLRetpxovuA2EubrEcXHvECMKfgV7i1qsI10ajL3n5Spy
-         y6mMwH2YLGS4Pc7bfO44lCELTKfi1WfPSaI7gsYtckhtSi55vKtr39eP2KI9XcM8DhTC
-         O8S24T245kzt1pBnCugHuGrpmI+d7xi3UzI5/XpTcMXdcRn9NrjfbwjUF6TcFzgn/s0Q
-         yS7VaRDStDbaTNS4PmysDhfHjuQjwWpif3MpCAKJKSnKGNI6qf59EeYr+sFVUeUBlILK
-         H+IX9FpvI/3u4RTn6kt5SCjsXBXc1XZC+i8Gn5ekFkWDV47VG245c24tBfwExv1rFe5L
-         6q0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dXfbgXntHAqJkORLDplPcK3uRdwwGaipj0NNSSNRkKE=;
-        b=s0p8AMakCjBmOr2XAHdTY4L2UWcjbHbogmCuarUSUTLFapZRB2BJvaKv/yAX4ty96P
-         +BmNfp6q5+8iAJMHrGCaMO+OVOzfKd/LVhtr4UZE1CXI+20XI6UJ/Ht8QOY6lRe9Mql2
-         sSYM+T0av9g1CBh4ipq+BKuSgFljVbbBBfNreIWPaIDXjdbrz4wYy9Az+s75kmSFLUsR
-         EmatZARdPejxYDSzLe9SZbhKe2PclCvZr84scaPvICDMMt28YuN6M87v6Jx8Y0QyaV0p
-         P0fTddxREfBLJlvbtWPDLJV2R9h73Dul+LagTaXJfZV3JRb3m1MneHqvOGcPZJoZSMdb
-         TmoA==
-X-Gm-Message-State: ANhLgQ3UWpGN/EeXp1mNlQrTXGpWjl6BVnyW9fybcjJqHPuS5W9W0gy0
-        lCDJ1nue4t/i73z3a2uVdc5fUlJp2Fc=
-X-Google-Smtp-Source: ADFU+vseHJop6X8zK5vE01ZnCbmWQzXFU7FlKUmuZ1iaSSoHrH+T0fLRmlRNcrgZi/XBGUa5TjbZ3g==
-X-Received: by 2002:a2e:2415:: with SMTP id k21mr267028ljk.9.1584574835031;
-        Wed, 18 Mar 2020 16:40:35 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id u10sm90760ljj.88.2020.03.18.16.40.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 16:40:34 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 6855E1025D1; Thu, 19 Mar 2020 02:40:36 +0300 (+03)
-Date:   Thu, 19 Mar 2020 02:40:36 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: khugepaged: fix potential page state corruption
-Message-ID: <20200318234036.aw3awl25gxrjd2jl@box>
-References: <1584573582-116702-1-git-send-email-yang.shi@linux.alibaba.com>
+        Wed, 18 Mar 2020 19:41:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10263 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726647AbgCRXlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 19:41:00 -0400
+IronPort-SDR: Io92QD2bzhy6QoIKWRi2jdmavUtSQASwLI5/Gwfd7cGVyYszGMEeeB7MwvOWw5djPnXFbdd3JD
+ n7W4WYHlb0qg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 16:41:00 -0700
+IronPort-SDR: 0AVhMY1N7Bew7T72sRrIi/R0AJB7HLwB+oIbbsdRHG/yIZfELvtaMSTqUteyQOYCXWykJa7GT4
+ Qr792+12M5Mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,569,1574150400"; 
+   d="scan'208";a="248350854"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga006.jf.intel.com with ESMTP; 18 Mar 2020 16:40:59 -0700
+Date:   Wed, 18 Mar 2020 16:40:58 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200318234057.GE26164@linux.intel.com>
+References: <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <254f1e35-4302-e55f-c00d-0f91d9503498@fortanix.com>
+ <CAOASepOm8-2UCdEnVMopEprMGWjkYUbUTX++dHaqCafi2ju8mA@mail.gmail.com>
+ <20200313164622.GC5181@linux.intel.com>
+ <CAOASepN1hxSgxVJAJiAbSmuCTCHd=95Mnvh6BKNSPJs=EpAmbQ@mail.gmail.com>
+ <20200313184452.GD5181@linux.intel.com>
+ <CAOASepP_oGOenjCvAvLg+e+=fz4H0X=cyD+v5ywD0peeXEEmYg@mail.gmail.com>
+ <20200313220820.GE5181@linux.intel.com>
+ <CAOASepMicT6CrYyDkoYizh4nAZ+1Zn4rGQh7QjfzSK72Fj6u_g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1584573582-116702-1-git-send-email-yang.shi@linux.alibaba.com>
+In-Reply-To: <CAOASepMicT6CrYyDkoYizh4nAZ+1Zn4rGQh7QjfzSK72Fj6u_g@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 07:19:42AM +0800, Yang Shi wrote:
-> When khugepaged collapses anonymous pages, the base pages would be freed
-> via pagevec or free_page_and_swap_cache().  But, the anonymous page may
-> be added back to LRU, then it might result in the below race:
-> 
-> 	CPU A				CPU B
-> khugepaged:
->   unlock page
->   putback_lru_page
->     add to lru
-> 				page reclaim:
-> 				  isolate this page
-> 				  try_to_unmap
->   page_remove_rmap <-- corrupt _mapcount
-> 
-> It looks nothing would prevent the pages from isolating by reclaimer.
-> 
-> The other problem is the page's active or unevictable flag might be
-> still set when freeing the page via free_page_and_swap_cache().  The
-> putback_lru_page() would not clear those two flags if the pages are
-> released via pagevec, it sounds nothing prevents from isolating active
-> or unevictable pages.
-> 
-> However I didn't really run into these problems, just in theory by visual
-> inspection.
-> 
-> And, it also seems unnecessary to have the pages add back to LRU again since
-> they are about to be freed when reaching this point.  So, clearing active
-> and unevictable flags, unlocking and dropping refcount from isolate
-> instead of calling putback_lru_page() as what page cache collapse does.
-> 
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
->  mm/khugepaged.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index b679908..f42fa4e 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -673,7 +673,6 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
->  			src_page = pte_page(pteval);
->  			copy_user_highpage(page, src_page, address, vma);
->  			VM_BUG_ON_PAGE(page_mapcount(src_page) != 1, src_page);
-> -			release_pte_page(src_page);
->  			/*
->  			 * ptl mostly unnecessary, but preempt has to
->  			 * be disabled to update the per-cpu stats
-> @@ -687,6 +686,15 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
->  			pte_clear(vma->vm_mm, address, _pte);
->  			page_remove_rmap(src_page, false);
->  			spin_unlock(ptl);
-> +
-> +			dec_node_page_state(src_page,
-> +				NR_ISOLATED_ANON + page_is_file_cache(src_page));
-> +			ClearPageActive(src_page);
-> +			ClearPageUnevictable(src_page);
-> +			unlock_page(src_page);
-> +			/* Drop refcount from isolate */
-> +			put_page(src_page);
-> +
->  			free_page_and_swap_cache(src_page);
->  		}
->  	}
+On Sat, Mar 14, 2020 at 10:10:26AM -0400, Nathaniel McCallum wrote:
+> On Fri, Mar 13, 2020 at 6:08 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> > > > > 4. sub/add to %rsp rather than save/restore
+> > > >
+> > > > Can you elaborate on why you want to sub/add to %rsp instead of having the
+> > > > enclave unwind the stack?  Preserving %rsp across EEXIT/ERESUME seems more
+> > > > in line with function call semantics, which I assume is desirable?  E.g.
+> > > >
+> > > >   push param3
+> > > >   push param2
+> > > >   push param1
+> > > >
+> > > >   enclu[EEXIT]
+> > > >
+> > > >   add $0x18, %rsp
+> > >
+> > > Before enclave EEXIT, the enclave restores %rsp to the value it had
+> > > before EENTER was called. Then it pushes additional output arguments
+> > > onto the stack. The enclave calls EENCLU[EEXIT].
+> > >
+> > > We are now in __vdso...() on the way back to the caller. However, %rsp
+> > > has a different value than we entered the function with. This breaks
+> > > x86_64 ABI, obviously. The handler needs to fix this up: how does it
+> > > do so?
 
-I will look at this closer tomorrow, but looks like an easier fix is to
-move release_pte_page() under ptl that we take just after it.
+Circling back to this request, because I just realized that the above is
+handled by saving %rsp into %rbp and requiring the enclave and handler
+to preserve %rbp at all times.
 
--- 
- Kirill A. Shutemov
+So the below discussion on making the %rsp adjustment relative is moot,
+at least with respect to getting out of __vdso() if the enclave has mucked
+with the untrusted stack.
+
+> > > In the current code, __vdso..() saves the value of %rsp, calls the
+> > > handler and then restores %rsp. The handler can fix up the stack by
+> > > setting the correct value to %rbx and returning without restoring it.
+> >
+> > Ah, you're referring to the patch where the handler decides to return all
+> > the way back to the caller of __vdso...().
+> >
+> > > But this requires internal knowledge of the __vdso...() function,
+> > > which could theoretically change in the future.
+> > >
+> > > If instead the __vdso...() only did add/sub, then the handler could do:
+> > > 1. pop return address
+> > > 2. pop handler stack params
+> > > 3. pop enclave additional output stack params
+> > > 4. push handler stack params
+> > > 5. push return address
+
+Per above, this is unnecessary when returning to the caller of __vdso().
+It would be necessary if the enclave wasn't smart enough to do it's own
+stack cleanup, but that seems like a very bizarre contract between the
+enclave and its runtime.
+
+The caveat is if %rbx is saved/restored by __vdso().  If we want a
+traditional frame pointer, then %rbx would be restored from the stack
+before %rsp itself is restored (from %rbp), in which case the exit handler
+would need to adjust %rsp using a sequence similar to what you listed
+above.
+
+If __vdso() uses a non-standard frame pointer, e.g.
+
+  push %rbp
+  push %rbx
+  mov  %rsp, %rbp
+
+then %rbx would come off the stack after %rsp is restored from %rbp, i.e.
+would be guaranteed to be restored to the pre-EENTER value (unless the
+enclave or handler mucks with %rbp).
+
+Anyways, we can discuss how to implement the frame pointer in the context
+of the patches, just wanted to point this out here for completeness.
+
+> > > While this is more work, it is standard calling convention work that
+> > > doesn't require internal knowledge of __vdso..(). Alternatively, if we
+> > > don't like the extra work, we can document the %rbx hack explicitly
+> > > into the handler documentation and make it part of the interface. But
+> > > we need some explicit way for the handler to pop enclave output stack
+> > > params that doesn't depend on internal knowledge of the __vdso...()
+> > > invariants.
+> >
+> > IIUC, this is what you're suggesting?  Having to align the stack makes this
+> > a bit annoying, but it's not bad by any means.
+> >
+> > diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> > index 94a8e5f99961..05d54f79b557 100644
+> > --- a/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> > +++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> > @@ -139,8 +139,9 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+> >         /* Pass the untrusted RSP (at exit) to the callback via %rcx. */
+> >         mov     %rsp, %rcx
+> >
+> > -       /* Save the untrusted RSP in %rbx (non-volatile register). */
+> > +       /* Save the untrusted RSP offset in %rbx (non-volatile register). */
+> >         mov     %rsp, %rbx
+> > +       and     $0xf, %rbx
+> >
+> >         /*
+> >          * Align stack per x86_64 ABI. Note, %rsp needs to be 16-byte aligned
+> > @@ -161,8 +162,8 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+> >         mov     0x20(%rbp), %rax
+> >         call    .Lretpoline
+> >
+> > -       /* Restore %rsp to its post-exit value. */
+> > -       mov     %rbx, %rsp
+> > +       /* Undo the post-exit %rsp adjustment. */
+> > +       lea     0x20(%rsp,%rbx), %rsp
+> >
+> >
+> > That's reasonable, let's the handler play more games with minimal overhead.
+> 
+> Yes, exactly!
+> 
+> > > > > That would make this a very usable and fast interface without
+> > > > > sacrificing any of its current power.
+> > > >
+> > >
+> >
+> 
