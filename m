@@ -2,562 +2,138 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AD9C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4945C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D748B20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8011F20719
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:39:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q+g51GD0"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JBORuCyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgCRRjM (ORCPT
+        id S1726869AbgCRRjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:39:12 -0400
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:34031 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgCRRjL (ORCPT
+        Wed, 18 Mar 2020 13:39:49 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39026 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgCRRjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:39:11 -0400
-Received: by mail-wm1-f74.google.com with SMTP id z26so1331194wmk.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:39:09 -0700 (PDT)
+        Wed, 18 Mar 2020 13:39:49 -0400
+Received: by mail-oi1-f195.google.com with SMTP id d63so26646863oig.6
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:39:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rK1ITrqRONL3mQZw4XYYSSwqWEyHadP5oWedteETYsk=;
-        b=q+g51GD00VnlhmvRzXc/On8KILqXVgidRUQfkl63AXfg1tDlQyZ5jQB222wfsCCaZo
-         TMC75Kr5caRBqiXayDReQkWhD5N8vNrOuOgUya7IUs89QRmV6oM+PMS5gWV0IbIDdKTc
-         2ZMdUzYe8lZKt9MIkm3KHM75diULuZYBBgf7nWk0ZxnFdms0TpUnsSdHo6MVJZ9n+f7+
-         pUMlkmq0X2i17n1Q/NiY5AI1ek+RUQU0VB5KtwyURk5mWrPxUaj9YxIOkoS6OswOfreW
-         i+39KPhPjlx3tVr3iBbL0ZtuZqXPgtiMBLhMH8htqcXmsRq5+0zpOy1xiopoBGI8rl7+
-         0tyg==
+        bh=kHYLZgvsf1hWg7wss08IWO7NiACgg0ycsHnQwwOGC/o=;
+        b=JBORuCypw8sBksHmM30bDIzjuQ7RWsVH6HMT8e5ZaAVU7E8G6gkLWQXlEXXe77DKFQ
+         MEA/XkeQop3sDtmPEZQHtrMj94AdEeN8yd8hg/I1C9cRQ6xjEE8qLKRT47rl3r+tzT40
+         6BsMYAkcZL536h8DRosc6/sOuEC/CAYbvmnqVZon/PlG100ssTNQ+6FH/8RzYwLGTpqu
+         rYSGNJL2N+7JGsIO7iIdNQIE8oK+Ss3njal+LQtaT1wlGTgK5+rBFdPMv9J8LObp45tO
+         tW5A2oDc//SHWgrjawQAy0iImOIi+JvH9jJRtWWByCfhxeehscEF31ycY5u8kMsPUM6o
+         FIZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=rK1ITrqRONL3mQZw4XYYSSwqWEyHadP5oWedteETYsk=;
-        b=a8yfjvgoNPR0xwZ8/muboCHEWHF6EAx6GPdaJB1x7W+1BgZAwzg652O+xIzeA8Tkym
-         ndAoZgAd58wZayQFqd528eBiq4XoQ1UhxLmNvhBrQOC5+bCw0OnGzKUeFR4KTOI3zpBq
-         XTnbaVo1lh7upbKXvf//0pg1Lz6C5AQlfntZmGREfSd0Xj4KVNYSn4wB3Rkzh5rfNdt1
-         sNoprNlwGtYaD0l2vsP4mNIO6rrJzR+dhaK9g19d96uxPgL4EmG+NwPIQnGLSqsYxB4+
-         GXFCGKoXjb5xv9bMWP5s/Z1Dk7URbvBa35pCYHLRXpObS1VXcjbECZ7jx+YmgoHJkSrt
-         558A==
-X-Gm-Message-State: ANhLgQ29Ye/sBy3YYsO4DM4YswlqvtcMMJf0pjhOA+kCLge3Sm6HW4Ry
-        EeMg8rpt82Z2j92IK19w5wgtZhJAiA==
-X-Google-Smtp-Source: ADFU+vtDaWQnhBTFo4DZE4Ctzoif7elggQLLd6tU3iGyQuY/vyazTQNQpmeqI2V0bQZl8o8mLWKX/8uiKA==
-X-Received: by 2002:a5d:522f:: with SMTP id i15mr6500780wra.231.1584553148835;
- Wed, 18 Mar 2020 10:39:08 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 18:38:45 +0100
-In-Reply-To: <20200318173845.220793-1-elver@google.com>
-Message-Id: <20200318173845.220793-2-elver@google.com>
-Mime-Version: 1.0
-References: <20200318173845.220793-1-elver@google.com>
-X-Mailer: git-send-email 2.25.1.481.gfbce0eb801-goog
-Subject: [PATCH 2/2] kcsan: Avoid blocking producers in prepare_report()
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, dvyukov@google.com, glider@google.com,
-        andreyknvl@google.com, cai@lca.pw, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kHYLZgvsf1hWg7wss08IWO7NiACgg0ycsHnQwwOGC/o=;
+        b=Pn44vQZl9UzkWZ4Kw1+0gvgIOPqPEJ3ENuJRRMJy4p0LWG/P7GJtwCkKMp0LL3Nxz4
+         nApIWM6gz/OCUXolPD5mqLwJre/78FNH/eQv4Ki6oUFonDMHSs/Ev/bImSK5Wj+vZZ90
+         Xb7646X88uRoSlU3mnSEcydvW0wgQEadfK2hRH6O9g3ixP16OACbkCXz9GnZuS8nvFfQ
+         Rdo4g7XWt16aS0XAU2qbga7RZnLw30FtOLft+ybeKXHyHQrUtAHNKUSvAYTfiqMW8D+P
+         T/wGjzAdJGOJCiH7QQEyfJivjbc2isXePS90zbdoiydhIo6ev0W0Pyo1z5rwG9h33hUV
+         YzvQ==
+X-Gm-Message-State: ANhLgQ2dExFNicGvbpiRsHq1h0mvcns338QdIM8h2J66rqubV6hjCobl
+        KXqQALQnyGDcKfCa2x9JVLQ7aiwiWoPK9A4u64HkPQ==
+X-Google-Smtp-Source: ADFU+vv61FyRVYmaA9PTdDt51tbofJ336O0XLQe2BKgEmzbR6+s801/WV/yc2hI80eFyXV6kWzP+gw13nONTF6vPPUI=
+X-Received: by 2002:a05:6808:495:: with SMTP id z21mr4194137oid.149.1584553188875;
+ Wed, 18 Mar 2020 10:39:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <158318760361.2216124.13612198312947463590.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAPcyv4hjgNruY84Kr9S5HZ6P03fNcPcmL7H2DN19Z+CbPZ7d+Q@mail.gmail.com> <CAJZ5v0heWeS1iZqHEZ5RB2a=UJbUQF0zAjeFfTa9qBxvQ193=w@mail.gmail.com>
+In-Reply-To: <CAJZ5v0heWeS1iZqHEZ5RB2a=UJbUQF0zAjeFfTa9qBxvQ193=w@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 18 Mar 2020 10:39:37 -0700
+Message-ID: <CAPcyv4hH55e-tm7erJGm_jVn4gWigQfVPSAUu-DBC4XkF+WZHg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] ACPI: NUMA: Add 'nohmat' option
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To avoid deadlock in case watchers can be interrupted, we need to ensure
-that producers of the struct other_info can never be blocked by an
-unrelated consumer. (Likely to occur with KCSAN_INTERRUPT_WATCHER.)
+On Wed, Mar 18, 2020 at 1:24 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Wed, Mar 18, 2020 at 1:09 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > On Mon, Mar 2, 2020 at 2:36 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > Disable parsing of the HMAT for debug, to workaround broken platform
+> > > instances, or cases where it is otherwise not wanted.
+> >
+> > Rafael, any heartburn with this change to the numa= option?
+> >
+> > ...as I look at this I realize I failed to also update
+> > Documentation/x86/x86_64/boot-options.rst, will fix.
+>
+> Thanks!
+>
+> Apart from this just a minor nit below.
+>
+> > >
+> > > Cc: x86@kernel.org
+> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > > Cc: Andy Lutomirski <luto@kernel.org>
+> > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > Cc: Borislav Petkov <bp@alien8.de>
+> > > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > > ---
+> > >  arch/x86/mm/numa.c       |    4 ++++
+> > >  drivers/acpi/numa/hmat.c |    3 ++-
+> > >  include/acpi/acpi_numa.h |    1 +
+> > >  3 files changed, 7 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> > > index 59ba008504dc..22de2e2610c1 100644
+> > > --- a/arch/x86/mm/numa.c
+> > > +++ b/arch/x86/mm/numa.c
+> > > @@ -44,6 +44,10 @@ static __init int numa_setup(char *opt)
+> > >  #ifdef CONFIG_ACPI_NUMA
+> > >         if (!strncmp(opt, "noacpi", 6))
+> > >                 acpi_numa = -1;
+> > > +#ifdef CONFIG_ACPI_HMAT
+> > > +       if (!strncmp(opt, "nohmat", 6))
+> > > +               hmat_disable = 1;
+> > > +#endif
+>
+> I wonder if IS_ENABLED() would work here?
 
-There are several cases that can lead to this scenario, for example:
+I took a look. hmat_disable, acpi_numa, and numa_emu_cmdline() are in
+other compilation units. I could wrap writing those variables with
+helper functions, and change numa_emu_cmdline(), to compile away when
+their respective configuration options are not present.
 
-	1. A watchpoint A was set up by task T1, but interrupted by
-	   interrupt I1. Some other thread (task or interrupt) finds
-	   watchpoint A consumes it, and sets other_info. Then I1 also
-	   finds some unrelated watchpoint B, consumes it, but is blocked
-	   because other_info is in use. T1 cannot consume other_info
-	   because I1 never returns -> deadlock.
-
-	2. A watchpoint A was set up by task T1, but interrupted by
-	   interrupt I1, which also sets up a watchpoint B. Some other
-	   thread finds watchpoint A, and consumes it and sets up
-	   other_info with its information. Similarly some other thread
-	   finds watchpoint B and consumes it, but is then blocked because
-	   other_info is in use. When I1 continues it sees its watchpoint
-	   was consumed, and that it must wait for other_info, which
-	   currently contains information to be consumed by T1. However, T1
-	   cannot unblock other_info because I1 never returns -> deadlock.
-
-To avoid this, we need to ensure that producers of struct other_info
-always have a usable other_info entry. This is obviously not the case
-with only a single instance of struct other_info, as concurrent
-producers must wait for the entry to be released by some consumer (which
-may be locked up as illustrated above).
-
-While it would be nice if producers could simply call kmalloc() and
-append their instance of struct other_info to a list, we are very
-limited in this code path: since KCSAN can instrument the allocators
-themselves, calling kmalloc() could lead to deadlock or corrupted
-allocator state.
-
-Since producers of the struct other_info will always succeed at
-try_consume_watchpoint(), preceding the call into kcsan_report(), we
-know that the particular watchpoint slot cannot simply be reused or
-consumed by another potential other_info producer. If we move removal of
-a watchpoint after reporting (by the consumer of struct other_info), we
-can see a consumed watchpoint as a held lock on elements of other_info,
-if we create a one-to-one mapping of a watchpoint to an other_info
-element.
-
-Therefore, the simplest solution is to create an array of struct
-other_info that is as large as the watchpoints array in core.c, and pass
-the watchpoint index to kcsan_report() for producers and consumers, and
-change watchpoints to be removed after reporting is done.
-
-With a default config on a 64-bit system, the array other_infos consumes
-~37KiB. For most systems today this is not a problem. On smaller memory
-constrained systems, the config value CONFIG_KCSAN_NUM_WATCHPOINTS can
-be reduced appropriately.
-
-Overall, this change is a simplification of the prepare_report() code,
-and makes some of the checks (such as checking if at least one access is
-a write) redundant.
-
-Tested:
-$ tools/testing/selftests/rcutorture/bin/kvm.sh \
-	--cpus 12 --duration 10 --kconfig "CONFIG_DEBUG_INFO=y \
-	CONFIG_KCSAN=y CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=n \
-	CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY=n \
-	CONFIG_KCSAN_REPORT_ONCE_IN_MS=100000 CONFIG_KCSAN_VERBOSE=y \
-	CONFIG_KCSAN_INTERRUPT_WATCHER=y CONFIG_PROVE_LOCKING=y" \
-	--configs TREE03
-=> No longer hangs and runs to completion as expected.
-
-Reported-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Marco Elver <elver@google.com>
----
- kernel/kcsan/core.c   |  31 ++++--
- kernel/kcsan/kcsan.h  |   3 +-
- kernel/kcsan/report.c | 212 ++++++++++++++++++++----------------------
- 3 files changed, 124 insertions(+), 122 deletions(-)
-
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index f1c38620e3cf..4d8ea0fca5f1 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -69,7 +69,6 @@ static DEFINE_PER_CPU(struct kcsan_ctx, kcsan_cpu_ctx) = {
-  *   slot=9:  [10, 11,  9]
-  *   slot=63: [64, 65, 63]
-  */
--#define NUM_SLOTS (1 + 2*KCSAN_CHECK_ADJACENT)
- #define SLOT_IDX(slot, i) (slot + ((i + KCSAN_CHECK_ADJACENT) % NUM_SLOTS))
- 
- /*
-@@ -171,12 +170,16 @@ try_consume_watchpoint(atomic_long_t *watchpoint, long encoded_watchpoint)
- 	return atomic_long_try_cmpxchg_relaxed(watchpoint, &encoded_watchpoint, CONSUMED_WATCHPOINT);
- }
- 
--/*
-- * Return true if watchpoint was not touched, false if consumed.
-- */
--static inline bool remove_watchpoint(atomic_long_t *watchpoint)
-+/* Return true if watchpoint was not touched, false if already consumed. */
-+static inline bool consume_watchpoint(atomic_long_t *watchpoint)
- {
--	return atomic_long_xchg_relaxed(watchpoint, INVALID_WATCHPOINT) != CONSUMED_WATCHPOINT;
-+	return atomic_long_xchg_relaxed(watchpoint, CONSUMED_WATCHPOINT) != CONSUMED_WATCHPOINT;
-+}
-+
-+/* Remove the watchpoint -- its slot may be reused after. */
-+static inline void remove_watchpoint(atomic_long_t *watchpoint)
-+{
-+	atomic_long_set(watchpoint, INVALID_WATCHPOINT);
- }
- 
- static __always_inline struct kcsan_ctx *get_ctx(void)
-@@ -322,7 +325,8 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
- 
- 	if (consumed) {
- 		kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_MAYBE,
--			     KCSAN_REPORT_CONSUMED_WATCHPOINT);
-+			     KCSAN_REPORT_CONSUMED_WATCHPOINT,
-+			     watchpoint - watchpoints);
- 	} else {
- 		/*
- 		 * The other thread may not print any diagnostics, as it has
-@@ -470,7 +474,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		value_change = KCSAN_VALUE_CHANGE_TRUE;
- 
- 	/* Check if this access raced with another. */
--	if (!remove_watchpoint(watchpoint)) {
-+	if (!consume_watchpoint(watchpoint)) {
- 		/*
- 		 * Depending on the access type, map a value_change of MAYBE to
- 		 * TRUE (always report) or FALSE (never report).
-@@ -500,7 +504,8 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		if (is_assert && value_change == KCSAN_VALUE_CHANGE_TRUE)
- 			kcsan_counter_inc(KCSAN_COUNTER_ASSERT_FAILURES);
- 
--		kcsan_report(ptr, size, type, value_change, KCSAN_REPORT_RACE_SIGNAL);
-+		kcsan_report(ptr, size, type, value_change, KCSAN_REPORT_RACE_SIGNAL,
-+			     watchpoint - watchpoints);
- 	} else if (value_change == KCSAN_VALUE_CHANGE_TRUE) {
- 		/* Inferring a race, since the value should not have changed. */
- 
-@@ -510,9 +515,15 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 
- 		if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN) || is_assert)
- 			kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_TRUE,
--				     KCSAN_REPORT_RACE_UNKNOWN_ORIGIN);
-+				     KCSAN_REPORT_RACE_UNKNOWN_ORIGIN,
-+				     watchpoint - watchpoints);
- 	}
- 
-+	/*
-+	 * Remove watchpoint; must be after reporting, since the slot may be
-+	 * reused after this point.
-+	 */
-+	remove_watchpoint(watchpoint);
- 	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
- out_unlock:
- 	if (!kcsan_interrupt_watcher)
-diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-index 6630dfe32f31..763d6d08d94b 100644
---- a/kernel/kcsan/kcsan.h
-+++ b/kernel/kcsan/kcsan.h
-@@ -12,6 +12,7 @@
- 
- /* The number of adjacent watchpoints to check. */
- #define KCSAN_CHECK_ADJACENT 1
-+#define NUM_SLOTS (1 + 2*KCSAN_CHECK_ADJACENT)
- 
- extern unsigned int kcsan_udelay_task;
- extern unsigned int kcsan_udelay_interrupt;
-@@ -136,6 +137,6 @@ enum kcsan_report_type {
-  */
- extern void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 			 enum kcsan_value_change value_change,
--			 enum kcsan_report_type type);
-+			 enum kcsan_report_type type, int watchpoint_idx);
- 
- #endif /* _KERNEL_KCSAN_KCSAN_H */
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index de234d1c1b3d..ae0a383238ea 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -30,9 +30,7 @@ struct access_info {
- 
- /*
-  * Other thread info: communicated from other racing thread to thread that set
-- * up the watchpoint, which then prints the complete report atomically. Only
-- * need one struct, as all threads should to be serialized regardless to print
-- * the reports, with reporting being in the slow-path.
-+ * up the watchpoint, which then prints the complete report atomically.
-  */
- struct other_info {
- 	struct access_info	ai;
-@@ -59,7 +57,11 @@ struct other_info {
- 	struct task_struct	*task;
- };
- 
--static struct other_info other_infos[1];
-+/*
-+ * To never block any producers of struct other_info, we need as many elements
-+ * as we have watchpoints (upper bound on concurrent races to report).
-+ */
-+static struct other_info other_infos[CONFIG_KCSAN_NUM_WATCHPOINTS + NUM_SLOTS-1];
- 
- /*
-  * Information about reported races; used to rate limit reporting.
-@@ -96,10 +98,11 @@ struct report_time {
- static struct report_time report_times[REPORT_TIMES_SIZE];
- 
- /*
-- * This spinlock protects reporting and other_info, since other_info is usually
-- * required when reporting.
-+ * Spinlock serializing report generation, and access to @other_infos. Although
-+ * it could make sense to have a finer-grained locking story for @other_infos,
-+ * report generation needs to be serialized either way, so not much is gained.
-  */
--static DEFINE_SPINLOCK(report_lock);
-+static DEFINE_RAW_SPINLOCK(report_lock);
- 
- /*
-  * Checks if the race identified by thread frames frame1 and frame2 has
-@@ -395,9 +398,13 @@ static bool print_report(enum kcsan_value_change value_change,
- static void release_report(unsigned long *flags, struct other_info *other_info)
- {
- 	if (other_info)
--		other_info->ai.ptr = NULL; /* Mark for reuse. */
-+		/*
-+		 * Use size to denote valid/invalid, since KCSAN entirely
-+		 * ignores 0-sized accesses.
-+		 */
-+		other_info->ai.size = 0;
- 
--	spin_unlock_irqrestore(&report_lock, *flags);
-+	raw_spin_unlock_irqrestore(&report_lock, *flags);
- }
- 
- /*
-@@ -435,14 +442,14 @@ static void set_other_info_task_blocking(unsigned long *flags,
- 			 */
- 			set_current_state(TASK_UNINTERRUPTIBLE);
- 		}
--		spin_unlock_irqrestore(&report_lock, *flags);
-+		raw_spin_unlock_irqrestore(&report_lock, *flags);
- 		/*
- 		 * We cannot call schedule() since we also cannot reliably
- 		 * determine if sleeping here is permitted -- see in_atomic().
- 		 */
- 
- 		udelay(1);
--		spin_lock_irqsave(&report_lock, *flags);
-+		raw_spin_lock_irqsave(&report_lock, *flags);
- 		if (timeout-- < 0) {
- 			/*
- 			 * Abort. Reset @other_info->task to NULL, since it
-@@ -454,128 +461,107 @@ static void set_other_info_task_blocking(unsigned long *flags,
- 			break;
- 		}
- 		/*
--		 * If @ptr nor @current matches, then our information has been
--		 * consumed and we may continue. If not, retry.
-+		 * If invalid, or @ptr nor @current matches, then @other_info
-+		 * has been consumed and we may continue. If not, retry.
- 		 */
--	} while (other_info->ai.ptr == ai->ptr && other_info->task == current);
-+	} while (other_info->ai.size && other_info->ai.ptr == ai->ptr &&
-+		 other_info->task == current);
- 	if (is_running)
- 		set_current_state(TASK_RUNNING);
- }
- 
--/*
-- * Depending on the report type either sets other_info and returns false, or
-- * acquires the matching other_info and returns true. If other_info is not
-- * required for the report type, simply acquires report_lock and returns true.
-- */
--static bool prepare_report(unsigned long *flags, enum kcsan_report_type type,
--			   const struct access_info *ai, struct other_info *other_info)
-+/* Populate @other_info; requires that the provided @other_info not in use. */
-+static void prepare_report_producer(unsigned long *flags,
-+				    const struct access_info *ai,
-+				    struct other_info *other_info)
- {
--	if (type != KCSAN_REPORT_CONSUMED_WATCHPOINT &&
--	    type != KCSAN_REPORT_RACE_SIGNAL) {
--		/* other_info not required; just acquire report_lock */
--		spin_lock_irqsave(&report_lock, *flags);
--		return true;
--	}
-+	raw_spin_lock_irqsave(&report_lock, *flags);
- 
--retry:
--	spin_lock_irqsave(&report_lock, *flags);
-+	/*
-+	 * The same @other_infos entry cannot be used concurrently, because
-+	 * there is a one-to-one mapping to watchpoint slots (@watchpoints in
-+	 * core.c), and a watchpoint is only released for reuse after reporting
-+	 * is done by the consumer of @other_info. Therefore, it is impossible
-+	 * for another concurrent prepare_report_producer() to set the same
-+	 * @other_info, and are guaranteed exclusivity for the @other_infos
-+	 * entry pointed to by @other_info.
-+	 *
-+	 * To check this property holds, size should never be non-zero here,
-+	 * because every consumer of struct other_info resets size to 0 in
-+	 * release_report().
-+	 */
-+	WARN_ON(other_info->ai.size);
- 
--	switch (type) {
--	case KCSAN_REPORT_CONSUMED_WATCHPOINT:
--		if (other_info->ai.ptr)
--			break; /* still in use, retry */
-+	other_info->ai = *ai;
-+	other_info->num_stack_entries = stack_trace_save(other_info->stack_entries, NUM_STACK_ENTRIES, 2);
- 
--		other_info->ai = *ai;
--		other_info->num_stack_entries = stack_trace_save(other_info->stack_entries, NUM_STACK_ENTRIES, 1);
-+	if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-+		set_other_info_task_blocking(flags, ai, other_info);
- 
--		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
--			set_other_info_task_blocking(flags, ai, other_info);
-+	raw_spin_unlock_irqrestore(&report_lock, *flags);
-+}
- 
--		spin_unlock_irqrestore(&report_lock, *flags);
-+/* Awaits producer to fill @other_info and then returns. */
-+static bool prepare_report_consumer(unsigned long *flags,
-+				    const struct access_info *ai,
-+				    struct other_info *other_info)
-+{
- 
--		/*
--		 * The other thread will print the summary; other_info may now
--		 * be consumed.
--		 */
--		return false;
-+	raw_spin_lock_irqsave(&report_lock, *flags);
-+	while (!other_info->ai.size) { /* Await valid @other_info. */
-+		raw_spin_unlock_irqrestore(&report_lock, *flags);
-+		cpu_relax();
-+		raw_spin_lock_irqsave(&report_lock, *flags);
-+	}
- 
--	case KCSAN_REPORT_RACE_SIGNAL:
--		if (!other_info->ai.ptr)
--			break; /* no data available yet, retry */
-+	/* Should always have a matching access based on watchpoint encoding. */
-+	if (WARN_ON(!matching_access((unsigned long)other_info->ai.ptr & WATCHPOINT_ADDR_MASK, other_info->ai.size,
-+				     (unsigned long)ai->ptr & WATCHPOINT_ADDR_MASK, ai->size)))
-+		goto discard;
- 
-+	if (!matching_access((unsigned long)other_info->ai.ptr, other_info->ai.size,
-+			     (unsigned long)ai->ptr, ai->size)) {
- 		/*
--		 * First check if this is the other_info we are expecting, i.e.
--		 * matches based on how watchpoint was encoded.
-+		 * If the actual accesses to not match, this was a false
-+		 * positive due to watchpoint encoding.
- 		 */
--		if (!matching_access((unsigned long)other_info->ai.ptr & WATCHPOINT_ADDR_MASK, other_info->ai.size,
--				     (unsigned long)ai->ptr & WATCHPOINT_ADDR_MASK, ai->size))
--			break; /* mismatching watchpoint, retry */
--
--		if (!matching_access((unsigned long)other_info->ai.ptr, other_info->ai.size,
--				     (unsigned long)ai->ptr, ai->size)) {
--			/*
--			 * If the actual accesses to not match, this was a false
--			 * positive due to watchpoint encoding.
--			 */
--			kcsan_counter_inc(KCSAN_COUNTER_ENCODING_FALSE_POSITIVES);
--
--			/* discard this other_info */
--			release_report(flags, other_info);
--			return false;
--		}
-+		kcsan_counter_inc(KCSAN_COUNTER_ENCODING_FALSE_POSITIVES);
-+		goto discard;
-+	}
- 
--		if (!((ai->access_type | other_info->ai.access_type) & KCSAN_ACCESS_WRITE)) {
--			/*
--			 * While the address matches, this is not the other_info
--			 * from the thread that consumed our watchpoint, since
--			 * neither this nor the access in other_info is a write.
--			 * It is invalid to continue with the report, since we
--			 * only have information about reads.
--			 *
--			 * This can happen due to concurrent races on the same
--			 * address, with at least 4 threads. To avoid locking up
--			 * other_info and all other threads, we have to consume
--			 * it regardless.
--			 *
--			 * A concrete case to illustrate why we might lock up if
--			 * we do not consume other_info:
--			 *
--			 *   We have 4 threads, all accessing the same address
--			 *   (or matching address ranges). Assume the following
--			 *   watcher and watchpoint consumer pairs:
--			 *   write1-read1, read2-write2. The first to populate
--			 *   other_info is write2, however, write1 consumes it,
--			 *   resulting in a report of write1-write2. This report
--			 *   is valid, however, now read1 populates other_info;
--			 *   read2-read1 is an invalid conflict, yet, no other
--			 *   conflicting access is left. Therefore, we must
--			 *   consume read1's other_info.
--			 *
--			 * Since this case is assumed to be rare, it is
--			 * reasonable to omit this report: one of the other
--			 * reports includes information about the same shared
--			 * data, and at this point the likelihood that we
--			 * re-report the same race again is high.
--			 */
--			release_report(flags, other_info);
--			return false;
--		}
-+	return true;
- 
--		/* Matching access in other_info. */
--		return true;
-+discard:
-+	release_report(flags, other_info);
-+	return false;
-+}
- 
-+/*
-+ * Depending on the report type either sets @other_info and returns false, or
-+ * awaits @other_info and returns true. If @other_info is not required for the
-+ * report type, simply acquires @report_lock and returns true.
-+ */
-+static noinline bool prepare_report(unsigned long *flags,
-+				    enum kcsan_report_type type,
-+				    const struct access_info *ai,
-+				    struct other_info *other_info)
-+{
-+	switch (type) {
-+	case KCSAN_REPORT_CONSUMED_WATCHPOINT:
-+		prepare_report_producer(flags, ai, other_info);
-+		return false;
-+	case KCSAN_REPORT_RACE_SIGNAL:
-+		return prepare_report_consumer(flags, ai, other_info);
- 	default:
--		BUG();
-+		/* @other_info not required; just acquire @report_lock. */
-+		raw_spin_lock_irqsave(&report_lock, *flags);
-+		return true;
- 	}
--
--	spin_unlock_irqrestore(&report_lock, *flags);
--
--	goto retry;
- }
- 
- void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 		  enum kcsan_value_change value_change,
--		  enum kcsan_report_type type)
-+		  enum kcsan_report_type type, int watchpoint_idx)
- {
- 	unsigned long flags = 0;
- 	const struct access_info ai = {
-@@ -586,7 +572,11 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 		.cpu_id		= raw_smp_processor_id()
- 	};
- 	struct other_info *other_info = type == KCSAN_REPORT_RACE_UNKNOWN_ORIGIN
--					? NULL : &other_infos[0];
-+					? NULL : &other_infos[watchpoint_idx];
-+
-+	kcsan_disable_current();
-+	if (WARN_ON(watchpoint_idx < 0 || watchpoint_idx >= ARRAY_SIZE(other_infos)))
-+		goto out;
- 
- 	/*
- 	 * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
-@@ -596,7 +586,6 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 	 */
- 	lockdep_off();
- 
--	kcsan_disable_current();
- 	if (prepare_report(&flags, type, &ai, other_info)) {
- 		/*
- 		 * Never report if value_change is FALSE, only if we it is
-@@ -611,7 +600,8 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 
- 		release_report(&flags, other_info);
- 	}
--	kcsan_enable_current();
- 
- 	lockdep_on();
-+out:
-+	kcsan_enable_current();
- }
--- 
-2.25.1.481.gfbce0eb801-goog
-
+Should we do that in general to have a touch point to report "you
+specified an option that is invalid for your current kernel
+configuration"? I'm happy to do that as a follow-on if you think it's
+worthwhile.
