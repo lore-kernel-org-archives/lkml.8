@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BD4C43333
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5CEC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A21120BED
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8C020724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564826;
-	bh=F0FLa2iKgD3VIOUQXUfJd6u9S0Ph0eysk4JIX+3072E=;
+	s=default; t=1584564829;
+	bh=41DXBGjIFS78mwqNahQaRX/x1oKwlEdRCUA3qcHJC94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uI47rBbG28pUwJuM8cs970u5mcvXZWa1In6dZzKJGZ2w/IU/FigNqwfDndYfZF288
-	 ZE2KtqrB29Ixc9bNKfztyRpAmOaxdyKKw9RAIceHC4hDUYfLVz9N18Jy0uaFOGP3nD
-	 G0LAHoT5iQtn5xwAE6O1wfQjuVRP/ogByw73F5iQ=
+	b=iV/QTa6QADUg2MrqzIj6K2+F6fD2z9O0LD9nlE2N4lrELvHePy8LR2bQBbaaiqtMe
+	 rdc+ij7SvYf4xjyKURu8BL0VmERO0OwJdCNUlwZLc1VrJ58Y0PYguBTKyYRfh8ciAv
+	 aBJA4Idc3DNM3ITJHZBdGSkNaX7761NmYu127E88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbgCRUxp (ORCPT
+        id S1727325AbgCRUxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:53:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52772 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:53:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbgCRUxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:53:43 -0400
+        id S1727297AbgCRUxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:53:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEF4020775;
-        Wed, 18 Mar 2020 20:53:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77D5C208FE;
+        Wed, 18 Mar 2020 20:53:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564822;
-        bh=F0FLa2iKgD3VIOUQXUfJd6u9S0Ph0eysk4JIX+3072E=;
+        s=default; t=1584564825;
+        bh=41DXBGjIFS78mwqNahQaRX/x1oKwlEdRCUA3qcHJC94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T/6SsHQbK/w/BpCu+x/aDWJv1ibsanSGXs/Cte/h0Hs8yA+g8+cd3UdzdIpE6kGZq
-         xxZW81rsfFh9wXuhcXR+XYKU7/zzgNszo3Bu0VIzkOXEb1Z7nNqYhKbAsZJOObTYNE
-         swBZB0nGU3X91u5Tx4tD6wIVwt+1rGj+/ZgbjaKQ=
+        b=KdylkQu4OzmRcKfAFpYrQlOMCXnQZuXSBS3TFr2DvbZR9keCKvPsDXqFHk79lIZge
+         mVi5o9jOXvtkAu0wLztgZMCEIFRRkIuB+TUizYXlcnZoRchR2Z4/a5TiRhIbtGJ5WP
+         x0q7i9ZPMpJ7qkten5xSwuki5sc0spd6167Rq1G4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com,
-        syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 04/73] batman-adv: Don't schedule OGM for disabled interface
-Date:   Wed, 18 Mar 2020 16:52:28 -0400
-Message-Id: <20200318205337.16279-4-sashal@kernel.org>
+Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 06/73] pinctrl: imx: scu: Align imx sc msg structs to 4
+Date:   Wed, 18 Mar 2020 16:52:30 -0400
+Message-Id: <20200318205337.16279-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -63,45 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit 8e8ce08198de193e3d21d42e96945216e3d9ac7f ]
+[ Upstream commit 4c48e549f39f8ed10cf8a0b6cb96f5eddf0391ce ]
 
-A transmission scheduling for an interface which is currently dropped by
-batadv_iv_ogm_iface_disable could still be in progress. The B.A.T.M.A.N. V
-is simply cancelling the workqueue item in an synchronous way but this is
-not possible with B.A.T.M.A.N. IV because the OGM submissions are
-intertwined.
+The imx SC api strongly assumes that messages are composed out of
+4-bytes words but some of our message structs have odd sizeofs.
 
-Instead it has to stop submitting the OGM when it detect that the buffer
-pointer is set to NULL.
+This produces many oopses with CONFIG_KASAN=y.
 
-Reported-by: syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com
-Reported-by: syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com
-Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Cc: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fix by marking with __aligned(4).
+
+Fixes: b96eea718bf6 ("pinctrl: fsl: add scu based pinctrl support")
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Link: https://lore.kernel.org/r/bd7ad5fd755739a6d8d5f4f65e03b3ca4f457bd2.1582216144.git.leonard.crestez@nxp.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/bat_iv_ogm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/freescale/pinctrl-scu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/batman-adv/bat_iv_ogm.c b/net/batman-adv/bat_iv_ogm.c
-index 5b0b20e6da956..d88a4de022372 100644
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -789,6 +789,10 @@ static void batadv_iv_ogm_schedule_buff(struct batadv_hard_iface *hard_iface)
+diff --git a/drivers/pinctrl/freescale/pinctrl-scu.c b/drivers/pinctrl/freescale/pinctrl-scu.c
+index 73bf1d9f9cc6f..23cf04bdfc55d 100644
+--- a/drivers/pinctrl/freescale/pinctrl-scu.c
++++ b/drivers/pinctrl/freescale/pinctrl-scu.c
+@@ -23,12 +23,12 @@ struct imx_sc_msg_req_pad_set {
+ 	struct imx_sc_rpc_msg hdr;
+ 	u32 val;
+ 	u16 pad;
+-} __packed;
++} __packed __aligned(4);
  
- 	lockdep_assert_held(&hard_iface->bat_iv.ogm_buff_mutex);
+ struct imx_sc_msg_req_pad_get {
+ 	struct imx_sc_rpc_msg hdr;
+ 	u16 pad;
+-} __packed;
++} __packed __aligned(4);
  
-+	/* interface already disabled by batadv_iv_ogm_iface_disable */
-+	if (!*ogm_buff)
-+		return;
-+
- 	/* the interface gets activated here to avoid race conditions between
- 	 * the moment of activating the interface in
- 	 * hardif_activate_interface() where the originator mac is set and
+ struct imx_sc_msg_resp_pad_get {
+ 	struct imx_sc_rpc_msg hdr;
 -- 
 2.20.1
 
