@@ -2,95 +2,125 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E736C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D138C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6555720775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:22:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="WVqbhFQ0"
+	by mail.kernel.org (Postfix) with ESMTP id 0C59520775
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584566718;
+	bh=PPihHaGg1zzpn1nHu5VlZHYT+H8Lm/yb44OJhzptGDI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=qxVOK9fexZBFNT4Y8UGM2hpsYWDuTVdnkM1DkrceMmOZPBdEnGT6bwiT2NDhJ3/nq
+	 z7euKNnGHJTWw/iFDvXJRKYSPmODSmkxXjVDGPAnVDG4JNhb2OV/ioA9ajNdQ8cDpK
+	 gOIZrDIeRZunPwMr3vRURIHF5gF4rQg1rF1Oi4vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgCRVW1 (ORCPT
+        id S1727052AbgCRVZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:22:27 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46406 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRVW1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:22:27 -0400
-Received: by mail-ed1-f66.google.com with SMTP id ca19so32692215edb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 14:22:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+bCjnLS3/3LmRyiYvzCeE/0vqSGm4G29SOPcHPTj9Nk=;
-        b=WVqbhFQ0HR48r+Jly83+UZE8P2XU4MXcDvBjdCv/+lZ7WU9Dhpn90tdVquotwAqlz/
-         JsqXHb23GLWbxT5koy4F8KNdXAJEqWX20bawxKtIKTk5Quk+0U8wcsUZlpzGHUeIdrNq
-         /cpFn9SxnnFWjEmiMWBvgt+2yUugQASTApC6Iz/iguJH+0g7ZZhf4bZoL6vfM/Az7Zhl
-         JhdtZcR6edgPvHKH9UOGzHYP6FQB4qy9kHKF7NrZb0LOzwOiU3q9jqM0tq1G6VZFF/sr
-         nGUOF/EHJvpDpmOR5MsGL2ks8SxVwzn7ztkRp49TpEw8QcH87mfBkz2rGFpPLehUW8Ns
-         ENwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+bCjnLS3/3LmRyiYvzCeE/0vqSGm4G29SOPcHPTj9Nk=;
-        b=P7juTzR2LLfK22FKP/W4BNtO1cGFvHg5evqu64sGLcWMy4vymybnDjHihYalooIDKj
-         tA0FOL210fIk4UHoSe32ZCvJypzEwhREZgsjJfDcqiyU66B5OLua2ZhdJX9OQ2+YrmFk
-         CtowzaGXK7PbnSXUTLe1rJIyfWKlof2bH6FjQlW6s36ra9fLT4ljm0Nl0ov9LS2byayk
-         4lcaVc52HMFq9l9x8AxF1McByBqvEkErkO+e2a4ZyROcejCTgUitwpThZcJJtoh2K/kN
-         281T6zMNrwfv0qCyszd0dn0SYYpypYq6RPSInXvDfpuLGsEhOFUrZ9xRkYEaH9CpJ0in
-         QBXQ==
-X-Gm-Message-State: ANhLgQ14bulzXrW0UK6xaBrLXlLYbkKcld9/HtW2ZmVQmekHO0hixiBG
-        8EVQk0gqqNI/LRlLt3yde+QOb4sXYW0onjx8me3F
-X-Google-Smtp-Source: ADFU+vvWLUbUOKc99d+nJ2kGsVgRAyeTEiBSorjH6C4MXrjw/aBa+P204vtxxVwDExRc2vW8ycqRFM9YVxibuVJSAck=
-X-Received: by 2002:a17:906:7b8d:: with SMTP id s13mr198887ejo.77.1584566543231;
- Wed, 18 Mar 2020 14:22:23 -0700 (PDT)
+        Wed, 18 Mar 2020 17:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgCRVZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 17:25:16 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A267920772;
+        Wed, 18 Mar 2020 21:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584566716;
+        bh=PPihHaGg1zzpn1nHu5VlZHYT+H8Lm/yb44OJhzptGDI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=J4R5BuBT7s0ufQ6OkQFm2DJaGU3GVO9cGs2MX4LtzTi7i9JWE5dM20xu5JQTXlZ83
+         PEvcq3DTg4VilmyOANCyGwCHYadT4otbhpLYSpa8TZJkQXYvR3a8J+LlUM3ulELzZx
+         jLKhC0M9bULug4AxIw26CRfmCEZy/H4Ad8J0WRnI=
+Date:   Wed, 18 Mar 2020 16:25:13 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        linux-pci@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [patch V2 01/15] PCI/switchtec: Fix init_completion race
+ condition with poll_wait()
+Message-ID: <20200318212513.GA240916@google.com>
 MIME-Version: 1.0
-References: <cover.1584480281.git.rgb@redhat.com> <13ef49b2f111723106d71c1bdeedae09d9b300d8.1584480281.git.rgb@redhat.com>
- <20200318131128.axyddgotzck7cit2@madcap2.tricolour.ca>
-In-Reply-To: <20200318131128.axyddgotzck7cit2@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 18 Mar 2020 17:22:12 -0400
-Message-ID: <CAHC9VhTdLZop0eT11H4uSXRj5M=kBet=GkA8taDwGN_BVMyhrQ@mail.gmail.com>
-Subject: Re: [PATCH ghak25 v3 3/3] audit: add subj creds to NETFILTER_CFG
- record to cover async unregister
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, twoerner@redhat.com,
-        Eric Paris <eparis@parisplace.org>, fw@strlen.de,
-        ebiederm@xmission.com, tgraf@infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318204407.497942274@linutronix.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 9:12 AM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-03-17 17:30, Richard Guy Briggs wrote:
-> > Some table unregister actions seem to be initiated by the kernel to
-> > garbage collect unused tables that are not initiated by any userspace
-> > actions.  It was found to be necessary to add the subject credentials to
-> > cover this case to reveal the source of these actions.  A sample record:
-> >
-> >   type=NETFILTER_CFG msg=audit(2020-03-11 21:25:21.491:269) : table=nat family=bridge entries=0 op=unregister pid=153 uid=root auid=unset tty=(none) ses=unset subj=system_u:system_r:kernel_t:s0 comm=kworker/u4:2 exe=(null)
->
-> Given the precedent set by bpf unload, I'd really rather drop this patch
-> that adds subject credentials.
->
-> Similarly with ghak25's subject credentials, but they were already
-> present and that would change an existing record format, so it isn't
-> quite as justifiable in that case.
+On Wed, Mar 18, 2020 at 09:43:03PM +0100, Thomas Gleixner wrote:
+> From: Logan Gunthorpe <logang@deltatee.com>
+> 
+> The call to init_completion() in mrpc_queue_cmd() can theoretically
+> race with the call to poll_wait() in switchtec_dev_poll().
+> 
+>   poll()			write()
+>     switchtec_dev_poll()   	  switchtec_dev_write()
+>       poll_wait(&s->comp.wait);      mrpc_queue_cmd()
+> 			               init_completion(&s->comp)
+> 				         init_waitqueue_head(&s->comp.wait)
+> 
+> To my knowledge, no one has hit this bug.
+> 
+> Fix this by using reinit_completion() instead of init_completion() in
+> mrpc_queue_cmd().
+> 
+> Fixes: 080b47def5e5 ("MicroSemi Switchtec management interface driver")
+> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Link: https://lkml.kernel.org/r/20200313183608.2646-1-logang@deltatee.com
 
-Your comments have me confused - do you want this patch (v3 3/3)
-considered for merging or no?
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
--- 
-paul moore
-www.paul-moore.com
+Not because I understand and have reviewed this, but because I trust
+you to do the right thing and it belongs with the rest of the series.
+
+> ---
+>  drivers/pci/switch/switchtec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/switch/switchtec.c b/drivers/pci/switch/switchtec.c
+> index a823b4b8ef8a..81dc7ac01381 100644
+> --- a/drivers/pci/switch/switchtec.c
+> +++ b/drivers/pci/switch/switchtec.c
+> @@ -175,7 +175,7 @@ static int mrpc_queue_cmd(struct switchtec_user *stuser)
+>  	kref_get(&stuser->kref);
+>  	stuser->read_len = sizeof(stuser->data);
+>  	stuser_set_state(stuser, MRPC_QUEUED);
+> -	init_completion(&stuser->comp);
+> +	reinit_completion(&stuser->comp);
+>  	list_add_tail(&stuser->list, &stdev->mrpc_queue);
+>  
+>  	mrpc_cmd_submit(stdev);
+> -- 
+> 2.20.1
+> 
+> 
