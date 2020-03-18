@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32648C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6C3C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BCF20936
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10CED20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565483;
-	bh=IecWBB9KRK/UPSYOWw1TAS+W1HeeidbzQZsbE2VD+s8=;
+	s=default; t=1584565495;
+	bh=pzcPdQhupRlmCAI9v65WsirZbfz7Rj/Nmuo4MKCKWIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e6MByGdF5MHzrWkK1gsDlNgPC+JFrAyfN0eJPUlDYTAKc5jJtvZ074tvOUotc7OMR
-	 obPCuvbM5cdVg4tRDlNq7VaiXk1U3gZsVsjWnQGr5qsffDHvJ1E/8/jjHbwqQYNuNS
-	 JaHJod1tWjV6e89HDjf5k3uLVZRufsxcF7agNOTA=
+	b=zk+r6Q5Ixd8YFzJsPI+j8iK7RPVIcF75l2xVnzcnOCZGuWkpIc9g5eLfN3f54txPZ
+	 btF2DIrw3CqMPgcg6XZmH8gtmE2Whiw2pnGC8++rHdE9pvknoliQfQOwagT9tQjw/Z
+	 aVl2Xrbsb95VTAeawvt3MqXdROKo4d7ee2Vj+CI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgCRUzQ (ORCPT
+        id S1727301AbgCRVEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:55:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55488 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:04:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbgCRUzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:13 -0400
+        id S1728195AbgCRUzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03FF4208FE;
-        Wed, 18 Mar 2020 20:55:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CAA1208E4;
+        Wed, 18 Mar 2020 20:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564912;
-        bh=IecWBB9KRK/UPSYOWw1TAS+W1HeeidbzQZsbE2VD+s8=;
+        s=default; t=1584564906;
+        bh=pzcPdQhupRlmCAI9v65WsirZbfz7Rj/Nmuo4MKCKWIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QRptaqo20cwPneOeaiI8tEZkZEhLtfAosczNuZZpYVul8xslg172joWIUqe5R4glM
-         ovpS7V3ivTr7CVf92PUUFIT9nCTGEzIX/RToP2asLT+rTkEqSVllybza3gTlBxa3vF
-         Y8jX4JNysCOjVKHzHkYRCFdMimT8KW8BAkhsXVV0=
+        b=wb1gthT8nkhrMQ1z/qrGNoNPL0LQcOQ5qOY9d+9hsV5RS6/aeDwSwcxXavJ95UYvd
+         tx9H/5J7Hx6Ip5kEtGnUycUkZrkoIcT7ycX7vFDbuYWHaJesIcnlm7qMpiLnXw6yBf
+         ulNa3LNW2muZEMoac9NjRNaFxt0id+8Cy55w7eA0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        cgroups@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 02/37] cgroup: Iterate tasks that did not finish do_exit()
-Date:   Wed, 18 Mar 2020 16:54:34 -0400
-Message-Id: <20200318205509.17053-2-sashal@kernel.org>
+Cc:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.4 72/73] iommu/amd: Fix IOMMU AVIC not properly update the is_run bit in IRTE
+Date:   Wed, 18 Mar 2020 16:53:36 -0400
+Message-Id: <20200318205337.16279-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
-References: <20200318205509.17053-1-sashal@kernel.org>
+In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
+References: <20200318205337.16279-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,101 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Koutný <mkoutny@suse.com>
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-[ Upstream commit 9c974c77246460fa6a92c18554c3311c8c83c160 ]
+[ Upstream commit 730ad0ede130015a773229573559e97ba0943065 ]
 
-PF_EXITING is set earlier than actual removal from css_set when a task
-is exitting. This can confuse cgroup.procs readers who see no PF_EXITING
-tasks, however, rmdir is checking against css_set membership so it can
-transitionally fail with EBUSY.
+Commit b9c6ff94e43a ("iommu/amd: Re-factor guest virtual APIC
+(de-)activation code") accidentally left out the ir_data pointer when
+calling modity_irte_ga(), which causes the function amd_iommu_update_ga()
+to return prematurely due to struct amd_ir_data.ref is NULL and
+the "is_run" bit of IRTE does not get updated properly.
 
-Fix this by listing tasks that weren't unlinked from css_set active
-lists.
-It may happen that other users of the task iterator (without
-CSS_TASK_ITER_PROCS) spot a PF_EXITING task before cgroup_exit(). This
-is equal to the state before commit c03cd7738a83 ("cgroup: Include dying
-leaders with live threads in PROCS iterations") but it may be reviewed
-later.
+This results in bad I/O performance since IOMMU AVIC always generate GA Log
+entry and notify IOMMU driver and KVM when it receives interrupt from the
+PCI pass-through device instead of directly inject interrupt to the vCPU.
 
-Reported-by: Suren Baghdasaryan <surenb@google.com>
-Fixes: c03cd7738a83 ("cgroup: Include dying leaders with live threads in PROCS iterations")
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes by passing ir_data when calling modify_irte_ga() as done previously.
+
+Fixes: b9c6ff94e43a ("iommu/amd: Re-factor guest virtual APIC (de-)activation code")
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/cgroup.h |  1 +
- kernel/cgroup/cgroup.c | 23 ++++++++++++++++-------
- 2 files changed, 17 insertions(+), 7 deletions(-)
+ drivers/iommu/amd_iommu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-index b4854b48a4f3d..5ed1a2b285cdd 100644
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -62,6 +62,7 @@ struct css_task_iter {
- 	struct list_head		*mg_tasks_head;
- 	struct list_head		*dying_tasks_head;
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 8bd5d608a82c2..bc77714983421 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -4421,7 +4421,7 @@ int amd_iommu_activate_guest_mode(void *data)
+ 	entry->lo.fields_vapic.ga_tag      = ir_data->ga_tag;
  
-+	struct list_head		*cur_tasks_head;
- 	struct css_set			*cur_cset;
- 	struct css_set			*cur_dcset;
- 	struct task_struct		*cur_task;
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 08bd40d900660..c416ef3e34797 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -4157,12 +4157,16 @@ static void css_task_iter_advance_css_set(struct css_task_iter *it)
- 		}
- 	} while (!css_set_populated(cset) && list_empty(&cset->dying_tasks));
- 
--	if (!list_empty(&cset->tasks))
-+	if (!list_empty(&cset->tasks)) {
- 		it->task_pos = cset->tasks.next;
--	else if (!list_empty(&cset->mg_tasks))
-+		it->cur_tasks_head = &cset->tasks;
-+	} else if (!list_empty(&cset->mg_tasks)) {
- 		it->task_pos = cset->mg_tasks.next;
--	else
-+		it->cur_tasks_head = &cset->mg_tasks;
-+	} else {
- 		it->task_pos = cset->dying_tasks.next;
-+		it->cur_tasks_head = &cset->dying_tasks;
-+	}
- 
- 	it->tasks_head = &cset->tasks;
- 	it->mg_tasks_head = &cset->mg_tasks;
-@@ -4220,10 +4224,14 @@ static void css_task_iter_advance(struct css_task_iter *it)
- 		else
- 			it->task_pos = it->task_pos->next;
- 
--		if (it->task_pos == it->tasks_head)
-+		if (it->task_pos == it->tasks_head) {
- 			it->task_pos = it->mg_tasks_head->next;
--		if (it->task_pos == it->mg_tasks_head)
-+			it->cur_tasks_head = it->mg_tasks_head;
-+		}
-+		if (it->task_pos == it->mg_tasks_head) {
- 			it->task_pos = it->dying_tasks_head->next;
-+			it->cur_tasks_head = it->dying_tasks_head;
-+		}
- 		if (it->task_pos == it->dying_tasks_head)
- 			css_task_iter_advance_css_set(it);
- 	} else {
-@@ -4242,11 +4250,12 @@ static void css_task_iter_advance(struct css_task_iter *it)
- 			goto repeat;
- 
- 		/* and dying leaders w/o live member threads */
--		if (!atomic_read(&task->signal->live))
-+		if (it->cur_tasks_head == it->dying_tasks_head &&
-+		    !atomic_read(&task->signal->live))
- 			goto repeat;
- 	} else {
- 		/* skip all dying ones */
--		if (task->flags & PF_EXITING)
-+		if (it->cur_tasks_head == it->dying_tasks_head)
- 			goto repeat;
- 	}
+ 	return modify_irte_ga(ir_data->irq_2_irte.devid,
+-			      ir_data->irq_2_irte.index, entry, NULL);
++			      ir_data->irq_2_irte.index, entry, ir_data);
  }
+ EXPORT_SYMBOL(amd_iommu_activate_guest_mode);
+ 
+@@ -4447,7 +4447,7 @@ int amd_iommu_deactivate_guest_mode(void *data)
+ 				APICID_TO_IRTE_DEST_HI(cfg->dest_apicid);
+ 
+ 	return modify_irte_ga(ir_data->irq_2_irte.devid,
+-			      ir_data->irq_2_irte.index, entry, NULL);
++			      ir_data->irq_2_irte.index, entry, ir_data);
+ }
+ EXPORT_SYMBOL(amd_iommu_deactivate_guest_mode);
+ 
 -- 
 2.20.1
 
