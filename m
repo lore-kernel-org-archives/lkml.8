@@ -2,106 +2,152 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19619C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2352AC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1F420768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDA9320754
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:10:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="j9cqkV9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgCRTIx convert rfc822-to-8bit (ORCPT
+        id S1726869AbgCRTK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:08:53 -0400
-Received: from mga09.intel.com ([134.134.136.24]:11075 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbgCRTIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 15:08:53 -0400
-IronPort-SDR: IV9MTEfVauHWmjjwcLWLFZyn2NLX+XPqm64yzigO9/zqY64/IOqRiq+6LWY8EoE442LoUEuYZ+
- W2RuVNFwgHWw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 12:08:52 -0700
-IronPort-SDR: 1RER0b8WJ7uU8DuvOk4osBuYh5geyIp5mdkP0hKFt4oJVO/AlYK3IcBZB5ceYDANHUrVwjG6Uo
- Z88VEin0fhfw==
-X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
-   d="scan'208";a="418055805"
-Received: from gkern-mobl.ger.corp.intel.com (HELO localhost) ([10.252.54.69])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 12:08:47 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>,
-        linux-pwm@vger.kernel.org
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K?= =?utf-8?Q?=C3=B6nig?= 
-        <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Subject: Re: [PATCH v9 01/11] drm/i915: Use 64-bit division macro
-In-Reply-To: <19661821c8eb32291e72ec091c267f915c365c52.1584473399.git.gurus@codeaurora.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <cover.1584473399.git.gurus@codeaurora.org> <19661821c8eb32291e72ec091c267f915c365c52.1584473399.git.gurus@codeaurora.org>
-Date:   Wed, 18 Mar 2020 21:08:45 +0200
-Message-ID: <87h7yleb0i.fsf@intel.com>
+        Wed, 18 Mar 2020 15:10:57 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45756 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgCRTK4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 15:10:56 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 9so8925018oiq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 12:10:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mF3uqR0dI65g7bnW0IoscUYfl1Pu8OWv3Jeasc6I3BA=;
+        b=j9cqkV9WTwaRvdcnzXTDaIt+vzNztv/R+bD2UgJMLQtJeMU12eT/rGdhjyO/W0T/xM
+         1HVP7sesYmegIVG5wXh4mssL83KThrLmHOVhVNTxAqe/PN0hJokGjjKlQIDb3gZfTQU1
+         joonWCXOEMZStzU2POcK99QCo7KXD+wLcj/5M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mF3uqR0dI65g7bnW0IoscUYfl1Pu8OWv3Jeasc6I3BA=;
+        b=bgllQcn1UWqrGE8z3sPSpDxs3fihtAYldnh/30kc2qZ42F49g1hOwfqQ+qYvGhMAqi
+         CTX/B4dGgli1YogYNjidLG5Cs4KqlIIpRivrcqm90LVK2Kl8KMCUWIZp7XwkkIMwaoHk
+         ONOGXUb78tcGiuQZtKQ2VOIl+4ZoNTl9YY7Fhi5Pcr6WAn7rYq0M+ciKcsmmNYqJjjAD
+         05Wt0cwoX09NOgFFBKL2JigsYd1x/gafbCYnrgQ+CTiLtC3uZwC0/lXEX9YMQ72FV5sK
+         jnmRbU5ZQY686OE0xpTegepmvLriZz9yopY1uVyQ+Q0djJsYxSHiRNdl+8IsnbMtraqo
+         9ALA==
+X-Gm-Message-State: ANhLgQ2xmN7htLMpVP5Q6BTtz6rM3hcZXDAZWboG4/1TSw4FojDrnCEA
+        FXf5VIlvlxjfvebSFxxAgmeixEmXdufCXu8nWb+2Rg==
+X-Google-Smtp-Source: ADFU+vtvzb3ld5iCKPCDgez2fALttjMFd7OTN00Q0ZMjrPaTHDJx/5l+Ix8tro1kM1/JytRME65AEbqBNk+Hg/Bb3XU=
+X-Received: by 2002:aca:be08:: with SMTP id o8mr4150691oif.101.1584558654804;
+ Wed, 18 Mar 2020 12:10:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+References: <20200310133121.27913-1-wambui.karugax@gmail.com>
+ <20200310133121.27913-11-wambui.karugax@gmail.com> <20200318152627.GY2363188@phenom.ffwll.local>
+ <alpine.LNX.2.21.99999.375.2003181857010.54051@wambui> <CAKMK7uGwJ6nzLPzwtfUY79e1fSFxkrSgTfJuDeM4px6c0v13qg@mail.gmail.com>
+ <20200318165846.GC3090655@kroah.com>
+In-Reply-To: <20200318165846.GC3090655@kroah.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 18 Mar 2020 20:10:43 +0100
+Message-ID: <CAKMK7uGbg5Lax+eXJda4k9LNd7JBb+LRtRw4S+bZ4GbNGT--ZA@mail.gmail.com>
+Subject: Re: [PATCH v2 10/17] drm/vram-helper: make drm_vram_mm_debugfs_init()
+ return 0
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Wambui Karuga <wambui.karugax@gmail.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Mar 2020, Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-> Since the PWM framework is switching struct pwm_state.duty_cycle's
-> datatype to u64, prepare for this transition by using DIV_ROUND_UP_ULL
-> to handle a 64-bit dividend.
+On Wed, Mar 18, 2020 at 5:58 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: "Ville Syrjälä" <ville.syrjala@linux.intel.com>
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> On Wed, Mar 18, 2020 at 05:31:47PM +0100, Daniel Vetter wrote:
+> > On Wed, Mar 18, 2020 at 5:03 PM Wambui Karuga <wambui.karugax@gmail.com> wrote:
+> > >
+> > >
+> > >
+> > > On Wed, 18 Mar 2020, Daniel Vetter wrote:
+> > >
+> > > > On Tue, Mar 10, 2020 at 04:31:14PM +0300, Wambui Karuga wrote:
+> > > >> Since 987d65d01356 (drm: debugfs: make
+> > > >> drm_debugfs_create_files() never fail), drm_debugfs_create_files() never
+> > > >> fails and should return void. Therefore, remove its use as the
+> > > >> return value of drm_vram_mm_debugfs_init(), and have the function
+> > > >> return 0 directly.
+> > > >>
+> > > >> v2: have drm_vram_mm_debugfs_init() return 0 instead of void to avoid
+> > > >> introducing build issues and build breakage.
+> > > >>
+> > > >> References: https://lists.freedesktop.org/archives/dri-devel/2020-February/257183.html
+> > > >> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> > > >> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+> > > >> ---
+> > > >>  drivers/gpu/drm/drm_gem_vram_helper.c | 10 ++++------
+> > > >>  1 file changed, 4 insertions(+), 6 deletions(-)
+> > > >>
+> > > >> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
+> > > >> index 92a11bb42365..c8bcc8609650 100644
+> > > >> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
+> > > >> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+> > > >> @@ -1048,14 +1048,12 @@ static const struct drm_info_list drm_vram_mm_debugfs_list[] = {
+> > > >>   */
+> > > >>  int drm_vram_mm_debugfs_init(struct drm_minor *minor)
+> > > >>  {
+> > > >> -    int ret = 0;
+> > > >> -
+> > > >>  #if defined(CONFIG_DEBUG_FS)
+> > > >
+> > > > Just noticed that this #if here is not needed, we already have a dummy
+> > > > function for that case. Care to write a quick patch to remove it? On top
+> > > > of this patch series here ofc, I'm in the processing of merging the entire
+> > > > pile.
+> > > >
+> > > > Thanks, Daniel
+> > > Hi Daniel,
+> > > Without this check here, and compiling without CONFIG_DEBUG_FS, this
+> > > function is run and the drm_debugfs_create_files() does not have access to
+> > > the parameters also protected by an #if above this function. So the change
+> > > throws an error for me. Is that correct?
+> >
+> > Hm right. Other drivers don't #ifdef out their debugfs file functions
+> > ... kinda a bit disappointing that we can't do this in the neatest way
+> > possible.
+> >
+> > Greg, has anyone ever suggested to convert the debugfs_create_file
+> > function (and similar things) to macros that don't use any of the
+> > arguments, and then also annotating all the static functions/tables as
+> > __maybe_unused and let the compiler garbage collect everything?
+> > Instead of explicit #ifdef in all the drivers ...
 >
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-
-Also ack for merging this via whichever tree you prefer; please let me
-know if you want me to take this via drm-intel.
-
-> ---
->  drivers/gpu/drm/i915/display/intel_panel.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> No, no one has suggested that, having the functions be static inline
+> should make it all "just work" properly if debugfs is not enabled.  The
+> variables will not be used, so the compiler should just optimize them
+> away properly.
 >
-> diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
-> index bc14e9c..843cac1 100644
-> --- a/drivers/gpu/drm/i915/display/intel_panel.c
-> +++ b/drivers/gpu/drm/i915/display/intel_panel.c
-> @@ -1868,7 +1868,7 @@ static int pwm_setup_backlight(struct intel_connector *connector,
->  
->  	panel->backlight.min = 0; /* 0% */
->  	panel->backlight.max = 100; /* 100% */
-> -	panel->backlight.level = DIV_ROUND_UP(
-> +	panel->backlight.level = DIV_ROUND_UP_ULL(
->  				 pwm_get_duty_cycle(panel->backlight.pwm) * 100,
->  				 CRC_PMIC_PWM_PERIOD_NS);
->  	panel->backlight.enabled = panel->backlight.level != 0;
+> No checks for CONFIG_DEBUG_FS should be needed anywhere in .c code.
 
+So the trouble with this one is that the static inline functions for
+the debugfs file are wrapped in a #if too, and hence if we drop the
+#if around the function call stuff won't compile. Should we drop all
+the #if in the .c file and assume the compiler will remove all the
+dead code and dead functions?
+-Daniel (who has no idea how this all works really)
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
