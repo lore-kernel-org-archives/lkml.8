@@ -2,76 +2,131 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6A7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1951C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C5F20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3FD20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:06:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LLFwCb6m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgCRECW (ORCPT
+        id S1726647AbgCREGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 00:02:22 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:35458 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbgCRECW (ORCPT
+        Wed, 18 Mar 2020 00:06:12 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51717 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgCREGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 00:02:22 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3ED71140F8B8E;
-        Tue, 17 Mar 2020 21:02:21 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 21:02:20 -0700 (PDT)
-Message-Id: <20200317.210220.1278270199388080239.davem@davemloft.net>
-To:     opendmb@gmail.com
-Cc:     f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 0/2] net: bcmgenet: revisit MAC reset
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1584395096-41674-1-git-send-email-opendmb@gmail.com>
-References: <1584395096-41674-1-git-send-email-opendmb@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 17 Mar 2020 21:02:21 -0700 (PDT)
+        Wed, 18 Mar 2020 00:06:12 -0400
+Received: by mail-pj1-f65.google.com with SMTP id hg10so730066pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 21:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=7NJiSJJsn7uiLh7Cvx0ggtnn/qvPqiLQL9PelNdKr40=;
+        b=LLFwCb6m129VqiUIVzImsyROsA0l3qHoEFW2RsL6NyhHboHjx/0rnjK9+XtD0om9DO
+         viX51mgiD4HOHQmcqAn8ePhU2DbWhbUSLPthEUaT9kzr2VRfRup1FfsZHGubolbxvn3/
+         D83deLS0Ajd8WxTR2voZjpFeSdvcrop2W8CLA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=7NJiSJJsn7uiLh7Cvx0ggtnn/qvPqiLQL9PelNdKr40=;
+        b=E3rUfsKNPkbN2lziWG1pYRTPktAmS/Az+xKRgHmNz1Ut3QcLO/MHuaCrsBCL9wzRN2
+         TDiGxuw3fPIryANdSYPCpWjL+TpdYdqEbDMntIyyfb0LiBELkNvsJR2EsgUXuIlu5U+g
+         z9NssKWfmd0+tLiTxlJHvRZbiEcLx9ex/galkp3gylbIP6In3zLRjFlArmNgiqAWT3j0
+         c3/lHZBLm8yjcCmyYJXmGWk6WR1G/3st/feGJ7jxWv3THGoFSSaCVpHF4nkQnYlJQNou
+         dSBmOFXEQ6pniIZB11DjhLBzGMSYGUIg3Y1gts8XRfqfEzRIcukdZCO0MEenuzXEEkQe
+         MpGw==
+X-Gm-Message-State: ANhLgQ0Br9RJ9f0iD/GDspAEhvav23KqbDxyEbyj4rCqP8m4AJ1/Rl8g
+        cRpPwl/LwSXfd7WSJLo3Do+ewQ==
+X-Google-Smtp-Source: ADFU+vswXSlUDGAdugtErh23ZUQBbS2UhbxYy/RYtpM536DAaJBoaMNYPF9LnK+zOfqfCJkUUwH7Yw==
+X-Received: by 2002:a17:90a:21ce:: with SMTP id q72mr2543293pjc.160.1584504370417;
+        Tue, 17 Mar 2020 21:06:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y9sm3937422pgo.80.2020.03.17.21.06.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 21:06:09 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 21:06:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Anton Protopopov <a.s.protopopov@gmail.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>
+Subject: Re: [PATCH] seccomp: allow BPF_MOD ALU instructions
+Message-ID: <202003172058.3CB0D95@keescook>
+References: <20200316163646.2465-1-a.s.protopopov@gmail.com>
+ <202003161423.B51FDA8083@keescook>
+ <CAGn_itw594Q_-4gC8=3jjRGF-wx90GeXMWBAz54X-UEer9pbtA@mail.gmail.com>
+ <202003171314.387F3F187D@keescook>
+ <CAGn_itz7jgoP5J1pjJ7BLaeh4my=JY2yQ7T8ssoYrqPOWvwKug@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGn_itz7jgoP5J1pjJ7BLaeh4my=JY2yQ7T8ssoYrqPOWvwKug@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
-Date: Mon, 16 Mar 2020 14:44:54 -0700
+On Tue, Mar 17, 2020 at 09:11:57PM -0400, Anton Protopopov wrote:
+> вт, 17 мар. 2020 г. в 16:21, Kees Cook <keescook@chromium.org>:
+> >
+> > On Mon, Mar 16, 2020 at 06:17:34PM -0400, Anton Protopopov wrote:
+> > > and in every case to walk only a corresponding factor-list. In my case
+> > > I had a list of ~40 syscall numbers and after this change filter
+> > > executed in 17.25 instructions on average per syscall vs. 45
+> > > instructions for the linear filter (so this removes about 30
+> > > instructions penalty per every syscall). To replace "mod #4" I
+> > > actually used "and #3", but this obviously doesn't work for
+> > > non-power-of-two divisors. If I would use "mod 5", then it would give
+> > > me about 15.5 instructions on average.
+> >
+> > Gotcha. My real concern is with breaking the ABI here -- using BPF_MOD
+> > would mean a process couldn't run on older kernels without some tricks
+> > on the seccomp side.
+> 
+> Yes, I understood. Could you tell what would you do exactly if there
+> was a real need in a new instruction?
 
-> Commit 3a55402c9387 ("net: bcmgenet: use RGMII loopback for MAC 
-> reset") was intended to resolve issues with reseting the UniMAC
-> core within the GENET block by providing better control over the
-> clocks used by the UniMAC core. Unfortunately, it is not
-> compatible with all of the supported system configurations so an
-> alternative method must be applied.
-> 
-> This commit set provides such an alternative. The first commit
-> reverts the previous change and the second commit provides the
-> alternative reset sequence that addresses the concerns observed
-> with the previous implementation.
-> 
-> This replacement implementation should be applied to the stable
-> branches wherever commit 3a55402c9387 ("net: bcmgenet: use RGMII 
-> loopback for MAC reset") has been applied.
-> 
-> Unfortunately, reverting that commit may conflict with some
-> restructuring changes introduced by commit 4f8d81b77e66 ("net: 
-> bcmgenet: Refactor register access in bcmgenet_mii_config").
-> The first commit in this set has been manually edited to
-> resolve the conflict on net/master. I would be happy to help
-> stable maintainers with resolving any such conflicts if they
-> occur. However, I do not expect that commit to have been
-> backported to stable branch so hopefully the revert can be
-> applied cleanly.
+I'd likely need to introduce some kind of way to query (and declare) the
+"language version" of seccomp filters. New programs would need to
+declare the language level (EINVAL would mean the program must support
+the original "v1", ENOTSUPP would mean "kernel doesn't support that
+level"), and the program would have to build a filter based on the
+supported language features. The kernel would assume all undeclared
+seccomp users were "v1" and would need to reject BPF_MOD. All programs
+declaring "v2" would be allowed to use BPF_MOD.
 
-Series applied and queued up for -stable, thank you.
+It's really a lot for something that isn't really needed. :)
+
+> > Since the syscall list is static for a given filter, why not arrange it
+> > as a binary search? That should get even better average instructions
+> > as O(log n) instead of O(n).
+> 
+> Right, thanks! This saves about 4 more instructions for my case and
+> works 1-2 ns faster.
+
+Excellent!
+
+> > Though frankly I've also been considering an ABI version bump for adding
+> > a syscall bitmap feature: the vast majority of seccomp filters are just
+> > binary yes/no across a list of syscalls. Only the special cases need
+> > special handling (arg inspection, fd notification, etc). Then these
+> > kinds of filters could run as O(1).
+
+*This* feature wouldn't need my crazy language version idea, but it
+_would_ still need to be detectable, much like how RET_USER_NOTIF was
+added.
+
+-- 
+Kees Cook
