@@ -2,104 +2,73 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 558B2C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E89FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222772076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6545E2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:35:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="pmUJrk5X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgCRLfC (ORCPT
+        id S1727357AbgCRLf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:35:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:48736 "EHLO foss.arm.com"
+        Wed, 18 Mar 2020 07:35:58 -0400
+Received: from ozlabs.org ([203.11.71.1]:44249 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726855AbgCRLfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:35:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3CFF1FB;
-        Wed, 18 Mar 2020 04:35:00 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DB4A3F534;
-        Wed, 18 Mar 2020 04:34:59 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 11:34:56 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Josh Don <joshdon@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Li Zefan <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        cgroups@vger.kernel.org, Paul Turner <pjt@google.com>
-Subject: Re: [PATCH v2] sched/cpuset: distribute tasks within affinity masks
-Message-ID: <20200318113456.3h64jpyb6xiczhcj@e107158-lin.cambridge.arm.com>
-References: <20200311010113.136465-1-joshdon@google.com>
- <20200311140533.pclgecwhbpqzyrks@e107158-lin.cambridge.arm.com>
- <20200317192401.GE20713@hirez.programming.kicks-ass.net>
- <CABk29NuAYvkqNmZZ6cjZBC6=hv--2siPPjZG-BUpNewxm02O6A@mail.gmail.com>
+        id S1727085AbgCRLf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 07:35:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48j7Jq0PMzz9sPF;
+        Wed, 18 Mar 2020 22:35:55 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1584531355;
+        bh=nZ8h3rQzS7YUxkreuIxZFpLLT3jR0FhsbHFPgoPcdJI=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=pmUJrk5Xi8xhUIwDPK7RrBSmTM7bfHYLCmcnCkHMDg5Mmcz2XrHOFCHIJu8d2FlsI
+         q4MJLY3tFtJRGP3j6muDyAgYj5t4txrvmiLBDKQOHLKJSM/fJqUxMNtMiYVBhjk962
+         x/hM9lkekXwoYrv/d1iYTXxMG9voCWP9K+vLLxRB/q32U3+Eo8prhE6BRnptmK4GiD
+         2g66VqtlIc+3d59dicdTUduQ1qDnhfzseYMli0JI7mkiTC52390FQPTY2AQ3PGC9EL
+         OfC72sdtOYl+P20j8LvGjJaBpOAXWkPkpEEYeOHDBmPC7He/nYbKpLSrEWAbYjyqDh
+         KnwmX6AS15LxQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/15] powerpc/watchpoint: Prepare handler to handle more than one watcnhpoint
+In-Reply-To: <3ba94856-0d87-5046-eca9-b5c3d99ec654@c-s.fr>
+References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com> <20200309085806.155823-13-ravi.bangoria@linux.ibm.com> <3ba94856-0d87-5046-eca9-b5c3d99ec654@c-s.fr>
+Date:   Wed, 18 Mar 2020 22:35:56 +1100
+Message-ID: <87zhcdevz7.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CABk29NuAYvkqNmZZ6cjZBC6=hv--2siPPjZG-BUpNewxm02O6A@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/17/20 14:35, Josh Don wrote:
-> On Wed, Mar 11, 2020 at 7:05 AM Qais Yousef <qais.yousef@arm.com> wrote:
-> >
-> > This actually helps me fix a similar problem I faced in RT [1]. If multiple RT
-> > tasks wakeup at the same time we get a 'thundering herd' issue where they all
-> > end up going to the same CPU, just to be pushed out again.
-> >
-> > Beside this will help fix another problem for RT tasks fitness, which is
-> > a manifestation of the problem above. If two tasks wake up at the same time and
-> > they happen to run on a little cpu (but request to run on a big one), one of
-> > them will end up being migrated because find_lowest_rq() will return the first
-> > cpu in the mask for both tasks.
-> >
-> > I tested the API (not the change in sched/core.c) and it looks good to me.
-> 
-> Nice, glad that the API already has another use case. Thanks for taking a look.
-> 
-> > nit: cpumask_first_and() is better here?
-> 
-> Yea, I would also prefer to use it, but the definition of
-> cpumask_first_and() follows this section, as it itself uses
-> cpumask_next_and().
-> 
-> > It might be a good idea to split the API from the user too.
-> 
-> Not sure what you mean by this, could you clarify?
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Le 09/03/2020 =C3=A0 09:58, Ravi Bangoria a =C3=A9crit=C2=A0:
+>> Currently we assume that we have only one watchpoint supported by hw.
+>> Get rid of that assumption and use dynamic loop instead. This should
+>> make supporting more watchpoints very easy.
+>
+> I think using 'we' is to be avoided in commit message.
 
-I meant it'd be a good idea to split the cpumask API into its own patch and
-have a separate patch for the user in sched/core.c. But that was a small nit.
-If the user (in sched/core.c) somehow introduces a regression, reverting it
-separately should be trivial.
+Hmm, is it?
 
-Thanks
+I use 'we' all the time. Which doesn't mean it's correct, but I think it
+reads OK.
 
---
-Qais Yousef
-
-> 
-> On Tue, Mar 17, 2020 at 12:24 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > > Anyway, for the API.
-> > >
-> > > Reviewed-by: Qais Yousef <qais.yousef@arm.com>
-> > > Tested-by: Qais Yousef <qais.yousef@arm.com>
-> >
-> > Thanks guys!
-> 
-> Thanks Peter, any other comments or are you happy with merging this patch as-is?
+cheers
