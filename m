@@ -2,126 +2,93 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CC6C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A03C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8729E2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584570428;
-	bh=WBvmIedY9CIKWhJY2kgXe8L5G19jMpx+hHF+aLE+rXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lJnJNmb2GrODfN0yG6+j1ROZJkAvlUZB3Srd7sXpylXvVtUqDfvBVhCjmzEITHnl2
-	 JBRS0M5qHwjCWivQgnBPMO1REgmtExnd9mtI2Yn23avHDwMV5vsamcryOtTyauD2yx
-	 ruYZV4lFBnJzzD/Soi+giKNjwyYecPzK9XnLUDMU=
+	by mail.kernel.org (Postfix) with ESMTP id 8063D2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:28:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgCRW1H (ORCPT
+        id S1727228AbgCRW2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:27:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48748 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 18:28:55 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:55828 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgCRW1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:27:07 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7487F2076C;
-        Wed, 18 Mar 2020 22:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584570425;
-        bh=WBvmIedY9CIKWhJY2kgXe8L5G19jMpx+hHF+aLE+rXA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=INqby59k+ikrtnZClXbHnxuaUfj1Mz5A3cimg2oVZhL3ADZU87f3GZYWDDBIsfVOJ
-         ThEi2v9gIrb5YLr2VxU2u974B45DnICsglRq3ocBQe8D46rUwTPnqpN4IXTd8wk2m2
-         77QeoY/O+KInQMzKOr+da79sQ2GMl+GZr1WpB1ZY=
-Date:   Wed, 18 Mar 2020 15:27:04 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        Eric Dumazet <edumazet@google.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH] vt: vt_ioctl: fix VT_DISALLOCATE freeing in-use virtual
- console
-Message-ID: <20200318222704.GC2334@sol.localdomain>
-References: <0000000000006663de0598d25ab1@google.com>
- <20200224071247.283098-1-ebiggers@kernel.org>
- <8fb00b38-abd0-6895-3ad2-85a6f05ee6cf@suse.com>
- <20200224081913.GA299238@sol.localdomain>
- <4ecf5517-f802-e1d3-5d0d-ba04fba58c87@suse.cz>
+        id S1726663AbgCRW2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 18:28:55 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1jEhAx-0000sH-OT; Wed, 18 Mar 2020 16:28:36 -0600
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20200318204302.693307984@linutronix.de>
+ <20200318204408.521507446@linutronix.de>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <9bb6db07-12c4-c272-3a98-baed2ac2f738@deltatee.com>
+Date:   Wed, 18 Mar 2020 16:28:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ecf5517-f802-e1d3-5d0d-ba04fba58c87@suse.cz>
+In-Reply-To: <20200318204408.521507446@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, dave@stgolabs.net, oleg@redhat.com, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, davem@davemloft.net, kvalo@codeaurora.org, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, kurt.schwemmer@microsemi.com, bigeasy@linutronix.de, arnd@arndb.de, rdunlap@infradead.org, rostedt@goodmis.org, joel@joelfernandes.org, paulmck@kernel.org, will@kernel.org, mingo@kernel.org, torvalds@linux-foundation.org, peterz@infradead.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [patch V2 11/15] completion: Use simple wait queues
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 02:15:00PM +0100, Jiri Slaby wrote:
-> On 24. 02. 20, 9:19, Eric Biggers wrote:
-> > On Mon, Feb 24, 2020 at 09:04:33AM +0100, Jiri Slaby wrote:
-> >>> KASAN report:
-> >>> 	BUG: KASAN: use-after-free in con_shutdown+0x76/0x80 drivers/tty/vt/vt.c:3278
-> >>> 	Write of size 8 at addr ffff88806a4ec108 by task syz_vt/129
-> >>>
-> >>> 	CPU: 0 PID: 129 Comm: syz_vt Not tainted 5.6.0-rc2 #11
-> >>> 	Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191223_100556-anatol 04/01/2014
-> >>> 	Call Trace:
-> >>> 	 [...]
-> >>> 	 con_shutdown+0x76/0x80 drivers/tty/vt/vt.c:3278
-> >>> 	 release_tty+0xa8/0x410 drivers/tty/tty_io.c:1514
-> >>> 	 tty_release_struct+0x34/0x50 drivers/tty/tty_io.c:1629
-> >>> 	 tty_release+0x984/0xed0 drivers/tty/tty_io.c:1789
-> >>> 	 [...]
-> >>>
-> >>> 	Allocated by task 129:
-> >>> 	 [...]
-> >>> 	 kzalloc include/linux/slab.h:669 [inline]
-> >>> 	 vc_allocate drivers/tty/vt/vt.c:1085 [inline]
-> >>> 	 vc_allocate+0x1ac/0x680 drivers/tty/vt/vt.c:1066
-> >>> 	 con_install+0x4d/0x3f0 drivers/tty/vt/vt.c:3229
-> >>> 	 tty_driver_install_tty drivers/tty/tty_io.c:1228 [inline]
-> >>> 	 tty_init_dev+0x94/0x350 drivers/tty/tty_io.c:1341
-> >>> 	 tty_open_by_driver drivers/tty/tty_io.c:1987 [inline]
-> >>> 	 tty_open+0x3ca/0xb30 drivers/tty/tty_io.c:2035
-> >>> 	 [...]
-> >>>
-> >>> 	Freed by task 130:
-> >>> 	 [...]
-> >>> 	 kfree+0xbf/0x1e0 mm/slab.c:3757
-> >>> 	 vt_disallocate drivers/tty/vt/vt_ioctl.c:300 [inline]
-> >>> 	 vt_ioctl+0x16dc/0x1e30 drivers/tty/vt/vt_ioctl.c:818
-> >>> 	 tty_ioctl+0x9db/0x11b0 drivers/tty/tty_io.c:2660
-> >>
-> >> That means the associated tty_port is destroyed while the tty layer
-> >> still has a tty on the top of it. That is a BUG anyway.
-> 
-> ...
-> 
-> >> Locking tty_mutex here does not sound quite right. What about switching
-> >> vc_data to proper refcounting based on tty_port? (Instead of doing
-> >> tty_port_destroy and kfree in vt_disallocate*.)
-> >>
-> > 
-> > How would that work?  We could make struct vc_data refcounted such that
-> > VT_DISALLOCATE doesn't free it right away but rather it's freed in the next
-> > con_shutdown().  But release_tty() still accesses tty->port afterwards, which is
-> > part of the 'struct vc_data' that would have just been freed.
-> 
-> Yes, but if it does the same as pty, i.e. throwing tty_port in
-> ->cleanup, not ->shutdown, that would work, right?
-> 
-> The initial requirement from tty_port is that it outlives tty. This was
-> later lifted by pty to live at least till ->cleanup.
-> 
 
-Yes, it looks like that will work.  I didn't know about
-tty_operations::cleanup().  I'll update the patch.
 
-- Eric
+On 2020-03-18 2:43 p.m., Thomas Gleixner wrote:
+> There is no semantical or functional change:
+> 
+>   - completions use the exclusive wait mode which is what swait provides
+> 
+>   - complete() wakes one exclusive waiter
+> 
+>   - complete_all() wakes all waiters while holding the lock which protects
+>     the wait queue against newly incoming waiters. The conversion to swait
+>     preserves this behaviour.
+> 
+> complete_all() might cause unbound latencies with a large number of waiters
+> being woken at once, but most complete_all() usage sites are either in
+> testing or initialization code or have only a really small number of
+> concurrent waiters which for now does not cause a latency problem. Keep it
+> simple for now.
+
+Seems like it would be worth adding a note for this to the
+complete_all() doc string. Otherwise developers will not likely find out
+about this issue and may not keep it as simple as you'd like.
+
+Logan
