@@ -2,254 +2,95 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDE3C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E883C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775A72076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB2C2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:27:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="wHavSO3d"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OQyJWYtz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgCRI1T (ORCPT
+        id S1727499AbgCRI1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 04:27:19 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40848 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727439AbgCRI1R (ORCPT
+        Wed, 18 Mar 2020 04:27:49 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:29135 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727439AbgCRI1s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 04:27:17 -0400
-Received: by mail-pl1-f196.google.com with SMTP id h11so10859183plk.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 01:27:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=q67Jyo84FepUkmWaE2l8NSTdFx5oALdllapMnZWigOw=;
-        b=wHavSO3dYWfl8aL69jLUhaa20mvMeN5gq65qxD00+zKON5m2BDMlFYBJIKejkHQT5d
-         j87RoCEVWiPjqj4LMYZo2t0KyrYu0ME88f3cfVO0aJuaRtkz1gTosPNTzcsi3TSf5Gfb
-         NEUxLdLi/BUiOv8AWH0ISIMvf+JfgjYJ1L5jqM47FbX302UU0xMdaCvzMR47pHxPzKvM
-         esUYSGbNR1cot3O/3gxiTWJdidYafGQkr5fyxK2UPGv60YswB4m9JduicFRB3CifQHvN
-         WZjDLT5oO0Wqjrzy6pP6Tv/PkZ4xaX364PxxnLugVt9nEUFwGvk4me/n/cr2byJLcdHB
-         825Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=q67Jyo84FepUkmWaE2l8NSTdFx5oALdllapMnZWigOw=;
-        b=rFdPMXGZk5SP5dP/3PT1l2UBOKtJZDuvbmPVTptqDVZUTgoh9JX9dbhe2oDnHWEOBf
-         v+Za5ujw/DHdLUtaIQuYakZP+WMk+632y/gFXUSNs2Fh5adNLmK0A8uWSNAZBvusswRu
-         ukOd9rjgpmYCH55yxat0Jy7ZCkCwNahFVegx6xvmbclINFrLU/xSYCaPglKIAANoi4+v
-         xlVlHBQ73bZy32PB5BB+wHRhK0aU+gEO3wHPPPGI7fz+mKeBGc4YpNHtWdAGZENrvaue
-         5QLbP+JizrKm0uqbyujJuZ1Gamup585ARe2/IMH1xoxgHjU0JB8P3xxJmC8eeXMINibO
-         KwzA==
-X-Gm-Message-State: ANhLgQ1v8ABmFCSOG8G9mnNtgAhavA1wPgWgfq19+5hUWcHTD/9EOMPO
-        SBuDQWroOP7yerEMo8lg02jysA==
-X-Google-Smtp-Source: ADFU+vv2OTPgHhQTQt1hhMqYhaFSeGVb5tFFleZIVG/GUUbGBVVXxMBNdJQBOh55SIWNsHqiVtnBaQ==
-X-Received: by 2002:a17:90a:1946:: with SMTP id 6mr405387pjh.42.1584520034178;
-        Wed, 18 Mar 2020 01:27:14 -0700 (PDT)
-Received: from localhost.localdomain (59-127-47-126.HINET-IP.hinet.net. [59.127.47.126])
-        by smtp.gmail.com with ESMTPSA id 18sm5492148pfj.140.2020.03.18.01.27.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Mar 2020 01:27:13 -0700 (PDT)
-From:   Chris Chiu <chiu@endlessm.com>
-To:     Jes.Sorensen@gmail.com, kvalo@codeaurora.org, davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com
-Subject: [PATCH 2/2] rtl8xxxu: Feed current txrate information for mac80211
-Date:   Wed, 18 Mar 2020 16:27:00 +0800
-Message-Id: <20200318082700.71875-3-chiu@endlessm.com>
-X-Mailer: git-send-email 2.21.1 (Apple Git-122.3)
-In-Reply-To: <20200318082700.71875-1-chiu@endlessm.com>
-References: <20200318082700.71875-1-chiu@endlessm.com>
+        Wed, 18 Mar 2020 04:27:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584520066;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=VH0+XlPo10NyA/xz91Ej5gjsjWF5TbKzK+mngsaI8Lo=;
+        b=OQyJWYtzDd6/SfjlVR5AekUXhPqKnAUYbuurb/fpICxE/LUgZfVeLvIpcgnkiMWgoel+7A
+        6iWgGpjE12ES/Lq99k+IRN6JBQGzMilKEvM/iVA5euWcL+9o3zw1nSM2ylEt/v2mi+oTx/
+        iiYFx3y8CEnAL4osX/iO8vSUKTrYZIk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295-yA7fyRPiO0KsCqIveqAp5A-1; Wed, 18 Mar 2020 04:27:43 -0400
+X-MC-Unique: yA7fyRPiO0KsCqIveqAp5A-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D72D4800D4E;
+        Wed, 18 Mar 2020 08:27:40 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D081819C70;
+        Wed, 18 Mar 2020 08:27:34 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200317194140.6031-5-longman@redhat.com>
+References: <20200317194140.6031-5-longman@redhat.com> <20200317194140.6031-1-longman@redhat.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     dhowells@redhat.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH v4 4/4] KEYS: Avoid false positive ENOMEM error on key read
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2832138.1584520054.1@warthog.procyon.org.uk>
+Date:   Wed, 18 Mar 2020 08:27:34 +0000
+Message-ID: <2832139.1584520054@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nl80211 commands such as 'iw link' can't get current txrate
-information from the driver. This commit fills in the tx rate
-information from the C2H RA report in the sta_statistics function.
+Waiman Long <longman@redhat.com> wrote:
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
----
- .../net/wireless/realtek/rtl8xxxu/rtl8xxxu.h  | 12 ++-
- .../wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 75 ++++++++++++++++++-
- 2 files changed, 85 insertions(+), 2 deletions(-)
+> +static inline void __kvzfree(const void *addr, size_t len)
+> +{
+> +	if (addr) {
+> +		memset((void *)addr, 0, len);
+> +		kvfree(addr);
+> +	}
+> +}
 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-index 86d1d50511a8..e6fd1ecaca9c 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-@@ -1183,13 +1183,16 @@ struct rtl8723bu_c2h {
- 		} __packed bt_info;
- 		struct {
- 			u8 rate:7;
--			u8 dummy0_0:1;
-+			u8 sgi:1;
- 			u8 macid;
- 			u8 ldpc:1;
- 			u8 txbf:1;
- 			u8 noisy_state:1;
- 			u8 dummy2_0:5;
- 			u8 dummy3_0;
-+			u8 dummy4_0;
-+			u8 dummy5_0;
-+			u8 bw;
- 		} __packed ra_report;
- 	};
- };
-@@ -1269,6 +1272,12 @@ struct rtl8xxxu_btcoex {
- #define RTL8XXXU_SNR_THRESH_HIGH	50
- #define RTL8XXXU_SNR_THRESH_LOW	20
- 
-+struct rtl8xxxu_ra_report {
-+	struct rate_info txrate;
-+	u32 bit_rate;
-+	u8 desc_rate;
-+};
-+
- struct rtl8xxxu_priv {
- 	struct ieee80211_hw *hw;
- 	struct usb_device *udev;
-@@ -1384,6 +1393,7 @@ struct rtl8xxxu_priv {
- 	struct sk_buff_head c2hcmd_queue;
- 	spinlock_t c2hcmd_lock;
- 	struct rtl8xxxu_btcoex bt_coex;
-+	struct rtl8xxxu_ra_report ra_report;
- };
- 
- struct rtl8xxxu_rx_urb {
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-index 511a3b4ed72a..49dfa32b572a 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -5389,6 +5389,35 @@ void rtl8723bu_handle_bt_info(struct rtl8xxxu_priv *priv)
- 	}
- }
- 
-+static struct ieee80211_rate rtl8xxxu_legacy_ratetable[] = {
-+	{.bitrate = 10, .hw_value = 0x00,},
-+	{.bitrate = 20, .hw_value = 0x01,},
-+	{.bitrate = 55, .hw_value = 0x02,},
-+	{.bitrate = 110, .hw_value = 0x03,},
-+	{.bitrate = 60, .hw_value = 0x04,},
-+	{.bitrate = 90, .hw_value = 0x05,},
-+	{.bitrate = 120, .hw_value = 0x06,},
-+	{.bitrate = 180, .hw_value = 0x07,},
-+	{.bitrate = 240, .hw_value = 0x08,},
-+	{.bitrate = 360, .hw_value = 0x09,},
-+	{.bitrate = 480, .hw_value = 0x0a,},
-+	{.bitrate = 540, .hw_value = 0x0b,},
-+};
-+
-+void rtl8xxxu_desc_to_mcsrate(u16 rate, u8 *mcs, u8 *nss)
-+{
-+	if (rate <= DESC_RATE_54M)
-+		return;
-+
-+	if (rate >= DESC_RATE_MCS0 && rate <= DESC_RATE_MCS15) {
-+		if (rate < DESC_RATE_MCS8)
-+			*nss = 1;
-+		else
-+			*nss = 2;
-+		*mcs = rate - DESC_RATE_MCS0;
-+	}
-+}
-+
- static void rtl8xxxu_c2hcmd_callback(struct work_struct *work)
- {
- 	struct rtl8xxxu_priv *priv;
-@@ -5397,9 +5426,14 @@ static void rtl8xxxu_c2hcmd_callback(struct work_struct *work)
- 	unsigned long flags;
- 	u8 bt_info = 0;
- 	struct rtl8xxxu_btcoex *btcoex;
-+	struct rtl8xxxu_ra_report *rarpt;
-+	u8 rate, sgi, bw;
-+	u32 bit_rate;
-+	u8 mcs = 0, nss = 0;
- 
- 	priv = container_of(work, struct rtl8xxxu_priv, c2hcmd_work);
- 	btcoex = &priv->bt_coex;
-+	rarpt = &priv->ra_report;
- 
- 	if (priv->rf_paths > 1)
- 		goto out;
-@@ -5422,6 +5456,34 @@ static void rtl8xxxu_c2hcmd_callback(struct work_struct *work)
- 			}
- 			rtl8723bu_handle_bt_info(priv);
- 			break;
-+		case C2H_8723B_RA_REPORT:
-+			rarpt->txrate.flags = 0;
-+			rate = c2h->ra_report.rate;
-+			sgi = c2h->ra_report.sgi;
-+			bw = c2h->ra_report.bw;
-+
-+			if (rate < DESC_RATE_MCS0) {
-+				rarpt->txrate.legacy =
-+					rtl8xxxu_legacy_ratetable[rate].bitrate;
-+			} else {
-+				rtl8xxxu_desc_to_mcsrate(rate, &mcs, &nss);
-+				rarpt->txrate.flags |= RATE_INFO_FLAGS_MCS;
-+
-+				rarpt->txrate.mcs = mcs;
-+				rarpt->txrate.nss = nss;
-+
-+				if (sgi) {
-+					rarpt->txrate.flags |=
-+						RATE_INFO_FLAGS_SHORT_GI;
-+				}
-+
-+				if (bw == RATE_INFO_BW_20)
-+					rarpt->txrate.bw |= RATE_INFO_BW_20;
-+			}
-+			bit_rate = cfg80211_calculate_bitrate(&rarpt->txrate);
-+			rarpt->bit_rate = bit_rate;
-+			rarpt->desc_rate = rate;
-+			break;
- 		default:
- 			break;
- 		}
-@@ -5465,7 +5527,7 @@ static void rtl8723bu_handle_c2h(struct rtl8xxxu_priv *priv,
- 	case C2H_8723B_RA_REPORT:
- 		dev_dbg(dev,
- 			"C2H RA RPT: rate %02x, unk %i, macid %02x, noise %i\n",
--			c2h->ra_report.rate, c2h->ra_report.dummy0_0,
-+			c2h->ra_report.rate, c2h->ra_report.sgi,
- 			c2h->ra_report.macid, c2h->ra_report.noisy_state);
- 		break;
- 	default:
-@@ -6069,6 +6131,16 @@ rtl8xxxu_ampdu_action(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
- 	return 0;
- }
- 
-+static void
-+rtl8xxxu_sta_statistics(struct ieee80211_hw *hw, struct ieee80211_vif *vif,
-+			struct ieee80211_sta *sta, struct station_info *sinfo)
-+{
-+	struct rtl8xxxu_priv *priv = hw->priv;
-+
-+	sinfo->txrate = priv->ra_report.txrate;
-+	sinfo->filled |= BIT_ULL(NL80211_STA_INFO_TX_BITRATE);
-+}
-+
- static u8 rtl8xxxu_signal_to_snr(int signal)
- {
- 	if (signal < RTL8XXXU_NOISE_FLOOR_MIN)
-@@ -6371,6 +6443,7 @@ static const struct ieee80211_ops rtl8xxxu_ops = {
- 	.sw_scan_complete = rtl8xxxu_sw_scan_complete,
- 	.set_key = rtl8xxxu_set_key,
- 	.ampdu_action = rtl8xxxu_ampdu_action,
-+	.sta_statistics = rtl8xxxu_sta_statistics,
- };
- 
- static int rtl8xxxu_parse_usb(struct rtl8xxxu_priv *priv,
--- 
-2.20.1
+I wonder if that would be better as "kvfree(memset(...))" as memset() will
+return the address parameter.  If memset is not inline, it avoids the need for
+the compiler to save the parameter.
+
+David
 
