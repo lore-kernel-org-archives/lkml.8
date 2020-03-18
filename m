@@ -2,223 +2,195 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41C4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E0FC5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AACAC20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C3320757
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="agETx32Y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GiGEN9Uk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbgCRPFI (ORCPT
+        id S1727345AbgCRPFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:05:08 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:46128 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbgCRPFH (ORCPT
+        Wed, 18 Mar 2020 11:05:13 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:59728 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726866AbgCRPFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:05:07 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B831FF9;
-        Wed, 18 Mar 2020 16:05:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584543905;
-        bh=4XeE4TEsnH5MYOX96WeQj61o+elhBI7bp3OtoVjeJgo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=agETx32Y3rQ/mCj8O63i2CwrNmnxqYTx9vYR48w+UMxhVyGx9Fav95ZgeA1HYb/BA
-         84KzQ0nPck5ouJ8rh5/usYno1MaH0UAQ8yxTQbNm5XRmFyk9ivC3O6FJ8X+zMq7SCs
-         d8Mai5VkjVHsAuFAmskPkvEvEOrWwd4hdgsIMMsQ=
-Date:   Wed, 18 Mar 2020 17:05:00 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/3] dt-bindings: phy: Add DT bindings for Xilinx
- ZynqMP PSGTR PHY
-Message-ID: <20200318150500.GO4733@pendragon.ideasonboard.com>
-References: <20200311103252.17514-1-laurent.pinchart@ideasonboard.com>
- <20200311103252.17514-2-laurent.pinchart@ideasonboard.com>
- <57072adb-9967-f5d1-7a3d-af713e8c35cd@ti.com>
+        Wed, 18 Mar 2020 11:05:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584543911;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yfA5n8Z+aIk+kyYGrURBEqzc1iGCmKy1Em7iNUliKXo=;
+        b=GiGEN9Ukfr3xtfYxgAQ47pcNxPPHD1MK894UV5ELuMyH/UqGaCdF2llvm6ScNS1nAIJCSS
+        vykh5OGPrl/QhZPKtUPyT2fSJhpNIt4V08RpBU/Byw3QRnhU3lmIG+oxIAHy8wLPUH+VaD
+        7WCnEEtrxiYOUaDhHpyTcrF2SYhxzIQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-382-wW7I9fuTPGiKlign-fCkrg-1; Wed, 18 Mar 2020 11:05:09 -0400
+X-MC-Unique: wW7I9fuTPGiKlign-fCkrg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC3F0107ACCD;
+        Wed, 18 Mar 2020 15:05:07 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C29555C1A1;
+        Wed, 18 Mar 2020 15:05:04 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 12/17] watch_queue: Add security hooks to rule on setting
+ mount and sb watches [ver #5]
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-security-module@vger.kernel.org, dhowells@redhat.com,
+        casey@schaufler-ca.com, sds@tycho.nsa.gov,
+        nicolas.dichtel@6wind.com, raven@themaw.net, christian@brauner.io,
+        andres@anarazel.de, jlayton@redhat.com, dray@redhat.com,
+        kzak@redhat.com, keyrings@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 18 Mar 2020 15:05:03 +0000
+Message-ID: <158454390389.2863966.16459187265972715098.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
+References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <57072adb-9967-f5d1-7a3d-af713e8c35cd@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon,
+Add security hooks that will allow an LSM to rule on whether or not a watch
+may be set on a mount or on a superblock.  More than one hook is required
+as the watches watch different types of object.
 
-On Fri, Mar 13, 2020 at 04:44:04PM +0530, Kishon Vijay Abraham I wrote:
-> +Rob
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Casey Schaufler <casey@schaufler-ca.com>
+cc: Stephen Smalley <sds@tycho.nsa.gov>
+cc: linux-security-module@vger.kernel.org
+---
 
-Any comment regarding patch 2/3 ? :-) You mentioned in your review of v5
-that the exported symbols were a no-go, and that is now fixed. The
-driver uses the PHY .configure() API to configure DisplayPort
-parameters, .power_on() now waits for the PHY PLL to lock, and the
-USB-specific exported symbols were removed with reset support being
-moved to the PHY consumers (there's no reason for the PHY driver to
-reset the PHY consumers, that's a layering violation).
+ include/linux/lsm_hooks.h |   24 ++++++++++++++++++++++++
+ include/linux/security.h  |   16 ++++++++++++++++
+ security/security.c       |   14 ++++++++++++++
+ 3 files changed, 54 insertions(+)
 
-> On 11/03/20 4:02 pm, Laurent Pinchart wrote:
-> > From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > 
-> > Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
-> > Processing System Gigabit Transceiver which provides PHY capabilities to
-> > USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
-> > 
-> > Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > ---
-> > Changes since v5:
-> > 
-> > - Document clocks and clock-names properties
-> > - Document resets and reset-names properties
-> > - Replace subnodes with an additional entry in the PHY cells
-> > - Drop lane frequency PHY cell, replaced by reference clock phandle
-> > - Convert bindings to YAML
-> > - Reword the subject line
-> > - Drop Rob's R-b as the bindings have significantly changed
-> > - Drop resets and reset-names properties
-> > ---
-> >  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 104 ++++++++++++++++++
-> >  include/dt-bindings/phy/phy.h                 |   1 +
-> >  2 files changed, 105 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > new file mode 100644
-> > index 000000000000..9948e4a60e45
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
-> > @@ -0,0 +1,104 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > +
-> > +description: |
-> > +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
-> > +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
-> > +  Ethernet SGMII controllers.
-> > +
-> > +properties:
-> > +  "#phy-cells":
-> > +    const: 4
-> > +    description: |
-> > +      The cells contain the following arguments.
-> > +
-> > +      - description: The GTR lane
-> > +        minimum: 0
-> > +        maximum: 3
-> > +      - description: The PHY type
-> > +        enum:
-> > +          - PHY_TYPE_DP
-> > +          - PHY_TYPE_PCIE
-> > +          - PHY_TYPE_SATA
-> > +          - PHY_TYPE_SGMII
-> > +          - PHY_TYPE_USB
-> > +      - description: The PHY instance
-> > +        minimum: 0
-> > +        maximum: 1 # for DP, SATA or USB
-> > +        maximum: 3 # for PCIE or SGMII
-> > +      - description: The reference clock number
-> > +        minimum: 0
-> > +        maximum: 3
-> > +
-> > +  compatible:
-> > +    enum:
-> > +      - xlnx,zynqmp-psgtr-v1.1
-> > +      - xlnx,zynqmp-psgtr
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    maxItems: 4
-> > +    description: |
-> > +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
-> > +      inputs shall not have an entry.
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    maxItems: 4
-> > +    items:
-> > +      pattern: "^ref[0-3]$"
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: SERDES registers block
-> > +      - description: SIOU registers block
-> > +
-> > +  reg-names:
-> > +    items:
-> > +      - const: serdes
-> > +      - const: siou
-> > +
-> > +required:
-> > +  - "#phy-cells"
-> > +  - compatible
-> > +  - reg
-> > +  - reg-names
-> > +
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      const: xlnx,zynqmp-psgtr
-> > +
-> > +then:
-> > +  properties:
-> > +    xlnx,tx-termination-fix:
-> > +      description: |
-> > +        Include this for fixing functional issue with the TX termination
-> > +        resistance in GT, which can be out of spec for the XCZU9EG silicon
-> > +        version.
-> > +      type: boolean
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    phy: phy@fd400000 {
-> > +      compatible = "xlnx,zynqmp-psgtr-v1.1";
-> > +      reg = <0x0 0xfd400000 0x0 0x40000>,
-> > +            <0x0 0xfd3d0000 0x0 0x1000>;
-> > +      reg-names = "serdes", "siou";
-> > +      clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
-> > +      clock-names = "ref1", "ref2", "ref3";
-> > +      #phy-cells = <4>;
-> > +      status = "okay";
-> > +    };
-> > +
-> > +...
-> > diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
-> > index 1f3f866fae7b..f6bc83b66ae9 100644
-> > --- a/include/dt-bindings/phy/phy.h
-> > +++ b/include/dt-bindings/phy/phy.h
-> > @@ -17,5 +17,6 @@
-> >  #define PHY_TYPE_USB3		4
-> >  #define PHY_TYPE_UFS		5
-> >  #define PHY_TYPE_DP		6
-> > +#define PHY_TYPE_SGMII		7
-> >  
-> >  #endif /* _DT_BINDINGS_PHY */
-> > 
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 16530255dc11..c4451ac197ae 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -1427,6 +1427,18 @@
+  *	Check to see if a process is allowed to watch for event notifications
+  *	from devices (as a global set).
+  *
++ * @watch_mount:
++ *	Check to see if a process is allowed to watch for mount topology change
++ *	notifications on a mount subtree.
++ *	@watch: The watch object
++ *	@path: The root of the subtree to watch.
++ *
++ * @watch_sb:
++ *	Check to see if a process is allowed to watch for event notifications
++ *	from a superblock.
++ *	@watch: The watch object
++ *	@sb: The superblock to watch.
++ *
+  * @post_notification:
+  *	Check to see if a watch notification can be posted to a particular
+  *	queue.
+@@ -1722,6 +1734,12 @@ union security_list_options {
+ #ifdef CONFIG_DEVICE_NOTIFICATIONS
+ 	int (*watch_devices)(void);
+ #endif
++#ifdef CONFIG_MOUNT_NOTIFICATIONS
++	int (*watch_mount)(struct watch *watch, struct path *path);
++#endif
++#ifdef CONFIG_SB_NOTIFICATIONS
++	int (*watch_sb)(struct watch *watch, struct super_block *sb);
++#endif
+ #ifdef CONFIG_WATCH_QUEUE
+ 	int (*post_notification)(const struct cred *w_cred,
+ 				 const struct cred *cred,
+@@ -2020,6 +2038,12 @@ struct security_hook_heads {
+ #ifdef CONFIG_DEVICE_NOTIFICATIONS
+ 	struct hlist_head watch_devices;
+ #endif
++#ifdef CONFIG_MOUNT_NOTIFICATIONS
++	struct hlist_head watch_mount;
++#endif
++#ifdef CONFIG_SB_NOTIFICATIONS
++	struct hlist_head watch_sb;
++#endif
+ #ifdef CONFIG_WATCH_QUEUE
+ 	struct hlist_head post_notification;
+ #endif /* CONFIG_WATCH_QUEUE */
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 910a1efa9a79..2ca2569bc12c 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -1306,6 +1306,22 @@ static inline int security_post_notification(const struct cred *w_cred,
+ 	return 0;
+ }
+ #endif
++#if defined(CONFIG_SECURITY) && defined(CONFIG_MOUNT_NOTIFICATIONS)
++int security_watch_mount(struct watch *watch, struct path *path);
++#else
++static inline int security_watch_mount(struct watch *watch, struct path *path)
++{
++	return 0;
++}
++#endif
++#if defined(CONFIG_SECURITY) && defined(CONFIG_SB_NOTIFICATIONS)
++int security_watch_sb(struct watch *watch, struct super_block *sb);
++#else
++static inline int security_watch_sb(struct watch *watch, struct super_block *sb)
++{
++	return 0;
++}
++#endif
+ 
+ #ifdef CONFIG_SECURITY_NETWORK
+ 
+diff --git a/security/security.c b/security/security.c
+index db7b574c9c70..5c0463444a90 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -2004,6 +2004,20 @@ int security_watch_key(struct key *key)
+ }
+ #endif
+ 
++#ifdef CONFIG_MOUNT_NOTIFICATIONS
++int security_watch_mount(struct watch *watch, struct path *path)
++{
++	return call_int_hook(watch_mount, 0, watch, path);
++}
++#endif
++
++#ifdef CONFIG_SB_NOTIFICATIONS
++int security_watch_sb(struct watch *watch, struct super_block *sb)
++{
++	return call_int_hook(watch_sb, 0, watch, sb);
++}
++#endif
++
+ #ifdef CONFIG_DEVICE_NOTIFICATIONS
+ int security_watch_devices(void)
+ {
 
--- 
-Regards,
 
-Laurent Pinchart
