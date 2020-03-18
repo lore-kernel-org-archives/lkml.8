@@ -2,152 +2,192 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D40C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA71C43332
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC62208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:42:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="T6mq9rK5"
+	by mail.kernel.org (Postfix) with ESMTP id EE2972076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgCRVmm (ORCPT
+        id S1727093AbgCRVqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:42:42 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36543 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727283AbgCRVmm (ORCPT
+        Wed, 18 Mar 2020 17:46:52 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:57652 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCRVqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:42:42 -0400
-Received: by mail-ed1-f67.google.com with SMTP id b18so10944edu.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 14:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wywIpBmnfonP+SMsK60nELfMnC1movwf9uyeVdD853s=;
-        b=T6mq9rK5P4XpQWpFfgAiIKi3lH6pQ6GrbiqcMaiWfr84rHUjaBgAPLyvhXpYETE4kf
-         hcDCkpv1bWurwcrlC+pdyLmJ7HjGj+jJTTPLOsi6OPDpp0OhaCzlySAOEoFzgwsLyNve
-         riGrdxe9qj9V/sK9YGkwAhJvugJjcnoZunY6ijk+/FC40Niqe/7YKhSYc/e0cJNueFZ6
-         MLKmmruNYdIFErSAF28rG/44y7aci8x84AylNieoqtKWrsl83QneKNR/oymmyR1uTUtV
-         2im+8o6LX4BTBghxmI4mwpR0taGPa67j5MS5vEGJtUTSOhmOUdMg9kiIEOBCoyS9T79h
-         wuYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wywIpBmnfonP+SMsK60nELfMnC1movwf9uyeVdD853s=;
-        b=TEF4YU10AmCv8ocwNAQEQ6L8+ubuCwnIKJ8LHVR0BWdPQOoKdMtYUm2aW5N+hN95pA
-         3eBIwlRdoO5LVnqSOEb0dzpU4Tz8jZzycOdoJ/JOzRDjeGlu98zSxz/Jdn+GQPWvduvT
-         /q44qR9e84bO7pDWyGQCQAKy7BnmQYzHj7ajLj/3Fn0fM+Tc1bvIAJ7bbfONU4Ir98FI
-         KMoD4yizxa9ZhryYuqDqudUw4i54fCvHAA9zHUPt1l8kM1DrqUFEEqLQ4JT90USZRfbH
-         9W2xfX1T7n8IXo5ZH3XuPHtVlQ99SlJspL/MvaolIZQVRXWgpRbblJ9XW7qKlTG2aJi0
-         s8Nw==
-X-Gm-Message-State: ANhLgQ1/qnCvA/zz++h/t9vnN6Lomuj49ABVre28msyBoOAONyqYKPgd
-        ycHK0zTKUlnpqhIpSAJ/md4+6EeqAPcvutYP2PZ3
-X-Google-Smtp-Source: ADFU+vsFfxpWZoWPoQfNzQoKkFTZAgqPPLMBHZEXieGrsLv/NxY4XpzprF2kknyaJZWIiPi4S6FHLOmCkd5dO3fhL3E=
-X-Received: by 2002:aa7:dd01:: with SMTP id i1mr5988476edv.164.1584567759671;
- Wed, 18 Mar 2020 14:42:39 -0700 (PDT)
+        Wed, 18 Mar 2020 17:46:51 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 7EABC20023;
+        Wed, 18 Mar 2020 22:46:40 +0100 (CET)
+Date:   Wed, 18 Mar 2020 22:46:39 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v9 2/2] drm/bridge: Add NWL MIPI DSI host controller
+ support
+Message-ID: <20200318214639.GA971@ravnborg.org>
+References: <cover.1584544065.git.agx@sigxcpu.org>
+ <6f2e65df672a0fe832af29f4ea89fbe7250c3a07.1584544065.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-References: <cover.1577736799.git.rgb@redhat.com> <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca>
- <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
- <3142237.YMNxv0uec1@x2> <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
- <CAHC9VhS09b_fM19tn7pHZzxfyxcHnK+PJx80Z9Z1hn8-==4oLA@mail.gmail.com>
- <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca> <CAHC9VhQoVOzy_b9W6h+kmizKr1rPkC4cy5aYoKT2i0ZgsceNDg@mail.gmail.com>
- <20200313185900.y44yvrfm4zxa5lfk@madcap2.tricolour.ca> <CAHC9VhR2zCCE5bjH75rSwfLC7TJGFj4RBnrtcOoUiqVp9q5TaA@mail.gmail.com>
- <20200318212630.mw2geg4ykhnbtr3k@madcap2.tricolour.ca>
-In-Reply-To: <20200318212630.mw2geg4ykhnbtr3k@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 18 Mar 2020 17:42:28 -0400
-Message-ID: <CAHC9VhRYvGAru3aOMwWKCCWDktS+2pGr+=vV4SjHW_0yewD98A@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
-        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6f2e65df672a0fe832af29f4ea89fbe7250c3a07.1584544065.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=ze386MxoAAAA:8
+        a=8AirrxEcAAAA:8 a=HCEFswCZRmPwI41a-fkA:9 a=wPNLvfGTeEIA:10
+        a=iBZjaW-pnkserzjvUTHh:22 a=ST-jHhOKWsTCqRlWije3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 5:27 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-03-18 16:56, Paul Moore wrote:
-> > On Fri, Mar 13, 2020 at 2:59 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2020-03-13 12:29, Paul Moore wrote:
-> > > > On Thu, Mar 12, 2020 at 3:30 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > On 2020-02-13 16:44, Paul Moore wrote:
-> > > > > > This is a bit of a thread-hijack, and for that I apologize, but
-> > > > > > another thought crossed my mind while thinking about this issue
-> > > > > > further ... Once we support multiple auditd instances, including the
-> > > > > > necessary record routing and duplication/multiple-sends (the host
-> > > > > > always sees *everything*), we will likely need to find a way to "trim"
-> > > > > > the audit container ID (ACID) lists we send in the records.  The
-> > > > > > auditd instance running on the host/initns will always see everything,
-> > > > > > so it will want the full container ACID list; however an auditd
-> > > > > > instance running inside a container really should only see the ACIDs
-> > > > > > of any child containers.
-> > > > >
-> > > > > Agreed.  This should be easy to check and limit, preventing an auditd
-> > > > > from seeing any contid that is a parent of its own contid.
-> > > > >
-> > > > > > For example, imagine a system where the host has containers 1 and 2,
-> > > > > > each running an auditd instance.  Inside container 1 there are
-> > > > > > containers A and B.  Inside container 2 there are containers Y and Z.
-> > > > > > If an audit event is generated in container Z, I would expect the
-> > > > > > host's auditd to see a ACID list of "1,Z" but container 1's auditd
-> > > > > > should only see an ACID list of "Z".  The auditd running in container
-> > > > > > 2 should not see the record at all (that will be relatively
-> > > > > > straightforward).  Does that make sense?  Do we have the record
-> > > > > > formats properly designed to handle this without too much problem (I'm
-> > > > > > not entirely sure we do)?
-> > > > >
-> > > > > I completely agree and I believe we have record formats that are able to
-> > > > > handle this already.
-> > > >
-> > > > I'm not convinced we do.  What about the cases where we have a field
-> > > > with a list of audit container IDs?  How do we handle that?
-> > >
-> > > I don't understand the problem.  (I think you crossed your 1/2 vs
-> > > A/B/Y/Z in your example.) ...
-> >
-> > It looks like I did, sorry about that.
-> >
-> > > ... Clarifying the example above, if as you
-> > > suggest an event happens in container Z, the hosts's auditd would report
-> > >         Z,^2
-> > > and the auditd in container 2 would report
-> > >         Z,^2
-> > > but if there were another auditd running in container Z it would report
-> > >         Z
-> > > while the auditd in container 1 or A/B would see nothing.
-> >
-> > Yes.  My concern is how do we handle this to minimize duplicating and
-> > rewriting the records?  It isn't so much about the format, although
-> > the format is a side effect.
->
-> Are you talking about caching, or about divulging more information than
-> necessary or even information leaks?  Or even noticing that records that
-> need to be generated to two audit daemons share the same contid field
-> values and should be generated at the same time or information shared
-> between them?  I'd see any of these as optimizations that don't affect
-> the api.
+Hi Guido.
 
-Imagine a record is generated in a container which has more than one
-auditd in it's ancestry that should receive this record, how do we
-handle that without completely killing performance?  That's my
-concern.  If you've already thought up a plan for this - excellent,
-please share :)
+Impressive and very detailed changelog in intro mail - nice.
 
--- 
-paul moore
-www.paul-moore.com
+On Wed, Mar 18, 2020 at 04:09:08PM +0100, Guido Günther wrote:
+> This adds initial support for the NWL MIPI DSI Host controller found on
+> i.MX8 SoCs.
+> 
+> It adds support for the i.MX8MQ but the same IP can be found on
+> e.g. the i.MX8QXP.
+> 
+> It has been tested on the Librem 5 devkit using mxsfb.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Co-developed-by: Robert Chiras <robert.chiras@nxp.com>
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Tested-by: Robert Chiras <robert.chiras@nxp.com>
+> Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> ---
+>  drivers/gpu/drm/bridge/Kconfig   |   16 +
+>  drivers/gpu/drm/bridge/Makefile  |    3 +
+>  drivers/gpu/drm/bridge/nwl-dsi.c | 1213 ++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/bridge/nwl-dsi.h |  144 ++++
+>  4 files changed, 1376 insertions(+)
+>  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.c
+>  create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.h
+> 
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 8397bf72d2f3..d41d93d24f16 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -55,6 +55,22 @@ config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
+>  	  to DP++. This is used with the i.MX6 imx-ldb
+>  	  driver. You are likely to say N here.
+>  
+> +config DRM_NWL_MIPI_DSI
+> +	tristate "Northwest Logic MIPI DSI Host controller"
+> +	depends on DRM
+> +	depends on COMMON_CLK
+> +	depends on OF && HAS_IOMEM
+> +	select DRM_KMS_HELPER
+> +	select DRM_MIPI_DSI
+> +	select DRM_PANEL_BRIDGE
+> +	select GENERIC_PHY_MIPI_DPHY
+> +	select MFD_SYSCON
+> +	select MULTIPLEXER
+> +	select REGMAP_MMIO
+> +	help
+> +	  This enables the Northwest Logic MIPI DSI Host controller as
+> +	  for example found on NXP's i.MX8 Processors.
+> +
+>  config DRM_NXP_PTN3460
+>  	tristate "NXP PTN3460 DP/LVDS bridge"
+>  	depends on OF
+> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> index 1eb5376c5d68..98581b3128a3 100644
+> --- a/drivers/gpu/drm/bridge/Makefile
+> +++ b/drivers/gpu/drm/bridge/Makefile
+> @@ -15,6 +15,9 @@ obj-$(CONFIG_DRM_TOSHIBA_TC358767) += tc358767.o
+>  obj-$(CONFIG_DRM_I2C_ADV7511) += adv7511/
+>  obj-$(CONFIG_DRM_TI_SN65DSI86) += ti-sn65dsi86.o
+>  obj-$(CONFIG_DRM_TI_TFP410) += ti-tfp410.o
+> +obj-$(CONFIG_DRM_NWL_MIPI_DSI) += nwl-dsi.o
+>  
+>  obj-y += analogix/
+>  obj-y += synopsys/
+> +
+> +header-test-y += nwl-dsi.h
+Sorry - but header-test-y support was ripped out of the kernel again.
+So this line has no longer any effect.
+
+
+> +
+> +static void nwl_dsi_bridge_enable(struct drm_bridge *bridge)
+> +{
+> +	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
+> +	int ret;
+> +
+> +	/* Step 5 from DSI reset-out instructions */
+> +	ret = reset_control_deassert(dsi->rst_dpi);
+> +	if (ret < 0)
+> +		DRM_DEV_ERROR(dsi->dev, "Failed to deassert DPI: %d\n", ret);
+I picked this for a general comment.
+
+    We have drm_err(drm, "...", ...) which is preferred over DRM_XXX
+    They require a drm_device * that may not be available everywhere.
+
+IMO not a showstopper, but should be trivial to fix (if adrm_device * is
+a avaiable).
+
+> +}
+> +
+> +static int nwl_dsi_bridge_attach(struct drm_bridge *bridge)
+> +{
+> +	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
+> +	struct drm_bridge *panel_bridge;
+> +	struct drm_panel *panel;
+> +	int ret;
+
+This function now takes a flags argument.
+In other words - the driver will not build when applied
+to drm-misc-next.
+
+> +
+> +	ret = drm_of_find_panel_or_bridge(dsi->dev->of_node, 1, 0, &panel,
+> +					  &panel_bridge);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (panel) {
+> +		panel_bridge = drm_panel_bridge_add(panel);
+> +		if (IS_ERR(panel_bridge))
+> +			return PTR_ERR(panel_bridge);
+> +	}
+> +	dsi->panel_bridge = panel_bridge;
+> +
+> +	if (!dsi->panel_bridge)
+> +		return -EPROBE_DEFER;
+> +
+> +	return drm_bridge_attach(bridge->encoder, dsi->panel_bridge, bridge);
+> +}
+
+	Sam
