@@ -2,121 +2,117 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9A6C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3BAC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBF420663
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F287820663
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:19:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ADYpT/no"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbgCRKTO (ORCPT
+        id S1727695AbgCRKTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:19:14 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:60027 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbgCRKTL (ORCPT
+        Wed, 18 Mar 2020 06:19:33 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:28998 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726786AbgCRKTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:19:11 -0400
-Received: from mail-qv1-f44.google.com ([209.85.219.44]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MMGVE-1iyUZc2DLC-00JJln for <linux-kernel@vger.kernel.org>; Wed, 18 Mar
- 2020 11:19:10 +0100
-Received: by mail-qv1-f44.google.com with SMTP id z13so6393581qvw.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:19:10 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1yNay6j/PxkstgmXa5ejMcMzZ5hdsCRTmBit01Qd2ScNC9nYTs
-        jhQ+C2R8dNKDIHiAtKywXslL6fl4VRztxwK9aWE=
-X-Google-Smtp-Source: ADFU+vtuQuYp6iTjljzJz66bWfoHPbGkarNkqvjP4G4fPNAhxKACZ2qYupUXWqRWV+mHx0qdrwoL46bNg5mdhQxv53g=
-X-Received: by 2002:a0c:b203:: with SMTP id x3mr3340934qvd.197.1584526749469;
- Wed, 18 Mar 2020 03:19:09 -0700 (PDT)
+        Wed, 18 Mar 2020 06:19:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584526772;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=t01fhWNp1IRXO32y9v3L1IxmXyRwLvORUavbkYC8gO4=;
+        b=ADYpT/no2EVaCuUjpWuHZNIRY77eX4JqHB8xWXgMsxh47sMb+glK/Qi3xmQ6vxO2zR76QU
+        g7DFWBal9yGQE95pLMqMRwWOFAWy0onawcoZFVWQdmxWo3G7VTfEJnx4EUUswJP8zjl2bh
+        WPvPggiAXEdq3uc6DI+SWA14UYPbQT4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-BCLxyEjRMZOmdsNyN1yuxA-1; Wed, 18 Mar 2020 06:19:30 -0400
+X-MC-Unique: BCLxyEjRMZOmdsNyN1yuxA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F970107ACCC;
+        Wed, 18 Mar 2020 10:19:29 +0000 (UTC)
+Received: from krava (unknown [10.40.195.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B453B92D0E;
+        Wed, 18 Mar 2020 10:19:25 +0000 (UTC)
+Date:   Wed, 18 Mar 2020 11:19:15 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v2 00/14] perf: Stream comparison
+Message-ID: <20200318101915.GB821557@krava>
+References: <20200313071118.11983-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-References: <20200317083043.226593-1-areber@redhat.com>
-In-Reply-To: <20200317083043.226593-1-areber@redhat.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 18 Mar 2020 11:18:53 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
-Message-ID: <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
-Subject: Re: clone3: allow creation of time namespace with offset
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:9bf/+TYZkAaEp+9Cc/8X/2wDjONwsJhDkpThfDZE4LKluDMbwlT
- SMx0e9Sq2uQeHw1CQqjyKlANwmjLMgJXAJ7FwlO3XsKsL9e3UPvJxB3JMdv6DcrotXzAXSe
- p0DgQWnsL7zkxa576BcuC5a3LDygWgEJOAXyNJbxepcwYsbt1jXQr6Rt1KT8omgW7Ad6bqO
- 49sE23xQxelUTnrm8AHdQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PNcvG8R74hg=:nQq4PCjgKKSJP1B6Gg8NFB
- HNX+IEFH8Fncaymyd3nCR/qnfmtIgYE/qAXEq1VYYZw2IIY9pezyg/s0F36OXwYOhdk38oLOA
- tLneV/tv0HPTbKtx2Q3PQpe3pad5oVW3cF3vkHUEN+MqPNgiWBaNTegF8jCCoJ8LsVDz/F729
- mt4x4pcHLkPFHsgDA2VD82dcabJt2ojMxkmAVjZ2bid8iRqC5TLx0AKwqm2MoDm2SUIZAv54a
- 7lprRzeyXfdaBM2YGNRgaIuNLMptRvJU5KwFlYF0AgMEXisqH0XirPdvUSjK9u+e/uORgmeSj
- 08V1hVvOyKb/7sTmmZV6AQxCJRXR7Mj0nhu+ZeEZkOMj8NK9wkMPcPuTTLPecyoKcJsftFYuA
- WA2rxQcOWNfsgw+a9bpHD1LLDUA2LZBVxSRi98orZSYzwFcS95ypAKr9GGfhAte8UZviIKqzu
- Gbu7UWbalUlyhQXRS1+TQg3TC8bXA/2QBZXzgaQjQrs49aAfUlgR00xwa+uzORQoPzWntBqQb
- ditnGSxuEvbvoLv4lyOim97cH5cqM/XAzUFjhnfNnx3M2zZzig+Af+DmNPTHAJ+hPU7Wd21or
- 1l1IUG1qnhkgECr3yG5QObuQUjrskh3EZHaTwlcmftb1jwxCoKIcuqEK8nAp130fp8933iyOk
- lIgzdJVwtpmYNfotDkfJebTZvKFgb5QkkZfcFSkQ7AMju+DMt11QPLcEw9/YUm4Dl0LvTOyTF
- RrdSY9yzhRWM87eOaPQ5IQWteDhf06QTriOh5KXyiTBp4XJlB4JB9M8gZgSDmGBiGb4QvnaCO
- 6s41bLxwXWi4/WzkwU9wv7Mthz9AwslyzQPDNq9+8/kkDvnWbM=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313071118.11983-1-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 9:32 AM Adrian Reber <areber@redhat.com> wrote:
->
-> This is an attempt to add time namespace support to clone3(). I am not
-> really sure which way clone3() should handle time namespaces. The time
-> namespace through /proc cannot be used with clone3() because the offsets
-> for the time namespace need to be written before a process has been
-> created in that time namespace. This means it is necessary to somehow
-> tell clone3() the offsets for the clocks.
->
-> The time namespace offers the possibility to set offsets for
-> CLOCK_MONOTONIC and CLOCK_BOOTTIME. My first approach was to extend
-> 'struct clone_args` with '__aligned_u64 monotonic_offset' and
-> '__aligned_u64 boottime_offset'. The problem with this approach was that
-> it was not possible to set nanoseconds for the clocks in the time
-> namespace.
->
-> One of the motivations for clone3() with CLONE_NEWTIME was to enable
-> CRIU to restore a process in a time namespace with the corresponding
-> offsets. And although the nanosecond value can probably never be
-> restored to the same value it had during checkpointing, because the
-> clock keeps on running between CRIU pausing all processes and CRIU
-> actually reading the value of the clocks, the nanosecond value is still
-> necessary for CRIU to not restore a process where the clock jumps back
-> due to CRIU restoring it with a nanonsecond value that is too small.
->
-> Requiring nanoseconds as well as seconds for two clocks during clone3()
-> means that it would require 4 additional members to 'struct clone_args':
->
->         __aligned_u64 tls;
->         __aligned_u64 set_tid;
->         __aligned_u64 set_tid_size;
-> +       __aligned_u64 boottime_offset_seconds;
-> +       __aligned_u64 boottime_offset_nanoseconds;
-> +       __aligned_u64 monotonic_offset_seconds;
-> +       __aligned_u64 monotonic_offset_nanoseconds;
->  };
+On Fri, Mar 13, 2020 at 03:11:04PM +0800, Jin Yao wrote:
 
-Wouldn't it be sufficient to have the two nanosecond values, rather
-than both seconds and nanoseconds? With 64-bit nanoseconds
-you can represent several hundred years, and these would
-always start at zero during boot.
+SNIP
 
-Regardless of this, I think you need a signed offset, not unsigned.
+> 
+>  v2:
+>  ---
+>  Refine the codes for following patches:
+>   perf util: Create source line mapping table
+>   perf util: Create streams for managing top N hottest callchains
+>   perf util: Calculate the sum of all streams hits
+>   perf util: Add new block info functions for top N hot blocks comparison 
+> 
+> Jin Yao (14):
+>   perf util: Create source line mapping table
+>   perf util: Create streams for managing top N hottest callchains
+>   perf util: Return per-event callchain streams
+>   perf util: Compare two streams
+>   perf util: Calculate the sum of all streams hits
+>   perf util: Report hot streams
+>   perf diff: Support hot streams comparison
+>   perf util: Add new block info functions for top N hot blocks
+>     comparison
+>   perf util: Add new block info fmts for showing hot blocks comparison
+>   perf util: Enable block source line comparison
+>   perf diff: support hot blocks comparison
+>   perf util: Filter out streams by name of changed functions
+>   perf util: Filter out blocks by name of changed functions
+>   perf diff: Filter out streams by changed functions
 
-          Arnd
+I can't apply this on latest perf/core, do you have it in git tree branch?
+
+thanks,
+jirka
+
+> 
+>  tools/perf/Documentation/perf-diff.txt |  19 +
+>  tools/perf/builtin-diff.c              | 324 ++++++++++++---
+>  tools/perf/util/Build                  |   1 +
+>  tools/perf/util/block-info.c           | 433 ++++++++++++++++++-
+>  tools/perf/util/block-info.h           |  38 +-
+>  tools/perf/util/callchain.c            | 517 +++++++++++++++++++++++
+>  tools/perf/util/callchain.h            |  34 ++
+>  tools/perf/util/srclist.c              | 555 +++++++++++++++++++++++++
+>  tools/perf/util/srclist.h              |  74 ++++
+>  9 files changed, 1935 insertions(+), 60 deletions(-)
+>  create mode 100644 tools/perf/util/srclist.c
+>  create mode 100644 tools/perf/util/srclist.h
+> 
+> -- 
+> 2.17.1
+> 
+
