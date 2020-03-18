@@ -2,68 +2,80 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A888C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71B6C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53DAE20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9CC520770
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgCRPMK (ORCPT
+        id S1727064AbgCRPMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:12:10 -0400
-Received: from mga14.intel.com ([192.55.52.115]:46274 "EHLO mga14.intel.com"
+        Wed, 18 Mar 2020 11:12:49 -0400
+Received: from ms.lwn.net ([45.79.88.28]:41118 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726777AbgCRPMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:12:09 -0400
-IronPort-SDR: 98TVkXbuPITyPcknKzj31qmxOr71rNu50oGAoRxYNsbpwAODBVbjUSLPR3c4Ns/iGfRSfZEFu2
- r+2zDccqonVQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 08:12:09 -0700
-IronPort-SDR: aP+LbHe6UFErjWb8JUE459Li2g3YoZfVUAvOe08po7fjQFcsC6u3sjHOCv3AVoy+SzmR9Hce4f
- Gx7qCvyv/W1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
-   d="scan'208";a="444196681"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Mar 2020 08:12:08 -0700
-Date:   Wed, 18 Mar 2020 08:12:08 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH] KVM: nVMX: remove side effects from
- nested_vmx_exit_reflected
-Message-ID: <20200318151207.GA24357@linux.intel.com>
-References: <1584468059-3585-1-git-send-email-pbonzini@redhat.com>
- <87tv2m2av4.fsf@vitty.brq.redhat.com>
- <803177a8-c5ef-ac5e-087b-52b09398d78c@redhat.com>
+        id S1726781AbgCRPMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 11:12:48 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 3A798144F;
+        Wed, 18 Mar 2020 15:12:48 +0000 (UTC)
+Date:   Wed, 18 Mar 2020 09:12:47 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Chucheng Luo <luochucheng@vivo.com>
+Cc:     Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@vivo.com
+Subject: Re: [PATCH] Translate Documentation/filesystems/debugfs.txt into
+ Chinese
+Message-ID: <20200318091247.6dfa27f5@lwn.net>
+In-Reply-To: <20200318150743.13480-1-luochucheng@vivo.com>
+References: <20200318150743.13480-1-luochucheng@vivo.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <803177a8-c5ef-ac5e-087b-52b09398d78c@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 11:59:13AM +0100, Paolo Bonzini wrote:
-> On 18/03/20 11:52, Vitaly Kuznetsov wrote:
-> > The only functional difference seems to be that we're now doing
-> > nested_mark_vmcs12_pages_dirty() in vmx->fail case too and this seems
-> > superfluous: we failed to enter L2 so 'special' pages should remain
-> > intact (right?) but this should be an uncommon case.
-> > 
-> > Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> 
-> I'm not entirely sure if the PID could be written before the processor
-> decrees a vmfail.  It doesn't really hurt anyway as you say though.
+On Wed, 18 Mar 2020 23:07:30 +0800
+Chucheng Luo <luochucheng@vivo.com> wrote:
 
-I would expect that writing special pages on VM-Fail would be classified
-as a CPU bug.
+Thanks for working to improve the docs.  A couple of quick notes...
+
+> Signed-off-by: Chucheng Luo <luochucheng@vivo.com>
+> ---
+>  .../zh_CN/filesystems/debugfs.rst             | 257 ++++++++++++++++++
+>  1 file changed, 257 insertions(+)
+>  create mode 100755 Documentation/translations/zh_CN/filesystems/debugfs.rst
+
+You need to add this file to index.rst as well so it becomes a part of the
+docs build.
+
+> diff --git a/Documentation/translations/zh_CN/filesystems/debugfs.rst b/Documentation/translations/zh_CN/filesystems/debugfs.rst
+> new file mode 100755
+> index 000000000000..69cd1fb8d3c6
+> --- /dev/null
+> +++ b/Documentation/translations/zh_CN/filesystems/debugfs.rst
+> @@ -0,0 +1,257 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. raw:: latex
+> +
+> +	\renewcommand\thesection*
+> +	\renewcommand\thesubsection*
+> +
+> +.. include:: ../disclaimer-zh_CN.rst
+
+Why are you putting raw LaTeX in here?  Please avoid that if you possibly
+can, or explain why it's there otherwise.
+
+Thanks,
+
+jon
