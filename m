@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6182C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18ADC4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757BF208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B628F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565048;
-	bh=4Ki+qkxU39QDsDVJd+9zZO5BdWzNnwZi+XZF9+iCI3o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahckrv+q4YSWUl6xwwZgEc6/j0D4nUg0G8BJ7/y3hdNa4HQj8o80esM8EoUuHhWZl
-	 oiU+fvZRdLOS+6xF8VhWls16O1dzhSwoWbBwO1xsEPs4IcU+kbxh5zzx3+CEchLOXx
-	 kB6lUFJ2np3EcWDab1HhZvYbDWOLYRoMnm6ftlyE=
+	s=default; t=1584565054;
+	bh=n+12w1H1+k6Ai1zMSyVDLLX4P4yFMdnnT66W/zNH6po=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=v6t9WQyWha+w5tyFrATVcOv6gfflCtzqilqYDZ4EJMHXwlOWKsmmQhuGYDEI5/4Fm
+	 A2JVwJ+2WgPCJfMl88+gbnG7uQ1NrXnGwrl1D8nr/TZzKUpDAkJTk0+/F/gelJEQbb
+	 PUxYMTb+cBvn2v+79GH/NaSeads4y8EtMe30DuEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbgCRU5Y (ORCPT
+        id S1728817AbgCRU5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:57:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57862 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:57:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728659AbgCRU4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:41 -0400
+        id S1728696AbgCRU4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D27592166E;
-        Wed, 18 Mar 2020 20:56:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 835DD20BED;
+        Wed, 18 Mar 2020 20:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584565000;
-        bh=4Ki+qkxU39QDsDVJd+9zZO5BdWzNnwZi+XZF9+iCI3o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U8q8IVLdpW62OFFSEYFQagnSS6872zzbVhF7/yz0TmC6Ok8+Htqapa8fPwDoGAj8a
-         x5JOu7EbuVz3c9IDSr4QwC9+UJ5639fSffnWzpIy4TBpDFO2PjHebUlePmEzUAqm10
-         id9QuYfBWHv/Yuz9Ti+apXdf2XPpAzbw0t1KQmWs=
+        s=default; t=1584565010;
+        bh=n+12w1H1+k6Ai1zMSyVDLLX4P4yFMdnnT66W/zNH6po=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CK9a2U/1R31yb0iypExkKE3Rq7JjNEfq6jVA6JwyLVQ2RrBdqcZIEVC2yDliEHN8D
+         RNG852StVRmhvnEc2+zueFP0dffFhrTEhqhR6qQuw5QbrEN/tCsrbtn54zt97D11vg
+         isFypWYsVl/kmZ3bWOmHjTlbIAoGOx8eBR5dcnFk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/15] dt-bindings: net: FMan erratum A050385
-Date:   Wed, 18 Mar 2020 16:56:23 -0400
-Message-Id: <20200318205629.17750-9-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 01/12] bnxt_en: reinitialize IRQs when MTU is modified
+Date:   Wed, 18 Mar 2020 16:56:37 -0400
+Message-Id: <20200318205648.17937-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205629.17750-1-sashal@kernel.org>
-References: <20200318205629.17750-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,87 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@nxp.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 26d5bb9e4c4b541c475751e015072eb2cbf70d15 ]
+[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
 
-FMAN DMA read or writes under heavy traffic load may cause FMAN
-internal resource leak; thus stopping further packet processing.
+MTU changes may affect the number of IRQs so we must call
+bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
+set to true.  The reason is that a larger MTU may require
+aggregation rings not needed with smaller MTU.  We may not be
+able to allocate the required number of aggregation rings and
+so we reduce the number of channels which will change the number
+of IRQs.  Without this patch, it may crash eventually in
+pci_disable_msix() when the IRQs are not properly unwound.
 
-The FMAN internal queue can overflow when FMAN splits single
-read or write transactions into multiple smaller transactions
-such that more than 17 AXI transactions are in flight from FMAN
-to interconnect. When the FMAN internal queue overflows, it can
-stall further packet processing. The issue can occur with any one
-of the following three conditions:
-
-  1. FMAN AXI transaction crosses 4K address boundary (Errata
-     A010022)
-  2. FMAN DMA address for an AXI transaction is not 16 byte
-     aligned, i.e. the last 4 bits of an address are non-zero
-  3. Scatter Gather (SG) frames have more than one SG buffer in
-     the SG list and any one of the buffers, except the last
-     buffer in the SG list has data size that is not a multiple
-     of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
-
-With any one of the above three conditions present, there is
-likelihood of stalled FMAN packet processing, especially under
-stress with multiple ports injecting line-rate traffic.
-
-To avoid situations that stall FMAN packet processing, all of the
-above three conditions must be avoided; therefore, configure the
-system with the following rules:
-
-  1. Frame buffers must not span a 4KB address boundary, unless
-     the frame start address is 256 byte aligned
-  2. All FMAN DMA start addresses (for example, BMAN buffer
-     address, FD[address] + FD[offset]) are 16B aligned
-  3. SG table and buffer addresses are 16B aligned and the size
-     of SG buffers are multiple of 16 bytes, except for the last
-     SG buffer that can be of any size.
-
-Additional workaround notes:
-- Address alignment of 64 bytes is recommended for maximally
-efficient system bus transactions (although 16 byte alignment is
-sufficient to avoid the stall condition)
-- To support frame sizes that are larger than 4K bytes, there are
-two options:
-  1. Large single buffer frames that span a 4KB page boundary can
-     be converted into SG frames to avoid transaction splits at
-     the 4KB boundary,
-  2. Align the large single buffer to 256B address boundaries,
-     ensure that the frame address plus offset is 256B aligned.
-- If software generated SG frames have buffers that are unaligned
-and with random non-multiple of 16 byte lengths, before
-transmitting such frames via FMAN, frames will need to be copied
-into a new single buffer or multiple buffer SG frame that is
-compliant with the three rules listed above.
-
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/powerpc/fsl/fman.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-index df873d1f3b7c5..2aaae210317bb 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/fman.txt
-@@ -110,6 +110,13 @@ PROPERTIES
- 		Usage: required
- 		Definition: See soc/fsl/qman.txt and soc/fsl/bman.txt
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 81282b811a6cd..d91953eabfeb4 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -5310,13 +5310,13 @@ static int bnxt_change_mtu(struct net_device *dev, int new_mtu)
+ 		return -EINVAL;
  
-+- fsl,erratum-a050385
-+		Usage: optional
-+		Value type: boolean
-+		Definition: A boolean property. Indicates the presence of the
-+		erratum A050385 which indicates that DMA transactions that are
-+		split can result in a FMan lock.
-+
- =============================================================================
- FMan MURAM Node
+ 	if (netif_running(dev))
+-		bnxt_close_nic(bp, false, false);
++		bnxt_close_nic(bp, true, false);
  
+ 	dev->mtu = new_mtu;
+ 	bnxt_set_ring_params(bp);
+ 
+ 	if (netif_running(dev))
+-		return bnxt_open_nic(bp, false, false);
++		return bnxt_open_nic(bp, true, false);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
