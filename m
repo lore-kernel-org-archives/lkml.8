@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C338AC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32648C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CAB20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BCF20936
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565479;
-	bh=8gWxQB1hy2Rs45/USgNRR4m1Ti7GPXXLLt/ZXidVBr0=;
+	s=default; t=1584565483;
+	bh=IecWBB9KRK/UPSYOWw1TAS+W1HeeidbzQZsbE2VD+s8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWsXF083dh9BnL76/x62nAo/Eq2xNDgM4D74kdTQuOoXUq+V17u3lc3j06uS2mvzM
-	 N2h/Zwsxqk3DPLVWgLDFcxmg77kLlZo8UeQqYh6OPDhWXnfDgYfLRrXcaYiPhnqUn8
-	 yvol4lhF875OaYkLOL0JB4Aameach9CCM2cBTUsA=
+	b=e6MByGdF5MHzrWkK1gsDlNgPC+JFrAyfN0eJPUlDYTAKc5jJtvZ074tvOUotc7OMR
+	 obPCuvbM5cdVg4tRDlNq7VaiXk1U3gZsVsjWnQGr5qsffDHvJ1E/8/jjHbwqQYNuNS
+	 JaHJod1tWjV6e89HDjf5k3uLVZRufsxcF7agNOTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbgCRVEi (ORCPT
+        id S1728251AbgCRUzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:04:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55612 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:55:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbgCRUzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:17 -0400
+        id S1728225AbgCRUzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDA5F208E4;
-        Wed, 18 Mar 2020 20:55:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03FF4208FE;
+        Wed, 18 Mar 2020 20:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564916;
-        bh=8gWxQB1hy2Rs45/USgNRR4m1Ti7GPXXLLt/ZXidVBr0=;
+        s=default; t=1584564912;
+        bh=IecWBB9KRK/UPSYOWw1TAS+W1HeeidbzQZsbE2VD+s8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gPE6kgigtu1BukX5TZmv3drvh2TSwTekEpAwY/i9zB58kex8uVL9r1iQHiZ1/abrh
-         iGbs/2eDvY6xUZsCIKdQXZrUvB8bqT+CvaDiOfgZZ3IZg9T/kBEZXfH6Y9WDHZ7nS1
-         4TC1mCGE6uZA3e5EN/IQBNtCFfDC7+iFqsD2eI58=
+        b=QRptaqo20cwPneOeaiI8tEZkZEhLtfAosczNuZZpYVul8xslg172joWIUqe5R4glM
+         ovpS7V3ivTr7CVf92PUUFIT9nCTGEzIX/RToP2asLT+rTkEqSVllybza3gTlBxa3vF
+         Y8jX4JNysCOjVKHzHkYRCFdMimT8KW8BAkhsXVV0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Scott Mayhew <smayhew@redhat.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/37] nfs: add minor version to nfs_server_key for fscache
-Date:   Wed, 18 Mar 2020 16:54:37 -0400
-Message-Id: <20200318205509.17053-5-sashal@kernel.org>
+Cc:     =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tejun Heo <tj@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        cgroups@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/37] cgroup: Iterate tasks that did not finish do_exit()
+Date:   Wed, 18 Mar 2020 16:54:34 -0400
+Message-Id: <20200318205509.17053-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,74 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Michal Koutný <mkoutny@suse.com>
 
-[ Upstream commit 55dee1bc0d72877b99805e42e0205087e98b9edd ]
+[ Upstream commit 9c974c77246460fa6a92c18554c3311c8c83c160 ]
 
-An NFS client that mounts multiple exports from the same NFS
-server with higher NFSv4 versions disabled (i.e. 4.2) and without
-forcing a specific NFS version results in fscache index cookie
-collisions and the following messages:
-[  570.004348] FS-Cache: Duplicate cookie detected
+PF_EXITING is set earlier than actual removal from css_set when a task
+is exitting. This can confuse cgroup.procs readers who see no PF_EXITING
+tasks, however, rmdir is checking against css_set membership so it can
+transitionally fail with EBUSY.
 
-Each nfs_client structure should have its own fscache index cookie,
-so add the minorversion to nfs_server_key.
+Fix this by listing tasks that weren't unlinked from css_set active
+lists.
+It may happen that other users of the task iterator (without
+CSS_TASK_ITER_PROCS) spot a PF_EXITING task before cgroup_exit(). This
+is equal to the state before commit c03cd7738a83 ("cgroup: Include dying
+leaders with live threads in PROCS iterations") but it may be reviewed
+later.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=200145
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Reported-by: Suren Baghdasaryan <surenb@google.com>
+Fixes: c03cd7738a83 ("cgroup: Include dying leaders with live threads in PROCS iterations")
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/client.c     | 1 +
- fs/nfs/fscache.c    | 2 ++
- fs/nfs/nfs4client.c | 1 -
- 3 files changed, 3 insertions(+), 1 deletion(-)
+ include/linux/cgroup.h |  1 +
+ kernel/cgroup/cgroup.c | 23 ++++++++++++++++-------
+ 2 files changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 0a2b59c1ecb3d..07c5ddd5d6d50 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -157,6 +157,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
- 	if ((clp = kzalloc(sizeof(*clp), GFP_KERNEL)) == NULL)
- 		goto error_0;
+diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
+index b4854b48a4f3d..5ed1a2b285cdd 100644
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -62,6 +62,7 @@ struct css_task_iter {
+ 	struct list_head		*mg_tasks_head;
+ 	struct list_head		*dying_tasks_head;
  
-+	clp->cl_minorversion = cl_init->minorversion;
- 	clp->cl_nfs_mod = cl_init->nfs_mod;
- 	if (!try_module_get(clp->cl_nfs_mod->owner))
- 		goto error_dealloc;
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index a7bc4e0494f92..6f45b1a957397 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -35,6 +35,7 @@ static DEFINE_SPINLOCK(nfs_fscache_keys_lock);
- struct nfs_server_key {
- 	struct {
- 		uint16_t	nfsversion;		/* NFS protocol version */
-+		uint32_t	minorversion;		/* NFSv4 minor version */
- 		uint16_t	family;			/* address family */
- 		__be16		port;			/* IP port */
- 	} hdr;
-@@ -59,6 +60,7 @@ void nfs_fscache_get_client_cookie(struct nfs_client *clp)
++	struct list_head		*cur_tasks_head;
+ 	struct css_set			*cur_cset;
+ 	struct css_set			*cur_dcset;
+ 	struct task_struct		*cur_task;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 08bd40d900660..c416ef3e34797 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4157,12 +4157,16 @@ static void css_task_iter_advance_css_set(struct css_task_iter *it)
+ 		}
+ 	} while (!css_set_populated(cset) && list_empty(&cset->dying_tasks));
  
- 	memset(&key, 0, sizeof(key));
- 	key.hdr.nfsversion = clp->rpc_ops->version;
-+	key.hdr.minorversion = clp->cl_minorversion;
- 	key.hdr.family = clp->cl_addr.ss_family;
+-	if (!list_empty(&cset->tasks))
++	if (!list_empty(&cset->tasks)) {
+ 		it->task_pos = cset->tasks.next;
+-	else if (!list_empty(&cset->mg_tasks))
++		it->cur_tasks_head = &cset->tasks;
++	} else if (!list_empty(&cset->mg_tasks)) {
+ 		it->task_pos = cset->mg_tasks.next;
+-	else
++		it->cur_tasks_head = &cset->mg_tasks;
++	} else {
+ 		it->task_pos = cset->dying_tasks.next;
++		it->cur_tasks_head = &cset->dying_tasks;
++	}
  
- 	switch (clp->cl_addr.ss_family) {
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 86991bcfbeb12..faaabbedc891d 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -210,7 +210,6 @@ struct nfs_client *nfs4_alloc_client(const struct nfs_client_initdata *cl_init)
- 	INIT_LIST_HEAD(&clp->cl_ds_clients);
- 	rpc_init_wait_queue(&clp->cl_rpcwaitq, "NFS client");
- 	clp->cl_state = 1 << NFS4CLNT_LEASE_EXPIRED;
--	clp->cl_minorversion = cl_init->minorversion;
- 	clp->cl_mvops = nfs_v4_minor_ops[cl_init->minorversion];
- 	clp->cl_mig_gen = 1;
- #if IS_ENABLED(CONFIG_NFS_V4_1)
+ 	it->tasks_head = &cset->tasks;
+ 	it->mg_tasks_head = &cset->mg_tasks;
+@@ -4220,10 +4224,14 @@ static void css_task_iter_advance(struct css_task_iter *it)
+ 		else
+ 			it->task_pos = it->task_pos->next;
+ 
+-		if (it->task_pos == it->tasks_head)
++		if (it->task_pos == it->tasks_head) {
+ 			it->task_pos = it->mg_tasks_head->next;
+-		if (it->task_pos == it->mg_tasks_head)
++			it->cur_tasks_head = it->mg_tasks_head;
++		}
++		if (it->task_pos == it->mg_tasks_head) {
+ 			it->task_pos = it->dying_tasks_head->next;
++			it->cur_tasks_head = it->dying_tasks_head;
++		}
+ 		if (it->task_pos == it->dying_tasks_head)
+ 			css_task_iter_advance_css_set(it);
+ 	} else {
+@@ -4242,11 +4250,12 @@ static void css_task_iter_advance(struct css_task_iter *it)
+ 			goto repeat;
+ 
+ 		/* and dying leaders w/o live member threads */
+-		if (!atomic_read(&task->signal->live))
++		if (it->cur_tasks_head == it->dying_tasks_head &&
++		    !atomic_read(&task->signal->live))
+ 			goto repeat;
+ 	} else {
+ 		/* skip all dying ones */
+-		if (task->flags & PF_EXITING)
++		if (it->cur_tasks_head == it->dying_tasks_head)
+ 			goto repeat;
+ 	}
+ }
 -- 
 2.20.1
 
