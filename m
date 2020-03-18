@@ -2,198 +2,96 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FBDC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 612DFC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B2E20754
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369B420754
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:13:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584569590;
+	bh=t+KgMHceNYPepEj8DnsavTVJzcyAGp6+uD6ynCkOwZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hy6IObVJqhf+99KtAtqnbMsq3vAnwTSQfymvg9/wzGBD5WQSjz1wfVRtSa5DyGUaB
+	 e/H94DCZ81yu3kPfDkuVEfA5n76ersO1FoFfNq5NQtnuAOyReUMGknpVcB5d4FdTVx
+	 oPKDL6pu0oXcrJYnuVkgAaEo+Y0waEt7YVxJB6aM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgCRWMo (ORCPT
+        id S1727318AbgCRWNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:12:44 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:55594 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgCRWMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:12:43 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1jEgut-0000dp-Ap; Wed, 18 Mar 2020 16:12:00 -0600
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-References: <20200318204302.693307984@linutronix.de>
- <20200318204407.607241357@linutronix.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <2256dbd5-8f1d-70c5-8855-855638ce3ef4@deltatee.com>
-Date:   Wed, 18 Mar 2020 16:11:56 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 18 Mar 2020 18:13:09 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44170 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgCRWNI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 18:13:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id v3so160121iot.11;
+        Wed, 18 Mar 2020 15:13:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vI2oiWC9LH3F/wNwDpMAEyJ8ow2uL7hezjEKLRYLfkQ=;
+        b=QWaX4LLYbxjs1lRVXvo7TRBAsVCu6oMISvzAwVeqP9GMqQ9GCgPiRUeE+2YB8Mc4Gt
+         iA3/5WffNd6NxPWZ1eD0E6uT9qsBpI8TdjOOW7dGevD6hw/eW3UCOoQOUo5LlCTX9PbS
+         ywd+we4HUHT3gY60eZTZuCcyCaIPh8AFhDM/GIzP1Dg5D5WEIKKScRu3PCRzarW4o/PL
+         /i00uRtuWoFNzaqvjNDexFT7VBEXETSTFVYE99S3WuGlHoBTfxjPr4GJx1qyI2lvynBX
+         h8tndcGkTiu6euD1bXVml8NY+buQ5gIxPpPLEL2LDaCOcWDIuD1/H6cXARaHjeT0TZY0
+         37cg==
+X-Gm-Message-State: ANhLgQ3ewiQ09kvEI7r4nLFB8ZK92cnfnh6Vy4FHbAdYxYRAflGX1Zg3
+        WCmP2GO7BgAjrMUOOsxUww==
+X-Google-Smtp-Source: ADFU+vuQg+pvqCkdjOR+MTIxkrfGYLu3hbZ8HXPDkiEoRjoFQtoZWruFHZBgCjkV/KU7alX75sG5xg==
+X-Received: by 2002:a02:6d2c:: with SMTP id m44mr233994jac.65.1584569587719;
+        Wed, 18 Mar 2020 15:13:07 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id v21sm68954ios.39.2020.03.18.15.13.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 15:13:06 -0700 (PDT)
+Received: (nullmailer pid 29033 invoked by uid 1000);
+        Wed, 18 Mar 2020 22:13:04 -0000
+Date:   Wed, 18 Mar 2020 16:13:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     peng.fan@nxp.com
+Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH V3 1/4] dt-bindings: fsl: add i.MX7ULP PMC binding doc
+Message-ID: <20200318221304.GA28525@bogus>
+References: <1584348944-19633-1-git-send-email-peng.fan@nxp.com>
+ <1584348944-19633-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318204407.607241357@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linuxppc-dev@lists.ozlabs.org, arnd@arndb.de, mpe@ellerman.id.au, dave@stgolabs.net, oleg@redhat.com, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, davem@davemloft.net, kvalo@codeaurora.org, linux-usb@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, kurt.schwemmer@microsemi.com, bigeasy@linutronix.de, rdunlap@infradead.org, rostedt@goodmis.org, joel@joelfernandes.org, paulmck@kernel.org, will@kernel.org, mingo@kernel.org, torvalds@linux-foundation.org, peterz@infradead.org, linux-kernel@vger.kernel.org, tglx@linutronix.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [patch V2 02/15] pci/switchtec: Replace completion wait queue
- usage for poll
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584348944-19633-2-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020-03-18 2:43 p.m., Thomas Gleixner wrote:
-> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+On Mon, 16 Mar 2020 16:55:41 +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> The poll callback is using the completion wait queue and sticks it into
-> poll_wait() to wake up pollers after a command has completed.
+> Add i.MX7ULP Power Management Controller binding doc
+> pmc0 is used by M4, pmc1 is used by A7, they have different
+> register name and usage.
 > 
-> This works to some extent, but cannot provide EPOLLEXCLUSIVE support
-> because the waker side uses complete_all() which unconditionally wakes up
-> all waiters. complete_all() is required because completions internally use
-> exclusive wait and complete() only wakes up one waiter by default.
-> 
-> This mixes conceptually different mechanisms and relies on internal
-> implementation details of completions, which in turn puts contraints on
-> changing the internal implementation of completions.
-> 
-> Replace it with a regular wait queue and store the state in struct
-> switchtec_user.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-While I've been against open coding the completion in this driver for a
-while, I'm convinced by the EPOLLEXCLUSIVE argument for this change.
-I've reviewed and lightly tested the change with hardware:
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
-Thanks,
-
-Logan
-
-> Cc: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
-> V2: Reworded changelog.
-> ---
->  drivers/pci/switch/switchtec.c |   22 +++++++++++++---------
->  1 file changed, 13 insertions(+), 9 deletions(-)
+>  .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
 > 
-> --- a/drivers/pci/switch/switchtec.c
-> +++ b/drivers/pci/switch/switchtec.c
-> @@ -52,10 +52,11 @@ struct switchtec_user {
->  
->  	enum mrpc_state state;
->  
-> -	struct completion comp;
-> +	wait_queue_head_t cmd_comp;
->  	struct kref kref;
->  	struct list_head list;
->  
-> +	bool cmd_done;
->  	u32 cmd;
->  	u32 status;
->  	u32 return_code;
-> @@ -77,7 +78,7 @@ static struct switchtec_user *stuser_cre
->  	stuser->stdev = stdev;
->  	kref_init(&stuser->kref);
->  	INIT_LIST_HEAD(&stuser->list);
-> -	init_completion(&stuser->comp);
-> +	init_waitqueue_head(&stuser->cmd_comp);
->  	stuser->event_cnt = atomic_read(&stdev->event_cnt);
->  
->  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
-> @@ -175,7 +176,7 @@ static int mrpc_queue_cmd(struct switcht
->  	kref_get(&stuser->kref);
->  	stuser->read_len = sizeof(stuser->data);
->  	stuser_set_state(stuser, MRPC_QUEUED);
-> -	reinit_completion(&stuser->comp);
-> +	stuser->cmd_done = false;
->  	list_add_tail(&stuser->list, &stdev->mrpc_queue);
->  
->  	mrpc_cmd_submit(stdev);
-> @@ -222,7 +223,8 @@ static void mrpc_complete_cmd(struct swi
->  		memcpy_fromio(stuser->data, &stdev->mmio_mrpc->output_data,
->  			      stuser->read_len);
->  out:
-> -	complete_all(&stuser->comp);
-> +	stuser->cmd_done = true;
-> +	wake_up_interruptible(&stuser->cmd_comp);
->  	list_del_init(&stuser->list);
->  	stuser_put(stuser);
->  	stdev->mrpc_busy = 0;
-> @@ -529,10 +531,11 @@ static ssize_t switchtec_dev_read(struct
->  	mutex_unlock(&stdev->mrpc_mutex);
->  
->  	if (filp->f_flags & O_NONBLOCK) {
-> -		if (!try_wait_for_completion(&stuser->comp))
-> +		if (!stuser->cmd_done)
->  			return -EAGAIN;
->  	} else {
-> -		rc = wait_for_completion_interruptible(&stuser->comp);
-> +		rc = wait_event_interruptible(stuser->cmd_comp,
-> +					      stuser->cmd_done);
->  		if (rc < 0)
->  			return rc;
->  	}
-> @@ -580,7 +583,7 @@ static __poll_t switchtec_dev_poll(struc
->  	struct switchtec_dev *stdev = stuser->stdev;
->  	__poll_t ret = 0;
->  
-> -	poll_wait(filp, &stuser->comp.wait, wait);
-> +	poll_wait(filp, &stuser->cmd_comp, wait);
->  	poll_wait(filp, &stdev->event_wq, wait);
->  
->  	if (lock_mutex_and_test_alive(stdev))
-> @@ -588,7 +591,7 @@ static __poll_t switchtec_dev_poll(struc
->  
->  	mutex_unlock(&stdev->mrpc_mutex);
->  
-> -	if (try_wait_for_completion(&stuser->comp))
-> +	if (stuser->cmd_done)
->  		ret |= EPOLLIN | EPOLLRDNORM;
->  
->  	if (stuser->event_cnt != atomic_read(&stdev->event_cnt))
-> @@ -1272,7 +1275,8 @@ static void stdev_kill(struct switchtec_
->  
->  	/* Wake up and kill any users waiting on an MRPC request */
->  	list_for_each_entry_safe(stuser, tmpuser, &stdev->mrpc_queue, list) {
-> -		complete_all(&stuser->comp);
-> +		stuser->cmd_done = true;
-> +		wake_up_interruptible(&stuser->cmd_comp);
->  		list_del_init(&stuser->list);
->  		stuser_put(stuser);
->  	}
-> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/arm/freescale/imx7ulp_pmc.yaml#
+
+See https://patchwork.ozlabs.org/patch/1255335
+Please check and re-submit.
