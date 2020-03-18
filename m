@@ -2,177 +2,144 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7500C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC30FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D55420772
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B21B120724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:23:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="eTV2S5Qr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgCRMWY (ORCPT
+        id S1726827AbgCRMXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 08:22:24 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2573 "EHLO huawei.com"
+        Wed, 18 Mar 2020 08:23:04 -0400
+Received: from mail-vi1eur05on2058.outbound.protection.outlook.com ([40.107.21.58]:41665
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726619AbgCRMWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:22:24 -0400
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id C98881FDEC3ADA6D060B;
-        Wed, 18 Mar 2020 12:22:22 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 18 Mar 2020 12:22:22 +0000
-Received: from [127.0.0.1] (10.47.11.44) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 18 Mar
- 2020 12:22:21 +0000
-Subject: Re: [PATCH v3 2/2] irqchip/gic-v3-its: Balance initial LPI affinity
- across CPUs
-To:     Marc Zyngier <maz@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     chenxiang <chenxiang66@hisilicon.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>
-References: <20200316115433.9017-1-maz@kernel.org>
- <20200316115433.9017-3-maz@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <d3a6435b-bc1f-e518-6461-2ebff72bbc59@huawei.com>
-Date:   Wed, 18 Mar 2020 12:22:09 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1726619AbgCRMXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 08:23:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TLrpk3Rq6BLMJR/GRyulnnTHHd7w/e611GsBx8vtaM122jLCwnCEra1Gfy9+BpzAHgVOjD/zTLFYNK4JDmC70rh2cKZNdzVjAtqYfMSft1yHuU2pEwcXOV7c5QoBoX++LFmCWfPHJwgfmvOg2gn9THtC28goY3LwK14gf/IpcsAibTuljGKPS+5HcUPuE6iiSm5yLF1j0CrikP2eg31rbdOYb2aa7OZqvF33yhcXnyVAXFPLPKtF/g21oHvkulgc3lqnjnzbWacjClxc5ICCcnKbBe3rbahF+0Pu8gJUPxyXUsmKzpBZQWkWctB6bgBPctRGs0n06PbPv3FgRZ8EHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rB/uBdueeVigHfVcZMb5CFpU4VPCCU/lBLqFKfnB1Pk=;
+ b=k6IkCUE1/K5SKDVSFUaOO4LgqrSy1JToientLUYZS6Arqpue1yt3FWkXumJCP4oNPFELUyly/YIJCcMfTZPnCWEhRSeEHq5n3ifRQKVoqATa8L5UT97Yoe0IM2A+sJqbdghhhDfuOpIlUK/Qy1OpbepJRnfLG9q0XalTU+DEXZyElUXAPVkCC5LFOlbd0maum2O15fu0BC1Csg/NkxnWnmrEyh7QOTKwunvDYUaOQUH0+ZgpZOZE83IvVGOlhprr9/gCRASdrr5j5bLRfFS1sInHsGaEsCc73pDbwOwsjU8QRkz3FhmQwHSmOHEkxrYCIEBDoyxmwSpydAOVKNBdNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rB/uBdueeVigHfVcZMb5CFpU4VPCCU/lBLqFKfnB1Pk=;
+ b=eTV2S5Qrsd6IOw/RLUu77Dpm/l7tB70QIg3quX9ary1XX1vS+xo5ZreZfLizA2Eh3CvNfk6nUHlshrMN1BXvo+27fv30TyTyNwMdjmuO/tqBxjxmqnIBIrjpfkFSSMLD3sPrgZTEOkn9HxQ3Q6/yF8JyHe7fvhd9KO++oEiuFrU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB6287.eurprd05.prod.outlook.com (20.179.25.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.14; Wed, 18 Mar 2020 12:23:00 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18d2:a9ea:519:add3]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18d2:a9ea:519:add3%7]) with mapi id 15.20.2814.025; Wed, 18 Mar 2020
+ 12:23:00 +0000
+Date:   Wed, 18 Mar 2020 09:22:55 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, lingshan.zhu@intel.com, eperezma@redhat.com,
+        lulu@redhat.com, parav@mellanox.com, kevin.tian@intel.com,
+        stefanha@redhat.com, rdunlap@infradead.org, hch@infradead.org,
+        aadam@redhat.com, jiri@mellanox.com, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        Bie Tiwei <tiwei.bie@intel.com>
+Subject: Re: [PATCH V6 8/8] virtio: Intel IFC VF driver for VDPA
+Message-ID: <20200318122255.GG13183@mellanox.com>
+References: <20200318080327.21958-1-jasowang@redhat.com>
+ <20200318080327.21958-9-jasowang@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318080327.21958-9-jasowang@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: BL0PR02CA0024.namprd02.prod.outlook.com
+ (2603:10b6:207:3c::37) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
 MIME-Version: 1.0
-In-Reply-To: <20200316115433.9017-3-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.11.44]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0024.namprd02.prod.outlook.com (2603:10b6:207:3c::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.22 via Frontend Transport; Wed, 18 Mar 2020 12:22:59 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jEXip-0003l3-Nt; Wed, 18 Mar 2020 09:22:55 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: fec168ad-986f-4206-50c1-08d7cb3718fe
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6287:|VI1PR05MB6287:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB62877A2DB1010E5C9AEFEB0DCFF70@VI1PR05MB6287.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 03468CBA43
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(39860400002)(136003)(376002)(199004)(5660300002)(33656002)(1076003)(2906002)(4326008)(478600001)(36756003)(2616005)(26005)(7416002)(6916009)(316002)(81166006)(66946007)(186003)(52116002)(8676002)(81156014)(66476007)(66556008)(8936002)(86362001)(9746002)(9786002)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6287;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XSrSkNW8+D2kNXHpww3h8hJluflkZzGOIh79EuYU+2TLCHlZRNxbzEGTmHn0XltAO6VF3gLBBb3M5aRjnHf+rTmqy1qhZUxJolqubRKglLwGp1EpMzqrZNNYdBJ79YhfIcRkquRbsyCMOQ8bKMH7rmXxCoRx/32D1vBdiZBdVOpKv1igi7r+HeBRAotlM/O83mmucFvYjj2IOicwSHWZw59v07qWy6HWx60dfXT8fLtQPEugAbq0v3ROm+7h4bUfAZL1cenrHTvkGhB2plb9VV7OUhA3DV9TZwXxMmg8ETBDtm79y+i6v1L99VRktnZB1pRwljzTdHW4rpfkVuak+2nBliMWMYBet4RgtjSE9PO1HtY0Qyo4R+ry8WSSL43eDdi6J1ySRtNszrKOQpXOQYYFaOmDAiWq5p4lw36Emk/EdKA08/0Seohf+aU5wZnIfdMrKJS+8pdDFKMmBsG9dSUOV76h8thea/Wy9QBPCOi/TYM/K7e/YZ712zdWhKz8
+X-MS-Exchange-AntiSpam-MessageData: jcbSCfrIPijc1oNK75p2M4+d/bq4WllgNO6A3kZnDZL4UtA7upLCtRZd6l34k6oPCz/yYGHOlYeItYYN14SJ+nfp2NnaAPilUtiVM58PCC/mSk0atAEyJ8RIAJbFOZE+BHTl9cH7hlJEI3nombHrxg==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fec168ad-986f-4206-50c1-08d7cb3718fe
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 12:23:00.0473
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AobLBU8Ex34USRB44Gs6xlDaeFK8kukgSZxfiwA1BuYjBWVzZLG+QxdSfYVtrgBgDwqTznZzTkhKrQBDfU8s0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6287
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I may have an idea about this:
-irq 196, cpu list 0-31, effective list 82
-
-Just going back to comment on the code:
-
-> +/*
-> + * As suggested by Thomas Gleixner in:
-> + * https://lore.kernel.org/r/87h80q2aoc.fsf@nanos.tec.linutronix.de
-> + */
-> +static int its_select_cpu(struct irq_data *d,
-> +			  const struct cpumask *aff_mask)
+On Wed, Mar 18, 2020 at 04:03:27PM +0800, Jason Wang wrote:
+> From: Zhu Lingshan <lingshan.zhu@intel.com>
+> +
+> +static int ifcvf_vdpa_attach(struct ifcvf_adapter *adapter)
 > +{
-> +	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-> +	cpumask_var_t tmpmask;
-> +	int cpu, node;
+> +	int ret;
 > +
-> +	if (!alloc_cpumask_var(&tmpmask, GFP_KERNEL))
-> +		return -ENOMEM;
-> +
-> +	node = its_dev->its->numa_node;
-> +
-> +	if (!irqd_affinity_is_managed(d)) {
-> +		/* First try the NUMA node */
-> +		if (node != NUMA_NO_NODE) {
-> +			/*
-> +			 * Try the intersection of the affinity mask and the
-> +			 * node mask (and the online mask, just to be safe).
-> +			 */
-> +			cpumask_and(tmpmask, cpumask_of_node(node), aff_mask);
-> +			cpumask_and(tmpmask, tmpmask, cpu_online_mask);
-> +
-> +			/* If that doesn't work, try the nodemask itself */
+> +	adapter->vdpa_dev  = vdpa_alloc_device(adapter->dev, adapter->dev,
+> +					       &ifc_vdpa_ops);
+> +	if (IS_ERR(adapter->vdpa_dev)) {
+> +		IFCVF_ERR(adapter->dev, "Failed to init ifcvf on vdpa bus");
+> +		put_device(&adapter->vdpa_dev->dev);
+> +		return -ENODEV;
+> +	}
 
-So if tmpmsk is empty...
+The point of having an alloc call is so that the drivers
+ifcvf_adaptor memory could be placed in the same struct - eg use
+container_of to flip between them, and have a kref for both memories.
 
-> +			if (cpumask_empty(tmpmask))
-> +				cpumask_and(tmpmask, cpumask_of_node(node), cpu_online_mask);
+It seem really weird to have an alloc followed immediately by
+register.
 
-  now the tmpmask may have no intersection with the aff_mask...
+> diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
+> index c30eb55030be..de64b88ee7e4 100644
+> +++ b/drivers/virtio/virtio_vdpa.c
+> @@ -362,6 +362,7 @@ static int virtio_vdpa_probe(struct vdpa_device *vdpa)
+>  		goto err;
+>  
+>  	vdpa_set_drvdata(vdpa, vd_dev);
+> +	dev_info(vd_dev->vdev.dev.parent, "device attached to VDPA bus\n");
+>  
+>  	return 0;
 
-> +
-> +			cpu = cpumask_pick_least_loaded(d, tmpmask);
-> +			if (cpu < nr_cpu_ids)
-> +				goto out;
-> +
-> +			/* If we can't cross sockets, give up */
-> +			if ((its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144))
-> +				goto out;
-> +
-> +			/* If the above failed, expand the search */
-> +		}
+This hunk seems out of place
 
-SNIP
-
-> +out:
-> +	free_cpumask_var(tmpmask);
-> +
-> +	pr_debug("IRQ%d -> %*pbl CPU%d\n", d->irq, cpumask_pr_args(aff_mask), cpu);
-> +	return cpu;
-> +}
-> +
->   static int its_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
->   			    bool force)
->   {
-> -	unsigned int cpu;
-> -	const struct cpumask *cpu_mask = cpu_online_mask;
->   	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
->   	struct its_collection *target_col;
->   	u32 id = its_get_event_id(d);
-> +	int cpu;
->   
->   	/* A forwarded interrupt should use irq_set_vcpu_affinity */
->   	if (irqd_is_forwarded_to_vcpu(d))
->   		return -EINVAL;
->   
-> -       /* lpi cannot be routed to a redistributor that is on a foreign node */
-> -	if (its_dev->its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) {
-> -		if (its_dev->its->numa_node >= 0) {
-> -			cpu_mask = cpumask_of_node(its_dev->its->numa_node);
-> -			if (!cpumask_intersects(mask_val, cpu_mask))
-> -				return -EINVAL;
-> -		}
-> -	}
-> -
-> -	cpu = cpumask_any_and(mask_val, cpu_mask);
-> +	if (!force)
-> +		cpu = its_select_cpu(d, mask_val);
-> +	else
-> +		cpu = cpumask_pick_least_loaded(d, mask_val);
->   
-> -	if (cpu >= nr_cpu_ids)
-> +	if (cpu < 0 || cpu >= nr_cpu_ids)
->   		return -EINVAL;
-
-Annotate missing code:
-
-	if (cpu < 0 || cpu >= nr_cpu_ids)
-		return -EINVAL;
-
-	if (cpu != its_dev->event_map.col_map[id]) {
-		its_inc_lpi_count(d, cpu);
-		its_dec_lpi_count(d, its_dev->event_map.col_map[id]);
-		target_col = &its_dev->its->collections[cpu];
-		its_send_movi(its_dev, target_col, id);
-		its_dev->event_map.col_map[id] = cpu;
-		irq_data_update_effective_affinity(d, cpumask_of(cpu));
-	}
-
-So cpu may not be a member of mask_val. Hence the inconsistency of the 
-affinity list and effective affinity. We could just drop the AND of the 
-ITS node mask in its_select_cpu().
-
-Anyway, I don't think that this should stop us testing.
-
-Cheers,
-John
+Jason  
