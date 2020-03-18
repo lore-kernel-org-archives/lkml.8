@@ -2,107 +2,108 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AF7C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B623EC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357B520771
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFC620771
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:03:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XB9nx06C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbgCRJC4 (ORCPT
+        id S1727519AbgCRJDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:02:56 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:43448 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgCRJC4 (ORCPT
+        Wed, 18 Mar 2020 05:03:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35932 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgCRJDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:02:56 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 0F8A61C0322; Wed, 18 Mar 2020 10:02:54 +0100 (CET)
-Date:   Wed, 18 Mar 2020 10:02:53 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dmitry Yakunin <zeil@yandex-team.ru>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 4.19 03/89] cgroup, netclassid: periodically release
- file_lock on classid updating
-Message-ID: <20200318090253.GA32397@duo.ucw.cz>
-References: <20200317103259.744774526@linuxfoundation.org>
- <20200317103300.173739219@linuxfoundation.org>
+        Wed, 18 Mar 2020 05:03:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=rqHuFXYHG+0M6MgARbEa/w5Vs+vN7XFOaRX7Vm8ilXk=; b=XB9nx06CTV5SxYAZuoaTTUX8pP
+        ytgSNwTJZlEUABVFJyr7mAe9GBpQDuwg0VDdOpMDpoklqYBTyh4Ck6T2scTpOK9kLlcMJGEU97V13
+        Ab7MmTT1mnNkI+BHLLAxMCkG7VIgAZ+v7Z4SeWFkCI2kgouKuPIT92f8V0uludoKZyHXPafsn/a0K
+        6bMQRjUs6homzAZWR682zanDSf7c2yKdHTfgTXGKuFonL2etqRGk27qQp9v7Q7S2qzpHDPlAJs6BG
+        g2axSVuYPu1BR1qhPbL7S83cQbv4Pex/fmHNu1mP2Ilx37eGZyiDPnhOtqEj1kTvoTEIAlKrIkjj6
+        ZW9uRX2w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEUbY-00048g-In; Wed, 18 Mar 2020 09:03:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8C12A3010C2;
+        Wed, 18 Mar 2020 10:03:09 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 789BC28563D6F; Wed, 18 Mar 2020 10:03:09 +0100 (CET)
+Date:   Wed, 18 Mar 2020 10:03:09 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
+Subject: Re: [PATCH v2 16/19] objtool: Implement noinstr validation
+Message-ID: <20200318090309.GC20730@hirez.programming.kicks-ass.net>
+References: <20200317170234.897520633@infradead.org>
+ <20200317170910.730949374@infradead.org>
+ <20200317210008.bda4c542b5lu7juf@treble>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200317103300.173739219@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200317210008.bda4c542b5lu7juf@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 17, 2020 at 04:00:08PM -0500, Josh Poimboeuf wrote:
+> On Tue, Mar 17, 2020 at 06:02:50PM +0100, Peter Zijlstra wrote:
+> > Validate that any call out of .noinstr.text is in between
+> > instr_begin() and instr_end() annotations.
+> > 
+> > This annotation is useful to ensure correct behaviour wrt tracing
+> > sensitive code like entry/exit and idle code. When we run code in a
+> > sensitive context we want a guarantee no unknown code is ran.
+> > 
+> > Since this validation relies on knowing the section of call
+> > destination symbols, we must run it on vmlinux.o instead of on
+> > individual object files.
+> > 
+> > Add two options:
+> > 
+> >  -d/--duplicate "duplicate validation for vmlinux"
+> >  -l/--vmlinux "vmlinux.o validation"
+> 
+> I'm not sure I see the point of the --vmlinux option, when it will be
+> autodetected anyway?
 
---vtzGhvizbBRQ85DL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ah, I sometimes do stuff like:
 
-Hi!
+ cp vmlinux.o vmlinux.o.orig
+ quilt push; make -j$lots
+ cp vmlinux.o vmlinux.o.1
+ quilt push; make -j$lots
+ ...
 
-> From: Dmitry Yakunin <zeil@yandex-team.ru>
->=20
-> [ Upstream commit 018d26fcd12a75fb9b5fe233762aa3f2f0854b88 ]
-=2E..
-> Now update is non atomic and socket may be skipped using calls:
->=20
-> dup2(oldfd, newfd);
-> close(oldfd);
->=20
-> But this case is not typical. Moreover before this patch skip is possible
-> too by hiding socket fd in unix socket buffer.
+And then it is nice to force the mode.
 
-Dunno. This makes interface even more interesting.
+> > @@ -46,5 +49,9 @@ int cmd_check(int argc, const char **arg
+> >  
+> >  	objname = argv[0];
+> >  
+> > +	s = strstr(objname, "vmlinux.o");
+> > +	if (s && !s[9])
+> > +		vmlinux = true;
+> > +
+> 
+> I think this would be slightly cleaner:
+> 
+> 	if (!strcmp(basename(objname), "vmlinux.o"))
+> 		vmlinux = true;
 
-> +
->  static int update_classid_sock(const void *v, struct file *file, unsigne=
-d n)
->  {
->  	int err;
-> +	struct update_classid_context *ctx =3D (void *)v;
->  	struct socket *sock =3D sock_from_file(file, &err);
->
-=2E..
-> +	if (--ctx->batch =3D=3D 0) {
-> +		ctx->batch =3D UPDATE_CLASSID_BATCH;
-> +		return n + 1;
-> +	}
->  	return 0;
->  }
-
-We take "const void *" and then write to it. That's asking for
-trouble... right? Should the const annotation be removed, at least for
-sake of humans trying to understand the code?
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---vtzGhvizbBRQ85DL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnHjvQAKCRAw5/Bqldv6
-8ltcAKC4P/hM60j4SfDJ/8gr8w3PMtcMdQCfU7uvgqqEAvk+R5iIVCrYfnnF14c=
-=i9db
------END PGP SIGNATURE-----
-
---vtzGhvizbBRQ85DL--
+Ah, indeed. I totally forgot userspace coding it seems..
