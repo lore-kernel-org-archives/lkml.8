@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18CAC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B08C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F20B20772
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E34820772
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgCRO1G (ORCPT
+        id S1727116AbgCRO1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:27:06 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:37372 "EHLO gloria.sntech.de"
+        Wed, 18 Mar 2020 10:27:01 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:37356 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727118AbgCRO1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:27:02 -0400
+        id S1726730AbgCRO1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 10:27:00 -0400
 Received: from [94.134.91.63] (helo=phil.fritz.box)
         by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.89)
         (envelope-from <heiko@sntech.de>)
-        id 1jEZep-0004YX-P7; Wed, 18 Mar 2020 15:26:55 +0100
+        id 1jEZen-0004YX-Ay; Wed, 18 Mar 2020 15:26:53 +0100
 From:   Heiko Stuebner <heiko@sntech.de>
 To:     gregkh@linuxfoundation.org
 Cc:     jslaby@suse.com, andriy.shevchenko@linux.intel.com,
@@ -31,9 +31,9 @@ Cc:     jslaby@suse.com, andriy.shevchenko@linux.intel.com,
         linux-kernel@vger.kernel.org, heiko@sntech.de,
         Giulio Benetti <giulio.benetti@micronovasrl.com>,
         Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: [PATCH 6/7] serial: 8250_dw: add em485 support
-Date:   Wed, 18 Mar 2020 15:26:39 +0100
-Message-Id: <20200318142640.982763-7-heiko@sntech.de>
+Subject: [PATCH 1/7] serial: 8250: Make em485_rts_after_send() set mctrl according to rts state.
+Date:   Wed, 18 Mar 2020 15:26:34 +0100
+Message-Id: <20200318142640.982763-2-heiko@sntech.de>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200318142640.982763-1-heiko@sntech.de>
 References: <20200318142640.982763-1-heiko@sntech.de>
@@ -46,66 +46,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Giulio Benetti <giulio.benetti@micronovasrl.com>
 
-Need to use rs485 transceiver so let's use existing em485 485 emulation
-layer on top of 8250.
+When rs485 enabled and RTS_AFTER_SEND set on startup, need to preserve
+mctrl status, because later functions will call set_mctrl passing
+port->mctrl=0 overriding rts status, resulting in rts pin in
+transmission when idle.
 
-Add rs485_config callback to port.
+Make mctrl reflect rts pin state.
 
 Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
 Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 ---
- drivers/tty/serial/8250/8250_dw.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/tty/serial/8250/8250_port.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index 1c72fdc2dd37..7023b656658d 100644
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -320,6 +320,36 @@ static void dw8250_set_ldisc(struct uart_port *p, struct ktermios *termios)
- 	serial8250_do_set_ldisc(p, termios);
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 8407166610ce..67aa3a2a9afa 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -565,10 +565,13 @@ static inline void serial8250_em485_rts_after_send(struct uart_8250_port *p)
+ {
+ 	unsigned char mcr = serial8250_in_MCR(p);
+ 
+-	if (p->port.rs485.flags & SER_RS485_RTS_AFTER_SEND)
++	if (p->port.rs485.flags & SER_RS485_RTS_AFTER_SEND) {
+ 		mcr |= UART_MCR_RTS;
+-	else
++		p->port.mctrl |= TIOCM_RTS;
++	} else {
+ 		mcr &= ~UART_MCR_RTS;
++		p->port.mctrl &= ~TIOCM_RTS;
++	}
+ 	serial8250_out_MCR(p, mcr);
  }
  
-+static int dw8250_rs485_config(struct uart_port *p,
-+			       struct serial_rs485 *rs485)
-+{
-+	struct uart_8250_port *up = up_to_u8250p(p);
-+
-+	/* Clamp the delays to [0, 100ms] */
-+	rs485->delay_rts_before_send = min(rs485->delay_rts_before_send, 100U);
-+	rs485->delay_rts_after_send  = min(rs485->delay_rts_after_send, 100U);
-+
-+	p->rs485 = *rs485;
-+
-+	/*
-+	 * Both serial8250_em485_init and serial8250_em485_destroy
-+	 * are idempotent
-+	 */
-+	if (rs485->flags & SER_RS485_ENABLED) {
-+		int ret = serial8250_em485_init(up, false);
-+
-+		if (ret) {
-+			rs485->flags &= ~SER_RS485_ENABLED;
-+			p->rs485.flags &= ~SER_RS485_ENABLED;
-+		}
-+		return ret;
-+	}
-+
-+	serial8250_em485_destroy(up);
-+
-+	return 0;
-+}
-+
- /*
-  * dw8250_fallback_dma_filter will prevent the UART from getting just any free
-  * channel on platforms that have DMA engines, but don't have any channels
-@@ -417,6 +447,7 @@ static int dw8250_probe(struct platform_device *pdev)
- 	p->serial_out	= dw8250_serial_out;
- 	p->set_ldisc	= dw8250_set_ldisc;
- 	p->set_termios	= dw8250_set_termios;
-+	p->rs485_config = dw8250_rs485_config;
- 
- 	p->membase = devm_ioremap(dev, regs->start, resource_size(regs));
- 	if (!p->membase)
 -- 
 2.24.1
 
