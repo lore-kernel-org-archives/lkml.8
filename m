@@ -2,106 +2,122 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34963C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1ECFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1231B20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A0720754
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:00:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="yJbuHbEf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgCRS6T (ORCPT
+        id S1726840AbgCRTAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:58:19 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:48908 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgCRS6S (ORCPT
+        Wed, 18 Mar 2020 15:00:12 -0400
+Received: from ms11p00im-qufo17291701.me.com ([17.58.38.46]:43380 "EHLO
+        ms11p00im-qufo17291701.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726506AbgCRTAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:58:18 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id D26128060A;
-        Wed, 18 Mar 2020 19:58:15 +0100 (CET)
-Date:   Wed, 18 Mar 2020 19:58:14 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: Update feiyang, st7701 panel
- bindings converted as YAML
-Message-ID: <20200318185814.GB28092@ravnborg.org>
-References: <20200318171003.5179-1-jagan@amarulasolutions.com>
- <20200318171003.5179-3-jagan@amarulasolutions.com>
+        Wed, 18 Mar 2020 15:00:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+        t=1584558008; bh=Wx3SLcGZbU7wK702DkuJhWDsfT3JOl+X/0ZhHZWG+9Q=;
+        h=From:To:Subject:Date:Message-Id:Content-Type;
+        b=yJbuHbEfX2NujboAIQTVDGAu5WfhdMVC/lg/2pNrzNDVdh5Q3mFVLpfTHvct6++Q3
+         BDDDNIGdA4p2MJ13xwDmAdXYWPiVP0EcGu4Fsh54SQPSQsKBJl4qRX7ptPW12wJlBb
+         URnD/kCq/Sa1U74/Bp1QJwVK2k+p3mJm+LhtFvT9hMBKk2DYtHUmHm245XkcmZmx/9
+         jrmvt9aPPjIu3TF7IWTrLvZC49QfKI36k8D/NHCmX5/lTUBygrfpuN3dIaDDnSJ3zg
+         7M8rQGoDwOvDxAl7H5MoXmesVyg/FiCznFhW0IB8vWDKHVWrCN40wJ2HY3eQixumPI
+         sahhNy1XEcftw==
+Received: from shwetrath.localdomain (unknown [66.199.8.131])
+        by ms11p00im-qufo17291701.me.com (Postfix) with ESMTPSA id C6BE76409A4;
+        Wed, 18 Mar 2020 19:00:07 +0000 (UTC)
+From:   Vijay Thakkar <vijaythakkar@me.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Vijay Thakkar <vijaythakkar@me.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
+        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH v6 0/3] perf vendor events amd: latest PMU events for zen1/zen2
+Date:   Wed, 18 Mar 2020 14:59:59 -0400
+Message-Id: <20200318190002.307290-1-vijaythakkar@me.com>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318171003.5179-3-jagan@amarulasolutions.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=iP-xVBlJAAAA:8
-        a=20KFwNOVAAAA:8 a=WZHNqt2aAAAA:8 a=e5mUnYsNAAAA:8 a=9Nv2NtiChPkpYjpV1K0A:9
-        a=CjuIK1q_8ugA:10 a=lHLH-nfn2y1bM_0xSXwp:22 a=PrHl9onO2p7xFKlKy1af:22
-        a=Vxmtnl_E_bksehYqCbjh:22 a=pHzHmUro8NiASowvMSCR:22
-        a=nt3jZW36AmriUCFCBwmW:22
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-03-18_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-2003180085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 10:40:03PM +0530, Jagan Teki wrote:
-> The feiyang,fy07024di26a30d.txt and sitronix,st7701.txt has been
-> converted to YAML schemas, update MAINTAINERS to match them again.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+This series of patches brings the PMU events for AMD family 17h series
+of processors up to date with the latest versions of the AMD processor
+programming reference manuals.
 
-The patch is fine.
-I just dislike we repeat the maintainer info in two places..
+The first patch changes the pmu events mapfile to be more selective for
+the model number rather than blanket detecting all f17h processors to
+have the same events directory. This is required for the later patch
+where we add events for zen2 based processors.
 
-	Sam
+The second patch adds the PMU events for zen2.
 
+Finally the third patch updates the zen1 PMU events to be in accordance
+with the latest PPR version and bumps up the events version to v2.
 
-> ---
-> Changes for v2:
-> - none
-> 
->  MAINTAINERS | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6ba8b584bf95..b987f2588e6a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5273,7 +5273,7 @@ DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
->  M:	Jagan Teki <jagan@amarulasolutions.com>
->  S:	Maintained
->  F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
-> -F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
-> +F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
->  
->  DRM DRIVER FOR GRAIN MEDIA GM12U320 PROJECTORS
->  M:	Hans de Goede <hdegoede@redhat.com>
-> @@ -5416,7 +5416,7 @@ DRM DRIVER FOR SITRONIX ST7701 PANELS
->  M:	Jagan Teki <jagan@amarulasolutions.com>
->  S:	Maintained
->  F:	drivers/gpu/drm/panel/panel-sitronix-st7701.c
-> -F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
-> +F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
->  
->  DRM DRIVER FOR SITRONIX ST7586 PANELS
->  M:	David Lechner <david@lechnology.com>
-> -- 
-> 2.17.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Vijay Thakkar (3):
+  perf vendor events amd: restrict model detection for zen1 based
+    processors
+  perf vendor events amd: add Zen2 events
+  perf vendor events amd: update Zen1 events to V2
+
+ .../pmu-events/arch/x86/amdfam17h/branch.json |  12 -
+ .../pmu-events/arch/x86/amdfam17h/cache.json  | 329 -----------------
+ .../pmu-events/arch/x86/amdfam17h/other.json  |  65 ----
+ .../pmu-events/arch/x86/amdzen1/branch.json   |  23 ++
+ .../pmu-events/arch/x86/amdzen1/cache.json    | 294 +++++++++++++++
+ .../arch/x86/{amdfam17h => amdzen1}/core.json |  15 +-
+ .../floating-point.json                       |  64 +++-
+ .../x86/{amdfam17h => amdzen1}/memory.json    |  82 +++--
+ .../pmu-events/arch/x86/amdzen1/other.json    |  56 +++
+ .../pmu-events/arch/x86/amdzen2/branch.json   |  52 +++
+ .../pmu-events/arch/x86/amdzen2/cache.json    | 338 +++++++++++++++++
+ .../pmu-events/arch/x86/amdzen2/core.json     | 130 +++++++
+ .../arch/x86/amdzen2/floating-point.json      | 140 +++++++
+ .../pmu-events/arch/x86/amdzen2/memory.json   | 341 ++++++++++++++++++
+ .../pmu-events/arch/x86/amdzen2/other.json    | 115 ++++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   3 +-
+ 16 files changed, 1606 insertions(+), 453 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/branch.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/core.json (87%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/floating-point.json (61%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json (63%)
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/core.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/other.json
+
+-- 
+2.25.2
+
