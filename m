@@ -2,93 +2,123 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE12C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36477C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1270220753
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E3820724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:56:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RERh36mN"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dK0+c9bo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbgCRQzo (ORCPT
+        id S1727141AbgCRQ4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:55:44 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:39847 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727141AbgCRQzo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 12:55:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584550543;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Gw8dSJcxAXn8cbdNXnASK9oycQDUpTjvTj4lA80tno0=;
-        b=RERh36mNVaH9Si4IhaY0isL0WIpGI43WeXDQ4FikbkHeAM7Ms5y7O1QTuKNkd5+AfpUCS+
-        dXBRSFe5ZWlYSgiueJSR6D4M1FK/yNPAkz3XKy392TRGWJapTmRS5trBMiLDbXvHa26esO
-        9hh8g47LBo2J5dOUxMPMgpzxiVpnqgc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-320-I5vSD3jsM3ifT26mfsHPPQ-1; Wed, 18 Mar 2020 12:55:41 -0400
-X-MC-Unique: I5vSD3jsM3ifT26mfsHPPQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4914D800D4E;
-        Wed, 18 Mar 2020 16:55:40 +0000 (UTC)
-Received: from treble (unknown [10.10.110.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 321225D9E2;
-        Wed, 18 Mar 2020 16:55:38 +0000 (UTC)
-Date:   Wed, 18 Mar 2020 11:55:36 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Mar 18 (objtool)
-Message-ID: <20200318165536.5cz4mzgb7xyxvjop@treble>
-References: <20200318220920.48df2e76@canb.auug.org.au>
- <d7dc5b4a-9a7e-ccf7-e00e-2e7f0e79a9bc@infradead.org>
+        Wed, 18 Mar 2020 12:56:30 -0400
+Received: from mout.gmx.net ([212.227.15.19]:55351 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726506AbgCRQ4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 12:56:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1584550581;
+        bh=0MdBDKZz6fAY+TxmYNydSRzfwOCiMYDTnxPndAe+j4Q=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=dK0+c9bodfi/UD+GXonEXV/+EuPu/xlrqke8n6qddhPLbMyAalxXfPmDwh8jbHSEf
+         cue9GD8VPgefO7Vgffi1C7TP6KQgX+fq2jrc5acJQQX7E46k+EUtTKSNO3H+I1joZe
+         Y4XWR6f8s5LbHExDIVshXz1TCm6f7dAeLD0JxLFc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MN5eR-1iyKBs0Smr-00J5i8; Wed, 18
+ Mar 2020 17:56:21 +0100
+Date:   Wed, 18 Mar 2020 17:55:52 +0100
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Forest Bond <forest@alittletooquiet.net>,
+        devel@driverdev.osuosl.org, Malcolm Priestley <tvboxspy@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Oscar Carter <oscar.carter@gmx.com>
+Subject: Re: [PATCH] staging: vt6656: Use ARRAY_SIZE instead of hardcoded size
+Message-ID: <20200318165551.GA3082@ubuntu>
+References: <20200314164754.8531-1-oscar.carter@gmx.com>
+ <20200317104506.GA4650@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d7dc5b4a-9a7e-ccf7-e00e-2e7f0e79a9bc@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200317104506.GA4650@kadam>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:8++pG89+OeDxgjT4Ibi/oYjl/3FVbtlFRCbf4uoQNXTO+XfK1E5
+ yfGqKA7GGA+WaQrsr73Zu8WuLeRJezvcZXnc1DAzqsFYVjtUVXL8+47Mi7ljvG3fRmCRXPO
+ Tt8HrqjROp+LjLR1++C3pLWS7PzeEjgBjTKfcx7VG7POBzkD295JATuKLD1pvhAYF5ybQdZ
+ lZZ+m7lPavTWxinXgY3Xg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZP2cT0rRTB8=:rgGD80Q77COxrZbszR8WG0
+ 7J3dZ5fgjwZbmIiQS2yh8b4cW2Vu5tA+03HpV5G66t3pfc4XDQYH0ANHYXRUROqneuLOx5PqE
+ 1nhAqI+MnnStIhBYRFQ68Eqpsfg1tqkpVh8hXUPxVwCQomqzmlVwxYoDzRWjRdaLxqnWlFmaQ
+ bkgBoIYYk7nOPlCrpB5CBC1VW3VTMhgfYviLnYnuyhaUhvSlIGGtuUq2yOHELT/3M1DNl1pTR
+ SzagGQEb7cQmp72qHCjQcQlydXdym9+DR8Do7KqpIuqvRpuozGMSz/kOiXDtziyJxPLQlPRxj
+ xADBHtj4Dod/IAnpgQHmAt1FkSGZFVNvjtRBuMkCMT6q1Mq0nvIbKllo3+7VaxndDTliltCNd
+ mxmeaI7p/jteTId0DaXx+4ePlSBFUu1Hp9dMPLvRoRIxjYDQRDYIWzpm0Mx5kbzL6HvgtrTCz
+ p1ROgONaDI7/JjHYWJRsO3fXs/04sGQ4tCqZMZxwl/9eF88FuFzoYBm2BSOclk3DOapQZl2rY
+ zzFvuG5pWSD3HOGezuCiv6pcSwY6hSB9kG1pjAiI4Il2zWueOBzdtDG2JsYoPHE0usy0aX0uq
+ qkNlMaB2mXr6HLl5ZPUJE9CaQQTqod2DjSR4dipUhIyz0GV06quF3UgY2Ud0d/qbr6u6IqYtr
+ 4hF3I+O5L+/lUo4HKx20p5RshazN051JVPDTO78FCHODmMJNRojgDD8JGAuOThzu3F43tf0Un
+ wlrbvrzd/H67R+DX/cXPH8DNyRQMJLlXrkTH6xs94DBIeX8jLhFbxYZykv3kUj+vLkYd4DwQc
+ jD+TzV55w7dK5a/e+0aWYgjVe5ePOXXLFgAvZAVAidKk7c3C8WY1/bYeaHS5YyLXGaN6+H+Oq
+ OuFNMjsNToaDP0+qPR6Fz+4w4aM1AhV/BzJRj77YUQUMcc/cQrvhV4J1jDITheGxC53kSRrkg
+ Lta0WVehPNYEjTPBxy6ziQkNny0Wh6JCJlyz4YDUcoUBygm+YywySaiUhQvT9yfN7GYDwvXT6
+ a6MV6bY20AB/QfU4UaZ0OkZ+rWpTJYFgmEDgkQoSbr5IlH4rsbjAAkzdCYqExJh5uXD9/oTbx
+ HM94ZuLrHxPP/u56TJ8Io7/+qGW2ZREM09gtL4SIZmb7JlGU1l6ZdHrIQB4mRyfBoCWUns86N
+ CtxjAlhwWF6eJ38GoitQKGdHGel8wrKHoDS0Hr3aP59XztMOPYi8/+U2WR8uZKc34rv4lXIQq
+ YHp7nOTa10vQ9ixeE
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 09:48:01AM -0700, Randy Dunlap wrote:
-> On 3/18/20 4:09 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20200317:
-> > 
-> 
-> Hi,
-> 
-> For some reason, the attached .config file generates over 350 objtool warnings.
-> There are all "unreachable instruction" warnings.
-> 
-> Here is a small sample:
-> 
-> mm/page-writeback.o: warning: objtool: __set_page_dirty_nobuffers()+0x25b: unreachable instruction
-> kernel/sched/fair.o: warning: objtool: load_balance()+0x54c: unreachable instruction
-> kernel/power/process.o: warning: objtool: freeze_kernel_threads()+0x115: unreachable instruction
-> mm/readahead.o: warning: objtool: read_cache_pages_invalidate_page()+0x1b5: unreachable instruction
-> kernel/power/suspend.o: warning: objtool: suspend_devices_and_enter()+0x101f: unreachable instruction
-> kernel/sched/rt.o: warning: objtool: dequeue_top_rt_rq()+0x67: unreachable instruction
+On Tue, Mar 17, 2020 at 01:45:06PM +0300, Dan Carpenter wrote:
+> On Sat, Mar 14, 2020 at 05:47:54PM +0100, Oscar Carter wrote:
+> > Use ARRAY_SIZE to replace the hardcoded size so we will never have a
+> > mismatch.
+> >
+> > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> > ---
+> >  drivers/staging/vt6656/main_usb.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/staging/vt6656/main_usb.c b/drivers/staging/vt665=
+6/main_usb.c
+> > index 5e48b3ddb94c..4370941ffc04 100644
+> > --- a/drivers/staging/vt6656/main_usb.c
+> > +++ b/drivers/staging/vt6656/main_usb.c
+> > @@ -23,6 +23,7 @@
+> >
+> >  #include <linux/etherdevice.h>
+> >  #include <linux/file.h>
+> > +#include <linux/kernel.h>
+> >  #include "device.h"
+> >  #include "card.h"
+> >  #include "baseband.h"
+> > @@ -116,6 +117,7 @@ static int vnt_init_registers(struct vnt_private *=
+priv)
+> >  	int ii;
+> >  	u8 tmp;
+> >  	u8 calib_tx_iq =3D 0, calib_tx_dc =3D 0, calib_rx_iq =3D 0;
+> > +	const int n_cck_pwr_tbl =3D ARRAY_SIZE(priv->cck_pwr_tbl);
+>
+> Please use ARRAY_SIZE(priv->cck_pwr_tbl) everywhere instead of
+> introducing this new variable.
+>
+Ok, I create a new version of the patch and I resend it.
 
-WTH.  This looks like the BUG "double ud2" problem we saw the other day.
+> regards,
+> dan carpenter
+>
+thanks,
 
-I wonder what changed.
-
--- 
-Josh
-
+oscar carter
