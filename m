@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7AFC4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BD0C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4810820773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF3D20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565197;
-	bh=oY0SUiEeXSxBkyGUXp0/nvA1R5EflvNU30qHwxT+EX0=;
+	s=default; t=1584565202;
+	bh=vM5NMFqNJZ1Kv3zv1Kv+95r4zD2nUkGuANljRNoa/lA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e6iWmYmAnyJTX7exhAy3sw587DGCkIhq5yPC7nXzfVIf1Cu4eotWcu2Xff1i3hS4f
-	 3E2rTSyq5351i1bb9rmTvmjaZ6yiUdnle6ifH8muH9jEFIEuy6UOArsekqB+ixHYQg
-	 ezhmc4AUvgoy3hF6j+HIwFtYV0DaEG1aTWUNwXHc=
+	b=w3c5p1MZgkkQLEBIgNln0keQ7Mmp9OqD7htCC8Yl/610cuMKgYutNYZqmpxr66vgH
+	 5HjUqzozY/VO+xJfCWvN/YNitTFRt/+Gq/TCUw/UTzBxyVhujN+JX6YibpCS09tjet
+	 D1Dl/kAMnVt2jI2QiRW/uI1DH+uu+jyyp/WSGJmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbgCRU74 (ORCPT
+        id S1728649AbgCRU4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:59:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57894 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:56:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728656AbgCRU4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:42 -0400
+        id S1727272AbgCRU4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1BD421707;
-        Wed, 18 Mar 2020 20:56:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACCFD208E4;
+        Wed, 18 Mar 2020 20:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584565001;
-        bh=oY0SUiEeXSxBkyGUXp0/nvA1R5EflvNU30qHwxT+EX0=;
+        s=default; t=1584564966;
+        bh=vM5NMFqNJZ1Kv3zv1Kv+95r4zD2nUkGuANljRNoa/lA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bKaW29Cl6wLJK+RXjhAqvvpsYsQNWM4L6DraYK9u7vR7/RU3rAm9IOLXeX35zx9li
-         M3vqIy9mIpE2oFw+2xHvWhE6Lp9r74Ub8Ape0YI/pvQYnN5AAGuMtv4Yz0kKHxssyf
-         sdN/pF7OHoYXOWLkUAeLecLCdfbe8OE3Gqkg1ci4=
+        b=QUPgenYaa1m6/+vPXoTZVUikDobWgh3PZ7X6ElWpDJf0qeSVg28x/qYNwCgw6KVxB
+         vf2AuSV247FWjtjKQcQBCOa8RNaxpgEZtpuW4suK1LIM9ZK2hc4teRImLckaB1JeDY
+         kPi/XRgoyvOVbxl4YQtHcjjFlRJxES7wFjGxi4Rk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Halil Pasic <pasic@linux.ibm.com>, Jens Axboe <axboe@kernel.dk>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 10/15] virtio-blk: fix hw_queue stopped on arbitrary error
-Date:   Wed, 18 Mar 2020 16:56:24 -0400
-Message-Id: <20200318205629.17750-10-sashal@kernel.org>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/28] can: add missing attribute validation for termination
+Date:   Wed, 18 Mar 2020 16:55:36 -0400
+Message-Id: <20200318205555.17447-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205629.17750-1-sashal@kernel.org>
-References: <20200318205629.17750-1-sashal@kernel.org>
+In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
+References: <20200318205555.17447-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,53 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Halil Pasic <pasic@linux.ibm.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit f5f6b95c72f7f8bb46eace8c5306c752d0133daa ]
+[ Upstream commit ab02ad660586b94f5d08912a3952b939cf4c4430 ]
 
-Since nobody else is going to restart our hw_queue for us, the
-blk_mq_start_stopped_hw_queues() is in virtblk_done() is not sufficient
-necessarily sufficient to ensure that the queue will get started again.
-In case of global resource outage (-ENOMEM because mapping failure,
-because of swiotlb full) our virtqueue may be empty and we can get
-stuck with a stopped hw_queue.
+Add missing attribute validation for IFLA_CAN_TERMINATION
+to the netlink policy.
 
-Let us not stop the queue on arbitrary errors, but only on -EONSPC which
-indicates a full virtqueue, where the hw_queue is guaranteed to get
-started by virtblk_done() before when it makes sense to carry on
-submitting requests. Let us also remove a stale comment.
-
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Fixes: f7728002c1c7 ("virtio_ring: fix return code on DMA mapping fails")
-Link: https://lore.kernel.org/r/20200213123728.61216-2-pasic@linux.ibm.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Fixes: 12a6075cabc0 ("can: dev: add CAN interface termination API")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/virtio_blk.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/can/dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 44ef1d66caa68..f287eec36b282 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -215,10 +215,12 @@ static int virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
- 	err = __virtblk_add_req(vblk->vqs[qid].vq, vbr, vbr->sg, num);
- 	if (err) {
- 		virtqueue_kick(vblk->vqs[qid].vq);
--		blk_mq_stop_hw_queue(hctx);
-+		/* Don't stop the queue if -ENOMEM: we may have failed to
-+		 * bounce the buffer due to global resource outage.
-+		 */
-+		if (err == -ENOSPC)
-+			blk_mq_stop_hw_queue(hctx);
- 		spin_unlock_irqrestore(&vblk->vqs[qid].lock, flags);
--		/* Out of mem doesn't actually happen, since we fall back
--		 * to direct descriptors */
- 		if (err == -ENOMEM || err == -ENOSPC)
- 			return BLK_MQ_RQ_QUEUE_BUSY;
- 		return BLK_MQ_RQ_QUEUE_ERROR;
+diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+index d92113db4fb97..05ad5ed145a3a 100644
+--- a/drivers/net/can/dev.c
++++ b/drivers/net/can/dev.c
+@@ -867,6 +867,7 @@ static const struct nla_policy can_policy[IFLA_CAN_MAX + 1] = {
+ 				= { .len = sizeof(struct can_bittiming) },
+ 	[IFLA_CAN_DATA_BITTIMING_CONST]
+ 				= { .len = sizeof(struct can_bittiming_const) },
++	[IFLA_CAN_TERMINATION]	= { .type = NLA_U16 },
+ };
+ 
+ static int can_validate(struct nlattr *tb[], struct nlattr *data[],
 -- 
 2.20.1
 
