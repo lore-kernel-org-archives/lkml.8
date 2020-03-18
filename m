@@ -2,527 +2,967 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE355C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D674C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3032076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36DB2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LLTlmXsp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NVuxmHpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbgCRIET (ORCPT
+        id S1727488AbgCRIEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 04:04:19 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33671 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgCRIER (ORCPT
+        Wed, 18 Mar 2020 04:04:25 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:22108 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727464AbgCRIEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 04:04:17 -0400
-Received: by mail-pf1-f194.google.com with SMTP id n7so13484497pfn.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 01:04:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=i9oNBg/4XLM+F+yVGTcBqwqwo0pspxNABxXhhxd2JUk=;
-        b=LLTlmXsp2gZ/KDu9+CTGrSb5HOdl+js0VBoHOB/qKv5Zc0lAoS3FojlNrMGoVkDP4S
-         Q3idTHteyqHnSjzADi2Wz3OBfDmPjNPv1V3cRTZgzoBRG1qDKjWKC6T2FU8AIwYBGUKO
-         04KczZh9QIXEyCqiY57UowVhmnLKL/pe61aMY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=i9oNBg/4XLM+F+yVGTcBqwqwo0pspxNABxXhhxd2JUk=;
-        b=k1dCZXaNOf0UARY1YQ+waRA0sGSxSejeYW4oaC5/ROjjB5xcvl5Wv1QP/HnTnVVtsw
-         JaUQ6mToFQ4QxarYI6UxSS2+vlpRdyEpgIorh3daZazzHSrd5lHIoQzd8l6cckvOOHGC
-         Y4PgONFdJ7bRHWPXFeu0Wx1fH+dmuAvqTxpfp/dMYc3A2quKwHtzjXiy5d7YiGD8fMQJ
-         FOvfrEbA3we6mhDe69Mv3vwZQ+SUZ3UwY8OdaPLWuTSJXyp4ymbQc03WB2pmUTv1eqwX
-         bJT5fLywoHrAtCqNv3do7g75HlfRPwGI9IR4JE7miNFNUC31DPi4QkZcofGSqdxam0Co
-         9PlQ==
-X-Gm-Message-State: ANhLgQ26fK7R994BCfjPMMRWOYl8jrugW7MUMw1nKwlTqWvPYB2tWVDe
-        fiup1HmV9jBipfdcUMuSur1Mug==
-X-Google-Smtp-Source: ADFU+vt1mUWCmfnFnh8KUVSNsWJjGuQ4ABfF9W6ocPPaVPAg6ZGgS1Kuer4KXf6DoPTRIFarmlQYyw==
-X-Received: by 2002:a63:2cce:: with SMTP id s197mr3436410pgs.184.1584518654392;
-        Wed, 18 Mar 2020 01:04:14 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id c62sm4833363pfc.136.2020.03.18.01.04.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 01:04:13 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 18 Mar 2020 04:04:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584518661;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qxt1d79F+5PoxEd8TYVUUM/gykPHqDIEkMHn+9jh0jo=;
+        b=NVuxmHpp/Ns+VAr7th1ZXhNF8SGNsrwNNVPI4Z6WtrVHgbj62XuMpw2/wjP/SPdrzLjxM0
+        RndnZP/Up0cc9af1HYd/faJQp6a42ExTUUyl5eGRlaumEQ6XENUJdXxrvhPzDgI3bwf/jt
+        PMwbokfr6obpAZrUBRqrzqdppo+W1Dc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-458-CUNW7ThrP-GGL_37xUsIkQ-1; Wed, 18 Mar 2020 04:04:17 -0400
+X-MC-Unique: CUNW7ThrP-GGL_37xUsIkQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E96F48017CE;
+        Wed, 18 Mar 2020 08:04:14 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-166.pek2.redhat.com [10.72.13.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3992919C58;
+        Wed, 18 Mar 2020 08:03:57 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
+        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
+        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
+        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
+        vmireyno@marvell.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V6 2/8] vhost: factor out IOTLB
+Date:   Wed, 18 Mar 2020 16:03:21 +0800
+Message-Id: <20200318080327.21958-3-jasowang@redhat.com>
+In-Reply-To: <20200318080327.21958-1-jasowang@redhat.com>
+References: <20200318080327.21958-1-jasowang@redhat.com>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAD=FV=U+c4GZU1p3xYT3t=0Q2cLFxoiM=vqc8SsxOKehxbZPXw@mail.gmail.com>
-References: <20200317133653.v2.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid> <158448096503.88485.8894151453752608519@swboyd.mtv.corp.google.com> <CAD=FV=U+c4GZU1p3xYT3t=0Q2cLFxoiM=vqc8SsxOKehxbZPXw@mail.gmail.com>
-Subject: Re: [PATCH v2] spi: spi-geni-qcom: Speculative fix of "nobody cared" about interrupt
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Girish Mahadevan <girishm@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
-Date:   Wed, 18 Mar 2020 01:04:12 -0700
-Message-ID: <158451865253.88485.11351400745937437114@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Doug Anderson (2020-03-17 15:08:45)
-> Hi,
->=20
-> On Tue, Mar 17, 2020 at 2:36 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > > Patch is marked "speculative" because I have no way to reproduce this
-> > > problem, so I'm just hoping this fixes it.  Weakly ordered memory
-> > > makes my brain hurt.
-> >
-> > It could be that. It could also be the poor design of geni_se_init() and
-> > how it enables many interrupts that this driver doesn't look to handle?
-> > Why do we allow the wrapper to enable all those bits in
-> > M_COMMON_GENI_M_IRQ_EN and S_COMMON_GENI_S_IRQ_EN if nobody is going to
-> > handle them?
->=20
-> It is possible it's related to an interrupt that we don't handle.  Howeve=
-r:
->=20
-> * IMO having the locking in place is safer anyway.  At some point I
-> read that advice that trying to reason about weakly ordered memory was
-> simply too hard for the average person (even the average kernel
-> developer).  In 99% of the cases you could just use a lock so it's
-> super clear and the performance difference is near zero.
->=20
-> * Most of the cases I saw of the "nobody cared" for geni-spi was on a
-> mostly idle system (presumably still doing periodic SPI transactions
-> to the EC, though).  It seems weird that one of these other interrupts
-> would suddenly fire.  It seems more likely that we just happened to
-> win a race of some sort.
+This patch factors out IOTLB into a dedicated module in order to be
+reused by other modules like vringh. User may choose to enable the
+automatic retiring by specifying VHOST_IOTLB_FLAG_RETIRE flag to fit
+for the case of vhost device IOTLB implementation.
 
-Sure, I'm mostly interested in understanding what that race is. I think
-it is something like cur_mcmd being stale when it's tested in the irq
-handler because the IO access triggers the irq before mas->cur_mcmd can
-be updated due to out of order execution. Nothing stops
-spi_geni_set_cs() from being reordered like this, especially because
-there isn't any sort of barrier besides the compiler barrier of asm
-volatile inside geni_set_setup_m_cmd():
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ MAINTAINERS                 |   1 +
+ drivers/vhost/Kconfig       |   6 +
+ drivers/vhost/Makefile      |   3 +
+ drivers/vhost/iotlb.c       | 177 +++++++++++++++++++++++++++++
+ drivers/vhost/net.c         |   2 +-
+ drivers/vhost/vhost.c       | 221 +++++++++++-------------------------
+ drivers/vhost/vhost.h       |  39 ++-----
+ include/linux/vhost_iotlb.h |  47 ++++++++
+ 8 files changed, 315 insertions(+), 181 deletions(-)
+ create mode 100644 drivers/vhost/iotlb.c
+ create mode 100644 include/linux/vhost_iotlb.h
 
-  CPU0 (device write overtakes CPU)  CPU1
-  ----                               ----
-  mas->cur_mcmd =3D CMD_NONE;
-  geni_se_setup_m_cmd(...)
-                                     geni_spi_isr()
-				      <tests cur_mcmd and it's still NONE>
-  mas->cur_mcmd =3D CMD_CS;
-
->=20
-> If nothing else it will suddenly become very obvious after my patch
-> lands because I'll print out the status.
-
-Fair enough.
-
->=20
->=20
-> That all being said if someone wants to submit a patch to clean up
-> which interrupts are enabled I'd support it.
-
-Great!
-
->=20
->=20
-> > > @@ -151,16 +151,19 @@ static void spi_geni_set_cs(struct spi_device *=
-slv, bool set_flag)
-> > >         struct geni_se *se =3D &mas->se;
-> > >         unsigned long time_left;
-> > >
-> > > -       reinit_completion(&mas->xfer_done);
-> > >         pm_runtime_get_sync(mas->dev);
-> > >         if (!(slv->mode & SPI_CS_HIGH))
-> > >                 set_flag =3D !set_flag;
-> > >
-> > > +       spin_lock_irq(&mas->lock);
-> >
-> > Why is this spin_lock_irq() vs. spin_lock_irqsave()? This isn't possible
-> > to be called from somewhere that hasn't changed irq flags?
->=20
-> See below.
->=20
->=20
-> > > +       reinit_completion(&mas->xfer_done);
-> > > +
-> > >         mas->cur_mcmd =3D CMD_CS;
-> > >         if (set_flag)
-> > >                 geni_se_setup_m_cmd(se, SPI_CS_ASSERT, 0);
-> > >         else
-> > >                 geni_se_setup_m_cmd(se, SPI_CS_DEASSERT, 0);
-> > > +       spin_unlock_irq(&mas->lock);
-> >
-> > This will force on interrupts if they were masked.
->=20
-> I'll change it if you want, but in this function there is already a
-> call to "wait_for_completion_timeout".  That's not gonna be too happy
-> if this function is ever called with interrupts already masked.  Also
-> in this function is pm_runtime_get_sync() which in many cases will
-> sleep (I think we'll end up in geni_se_clks_on() which calls
-> clk_bulk_prepare_enable()).
->=20
-> In cases where you know for sure that interrupts aren't masked,
-> spin_lock_irq() and spin_unlock_irq() are fine and that's what they're
-> for, no?
->=20
->=20
-> > >         time_left =3D wait_for_completion_timeout(&mas->xfer_done, HZ=
-);
-> > >         if (!time_left)
-> > > @@ -307,6 +310,8 @@ static void setup_fifo_xfer(struct spi_transfer *=
-xfer,
-> > >         u32 spi_tx_cfg, len;
-> > >         struct geni_se *se =3D &mas->se;
-> > >
-> > > +       spin_lock_irq(&mas->lock);
->=20
-> ...and just to answer the same question for here: setup_fifo_xfer() is
-> called from spi_geni_transfer_one() which is our "transfer_one"
-> function.  We don't happen to block anywhere in these functions, but
-> I'm nearly certain you are allowed to block in them.  We actually
-> return a positive number to indicate to the SPI core that we're not
-> doing the blocking ourselves but since the SPI core can't know we were
-> going to do that it has to assume we might block.
-
-Sounds good to not use irq save/restore here. Thanks for confirming.
-
->=20
->=20
-> > > @@ -478,13 +485,29 @@ static irqreturn_t geni_spi_isr(int irq, void *=
-data)
-> > >         struct geni_se *se =3D &mas->se;
-> > >         u32 m_irq;
-> > >         unsigned long flags;
-> > > -
-> > > -       if (mas->cur_mcmd =3D=3D CMD_NONE)
-> > > -               return IRQ_NONE;
-> > > +       irqreturn_t ret =3D IRQ_HANDLED;
-> > >
-> > >         spin_lock_irqsave(&mas->lock, flags);
->=20
-> Ironically the above could probably just be "spin_lock" since this is
-> our interrupt handler.  ;-)  I'll just leave it alone though since
-> what's there now doesn't hurt.
-
-Yes that's another thing that can be done.
-
->=20
->=20
-> > >         m_irq =3D readl(se->base + SE_GENI_M_IRQ_STATUS);
-> >
-> > Does this read need to be inside the lock?
->=20
-> Probably not.  Discussion below.
->=20
->=20
-> > > +       /* Check for spurious interrupt */
-> > > +       if (!m_irq) {
-> > > +               ret =3D IRQ_NONE;
-> > > +               goto exit;
-> >
-> > I ask because it could be simplified by reading the status and then
-> > immediately returning IRQ_NONE if no bits are set without having to do
-> > the lock/unlock dance. And does writing 0 to the irq clear register do
-> > anything?
->=20
-> Sure.  I'll move it if you want.  It felt nicer to just keep the whole
-> thing under lock so I didn't have to think about whether it mattered.
-> ...and anyone else looking at it didn't need to think about if it
-> mattered, too.  It it is very easy to say that it doesn't _hurt_ to
-> have it under lock other than having one extra memory read under lock.
-> ...and presumably the case where the optimization matters is
-> incredibly rare (a spurious interrupt) and we just spent a whole lot
-> of cycles calling the interrupt handler to begin with for this
-> spurious interrupt.
->=20
-> I would have a hard time believing that a write of 0 to a "write 1 to
-> clear" register would have any impact.  It would be a pretty bad
-> hardware design...
-
-This is a writel to a device so it may take some time for the memory
-barrier to drain any other writes with the full memory barrier in there.
-Not sure if we care about getting super high performance here but that's
-a concern.
-
->=20
->=20
-> So I guess in summary, I'm not planning to spin for any of these
-> things unless you really insist or you say I'm wrong about something
-> above or someone else says my opinions are the wrong opinions.
->=20
-
-Why do we need such large locking areas? Why can't we remove the enum
-software tracking stuff and look at mas->cur_xfer to figure out if a cs
-change is happening or not? I suppose mas->cur_xfer could be stale, so
-we need to make sure that is modified and checked under a lock, and then
-mas->rx_rem_bytes/tx_rem_bytes also need to be under a lock because
-they're modified inside and outside the irq handler, but otherwise I
-don't see any need to hold the lock over the register reads/writes. Most
-other things are synchronized with the completions or in higher layers
-of the SPI core.
-
-I do wonder if we need to hold the lock again when we update the rx/tx
-remaining bytes counter but I can't convince myself that the irq can run
-on another CPU in parallel with the CPU that ran the irq first. That
-seems impossible given that the interrupt would have to come again and
-the irq controller would need to send it to a different CPU at the same
-time. We should only need to grab the lock to make sure that cur_xfer
-and remaining bytes is published by the CPU triggering the rx/tx
-transfers and then assume the irq handler code is synchronous with
-itself.
-
-------8<-----
-diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
-index f0ca7f5ae714..ac7da801a63d 100644
---- a/drivers/spi/spi-geni-qcom.c
-+++ b/drivers/spi/spi-geni-qcom.c
-@@ -64,13 +64,6 @@
- #define TIMESTAMP_AFTER		BIT(3)
- #define POST_CMD_DELAY		BIT(4)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c74e4ea714a5..0fb645b5a7df 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17768,6 +17768,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/=
+git/mst/vhost.git
+ S:	Maintained
+ F:	drivers/vhost/
+ F:	include/uapi/linux/vhost.h
++F:	include/linux/vhost_iotlb.h
 =20
--enum spi_m_cmd_opcode {
--	CMD_NONE,
--	CMD_XFER,
--	CMD_CS,
--	CMD_CANCEL,
--};
+ VIRTIO INPUT DRIVER
+ M:	Gerd Hoffmann <kraxel@redhat.com>
+diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+index 3d03ccbd1adc..e76a72490563 100644
+--- a/drivers/vhost/Kconfig
++++ b/drivers/vhost/Kconfig
+@@ -36,6 +36,7 @@ config VHOST_VSOCK
+=20
+ config VHOST
+ 	tristate
++	select VHOST_IOTLB
+ 	---help---
+ 	  This option is selected by any driver which needs to access
+ 	  the core of vhost.
+@@ -54,3 +55,8 @@ config VHOST_CROSS_ENDIAN_LEGACY
+ 	  adds some overhead, it is disabled by default.
+=20
+ 	  If unsure, say "N".
++
++config VHOST_IOTLB
++	tristate
++	help
++	  Generic IOTLB implementation for vhost and vringh.
+diff --git a/drivers/vhost/Makefile b/drivers/vhost/Makefile
+index 6c6df24f770c..fb831002bcf0 100644
+--- a/drivers/vhost/Makefile
++++ b/drivers/vhost/Makefile
+@@ -11,3 +11,6 @@ vhost_vsock-y :=3D vsock.o
+ obj-$(CONFIG_VHOST_RING) +=3D vringh.o
+=20
+ obj-$(CONFIG_VHOST)	+=3D vhost.o
++
++obj-$(CONFIG_VHOST_IOTLB) +=3D vhost_iotlb.o
++vhost_iotlb-y :=3D iotlb.o
+diff --git a/drivers/vhost/iotlb.c b/drivers/vhost/iotlb.c
+new file mode 100644
+index 000000000000..1f0ca6e44410
+--- /dev/null
++++ b/drivers/vhost/iotlb.c
+@@ -0,0 +1,177 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright (C) 2020 Red Hat, Inc.
++ * Author: Jason Wang <jasowang@redhat.com>
++ *
++ * IOTLB implementation for vhost.
++ */
++#include <linux/slab.h>
++#include <linux/vhost_iotlb.h>
++#include <linux/module.h>
++
++#define MOD_VERSION  "0.1"
++#define MOD_DESC     "VHOST IOTLB"
++#define MOD_AUTHOR   "Jason Wang <jasowang@redhat.com>"
++#define MOD_LICENSE  "GPL v2"
++
++#define START(map) ((map)->start)
++#define LAST(map) ((map)->last)
++
++INTERVAL_TREE_DEFINE(struct vhost_iotlb_map,
++		     rb, __u64, __subtree_last,
++		     START, LAST, static inline, vhost_iotlb_itree);
++
++/**
++ * vhost_iotlb_map_free - remove a map node and free it
++ * @iotlb: the IOTLB
++ * @map: the map that want to be remove and freed
++ */
++void vhost_iotlb_map_free(struct vhost_iotlb *iotlb,
++			  struct vhost_iotlb_map *map)
++{
++	vhost_iotlb_itree_remove(map, &iotlb->root);
++	list_del(&map->link);
++	kfree(map);
++	iotlb->nmaps--;
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_map_free);
++
++/**
++ * vhost_iotlb_add_range - add a new range to vhost IOTLB
++ * @iotlb: the IOTLB
++ * @start: start of the IOVA range
++ * @last: last of IOVA range
++ * @addr: the address that is mapped to @start
++ * @perm: access permission of this range
++ *
++ * Returns an error last is smaller than start or memory allocation
++ * fails
++ */
++int vhost_iotlb_add_range(struct vhost_iotlb *iotlb,
++			  u64 start, u64 last,
++			  u64 addr, unsigned int perm)
++{
++	struct vhost_iotlb_map *map;
++
++	if (last < start)
++		return -EFAULT;
++
++	if (iotlb->limit &&
++	    iotlb->nmaps =3D=3D iotlb->limit &&
++	    iotlb->flags & VHOST_IOTLB_FLAG_RETIRE) {
++		map =3D list_first_entry(&iotlb->list, typeof(*map), link);
++		vhost_iotlb_map_free(iotlb, map);
++	}
++
++	map =3D kmalloc(sizeof(*map), GFP_ATOMIC);
++	if (!map)
++		return -ENOMEM;
++
++	map->start =3D start;
++	map->size =3D last - start + 1;
++	map->last =3D last;
++	map->addr =3D addr;
++	map->perm =3D perm;
++
++	iotlb->nmaps++;
++	vhost_iotlb_itree_insert(map, &iotlb->root);
++
++	INIT_LIST_HEAD(&map->link);
++	list_add_tail(&map->link, &iotlb->list);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_add_range);
++
++/**
++ * vring_iotlb_del_range - delete overlapped ranges from vhost IOTLB
++ * @iotlb: the IOTLB
++ * @start: start of the IOVA range
++ * @last: last of IOVA range
++ */
++void vhost_iotlb_del_range(struct vhost_iotlb *iotlb, u64 start, u64 las=
+t)
++{
++	struct vhost_iotlb_map *map;
++
++	while ((map =3D vhost_iotlb_itree_iter_first(&iotlb->root,
++						   start, last)))
++		vhost_iotlb_map_free(iotlb, map);
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_del_range);
++
++/**
++ * vhost_iotlb_alloc - add a new vhost IOTLB
++ * @limit: maximum number of IOTLB entries
++ * @flags: VHOST_IOTLB_FLAG_XXX
++ *
++ * Returns an error is memory allocation fails
++ */
++struct vhost_iotlb *vhost_iotlb_alloc(unsigned int limit, unsigned int f=
+lags)
++{
++	struct vhost_iotlb *iotlb =3D kzalloc(sizeof(*iotlb), GFP_KERNEL);
++
++	if (!iotlb)
++		return NULL;
++
++	iotlb->root =3D RB_ROOT_CACHED;
++	iotlb->limit =3D limit;
++	iotlb->nmaps =3D 0;
++	iotlb->flags =3D flags;
++	INIT_LIST_HEAD(&iotlb->list);
++
++	return iotlb;
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_alloc);
++
++/**
++ * vhost_iotlb_reset - reset vhost IOTLB (free all IOTLB entries)
++ * @iotlb: the IOTLB to be reset
++ */
++void vhost_iotlb_reset(struct vhost_iotlb *iotlb)
++{
++	vhost_iotlb_del_range(iotlb, 0ULL, 0ULL - 1);
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_reset);
++
++/**
++ * vhost_iotlb_free - reset and free vhost IOTLB
++ * @iotlb: the IOTLB to be freed
++ */
++void vhost_iotlb_free(struct vhost_iotlb *iotlb)
++{
++	if (iotlb) {
++		vhost_iotlb_reset(iotlb);
++		kfree(iotlb);
++	}
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_free);
++
++/**
++ * vhost_iotlb_itree_first - return the first overlapped range
++ * @iotlb: the IOTLB
++ * @start: start of IOVA range
++ * @end: end of IOVA range
++ */
++struct vhost_iotlb_map *
++vhost_iotlb_itree_first(struct vhost_iotlb *iotlb, u64 start, u64 last)
++{
++	return vhost_iotlb_itree_iter_first(&iotlb->root, start, last);
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_itree_first);
++
++/**
++ * vhost_iotlb_itree_first - return the next overlapped range
++ * @iotlb: the IOTLB
++ * @start: start of IOVA range
++ * @end: end of IOVA range
++ */
++struct vhost_iotlb_map *
++vhost_iotlb_itree_next(struct vhost_iotlb_map *map, u64 start, u64 last)
++{
++	return vhost_iotlb_itree_iter_next(map, start, last);
++}
++EXPORT_SYMBOL_GPL(vhost_iotlb_itree_next);
++
++MODULE_VERSION(MOD_VERSION);
++MODULE_DESCRIPTION(MOD_DESC);
++MODULE_AUTHOR(MOD_AUTHOR);
++MODULE_LICENSE(MOD_LICENSE);
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index c8ab8d83b530..c7298b192ab4 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -1595,7 +1595,7 @@ static long vhost_net_reset_owner(struct vhost_net =
+*n)
+ 	struct socket *tx_sock =3D NULL;
+ 	struct socket *rx_sock =3D NULL;
+ 	long err;
+-	struct vhost_umem *umem;
++	struct vhost_iotlb *umem;
+=20
+ 	mutex_lock(&n->dev.mutex);
+ 	err =3D vhost_dev_check_owner(&n->dev);
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 8e9e2341e40a..d450e16c5c25 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -50,10 +50,6 @@ enum {
+ #define vhost_used_event(vq) ((__virtio16 __user *)&vq->avail->ring[vq->=
+num])
+ #define vhost_avail_event(vq) ((__virtio16 __user *)&vq->used->ring[vq->=
+num])
+=20
+-INTERVAL_TREE_DEFINE(struct vhost_umem_node,
+-		     rb, __u64, __subtree_last,
+-		     START, LAST, static inline, vhost_umem_interval_tree);
 -
- struct spi_geni_master {
- 	struct geni_se se;
- 	struct device *dev;
-@@ -84,8 +77,7 @@ struct spi_geni_master {
- 	const struct spi_transfer *cur_xfer;
- 	struct completion xfer_done;
- 	unsigned int oversampling;
--	spinlock_t lock;
--	enum spi_m_cmd_opcode cur_mcmd;
-+	spinlock_t lock; /* Protects cur_xfer, {tx,rx}_rem_bytes */
- 	int irq;
+ #ifdef CONFIG_VHOST_CROSS_ENDIAN_LEGACY
+ static void vhost_disable_cross_endian(struct vhost_virtqueue *vq)
+ {
+@@ -584,21 +580,25 @@ long vhost_dev_set_owner(struct vhost_dev *dev)
+ }
+ EXPORT_SYMBOL_GPL(vhost_dev_set_owner);
+=20
+-struct vhost_umem *vhost_dev_reset_owner_prepare(void)
++static struct vhost_iotlb *iotlb_alloc(void)
++{
++	return vhost_iotlb_alloc(max_iotlb_entries,
++				 VHOST_IOTLB_FLAG_RETIRE);
++}
++
++struct vhost_iotlb *vhost_dev_reset_owner_prepare(void)
+ {
+-	return kvzalloc(sizeof(struct vhost_umem), GFP_KERNEL);
++	return iotlb_alloc();
+ }
+ EXPORT_SYMBOL_GPL(vhost_dev_reset_owner_prepare);
+=20
+ /* Caller should have device mutex */
+-void vhost_dev_reset_owner(struct vhost_dev *dev, struct vhost_umem *ume=
+m)
++void vhost_dev_reset_owner(struct vhost_dev *dev, struct vhost_iotlb *um=
+em)
+ {
+ 	int i;
+=20
+ 	vhost_dev_cleanup(dev);
+=20
+-	/* Restore memory to default empty mapping. */
+-	INIT_LIST_HEAD(&umem->umem_list);
+ 	dev->umem =3D umem;
+ 	/* We don't need VQ locks below since vhost_dev_cleanup makes sure
+ 	 * VQs aren't running.
+@@ -621,28 +621,6 @@ void vhost_dev_stop(struct vhost_dev *dev)
+ }
+ EXPORT_SYMBOL_GPL(vhost_dev_stop);
+=20
+-static void vhost_umem_free(struct vhost_umem *umem,
+-			    struct vhost_umem_node *node)
+-{
+-	vhost_umem_interval_tree_remove(node, &umem->umem_tree);
+-	list_del(&node->link);
+-	kfree(node);
+-	umem->numem--;
+-}
+-
+-static void vhost_umem_clean(struct vhost_umem *umem)
+-{
+-	struct vhost_umem_node *node, *tmp;
+-
+-	if (!umem)
+-		return;
+-
+-	list_for_each_entry_safe(node, tmp, &umem->umem_list, link)
+-		vhost_umem_free(umem, node);
+-
+-	kvfree(umem);
+-}
+-
+ static void vhost_clear_msg(struct vhost_dev *dev)
+ {
+ 	struct vhost_msg_node *node, *n;
+@@ -680,9 +658,9 @@ void vhost_dev_cleanup(struct vhost_dev *dev)
+ 		eventfd_ctx_put(dev->log_ctx);
+ 	dev->log_ctx =3D NULL;
+ 	/* No one will access memory at this point */
+-	vhost_umem_clean(dev->umem);
++	vhost_iotlb_free(dev->umem);
+ 	dev->umem =3D NULL;
+-	vhost_umem_clean(dev->iotlb);
++	vhost_iotlb_free(dev->iotlb);
+ 	dev->iotlb =3D NULL;
+ 	vhost_clear_msg(dev);
+ 	wake_up_interruptible_poll(&dev->wait, EPOLLIN | EPOLLRDNORM);
+@@ -718,27 +696,26 @@ static bool vhost_overflow(u64 uaddr, u64 size)
+ }
+=20
+ /* Caller should have vq mutex and device mutex. */
+-static bool vq_memory_access_ok(void __user *log_base, struct vhost_umem=
+ *umem,
++static bool vq_memory_access_ok(void __user *log_base, struct vhost_iotl=
+b *umem,
+ 				int log_all)
+ {
+-	struct vhost_umem_node *node;
++	struct vhost_iotlb_map *map;
+=20
+ 	if (!umem)
+ 		return false;
+=20
+-	list_for_each_entry(node, &umem->umem_list, link) {
+-		unsigned long a =3D node->userspace_addr;
++	list_for_each_entry(map, &umem->list, link) {
++		unsigned long a =3D map->addr;
+=20
+-		if (vhost_overflow(node->userspace_addr, node->size))
++		if (vhost_overflow(map->addr, map->size))
+ 			return false;
+=20
+=20
+-		if (!access_ok((void __user *)a,
+-				    node->size))
++		if (!access_ok((void __user *)a, map->size))
+ 			return false;
+ 		else if (log_all && !log_access_ok(log_base,
+-						   node->start,
+-						   node->size))
++						   map->start,
++						   map->size))
+ 			return false;
+ 	}
+ 	return true;
+@@ -748,17 +725,17 @@ static inline void __user *vhost_vq_meta_fetch(stru=
+ct vhost_virtqueue *vq,
+ 					       u64 addr, unsigned int size,
+ 					       int type)
+ {
+-	const struct vhost_umem_node *node =3D vq->meta_iotlb[type];
++	const struct vhost_iotlb_map *map =3D vq->meta_iotlb[type];
+=20
+-	if (!node)
++	if (!map)
+ 		return NULL;
+=20
+-	return (void *)(uintptr_t)(node->userspace_addr + addr - node->start);
++	return (void *)(uintptr_t)(map->addr + addr - map->start);
+ }
+=20
+ /* Can we switch to this memory table? */
+ /* Caller should have device mutex but not vq mutex */
+-static bool memory_access_ok(struct vhost_dev *d, struct vhost_umem *ume=
+m,
++static bool memory_access_ok(struct vhost_dev *d, struct vhost_iotlb *um=
+em,
+ 			     int log_all)
+ {
+ 	int i;
+@@ -1023,47 +1000,6 @@ static inline int vhost_get_desc(struct vhost_virt=
+queue *vq,
+ 	return vhost_copy_from_user(vq, desc, vq->desc + idx, sizeof(*desc));
+ }
+=20
+-static int vhost_new_umem_range(struct vhost_umem *umem,
+-				u64 start, u64 size, u64 end,
+-				u64 userspace_addr, int perm)
+-{
+-	struct vhost_umem_node *tmp, *node;
+-
+-	if (!size)
+-		return -EFAULT;
+-
+-	node =3D kmalloc(sizeof(*node), GFP_ATOMIC);
+-	if (!node)
+-		return -ENOMEM;
+-
+-	if (umem->numem =3D=3D max_iotlb_entries) {
+-		tmp =3D list_first_entry(&umem->umem_list, typeof(*tmp), link);
+-		vhost_umem_free(umem, tmp);
+-	}
+-
+-	node->start =3D start;
+-	node->size =3D size;
+-	node->last =3D end;
+-	node->userspace_addr =3D userspace_addr;
+-	node->perm =3D perm;
+-	INIT_LIST_HEAD(&node->link);
+-	list_add_tail(&node->link, &umem->umem_list);
+-	vhost_umem_interval_tree_insert(node, &umem->umem_tree);
+-	umem->numem++;
+-
+-	return 0;
+-}
+-
+-static void vhost_del_umem_range(struct vhost_umem *umem,
+-				 u64 start, u64 end)
+-{
+-	struct vhost_umem_node *node;
+-
+-	while ((node =3D vhost_umem_interval_tree_iter_first(&umem->umem_tree,
+-							   start, end)))
+-		vhost_umem_free(umem, node);
+-}
+-
+ static void vhost_iotlb_notify_vq(struct vhost_dev *d,
+ 				  struct vhost_iotlb_msg *msg)
+ {
+@@ -1120,9 +1056,9 @@ static int vhost_process_iotlb_msg(struct vhost_dev=
+ *dev,
+ 			break;
+ 		}
+ 		vhost_vq_meta_reset(dev);
+-		if (vhost_new_umem_range(dev->iotlb, msg->iova, msg->size,
+-					 msg->iova + msg->size - 1,
+-					 msg->uaddr, msg->perm)) {
++		if (vhost_iotlb_add_range(dev->iotlb, msg->iova,
++					  msg->iova + msg->size - 1,
++					  msg->uaddr, msg->perm)) {
+ 			ret =3D -ENOMEM;
+ 			break;
+ 		}
+@@ -1134,8 +1070,8 @@ static int vhost_process_iotlb_msg(struct vhost_dev=
+ *dev,
+ 			break;
+ 		}
+ 		vhost_vq_meta_reset(dev);
+-		vhost_del_umem_range(dev->iotlb, msg->iova,
+-				     msg->iova + msg->size - 1);
++		vhost_iotlb_del_range(dev->iotlb, msg->iova,
++				      msg->iova + msg->size - 1);
+ 		break;
+ 	default:
+ 		ret =3D -EINVAL;
+@@ -1319,44 +1255,42 @@ static bool vq_access_ok(struct vhost_virtqueue *=
+vq, unsigned int num,
+ }
+=20
+ static void vhost_vq_meta_update(struct vhost_virtqueue *vq,
+-				 const struct vhost_umem_node *node,
++				 const struct vhost_iotlb_map *map,
+ 				 int type)
+ {
+ 	int access =3D (type =3D=3D VHOST_ADDR_USED) ?
+ 		     VHOST_ACCESS_WO : VHOST_ACCESS_RO;
+=20
+-	if (likely(node->perm & access))
+-		vq->meta_iotlb[type] =3D node;
++	if (likely(map->perm & access))
++		vq->meta_iotlb[type] =3D map;
+ }
+=20
+ static bool iotlb_access_ok(struct vhost_virtqueue *vq,
+ 			    int access, u64 addr, u64 len, int type)
+ {
+-	const struct vhost_umem_node *node;
+-	struct vhost_umem *umem =3D vq->iotlb;
++	const struct vhost_iotlb_map *map;
++	struct vhost_iotlb *umem =3D vq->iotlb;
+ 	u64 s =3D 0, size, orig_addr =3D addr, last =3D addr + len - 1;
+=20
+ 	if (vhost_vq_meta_fetch(vq, addr, len, type))
+ 		return true;
+=20
+ 	while (len > s) {
+-		node =3D vhost_umem_interval_tree_iter_first(&umem->umem_tree,
+-							   addr,
+-							   last);
+-		if (node =3D=3D NULL || node->start > addr) {
++		map =3D vhost_iotlb_itree_first(umem, addr, last);
++		if (map =3D=3D NULL || map->start > addr) {
+ 			vhost_iotlb_miss(vq, addr, access);
+ 			return false;
+-		} else if (!(node->perm & access)) {
++		} else if (!(map->perm & access)) {
+ 			/* Report the possible access violation by
+ 			 * request another translation from userspace.
+ 			 */
+ 			return false;
+ 		}
+=20
+-		size =3D node->size - addr + node->start;
++		size =3D map->size - addr + map->start;
+=20
+ 		if (orig_addr =3D=3D addr && size >=3D len)
+-			vhost_vq_meta_update(vq, node, type);
++			vhost_vq_meta_update(vq, map, type);
+=20
+ 		s +=3D size;
+ 		addr +=3D size;
+@@ -1372,12 +1306,12 @@ int vq_meta_prefetch(struct vhost_virtqueue *vq)
+ 	if (!vq->iotlb)
+ 		return 1;
+=20
+-	return iotlb_access_ok(vq, VHOST_ACCESS_RO, (u64)(uintptr_t)vq->desc,
++	return iotlb_access_ok(vq, VHOST_MAP_RO, (u64)(uintptr_t)vq->desc,
+ 			       vhost_get_desc_size(vq, num), VHOST_ADDR_DESC) &&
+-	       iotlb_access_ok(vq, VHOST_ACCESS_RO, (u64)(uintptr_t)vq->avail,
++	       iotlb_access_ok(vq, VHOST_MAP_RO, (u64)(uintptr_t)vq->avail,
+ 			       vhost_get_avail_size(vq, num),
+ 			       VHOST_ADDR_AVAIL) &&
+-	       iotlb_access_ok(vq, VHOST_ACCESS_WO, (u64)(uintptr_t)vq->used,
++	       iotlb_access_ok(vq, VHOST_MAP_WO, (u64)(uintptr_t)vq->used,
+ 			       vhost_get_used_size(vq, num), VHOST_ADDR_USED);
+ }
+ EXPORT_SYMBOL_GPL(vq_meta_prefetch);
+@@ -1416,25 +1350,11 @@ bool vhost_vq_access_ok(struct vhost_virtqueue *v=
+q)
+ }
+ EXPORT_SYMBOL_GPL(vhost_vq_access_ok);
+=20
+-static struct vhost_umem *vhost_umem_alloc(void)
+-{
+-	struct vhost_umem *umem =3D kvzalloc(sizeof(*umem), GFP_KERNEL);
+-
+-	if (!umem)
+-		return NULL;
+-
+-	umem->umem_tree =3D RB_ROOT_CACHED;
+-	umem->numem =3D 0;
+-	INIT_LIST_HEAD(&umem->umem_list);
+-
+-	return umem;
+-}
+-
+ static long vhost_set_memory(struct vhost_dev *d, struct vhost_memory __=
+user *m)
+ {
+ 	struct vhost_memory mem, *newmem;
+ 	struct vhost_memory_region *region;
+-	struct vhost_umem *newumem, *oldumem;
++	struct vhost_iotlb *newumem, *oldumem;
+ 	unsigned long size =3D offsetof(struct vhost_memory, regions);
+ 	int i;
+=20
+@@ -1456,7 +1376,7 @@ static long vhost_set_memory(struct vhost_dev *d, s=
+truct vhost_memory __user *m)
+ 		return -EFAULT;
+ 	}
+=20
+-	newumem =3D vhost_umem_alloc();
++	newumem =3D iotlb_alloc();
+ 	if (!newumem) {
+ 		kvfree(newmem);
+ 		return -ENOMEM;
+@@ -1465,13 +1385,12 @@ static long vhost_set_memory(struct vhost_dev *d,=
+ struct vhost_memory __user *m)
+ 	for (region =3D newmem->regions;
+ 	     region < newmem->regions + mem.nregions;
+ 	     region++) {
+-		if (vhost_new_umem_range(newumem,
+-					 region->guest_phys_addr,
+-					 region->memory_size,
+-					 region->guest_phys_addr +
+-					 region->memory_size - 1,
+-					 region->userspace_addr,
+-					 VHOST_ACCESS_RW))
++		if (vhost_iotlb_add_range(newumem,
++					  region->guest_phys_addr,
++					  region->guest_phys_addr +
++					  region->memory_size - 1,
++					  region->userspace_addr,
++					  VHOST_MAP_RW))
+ 			goto err;
+ 	}
+=20
+@@ -1489,11 +1408,11 @@ static long vhost_set_memory(struct vhost_dev *d,=
+ struct vhost_memory __user *m)
+ 	}
+=20
+ 	kvfree(newmem);
+-	vhost_umem_clean(oldumem);
++	vhost_iotlb_free(oldumem);
+ 	return 0;
+=20
+ err:
+-	vhost_umem_clean(newumem);
++	vhost_iotlb_free(newumem);
+ 	kvfree(newmem);
+ 	return -EFAULT;
+ }
+@@ -1734,10 +1653,10 @@ EXPORT_SYMBOL_GPL(vhost_vring_ioctl);
+=20
+ int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled)
+ {
+-	struct vhost_umem *niotlb, *oiotlb;
++	struct vhost_iotlb *niotlb, *oiotlb;
+ 	int i;
+=20
+-	niotlb =3D vhost_umem_alloc();
++	niotlb =3D iotlb_alloc();
+ 	if (!niotlb)
+ 		return -ENOMEM;
+=20
+@@ -1753,7 +1672,7 @@ int vhost_init_device_iotlb(struct vhost_dev *d, bo=
+ol enabled)
+ 		mutex_unlock(&vq->mutex);
+ 	}
+=20
+-	vhost_umem_clean(oiotlb);
++	vhost_iotlb_free(oiotlb);
+=20
+ 	return 0;
+ }
+@@ -1883,8 +1802,8 @@ static int log_write(void __user *log_base,
+=20
+ static int log_write_hva(struct vhost_virtqueue *vq, u64 hva, u64 len)
+ {
+-	struct vhost_umem *umem =3D vq->umem;
+-	struct vhost_umem_node *u;
++	struct vhost_iotlb *umem =3D vq->umem;
++	struct vhost_iotlb_map *u;
+ 	u64 start, end, l, min;
+ 	int r;
+ 	bool hit =3D false;
+@@ -1894,16 +1813,15 @@ static int log_write_hva(struct vhost_virtqueue *=
+vq, u64 hva, u64 len)
+ 		/* More than one GPAs can be mapped into a single HVA. So
+ 		 * iterate all possible umems here to be safe.
+ 		 */
+-		list_for_each_entry(u, &umem->umem_list, link) {
+-			if (u->userspace_addr > hva - 1 + len ||
+-			    u->userspace_addr - 1 + u->size < hva)
++		list_for_each_entry(u, &umem->list, link) {
++			if (u->addr > hva - 1 + len ||
++			    u->addr - 1 + u->size < hva)
+ 				continue;
+-			start =3D max(u->userspace_addr, hva);
+-			end =3D min(u->userspace_addr - 1 + u->size,
+-				  hva - 1 + len);
++			start =3D max(u->addr, hva);
++			end =3D min(u->addr - 1 + u->size, hva - 1 + len);
+ 			l =3D end - start + 1;
+ 			r =3D log_write(vq->log_base,
+-				      u->start + start - u->userspace_addr,
++				      u->start + start - u->addr,
+ 				      l);
+ 			if (r < 0)
+ 				return r;
+@@ -2054,9 +1972,9 @@ EXPORT_SYMBOL_GPL(vhost_vq_init_access);
+ static int translate_desc(struct vhost_virtqueue *vq, u64 addr, u32 len,
+ 			  struct iovec iov[], int iov_size, int access)
+ {
+-	const struct vhost_umem_node *node;
++	const struct vhost_iotlb_map *map;
+ 	struct vhost_dev *dev =3D vq->dev;
+-	struct vhost_umem *umem =3D dev->iotlb ? dev->iotlb : dev->umem;
++	struct vhost_iotlb *umem =3D dev->iotlb ? dev->iotlb : dev->umem;
+ 	struct iovec *_iov;
+ 	u64 s =3D 0;
+ 	int ret =3D 0;
+@@ -2068,25 +1986,24 @@ static int translate_desc(struct vhost_virtqueue =
+*vq, u64 addr, u32 len,
+ 			break;
+ 		}
+=20
+-		node =3D vhost_umem_interval_tree_iter_first(&umem->umem_tree,
+-							addr, addr + len - 1);
+-		if (node =3D=3D NULL || node->start > addr) {
++		map =3D vhost_iotlb_itree_first(umem, addr, addr + len - 1);
++		if (map =3D=3D NULL || map->start > addr) {
+ 			if (umem !=3D dev->iotlb) {
+ 				ret =3D -EFAULT;
+ 				break;
+ 			}
+ 			ret =3D -EAGAIN;
+ 			break;
+-		} else if (!(node->perm & access)) {
++		} else if (!(map->perm & access)) {
+ 			ret =3D -EPERM;
+ 			break;
+ 		}
+=20
+ 		_iov =3D iov + ret;
+-		size =3D node->size - addr + node->start;
++		size =3D map->size - addr + map->start;
+ 		_iov->iov_len =3D min((u64)len - s, size);
+ 		_iov->iov_base =3D (void __user *)(unsigned long)
+-			(node->userspace_addr + addr - node->start);
++				 (map->addr + addr - map->start);
+ 		s +=3D size;
+ 		addr +=3D size;
+ 		++ret;
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index f9d1a03dd153..181382185bbc 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -12,6 +12,7 @@
+ #include <linux/virtio_config.h>
+ #include <linux/virtio_ring.h>
+ #include <linux/atomic.h>
++#include <linux/vhost_iotlb.h>
+=20
+ struct vhost_work;
+ typedef void (*vhost_work_fn_t)(struct vhost_work *work);
+@@ -52,27 +53,6 @@ struct vhost_log {
+ 	u64 len;
  };
 =20
-@@ -123,23 +115,18 @@ static void handle_fifo_timeout(struct spi_master *sp=
-i,
- 				struct spi_message *msg)
- {
- 	struct spi_geni_master *mas =3D spi_master_get_devdata(spi);
--	unsigned long time_left, flags;
-+	unsigned long time_left;
- 	struct geni_se *se =3D &mas->se;
-=20
--	spin_lock_irqsave(&mas->lock, flags);
- 	reinit_completion(&mas->xfer_done);
--	mas->cur_mcmd =3D CMD_CANCEL;
- 	geni_se_cancel_m_cmd(se);
- 	writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
--	spin_unlock_irqrestore(&mas->lock, flags);
- 	time_left =3D wait_for_completion_timeout(&mas->xfer_done, HZ);
- 	if (time_left)
- 		return;
-=20
--	spin_lock_irqsave(&mas->lock, flags);
- 	reinit_completion(&mas->xfer_done);
- 	geni_se_abort_m_cmd(se);
--	spin_unlock_irqrestore(&mas->lock, flags);
- 	time_left =3D wait_for_completion_timeout(&mas->xfer_done, HZ);
- 	if (!time_left)
- 		dev_err(mas->dev, "Failed to cancel/abort m_cmd\n");
-@@ -157,7 +144,6 @@ static void spi_geni_set_cs(struct spi_device *slv, boo=
-l set_flag)
- 	if (!(slv->mode & SPI_CS_HIGH))
- 		set_flag =3D !set_flag;
-=20
--	mas->cur_mcmd =3D CMD_CS;
- 	if (set_flag)
- 		geni_se_setup_m_cmd(se, SPI_CS_ASSERT, 0);
- 	else
-@@ -307,6 +293,7 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
- 	u32 m_cmd =3D 0;
- 	u32 spi_tx_cfg, len;
- 	struct geni_se *se =3D &mas->se;
-+	unsigned int rx_len =3D 0, tx_len =3D 0;
-=20
- 	spi_tx_cfg =3D readl(se->base + SE_SPI_TRANS_CFG);
- 	if (xfer->bits_per_word !=3D mas->cur_bits_per_word) {
-@@ -339,14 +326,14 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
- 		writel(m_clk_cfg, se->base + GENI_SER_M_CLK_CFG);
- 	}
-=20
--	mas->tx_rem_bytes =3D 0;
--	mas->rx_rem_bytes =3D 0;
--	if (xfer->tx_buf && xfer->rx_buf)
--		m_cmd =3D SPI_FULL_DUPLEX;
--	else if (xfer->tx_buf)
--		m_cmd =3D SPI_TX_ONLY;
--	else if (xfer->rx_buf)
--		m_cmd =3D SPI_RX_ONLY;
-+	if (xfer->tx_buf) {
-+		m_cmd |=3D SPI_TX_ONLY;
-+		tx_len =3D xfer->len;
-+	}
-+	if (xfer->rx_buf) {
-+		m_cmd |=3D SPI_RX_ONLY;
-+		rx_len =3D xfer->len;
-+	}
-=20
- 	spi_tx_cfg &=3D ~CS_TOGGLE;
-=20
-@@ -356,18 +343,17 @@ static void setup_fifo_xfer(struct spi_transfer *xfer,
- 		len =3D xfer->len / (mas->cur_bits_per_word / BITS_PER_BYTE + 1);
- 	len &=3D TRANS_LEN_MSK;
-=20
-+	spin_lock_irq(&mas->lock);
- 	mas->cur_xfer =3D xfer;
--	if (m_cmd & SPI_TX_ONLY) {
--		mas->tx_rem_bytes =3D xfer->len;
--		writel(len, se->base + SE_SPI_TX_TRANS_LEN);
--	}
-+	mas->tx_rem_bytes =3D tx_len;
-+	mas->rx_rem_bytes =3D rx_len;
-+	spin_unlock_irq(&mas->lock);
-=20
--	if (m_cmd & SPI_RX_ONLY) {
-+	if (m_cmd & SPI_TX_ONLY)
-+		writel(len, se->base + SE_SPI_TX_TRANS_LEN);
-+	if (m_cmd & SPI_RX_ONLY)
- 		writel(len, se->base + SE_SPI_RX_TRANS_LEN);
--		mas->rx_rem_bytes =3D xfer->len;
--	}
- 	writel(spi_tx_cfg, se->base + SE_SPI_TRANS_CFG);
--	mas->cur_mcmd =3D CMD_XFER;
- 	geni_se_setup_m_cmd(se, m_cmd, FRAGMENTATION);
-=20
- 	/*
-@@ -416,10 +402,12 @@ static void geni_spi_handle_tx(struct spi_geni_master=
- *mas)
- 	unsigned int i =3D 0;
-=20
- 	max_bytes =3D (mas->tx_fifo_depth - mas->tx_wm) * bytes_per_fifo_word;
-+	spin_lock(&mas->lock);
- 	if (mas->tx_rem_bytes < max_bytes)
- 		max_bytes =3D mas->tx_rem_bytes;
-=20
- 	tx_buf =3D mas->cur_xfer->tx_buf + mas->cur_xfer->len - mas->tx_rem_bytes;
-+	spin_unlock(&mas->lock);
- 	while (i < max_bytes) {
- 		unsigned int j;
- 		unsigned int bytes_to_write;
-@@ -454,10 +442,13 @@ static void geni_spi_handle_rx(struct spi_geni_master=
- *mas)
- 		if (rx_last_byte_valid && rx_last_byte_valid < 4)
- 			rx_bytes -=3D bytes_per_fifo_word - rx_last_byte_valid;
- 	}
-+	spin_lock(&mas->lock);
- 	if (mas->rx_rem_bytes < rx_bytes)
- 		rx_bytes =3D mas->rx_rem_bytes;
-=20
- 	rx_buf =3D mas->cur_xfer->rx_buf + mas->cur_xfer->len - mas->rx_rem_bytes;
-+	spin_unlock(&mas->lock);
-+
- 	while (i < rx_bytes) {
- 		u32 fifo_word =3D 0;
- 		u8 *fifo_byte =3D (u8 *)&fifo_word;
-@@ -478,13 +469,11 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 	struct spi_geni_master *mas =3D spi_master_get_devdata(spi);
- 	struct geni_se *se =3D &mas->se;
- 	u32 m_irq;
--	unsigned long flags;
-+	bool cs_change =3D false;
-=20
--	if (mas->cur_mcmd =3D=3D CMD_NONE)
--		return IRQ_NONE;
+-#define START(node) ((node)->start)
+-#define LAST(node) ((node)->last)
 -
--	spin_lock_irqsave(&mas->lock, flags);
- 	m_irq =3D readl(se->base + SE_GENI_M_IRQ_STATUS);
-+	if (!m_irq)
-+		return IRQ_NONE;
+-struct vhost_umem_node {
+-	struct rb_node rb;
+-	struct list_head link;
+-	__u64 start;
+-	__u64 last;
+-	__u64 size;
+-	__u64 userspace_addr;
+-	__u32 perm;
+-	__u32 flags_padding;
+-	__u64 __subtree_last;
+-};
+-
+-struct vhost_umem {
+-	struct rb_root_cached umem_tree;
+-	struct list_head umem_list;
+-	int numem;
+-};
+-
+ enum vhost_uaddr_type {
+ 	VHOST_ADDR_DESC =3D 0,
+ 	VHOST_ADDR_AVAIL =3D 1,
+@@ -90,7 +70,7 @@ struct vhost_virtqueue {
+ 	struct vring_desc __user *desc;
+ 	struct vring_avail __user *avail;
+ 	struct vring_used __user *used;
+-	const struct vhost_umem_node *meta_iotlb[VHOST_NUM_ADDRS];
++	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
+ 	struct file *kick;
+ 	struct eventfd_ctx *call_ctx;
+ 	struct eventfd_ctx *error_ctx;
+@@ -128,8 +108,8 @@ struct vhost_virtqueue {
+ 	struct iovec *indirect;
+ 	struct vring_used_elem *heads;
+ 	/* Protected by virtqueue mutex. */
+-	struct vhost_umem *umem;
+-	struct vhost_umem *iotlb;
++	struct vhost_iotlb *umem;
++	struct vhost_iotlb *iotlb;
+ 	void *private_data;
+ 	u64 acked_features;
+ 	u64 acked_backend_features;
+@@ -164,8 +144,8 @@ struct vhost_dev {
+ 	struct eventfd_ctx *log_ctx;
+ 	struct llist_head work_list;
+ 	struct task_struct *worker;
+-	struct vhost_umem *umem;
+-	struct vhost_umem *iotlb;
++	struct vhost_iotlb *umem;
++	struct vhost_iotlb *iotlb;
+ 	spinlock_t iotlb_lock;
+ 	struct list_head read_list;
+ 	struct list_head pending_list;
+@@ -186,8 +166,8 @@ void vhost_dev_init(struct vhost_dev *, struct vhost_=
+virtqueue **vqs,
+ long vhost_dev_set_owner(struct vhost_dev *dev);
+ bool vhost_dev_has_owner(struct vhost_dev *dev);
+ long vhost_dev_check_owner(struct vhost_dev *);
+-struct vhost_umem *vhost_dev_reset_owner_prepare(void);
+-void vhost_dev_reset_owner(struct vhost_dev *, struct vhost_umem *);
++struct vhost_iotlb *vhost_dev_reset_owner_prepare(void);
++void vhost_dev_reset_owner(struct vhost_dev *dev, struct vhost_iotlb *io=
+tlb);
+ void vhost_dev_cleanup(struct vhost_dev *);
+ void vhost_dev_stop(struct vhost_dev *);
+ long vhost_dev_ioctl(struct vhost_dev *, unsigned int ioctl, void __user=
+ *argp);
+@@ -233,6 +213,9 @@ ssize_t vhost_chr_write_iter(struct vhost_dev *dev,
+ 			     struct iov_iter *from);
+ int vhost_init_device_iotlb(struct vhost_dev *d, bool enabled);
 =20
- 	if ((m_irq & M_RX_FIFO_WATERMARK_EN) || (m_irq & M_RX_FIFO_LAST_EN))
- 		geni_spi_handle_rx(mas);
-@@ -493,39 +482,48 @@ static irqreturn_t geni_spi_isr(int irq, void *data)
- 		geni_spi_handle_tx(mas);
-=20
- 	if (m_irq & M_CMD_DONE_EN) {
--		if (mas->cur_mcmd =3D=3D CMD_XFER)
-+		spin_lock(&mas->lock);
-+		if (mas->cur_xfer) {
- 			spi_finalize_current_transfer(spi);
--		else if (mas->cur_mcmd =3D=3D CMD_CS)
--			complete(&mas->xfer_done);
--		mas->cur_mcmd =3D CMD_NONE;
--		/*
--		 * If this happens, then a CMD_DONE came before all the Tx
--		 * buffer bytes were sent out. This is unusual, log this
--		 * condition and disable the WM interrupt to prevent the
--		 * system from stalling due an interrupt storm.
--		 * If this happens when all Rx bytes haven't been received, log
--		 * the condition.
--		 * The only known time this can happen is if bits_per_word !=3D 8
--		 * and some registers that expect xfer lengths in num spi_words
--		 * weren't written correctly.
--		 */
--		if (mas->tx_rem_bytes) {
--			writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
--			dev_err(mas->dev, "Premature done. tx_rem =3D %d bpw%d\n",
--				mas->tx_rem_bytes, mas->cur_bits_per_word);
-+			mas->cur_xfer =3D NULL;
-+			/*
-+			 * If this happens, then a CMD_DONE came before all the
-+			 * Tx buffer bytes were sent out. This is unusual, log
-+			 * this condition and disable the WM interrupt to
-+			 * prevent the system from stalling due an interrupt
-+			 * storm.
-+			 *
-+			 * If this happens when all Rx bytes haven't been
-+			 * received, log the condition.
-+			 *
-+			 * The only known time this can happen is if
-+			 * bits_per_word !=3D 8 and some registers that expect
-+			 * xfer lengths in num spi_words weren't written
-+			 * correctly.
-+			 */
-+			if (mas->tx_rem_bytes) {
-+				writel(0, se->base + SE_GENI_TX_WATERMARK_REG);
-+				dev_err(mas->dev, "Premature done. tx_rem =3D %d bpw%d\n",
-+					mas->tx_rem_bytes,
-+					mas->cur_bits_per_word);
-+			}
-+			if (mas->rx_rem_bytes) {
-+				dev_err(mas->dev, "Premature done. rx_rem =3D %d bpw%d\n",
-+					mas->rx_rem_bytes,
-+					mas->cur_bits_per_word);
-+			}
-+		} else {
-+			cs_change =3D true;
- 		}
--		if (mas->rx_rem_bytes)
--			dev_err(mas->dev, "Premature done. rx_rem =3D %d bpw%d\n",
--				mas->rx_rem_bytes, mas->cur_bits_per_word);
-+		spin_unlock(&mas->lock);
- 	}
-=20
--	if ((m_irq & M_CMD_CANCEL_EN) || (m_irq & M_CMD_ABORT_EN)) {
--		mas->cur_mcmd =3D CMD_NONE;
-+	/* Wake up spi_geni_set_cs() or handle_fifo_timeout() */
-+	if (cs_change || (m_irq & M_CMD_CANCEL_EN) || (m_irq & M_CMD_ABORT_EN))
- 		complete(&mas->xfer_done);
--	}
-=20
- 	writel(m_irq, se->base + SE_GENI_M_IRQ_CLEAR);
--	spin_unlock_irqrestore(&mas->lock, flags);
++void vhost_iotlb_map_free(struct vhost_iotlb *iotlb,
++			  struct vhost_iotlb_map *map);
 +
- 	return IRQ_HANDLED;
- }
+ #define vq_err(vq, fmt, ...) do {                                  \
+ 		pr_debug(pr_fmt(fmt), ##__VA_ARGS__);       \
+ 		if ((vq)->error_ctx)                               \
+diff --git a/include/linux/vhost_iotlb.h b/include/linux/vhost_iotlb.h
+new file mode 100644
+index 000000000000..6b09b786a762
+--- /dev/null
++++ b/include/linux/vhost_iotlb.h
+@@ -0,0 +1,47 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_VHOST_IOTLB_H
++#define _LINUX_VHOST_IOTLB_H
++
++#include <linux/interval_tree_generic.h>
++
++struct vhost_iotlb_map {
++	struct rb_node rb;
++	struct list_head link;
++	u64 start;
++	u64 last;
++	u64 size;
++	u64 addr;
++#define VHOST_MAP_RO 0x1
++#define VHOST_MAP_WO 0x2
++#define VHOST_MAP_RW 0x3
++	u32 perm;
++	u32 flags_padding;
++	u64 __subtree_last;
++};
++
++#define VHOST_IOTLB_FLAG_RETIRE 0x1
++
++struct vhost_iotlb {
++	struct rb_root_cached root;
++	struct list_head list;
++	unsigned int limit;
++	unsigned int nmaps;
++	unsigned int flags;
++};
++
++int vhost_iotlb_add_range(struct vhost_iotlb *iotlb, u64 start, u64 last=
+,
++			  u64 addr, unsigned int perm);
++void vhost_iotlb_del_range(struct vhost_iotlb *iotlb, u64 start, u64 las=
+t);
++
++struct vhost_iotlb *vhost_iotlb_alloc(unsigned int limit, unsigned int f=
+lags);
++void vhost_iotlb_free(struct vhost_iotlb *iotlb);
++void vhost_iotlb_reset(struct vhost_iotlb *iotlb);
++
++struct vhost_iotlb_map *
++vhost_iotlb_itree_first(struct vhost_iotlb *iotlb, u64 start, u64 last);
++struct vhost_iotlb_map *
++vhost_iotlb_itree_next(struct vhost_iotlb_map *map, u64 start, u64 last)=
+;
++
++void vhost_iotlb_map_free(struct vhost_iotlb *iotlb,
++			  struct vhost_iotlb_map *map);
++#endif
+--=20
+2.20.1
+
