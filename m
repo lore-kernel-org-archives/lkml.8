@@ -2,136 +2,153 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEA8C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F03C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672722072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBA520663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Za+oOSYZ"
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="h5ay3Dk8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgCSINC (ORCPT
+        id S1726796AbgCSIOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:13:02 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46666 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgCSINC (ORCPT
+        Thu, 19 Mar 2020 04:14:40 -0400
+Received: from mout-u-204.mailbox.org ([91.198.250.253]:21838 "EHLO
+        mout-u-204.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgCSIOj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:13:02 -0400
-Received: by mail-pg1-f195.google.com with SMTP id y30so837207pga.13;
-        Thu, 19 Mar 2020 01:13:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ac1YV381+pu+9t+a/snJbLjzWPHz5dhKlor8SQORWwk=;
-        b=Za+oOSYZruRvXcb3jvvrfDOxN1r4gMFYrIHrPH+NLDOOV/dU81M8LlZcV71oCnaywF
-         nDJifkcOnIy2J8SWGVkoPEGhEElNgNaGOu1j0L2jW41zObzPejqGuryJDOh87NSBdowr
-         W6RBvHPVGxLHfzKBegLovxWkuWRkyKKE86N8BNQiyaclUn8Qi88sYGCbsK364tUVa/td
-         xnY0+1BmrodEIFu5J7OleM935QQmSYIp4jRLICQPB33Ti4Nogl/mM8sFQ7qEoLUcEfvm
-         ifpfC5cnJXlx/QZ6TakYEIIQphlvfM53IY7L8r3HwRL9o8cyUU01gstK/x0Ip3/hhdGs
-         AvhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ac1YV381+pu+9t+a/snJbLjzWPHz5dhKlor8SQORWwk=;
-        b=P3U2S1xXjzvJA19+XpOGMSE4oAbmpIyL36b56+VbLJfT+xNa5izPhPE7P9G/JDRl9o
-         SNhLWuMlAciNTVWCj3zfPXM3n62JfdJ5oQgbQzhN583bsCDmytDdAC5J+fOglTpm32A5
-         4wVkkzLRMxQZk8oABgmvaDS/QeFFZdDERpHNeyCpq+17eak48qpo2R4rVdc+begiHvRL
-         jXeFxcrdXaZCEhAggS4MVtF2NnzMAGR1t/FHFNuNj0QQw0J5EGQhGbTkcU53YhW6nC32
-         lA3n2fGmFgSXM1m//t1F8F1k/q2IwkPYMIKYe4PgQyRO5Ee0u9jaMoqS8PWbzxUcIRI5
-         cYQA==
-X-Gm-Message-State: ANhLgQ3+kMSqMA4E72+fHqUVRmLm5k9QMyjfuOyRCz5j9Lcozjfr8cui
-        qmavGxGsEPX6//qo7ab8FfU=
-X-Google-Smtp-Source: ADFU+vuUYCNoMeUgkA/1IgD1NG/JZmJhAbBzL1jvwz0SYdcYS0LdsBPwlXa2sPuDTncEr3ayDRgW9g==
-X-Received: by 2002:aa7:99c8:: with SMTP id v8mr2640858pfi.151.1584605581088;
-        Thu, 19 Mar 2020 01:13:01 -0700 (PDT)
-Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
-        by smtp.gmail.com with ESMTPSA id 67sm1362804pfe.168.2020.03.19.01.12.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 01:13:00 -0700 (PDT)
-Subject: Re: [PATCH 2/4] x86/Hyper-V: Free hv_panic_page when fail to register
- kmsg dump
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        michael.h.kelley@microsoft.com,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com
-References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
- <20200317132523.1508-3-Tianyu.Lan@microsoft.com>
- <20200317173600.2hqznyabyj4nckjo@debian>
-From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <0105c10b-b546-6d93-bb49-e9a4ce4589f6@gmail.com>
-Date:   Thu, 19 Mar 2020 16:12:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 19 Mar 2020 04:14:39 -0400
+Received: by mout-u-204.mailbox.org (Postfix, from userid 51)
+        id 48jfcM4HJWzQlGP; Thu, 19 Mar 2020 08:05:14 +0000 (UTC)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-u-204.mailbox.org (Postfix) with ESMTPS id 48jJHZ6lt0zQlG0;
+        Wed, 18 Mar 2020 19:20:26 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1584555625;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=O7m4lvrIqRs2bqX0fJ398lumr7Ad9ngJFhRhZgfuKUA=;
+        b=h5ay3Dk8OATxLJQjj+ENRkkXBjclmZmucQCN6amcMPzC/kCrPcz++Ro4l6OKO+wETezw8E
+        wm/LEL5Jq8uf24RZWv5i3rWLZyq4CIND+trc+fWbteI/jzEhhZhZW55HlhuiAmYIrunFUl
+        2eVB4rraD9m2oK6edmXFCq4UrrUASgI9X84v68i+pwIfJADMJI8IpxLCVieUUzCTQU9Fdb
+        wZJiNSdC9Dp4kUUWWcPRb0fmjgzaGpN1JdQ1C/Sz8xZGO3z5vTBZ76IqqwDN8vNq3Dbji6
+        mBKvJC1lR8O1LI9YPjkV8Ut2kBtDEHjbhfC28j7rSwrQTYVI+sU3DGi/mmZIvQ==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id U7p6m9PGs4Mx; Wed, 18 Mar 2020 19:20:24 +0100 (CET)
+Subject: Re: [PATCH] irqchip/versatile-fpga: Handle chained IRQs properly
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-oxnas@groups.io, Linus Walleij <linus.walleij@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+References: <20200318170904.1461278-1-mans0n@gorani.run>
+ <112cdab389aa9cc30189c7aec0baded2@kernel.org>
+From:   Sungbo Eo <mans0n@gorani.run>
+Message-ID: <bdb90bd8-ede1-63d5-816c-57f6bf0417a4@gorani.run>
+Date:   Thu, 19 Mar 2020 03:20:13 +0900
 MIME-Version: 1.0
-In-Reply-To: <20200317173600.2hqznyabyj4nckjo@debian>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <112cdab389aa9cc30189c7aec0baded2@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wei:
-	Thanks for your review.
+Hi Marc,
 
-On 3/18/2020 1:36 AM, Wei Liu wrote:
-> On Tue, Mar 17, 2020 at 06:25:21AM -0700, ltykernel@gmail.com wrote:
->> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+On 2020-03-19 02:48, Marc Zyngier wrote:
+> Hi Sungbo,
+> 
+> On 2020-03-18 17:09, Sungbo Eo wrote:
+>> Enclose the chained handler with chained_irq_{enter,exit}(), so that the
+>> muxed interrupts get properly acked.
 >>
->> If fail to register kmsg dump on Hyper-V platform, hv_panic_page
->> will not be used anywhere. So free and reset it.
+>> This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
+>> interrupt is never acked. The kernel waits a clock tick forever in
+>> calibrate_delay_converge(), which leads to a boot hang.
+> 
+> Nice catch.
+> 
 >>
->> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+>> Cc: Neil Armstrong <narmstrong@baylibre.com>
 >> ---
->>   drivers/hv/vmbus_drv.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>  drivers/irqchip/irq-versatile-fpga.c | 9 ++++++++-
+>>  1 file changed, 8 insertions(+), 1 deletion(-)
 >>
->> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
->> index b56b9fb9bd90..b043efea092a 100644
->> --- a/drivers/hv/vmbus_drv.c
->> +++ b/drivers/hv/vmbus_drv.c
->> @@ -1385,9 +1385,13 @@ static int vmbus_bus_init(void)
->>   			hv_panic_page = (void *)hv_alloc_hyperv_zeroed_page();
->>   			if (hv_panic_page) {
->>   				ret = kmsg_dump_register(&hv_kmsg_dumper);
->> -				if (ret)
->> +				if (ret) {
->>   					pr_err("Hyper-V: kmsg dump register "
->>   						"error 0x%x\n", ret);
->> +					hv_free_hyperv_page(
->> +					    (unsigned long)hv_panic_page);
->> +					hv_panic_page = NULL;
->> +				}
-> 
-> While this modification looks correct to me, there is a call to free
-> hv_panic_page in the err_alloc path. That makes the error handling a bit
-> confusing here.
-> 
-> I think you can just remove that function call in err_alloc path.
-
-OK. Will update in the next version.
-
-> 
-> Wei.
-> 
->>   			} else
->>   				pr_err("Hyper-V: panic message page memory "
->>   					"allocation failed");
->> -- 
->> 2.14.5
+>> diff --git a/drivers/irqchip/irq-versatile-fpga.c
+>> b/drivers/irqchip/irq-versatile-fpga.c
+>> index 928858dada75..08faab2fec3e 100644
+>> --- a/drivers/irqchip/irq-versatile-fpga.c
+>> +++ b/drivers/irqchip/irq-versatile-fpga.c
+>> @@ -6,6 +6,7 @@
+>>  #include <linux/irq.h>
+>>  #include <linux/io.h>
+>>  #include <linux/irqchip.h>
+>> +#include <linux/irqchip/chained_irq.h>
+>>  #include <linux/irqchip/versatile-fpga.h>
+>>  #include <linux/irqdomain.h>
+>>  #include <linux/module.h>
+>> @@ -68,12 +69,15 @@ static void fpga_irq_unmask(struct irq_data *d)
 >>
+>>  static void fpga_irq_handle(struct irq_desc *desc)
+>>  {
+>> +    struct irq_chip *chip = irq_desc_get_chip(desc);
+>>      struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
+>>      u32 status = readl(f->base + IRQ_STATUS);
+>>
+>> +    chained_irq_enter(chip, desc);
+>> +
+> 
+> It's probably not a big deal, but I'm not fond of starting talking to
+> the muxing irqchip before having done the chained_irq_enter() call.
+> 
+> Moving that read here would probably be safer.
+
+Oops, I missed it. Thanks for pointing it out.
+
+> 
+>>      if (status == 0) {
+>>          do_bad_IRQ(desc);
+>> -        return;
+>> +        goto out;
+>>      }
+>>
+>>      do {
+>> @@ -82,6 +86,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
+>>          status &= ~(1 << irq);
+>>          generic_handle_irq(irq_find_mapping(f->domain, irq));
+>>      } while (status);
+>> +
+>> +out:
+>> +    chained_irq_exit(chip, desc);
+>>  }
+>>
+>>  /*
+> 
+> Otherwise looks good. If you send it again with the above fixed
+> and a Fixes: tag, I'll queue it.
+
+It seems the handler had been broken from the very beginning. Could you 
+give me a hint on how the tag should be like?
+
+Thanks.
+
+> 
+> Thanks,
+> 
+>          M.
