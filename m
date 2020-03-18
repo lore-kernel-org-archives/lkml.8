@@ -2,362 +2,89 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A497CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AD9C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6419620753
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6EDC20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584551640;
+	bh=zhaVfKAZ9DWXovGE8g99UowHd7QWKaEhgZ8kbNHW5y4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=f2JBZNCevp8K+H5/TviNb6Rc0o3hJbvQpthZi1MApSuYvcK+YFxw8aKDl3KSbkIJE
+	 EtrkVUtSIom4eama8uGqCQQ/6GGZbPXQ/8FX6TFO/oNBYV/OSueo1H/hFFLipsWUG5
+	 efYAui+sDb8Xq3HlxwQioqlswbiUIMHg7RvcOgEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgCRRLz convert rfc822-to-8bit (ORCPT
+        id S1726832AbgCRRN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:11:55 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:60770 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRRLz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:11:55 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 85B23CECF8;
-        Wed, 18 Mar 2020 18:21:22 +0100 (CET)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH 1/1] Bluetooth: Prioritize SCO traffic on slow interfaces
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CANFp7mXwWGZF80EBqEmacc5uQWkaC0pL1rp+x5Qa40kkAcod-Q@mail.gmail.com>
-Date:   Wed, 18 Mar 2020 18:11:51 +0100
-Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <FFDE30C9-EE74-436D-8628-9FFC79114D3B@holtmann.org>
-References: <20200312181055.94038-1-abhishekpandit@chromium.org>
- <20200312111036.1.I17e2220fd0c0822c76a15ef89b882fb4cfe3fe89@changeid>
- <A79B48D3-D342-473C-B94A-A2E0AA83B505@holtmann.org>
- <CANFp7mXwWGZF80EBqEmacc5uQWkaC0pL1rp+x5Qa40kkAcod-Q@mail.gmail.com>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Wed, 18 Mar 2020 13:13:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbgCRRN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 13:13:59 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 673D92071C;
+        Wed, 18 Mar 2020 17:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584551639;
+        bh=zhaVfKAZ9DWXovGE8g99UowHd7QWKaEhgZ8kbNHW5y4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Li0LZeQVZ4Y+/0pUIJSWmkVPN6EAdJ4YA8shQ6emtUWMi8hEJQGHidj0itPCT5YjZ
+         J/WugOmTS/lFVni8CuSA2eGGz3fW/At9p4z7XIE1RoDPRVvc5Gi5yl36aJNGAYM+Si
+         JjcaPcSbvU32yOWlb3huoFMM9NS9gdzU+1RNkoeA=
+Date:   Wed, 18 Mar 2020 19:13:55 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Moshe Shemesh <moshe@mellanox.com>
+Cc:     linux-kernel@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>
+Subject: Re: [RFC 1/1] net/mlx5: Fix failing fw tracer allocation on s390
+Message-ID: <20200318171355.GE126814@unreal>
+References: <20200318164431.85948-1-schnelle@linux.ibm.com>
+ <20200318164431.85948-2-schnelle@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318164431.85948-2-schnelle@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+On Wed, Mar 18, 2020 at 05:44:31PM +0100, Niklas Schnelle wrote:
+> On s390 FORCE_MAX_ZONEORDER is 9 instead of 11, thus a larger kzalloc()
+> allocation as done for the firmware tracer will always fail.
+>
+> Looking at mlx5_fw_tracer_save_trace(), it is actually the driver itself
+> that copies the debug data into the trace array and there is no need for
+> the allocation to be contiguous in physical memory. We can therefor use
+> kvzalloc() instead of kzalloc() and get rid of the large contiguous
+> allcoation.
+>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+>  drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+> index 94d7b69a95c7..eb2e57ff08a6 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
+> @@ -935,7 +935,7 @@ struct mlx5_fw_tracer *mlx5_fw_tracer_create(struct mlx5_core_dev *dev)
+>  		return NULL;
+>  	}
+>
+> -	tracer = kzalloc(sizeof(*tracer), GFP_KERNEL);
+> +	tracer = kvzalloc(sizeof(*tracer), GFP_KERNEL);
 
->>> When scheduling TX packets, send all SCO/eSCO packets first and then
->>> send only 1 ACL/LE packet in a loop while checking that there are no SCO
->>> packets pending. This is done to make sure that we can meet SCO
->>> deadlines on slow interfaces like UART. If we were to queue up multiple
->>> ACL packets without checking for a SCO packet, we might miss the SCO
->>> timing. For example:
->>> 
->>> The time it takes to send a maximum size ACL packet (1024 bytes):
->>> t = 10/8 * 1024 bytes * 8 bits/byte * 1 packet / baudrate
->>>       where 10/8 is uart overhead due to start/stop bits per byte
->>> 
->>> Replace t = 3.75ms (SCO deadline), which gives us a baudrate of 2730666
->>> and is pretty close to a common baudrate of 3000000 used for BT. At this
->>> baudrate, if we sent two 1024 byte ACL packets, we would miss the 3.75ms
->>> timing window.
->>> 
->>> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
->>> ---
->>> 
->>> include/net/bluetooth/hci_core.h |  1 +
->>> net/bluetooth/hci_core.c         | 91 +++++++++++++++++++++++++-------
->>> 2 files changed, 73 insertions(+), 19 deletions(-)
->>> 
->>> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
->>> index d4e28773d378..f636c89f1fe1 100644
->>> --- a/include/net/bluetooth/hci_core.h
->>> +++ b/include/net/bluetooth/hci_core.h
->>> @@ -315,6 +315,7 @@ struct hci_dev {
->>>      __u8            ssp_debug_mode;
->>>      __u8            hw_error_code;
->>>      __u32           clock;
->>> +     __u8            sched_limit;
->> 
->> why do you need this parameter?
-> 
-> This is really only necessary on systems where the data transfer rate
-> to the controller is low. I want the driver to set whether we should
-> aggressively schedule SCO packets. A quirk might actually be better
-> than a variable (wasn't sure what is preferable).
+Saeed, Moshe
 
-or maybe we try without driver choice first. I would assume what is required for UART, will not harm USB or SDIO transports either.
+Can we use vzalloc() instead of kvzalloc() here?
 
->>>      __u16           devid_source;
->>>      __u16           devid_vendor;
->>> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
->>> index dbd2ad3a26ed..00a72265cd96 100644
->>> --- a/net/bluetooth/hci_core.c
->>> +++ b/net/bluetooth/hci_core.c
->>> @@ -4239,18 +4239,32 @@ static void __check_timeout(struct hci_dev *hdev, unsigned int cnt)
->>>      }
->>> }
->>> 
->>> -static void hci_sched_acl_pkt(struct hci_dev *hdev)
->>> +/* Limit packets in flight when SCO/eSCO links are active. */
->>> +static bool hci_sched_limit(struct hci_dev *hdev)
->>> +{
->>> +     return hdev->sched_limit && hci_conn_num(hdev, SCO_LINK);
->>> +}
->>> +
->>> +static bool hci_sched_acl_pkt(struct hci_dev *hdev)
->>> {
->>>      unsigned int cnt = hdev->acl_cnt;
->>>      struct hci_chan *chan;
->>>      struct sk_buff *skb;
->>>      int quote;
->>> +     bool sched_limit = hci_sched_limit(hdev);
->>> +     bool resched = false;
->>> 
->>>      __check_timeout(hdev, cnt);
->>> 
->>>      while (hdev->acl_cnt &&
->>>             (chan = hci_chan_sent(hdev, ACL_LINK, &quote))) {
->>>              u32 priority = (skb_peek(&chan->data_q))->priority;
->>> +
->>> +             if (sched_limit && quote > 0) {
->>> +                     resched = true;
->>> +                     quote = 1;
->>> +             }
->>> +
->>>              while (quote-- && (skb = skb_peek(&chan->data_q))) {
->>>                      BT_DBG("chan %p skb %p len %d priority %u", chan, skb,
->>>                             skb->len, skb->priority);
->>> @@ -4271,19 +4285,26 @@ static void hci_sched_acl_pkt(struct hci_dev *hdev)
->>>                      chan->sent++;
->>>                      chan->conn->sent++;
->>>              }
->>> +
->>> +             if (resched && cnt != hdev->acl_cnt)
->>> +                     break;
->>>      }
->>> 
->>> -     if (cnt != hdev->acl_cnt)
->>> +     if (hdev->acl_cnt == 0 && cnt != hdev->acl_cnt)
->>>              hci_prio_recalculate(hdev, ACL_LINK);
->>> +
->>> +     return resched;
->>> }
->>> 
->>> -static void hci_sched_acl_blk(struct hci_dev *hdev)
->>> +static bool hci_sched_acl_blk(struct hci_dev *hdev)
->>> {
->>>      unsigned int cnt = hdev->block_cnt;
->>>      struct hci_chan *chan;
->>>      struct sk_buff *skb;
->>>      int quote;
->>>      u8 type;
->>> +     bool sched_limit = hci_sched_limit(hdev);
->>> +     bool resched = false;
->>> 
->>>      __check_timeout(hdev, cnt);
->>> 
->>> @@ -4297,6 +4318,12 @@ static void hci_sched_acl_blk(struct hci_dev *hdev)
->>>      while (hdev->block_cnt > 0 &&
->>>             (chan = hci_chan_sent(hdev, type, &quote))) {
->>>              u32 priority = (skb_peek(&chan->data_q))->priority;
->>> +
->>> +             if (sched_limit && quote > 0) {
->>> +                     resched = true;
->>> +                     quote = 1;
->>> +             }
->>> +
->>>              while (quote > 0 && (skb = skb_peek(&chan->data_q))) {
->>>                      int blocks;
->>> 
->>> @@ -4311,7 +4338,7 @@ static void hci_sched_acl_blk(struct hci_dev *hdev)
->>> 
->>>                      blocks = __get_blocks(hdev, skb);
->>>                      if (blocks > hdev->block_cnt)
->>> -                             return;
->>> +                             return false;
->>> 
->>>                      hci_conn_enter_active_mode(chan->conn,
->>>                                                 bt_cb(skb)->force_active);
->>> @@ -4325,33 +4352,39 @@ static void hci_sched_acl_blk(struct hci_dev *hdev)
->>>                      chan->sent += blocks;
->>>                      chan->conn->sent += blocks;
->>>              }
->>> +
->>> +             if (resched && cnt != hdev->block_cnt)
->>> +                     break;
->>>      }
->>> 
->>> -     if (cnt != hdev->block_cnt)
->>> +     if (hdev->block_cnt == 0 && cnt != hdev->block_cnt)
->>>              hci_prio_recalculate(hdev, type);
->>> +
->>> +     return resched;
->>> }
->>> 
->>> -static void hci_sched_acl(struct hci_dev *hdev)
->>> +static bool hci_sched_acl(struct hci_dev *hdev)
->>> {
->>>      BT_DBG("%s", hdev->name);
->>> 
->>>      /* No ACL link over BR/EDR controller */
->>>      if (!hci_conn_num(hdev, ACL_LINK) && hdev->dev_type == HCI_PRIMARY)
->>> -             return;
->>> +             goto done;
->> 
->> Style wise the goto done is overkill. Just return false.
-> 
-> Will do.
-> 
->> 
->>> 
->>>      /* No AMP link over AMP controller */
->>>      if (!hci_conn_num(hdev, AMP_LINK) && hdev->dev_type == HCI_AMP)
->>> -             return;
->>> +             goto done;
->>> 
->>>      switch (hdev->flow_ctl_mode) {
->>>      case HCI_FLOW_CTL_MODE_PACKET_BASED:
->>> -             hci_sched_acl_pkt(hdev);
->>> -             break;
->>> +             return hci_sched_acl_pkt(hdev);
->>> 
->>>      case HCI_FLOW_CTL_MODE_BLOCK_BASED:
->>> -             hci_sched_acl_blk(hdev);
->>> -             break;
->>> +             return hci_sched_acl_blk(hdev);
->> 
->> So the block based mode is for AMP controllers and not used on BR/EDR controllers. Since AMP controllers only transport ACL packet and no SCO/eSCO packets, we can ignore this here.
-> 
-> Ok, I'll remove it there.
-> 
->> 
->>>      }
->>> +
->>> +done:
->>> +     return false;
->>> }
->>> 
->>> /* Schedule SCO */
->>> @@ -4402,16 +4435,18 @@ static void hci_sched_esco(struct hci_dev *hdev)
->>>      }
->>> }
->>> 
->>> -static void hci_sched_le(struct hci_dev *hdev)
->>> +static bool hci_sched_le(struct hci_dev *hdev)
->>> {
->>>      struct hci_chan *chan;
->>>      struct sk_buff *skb;
->>>      int quote, cnt, tmp;
->>> +     bool sched_limit = hci_sched_limit(hdev);
->>> +     bool resched = false;
->>> 
->>>      BT_DBG("%s", hdev->name);
->>> 
->>>      if (!hci_conn_num(hdev, LE_LINK))
->>> -             return;
->>> +             return resched;
->>> 
->>>      cnt = hdev->le_pkts ? hdev->le_cnt : hdev->acl_cnt;
->>> 
->>> @@ -4420,6 +4455,12 @@ static void hci_sched_le(struct hci_dev *hdev)
->>>      tmp = cnt;
->>>      while (cnt && (chan = hci_chan_sent(hdev, LE_LINK, &quote))) {
->>>              u32 priority = (skb_peek(&chan->data_q))->priority;
->>> +
->>> +             if (sched_limit && quote > 0) {
->>> +                     resched = true;
->>> +                     quote = 1;
->>> +             }
->>> +
->>>              while (quote-- && (skb = skb_peek(&chan->data_q))) {
->>>                      BT_DBG("chan %p skb %p len %d priority %u", chan, skb,
->>>                             skb->len, skb->priority);
->>> @@ -4437,6 +4478,9 @@ static void hci_sched_le(struct hci_dev *hdev)
->>>                      chan->sent++;
->>>                      chan->conn->sent++;
->>>              }
->>> +
->>> +             if (resched && cnt != tmp)
->>> +                     break;
->>>      }
->>> 
->>>      if (hdev->le_pkts)
->>> @@ -4444,24 +4488,33 @@ static void hci_sched_le(struct hci_dev *hdev)
->>>      else
->>>              hdev->acl_cnt = cnt;
->>> 
->>> -     if (cnt != tmp)
->>> +     if (cnt == 0 && cnt != tmp)
->>>              hci_prio_recalculate(hdev, LE_LINK);
->>> +
->>> +     return resched;
->>> }
->>> 
->>> static void hci_tx_work(struct work_struct *work)
->>> {
->>>      struct hci_dev *hdev = container_of(work, struct hci_dev, tx_work);
->>>      struct sk_buff *skb;
->>> +     bool resched;
->>> 
->>>      BT_DBG("%s acl %d sco %d le %d", hdev->name, hdev->acl_cnt,
->>>             hdev->sco_cnt, hdev->le_cnt);
->>> 
->>>      if (!hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
->>>              /* Schedule queues and send stuff to HCI driver */
->>> -             hci_sched_acl(hdev);
->>> -             hci_sched_sco(hdev);
->>> -             hci_sched_esco(hdev);
->>> -             hci_sched_le(hdev);
->>> +             do {
->>> +                     /* SCO and eSCO send all packets until emptied */
->>> +                     hci_sched_sco(hdev);
->>> +                     hci_sched_esco(hdev);
->>> +
->>> +                     /* Acl and Le send based on quota (priority on ACL per
->>> +                      * loop)
->>> +                      */
->>> +                     resched = hci_sched_acl(hdev) || hci_sched_le(hdev);
->>> +             } while (resched);
->>>      }
->> 
->> I am not in favor of this busy loop. We might want to re-think the whole scheduling by connection type and really only focus on scheduling ACL (BR/EDR and LE) and audio packets (SCO/eSCO and ISO).
-> 
-> I think the busy loop is the simplest solution if we want to solve the
-> problem: don't send 2 ACL packets without checking if there is a SCO
-> packet scheduled (which is the worst case I'm worried about on UART
-> interfaces).
-> 
-> If we get rid of the connection type scheduling and only do audio and
-> ACL, we would still need some mechanism to guarantee that you don't
-> send >~1100 bytes without checking if SCO is queued (assuming 3000000
-> baudrate and 3.75ms latency requirement).
-
-Why don’t we just say that if SCO is queued up, then after each ACL packet we should send a SCO packet.
-
-> 
->> 
->> In addition, we also need to check that SCO scheduling and A2DP media channel ACL packets do work together. I think that generally it would be best to have a clear rate at which SCO packets are require to pushed down to the hardware. So you really reserve bandwidth and not blindly prioritize them via a busy loop.
->> 
-> I am less worried about bandwidth and more about latency. If I start
-> sending really large ACL packets through UART, it could take multiple
-> milliseconds. It really has to be reserved bandwidth per small
-> timeslice (like 3.75ms) so I can guarantee that if a SCO packet is
-> seen within that time slice, it will be transferred. There will still
-> have to be a busy loop though because the amount of data you can send
-> in the time slice will probably be less than the data that can be
-> in-flight to the controller (i.e. acl_max_pkts).
-
-Right now we kinda let the SCO socket application provide the correct timing. I was thinking that the kernel might need to enforce this.
-
-Regards
-
-Marcel
-
+Thanks
