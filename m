@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3552C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB298C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80DC221473
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56D220409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565153;
-	bh=Xbn6HVdf2Rr06BngOPRSafzwB1lYDKBAhjv8a6jaFNo=;
+	s=default; t=1584565159;
+	bh=9lZQmJMhtpgdfLZcExYLGaFrCnb8cgG3XX2TRfeRI9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wyZrX9k4bVF2t1bGHanPHzaTEsMpFvf/DYHjUx39K8ecuo8xDzFyiRAfUJZTCQh1+
-	 Zaofu852PXf0QGXCpR/4ZsMx883ceX08xmkzUY3zkexRgljzh+CtEPKk1X3XWXZ0J+
-	 XkXR0O4a5Uwb0PKdZzVawfPW6feLF8gUAPZi12E8=
+	b=jkq5s4QcfAgWW2/U3uTHPW5bdrgs9gjP3htywHQfxHVHjoDdJdopdscITZOA/Tktc
+	 J9DsUTZ0ue7RdUXOE0LSV6zzFWgPT83wEAdjQIfd/mcW3/Ya+BTFYaE2V2NXjXbTI0
+	 7Y2qHPGoCjQc1STyiNhjKkvh3JI7Q4xrHGmXr3hQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgCRU7L (ORCPT
+        id S1728748AbgCRU7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58372 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:59:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728724AbgCRU4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:55 -0400
+        id S1727228AbgCRU4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2797B208FE;
-        Wed, 18 Mar 2020 20:56:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBE372166E;
+        Wed, 18 Mar 2020 20:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584565014;
-        bh=Xbn6HVdf2Rr06BngOPRSafzwB1lYDKBAhjv8a6jaFNo=;
+        s=default; t=1584565013;
+        bh=9lZQmJMhtpgdfLZcExYLGaFrCnb8cgG3XX2TRfeRI9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMd4tFHlwNHFn1/pIscteGqQrRI14g3eUKLraSyQRdEDJwSDsWjhVcxi8BZjleRXb
-         GxoPIAVnAsT4DWa2rZK4fg0qN4wqgjq2nuXNn4JWtnjmqqFoHrXeZTitZJfXf+89oH
-         7BZWmdX63JvEHFJocWByXmwEFTtXi+5BCfFOerWA=
+        b=LgfEZkDB8/btVMfRFQv+0uEvuQsS9wgZtuTK8QFFxZbUJ99j/IS6mttGzaDM3cG4X
+         0K+/gPLKRDfpc78M7L5G4NN9dGqgot/Q1znvpcBY8fONBgXqrpX9Bhbqt3IRMJrb7H
+         CgUL3VtFNIrBfWkRW+CUkk2b/Q7iJEUAq9mdHUGU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@mellanox.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/12] team: add missing attribute validation for array index
-Date:   Wed, 18 Mar 2020 16:56:41 -0400
-Message-Id: <20200318205648.17937-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 04/12] team: add missing attribute validation for port ifindex
+Date:   Wed, 18 Mar 2020 16:56:40 -0400
+Message-Id: <20200318205648.17937-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205648.17937-1-sashal@kernel.org>
 References: <20200318205648.17937-1-sashal@kernel.org>
@@ -61,12 +61,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 669fcd7795900cd1880237cbbb57a7db66cb9ac8 ]
+[ Upstream commit dd25cb272ccce4db67dc8509278229099e4f5e99 ]
 
-Add missing attribute validation for TEAM_ATTR_OPTION_ARRAY_INDEX
+Add missing attribute validation for TEAM_ATTR_OPTION_PORT_IFINDEX
 to the netlink policy.
 
-Fixes: b13033262d24 ("team: introduce array options")
+Fixes: 80f7c6683fe0 ("team: add support for per-port options")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
@@ -76,14 +76,14 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
-index adafc570c6507..e51fb7cb77282 100644
+index 285d376f53efa..adafc570c6507 100644
 --- a/drivers/net/team/team.c
 +++ b/drivers/net/team/team.c
-@@ -2170,6 +2170,7 @@ team_nl_option_policy[TEAM_ATTR_OPTION_MAX + 1] = {
+@@ -2169,6 +2169,7 @@ team_nl_option_policy[TEAM_ATTR_OPTION_MAX + 1] = {
+ 	[TEAM_ATTR_OPTION_CHANGED]		= { .type = NLA_FLAG },
  	[TEAM_ATTR_OPTION_TYPE]			= { .type = NLA_U8 },
  	[TEAM_ATTR_OPTION_DATA]			= { .type = NLA_BINARY },
- 	[TEAM_ATTR_OPTION_PORT_IFINDEX]		= { .type = NLA_U32 },
-+	[TEAM_ATTR_OPTION_ARRAY_INDEX]		= { .type = NLA_U32 },
++	[TEAM_ATTR_OPTION_PORT_IFINDEX]		= { .type = NLA_U32 },
  };
  
  static int team_nl_cmd_noop(struct sk_buff *skb, struct genl_info *info)
