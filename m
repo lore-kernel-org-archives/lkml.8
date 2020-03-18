@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBEBC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52068C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7FB20409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A41F20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565567;
-	bh=D8b8a7WrXA/GjADo5nzuC7SUzmHlHAizf/wjGu4r3mg=;
+	s=default; t=1584565574;
+	bh=XSZzH2serizN/OLoNX6Yx4oQOhWEP35/FLsLbKITsSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LqHx1LaFGLOy7p6xISZP9xQbqNfdot5NB393BMPRoLcoOi3PVaUxgcigE1PQPsZ/4
-	 rUrHRN0GHJH8Uym6FDOfqy0XXMK2nwHa48JQeXA0zba2dIRtROnilkqdz+mzbl+glK
-	 lF3PyHG+7VvQ6uibxHRv7rYJLnN7BuBxC3ap/91Q=
+	b=so83i6osmZJN3TrwNSlhiL2Scrm2CWKWlSDP6eTagyi6GsQ3eATeyW7SNqW/JT0Mf
+	 ViQAAKEy+Td6Wo+6RK2gIgISslBUp2sbXXiHr/cSjGrm4+sVQ7jwa7JWPKrBtApaWo
+	 7W5IPCTLagfJMLXrvBe8D6qd5APyA4YrdmTyXhuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbgCRVGG (ORCPT
+        id S1727938AbgCRUyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:06:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54474 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727960AbgCRUyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:54:43 -0400
+        id S1727900AbgCRUyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 400FA208DB;
-        Wed, 18 Mar 2020 20:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3443208E0;
+        Wed, 18 Mar 2020 20:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564883;
-        bh=D8b8a7WrXA/GjADo5nzuC7SUzmHlHAizf/wjGu4r3mg=;
+        s=default; t=1584564876;
+        bh=XSZzH2serizN/OLoNX6Yx4oQOhWEP35/FLsLbKITsSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lBvfavq/6hKJoEr6YOWQ0Ca7G+3sWX8/OeKyxxmUEgHT16myaptD5LvDwDR6s263p
-         ZZo5cniXAf2kGhtTzxQzQlXBSOICP4b4MDojdttvpbM0Vvwf4pFsZwDMYcRXyf1DK6
-         QEduoIuNn5+98ZfPhSNHJJqZV/HGhmT+2PQ344Fk=
+        b=GCNiay+x7dlipO8oWF4Rbg7gosuv+QhcFDkh2DP2w20Jaeem3t7EaedeOusfOE4Go
+         K3Pmn4P1IISyuHV+RbDix8arkwHme/Jt5phK7WQaBF1xScj6omPswJOfYpEVVulzSC
+         Bdf/RfQCyGpcEFU7RpEBAIWwISnPbeSwTbYESDRI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 52/73] i2c: gpio: suppress error on probe defer
-Date:   Wed, 18 Mar 2020 16:53:16 -0400
-Message-Id: <20200318205337.16279-52-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Mahesh Bandewar <maheshb@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 47/73] ipvlan: do not use cond_resched_rcu() in ipvlan_process_multicast()
+Date:   Wed, 18 Mar 2020 16:53:11 -0400
+Message-Id: <20200318205337.16279-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -60,38 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 3747cd2efe7ecb9604972285ab3f60c96cb753a8 ]
+[ Upstream commit afe207d80a61e4d6e7cfa0611a4af46d0ba95628 ]
 
-If a GPIO we are trying to use is not available and we are deferring
-the probe, don't output an error message.
-This seems to have been the intent of commit 05c74778858d
-("i2c: gpio: Add support for named gpios in DT") but the error was
-still output due to not checking the updated 'retdesc'.
+Commit e18b353f102e ("ipvlan: add cond_resched_rcu() while
+processing muticast backlog") added a cond_resched_rcu() in a loop
+using rcu protection to iterate over slaves.
 
-Fixes: 05c74778858d ("i2c: gpio: Add support for named gpios in DT")
-Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+This is breaking rcu rules, so lets instead use cond_resched()
+at a point we can reschedule
+
+Fixes: e18b353f102e ("ipvlan: add cond_resched_rcu() while processing muticast backlog")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Mahesh Bandewar <maheshb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-gpio.c | 2 +-
+ drivers/net/ipvlan/ipvlan_core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
-index 3a9e840a35466..a4a6825c87583 100644
---- a/drivers/i2c/busses/i2c-gpio.c
-+++ b/drivers/i2c/busses/i2c-gpio.c
-@@ -348,7 +348,7 @@ static struct gpio_desc *i2c_gpio_get_desc(struct device *dev,
- 	if (ret == -ENOENT)
- 		retdesc = ERR_PTR(-EPROBE_DEFER);
+diff --git a/drivers/net/ipvlan/ipvlan_core.c b/drivers/net/ipvlan/ipvlan_core.c
+index 5759e91dec710..8801d093135c3 100644
+--- a/drivers/net/ipvlan/ipvlan_core.c
++++ b/drivers/net/ipvlan/ipvlan_core.c
+@@ -277,7 +277,6 @@ void ipvlan_process_multicast(struct work_struct *work)
+ 			}
+ 			ipvlan_count_rx(ipvlan, len, ret == NET_RX_SUCCESS, true);
+ 			local_bh_enable();
+-			cond_resched_rcu();
+ 		}
+ 		rcu_read_unlock();
  
--	if (ret != -EPROBE_DEFER)
-+	if (PTR_ERR(retdesc) != -EPROBE_DEFER)
- 		dev_err(dev, "error trying to get descriptor: %d\n", ret);
+@@ -294,6 +293,7 @@ void ipvlan_process_multicast(struct work_struct *work)
+ 		}
+ 		if (dev)
+ 			dev_put(dev);
++		cond_resched();
+ 	}
+ }
  
- 	return retdesc;
 -- 
 2.20.1
 
