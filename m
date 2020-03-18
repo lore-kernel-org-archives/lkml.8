@@ -2,115 +2,114 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206B0C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F5DC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB52C20752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F051720752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eaTbqq+U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T89vFjMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbgCRCS5 (ORCPT
+        id S1727341AbgCRCTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 22:18:57 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46210 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbgCRCS5 (ORCPT
+        Tue, 17 Mar 2020 22:19:45 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33987 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgCRCTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 22:18:57 -0400
-Received: by mail-qk1-f196.google.com with SMTP id f28so36280361qkk.13;
-        Tue, 17 Mar 2020 19:18:56 -0700 (PDT)
+        Tue, 17 Mar 2020 22:19:45 -0400
+Received: by mail-lf1-f67.google.com with SMTP id f3so8751234lfc.1;
+        Tue, 17 Mar 2020 19:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=25IWALHi+NXst7Xu28sZVkGuORaxg4iwbvG83wUoJp4=;
-        b=eaTbqq+UVTkedK7NahvYddiAh+YVk+5cNhsSvqCmgNFao1/su/WGBuQYEWTwbMOyKq
-         BM6FXNLPFAObqA8MGgdPcLHRKAxtw1sKWibrzO4Gb6/b60J4+OuTrxSo8JdaoCjAG7E0
-         6LmG17fWhGIf0G4GgHrKf7gVbtHdR23YLZLIPNIQkgJVV/DcR+GU/j67bsxOeyliVhA+
-         F1X6elvUndBvHahQh3Doi8CEeD7zaAk4DVw64TO6QxfvcD1Mpv09+Ttm5SSmF5Hs+hXl
-         6Iv2oFRD/+YpKutXWqTcoUoOtQ4/dU88NQERIQh+c5O3Is6W5FTMuYYw99zqoTOsOnnP
-         ahYQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2+VfuB29bj2H8QrZo10ASzsk+M2zZbRzyQjPcMMzwV4=;
+        b=T89vFjMXgz577doE0CXCapQR3nnlT34DYxkvP8owAxarl2u8Ugp/gO2BWu8ZhjYhud
+         FvM0erR2Vd8I7CFJtw/8wNxC4LyznUteEbs2FMElFVKoITWmscb+dVDGL8m7nFitUuaa
+         KQH58lbj+ETX2wNm3C80QAjU962ghiyEewfzCf9MJsWXAhHyWfn5/UzejTaUqnvWuArh
+         UpCZ5NIxbXvZMAgueHerOK3kw+WX4ICjzeLY+Vbez0XvummtXUN3WOIJWUsiAhbPqlHM
+         DictrMEoiaSsyo6b5hDtTkNlq0uKh5zRXlwsd0njP37fqO5UQXo+AfArZxNzJkjku+qI
+         tOLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=25IWALHi+NXst7Xu28sZVkGuORaxg4iwbvG83wUoJp4=;
-        b=YfN+OqyY0+dBD5VFg+96V5TVxqLZGfU0V5oY0Z12Rcl6iZZWoL9nzlxf3ws5FPCV25
-         VinQCeIXGx5Tf25T088GaS90Pgi2wr2bueWMwAdryAjki5PIO8tBoJ7gAfqJ6euYjv3q
-         BL6irnv+X7B81kRieuRKCvkdVgWtpUAtj3A1UFIOpJsKkPLp2sNITcL7Dn5s2EdlweXL
-         UhMN/tgqQtmOV2HgN3DDXVCNLSZGGYhBmfGSM09vZD71Q5yDhwvVlhXZRFBP7Pv2ODy8
-         +2lwIoeJyuHzuHj5XReUmyB5p1HK0SwMuUaRFUGcfOJqjactHO9cvJWT/mFfgHxbRK81
-         yY0w==
-X-Gm-Message-State: ANhLgQ3iNAU397JRcqls+erHBVRfs59+a+7Y5o9YlvNXBRlnUmbCztSA
-        7UHw4PYqv0wBUqXjQCGnCEnWCSE9ZTC5cA==
-X-Google-Smtp-Source: ADFU+vtobpMVyykQ44fsZh0a89BryFL33+quNDJSwtHkSbz7z8g2/fzShZU3zABRZTarB7knUhsvwQ==
-X-Received: by 2002:a37:7f03:: with SMTP id a3mr1892552qkd.121.1584497936401;
-        Tue, 17 Mar 2020 19:18:56 -0700 (PDT)
-Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id z43sm3722493qtb.92.2020.03.17.19.18.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 19:18:55 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 22:18:53 -0400
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Syed Nayyar Waris <syednwaris@gmail.com>, jic23@kernel.org
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] counter: 104-quad-8: Add lock guards - filter
- clock prescaler
-Message-ID: <20200318021853.GC45571@icarus>
-References: <20200316125046.GA447@syed.domain.name>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2+VfuB29bj2H8QrZo10ASzsk+M2zZbRzyQjPcMMzwV4=;
+        b=J4cqyLwr0axPsE/lWLXrpixfiypWQPZCkISNhG7qTG1Bv0OoffZ6jN8Cy3sxB/RvEk
+         aqtT2qWIaNL1W0BBO7PtkqDt7FrZn29D/rNlcg2C7IyL416phhs/Na1ijFNhT6K6E2n6
+         CEhx0TtqIwP/eokNup9wwzJ6L1mlGmxf8J8qKG8oStOp4w6/LznDJ6amxsABiwJbaIGS
+         akf+qaIPZ2GHUneVcTgZnh/mTgcNgT6ttavBXThAiivXpP6uDoO3pIQWg2eX+XYba9tF
+         XtinUCI2okgRWvGl5WWLVDCiAvXNJoFsuB7cebTRkWPutOD1OH94QAIcPd/hQQ/I/yHb
+         aTEQ==
+X-Gm-Message-State: ANhLgQ0ppbIk1kuBImajIC4QVOhAdZWOnlPtXSvFy/6XsZAXYMvtkn25
+        A+JYB1o/5Y68Z51EP4dUWhEBRsYpcaI7YQ0JDGg=
+X-Google-Smtp-Source: ADFU+vvpU0kyxySDVrSQPRlOHLgNV3BJCSJ95MCdS4ihBCkxWEsR6ymOk2rRF3KseI9E+Lu10U20qB1TnPzWKh04oJY=
+X-Received: by 2002:ac2:4191:: with SMTP id z17mr115723lfh.73.1584497983022;
+ Tue, 17 Mar 2020 19:19:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tNQTSEo8WG/FKZ8E"
-Content-Disposition: inline
-In-Reply-To: <20200316125046.GA447@syed.domain.name>
+References: <1583300076-28392-1-git-send-email-leon.he@unisoc.com> <9be2873c-79c2-2d02-f15a-1e6e0ff7e898@kernel.org>
+In-Reply-To: <9be2873c-79c2-2d02-f15a-1e6e0ff7e898@kernel.org>
+From:   xiaolong he <hexiaolong2008@gmail.com>
+Date:   Wed, 18 Mar 2020 10:19:22 +0800
+Message-ID: <CAN9aa7qfmY6nuVf7CLYLn4i5h28pDOMceup4vFNQmKM1gLdPqA@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: heaps: bugfix for selftest failure
+To:     shuah <shuah@kernel.org>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, Leon He <leon.he@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>
+> On 3/3/20 10:34 PM, Leon He wrote:
+> > If the 'name' array in check_vgem() was not initialized to null, the
+> > value of name[4] may be random. Which will cause strcmp(name, "vgem")
+> > failed.
+>
+> Nit: "to fail" instead of "failed"
 
---tNQTSEo8WG/FKZ8E
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, thanks!
 
-On Mon, Mar 16, 2020 at 06:20:46PM +0530, Syed Nayyar Waris wrote:
-> Add lock protection from race conditions to the 104-quad-8 counter
-> driver for filter clock prescaler code changes. Mutex calls used for
-> protection.
->=20
-> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
-> ---
-> Changes in v5:
->  - Change spin lock calls to mutex lock calls.
->  - Modify the title description.
+>
+>
+> >
+> > Signed-off-by: Leon He <leon.he@unisoc.com>
+> > ---
+> >   tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> > index cd5e1f6..21f3d19 100644
+> > --- a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> > +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> > @@ -22,7 +22,7 @@
+> >   static int check_vgem(int fd)
+> >   {
+> >       drm_version_t version = { 0 };
+> > -     char name[5];
+> > +     char name[5] = { 0 };
+> >       int ret;
+> >
+> >       version.name_len = 4;
+> >
+>
+> return !strcmp(name, "vgem");
+>
+> While you are at it, why not change strcmp() to strncmp()?
+>
 
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+OK, I'll change it in patch v3.
 
---tNQTSEo8WG/FKZ8E
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl5xhQ0ACgkQhvpINdm7
-VJLYCRAAsfIrrgeI1WGLGZIe1SbDnRRQ69JHBsoloeYESw2e3a7XVfXJlmTdmZq9
-XnpEGwEa8HEdN6QU+q6UfimmN9jV3Y/AYkpZXoiNsMEZZW0qUHFGhBnnE5FbU8W5
-4O5/mafRL7yBgv7mkdP+LEPCDKawLh72ioUkxG+nbrD7/dPXKmjLurBqHDU1a3i+
-9Gmc+uPmPBEPpqzmXzrnmzItBDj5bkAXjsitJLw7S1Lkbf5MRQ6A0pIQvkKeBy7C
-drtollv4B58amC0EZ/cZCenq7nvwZTvHBFrnEBHSzjqlGpT9E+5eWfJ+Uj3IylNw
-3TcpRH4vVXRgwp0NmpGERC694Rt44IUhSuMbElJBSFiwFCAhUBLzMhpdx98Y1Jwh
-bXtFSeK1AwzzupHlm7mlQn2qnTy9DKMoc+rp8esxFmuCFMgxQwZv/jvaRurxmCsS
-lUnvMsXtyTwhuYfJ5HHtm4j0lZsqR8zemTVqa8R7dLpcVINcdxyhzUT4fobeklaL
-NVHFSca9TeDCy8QwF9PhGTiiR5VoOiCk6x9kb7cYqBcxz+oPyVQwdaoyaYjnHmXa
-12aIAsovDvs2vUOcnPGqmS4foRfOePK7ql8S01cc0TPl5idTP/0uypUP1zLQC0Zh
-bhbNKcVpI/YXipRlshuEna+8/uRjGS6tGh3flUi3oBG6uNG5l84=
-=mpe2
------END PGP SIGNATURE-----
-
---tNQTSEo8WG/FKZ8E--
+thanks,
+-- Leon
