@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302E5C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC97C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0B12076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373862076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:42:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XXJS2Shz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K67tpfAU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgCRRmu (ORCPT
+        id S1727190AbgCRRmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:42:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44856 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbgCRRmq (ORCPT
+        Wed, 18 Mar 2020 13:42:51 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40643 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727152AbgCRRmu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:42:46 -0400
-Received: by mail-wr1-f65.google.com with SMTP id y2so16027767wrn.11
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:42:45 -0700 (PDT)
+        Wed, 18 Mar 2020 13:42:50 -0400
+Received: by mail-wm1-f65.google.com with SMTP id z12so4357920wmf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 10:42:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=f15f74ppT2riuw2oQxxbxtXEiKKBOa/p7uG21adrcxA=;
-        b=XXJS2ShzmjXsJivWn9bj5g4jBm4X7ktoDPO5+jLIGyehUbBbJIdNNU180AQAWTEzhQ
-         JXK/07q827hqZScxSeCL6lgNvUgpovOBGsCBCm8wkHMlRsK0fWB35tm88+rkerNkD2WM
-         jdXL/OTAyKuh8Y+RwugQpVj3uzjxkzMa7USuWlD7ChR6BZllxEp1XaulHO65tS7GeprE
-         tA1tXi9Y/r6mpo97fX4zfAeb/9weZlJ8R841vvrRyS3yQ27caQ0OItHO+VszhRzy20pV
-         JkU111VO0NRCB47QrykGY50pQ9kScKTB8zVm88yEVIOesdM/TzPczTo3KyWq0tp+wtPU
-         dsew==
+        bh=HnFDyu+bqN/T6zaniZEXcMr32LKFRq1enTNFpCP4Q04=;
+        b=K67tpfAUKbMoV2koVIXIpMjwt5tEFoSbo/DIHeBK/fWp8i7wAqh3N+TkPGsX3gPgsV
+         nFoYm8RwK2tLxNyBOFjYxwqhFHNsRUisHxOQK+vWM1+CfJaMugPNXBmoHGtPlba+izJ+
+         Ift6mWkBT2qLd8mX0nJhczK4V4RDitPrguFTZ13xw74JxhdTSuCyHaR1i7qBrN35i//8
+         AyyiuGfnRCFRrsVFPVk+UcRpe+CuHAokVSPbWic3roN7eCXJ0akqBkTyAnY53/7D5ODu
+         OscTN02R87RR9nwGEcqWq7IrzJTledRkQ9DVMyj2MZ/DZAKeqcwMfJ38gAEBnsos71zp
+         Lx1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=f15f74ppT2riuw2oQxxbxtXEiKKBOa/p7uG21adrcxA=;
-        b=qOqH/sAfvY+mdFqTUIxdKVN7TKXooPCr/L8j8IWUEgdL1x3/jmKdox65UzasOrRnIA
-         /YKW1jHAGpozKVrnkr+ewBStcIiZg26JhGNszBJLTEFY4g/Pvbgw7Z6OUc1hezmnUSkB
-         +ibbZVGCxgdrve8y3iIbo7ALdc/vGYq/JPtwW/KKG4DQkFftxroayFXaR3OS8b/CKvuo
-         79GNaBEsy/PUxTW+TqFs1AP/3QuPY7I9yAEKpeHiCicQ31Q+7Ckyjd4u04FdhlcAjzle
-         tHSksVOd8COatjqJ4bez/ZZStNQJjbJC8B6t1YBnd0iG3OF/ftOeK13AKfEnfJfpOTMp
-         emNA==
-X-Gm-Message-State: ANhLgQ0YwzYT66r1qrYdH9ul8Yo0d02jSKNPSb0WSxxiLNE4u2Q7V1tv
-        GbnW8+znUthTjf5woUH3vLZJs/u0j6c=
-X-Google-Smtp-Source: ADFU+vvb7l9m2SU8dH5i3a9GXPWS8qQJQPZaAqIvAMxo7bs9mWP8zyQbhIgly/ph0vNXGIZkzD9DLg==
-X-Received: by 2002:adf:bbcd:: with SMTP id z13mr6677074wrg.389.1584553364567;
-        Wed, 18 Mar 2020 10:42:44 -0700 (PDT)
+        bh=HnFDyu+bqN/T6zaniZEXcMr32LKFRq1enTNFpCP4Q04=;
+        b=TS4xYd0vicFmaNya8wKQ6IsF2nkZYqaVSg1t2IuvgZ4b9Q55LQSgpuJ1gf4F297sjn
+         fNxmFM0J88c1fMaH/JhnVkWT/MLgFIg0P2RUXkT/Bghba4AmDCbGEXgk7LF/k2siIEAb
+         R39jeRyU8Ui7OO8+7rp81Ue71uYAp9InzY6Fgc6PKKrR/ri9JtpXV5HI00TpYKzaeTX3
+         1c3bq9JHL4mo7nHF+2guoCfsogtV3Io14Ji4a9X1pP1JAQ0PbYG7F/XRHgHFtKt4OXHf
+         q8h2d6pcCvSILdhWO4vlnWz7NqdsuV0J2JtfSozAZBEVb+PTipoNLMcyRts/Ff085Kb2
+         bmKg==
+X-Gm-Message-State: ANhLgQ1bQqXatYTXUmFufT7gzDw1AoRMhbIbsSl9KtJYA0GDAbBcuhLd
+        r+FzuO4QTR/XKW8MAlab6itx74ZDImE=
+X-Google-Smtp-Source: ADFU+vsKfHYGfDw6iV2Bg6By9IpmEZ8h/mJpbNTNQgFhdFdq9qSd1CnlxUVe3F96luINcsTqGkMyRg==
+X-Received: by 2002:a1c:9904:: with SMTP id b4mr6301036wme.34.1584553368216;
+        Wed, 18 Mar 2020 10:42:48 -0700 (PDT)
 Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:5d64:ea6:49bd:69d7])
-        by smtp.gmail.com with ESMTPSA id r3sm3787212wrm.35.2020.03.18.10.42.42
+        by smtp.gmail.com with ESMTPSA id r3sm3787212wrm.35.2020.03.18.10.42.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 10:42:43 -0700 (PDT)
+        Wed, 18 Mar 2020 10:42:47 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org,
-        afzal mohammed <afzal.mohd.ma@gmail.com>
-Subject: [PATCH 11/21] clocksource/drivers/timer-cs5535: Request irq with non-NULL dev_id
-Date:   Wed, 18 Mar 2020 18:41:21 +0100
-Message-Id: <20200318174131.20582-11-daniel.lezcano@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 13/21] clocksource/drivers/timer-ti-dm: Convert to SPDX identifier
+Date:   Wed, 18 Mar 2020 18:41:23 +0100
+Message-Id: <20200318174131.20582-13-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200318174131.20582-1-daniel.lezcano@linaro.org>
 References: <e6cd8adf-60df-437a-003f-58e3403e4697@linaro.org>
@@ -71,46 +71,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: afzal mohammed <afzal.mohd.ma@gmail.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
 
-Recently all usages of setup_irq() was replaced by request_irq().
-request_irq() does a few sanity checks that were not done in
-setup_irq(), if they fail irq registration will fail. One of the check
-is to ensure that non-NULL dev_id is passed in the case of shared irq.
+Use SPDX-License-Identifier instead of a verbose license text.
 
-Fix it by passing non-NULL dev_id while registering the shared irq.
-
-Fixes: cc2550b421aa ("clocksource: Replace setup_irq() by request_irq()")
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200312064817.19000-1-afzal.mohd.ma@gmail.com
+Link: https://lore.kernel.org/r/20200305082715.15861-2-lokeshvutla@ti.com
 ---
- drivers/clocksource/timer-cs5535.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/clocksource/timer-ti-dm.c | 19 +------------------
+ 1 file changed, 1 insertion(+), 18 deletions(-)
 
-diff --git a/drivers/clocksource/timer-cs5535.c b/drivers/clocksource/timer-cs5535.c
-index 51ea0509fb25..d47acfe848ae 100644
---- a/drivers/clocksource/timer-cs5535.c
-+++ b/drivers/clocksource/timer-cs5535.c
-@@ -133,6 +133,7 @@ static irqreturn_t mfgpt_tick(int irq, void *dev_id)
+diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+index 269a994d6a99..c0e9e9978cdd 100644
+--- a/drivers/clocksource/timer-ti-dm.c
++++ b/drivers/clocksource/timer-ti-dm.c
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0+
+ /*
+  * linux/arch/arm/plat-omap/dmtimer.c
+  *
+@@ -15,24 +16,6 @@
+  *
+  * Copyright (C) 2009 Texas Instruments
+  * Added OMAP4 support - Santosh Shilimkar <santosh.shilimkar@ti.com>
+- *
+- * This program is free software; you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License as published by the
+- * Free Software Foundation; either version 2 of the License, or (at your
+- * option) any later version.
+- *
+- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+- * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- *
+- * You should have received a copy of the  GNU General Public License along
+- * with this program; if not, write  to the Free Software Foundation, Inc.,
+- * 675 Mass Ave, Cambridge, MA 02139, USA.
+  */
  
- static int __init cs5535_mfgpt_init(void)
- {
-+	unsigned long flags = IRQF_NOBALANCING | IRQF_TIMER | IRQF_SHARED;
- 	struct cs5535_mfgpt_timer *timer;
- 	int ret;
- 	uint16_t val;
-@@ -152,9 +153,7 @@ static int __init cs5535_mfgpt_init(void)
- 	}
- 
- 	/* And register it with the kernel */
--	ret = request_irq(timer_irq, mfgpt_tick,
--			  IRQF_NOBALANCING | IRQF_TIMER | IRQF_SHARED,
--			  DRV_NAME, NULL);
-+	ret = request_irq(timer_irq, mfgpt_tick, flags, DRV_NAME, timer);
- 	if (ret) {
- 		printk(KERN_ERR DRV_NAME ": Unable to set up the interrupt.\n");
- 		goto err_irq;
+ #include <linux/clk.h>
 -- 
 2.17.1
 
