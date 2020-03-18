@@ -2,88 +2,68 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60872C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA48AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3602E20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:30:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SP1behJx"
+	by mail.kernel.org (Postfix) with ESMTP id BAF1320768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgCREaS (ORCPT
+        id S1726759AbgCREhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 00:30:18 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:45333 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726553AbgCREaR (ORCPT
+        Wed, 18 Mar 2020 00:37:52 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35666 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbgCREhw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 00:30:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584505817; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=AQurlkgWkldGIbYVlBgGWYFJkyW2IsTVg7EXKiXNeH0=; b=SP1behJx02NmMdFSVgmowrAh5QQZR+ASzTnGhG57zK1OZRrmTs3CfeCjrRKpUNrjC0DruBgE
- R1Qjk3JK6kMJJ4UOjDTbBVeDx5r1TN95y6u592LaZ31xl1/jTj9v3IJpgmJeQyAomewTeZI/
- gS1SRisdOG/z4FRI0VmDAVqJnmw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e71a3c9.7fc57266c3b0-smtp-out-n01;
- Wed, 18 Mar 2020 04:30:01 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 910AFC43637; Wed, 18 Mar 2020 04:30:00 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 37FE8C44791;
-        Wed, 18 Mar 2020 04:29:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 37FE8C44791
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v5 4/4] arm64: defconfig: Enable SoC sleep stats driver
-Date:   Wed, 18 Mar 2020 09:59:18 +0530
-Message-Id: <1584505758-21037-5-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584505758-21037-1-git-send-email-mkshah@codeaurora.org>
-References: <1584505758-21037-1-git-send-email-mkshah@codeaurora.org>
+        Wed, 18 Mar 2020 00:37:52 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4B979120F52AA;
+        Tue, 17 Mar 2020 21:37:51 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 21:37:50 -0700 (PDT)
+Message-Id: <20200317.213750.1737351964613250216.davem@davemloft.net>
+To:     Jose.Abreu@synopsys.com
+Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        mcoquelin.stm32@gmail.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk
+Subject: Re: [PATCH net-next 0/4] net: stmmac: 100GB Enterprise MAC support
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <cover.1584436401.git.Jose.Abreu@synopsys.com>
+References: <cover.1584436401.git.Jose.Abreu@synopsys.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 17 Mar 2020 21:37:51 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable SoC sleep stats driver. The driver gives statistics for
-various low power modes on Qualcomm Technologies, Inc. (QTI) SoCs.
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Tue, 17 Mar 2020 10:18:49 +0100
 
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> Adds the support for Enterprise MAC IP version which allows operating
+> speeds up to 100GB.
+> 
+> Patch 1/4, adds the support in XPCS for XLGMII interface that is used in
+> this kind of Enterprise MAC IPs.
+> 
+> Patch 2/4, adds the XLGMII interface support in stmmac.
+> 
+> Patch 3/4, adds the HW specific support for Enterprise MAC.
+> 
+> We end in patch 4/4, by updating stmmac documentation to mention the
+> support for this new IP version.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 5f15901..6228177 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -794,6 +794,7 @@ CONFIG_QCOM_SMD_RPM=y
- CONFIG_QCOM_SMP2P=y
- CONFIG_QCOM_SMSM=y
- CONFIG_QCOM_SOCINFO=m
-+CONFIG_QCOM_SOC_SLEEP_STATS=m
- CONFIG_ARCH_R8A774A1=y
- CONFIG_ARCH_R8A774B1=y
- CONFIG_ARCH_R8A774C0=y
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Series applied, thank you.
