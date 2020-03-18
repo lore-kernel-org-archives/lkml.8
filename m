@@ -2,131 +2,168 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1951C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F46C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3FD20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038BD20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:08:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LLFwCb6m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SO1oIEi2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgCREGM (ORCPT
+        id S1726845AbgCREIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 00:06:12 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51717 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgCREGM (ORCPT
+        Wed, 18 Mar 2020 00:08:11 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44634 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726550AbgCREIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 00:06:12 -0400
-Received: by mail-pj1-f65.google.com with SMTP id hg10so730066pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 21:06:11 -0700 (PDT)
+        Wed, 18 Mar 2020 00:08:10 -0400
+Received: by mail-io1-f65.google.com with SMTP id v3so13367074iot.11;
+        Tue, 17 Mar 2020 21:08:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=7NJiSJJsn7uiLh7Cvx0ggtnn/qvPqiLQL9PelNdKr40=;
-        b=LLFwCb6m129VqiUIVzImsyROsA0l3qHoEFW2RsL6NyhHboHjx/0rnjK9+XtD0om9DO
-         viX51mgiD4HOHQmcqAn8ePhU2DbWhbUSLPthEUaT9kzr2VRfRup1FfsZHGubolbxvn3/
-         D83deLS0Ajd8WxTR2voZjpFeSdvcrop2W8CLA=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1y3VYEMMB36hbyX25xJqlRITD/GhHC8JGwRXWq8x8hA=;
+        b=SO1oIEi2lDBKF7zFXFbJuTnir4JvQJ83EqL16ln6U9b73HI37FJPY/n5zd7WBeA4xT
+         eSOzwhphtjC7ORQUrP0kEn/x138QBwEZmTGV1ZFH67YzooM5QTeQdhe20aVtaVekb8NI
+         /xk5e95ZvfaF+L+HwedaiiDWNLiWVD2GIn0O5GV5HTgtvdXrSlHs5k76QDGfSmBR7EVl
+         dZH04BE11Hjcorz0Jivn353F2yM6mHaDdC6UVNlMeYzrsTMCdQXDWkYTKSg4bQ9L/cLv
+         ciTKEip9JzgGb8gtO9GBGHvVZgyNsPKIxU8hC+4TeJa1PtMkDlhooHjyQUkoohoaGpU3
+         JNGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=7NJiSJJsn7uiLh7Cvx0ggtnn/qvPqiLQL9PelNdKr40=;
-        b=E3rUfsKNPkbN2lziWG1pYRTPktAmS/Az+xKRgHmNz1Ut3QcLO/MHuaCrsBCL9wzRN2
-         TDiGxuw3fPIryANdSYPCpWjL+TpdYdqEbDMntIyyfb0LiBELkNvsJR2EsgUXuIlu5U+g
-         z9NssKWfmd0+tLiTxlJHvRZbiEcLx9ex/galkp3gylbIP6In3zLRjFlArmNgiqAWT3j0
-         c3/lHZBLm8yjcCmyYJXmGWk6WR1G/3st/feGJ7jxWv3THGoFSSaCVpHF4nkQnYlJQNou
-         dSBmOFXEQ6pniIZB11DjhLBzGMSYGUIg3Y1gts8XRfqfEzRIcukdZCO0MEenuzXEEkQe
-         MpGw==
-X-Gm-Message-State: ANhLgQ0Br9RJ9f0iD/GDspAEhvav23KqbDxyEbyj4rCqP8m4AJ1/Rl8g
-        cRpPwl/LwSXfd7WSJLo3Do+ewQ==
-X-Google-Smtp-Source: ADFU+vswXSlUDGAdugtErh23ZUQBbS2UhbxYy/RYtpM536DAaJBoaMNYPF9LnK+zOfqfCJkUUwH7Yw==
-X-Received: by 2002:a17:90a:21ce:: with SMTP id q72mr2543293pjc.160.1584504370417;
-        Tue, 17 Mar 2020 21:06:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y9sm3937422pgo.80.2020.03.17.21.06.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 21:06:09 -0700 (PDT)
-Date:   Tue, 17 Mar 2020 21:06:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Anton Protopopov <a.s.protopopov@gmail.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH] seccomp: allow BPF_MOD ALU instructions
-Message-ID: <202003172058.3CB0D95@keescook>
-References: <20200316163646.2465-1-a.s.protopopov@gmail.com>
- <202003161423.B51FDA8083@keescook>
- <CAGn_itw594Q_-4gC8=3jjRGF-wx90GeXMWBAz54X-UEer9pbtA@mail.gmail.com>
- <202003171314.387F3F187D@keescook>
- <CAGn_itz7jgoP5J1pjJ7BLaeh4my=JY2yQ7T8ssoYrqPOWvwKug@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1y3VYEMMB36hbyX25xJqlRITD/GhHC8JGwRXWq8x8hA=;
+        b=tAufFOWTrLSSjfYWYvWvPwGhZygK5CkhD78f3XX15TyhCweqQjBu+J01dox2a/dWNF
+         0b/ia3/6yhtxqLXvfi9MTroGGGqwDRlVSiJBZJD4GxLxNgzYAPDWnRy8e3HOi804C4Et
+         N/VMzN9XKyY3E2w6atzY4ihYtU5+PunyGPLxlHi8M+ntbw2VbFSOyuMC42ZnauRiKdz8
+         7TCJFV/UPorTvHdMv37m4O8QFc0lPJziJyddXx9d86wA6cadpLxxJFnj/tA2innKHApd
+         BNmAJoZwFldAWm6fRDsVFAgvDCwbbzyXjHBn95QrLwA4b2nrQrdFhDBv0L726n/HF4UD
+         3gqQ==
+X-Gm-Message-State: ANhLgQ37dhah8DKs1ZBEPNidNqIi3HoJeXwNcpl2/hMjzzjnpfilz+oN
+        gr4FPhAWZMuUvGZ4vPBiaODiOrg8WTSNhQj1J/Y=
+X-Google-Smtp-Source: ADFU+vvgce9sXkaz3f8wxIYnDObhVxsw1YvGMs4jy4g39o/Wm9Ssbao4HjLfqzLh+ADtG1QWpcoybH8JO0n1aBJbC1U=
+X-Received: by 2002:a02:220f:: with SMTP id o15mr2608999jao.106.1584504489108;
+ Tue, 17 Mar 2020 21:08:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGn_itz7jgoP5J1pjJ7BLaeh4my=JY2yQ7T8ssoYrqPOWvwKug@mail.gmail.com>
+References: <20200317155536.10227-1-hqjagain@gmail.com> <20200317173039.GA3828@localhost.localdomain>
+ <CAJRQjocwMzmBiYXwCnupE7hd8qYveBXtUiF2WKBe=TFfJLqcDw@mail.gmail.com> <20200318035549.GC3756@localhost.localdomain>
+In-Reply-To: <20200318035549.GC3756@localhost.localdomain>
+From:   Qiujun Huang <hqjagain@gmail.com>
+Date:   Wed, 18 Mar 2020 12:07:58 +0800
+Message-ID: <CAJRQjoeGtALzDHUS+OUJfK-JqQ_T-_RX74Opt-TLTxufVAQN7g@mail.gmail.com>
+Subject: Re: [PATCH v2] sctp: fix refcount bug in sctp_wfree
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, vyasevich@gmail.com,
+        nhorman@tuxdriver.com, Jakub Kicinski <kuba@kernel.org>,
+        linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, anenbupt@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 09:11:57PM -0400, Anton Protopopov wrote:
-> вт, 17 мар. 2020 г. в 16:21, Kees Cook <keescook@chromium.org>:
-> >
-> > On Mon, Mar 16, 2020 at 06:17:34PM -0400, Anton Protopopov wrote:
-> > > and in every case to walk only a corresponding factor-list. In my case
-> > > I had a list of ~40 syscall numbers and after this change filter
-> > > executed in 17.25 instructions on average per syscall vs. 45
-> > > instructions for the linear filter (so this removes about 30
-> > > instructions penalty per every syscall). To replace "mod #4" I
-> > > actually used "and #3", but this obviously doesn't work for
-> > > non-power-of-two divisors. If I would use "mod 5", then it would give
-> > > me about 15.5 instructions on average.
-> >
-> > Gotcha. My real concern is with breaking the ABI here -- using BPF_MOD
-> > would mean a process couldn't run on older kernels without some tricks
-> > on the seccomp side.
-> 
-> Yes, I understood. Could you tell what would you do exactly if there
-> was a real need in a new instruction?
+On Wed, Mar 18, 2020 at 11:55 AM Marcelo Ricardo Leitner
+<marcelo.leitner@gmail.com> wrote:
+>
+> On Wed, Mar 18, 2020 at 10:45:51AM +0800, Qiujun Huang wrote:
+>
+> Hmm, not sure how you got that out of that debug msg, but okay.
+> Even if so, how would this trouble skb be accounted on the wrong sk by
+> then?
+>
+> Asking because the fix that we want may be a better locking, to
+> prevent this situation from happening, than compensating for it in
+> sctp_wfree(). But for that we need to understand how this happened.
+>
 
-I'd likely need to introduce some kind of way to query (and declare) the
-"language version" of seccomp filters. New programs would need to
-declare the language level (EINVAL would mean the program must support
-the original "v1", ENOTSUPP would mean "kernel doesn't support that
-level"), and the program would have to build a filter based on the
-supported language features. The kernel would assume all undeclared
-seccomp users were "v1" and would need to reject BPF_MOD. All programs
-declaring "v2" would be allowed to use BPF_MOD.
+Yes, I should find the root cause. Here is the log
 
-It's really a lot for something that isn't really needed. :)
+[   86.507432][ T8813] [1]skb 0xffff88809fdfc800 0xffff88809621e7c0:
+truesize 768, sk alloc 769 sctp_set_owner_w 137
+[   86.532042][ T8813] [1]skb 0xffff888099ebbe80 0xffff88809621e7c0:
+truesize 131328, sk alloc 132353 sctp_set_owner_w 137
+[   86.543426][ T8813] [1]skb 0xffff88809ef55cc0 0xffff88809621e7c0:
+truesize 131328, sk alloc 263937 sctp_set_owner_w 137
+[   86.563229][ T8813] [1]skb 0xffff88809ef557c0 0xffff88809621e7c0:
+truesize 131328, sk alloc 395521 sctp_set_owner_w 137
+[   86.589332][ T8813] [1]skb 0xffff88809ef55a40 0xffff88809621e7c0:
+truesize 33024, sk alloc 428801 sctp_set_owner_w 137
+[   86.602211][ T8813] [1]deal with transmitted 0xffff8880910b0a80
+from transport 0xffff8880910b0800  __sctp_outq_teardown, 216
+[   86.616336][ T8813] [1]put back to queue 0xffff888091dc8770
+sctp_check_transmitted, 1683
+[   86.625610][ T8813] [1]get packet 0xffff888099ebbe80 from queue
+0xffff888096b2c280  sctp_check_transmitted, 1437
+[   86.637105][ T8813] [1]put skb 0xffff888099ebbe80 back.
+sctp_check_transmitted, 1533
+[   86.646284][ T8813] [1]put back to queue 0xffff888096b2c280
+sctp_check_transmitted, 1683          ----
+[   86.687575][ T8813] [1]before sk 0xffff88809621e7c0
+sctp_sock_migrate, 9592                               ----I think
+something wrong opens here. 0xffff888099ebbe80 not changed to newsk
+[   86.696296][ T8813] [1]skb 0xffff88809ef55cc0 0xffff88809621e7c0:
+truesize 131328, sk alloc 429057 sctp_wfree 9101 real sk
+0xffff88809621e7c0
+[   86.721891][ T8813] [1]transmitted done queue 0xffff888091dc83d0
+sctp_for_each_tx_datachunk, 166
+[   86.757260][ T8813] [1]retransmit done queue 0xffff888091dc8770
+sctp_for_each_tx_datachunk, 171
+[   86.771065][ T8813] [1]sacked done queue 0xffff888091dc8760
+sctp_for_each_tx_datachunk, 176
+[   86.797487][ T8813] [1]abandoned done queue 0xffff888091dc8780
+sctp_for_each_tx_datachunk, 181
+[   86.814856][ T8813] [0]skb 0xffff88809ef557c0 0xffff88809621e7c0:
+truesize 131328, sk alloc 297473 sctp_wfree 9101 real sk
+0xffff88809621e7c0
+[   86.831799][ T8813] [0]skb 0xffff88809ef55a40 0xffff88809621e7c0:
+truesize 33024, sk alloc 165889 sctp_wfree 9101 real sk
+0xffff88809621e7c0
+[   86.845473][ T8813] [0]out_chunk_list done queue 0xffff888091dc8730
+sctp_for_each_tx_datachunk, 186
+[   86.866011][ T8813] [0]skb 0xffff88809ef55cc0 0xffff8880a3bb2800:
+truesize 131328, sk alloc 131329 sctp_set_owner_w 137
+[   86.884811][ T8813] [0]transmitted done queue 0xffff888091dc83d0
+sctp_for_each_tx_datachunk, 166
+[   86.896150][ T8813] [0]retransmit done queue 0xffff888091dc8770
+sctp_for_each_tx_datachunk, 171
+[   86.907233][ T8813] [0]sacked done queue 0xffff888091dc8760
+sctp_for_each_tx_datachunk, 176
+[   86.916825][ T8813] [0]abandoned done queue 0xffff888091dc8780
+sctp_for_each_tx_datachunk, 181
+[   86.927458][ T8813] [0]skb 0xffff88809ef557c0 0xffff8880a3bb2800:
+truesize 131328, sk alloc 262913 sctp_set_owner_w 137
+[   86.957446][ T8813] [0]skb 0xffff88809ef55a40 0xffff8880a3bb2800:
+truesize 33024, sk alloc 296193 sctp_set_owner_w 137
+[   86.971810][ T8813] [0]out_chunk_list done queue 0xffff888091dc8730
+sctp_for_each_tx_datachunk, 186
+[   86.992386][ T8813] [0]after sk 0xffff8880a3bb2800 sctp_sock_migrate, 9597
+[   87.091320][ T8811] [1]deal with transmitted 0xffff8880a6f52280
+from transport 0xffff8880a6f52000  __sctp_outq_teardown, 216
+[   87.110552][ T8811] [1]skb 0xffff88809fdfc800 0xffff88809621e7c0:
+truesize 768, sk alloc 132609 sctp_wfree 9101 real sk
+0xffff88809621e7c0
+[   87.180238][ T8811] [0]deal with transmitted 0xffff888096b2c280
+from transport 0xffff888096b2c000  __sctp_outq_teardown, 216
+[   87.264062][ T8811] [0]skb 0xffff888099ebbe80 0xffff8880a3bb2800:
+truesize 131328, sk alloc 296449 sctp_wfree 9101 real sk
+0xffff88809621e7c0       --->the trouble skb
+[   87.289730][ T8811] [1]skb 0xffff88809ef55cc0 0xffff8880a3bb2800:
+truesize 131328, sk alloc 296193 sctp_wfree 9101 real sk
+0xffff8880a3bb2800
+[   87.314206][ T8811] [1]skb 0xffff88809ef557c0 0xffff8880a3bb2800:
+truesize 131328, sk alloc 164609 sctp_wfree 9101 real sk
+0xffff8880a3bb2800
+[   87.329602][ T8811] [1]skb 0xffff88809ef55a40 0xffff8880a3bb2800:
+truesize 33024, sk alloc 33025 sctp_wfree 9101 real sk
+0xffff8880a3bb2800
 
-> > Since the syscall list is static for a given filter, why not arrange it
-> > as a binary search? That should get even better average instructions
-> > as O(log n) instead of O(n).
-> 
-> Right, thanks! This saves about 4 more instructions for my case and
-> works 1-2 ns faster.
-
-Excellent!
-
-> > Though frankly I've also been considering an ABI version bump for adding
-> > a syscall bitmap feature: the vast majority of seccomp filters are just
-> > binary yes/no across a list of syscalls. Only the special cases need
-> > special handling (arg inspection, fd notification, etc). Then these
-> > kinds of filters could run as O(1).
-
-*This* feature wouldn't need my crazy language version idea, but it
-_would_ still need to be detectable, much like how RET_USER_NOTIF was
-added.
-
--- 
-Kees Cook
+>   Marcelo
