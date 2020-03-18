@@ -2,102 +2,110 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BF6C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA47C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAD452076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026632076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mjEQTlB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgCRJU4 (ORCPT
+        id S1727492AbgCRJVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:20:56 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59419 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgCRJU4 (ORCPT
+        Wed, 18 Mar 2020 05:21:23 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46997 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgCRJVX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:20:56 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEUsa-0006vf-Bx; Wed, 18 Mar 2020 10:20:48 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEUsZ-0006yY-8Y; Wed, 18 Mar 2020 10:20:47 +0100
-Date:   Wed, 18 Mar 2020 10:20:47 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 3/7] dt-bindings: pwm: add normal PWM polarity flag
-Message-ID: <20200318092047.25gjkx43jwfyywsl@pengutronix.de>
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-4-oleksandr.suvorov@toradex.com>
- <20200317225656.GK2527@pendragon.ideasonboard.com>
+        Wed, 18 Mar 2020 05:21:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w16so12900776wrv.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 02:21:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9CPSM3TbuO9VpI+gQ3R11/NwAFhf9O4PNoFbVUCUhts=;
+        b=mjEQTlB7dKBhJRDA1W85ESpVqAOYCUq8lIkXHu82ETPYYd1u0RA6ItDTWDf3K5oIXC
+         PqzORIB21B9gfVEjs2qCCpAg8XTdvFZL6iSL4Owaeiu5xtwpV3/jPs9bvX3JSu17Na8i
+         9QiAMxphByCGy08FDR8iDBlrI9L+FlAWk15ny5VeH7RjtzpPELiDzGH3/+V5kxNzrTZH
+         XgMrnrgoIudWHzPrZaVQen13nAnD6BmQyVDJ6lDupIF9J1T/l6WXHhLYybFvS6A/qmJI
+         Ovsm7aj3yhF0rNphT2JFPveOAUynpEwGY1SGFsnTm8AnWfxjgfU+fiTOycpvb0siMzVL
+         qkGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9CPSM3TbuO9VpI+gQ3R11/NwAFhf9O4PNoFbVUCUhts=;
+        b=GseIGWkb3QB5k/YXm7AD/4SuvWmtpxif2eovQrvlmJURujWwp9sNA964L7mOEnEb6r
+         KyuiSQx7ykUDbf0wLZ5M6ISXybebNOkwYjWU5CCOBzpnp/927cNQIuGEsBVF7h4TgPtN
+         pUYKRIAG9Dyt12kIGhUdagQmgDRYUEIgc+obKaWer1nGKx0t/10qZlww4O1/vVBSzzw+
+         mXP9r/KoqyGZZZ/t0EFmeUXxFlojRMNcNbVZrX6pWlhXyPtfFplTHLEW58TCuN7nWskD
+         FD2sm2vZb98usVMiJ3Xi17fNoWoYmjC+FUjiL7kVriigKFhJ61S/ektWvu25h4Oxg4O3
+         JDEQ==
+X-Gm-Message-State: ANhLgQ37sYXQsrrC+PDB0HmUVS1/PcV6bAu5aRfEidSeQIfywjIX0jAd
+        QgimrO3DA+kWsjlJQESHkV3dlQ==
+X-Google-Smtp-Source: ADFU+vtU90fFfLgtA2miWNPm2B/BrB2G3jwqZlfxZD6DzZuctWr/P3W5RFX+wXkzi1m3eArdvItajg==
+X-Received: by 2002:adf:fd87:: with SMTP id d7mr4432665wrr.393.1584523281247;
+        Wed, 18 Mar 2020 02:21:21 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id n18sm8611196wrw.34.2020.03.18.02.21.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 02:21:20 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 10:21:18 +0100
+From:   LABBE Corentin <clabbe@baylibre.com>
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 1/2] PNP: constify driver name
+Message-ID: <20200318092118.GA24828@Red>
+References: <1583481181-22972-1-git-send-email-clabbe@baylibre.com>
+ <a76a7dc9-4e5d-bb5b-b70c-cf6762b73f7d@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200317225656.GK2527@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <a76a7dc9-4e5d-bb5b-b70c-cf6762b73f7d@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Laurent,
-
-On Wed, Mar 18, 2020 at 12:56:56AM +0200, Laurent Pinchart wrote:
-> On Tue, Mar 17, 2020 at 02:32:27PM +0200, Oleksandr Suvorov wrote:
-> > PWM can have a normal polarity and a reverted one. The reverted polarity
-> > value is defined.
+On Tue, Mar 17, 2020 at 06:46:24PM +0100, Rafael J. Wysocki wrote:
+> On 3/6/2020 8:53 AM, Corentin Labbe wrote:
+> > struct pnp_driver has name set as char* instead of const char* like platform_driver, pci_driver, usb_driver, etc...
+> > Let's unify a bit by setting name as const char*.
+> > Furthermore, all users of this structures set name from already const
+> > data.
+> >
+> > Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> > ---
+> >   include/linux/pnp.h | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/pnp.h b/include/linux/pnp.h
+> > index 3b12fd28af78..b18dca67253d 100644
+> > --- a/include/linux/pnp.h
+> > +++ b/include/linux/pnp.h
+> > @@ -379,7 +379,7 @@ struct pnp_id {
+> >   };
+> >   
+> >   struct pnp_driver {
+> > -	char *name;
+> > +	const char *name;
+> >   	const struct pnp_device_id *id_table;
+> >   	unsigned int flags;
+> >   	int (*probe) (struct pnp_dev *dev, const struct pnp_device_id *dev_id);
 > 
-> I would squash this patch with 2/7, apart from that it looks fine.
-> However, I also agree with Thierry that the PWM cell that contains this
-> value is a bitmask, so once we get more flags it may get a bit awkward.
+> Applied as 5.7 material along with the [2/2].
+> 
+> BTW, please CC PNP patches to linux-acpi in the future.
+> 
 
-For me the usefulness of PWM_POLARITY_NORMAL increases with more bits
-used. That's because if there are 5 things that can be set there and the
-patch author mentions only the two that are non-zero, I as a reviewer
-don't know if the author actually know and thought about the other
-three. If however they spell out PWM_POLARITY_NORMAL it's quite sure
-they want normal polarity.
-
-> Will we have one macro for each flag that will evaluate to 0 to report
-> that the flag isn't set ?
-
-Yes. Given the above mentioned advantage this is cheap enough in my
-eyes.
-
-> Or should we define a single PWM_FLAG_NONE (or
-> similarly named) macro ?
-
-I like one macro for each bit field better for the above mentioned
-reason.
-
-> In retrospect, maybe PWM_POLARITY_INVERTED
-> should have been named PWM_FLAG_POLARITY_INVERTED.
-
-Seems to be subjective. I don't see much added semantic that justifies
-the longer name.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Perhaps it is better to update MAINTAINERS ?
+I will send a patch for it.
