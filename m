@@ -2,144 +2,295 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC30FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC23C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B21B120724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:23:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="eTV2S5Qr"
+	by mail.kernel.org (Postfix) with ESMTP id 0C8B020753
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgCRMXE (ORCPT
+        id S1726855AbgCRMXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 08:23:04 -0400
-Received: from mail-vi1eur05on2058.outbound.protection.outlook.com ([40.107.21.58]:41665
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726619AbgCRMXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:23:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TLrpk3Rq6BLMJR/GRyulnnTHHd7w/e611GsBx8vtaM122jLCwnCEra1Gfy9+BpzAHgVOjD/zTLFYNK4JDmC70rh2cKZNdzVjAtqYfMSft1yHuU2pEwcXOV7c5QoBoX++LFmCWfPHJwgfmvOg2gn9THtC28goY3LwK14gf/IpcsAibTuljGKPS+5HcUPuE6iiSm5yLF1j0CrikP2eg31rbdOYb2aa7OZqvF33yhcXnyVAXFPLPKtF/g21oHvkulgc3lqnjnzbWacjClxc5ICCcnKbBe3rbahF+0Pu8gJUPxyXUsmKzpBZQWkWctB6bgBPctRGs0n06PbPv3FgRZ8EHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rB/uBdueeVigHfVcZMb5CFpU4VPCCU/lBLqFKfnB1Pk=;
- b=k6IkCUE1/K5SKDVSFUaOO4LgqrSy1JToientLUYZS6Arqpue1yt3FWkXumJCP4oNPFELUyly/YIJCcMfTZPnCWEhRSeEHq5n3ifRQKVoqATa8L5UT97Yoe0IM2A+sJqbdghhhDfuOpIlUK/Qy1OpbepJRnfLG9q0XalTU+DEXZyElUXAPVkCC5LFOlbd0maum2O15fu0BC1Csg/NkxnWnmrEyh7QOTKwunvDYUaOQUH0+ZgpZOZE83IvVGOlhprr9/gCRASdrr5j5bLRfFS1sInHsGaEsCc73pDbwOwsjU8QRkz3FhmQwHSmOHEkxrYCIEBDoyxmwSpydAOVKNBdNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rB/uBdueeVigHfVcZMb5CFpU4VPCCU/lBLqFKfnB1Pk=;
- b=eTV2S5Qrsd6IOw/RLUu77Dpm/l7tB70QIg3quX9ary1XX1vS+xo5ZreZfLizA2Eh3CvNfk6nUHlshrMN1BXvo+27fv30TyTyNwMdjmuO/tqBxjxmqnIBIrjpfkFSSMLD3sPrgZTEOkn9HxQ3Q6/yF8JyHe7fvhd9KO++oEiuFrU=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB6287.eurprd05.prod.outlook.com (20.179.25.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.14; Wed, 18 Mar 2020 12:23:00 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::18d2:a9ea:519:add3]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::18d2:a9ea:519:add3%7]) with mapi id 15.20.2814.025; Wed, 18 Mar 2020
- 12:23:00 +0000
-Date:   Wed, 18 Mar 2020 09:22:55 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, lingshan.zhu@intel.com, eperezma@redhat.com,
-        lulu@redhat.com, parav@mellanox.com, kevin.tian@intel.com,
-        stefanha@redhat.com, rdunlap@infradead.org, hch@infradead.org,
-        aadam@redhat.com, jiri@mellanox.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        Bie Tiwei <tiwei.bie@intel.com>
-Subject: Re: [PATCH V6 8/8] virtio: Intel IFC VF driver for VDPA
-Message-ID: <20200318122255.GG13183@mellanox.com>
-References: <20200318080327.21958-1-jasowang@redhat.com>
- <20200318080327.21958-9-jasowang@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318080327.21958-9-jasowang@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: BL0PR02CA0024.namprd02.prod.outlook.com
- (2603:10b6:207:3c::37) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Wed, 18 Mar 2020 08:23:25 -0400
+Received: from relay.sw.ru ([185.231.240.75]:57384 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgCRMXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 08:23:24 -0400
+Received: from [192.168.15.253]
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1jEXiG-0005hk-C4; Wed, 18 Mar 2020 15:22:20 +0300
+Subject: Re: [PATCH v3 5/5] exec: Add a exec_update_mutex to replace
+ cred_guard_mutex
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87r1y8dqqz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517053AED7DC89F7C0704B7DE4E50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+ <f37a5d68-9674-533f-ee9c-a49174605710@virtuozzo.com>
+ <87d09hn4kt.fsf@x220.int.ebiederm.org>
+ <dbce35c7-c060-cfd8-bde1-98fd9a0747a9@virtuozzo.com>
+ <87lfo5lju6.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170E9E71B9F84330B098BADE4FA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <6002ac56-025a-d50f-e89d-1bf42a072323@virtuozzo.com>
+ <AM6PR03MB5170353DF3575FF7742BB155E4FB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <532ce6a3-f0df-e3e4-6966-473c608246e1@virtuozzo.com>
+ <AM6PR03MB51705D8A5631B53844CE447CE4F60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <13c4d333-9c33-8036-3142-dac22c392c60@virtuozzo.com>
+Date:   Wed, 18 Mar 2020 15:22:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR02CA0024.namprd02.prod.outlook.com (2603:10b6:207:3c::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.22 via Frontend Transport; Wed, 18 Mar 2020 12:22:59 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jEXip-0003l3-Nt; Wed, 18 Mar 2020 09:22:55 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: fec168ad-986f-4206-50c1-08d7cb3718fe
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6287:|VI1PR05MB6287:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB62877A2DB1010E5C9AEFEB0DCFF70@VI1PR05MB6287.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 03468CBA43
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(39860400002)(136003)(376002)(199004)(5660300002)(33656002)(1076003)(2906002)(4326008)(478600001)(36756003)(2616005)(26005)(7416002)(6916009)(316002)(81166006)(66946007)(186003)(52116002)(8676002)(81156014)(66476007)(66556008)(8936002)(86362001)(9746002)(9786002)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6287;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: XSrSkNW8+D2kNXHpww3h8hJluflkZzGOIh79EuYU+2TLCHlZRNxbzEGTmHn0XltAO6VF3gLBBb3M5aRjnHf+rTmqy1qhZUxJolqubRKglLwGp1EpMzqrZNNYdBJ79YhfIcRkquRbsyCMOQ8bKMH7rmXxCoRx/32D1vBdiZBdVOpKv1igi7r+HeBRAotlM/O83mmucFvYjj2IOicwSHWZw59v07qWy6HWx60dfXT8fLtQPEugAbq0v3ROm+7h4bUfAZL1cenrHTvkGhB2plb9VV7OUhA3DV9TZwXxMmg8ETBDtm79y+i6v1L99VRktnZB1pRwljzTdHW4rpfkVuak+2nBliMWMYBet4RgtjSE9PO1HtY0Qyo4R+ry8WSSL43eDdi6J1ySRtNszrKOQpXOQYYFaOmDAiWq5p4lw36Emk/EdKA08/0Seohf+aU5wZnIfdMrKJS+8pdDFKMmBsG9dSUOV76h8thea/Wy9QBPCOi/TYM/K7e/YZ712zdWhKz8
-X-MS-Exchange-AntiSpam-MessageData: jcbSCfrIPijc1oNK75p2M4+d/bq4WllgNO6A3kZnDZL4UtA7upLCtRZd6l34k6oPCz/yYGHOlYeItYYN14SJ+nfp2NnaAPilUtiVM58PCC/mSk0atAEyJ8RIAJbFOZE+BHTl9cH7hlJEI3nombHrxg==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fec168ad-986f-4206-50c1-08d7cb3718fe
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 12:23:00.0473
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AobLBU8Ex34USRB44Gs6xlDaeFK8kukgSZxfiwA1BuYjBWVzZLG+QxdSfYVtrgBgDwqTznZzTkhKrQBDfU8s0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6287
+In-Reply-To: <AM6PR03MB51705D8A5631B53844CE447CE4F60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 04:03:27PM +0800, Jason Wang wrote:
-> From: Zhu Lingshan <lingshan.zhu@intel.com>
-> +
-> +static int ifcvf_vdpa_attach(struct ifcvf_adapter *adapter)
-> +{
-> +	int ret;
-> +
-> +	adapter->vdpa_dev  = vdpa_alloc_device(adapter->dev, adapter->dev,
-> +					       &ifc_vdpa_ops);
-> +	if (IS_ERR(adapter->vdpa_dev)) {
-> +		IFCVF_ERR(adapter->dev, "Failed to init ifcvf on vdpa bus");
-> +		put_device(&adapter->vdpa_dev->dev);
-> +		return -ENODEV;
-> +	}
+On 18.03.2020 00:53, Bernd Edlinger wrote:
+> On 3/17/20 9:56 AM, Kirill Tkhai wrote:
+>> On 14.03.2020 12:11, Bernd Edlinger wrote:
+>>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
+>>> over the userspace accesses as the arguments from userspace are read.
+>>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
+>>> threads are killed.  The cred_guard_mutex is held over
+>>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
+>>>
+>>> Any of those can result in deadlock, as the cred_guard_mutex is held
+>>> over a possible indefinite userspace waits for userspace.
+>>>
+>>> Add exec_update_mutex that is only held over exec updating process
+>>> with the new contents of exec, so that code that needs not to be
+>>> confused by exec changing the mm and the cred in ways that can not
+>>> happen during ordinary execution of a process.
+>>>
+>>> The plan is to switch the users of cred_guard_mutex to
+>>> exec_udpate_mutex one by one.  This lets us move forward while still
+>>> being careful and not introducing any regressions.
+>>>
+>>> Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
+>>> Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
+>>> Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
+>>> Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
+>>> Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
+>>> Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
+>>> Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
+>>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>>> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+>>> ---
+>>>  fs/exec.c                    | 17 ++++++++++++++---
+>>>  include/linux/binfmts.h      |  8 +++++++-
+>>>  include/linux/sched/signal.h |  9 ++++++++-
+>>>  init/init_task.c             |  1 +
+>>>  kernel/fork.c                |  1 +
+>>>  5 files changed, 31 insertions(+), 5 deletions(-)
+>>>
+>>> v3: this update fixes lock-order and adds an explicit data member in linux_binprm
+>>>
+>>> diff --git a/fs/exec.c b/fs/exec.c
+>>> index d820a72..11974a1 100644
+>>> --- a/fs/exec.c
+>>> +++ b/fs/exec.c
+>>> @@ -1014,12 +1014,17 @@ static int exec_mmap(struct mm_struct *mm)
+>>>  {
+>>>  	struct task_struct *tsk;
+>>>  	struct mm_struct *old_mm, *active_mm;
+>>> +	int ret;
+>>>  
+>>>  	/* Notify parent that we're no longer interested in the old VM */
+>>>  	tsk = current;
+>>>  	old_mm = current->mm;
+>>>  	exec_mm_release(tsk, old_mm);
+>>>  
+>>> +	ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>>  	if (old_mm) {
+>>>  		sync_mm_rss(old_mm);
+>>>  		/*
+>>> @@ -1031,9 +1036,11 @@ static int exec_mmap(struct mm_struct *mm)
+>>>  		down_read(&old_mm->mmap_sem);
+>>>  		if (unlikely(old_mm->core_state)) {
+>>>  			up_read(&old_mm->mmap_sem);
+>>> +			mutex_unlock(&tsk->signal->exec_update_mutex);
+>>>  			return -EINTR;
+>>>  		}
+>>>  	}
+>>> +
+>>>  	task_lock(tsk);
+>>>  	active_mm = tsk->active_mm;
+>>>  	membarrier_exec_mmap(mm);
+>>> @@ -1288,11 +1295,12 @@ int flush_old_exec(struct linux_binprm * bprm)
+>>>  		goto out;
+>>>  
+>>>  	/*
+>>> -	 * After clearing bprm->mm (to mark that current is using the
+>>> -	 * prepared mm now), we have nothing left of the original
+>>> +	 * After setting bprm->called_exec_mmap (to mark that current is
+>>> +	 * using the prepared mm now), we have nothing left of the original
+>>>  	 * process. If anything from here on returns an error, the check
+>>>  	 * in search_binary_handler() will SEGV current.
+>>>  	 */
+>>> +	bprm->called_exec_mmap = 1;
+>>
+>> The two below is non-breaking pair:
+>>
+>> exec_mmap(bprm->mm);
+>> bprm->called_exec_mmap = 1;
+>>
+>> Why not move this into exec_mmap(), so nobody definitely inserts something
+>> between them?
+>>
+> 
+> Hmm, could be done, but then I would probably need a different name than
+> "called_exec_mmap".
+> 
+> How about adding a nice function comment to exec_mmap that calls out the
+> changed behaviour that the exec_update_mutex is taken unless the function
+> fails?
 
-The point of having an alloc call is so that the drivers
-ifcvf_adaptor memory could be placed in the same struct - eg use
-container_of to flip between them, and have a kref for both memories.
+Not sure, I understand correct.
 
-It seem really weird to have an alloc followed immediately by
-register.
+Could you post this like a small patch hunk (on top of anything you want)?
 
-> diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
-> index c30eb55030be..de64b88ee7e4 100644
-> +++ b/drivers/virtio/virtio_vdpa.c
-> @@ -362,6 +362,7 @@ static int virtio_vdpa_probe(struct vdpa_device *vdpa)
->  		goto err;
->  
->  	vdpa_set_drvdata(vdpa, vd_dev);
-> +	dev_info(vd_dev->vdev.dev.parent, "device attached to VDPA bus\n");
->  
->  	return 0;
+> Bernd.
+> 
+> 
+>>>  	bprm->mm = NULL;
+>>>  
+>>>  #ifdef CONFIG_POSIX_TIMERS
+>>> @@ -1438,6 +1446,8 @@ static void free_bprm(struct linux_binprm *bprm)
+>>>  {
+>>>  	free_arg_pages(bprm);
+>>>  	if (bprm->cred) {
+>>> +		if (bprm->called_exec_mmap)
+>>> +			mutex_unlock(&current->signal->exec_update_mutex);
+>>>  		mutex_unlock(&current->signal->cred_guard_mutex);
+>>>  		abort_creds(bprm->cred);
+>>>  	}
+>>> @@ -1487,6 +1497,7 @@ void install_exec_creds(struct linux_binprm *bprm)
+>>>  	 * credentials; any time after this it may be unlocked.
+>>>  	 */
+>>>  	security_bprm_committed_creds(bprm);
+>>> +	mutex_unlock(&current->signal->exec_update_mutex);
+>>>  	mutex_unlock(&current->signal->cred_guard_mutex);
+>>>  }
+>>>  EXPORT_SYMBOL(install_exec_creds);
+>>> @@ -1678,7 +1689,7 @@ int search_binary_handler(struct linux_binprm *bprm)
+>>>  
+>>>  		read_lock(&binfmt_lock);
+>>>  		put_binfmt(fmt);
+>>> -		if (retval < 0 && !bprm->mm) {
+>>> +		if (retval < 0 && bprm->called_exec_mmap) {
+>>>  			/* we got to flush_old_exec() and failed after it */
+>>>  			read_unlock(&binfmt_lock);
+>>>  			force_sigsegv(SIGSEGV);
+>>> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+>>> index b40fc63..a345d9f 100644
+>>> --- a/include/linux/binfmts.h
+>>> +++ b/include/linux/binfmts.h
+>>> @@ -44,7 +44,13 @@ struct linux_binprm {
+>>>  		 * exec has happened. Used to sanitize execution environment
+>>>  		 * and to set AT_SECURE auxv for glibc.
+>>>  		 */
+>>> -		secureexec:1;
+>>> +		secureexec:1,
+>>> +		/*
+>>> +		 * Set by flush_old_exec, when exec_mmap has been called.
+>>> +		 * This is past the point of no return, when the
+>>> +		 * exec_update_mutex has been taken.
+>>> +		 */
+>>> +		called_exec_mmap:1;
+>>>  #ifdef __alpha__
+>>>  	unsigned int taso:1;
+>>>  #endif
+>>> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+>>> index 8805025..a29df79 100644
+>>> --- a/include/linux/sched/signal.h
+>>> +++ b/include/linux/sched/signal.h
+>>> @@ -224,7 +224,14 @@ struct signal_struct {
+>>>  
+>>>  	struct mutex cred_guard_mutex;	/* guard against foreign influences on
+>>>  					 * credential calculations
+>>> -					 * (notably. ptrace) */
+>>> +					 * (notably. ptrace)
+>>> +					 * Deprecated do not use in new code.
+>>> +					 * Use exec_update_mutex instead.
+>>> +					 */
+>>> +	struct mutex exec_update_mutex;	/* Held while task_struct is being
+>>> +					 * updated during exec, and may have
+>>> +					 * inconsistent permissions.
+>>> +					 */
+>>>  } __randomize_layout;
+>>>  
+>>>  /*
+>>> diff --git a/init/init_task.c b/init/init_task.c
+>>> index 9e5cbe5..bd403ed 100644
+>>> --- a/init/init_task.c
+>>> +++ b/init/init_task.c
+>>> @@ -26,6 +26,7 @@
+>>>  	.multiprocess	= HLIST_HEAD_INIT,
+>>>  	.rlim		= INIT_RLIMITS,
+>>>  	.cred_guard_mutex = __MUTEX_INITIALIZER(init_signals.cred_guard_mutex),
+>>> +	.exec_update_mutex = __MUTEX_INITIALIZER(init_signals.exec_update_mutex),
+>>>  #ifdef CONFIG_POSIX_TIMERS
+>>>  	.posix_timers = LIST_HEAD_INIT(init_signals.posix_timers),
+>>>  	.cputimer	= {
+>>> diff --git a/kernel/fork.c b/kernel/fork.c
+>>> index 8642530..036b692 100644
+>>> --- a/kernel/fork.c
+>>> +++ b/kernel/fork.c
+>>> @@ -1594,6 +1594,7 @@ static int copy_signal(unsigned long clone_flags, struct task_struct *tsk)
+>>>  	sig->oom_score_adj_min = current->signal->oom_score_adj_min;
+>>>  
+>>>  	mutex_init(&sig->cred_guard_mutex);
+>>> +	mutex_init(&sig->exec_update_mutex);
+>>>  
+>>>  	return 0;
+>>>  }
+>>>
+>>
 
-This hunk seems out of place
-
-Jason  
