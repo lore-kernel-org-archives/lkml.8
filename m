@@ -2,70 +2,103 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5E8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71A6C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3884920658
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9554820663
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:11:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJ7/Anym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgCRQJj (ORCPT
+        id S1726976AbgCRQL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:09:39 -0400
-Received: from mga01.intel.com ([192.55.52.88]:46855 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbgCRQJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 12:09:38 -0400
-IronPort-SDR: VeoafylxGTkLVVfFk08tt1gbYEePF0CiKWknQMPjHgG8A+B9D39KDkVy2VJdepqj5sak38gZS3
- lnGHapkRt6wA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 09:09:38 -0700
-IronPort-SDR: Hpmo2mv5SFsFQ+EzPVzAI1bd6Z4/F0fM4KK6OGaY49neFNwf+8E0Zhk6tHTCaMZoeEMqjx7upZ
- QhcsxzA12QQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
-   d="scan'208";a="291357231"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Mar 2020 09:09:37 -0700
-Date:   Wed, 18 Mar 2020 09:09:37 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v2 23/32] KVM: nVMX: Add helper to handle TLB flushes on
- nested VM-Enter/VM-Exit
-Message-ID: <20200318160937.GH24357@linux.intel.com>
-References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
- <20200317045238.30434-24-sean.j.christopherson@intel.com>
- <0975d43f-42b6-74db-f916-b0995115d726@redhat.com>
- <20200317181832.GC12959@linux.intel.com>
- <f4850521-29fe-51ff-05e7-76cef1fa0fd9@redhat.com>
+        Wed, 18 Mar 2020 12:11:58 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38305 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbgCRQL6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 12:11:58 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x7so13947099pgh.5;
+        Wed, 18 Mar 2020 09:11:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
+         :user-agent;
+        bh=LWuGqqiVZStjA49iRqkB2ECGeP11khRAviVxRIQYens=;
+        b=hJ7/AnymbJqEL9fDuUD1UXa4a8M+PhkAlkiJxpd/HpgvsQN9ycgElBYdD2wF6KqzQi
+         9l4eprE+HBCuCqsilh4rJEN/+DOAhV7icJNaBCoFdX9BLt5s6C9ogqCVmb1jnojQ+NfE
+         oK52vugCG2BeY3o4AR0/dwv0PmmCzV9RhSpYUg0gmAAYnQijiFUck2kqJdGA4jQ7iKtW
+         S0riliFEbzOm5WuHnyI/o9Et9bnZhBB/+/3ZPNYyfhgyhEpTudH6rQJm7WlE3651vlx5
+         93Sb5qubnCm9StZFeETTMrg7ytES7wN5+ZNy/S+XWwc3+32R7lbZKDMXZm0WhJYBRG12
+         kKDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
+         :content-disposition:user-agent;
+        bh=LWuGqqiVZStjA49iRqkB2ECGeP11khRAviVxRIQYens=;
+        b=pObCP0KvNXY+c8FOOmD5KFr8Y1K7+BDeMXC5nXO3/DyMe+JOu2YJeKZgbpf+zlC16Z
+         kHyUQRIaxkOyw8SemHz1XslIBDas2/yYB3KLTGW1H1ard8njyF5NlY0K4NEr9n3Un392
+         Ex+aUrssHSkXV09LdE0xUWV0ScAAsEIqr3RyhkkZgzdo6o3jGVhuKQZdsYk1xR8mY3cI
+         Ml2zURscZzMc8p//4nEbjPcvf8XU1UJeQFT9BL16yNI8bnzZTdFsiKxLeXREo52jyjDx
+         6yXyoejdgV3ctWRt0ek172rX18zc2wwIjfmycX6zLSnIJ+rTfo91HUbo6+aWK277GzZ9
+         ptkQ==
+X-Gm-Message-State: ANhLgQ0xesU/dZ/uEw3hp9rrz7dD9MhOfjpv9+pjibMTXV67hUE0cFRi
+        UpiygJ9tw5csH6xgzNP1Bdwf5hvjMoA=
+X-Google-Smtp-Source: ADFU+vsO9tap4oeyRWVuzA9XlsiET4/dRMS4Pk/tQwU5/YnV0jOhKwCBCopromTwiUxlYpEq3zes6A==
+X-Received: by 2002:a63:7c02:: with SMTP id x2mr5576113pgc.236.1584547916442;
+        Wed, 18 Mar 2020 09:11:56 -0700 (PDT)
+Received: from SARKAR ([43.224.157.42])
+        by smtp.gmail.com with ESMTPSA id f19sm6356308pgf.33.2020.03.18.09.11.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 09:11:55 -0700 (PDT)
+Message-ID: <5e72484b.1c69fb81.53f77.5a16@mx.google.com>
+X-Google-Original-Message-ID: <20200318161151.GA31012@rohitsarkar5398@gmail.com>
+Date:   Wed, 18 Mar 2020 21:41:51 +0530
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: core: Make mlock internal to the iio core
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f4850521-29fe-51ff-05e7-76cef1fa0fd9@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 11:45:57AM +0100, Paolo Bonzini wrote:
-> Perhaps nested_vmx_transition_tlb_flush could grow a vmentry/vmexit bool
-> argument instead?
+"mlock" should ideally only be used by the iio core. The mlock
+implementation may change in the future which means that no driver
+should be explicitly using mlock.
 
-I'll give that a shot.
+Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+---
+ include/linux/iio/iio.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index eed58ed2f368..e975020abaa6 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -492,7 +492,7 @@ struct iio_buffer_setup_ops {
+  * @buffer:		[DRIVER] any buffer present
+  * @buffer_list:	[INTERN] list of all buffers currently attached
+  * @scan_bytes:		[INTERN] num bytes captured to be fed to buffer demux
+- * @mlock:		[DRIVER] lock used to prevent simultaneous device state
++ * @mlock:		[INTERN] lock used to prevent simultaneous device state
+  *			changes
+  * @available_scan_masks: [DRIVER] optional array of allowed bitmasks
+  * @masklength:		[INTERN] the length of the mask established from
+-- 
+2.23.0.385.gbc12974a89
+
