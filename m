@@ -2,105 +2,130 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB26BC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3951C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A4220767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584525435;
-	bh=PxOugapyiLyGM41ij3qU4It93Jbk5/RLhf0dug/PLy8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qvqjpQ7chAtvevrEHyMSMqgu5bF4aaeNayBrqVwmAUeinsva947SdYGtwpOp45HBq
-	 jDpU2GP7ei7InKMT05jgV0zSqXxY/CLthyIvMHZhVEHY04TyhNg6lvqYBELlThxYpQ
-	 FFYIAB2h3FXIabvlSXDSnABQDRtRzxEvLtU2C4xo=
+	by mail.kernel.org (Postfix) with ESMTP id 7845320767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbgCRJ5O (ORCPT
+        id S1727581AbgCRJ6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:57:14 -0400
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:37715 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727405AbgCRJ5O (ORCPT
+        Wed, 18 Mar 2020 05:58:01 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:49520 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgCRJ6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:57:14 -0400
-Received: by mail-wr1-f48.google.com with SMTP id w10so631428wrm.4
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 02:57:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GOcmbfCGsBYkxr9ElKbbF2lKiCO06vnAuf1KQJx6gnM=;
-        b=X+judH+b0yjx8AzNhOcwU3Zp/ihld72xOPu9nScQ8noVWGjjMWGAqd6Wvpx7drlYic
-         TZFZwzle7z0FZRrYAjf2aeSkltepaiC1BMl1fmvRBDF83q9ARiyvAceqcRKEUxuMXNdX
-         G41Fj6TPgwnMtvXxIqTG8VH4HMBfHN1lHhK0rXL/qFZh4XV6wlFo8pcUZdQbPJEPN5n7
-         QwGWBL8V78L+/pwoCvv75k/DgQw8HF5TkQ3EdTGdq7xOwGCgVvpgmTfXwn2LqekDCOus
-         gdAKwyRMRA+xbf7AjxWpFP0bKvWcH5YOn01UG+kVR+xYJExJh2KRWWb3H4oeQYhuErUH
-         /Eig==
-X-Gm-Message-State: ANhLgQ2pnZxCkSsPmyoe/0GvJ85cFDvnGkjKrinlvaFmMFPxP2whB3+q
-        CA8vkkn9fcDDYOmVjDh3ZcE=
-X-Google-Smtp-Source: ADFU+vvBHA61twBo/iJCkAyPfb8alCOE0RxXYb3BGFv8E2BcCaIptytGe1N2yy2yIUN1EMDdUQzxpQ==
-X-Received: by 2002:adf:ea42:: with SMTP id j2mr4642015wrn.3.1584525432444;
-        Wed, 18 Mar 2020 02:57:12 -0700 (PDT)
-Received: from localhost (ip-37-188-180-89.eurotel.cz. [37.188.180.89])
-        by smtp.gmail.com with ESMTPSA id s7sm8708665wro.10.2020.03.18.02.57.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 02:57:11 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 10:57:10 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Ami Fischman <fischman@google.com>
-Cc:     Robert Kolchmeyer <rkolchmeyer@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [patch] mm, oom: make a last minute check to prevent unnecessary
- memcg oom kills
-Message-ID: <20200318095710.GG21362@dhcp22.suse.cz>
-References: <alpine.DEB.2.21.2003101454580.142656@chino.kir.corp.google.com>
- <20200310221938.GF8447@dhcp22.suse.cz>
- <alpine.DEB.2.21.2003101547090.177273@chino.kir.corp.google.com>
- <CAJc0_fwDAKUTcYd_rga+jjDEE2BT7Tp=ViWdtiUeswVLUqC9CQ@mail.gmail.com>
- <CAHuR8a-PbmthrKYpY5-SM-MH39O39W2J1mXA48oy9nASmys0mg@mail.gmail.com>
+        Wed, 18 Mar 2020 05:58:01 -0400
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id C0687200ADE;
+        Wed, 18 Mar 2020 09:57:59 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 2EFF320B19; Wed, 18 Mar 2020 10:57:45 +0100 (CET)
+Date:   Wed, 18 Mar 2020 10:57:45 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     Cezary Rojewski <cezary.rojewski@intel.com>
+Cc:     tiwai@suse.com, pierre-louis.bossart@linux.intel.com,
+        liam.r.girdwood@linux.intel.com, yang.jie@linux.intel.com,
+        broonie@kernel.org, perex@perex.cz, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+Message-ID: <20200318095745.GA133849@light.dominikbrodowski.net>
+References: <20200318063022.GA116342@light.dominikbrodowski.net>
+ <66c719b3-a66e-6a9f-fab8-721ba48d7ad8@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHuR8a-PbmthrKYpY5-SM-MH39O39W2J1mXA48oy9nASmys0mg@mail.gmail.com>
+In-Reply-To: <66c719b3-a66e-6a9f-fab8-721ba48d7ad8@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 17-03-20 12:00:45, Ami Fischman wrote:
-> On Tue, Mar 17, 2020 at 11:26 AM Robert Kolchmeyer
-> <rkolchmeyer@google.com> wrote:
-> >
-> > On Tue, Mar 10, 2020 at 3:54 PM David Rientjes <rientjes@google.com> wrote:
-> > >
-> > > Robert, could you elaborate on the user-visible effects of this issue that
-> > > caused it to initially get reported?
-> >
-> > Ami (now cc'ed) knows more, but here is my understanding.
+On Wed, Mar 18, 2020 at 10:41:42AM +0100, Cezary Rojewski wrote:
+> On 2020-03-18 07:30, Dominik Brodowski wrote:
+> > Hi!
+> > 
+> > While 5.5.x works fine, mainline as of ac309e7744be (v5.6-rc6+) causes me
+> > some sound-related trouble: after boot, the sound works fine -- but once I
+> > suspend and resume my broadwell-based XPS13, I need to switch to headphone
+> > and back to speaker to hear something. But what I hear isn't music but
+> > garbled output.
+> > 
+> > A few dmesg snippets from v5.6-rc6-9-gac309e7744be which might be of
+> > interest. I've highlighted the lines differing from v.5.5.x which might be
+> > of special interest:
+> > 
 > 
-> Robert's description of the mechanics we observed is accurate.
+> Thank you for the report, Dominik. You definitely got our attention.
 > 
-> We discovered this regression in the oom-killer's behavior when
-> attempting to upgrade our system. The fraction of the system that
-> went unhealthy due to this issue was approximately equal to the
-> _sum_ of all other causes of unhealth, which are many and varied,
-> but each of which contribute only a small amount of
-> unhealth. This issue forced a rollback to the previous kernel
-> where we ~never see this behavior, returning our unhealth levels
-> to the previous background levels.
+> I've checked the market: Dell XPS 13 9343, yes? Once you confirm model id,
+> I'll order a piece immediately to our site.
 
-Could you be more specific on the good vs. bad kernel versions? Because
-I do not remember any oom changes that would affect the
-time-to-check-time-to-kill race. The timing might be slightly different
-in each kernel version of course.
+Thanks, for taking a look at this issue, Czarek. Indeed, it's a
 
--- 
-Michal Hocko
-SUSE Labs
+	Dell Inc. XPS 13 9343/0TM99H, BIOS A19 12/24/2018
+
+and IIRC there should be at least one of those already at the Linux sound
+team at Intel (you may want to check with Yang Jie and Han Lu; I was in
+contact with them relating to a different sound-related issue in 2015).
+
+> In regard to logs, thanks for highlighting important lines. Build is of 'rc'
+> so bugs can still be in plenty - any reason for switching to cutting-edge
+> kernel on production stuff? Our CI didn't detect any anomalies yet as it is
+> running on 5.5.
+
+Well, one has to test things to find bugs ;-) -- and as I sometimes
+contribute to the kernel, it is better to keep current on things.
+
+> I'll direct your ticket on todays meeting. On the first look, issue seems to
+> be connected with recent changes to /drivers/dma/dmaengine.c. DesignWare DMA
+> controller drv - which HSW/BDW makes use of - might not have been updated
+> accordingly. Will dig further on that.
+> 
+> One more, just to make it clear for the rest of the viewers:
+> 
+> > 	haswell-pcm-audio haswell-pcm-audio: Direct firmware load for intel/IntcPP01.bin failed with error -2
+> > 	haswell-pcm-audio haswell-pcm-audio: fw image intel/IntcPP01.bin not available(-2)
+> 
+> Back in the ancient days of DSP (HSW/BDW are actually the very first audio
+> DSP hws for Intel) topology was part of FW - SW could not configure it and
+> probably that's why library IntcPP01 is attempted to be loaded on every
+> boot, even if it's not part of configuration for given hw. Maybe we could
+> make it quieter though..
+> 
+> > 
+> > (these last two messages already are printed a couple of time after boot, and then
+> > again during a suspend/resume cycle. On v.5.5.y, there are similar messages
+> > "no context buffer need to restore!"). Everything is built-in, no modules
+> > are loaded.
+> > 
+> > Unfortunately, I cannot bisect this issue easily -- i915 was broken for
+> > quite some time on this system[*], prohibiting boot...
+> 
+> Hmm, sounds like that issue is quite old. DSP for Haswell and Broadwell is
+> available for I2S devices only, so this relates directly to legacy HDA
+> driver. Compared to Skylake+, HDAudio controller for older platforms is
+> found within GPU. My advice is to notify the DRM guys about this issue.
+> 
+> Takashi, are you aware of problems with HDMI on HSW/ BDW or should I just
+> loop Jani and other DRM peps here?
+
+Well, it works on v5.5, so this issue is not really "quite old" (the "no
+context buffer need to restore!" message seen there seems harmless).
+
+Thanks again, and best wishes,
+	Dominik
