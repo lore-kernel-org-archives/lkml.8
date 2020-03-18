@@ -2,283 +2,291 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B0F1C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F54C43332
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 581A82076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:47:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RdLXnW6e"
+	by mail.kernel.org (Postfix) with ESMTP id 0981020753
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbgCRXrz (ORCPT
+        id S1727225AbgCRXtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:47:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40428 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgCRXrx (ORCPT
+        Wed, 18 Mar 2020 19:49:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25184 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726934AbgCRXtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:47:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f3so570614wrw.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 16:47:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language;
-        bh=1ZwkJTSe/N0nx9bzPX4TSnRpe18i81HZN5KJN9b0wCM=;
-        b=RdLXnW6eKzmMX1iQSIXwPp+rasw+IFCms1ipYrpQlJUmuh0D1FEdahFybUUM7gl3TF
-         TUsSlqnStSPDV810rt5bQKZa+EBptYiHjqhY0qL6eKvN/KvheExbN0nco6itoSSirkvx
-         I3n0TMNQ4eQ7gTMVsAGCccOq19FoIqaGPgCKoTrlMPyLhSRk4IRcx//a23OdEqJdiRPu
-         8Q8apDiJbbB+OLcvXVTA8s1LM3bdf/j/Jo6A1f1WvzbrD7nbYAYaVypXzmhT0w/4QnGO
-         mHH0dYuIu9XsL+IH13P19HpZn5izz8tLRTSkmlk8rhBCyOR5d0zZWEFUvsHxMpML2DaY
-         1yyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language;
-        bh=1ZwkJTSe/N0nx9bzPX4TSnRpe18i81HZN5KJN9b0wCM=;
-        b=nGNXFtgVG/0rmvgex5rqmM12Kj4IPGbwSxLc9rwDMrVj8vdLj2DLglmwgZ3+yR4q8z
-         e+27ANy19BmNw8xMLAWpefIYMh/YxcHtK78SMiDtpvBF5E8+XqfCTUxS+CCKiy8KHWHh
-         iQkIInX5rU5DG//QXb8dVsWc9Mm9BUymU1FzcixhF3PlNiQUVKu0SKMWbwLjNcEdKiWM
-         4sCQt0iv9sV/8BMzf9NXj3FeueXgfUtU2UIDQ3ZZaWAxNTCqxwwynScPadXY6sqj/ey8
-         jHQ0W+snNTD6QzuNO+BIaQwYwG+08+ZP3HD1Z0aCVjw6KGBMaSKOMNfoQ4tSdvUXR7IY
-         Qgbw==
-X-Gm-Message-State: ANhLgQ2QJLwt82P02QLeMFUG1qoMRDHt8GnLn6njAz9ws4dqFH3Z/3UE
-        gBB+U+fUaq7wJi8CZ9+LZmXrHcUBjww=
-X-Google-Smtp-Source: ADFU+vvoL+9peYYQ1hIU3SpDePFBEJsYjd8qdOeuNNVf8KxT35yeK3WJD2ZtnkRzi1BgA2dCtqWXEg==
-X-Received: by 2002:a5d:5710:: with SMTP id a16mr421722wrv.5.1584575271476;
-        Wed, 18 Mar 2020 16:47:51 -0700 (PDT)
-Received: from [192.168.1.159] (mtrlpq3125w-lp130-01-174-91-231-91.dsl.bell.ca. [174.91.231.91])
-        by smtp.gmail.com with ESMTPSA id t193sm548257wmt.14.2020.03.18.16.47.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Mar 2020 16:47:50 -0700 (PDT)
-Subject: Re: perf: arm64: libunwind patch
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-kernel@vger.kernel.org
-References: <deb0d490-e2ad-40d5-f804-c51a91edc4d5@gmail.com>
- <20200318031928.GA22966@leoy-ThinkPad-X240s>
-From:   ferar achkar <ferarachkar@gmail.com>
-Message-ID: <f7f55fd3-df95-6858-18e3-f82041fcefb7@gmail.com>
-Date:   Wed, 18 Mar 2020 19:47:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 18 Mar 2020 19:49:41 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02INXvQ1034319;
+        Wed, 18 Mar 2020 19:49:38 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yu7fsde1b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Mar 2020 19:49:38 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02INjJk0021708;
+        Wed, 18 Mar 2020 23:49:37 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma01dal.us.ibm.com with ESMTP id 2yrpw75cpt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Mar 2020 23:49:37 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02INnZ4U37683512
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 23:49:35 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7B0D06A04F;
+        Wed, 18 Mar 2020 23:49:35 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 66B076A058;
+        Wed, 18 Mar 2020 23:49:35 +0000 (GMT)
+Received: from crimini9.aus.stglabs.ibm.com (unknown [9.40.192.141])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Wed, 18 Mar 2020 23:49:35 +0000 (GMT)
+Received: (from gcwilson@localhost)
+        by crimini9.aus.stglabs.ibm.com (8.15.2/8.15.2/Submit) id 02INnXCC206129;
+        Wed, 18 Mar 2020 19:49:33 -0400
+X-Authentication-Warning: crimini9.aus.stglabs.ibm.com: gcwilson set sender to gcwilson@linux.ibm.com using -f
+From:   George Wilson <gcwilson@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Nayna Jain <nayna@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Linh Pham <phaml@us.ibm.com>
+Subject: [PATCH v3] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
+Date:   Wed, 18 Mar 2020 19:49:27 -0400
+Message-Id: <20200318234927.206075-1-gcwilson@linux.ibm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200318031928.GA22966@leoy-ThinkPad-X240s>
-Content-Type: multipart/mixed;
- boundary="------------D3E40FFF4EC395A06ADDCDDF"
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_07:2020-03-18,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=1 bulkscore=0 phishscore=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003180099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------D3E40FFF4EC395A06ADDCDDF
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+tpm_ibmvtpm_send() can fail during PowerVM Live Partition Mobility resume
+with an H_CLOSED return from ibmvtpm_send_crq().  The PAPR says, 'The
+“partner partition suspended” transport event disables the associated CRQ
+such that any H_SEND_CRQ hcall() to the associated CRQ returns H_Closed
+until the CRQ has been explicitly enabled using the H_ENABLE_CRQ hcall.'
+This patch adds a check in tpm_ibmvtpm_send() for an H_CLOSED return from
+ibmvtpm_send_crq() and in that case calls tpm_ibmvtpm_resume() and
+retries the ibmvtpm_send_crq() once.
 
-Hi Leo,
-
-you are doing a native build, while the compile error I am having shows 
-when cross compiling on x86_64 Linux Host:
-
-ferar@barbarian:~/renegade_rk3328/perf_core$ make -j4 ARCH=arm64 
-CROSS_COMPILE=/home/ferar/vim3/gcc-linaro-7.4.1-2019.02-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu- 
--C tools/perf
-
-ferar@barbarian:~/renegade_rk3328/perf_core$ head Makefile
-# SPDX-License-Identifier: GPL-2.0
-VERSION = 5
-PATCHLEVEL = 6
-SUBLEVEL = 0
-EXTRAVERSION = -rc6
-NAME = Kleptomaniac Octopus
-
-...
-
-ferar@barbarian:~/renegade_rk3328/perf_core$
-
-regard,
-
-ferar
-
-On 2020-03-17 11:19 p.m., Leo Yan wrote:
-> Hi,
->
-> On Tue, Mar 17, 2020 at 06:29:05PM -0400, ferar achkar wrote:
->> hi,
->> please find attached a compile error fix.
->> regards,
-> I checked this with the kernel 5.6.0-rc4, but cannot reproduce this
-> issue on my Arm64 board (DB410c) with Debian Buster.
->
-> Below is the GCC version I am using on the Arm64 board:
->
-> # gcc --version
-> gcc (Debian 8.3.0-6) 8.3.0
->
-> Thanks,
-> Leo
->
->> ferar
->>
->> ------------------
->>
->> ferar@barbarian:~/renegade_rk3328/perf_core$ make -j4 ARCH=arm64 ....
->>
->> ....
->>
->> Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/kvm.h'
->> differs from latest version at 'arch/arm64/include/uapi/asm/kvm.h'
->> diff -u tools/arch/arm64/include/uapi/asm/kvm.h
->> arch/arm64/include/uapi/asm/kvm.h
->> Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/mman-common.h'
->> differs from latest version at 'include/uapi/asm-generic/mman-common.h'
->> diff -u tools/include/uapi/asm-generic/mman-common.h
->> include/uapi/asm-generic/mman-common.h
->>
->> Auto-detecting system features:
->> ...                         dwarf: [ on  ]
->> ...            dwarf_getlocations: [ on  ]
->> ...                         glibc: [ on  ]
->> ...                          gtk2: [ OFF ]
->> ...                      libaudit: [ on  ]
->> ...                        libbfd: [ on  ]
->> ...                        libcap: [ on  ]
->> ...                        libelf: [ on  ]
->> ...                       libnuma: [ OFF ]
->> ...        numa_num_possible_cpus: [ OFF ]
->> ...                       libperl: [ OFF ]
->> ...                     libpython: [ OFF ]
->> ...                     libcrypto: [ on  ]
->> ...                     libunwind: [ on  ]
->> ...            libdw-dwarf-unwind: [ on  ]
->> ...                          zlib: [ on  ]
->> ...                          lzma: [ on  ]
->> ...                     get_cpuid: [ OFF ]
->> ...                           bpf: [ on  ]
->> ...                        libaio: [ on  ]
->> ...                       libzstd: [ OFF ]
->> ...        disassembler-four-args: [ on  ]
->>
->> Makefile.config:497: No sys/sdt.h found, no SDT events are defined, please
->> install systemtap-sdt-devel or systemtap-sdt-dev
->>
->> ....
->>
->>    CC       util/dwarf-regs.o
->>    CC       util/unwind-libunwind-local.o
->>    CC       util/unwind-libunwind.o
->>    CC       util/libunwind/arm64.o
->> util/libunwind/arm64.c:20:40: error: no previous prototype for
->> ‘libunwind__arm64_reg_id’ [-Werror=missing-prototypes]
->>   #define LIBUNWIND__ARCH_REG_ID(regnum) libunwind__arm64_reg_id(regnum)
->>                                          ^
->> util/libunwind/../../arch/arm64/util/unwind-libunwind.c:11:5: note: in
->> expansion of macro ‘LIBUNWIND__ARCH_REG_ID’
->>   int LIBUNWIND__ARCH_REG_ID(int regnum)
->>       ^~~~~~~~~~~~~~~~~~~~~~
->>    CC       util/zlib.o
->>    CC       util/lzma.o
->> util/libunwind/arm64.c:20:40: error: redundant redeclaration of
->> ‘libunwind__arm64_reg_id’ [-Werror=redundant-decls]
->>   #define LIBUNWIND__ARCH_REG_ID(regnum) libunwind__arm64_reg_id(regnum)
->>                                          ^
->> /home/ferar/renegade_rk3328/linux-5.4.0-rc1/tools/perf/util/unwind.h:49:5:
->> note: in expansion of macro ‘LIBUNWIND__ARCH_REG_ID’
->>   int LIBUNWIND__ARCH_REG_ID(int regnum);
->>       ^~~~~~~~~~~~~~~~~~~~~~
->> util/libunwind/arm64.c:20:40: note: previous definition of
->> ‘libunwind__arm64_reg_id’ was here
->>   #define LIBUNWIND__ARCH_REG_ID(regnum) libunwind__arm64_reg_id(regnum)
->>                                          ^
->> util/libunwind/../../arch/arm64/util/unwind-libunwind.c:11:5: note: in
->> expansion of macro ‘LIBUNWIND__ARCH_REG_ID’
->>   int LIBUNWIND__ARCH_REG_ID(int regnum)
->>       ^~~~~~~~~~~~~~~~~~~~~~
->>    CC       util/cap.o
->>    CC       util/demangle-java.o
->>    CC       util/demangle-rust.o
->> ....
->>
->> ----------------------------------------------------------------------
->>
->>  From 0c6bf617d5696dda28ecac776c09b3f5b3921526 Mon Sep 17 00:00:00 2001
->> From: ferar achkar <ferarachkar@gmail.com>
->> Date: Tue, 17 Mar 2020 18:15:37 -0400
->> Subject: [PATCH] Fix Arm64 libunwind trivial compile error
->> MIME-Version: 1.0
->> Content-Type: text/plain; charset=UTF-8
->> Content-Transfer-Encoding: 8bit
->>
->> fix trivial compile error 'no previous prototype for
->> ‘libunwind__arm64_reg_id’' [-Werror=missing-prototypes], this error
->> related to including userspace bundled 'unwind.h' instead of using
->> perf's local version.
->> ---
->>   tools/perf/util/libunwind/arm64.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/libunwind/arm64.c b/tools/perf/util/libunwind/arm64.c
->> index 6b4e5a089..fd26e612d 100644
->> --- a/tools/perf/util/libunwind/arm64.c
->> +++ b/tools/perf/util/libunwind/arm64.c
->> @@ -21,7 +21,7 @@
->>   #define LIBUNWIND__ARCH_REG_IP PERF_REG_ARM64_PC
->>   #define LIBUNWIND__ARCH_REG_SP PERF_REG_ARM64_SP
->>   
->> -#include "unwind.h"
->> +#include "../../util/unwind.h"
->>   #include "libunwind-aarch64.h"
->>   #include <../../../../arch/arm64/include/uapi/asm/perf_regs.h>
->>   #include "../../arch/arm64/util/unwind-libunwind.c"
->> -- 
->> 2.17.1
->>
-
---------------D3E40FFF4EC395A06ADDCDDF
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-Fix-Arm64-libunwind-trivial-compile-error.patch"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: attachment;
- filename="0001-Fix-Arm64-libunwind-trivial-compile-error.patch"
-
-From 0c6bf617d5696dda28ecac776c09b3f5b3921526 Mon Sep 17 00:00:00 2001
-From: ferar achkar <ferarachkar@gmail.com>
-Date: Tue, 17 Mar 2020 18:15:37 -0400
-Subject: [PATCH] Fix Arm64 libunwind trivial compile error
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-fix trivial compile error 'no previous prototype for
-‘libunwind__arm64_reg_id’' [-Werror=missing-prototypes], this error
-related to including userspace bundled 'unwind.h' instead of using
-perf's local version.
+Reported-by: Linh Pham <phaml@us.ibm.com>
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Signed-off-by: George Wilson <gcwilson@linux.ibm.com>
+Tested-by: Linh Pham <phaml@us.ibm.com>
+Fixes: 132f76294744 ("Add new device driver to support IBM vTPM")
 ---
- tools/perf/util/libunwind/arm64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/tpm/tpm_ibmvtpm.c | 136 ++++++++++++++++++---------------
+ 1 file changed, 73 insertions(+), 63 deletions(-)
 
-diff --git a/tools/perf/util/libunwind/arm64.c b/tools/perf/util/libunwind/arm64.c
-index 6b4e5a089..fd26e612d 100644
---- a/tools/perf/util/libunwind/arm64.c
-+++ b/tools/perf/util/libunwind/arm64.c
-@@ -21,7 +21,7 @@
- #define LIBUNWIND__ARCH_REG_IP PERF_REG_ARM64_PC
- #define LIBUNWIND__ARCH_REG_SP PERF_REG_ARM64_SP
+diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
+index 78cc52690177..d097d47e0efa 100644
+--- a/drivers/char/tpm/tpm_ibmvtpm.c
++++ b/drivers/char/tpm/tpm_ibmvtpm.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2012 IBM Corporation
++ * Copyright (C) 2012-2020 IBM Corporation
+  *
+  * Author: Ashley Lai <ashleydlai@gmail.com>
+  *
+@@ -133,6 +133,64 @@ static int tpm_ibmvtpm_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+ 	return len;
+ }
  
--#include "unwind.h"
-+#include "../../util/unwind.h"
- #include "libunwind-aarch64.h"
- #include <../../../../arch/arm64/include/uapi/asm/perf_regs.h>
- #include "../../arch/arm64/util/unwind-libunwind.c"
++/**
++ * ibmvtpm_crq_send_init - Send a CRQ initialize message
++ * @ibmvtpm:	vtpm device struct
++ *
++ * Return:
++ *	0 on success.
++ *	Non-zero on failure.
++ */
++static int ibmvtpm_crq_send_init(struct ibmvtpm_dev *ibmvtpm)
++{
++	int rc;
++
++	rc = ibmvtpm_send_crq_word(ibmvtpm->vdev, INIT_CRQ_CMD);
++	if (rc != H_SUCCESS)
++		dev_err(ibmvtpm->dev,
++			"ibmvtpm_crq_send_init failed rc=%d\n", rc);
++
++	return rc;
++}
++
++/**
++ * tpm_ibmvtpm_resume - Resume from suspend
++ *
++ * @dev:	device struct
++ *
++ * Return: Always 0.
++ */
++static int tpm_ibmvtpm_resume(struct device *dev)
++{
++	struct tpm_chip *chip = dev_get_drvdata(dev);
++	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
++	int rc = 0;
++
++	do {
++		if (rc)
++			msleep(100);
++		rc = plpar_hcall_norets(H_ENABLE_CRQ,
++					ibmvtpm->vdev->unit_address);
++	} while (rc == H_IN_PROGRESS || rc == H_BUSY || H_IS_LONG_BUSY(rc));
++
++	if (rc) {
++		dev_err(dev, "Error enabling ibmvtpm rc=%d\n", rc);
++		return rc;
++	}
++
++	rc = vio_enable_interrupts(ibmvtpm->vdev);
++	if (rc) {
++		dev_err(dev, "Error vio_enable_interrupts rc=%d\n", rc);
++		return rc;
++	}
++
++	rc = ibmvtpm_crq_send_init(ibmvtpm);
++	if (rc)
++		dev_err(dev, "Error send_init rc=%d\n", rc);
++
++	return rc;
++}
++
+ /**
+  * tpm_ibmvtpm_send() - Send a TPM command
+  * @chip:	tpm chip struct
+@@ -146,6 +204,7 @@ static int tpm_ibmvtpm_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
+ {
+ 	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
++	bool retry = true;
+ 	int rc, sig;
+ 
+ 	if (!ibmvtpm->rtce_buf) {
+@@ -179,18 +238,27 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
+ 	 */
+ 	ibmvtpm->tpm_processing_cmd = true;
+ 
++again:
+ 	rc = ibmvtpm_send_crq(ibmvtpm->vdev,
+ 			IBMVTPM_VALID_CMD, VTPM_TPM_COMMAND,
+ 			count, ibmvtpm->rtce_dma_handle);
+ 	if (rc != H_SUCCESS) {
++		/*
++		 * H_CLOSED can be returned after LPM resume.  Call
++		 * tpm_ibmvtpm_resume() to re-enable the CRQ then retry
++		 * ibmvtpm_send_crq() once before failing.
++		 */
++		if (rc == H_CLOSED && retry) {
++			tpm_ibmvtpm_resume(ibmvtpm->dev);
++			retry = false;
++			goto again;
++		}
+ 		dev_err(ibmvtpm->dev, "tpm_ibmvtpm_send failed rc=%d\n", rc);
+-		rc = 0;
+ 		ibmvtpm->tpm_processing_cmd = false;
+-	} else
+-		rc = 0;
++	}
+ 
+ 	spin_unlock(&ibmvtpm->rtce_lock);
+-	return rc;
++	return 0;
+ }
+ 
+ static void tpm_ibmvtpm_cancel(struct tpm_chip *chip)
+@@ -268,26 +336,6 @@ static int ibmvtpm_crq_send_init_complete(struct ibmvtpm_dev *ibmvtpm)
+ 	return rc;
+ }
+ 
+-/**
+- * ibmvtpm_crq_send_init - Send a CRQ initialize message
+- * @ibmvtpm:	vtpm device struct
+- *
+- * Return:
+- *	0 on success.
+- *	Non-zero on failure.
+- */
+-static int ibmvtpm_crq_send_init(struct ibmvtpm_dev *ibmvtpm)
+-{
+-	int rc;
+-
+-	rc = ibmvtpm_send_crq_word(ibmvtpm->vdev, INIT_CRQ_CMD);
+-	if (rc != H_SUCCESS)
+-		dev_err(ibmvtpm->dev,
+-			"ibmvtpm_crq_send_init failed rc=%d\n", rc);
+-
+-	return rc;
+-}
+-
+ /**
+  * tpm_ibmvtpm_remove - ibm vtpm remove entry point
+  * @vdev:	vio device struct
+@@ -400,44 +448,6 @@ static int ibmvtpm_reset_crq(struct ibmvtpm_dev *ibmvtpm)
+ 				  ibmvtpm->crq_dma_handle, CRQ_RES_BUF_SIZE);
+ }
+ 
+-/**
+- * tpm_ibmvtpm_resume - Resume from suspend
+- *
+- * @dev:	device struct
+- *
+- * Return: Always 0.
+- */
+-static int tpm_ibmvtpm_resume(struct device *dev)
+-{
+-	struct tpm_chip *chip = dev_get_drvdata(dev);
+-	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
+-	int rc = 0;
+-
+-	do {
+-		if (rc)
+-			msleep(100);
+-		rc = plpar_hcall_norets(H_ENABLE_CRQ,
+-					ibmvtpm->vdev->unit_address);
+-	} while (rc == H_IN_PROGRESS || rc == H_BUSY || H_IS_LONG_BUSY(rc));
+-
+-	if (rc) {
+-		dev_err(dev, "Error enabling ibmvtpm rc=%d\n", rc);
+-		return rc;
+-	}
+-
+-	rc = vio_enable_interrupts(ibmvtpm->vdev);
+-	if (rc) {
+-		dev_err(dev, "Error vio_enable_interrupts rc=%d\n", rc);
+-		return rc;
+-	}
+-
+-	rc = ibmvtpm_crq_send_init(ibmvtpm);
+-	if (rc)
+-		dev_err(dev, "Error send_init rc=%d\n", rc);
+-
+-	return rc;
+-}
+-
+ static bool tpm_ibmvtpm_req_canceled(struct tpm_chip *chip, u8 status)
+ {
+ 	return (status == 0);
 -- 
-2.17.1
+2.24.1
 
-
---------------D3E40FFF4EC395A06ADDCDDF--
