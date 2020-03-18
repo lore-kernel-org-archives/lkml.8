@@ -6,93 +6,123 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8902C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67187C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B4320753
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCB420753
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgCRRAO (ORCPT
+        id S1726975AbgCRRCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:00:14 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:38355 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726638AbgCRRAO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:00:14 -0400
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 18 Mar 2020 10:00:13 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg04-sd.qualcomm.com with ESMTP; 18 Mar 2020 10:00:10 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id DDA914BAA; Wed, 18 Mar 2020 10:00:10 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 10:00:10 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Shiyan <shc_work@mail.ru>
-Subject: Re: [PATCH v9 04/11] pwm: clps711x: Use 64-bit division macro
-Message-ID: <20200318170010.GA26509@codeaurora.org>
-References: <cover.1584473399.git.gurus@codeaurora.org>
- <587f9ccae68ad7e1ce97fa8da6037292af1a5095.1584473399.git.gurus@codeaurora.org>
- <CAK8P3a2Hi_AoRC3g7qKth4e_Y1jZrbBDhWUb3YPZm10FWMu-ig@mail.gmail.com>
- <20200317233003.GA11350@codeaurora.org>
- <CAK8P3a2a-QEwFfDE5FbFCVdDS+t9jirgbHWJQQv0i5_OMCYXJg@mail.gmail.com>
+        Wed, 18 Mar 2020 13:02:49 -0400
+Received: from mga03.intel.com ([134.134.136.65]:13839 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726638AbgCRRCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 13:02:48 -0400
+IronPort-SDR: GW29u5MqL4Q8TtV2DWHAvHtSWbFdDCJfe1XKgdYVSbJN22Yc/+XM7KNr8Dm4aXAINDi256qQpf
+ Dxz2kSePep/Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 10:02:41 -0700
+IronPort-SDR: lvUm8X+7IdYPGh9PtUcxWuWLT07MuzXrRMbkxoFh+siGmQn+69FHUjG/Eogg9Axe8F5cIsxP9w
+ y4hOLekTV9tA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
+   d="scan'208";a="244885698"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga003.jf.intel.com with ESMTP; 18 Mar 2020 10:02:41 -0700
+Date:   Wed, 18 Mar 2020 10:02:41 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        John Haxby <john.haxby@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH v2 31/32] KVM: nVMX: Don't flush TLB on nested VM
+ transition with EPT enabled
+Message-ID: <20200318170241.GJ24357@linux.intel.com>
+References: <20200317045238.30434-1-sean.j.christopherson@intel.com>
+ <20200317045238.30434-32-sean.j.christopherson@intel.com>
+ <97f91b27-65ac-9187-6b60-184e1562d228@redhat.com>
+ <20200317182251.GD12959@linux.intel.com>
+ <218d4dbd-20f1-5bf8-ca44-c53dd9345dab@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a2a-QEwFfDE5FbFCVdDS+t9jirgbHWJQQv0i5_OMCYXJg@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <218d4dbd-20f1-5bf8-ca44-c53dd9345dab@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 10:49:34AM +0100, Arnd Bergmann wrote:
-> On Wed, Mar 18, 2020 at 12:30 AM Guru Das Srinagesh
-> <gurus@codeaurora.org> wrote:
-> >
-> > On Tue, Mar 17, 2020 at 11:22:06PM +0100, Arnd Bergmann wrote:
-> > > > diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
-> > > > index 924d39a..ba9500a 100644
-> > > > --- a/drivers/pwm/pwm-clps711x.c
-> > > > +++ b/drivers/pwm/pwm-clps711x.c
-> > > > @@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
-> > > >  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
-> > > >  {
-> > > >         /* Duty cycle 0..15 max */
-> > > > -       return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-> > > > +       return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
-> > > >  }
-> > >
-> > > Is it actually going to exceed U32_MAX? If not, a type cast may be
-> > > more appropriate here than the expensive 64-bit division.
-> >
-> > With the final change in this patch series, the framework will support
-> > periods that exceed U32_MAX. My concern is that using a typecast would
-> > mean that in those cases, this driver will not support > U32_MAX values.
-> > Using DIV64_U64_ROUND_CLOSEST makes the driver future proof and able to
-> > handle > U32_MAX values correctly. What do you think?
+On Wed, Mar 18, 2020 at 11:36:04AM +0100, Paolo Bonzini wrote:
+> On 17/03/20 19:22, Sean Christopherson wrote:
+> > On Tue, Mar 17, 2020 at 06:18:37PM +0100, Paolo Bonzini wrote:
+> >> On 17/03/20 05:52, Sean Christopherson wrote:
+> >>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> >>> index d816f1366943..a77eab5b0e8a 100644
+> >>> --- a/arch/x86/kvm/vmx/nested.c
+> >>> +++ b/arch/x86/kvm/vmx/nested.c
+> >>> @@ -1123,7 +1123,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
+> >>>  	}
+> >>>  
+> >>>  	if (!nested_ept)
+> >>> -		kvm_mmu_new_cr3(vcpu, cr3, false);
+> >>> +		kvm_mmu_new_cr3(vcpu, cr3, enable_ept);
+> >>
+> >> Even if enable_ept == false, we could have already scheduled or flushed
+> >> the TLB soon due to one of 1) nested_vmx_transition_tlb_flush 2)
+> >> vpid_sync_context in prepare_vmcs02 3) the processor doing it for
+> >> !enable_vpid.
+> >>
+> >> So for !enable_ept only KVM_REQ_MMU_SYNC is needed, not
+> >> KVM_REQ_TLB_FLUSH_CURRENT I think.  Worth adding a TODO?
+> > 
+> > Now that you point it out, I think it makes sense to unconditionally pass
+> > %true here, i.e. rely 100% on nested_vmx_transition_tlb_flush() to do the
+> > right thing.
 > 
-> Ah, so if the period can actually be larger than U32_MAX, you need to
-> handle that case. However, I see that the divident in this code (v * 0xf)
-> is still a 32-bit number, so a correct and efficient implementation could be
-> 
->    if (pwm->args.period > (UINT_MAX / 0xf))
+> Why doesn't it need KVM_REQ_MMU_SYNC either?
 
-Shouldn't the if condition be the following? Or am I missing
-something here?
+Hmm, so if L1 is using VPID, we're ok without a sync.  Junaid's INVVPID
+patch earlier in this series ensures cached roots won't retain unsync'd
+SPTEs when L1 does INVVPID.  If L1 doesn't flush L2's TLB on VM-Entry, it
+can't expect L2 to recognize changes in the PTEs since the last INVVPID.
 
-     if (pwm->args.period > (UINT_MAX / (v * 0xf)))
-     					^^^^^^^^^
+Per Intel's SDM, INVLPG (and INVPCID) are only required to invalidate
+entries for the current VPID, i.e. virtual VPID=0 when executed by L1.
 
->           return 0;
->    return DIV_ROUND_CLOSEST(v * 0xf, (u32)pwm->args.period);
+  Operations that architecturally invalidate entries in the TLBs or
+  paging-structure caches independent of VMX operation (e.g., the INVLPG and
+  INVPCID instructions) invalidate linear mappings and combined mappings.
+  They are required to do so only for the current VPID.
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Thank you.
+If L1 isn't using VPID and L0 isn't using EPT, then a sync is required as
+L1 would expect PTE changes to be recognized without an explicit INVLPG
+prior to VM-Ennter.
 
-Guru Das.
+So something like this?
+
+	if (!nested_ept)
+		kvm_mmu_new_cr3(vcpu, cr3, enable_ept ||
+					   nested_cpu_has_vpid(vmcs12));
+
+The KVM_REQ_TLB_FLUSH_CURRENT request would be redundant with
+nested_vmx_transition_tlb_flush() when VPID is enabled, and is a (big) nop
+when VPID is disabled.  In either case the overhead is negligible.  Ideally
+this logic would tie into nested_vmx_transition_tlb_flush() in some way,
+but making that happen may be wishful thinking.
+
+> All this should be in a comment as well, of course.
+
+Heh, in hindsight that's painfully obvious.
