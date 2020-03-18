@@ -2,113 +2,67 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2DCC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB83C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F45920738
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:05:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HUjlpHPw"
+	by mail.kernel.org (Postfix) with ESMTP id 6EE7620738
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgCRCFl (ORCPT
+        id S1727259AbgCRCIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 22:05:41 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42701 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgCRCFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 22:05:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48htfp56vwz9sNg;
-        Wed, 18 Mar 2020 13:05:38 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584497139;
-        bh=ODSzlO0kO5hWcTZeHNNs9tVOUUI5xO0GzBFK5kFt5/E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HUjlpHPwdybPdv0+gf/57bWMC30tGK5rYLCvx1CbKgusB/GCWuCVoS8TJqxZu4Q8d
-         LZVTnZAgdfr1wlw525WTsFZZC4YP5I8tw1s+/Kv9iqq+GCX90VI0w59Osk15Y4zSI8
-         0xq4woXAcA9d3y1zWdwIuxZJ8T8xLx+JTeuxMVFs1hDOkCldG0oPxAc3CmPCvhZONm
-         thnXdT6qeHI+Mp1BFmz326IXFTWFi3bw4flvnaUdgB5DNxvBmS/8HpzD/rYqtyqLvO
-         5Uq1BPi5OCtobyFeXGQWDhVlPvZ/ntpETqgBowdTFX6M2ftvFtuc/J5v9U06/Nn7JG
-         zBhjXUt3G3wow==
-Date:   Wed, 18 Mar 2020 13:05:31 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: Re: linux-next: build warning after merge of the mlx5-next tree
-Message-ID: <20200318130531.1df149c7@canb.auug.org.au>
-In-Reply-To: <20200316103913.659d3a5e@canb.auug.org.au>
-References: <20200316103913.659d3a5e@canb.auug.org.au>
+        Tue, 17 Mar 2020 22:08:46 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:11714 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726229AbgCRCIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 22:08:45 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AC76B3D0B051E3C9A6F8;
+        Wed, 18 Mar 2020 10:08:40 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 18 Mar 2020 10:08:25 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+CC:     YueHaibing <yuehaibing@huawei.com>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] crypto: ccree - remove duplicated include from cc_aead.c
+Date:   Wed, 18 Mar 2020 02:00:40 +0000
+Message-ID: <20200318020040.175704-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4RF4C6asXy+CYm2goqxefSy";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4RF4C6asXy+CYm2goqxefSy
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Remove duplicated include.
 
-Hi all,
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/crypto/ccree/cc_aead.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-On Mon, 16 Mar 2020 10:39:13 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi all,
->=20
-> After merging the mlx5-next tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
->=20
-> In file included from include/linux/printk.h:331,
->                  from include/linux/kernel.h:15,
->                  from drivers/net/ethernet/mellanox/mlx5/core/mr.c:33:
-> drivers/net/ethernet/mellanox/mlx5/core/mr.c: In function 'mlx5_core_crea=
-te_mkey':
-> include/linux/dynamic_debug.h:157:25: warning: 'key' may be used uninitia=
-lized in this function [-Wmaybe-uninitialized]
->   157 |  _dynamic_func_call(fmt,__dynamic_dev_dbg,   \
->       |                         ^~~~~~~~~~~~~~~~~
-> drivers/net/ethernet/mellanox/mlx5/core/mr.c:47:5: note: 'key' was declar=
-ed here
->    47 |  u8 key;
->       |     ^~~
->=20
-> Probably introduced by commit
->=20
->   fc6a9f86f08a ("{IB,net}/mlx5: Assign mkey variant in mlx5_ib only")
+diff --git a/drivers/crypto/ccree/cc_aead.c b/drivers/crypto/ccree/cc_aead.c
+index 875fa79a03eb..1cf51edbc4b9 100644
+--- a/drivers/crypto/ccree/cc_aead.c
++++ b/drivers/crypto/ccree/cc_aead.c
+@@ -9,7 +9,6 @@
+ #include <crypto/gcm.h>
+ #include <linux/rtnetlink.h>
+ #include <crypto/internal/des.h>
+-#include <linux/rtnetlink.h>
+ #include "cc_driver.h"
+ #include "cc_buffer_mgr.h"
+ #include "cc_aead.h"
 
-This warning now appears in the rdma tree.
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/4RF4C6asXy+CYm2goqxefSy
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5xgesACgkQAVBC80lX
-0Gw/YQgAoRxC9pa50M/cNJWv3ZI9Hk7i1j2lgpe16D+mPWcF7wo1qQoY+U45EWfG
-Rxcx84wGr0xZen1LEor0L42jwxYZt4+EvZU65PIZtbHMwuNqjNJTnPsYyVkZnowu
-WSnOe5zjNI6DKqL5Rh5aABGLek08zccLhprP5iBmeVliuxyRqK0ThwMThzP02f28
-6Wnc3V6DQM1Gppczpn3eH4q0WGWXigIW77oI/9SuZ+pSQtXPa5o2beANQY2U0Ofw
-GKgtZsRXDHERwH2XyeWp42M4YUMnXXFPYItnB001Oxfx22+KRd0KkSi2IypOqscv
-88F6mdht1ORR4StPgz4ApeM1bGKHaw==
-=apSN
------END PGP SIGNATURE-----
-
---Sig_/4RF4C6asXy+CYm2goqxefSy--
