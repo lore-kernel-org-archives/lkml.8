@@ -2,237 +2,135 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72DBC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B28C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA80B20674
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF8F2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:48:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a53AcudG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbgCRJp5 (ORCPT
+        id S1727474AbgCRJsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:45:57 -0400
-Received: from mga03.intel.com ([134.134.136.65]:45501 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727483AbgCRJp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:45:57 -0400
-IronPort-SDR: Qc4Y89vwvpIC0vCgvBNc2s1V7BL/xNMxHEfoXtEgXW5kcFDcwwZqK5tQOFwy8UOKl6X/t4ckQZ
- Corccu82C3xg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 02:45:56 -0700
-IronPort-SDR: OxdqrP/2H6YOzj6Ef1yxaKxBJR/PhT1/9RETQqlGCJmxwtgUSR7b0JWE5hqy4IxPCyfcbEHUl1
- Fv1dtK9QWMOw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,566,1574150400"; 
-   d="scan'208";a="238147863"
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Mar 2020 02:45:54 -0700
-Date:   Wed, 18 Mar 2020 17:24:51 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH v2 5/7] fpga: dfl: fme: add interrupt support for global
- error reporting
-Message-ID: <20200318092450.GA8501@hao-dev>
-References: <1584332222-26652-1-git-send-email-yilun.xu@intel.com>
- <1584332222-26652-6-git-send-email-yilun.xu@intel.com>
+        Wed, 18 Mar 2020 05:48:31 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39568 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgCRJsa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 05:48:30 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f7so2456831wml.4;
+        Wed, 18 Mar 2020 02:48:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kZWoyvaHJSGd73srWJBm6fxD7x19530bbjXoByZ4qR4=;
+        b=a53AcudGGz6w3yGUUaIkUKc/2DADUIGgaeiEFOHYu9km7wuSMjqVT5ePukdJLlUj5r
+         zYc6tYkJBqLGvRFNS7niMFtFmLS3N5vB7Ba05TkOdtmfDcbjx8Q0OE2TbwXbgzTXjGCz
+         mhQI7z80kTOVifzTscM+FNwXEZCZyukNqWl64oqNac6SJYLiI/+SKw4i0ogJdP3/CzV8
+         V6mgZ+i4BinPE5YYsA1/iaA6GwxyZVvDoCTuX2O7/Nu3As8+EJIe7fs7ieXe6Sx52+qc
+         gt3MELJ/edUQhxUp/ycvxsE9kosBLKwuH4UsKq9uAW238nV7HnCO/xfrBV73mov2Asoy
+         4Owg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kZWoyvaHJSGd73srWJBm6fxD7x19530bbjXoByZ4qR4=;
+        b=V5Jq+7l0pAZL2y/pfcwM0aJwmxf0L+j7CW9ZOED/RcvV3wmQyKzVJVJGmVMk/wUlYY
+         w6un0x6FOC2Z8sJatk/JqHIJff3SknSTgGh+R1Txwu2547L/70fw4I+6RcxF55zYN8r6
+         /AwYvO8CBAkcmKZitxWcaMRSgbC3kucumVOphTPlDiZ5um0XMXEydVQIxyj2vV2GAveB
+         Vnf6fKt2RD5Nk6tyBcoedy/U+Olmm6RMlL2pM+m1yZNH1Tw0Ky8B4rtrVoPm4GjWy8UF
+         c6X7oeB3a58etKnVgK/QAtPk0aFB4WpMkXC1JutdVamYyBeNWZKa4SSk0C/VmEryGJGX
+         9I7A==
+X-Gm-Message-State: ANhLgQ1goLyBGLrmCdByDHHdzYFE4QC5gsRWgWQ7HzJNEMP6k397rQCu
+        ZcLue+Cd1KxTkNnyf/mACbd4KuDcz6rm/Lz06dc=
+X-Google-Smtp-Source: ADFU+vvt+aQ0K45DCFto4tqOEeYoZHwvLuJtLFWDetsV/skwz/0PCiKBEkPYkP6l0v7Mjcsa5dIpLDMp1MUZS8lonn0=
+X-Received: by 2002:a1c:f615:: with SMTP id w21mr4276473wmc.152.1584524908962;
+ Wed, 18 Mar 2020 02:48:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584332222-26652-6-git-send-email-yilun.xu@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200318083120.13805-1-zhang.lyra@gmail.com> <20200318083120.13805-2-zhang.lyra@gmail.com>
+ <CADBw62rSE+MrQB_HSOwVNos_W=x-mHMEuVrZN=jU0Yt1KXFGvw@mail.gmail.com>
+In-Reply-To: <CADBw62rSE+MrQB_HSOwVNos_W=x-mHMEuVrZN=jU0Yt1KXFGvw@mail.gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Wed, 18 Mar 2020 17:47:52 +0800
+Message-ID: <CAAfSe-u-ui3SP8vnNPMuKHhB-iMCscc4OE16hoDWZ8xzsie+vQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] serial: sprd: cleanup the sprd_port for error case
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 16, 2020 at 12:17:00PM +0800, Xu Yilun wrote:
-> Error reporting interrupt is very useful to notify users that some
-> errors are detected by the hardware. Once users are notified, they
-> could query hardware logged error states, no need to continuously
-> poll on these states.
-> 
-> This patch follows the common DFL interrupt notification and handling
-> mechanism. And it implements two ioctls below for user to query
-> number of irqs supported, and set/unset interrupt triggers.
-> 
->  Ioctls:
->  * DFL_FPGA_FME_ERR_GET_IRQ_NUM
->    get the number of irqs, which is used to determine whether/how many
->    interrupts fme error reporting feature supports.
-> 
->  * DFL_FPGA_FME_ERR_SET_IRQ
->    set/unset given eventfds as fme error reporting interrupt triggers.
-> 
-> Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> ----
-> v2: use DFL_FPGA_FME_ERR_GET_IRQ_NUM instead of
->     DFL_FPGA_FME_ERR_GET_INFO
->     Delete flags field for DFL_FPGA_FME_ERR_SET_IRQ
-> ---
->  drivers/fpga/dfl-fme-error.c  | 66 +++++++++++++++++++++++++++++++++++++++++++
->  drivers/fpga/dfl-fme-main.c   |  6 ++++
->  include/uapi/linux/fpga-dfl.h | 23 +++++++++++++++
->  3 files changed, 95 insertions(+)
-> 
-> diff --git a/drivers/fpga/dfl-fme-error.c b/drivers/fpga/dfl-fme-error.c
-> index f897d41..42853e6 100644
-> --- a/drivers/fpga/dfl-fme-error.c
-> +++ b/drivers/fpga/dfl-fme-error.c
-> @@ -16,6 +16,7 @@
->   */
->  
->  #include <linux/uaccess.h>
-> +#include <linux/fpga-dfl.h>
->  
->  #include "dfl.h"
->  #include "dfl-fme.h"
-> @@ -348,6 +349,70 @@ static void fme_global_err_uinit(struct platform_device *pdev,
->  	fme_err_mask(&pdev->dev, true);
->  }
->  
-> +static long
-> +fme_global_err_get_num_irqs(struct platform_device *pdev,
-> +			    struct dfl_feature *feature, unsigned long arg)
-> +{
-> +	if (copy_to_user((void __user *)arg, &feature->nr_irqs,
-> +			 sizeof(feature->nr_irqs)))
-> +		return -EFAULT;
+On Wed, 18 Mar 2020 at 17:16, Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> On Wed, Mar 18, 2020 at 4:31 PM Chunyan Zhang <zhang.lyra@gmail.com> wrot=
+e:
+> >
+> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> >
+> > It would be better to cleanup the sprd_port for the device before
+> > return error.
+> >
+> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > ---
+> >  drivers/tty/serial/sprd_serial.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd=
+_serial.c
+> > index 9f8c14ff6454..54477de9822f 100644
+> > --- a/drivers/tty/serial/sprd_serial.c
+> > +++ b/drivers/tty/serial/sprd_serial.c
+> > @@ -1204,8 +1204,10 @@ static int sprd_probe(struct platform_device *pd=
+ev)
+> >         up->has_sysrq =3D IS_ENABLED(CONFIG_SERIAL_SPRD_CONSOLE);
+> >
+> >         ret =3D sprd_clk_init(up);
+> > -       if (ret)
+> > +       if (ret) {
+> > +               sprd_port[index] =3D NULL;
+>
+> =E5=A6=82=E6=9E=9C=E6=88=91=E4=BB=AC=E5=BC=BA=E5=88=B6=E4=BD=BF=E7=94=A8a=
+lias, =E5=88=99=E8=BF=99=E9=87=8C=E5=BA=94=E8=AF=A5=E4=B9=9F=E6=97=A0=E9=9C=
+=80=E6=B8=85=E9=99=A4=E4=BA=86=EF=BC=8C=E5=9B=A0=E4=B8=BA=E4=B8=80=E8=BF=9B=
+probe=E5=B0=B1=E4=BC=9A=E7=BB=99=E5=AE=83=E9=87=8D=E6=96=B0=E8=B5=8B=E5=80=
+=BC=E3=80=82 =E8=BF=98=E6=98=AF=E6=88=91=E6=BC=8F=E4=BA=86=E4=BB=80=E4=B9=
+=88=EF=BC=9F
 
-Per my understanding, if it returns more than 1 to userspace, then how should
-userspce deal with it? or we can add some code (maybe in framework parsing code)
-to support 1 interrupt only for now, as all existing hardwares only use 1 irq
-for error reporing?
+=E6=98=AF=E4=B8=8D=E9=9C=80=E8=A6=81, =E6=89=80=E4=BB=A5=E6=88=91comment me=
+ssage=E9=87=8C=E5=86=99=E7=9A=84=E6=98=AFit would be better...
 
-Hao
+=E6=88=91=E8=A7=89=E5=BE=97=E6=98=AF=E4=B8=8B=E9=9D=A2=E8=BF=94=E5=9B=9E=E7=
+=9A=84=E5=9C=B0=E6=96=B9=E9=83=BD=E6=B8=85=E7=90=86=E4=BA=86, =E8=BF=99=E9=
+=87=8C=E4=B9=9F=E6=B8=85=E7=90=86=E6=8E=89
 
-> +
-> +	return 0;
-> +}
-> +
-> +static long
-> +fme_global_err_set_irq(struct platform_device *pdev,
-> +		       struct dfl_feature *feature, unsigned long arg)
-> +{
-> +	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> +	struct dfl_fpga_irq_set hdr;
-> +	s32 *fds;
-> +	long ret;
-> +
-> +	if (!feature->nr_irqs)
-> +		return -ENOENT;
-> +
-> +	if (copy_from_user(&hdr, (void __user *)arg, sizeof(hdr)))
-> +		return -EFAULT;
-> +
-> +	if (!hdr.count || (hdr.start + hdr.count > feature->nr_irqs) ||
-> +	    (hdr.start + hdr.count < hdr.start))
-> +		return -EINVAL;
-> +
-> +	fds = memdup_user((void __user *)(arg + sizeof(hdr)),
-> +			  hdr.count * sizeof(s32));
-> +	if (IS_ERR(fds))
-> +		return PTR_ERR(fds);
-> +
-> +	mutex_lock(&pdata->lock);
-> +	ret = dfl_fpga_set_irq_triggers(feature, hdr.start, hdr.count, fds);
-> +	mutex_unlock(&pdata->lock);
-> +
-> +	kfree(fds);
-> +	return ret;
-> +}
-> +
-> +static long
-> +fme_global_error_ioctl(struct platform_device *pdev,
-> +		       struct dfl_feature *feature,
-> +		       unsigned int cmd, unsigned long arg)
-> +{
-> +	long ret = -ENODEV;
-> +
-> +	switch (cmd) {
-> +	case DFL_FPGA_FME_ERR_GET_IRQ_NUM:
-> +		ret = fme_global_err_get_num_irqs(pdev, feature, arg);
-> +		break;
-> +	case DFL_FPGA_FME_ERR_SET_IRQ:
-> +		ret = fme_global_err_set_irq(pdev, feature, arg);
-> +		break;
-> +	default:
-> +		dev_dbg(&pdev->dev, "%x cmd not handled", cmd);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  const struct dfl_feature_id fme_global_err_id_table[] = {
->  	{.id = FME_FEATURE_ID_GLOBAL_ERR,},
->  	{0,}
-> @@ -356,4 +421,5 @@ const struct dfl_feature_id fme_global_err_id_table[] = {
->  const struct dfl_feature_ops fme_global_err_ops = {
->  	.init = fme_global_err_init,
->  	.uinit = fme_global_err_uinit,
-> +	.ioctl = fme_global_error_ioctl,
->  };
-> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> index 56d720c..ab3722d 100644
-> --- a/drivers/fpga/dfl-fme-main.c
-> +++ b/drivers/fpga/dfl-fme-main.c
-> @@ -616,11 +616,17 @@ static int fme_release(struct inode *inode, struct file *filp)
->  {
->  	struct dfl_feature_platform_data *pdata = filp->private_data;
->  	struct platform_device *pdev = pdata->dev;
-> +	struct dfl_feature *feature;
->  
->  	dev_dbg(&pdev->dev, "Device File Release\n");
->  
->  	mutex_lock(&pdata->lock);
->  	dfl_feature_dev_use_end(pdata);
-> +
-> +	if (!dfl_feature_dev_use_count(pdata))
-> +		dfl_fpga_dev_for_each_feature(pdata, feature)
-> +			dfl_fpga_set_irq_triggers(feature, 0,
-> +						  feature->nr_irqs, NULL);
->  	mutex_unlock(&pdata->lock);
->  
->  	return 0;
-> diff --git a/include/uapi/linux/fpga-dfl.h b/include/uapi/linux/fpga-dfl.h
-> index ced859d..dc8d370 100644
-> --- a/include/uapi/linux/fpga-dfl.h
-> +++ b/include/uapi/linux/fpga-dfl.h
-> @@ -223,4 +223,27 @@ struct dfl_fpga_fme_port_pr {
->   */
->  #define DFL_FPGA_FME_PORT_ASSIGN     _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 2, int)
->  
-> +/**
-> + * DFL_FPGA_FME_ERR_GET_IRQ_NUM - _IOR(DFL_FPGA_MAGIC, DFL_FME_BASE + 3,
-> + *							__u32 num_irqs)
-> + *
-> + * Get the number of irqs supported by the fpga fme error reporting private
-> + * feature.
-> + * Return: 0 on success, -errno on failure.
-> + */
-> +#define DFL_FPGA_FME_ERR_GET_IRQ_NUM	_IOR(DFL_FPGA_MAGIC,	\
-> +					     DFL_FME_BASE + 3, __u32)
-> +
-> +/**
-> + * DFL_FPGA_FME_ERR_SET_IRQ - _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 4,
-> + *						struct dfl_fpga_irq_set)
-> + *
-> + * Set fpga fme error reporting interrupt trigger if evtfds[n] is valid.
-> + * Unset related interrupt trigger if evtfds[n] is a NULL or negative value.
-> + * Return: 0 on success, -errno on failure.
-> + */
-> +#define DFL_FPGA_FME_ERR_SET_IRQ	_IOW(DFL_FPGA_MAGIC,	\
-> +					     DFL_FME_BASE + 4,	\
-> +					     struct dfl_fpga_irq_set)
-> +
->  #endif /* _UAPI_LINUX_FPGA_DFL_H */
-> -- 
-> 2.7.4
+=E8=A6=81=E4=B9=88=E9=83=BD=E5=8E=BB=E6=8E=89?
+
+
+>
+>
+> >                 return ret;
+> > +       }
+> >
+> >         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >         up->membase =3D devm_ioremap_resource(&pdev->dev, res);
+> > --
+> > 2.20.1
+> >
+>
+>
+> --
+> Baolin Wang
