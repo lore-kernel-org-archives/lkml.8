@@ -2,66 +2,90 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106A7C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5367AC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA8E720777
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB2A20777
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:08:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584565717;
+	bh=Ovh5rchl63BVW/eFK9nsn45vGkmK1FT0ehnpuAHunGM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xkBeMbiBGL0fo89+z58dj/R5x/QRuhglSF4q4DysMEukA6HjUi3mrIrTS2MHUTj4k
+	 NmOpIHO4nOjSpWWGM1/Pd2+5vfcnfctXy+dV67i1UM/6RNT0usmM8N2kDxkfzb4vGz
+	 k4EsNObifF+xDp1hg0gMhJ+LAOKlo8BfUUUpPrYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgCRVIY (ORCPT
+        id S1727474AbgCRUx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:08:24 -0400
-Received: from smtp13-ia5-sp1.mta.salesforce.com ([13.110.78.236]:57701 "EHLO
-        smtp13-ia5-sp1.mta.salesforce.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727525AbgCRVIV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:08:21 -0400
-X-Greylist: delayed 300 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Mar 2020 17:08:21 EDT
-Authentication-Results:  mx2-ia5-sp1.mta.salesforce.com x-tls.subject="/C=US/ST=California/L=San Francisco/O=salesforce.com, inc./OU=0:app;1:ia5;2:ia5-sp1;3:na174;4:prod/CN=na174-app2-2-ia5.ops.sfdc.net"; auth=pass (cipher=ECDHE-RSA-AES256-GCM-SHA384)
-Received: from [10.182.146.28] ([10.182.146.28:58272] helo=na174-app2-2-ia5.ops.sfdc.net)
-        by mx2-ia5-sp1.mta.salesforce.com (envelope-from <lynn.child=infotechmarketz.com__0-1odyhtgbo3jezq@6vq40tkj1n6wtc0n.41tm3s86soaxq53m.7lfbwzx.6g-6pypkeas.na174.bnc.salesforce.com>)
-        (ecelerity 4.2.38.62368 r(Core:release/4.2.38.0)) with ESMTPS (cipher=ECDHE-RSA-AES256-GCM-SHA384
-        subject="/C=US/ST=California/L=San Francisco/O=salesforce.com, inc./OU=0:app;1:ia5;2:ia5-sp1;3:na174;4:prod/CN=na174-app2-2-ia5.ops.sfdc.net") 
-        id 3B/E4-46912-79C827E5; Wed, 18 Mar 2020 21:03:19 +0000
-Date:   Wed, 18 Mar 2020 21:03:19 +0000 (GMT)
-From:   Lynn Child <lynn.child@infotechmarketz.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-ID: <JzZnQ000000000000000000000000000000000000000000000Q7EQHD00x4XmtdoLQ_6IzWfWAcFtww@sfdc.net>
-Subject: SGI Software User List
+        Wed, 18 Mar 2020 16:53:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726757AbgCRUx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:53:58 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18AC22145D;
+        Wed, 18 Mar 2020 20:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584564837;
+        bh=Ovh5rchl63BVW/eFK9nsn45vGkmK1FT0ehnpuAHunGM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xyDefM4PLcFzPFOiahKDEWKNubnbsIKKrC+FgOCMm8SXI1cu0TEUym5Qc5xVGndFZ
+         QfUVwM5bjsx9QB9zZmIp8iUNmSRDirQscZBX+FiBrIeMJQcNZ6Bdl2UHBPKNmel6Ve
+         qqR0rGYbOo6Yk0Ou9GWttb9VP1BSXOP0fNvVwt6g=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 17/73] macsec: add missing attribute validation for port
+Date:   Wed, 18 Mar 2020 16:52:41 -0400
+Message-Id: <20200318205337.16279-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
+References: <20200318205337.16279-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-SFDC-LK: 00D6g000006PypK
-X-SFDC-User: 0056g000003wwAp
-X-Sender: postmaster@salesforce.com
-X-mail_abuse_inquiries: http://www.salesforce.com/company/abuse.jsp
-X-SFDC-TLS-NoRelay: 1
-X-SFDC-Binding: iCBT705cy8bBFz3B
-X-SFDC-EmailCategory: apiMassMail
-X-SFDC-EntityId: 0036g00000FaumE
-X-SFDC-Interface: internal
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Jakub Kicinski <kuba@kernel.org>
 
-I would like to know if you are interested in acquiring contacts of SGI Software user List? 
+[ Upstream commit 31d9a1c524964bac77b7f9d0a1ac140dc6b57461 ]
 
-Data Fields Includes: - Contact Name, Organization Name, Job Title, Website, Email Address, LinkedIn Profile, Telephone Number, Fax Number, Mailing Address, Technology Type, SIC Code, Employee Size, Revenue Size, etc.
+Add missing attribute validation for IFLA_MACSEC_PORT
+to the netlink policy.
 
-Kindly let me know your target criteria, so that I can get back to you with the counts, pricing and samples for your review.
+Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/macsec.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-We also have other Software contact list.
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index afd8b2a082454..9dbe218eed1da 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -2977,6 +2977,7 @@ static const struct device_type macsec_type = {
+ 
+ static const struct nla_policy macsec_rtnl_policy[IFLA_MACSEC_MAX + 1] = {
+ 	[IFLA_MACSEC_SCI] = { .type = NLA_U64 },
++	[IFLA_MACSEC_PORT] = { .type = NLA_U16 },
+ 	[IFLA_MACSEC_ICV_LEN] = { .type = NLA_U8 },
+ 	[IFLA_MACSEC_CIPHER_SUITE] = { .type = NLA_U64 },
+ 	[IFLA_MACSEC_WINDOW] = { .type = NLA_U32 },
+-- 
+2.20.1
 
-Note: - May I send across 5-10 sample for your review? 
-
-Regards,
-Lynn Child 
-Marketing Manager
