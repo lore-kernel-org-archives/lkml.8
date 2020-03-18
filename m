@@ -2,102 +2,124 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F67CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E13C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D30CB2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4F12076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7ZK+pBC"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CV/gd6Gb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgCRMHT (ORCPT
+        id S1726741AbgCRMN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 08:07:19 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34385 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgCRMHT (ORCPT
+        Wed, 18 Mar 2020 08:13:29 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42368 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgCRMN2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:07:19 -0400
-Received: by mail-lj1-f195.google.com with SMTP id s13so26719921ljm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 05:07:18 -0700 (PDT)
+        Wed, 18 Mar 2020 08:13:28 -0400
+Received: by mail-qk1-f195.google.com with SMTP id e11so38143381qkg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 05:13:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=xYab8ZW+PzDc+v6CkQlUDWiUUOqkPWlNCzzCEJq5HBA=;
-        b=O7ZK+pBCI02kadu9Tg3PJiG8b+B1hbYLAI16gxTbPDPDW/oE47ma/pZ+zAn97+Q0tw
-         JhaCTePf0EuSGmRNpq0NGpKmknV7sMTGGz/+/MfLAeNS0A590eZ5gbJ+1I7kmxLrwg5P
-         gzMIBq6PsRtNl56wTlY70rAdn6SlcNTN0+G49HMHWHqaKZN6K2Woe6GQJlwk261of23J
-         TL2dfE1nCXTStvzZQFQjJZ/Shm3ItQErhvdC96l7P+U81Zb5fcqvvYa0DyUzv4Bj6/hY
-         L4UdReiOsLUbj+lr7gSMqZDaoHRJz18yYRZo7Y05GHTBU9N88uJp0mhC71fnRJRj/dv+
-         1lbg==
+        bh=j5lq+ZeR1e5BLS61AhHY/9aQpgtc96UUH7xL5gfZlA4=;
+        b=CV/gd6GbNBkHRzX6JGk52Gu52tpr+Ik38xHSjudsHMrtP3GG0SadQ/ERhtDU7kkGsE
+         JgQEcYrOmU5agISimpX5xfwdM8s+z2RYoYxtH+/EZLht/quMchPcvOZnF+aJDxK1JKAB
+         SFIbYlm7RqIlG6Ym6nJ4AM8uWuMtZ2VSK+DVdULVDkU/TE2VLsxbt4PLXTiL1wxEzmHU
+         fMMLDzeinxdeV4YBUU38jrTyYx73QMmbDvX+wK6I+dusQ13+9ddEWjN0pwn+4s3UGI49
+         oIdENEBzAzVDXSq+LsGLqAc6sdMxQzVD6XbuZdzmV/Vid71g52WOdJyziDHTFeDNFdUq
+         rtQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xYab8ZW+PzDc+v6CkQlUDWiUUOqkPWlNCzzCEJq5HBA=;
-        b=J1Mq+2UxuMQLRq6WyiCblfaXcrZPe6uUfxDeH5kGyevpxPti3duSKx2wLoTiRgYRwJ
-         CKIvMLmfgMDDwu4c9I0MyxmBADFM8eJSJ2mqvXNwYoJ3WVWX7gGELyUBgKayuevs5J6X
-         nU7pcMtkxd5//gMu8CMO6+XGC5o96Bn1mUoSG+4trCBhNvY/AmRe7XCW0Sq110xDMkz+
-         FOKBs9pEyZwbZvy9y4VLJg9iOxbozy1RZ7TGcGtTRKXZ/f7Yakz67AiTo2OlsUH7lGhG
-         ouuTlZuoPPXEZEiHwwAfasOEnfpPkLG2szrhdfFhOh45Wv7PkUDwrEsqBjuwO2oLk1Qd
-         WjMQ==
-X-Gm-Message-State: ANhLgQ0RzQYWKo6n8WI40OUZicNVEuaE2mB47u7iqZ4e/PFAlmUz0FdX
-        zRo4OgtYVaIxgFPa7GbruXg=
-X-Google-Smtp-Source: ADFU+vvcRi8/WKUppPguFMSbYMLEM1JH1gassiXBwvucPGIUsaTBMlH+Zng/+OHUfBv72PBSOA84mw==
-X-Received: by 2002:a05:651c:8d:: with SMTP id 13mr2123878ljq.256.1584533237368;
-        Wed, 18 Mar 2020 05:07:17 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.171.94])
-        by smtp.gmail.com with ESMTPSA id t6sm3020529lfk.91.2020.03.18.05.07.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 05:07:16 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id AB495461840; Wed, 18 Mar 2020 15:07:15 +0300 (MSK)
-Date:   Wed, 18 Mar 2020 15:07:15 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Adrian Reber <areber@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 1/4] ns: prepare time namespace for clone3()
-Message-ID: <20200318120715.GR27301@uranus>
-References: <20200317083043.226593-1-areber@redhat.com>
- <20200317083043.226593-2-areber@redhat.com>
- <20200318105747.GP27301@uranus>
- <20200318111726.u2r3ghymexyng5nn@wittgenstein>
- <20200318112814.GQ27301@uranus>
- <20200318115731.3vn7cjchunk2bqoe@wittgenstein>
- <20200318115800.p4rsqua6tglydulu@wittgenstein>
+        bh=j5lq+ZeR1e5BLS61AhHY/9aQpgtc96UUH7xL5gfZlA4=;
+        b=jYWnm5frdGrsaj0ecZnbabKXJGh4Tf8vPbaXMKdDS0u1o0m6IriZYYGKsrzN2ELqZA
+         aIScpbiJpQK5jhR1cL+TxNB+Tovvjlg1sH9hygu3pqgTVI1gxu08Ywem8krtzdoxxcwa
+         X3/W/B5gMHiiRHcMn/K234mmotCeKonw5Ur7j+qJoDioKCrpzJWohgQUlMz1kagn3hLz
+         yjzRJuS4WkXphsDeaC6cUksy4lsIowk6doIZwchy0XgMm0sKu7fURghkLkFYqt/2k0j/
+         fdQOfvnhkNbTfrySOZMyH24yJ68P/8DNqn+haHCglwHWo+SbaBa2nQopd3feOZ+1IerL
+         4dBQ==
+X-Gm-Message-State: ANhLgQ1jDBKH9Pxa+9/d+6RdW/b5oB5dQli8SGAjtY6xbJ16aBJDjbde
+        r1tysleLY+OxkEXb3+FfLwtOgQ==
+X-Google-Smtp-Source: ADFU+vs9zNKs2Xu1t6dEyeygPPbCwubyJJzXUvpJUoWsTNJzUZXqoXmlWPE4G/BL5uZuyOnIhMu0ug==
+X-Received: by 2002:a37:aa54:: with SMTP id t81mr3827143qke.234.1584533607354;
+        Wed, 18 Mar 2020 05:13:27 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id p25sm312216qkm.97.2020.03.18.05.13.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 18 Mar 2020 05:13:26 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jEXZe-0003a7-6B; Wed, 18 Mar 2020 09:13:26 -0300
+Date:   Wed, 18 Mar 2020 09:13:26 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, paulmck@kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/mmu_notifier: silence PROVE_RCU_LIST warnings
+Message-ID: <20200318121326.GZ20941@ziepe.ca>
+References: <20200317175640.2047-1-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200318115800.p4rsqua6tglydulu@wittgenstein>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20200317175640.2047-1-cai@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 12:58:00PM +0100, Christian Brauner wrote:
-> > > 
-> > > I see, thanks for info! So I think we could swap the members.
-> > 
-> > Yeah, _if_ we go with a version of this struct we definitely need to
-> > ensure proper padding/alignment!
+On Tue, Mar 17, 2020 at 01:56:40PM -0400, Qian Cai wrote:
+> It is safe to traverse mm->notifier_subscriptions->list either under
+> SRCU read lock or mm->notifier_subscriptions->lock using
+> hlist_for_each_entry_rcu(). Silence the PROVE_RCU_LIST false positives,
+> for example,
 > 
-> Input/ideas totally welcome of course!
+>  WARNING: suspicious RCU usage
+>  -----------------------------
+>  mm/mmu_notifier.c:484 RCU-list traversed in non-reader section!!
+> 
+>  other info that might help us debug this:
+> 
+>  rcu_scheduler_active = 2, debug_locks = 1
+>  3 locks held by libvirtd/802:
+>   #0: ffff9321e3f58148 (&mm->mmap_sem#2){++++}, at: do_mprotect_pkey+0xe1/0x3e0
+>   #1: ffffffff91ae6160 (mmu_notifier_invalidate_range_start){+.+.}, at: change_p4d_range+0x5fa/0x800
+>   #2: ffffffff91ae6e08 (srcu){....}, at: __mmu_notifier_invalidate_range_start+0x178/0x460
+> 
+>  stack backtrace:
+>  CPU: 7 PID: 802 Comm: libvirtd Tainted: G          I       5.6.0-rc6-next-20200317+ #2
+>  Hardware name: HP ProLiant BL460c Gen8, BIOS I31 11/02/2014
+>  Call Trace:
+>   dump_stack+0xa4/0xfe
+>   lockdep_rcu_suspicious+0xeb/0xf5
+>   __mmu_notifier_invalidate_range_start+0x3ff/0x460
+>   change_p4d_range+0x746/0x800
+>   change_protection+0x1df/0x300
+>   mprotect_fixup+0x245/0x3e0
+>   do_mprotect_pkey+0x23b/0x3e0
+>   __x64_sys_mprotect+0x51/0x70
+>   do_syscall_64+0x91/0xae8
+>   entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  mm/mmu_notifier.c | 27 ++++++++++++++++++---------
+>  1 file changed, 18 insertions(+), 9 deletions(-)
 
-I'll try to take a look once time permit, but no promises though.
+Looks right to me
+
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+
+This was missed during testing because we don't run with
+PROVE_RCU_LIST enabled
+
+Jason
