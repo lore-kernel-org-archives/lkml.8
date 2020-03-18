@@ -2,206 +2,141 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C32DC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF33C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D994B20752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:47:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="1KhlpTKg"
+	by mail.kernel.org (Postfix) with ESMTP id 9AFEC205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgCROrD (ORCPT
+        id S1726796AbgCROti convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:47:03 -0400
-Received: from mail-eopbgr750080.outbound.protection.outlook.com ([40.107.75.80]:23970
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        Wed, 18 Mar 2020 10:49:38 -0400
+Received: from mail-oln040092253062.outbound.protection.outlook.com ([40.92.253.62]:6063
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726877AbgCROrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:47:03 -0400
+        id S1726643AbgCROti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 10:49:38 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lqepIqFN/djyiPwzYpC0okwIsk3PIsjVn7voj1bL6zZXtnL5BVXExB3s866p92nXc043NIfincjfoiKLDgQZe/LiAsnhfzxihMfund/eIYTus9f14vUAya0IfS3l3Kue9VwZHhEtcaoyNEqxhfu88Gn7kPwyfHd0BqFCrsumuMzBDl7Naa7T3flRoTvprNWItNqLhIpYKvJ0CahpUTOId6gGZIMvjEanlOGefKX7v+81NmNeunl6slQifObd+lcO5InFwRk2J89EbSTO8R7E1lbU8imzgv1FXre+BOmh3RvVojtkI1j6E541SAWHAQ567INyJfdbCpDLGAkqdOrM8A==
+ b=DmBUq69SK91vYDIg+ewwX420h7/YLCYukeaaOlpifnohIL292QUPYR9XnAvTu6HXKS9WVHnfXKLO7clx9DBXREaX64a8e+c/+VlsHm5NeBUB8tmmdw1ItoHA3n6YM06Y9XTwZH9EcDBanjYm9TajYb+8VpAT7tpl4R4gOBHXY6omhxy/dBU0fkAXj06SX0iAlB3T+a9eMx5b4pqHjDaQLCkiBEYGl4PNGEs9BBW3xA9hCX1bj6fE9I/pq7UAmeG6hStHy09N6gRKDBexEsC2ku6YRyeGADlyn+wdCSFu99u+eSoezq/875/if0D2ZkDQSoTHuN9fGQEkiWyOdNZjYw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cvr6OAr/geSp0/Lid69jKcW5IPAKeNaBTjCaBLjtcls=;
- b=XUvoyjt+EIhCYtCfTa0W9hSwarrfb8mZxd52SeLGzcdvIB2OOQW2sv0pyXFT84AnvJCBPI8np6aw8BxMPanw4HbGcHiuNQTfS+lJEjCXkJBxDYv3eCQNpJ4qyj+6hMkvHMMctpcYzPOQZ/aU8lWdqw8qOjzwjZGKGF1XjwLIt5aolLPDb+KI3vExNfSGZMyZiDDaI8bJQCfUaVhBt/zj69wafmLUxTW6AXVAO+vV5gaAxv1iO1qwpC8E549ymcHy/kVPB1BSRt0cvcfmZc/jfbzyEa9sPoHJJYKx6JCqKjp6hgR5EBUz0V0ZTkQlvzfqzv38SdtM89gFVjRIw/r5mg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cvr6OAr/geSp0/Lid69jKcW5IPAKeNaBTjCaBLjtcls=;
- b=1KhlpTKgpwNSgFXwHGmiOoofgmIZ6sNv1oPu0gpxf6mNByXWyzMc+RQor/e/aOFfRbzO4bgD3RTuJyJGPA6RleHyJLULQMrb0tIOeCI3Dk36R0jz+XjqHEZdlCbmax8qaPtPmAWeRGTqB50QqBVvFnl5Kllu2KI/q0tAQ34HPDQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=kim.phillips@amd.com; 
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
- by SN6PR12MB2736.namprd12.prod.outlook.com (2603:10b6:805:75::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.19; Wed, 18 Mar
- 2020 14:46:58 +0000
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2814.019; Wed, 18 Mar 2020
- 14:46:58 +0000
-From:   Kim Phillips <kim.phillips@amd.com>
-Subject: Re: [PATCH 1/3 v2] perf/amd/uncore: Prepare L3 thread mask code for
- Family 19h support
-To:     Stephane Eranian <eranian@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-References: <20200313231024.17601-1-kim.phillips@amd.com>
- <CABPqkBS8TUMTEz_motpd+8xK599tLXAonUHwp-CWMyU2RhcbQg@mail.gmail.com>
-Message-ID: <2581de5a-969b-93c7-0565-2eef51717900@amd.com>
-Date:   Wed, 18 Mar 2020 09:46:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <CABPqkBS8TUMTEz_motpd+8xK599tLXAonUHwp-CWMyU2RhcbQg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+ bh=UB5S4PoRNEO/naviICIgEb9IeCCXJmG0UFBbei/hhZw=;
+ b=MpYvLsBpup73Zd10ljeVSBQhsc7RWMswxHvqgBKdgejwZmlfCl+fFCis/wrTxbSI/8iMDr6pr36ixa0q+urINmMAZovYcQPAB789v8DPXAA9oogoEW/1HndV+Qdhd6rt8Typ1QiwUyynm83bbf2q7D4sYY0y3crjcrLYgaPHmgEqtBPzmjwfEQAMpOLFQ0uuufUprLIRZ945VRs1jmS3hYOcQag7GAQSkvpdQT9kGW/BaoCzUkOeydR8WR30dS3ZOh7qFlSokwpXWWamvKpi+9ESBAxKf6Ckks30UpthG/7cHnu1c2eeCfMD+Id2NCNxg8JifBHRdmyvo3UKMJMXpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from HK2APC01FT115.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebc::34) by
+ HK2APC01HT071.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebc::229)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13; Wed, 18 Mar
+ 2020 14:49:33 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.51) by
+ HK2APC01FT115.mail.protection.outlook.com (10.152.248.194) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.13 via Frontend Transport; Wed, 18 Mar 2020 14:49:33 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::a5dc:fc1:6544:5cb2%7]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
+ 14:49:32 +0000
+Received: from nicholas-dell-linux (2001:44b8:6065:1c:6059:d44:6861:fae2) by SYBPR01CA0009.ausprd01.prod.outlook.com (2603:10c6:10::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Wed, 18 Mar 2020 14:49:30 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v5 0/1] nvmem: Add support for write-only instances, and
+ clean-up
+Thread-Topic: [PATCH v5 0/1] nvmem: Add support for write-only instances, and
+ clean-up
+Thread-Index: AQHV/TRvkGs3/FHPXUWMfTjZCgJYDw==
+Date:   Wed, 18 Mar 2020 14:49:32 +0000
+Message-ID: <PSXP216MB0438BB51FBB5964FAD7E180F80F70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN8PR04CA0025.namprd04.prod.outlook.com
- (2603:10b6:408:70::38) To SN6PR12MB2845.namprd12.prod.outlook.com
- (2603:10b6:805:75::33)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SYBPR01CA0009.ausprd01.prod.outlook.com (2603:10c6:10::21)
+ To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:05B4DD883CBE1ACDC5878A3563E8E646E1A5ADBF72365271EF3C52A918781FE2;UpperCasedChecksum:8C4E2E7A042FDC400FE9A1075186D78E27636D9B943F4FCBE02773186BD43537;SizeAsReceived:7732;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [4n4vUuMLjoSAV6k74+q+as5OvNMzxxpvn7Ml3Rs+MTVOk7pzgcsdy2TyGNA94ilh]
+x-microsoft-original-message-id: <20200318144924.GA10037@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 2269c211-a77e-4f61-d6c0-08d7cb4b9195
+x-ms-exchange-slblob-mailprops: =?us-ascii?Q?EvJfeA36uqIt+ku0zmot2SAHdMiltl7jQUbyMVtxFqThCmq/KqrlJfVIOoki?=
+ =?us-ascii?Q?GGL44Z5j+un9+7rWCNEIWVMlXtsvkepHfgxkXavp5ZopJdhnx3U+2kaR5oEn?=
+ =?us-ascii?Q?8ruUHNgUAeVknETH2otaf7OljgO22FHhhJCtuA9ajuoJiLO+OOwwIjcPGq9f?=
+ =?us-ascii?Q?MtB8G3P8PVd8KV2FRwON2w4V4xHNBfQ21v01w/DltdjGkwfGp7iN1POiLdse?=
+ =?us-ascii?Q?TKofqas8m0fAEnErDqUHqr8O8AZm7QdKEt75BSwnd2KBuXr3vzkFjodgkTMk?=
+ =?us-ascii?Q?/8IJbN0HVvtfI5kSNHZNdc/Xk/YY/s+/CGOmHLuY6dtiO84YLDG4i+UXxbBH?=
+ =?us-ascii?Q?X6IDwSqLVveAMaVP7R3uPnWb7I2gBRHEIRt2/zecOMm1tETLjbv1pCIfTPTm?=
+ =?us-ascii?Q?pCj7grO7QZjue3su+xzKxI26JwFPKd5S/Pw4wcL9oojOG+NV+yviH8dliC97?=
+ =?us-ascii?Q?z31GOatuXV7hlYpW1AWSQ+AossGXsaYDuNoc3i5OAiuwGMw+32WaKM6uODV8?=
+ =?us-ascii?Q?k6hKhx9PUkhbHydCtQBUlh9xt2yaAD9mbfKLUy9neT/6KkoL2PEbvkBkasGU?=
+ =?us-ascii?Q?hx0vx1M53PgStzoJ/+8UJPt9KdGnL8qsk4lFumC/KTHA/Kf++e6vOMKOArry?=
+ =?us-ascii?Q?7+6Cpl7yvpLF3+QVXNbI2twPlwEreEQE8nCDOU5UZtE0ECdme0aWPmhlWtal?=
+ =?us-ascii?Q?lqz8u3fxFfLrKnUyikCguc2kqIJH54voNwhGvvPIFIQM/r1/aIaslYCaZYGP?=
+ =?us-ascii?Q?zQO283j8AhllxZ3TRs8f0MH1NI3SyQ2zijA1gp5SQFOSVx4GDuKCEH81SAhQ?=
+ =?us-ascii?Q?BJNCxZGPIXFyr7xB0YKyUSRwxoRYqx0Mgv3601hknGlPntxpOxXviky06Dje?=
+ =?us-ascii?Q?CY/1jgPr8U8rgHE4vNPq6Ea1XNouHEDIZzd6DD47zsdLBJQNa2eke3n9hpnp?=
+ =?us-ascii?Q?Y3BpLuvEPsMjUOXB9DDbl1ffP16GghzAkBO5Y97X90NYdNKhV+U4Ni3OCn3E?=
+ =?us-ascii?Q?g6RA8HclDhPaEXxe1FwY/0Z/jYzQ2GjY3mVvqeCyEexgwAESEmyQLwZSB08f?=
+ =?us-ascii?Q?RotCrUDI?=
+x-ms-traffictypediagnostic: HK2APC01HT071:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8On3JLaClxdV91OAmGv173LWLDHPQkaDgMi4TkvJY5qMoEhZcG1oVXj4JDKSrpKT3iiEKGNx4PypKR7y5ozBGDLJ/mZN1fNaVg98bN0Zd9NP99KT2GGd+U1nh5vccXWznzpCTRN7UDFYZce5uASaJa974ez/09yrBIs/mW+6DqCnJe5m0GRN41aLshUdNb1BiIl7Oquj6LZg1pi7khRFsry0gLZHj2ehtNCi5dtDZ2g=
+x-ms-exchange-antispam-messagedata: r/JVAuXddVMlOxJmLDaeVKtsUcn77IadR4rLCMZ0g3NKaKtgCNPJTiWojW0ULUz/wlcM+gY3qCH/y4B2RMdKH63DKrlasXiKB4totMVKjbOAnPdhihQSIy095llTasKxxO3/KLwU3O+WckwfeK02kl1ptvWqbF03GRdXo1+Ps1BjRgnIFw1rcaMk2N4c9YXB9vFSSjJ5U8npajRMCXkB4A==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <910E849CAC3F5B4FBA0E063565F6E7A8@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.252.3.58] (165.204.84.11) by BN8PR04CA0025.namprd04.prod.outlook.com (2603:10b6:408:70::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21 via Frontend Transport; Wed, 18 Mar 2020 14:46:55 +0000
-X-Originating-IP: [165.204.84.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9acf920b-eb95-44bb-ef80-08d7cb4b35e9
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2736:
-X-Microsoft-Antispam-PRVS: <SN6PR12MB2736FC97135D9F7F5320C37587F70@SN6PR12MB2736.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 03468CBA43
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(376002)(366004)(346002)(199004)(6666004)(26005)(186003)(7416002)(36756003)(5660300002)(31696002)(86362001)(31686004)(16526019)(956004)(2616005)(8936002)(6916009)(66476007)(66556008)(66946007)(2906002)(478600001)(316002)(53546011)(4326008)(54906003)(52116002)(44832011)(81156014)(8676002)(81166006)(16576012)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2736;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qRyI8PugDy0WTYo0avAi0fEFWkca7c0Ek1xF0btQeaJ9ONybLjofnicOp9yMTzoyEZBSvVywbkKSqUsDS2lBpC3JfqdLz/1CiiKsPNq2PmDoAQhoebyXyjsbVCY+PueXksK7Swi07Wy0STwJ4W478jWf5oBRJsU1sFqF8UDZrM8adN6X94FyKxsRboK4E48PmpB6ueOhzjXVncP9FjLyu7BLSbpPcpP4O+7juNdgtrfjRQoG+IryviHZCzXTgkC8G1FjkNdpPQwyccmkI0uW8M8vpa5hCM0WuVWNZI5ThlafWvW5JvnEbDykNd11Geq/bF63B9z+I0UGiUWW3F5KGT+r9LA2dqvaMv8frlRL4FK9CpfhpAFHMCTHCMRcq/0nABqw/Qh/e80rsC5MSlRAhGWj+N2EOouD6cGhBQ+CRSIP20WUEscCfdpantAtg/xQ
-X-MS-Exchange-AntiSpam-MessageData: maPHHt2CfI0bRjGF65mJpXbb7EPOv8o76FvdyWMVXRhilsQTRX/+yeHGGsWIVLkpdbT69Ivuv7YTNPeyUQqsFjOR5OuPQnSz4Z3K5HyXS9hjRR259WZ3TgzGvSmCZU4OmBkqP3FOa1nc2L7AMNVFQw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9acf920b-eb95-44bb-ef80-08d7cb4b35e9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 14:46:58.6533
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2269c211-a77e-4f61-d6c0-08d7cb4b9195
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 14:49:32.6544
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iHxFXpkQf/J6DRv4j4Zg9r+awIqOEACUTfSPWvauJUYYAjhgM3LDmAdAUZUcCX+Prc/j3Oql82zj5gFON3h8Jw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2736
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/17/20 9:09 PM, Stephane Eranian wrote:
-> On Fri, Mar 13, 2020 at 4:10 PM Kim Phillips <kim.phillips@amd.com> wrote:
->> +++ b/arch/x86/events/amd/uncore.c
->> @@ -180,6 +180,20 @@ static void amd_uncore_del(struct perf_event *event, int flags)
->>         hwc->idx = -1;
->>  }
->>
->> +/*
->> + * Convert logical cpu number to L3 PMC Config ThreadMask format
->> + */
->> +static u64 l3_thread_slice_mask(int cpu)
->> +{
->> +       int thread = 2 * (cpu_data(cpu).cpu_core_id % 4);
->> +
->> +       if (smp_num_siblings > 1)
->> +               thread += cpu_data(cpu).apicid & 1;
->> +
->> +       return (1ULL << (AMD64_L3_THREAD_SHIFT + thread) &
->> +               AMD64_L3_THREAD_MASK) | AMD64_L3_SLICE_MASK;
->> +}
->> +
->>  static int amd_uncore_event_init(struct perf_event *event)
->>  {
->>         struct amd_uncore *uncore;
->> @@ -209,15 +223,8 @@ static int amd_uncore_event_init(struct perf_event *event)
->>          * SliceMask and ThreadMask need to be set for certain L3 events in
->>          * Family 17h. For other events, the two fields do not affect the count.
->>          */
->> -       if (l3_mask && is_llc_event(event)) {
->> -               int thread = 2 * (cpu_data(event->cpu).cpu_core_id % 4);
->> -
->> -               if (smp_num_siblings > 1)
->> -                       thread += cpu_data(event->cpu).apicid & 1;
->> -
->> -               hwc->config |= (1ULL << (AMD64_L3_THREAD_SHIFT + thread) &
->> -                               AMD64_L3_THREAD_MASK) | AMD64_L3_SLICE_MASK;
->> -       }
->> +       if (l3_mask && is_llc_event(event))
->> +               hwc->config |= l3_thread_slice_mask(event->cpu);
->>
-> By looking at this code, I realized that even on Zen2 this is wrong.
-> It does not work well.
-> You are basically saying that the L3 event is tied to the CPU the
-> event is programmed to.
-> But this does not work with the cpumask programmed for the amd_l3 PMU. This mask
-> shows, as it should, one CPU/CCX. So that means that when I do:
-> 
-> $ perf stat -a amd_l3/event=llc_event/
-> 
-> This only collects on the CPUs listed in the cpumask: 0,4,8,12 ....
-> That means that L3 events generated by the other CPUs on the CCX are
-> not monitored.
-> I can easily see the problem by pinning a memory bound program to
-> CPU64, for instance.
+Hello all,
 
-Right, the higher level code calls the driver with a single cpu==0
-call if the perf tool is invoked with a simple -a style system-wide.
-If the tool is invoked with supplemental switches to -a, like -C 0-255,
-and -A, the driver gets called multiple times with all the unique cpu
-values.  The latter is the expected invocation style when measuring
-a benchmark pinned on a subset of cpus, i.e., when evaluating
-the driver, and is the more deterministic behaviour for the driver
-to have, given it cannot tell the difference otherwise.
+Previous version: https://lkml.org/lkml/2020/3/16/1051
 
-> I think the thread mask should be exposed to the user. If not
-> specified, then set the mask to
-> cover all CPUs of the CCX. That way you can pick and choose what you
-> want. And with one event/CCX
-> you can monitor  for all CPUs. I can send a patch that does that.
+Changed since previous version:
 
-Do you mean something that will allow the user to do something
-like this?:
+- No longer leaking objects such as idr and gpio.
 
-perf stat -a amd_l3/event=llc_event,core=X,thread_mask={1,2,3}/
+- Got rid of accidental line of diff removing blank line.
 
-Wouldn't users rather specify cpus using -C etc.?
+- Rebased on top of [0] as requested in [1] - no conflicts, anyway.
 
-> With what you have now, you have to force the list of CPUs with -C to
-> work around
-> the cpumask. And forcing the cpumask to 0-255 does not make sense because not
-> all L3 events necessarily need the L3 mask, so you don't want to program them on
-> all CPUs especially with 8 cpus/CCX and only 6 counters.
+[0]
+https://git.kernel.org/pub/scm/linux/kernel/git/srini/nvmem.git/tree/drivers/nvmem/core.c?h=for-next
 
-Is it not possible for those to be run in separate invocations
-that use the simple system-wide case, e.g., -a?
+[1]
+https://lkml.org/lkml/2020/3/18/171
 
-How would adding core=X,thread_mask={1,2,3} specification
-change the -C invocation behaviour?
+Nicholas Johnson (1):
+  nvmem: Add support for write-only instances
 
-I thought of having the driver set all CPUs in the threadmask
-if invoked with a cpu == 0, but that means one cannot specify
--C 0,4,8, etc.
+ drivers/nvmem/core.c        | 10 +++++--
+ drivers/nvmem/nvmem-sysfs.c | 56 +++++++++++++++++++++++++++++++------
+ 2 files changed, 56 insertions(+), 10 deletions(-)
 
-Thanks,
+-- 
+2.25.1
 
-Kim
