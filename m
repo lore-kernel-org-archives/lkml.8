@@ -2,99 +2,105 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85289C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBC7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8C020771
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C32120724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:14:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iAeIBdla"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="amMj84jS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgCRMOS (ORCPT
+        id S1726827AbgCRMOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 08:14:18 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:41421 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgCRMOR (ORCPT
+        Wed, 18 Mar 2020 08:14:20 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:22259 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726631AbgCRMOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:14:17 -0400
-Received: by mail-vk1-f196.google.com with SMTP id q8so7001690vka.8
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 05:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=og0LDHDGJi+jmOmmQp4Rk2H6PUrLgVc6fcIsRCRNLD0=;
-        b=iAeIBdlaaFvGcjmOV9nnbG4Q+ZKQ58q6k1c/nmRUOMcJSdQdGoeupdtrE0kMoc4lpt
-         tEZueJQn3kCsdxcxN9odshFTtplAHptMXbyeDvQnnTC6abmb/DbaTG/Gjk/rjKhu34XH
-         F2ITAgNyF83lzIz/61qEASXmvPCKRW+M9iJ+PbaFQzhZAIZB3yw8fhmgkCI09aEuas4p
-         npdO3N3Ju7my6YLRjznwctZm7KlW4PbyQN6a5kYxyGYntxrnLPxGzzpswV6X9ffChNMZ
-         S4QnHDcw9NCHeG0/8rpOn7HeDWK04qk/2DZsOqiKAaNE6IF1N8/U/0XYPUt7g3do7k6m
-         eh5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=og0LDHDGJi+jmOmmQp4Rk2H6PUrLgVc6fcIsRCRNLD0=;
-        b=CTpluNu3EOAFkoNgiePRpoNzLnuVdawsPL/4aUnvuC8Omw1DbswvRYbXBZX0RhpVsA
-         8Iph1WEheF4ac/wCvAajKM833SnOkyXF9wAAEI6+bGdQalI2eoqi+ja5Gr1UvnSokSbu
-         we2N5QwWra2j7iQKkDSc41VhL2Avqg9AFCVcQ8NgRIomq32gJfiuYF6nU/HTK5xKZvby
-         zl0iVrB3C3+MPGQJq/l+gEFNlfexRjXt8qrT8VndABAH+d7KCMsNtwPXcgIUeKeiTqWI
-         ebxz/Np3CD3iTtU8V8ti9v52V0Un7HdKaib+gzdjYNaB+mFt3NSN6RAgCUC0Z2iEIGWB
-         MqLQ==
-X-Gm-Message-State: ANhLgQ1IzsQyAt8XhfSe8yEn+wS+TcX+oA6smfHf7WLMcYC53wYRdN3u
-        BpFzD7fvOJyf5VcyD0LumLX0a0ChNTm3TPKEylWK8/KwWR4=
-X-Google-Smtp-Source: ADFU+vtuxafvF6plHBJVfKJ7U23/fBbB1V91FZHEJpgZp+l9v0FqrX8HUV0TNGlgraDKAKeMO6f2LK/g141VKeZjYYs=
-X-Received: by 2002:a1f:ee05:: with SMTP id m5mr3020614vkh.9.1584533656113;
- Wed, 18 Mar 2020 05:14:16 -0700 (PDT)
+        Wed, 18 Mar 2020 08:14:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584533658;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TYFAvu2uKTz7Cwt/dbZj8smyGUrw3nlIrQrl0ibJqbY=;
+        b=amMj84jSXnyLOC5iFZuXkgrtgOHc9EFCTuNyDgBSU4dhIO0N7By9AEbPSN+Ajm6agHLk/V
+        3rbdXPg1M7nTEPbsA+c2GTAvUO8KvR0WKIihvpKgenzXUmSQXitHXmGcUrGHrtoSEUgooI
+        CF7+278f4ajELs1xmsSkPc+OrLBKOWA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-cRkhSGbaOzuaLn6qc5AGAQ-1; Wed, 18 Mar 2020 08:14:14 -0400
+X-MC-Unique: cRkhSGbaOzuaLn6qc5AGAQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D354C149C1;
+        Wed, 18 Mar 2020 12:14:11 +0000 (UTC)
+Received: from krava (unknown [10.40.195.82])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1492C5D9C5;
+        Wed, 18 Mar 2020 12:14:07 +0000 (UTC)
+Date:   Wed, 18 Mar 2020 13:14:05 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        adrian.hunter@intel.com, mathieu.poirier@linaro.org,
+        ravi.bangoria@linux.ibm.com, alexey.budankov@linux.intel.com,
+        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
+        mpe@ellerman.id.au, eranian@google.com, ak@linux.intel.com
+Subject: Re: [PATCH V3 15/17] perf top: Add option to enable the LBR
+ stitching approach
+Message-ID: <20200318121405.GA849721@krava>
+References: <20200313183319.17739-1-kan.liang@linux.intel.com>
+ <20200313183319.17739-16-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-References: <20200225101710.40123-1-yuchao0@huawei.com>
-In-Reply-To: <20200225101710.40123-1-yuchao0@huawei.com>
-From:   Ju Hyung Park <qkrwngud825@gmail.com>
-Date:   Wed, 18 Mar 2020 21:14:04 +0900
-Message-ID: <CAD14+f3pi331-V0gzjtxcMRVaEn3tPacrC20wtRq9+6JY9_HVA@mail.gmail.com>
-Subject: Re: [PATCH v2] f2fs: use kmem_cache pool during inline xattr lookups
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Chao Yu <chao@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200313183319.17739-16-kan.liang@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao.
+On Fri, Mar 13, 2020 at 11:33:17AM -0700, kan.liang@linux.intel.com wrote:
 
-I got the time around to test this patch.
-The v2 patch seems to work just fine, and the code looks good.
+SNIP
 
-On Tue, Feb 25, 2020 at 7:17 PM Chao Yu <yuchao0@huawei.com> wrote:
-> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
-> index a3360a97e624..e46a10eb0e42 100644
-> --- a/fs/f2fs/xattr.c
-> +++ b/fs/f2fs/xattr.c
-> @@ -23,6 +23,25 @@
->  #include "xattr.h"
->  #include "segment.h"
->
-> +static void *xattr_alloc(struct f2fs_sb_info *sbi, int size, bool *is_inline)
-> +{
-> +       *is_inline = (size == sbi->inline_xattr_slab_size);
+>  #include "util/top.h"
+> @@ -766,6 +767,9 @@ static void perf_event__process_sample(struct perf_tool *tool,
+>  	if (machine__resolve(machine, &al, sample) < 0)
+>  		return;
+>  
+> +	if (top->stitch_lbr)
+> +		al.thread->lbr_stitch_enable = true;
+> +
+>  	if (!machine->kptr_restrict_warned &&
+>  	    symbol_conf.kptr_restrict &&
+>  	    al.cpumode == PERF_RECORD_MISC_KERNEL) {
+> @@ -1543,6 +1547,8 @@ int cmd_top(int argc, const char **argv)
+>  			"number of thread to run event synthesize"),
+>  	OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
+>  		    "Record namespaces events"),
+> +	OPT_BOOLEAN(0, "stitch-lbr", &top.stitch_lbr,
+> +		    "Enable LBR callgraph stitching approach"),
+>  	OPTS_EVSWITCH(&top.evswitch),
+>  	OPT_END()
+>  	};
+> @@ -1612,6 +1618,11 @@ int cmd_top(int argc, const char **argv)
+>  		}
+>  	}
+>  
+> +	if (top.stitch_lbr && !(callchain_param.record_mode == CALLCHAIN_LBR)) {
+> +		pr_err("Error: --stitch-lbr must be used with --call-graph lbr\n");
+> +		goto out_delete_evlist;
+> +	}
 
-Would it be meaningless to change this to the following code?
-if (likely(size == sbi->inline_xattr_slab_size))
-    *is_inline = true;
-else
-    *is_inline = false;
+why is this check not added for script/report/c2c..?
 
-The above statement seems to be only false during the initial mount
-and the rest(millions) seems to be always true.
+jirka
 
-Thanks.
