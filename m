@@ -2,88 +2,63 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B74C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55ABC5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D96220771
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0CCD2076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgCRLk7 (ORCPT
+        id S1727148AbgCRLlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:40:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11717 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726730AbgCRLk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:40:59 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DAD6529B95D629A35DC3;
-        Wed, 18 Mar 2020 19:40:53 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 18 Mar 2020 19:40:47 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: don't mark compressed inode dirty during f2fs_iget()
-Date:   Wed, 18 Mar 2020 19:40:45 +0800
-Message-ID: <20200318114045.45813-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Wed, 18 Mar 2020 07:41:13 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:56844 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbgCRLlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 07:41:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 0F1E2FB03;
+        Wed, 18 Mar 2020 12:41:11 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id OTVONGkV4vui; Wed, 18 Mar 2020 12:41:10 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 8E411412BE; Wed, 18 Mar 2020 12:41:09 +0100 (CET)
+Date:   Wed, 18 Mar 2020 12:41:09 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+Subject: linux-next build failure on arm64 with CMA but !NUMA
+Message-ID: <20200318114109.GA65068@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- f2fs_iget
- - do_read_inode
-  - set_inode_flag(, FI_COMPRESSED_FILE)
-   - __mark_inode_dirty_flag(, true)
+Hi Roman,
+882d60d2ce725381236a158204d7ec13ff19ab25 in linux-next broke compilation
+on arm64 CMA && !NUMA like
 
-It's unnecessary, so let's just mark compressed inode dirty while
-compressed inode conversion.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/f2fs.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index f5c55c966ed7..422a070526e5 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2582,7 +2582,6 @@ static inline void __mark_inode_dirty_flag(struct inode *inode,
- 	case FI_DATA_EXIST:
- 	case FI_INLINE_DOTS:
- 	case FI_PIN_FILE:
--	case FI_COMPRESSED_FILE:
- 		f2fs_mark_inode_dirty_sync(inode, true);
- 	}
- }
-@@ -3848,6 +3847,7 @@ static inline void set_compress_context(struct inode *inode)
- 	F2FS_I(inode)->i_flags |= F2FS_COMPR_FL;
- 	set_inode_flag(inode, FI_COMPRESSED_FILE);
- 	stat_inc_compr_inode(inode);
-+	f2fs_mark_inode_dirty_sync(inode, true);
- }
- 
- static inline u64 f2fs_disable_compressed_file(struct inode *inode)
-@@ -3864,6 +3864,7 @@ static inline u64 f2fs_disable_compressed_file(struct inode *inode)
- 	fi->i_flags &= ~F2FS_COMPR_FL;
- 	stat_dec_compr_inode(inode);
- 	clear_inode_flag(inode, FI_COMPRESSED_FILE);
-+	f2fs_mark_inode_dirty_sync(inode, true);
- 	return 0;
- }
- 
--- 
-2.18.0.rc1
+  CC      kernel/irq/irqdesc.o
+mm/hugetlb.c: In function ‘hugetlb_cma_reserve’:
+mm/hugetlb.c:5449:3: error: implicit declaration of function ‘for_each_mem_pfn_range’; did you mean ‘for_each_mem_range’? [-Werror=implicit-function-declaration]
+   for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+   ^~~~~~~~~~~~~~~~~~~~~~ 
+   for_each_mem_range
+mm/hugetlb.c:5449:61: error: expected ‘;’ before ‘{’ token
+   for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+                                                             ^~
+Reverting that fixes the build for the moment. Would making all of this
+dependent on CMA && NUMA be the right fix?
+Cheers,
+ -- Guido
 
