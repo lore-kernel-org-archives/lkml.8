@@ -2,154 +2,137 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA13C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84127C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE4120777
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qN4+WX6l"
+	by mail.kernel.org (Postfix) with ESMTP id 47F2920775
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584565676;
+	bh=pP25dGs0qhPsHPBXaWMxCr5rU29q+GM9TmYMhLNGNRo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=grPKsotW2SJMiIvwO8qnqH3nKBM12uXnbxcQ5jQv9mYy/da4bN/worencErkNyXj1
+	 l/gvDKI4xB9EfPVa6MINVk5AQLvWMVJTLUB8yDWt9c08GrjGnzYIDcNB1oYjwO1wfy
+	 6FZl0JRvixqqU2+d1D0jGBSUiRZO2Qe82a0iNRxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgCRVHw (ORCPT
+        id S1727590AbgCRUyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:07:52 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39885 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727089AbgCRVHs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:07:48 -0400
-Received: by mail-pf1-f193.google.com with SMTP id d25so145374pfn.6
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 14:07:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UnW3oRxVQHnYvwZ2+HCKUVYxiIim+eBLvaQELpxrRqU=;
-        b=qN4+WX6llXdXg7OP2ngw/tmuSenPNNwNDboXm8R0BqN7TKq6AnxLkKLG8Q99y9IZ6T
-         YDfO8JIUTC9v2tBafpZVOOd0JFYHC0mDB+lxnynMKQQLixMFCn9aOM1p/8pLBMWijDoE
-         rLQazFqDavwllYsf3wPN4aql2BpoZjato+DcTWKqNtpooKdE/nwFO0dcUImcroRCILJO
-         aPVcdVsQK6Yfq1FM6t0YjsW0hhvgLZRy2qsN7Ze0/hX0uJaqnU3valz6jPspG792A5BE
-         UiFdDU6CdJPC5k87CYj8sMC2aAKdppbSCjkh0rgWDLetIMv33zXhdzo2jCnPehDY1cV5
-         BkdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UnW3oRxVQHnYvwZ2+HCKUVYxiIim+eBLvaQELpxrRqU=;
-        b=LeQv+CQR1CA3yBjacjIw8zpclyTBe6zRabo9E/Cg/+m8Ok/qCnXdcaPN6amUc4zzNw
-         9NzTXwTy6+j9mOqTubA2nYwtHhbR52LnEOKl3HzU134hxRAnhRORVYwd81smaSxj40ke
-         gCxad6U73EwkMjyO6NP7sw9Ln2Owj3S07KwjCgMKQQsGEQ7oZvAsnDrVgSElyR+SQrBf
-         +f/yRcIfKlOFfiprhJ55ZI34DwE3P07L54cp5Q8jXZNcpp1X2g2yKWuIP74E2Wi2apOl
-         mLl+uft+JYx7W6zS6uZV0dSYWX6Aw8OxdaiZPpALodB+da3rOdHp/MA51SNum1hxmD1V
-         L1Gw==
-X-Gm-Message-State: ANhLgQ0ma8KqHX8+HlMOaORhMUXoq9us+X8k5NblCvUH2diTXJkmuq7l
-        fAy88TyqdgTpzzQ8knMCGltEgbpuqHXC6vmh/dv2Yg==
-X-Google-Smtp-Source: ADFU+vtrCbWLsD9Kl2sgpRCLWJgG9WETEekWUwb95aIHCLvQp5JpBJCHYMAZGw01/Hcy77aG8jAmyFceFlIcLkd5Les=
-X-Received: by 2002:aa7:8b54:: with SMTP id i20mr215129pfd.39.1584565667463;
- Wed, 18 Mar 2020 14:07:47 -0700 (PDT)
+        Wed, 18 Mar 2020 16:54:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727499AbgCRUyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:06 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52986208D5;
+        Wed, 18 Mar 2020 20:54:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584564845;
+        bh=pP25dGs0qhPsHPBXaWMxCr5rU29q+GM9TmYMhLNGNRo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KUaTo3h/95WXMDdtJpYOjslsR/ew40Sr7zbk3eybodczlnQLZilUGtpFdQrAPRgMk
+         9eB/Czm4X04Ym4ND2gX2ND63C1PblYnViKfpT1Xaxs5JBoCWYmFNxRLktwL0yekAYn
+         ri0eEr0t21CYMrJ5ltaBjPlbJ+x5RXa4YcHcjxIs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jonas Gorski <jonas.gorski@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 23/73] net: phy: bcm63xx: fix OOPS due to missing driver name
+Date:   Wed, 18 Mar 2020 16:52:47 -0400
+Message-Id: <20200318205337.16279-23-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
+References: <20200318205337.16279-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200318002500.52471-1-natechancellor@gmail.com> <20200318210408.4113-1-natechancellor@gmail.com>
-In-Reply-To: <20200318210408.4113-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 18 Mar 2020 14:07:34 -0700
-Message-ID: <CAKwvOdmjzemFW9jF-CW1RhLJJbMvFO_NrPUeyi=rdLNVZURsfw@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/amdgpu: Remove unnecessary variable shadow in gfx_v9_0_rlcg_wreg
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 2:05 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> clang warns:
->
-> drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:754:6: warning: variable 'shadow'
-> is used uninitialized whenever 'if' condition is
-> false [-Wsometimes-uninitialized]
->         if (offset == grbm_cntl || offset == grbm_idx)
->             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:757:6: note: uninitialized use
-> occurs here
->         if (shadow) {
->             ^~~~~~
-> drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:754:2: note: remove the 'if' if
-> its condition is always true
->         if (offset == grbm_cntl || offset == grbm_idx)
->         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:738:13: note: initialize the
-> variable 'shadow' to silence this warning
->         bool shadow;
->                    ^
->                     = 0
-> 1 warning generated.
->
-> shadow is only assigned in one condition and used as the condition for
-> another if statement; combine the two if statements and remove shadow
-> to make the code cleaner and resolve this warning.
->
-> Fixes: 2e0cc4d48b91 ("drm/amdgpu: revise RLCG access path")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/936
-> Suggested-by: Joe Perches <joe@perches.com>
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->
-> v1 -> v2:
->
-> * Remove shadow altogether, as suggested by Joe Perches.
-> * Add Nick's Reviewed-by, as I assume it still stands.
+From: Jonas Gorski <jonas.gorski@gmail.com>
 
-yep, thanks
+[ Upstream commit 43de81b0601df7d7988d3f5617ee0987df65c883 ]
 
->
->  drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-> index 7bc2486167e7..496b9edca3c3 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-> @@ -735,7 +735,6 @@ void gfx_v9_0_rlcg_wreg(struct amdgpu_device *adev, u32 offset, u32 v)
->         static void *spare_int;
->         static uint32_t grbm_cntl;
->         static uint32_t grbm_idx;
-> -       bool shadow;
->
->         scratch_reg0 = adev->rmmio + (adev->reg_offset[GC_HWIP][0][mmSCRATCH_REG0_BASE_IDX] + mmSCRATCH_REG0)*4;
->         scratch_reg1 = adev->rmmio + (adev->reg_offset[GC_HWIP][0][mmSCRATCH_REG1_BASE_IDX] + mmSCRATCH_REG1)*4;
-> @@ -751,10 +750,7 @@ void gfx_v9_0_rlcg_wreg(struct amdgpu_device *adev, u32 offset, u32 v)
->                 return;
->         }
->
-> -       if (offset == grbm_cntl || offset == grbm_idx)
-> -               shadow = true;
-> -
-> -       if (shadow) {
-> +       if (offset == grbm_cntl || offset == grbm_idx) {
->                 if (offset  == grbm_cntl)
->                         writel(v, scratch_reg2);
->                 else if (offset == grbm_idx)
-> --
-> 2.26.0.rc1
->
+719655a14971 ("net: phy: Replace phy driver features u32 with link_mode
+bitmap") was a bit over-eager and also removed the second phy driver's
+name, resulting in a nasty OOPS on registration:
 
+[    1.319854] CPU 0 Unable to handle kernel paging request at virtual address 00000000, epc == 804dd50c, ra == 804dd4f0
+[    1.330859] Oops[#1]:
+[    1.333138] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.22 #0
+[    1.339217] $ 0   : 00000000 00000001 87ca7f00 805c1874
+[    1.344590] $ 4   : 00000000 00000047 00585000 8701f800
+[    1.349965] $ 8   : 8701f800 804f4a5c 00000003 64726976
+[    1.355341] $12   : 00000001 00000000 00000000 00000114
+[    1.360718] $16   : 87ca7f80 00000000 00000000 80639fe4
+[    1.366093] $20   : 00000002 00000000 806441d0 80b90000
+[    1.371470] $24   : 00000000 00000000
+[    1.376847] $28   : 87c1e000 87c1fda0 80b90000 804dd4f0
+[    1.382224] Hi    : d1c8f8da
+[    1.385180] Lo    : 5518a480
+[    1.388182] epc   : 804dd50c kset_find_obj+0x3c/0x114
+[    1.393345] ra    : 804dd4f0 kset_find_obj+0x20/0x114
+[    1.398530] Status: 10008703 KERNEL EXL IE
+[    1.402833] Cause : 00800008 (ExcCode 02)
+[    1.406952] BadVA : 00000000
+[    1.409913] PrId  : 0002a075 (Broadcom BMIPS4350)
+[    1.414745] Modules linked in:
+[    1.417895] Process swapper/0 (pid: 1, threadinfo=(ptrval), task=(ptrval), tls=00000000)
+[    1.426214] Stack : 87cec000 80630000 80639370 80640658 80640000 80049af4 80639fe4 8063a0d8
+[    1.434816]         8063a0d8 802ef078 00000002 00000000 806441d0 80b90000 8063a0d8 802ef114
+[    1.443417]         87cea0de 87c1fde0 00000000 804de488 87cea000 8063a0d8 8063a0d8 80334e48
+[    1.452018]         80640000 8063984c 80639bf4 00000000 8065de48 00000001 8063a0d8 80334ed0
+[    1.460620]         806441d0 80b90000 80b90000 802ef164 8065dd70 80620000 80b90000 8065de58
+[    1.469222]         ...
+[    1.471734] Call Trace:
+[    1.474255] [<804dd50c>] kset_find_obj+0x3c/0x114
+[    1.479141] [<802ef078>] driver_find+0x1c/0x44
+[    1.483665] [<802ef114>] driver_register+0x74/0x148
+[    1.488719] [<80334e48>] phy_driver_register+0x9c/0xd0
+[    1.493968] [<80334ed0>] phy_drivers_register+0x54/0xe8
+[    1.499345] [<8001061c>] do_one_initcall+0x7c/0x1f4
+[    1.504374] [<80644ed8>] kernel_init_freeable+0x1d4/0x2b4
+[    1.509940] [<804f4e24>] kernel_init+0x10/0xf8
+[    1.514502] [<80018e68>] ret_from_kernel_thread+0x14/0x1c
+[    1.520040] Code: 1060000c  02202025  90650000 <90810000> 24630001  14250004  24840001  14a0fffb  90650000
+[    1.530061]
+[    1.531698] ---[ end trace d52f1717cd29bdc8 ]---
 
+Fix it by readding the name.
+
+Fixes: 719655a14971 ("net: phy: Replace phy driver features u32 with link_mode bitmap")
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/phy/bcm63xx.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/phy/bcm63xx.c b/drivers/net/phy/bcm63xx.c
+index 23f1958ba6ad4..459fb2069c7e0 100644
+--- a/drivers/net/phy/bcm63xx.c
++++ b/drivers/net/phy/bcm63xx.c
+@@ -73,6 +73,7 @@ static struct phy_driver bcm63xx_driver[] = {
+ 	/* same phy as above, with just a different OUI */
+ 	.phy_id		= 0x002bdc00,
+ 	.phy_id_mask	= 0xfffffc00,
++	.name		= "Broadcom BCM63XX (2)",
+ 	/* PHY_BASIC_FEATURES */
+ 	.flags		= PHY_IS_INTERNAL,
+ 	.config_init	= bcm63xx_config_init,
 -- 
-Thanks,
-~Nick Desaulniers
+2.20.1
+
