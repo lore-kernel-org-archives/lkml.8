@@ -2,85 +2,192 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60347C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0784C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2786120770
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:23:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y0r8NXkM"
+	by mail.kernel.org (Postfix) with ESMTP id 88A2D2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbgCRIXU (ORCPT
+        id S1727403AbgCRIYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 04:23:20 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:45485 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726994AbgCRIXT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 04:23:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584519798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=c5ZmniDWtOGgirD0ysXPKxoDj8zWagjtTzwo7m2KYVo=;
-        b=Y0r8NXkMi7FThx6FhibC1nb1o//S89dYspxFVuLGQ/kDNl0XOuEd+ZGG+RKYYGow/l1Qc3
-        ZfDW7RDIgYgPO983Wae7fXqmToLJu125iW1AHOwaAzJJ3izkUNvF9hmkqU/ZZu+0sJyh+g
-        tpd+M5pYXoNPcsf+iOEOhcs8kNiIQiM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-372-UnVQ4uV7PpGJbTpejA56sQ-1; Wed, 18 Mar 2020 04:23:15 -0400
-X-MC-Unique: UnVQ4uV7PpGJbTpejA56sQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 240158010C8;
-        Wed, 18 Mar 2020 08:23:12 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A427B60BEC;
-        Wed, 18 Mar 2020 08:23:05 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200317194140.6031-3-longman@redhat.com>
-References: <20200317194140.6031-3-longman@redhat.com> <20200317194140.6031-1-longman@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     dhowells@redhat.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-Subject: Re: [PATCH v4 2/4] KEYS: Remove __user annotation from rxrpc_read()
+        Wed, 18 Mar 2020 04:24:10 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43616 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726513AbgCRIYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 04:24:10 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id E7C7026454CE003E0951;
+        Wed, 18 Mar 2020 16:23:19 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 18 Mar 2020 16:23:13 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v2] f2fs: support partial truncation on compressed inode
+Date:   Wed, 18 Mar 2020 16:22:59 +0800
+Message-ID: <20200318082259.128833-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2831785.1584519784.1@warthog.procyon.org.uk>
-Date:   Wed, 18 Mar 2020 08:23:04 +0000
-Message-ID: <2831786.1584519784@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch 2 and 3 need to be rolled into patch 1 otherwise sparse will give
-warnings about mismatches in address spaces on patch 1.
+Supports to truncate compressed/normal cluster partially on compressed
+inode.
 
-Thanks,
-David
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+v2:
+- fix wrong page index calculated in f2fs_truncate_partial_cluster().
+ fs/f2fs/compress.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++
+ fs/f2fs/f2fs.h     |  2 ++
+ fs/f2fs/file.c     | 19 +++++++++++++-----
+ 3 files changed, 65 insertions(+), 5 deletions(-)
+
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 744ce2eb6ca7..758ef8183e59 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -956,6 +956,55 @@ bool f2fs_compress_write_end(struct inode *inode, void *fsdata,
+ 	return first_index;
+ }
+ 
++int f2fs_truncate_partial_cluster(struct inode *inode, u64 from, bool lock)
++{
++	void *fsdata = NULL;
++	struct page *pagep;
++	int log_cluster_size = F2FS_I(inode)->i_log_cluster_size;
++	pgoff_t start_idx = from >> (PAGE_SHIFT + log_cluster_size) <<
++							log_cluster_size;
++	int err;
++
++	err = f2fs_is_compressed_cluster(inode, start_idx);
++	if (err < 0)
++		return err;
++
++	/* truncate normal cluster */
++	if (!err)
++		return f2fs_do_truncate_blocks(inode, from, lock);
++
++	/* truncate compressed cluster */
++	err = f2fs_prepare_compress_overwrite(inode, &pagep,
++						start_idx, &fsdata);
++
++	/* should not be a normal cluster */
++	f2fs_bug_on(F2FS_I_SB(inode), err == 0);
++
++	if (err <= 0)
++		return err;
++
++	if (err > 0) {
++		struct page **rpages = fsdata;
++		int cluster_size = F2FS_I(inode)->i_cluster_size;
++		int i;
++
++		for (i = cluster_size - 1; i >= 0; i--) {
++			loff_t start = rpages[i]->index << PAGE_SHIFT;
++
++			if (from <= start) {
++				zero_user_segment(rpages[i], 0, PAGE_SIZE);
++			} else {
++				zero_user_segment(rpages[i], from - start,
++								PAGE_SIZE);
++				break;
++			}
++		}
++
++		f2fs_compress_write_end(inode, fsdata, start_idx, true);
++	}
++	return 0;
++}
++
+ static int f2fs_write_compressed_pages(struct compress_ctx *cc,
+ 					int *submitted,
+ 					struct writeback_control *wbc,
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 76d2a99520bf..f5c55c966ed7 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3076,6 +3076,7 @@ static inline void f2fs_clear_page_private(struct page *page)
+  */
+ int f2fs_sync_file(struct file *file, loff_t start, loff_t end, int datasync);
+ void f2fs_truncate_data_blocks(struct dnode_of_data *dn);
++int f2fs_do_truncate_blocks(struct inode *inode, u64 from, bool lock);
+ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock);
+ int f2fs_truncate(struct inode *inode);
+ int f2fs_getattr(const struct path *path, struct kstat *stat,
+@@ -3796,6 +3797,7 @@ int f2fs_prepare_compress_overwrite(struct inode *inode,
+ 			struct page **pagep, pgoff_t index, void **fsdata);
+ bool f2fs_compress_write_end(struct inode *inode, void *fsdata,
+ 					pgoff_t index, unsigned copied);
++int f2fs_truncate_partial_cluster(struct inode *inode, u64 from, bool lock);
+ void f2fs_compress_write_end_io(struct bio *bio, struct page *page);
+ bool f2fs_is_compress_backend_ready(struct inode *inode);
+ void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity);
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 8dfbcf3b4c4c..257b3b629ee1 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -646,9 +646,6 @@ static int truncate_partial_data_page(struct inode *inode, u64 from,
+ 		return 0;
+ 	}
+ 
+-	if (f2fs_compressed_file(inode))
+-		return 0;
+-
+ 	page = f2fs_get_lock_data_page(inode, index, true);
+ 	if (IS_ERR(page))
+ 		return PTR_ERR(page) == -ENOENT ? 0 : PTR_ERR(page);
+@@ -664,7 +661,7 @@ static int truncate_partial_data_page(struct inode *inode, u64 from,
+ 	return 0;
+ }
+ 
+-static int do_truncate_blocks(struct inode *inode, u64 from, bool lock)
++int f2fs_do_truncate_blocks(struct inode *inode, u64 from, bool lock)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct dnode_of_data dn;
+@@ -732,7 +729,9 @@ static int do_truncate_blocks(struct inode *inode, u64 from, bool lock)
+ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
+ {
+ 	u64 free_from = from;
++	int err;
+ 
++#ifdef CONFIG_F2FS_FS_COMPRESSION
+ 	/*
+ 	 * for compressed file, only support cluster size
+ 	 * aligned truncation.
+@@ -747,8 +746,18 @@ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
+ 			free_from++;
+ 		free_from <<= cluster_shift;
+ 	}
++#endif
++
++	err = f2fs_do_truncate_blocks(inode, free_from, lock);
++	if (err)
++		return err;
++
++#ifdef CONFIG_F2FS_FS_COMPRESSION
++	if (from != free_from)
++		err = f2fs_truncate_partial_cluster(inode, from, lock);
++#endif
+ 
+-	return do_truncate_blocks(inode, free_from, lock);
++	return err;
+ }
+ 
+ int f2fs_truncate(struct inode *inode)
+-- 
+2.18.0.rc1
 
