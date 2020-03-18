@@ -2,309 +2,140 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8269EC43332
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB04C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D9820768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD23620768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:48:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="T4F+0zg1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbgCRVri (ORCPT
+        id S1727213AbgCRVsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:47:38 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:57728 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRVri (ORCPT
+        Wed, 18 Mar 2020 17:48:01 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33577 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727186AbgCRVsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:47:38 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 3C38120023;
-        Wed, 18 Mar 2020 22:47:33 +0100 (CET)
-Date:   Wed, 18 Mar 2020 22:47:31 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 1/2] dt-bindings: display/bridge: Add binding for NWL
- mipi dsi host controller
-Message-ID: <20200318214731.GB971@ravnborg.org>
-References: <cover.1584544065.git.agx@sigxcpu.org>
- <e76a1e6cd3a18e4239915d3aee801b7a2aeac127.1584544065.git.agx@sigxcpu.org>
+        Wed, 18 Mar 2020 17:48:01 -0400
+Received: by mail-ed1-f68.google.com with SMTP id z65so45646ede.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 14:47:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jSbmM7deMijcGQ2Njr0obFK5q42A00wv1XC6bXtNHSs=;
+        b=T4F+0zg1O4tCjiTKCeojQKo/2Vtz1Y+alVLD9/3BaXATvaIH/n9YlZXNzm44rRIYbc
+         /F5yX5PPdgh6l01fK9Gc10RKTceI3FKoMamsMY7hRmF0avd+AHmIzQx36bFZmvXUv3WA
+         EvoGBOAqVPPUfit4G9+GonZdu56r9uGVHxzjN4hKfT0wxiYfjbDnp6J0f3ZqDddnq+2k
+         cyBGj7HLAeLnxb7lU/gUixuR6E1k3WHUyCQ/ClL6F7PlGcFYjaOKkhpgPPSb+URJI5vX
+         hlLE/L/hNKSs2ia2J+nArMBJNI5rRs49r+Pxi72D9WYQ8pY6L5sMGpDq0zB1ajX5b02A
+         uXHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jSbmM7deMijcGQ2Njr0obFK5q42A00wv1XC6bXtNHSs=;
+        b=RnDQWwngrSiVArTdieRVkonGx517WbBsjE4ocB8eISMsLBPlKHfJ5Udc9LZEmCasLy
+         bX8AJZ//R7ZTbAxtf23W/qrLiQUNaSmKmsB1SpLTgzpaPbQNK5URmFkL5Nne+5MdIsyd
+         p391qP+j+wxWXOAfHu6P2X+GLCY+ShYpY4+rVD28oUb4xV/Dr1jAqufycNb6c49XPW5/
+         KW7u5NZ5pDnmSNMn0BLV/R1UULXwJ95oNreiZlkzMLjdXBL4sKaiDd9GktPJsEvJZSDa
+         wNfuu9M3QMgdt46fwWh/KSSe35gf+pdkm/ofVskv5yjH7TMDiBMWgn7BUaionzypfcwZ
+         6pWw==
+X-Gm-Message-State: ANhLgQ0HoziPDRCQOpzbQjAox9kOfjDVnBFxpUkaYUNRQzWi7wjqrMfu
+        QamwcFLclMW/bPmAWBcf1dcvt6sAKqirBVpcV7j/
+X-Google-Smtp-Source: ADFU+vv/EY9M8GK0pcJMqD/OH+jUGrRWl+6JVHzUqMMHKF9wP/wDKGvAN8gqZuvjirieWXrnqF8sYPlcMloCLTpwSog=
+X-Received: by 2002:a17:906:7a46:: with SMTP id i6mr281388ejo.95.1584568078394;
+ Wed, 18 Mar 2020 14:47:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e76a1e6cd3a18e4239915d3aee801b7a2aeac127.1584544065.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=ze386MxoAAAA:8
-        a=8AirrxEcAAAA:8 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8 a=gEfo2CItAAAA:8
-        a=Vm19FepyDpoABvc2yYMA:9 a=cVXEkGUna-Ne1Fa8:21 a=TVmiQ_s7cYx9mS0L:21
-        a=wPNLvfGTeEIA:10 a=iBZjaW-pnkserzjvUTHh:22 a=ST-jHhOKWsTCqRlWije3:22
-        a=AjGcO6oz07-iQ99wixmX:22 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=sptkURWiP4Gy88Gu7hUp:22
+References: <cover.1577736799.git.rgb@redhat.com> <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca>
+ <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
+ <3142237.YMNxv0uec1@x2> <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
+ <20200312202733.7kli64zsnqc4mrd2@madcap2.tricolour.ca> <CAHC9VhS9DtxJ4gvOfMRnzoo6ccGJVKL+uZYe6qqH+SPqD8r01Q@mail.gmail.com>
+ <20200313192306.wxey3wn2h4htpccm@madcap2.tricolour.ca> <CAHC9VhQKOpVWxDg-tWuCWV22QRu8P_NpFKme==0Ot1RQKa_DWA@mail.gmail.com>
+ <20200318214154.ycxy5dl4pxno6fvi@madcap2.tricolour.ca>
+In-Reply-To: <20200318214154.ycxy5dl4pxno6fvi@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 18 Mar 2020 17:47:47 -0400
+Message-ID: <CAHC9VhSuMnd3-ci2Bx-xJ0yscQ=X8ZqFAcNPKpbh_ZWN3FJcuQ@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
+        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 04:09:07PM +0100, Guido Günther wrote:
-> The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> Tested-by: Robert Chiras <robert.chiras@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+On Wed, Mar 18, 2020 at 5:42 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-03-18 17:01, Paul Moore wrote:
+> > On Fri, Mar 13, 2020 at 3:23 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2020-03-13 12:42, Paul Moore wrote:
+> >
+> > ...
+> >
+> > > > The thread has had a lot of starts/stops, so I may be repeating a
+> > > > previous suggestion, but one idea would be to still emit a "death
+> > > > record" when the final task in the audit container ID does die, but
+> > > > block the particular audit container ID from reuse until it the
+> > > > SIGNAL2 info has been reported.  This gives us the timely ACID death
+> > > > notification while still preventing confusion and ambiguity caused by
+> > > > potentially reusing the ACID before the SIGNAL2 record has been sent;
+> > > > there is a small nit about the ACID being present in the SIGNAL2
+> > > > *after* its death, but I think that can be easily explained and
+> > > > understood by admins.
+> > >
+> > > Thinking quickly about possible technical solutions to this, maybe it
+> > > makes sense to have two counters on a contobj so that we know when the
+> > > last process in that container exits and can issue the death
+> > > certificate, but we still block reuse of it until all further references
+> > > to it have been resolved.  This will likely also make it possible to
+> > > report the full contid chain in SIGNAL2 records.  This will eliminate
+> > > some of the issues we are discussing with regards to passing a contobj
+> > > vs a contid to the audit_log_contid function, but won't eliminate them
+> > > all because there are still some contids that won't have an object
+> > > associated with them to make it impossible to look them up in the
+> > > contobj lists.
+> >
+> > I'm not sure you need a full second counter, I imagine a simple flag
+> > would be okay.  I think you just something to indicate that this ACID
+> > object is marked as "dead" but it still being held for sanity reasons
+> > and should not be reused.
+>
+> Ok, I see your point.  This refcount can be changed to a flag easily
+> enough without change to the api if we can be sure that more than one
+> signal can't be delivered to the audit daemon *and* collected by sig2.
+> I'll have a more careful look at the audit daemon code to see if I can
+> determine this.
 
-> ---
->  .../bindings/display/bridge/nwl-dsi.yaml      | 216 ++++++++++++++++++
->  1 file changed, 216 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> new file mode 100644
-> index 000000000000..ec1e7e12719d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> @@ -0,0 +1,216 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Northwest Logic MIPI-DSI controller on i.MX SoCs
-> +
-> +maintainers:
-> +  - Guido Gúnther <agx@sigxcpu.org>
-> +  - Robert Chiras <robert.chiras@nxp.com>
-> +
-> +description: |
-> +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
-> +  the SOCs NWL MIPI-DSI host controller.
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx8mq-nwl-dsi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  clocks:
-> +    items:
-> +      - description: DSI core clock
-> +      - description: RX_ESC clock (used in escape mode)
-> +      - description: TX_ESC clock (used in escape mode)
-> +      - description: PHY_REF clock
-> +      - description: LCDIF clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core
-> +      - const: rx_esc
-> +      - const: tx_esc
-> +      - const: phy_ref
-> +      - const: lcdif
-> +
-> +  mux-controls:
-> +    description:
-> +      mux controller node to use for operating the input mux
-> +
-> +  phys:
-> +    maxItems: 1
-> +    description:
-> +      A phandle to the phy module representing the DPHY
-> +
-> +  phy-names:
-> +    items:
-> +      - const: dphy
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    items:
-> +      - description: dsi byte reset line
-> +      - description: dsi dpi reset line
-> +      - description: dsi esc reset line
-> +      - description: dsi pclk reset line
-> +
-> +  reset-names:
-> +    items:
-> +      - const: byte
-> +      - const: dpi
-> +      - const: esc
-> +      - const: pclk
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      A node containing DSI input & output port nodes with endpoint
-> +      definitions as documented in
-> +      Documentation/devicetree/bindings/graph.txt.
-> +    properties:
-> +      port@0:
-> +        type: object
-> +        description:
-> +          Input port node to receive pixel data from the
-> +          display controller. Exactly one endpoint must be
-> +          specified.
-> +        properties:
-> +          '#address-cells':
-> +            const: 1
-> +
-> +          '#size-cells':
-> +            const: 0
-> +
-> +          endpoint@0:
-> +            description: sub-node describing the input from LCDIF
-> +            type: object
-> +
-> +          endpoint@1:
-> +            description: sub-node describing the input from DCSS
-> +            type: object
-> +
-> +          reg:
-> +            const: 0
-> +
-> +        required:
-> +          - '#address-cells'
-> +          - '#size-cells'
-> +          - reg
-> +        additionalProperties: false
-> +
-> +      port@1:
-> +        type: object
-> +        description:
-> +          DSI output port node to the panel or the next bridge
-> +          in the chain
-> +
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    required:
-> +      - '#address-cells'
-> +      - '#size-cells'
-> +      - port@0
-> +      - port@1
-> +
-> +    additionalProperties: false
-> +
-> +patternProperties:
-> +  "^panel@[0-9]+$":
-> +    type: object
-> +
-> +required:
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +  - clock-names
-> +  - clocks
-> +  - compatible
-> +  - interrupts
-> +  - mux-controls
-> +  - phy-names
-> +  - phys
-> +  - ports
-> +  - reg
-> +  - reset-names
-> +  - resets
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> + - |
-> +
-> +   #include <dt-bindings/clock/imx8mq-clock.h>
-> +   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +   #include <dt-bindings/reset/imx8mq-reset.h>
-> +
-> +   mipi_dsi: mipi_dsi@30a00000 {
-> +              #address-cells = <1>;
-> +              #size-cells = <0>;
-> +              compatible = "fsl,imx8mq-nwl-dsi";
-> +              reg = <0x30A00000 0x300>;
-> +              clocks = <&clk IMX8MQ_CLK_DSI_CORE>,
-> +                       <&clk IMX8MQ_CLK_DSI_AHB>,
-> +                       <&clk IMX8MQ_CLK_DSI_IPG_DIV>,
-> +                       <&clk IMX8MQ_CLK_DSI_PHY_REF>,
-> +                       <&clk IMX8MQ_CLK_LCDIF_PIXEL>;
-> +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref", "lcdif";
-> +              interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +              mux-controls = <&mux 0>;
-> +              power-domains = <&pgc_mipi>;
-> +              resets = <&src IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_DPI_RESET_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_ESC_RESET_N>,
-> +                       <&src IMX8MQ_RESET_MIPI_DSI_PCLK_RESET_N>;
-> +              reset-names = "byte", "dpi", "esc", "pclk";
-> +              phys = <&dphy>;
-> +              phy-names = "dphy";
-> +
-> +              panel@0 {
-> +                      compatible = "rocktech,jh057n00900";
-> +                      reg = <0>;
-> +                      port@0 {
-> +                           panel_in: endpoint {
-> +                                     remote-endpoint = <&mipi_dsi_out>;
-> +                           };
-> +                      };
-> +              };
-> +
-> +              ports {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +
-> +                    port@0 {
-> +                           #size-cells = <0>;
-> +                           #address-cells = <1>;
-> +                           reg = <0>;
-> +                           mipi_dsi_in: endpoint@0 {
-> +                                        reg = <0>;
-> +                                        remote-endpoint = <&lcdif_mipi_dsi>;
-> +                           };
-> +                    };
-> +                    port@1 {
-> +                           reg = <1>;
-> +                           mipi_dsi_out: endpoint {
-> +                                         remote-endpoint = <&panel_in>;
-> +                           };
-> +                    };
-> +              };
-> +      };
-> -- 
-> 2.23.0
+Maybe I'm not understanding your concern, but this isn't really
+different than any of the other things we track for the auditd signal
+sender, right?  If we are worried about multiple signals being sent
+then it applies to everything, not just the audit container ID.
+
+> Another question occurs to me is that what if the audit daemon is sent a
+> signal and it cannot or will not collect the sig2 information from the
+> kernel (SIGKILL?)?  Does that audit container identifier remain dead
+> until reboot, or do we institute some other form of reaping, possibly
+> time-based?
+
+In order to preserve the integrity of the audit log that ACID value
+would need to remain unavailable until the ACID which contains the
+associated auditd is "dead" (no one can request the signal sender's
+info if that container is dead).
+
+-- 
+paul moore
+www.paul-moore.com
