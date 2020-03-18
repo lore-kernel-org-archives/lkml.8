@@ -2,104 +2,124 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE567C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16719C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F6C20772
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE57020772
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:34:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cl0pZFan"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="USlc4yqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgCRNcl (ORCPT
+        id S1726971AbgCRNe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:32:41 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42369 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbgCRNcl (ORCPT
+        Wed, 18 Mar 2020 09:34:29 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:36602 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726741AbgCRNe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:32:41 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b21so20569106edy.9;
-        Wed, 18 Mar 2020 06:32:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mYCC0npBMG0vbAOp6lmFNCRY0zK8adL/9dKbj+Yqe7Y=;
-        b=Cl0pZFanv4M9J1aHobxx5invUvlqLH+t7nhja3ohfPPNddUcIMPeESp2YfaJEW5na9
-         qj0OcVgtvDVktgIXXf/8hYTys/icsmDxI7utUoF8IzQd6nmcABR2KtoH/bRMICAtG0eQ
-         ae1fn1NcxytBebk4wowKsIEK+8ez8av+STpxjXa/UU0USladilHZBJw1X7PbZOvRJLt3
-         Jgb3OsaOEn7IeMGM9aThge0JODAtfRh/NmqfhOWybUpDQ+kQW2K6xypHnHDX5P8ULNm9
-         1nU/FGV06t0upZaZYEzbwCwE0cz/rCnV2jFklmyXnhTFgjR3VztjzX1MM6HHtjI/eA/3
-         sIAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mYCC0npBMG0vbAOp6lmFNCRY0zK8adL/9dKbj+Yqe7Y=;
-        b=awj1/G8D6Bqw1GpXsXczRi58TxWydXvOEfYo7b4GcDovr6OQnY6V5wzub9XQU7tY6r
-         ZjQD8bHpzOvSM8HqBCgRI8IP6BHTyn2z7PFG8a43gIzer0A5VQ9NadsJ6qGat98l9WVW
-         F89WoQ0s/5/MmPFj7IWzKcTsBT4zFFKORKE69Y9Ch3MX6SOBTQlBFFRAmyOBS1UR00s1
-         Gay6bckPleItJr9VXOsMnglBGVEK6vE09BksH7DLEZZIlRkN1zWe4gMmEpg+DXJ60Tru
-         tWjm+hJ8y8nVxP26/KeN/EaNTfReQiSA0kzUtyja/7qaLfoMT3AzP/nQa2aLSBSyzGxL
-         KD3g==
-X-Gm-Message-State: ANhLgQ3FLbfQKnopDPthy5D0jzYuGgi2XS3FY7Mk4zXlczK/i+ikXw7f
-        D1c+kMopmH2oowVLDMD/oEA=
-X-Google-Smtp-Source: ADFU+vuReANJeEqUItjIq+M9/F87Jm+fIrhJyn+pckLzJ9iiwEIXJ0vfbUxIbAg6RE2pe28SmD3Drw==
-X-Received: by 2002:a05:6402:1d95:: with SMTP id dk21mr3836875edb.93.1584538358848;
-        Wed, 18 Mar 2020 06:32:38 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host203-232-dynamic.53-79-r.retail.telecomitalia.it. [79.53.232.203])
-        by smtp.googlemail.com with ESMTPSA id c21sm344479ejm.47.2020.03.18.06.32.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 06:32:38 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Andy Gross <agross@kernel.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: qcom: add scm definition
-Date:   Wed, 18 Mar 2020 14:32:14 +0100
-Message-Id: <20200318133213.1041-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 18 Mar 2020 09:34:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584538468;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Rwy2W2p7dMLeHMVGRHL4A2JsbSyvgsJe+2hxKr/b+dA=;
+        b=USlc4yqUno+AYFMQ/n/ep+CyDqqyybGbD8t3tqX+gDSLLmm4Js8Ff4a/ljFguZaS+7MmNy
+        kFl+RdudhTtuL2DcTXqBhuYywohz+pF06XBQ+FNO6ItRX401r6WjO+tVldZTUPl9Ho5FyA
+        sbhWBfH4BZM4vXxMi2E/KXR/n+daji8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-wnANbA4UPDyuupoy2miDvg-1; Wed, 18 Mar 2020 09:34:23 -0400
+X-MC-Unique: wnANbA4UPDyuupoy2miDvg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40D31149C2;
+        Wed, 18 Mar 2020 13:34:22 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (unknown [10.3.128.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B248A5C219;
+        Wed, 18 Mar 2020 13:34:21 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 1C5A8160; Wed, 18 Mar 2020 10:34:35 -0300 (BRT)
+Date:   Wed, 18 Mar 2020 10:34:35 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     zhe.he@windriver.com, jolsa@kernel.org, ak@linux.intel.com,
+        meyerk@hpe.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: Add NULL pointer check for cpu_map iteration and
+ NULL assignment for all_cpus.
+Message-ID: <20200318133435.GA14726@redhat.com>
+References: <1583665157-349023-1-git-send-email-zhe.he@windriver.com>
+ <20200318103224.GE821557@krava>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318103224.GE821557@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing scm definition for ipq806x soc
+Em Wed, Mar 18, 2020 at 11:32:24AM +0100, Jiri Olsa escreveu:
+> On Sun, Mar 08, 2020 at 06:59:17PM +0800, zhe.he@windriver.com wrote:
+> > From: He Zhe <zhe.he@windriver.com>
+> > 
+> > NULL pointer may be passed to perf_cpu_map__cpu and then cause crash,
+> > such as the one commit cb71f7d43ece ("libperf: Setup initial evlist::all_cpus value")
+> > fix.
+> > 
+> > Signed-off-by: He Zhe <zhe.he@windriver.com>
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> 
+> thanks,
+> jirka
+> 
+> > ---
+> >  tools/perf/lib/cpumap.c | 2 +-
+> >  tools/perf/lib/evlist.c | 1 +
+> >  2 files changed, 2 insertions(+), 1 deletion(-)
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- arch/arm/boot/dts/qcom-ipq8064.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+this is in tools/lib/perf/ for some time already, I'll do the changes
+there, thanks,
 
-diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-index 16c0da97932c..bb5f678c869f 100644
---- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
-@@ -93,6 +93,12 @@ sleep_clk: sleep_clk {
- 		};
- 	};
- 
-+	firmware {
-+		scm {
-+			compatible = "qcom,scm-ipq806x", "qcom,scm";
-+		};
-+	};
-+
- 	soc: soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-2.25.1
+- Arnaldo
+
+> > 
+> > diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+> > index f93f4e7..ca02150 100644
+> > --- a/tools/perf/lib/cpumap.c
+> > +++ b/tools/perf/lib/cpumap.c
+> > @@ -247,7 +247,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+> >  
+> >  int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
+> >  {
+> > -	if (idx < cpus->nr)
+> > +	if (cpus && idx < cpus->nr)
+> >  		return cpus->map[idx];
+> >  
+> >  	return -1;
+> > diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+> > index 5b9f2ca..f87a239 100644
+> > --- a/tools/perf/lib/evlist.c
+> > +++ b/tools/perf/lib/evlist.c
+> > @@ -127,6 +127,7 @@ void perf_evlist__exit(struct perf_evlist *evlist)
+> >  	perf_cpu_map__put(evlist->cpus);
+> >  	perf_thread_map__put(evlist->threads);
+> >  	evlist->cpus = NULL;
+> > +	evlist->all_cpus = NULL;
+> >  	evlist->threads = NULL;
+> >  	fdarray__exit(&evlist->pollfd);
+> >  }
+> > -- 
+> > 2.7.4
+> > 
 
