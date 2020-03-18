@@ -2,174 +2,123 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6993BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BDEC5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B92520724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:50:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584525025;
-	bh=h1sqElW5tfuolMtTUIsxAnKq9mwnCARkWAFtMOVhhwc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZAh13zv+hedSYMn7RE9TGpdwjcA9ozNGfmrm5GyxZKtv73G3kZ8U9o4X9CZKwSNqi
-	 YCz59vsektKbR0lUXGy4QRgNIbCBQjTZr6CV0+Y8B67wCbU3sIQE7Pzy9HHGHNXt6A
-	 KS4SQiaVQPBW9KfeFqh2oyBVmxOm4ImneiYQfyFY=
+	by mail.kernel.org (Postfix) with ESMTP id 96A9820724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbgCRJuY (ORCPT
+        id S1727537AbgCRJwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:50:24 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:24579 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgCRJuY (ORCPT
+        Wed, 18 Mar 2020 05:52:50 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:48575 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727420AbgCRJwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:50:24 -0400
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 02I9oKQL003768;
-        Wed, 18 Mar 2020 18:50:20 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02I9oKQL003768
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584525021;
-        bh=chiklVzBctTlLbxGf2Dcd0qlUqvFAB8Y+B4FfJ0EYR8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VCGDYdMO0tYz6eQOpRT7lOOmN+don6FrPMQ7LUkqhlZZRIfOVFfTRE3Klz/yMqj9y
-         7Dx3bTg4/hYPpT1iutfMzHx7nfOY+0nqRRiqjctxE2RMFLbyg8oUjUMYILChPHFPUM
-         JWHcn5/Yae/acuLqnqadMyva9Y99VNhlnI2uKeTMEDZCNDeiUtzyOTqBOf1FJ9TPHT
-         T2PHuVFVGliZXp6qQ0IGsl6vkym8a14J3GfGXxlAgFt9ycPOZiagCS4PIl6/5/ZHTT
-         +aYPJv7qlKgimdPWExK8atFjrp+vL/LDBirJImsDQ6R4+nJgthLz5SIjte5dV8fcoN
-         6xIqWSuenQDRA==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id z125so15965087vsb.13;
-        Wed, 18 Mar 2020 02:50:20 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0qWZftZTWvPbzmzKhD5GM6LcXukZs9co57dkk81fq4cpfMoXNe
-        pHkgMfIEvbtyJmlUy75xOYDo5npeOn87P33TQME=
-X-Google-Smtp-Source: ADFU+vudeX7j1H0dbtItU0YyqPX05lGkToRiAw6PSpkDne2hG2HjXS+0Fd2/2e1rrZ/Caj1eQ0JgUQGVn+ttmDXXUZ0=
-X-Received: by 2002:a67:3201:: with SMTP id y1mr2566856vsy.54.1584525019426;
- Wed, 18 Mar 2020 02:50:19 -0700 (PDT)
+        Wed, 18 Mar 2020 05:52:49 -0400
+Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mzi3l-1jREuU3oCv-00viKa; Wed, 18 Mar 2020 10:52:48 +0100
+Received: by mail-qk1-f180.google.com with SMTP id f28so37589856qkk.13;
+        Wed, 18 Mar 2020 02:52:47 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1dGpADYjO5CDo9TpC9sNH0OfvqMLmN9P2f3eZ+mfD8mi7hWdNI
+        bpn+08ayNnGJiug5lJv2ZA0tpBSbNr8b47nBN+4=
+X-Google-Smtp-Source: ADFU+vvPPpkP18ZKfrFNh8gvaXPMHk4SKQCYU0CemL9wvz6IRWOfSh9+2To1NcmRy07HyNQyHflromqOgChlyMVwpd0=
+X-Received: by 2002:a37:6285:: with SMTP id w127mr3096860qkb.138.1584525166497;
+ Wed, 18 Mar 2020 02:52:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200316122820.11032-1-yangx.jy@cn.fujitsu.com> <5E702236.8070109@cn.fujitsu.com>
-In-Reply-To: <5E702236.8070109@cn.fujitsu.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 18 Mar 2020 18:49:43 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARcs_ouquXPWJfKkfpikXV-4t=2YVCjEWeDzaNhFjmaeA@mail.gmail.com>
-Message-ID: <CAK7LNARcs_ouquXPWJfKkfpikXV-4t=2YVCjEWeDzaNhFjmaeA@mail.gmail.com>
-Subject: Re: [PATCH] modpost: Get proper section index by get_secindex()
- instead of st_shndx
-To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+ <1584200119-18594-6-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a2yve3R1w5igBYMy3HSFJ8Xt4BHhXQcaTAkNCdZXZ1v-w@mail.gmail.com> <MW2PR2101MB1052B9C24DAB19FBBD818347D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB1052B9C24DAB19FBBD818347D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 18 Mar 2020 10:52:30 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1zm2UH-S6eN4qMO_o1M8b0ieMq+2tQGVKmtC-UKeZUTQ@mail.gmail.com>
+Message-ID: <CAK8P3a1zm2UH-S6eN4qMO_o1M8b0ieMq+2tQGVKmtC-UKeZUTQ@mail.gmail.com>
+Subject: Re: [PATCH v6 05/10] arm64: hyperv: Add interrupt handlers for VMbus
+ and stimer
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:A1KzVya30fjoULLZ+eD2UXAbZC8WJh5Z7ng5J6IZzzlynO993/b
+ 0SSCMhfRnGtznaciJzi8JIOE7iMdMixIrToEs0OdUuSdrfRk8mgBlV5NxB5ez5AhLH9KZDH
+ wVYoyZn65/gHyak53FLg+4+crg7selqHaskTeFcdIZnLxO5nr9ErvULb5OteTqqnTyjIhMc
+ sY2Q2FkvyjWMNOL0UpDew==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:r+xSzRlN+aE=:RJwZ+to3d1F75tXB2EyKPp
+ d91UC9VbiX4FD5XucXITiDzp/TaSff9veEDX3y3t/Iq51zAZ/r+rMDkUwTow1F1Ru9C2hnaMB
+ KxwnMnKeUKNcZsw9Cfs/nN72U2CKyrVFPwe6FUuRWxMJnwg9kRQhjHphPz95zqox8KHKqJ9Mb
+ aPWqg38MSr7eSdWIABpqX4MwG0gcbIRJV68O1YL8ZW+NbfWTRSsGJ4mrNaK2pKdJ2Qh2V0E6g
+ zfK1L/SWfY5ts1gMMOb+SsSdqa/IzV6Od5ofklw68YMnwXbWKop+VUk+qOmm/X2Uo4GlK0DAX
+ lwWzdmDlaqr3Z6vDF55ON1yhwsyNVHkrb+Jl0PIatqklwFZIJQIYV3KqVThs7sSyDN9SFCbkX
+ GL4me4vL00eRXPwHWPk6gXxH6SubqvNmkDNPKsIqDSkTyU4U1jM748iqShAf/MKkXe1e+SA2z
+ olaTzmWRFrgFX9OeLzc0trrhPrLKfa5rF9xxlfizVvVwZR0ZLfQz7oXaIBDaTaPVgaV4fVcHX
+ nBOYiTX3M0XD1Wtwud+yu8A0EDoECltEKUc3aOCNf8B8VKq9b0WaYcCozJEJmFQ21Yp+PBJgX
+ SFs42AZAD5DMITpP4HNPJ7ds91B6PGgG9MzVEq37JVPD1Glpe9ZjqGzVqAlEifFsV3Tywa0fS
+ Ihbac3lTsmi9vErTky1ejjcbqOdozls9iwXb5/tdZlnC+CTEW4PxtRFDcz90IY+juMwyxLYPx
+ o9LFzJwX2ZboPMW1D3lxQ7GyJWwf6lPhNK2fy998tdpd/+bdII0FFLfu9Fvpd3jstn6wVINuD
+ xANBts00pWzhLYlUCRkujWuaPNkrBSh3F2U2MQdSQv3Zc8NoTU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 10:05 AM Xiao Yang <yangx.jy@cn.fujitsu.com> wrote:
->
-> On 2020/3/16 20:28, Xiao Yang wrote:
-
-Thanks for catching this bug.
-
-
-> > (uint16_t) st_shndx is limited to 65535(i.e. SHN_XINDEX) so sym_get_dat=
-a() gets
-> > wrong section index by st_shndx if object file(e.g. vmlinux.o) has more=
- than
-> Hi,
->
-> It seems better to say that sym_get_data() gets wrong section index by
-> st_shndx if requested symbol contains extended section index that is
-> more than 65535.
-
-
-Sounds good to me.
-
-
-> Thanks,
-> Xiao Yang
-> > 65535 sessions.  In this case, we need to get proper section index by .=
-symtab_shndx
-> > section.
+On Wed, Mar 18, 2020 at 1:16 AM Michael Kelley <mikelley@microsoft.com> wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> > On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
+> > >
+> > > Add ARM64-specific code to set up and handle the interrupts
+> > > generated by Hyper-V for VMbus messages and for stimer expiration.
+> > >
+> > > This code is architecture dependent and is mostly driven by
+> > > architecture independent code in the VMbus driver and the
+> > > Hyper-V timer clocksource driver.
+> > >
+> > > This code is built only when CONFIG_HYPERV is enabled.
+> > >
+> > > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
 > >
-> > Module.symvers generated by building kernel with "-ffunction-sections -=
-fdata-sections"
-> > shows the issue(i.e. cannot get 89902 by st_shndx):
-> > -------------------------------------------------------------------
-> > [root@Fedora-30 linux]# file Module.symvers
-> > Module.symvers: data
-> > [root@Fedora-30 linux]# head -n1 Module.symvers
-> > 0x5caf3011      ipv6_chk_custom_prefix  =E2=96=92=E2=96=92=E2=96=92=E2=
-=96=92=E2=96=92=E2=96=92=E2=96=92=E2=96=92        vmlinux EXPORT_SYMBOL
-
-
-Could you delete this dump?
-I'd like to avoid garbling where possible.
-
-
-> > ...
-> > [root@Fedora-30 linux]# readelf -s -W vmlinux.o | grep __kstrtabns_ipv6=
-_chk_custom_prefix
-> > 199174: 0000000000032578     1 OBJECT  LOCAL  DEFAULT 89902 __kstrtabns=
-_ipv6_chk_custom_prefix
-> > [root@Fedora-30 linux]# readelf -S -W vmlinux.o | grep 89902
-> >    [89902] __ksymtab_strings PROGBITS        0000000000000000 a94e00 03=
-45a2 00   A  0   0  1
-> > -------------------------------------------------------------------
+> > This looks like it should be a nested irqchip driver instead, so your
+> > device drivers can use the normal request_irq() functions etc.
 > >
-> > Fixes: afa0459daa7b ("modpost: add a helper to get data pointed by a sy=
-mbol")
-
-Strictly speaking, this commit does not introduce any bug.
-
-The CRC bug for MODVERSIONS exists since
-56067812d5b0 ("kbuild: modversions: add infrastructure for emitting
-relative CRCs")
-
-
-> > Fixes: 5545322c86d9 ("modpost: refactor namespace_from_kstrtabns() to n=
-ot hard-code section name")
-
-This commit hash is wrong.
-The correct one is
-
-Fixes: e84f9fbbece1 ("modpost: refactor namespace_from_kstrtabns() to
-not hard-code section name")
-
-
-
-
-
-> > Signed-off-by: Xiao Yang<yangx.jy@cn.fujitsu.com>
-> > ---
-> >   scripts/mod/modpost.c | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > Is anything preventing you from doing that? If so, please describe
+> > that in the changelog and in a comment in the driver.
 > >
-> > diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> > index d9418c58a8c0..c1fec8cac257 100644
-> > --- a/scripts/mod/modpost.c
-> > +++ b/scripts/mod/modpost.c
-> > @@ -310,7 +310,8 @@ static const char *sec_name(struct elf_info *elf, i=
-nt secindex)
-> >
-> >   static void *sym_get_data(const struct elf_info *info, const Elf_Sym =
-*sym)
-> >   {
-> > -     Elf_Shdr *sechdr =3D&info->sechdrs[sym->st_shndx];
-> > +     unsigned int secindex =3D get_secindex(info, sym);
-> > +     Elf_Shdr *sechdr =3D&info->sechdrs[secindex];
-> >       unsigned long offset;
-> >
-> >       offset =3D sym->st_value;
 >
->
->
+> As mentioned in my reply on Patch 1, Hyper-V offers a limited synthetic
+> interrupt controller managed by Linux code that's been around the last
+> 10 years on the x86 side.   For reasons that pre-date me, it was not written
+> as an irqchip driver.
 
+I think the reason is just that 10 years ago, we did not have the concept
+of irqchips as device drivers.
 
---
-Best Regards
-Masahiro Yamada
+> Modulo the small routines you see in this patch, the code is architecture
+> independent, and it seems we ought to keep the high degree of commonality.
+> Re-architecting the arch independent code to model as an irqchip driver seems
+> to carry some risk to the x86 side that has a lot of real-world usage today, but
+> I'll take a look and see what the risks look like and if it adds any clarity.
+
+How many drivers link against the custom interface? If it's less than 10,
+making it a real driver is probably not too hard to do.
+
+       Arnd
