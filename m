@@ -2,160 +2,120 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7621C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2E2C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2FC20754
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:39:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YRFM8a6G"
+	by mail.kernel.org (Postfix) with ESMTP id 6BD5C20754
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727252AbgCRWjt (ORCPT
+        id S1727351AbgCRWjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:39:49 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:50512 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbgCRWjt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:39:49 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02IMd6da003668;
-        Wed, 18 Mar 2020 22:39:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=H1MqLvxMQu57KLqvhSHFxWcNzIe9uVH2pzVyel8x3lY=;
- b=YRFM8a6G/Nlx2vr+v00SsVqX8z+MTuEh6bQcPh317YpuKbvbvW/V1YrZ4GafwKwUWFAM
- CLTRLGdG/wGJv4fvSn/OIsLtkEOrE1kTK7QLdLjaOPhFHxLExj4mvQNWrxwRUaTodqK9
- Yu66Qcg0aAbs0n1iKUfXdYUkL/lWY9RSzX635I6NqpyjvMqP23tsyz9CXmmiHVHW+XDv
- Dpvkszh0PGrln064nj1pqUqZWPmLM94FcgPKTGY0wczu7fBtU89e7l2RIiDXGcwbcY36
- vT+6bjLnrYqH9P3W09Sh/G4ZPGweC2OG1tYuva0v3txraGIhO3Ko2ocoPmPlwXsDpdc/ Ag== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2yrq7m57nx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 22:39:05 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02IMaggY070076;
-        Wed, 18 Mar 2020 22:39:05 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2ys8tuvjum-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 22:39:05 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02IMctjE013967;
-        Wed, 18 Mar 2020 22:38:56 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Mar 2020 15:38:55 -0700
-Subject: Re: [PATCH 1/4] hugetlbfs: add arch_hugetlb_valid_size
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S.Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Longpeng <longpeng2@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200318220634.32100-1-mike.kravetz@oracle.com>
- <20200318220634.32100-2-mike.kravetz@oracle.com>
- <20200318220954.GD8477@willie-the-truck>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <43735ae0-f5f6-1e7b-2d0f-a46f9af1627e@oracle.com>
-Date:   Wed, 18 Mar 2020 15:38:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 18:39:52 -0400
+Received: from mga06.intel.com ([134.134.136.31]:41336 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726777AbgCRWju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 18:39:50 -0400
+IronPort-SDR: 16vwUxItd219oym/u9uvTyHEr+eEG2ECLFxyN89lVOd0dthG9sPvLDxLr0OQC2uUIuQSHIwH6y
+ ndoE5swUfJPQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 15:39:49 -0700
+IronPort-SDR: OIZt4/Bulq5VM9kt6gz93SuZccv60eWXlc2inejhm2wUCfLxduTFCDDxrd8BuexZGUz7Mwo9Py
+ fiNQdjwwpBsw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,569,1574150400"; 
+   d="scan'208";a="355843989"
+Received: from mbeldzik-mobl.ger.corp.intel.com (HELO localhost) ([10.252.55.127])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Mar 2020 15:39:39 -0700
+Date:   Thu, 19 Mar 2020 00:39:37 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200318223937.GC52244@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <20200315012523.GC208715@linux.intel.com>
+ <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
+ <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
+ <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
+ <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com>
+ <20200316225322.GJ24267@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318220954.GD8477@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003180097
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
- malwarescore=0 mlxscore=0 phishscore=0 impostorscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003180097
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200316225322.GJ24267@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/20 3:09 PM, Will Deacon wrote:
-> On Wed, Mar 18, 2020 at 03:06:31PM -0700, Mike Kravetz wrote:
->> The architecture independent routine hugetlb_default_setup sets up
->> the default huge pages size.  It has no way to verify if the passed
->> value is valid, so it accepts it and attempts to validate at a later
->> time.  This requires undocumented cooperation between the arch specific
->> and arch independent code.
->>
->> For architectures that support more than one huge page size, provide
->> a routine arch_hugetlb_valid_size to validate a huge page size.
->> hugetlb_default_setup can use this to validate passed values.
->>
->> arch_hugetlb_valid_size will also be used in a subsequent patch to
->> move processing of the "hugepagesz=" in arch specific code to a common
->> routine in arch independent code.
->>
->> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
->> ---
->>  arch/arm64/include/asm/hugetlb.h   |  2 ++
->>  arch/arm64/mm/hugetlbpage.c        | 19 ++++++++++++++-----
->>  arch/powerpc/include/asm/hugetlb.h |  3 +++
->>  arch/powerpc/mm/hugetlbpage.c      | 20 +++++++++++++-------
->>  arch/riscv/include/asm/hugetlb.h   |  3 +++
->>  arch/riscv/mm/hugetlbpage.c        | 28 ++++++++++++++++++----------
->>  arch/s390/include/asm/hugetlb.h    |  3 +++
->>  arch/s390/mm/hugetlbpage.c         | 18 +++++++++++++-----
->>  arch/sparc/include/asm/hugetlb.h   |  3 +++
->>  arch/sparc/mm/init_64.c            | 23 ++++++++++++++++-------
->>  arch/x86/include/asm/hugetlb.h     |  3 +++
->>  arch/x86/mm/hugetlbpage.c          | 21 +++++++++++++++------
->>  include/linux/hugetlb.h            |  7 +++++++
->>  mm/hugetlb.c                       | 16 +++++++++++++---
->>  14 files changed, 126 insertions(+), 43 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
->> index 2eb6c234d594..3248f35213ee 100644
->> --- a/arch/arm64/include/asm/hugetlb.h
->> +++ b/arch/arm64/include/asm/hugetlb.h
-<snip>
->> +
->> +static __init int setup_hugepagesz(char *opt)
->> +{
->> +	unsigned long long ps = memparse(opt, &opt);
->> +
->> +	if arch_hugetlb_valid_size(ps)) {
-> 
-> Please compile your changes if you're touching multiple architectures. You
-> can get cross-compiler binaries from:
-> 
+On Mon, Mar 16, 2020 at 03:53:22PM -0700, Sean Christopherson wrote:
+> Yes and no.   If we wanted to minimize the amount of wrapping around the
+> vDSO's ENCLU then we wouldn't have the exit handler shenanigans in the
+> first place.  The whole process has been about balancing the wants of each
+> use case against the overall quality of the API and code.
 
-My apologies.  I only cross compiled the result of the series on each
-architecture.  The above code is obviously bad.
+Minimizing is not something that happens in a void. Given the user base
+for the SDK having the handler was a necessity. Otherwise, we would not
+have that handler in the first place.
 
--- 
-Mike Kravetz
+> Up until Nathaniel joined the party, the only stakeholder in terms of the
+> exit handler was the Intel SDK.  There was a general consensus to pass
+> registers as-is when there isn't a strong reason to do otherwise.  Note
+> that Nathaniel has also expressed approval of that approach.
+
+OK, great.
+
+> The major benefits being that the vDSO would be callable from C and that
+> the kernel could define a legitimate prototype instead of a frankenstein
+> prototype that's half assembly and half C.  For me, those are significant
+
+I was not aware that there was a plot to make it callable by C.
+
+OK, so right now
+
+A. @leaf =  %eax
+B. @tcs = 8(%rsp)
+C. @e = 0x10(%rsp)
+D. @handler = 0x18(%rsp)
+
+On x86-64 Linux C calling convention means DI/SI/DX/CX type of thing.
+
+So what is the thing that we are referring to C calling convetion in
+this email discussion?
+
+> benefits and well worth the extra MOV, PUSH and POP.  For some use cases
+> it would eliminate the need for an assembly wrapper.  For runtimes that
+> need an assembly wrapper for whatever reason, it's probably still a win as
+> a well designed runtime can avoid register shuffling in the wrapper.  And
+> if there is a runtime that isn't covered by the above, it's at worst an
+> extra MOV.
+
+Is it cool if I rip of the documentation from vsgx_enter_enclave.S and
+move it to Documentation/ ? It is nasty to keep and update it where it
+is right now. How it is right now, it is destined to rotten.
+
+/Jarkko
