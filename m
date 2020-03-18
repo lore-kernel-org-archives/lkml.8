@@ -2,167 +2,133 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7EA8C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ED9C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0AC020674
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4E120767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgCRJoN (ORCPT
+        id S1727749AbgCRJoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:44:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15294 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727695AbgCRJoL (ORCPT
+        Wed, 18 Mar 2020 05:44:38 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:50683 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727733AbgCRJof (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:44:11 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02I9XUnE025036
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 05:44:10 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8br9fa9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 05:44:09 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Wed, 18 Mar 2020 09:44:07 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Mar 2020 09:44:02 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02I9i1mA59441288
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 09:44:01 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5779152052;
-        Wed, 18 Mar 2020 09:44:01 +0000 (GMT)
-Received: from [9.203.170.80] (unknown [9.203.170.80])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B804952065;
-        Wed, 18 Mar 2020 09:43:10 +0000 (GMT)
-Subject: Re: [PATCH 10/15] powerpc/watchpoint: Use loop for
- thread_struct->ptrace_bps
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
-        paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
- <20200309085806.155823-11-ravi.bangoria@linux.ibm.com>
- <0eeeac90-b5e3-722b-2d2c-bb95c81d851a@c-s.fr>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Wed, 18 Mar 2020 15:13:01 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 05:44:35 -0400
+Received: from mail-qv1-f47.google.com ([209.85.219.47]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M4384-1jEVFZ3cIa-0001zM; Wed, 18 Mar 2020 10:44:34 +0100
+Received: by mail-qv1-f47.google.com with SMTP id c28so12488183qvb.10;
+        Wed, 18 Mar 2020 02:44:33 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3GZP4gwGrp0jv80nuEkZsnCwKOUNqkmTyg2h6nDN97CyC/JsMj
+        pmtvgEixg+WwyE6PCmX264CD/sKCuKgK3qneKeg=
+X-Google-Smtp-Source: ADFU+vtLo+GOWNxMC15V2TiH90BEPvu2JmMbmtc3AvFP8wu5z0vI2xAgHqQbsb7yudqWQcePXGno6172j7v0a1xP4uw=
+X-Received: by 2002:a0c:a602:: with SMTP id s2mr3333321qva.222.1584524672422;
+ Wed, 18 Mar 2020 02:44:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0eeeac90-b5e3-722b-2d2c-bb95c81d851a@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031809-0016-0000-0000-000002F31937
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031809-0017-0000-0000-000033569D96
-Message-Id: <a52ef8d3-b27b-d48d-b0ab-c9b41209a6ca@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-18_03:2020-03-17,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=999 spamscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003180048
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+ <1584200119-18594-8-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a0+uBsurfQ4smjPDGkJQSkMe-TxJ4cWR_EZXgDR4-bAWQ@mail.gmail.com> <MW2PR2101MB1052281E5B197F2AA8E4D622D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB1052281E5B197F2AA8E4D622D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 18 Mar 2020 10:44:16 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2fzFdXoMKz_-Bryq0HUar=Tgs7SwJL4JFw2_KjzpOPdg@mail.gmail.com>
+Message-ID: <CAK8P3a2fzFdXoMKz_-Bryq0HUar=Tgs7SwJL4JFw2_KjzpOPdg@mail.gmail.com>
+Subject: Re: [PATCH v6 07/10] arm64: hyperv: Initialize hypervisor on boot
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Y3E7GFMtxfMb4EWglKwosVf4WGrTPZmdppd+xcndfUIFF7m/2CG
+ CP4uWgt+ndLbEEWtP0dqLUntzwuskkrezbWXa0Fe/oTAPnYP2+gfDTr4zjvYdWJvs+9fM30
+ pALwNEe4JkxgcRds2+Ct7XHtoQhVyroKYV+eMKgsy55/unt3SmeuyK5BHuqfBMld4BuJW9v
+ 7Y/gnzAtlTw2pzgEWMpIQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:puLlbryp3kc=:ygU3UUZExT6qMfUKNNbQ/1
+ 85Lh5A5GfrhtCYzNZbz7OztgiSskM+cAg+CViARiGyEAChaR9i4hoHOC9pNLWB9nf/LaqU5zM
+ m/XTBms0xLEjMikmtAzdqYFYmanEmUM7EVpP90IiTiE+dr6n110NeRQ2kbb2CpbC6UTnp9fis
+ 4QdftzV3l1SrmImh+tYGjK8jqWqUSgWmUiuc7c3o+dHY9F1XFvxEAAsm89iK49VyXnC3XoHGM
+ bLQSUn89idCgzqTbiNFFIow0bALmouXm7zrkcHV+cqp0CaicaXtFGKSn1YZcCho36/3iDrP43
+ ajpXprl333XxkyGvPa+4plQpnIITxxHYVMuIQBR9o0CxyRs67Fl15VmhRjcgDOfns6DVQiboo
+ WZ63S60MZ9VsDCdZOdZi6rtGSxWnWIXG0PcknA1i6pPvlg3EEYpGj1sqTDhDctLrDaapYeeaM
+ HBP4ByMaKnkeR/BxZI6afG+S9sFOhzSsr3kbwycOu01qFnbc1vbF7g0ldFMc3tdBObUlWrntO
+ WSKvT/4IdMKTJ24PyElsK0+9s+3hkHniApxG8Gn4PnpkBLLXLpnps50UWrmYqCM1mHafkb2wp
+ 6hEym/m1tNFQbrRuOK3Krr4H7WaL8h/9LpiAeG35cpzc7lon0Z/zvOc8vwqjNj1VDbvjkmhhE
+ FE7mcLe5gJDLNtxTgs0C8rCdj0b7Y8SSb0f3HHfg5jmxo2jM1R7PeJDqPj4kms6/GhG8nJCC+
+ dKeqMTGFREwQWwJofd/A/bvXlqqxz+4f4EWr+u1YEEQZ3HsLyltuTUMJv+F+GMpGF63UNt3yi
+ m91v7PmAaN4D+wrwG4nKNL9jY8+CWKPiGKntIBzoawA/7gAOWE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> @@ -1628,6 +1628,9 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
->>       void (*f)(void);
->>       unsigned long sp = (unsigned long)task_stack_page(p) + THREAD_SIZE;
->>       struct thread_info *ti = task_thread_info(p);
->> +#ifdef CONFIG_HAVE_HW_BREAKPOINT
->> +    int i;
->> +#endif
-> 
-> Could we avoid all those #ifdefs ?
-> 
-> I think if we make p->thread.ptrace_bps[] exist all the time, with a size of 0 when CONFIG_HAVE_HW_BREAKPOINT is not set, then we can drop a lot of #ifdefs.
+On Wed, Mar 18, 2020 at 1:18 AM Michael Kelley <mikelley@microsoft.com> wrote:
+>
+> From: Arnd Bergmann <arnd@arndb.de> Sent: Monday, March 16, 2020 1:30 AM
+> >
+> > As you are effectively adding a new clocksource driver here, please move the
+> > code to drivers/clocksource and send the patch to the respective maintainers
+> > (added to Cc here), splitting it out from the rest of the patch.
+> >
+> > You should also describe why your platform doesn't just use the normal
+> > architected timer interface.
+> >
+> > > +TIMER_ACPI_DECLARE(hyperv, ACPI_SIG_GTDT, hyperv_init);
+> >
+> > This looks like it registers a driver for the same device as the normal
+> > arch timer. Won't that clash?
+>
+> There is a Hyper-V clocksource driver in drivers/clocksource/hyperv_timer.c.
+> It is architecture independent and works for both x86 and ARM64.
+>
+> The requirement here is really for a place to hang the general Hyper-V
+> initialization code.   On the x86 side, there's infrastructure already in place
+> to do hypervisor initialization, but nothing corresponding on the ARM64 side.
+> The TIMER_ACPI_DECLARE hook is admittedly a temporary approach, and I'm
+> happy to hear if someone has a better way to handle this.
+>
+> FWIW, Hyper-V doesn't currently virtualize the ARM arch counter/timer for
+> guest VMs.  The Hyper-V synthetic counter/timer in the Hyper-V clocksource
+> driver is used on both ARM64 and x86.  But this Hyper-V init code doesn't actually
+> touch the GTDT device, so it won't interfere with the ARM arch counter/timer
+> when a future Hyper-V version does virtualize it.
 
-Hmm.. what you are saying seems possible. But IMO it should be done as
-independent series. Will work on it.
+I don't have a good idea to solve it, just a few more thoughts:
 
-> 
->>       klp_init_thread_info(p);
->> @@ -1687,7 +1690,8 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
->>       p->thread.ksp_limit = (unsigned long)end_of_stack(p);
->>   #endif
->>   #ifdef CONFIG_HAVE_HW_BREAKPOINT
->> -    p->thread.ptrace_bps[0] = NULL;
->> +    for (i = 0; i < nr_wp_slots(); i++)
->> +        p->thread.ptrace_bps[i] = NULL;
->>   #endif
->>       p->thread.fp_save_area = NULL;
->> diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
->> index f6d7955fc61e..e2651f86d56f 100644
->> --- a/arch/powerpc/kernel/ptrace.c
->> +++ b/arch/powerpc/kernel/ptrace.c
-> 
-> You'll have to rebase all this on the series https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=161356 which is about to go into powerpc-next
+- if your platform does not actually provide the generic timer, then the
+  ACPI tables should not list one either. Instead, create a separate
+  description for your custom timer, and have that added to the ACPI
+  spec.
 
-Sure. Thanks for heads up.
+- To treat the timer more like a normal driver, better have the
+   TIMER_ACPI_DECLARE() function live only in the driver itself,
+   and use an early initcall (arch_initcall, subsys_initcall, etc)
+   it initialize the rest as late as you can.
 
-> 
->> @@ -2829,6 +2829,19 @@ static int set_dac_range(struct task_struct *child,
->>   }
->>   #endif /* CONFIG_PPC_ADV_DEBUG_DAC_RANGE */
->> +#ifdef CONFIG_HAVE_HW_BREAKPOINT
->> +static int empty_ptrace_bp(struct thread_struct *thread)
->> +{
->> +    int i;
->> +
->> +    for (i = 0; i < nr_wp_slots(); i++) {
->> +        if (!thread->ptrace_bps[i])
->> +            return i;
->> +    }
->> +    return -1;
->> +}
->> +#endif
-> 
-> What does this function do exactly ? I seems to do more than what its name suggests.
+- Some of the other code added to arch/arm64/ might be able to
+  live in drivers/virt/hyperv in order to be shared between x86 and
+  arm64. (No idea how much of it there is).
 
-It finds an empty breakpoint in ptrace_bps[]. But yeah, function name is
-misleading. I'll rename it to find_empty_ptrace_bp().
-
-...
-
->> @@ -2979,10 +2993,10 @@ static long ppc_del_hwdebug(struct task_struct *child, long data)
->>           return -EINVAL;
->>   #ifdef CONFIG_HAVE_HW_BREAKPOINT
->> -    bp = thread->ptrace_bps[0];
->> +    bp = thread->ptrace_bps[data - 1];
-> 
-> Is data checked somewhere to ensure it is not out of boundaries ? Or are we sure it is always within ?
-
-Yes. it's checked. See patch #9:
-
-   @@ -2955,7 +2975,7 @@ static long ppc_del_hwdebug(struct task_struct *child, long data)
-    	}
-    	return rc;
-    #else
-   -	if (data != 1)
-   +	if (data < 1 || data > nr_wp_slots())
-    		return -EINVAL;
-    
-    #ifdef CONFIG_HAVE_HW_BREAKPOINT
-
-Thanks,
-Ravi
-
+       Arnd
