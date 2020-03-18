@@ -2,201 +2,179 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23A7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED0EC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4562076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 516052076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:07:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A3iniDuz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oe3sHENH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbgCRLE6 (ORCPT
+        id S1727709AbgCRLHC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:04:58 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40831 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgCRLE6 (ORCPT
+        Wed, 18 Mar 2020 07:07:02 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51412 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgCRLHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:04:58 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f3so22783838wrw.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 04:04:56 -0700 (PDT)
+        Wed, 18 Mar 2020 07:07:01 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c187so1452565wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 04:07:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KRvo2AnedhxVnlA+EvDsxLitXemLLTPkBYA0yM+Px8k=;
-        b=A3iniDuzEsg/eOraikmeaGfeS8BAtq8n/r2TJhOob3fbPinvCMJZqot6XhNJS7gjT8
-         SRLE8h4aTjWt5IqeosWSw3lPeqkEXNJAQF5T+dZ9yfz0egfdQCmrQ2mhITil1jwdTC6f
-         dwL/4CO/+fuA0E06AFPBet2Gw7rad+MQ+YT9QdlaAMR6syBuf+M/3BUv9BW02yXpzpiC
-         6DjMP3ycqR5UU0BVfehHtokqxSA2sJD4x9QNErf2bu80BuWMmVz2KzwoOpzMngRENa7D
-         Nx6/W0TPzG+zaneLuHou/yVpBnVbEeNYxf2H/wGwTJqLbRpwAkPTBIEWdezD8oWotxAC
-         lpwg==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=2GgzefCkHgQryfh05yVOXaqfrd16ZLleM2vVoWi7qKM=;
+        b=oe3sHENHLGinBcd6lMWtD0RoK45nqnzlQr19MySzk1H++IPzrafqn2QGKUgroirtAL
+         2lq94YtnruHw3iuab3e4AriYG2hEDA3sSolOFoDaKQO/bQhD2FD96GTdUwwCmputjbKG
+         g7lSYEHuwJu3WcZnQI9lIerjoQsv7upSxnLDekOD6qxMw84AKQEbNa92xHr9PfIQ3dl5
+         mIslOu/fiy47HYjRmxFu8oKAr7ybJSc4LKfDOGS1WidoyvshWGBgzbLDQgHcH7v1zN28
+         Y8o+y9bN5HwKnk6rN6N08F9Lz2wJMZBFYKJIDoQfJl51GthyZZ4KYQMAz1WwReFN8TlI
+         dKGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=KRvo2AnedhxVnlA+EvDsxLitXemLLTPkBYA0yM+Px8k=;
-        b=VsuRQhZgOXN2o3ODRzpGT91nyGwfdiKpBYGt0OSkCHSC2qQaV+waIl0xqT2mAVSgr8
-         H2iN+prinTAPGit/6CczOAr7IEYH/baN/eswwHn31uNw0IKWuEjebYJEQzJrChwbG46g
-         8QdTcdP7Yg1W+DlvZItxb63isMCr6WYKE+013oATNPDHCW+DrJHRDVrtsz69l4943HVp
-         45NNPmuA0bsrTfXq9+wHPyIMFccKWnPVIR2vQExKmuRzxGdBj9+K0DK/V1muiX4xxfcR
-         1TnVUadWoCcA8WjIxVmDek/TGRzu6uAZoD1W0SXq2kIVs+va0+T/qeqmKvn4xoODqcLF
-         bjAw==
-X-Gm-Message-State: ANhLgQ3H/fT9045nzqOZFv5n5wpBXqocjp+vFPcfDF3HXqUZe6UhwF+b
-        0ajb6VA3HL1HFCqhZJO1nEdURQ==
-X-Google-Smtp-Source: ADFU+vsEPKKXoNLrq+h0rJ8LJoWmrZKw/KUI31whkpkBF+U46kfttWy+6DZ/dB4m0yuOw1/R5LrALA==
-X-Received: by 2002:a5d:52d0:: with SMTP id r16mr4822813wrv.379.1584529495406;
-        Wed, 18 Mar 2020 04:04:55 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:bd37:618d:f415:31ea? ([2a01:e34:ed2f:f020:bd37:618d:f415:31ea])
-        by smtp.googlemail.com with ESMTPSA id b5sm8747529wrw.86.2020.03.18.04.04.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Mar 2020 04:04:54 -0700 (PDT)
-Subject: Re: [PATCH RFC] cpuidle: consolidate calls to time capture
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     ulf.hansson@linaro.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, khilman@kernel.org
-References: <20200316210843.11678-1-daniel.lezcano@linaro.org>
- <2605374.f08NWHE4iP@kreacher>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <669fe03f-0d65-8ca9-53dc-1323e0397c53@linaro.org>
-Date:   Wed, 18 Mar 2020 12:04:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <2605374.f08NWHE4iP@kreacher>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=2GgzefCkHgQryfh05yVOXaqfrd16ZLleM2vVoWi7qKM=;
+        b=B8mN65qucnjVDEd3+HmThAk2Q97N/P0LxNdSFTUrDhkkPZAQHdVCawo7XbdH0JE+cD
+         fdJDuX6IPDXd5cAcciFWlY7qY/0tspSNka9cbPN8bTaLRPa41MVN07UXjZo6V+lnGpgd
+         7/2gKFYBmyHEJhAuhST9RbArj8gSnkJu4DvsypVHlsPJSKErKbfGu8KHPvh0/BMaCmmB
+         BCWdzzEqDnu2+aYw8y2hk+uizXJLcpfKMFEZmAopTTbKOMyeuNXr91284z2YVngcC54o
+         03TA/AnLEh76CbPLEaFRPYFkAZKR7D8ZZesJJ5kyAzym1YzTloKyZ24MW3OYg/L6dGf1
+         zlcQ==
+X-Gm-Message-State: ANhLgQ3ZpaYWD1+Uvz7AA91XZYcHiFRA1Hdiy0WBZjU7lcaNr3ghIy97
+        ze3PV8+T1HWdPbdFO+UMzQQP2w==
+X-Google-Smtp-Source: ADFU+vvbOF4UPZ6d4YXj7X2uq/HVQ+u1hCqRdJ2NoMl/CAIeeiaxA9jFtRCN5cOgU3/Z12AVgesd0g==
+X-Received: by 2002:a1c:9693:: with SMTP id y141mr4595944wmd.23.1584529619351;
+        Wed, 18 Mar 2020 04:06:59 -0700 (PDT)
+Received: from [192.168.0.104] (88-147-64-186.dyn.eolo.it. [88.147.64.186])
+        by smtp.gmail.com with ESMTPSA id a186sm3427803wmh.33.2020.03.18.04.06.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Mar 2020 04:06:58 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] block, bfq: fix use-after-free in
+ bfq_idle_slice_timer_body
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <241f9766-bfe6-485a-331c-fdc693738ffc@huawei.com>
+Date:   Wed, 18 Mar 2020 12:07:37 +0100
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mingfangsen <mingfangsen@huawei.com>,
+        Yanxiaodan <yanxiaodan@huawei.com>,
+        "wubo (T)" <wubo40@huawei.com>, renxudong <renxudong1@huawei.com>,
+        Louhongxiang <louhongxiang@huawei.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A7FFF605-BAA8-42C1-B648-1D5BA17D1286@linaro.org>
+References: <6c0d0b36-751b-a63a-418b-888a88ce58f4@huawei.com>
+ <C69604D5-CBB7-4A5F-AD73-7A9C0B6B3360@linaro.org>
+ <0a6e190a-3393-53f9-b127-d57d67cdcdc8@huawei.com>
+ <4171EF13-7956-44DA-A5BF-0245E4926436@linaro.org>
+ <241f9766-bfe6-485a-331c-fdc693738ffc@huawei.com>
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Rafael,
 
-On 18/03/2020 11:17, Rafael J. Wysocki wrote:
-> On Monday, March 16, 2020 10:08:43 PM CET Daniel Lezcano wrote:
->> A few years ago, we changed the code in cpuidle to replace ktime_get()
->> by a local_clock() to get rid of potential seq lock in the path and an
->> extra latency.
->>
->> Meanwhile, the code evolved and we are getting the time in some other
->> places like the power domain governor and in the future break even
->> deadline proposal.
-> 
-> Hmm?
-> 
-> Have any patches been posted for that?
+> Il giorno 18 mar 2020, alle ore 10:52, Zhiqiang Liu =
+<liuzhiqiang26@huawei.com> ha scritto:
+>=20
+>=20
+>=20
+> On 2020/3/18 16:45, Paolo Valente wrote:
+>>=20
+>>=20
+>>>>> 	spin_lock_irqsave(&bfqd->lock, flags);
+>>>>> -	bfq_clear_bfqq_wait_request(bfqq);
+>>>>> -
+>>>>> 	if (bfqq !=3D bfqd->in_service_queue) {
+>>>>> 		spin_unlock_irqrestore(&bfqd->lock, flags);
+>>>>> 		return;
+>>>>> 	}
+>>>>>=20
+>>>>> +	bfq_clear_bfqq_wait_request(bfqq);
+>>>>> +
+>>>>=20
+>>>> Please add a comment on why you (correctly) clear this flag only if =
+bfqq is in service.
+>>>>=20
+>>>> For the rest, seems ok to me.
+>>>>=20
+>>>> Thank you very much for spotting and fixing this bug,
+>>>> Paolo
+>>>>=20
+>>> Thanks for your reply.
+>>> Considering that the bfqq may be in race, we should firstly check =
+whether bfqq is in service before
+>>> doing something on it.
+>>>=20
+>>=20
+>> The comment you propose is correct, but the correctness issue I =
+raised
+>> is essentially the opposite.  Sorry for not being clear.
+>>=20
+>> Let me put it the other way round: why is it still correct that, if
+>> bfqq is not the queue in service, then that flag is not cleared at =
+all?
+>> IOW, why is it not a problem that that flag remains untouched is bfqq
+>> is not in service?
+>>=20
+>> Thanks,
+>> Paolo
+>>=20
+> Thanks for your patient.
+> As you comment in bfq_idle_slice_timer, there are two race situations =
+as follows,
+> a) bfqq is null
+>   bfq_idle_slice_timer will not call bfq_idle_slice_timer_body ->no =
+problem
+> b) bfqq are not in service
+>   1) bfqq is freed
+>      it will cause use-after-free problem before calling =
+bfq_clear_bfqq_wait_request
+>      in bfq_idle_slice_timer_body. -> use-after-free problem as =
+analyzed in the patch.
+>   2) bfqq is not freed
+>      it means in_service_queue has been set to a new bfqq. The old =
+bfqq has been expired
+>      through __bfq_bfqq_expire func. Then the wait_request flags of =
+old bfqq will be cleared
+>      in __bfq_bfqd_reset_in_service func. -> it is no a problem to =
+re-clear the wait_request
+>      flags before checking whether bfqq is in service.
 
-https://lkml.org/lkml/2020/3/11/1113
+Great, this item 2 is exactly what I meant.  We need a comment
+because, even if now this stuff is clear to you, imagine somebody
+else getting to your modified piece of code after reading hundreds of
+lines of code, about a non-trivial state machine as BFQ ...  :)
 
-https://lkml.org/lkml/2020/3/13/466
+Thanks,
+Paolo
 
-but there is no consensus yet if that has a benefit or not.
-
->> Unfortunately, as the time must be compared across the CPU, we have no
->> other option than using the ktime_get() again. Hopefully, we can
->> factor out all the calls to local_clock() and ktime_get() into a
->> single one when the CPU is entering idle as the value will be reuse in
->> different places.
-> 
-> So there are cases in which it is not necessary to synchronize the time
-> between CPUs and those would take the overhead unnecessarily.
-> 
-> This change looks premature to me at least.
-
-The idea is to call one time ktime_get() when entering idle and store
-the result in the struct cpuidle_device, so we have the information when
-we entered idle.
-
-Moreover, ktime_get() is called in do_idle() via:
-
-tick_nohz_idle_enter()
-  tick_nohz_start_idle()
-    ts->idle_entrytime = ktime_get();
-
-This is called at the first loop level. The idle loop is exiting and
-re-entering again without passing through tick_nohz_idle_enter() in the
-second loop level in case of interrupt processing, thus the
-idle_entrytime is not updated and the return of
-tick_nohz_get_sleep_length() will be greater than what is expected.
-
-May be we can consider ktime_get_mono_fast_ns() which is lockless with a
-particular care of the non-monotonic aspect if needed. Given the
-description at [1] the time jump could a few nanoseconds in case of NMI.
-
-The local_clock() can no be inspected across CPUs, the gap is too big
-and continues to increase during system lifetime.
-
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/time/timekeeping.c#n396
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>=20
+> In one word, the old bfqq in race has already cleared the wait_request =
+flag when switching in_service_queue.
+>=20
+> Thanks,
+> Zhiqiang Liu
+>=20
+>>>>>=20
+>>>>=20
+>>>>=20
+>>>> .
+>>=20
+>>=20
+>> .
+>>=20
+>=20
 
