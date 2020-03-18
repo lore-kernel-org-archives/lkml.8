@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243FDC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE28C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E284E20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5A920773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565335;
-	bh=00nORI7dnwMcqWiv7O87Jn9altOa8vMwClu8L6DjZz4=;
+	s=default; t=1584565340;
+	bh=DlQSvKcrvx1iZK+hM1Ku2CdTowpynbTIE9M/QpsqnXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VunEIoTFWSu8iUcGEwdgqe5uVLubt5egyZN6EWHpkNcbMr/gO4bcLrBc8s9QCYp2B
-	 XP0EOx406PM+9mDBAmuvhezUmkLVOZ//PgP5vSfBDbVyXRBoxNelPyMDee53SD8gxJ
-	 D4tTVSamPUaSiz6TuR4jUsR3TkGEeeMU2azVQDDc=
+	b=mbv/NaHVNedPf4WQwlF3oX1ELbF+hB7iSwjKxlWiSOsb/wuobByfUIXwh1Bsod2UE
+	 s/YDY3FlnBZLZqrHLJsHjf1JzDjHWS8+H/QERZTu3H1PPPvcH2Tw3696QyGukq7f0v
+	 CXZaRvzSHEF2VL1XuQyiUvMfDRwnwlSNn00UrDZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgCRVCO (ORCPT
+        id S1728513AbgCRU4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:02:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56818 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbgCRU4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:05 -0400
+        id S1728481AbgCRUzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85B96208CA;
-        Wed, 18 Mar 2020 20:56:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9FD321775;
+        Wed, 18 Mar 2020 20:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564965;
-        bh=00nORI7dnwMcqWiv7O87Jn9altOa8vMwClu8L6DjZz4=;
+        s=default; t=1584564953;
+        bh=DlQSvKcrvx1iZK+hM1Ku2CdTowpynbTIE9M/QpsqnXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zOxfh3AHcP2wV/pwvNbRJ2oOOWR9XzMhWu1ofUaJof9q8FH5lC/rNa69GRLQFE6KL
-         i5e61UFG3auZ9fIZdPGxx/TRNz4usKTRDId+R6Xc+bVjAL+SVJBzQmKqfVlM8tFg9N
-         mcyeZoDUhB23P+WsXxo0AL3QMBtkuvfAGCJg8tYE=
+        b=GJO9GJQnfm7Zh3vTx7nDMMjE6o4Q3ztlHjGrenvr9F1HxB0nhYPcsuODP85ot0/vb
+         Ymf2M39mxEJymelKuS3r7SUdJJETIKidQe0AxaIc0AqCtravCBy6c8dVAio7uEWeft
+         9HnW3q8aBfhS7UX6ByhqLe4eLXVl5GGkbDjyWt4Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>, David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/28] fib: add missing attribute validation for tun_id
-Date:   Wed, 18 Mar 2020 16:55:35 -0400
-Message-Id: <20200318205555.17447-8-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 37/37] iommu/vt-d: Fix the wrong printing in RHSA parsing
+Date:   Wed, 18 Mar 2020 16:55:09 -0400
+Message-Id: <20200318205509.17053-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
-References: <20200318205555.17447-1-sashal@kernel.org>
+In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
+References: <20200318205509.17053-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,33 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit 4c16d64ea04056f1b1b324ab6916019f6a064114 ]
+[ Upstream commit b0bb0c22c4db623f2e7b1a471596fbf1c22c6dc5 ]
 
-Add missing netlink policy entry for FRA_TUN_ID.
+When base address in RHSA structure doesn't match base address in
+each DRHD structure, the base address in last DRHD is printed out.
 
-Fixes: e7030878fc84 ("fib: Add fib rule match on tunnel id")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This doesn't make sense when there are multiple DRHD units, fix it
+by printing the buggy RHSA's base address.
+
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Fixes: fd0c8894893cb ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/fib_rules.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/dmar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/fib_rules.h b/include/net/fib_rules.h
-index 648caf90ec07a..b8fd023ba625a 100644
---- a/include/net/fib_rules.h
-+++ b/include/net/fib_rules.h
-@@ -102,6 +102,7 @@ struct fib_rule_notifier_info {
- 	[FRA_OIFNAME]	= { .type = NLA_STRING, .len = IFNAMSIZ - 1 }, \
- 	[FRA_PRIORITY]	= { .type = NLA_U32 }, \
- 	[FRA_FWMARK]	= { .type = NLA_U32 }, \
-+	[FRA_TUN_ID]	= { .type = NLA_U64 }, \
- 	[FRA_FWMASK]	= { .type = NLA_U32 }, \
- 	[FRA_TABLE]     = { .type = NLA_U32 }, \
- 	[FRA_SUPPRESS_PREFIXLEN] = { .type = NLA_U32 }, \
+diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+index 72994d67bc5b9..5a0238806cae0 100644
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -486,7 +486,7 @@ static int dmar_parse_one_rhsa(struct acpi_dmar_header *header, void *arg)
+ 		1, TAINT_FIRMWARE_WORKAROUND,
+ 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
+ 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+-		drhd->reg_base_addr,
++		rhsa->base_address,
+ 		dmi_get_system_info(DMI_BIOS_VENDOR),
+ 		dmi_get_system_info(DMI_BIOS_VERSION),
+ 		dmi_get_system_info(DMI_PRODUCT_VERSION));
 -- 
 2.20.1
 
