@@ -2,396 +2,273 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB60CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BE1C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C9F20773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A05C920773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:23:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L84CQAC6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rNM5E8pI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgCROVD (ORCPT
+        id S1727093AbgCROXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:21:03 -0400
-Received: from mail-qk1-f174.google.com ([209.85.222.174]:34495 "EHLO
-        mail-qk1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgCROVD (ORCPT
+        Wed, 18 Mar 2020 10:23:23 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:37079 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbgCROXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:21:03 -0400
-Received: by mail-qk1-f174.google.com with SMTP id f3so38938594qkh.1;
-        Wed, 18 Mar 2020 07:21:01 -0700 (PDT)
+        Wed, 18 Mar 2020 10:23:23 -0400
+Received: by mail-pj1-f68.google.com with SMTP id ca13so1279297pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 07:23:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Sy5iHcrtX1pHBM/PUWynkqV0cManlXIA2qvlXZPPxk0=;
-        b=L84CQAC6SZLAsmZKDXtRlslDkaqbiRMMVs5Of3MV1eCny6z87iSSJS5+SCC/F/x4/O
-         D0Cecz1Gi+ggDGpC0ZNnNTx0iV4IzR/mu7zUUqAr2jgms32GPoBdybzuZqK5yx8z4GQW
-         2FAMNrNK42lVaOIc8q4pYc7NEsKsk6kW4w8PBsZluOHFyPAAJySFLSP+5OGwAd0qPmRq
-         qG+LZPap9xdYqCic0WvLZV/BgMrg7jP6EGQsLTNQHFeuD1ATg5Vw3m1YKQ4jNd8t1U+H
-         0hiMp6TjTcv173Cs2jR9I3xrYIdGP0qx6gOSY7XmiBAvNOEOG3ZV1N9dOcxUC3wDweeW
-         3Gsw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/T6Y7h4lX7inlKg7h1ZYZmyzFUnZ0vGOlBmL/m1r4QI=;
+        b=rNM5E8pI1J3xm47Ba8VqNjFoG2gnRO5BtbAPP4Ohc51ZQpqC34vJEMwFIVRd7PpfNr
+         HbrZ2XBbTjhwgaDUCHmKrPxSAYrOHPq/mwn3DrplkCDUnOsx+LZTXpSWL1a51xRTGzt8
+         JLl4ZWIsyKpKcJIv+JBr5heSZf8KPcqpldoUz7DUE5uMaOS6UhmYzfHd98NbaUkn2DnX
+         IUALMKhIz5QyyzbvvzdfUALCGXrX9W8y3JyLy4HnfMQ9RRvTFSpo2VE4KiqCuyOgNqLV
+         DRteSNqo1oHA6Bii9cXcGnwumMJ3SSsTzFoRKQ+K6J1sFmdHtHhTKXIZf660fx5Zhx4d
+         zbIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Sy5iHcrtX1pHBM/PUWynkqV0cManlXIA2qvlXZPPxk0=;
-        b=tVE+qRFCJZTjZwzJt0MUUAJQi2ChhzEppg4cXRcA+F0NA4KgdC3EsND90w2bwNtVDM
-         F04wJJj8hbhO3oZT+/YvGgCroI64jk6I2smYCHJLFi2EcnabjOsCAloELXqU9/XKToku
-         Fx5zAC1TvXQ4Oyjpyoj3R7QzUwLhsunSIX02oRF3zQKoz8tfnQg90Is0nxJDofGxHlEC
-         7x3dxFu1EqBQH/UmGsGdAJmV1quSC0/HgrulD6nyCtN6jK3n+W7uqNlBQT0C5xVKepCR
-         PgWT/Fvbsa4Lar4TAEZNdmEUZm1Fh2Umq+5iBuI3XF9bVbx62sWBC0vvsF0lMtj7krBv
-         nlvA==
-X-Gm-Message-State: ANhLgQ3A1iLD5d7L1SyfJ0UZ5lZYcUNWz3l3tbJs1fTJAoQWBBfTu/EB
-        uhQoWEmVZjEPg7VFNLyGninA1Jbe
-X-Google-Smtp-Source: ADFU+vsMZIDPdlHUq8IodyfeE8xQwEGqgSSgsoiun5s+cldMVhiGuHAfmBFE/XlX+wuRzODuOUdaNw==
-X-Received: by 2002:a05:620a:1192:: with SMTP id b18mr4041984qkk.334.1584541260815;
-        Wed, 18 Mar 2020 07:21:00 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id h25sm4083190qkg.87.2020.03.18.07.20.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 07:21:00 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 08F41404E4; Wed, 18 Mar 2020 11:20:58 -0300 (-03)
-Date:   Wed, 18 Mar 2020 11:20:57 -0300
-To:     Vijay Thakkar <vijaythakkar@me.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] perf vendor events amd: add Zen2 events
-Message-ID: <20200318142057.GD11531@kernel.org>
-References: <20200316225238.150154-1-vijaythakkar@me.com>
- <20200316225238.150154-3-vijaythakkar@me.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/T6Y7h4lX7inlKg7h1ZYZmyzFUnZ0vGOlBmL/m1r4QI=;
+        b=RMy0XFYRZTZwCkcd+yIaP6WJfObsB13Q0FKKkvebdJ+1ZmCs2SlXtv3nkJxEBMUE+0
+         Pgen9HzD26XYA8MDzCOpzon+dOj+uJ2WYTqDAP+6xajTlzGEJoP7/cQbGx8M09UEXt4H
+         dSRhy0a4FsoDatK+P5bbDi2jIAUOJagJmaNRDXduLZ6p26pljm3esKWpemH8gfXNTxIv
+         9yP03ZqrkvZzSlCSydmcVUZKVJ8+ry135l6zU3DlFJvxQDBFBacr1P5hYCGfy50OFNxf
+         JTvOVBOubZP4JwdSt7wJnzobXtxdPi67dMzNXJTrBH9RXdr3IvEuGAjxlF31U86d9KE7
+         KhYA==
+X-Gm-Message-State: ANhLgQ0YDTutWnYTtWLMYTyH5Za5Ac4KnLMdtTDbw5E5is/OcpYVLoGl
+        fn/+W+cVVt+oD87EQKLlK3TVxvmWgfOg
+X-Google-Smtp-Source: ADFU+vtDszy0j7N2rzdI1e8yHt2dLBIdy2IO9X3/YRy65VX/2kEymarNolNavbXW/1wUQnyxj+ImFA==
+X-Received: by 2002:a17:90b:30d3:: with SMTP id hi19mr4864232pjb.52.1584541401290;
+        Wed, 18 Mar 2020 07:23:21 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:199:25eb:1005:91b8:c500:d4b4])
+        by smtp.gmail.com with ESMTPSA id y22sm7130105pfr.68.2020.03.18.07.23.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 18 Mar 2020 07:23:20 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 19:53:12 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Jeffrey Hugo <jhugo@codeaurora.org>, arnd@arndb.de,
+        smohanad@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/16] bus: mhi: core: Add support for registering MHI
+ client drivers
+Message-ID: <20200318142312.GA11494@Mani-XPS-13-9360>
+References: <20200220095854.4804-1-manivannan.sadhasivam@linaro.org>
+ <20200220095854.4804-4-manivannan.sadhasivam@linaro.org>
+ <20200318133626.GA2801580@kroah.com>
+ <db612e12-0033-31cc-60fc-62e45dda4342@codeaurora.org>
+ <20200318140034.GA2805201@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200316225238.150154-3-vijaythakkar@me.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200318140034.GA2805201@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Mar 16, 2020 at 06:52:37PM -0400, Vijay Thakkar escreveu:
-> This patch adds PMU events for AMD Zen2 core based processors, namely,
-> Matisse (model 71h), Castle Peak (model 31h) and Rome (model 2xh), as
-> documented in the AMD Processor Programming Reference for Matisse [1].
-> The model number regex has been set to detect all the models under
-> family 17 that do not match those of Zen1, as the range is larger for
-> zen2.
+Hi Greg,
+
+On Wed, Mar 18, 2020 at 03:00:34PM +0100, Greg KH wrote:
+> On Wed, Mar 18, 2020 at 07:54:30AM -0600, Jeffrey Hugo wrote:
+> > On 3/18/2020 7:36 AM, Greg KH wrote:
+> > > On Thu, Feb 20, 2020 at 03:28:41PM +0530, Manivannan Sadhasivam wrote:
+> > > > This commit adds support for registering MHI client drivers with the
+> > > > MHI stack. MHI client drivers binds to one or more MHI devices inorder
+> > > > to sends and receive the upper-layer protocol packets like IP packets,
+> > > > modem control messages, and diagnostics messages over MHI bus.
+> > > > 
+> > > > This is based on the patch submitted by Sujeev Dias:
+> > > > https://lkml.org/lkml/2018/7/9/987
+> > > > 
+> > > > Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
+> > > > Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
+> > > > [mani: splitted and cleaned up for upstream]
+> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > > ---
+> > > >   drivers/bus/mhi/core/init.c | 149 ++++++++++++++++++++++++++++++++++++
+> > > >   include/linux/mhi.h         |  39 ++++++++++
+> > > >   2 files changed, 188 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+> > > > index 6f24c21284ec..12e386862b3f 100644
+> > > > --- a/drivers/bus/mhi/core/init.c
+> > > > +++ b/drivers/bus/mhi/core/init.c
+> > > > @@ -374,8 +374,157 @@ struct mhi_device *mhi_alloc_device(struct mhi_controller *mhi_cntrl)
+> > > >   	return mhi_dev;
+> > > >   }
+> > > > +static int mhi_driver_probe(struct device *dev)
+> > > > +{
+> > > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> > > > +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
+> > > > +	struct device_driver *drv = dev->driver;
+> > > > +	struct mhi_driver *mhi_drv = to_mhi_driver(drv);
+> > > > +	struct mhi_event *mhi_event;
+> > > > +	struct mhi_chan *ul_chan = mhi_dev->ul_chan;
+> > > > +	struct mhi_chan *dl_chan = mhi_dev->dl_chan;
+> > > > +
+> > > > +	if (ul_chan) {
+> > > > +		/*
+> > > > +		 * If channel supports LPM notifications then status_cb should
+> > > > +		 * be provided
+> > > > +		 */
+> > > > +		if (ul_chan->lpm_notify && !mhi_drv->status_cb)
+> > > > +			return -EINVAL;
+> > > > +
+> > > > +		/* For non-offload channels then xfer_cb should be provided */
+> > > > +		if (!ul_chan->offload_ch && !mhi_drv->ul_xfer_cb)
+> > > > +			return -EINVAL;
+> > > > +
+> > > > +		ul_chan->xfer_cb = mhi_drv->ul_xfer_cb;
+> > > > +	}
+> > > > +
+> > > > +	if (dl_chan) {
+> > > > +		/*
+> > > > +		 * If channel supports LPM notifications then status_cb should
+> > > > +		 * be provided
+> > > > +		 */
+> > > > +		if (dl_chan->lpm_notify && !mhi_drv->status_cb)
+> > > > +			return -EINVAL;
+> > > > +
+> > > > +		/* For non-offload channels then xfer_cb should be provided */
+> > > > +		if (!dl_chan->offload_ch && !mhi_drv->dl_xfer_cb)
+> > > > +			return -EINVAL;
+> > > > +
+> > > > +		mhi_event = &mhi_cntrl->mhi_event[dl_chan->er_index];
+> > > > +
+> > > > +		/*
+> > > > +		 * If the channel event ring is managed by client, then
+> > > > +		 * status_cb must be provided so that the framework can
+> > > > +		 * notify pending data
+> > > > +		 */
+> > > > +		if (mhi_event->cl_manage && !mhi_drv->status_cb)
+> > > > +			return -EINVAL;
+> > > > +
+> > > > +		dl_chan->xfer_cb = mhi_drv->dl_xfer_cb;
+> > > > +	}
+> > > > +
+> > > > +	/* Call the user provided probe function */
+> > > > +	return mhi_drv->probe(mhi_dev, mhi_dev->id);
+> > > > +}
+> > > > +
+> > > > +static int mhi_driver_remove(struct device *dev)
+> > > > +{
+> > > > +	struct mhi_device *mhi_dev = to_mhi_device(dev);
+> > > > +	struct mhi_driver *mhi_drv = to_mhi_driver(dev->driver);
+> > > > +	struct mhi_chan *mhi_chan;
+> > > > +	enum mhi_ch_state ch_state[] = {
+> > > > +		MHI_CH_STATE_DISABLED,
+> > > > +		MHI_CH_STATE_DISABLED
+> > > > +	};
+> > > > +	int dir;
+> > > > +
+> > > > +	/* Skip if it is a controller device */
+> > > > +	if (mhi_dev->dev_type == MHI_DEVICE_CONTROLLER)
+> > > > +		return 0;
+> > > > +
+> > > > +	/* Reset both channels */
+> > > > +	for (dir = 0; dir < 2; dir++) {
+> > > > +		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
+> > > > +
+> > > > +		if (!mhi_chan)
+> > > > +			continue;
+> > > > +
+> > > > +		/* Wake all threads waiting for completion */
+> > > > +		write_lock_irq(&mhi_chan->lock);
+> > > > +		mhi_chan->ccs = MHI_EV_CC_INVALID;
+> > > > +		complete_all(&mhi_chan->completion);
+> > > > +		write_unlock_irq(&mhi_chan->lock);
+> > > > +
+> > > > +		/* Set the channel state to disabled */
+> > > > +		mutex_lock(&mhi_chan->mutex);
+> > > > +		write_lock_irq(&mhi_chan->lock);
+> > > > +		ch_state[dir] = mhi_chan->ch_state;
+> > > > +		mhi_chan->ch_state = MHI_CH_STATE_SUSPENDED;
+> > > > +		write_unlock_irq(&mhi_chan->lock);
+> > > > +
+> > > > +		mutex_unlock(&mhi_chan->mutex);
+> > > > +	}
+> > > > +
+> > > > +	mhi_drv->remove(mhi_dev);
+> > > > +
+> > > > +	/* De-init channel if it was enabled */
+> > > > +	for (dir = 0; dir < 2; dir++) {
+> > > > +		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
+> > > > +
+> > > > +		if (!mhi_chan)
+> > > > +			continue;
+> > > > +
+> > > > +		mutex_lock(&mhi_chan->mutex);
+> > > > +
+> > > > +		mhi_chan->ch_state = MHI_CH_STATE_DISABLED;
+> > > > +
+> > > > +		mutex_unlock(&mhi_chan->mutex);
+> > > > +	}
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +int mhi_driver_register(struct mhi_driver *mhi_drv)
+> > > > +{
+> > > > +	struct device_driver *driver = &mhi_drv->driver;
+> > > > +
+> > > > +	if (!mhi_drv->probe || !mhi_drv->remove)
+> > > > +		return -EINVAL;
+> > > > +
+> > > > +	driver->bus = &mhi_bus_type;
+> > > > +	driver->probe = mhi_driver_probe;
+> > > > +	driver->remove = mhi_driver_remove;
+> > > > +
+> > > > +	return driver_register(driver);
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(mhi_driver_register);
+> > > 
+> > > You don't care about module owners of the driver?  Odd :(
+> > > 
+> > > (hint, you probably should...)
+> > > 
+> > > greg k-h
+> > > 
+> > 
+> > For my own education, can you please clarify your comment?  I'm not sure
+> > that I understand the context of what you are saying (ie why is this export
+> > a possible problem?).
 > 
-> Zen2 adds some additional counters that are not present in Zen1 and
-> events for them have been added in this patch. Some counters have also
-> been removed for Zen2 thatwere previously present in Zen1 and have been
-> confirmed to always sample zero on zen2. These added/removed counters
-> have been omitted for brevity but can be found here:
-> https://gist.github.com/thakkarV/5b12ca5fd7488eb2c42e451e40bdd5f3
+> Sorry, it didn't have to do with the export, it had to do with the fact
+> that your driver_register() function does not pass in the owner of the
+> module of the driver, like almost all other subsystems do.  That way you
+> can try to protect the module from being unloaded if it has files open
+> assigned to it.
 > 
-> Note that PPR for Zen2 [1] does not include some counters that were
-> documented in the PPR for Zen1 based processors [2]. After having tested
-> these counters, some of them that still work for zen2 systems have been
-> preserved in the events for zen2. The counters that are omitted in [1]
-> but are still measurable and non-zero on zen2 (tested on a Ryzen 3900X
-> system) are the following:
+> If you don't have any userspace accesses like that, to the driver, then
+> nevermind, all is fine :)
 > 
-> PMC 0x000 fpu_pipe_assignment.{total|total0|total1|total2|total3}
 
-So trying to test this a bit, can you take a look at the examples
-below? I.e. it would be really nice to have at least some of these
-examples tested programatically.
+This is not needed right now but I'll fix this anyway to avoid issues in
+future :)
 
-So, picking this one:
+Btw, may I know the status of this series? Do you have any more comments
+or do you happen to wait for more reviews?
 
-    "EventName": "fpu_pipe_assignment.total",
-    "EventCode": "0x00",
-    "BriefDescription": "Total number of fp uOps.",
-    "PublicDescription":
+Thanks,
+Mani
 
-    "Total number of fp uOps. The number of operations (uOps) dispatched
-    to each of the 4 FPU execution pipelines. This event reflects how
-    busy the FPU pipelines are and may be used for workload
-    characterization. This includes all operations performed by x87,
-    MMX, and SSE instructions, including moves. Each increment
-    represents a one- cycle dispatch event. This event is a speculative
-    event. Since this event includes non-numeric operations it is not
-    suitable for measuring MFLOPS.",
-
-
-Committer testing:
-
-On a AMD Ryzen 5 3600X 6-Core Processor, model 113 (0x71):
-
-Before:
-
-  [root@five ~]# perf list *fpu_pipe_assignment*
-  
-  List of pre-defined events (to be used in -e):
-  
-  
-  [root@five ~]#
-
-After:
-
-  [root@five ~]# perf list *fpu_pipe_assignment*
-  
-  List of pre-defined events (to be used in -e):
-  
-  
-  
-  floating point:
-    fpu_pipe_assignment.total                         
-         [Total number of fp uOps]
-  
-  
-  Metric Groups:
-  
-  [root@five ~]#
-
-Using it:
-
-  [root@five ~]# perf stat -I1000 -e fpu_pipe_assignment.total
-  #           time             counts unit events
-       1.000781022         71,830,536      fpu_pipe_assignment.total                                   
-       2.001835955         69,017,141      fpu_pipe_assignment.total                                   
-       3.002498539         79,561,420      fpu_pipe_assignment.total                                   
-       4.002922910         79,834,539      fpu_pipe_assignment.total                                   
-       5.003545481         76,197,236      fpu_pipe_assignment.total                                   
-  ^C     5.288876179         36,038,036      fpu_pipe_assignment.total                                   
-  
-  [root@five ~]#
-
-  [root@five ~]# perf stat -e fpu_pipe_assignment.total sleep 1
-  
-   Performance counter stats for 'sleep 1':
-  
-             396,722      fpu_pipe_assignment.total                                   
-  
-         1.000777226 seconds time elapsed
-  
-         0.000712000 seconds user
-         0.000000000 seconds sys
-  
-  
-  [root@five ~]#
-
-  [root@five ~]# perf record -e fpu_pipe_assignment.total sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.020 MB perf.data (7 samples) ]
-  [root@five ~]# perf report --stdio --no-header
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 7  of event 'fpu_pipe_assignment.total'
-  # Event count (approx.): 120733
-  #
-  # Overhead  Command  Shared Object     Symbol                    
-  # ........  .......  ................  ..........................
-  #
-      96.44%  sleep    ld-2.30.so        [.] _dl_map_object_deps
-       3.44%  sleep    [kernel.vmlinux]  [k] __do_munmap
-       0.12%  sleep    [kernel.vmlinux]  [k] kfree
-       0.00%  sleep    [kernel.vmlinux]  [k] perf_event_mmap_output
-       0.00%  sleep    [kernel.vmlinux]  [k] kmem_cache_alloc_trace
-       0.00%  sleep    [kernel.vmlinux]  [k] prepend_name
-       0.00%  sleep    [kernel.vmlinux]  [k] shift_arg_pages
-  
-  
-  #
-  # (Tip: If you have debuginfo enabled, try: perf report -s sym,srcline)
-  #
-  [root@five ~]#
-
-  [root@five ~]# perf annotate --stdio2 kfree | egrep '^ {0,2}[0-9]+' -B5 -A5
-                 mov    0x8(%rbp),%rax
-                 lea    -0x1(%rax),%rdx
-                 test   $0x1,%al
-                 cmovne %rdx,%rbp
-                 mov    0x8(%rbp),%rdx
-  100.00         lea    -0x1(%rdx),%rax
-                 and    $0x1,%edx
-                 cmove  %rbp,%rax
-                 mov    (%rax),%rax
-                 test   $0x2,%ah
-               ↓ je     1bc     
-  [root@five ~]#
-
-  [root@five ~]# perf annotate --stdio2 _dl_map_object_deps | egrep '^ {0,2}[0-9]+' -B5 -A5
-                  cmp     $0xfffffffffffffffd,%rax
-                ↑ jbe     559     
-           c7b:   xor     %ecx,%ecx
-                ↑ jmpq    56f     
-           c82:   mov     %r10,-0x4c0(%rbp)
-  100.00          mov     -0x4b8(%rbp),%r14
-                  movl    $0x1,-0x4dc(%rbp)
-                ↑ jmpq    13b     
-           c9f:   mov     -0x4b8(%rbp),%rax
-                  cmp     %rax,_rtld_global
-                ↑ jne     7a0     
-  [root@five ~]#
-
-
-These look reassuring:
-
-  [root@five ~]# perf record -e fpu_pipe_assignment.total -a sleep 1
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 1.351 MB perf.data (2112 samples) ]
-  [root@five ~]# perf report --stdio --no-header | head -30
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 2K of event 'fpu_pipe_assignment.total'
-  # Event count (approx.): 1408125294
-  #
-  # Overhead  Command          Shared Object                 Symbol
-  # ........  ...............  ............................  .............................................
-  #
-      10.24%  Compositor       libxul.so                     [.] 0x00000000041bf629
-       5.90%  Compositor       libxul.so                     [.] 0x00000000041bf63c
-       5.15%  DecodingThread   libxul.so                     [.] vp9_variance_and_sad_16x16_sse2
-       2.87%  Compositor       libxul.so                     [.] 0x00000000041c421b
-       2.56%  Compositor       libxul.so                     [.] 0x00000000041bf611
-       2.30%  Compositor       libc-2.30.so                  [.] __memmove_avx_unaligned_erms
-       1.39%  Compositor       libxul.so                     [.] 0x00000000041bf307
-       1.21%  Compositor       libxul.so                     [.] 0x0000000003b485de
-       1.09%  Compositor       libxul.so                     [.] 0x0000000003b4a9b0
-       1.02%  Compositor       libxul.so                     [.] 0x00000000041bf2f9
-       0.98%  DecodingThread   libxul.so                     [.] vp8_variance_and_sad_16x16_sse2
-       0.97%  Compositor       libxul.so                     [.] 0x00000000041c41cf
-       0.81%  Compositor       libxul.so                     [.] 0x00000000041c41bc
-       0.79%  Compositor       libxul.so                     [.] 0x00000000041bf2cd
-       0.73%  Compositor       libxul.so                     [.] 0x00000000041bf2de
-       0.72%  Compositor       libxul.so                     [.] 0x00000000041c4225
-       0.70%  Compositor       [kernel.vmlinux]              [k] clear_page_rep
-       0.69%  Compositor       libxul.so                     [.] 0x00000000041bf2d2
-       0.68%  Compositor       libxul.so                     [.] 0x0000000003b48524
-  [root@five ~]#
-  
-  [root@five ~]# perf annotate --stdio2 vp9_variance_and_sad_16x16_sse2 | egrep '^ {0,2}[0-9]+' -B2 -A2
-                   movdqa     %xmm1,%xmm5
-                   pavgb      %xmm3,%xmm5
-    2.15           psubusb    %xmm1,%xmm4
-                   psubusb    %xmm0,%xmm1
-                   psubusb    %xmm3,%xmm6
-  --
-                   movdqa     (%rsp),%xmm2
-                   pxor       %xmm1,%xmm1
-    0.74           movdqa     %xmm2,%xmm7
-                   psubusb    %xmm4,%xmm2
-    0.99           psubusb    %xmm6,%xmm7
-                   pcmpeqb    %xmm1,%xmm2
-    2.29           pcmpeqb    %xmm1,%xmm7
-                   por        %xmm2,%xmm7
-   14.96           neg        %rax  
-                   movdqu     (%rsi,%rax,2),%xmm1
-                   movdqu     (%rsi,%rax,1),%xmm3
-  --
-                   pavgb      %xmm3,%xmm1
-                   psubusb    %xmm2,%xmm6
-    2.70           psubusb    %xmm0,%xmm2
-                   psubusb    %xmm3,%xmm4
-                   psubusb    %xmm0,%xmm3
-  --
-                   movdqa     (%rsp),%xmm2
-                   pxor       %xmm1,%xmm1
-    1.68           movdqa     %xmm2,%xmm3
-                   psubusb    %xmm6,%xmm2
-    0.92           psubusb    %xmm4,%xmm3
-                   pcmpeqb    %xmm1,%xmm2
-                   pcmpeqb    %xmm1,%xmm3
-    1.84           por        %xmm2,%xmm7
-    5.95           por        %xmm3,%xmm7
-    2.93           pavgb      %xmm0,%xmm5
-                   pand       %xmm7,%xmm0
-   10.03           pandn      %xmm5,%xmm7
-    0.96           paddusb    %xmm7,%xmm0
-                   movdqu     %xmm0,(%rdi)
-    2.60           neg        %rax  
-                   add        $0x10,%rsi
-                   add        $0x10,%rdi
-                   add        $0x10,%rdx
-                   cmp        -0x28(%rbp),%edx
-    1.20         ↓ jge        b67   
-                   movdqu     (%rbx),%xmm2
-                   movdqu     %xmm2,(%rsp)
-                   add        $0x10,%rbx
-    2.50         ↑ jmpq       a78   
-            b67:   sub        %rdx,%rsi
-                   sub        %rdx,%rdi
-  --
-                   punpcklbw  %mm1,%mm1
-                   punpcklwd  %mm1,%mm1
-    1.14           punpckldq  %mm1,%mm1
-                   mov        $0xfffffffffffffff8,%rdx
-                   movq       %mm1,(%rdi,%rdx,1)
-                   movslq     -0x28(%rbp),%rdx
-                   movq       -0x1(%rdi,%rdx,1),%mm1
-    2.16           punpcklbw  %mm1,%mm1
-                   punpcklwd  %mm1,%mm1
-                   punpckldq  %mm1,%mm1
-  --
-            bb6:   movdqu     (%rdi,%rdx,1),%xmm0
-                   movdqu     -0x2(%rdi,%rdx,1),%xmm1
-    0.60           movdqu     -0x1(%rdi,%rdx,1),%xmm3
-                   movdqa     %xmm0,%xmm4
-                   movdqa     %xmm0,%xmm6
-  --
-                   movdqa     %xmm2,%xmm7
-                   psubusb    %xmm4,%xmm2
-    1.19           psubusb    %xmm6,%xmm7
-    2.37           pcmpeqb    %xmm1,%xmm2
-                   pcmpeqb    %xmm1,%xmm7
-                   por        %xmm2,%xmm7
-    4.40           movdqu     0x1(%rdi,%rdx,1),%xmm1
-                   movdqu     0x2(%rdi,%rdx,1),%xmm3
-                   movdqa     %xmm0,%xmm6
-                   movdqa     %xmm0,%xmm4
-    3.07           movdqa     %xmm1,%xmm2
-                   pavgb      %xmm3,%xmm1
-                   psubusb    %xmm2,%xmm6
-                   psubusb    %xmm0,%xmm2
-    2.05           psubusb    %xmm3,%xmm4
-                   psubusb    %xmm0,%xmm3
-                   paddusb    %xmm2,%xmm6
-                   paddusb    %xmm3,%xmm4
-    1.98           pavgb      %xmm1,%xmm5
-                   movdqa     (%rsp),%xmm2
-                   pxor       %xmm1,%xmm1
-                   movdqa     %xmm2,%xmm3
-    1.94           psubusb    %xmm6,%xmm2
-                   psubusb    %xmm4,%xmm3
-                   pcmpeqb    %xmm1,%xmm2
-                   pcmpeqb    %xmm1,%xmm3
-    2.42           por        %xmm2,%xmm7
-    1.49           por        %xmm3,%xmm7
-    1.78           pavgb      %xmm0,%xmm5
-                   pand       %xmm7,%xmm0
-    2.89           pandn      %xmm5,%xmm7
-    3.24           paddusb    %xmm7,%xmm0
-                   movq       %mm0,-0x10(%rdi,%rdx,1)
-                   movq       %mm1,-0x8(%rdi,%rdx,1)
-                   movdq2q    %xmm0,%mm0
-    6.83           psrldq     $0x8,%xmm0
-    1.97           movdq2q    %xmm0,%mm1
-    4.03           add        $0x10,%rdx
-                   cmp        -0x28(%rbp),%edx
-                 ↓ jge        caf   
-  [root@five ~]#
+> thanks,
+> 
+> greg k-h
