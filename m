@@ -2,108 +2,95 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B623EC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07EAC5ACD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFC620771
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7012076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:08:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XB9nx06C"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="odpifOv7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgCRJDQ (ORCPT
+        id S1727395AbgCRJIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:03:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35932 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgCRJDP (ORCPT
+        Wed, 18 Mar 2020 05:08:24 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35950 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgCRJIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:03:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=rqHuFXYHG+0M6MgARbEa/w5Vs+vN7XFOaRX7Vm8ilXk=; b=XB9nx06CTV5SxYAZuoaTTUX8pP
-        ytgSNwTJZlEUABVFJyr7mAe9GBpQDuwg0VDdOpMDpoklqYBTyh4Ck6T2scTpOK9kLlcMJGEU97V13
-        Ab7MmTT1mnNkI+BHLLAxMCkG7VIgAZ+v7Z4SeWFkCI2kgouKuPIT92f8V0uludoKZyHXPafsn/a0K
-        6bMQRjUs6homzAZWR682zanDSf7c2yKdHTfgTXGKuFonL2etqRGk27qQp9v7Q7S2qzpHDPlAJs6BG
-        g2axSVuYPu1BR1qhPbL7S83cQbv4Pex/fmHNu1mP2Ilx37eGZyiDPnhOtqEj1kTvoTEIAlKrIkjj6
-        ZW9uRX2w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEUbY-00048g-In; Wed, 18 Mar 2020 09:03:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8C12A3010C2;
-        Wed, 18 Mar 2020 10:03:09 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 789BC28563D6F; Wed, 18 Mar 2020 10:03:09 +0100 (CET)
-Date:   Wed, 18 Mar 2020 10:03:09 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: Re: [PATCH v2 16/19] objtool: Implement noinstr validation
-Message-ID: <20200318090309.GC20730@hirez.programming.kicks-ass.net>
-References: <20200317170234.897520633@infradead.org>
- <20200317170910.730949374@infradead.org>
- <20200317210008.bda4c542b5lu7juf@treble>
+        Wed, 18 Mar 2020 05:08:24 -0400
+Received: by mail-pj1-f65.google.com with SMTP id nu11so928683pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 02:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1f5kYBCY1uKoKqzNVNfGNS8kuHSh6LqXMA1hvR+KOa4=;
+        b=odpifOv74L/hJEF9iJGfNTia2vJHOM15ktWoY9+u6TyDAXF1sMbGixEhMpVOl4E3HZ
+         tnGueGctwD+Jx84fkUdRZVJewBTUQegE2MhMNeiXuv0Av9ZmH7PvS0JItGfFvts8Bn/t
+         KxrAuH7DMlZ5cb3vrEj/p7XbteiEsvPV2CT/Z2/EmaF6w/D2GH/kspyzb90VnJk9jyRq
+         81k+EbW992v2eehds1ValPodUaD5Ii3uek9LZBgZF8KHEke2tDuBwdD/bdrmQ2mwL08h
+         c46AVSSANfr7hXHuCqufq4d69eVXg+8aQT1b/sflb1T6mkAcstfbfOGnw7fOsrLrAh1R
+         4MIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1f5kYBCY1uKoKqzNVNfGNS8kuHSh6LqXMA1hvR+KOa4=;
+        b=mCdCHwvDZ2F7FTnD+qxrKiswHKMTFn2EYA3UtR+kWBvhZSxnyC9qaQ+DAC7cIBZZgz
+         gfF4Pe6H3IpZeryNtF5ZnD9y93XZVlQ4TvWwC6YwYycZ1QTIcSc3IyRPOhDE2elH8cWN
+         s4lFnO+4KYSWtN6Yuy/xrXLq6FY5Rv0lfoR2b2lbosXOyGzpGw1kbpVjHPOofoQgcGMn
+         z59bFNtFFlBLiliVwkqjChHl4BfqanW99QRYfrbK/wjBUVJT9uThmSKB7FGnqjC1iRCh
+         T9IpW+SEf6ATFTsR6Ug939HJRVjNOK4y2dGfSFTFuieg699PYl5+OsoziyzNgD7rIfOZ
+         6xnQ==
+X-Gm-Message-State: ANhLgQ00Swrb7hxRBstp8dBg8LUaqxKb2ebvuLjH2dPYdtYyEoHOC3wK
+        +goX7wEQhRXv9Y7RNq82mDWnL06eu8A=
+X-Google-Smtp-Source: ADFU+vvJtZn1wKJFN1I9x9yIzxQr88V3AsLSI8/vu7XSfy0TQhPJXOohHYVEd+HZeZtJcINo2nPObA==
+X-Received: by 2002:a17:902:b905:: with SMTP id bf5mr2706826plb.162.1584522502102;
+        Wed, 18 Mar 2020 02:08:22 -0700 (PDT)
+Received: from localhost ([103.195.202.108])
+        by smtp.gmail.com with ESMTPSA id c15sm1778384pja.30.2020.03.18.02.08.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 02:08:21 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, sibis@codeaurora.org,
+        swboyd@chromium.org, dianders@chromium.org
+Cc:     devicetree@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: arm: cpus: Add kryo468 compatible
+Date:   Wed, 18 Mar 2020 14:38:16 +0530
+Message-Id: <cd0f3d35ca0fc2944fd97e030a28318ff82dd5c1.1584516925.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317210008.bda4c542b5lu7juf@treble>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 04:00:08PM -0500, Josh Poimboeuf wrote:
-> On Tue, Mar 17, 2020 at 06:02:50PM +0100, Peter Zijlstra wrote:
-> > Validate that any call out of .noinstr.text is in between
-> > instr_begin() and instr_end() annotations.
-> > 
-> > This annotation is useful to ensure correct behaviour wrt tracing
-> > sensitive code like entry/exit and idle code. When we run code in a
-> > sensitive context we want a guarantee no unknown code is ran.
-> > 
-> > Since this validation relies on knowing the section of call
-> > destination symbols, we must run it on vmlinux.o instead of on
-> > individual object files.
-> > 
-> > Add two options:
-> > 
-> >  -d/--duplicate "duplicate validation for vmlinux"
-> >  -l/--vmlinux "vmlinux.o validation"
-> 
-> I'm not sure I see the point of the --vmlinux option, when it will be
-> autodetected anyway?
+Kryo468 is found in sc7180, so add it to the list of cpu compatibles
 
-Ah, I sometimes do stuff like:
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
- cp vmlinux.o vmlinux.o.orig
- quilt push; make -j$lots
- cp vmlinux.o vmlinux.o.1
- quilt push; make -j$lots
- ...
+diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
+index 7a9c3ce2dbef..57408c773b4d 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.yaml
++++ b/Documentation/devicetree/bindings/arm/cpus.yaml
+@@ -156,6 +156,7 @@ properties:
+       - qcom,krait
+       - qcom,kryo
+       - qcom,kryo385
++      - qcom,kryo468
+       - qcom,kryo485
+       - qcom,scorpion
+ 
+-- 
+2.20.1
 
-And then it is nice to force the mode.
-
-> > @@ -46,5 +49,9 @@ int cmd_check(int argc, const char **arg
-> >  
-> >  	objname = argv[0];
-> >  
-> > +	s = strstr(objname, "vmlinux.o");
-> > +	if (s && !s[9])
-> > +		vmlinux = true;
-> > +
-> 
-> I think this would be slightly cleaner:
-> 
-> 	if (!strcmp(basename(objname), "vmlinux.o"))
-> 		vmlinux = true;
-
-Ah, indeed. I totally forgot userspace coding it seems..
