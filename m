@@ -2,103 +2,54 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D83AC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E3DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C2520738
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD2C20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 03:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgCRDvM (ORCPT
+        id S1726767AbgCRDzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 23:51:12 -0400
-Received: from mga14.intel.com ([192.55.52.115]:57668 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726229AbgCRDvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 23:51:11 -0400
-IronPort-SDR: JiYt3whZZc5rWcXYQjE9lZ0QWtm+Lx4F1ybZGVxtr7O+lvkYsIwK7Mr5yLmjyIXlkER81tSf3q
- a4C7MRwCGRLw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 20:51:11 -0700
-IronPort-SDR: 9bUF4H9QQNe3a8MQitbBFyw8f9tSiDyCfhjvRRegxTcaEa61P4rY7aAkTgy9i/WeNGTaHtWTYI
- 3rVfHzAzi7vg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,566,1574150400"; 
-   d="scan'208";a="268215257"
-Received: from icx-2s.bj.intel.com ([10.240.192.138])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Mar 2020 20:51:09 -0700
-From:   Luwei Kang <luwei.kang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, Luwei Kang <luwei.kang@intel.com>
-Subject: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
-Date:   Wed, 18 Mar 2020 11:48:18 +0800
-Message-Id: <1584503298-18731-1-git-send-email-luwei.kang@intel.com>
-X-Mailer: git-send-email 1.8.3.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 17 Mar 2020 23:55:02 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35360 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgCRDzB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 23:55:01 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 024FE13EA9467;
+        Tue, 17 Mar 2020 20:55:00 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 20:54:58 -0700 (PDT)
+Message-Id: <20200317.205458.363428814998635583.davem@davemloft.net>
+To:     chris.packham@alliedtelesis.co.nz
+Cc:     andrew@lunn.ch, josua@solid-run.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] net: mvmdio: avoid error message for optional
+ IRQ
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200316074907.21879-1-chris.packham@alliedtelesis.co.nz>
+References: <20200316074907.21879-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 17 Mar 2020 20:55:01 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the logical processor is operating with Intel PT enabled (
-IA32_RTIT_CTL.TraceEn = 1) at the time of VM entry, the “load
-IA32_RTIT_CTL” VM-entry control must be 0(SDM 26.2.1.1).
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Date: Mon, 16 Mar 2020 20:49:05 +1300
 
-The first disabled the host Intel PT(Clear TraceEn) will make all the
-buffered packets are flushed out of the processor and it may cause
-an Intel PT PMI. The host Intel PT will be re-enabled in the host Intel
-PT PMI handler.
+> I've gone ahead an sent a revert. This is the same as the original v1 except
+> I've added Andrew's review to the commit message.
 
-handle_pmi_common()
-    -> intel_pt_interrupt()
-            -> pt_config_start()
-
-This patch will disable the Intel PT twice to make sure the Intel PT
-is disabled before VM-Entry.
-
-Signed-off-by: Luwei Kang <luwei.kang@intel.com>
----
- arch/x86/kvm/vmx/vmx.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 26f8f31..d936a91 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1095,6 +1095,8 @@ static inline void pt_save_msr(struct pt_ctx *ctx, u32 addr_range)
- 
- static void pt_guest_enter(struct vcpu_vmx *vmx)
- {
-+	u64 rtit_ctl;
-+
- 	if (pt_mode == PT_MODE_SYSTEM)
- 		return;
- 
-@@ -1103,8 +1105,14 @@ static void pt_guest_enter(struct vcpu_vmx *vmx)
- 	 * Save host state before VM entry.
- 	 */
- 	rdmsrl(MSR_IA32_RTIT_CTL, vmx->pt_desc.host.ctl);
--	if (vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN) {
-+	if (vmx->pt_desc.host.ctl & RTIT_CTL_TRACEEN) {
- 		wrmsrl(MSR_IA32_RTIT_CTL, 0);
-+		rdmsrl(MSR_IA32_RTIT_CTL, rtit_ctl);
-+		if (rtit_ctl)
-+			wrmsrl(MSR_IA32_RTIT_CTL, 0);
-+	}
-+
-+	if (vmx->pt_desc.guest.ctl & RTIT_CTL_TRACEEN) {
- 		pt_save_msr(&vmx->pt_desc.host, vmx->pt_desc.addr_range);
- 		pt_load_msr(&vmx->pt_desc.guest, vmx->pt_desc.addr_range);
- 	}
--- 
-1.8.3.1
-
+Applied, thanks Chris.
