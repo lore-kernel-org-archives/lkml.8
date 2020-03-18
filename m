@@ -2,232 +2,133 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E58C5ACD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43194C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B2D20752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171EF20752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:29:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QImxNQeU"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HUOlH0Qw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgCRG1d (ORCPT
+        id S1727197AbgCRG3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 02:27:33 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:32933 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbgCRG1c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 02:27:32 -0400
-Received: by mail-pl1-f194.google.com with SMTP id ay11so10750916plb.0;
-        Tue, 17 Mar 2020 23:27:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M0jLEpxC4l3IOb+KMA02Q30dEzRvhIJNxnX68azs+4A=;
-        b=QImxNQeUzuTppW30cpuiNPD4z63mXgEyiuPP9OnkZi83y/wsfIVKN2rpttBgdc5U+3
-         ZTWJkXPLNvMp8HH4Bh6MfDqK5dI5gHcaKoLDt4WbSojpxG/mgljzDR2LHHkX2DhX/nS2
-         RuMQS5fPsMV9Y7rK6ImRAp0P9AczCya+u0ErwXL/8kcnjlzRP+F91DKm27TV66hQ7TJT
-         0j3txo5hICGCZSjQAMkc++tcNyziLaBDpV2+AHfGHK1Mhacb34S42YkztdDdXCXz5Ahs
-         P4pHsIikKNfjwlM2qRJU6YJXQqjJLz/4OGOi5Oo3FWqZGrPFHGuhEGxYWuTk7l6YdAzo
-         VCNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M0jLEpxC4l3IOb+KMA02Q30dEzRvhIJNxnX68azs+4A=;
-        b=mJXtjClbk2O4VvbfkUGJXBpszpOh60tsvGYK7puLnNywO57epVvDKl003JeFZ42nq9
-         2JRj21LKkaY45i2uNzZkX5e2bMoU+fPwQHl2V1TJiMT35gBHSzXV7MNA6tx7Lw+rBqbX
-         2EUhHoUYl+bYuRgNHrCpngT6aGHswZ/oHM6hermrO31ePhF4pAmB7EX1c+AiETatistN
-         GI6r4au1NFNP8NBH5go6FFmBn2Y9unoUi5lYLlCOFtlANtlsLbO2SuW8OApsOCmFF09w
-         SK3fNT36ow6q9yKo3e5blUq7sz0O3wgZ3xuD/YErokldzp3vw8DvAtNPe8VGXeFOGu7t
-         f12g==
-X-Gm-Message-State: ANhLgQ2nxPwZIzCOBbb+GJjkM4Rb4TFwiiGQmm8raD+DkizhaAiZXWjE
-        mlPQ8F1tT4fquvjZSuCgwhEGemW8
-X-Google-Smtp-Source: ADFU+vsUY1qyJ3MM5qkB5boM9kpHmxcYeaba4l01BHYDSgM3lynvyO19aBDRv/DFfRZ4K8mimcw9yg==
-X-Received: by 2002:a17:902:ab95:: with SMTP id f21mr2178201plr.188.1584512849727;
-        Tue, 17 Mar 2020 23:27:29 -0700 (PDT)
-Received: from ?IPv6:2409:4072:6086:470e:bc8d:c185:c429:a95b? ([2409:4072:6086:470e:bc8d:c185:c429:a95b])
-        by smtp.gmail.com with ESMTPSA id b25sm5060850pfp.201.2020.03.17.23.27.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Mar 2020 23:27:29 -0700 (PDT)
-Subject: Re: [PATCH] dt-bindings: iio: tsl2563: convert bindings to YAML
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, mark.rutland@arm.com, sre@kernel.org,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200314134237.12187-1-nish.malpani25@gmail.com>
- <20200315105834.7a5f4475@archlinux>
-From:   Nishant Malpani <nish.malpani25@gmail.com>
-Message-ID: <1cfe5e97-1c0d-8ffe-88f3-90db77e0f03b@gmail.com>
-Date:   Wed, 18 Mar 2020 11:57:20 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200315105834.7a5f4475@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 18 Mar 2020 02:29:00 -0400
+Received: from mail-eopbgr80070.outbound.protection.outlook.com ([40.107.8.70]:43686
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726802AbgCRG27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 02:28:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S/9dllisX9yHsVy8iKsvUH24eWkbj1qqaB9GzphMtlQxeDfWvyggkrVL8KPxVkao+zKF/bTD7DcJSmcQ0GiOh81ThMtW8n9q8zHRn23XW6MQ1WsVOLy+NNmM/CRw40w9JT5CqKvnwi+pS9seGgbMYoLSMy99U6CSfQ//HzChOpFVPTkTKnOdCnmBPVwDozUxcHbygjLUb5VJXOTWv1kzJhRSiGZoXJb/E3EzdJ1ZMDoQYlsYLNQjeqqcHDbnzKzDjPkm5XHqoJZhg6tLHmjaPSikatHh3SKAqp3lnaAaPIdegCXQUUoKa/huIlLGYwlamPodb5bJ9G6KHwRdTQNj7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xgJh1mP9b9A613RbKKjhJqPxV59CKn3x6tHTSUW9D8c=;
+ b=nUhXZZGGc8m1sczBZ/fG9TuIOXN2DT81uAmZ/Ulss7sSwcpL4NigZdjKqp2RI9BLSr+oC3VvVCeHYc/yMFfg95nRFyvETXJtWNjRozakBBIzKYMIiQvOh7vNBrhBQHVycGq2sKKSqxGLbY99+pZk5eB0a4m4YNv6FIrlnYP9vD1TvS8C2CLqlrQuSVPr4HNt4TA1kfPaaoyf++3PQ5mn2qNiZcDK822J3ycIWFIbv7icSeWajw2A5uncB4TKg/mewI3kZ7ZlH0uUdsTwVXFl/GqdhrsTEIqRqcE7UKSS+qWjaO9Qd2NjpFhbzonjUtUBtZyMj3a7lt9KPhkiY4Dp6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xgJh1mP9b9A613RbKKjhJqPxV59CKn3x6tHTSUW9D8c=;
+ b=HUOlH0QwRC57+MhoYOdEtXumjNwb8CStNS7KCvAL9sA+QKEMxy+fBD9Na9oxPqQRR4eyVps3FKj2YGOFDnBNnIMj/+e39GkT2BH9vY8qS1l8HyXQ+h+Th79wpyBh6irpeayLBtv54tXoH6H1gyoKzTnAl1T4OyVM6ULUuTl/vUs=
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.3.146) by
+ VI1PR0402MB2925.eurprd04.prod.outlook.com (10.175.24.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.18; Wed, 18 Mar 2020 06:28:55 +0000
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::c991:848b:cc80:2768]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::c991:848b:cc80:2768%7]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
+ 06:28:55 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [EXT] [PATCH 0/4] Fix Wake on lan with FEC on i.MX6
+Thread-Topic: [EXT] [PATCH 0/4] Fix Wake on lan with FEC on i.MX6
+Thread-Index: AQHV/HwfH3wTHDqsi0KQfAvD/Tjc/6hN41Qg
+Date:   Wed, 18 Mar 2020 06:28:55 +0000
+Message-ID: <VI1PR0402MB3600DC7BB937553785165C2AFFF70@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+References: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
+In-Reply-To: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fugang.duan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 81dafd63-3bd1-440b-5747-08d7cb05a243
+x-ms-traffictypediagnostic: VI1PR0402MB2925:|VI1PR0402MB2925:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB29255678F628006AF0888A93FFF70@VI1PR0402MB2925.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 03468CBA43
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(346002)(136003)(376002)(199004)(9686003)(52536014)(2906002)(55016002)(71200400001)(33656002)(5660300002)(4744005)(186003)(316002)(8676002)(81156014)(54906003)(81166006)(8936002)(4326008)(110136005)(7696005)(86362001)(76116006)(6506007)(66946007)(66476007)(66556008)(64756008)(66446008)(478600001)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2925;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Pmv7Sp8Wnfk6YAx4RwHMxvCS66I8/5QWmQ/WdmCI8HQbgAn5DBlfroGxSlqdZPdvYHCIkhDRg3jsDTia2gzH6FMaF+u6UDjxqH2vvR2YykzPPZr/YQB40GBn55xAEqB6jX5ecMBVBqdQbhJSrMGUXeSPmo0xxYes0lmKkS2mVD05aGWNfe5wmLdD2nq6flReVsHaI2HCaWSbWivZdReFI5FAF5ufU+AbaDfPobMtK+hXNyJtWwelqx/z8282eUKQkAff3Ux1+O9aMrUV7bsplsU4jwBnv0yCDB8UvqoxNiY7k3089ldDLCZxMIRfncH5kohw8QGZ2IVs41tb68TPvTTB50KoIJbfgjQfamamb3lpUlZuWgFbquLQ5ZDO/ASfdhPc3ARblgaA9028Kc1r5s907Bk4HEXY8tUKHqxDQz21/V5dRm3B19cOXwC6IZ4r
+x-ms-exchange-antispam-messagedata: wE1dv9o6UfmoXSpR9TBwrFOlqf1CELHpbeJ7pg+c5UiP3rO5OtCCvf8dwu2/XxuuaR2godToAXk40CnfHfWy26lWrKH2uhRVSc9Sc81SVk0r+SOYxIU+2jFKGFRsOjZ4Yf0PeZldqzeW9ZS9xa2SVw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81dafd63-3bd1-440b-5747-08d7cb05a243
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 06:28:55.3102
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qJN/U8NedvBlLVqmxw+czc57GB2GePjhnh/DyczbFy7ldc8AvVyYVn76vqwjKoRrZfuil/g028EM808r9b+lUA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2925
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A v3 PATCH [1] was generated taking care of the reviews which can be 
-found inline.
+From: Martin Fuzzey <martin.fuzzey@flowbird.group> Sent: Wednesday, March 1=
+8, 2020 12:50 AM
+> This series fixes WoL support with the FEC on i.MX6 The support was alrea=
+dy
+> in mainline but seems to have bitrotted somewhat.
+>=20
+> Only tested with i.MX6DL
 
-[1] https://marc.info/?l=linux-iio&m=158451158827441&w=2
+The most of code is reused from nxp internal tree,
+If you refer the patches from nxp kernel tree, please
+keep the signed-off with original author.
 
-On 15/03/20 4:28 pm, Jonathan Cameron wrote:
-> On Sat, 14 Mar 2020 19:12:37 +0530
-> Nishant Malpani <nish.malpani25@gmail.com> wrote:
-> 
->> Convert the TSL2563 device tree bindings to the new YAML format.
->>
->> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
->> ---
->>
->> The link for the datasheet is not attached in the binding document
->> because it was not available on the manufacturer's (AMS) website [1].
-> 
-> Very old part now, though plenty of them in circulation or least there
-> used to be.  I have though not powered up that board for a while.
-> 
-> When doing these conversions, do sanity check them against the driver
-> as the old docs aren't always entirely accurate ; >
-> Jonathan
-> 
->>
->> [1] https://ams.com/ambient-light-sensors
->> ---
->>   .../devicetree/bindings/iio/light/tsl2563.txt | 19 --------
->>   .../bindings/iio/light/tsl2563.yaml           | 46 +++++++++++++++++++
->>   2 files changed, 46 insertions(+), 19 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
->>   create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
->> deleted file mode 100644
->> index f91e809e736e..000000000000
->> --- a/Documentation/devicetree/bindings/iio/light/tsl2563.txt
->> +++ /dev/null
->> @@ -1,19 +0,0 @@
->> -* AMS TAOS TSL2563 ambient light sensor
->> -
->> -Required properties:
->> -
->> -  - compatible : should be "amstaos,tsl2563"
->> -  - reg : the I2C address of the sensor
->> -
->> -Optional properties:
->> -
->> -  - amstaos,cover-comp-gain : integer used as multiplier for gain
->> -                              compensation (default = 1)
->> -
->> -Example:
->> -
->> -tsl2563@29 {
->> -	compatible = "amstaos,tsl2563";
->> -	reg = <0x29>;
->> -	amstaos,cover-comp-gain = <16>;
->> -};
->> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
->> new file mode 100644
->> index 000000000000..2a70b8d62760
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
->> @@ -0,0 +1,46 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/iio/light/tsl2563.yaml#
-> 
-> Convention is now to name files and this with the manufacturer part
-> as well.
+>=20
+>=20
+> Martin Fuzzey (4):
+>   net: fec: set GPR bit on suspend by DT connfiguration.
+>   ARM: dts: imx6: Use gpc for FEC interrupt controller to fix wake on
+>     LAN.
+>   dt-bindings: fec: document the new fsl,stop-mode property
+>   ARM: dts: imx6: add fsl,stop-mode property.
+>=20
+>  Documentation/devicetree/bindings/net/fsl-fec.txt |  5 ++
+>  arch/arm/boot/dts/imx6qdl.dtsi                    |  6 +-
+>  drivers/net/ethernet/freescale/fec.h              |  7 +++
+>  drivers/net/ethernet/freescale/fec_main.c         | 72
+> ++++++++++++++++++++---
+>  4 files changed, 80 insertions(+), 10 deletions(-)
+>=20
+> --
+> 1.9.1
 
-Got it! Taken care of in v3.
-> 
-> light/amstaos,tsl2563.yaml
-> 
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: AMS TAOS TSL2563 ambient light sensor
->> +
->> +maintainers:
->> +  - Sebastian Reichel <sre@kernel.org>
->> +
->> +description: |
->> +  Ambient light sensor with an i2c interface.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - amstaos,tsl2563
-> 
-> The original binding was wrong on this.   Check the driver :)
-> I'm a bit embarrassed I never noticed during review as I have
-> a tsl2561, be it on a board that was never converted to DT.
-> 
-
-You're right. Should have cross-checked with the driver before blindly 
-following the original binding. Corrected in v3.
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  amstaos,cover-comp-gain:
->> +    description: Multiplier for gain compensation
->> +    allOf:
->> +      - $ref: /schemas/types.yaml#/definitions/uint32
->> +      - enum: [1, 16]
-> 
-> Not sure it's that restricted...  or to be honest what
-> that is for at all.  Superficially it looks like
-> a multiplier to change the 'range' of the the sysfs control.
-> 
-> I wonder if anyone cares or if we can just start ignoring that going
-> forwards?  Sebastian, anyone else?
-> 
-
- From what I understood while reading the datasheet [2] (Page 4), 
-'amstaos,cover-comp-gain' is used to switch between the low gain and 
-high gain mode which further adjusts the 'Illuminance Responsivity'. 
-Ergo, I've taken it forward even in v3 since the driver also relies on 
-it [3]. Please let me know if my reasoning is erroneous.
-
-[2] 
-https://media.digikey.com/pdf/Data%20Sheets/Austriamicrosystems%20PDFs/TSL2562,63.pdf
-
-[3] 
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/tree/drivers/iio/light/tsl2563.c#n494
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +examples:
->> +  - |
->> +    i2c {
->> +
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +
->> +      light-sensor@29 {
->> +        compatible = "amstaos,tsl2563";
->> +        reg = <0x29>;
->> +        amstaos,cover-comp-gain = <16>;
->> +      };
->> +    };
->> +...
-> 
-
-With regards,
-Nishant Malpani
