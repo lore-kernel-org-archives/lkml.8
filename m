@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3E9C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA78CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04F2520738
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BFD2076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ynp2qMHI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbSOl1Aw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbgCRARM (ORCPT
+        id S1727299AbgCRARR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 20:17:12 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56308 "EHLO
+        Tue, 17 Mar 2020 20:17:17 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56315 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbgCRARJ (ORCPT
+        with ESMTP id S1726991AbgCRARO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 20:17:09 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 6so1303211wmi.5;
-        Tue, 17 Mar 2020 17:17:08 -0700 (PDT)
+        Tue, 17 Mar 2020 20:17:14 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 6so1303305wmi.5;
+        Tue, 17 Mar 2020 17:17:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=J+e5SK2e2LZ4MyHO9wWSsa40xkOFSDNcY+p2H5PaU+M=;
-        b=Ynp2qMHIuiwOUtZ3QM8+AfwnmcGnkCuk4FQFn8Eto1QVXv7jYR2Ss/sb/kVH738oZu
-         iVSOpVaIA3MIQ9KszW2EfUIRrEVCRZxabMXD6e0/3RWxKSJwpmkhMqahTD2z67QrqIAt
-         gmWybPGOIHi07H1rdM/5kDntw1zPNAO13wjimFtPB0vTj0zJ/NEbZzokcBs8y67xS4K/
-         E4r+cJRajOj34rWb3sTLI1MComoF6+ZidtBCfffijh2DpqsExKSQ9vxEWrZZKlJq/Ber
-         dtCbdZs6DubENgqC17ljQPdrq0b64t+d5JUIAVkP/sAVuHigFfgmgz80+HWQWMWIU+TR
-         XQTg==
+        bh=LtJjhRPIy7AYBnH/+FNJCutzC44JnMplfSDwQrTUa8w=;
+        b=jbSOl1Awue/1LPRRc+xSPb9r+8QvOIlbvb25O6i8BGZgfpAtA1ZOnCyPHRosISF29I
+         Ezp/SyZTuH3p2oeNcSk8B51hijLOv/S3UhcF+MUiHyRbxdPUKZRHALBHAuOPiqEJ4tCF
+         J4orZviFR1gSge+5sFACQXQmzWW8/PeBHnW6qDaRYMYeAXVX+j32QzRO4LaKXnaWXJCT
+         jeNkLOHqZaHk7fICB7yV0wQTrRJX1W6pa1Scdx3JhTrzqUMeGEC+MXUaAZGeUu5ygi1r
+         hk0En70j4+s45QLwK7KAnIcZ+2+/7WB5LE9ZjRNtvS/WR9VSU4DnkyX7qjvc3gi3LDI2
+         dMkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=J+e5SK2e2LZ4MyHO9wWSsa40xkOFSDNcY+p2H5PaU+M=;
-        b=DJK1t+T0p3LcwI7wbX510gBBQMgUG6f/uTrLOCSkAxP8RZXD2ZVX44DkyTuYrOzzuf
-         DTiMyY7oyzSYJvbcluu9S8eRLxxZjE5NJNH2Xauynj58M5m1kQOxNGnJIj18Bsk8PNk7
-         CvwSP9Lg29c3og88v9C8vIjx8fixGxc4bUa0nLZu4kTSwDx+8mR/kaj+IRYKeOPeuNR+
-         +ShzdkNl4dkKCkcJ4/l1ktcNZeLymCNczLXu9tIpl3m+gxpcTVADy9YaUj4UE0DXhBlt
-         4wiMsE6M7k5yJkoosF+bDZjuUFkD2DWg7vk8EtRhno0rocbMpd9fkvxGoS8vTInZzy13
-         58Pw==
-X-Gm-Message-State: ANhLgQ1tzsIY/fFgcguJ4tugBC6goYL8oRnbyJGuMBbQTa5nxo41NAWl
-        Cv5IwkQFjBncWqeD/4W5z8k=
-X-Google-Smtp-Source: ADFU+vs7XKqVjr0PgUql0X5CC6cLuNW6Uv2W1EblIurQKjusZ+ze0jq2S+qyuUiW+Blezf+J0pNwSw==
-X-Received: by 2002:a05:600c:4145:: with SMTP id h5mr1529450wmm.3.1584490628310;
-        Tue, 17 Mar 2020 17:17:08 -0700 (PDT)
+        bh=LtJjhRPIy7AYBnH/+FNJCutzC44JnMplfSDwQrTUa8w=;
+        b=KLbno19G/uX4BmOYYXLeGvJCeCAdFfxMjwu7qVG/rI7pcG3SRfiC+z62Do79Umvk/C
+         5dJ5cHc2P3CtCyzcewGwRSl1gjvonbsnFxZQMSbNLZhpTUnGgwYac8x7fA5bQSFiCgrl
+         NPgtdnfkns12KXWcbm33v3ZBGK0le4j/cA9qcOo3U9HjIR1iZKjqX/NUmE2GpbvrWQmW
+         XTr66LWse8sFDIWntu/ElsyBI0KAXNdvzTF4FBTR2WaWGxYoOMwLbHzzrNMbTUIbD9mF
+         kvKNF39eg+CpIdLEVZ3d3q8huMzKK+7fErQm+06viw2mLP+qQHneAIKsLsbsVIeuFM9k
+         I0aw==
+X-Gm-Message-State: ANhLgQ01IuxCxCxw0zC4IPfwjKt1km7I2FFcFfxDa7rZE6mfFPn5MJeg
+        3DrlMni7vyPb4eBeYGr5iFEgc7/N0X2+Iw==
+X-Google-Smtp-Source: ADFU+vv2Vh7Eu15pOeJ/8F/ptvM5dbg6R3B92VKZ7YtIKaJesNpIXOy/Yipqg7DRWKcpi43GLhf52w==
+X-Received: by 2002:a1c:de82:: with SMTP id v124mr1539863wmg.70.1584490632322;
+        Tue, 17 Mar 2020 17:17:12 -0700 (PDT)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id i6sm6584600wru.40.2020.03.17.17.17.07
+        by smtp.gmail.com with ESMTPSA id i6sm6584600wru.40.2020.03.17.17.17.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 17:17:07 -0700 (PDT)
+        Tue, 17 Mar 2020 17:17:11 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     broonie@kernel.org
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -63,9 +63,9 @@ Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, eha@deif.com, angelo@sysam.it,
         andrew.smirnov@gmail.com, gustavo@embeddedor.com, weic@nvidia.com,
         mhosny@nvidia.com, michael@walle.cc, peng.ma@nxp.com
-Subject: [PATCH v5 01/12] spi: spi-fsl-dspi: Don't access reserved fields in SPI_MCR
-Date:   Wed, 18 Mar 2020 02:15:52 +0200
-Message-Id: <20200318001603.9650-2-olteanv@gmail.com>
+Subject: [PATCH v5 04/12] spi: spi-fsl-dspi: Avoid reading more data than written in EOQ mode
+Date:   Wed, 18 Mar 2020 02:15:55 +0200
+Message-Id: <20200318001603.9650-5-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200318001603.9650-1-olteanv@gmail.com>
 References: <20200318001603.9650-1-olteanv@gmail.com>
@@ -76,57 +76,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-The SPI_MCR_PCSIS macro assumes that the controller has a number of chip
-select signals equal to 6. That is not always the case, but actually is
-described through the driver-specific "spi-num-chipselects" device tree
-binding. LS1028A for example only has 4 chip selects.
+If dspi->words_in_flight is populated with the hardware FIFO size,
+then in dspi_fifo_read it will attempt to read more data at the end of a
+buffer that is not a multiple of 16 bytes in length. It will probably
+time out attempting to do so.
 
-Don't write to the upper bits of the PCSIS field, which are reserved in
-the reference manual.
+So limit the num_fifo_entries variable to the actual number of FIFO
+entries that is going to be used.
 
-Fixes: 349ad66c0ab0 ("spi:Add Freescale DSPI driver for Vybrid VF610 platform")
+Fixes: d59c90a2400f ("spi: spi-fsl-dspi: Convert TCFQ users to XSPI FIFO mode")
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
 Changes in v5:
 None.
 
 Changes in v4:
-None.
-
-Changes in v3:
-None.
-
-Changes in v2:
-Remove duplicate phrase in commit message.
+Patch is new.
 
  drivers/spi/spi-fsl-dspi.c | 7 +++++--
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 50e3382f0c50..6ca35881881b 100644
+index 8f2b73cc6ed7..51224b772680 100644
 --- a/drivers/spi/spi-fsl-dspi.c
 +++ b/drivers/spi/spi-fsl-dspi.c
-@@ -22,7 +22,7 @@
+@@ -739,13 +739,16 @@ static void dspi_eoq_fifo_write(struct fsl_dspi *dspi)
+ 	int num_fifo_entries = dspi->devtype_data->fifo_size;
+ 	u16 xfer_cmd = dspi->tx_cmd;
  
- #define SPI_MCR				0x00
- #define SPI_MCR_MASTER			BIT(31)
--#define SPI_MCR_PCSIS			(0x3F << 16)
-+#define SPI_MCR_PCSIS(x)		((x) << 16)
- #define SPI_MCR_CLR_TXF			BIT(11)
- #define SPI_MCR_CLR_RXF			BIT(10)
- #define SPI_MCR_XSPI			BIT(3)
-@@ -1200,7 +1200,10 @@ static const struct regmap_config dspi_xspi_regmap_config[] = {
- 
- static void dspi_init(struct fsl_dspi *dspi)
- {
--	unsigned int mcr = SPI_MCR_PCSIS;
-+	unsigned int mcr;
++	if (num_fifo_entries * dspi->oper_word_size > dspi->len)
++		num_fifo_entries = dspi->len / dspi->oper_word_size;
 +
-+	/* Set idle states for all chip select signals to high */
-+	mcr = SPI_MCR_PCSIS(GENMASK(dspi->ctlr->num_chipselect - 1, 0));
+ 	dspi->words_in_flight = num_fifo_entries;
  
- 	if (dspi->devtype_data->trans_mode == DSPI_XSPI_MODE)
- 		mcr |= SPI_MCR_XSPI;
+ 	/* Fill TX FIFO with as many transfers as possible */
+-	while (dspi->len && num_fifo_entries--) {
++	while (num_fifo_entries--) {
+ 		dspi->tx_cmd = xfer_cmd;
+ 		/* Request EOQF for last transfer in FIFO */
+-		if (dspi->len == dspi->oper_word_size || num_fifo_entries == 0)
++		if (num_fifo_entries == 0)
+ 			dspi->tx_cmd |= SPI_PUSHR_CMD_EOQ;
+ 		/* Write combined TX FIFO and CMD FIFO entry */
+ 		dspi_pushr_write(dspi);
 -- 
 2.17.1
 
