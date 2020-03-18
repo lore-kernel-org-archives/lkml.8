@@ -2,231 +2,120 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD48C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F358C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8473C20767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 664E620768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:12:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqWX7PKf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PNWQuYS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgCREJs (ORCPT
+        id S1726671AbgCREM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 00:09:48 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45991 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbgCREJs (ORCPT
+        Wed, 18 Mar 2020 00:12:58 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37982 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgCREM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 00:09:48 -0400
-Received: by mail-io1-f67.google.com with SMTP id w7so8132360ioj.12;
-        Tue, 17 Mar 2020 21:09:46 -0700 (PDT)
+        Wed, 18 Mar 2020 00:12:58 -0400
+Received: by mail-lj1-f194.google.com with SMTP id w1so25465124ljh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Mar 2020 21:12:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=t9oUNFBFVeyaRR97rOt4GWkRnk93KP745TrCMTCRay8=;
-        b=mqWX7PKfYqBcduqUhakCo/UKJU+hdvypvdLBh1VVdEbIJA2lwIwGl+kh6IKtnpu6Oc
-         c4XYgXRZwzbH5UDv0YKEU7fizRclDiegx5Qy5S0IUORaDSXLFDr5QhemZQYMN4wjHQ8M
-         ZhQUilyJGfeA6eXJrAUqim8gp8W2JuQrLO2wXIzZVmNXRxTKdK13O6ZOnGHtqlOvMg5J
-         WgDY/a0uA7rOJ6/rhhG/yNl2b6NScrwjIEAnyLyH8QNogPlX3RKO7IKi2rFCsfPM3mOO
-         aSyqy/1Ks5NSUT6+BVJvXkSnMH8fYQ/suZNmiMAaapOWdQOXrJ0EYJ3ujEJmJ0RLw/gK
-         0Rhg==
+        bh=+5RQy3c2offPt/+uCMqQvbRmg044IUDq91T7c4twuiQ=;
+        b=PNWQuYS3DuEgG1TiRWX8q+/naX/RHcP4pfdCBEVHg5cGKkSz3CJsNMUQvZs1XqISn7
+         MMjOoD2ESJw7hs7Sp6ETaNXJypXRC2brDHv1phlLM/rhN5u0NTDTWDk2jGgSkkDkfcVz
+         rvJFwuZFUah0S2YbC9OhKBtqV2s/QWF5R7kjgIyAX5sMJmAiqw6xMF6GFLqp/6/OJC2Q
+         7LzylG3jBo3r0UAmlCSTTPgv+Kx+F6NuCfrs+xiXLgP1nEhCM1xL+rxP9twLHrsiz8dw
+         78FAEJpYdl59tv3vp9mSwv2txpYXconQ1LT4Ri9fx6yzegtHIm6YsGVwo8G3Dbu3FR53
+         OnZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=t9oUNFBFVeyaRR97rOt4GWkRnk93KP745TrCMTCRay8=;
-        b=R6FTbjpzXiFgUjBH/B7jd4W5QAOMX0p0YAW7wMG2rz0Fyr1ngUV4Ds5AwOxNYG9lGj
-         37M3v1bOQN2HZzUPbRUYr19BRI+xiGkmOcTsNWdyixqSxqWnFiOAXI+y6BewXWrZkNCu
-         p2TiLBkSVEZ+PxsF+tNof6NpXdfhKtn/xu0x+ShpMeCkRKtfULA6zGeOuRpuAZxWU+DG
-         /kjqGbxsON2+c2c+3fqTGMV56YF/aEDaI6zpU0JJKAySWXsW1fKfDJzqmJsJhPUowIn5
-         9Ov0yozyzHzCpqm7CPvlLHmd41JMiCgHt10vmZEpJ1CSwqm6A7PBLvZARRTfOzj+xXh/
-         9byA==
-X-Gm-Message-State: ANhLgQ1fYD2PMPiSPhPOVui7vqhMdVBE2hhhvNiHfaQs3qHw5Ib4QwYT
-        wLLMfYiSSeNuyQguqNDMkrnZlrZlp7zSJ1bv2nw=
-X-Google-Smtp-Source: ADFU+vtnJRZxQp6MhvFSgAzh49EK8PcMuXwU4FUckBRVnMJb9XrUha/IQGp38lUOiyMqME3JVK7WJehb1GBYc9KgSCY=
-X-Received: by 2002:a02:c6b4:: with SMTP id o20mr2520967jan.117.1584504586169;
- Tue, 17 Mar 2020 21:09:46 -0700 (PDT)
+        bh=+5RQy3c2offPt/+uCMqQvbRmg044IUDq91T7c4twuiQ=;
+        b=RL+D+gIt1koVELEkSkw1/ha1sR7m/3A4yliG25J0a4009xqPhjKpMw7LXElTjwR/0P
+         qoqGH+CS3JEefY8bmAFERFbnYZ29kvUkPBcbv1K954erevlnnd86HKLw5akkWKFiOpeG
+         XRRSVmNd0JrN8MiBXuNzucmn+g7tcej72CGv2mt5zE0WyEmD1OT0L90Nbo8/eDbmAnTo
+         0EL6QGIIcGUypFPqe59M0NeAYuHxVoiWxQdI7+QvE8fzBQIQkqHKbKekE9yJxJY7xckC
+         /i5FuCNViWeqs318PTfEXD3HGmEQUGeUbn9RLIh+ok8iJ3hs0yAfOo+j+W17/vkVuEt8
+         1zMA==
+X-Gm-Message-State: ANhLgQ2fPQvRFUsL4hTgY8qZWEfHQrEms5geCYs7mwwucqCu9kepAJvC
+        QK5zGOGnCXZ5KoVI3dZQdJjQa7PbKaLhTXLrFuDo6A==
+X-Google-Smtp-Source: ADFU+vshXsd069bcjh1DLJuN1A/iA9e1k3ypyxTcYsCayU/zyxOdXvq0TOmOvunUbxQpqQcl6WbQZ0tk2O56M3OLf54=
+X-Received: by 2002:a2e:b008:: with SMTP id y8mr1092986ljk.107.1584504775380;
+ Tue, 17 Mar 2020 21:12:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200317155536.10227-1-hqjagain@gmail.com> <20200317173039.GA3828@localhost.localdomain>
- <CAJRQjocwMzmBiYXwCnupE7hd8qYveBXtUiF2WKBe=TFfJLqcDw@mail.gmail.com>
- <20200318035549.GC3756@localhost.localdomain> <CAJRQjoeGtALzDHUS+OUJfK-JqQ_T-_RX74Opt-TLTxufVAQN7g@mail.gmail.com>
-In-Reply-To: <CAJRQjoeGtALzDHUS+OUJfK-JqQ_T-_RX74Opt-TLTxufVAQN7g@mail.gmail.com>
-From:   Qiujun Huang <hqjagain@gmail.com>
-Date:   Wed, 18 Mar 2020 12:09:34 +0800
-Message-ID: <CAJRQjofoB89biLLQxwDon7BzG4H88AuKQxh+zjOkcKxZgoAxzg@mail.gmail.com>
-Subject: Re: [PATCH v2] sctp: fix refcount bug in sctp_wfree
-To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, Jakub Kicinski <kuba@kernel.org>,
-        linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, anenbupt@gmail.com
-Content-Type: multipart/mixed; boundary="0000000000000133e305a11939a1"
+References: <20200313180333.75011-1-rajatja@google.com> <20200318035618.GG192640@dtor-ws>
+In-Reply-To: <20200318035618.GG192640@dtor-ws>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Tue, 17 Mar 2020 21:12:19 -0700
+Message-ID: <CACK8Z6HXTDWteq1iVAHqw4irsWHGvAaS3apwNCicxGNreMncHg@mail.gmail.com>
+Subject: Re: [PATCH v3] Input: Allocate keycode for "Selective Screenshot" key
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Harry Cutts <hcutts@chromium.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dtor@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000000133e305a11939a1
-Content-Type: text/plain; charset="UTF-8"
+On Tue, Mar 17, 2020 at 8:56 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> On Fri, Mar 13, 2020 at 11:03:33AM -0700, Rajat Jain wrote:
+> > New chromeos keyboards have a "snip" key that is basically a selective
+> > screenshot (allows a user to select an area of screen to be copied).
+> > Allocate a keycode for it.
+> >
+> > Signed-off-by: Rajat Jain <rajatja@google.com>
+>
+> Applied, thank you.
 
-add log.txt
+I just noticed that I had by mistake used KEY_SELECTIVE_SNAPSHOT
+instead of intended KEY_SELECTIVE_SCREENSHOT in the commit message. My
+apologies. Can you please fix the commit message if not already
+pushed. Otherwise I can send a follow up patch if you'd like.
 
---0000000000000133e305a11939a1
-Content-Type: text/plain; charset="US-ASCII"; name="log.txt"
-Content-Disposition: attachment; filename="log.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k7wt3z1b0>
-X-Attachment-Id: f_k7wt3z1b0
+Thanks & Best Regards,
 
-WyAgIDg2LjUwNzQzMl1bIFQ4ODEzXSBbMV1za2IgMHhmZmZmODg4MDlmZGZjODAwIDB4ZmZmZjg4
-ODA5NjIxZTdjMDogdHJ1ZXNpemUgNzY4LCBzayBhbGxvYyA3Njkgc2N0cF9zZXRfb3duZXJfdyAx
-MzcKWyAgIDg2LjUzMjA0Ml1bIFQ4ODEzXSBbMV1za2IgMHhmZmZmODg4MDk5ZWJiZTgwIDB4ZmZm
-Zjg4ODA5NjIxZTdjMDogdHJ1ZXNpemUgMTMxMzI4LCBzayBhbGxvYyAxMzIzNTMgc2N0cF9zZXRf
-b3duZXJfdyAxMzcKWyAgIDg2LjU0MzQyNl1bIFQ4ODEzXSBbMV1za2IgMHhmZmZmODg4MDllZjU1
-Y2MwIDB4ZmZmZjg4ODA5NjIxZTdjMDogdHJ1ZXNpemUgMTMxMzI4LCBzayBhbGxvYyAyNjM5Mzcg
-c2N0cF9zZXRfb3duZXJfdyAxMzcKWyAgIDg2LjU2MzIyOV1bIFQ4ODEzXSBbMV1za2IgMHhmZmZm
-ODg4MDllZjU1N2MwIDB4ZmZmZjg4ODA5NjIxZTdjMDogdHJ1ZXNpemUgMTMxMzI4LCBzayBhbGxv
-YyAzOTU1MjEgc2N0cF9zZXRfb3duZXJfdyAxMzcKWyAgIDg2LjU4OTMzMl1bIFQ4ODEzXSBbMV1z
-a2IgMHhmZmZmODg4MDllZjU1YTQwIDB4ZmZmZjg4ODA5NjIxZTdjMDogdHJ1ZXNpemUgMzMwMjQs
-IHNrIGFsbG9jIDQyODgwMSBzY3RwX3NldF9vd25lcl93IDEzNwpbICAgODYuNjAyMjExXVsgVDg4
-MTNdIFsxXWRlYWwgd2l0aCB0cmFuc21pdHRlZCAweGZmZmY4ODgwOTEwYjBhODAgZnJvbSB0cmFu
-c3BvcnQgMHhmZmZmODg4MDkxMGIwODAwICBfX3NjdHBfb3V0cV90ZWFyZG93biwgMjE2ClsgICA4
-Ni42MTYzMzZdWyBUODgxM10gWzFdcHV0IGJhY2sgdG8gcXVldWUgMHhmZmZmODg4MDkxZGM4Nzcw
-IHNjdHBfY2hlY2tfdHJhbnNtaXR0ZWQsIDE2ODMKWyAgIDg2LjYyNTYxMF1bIFQ4ODEzXSBbMV1n
-ZXQgcGFja2V0IDB4ZmZmZjg4ODA5OWViYmU4MCBmcm9tIHF1ZXVlIDB4ZmZmZjg4ODA5NmIyYzI4
-MCAgc2N0cF9jaGVja190cmFuc21pdHRlZCwgMTQzNwpbICAgODYuNjM3MTA1XVsgVDg4MTNdIFsx
-XXB1dCBza2IgMHhmZmZmODg4MDk5ZWJiZTgwIGJhY2suIHNjdHBfY2hlY2tfdHJhbnNtaXR0ZWQs
-IDE1MzMKWyAgIDg2LjY0NjI4NF1bIFQ4ODEzXSBbMV1wdXQgYmFjayB0byBxdWV1ZSAweGZmZmY4
-ODgwOTZiMmMyODAgc2N0cF9jaGVja190cmFuc21pdHRlZCwgMTY4MwpbICAgODYuNjg3NTc1XVsg
-VDg4MTNdIFsxXWJlZm9yZSBzayAweGZmZmY4ODgwOTYyMWU3YzAgc2N0cF9zb2NrX21pZ3JhdGUs
-IDk1OTIKWyAgIDg2LjY5NjI5Nl1bIFQ4ODEzXSBbMV1za2IgMHhmZmZmODg4MDllZjU1Y2MwIDB4
-ZmZmZjg4ODA5NjIxZTdjMDogdHJ1ZXNpemUgMTMxMzI4LCBzayBhbGxvYyA0MjkwNTcgc2N0cF93
-ZnJlZSA5MTAxIHJlYWwgc2sgMHhmZmZmODg4MDk2MjFlN2MwClsgICA4Ni43MjE4OTFdWyBUODgx
-M10gWzFddHJhbnNtaXR0ZWQgZG9uZSBxdWV1ZSAweGZmZmY4ODgwOTFkYzgzZDAgc2N0cF9mb3Jf
-ZWFjaF90eF9kYXRhY2h1bmssIDE2NgpbICAgODYuNzU3MjYwXVsgVDg4MTNdIFsxXXJldHJhbnNt
-aXQgZG9uZSBxdWV1ZSAweGZmZmY4ODgwOTFkYzg3NzAgc2N0cF9mb3JfZWFjaF90eF9kYXRhY2h1
-bmssIDE3MQpbICAgODYuNzcxMDY1XVsgVDg4MTNdIFsxXXNhY2tlZCBkb25lIHF1ZXVlIDB4ZmZm
-Zjg4ODA5MWRjODc2MCBzY3RwX2Zvcl9lYWNoX3R4X2RhdGFjaHVuaywgMTc2ClsgICA4Ni43OTc0
-ODddWyBUODgxM10gWzFdYWJhbmRvbmVkIGRvbmUgcXVldWUgMHhmZmZmODg4MDkxZGM4NzgwIHNj
-dHBfZm9yX2VhY2hfdHhfZGF0YWNodW5rLCAxODEKWyAgIDg2LjgxNDg1Nl1bIFQ4ODEzXSBbMF1z
-a2IgMHhmZmZmODg4MDllZjU1N2MwIDB4ZmZmZjg4ODA5NjIxZTdjMDogdHJ1ZXNpemUgMTMxMzI4
-LCBzayBhbGxvYyAyOTc0NzMgc2N0cF93ZnJlZSA5MTAxIHJlYWwgc2sgMHhmZmZmODg4MDk2MjFl
-N2MwClsgICA4Ni44MzE3OTldWyBUODgxM10gWzBdc2tiIDB4ZmZmZjg4ODA5ZWY1NWE0MCAweGZm
-ZmY4ODgwOTYyMWU3YzA6IHRydWVzaXplIDMzMDI0LCBzayBhbGxvYyAxNjU4ODkgc2N0cF93ZnJl
-ZSA5MTAxIHJlYWwgc2sgMHhmZmZmODg4MDk2MjFlN2MwClsgICA4Ni44NDU0NzNdWyBUODgxM10g
-WzBdb3V0X2NodW5rX2xpc3QgZG9uZSBxdWV1ZSAweGZmZmY4ODgwOTFkYzg3MzAgc2N0cF9mb3Jf
-ZWFjaF90eF9kYXRhY2h1bmssIDE4NgpbICAgODYuODY2MDExXVsgVDg4MTNdIFswXXNrYiAweGZm
-ZmY4ODgwOWVmNTVjYzAgMHhmZmZmODg4MGEzYmIyODAwOiB0cnVlc2l6ZSAxMzEzMjgsIHNrIGFs
-bG9jIDEzMTMyOSBzY3RwX3NldF9vd25lcl93IDEzNwpbICAgODYuODg0ODExXVsgVDg4MTNdIFsw
-XXRyYW5zbWl0dGVkIGRvbmUgcXVldWUgMHhmZmZmODg4MDkxZGM4M2QwIHNjdHBfZm9yX2VhY2hf
-dHhfZGF0YWNodW5rLCAxNjYKWyAgIDg2Ljg5NjE1MF1bIFQ4ODEzXSBbMF1yZXRyYW5zbWl0IGRv
-bmUgcXVldWUgMHhmZmZmODg4MDkxZGM4NzcwIHNjdHBfZm9yX2VhY2hfdHhfZGF0YWNodW5rLCAx
-NzEKWyAgIDg2LjkwNzIzM11bIFQ4ODEzXSBbMF1zYWNrZWQgZG9uZSBxdWV1ZSAweGZmZmY4ODgw
-OTFkYzg3NjAgc2N0cF9mb3JfZWFjaF90eF9kYXRhY2h1bmssIDE3NgpbICAgODYuOTE2ODI1XVsg
-VDg4MTNdIFswXWFiYW5kb25lZCBkb25lIHF1ZXVlIDB4ZmZmZjg4ODA5MWRjODc4MCBzY3RwX2Zv
-cl9lYWNoX3R4X2RhdGFjaHVuaywgMTgxClsgICA4Ni45Mjc0NThdWyBUODgxM10gWzBdc2tiIDB4
-ZmZmZjg4ODA5ZWY1NTdjMCAweGZmZmY4ODgwYTNiYjI4MDA6IHRydWVzaXplIDEzMTMyOCwgc2sg
-YWxsb2MgMjYyOTEzIHNjdHBfc2V0X293bmVyX3cgMTM3ClsgICA4Ni45NTc0NDZdWyBUODgxM10g
-WzBdc2tiIDB4ZmZmZjg4ODA5ZWY1NWE0MCAweGZmZmY4ODgwYTNiYjI4MDA6IHRydWVzaXplIDMz
-MDI0LCBzayBhbGxvYyAyOTYxOTMgc2N0cF9zZXRfb3duZXJfdyAxMzcKWyAgIDg2Ljk3MTgxMF1b
-IFQ4ODEzXSBbMF1vdXRfY2h1bmtfbGlzdCBkb25lIHF1ZXVlIDB4ZmZmZjg4ODA5MWRjODczMCBz
-Y3RwX2Zvcl9lYWNoX3R4X2RhdGFjaHVuaywgMTg2ClsgICA4Ni45OTIzODZdWyBUODgxM10gWzBd
-YWZ0ZXIgc2sgMHhmZmZmODg4MGEzYmIyODAwIHNjdHBfc29ja19taWdyYXRlLCA5NTk3ClsgICA4
-Ny4wOTEzMjBdWyBUODgxMV0gWzFdZGVhbCB3aXRoIHRyYW5zbWl0dGVkIDB4ZmZmZjg4ODBhNmY1
-MjI4MCBmcm9tIHRyYW5zcG9ydCAweGZmZmY4ODgwYTZmNTIwMDAgIF9fc2N0cF9vdXRxX3RlYXJk
-b3duLCAyMTYKWyAgIDg3LjExMDU1Ml1bIFQ4ODExXSBbMV1za2IgMHhmZmZmODg4MDlmZGZjODAw
-IDB4ZmZmZjg4ODA5NjIxZTdjMDogdHJ1ZXNpemUgNzY4LCBzayBhbGxvYyAxMzI2MDkgc2N0cF93
-ZnJlZSA5MTAxIHJlYWwgc2sgMHhmZmZmODg4MDk2MjFlN2MwClsgICA4Ny4xODAyMzhdWyBUODgx
-MV0gWzBdZGVhbCB3aXRoIHRyYW5zbWl0dGVkIDB4ZmZmZjg4ODA5NmIyYzI4MCBmcm9tIHRyYW5z
-cG9ydCAweGZmZmY4ODgwOTZiMmMwMDAgIF9fc2N0cF9vdXRxX3RlYXJkb3duLCAyMTYKWyAgIDg3
-LjI2NDA2Ml1bIFQ4ODExXSBbMF1za2IgMHhmZmZmODg4MDk5ZWJiZTgwIDB4ZmZmZjg4ODBhM2Ji
-MjgwMDogdHJ1ZXNpemUgMTMxMzI4LCBzayBhbGxvYyAyOTY0NDkgc2N0cF93ZnJlZSA5MTAxIHJl
-YWwgc2sgMHhmZmZmODg4MDk2MjFlN2MwClsgICA4Ny4yODk3MzBdWyBUODgxMV0gWzFdc2tiIDB4
-ZmZmZjg4ODA5ZWY1NWNjMCAweGZmZmY4ODgwYTNiYjI4MDA6IHRydWVzaXplIDEzMTMyOCwgc2sg
-YWxsb2MgMjk2MTkzIHNjdHBfd2ZyZWUgOTEwMSByZWFsIHNrIDB4ZmZmZjg4ODBhM2JiMjgwMApb
-ICAgODcuMzE0MjA2XVsgVDg4MTFdIFsxXXNrYiAweGZmZmY4ODgwOWVmNTU3YzAgMHhmZmZmODg4
-MGEzYmIyODAwOiB0cnVlc2l6ZSAxMzEzMjgsIHNrIGFsbG9jIDE2NDYwOSBzY3RwX3dmcmVlIDkx
-MDEgcmVhbCBzayAweGZmZmY4ODgwYTNiYjI4MDAKWyAgIDg3LjMyOTYwMl1bIFQ4ODExXSBbMV1z
-a2IgMHhmZmZmODg4MDllZjU1YTQwIDB4ZmZmZjg4ODBhM2JiMjgwMDogdHJ1ZXNpemUgMzMwMjQs
-IHNrIGFsbG9jIDMzMDI1IHNjdHBfd2ZyZWUgOTEwMSByZWFsIHNrIDB4ZmZmZjg4ODBhM2JiMjgw
-MApbICAgODcuMzU2OTMwXVsgVDg4MTFdIC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0t
-LS0tLQpbICAgODcuMzk3NzExXVsgVDg4MTFdIHJlZmNvdW50X3Q6IHVuZGVyZmxvdzsgdXNlLWFm
-dGVyLWZyZWUuClsgICA4Ny40Mjg0NDVdWyBUODgxMV0gV0FSTklORzogQ1BVOiAxIFBJRDogODgx
-MSBhdCBsaWIvcmVmY291bnQuYzoyOCByZWZjb3VudF93YXJuX3NhdHVyYXRlKzB4MTViLzB4MWEw
-ClsgICA4Ny40MzgwMTVdWyBUODgxMV0gS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IHBhbmlj
-X29uX3dhcm4gc2V0IC4uLgpbICAgODcuNDQ0NjMwXVsgVDg4MTFdIENQVTogMSBQSUQ6IDg4MTEg
-Q29tbTogc3l6LWV4ZWN1dG9yLjIgTm90IHRhaW50ZWQgNS42LjAtcmM1LXN5emthbGxlciAjMApb
-ICAgODcuNDQ0NjM1XVsgVDg4MTFdIEhhcmR3YXJlIG5hbWU6IEdvb2dsZSBHb29nbGUgQ29tcHV0
-ZSBFbmdpbmUvR29vZ2xlIENvbXB1dGUgRW5naW5lLCBCSU9TIEdvb2dsZSAwMS8wMS8yMDExClsg
-ICA4Ny40NDQ2MzldWyBUODgxMV0gQ2FsbCBUcmFjZToKWyAgIDg3LjQ0NDY1Nl1bIFQ4ODExXSAg
-ZHVtcF9zdGFjaysweDFlOS8weDMwZQpbICAgODcuNDQ0NjcxXVsgVDg4MTFdICBwYW5pYysweDI2
-NC8weDdhMApbICAgODcuNDQ0Njg0XVsgVDg4MTFdICA/IF9fd2FybisweDEwMi8weDIxMApbICAg
-ODcuNDY5MTk3XVsgVDg4MTFdICA/IHJlZmNvdW50X3dhcm5fc2F0dXJhdGUrMHgxNWIvMHgxYTAK
-WyAgIDg3LjQ2OTIwOV1bIFQ4ODExXSAgX193YXJuKzB4MjA5LzB4MjEwClsgICA4Ny40NjkyMjNd
-WyBUODgxMV0gID8gcmVmY291bnRfd2Fybl9zYXR1cmF0ZSsweDE1Yi8weDFhMApbICAgODcuNDY5
-MjMwXVsgVDg4MTFdICByZXBvcnRfYnVnKzB4MWFjLzB4MmQwClsgICA4Ny40NjkyNDldWyBUODgx
-MV0gIGRvX2Vycm9yX3RyYXArMHhjYS8weDFjMApbICAgODcuNDc2ODUyXVsgVDg4MTFdICBkb19p
-bnZhbGlkX29wKzB4MzIvMHg0MApbICAgODcuNTA3Mzk5XVsgVDg4MTFdICA/IHJlZmNvdW50X3dh
-cm5fc2F0dXJhdGUrMHgxNWIvMHgxYTAKWyAgIDg3LjUwNzQxMV1bIFQ4ODExXSAgaW52YWxpZF9v
-cCsweDIzLzB4MzAKWyAgIDg3LjUwNzQyMF1bIFQ4ODExXSBSSVA6IDAwMTA6cmVmY291bnRfd2Fy
-bl9zYXR1cmF0ZSsweDE1Yi8weDFhMApbICAgODcuNTA3NDMxXVsgVDg4MTFdIENvZGU6IGM3IGQ0
-IDAwIGQxIDg4IDMxIGMwIGU4IDMzIDFmIGIzIGZkIDBmIDBiIGViIDg1IGU4IDJhIDRhIGUwIGZk
-IGM2IDA1IDRlIDcwIGIxIDA1IDAxIDQ4IGM3IGM3IDAwIDAxIGQxIDg4IDMxIGMwIGU4IDE1IDFm
-IGIzIGZkIDwwZj4gMGIgZTkgNjQgZmYgZmYgZmYgZTggMDkgNGEgZTAgZmQgYzYgMDUgMmUgNzAg
-YjEgMDUgMDEgNDggYzcgYzcKWyAgIDg3LjUxNjI3N11bIFQ4ODExXSBSU1A6IDAwMTg6ZmZmZmM5
-MDAwMmY3NzhiMCBFRkxBR1M6IDAwMDEwMjQ2ClsgICA4Ny41MzM4ODVdWyBUODgxMV0gUkFYOiBk
-Y2Y1NzU1MWNlMGIxZDAwIFJCWDogMDAwMDAwMDAwMDAwMDAwMyBSQ1g6IGZmZmY4ODgwYTdlZWUw
-YzAKWyAgIDg3LjUzMzg5MV1bIFQ4ODExXSBSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiAwMDAw
-MDAwMDgwMDAwMDAwIFJESTogMDAwMDAwMDAwMDAwMDAwMApbICAgODcuNTMzODk3XVsgVDg4MTFd
-IFJCUDogMDAwMDAwMDAwMDAwMDAwMyBSMDg6IGZmZmZmZmZmODE1ZTE2ZDYgUjA5OiBmZmZmZWQx
-MDE1ZDI2NjE4ClsgICA4Ny41MzM5MDNdWyBUODgxMV0gUjEwOiBmZmZmZWQxMDE1ZDI2NjE4IFIx
-MTogMDAwMDAwMDAwMDAwMDAwMCBSMTI6IGRmZmZmYzAwMDAwMDAwMDAKWyAgIDg3LjUzMzkwOV1b
-IFQ4ODExXSBSMTM6IGZmZmY4ODgwOTFkYzgwMDAgUjE0OiAxZmZmZjExMDE0ZGQyODQwIFIxNTog
-ZmZmZjg4ODBhNmU5NDIwMApbICAgODcuNTMzOTM2XVsgVDg4MTFdICA/IHZwcmludGtfZW1pdCsw
-eDJlNi8weDNiMApbICAgODcuNTUwODMzXVsgVDg4MTFdICBzY3RwX3dmcmVlKzB4NDQ5LzB4N2Uw
-ClsgICA4Ny41NTA4NTldWyBUODgxMV0gIHNrYl9yZWxlYXNlX2hlYWRfc3RhdGUrMHhmYi8weDIx
-MApbICAgODcuNTUwODc3XVsgVDg4MTFdICBfX2tmcmVlX3NrYisweDIyLzB4MWMwClsgICA4Ny41
-NzY2MzVdWyBUODgxMV0gIHNjdHBfY2h1bmtfcHV0KzB4MTdiLzB4MjAwClsgICA4Ny41NzY2NTRd
-WyBUODgxMV0gIF9fc2N0cF9vdXRxX3RlYXJkb3duKzB4NWE5LzB4OTgwClsgICA4Ny41NzY2NzJd
-WyBUODgxMV0gIHNjdHBfYXNzb2NpYXRpb25fZnJlZSsweDIxZS8weDdjMApbICAgODcuNTc2Njgy
-XVsgVDg4MTFdICA/IHNjdHBfZG9fc20rMHgyZTJhLzB4NTU2MApbICAgODcuNTc2NzAyXVsgVDg4
-MTFdICBzY3RwX2RvX3NtKzB4M2MwMS8weDU1NjAKWyAgIDg3LjU5NTYwNF1bIFQ4ODExXSAgPyBy
-Y3VfcmVhZF9sb2NrX3NjaGVkX2hlbGQrMHgxMDYvMHgxNzAKWyAgIDg3LjU5NTYzMV1bIFQ4ODEx
-XSAgPyBfc2N0cF9tYWtlX2NodW5rKzB4MTBjLzB4M2UwClsgICA4Ny42MDk0NjVdWyBUODgxMV0g
-ID8gcmN1X3JlYWRfbG9ja19zY2hlZF9oZWxkKzB4MTA2LzB4MTcwClsgICA4Ny42MDk0NzZdWyBU
-ODgxMV0gID8gdHJhY2Vfa21lbV9jYWNoZV9hbGxvYysweGNiLzB4MTIwClsgICA4Ny42MDk0ODld
-WyBUODgxMV0gID8gX3NjdHBfbWFrZV9jaHVuaysweDEwYy8weDNlMApbICAgODcuNjA5NDk5XVsg
-VDg4MTFdICA/IHNjdHBfYXV0aF9zZW5kX2NpZCsweDYwLzB4MjUwClsgICA4Ny42MDk1MzRdWyBU
-ODgxMV0gIHNjdHBfcHJpbWl0aXZlX0FCT1JUKzB4OTMvMHhjMApbICAgODcuNjI1NDU4XVsgVDg4
-MTFdICBzY3RwX2Nsb3NlKzB4MmFhLzB4N2QwClsgICA4Ny42MjU0ODJdWyBUODgxMV0gID8gaXBf
-bWNfZHJvcF9zb2NrZXQrMHgyNjcvMHgyODAKWyAgIDg3LjYyNTUwMV1bIFQ4ODExXSAgaW5ldF9y
-ZWxlYXNlKzB4MTM1LzB4MTgwClsgICA4Ny42NDE2ODVdWyBUODgxMV0gIHNvY2tfY2xvc2UrMHhk
-OC8weDI2MApbICAgODcuNjQxNjk5XVsgVDg4MTFdICA/IHNvY2tfbW1hcCsweDkwLzB4OTAKWyAg
-IDg3LjY0MTcwOF1bIFQ4ODExXSAgX19mcHV0KzB4MmQ4LzB4NzMwClsgICA4Ny42NDE3MzNdWyBU
-ODgxMV0gIHRhc2tfd29ya19ydW4rMHgxNzYvMHgxYjAKWyAgIDg3LjY1MzQ0Ml1bIFQ4ODExXSAg
-cHJlcGFyZV9leGl0X3RvX3VzZXJtb2RlKzB4NDhlLzB4NjAwClsgICA4Ny42NTM0NTRdWyBUODgx
-MV0gID8gc3lzY2FsbF9yZXR1cm5fc2xvd3BhdGgrMHhmOS8weDQyMApbICAgODcuNjUzNDczXVsg
-VDg4MTFdICBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg0OS8weGJlClsgICA4Ny42
-NTM0ODJdWyBUODgxMV0gUklQOiAwMDMzOjB4NDE2MDQxClsgICA4Ny42NTM0OTNdWyBUODgxMV0g
-Q29kZTogNzUgMTQgYjggMDMgMDAgMDAgMDAgMGYgMDUgNDggM2QgMDEgZjAgZmYgZmYgMGYgODMg
-MDQgMWIgMDAgMDAgYzMgNDggODMgZWMgMDggZTggMGEgZmMgZmYgZmYgNDggODkgMDQgMjQgYjgg
-MDMgMDAgMDAgMDAgMGYgMDUgPDQ4PiA4YiAzYyAyNCA0OCA4OSBjMiBlOCA1MyBmYyBmZiBmZiA0
-OCA4OSBkMCA0OCA4MyBjNCAwOCA0OCAzZCAwMQpbICAgODcuNjYzMjUyXVsgVDg4MTFdIFJTUDog
-MDAyYjowMDAwN2ZmZTZlODFjZTkwIEVGTEFHUzogMDAwMDAyOTMgT1JJR19SQVg6IDAwMDAwMDAw
-MDAwMDAwMDMKWyAgIDg3LjY2MzI2MV1bIFQ4ODExXSBSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJY
-OiAwMDAwMDAwMDAwMDAwMDA2IFJDWDogMDAwMDAwMDAwMDQxNjA0MQpbICAgODcuNjYzMjY2XVsg
-VDg4MTFdIFJEWDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IDAwMDAwMDAwMDAwMDAwMDAgUkRJOiAw
-MDAwMDAwMDAwMDAwMDA1ClsgICA4Ny42NjMyNzBdWyBUODgxMV0gUkJQOiAwMDAwMDAwMDAwMDAw
-MDAxIFIwODogMDBmZmZmZmZmZmZmZmZmZiBSMDk6IDAwZmZmZmZmZmZmZmZmZmYKWyAgIDg3LjY2
-MzI3NV1bIFQ4ODExXSBSMTA6IDAwMDA3ZmZlNmU4MWNmNzAgUjExOiAwMDAwMDAwMDAwMDAwMjkz
-IFIxMjogMDAwMDAwMDAwMDc2YzkyMApbICAgODcuNjYzMjc5XVsgVDg4MTFdIFIxMzogMDAwMDAw
-MDAwMDc2YzkyMCBSMTQ6IDAwMDAwMDAwMDAwMTUyYTEgUjE1OiAwMDAwMDAwMDAwNzZiZjJjClsg
-ICA4Ny42NjkyODRdWyBUODgxMV0gS2VybmVsIE9mZnNldDogZGlzYWJsZWQKWyAgIDg3LjkyMDQ1
-MV1bIFQ4ODExXSBSZWJvb3RpbmcgaW4gODY0MDAgc2Vjb25kcy4uCg==
---0000000000000133e305a11939a1--
+Rajat
+
+>
+> > ---
+> > v3: Rename KEY_SNIP to KEY_SELECTIVE_SNAPSHOT
+> > V2: Drop patch [1/2] and instead rebase this on top of Linus' tree.
+> >
+> >  include/uapi/linux/input-event-codes.h | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+> > index 0f1db1cccc3fd..c4dbe2ee9c098 100644
+> > --- a/include/uapi/linux/input-event-codes.h
+> > +++ b/include/uapi/linux/input-event-codes.h
+> > @@ -652,6 +652,8 @@
+> >  /* Electronic privacy screen control */
+> >  #define KEY_PRIVACY_SCREEN_TOGGLE    0x279
+> >
+> > +#define KEY_SELECTIVE_SCREENSHOT     0x280
+> > +
+> >  /*
+> >   * Some keyboards have keys which do not have a defined meaning, these keys
+> >   * are intended to be programmed / bound to macros by the user. For most
+> > --
+> > 2.25.1.481.gfbce0eb801-goog
+> >
+>
+> --
+> Dmitry
