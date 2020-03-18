@@ -2,175 +2,105 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCD4C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB26BC5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF20620767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:56:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="H2XSZNDP"
+	by mail.kernel.org (Postfix) with ESMTP id C1A4220767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584525435;
+	bh=PxOugapyiLyGM41ij3qU4It93Jbk5/RLhf0dug/PLy8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qvqjpQ7chAtvevrEHyMSMqgu5bF4aaeNayBrqVwmAUeinsva947SdYGtwpOp45HBq
+	 jDpU2GP7ei7InKMT05jgV0zSqXxY/CLthyIvMHZhVEHY04TyhNg6lvqYBELlThxYpQ
+	 FFYIAB2h3FXIabvlSXDSnABQDRtRzxEvLtU2C4xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbgCRJ4v (ORCPT
+        id S1727569AbgCRJ5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:56:51 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19653 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726310AbgCRJ4v (ORCPT
+        Wed, 18 Mar 2020 05:57:14 -0400
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:37715 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727405AbgCRJ5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:56:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584525410; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=wpTs/Yv2vfdHP8J7CUkO3ZinHFh2kyE/dE8fmawgde8=; b=H2XSZNDPGlTyV3bJ4VN9TV2gHf83u3DhJqLevrnEaIU4e5OnF3bpUPyQsFEfJIhvZOoTnoHa
- mjUZ8Br8Tnz/hcxMEX8PY2g6rdxQhJvPmF6reIvKfVk/axFjkqWdlDlwAHMYxjGcqR66ANqE
- +PYmVBN5SojdzCMnT8qLVbEU4oU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e71f061.7f632602d1b8-smtp-out-n01;
- Wed, 18 Mar 2020 09:56:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 98DF0C433BA; Wed, 18 Mar 2020 09:56:49 +0000 (UTC)
-Received: from MAGGARWA (unknown [183.83.138.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: maggarwa)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A79BDC433CB;
-        Wed, 18 Mar 2020 09:56:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A79BDC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=maggarwa@codeaurora.org
-From:   <maggarwa@codeaurora.org>
-To:     "'Alexandre Belloni'" <alexandre.belloni@bootlin.com>
-Cc:     <a.zummo@towertech.it>, <linux-rtc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1584342688-14035-1-git-send-email-maggarwa@codeaurora.org> <20200316102905.GN4518@piout.net> <000001d5fc17$9c327ee0$d4977ca0$@codeaurora.org> <20200317115523.GB3448@piout.net>
-In-Reply-To: <20200317115523.GB3448@piout.net>
-Subject: RE: [PATCH] rtc-pm8xxx: Clear Alarm register on resume
-Date:   Wed, 18 Mar 2020 15:26:43 +0530
-Message-ID: <000001d5fd0b$89fc5260$9df4f720$@codeaurora.org>
+        Wed, 18 Mar 2020 05:57:14 -0400
+Received: by mail-wr1-f48.google.com with SMTP id w10so631428wrm.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 02:57:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GOcmbfCGsBYkxr9ElKbbF2lKiCO06vnAuf1KQJx6gnM=;
+        b=X+judH+b0yjx8AzNhOcwU3Zp/ihld72xOPu9nScQ8noVWGjjMWGAqd6Wvpx7drlYic
+         TZFZwzle7z0FZRrYAjf2aeSkltepaiC1BMl1fmvRBDF83q9ARiyvAceqcRKEUxuMXNdX
+         G41Fj6TPgwnMtvXxIqTG8VH4HMBfHN1lHhK0rXL/qFZh4XV6wlFo8pcUZdQbPJEPN5n7
+         QwGWBL8V78L+/pwoCvv75k/DgQw8HF5TkQ3EdTGdq7xOwGCgVvpgmTfXwn2LqekDCOus
+         gdAKwyRMRA+xbf7AjxWpFP0bKvWcH5YOn01UG+kVR+xYJExJh2KRWWb3H4oeQYhuErUH
+         /Eig==
+X-Gm-Message-State: ANhLgQ2pnZxCkSsPmyoe/0GvJ85cFDvnGkjKrinlvaFmMFPxP2whB3+q
+        CA8vkkn9fcDDYOmVjDh3ZcE=
+X-Google-Smtp-Source: ADFU+vvBHA61twBo/iJCkAyPfb8alCOE0RxXYb3BGFv8E2BcCaIptytGe1N2yy2yIUN1EMDdUQzxpQ==
+X-Received: by 2002:adf:ea42:: with SMTP id j2mr4642015wrn.3.1584525432444;
+        Wed, 18 Mar 2020 02:57:12 -0700 (PDT)
+Received: from localhost (ip-37-188-180-89.eurotel.cz. [37.188.180.89])
+        by smtp.gmail.com with ESMTPSA id s7sm8708665wro.10.2020.03.18.02.57.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 02:57:11 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 10:57:10 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Ami Fischman <fischman@google.com>
+Cc:     Robert Kolchmeyer <rkolchmeyer@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [patch] mm, oom: make a last minute check to prevent unnecessary
+ memcg oom kills
+Message-ID: <20200318095710.GG21362@dhcp22.suse.cz>
+References: <alpine.DEB.2.21.2003101454580.142656@chino.kir.corp.google.com>
+ <20200310221938.GF8447@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2003101547090.177273@chino.kir.corp.google.com>
+ <CAJc0_fwDAKUTcYd_rga+jjDEE2BT7Tp=ViWdtiUeswVLUqC9CQ@mail.gmail.com>
+ <CAHuR8a-PbmthrKYpY5-SM-MH39O39W2J1mXA48oy9nASmys0mg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQGOsd3LdOay4LNIsG2VCVcgDm4GSQFDNT2fAYgk9NcBLfk0F6i86AGw
-Content-Language: en-us
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHuR8a-PbmthrKYpY5-SM-MH39O39W2J1mXA48oy9nASmys0mg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Comments inline.
+On Tue 17-03-20 12:00:45, Ami Fischman wrote:
+> On Tue, Mar 17, 2020 at 11:26 AM Robert Kolchmeyer
+> <rkolchmeyer@google.com> wrote:
+> >
+> > On Tue, Mar 10, 2020 at 3:54 PM David Rientjes <rientjes@google.com> wrote:
+> > >
+> > > Robert, could you elaborate on the user-visible effects of this issue that
+> > > caused it to initially get reported?
+> >
+> > Ami (now cc'ed) knows more, but here is my understanding.
+> 
+> Robert's description of the mechanics we observed is accurate.
+> 
+> We discovered this regression in the oom-killer's behavior when
+> attempting to upgrade our system. The fraction of the system that
+> went unhealthy due to this issue was approximately equal to the
+> _sum_ of all other causes of unhealth, which are many and varied,
+> but each of which contribute only a small amount of
+> unhealth. This issue forced a rollback to the previous kernel
+> where we ~never see this behavior, returning our unhealth levels
+> to the previous background levels.
 
------Original Message-----
-From: Alexandre Belloni <alexandre.belloni@bootlin.com> 
-Sent: Tuesday, March 17, 2020 5:25 PM
-To: maggarwa@codeaurora.org
-Cc: a.zummo@towertech.it; linux-rtc@vger.kernel.org;
-linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rtc-pm8xxx: Clear Alarm register on resume
+Could you be more specific on the good vs. bad kernel versions? Because
+I do not remember any oom changes that would affect the
+time-to-check-time-to-kill race. The timing might be slightly different
+in each kernel version of course.
 
-On 17/03/2020 10:20:36+0530, maggarwa@codeaurora.org wrote:
-> Hi,
-> 
-> Comments inline.
-> 
-> 
-> Thanks & Regards,
-> Mohit
-> 
-> -----Original Message-----
-> From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Sent: Monday, March 16, 2020 3:59 PM
-> To: Mohit Aggarwal <maggarwa@codeaurora.org>
-> Cc: a.zummo@towertech.it; linux-rtc@vger.kernel.org; 
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] rtc-pm8xxx: Clear Alarm register on resume
-> 
-> Hi,
-> 
-> On 16/03/2020 12:41:28+0530, Mohit Aggarwal wrote:
-> > Currently, alarm register is not cleared on resume leading to reboot 
-> > during power off charging mode.
-> > 
-> > Change-Id: Ie2e6bbab8aa46e4e9b9cc984181ffab557cbbdae
-> 
-> No Change-Id upstream please.
-> [Mohit]: Will fix in next patch.
-> 
-> > Signed-off-by: Mohit Aggarwal <maggarwa@codeaurora.org>
-> > ---
-> >  drivers/rtc/rtc-pm8xxx.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c 
-> > index
-> > bbe013f..96e7985 100644
-> > --- a/drivers/rtc/rtc-pm8xxx.c
-> > +++ b/drivers/rtc/rtc-pm8xxx.c
-> > @@ -1,5 +1,5 @@
-> >  // SPDX-License-Identifier: GPL-2.0-only
-> > -/* Copyright (c) 2010-2011, 2019, The Linux Foundation. All rights 
-> > reserved. */
-> > +/* Copyright (c) 2010-2011, 2019-2020, The Linux Foundation. All 
-> > +rights reserved. */
-> >  
-> >  #include <linux/of.h>
-> >  #include <linux/module.h>
-> > @@ -301,6 +301,7 @@ static int pm8xxx_rtc_alarm_irq_enable(struct 
-> > device
-> *dev, unsigned int enable)
-> >  	struct pm8xxx_rtc *rtc_dd = dev_get_drvdata(dev);
-> >  	const struct pm8xxx_rtc_regs *regs = rtc_dd->regs;
-> >  	unsigned int ctrl_reg;
-> > +	u8 value[NUM_8_BIT_RTC_REGS] = {0};
-> >  
-> >  	spin_lock_irqsave(&rtc_dd->ctrl_reg_lock, irq_flags);
-> >  
-> > @@ -319,6 +320,16 @@ static int pm8xxx_rtc_alarm_irq_enable(struct 
-> > device
-> *dev, unsigned int enable)
-> >  		goto rtc_rw_fail;
-> >  	}
-> >  
-> > +	/* Clear Alarm register */
-> > +	if (!enable) {
-> > +		rc = regmap_bulk_write(rtc_dd->regmap, regs->alarm_rw,
-> value,
-> > +					sizeof(value));
-> 
-> This is not properly aligned.
-> [Mohit]: I don't see any alignment issue at my end. I can see proper 
-> tabs are present.
-> 
-
-The alignment should match the opening parenthesis.
-[Mohit]: Thanks for clarification. Uploaded new patch.
-
-> > +		if (rc) {
-> > +			dev_err(dev, "Write to RTC ALARM register
-> failed\n");
-> 
-> Is that error message necessary? What would be the user action after 
-> seeing that in the logs? Will the logs actually be seen?
-> [Mohit]: In case issue in question reproduces even after this change 
-> then for debugging purposes user can look out for this error log in 
-> kernel logs which can help to triage the issue.
-> 
-
-Who in the field on the final product will see this error message? For
-debugging purposes, regmap already provides plenty of tracing facilities.
-[Mohit]: This is mostly for debugging issues reported during internal tests
-using kernel logs. Also added the debug error log to remain in-line with
-other error logs in file.
-
-
---
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+Michal Hocko
+SUSE Labs
