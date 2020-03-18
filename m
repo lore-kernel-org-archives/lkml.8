@@ -2,148 +2,142 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940BFC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F9BC4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC852076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:54:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="i0OAlQWb"
+	by mail.kernel.org (Postfix) with ESMTP id CDB8420772
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCRVyi (ORCPT
+        id S1727188AbgCRVzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:54:38 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37482 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCRVyh (ORCPT
+        Wed, 18 Mar 2020 17:55:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10772 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726647AbgCRVzB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 17:54:37 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b23so42158edx.4
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 14:54:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=au4UNn3QqNUChn3BLHtwX07oVBM4ryrMaWKZ7Y+L8CU=;
-        b=i0OAlQWb7N4fH+cATuHJJ3gHnCkllsUQZSxU/0N+JaZCg3q5a0REk7fN04Hg0BynOQ
-         fl0Zn6Fe/Ej7gV8cu0p/yfUiZD2zGlfhfnkIrTooHRW/6zbBqNjGSXpOhZ46bS3WF2d9
-         WPn0MwSm57hi09nyfpE8yyv1CvLqgv701gczo+pN8OuYjr4XqTgRgGV9GbpMTMbq9n9e
-         rw2IpMwgvMsHE2JjEbuR1ukxdWqn6oG5guRwl8cq3xxmlCYLGsVCrmRIFNF04ZX2BqWO
-         ryH2G5P2fDx+V0e87adNDb9A2ktzB2Iu6L14rhxCLJXC2STv3LiWSlpYYBvmSI1Jv9aO
-         M9LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=au4UNn3QqNUChn3BLHtwX07oVBM4ryrMaWKZ7Y+L8CU=;
-        b=G92myV3DU22RefOd1lX6XnZHnufpoRimxdgPw1iDjvs8CHKgCbSn3tktMeUt3ka8hW
-         JXPfWwfKax/LLT1BW/fsSwlt5mAql6wirN8nGWWhfyx13QeqIv3E0+fC5klFxV5IfmF6
-         NFsxg+zYVyZHcYeTHnFB52WfXgymteBnFsfDHf5ssWfpRfeOWbMfn0n+NG5adRC3LY0u
-         vxUAdiGVlkcezxiJcPt97pHXuj2bwX9Jd3cFDmy7phZT31EGEShHNSkQ38UJ2iateIHF
-         tQhTrGHtII88PRkj4gbG4MKAbbnLQauwf3j9mqzkAOqQPKec2FkOLZzsyxU0LC/QKjWO
-         8wLw==
-X-Gm-Message-State: ANhLgQ3UNTPlfnCicvWqUkOPyt5H2mXJUmDqbvrf5IBboY9PfAls5qKw
-        Q5w+aDCftfAqTC8xGJ06JGu/5wubXeK6ZJBIKp/qqSo=
-X-Google-Smtp-Source: ADFU+vutjASI3AztJGUCiHQ3hTXDBoQauisEgUSQ6bO954EQ6P7ghZ239siSSVuKzPqcgls4Wr6aYY1bVrErMIkhK3I=
-X-Received: by 2002:a17:906:7a46:: with SMTP id i6mr303161ejo.95.1584568475949;
- Wed, 18 Mar 2020 14:54:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1584480281.git.rgb@redhat.com> <3d591dc49fcb643890b93e5b9a8169612b1c96e1.1584480281.git.rgb@redhat.com>
-In-Reply-To: <3d591dc49fcb643890b93e5b9a8169612b1c96e1.1584480281.git.rgb@redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 18 Mar 2020 17:54:25 -0400
-Message-ID: <CAHC9VhTQBxzFrGn=+b9MzoapV0iiccPOLvkwemdESSb6nOFGXQ@mail.gmail.com>
-Subject: Re: [PATCH ghak25 v3 1/3] audit: tidy and extend netfilter_cfg
- x_tables and ebtables logging
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
-        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
-        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
-        tgraf@infradead.org
+        Wed, 18 Mar 2020 17:55:01 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ILWbm4119017
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 17:54:59 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yua2be9a8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 17:54:59 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 18 Mar 2020 21:54:57 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Mar 2020 21:54:55 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02ILrrgZ39649772
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 21:53:53 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C0BD5204E;
+        Wed, 18 Mar 2020 21:54:54 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.207.40])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4565352051;
+        Wed, 18 Mar 2020 21:54:53 +0000 (GMT)
+Subject: Re: [PATCH v3 7/8] ima: Calculate and extend PCR with digests in
+ ima_template_entry
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Wed, 18 Mar 2020 17:54:52 -0400
+In-Reply-To: <fecf59c1880045769bfecc17b5670ac5@huawei.com>
+References: <20200210100418.22049-1-roberto.sassu@huawei.com>
+         <1583208222.8544.168.camel@linux.ibm.com>
+         <fecf59c1880045769bfecc17b5670ac5@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031821-4275-0000-0000-000003AEABFD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031821-4276-0000-0000-000038C3D8E2
+Message-Id: <1584568492.5188.200.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_07:2020-03-18,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 malwarescore=0 suspectscore=0 clxscore=1015 phishscore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003180090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 5:31 PM Richard Guy Briggs <rgb@redhat.com> wrote:
->
-> NETFILTER_CFG record generation was inconsistent for x_tables and
-> ebtables configuration changes.  The call was needlessly messy and there
-> were supporting records missing at times while they were produced when
-> not requested.  Simplify the logging call into a new audit_log_nfcfg
-> call.  Honour the audit_enabled setting while more consistently
-> recording information including supporting records by tidying up dummy
-> checks.
->
-> Add an op= field that indicates the operation being performed (register
-> or replace).
->
-> Here is the enhanced sample record:
->   type=NETFILTER_CFG msg=audit(1580905834.919:82970): table=filter family=2 entries=83 op=replace
->
-> Generate audit NETFILTER_CFG records on ebtables table registration.
-> Previously this was being done for x_tables registration and replacement
-> operations and ebtables table replacement only.
->
-> See: https://github.com/linux-audit/audit-kernel/issues/25
-> See: https://github.com/linux-audit/audit-kernel/issues/35
-> See: https://github.com/linux-audit/audit-kernel/issues/43
->
-> Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> ---
->  include/linux/audit.h           | 19 +++++++++++++++++++
->  kernel/auditsc.c                | 24 ++++++++++++++++++++++++
->  net/bridge/netfilter/ebtables.c | 12 ++++--------
->  net/netfilter/x_tables.c        | 12 +++---------
->  4 files changed, 50 insertions(+), 17 deletions(-)
->
-> diff --git a/include/linux/audit.h b/include/linux/audit.h
-> index f9ceae57ca8d..f4aed2b9be8d 100644
-> --- a/include/linux/audit.h
-> +++ b/include/linux/audit.h
-> @@ -94,6 +94,11 @@ struct audit_ntp_data {
->  struct audit_ntp_data {};
->  #endif
->
-> +enum audit_nfcfgop {
-> +       AUDIT_XT_OP_REGISTER,
-> +       AUDIT_XT_OP_REPLACE,
-> +};
-> +
->  extern int is_audit_feature_set(int which);
->
->  extern int __init audit_register_class(int class, unsigned *list);
-> @@ -379,6 +384,8 @@ extern int __audit_log_bprm_fcaps(struct linux_binprm *bprm,
->  extern void __audit_fanotify(unsigned int response);
->  extern void __audit_tk_injoffset(struct timespec64 offset);
->  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
-> +extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
-> +                             enum audit_nfcfgop op);
->
->  static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
->  {
-> @@ -514,6 +521,13 @@ static inline void audit_ntp_log(const struct audit_ntp_data *ad)
->                 __audit_ntp_log(ad);
->  }
->
-> +static inline void audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
-> +                                  enum audit_nfcfgop op)
-> +{
-> +       if (audit_enabled)
-> +               __audit_log_nfcfg(name, af, nentries, op);
+On Wed, 2020-03-18 at 12:42 +0000, Roberto Sassu wrote:
+> > -----Original Message-----
+> > From: owner-linux-security-module@vger.kernel.org [mailto:owner-linux-
+> > security-module@vger.kernel.org] On Behalf Of Mimi Zohar
+> > Sent: Tuesday, March 3, 2020 5:04 AM
+> > To: Roberto Sassu <roberto.sassu@huawei.com>;
+> > James.Bottomley@HansenPartnership.com;
+> > jarkko.sakkinen@linux.intel.com
+> > Cc: linux-integrity@vger.kernel.org; linux-security-module@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; Silviu Vlasceanu
+> > <Silviu.Vlasceanu@huawei.com>
+> > Subject: Re: [PATCH v3 7/8] ima: Calculate and extend PCR with digests in
+> > ima_template_entry
+> > 
+> > On Mon, 2020-02-10 at 11:04 +0100, Roberto Sassu wrote:
+> > 
+> > > @@ -219,6 +214,8 @@ int ima_restore_measurement_entry(struct
+> > ima_template_entry *entry)
+> > >
+> > >  int __init ima_init_digests(void)
+> > >  {
+> > > +	u16 digest_size;
+> > > +	u16 crypto_id;
+> > >  	int i;
+> > >
+> > >  	if (!ima_tpm_chip)
+> > > @@ -229,8 +226,17 @@ int __init ima_init_digests(void)
+> > >  	if (!digests)
+> > >  		return -ENOMEM;
+> > >
+> > > -	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++)
+> > > +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
+> > >  		digests[i].alg_id = ima_tpm_chip->allocated_banks[i].alg_id;
+> > > +		digest_size = ima_tpm_chip->allocated_banks[i].digest_size;
+> > > +		crypto_id = ima_tpm_chip->allocated_banks[i].crypto_id;
+> > > +
+> > > +		/* for unmapped TPM algorithms digest is still a padded
+> > SHA1 */
+> > > +		if (crypto_id == HASH_ALGO__LAST)
+> > > +			digest_size = SHA1_DIGEST_SIZE;
+> > > +
+> > > +		memset(digests[i].digest, 0xff, digest_size);
+> > 
+> > Shouldn't the memset here be of the actual digest size even for
+> > unmapped TPM algorithms.
+> 
+> This is consistent with ima_calc_field_array_hash(), so that a verifier
+> will always pad the SHA1 digest with zeros to obtain the final PCR value.
+> 
+> I can set all bytes if you prefer.
 
-Do we want a dummy check here too?  Or do we always want to generate
-this record (assuming audit is enabled) because it is a configuration
-related record?
+My concern is with violations.  The measurement list will be padded
+with 0's, but the value being extended into the TPM will only
+partially be 0xFF's.  When verifying the measurement list, replacing
+all 0x00's with all 0xFF's is simpler.
 
--- 
-paul moore
-www.paul-moore.com
+Mimi
+
