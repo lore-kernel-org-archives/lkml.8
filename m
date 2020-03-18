@@ -2,106 +2,83 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097F9C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732CEC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC9620770
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584526425;
-	bh=G7H8dYctiDdl1gUqcTaPSxK2kdPyhB5vuVjA+h9mHSc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hmJ6a7l5hRST+DrnYTacKtEMemJHgYr0ugt/YKBlUFEKsKyaRhwJhEvDwHKba71E+
-	 TYoO0WcBRPyPYKho5kYi2yXeaGUUKQwkqxjwLDXDcfFc6GD/jSDfNoPLZUQm9GQZDg
-	 mx2a9W2PdCmzcYyOUUNfuMe1q5fv3KXJeNlnwpcU=
+	by mail.kernel.org (Postfix) with ESMTP id 3EE9A20770
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:15:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="ebpeu+ga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbgCRKNo (ORCPT
+        id S1727405AbgCRKP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:13:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726486AbgCRKNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:13:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 713E320768;
-        Wed, 18 Mar 2020 10:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584526423;
-        bh=G7H8dYctiDdl1gUqcTaPSxK2kdPyhB5vuVjA+h9mHSc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NJjHR17eZ41ZJRJS+wmEC+HlZsd3Yh1YnJH5df2ypBQ76x/LyEwowRZzJnK2zmQFa
-         8DJUTR2DmvecrdI986ZdC7VSBkWiw6XIZy3XQPgGId0OhjeIMyajLV3wocUbZeiQrU
-         HPT75cRo+2EG+Ac08Hjn/939C+FRs5/XdCFM5T9w=
-Date:   Wed, 18 Mar 2020 11:13:40 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Chunyan Zhang <zhang.lyra@gmail.com>, Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: Re: [PATCH v2 2/2] serial: sprd: cleanup the sprd_port for error case
-Message-ID: <20200318101340.GA2081481@kroah.com>
-References: <20200318083120.13805-1-zhang.lyra@gmail.com>
- <20200318083120.13805-2-zhang.lyra@gmail.com>
- <CADBw62rSE+MrQB_HSOwVNos_W=x-mHMEuVrZN=jU0Yt1KXFGvw@mail.gmail.com>
- <CADBw62pWhA8n5rAgX2Hud06k9cvF9b3KDfZmH7oX1HEz=MWzYA@mail.gmail.com>
+        Wed, 18 Mar 2020 06:15:56 -0400
+Received: from www381.your-server.de ([78.46.137.84]:44976 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbgCRKP4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 06:15:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=uePrIDfqBZFnSgWVkXPSgRpt9QzNhv5Xk2uw/MF+wAQ=; b=ebpeu+gagAEFuS42nV1oG3kE5e
+        NSy2cJXISlUO+nuF+TnQD3ezVwRoApVQ79s4wa8Q0ncqZSe9NbQn9L29j2bpPM34EVtHy7OYxySgd
+        2AUMT3vm59/S72rSK9Ru/FKCiR04au/QfQ7uiqIapoPgUjn/UJ2Ozpm90/X90rjKkGgKBbEVAirCA
+        +WAFjq1w1pudGk48EJz8QlVFr812Mfdryvf7QoQBHWjrLj9htPoSu2K2JGb8ptQSfajmzS32jlX/E
+        wHeftb4Ubx8/x+dNOrMtpYgCauBAPGh9xVQYbsohCBq62Abi+5eghYiUULjnc+oFzTK9K/hl+bcLY
+        As2fU0FQ==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jEVjt-0006lh-Li; Wed, 18 Mar 2020 11:15:53 +0100
+Received: from [93.104.115.49] (helo=[192.168.178.20])
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jEVjt-0007Fn-Eg; Wed, 18 Mar 2020 11:15:53 +0100
+Subject: Re: [PATCH v3 3/4] iio: accel: adxl372: add additional events ABIs
+To:     Alexandru Tachici <tachicialex@gmail.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     jic23@kernel.org
+References: <20200318110958.8621-1-alexandru.tachici@analog.com>
+ <20200318110958.8621-4-alexandru.tachici@analog.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <c140a2ab-2da8-2c56-3ab6-193bb52a46cb@metafoo.de>
+Date:   Wed, 18 Mar 2020 11:15:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADBw62pWhA8n5rAgX2Hud06k9cvF9b3KDfZmH7oX1HEz=MWzYA@mail.gmail.com>
+In-Reply-To: <20200318110958.8621-4-alexandru.tachici@analog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25754/Tue Mar 17 14:09:15 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 06:06:05PM +0800, Baolin Wang wrote:
-> On Wed, Mar 18, 2020 at 5:16 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> >
-> > On Wed, Mar 18, 2020 at 4:31 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > >
-> > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > >
-> > > It would be better to cleanup the sprd_port for the device before
-> > > return error.
-> > >
-> > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > ---
-> > >  drivers/tty/serial/sprd_serial.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
-> > > index 9f8c14ff6454..54477de9822f 100644
-> > > --- a/drivers/tty/serial/sprd_serial.c
-> > > +++ b/drivers/tty/serial/sprd_serial.c
-> > > @@ -1204,8 +1204,10 @@ static int sprd_probe(struct platform_device *pdev)
-> > >         up->has_sysrq = IS_ENABLED(CONFIG_SERIAL_SPRD_CONSOLE);
-> > >
-> > >         ret = sprd_clk_init(up);
-> > > -       if (ret)
-> > > +       if (ret) {
-> > > +               sprd_port[index] = NULL;
-> >
-> > 如果我们强制使用alias, 则这里应该也无需清除了，因为一进probe就会给它重新赋值。 还是我漏了什么？
+On 3/18/20 12:09 PM, Alexandru Tachici wrote:
+> Adxl372 uses the standard event interface. The additional
+> ABIs aim to explain to the user that the values set in
+> ./events/thresh_falling_period and ./events/thresh_rising_period
+> control the state of the device, not just the events timings.
 > 
-> Sorry, please ignore my previsous comment. I made a stupid mistake
-> when talking with Chunyan.
-> 
-> So what I mean is we should not add this clean up, cause we will
-> always get the correct index with aliases, and it will be overlapped
-> when probing again.
 
-So ignore this patch and only take patch 1/2?  If so, can I get your
-acked-by for it?
+Hi,
 
-thanks,
+I'm not convinced this is a good idea. Since this is non-standard ABI 
+the user would likely have to consult the documentation to figure out 
+what this means. So we might as well document in the documentation that 
+for peak mode the thresholds are configured through the event API.
 
-greg k-h
+- Lars
