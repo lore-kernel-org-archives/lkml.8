@@ -2,210 +2,208 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212F6C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A330C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43372072C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ryjqA912"
+	by mail.kernel.org (Postfix) with ESMTP id 698CB2077A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgCRTXL (ORCPT
+        id S1727024AbgCRTXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:23:11 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45106 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRTXL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 15:23:11 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02IJN6Fs068538;
-        Wed, 18 Mar 2020 14:23:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584559386;
-        bh=4RtGMvb6PsyZbz80Ujo1TfR5IGVyIIByosWZfa6bT9M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ryjqA912AaMQMxHHWXayvgB/+P4L1ro/RGMNK0uqa0HIdOvOOeUWCTnsIyu2/yaV2
-         MVpE+BWaZkXLpeYlpX/ae7O/z4LCVM39neAA7XV8i+CgTSm9R+2n6Yu9beXiJhwJTA
-         4Ia0AkQZR/2/TcUE+byHtWZXBWolEivmf1UrvlzE=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02IJN6Yg082709
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 18 Mar 2020 14:23:06 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
- Mar 2020 14:23:06 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 18 Mar 2020 14:23:06 -0500
-Received: from [10.250.35.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02IJN5LC053609;
-        Wed, 18 Mar 2020 14:23:05 -0500
-Subject: Re: [PATCH 2/2] remoteproc: Fix and restore the parenting hierarchy
- for vdev
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200305224108.21351-1-s-anna@ti.com>
- <20200305224108.21351-3-s-anna@ti.com> <20200317180530.GA1801@xps15>
- <76772d98-93d9-e559-01b8-ba7d4d1cc1eb@st.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <f08b15c2-639c-2919-e321-a5a5296e8112@ti.com>
-Date:   Wed, 18 Mar 2020 14:23:05 -0500
+        Wed, 18 Mar 2020 15:23:14 -0400
+Received: from mga02.intel.com ([134.134.136.20]:53523 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgCRTXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 15:23:12 -0400
+IronPort-SDR: l17tzpdCnhbsuD5T0P8p9+cq8hLw4x84jbkeo2nz+pY2euY6mv2ghEsuQtAkJiGsYubbcul9nH
+ PuUsPVkjipkQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 12:23:12 -0700
+IronPort-SDR: lc5+nY8X20RmwOMgWKXaoabS743UxfyckFxokQD5dmmPSwnKBEfxIjKKUuruIrUw8jnowK2Hls
+ iHuLWM/iNJkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
+   d="scan'208";a="244923072"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga003.jf.intel.com with ESMTP; 18 Mar 2020 12:23:09 -0700
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ mQINBFMB0ccBEADd+nZnZrFDsIjQtclVz6OsqFOQ6k0nQdveiDNeBuwyFYykkBpaGekoHZ6f
+ lH4ogPZzQ+pzoJEMlRGXc881BIggKMCMH86fYJGfZKWdfpg9O6mqSxyEuvBHKe9eZCBKPvoC
+ L2iwygtO8TcXXSCynvXSeZrOwqAlwnxWNRm4J2ikDck5S5R+Qie0ZLJIfaId1hELofWfuhy+
+ tOK0plFR0HgVVp8O7zWYT2ewNcgAzQrRbzidA3LNRfkL7jrzyAxDapuejuK8TMrFQT/wW53e
+ uegnXcRJaibJD84RUJt+mJrn5BvZ0MYfyDSc1yHVO+aZcpNr+71yZBQVgVEI/AuEQ0+p9wpt
+ O9Wt4zO2KT/R5lq2lSz1MYMJrtfFRKkqC6PsDSB4lGSgl91XbibK5poxrIouVO2g9Jabg04T
+ MIPpVUlPme3mkYHLZUsboemRQp5/pxV4HTFR0xNBCmsidBICHOYAepCzNmfLhfo1EW2Uf+t4
+ L8IowAaoURKdgcR2ydUXjhACVEA/Ldtp3ftF4hTQ46Qhba/p4MUFtDAQ5yeA5vQVuspiwsqB
+ BoL/298+V119JzM998d70Z1clqTc8fiGMXyVnFv92QKShDKyXpiisQn2rrJVWeXEIVoldh6+
+ J8M3vTwzetnvIKpoQdSFJ2qxOdQ8iYRtz36WYl7hhT3/hwkHuQARAQABtCdNYXRoaWFzIE55
+ bWFuIDxtYXRoaWFzLm55bWFuQGdtYWlsLmNvbT6JAjsEEwECACUCGwMGCwkIBwMCBhUIAgkK
+ CwQWAgMBAh4BAheABQJTAeo1AhkBAAoJEFiDn/uYk8VJOdIP/jhA+RpIZ7rdUHFIYkHEKzHw
+ tkwrJczGA5TyLgQaI8YTCTPSvdNHU9Rj19mkjhUO/9MKvwfoT2RFYqhkrtk0K92STDaBNXTL
+ JIi4IHBqjXOyJ/dPADU0xiRVtCHWkBgjEgR7Wihr7McSdVpgupsaXhbZjXXgtR/N7PE0Wltz
+ hAL2GAnMuIeJyXhIdIMLb+uyoydPCzKdH6znfu6Ox76XfGWBCqLBbvqPXvk4oH03jcdt+8UG
+ 2nfSeti/To9ANRZIlSKGjddCGMa3xzjtTx9ryf1Xr0MnY5PeyNLexpgHp93sc1BKxKKtYaT0
+ lR6p0QEKeaZ70623oB7Sa2Ts4IytqUVxkQKRkJVWeQiPJ/dZYTK5uo15GaVwufuF8VTwnMkC
+ 4l5X+NUYNAH1U1bpRtlT40aoLEUhWKAyVdowxW4yGCP3nL5E69tZQQgsag+OnxBa6f88j63u
+ wxmOJGNXcwCerkCb+wUPwJzChSifFYmuV5l89LKHgSbv0WHSN9OLkuhJO+I9fsCNvro1Y7dT
+ U/yq4aSVzjaqPT3yrnQkzVDxrYT54FLWO1ssFKAOlcfeWzqrT9QNcHIzHMQYf5c03Kyq3yMI
+ Xi91hkw2uc/GuA2CZ8dUD3BZhUT1dm0igE9NViE1M7F5lHQONEr7MOCg1hcrkngY62V6vh0f
+ RcDeV0ISwlZWuQINBFMB0ccBEACXKmWvojkaG+kh/yipMmqZTrCozsLeGitxJzo5hq9ev31N
+ 2XpPGx4AGhpccbco63SygpVN2bOd0W62fJJoxGohtf/g0uVtRSuK43OTstoBPqyY/35+VnAV
+ oA5cnfvtdx5kQPIL6LRcxmYKgN4/3+A7ejIxbOrjWFmbWCC+SgX6mzHHBrV0OMki8R+NnrNa
+ NkUmMmosi7jBSKdoi9VqDqgQTJF/GftvmaZHqgmVJDWNrCv7UiorhesfIWPt1O/AIk9luxlE
+ dHwkx5zkWa9CGYvV6LfP9BznendEoO3qYZ9IcUlW727Le80Q1oh69QnHoI8pODDBBTJvEq1h
+ bOWcPm/DsNmDD8Rwr/msRmRyIoxjasFi5WkM/K/pzujICKeUcNGNsDsEDJC5TCmRO/TlvCvm
+ 0X+vdfEJRZV6Z+QFBflK1asUz9QHFre5csG8MyVZkwTR9yUiKi3KiqQdaEu+LuDD2CGF5t68
+ xEl66Y6mwfyiISkkm3ETA4E8rVZP1rZQBBm83c5kJEDvs0A4zrhKIPTcI1smK+TWbyVyrZ/a
+ mGYDrZzpF2N8DfuNSqOQkLHIOL3vuOyx3HPzS05lY3p+IIVmnPOEdZhMsNDIGmVorFyRWa4K
+ uYjBP/W3E5p9e6TvDSDzqhLoY1RHfAIadM3I8kEx5wqco67VIgbIHHB9DbRcxQARAQABiQIf
+ BBgBAgAJBQJTAdHHAhsMAAoJEFiDn/uYk8VJb7AQAK56tgX8V1Wa6RmZDmZ8dmBC7W8nsMRz
+ PcKWiDSMIvTJT5bygMy1lf7gbHXm7fqezRtSfXAXr/OJqSA8LB2LWfThLyuuCvrdNsQNrI+3
+ D+hjHJjhW/4185y3EdmwwHcelixPg0X9EF+lHCltV/w29Pv3PiGDkoKxJrnOpnU6jrwiBebz
+ eAYBfpSEvrCm4CR4hf+T6MdCs64UzZnNt0nxL8mLCCAGmq1iks9M4bZk+LG36QjCKGh8PDXz
+ 9OsnJmCggptClgjTa7pO6040OW76pcVrP2rZrkjo/Ld/gvSc7yMO/m9sIYxLIsR2NDxMNpmE
+ q/H7WO+2bRG0vMmsndxpEYS4WnuhKutoTA/goBEhtHu1fg5KC+WYXp9wZyTfeNPrL0L8F3N1
+ BCEYefp2JSZ/a355X6r2ROGSRgIIeYjAiSMgGAZMPEVsdvKsYw6BH17hDRzltNyIj5S0dIhb
+ Gjynb3sXforM/GVbr4mnuxTdLXQYlj2EJ4O4f0tkLlADT7podzKSlSuZsLi2D+ohKxtP3U/r
+ 42i8PBnX2oAV0UIkYk7Oel/3hr0+BP666SnTls9RJuoXc7R5XQVsomqXID6GmjwFQR5Wh/RE
+ IJtkiDAsk37cfZ9d1kZ2gCQryTV9lmflSOB6AFZkOLuEVSC5qW8M/s6IGDfYXN12YJaZPptJ fiD/
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Evan Green <evgreen@chromium.org>,
+        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>
+To:     x86@kernel.org
+Message-ID: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
+Date:   Wed, 18 Mar 2020 21:25:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <76772d98-93d9-e559-01b8-ba7d4d1cc1eb@st.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaud,
+Hi
 
-On 3/18/20 11:38 AM, Arnaud POULIQUEN wrote:
-> Hi Suman, Mathieu,
-> 
-> On 3/17/20 7:05 PM, Mathieu Poirier wrote:
->> Hi Suman,
->>
->> On Thu, Mar 05, 2020 at 04:41:08PM -0600, Suman Anna wrote:
->>> The commit 086d08725d34 ("remoteproc: create vdev subdevice with specific
->>> dma memory pool") has introduced a new vdev subdevice for each vdev
->>> declared in the firmware resource table and made it as the parent for the
->>> created virtio rpmsg devices instead of the previous remoteproc device.
->>> This changed the overall parenting hierarchy for the rpmsg devices, which
->>> were children of virtio devices, and does not allow the corresponding
->>> rpmsg drivers to retrieve the parent rproc device through the
->>> rproc_get_by_child() API.
->>>
->>> Fix this by restoring the remoteproc device as the parent. The new vdev
->>> subdevice can continue to inherit the DMA attributes from the remoteproc's
->>> parent device (actual platform device).
->>>
->>> Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> ---
->>>  drivers/remoteproc/remoteproc_core.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
->>> index 097f33e4f1f3..ba18f32bd0c4 100644
->>> --- a/drivers/remoteproc/remoteproc_core.c
->>> +++ b/drivers/remoteproc/remoteproc_core.c
->>> @@ -510,7 +510,7 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
->>>  
->>>  	/* Initialise vdev subdevice */
->>>  	snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
->>> -	rvdev->dev.parent = rproc->dev.parent;
->>> +	rvdev->dev.parent = &rproc->dev;
->>
->> I can see how it would not be possible to retrieve the parent rproc device since
->> rvdev->dev.parent was set to be platform device...
-> 
-> In rpmsg_virtio_bus.c [1] the vdev buffers are allocated in a memory region using a dma_alloc_coherent
-> So the buffers are allocated in the platform driver memory region if declared, else in the default memory region. 
-> 
-> According to  086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool"),
-> A patch has been integrated in rpmsg framework:  d999b622fcfb3 ("rpmsg: virtio: allocate buffer from parent")
-> 
-> -	bufs_va = dma_alloc_coherent(vdev->dev.parent->parent,
-> +	bufs_va = dma_alloc_coherent(vdev->dev.parent,
-> 
-> So in term of parent-child relationchip the Loic's patches seem coherent, and don't affect parenting hierarchy
-> for the rpmsg bus.
+I can reproduce the lost MSI interrupt issue on 5.6-rc6 which includes
+the "Plug non-maskable MSI affinity race" patch.
 
-So, there are two things w.r.t rpmsg device hierarchy - buffer
-allocations and the overall hierarchy to allow a child rpmsg device to
-be able to retrieve the corresponding rproc. This is done using
-rproc_get_by_child() which walks up the dev parent hierarchy and
-matching the parent device type to rproc_type.
+I can see this on a couple platforms, I'm running a script that first generates
+a lot of usb traffic, and then in a busyloop sets irq affinity and turns off
+and on cpus:
 
-Commit 086d08725d34 adds a new vdevbuffer device with parent as the
-rproc platform device and makes this the parent of the virtio device, so
-the buffer allocations were unchanged just with that commit, but the
-rproc lookup will always fail. The later commit d999b622fcfb3 switches
-the buffer allocation over to the vdevbuffer device, and with rproc
-drivers that added dedicated vdevbuf pools allocates from those pools
-(these were mostly coming from a specific rproc platform device memory
-region index anyway). For those that did not define, this actually
-became the global pool even if the rproc device was using a single
-DMA/CMA pool (patch 1).
+for i in 1 3 5 7; do
+	echo "1" > /sys/devices/system/cpu/cpu$i/online
+done
+echo "A" > "/proc/irq/*/smp_affinity"
+echo "A" > "/proc/irq/*/smp_affinity"
+echo "F" > "/proc/irq/*/smp_affinity"
+for i in 1 3 5 7; do
+	echo "0" > /sys/devices/system/cpu/cpu$i/online
+done
 
-Please see my cover-letter for an example of the dev hierarchy.
+I added some very simple debugging but I don't really know what to look for.
+xhci interrupts (122) just stop after a setting msi affinity, it survived many
+similar msi_set_affinity() calls before this.
 
-> 
-> So It seems to me that this patch breaks the relationship between the rpmsg bus
-> and the rproc platform driver, at least concerning the buffer allocation.
+I'm not that familiar with the inner workings of this, but I'll be happy to
+help out with adding debugging and testing patches.
 
-I am not sure if you were interpreting this patch with or without
-d999b622fcfb3 ("rpmsg: virtio: allocate buffer from parent"). Both of
-the above commits are in 5.1, so I consider this patch to be fixing only
-on 5.1+ kernels and it does use d999b622fcfb3. Buffer allocations after
-this patch without d999b622fcfb3 would try to allocate from rproc device
-which is a pseudo-device and doesn't have any pools defined with it, so
-will allocate from the global pool.
+Details:
 
-> But on the other side this patch doesn't introduce regression for rpmsg bus on my platform... 
-> 
-> I probably missed something important because i can not figure out how this patch don't introduce regression.
-> Can the rproc->dev inherits from the rproc platform device in term of memory regions?
-> 
-> [1]: https://elixir.bootlin.com/linux/latest/source/drivers/rpmsg/virtio_rpmsg_bus.c#L915
-> [2]: https://lkml.org/lkml/2018/11/30/180
-> 
->>
->> I wonder how the original change didn't blow up sysmon_probe() and potentially
->> other out-of-tree users of rproc_get_by_child().  It would be nice to have
->> someone from the QCOM team test your patch.
-> 
-> You are right the rproc platform device is now the grand parent of a rpmsg device, while before it was the parent.
-> Anyway, does it makes sense to have this kind of dependency between rpmsg device and rproc device?
-> The fix could be done in the rpmsg device that would be rproc dependent (if out-of-tree).
-
-Not sure what you are proposing here, since you cannot retrieve a rproc
-handle. We use this to perform address translations in rpmsg drivers
-since all the addresses are with the rproc device.
-
-> The alternative could be to declare the rpmsg device in device tree as child of the rproc platform device...
-
-And that is completely orthogonal and doesn't solve the current scenario
-where rpmsg devices are created through the virtio-rpmsg bus nameservice
-announcement.
-
-regards
-Suman
+ cat /proc/interrupts
+            CPU0       CPU1       CPU2       CPU3       CPU4       CPU5       CPU6       CPU7
+   0:         26          0          0          0          0          0          0          0   IO-APIC    2-edge      timer
+   1:          0          0          0          0          0          7          0          0   IO-APIC    1-edge      i8042
+   4:          0          4      59941          0          0          0          0          0   IO-APIC    4-edge      ttyS0
+   8:          0          0          0          0          0          0          1          0   IO-APIC    8-edge      rtc0
+   9:          0         40          8          0          0          0          0          0   IO-APIC    9-fasteoi   acpi
+  16:          0          0          0          0          0          0          0          0   IO-APIC   16-fasteoi   i801_smbus
+ 120:          0          0        293          0          0          0          0          0   PCI-MSI 32768-edge      i915
+ 121:        728          0          0         58          0          0          0          0   PCI-MSI 520192-edge      enp0s31f6
+ 122:      63575       2271          0       1957       7262          0          0          0   PCI-MSI 327680-edge      xhci_hcd
+ 123:          0          0          0          0          0          0          0          0   PCI-MSI 514048-edge      snd_hda_intel:card0
+ NMI:          0          0          0          0          0          0          0          0   Non-maskable interrupts
+ 
+trace snippet: 
+      <idle>-0     [001] d.h.   129.676900: xhci_irq: xhci irq
+      <idle>-0     [001] d.h.   129.677507: xhci_irq: xhci irq
+      <idle>-0     [001] d.h.   129.677556: xhci_irq: xhci irq
+      <idle>-0     [001] d.h.   129.677647: xhci_irq: xhci irq
+      <...>-14    [001] d..1   129.679802: msi_set_affinity: direct update msi 122, vector 33 -> 33, apicid: 2 -> 6
+      <idle>-0     [003] d.h.   129.682639: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.682769: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.682908: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.683552: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.683677: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.683819: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.689017: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.689140: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.689307: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.689984: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.690107: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.690278: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.695541: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.695674: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.695839: xhci_irq: xhci irq
+      <idle>-0     [003] d.H.   129.696667: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.696797: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.696973: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.702288: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.702380: xhci_irq: xhci irq
+      <idle>-0     [003] d.h.   129.702493: xhci_irq: xhci irq
+ migration/3-24    [003] d..1   129.703150: msi_set_affinity: direct update msi 122, vector 33 -> 33, apicid: 6 -> 0
+ kworker/0:0-5     [000] d.h.   131.328790: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+ kworker/0:0-5     [000] d.h.   133.312704: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+ kworker/0:0-5     [000] d.h.   135.360786: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+      <idle>-0     [000] d.h.   137.344694: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+ kworker/0:0-5     [000] d.h.   139.128679: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+ kworker/0:0-5     [000] d.h.   141.312686: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+ kworker/0:0-5     [000] d.h.   143.360703: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+ kworker/0:0-5     [000] d.h.   145.344791: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
 
 
-> 
-> Regards,
-> Arnaud
-> 
->>
->>>  	rvdev->dev.dma_pfn_offset = rproc->dev.parent->dma_pfn_offset;
->>>  	rvdev->dev.release = rproc_rvdev_release;
->>>  	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
->>
->> Be mindful there might be fallouts from applying this patch since it does change
->> the location of the vdev under /sys/device/platform/ .
->>
->> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->>
->>> -- 
->>> 2.23.0
->>>
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -92,6 +92,10 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
+            cfg->vector == old_cfg.vector ||
+            old_cfg.vector == MANAGED_IRQ_SHUTDOWN_VECTOR ||
+            cfg->dest_apicid == old_cfg.dest_apicid) {
++               trace_printk("direct update msi %u, vector %u -> %u, apicid: %u -> %u\n",
++                    irqd->irq,
++                    old_cfg.vector, cfg->vector,
++                    old_cfg.dest_apicid, cfg->dest_apicid);
+                irq_msi_update_msg(irqd, cfg);
+                return ret;
+        }
+@@ -134,7 +138,10 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
+         */
+        if (IS_ERR_OR_NULL(this_cpu_read(vector_irq[cfg->vector])))
+                this_cpu_write(vector_irq[cfg->vector], VECTOR_RETRIGGERED);
+-
++       trace_printk("twostep update msi, irq %u, vector %u -> %u, apicid: %u -> %u\n",
++                    irqd->irq,
++                    old_cfg.vector, cfg->vector,
++                    old_cfg.dest_apicid, cfg->dest_apicid);
+        /* Redirect it to the new vector on the local CPU temporarily */
+        old_cfg.vector = cfg->vector;
+        irq_msi_update_msg(irqd, &old_cfg);
 
+Thanks
+-Mathias
