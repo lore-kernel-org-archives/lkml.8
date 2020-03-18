@@ -2,123 +2,119 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88786C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48811C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6479E20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204D420757
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 02:18:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FnkI7Hf4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbgCRCPU (ORCPT
+        id S1727264AbgCRCSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 22:15:20 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:14807 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726229AbgCRCPT (ORCPT
+        Tue, 17 Mar 2020 22:18:07 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39840 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgCRCSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 22:15:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Tsv6iJu_1584497715;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0Tsv6iJu_1584497715)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 18 Mar 2020 10:15:16 +0800
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Subject: [PATCH v2] sched: avoid scale real weight down to zero
-Message-ID: <38e8e212-59a1-64b2-b247-b6d0b52d8dc1@linux.alibaba.com>
-Date:   Wed, 18 Mar 2020 10:15:15 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.2
+        Tue, 17 Mar 2020 22:18:06 -0400
+Received: by mail-qt1-f194.google.com with SMTP id f17so18159041qtq.6;
+        Tue, 17 Mar 2020 19:18:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gwlzqeZj4d3b961byPyFVrEOJd+bwlw/Cv25SoFLeBI=;
+        b=FnkI7Hf4aobxD7Mbzp+6UCkJHwEUJUtmKlGIBVgagNQDs9KazggfL0FMl3zl0RC9Tq
+         YsrjkW6M5gRPEUliOWv8C+Dmjjy+DcTgzpnVpx+GTIT/ZPJ+Y874zsTi6EdlzOjNSFWX
+         HtuBIsIZU4NM3QSpBQ5j6qnSw54uQnldE1uPhj4eVZ9h80m4K4iDRc20MofkmjCBliNP
+         I4WRIO+fL/vdize/oQLvHdG5gx75O4iX73XmI47OqLipFzJ2k6cRtnInPXK/G0tzoFQP
+         QqfQv4C7CaiUZcV6lnd9tKhx4vFXlASSNt8WxJzeGx+LR2fpeT4s9fHMoZFgf03ZkecP
+         MqLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gwlzqeZj4d3b961byPyFVrEOJd+bwlw/Cv25SoFLeBI=;
+        b=LodeWK5HRuDZMxhbZZTXwTxLTsYZq1nwhX9rXCGZuhPxeQdQHpcoiK52I5uegdZ1Yo
+         5qemeJ2ny9+QT/oYaAKyD+J88KMMhUo+fJ2UyDeuuHj4flJquvH7628ZUePXEf0irMDk
+         oTzJxzokBS8f84/4Vq3EELy+24zSOBLp/kibTUaiN9Ks9vU9lWR9WizzDJcIQlX52lPr
+         X/soXTtX0Oa6fG/2WtNZ5AC5q4Sxyk7qhhaYNm5ZfTtwq5fWJfJ5MI2ClQBCW+rFHRmH
+         PwxRZ2JJzF4981MUdHQtrvdjA1+zL3ymWq5TpUyVfe46yK0oRWEugrd1VnyWFOK5MsF0
+         whxA==
+X-Gm-Message-State: ANhLgQ1jm5KOiZv7mhWVPcYqXJ8xo+K9a+5oDo035P3uHF8ag/Wj6oNp
+        6iaRyLT2iRmWlY5UJr32rI3MDKpO0X2cGA==
+X-Google-Smtp-Source: ADFU+vv5HD9xXsH8mTL6DvQT5Pg/4NoEqtBsEYA+KV0Y6AW4tN9pogaXID1SkaBoJevPxnQMrdDL9g==
+X-Received: by 2002:ac8:7a96:: with SMTP id x22mr2406587qtr.0.1584497885590;
+        Tue, 17 Mar 2020 19:18:05 -0700 (PDT)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id m19sm3232429qkk.1.2020.03.17.19.18.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 19:18:04 -0700 (PDT)
+Date:   Tue, 17 Mar 2020 22:18:02 -0400
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Syed Nayyar Waris <syednwaris@gmail.com>, jic23@kernel.org
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] counter: 104-quad-8: Add lock guards -
+ differential encoder
+Message-ID: <20200318021802.GB45571@icarus>
+References: <20200316125006.GA415@syed.domain.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NKoe5XOeduwbEQHU"
+Content-Disposition: inline
+In-Reply-To: <20200316125006.GA415@syed.domain.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During our testing, we found a case that shares no longer
-working correctly, the cgroup topology is like:
 
-  /sys/fs/cgroup/cpu/A		(shares=102400)
-  /sys/fs/cgroup/cpu/A/B	(shares=2)
-  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
+--NKoe5XOeduwbEQHU
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  /sys/fs/cgroup/cpu/D		(shares=1024)
-  /sys/fs/cgroup/cpu/D/E	(shares=1024)
-  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+On Mon, Mar 16, 2020 at 06:20:06PM +0530, Syed Nayyar Waris wrote:
+> Add lock protection from race conditions to 104-quad-8 counter driver
+> for differential encoder status code changes. Mutex lock calls used for
+> protection.
+>=20
+> Signed-off-by: Syed Nayyar Waris <syednwaris@gmail.com>
+> ---
+> Changes in v5:
+>  - Change spin lock calls to mutex lock calls.
+>  - Modify the title description.
 
-The same benchmark is running in group C & F, no other tasks are
-running, the benchmark is capable to consumed all the CPUs.
+Looks like the Fixes tags were dropped in these last two patches. I
+suppose they aren't really necessary though since these features haven't
+yet made it out of the IIO tree, so no need to backport these fixes.
 
-We suppose the group C will win more CPU resources since it could
-enjoy all the shares of group A, but it's F who wins much more.
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-The reason is because we have group B with shares as 2, since
-A->cfs_rq.load.weight == B->se.load.weight == B->shares/nr_cpus,
-so A->cfs_rq.load.weight become very small.
+--NKoe5XOeduwbEQHU
+Content-Type: application/pgp-signature; name="signature.asc"
 
-And in calc_group_shares() we calculate shares as:
+-----BEGIN PGP SIGNATURE-----
 
-  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
-  shares = (tg_shares * load) / tg_weight;
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAl5xhNoACgkQhvpINdm7
+VJKOqxAA0HEYpYOE9HFYYHkmUWf9sjCh4Op7o6kpfjdbOABgZ8z28RiGFVReqRDH
+PUUd+fa5ytttaczn6NKnwUtdR7ExetwqdCBTKQ2ouY/q9N6nl5cR+DNDphTZz4Ig
+Nhdr+M5NrUd0OyUE6SUzz0OlIAl2xE8Z7+bVesPWCdRWPrUwWjy/lhQ6zyCzHnpe
+gg+C3YwpoEq0we4Hw8fynbmq/D/uMjOEwLAEe7Tqs2trwvp31hK2+BcCiEA9YfO6
+4lntatXjEh9QXL5wnr/sVsLNOMttJ00qiFSUnqFmrUXwB7YwisjAlfwmsVgiIlvD
+zAuBqvIwQntWnEUa3tCG/HLQXaPji2lSqyiqdhsx4YnN5kjGdPnGfDFwYvlXOp/T
+xRMr6ESopn8UzYQ6ch0p2esCX75RCBgutcM/vvxsZUacOAzcnCiKe/TpzIa/X1Pb
+i+NCrqa2B40HKPPoSEWQcOKwGXWCUxNj/1NzTjN95aMOdXCtSq+c4Bv9cPH0AGJh
+QvJFaI6tLKSzxhsMeNr8fyvChVEvHf6ESgMfaqLYc3XXfoe4ndswIaDxpq/JVdya
+EgDFoBdOpwNvTDOk0ZjjWxNKWRvNCSvpH1I6NQEVTK4v3bDIeToUCoOKwwV3Avp0
+f42QA4M6jHxJuS2Edf2vKk+sk3ydw0LO1nAUYAJw50WrUAaf/e4=
+=z7tb
+-----END PGP SIGNATURE-----
 
-Since the 'cfs_rq->load.weight' is too small, the load become 0
-after scale down, although 'tg_shares' is 102400, shares of the se
-which stand for group A on root cfs_rq become 2.
-
-While the se of D on root cfs_rq is far more bigger than 2, so it
-wins the battle.
-
-Thus when scale_load_down() scale real weight down to 0, it's no
-longer telling the real story, the caller will have the wrong
-information and the calculation will be buggy.
-
-This patch add check in scale_load_down(), so the real weight will
-be >= MIN_SHARES after scale, after applied the group C wins as
-expected.
-
-Cc: Ben Segall <bsegall@google.com>
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
----
-v2:
-  * replace MIN_SHARE with 2UL to cover CONFIG_FAIR_GROUP_SCHED=n case
-
- kernel/sched/sched.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 2a0caf394dd4..9bca26bd60d9 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -118,7 +118,13 @@ extern long calc_load_fold_active(struct rq *this_rq, long adjust);
- #ifdef CONFIG_64BIT
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT + SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		((w) << SCHED_FIXEDPOINT_SHIFT)
--# define scale_load_down(w)	((w) >> SCHED_FIXEDPOINT_SHIFT)
-+# define scale_load_down(w) \
-+({ \
-+	unsigned long __w = (w); \
-+	if (__w) \
-+		__w = max(2UL, __w >> SCHED_FIXEDPOINT_SHIFT); \
-+	__w; \
-+})
- #else
- # define NICE_0_LOAD_SHIFT	(SCHED_FIXEDPOINT_SHIFT)
- # define scale_load(w)		(w)
--- 
-2.14.4.44.g2045bb6
-
+--NKoe5XOeduwbEQHU--
