@@ -2,576 +2,175 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FF6C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33179C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7BBC20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC57620752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 00:11:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="U8/Rboog"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ODRuonwb";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="gEoJCagW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgCRAKv (ORCPT
+        id S1727206AbgCRALQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 20:10:51 -0400
-Received: from mail-bn8nam11on2094.outbound.protection.outlook.com ([40.107.236.94]:23395
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726680AbgCRAKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 20:10:51 -0400
+        Tue, 17 Mar 2020 20:11:16 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:47472 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726680AbgCRALQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 20:11:16 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02I0Afu0014231;
+        Tue, 17 Mar 2020 17:10:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pfpt0818; bh=xPpOf9VGSV8QyFuthDDqxHJtFEn1Q141apMa41IYRug=;
+ b=ODRuonwbMMlk8dMg8m/v0lStt6iUCIvW3L4nUX+/7cBme4nLSrgftJxZLTcQjkfvjlxK
+ qTanXltBjVF+aRlSRSn1yFjgyMd8NpAsW9+mEX0bfKMkv2nZ9E58UIHgEGp4hhAxECx8
+ +4xKPob+X9ZgywUxlFLJ2ud1zxGjhnT6k7vXoA/uSaCrh9EwrB/fb+Wj650+ElnkjYkq
+ UhXPFVVnsWHiVLlsgm/C4eSiiVZ2ibKpW2bvrn4nZkglymor3ScH/YQAIpHsARp24v5b
+ Gbjt2E1Y8xcW6PX46lJ4Vgef4evandrpU2tUTk0fR/67xLDosIqjvLJoSEhPUh0fXajm XQ== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2yrxsmpfsf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 17 Mar 2020 17:10:52 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 17 Mar
+ 2020 17:10:49 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 17 Mar
+ 2020 17:10:49 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.172)
+ by SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Tue, 17 Mar 2020 17:10:49 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XyZ1cRWvKCBhqUDoCOR8NJoPCiuXcmLoz5rt+ahl7RY+Ix6rUBaohbW+z+pVctZG1QsNrm3TcqdHbiykr4YlfWw00oNI1fP8XT4H0/3DYBFmswcuXi6lDupfJBtjAHQXvyRpQL1RQQa1ssu0uAtWXyelfL3ADC+hSmmQnXXWjUo3Xp5dkgqsZ8uF2j0l5RGwELWPoFHNkjQSxMLyzZO15puje5DsAfGT960n0q1gPftvNmZceJbSyToep8kKpqj0LleTZ9hMDGpQy+X1PbXWzktdnwjJth4HIuJZOVPrD+reoHJoTNLcf3RhKIBUmfImPSLUHVISCSlo11v9Gi+KLQ==
+ b=jKvQ9uuaZZoZdhzzYYft8ytq4pef5/HRfm5Yr5XyHdiFI+UyvNaa2pcKQi/BG3ZtamStg5IBSCdXTM9s74JqjAvdyQK4ZNwpw5pcVXRoHjshu228kvRvGzKLGo2Yjuo3nN/TR8yVY2v5HaxmcIM4REdxcgYHqQwPnYOFKl+kcKOyrLTdD1UcyZ+lXCn4z6e2Zxnrb2cr0pG92YyXok6EZLDQsw2P6I7XZOMDLGzUswnL8V2/RtouTl9rLfTRuv+BpH2keOa4yXohE46Phscb/GwAx98lm8xq4wnwP90deb89mjuDnqub1dGfAmjVI8g+HMLmG/neaBub8XMwa7+QIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p6EK4WIRO1N1cfqS2SVBmroJvI/DXTCfG2O16L+5XSk=;
- b=i2GPiMFqSDxQBhODM2dqSQMCcOJnPWhV08l+O4vNRj4aa8cNaxIvE17u4P0Vys6FIOxiwYl/PNlBFp/USLJ/7HSXtS8Rp2UihM8bRNIMjsXxyuyInq/xMt1EOYr4GdM6BEa4yHebwdWvgdWwtx4FkD8yY8jLHg/z79Ukl7Jq/qmr1fQJ1rWcWfqPCQ5dwPjJBgMkYabdISA/SIdPc69Avwf8+zwC5mCFFL3CQ7VYjG8jPPNUgr9ZdHq5Drldq3CyN7y907TgWo9gbndDmXTS5E5CJuBfqpzauUXJr69QYDMmHy/QeMMeQEIHlXRqmlY3/QBHJ1pdVmLBzSllvT4Kxw==
+ bh=xPpOf9VGSV8QyFuthDDqxHJtFEn1Q141apMa41IYRug=;
+ b=CnpTFXNBxQFj/qVFP042btC1v9FdwVLR/tyXYNiK1CN3J4/IXKlHdohxSK+n4NmV1P6gGXhnI2yOavKpbMtpgQ1AlTKLfPGiFDsvWz7qdO+z8cAKH3GLOsHIoqq9TnMITDrs1xBk4gk7gmhjSy238aKDEz6n2Dv5qnwfgOPWQWMAAkcUi5hkBSVb/Z7yF3POPcqstbVXU4/fuy3Zm+wxhc7CwZqDShSNVTyvUEdAXncZrtwWD4D2rak+am40tgnVhaxeujI7YH7dwAXrbWCAy6C6X8PgY/INAhVCdoPG5FcPW7z8A3qW/FxLuZ5QWJrVBJkrNQqhTt1PA3d/5vG5CQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p6EK4WIRO1N1cfqS2SVBmroJvI/DXTCfG2O16L+5XSk=;
- b=U8/RboogOetM3WuEE49Nwjkxp5zStQI7Lf+1qdW0cmxatx2Usc+7VTirxieRQ1k7M7OgKScwv1vrT6BsQgbDphZPg/0KiCvHucdr4otr5oSTuaGGxm70SVYruEslFBl6vX766WdivlvgxhJkmIbK7lw2pAyck2gxTrG+N2c7Pt8=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0924.namprd21.prod.outlook.com (2603:10b6:302:10::32) with
+ bh=xPpOf9VGSV8QyFuthDDqxHJtFEn1Q141apMa41IYRug=;
+ b=gEoJCagW+7yMfk9tBCTVRRWCTrjWnhldw+4vCkwgp1GzA5nuL5oDtaDSKSkALsa0B11H3e2s4XzvuYVxu7iGNqk03mfZNHuw3v1AUiU2OtMZuVYFU9JzU43y98P7uRPyeCGEFzRORq6k3lRbbjMkzkcvjZNBNiJiJN6keh2UJpU=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (2603:10b6:208:165::10)
+ by MN2PR18MB3606.namprd18.prod.outlook.com (2603:10b6:208:26d::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.3; Wed, 18 Mar
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.16; Wed, 18 Mar
  2020 00:10:46 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2835.003; Wed, 18 Mar 2020
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::30c4:52fe:fdf8:faff]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::30c4:52fe:fdf8:faff%7]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
  00:10:46 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "will@kernel.org" <will@kernel.org>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+Date:   Wed, 18 Mar 2020 01:10:39 +0100
+From:   Robert Richter <rrichter@marvell.com>
+To:     "Kani, Toshi" <toshi.kani@hpe.com>
+CC:     Borislav Petkov <bp@alien8.de>, John Garry <john.garry@huawei.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "James Morse" <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        "boqun.feng@gmail.com" <boqun.feng@gmail.com>
-Subject: RE: [PATCH v6 01/10] arm64: hyperv: Add core Hyper-V include files
-Thread-Topic: [PATCH v6 01/10] arm64: hyperv: Add core Hyper-V include files
-Thread-Index: AQHV+hZFy2PYk3vLgUeMDTQcrJxEgqhJ6u2AgAM4fwA=
-Date:   Wed, 18 Mar 2020 00:10:46 +0000
-Message-ID: <MW2PR2101MB1052D91D46EBDFE004B2F549D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
-        <1584200119-18594-2-git-send-email-mikelley@microsoft.com>
- <86v9n5zfrm.wl-maz@kernel.org>
-In-Reply-To: <86v9n5zfrm.wl-maz@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-18T00:10:44.0699642Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=279715c3-fe97-4c2a-8dbf-83894911492b;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8f20517b-d554-45f8-772b-08d7cad0ce93
-x-ms-traffictypediagnostic: MW2PR2101MB0924:|MW2PR2101MB0924:|MW2PR2101MB0924:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB09246E0EC1A9ADE60661DCB1D7F70@MW2PR2101MB0924.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03468CBA43
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(136003)(396003)(376002)(366004)(199004)(55016002)(9686003)(8676002)(26005)(30864003)(8936002)(186003)(81156014)(8990500004)(316002)(81166006)(86362001)(66946007)(7416002)(66556008)(966005)(66476007)(66446008)(64756008)(54906003)(76116006)(4326008)(6916009)(33656002)(478600001)(5660300002)(6506007)(10290500003)(7696005)(52536014)(2906002)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0924;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0GzC2Len+Wx9oFKsXp+hbm+MRpmBs+R/5NLXbmLaDIYAXBAM0KZnyZAc5Cbna2TdYukWO397pGzAhe4Pbowc5I5fJjXCdnAEymqZ67yUX7gXl0gKSXim70beBWQAk87/ClAaqaif4z+SHB7XOLplS67W4v3Zxs+kkwNC4IhMQBpPQE/zM0Vmq7Y4ejXFS8i+oAnrluX9qqVwceWbkXsh8rKXozUMwVy2FAsvrwtaaF7Y8w07SK7FhKqT8O/WcMLkcKgEGIuFst7KWxg2KCit6svepo4SXj30BbJSPFUKofvXJMWHiCU7qDQaPXigp5nbmg3/y3WiwfwZTdm1fn7O2MqJJ92Uj/wuG4NacG9tH+FYGE+GhdM+4d1w8z0A985NknWd/GD6688AXKTxkd7RxUYC+VGzZbyyhEqoKhUgOBsJBL8qKMAgctITWhUDPxqrCrivQEbEG46nyC8wZ6eVMSMfVZHfJ3cTqeRLNGHj2wsMhR3czZxqLMCbQWpj5pm7S0IOyPK9gxuEj9hkeDdimw==
-x-ms-exchange-antispam-messagedata: fOSMeLysDsIw5q7HMqc82jvsbhLb+nvMBlz9p5iBjmA3qrdYfAoRE+nzbs6bYeJohQPyI/Ggw5xZyRHJZcCibRQBmw55Tjhpc2D0cocmnCCOSp6BapceKv3XG5xpMEwsx1Qt/T7YsR+oAO2W1ylaCg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Xiaofei Tan <tanxiaofei@huawei.com>,
+        Shiju Jose <shiju.jose@huawei.com>
+Subject: Re: [PATCH 11/11] EDAC/ghes: Create one memory controller per
+ physical memory array
+Message-ID: <20200318001039.i6w3hd4cp6lh2ppr@rric.localdomain>
+References: <20200306151318.17422-1-rrichter@marvell.com>
+ <20200306151318.17422-12-rrichter@marvell.com>
+ <20200316095149.GE26126@zn.tnic>
+ <924f4c0e-1f9d-e7de-17cd-466eb3a74d90@huawei.com>
+ <DF4PR8401MB073186E9C0F1514827781CC582F60@DF4PR8401MB0731.NAMPRD84.PROD.OUTLOOK.COM>
+ <20200317225039.GI15609@zn.tnic>
+ <DF4PR8401MB073148816BE1012B3AE729CA82F60@DF4PR8401MB0731.NAMPRD84.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DF4PR8401MB073148816BE1012B3AE729CA82F60@DF4PR8401MB0731.NAMPRD84.PROD.OUTLOOK.COM>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR05CA0164.eurprd05.prod.outlook.com
+ (2603:10a6:3:f8::12) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f20517b-d554-45f8-772b-08d7cad0ce93
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 00:10:46.2534
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from rric.localdomain (31.208.96.227) by HE1PR05CA0164.eurprd05.prod.outlook.com (2603:10a6:3:f8::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.19 via Frontend Transport; Wed, 18 Mar 2020 00:10:44 +0000
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 12c597d4-8b0c-42a8-1f37-08d7cad0ce77
+X-MS-TrafficTypeDiagnostic: MN2PR18MB3606:
+X-Microsoft-Antispam-PRVS: <MN2PR18MB3606D2228029F3AB143849ABD9F70@MN2PR18MB3606.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 03468CBA43
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(366004)(136003)(199004)(66946007)(2906002)(296002)(316002)(9686003)(66476007)(66556008)(6506007)(53546011)(55016002)(54906003)(956004)(52116002)(8936002)(7696005)(6916009)(6666004)(478600001)(7416002)(1076003)(26005)(186003)(16526019)(81156014)(86362001)(8676002)(81166006)(5660300002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3606;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AHlci0sxtPeBlaZUbf6mtM1kiKHlgo9UpIdkCb8YwEq4jO1FUYGdVD+XgLENzkwB4kjxk8PJIFvT+Rtn3wYmCi9nXO3mSFjmC7nI8iN3fkQXWzLwmRrGPv4mntIN/TFD9rRi67n4mMlPGMmKOrlBBae8mEVTJ9LLGWxkyOJoVOI+t2jcyEnJnQmBCQpKA7P0bkoQj7ihGOIGewIm4SOWpvLXL4+5/Nkxp2yfexuwyEqyFCXjfu0oPSnJ/E06qnWMhTlV7MEp6HSKy7TRvyDIi6O99B/oiKSlPWRFa1hj1WTt5ApZa5BdUp3jc0ciTMx3kyQIu/CoJtOpCoLB47FtJawf6VfTCQ+jsyspTo18jpwFj66y6UlCzgfhnmXFeefYGUL+QBpgwCgkSsc5y7SESMzZgrWOs9SLcG/vxptfwZPqPp7B2rmTn7pbRukgjS2U
+X-MS-Exchange-AntiSpam-MessageData: DdLz9F+++HP0TloU74Nl4+m2S6I4f5EuEzl4eXnyAWbGAJ7tBGoMhD2d2f4lbLi9wt8P93XRM61FXIUnxnjj6Ndh2wlhAMx2HzWJ1g/aCGPL8zFvJmC+JIg+p6ZXR23NgCZnicxrhwdC80YhhzRvzg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12c597d4-8b0c-42a8-1f37-08d7cad0ce77
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 00:10:46.3225
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FfyXdLT4TS+zM8aZQ8y2RFaR5CSNMcsk3MfSCaU/VtPTTo1pdDgQaFDxtEnc3YLClzKFy5UMQau3QU3Pu42F88WhAy2zUp8QWA+ay+oRejA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0924
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: z5j0QBprgE8V+r2fzX7VWDPq/r6/VYfBZ689hyciIrqkzjlMsV934t/MWGhYUGKXIK9tAZO1ZEwHCQQz888mHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3606
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-17_09:2020-03-17,2020-03-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org> Sent: Sunday, March 15, 2020 10:31 AM
->=20
-> On Sat, 14 Mar 2020 15:35:10 +0000,
-> Hi Michael,
->=20
-> Michael Kelley <mikelley@microsoft.com> wrote:
-> >
-> > hyperv-tlfs.h defines Hyper-V interfaces from the Hyper-V Top Level
-> > Functional Spec (TLFS). The TLFS is distinctly oriented to x86/x64,
-> > and Hyper-V has not separated out the architecture-dependent parts into
-> > x86/x64 vs. ARM64. So hyperv-tlfs.h includes information for ARM64
-> > that is not yet formally published. The TLFS is available here:
-> >
-> >   docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/=
-tlfs
-> >
-> > mshyperv.h defines Linux-specific structures and routines for
-> > interacting with Hyper-V on ARM64, and #includes the architecture-
-> > independent part of mshyperv.h in include/asm-generic.
-> >
-> > Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-> > ---
-> >  MAINTAINERS                          |   2 +
-> >  arch/arm64/include/asm/hyperv-tlfs.h | 413
-> +++++++++++++++++++++++++++++++++++
-> >  arch/arm64/include/asm/mshyperv.h    | 115 ++++++++++
-> >  3 files changed, 530 insertions(+)
-> >  create mode 100644 arch/arm64/include/asm/hyperv-tlfs.h
-> >  create mode 100644 arch/arm64/include/asm/mshyperv.h
->=20
-> So this is a pretty large patch, mostly containing constants and other
-> data structures that don't necessarily make sense immediately (or at
-> least, I can't make sense of it without reading all the other 9
-> patches and going back to patch #1).
->=20
-> Could you please consider splitting this into more discreet bits that
-> get added as required by the supporting code?
+On 17.03.20 22:53:09, Kani, Toshi wrote:
+> > On Tue, Mar 17, 2020 at 10:14:46PM +0000, Kani, Toshi wrote:
+> > > > > This is all fine and good but that change affects the one x86
+> > > > > platform we support so the whole patchset should be tested there
+> > > > > too. Adding Toshi.
+> > >
+> > > Thanks for the heads-up.  I do not have an access to a test system at
+> > > the moment, but am checking my colleague to do the test.
+> > 
+> > Thx but hold that off for now - Robert is reworking the set.
 
-Yes, I'll do this in the next version.
+It would still be good to have a test run as the general concept wont
+change and we will then early see potential issues, especially wrt
+SMBIOS/DMI.
 
->=20
-> So here's only a few sparse comments:
->=20
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 58bb5c4..398cfdb 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -7809,6 +7809,8 @@ F:	arch/x86/include/asm/trace/hyperv.h
-> >  F:	arch/x86/include/asm/hyperv-tlfs.h
-> >  F:	arch/x86/kernel/cpu/mshyperv.c
-> >  F:	arch/x86/hyperv
-> > +F:	arch/arm64/include/asm/hyperv-tlfs.h
-> > +F:	arch/arm64/include/asm/mshyperv.h
-> >  F:	drivers/clocksource/hyperv_timer.c
-> >  F:	drivers/hid/hid-hyperv.c
-> >  F:	drivers/hv/
-> > diff --git a/arch/arm64/include/asm/hyperv-tlfs.h b/arch/arm64/include/=
-asm/hyperv-
-> tlfs.h
-> > new file mode 100644
-> > index 0000000..5e6a087
-> > --- /dev/null
-> > +++ b/arch/arm64/include/asm/hyperv-tlfs.h
-> > @@ -0,0 +1,413 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +/*
-> > + * This file contains definitions from the Hyper-V Hypervisor Top-Leve=
-l
-> > + * Functional Specification (TLFS):
-> > + * https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/=
-reference/tlfs
-> > + *
-> > + * Copyright (C) 2019, Microsoft, Inc.
-> > + *
-> > + * Author : Michael Kelley <mikelley@microsoft.com>
-> > + */
-> > +
-> > +#ifndef _ASM_HYPERV_TLFS_H
-> > +#define _ASM_HYPERV_TLFS_H
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +/*
-> > + * All data structures defined in the TLFS that are shared between Hyp=
-er-V
-> > + * and a guest VM use Little Endian byte ordering.  This matches the d=
-efault
-> > + * byte ordering of Linux running on ARM64, so no special handling is =
-required.
-> > + */
-> > +
-> > +
-> > +/*
-> > + * While not explicitly listed in the TLFS, Hyper-V always runs with a=
- page
-> > + * size of 4096. These definitions are used when communicating with Hy=
-per-V
-> > + * using guest physical pages and guest physical page addresses, since=
- the
-> > + * guest page size may not be 4096 on ARM64.
-> > + */
-> > +#define HV_HYP_PAGE_SHIFT	12
-> > +#define HV_HYP_PAGE_SIZE	(1 << HV_HYP_PAGE_SHIFT)
->=20
-> Probably worth writing this as 1UL to be on the safe side.
+It would esp. be interesting to see how the node mapping reflects the
+memory topology:
 
-Agreed.
+# grep . /sys/devices/system/edac/mc/mc*/dimm*/dimm_label
+/sys/devices/system/edac/mc/mc0/dimm0/dimm_label:N0 DIMM_A0
+/sys/devices/system/edac/mc/mc0/dimm1/dimm_label:N0 DIMM_B0
+/sys/devices/system/edac/mc/mc0/dimm2/dimm_label:N0 DIMM_C0
+/sys/devices/system/edac/mc/mc0/dimm3/dimm_label:N0 DIMM_D0
+/sys/devices/system/edac/mc/mc0/dimm4/dimm_label:N0 DIMM_E0
+/sys/devices/system/edac/mc/mc0/dimm5/dimm_label:N0 DIMM_F0
+/sys/devices/system/edac/mc/mc0/dimm6/dimm_label:N0 DIMM_G0
+/sys/devices/system/edac/mc/mc0/dimm7/dimm_label:N0 DIMM_H0
+/sys/devices/system/edac/mc/mc1/dimm0/dimm_label:N1 DIMM_I0
+/sys/devices/system/edac/mc/mc1/dimm1/dimm_label:N1 DIMM_J0
+/sys/devices/system/edac/mc/mc1/dimm2/dimm_label:N1 DIMM_K0
+/sys/devices/system/edac/mc/mc1/dimm3/dimm_label:N1 DIMM_L0
+/sys/devices/system/edac/mc/mc1/dimm4/dimm_label:N1 DIMM_M0
+/sys/devices/system/edac/mc/mc1/dimm5/dimm_label:N1 DIMM_N0
+/sys/devices/system/edac/mc/mc1/dimm6/dimm_label:N1 DIMM_O0
+/sys/devices/system/edac/mc/mc1/dimm7/dimm_label:N1 DIMM_P0
 
->=20
-> > +#define HV_HYP_PAGE_MASK	(~(HV_HYP_PAGE_SIZE - 1))
-> > +
-> > +/*
-> > + * These Hyper-V registers provide information equivalent to the CPUID
-> > + * instruction on x86/x64.
-> > + */
-> > +#define HV_REGISTER_HYPERVISOR_VERSION		0x00000100 /*CPUID
-> 0x40000002 */
-> > +#define	HV_REGISTER_PRIVILEGES_AND_FEATURES	0x00000200 /*CPUID
-> 0x40000003 */
-> > +#define	HV_REGISTER_FEATURES			0x00000201 /*CPUID
-> 0x40000004 */
-> > +#define	HV_REGISTER_IMPLEMENTATION_LIMITS	0x00000202 /*CPUID
-> 0x40000005 */
-> > +#define HV_ARM64_REGISTER_INTERFACE_VERSION	0x00090006 /*CPUID
-> 0x40000001 */
-> > +
-> > +/*
-> > + * Feature identification. HvRegisterPrivilegesAndFeaturesInfo returns=
- a
-> > + * 128-bit value with flags indicating which features are available to=
- the
-> > + * partition based upon the current partition privileges. The 128-bit
-> > + * value is broken up with different portions stored in different 32-b=
-it
-> > + * fields in the ms_hyperv structure.
-> > + */
-> > +
-> > +/* Partition Reference Counter available*/
-> > +#define HV_MSR_TIME_REF_COUNT_AVAILABLE		BIT(1)
-> > +
-> > +/* Synthetic Timers available */
-> > +#define HV_MSR_SYNTIMER_AVAILABLE		BIT(3)
-> > +
-> > +/* Reference TSC available */
-> > +#define HV_MSR_REFERENCE_TSC_AVAILABLE		BIT(9)
-> > +
-> > +
-> > +/*
-> > + * This group of flags is in the high order 64-bits of the returned
-> > + * 128-bit value. Note that this set of bit positions differs from wha=
-t
-> > + * is used on x86/x64 architecture.
-> > + */
-> > +
-> > +/* Crash MSRs available */
-> > +#define HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE	BIT(8)
->=20
-> It is confusing that you don't have a single bit space for all these
-> flags. It'd probably help if you had a structure describing this
-> 128bit value in multiple 32bit or 64bit words, and indicating which
-> field the bit position is relevant to.
 
-I'll add this in the next version.
+Thanks,
 
->=20
-> [...]
->=20
-> > +/* Define the hypercall status result */
-> > +
-> > +union hv_hypercall_status {
-> > +	u64 as_uint64;
->=20
-> nit: it'd be more consistent if as_uint64 was actually a uint64 type.
-
-Agreed.
-
->=20
-> > +	struct {
-> > +		u16 status;
-> > +		u16 reserved;
-> > +		u16 reps_completed;  /* Low 12 bits */
-> > +		u16 reserved2;
-> > +	};
-> > +};
-> > +
-> > +/* hypercall status code */
-> > +#define HV_STATUS_SUCCESS			0
-> > +#define HV_STATUS_INVALID_HYPERCALL_CODE	2
-> > +#define HV_STATUS_INVALID_HYPERCALL_INPUT	3
-> > +#define HV_STATUS_INVALID_ALIGNMENT		4
-> > +#define HV_STATUS_INSUFFICIENT_MEMORY		11
-> > +#define HV_STATUS_INVALID_CONNECTION_ID		18
-> > +#define HV_STATUS_INSUFFICIENT_BUFFERS		19
-> > +
-> > +/* Define input and output layout for Get VP Register hypercall */
-> > +struct hv_get_vp_register_input {
-> > +	u64 partitionid;
-> > +	u32 vpindex;
-> > +	u8  inputvtl;
-> > +	u8  padding[3];
-> > +	u32 name0;
-> > +	u32 name1;
-> > +} __packed;
-> > +
-> > +struct hv_get_vp_register_output {
-> > +	u64 registervaluelow;
-> > +	u64 registervaluehigh;
-> > +} __packed;
-> > +
-> > +#define HV_FLUSH_ALL_PROCESSORS			BIT(0)
-> > +#define HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES	BIT(1)
-> > +#define HV_FLUSH_NON_GLOBAL_MAPPINGS_ONLY	BIT(2)
->=20
-> I"m curious: Are these supposed to be PV'd TLB invalidation
-> operations?
-
-Yes, they are.  Hyper-V provides PV TLB flush hypercalls on ARM64, but
-this patch set doesn't use those hypercalls.  I'll remove the definitions.
-
->=20
-> > +#define HV_FLUSH_USE_EXTENDED_RANGE_FORMAT	BIT(3)
-> > +
-> > +enum HV_GENERIC_SET_FORMAT {
-> > +	HV_GENERIC_SET_SPARSE_4K,
-> > +	HV_GENERIC_SET_ALL,
-> > +};
-> > +
-> > +/*
-> > + * The Hyper-V TimeRefCount register and the TSC
-> > + * page provide a guest VM clock with 100ns tick rate
-> > + */
-> > +#define HV_CLOCK_HZ (NSEC_PER_SEC/100)
-> > +
-> > +/*
-> > + * The fields in this structure are set by Hyper-V and read
-> > + * by the Linux guest.  They should be accessed with READ_ONCE()
-> > + * so the compiler doesn't optimize in a way that will cause
-> > + * problems.  The union pads the size out to the page size
-> > + * used to communicate with Hyper-V.
-> > + */
-> > +struct ms_hyperv_tsc_page {
-> > +	union {
-> > +		struct {
-> > +			u32 tsc_sequence;
-> > +			u32 reserved1;
-> > +			u64 tsc_scale;
-> > +			s64 tsc_offset;
-> > +		} __packed;
-> > +		u8 reserved2[HV_HYP_PAGE_SIZE];
-> > +	};
-> > +};
-> > +
-> > +/* Define the number of synthetic interrupt sources. */
-> > +#define HV_SYNIC_SINT_COUNT		(16)
-> > +/* Define the expected SynIC version. */
-> > +#define HV_SYNIC_VERSION_1		(0x1)
-> > +
-> > +#define HV_SYNIC_CONTROL_ENABLE		(1ULL << 0)
-> > +#define HV_SYNIC_SIMP_ENABLE		(1ULL << 0)
-> > +#define HV_SYNIC_SIEFP_ENABLE		(1ULL << 0)
-> > +#define HV_SYNIC_SINT_MASKED		(1ULL << 16)
-> > +#define HV_SYNIC_SINT_AUTO_EOI		(1ULL << 17)
-> > +#define HV_SYNIC_SINT_VECTOR_MASK	(0xFF)
->=20
-> Let's me guess: a PV interrupt controller? Do you really need this?
-> Specially as I don't see any PV irqchip driver in this submission...
->=20
-
-No, the above definitions aren't needed.  I'll remove them.
-
-Hyper-V does provide a limited synthetic interrupt controller that's
-implemented entirely in architecture independent code and has been
-used on the x86 side since the beginning of Hyper-V support.  It
-pre-dates me by a lot of years, and I've never considered whether it
-should be modeled as an irqchip.
-
-> [...]
->=20
-> > diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm=
-/mshyperv.h
-> > new file mode 100644
-> > index 0000000..60b3f68
-> > --- /dev/null
-> > +++ b/arch/arm64/include/asm/mshyperv.h
-> > @@ -0,0 +1,115 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +/*
-> > + * Linux-specific definitions for managing interactions with Microsoft=
-'s
-> > + * Hyper-V hypervisor. The definitions in this file are specific to
-> > + * the ARM64 architecture.  See include/asm-generic/mshyperv.h for
-> > + * definitions are that architecture independent.
-> > + *
-> > + * Definitions that are specified in the Hyper-V Top Level Functional
-> > + * Spec (TLFS) should not go in this file, but should instead go in
-> > + * hyperv-tlfs.h.
-> > + *
-> > + * Copyright (C) 2019, Microsoft, Inc.
-> > + *
-> > + * Author : Michael Kelley <mikelley@microsoft.com>
-> > + */
-> > +
-> > +#ifndef _ASM_MSHYPERV_H
-> > +#define _ASM_MSHYPERV_H
-> > +
-> > +#include <linux/types.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/clocksource.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/irqdesc.h>
-> > +#include <linux/arm-smccc.h>
-> > +#include <asm/hyperv-tlfs.h>
-> > +
-> > +/*
-> > + * Define the IRQ numbers/vectors used by Hyper-V VMbus interrupts
-> > + * and by STIMER0 Direct Mode interrupts. Hyper-V should be supplying
-> > + * these values through ACPI, but there are no other interrupting
-> > + * devices in a Hyper-V VM on ARM64, so it's OK to hard code for now.
->=20
-> I'm not convinced it is OK. If you don't try to do the right thing
-> now, what is the incentive to do it later? Starting to hard code
-> things is akin to going back to the ARM board files of old. Been
-> there, managed to fix it, not going back to it again anytime soon.
-
-I'll check back with the Hyper-V guys on getting appropriate values
-assigned in ACPI.
-
->=20
-> > + * The "CALLBACK_VECTOR" terminology is a left-over from the x86/x64
-> > + * world that is used in architecture independent Hyper-V code.
-> > + */
-> > +#define HYPERVISOR_CALLBACK_VECTOR 16
-> > +#define	HV_STIMER0_IRQNR	   17
-> > +
-> > +extern u64 hv_do_hvc(u64 control, ...);
-> > +extern u64 hv_do_hvc_fast_get(u64 control, u64 input1, u64 input2, u64=
- input3,
-> > +		struct hv_get_vp_register_output *output);
-> > +
-> > +/*
-> > + * Declare calls to get and set Hyper-V VP register values on ARM64, w=
-hich
-> > + * requires a hypercall.
-> > + */
-> > +extern void hv_set_vpreg(u32 reg, u64 value);
-> > +extern u64 hv_get_vpreg(u32 reg);
-> > +extern void hv_get_vpreg_128(u32 reg, struct hv_get_vp_register_output=
- *result);
-> > +
-> > +/*
-> > + * Use the Hyper-V provided stimer0 as the timer that is made
-> > + * available to the architecture independent Hyper-V drivers.
-> > + */
-> > +#define hv_init_timer(timer, tick) \
-> > +		hv_set_vpreg(HV_REGISTER_STIMER0_COUNT + (2*timer), tick)
-> > +#define hv_init_timer_config(timer, val) \
-> > +		hv_set_vpreg(HV_REGISTER_STIMER0_CONFIG + (2*timer), val)
-> > +#define hv_get_current_tick(tick) \
-> > +		(tick =3D hv_get_vpreg(HV_REGISTER_TIME_REFCOUNT))
-> > +
-> > +#define hv_get_simp(val) (val =3D hv_get_vpreg(HV_REGISTER_SIPP))
-> > +#define hv_set_simp(val) hv_set_vpreg(HV_REGISTER_SIPP, val)
-> > +
-> > +#define hv_get_siefp(val) (val =3D hv_get_vpreg(HV_REGISTER_SIFP))
-> > +#define hv_set_siefp(val) hv_set_vpreg(HV_REGISTER_SIFP, val)
-> > +
-> > +#define hv_get_synic_state(val) (val =3D hv_get_vpreg(HV_REGISTER_SCON=
-TROL))
-> > +#define hv_set_synic_state(val) hv_set_vpreg(HV_REGISTER_SCONTROL, val=
-)
-> > +
-> > +#define hv_get_vp_index(index) (index =3D hv_get_vpreg(HV_REGISTER_VPI=
-NDEX))
-> > +
-> > +#define hv_signal_eom()	hv_set_vpreg(HV_REGISTER_EOM, 0)
-> > +
-> > +/*
-> > + * Hyper-V SINT registers are numbered sequentially, so we can just
-> > + * add the SINT number to the register number of SINT0
-> > + */
-> > +#define hv_get_synint_state(sint_num, val) \
-> > +		(val =3D hv_get_vpreg(HV_REGISTER_SINT0 + sint_num))
-> > +#define hv_set_synint_state(sint_num, val) \
-> > +		hv_set_vpreg(HV_REGISTER_SINT0 + sint_num, val)
-> > +
-> > +#define hv_get_crash_ctl(val) \
-> > +		(val =3D hv_get_vpreg(HV_REGISTER_CRASH_CTL))
-> > +#define hv_get_time_ref_count(val) \
-> > +		(val =3D hv_get_vpreg(HV_REGISTER_TIME_REFCOUNT))
-> > +#define hv_get_reference_tsc(val) \
-> > +		(val =3D hv_get_vpreg(HV_REGISTER_REFERENCE_TSC))
-> > +#define hv_set_reference_tsc(val) \
-> > +		hv_set_vpreg(HV_REGISTER_REFERENCE_TSC, val)
-> > +#define hv_enable_vdso_clocksource()
-> > +#define hv_set_clocksource_vdso(val) \
-> > +		((val).vdso_clock_mode =3D VDSO_CLOCKMODE_NONE)
-> > +
-> > +#if IS_ENABLED(CONFIG_HYPERV)
->=20
-> I don't think this guards anything useful.
-
-You are probably right.  I'll double-check.
-
->=20
-> > +#define hv_enable_stimer0_percpu_irq(irq)	enable_percpu_irq(irq, 0)
-> > +#define hv_disable_stimer0_percpu_irq(irq)	disable_percpu_irq(irq)
->=20
-> and this looks pretty premature.
-
-I'm not sure I understand your comment about "premature".  Could
-you clarify?
-
->=20
-> > +#endif
-> > +
-> > +/* ARM64 specific code to read the hardware clock */
-> > +#define hv_get_raw_timer() arch_timer_read_counter()
-> > +
-> > +/* SMCCC hypercall parameters */
-> > +#define HV_SMCCC_FUNC_NUMBER	1
-> > +#define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
-> > +				ARM_SMCCC_STD_CALL,		\
-> > +				ARM_SMCCC_SMC_64,		\
-> > +				ARM_SMCCC_OWNER_VENDOR_HYP,	\
->=20
-> This is only defined in patch #2...
-
-Indeed. :-(   I'll fix as part of breaking up this patch into smaller
-pieces.
-
-Michael
-
->=20
-> > +				HV_SMCCC_FUNC_NUMBER)
-> > +
-> > +#include <asm-generic/mshyperv.h>
-> > +
-> > +#endif
->=20
-> Thanks,
->=20
-> 	M.
->=20
-> --
-> Jazz is not dead, it just smells funny.
+-Robert
