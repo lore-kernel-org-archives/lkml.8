@@ -2,182 +2,176 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F813C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FF4C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4122F20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB0520724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:06:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="lWgDEZQJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQEvsPU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbgCRGEF (ORCPT
+        id S1727120AbgCRGGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 02:04:05 -0400
-Received: from mail-eopbgr70042.outbound.protection.outlook.com ([40.107.7.42]:49033
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726478AbgCRGEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 02:04:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=miUEYDnCOT6IhbafWqyICIA/18MfDUDGwWZyb7G5YvcTSxyDsUThQmKlKjOGzF/p+EidDgiKXCSKgUz8fa8UnIhKuTG1bDQmONdJbgfWLSsmHXKNiof9Qef7BP+nXKX84ksfzgLKWbvL3tTbTwyP00LvIIV/BzAoLqizpdQb7LLL78QqVpSfarRPr6i9X8qThrnfb6dltzh8gQsbIEyiHnYz4QFEGJovr2h+Q0A/S8LuJgmv2BJCK4O0wHqwTCbBmlqevrfrLMbXZdtWtiKRx4oQ7d4IN4tvQNsKIv7g+N3BmeDipBbMNtJ3tA4ezrN+kySb6+1EMjEUJ5jrWcwMNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tis0CEjhJ4S44RqDanuK14m1ghIE+VgY8FLeVy5Apx4=;
- b=Hntf30xZ8/T3DrJzZAGFs3rOzCjYxucjCXyPlioinJarff61mYIYM0sd9gIjhgvV2CC0CXpoRJEvUWlETcY0JfHFaYKU+Ag2bNlB41bfMmEGEgOLJ2Ri/BEEe17w0gTMtq73wnV4kqIzhE70viVSwy/BRG4dB6jHM8uxOOQJNVkyk4Dmaj2qmoKaT6pOFmQbNOxMmmtuXWg/U0sMBE2x69ecMuLfDpIsK03x0n1UBkx+slEIr/UKNkjCi2TGPCLjBvp5zq7IUu7gBRAfflc93LZkxRc/m/haa1/YCd9ul1FOL4+Ytr0lv9kdeEjpoG3cFkbpo2BPuECB0i6q4iKzqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tis0CEjhJ4S44RqDanuK14m1ghIE+VgY8FLeVy5Apx4=;
- b=lWgDEZQJdG6ic7k7tIlhOcZp06HmSI6mVh+DlwyOdJOfJfQyYHtFzelKYMwO3ErsfivI4V2FRB38bjQqaHcuX2lVbWhuJcY07c2PrFcZwELG5rTxdgQtu0cxGh5jSNINKtOBIsbOeGaNqc4GB0PY/VE30ES7oEVUTAW4dor4gCw=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=calvin.johnson@oss.nxp.com; 
-Received: from AM0PR04MB5636.eurprd04.prod.outlook.com (20.178.202.86) by
- AM0PR04MB3986.eurprd04.prod.outlook.com (52.134.91.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.22; Wed, 18 Mar 2020 06:04:01 +0000
-Received: from AM0PR04MB5636.eurprd04.prod.outlook.com
- ([fe80::1b4:31d2:1485:6e07]) by AM0PR04MB5636.eurprd04.prod.outlook.com
- ([fe80::1b4:31d2:1485:6e07%7]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
- 06:04:01 +0000
-Date:   Wed, 18 Mar 2020 11:33:47 +0530
-From:   Calvin Johnson <calvin.johnson@oss.nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Jeremy Linton <jeremy.linton@arm.com>, linux.cj@gmail.com,
-        Jon Nettleton <jon@solid-run.com>, linux@armlinux.org.uk,
-        Makarand Pawagi <makarand.pawagi@nxp.com>,
-        cristian.sovaiala@nxp.com, laurentiu.tudor@nxp.com,
-        ioana.ciornei@nxp.com, V.Sethi@nxp.com, pankaj.bansal@nxp.com,
-        "Rajesh V . Bikkina" <rajesh.bikkina@nxp.com>,
-        Marcin Wojtas <mw@semihalf.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v1 1/7] mdio_bus: Introduce fwnode MDIO helpers
-Message-ID: <20200318060347.GA21824@lsv03152.swis.in-blr01.nxp.com>
-References: <20200131153440.20870-1-calvin.johnson@nxp.com>
- <20200131153440.20870-2-calvin.johnson@nxp.com>
- <20200317113650.GA6016@lsv03152.swis.in-blr01.nxp.com>
- <20200317140426.GR24270@lunn.ch>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317140426.GR24270@lunn.ch>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: SG2PR06CA0161.apcprd06.prod.outlook.com
- (2603:1096:1:1e::15) To AM0PR04MB5636.eurprd04.prod.outlook.com
- (2603:10a6:208:130::22)
+        Wed, 18 Mar 2020 02:06:25 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36277 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgCRGGZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 02:06:25 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i13so13328897pfe.3;
+        Tue, 17 Mar 2020 23:06:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tz/NOLbKsDEYh8ikUHMyFXA0Fv1NQbDvbW9hYYkgk0M=;
+        b=vQEvsPU2aP0eurmQG4ZXT/gNnIictX9IFmG28pSoYtwt0KNd7ZFe6HLau3pTPrnHC8
+         L4dc+i+6X1mJDayXHnyxAQKc97VR1DUjML/0h3oNyHBZB0DzcyxiuTN12ZpQid6KfquK
+         aPqraV0XHCYhgOABPShkkMkxoSe+BSnnDm88EAV0fhgwodMY93rWs/Oa/x1353Js1ihD
+         QIGkGGjnNFj++D1PIDgLzv9jhRolZPQKCnfdgIlquH+HPaGQZindARVB9yXlsLP4SCTZ
+         RPAPF4wmtaDySVoohtUW32RYa/URmi4vCZDeTQ13Ok4Omh3pd3L9/4keibteNf7La9T7
+         vM/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Tz/NOLbKsDEYh8ikUHMyFXA0Fv1NQbDvbW9hYYkgk0M=;
+        b=KGcMajR7fb6fb3F4tyr9aSXt+nLhDk091aHWeAsmyDldm8Rt+0tQcY2ngUtMm6Fsp1
+         BJsTLardl4Dx6cQuE9YQj5mV/UTZOJqlkRcteRCzHpJeRDhuK6zW4xDp++qGnRFFgbW6
+         1qCO4EOwfzIq939GMLY90TdAW2cBWCx2UfEU42eR5/Fq+vgULaat/Ae4QnEuGWctLiOI
+         qHNWKEKG+kOvttFI5Xz76iL2tYSNLrd9YY/nDuzUkmiWlr0+8VmbFuexew/vjsr3KSu2
+         8MJkaf6N6DGE2Eu1tmh5bsM1K7IK9c5l0328aQBRFWMgQZJTpGwtZ2b3tcwNJ7/8+aLL
+         +L9A==
+X-Gm-Message-State: ANhLgQ1Zvstl5cMH2BuhQlVWHZdi/dQq1fGw06XvrEm7dlQfULelBElz
+        HRcdRHgtlchV4pQhvCKbIurgwQ6MEhg=
+X-Google-Smtp-Source: ADFU+vt6M8xp9+lcWaX7Q9pFQk9E13Qq3WjrZa0h7gbBBiCWun+sZwbj/zVcyPIKki3r3gcZ18jN/w==
+X-Received: by 2002:a62:e306:: with SMTP id g6mr2632336pfh.312.1584511583685;
+        Tue, 17 Mar 2020 23:06:23 -0700 (PDT)
+Received: from nish-HP-Pavilion ([2409:4072:6086:470e:bc8d:c185:c429:a95b])
+        by smtp.gmail.com with ESMTPSA id m18sm4132518pgd.39.2020.03.17.23.06.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Mar 2020 23:06:23 -0700 (PDT)
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+To:     jic23@kernel.org, robh+dt@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        mark.rutland@arm.com, nish.malpani25@gmail.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] dt-bindings: iio: tsl2563: convert bindings to YAML
+Date:   Wed, 18 Mar 2020 11:36:07 +0530
+Message-Id: <20200318060607.6061-1-nish.malpani25@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from lsv03152.swis.in-blr01.nxp.com (14.142.151.118) by SG2PR06CA0161.apcprd06.prod.outlook.com (2603:1096:1:1e::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18 via Frontend Transport; Wed, 18 Mar 2020 06:03:56 +0000
-X-Originating-IP: [14.142.151.118]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 27eaa456-e9b8-4d4f-c034-08d7cb02272e
-X-MS-TrafficTypeDiagnostic: AM0PR04MB3986:|AM0PR04MB3986:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB398636A232EE97DC26BD9B81D2F70@AM0PR04MB3986.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 03468CBA43
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(376002)(366004)(136003)(199004)(55236004)(6506007)(7416002)(26005)(16526019)(66556008)(956004)(186003)(2906002)(66946007)(66476007)(1006002)(44832011)(6666004)(316002)(33656002)(5660300002)(54906003)(81156014)(81166006)(6916009)(86362001)(8936002)(55016002)(7696005)(9686003)(52116002)(4326008)(1076003)(8676002)(478600001)(966005)(110426005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB3986;H:AM0PR04MB5636.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
-Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wPc4UiWXPwPHyxadYtDJx2tzLqNDVJ60gY+q5l+FSN18cgajuMbOjWVftt3YOfRZLl3apJcCb0pf9wRm1e/pedNRBH2bGfUMp/IyUyV8Dh/k/jqjNWtWewaDHOQ/o8R1abOPKWPmhN9Oqj5T5jYQ95AZiFH3rJ5rwpVtUaGwPQjp/hDHKEauJQo3N3sU76oNDjJhaTDmzmml6Oz1RvinXRNwwo0OtvkUznCgIH2Q+OCrLuNssg1PaP1fZphcCCeNDEHs7Vj+4ZKR6JUPosXBhB8ZXTMGcEF/lGyweIHoXYL1q1EnfLhXQ0Lh3wM6ymrE4L6B2uBoUBECG9vzjjj4zXu/9j/dgdh5w7o0BjCeKYHH70CZP0R97r5ntXQ3BqdIHBg/pQAk/BePz1X15NDofANf1On85vOgtrYVSzvtEEJRhDsfG0uukquB1z4hGjfz59e/VKAvAgvTVkNRLUx2rxi4+W7GIBnqs0yCNYFJZKt5icOLuPShnKPEXUxGbrAaHP9nkK2eWSnle2IX4bp8G6ST3KTSdCXso+YHjPYIaDipCgAarG+1Kmlq1DdyMZq0wUSCIbDrREMghfMAqItVaQ==
-X-MS-Exchange-AntiSpam-MessageData: cDXoVQKBOGw0D8KMjDosxkIck2uu9WmOa5CyLzXuU+PYco8Ec5vrPDD3VTvkimUMtIvObewwrvk2aR/X/mwLWIVFtjbbubgdufsbKUe2lO/kpVH7QVBdlBgvCfG0W6b7q8QisXymwqtMQ0Au726xvw==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27eaa456-e9b8-4d4f-c034-08d7cb02272e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 06:04:01.0998
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qfdzkOLq5NmUsg9+vJzy7poPSc4Q173MU73NYClh3yljGoID6b7GxgPqZ2gMxJbyIQFWBgeO6r9bmDvfMnhJUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB3986
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Convert the TSL2563 device tree bindings to the new YAML format.
 
-On Tue, Mar 17, 2020 at 03:04:26PM +0100, Andrew Lunn wrote:
-> On Tue, Mar 17, 2020 at 05:06:50PM +0530, Calvin Johnson wrote:
-> > Hi,
-> > 
-> > On Fri, Jan 31, 2020 at 09:04:34PM +0530, Calvin Johnson wrote:
-> > 
-> > <snip>
-> > 
-> > > +/**
-> > > + * fwnode_mdiobus_child_is_phy - Return true if the child is a PHY node.
-> > > + * It must either:
-> > > + * o Compatible string of "ethernet-phy-ieee802.3-c45"
-> > > + * o Compatible string of "ethernet-phy-ieee802.3-c22"
-> > > + * Checking "compatible" property is done, in order to follow the DT binding.
-> > > + */
-> > > +static bool fwnode_mdiobus_child_is_phy(struct fwnode_handle *child)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	ret = fwnode_property_match_string(child, "compatible",
-> > > +					   "ethernet-phy-ieee802.3-c45");
-> > > +	if (!ret)
-> > > +		return true;
-> > > +
-> > > +	ret = fwnode_property_match_string(child, "compatible",
-> > > +					   "ethernet-phy-ieee802.3-c22");
-> > > +	if (!ret)
-> > > +		return true;
-> > > +
-> > > +	if (!fwnode_property_present(child, "compatible"))
-> > > +		return true;
-> > > +
-> > > +	return false;
-> > > +}
-> > 
-> > Can we use _CID in ACPI to get the compatible string? Is there any other method
-> > to handle this kind of situation where we would like to pass C45 or C22 info to
-> > the mdiobus driver?
-> 
-> Hi Calvin
-> 
-> Is there any defacto standardised way to stuff this device tree
-> property into ACPI? It is one of the key properties, so either there
-> is one standard way, or lots of variants because nobody can be
-> bothered to go to the ACPI standardisation body and get it formalised.
+Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+---
 
-_DSD package is used to stuff this kind of DT property. IMO, this is not the
-standard way as C22 and C45 are key properties for MDIO.
+Changes in v3:
+  - Include the complete diff (changes from v1).
 
-Eg usage of _DSD:
-https://source.codeaurora.org/external/qoriq/qoriq-components/edk2-platforms/tree/Platform/NXP/LX2160aRdbPkg/AcpiTables/Dsdt/Mdio.asl?h=LX2160_UEFI_ACPI_EAR1
+Changes in v2:
+  - Rename the dt-bindings to include manufacturer's name.
+  - Synchronize the bindings with the driver.
+---
+ .../bindings/iio/light/amstaos,tsl2563.yaml   | 49 +++++++++++++++++++
+ .../devicetree/bindings/iio/light/tsl2563.txt | 19 -------
+ 2 files changed, 49 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
+ delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
 
-      Name (_DSD, Package () {
-        ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-          Package () {
-            Package () {"reg", 5},
-            Package () {"phy-addr", 5},
-            Package () {"compatible", "ethernet-phy-ieee802.3-c45"}
-        }
-      })
+diff --git a/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
+new file mode 100644
+index 000000000000..141c7ae1edc8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/amstaos,tsl2563.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/tsl2563.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AMS TAOS TSL2563 ambient light sensor
++
++maintainers:
++  - Sebastian Reichel <sre@kernel.org>
++
++description: |
++  Ambient light sensor with an i2c interface.
++
++properties:
++  compatible:
++    enum:
++      - amstaos,tsl2560
++      - amstaos,tsl2561
++      - amstaos,tsl2562
++      - amstaos,tsl2563
++
++  reg:
++    maxItems: 1
++
++  amstaos,cover-comp-gain:
++    description: Multiplier for gain compensation
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [1, 16]
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      light-sensor@29 {
++        compatible = "amstaos,tsl2563";
++        reg = <0x29>;
++        amstaos,cover-comp-gain = <16>;
++      };
++    };
++...
+diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+deleted file mode 100644
+index f91e809e736e..000000000000
+--- a/Documentation/devicetree/bindings/iio/light/tsl2563.txt
++++ /dev/null
+@@ -1,19 +0,0 @@
+-* AMS TAOS TSL2563 ambient light sensor
+-
+-Required properties:
+-
+-  - compatible : should be "amstaos,tsl2563"
+-  - reg : the I2C address of the sensor
+-
+-Optional properties:
+-
+-  - amstaos,cover-comp-gain : integer used as multiplier for gain
+-                              compensation (default = 1)
+-
+-Example:
+-
+-tsl2563@29 {
+-	compatible = "amstaos,tsl2563";
+-	reg = <0x29>;
+-	amstaos,cover-comp-gain = <16>;
+-};
+-- 
+2.20.1
 
-Ideally, MDIO bus should be part of the ACPI spec.
-Maybe this property can be included in:
-https://uefi.org/sites/default/files/resources/nic-request-v2.pdf
-
-I'm still looking for a better approach than _DSD till ACPI spec defines it.
-
-Regards
-Calvin
