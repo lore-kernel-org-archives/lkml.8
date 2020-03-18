@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A594C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08079C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D08208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6A9D20773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565204;
-	bh=sxFsWE3R0iWc9nWX4mpat7KWKzln0bMMRRur2Jkaiv4=;
+	s=default; t=1584565215;
+	bh=aCXDfBj6Zf5CZMcX8LIz9/RY1DaZrceSdatsYg1dRFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0hMTuZMfifzSYYJj1dGyyq55b90eByu2XO69/zqxYZsmBJslPWllxMZNl6ZJtjDbY
-	 ONuEX3lRi9EU7VPitNOjD745JFMw9zwDKZ2UyjxPlGdPBO+XpRjAUBMzaNvOOXszWM
-	 u3aMcxgsEOpZ9EVxUru9sL1KY0uiBibJlzcdXPaQ=
+	b=WA3U3vhIAQegom6Q/gXHwOjqUiNRZT686xiMORH8abms1OykmDt5NCdi0J3O4PxVe
+	 rTr3juS8TIFYKkSdQj+PjdRlUYDJXOm0G/xbkhp3knE5qn9K4Prfb76HybYHFIFC8p
+	 rp+yPy8aQ92UmTRlRUErMLkAJAEz/sKUucXEhPS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgCRVAD (ORCPT
+        id S1728812AbgCRVAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:00:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57832 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:00:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728651AbgCRU4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:39 -0400
+        id S1728643AbgCRU4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EE0B20A8B;
-        Wed, 18 Mar 2020 20:56:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CAE020BED;
+        Wed, 18 Mar 2020 20:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564999;
-        bh=sxFsWE3R0iWc9nWX4mpat7KWKzln0bMMRRur2Jkaiv4=;
+        s=default; t=1584564998;
+        bh=aCXDfBj6Zf5CZMcX8LIz9/RY1DaZrceSdatsYg1dRFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O1fgGsr6KuwMZoZmv7sO9gxK4f4tB8Zx3J3HOlYzgaUW1H9OG1qa7HJ53QtXE5iur
-         2mJEtE/HP5oi2VM8WLReffGcnk5HhbJ1JLoyeos3MfLkQ1motIFJ2/KkrnRZggkMil
-         rKQajsMkfyZsQN02i2wZuAPygQ1xJ1q1UVUkW0+I=
+        b=otKHOQD3/TTpyI/GOMUU85XawrDRROc6PnjRjJexFuMWIpMli+qPZqahmIJh7YkVz
+         yklI/7vcYDvo9CXDPzWeo2Lkk6Oa6tbEbF3HOkIBQmDo6zJtSlTXHPv4nGFxchxuy8
+         HT9KApUI8DR36YQTBQpO5nhdrHO378PnUhza8a5M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/15] netfilter: cthelper: add missing attribute validation for cthelper
-Date:   Wed, 18 Mar 2020 16:56:22 -0400
-Message-Id: <20200318205629.17750-8-sashal@kernel.org>
+Cc:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/15] team: add missing attribute validation for array index
+Date:   Wed, 18 Mar 2020 16:56:21 -0400
+Message-Id: <20200318205629.17750-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205629.17750-1-sashal@kernel.org>
 References: <20200318205629.17750-1-sashal@kernel.org>
@@ -63,32 +61,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit c049b3450072b8e3998053490e025839fecfef31 ]
+[ Upstream commit 669fcd7795900cd1880237cbbb57a7db66cb9ac8 ]
 
-Add missing attribute validation for cthelper
+Add missing attribute validation for TEAM_ATTR_OPTION_ARRAY_INDEX
 to the netlink policy.
 
-Fixes: 12f7a505331e ("netfilter: add user-space connection tracking helper infrastructure")
+Fixes: b13033262d24 ("team: introduce array options")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nfnetlink_cthelper.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/team/team.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/nfnetlink_cthelper.c b/net/netfilter/nfnetlink_cthelper.c
-index 3f499126727c8..8396dc8ee2474 100644
---- a/net/netfilter/nfnetlink_cthelper.c
-+++ b/net/netfilter/nfnetlink_cthelper.c
-@@ -711,6 +711,8 @@ static const struct nla_policy nfnl_cthelper_policy[NFCTH_MAX+1] = {
- 	[NFCTH_NAME] = { .type = NLA_NUL_STRING,
- 			 .len = NF_CT_HELPER_NAME_LEN-1 },
- 	[NFCTH_QUEUE_NUM] = { .type = NLA_U32, },
-+	[NFCTH_PRIV_DATA_LEN] = { .type = NLA_U32, },
-+	[NFCTH_STATUS] = { .type = NLA_U32, },
+diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
+index eaae1ac4749bd..d0c18e3557f1c 100644
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -2217,6 +2217,7 @@ team_nl_option_policy[TEAM_ATTR_OPTION_MAX + 1] = {
+ 	[TEAM_ATTR_OPTION_TYPE]			= { .type = NLA_U8 },
+ 	[TEAM_ATTR_OPTION_DATA]			= { .type = NLA_BINARY },
+ 	[TEAM_ATTR_OPTION_PORT_IFINDEX]		= { .type = NLA_U32 },
++	[TEAM_ATTR_OPTION_ARRAY_INDEX]		= { .type = NLA_U32 },
  };
  
- static const struct nfnl_callback nfnl_cthelper_cb[NFNL_MSG_CTHELPER_MAX] = {
+ static int team_nl_cmd_noop(struct sk_buff *skb, struct genl_info *info)
 -- 
 2.20.1
 
