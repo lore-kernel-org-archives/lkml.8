@@ -2,52 +2,53 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CEBC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6A5C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C21208DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FCA208DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564891;
-	bh=wHVMFXCOPG4nZvILfcIh/HvdK/unXPCQb97HaqKUvT0=;
+	s=default; t=1584564897;
+	bh=b8bd6Ssb2jjKH46Qv4vM+gwNIHecKgzTwk75GCSXmV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OEEs+mNpTI6GI29YiYStUrYL+BCENI5/8noYAIjUs3295hRsxE/q7cgyda/Ve/LJ2
-	 EYZ4B5ANkP6VSfH/ldPKSX8n54XRCgKGBqQQxJ+HGlQ9mAjZyGwW5/C2KU2qtGeuMK
-	 yXtm/tbBJDAC1jzW1Vce32M0E7PGazJOpT9l7ocI=
+	b=CTilxxCuoVN00Jxwu4/p2taJsLPn5eBVAkTzcCQEXUcnrCtmXdclOotCuxxYAUvhH
+	 UW/FOGWm36Q/WA3+xRu7gGwIlMSIumSoTJZJ5LVTsVyITV69O0zVMqe20Dz8lsw47w
+	 VKVAMTaLokddlmRDe9GTROqJj3802PilWyxMYV+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbgCRUyu (ORCPT
+        id S1728101AbgCRUy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:54:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54716 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbgCRUyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:54:49 -0400
+        id S1728072AbgCRUyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3D1120B1F;
-        Wed, 18 Mar 2020 20:54:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87EF221707;
+        Wed, 18 Mar 2020 20:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564888;
-        bh=wHVMFXCOPG4nZvILfcIh/HvdK/unXPCQb97HaqKUvT0=;
+        s=default; t=1584564893;
+        bh=b8bd6Ssb2jjKH46Qv4vM+gwNIHecKgzTwk75GCSXmV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sCWEJ6nB8KFwsBsqkNBSMP0vHZLMbtdwS55IfICXwFy2PY8XX/8cNADnFOW9J7YEG
-         ID3sr/JcsbI056LlNAs0iQuXA5vpNBhn2aKvR6w4TGMMbDgfQAj6fQzUkWR8rWE3uj
-         4erWPodOS1QL6wrLhRCrPxwGhWssuzjgvwk0JApk=
+        b=gjuQmWbMIamHayh4NnQD0Lwcg/Zq/JMcY7TOJ1ofR5MMdGxzUyhSOe8e+lEUNFhbl
+         L2Rec888ExHTFS3FdyTDMEo3fEAQw/5NPh1XkG+yqrky5vJ4o/ZzVsDCm8EYLjrwPi
+         tMGXpZ3ZJweZ+Cll8MvtQJXeWG8u9jOMdQxz/Pk0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 57/73] nl80211: add missing attribute validation for beacon report scanning
-Date:   Wed, 18 Mar 2020 16:53:21 -0400
-Message-Id: <20200318205337.16279-57-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.4 61/73] dpaa_eth: Remove unnecessary boolean expression in dpaa_get_headroom
+Date:   Wed, 18 Mar 2020 16:53:25 -0400
+Message-Id: <20200318205337.16279-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -60,35 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 056e9375e1f3c4bf2fd49b70258c7daf788ecd9d ]
+[ Upstream commit 7395f62d95aafacdb9bd4996ec2f95b4a655d7e6 ]
 
-Add missing attribute validation for beacon report scanning
-to the netlink policy.
+Clang warns:
 
-Fixes: 1d76250bd34a ("nl80211: support beacon report scanning")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Link: https://lore.kernel.org/r/20200303051058.4089398-3-kuba@kernel.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:2860:9: warning:
+converting the result of '?:' with integer constants to a boolean always
+evaluates to 'true' [-Wtautological-constant-compare]
+        return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
+               ^
+drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:131:34: note: expanded
+from macro 'DPAA_FD_DATA_ALIGNMENT'
+\#define DPAA_FD_DATA_ALIGNMENT  (fman_has_errata_a050385() ? 64 : 16)
+                                 ^
+1 warning generated.
+
+This was exposed by commit 3c68b8fffb48 ("dpaa_eth: FMan erratum A050385
+workaround") even though it appears to have been an issue since the
+introductory commit 9ad1a3749333 ("dpaa_eth: add support for DPAA
+Ethernet") since DPAA_FD_DATA_ALIGNMENT has never been able to be zero.
+
+Just replace the whole boolean expression with the true branch, as it is
+always been true.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/928
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 9ca16ca0528ac..f0c6c522964c2 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -469,6 +469,8 @@ const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
- 	[NL80211_ATTR_WOWLAN_TRIGGERS] = { .type = NLA_NESTED },
- 	[NL80211_ATTR_STA_PLINK_STATE] =
- 		NLA_POLICY_MAX(NLA_U8, NUM_NL80211_PLINK_STATES - 1),
-+	[NL80211_ATTR_MEASUREMENT_DURATION] = { .type = NLA_U16 },
-+	[NL80211_ATTR_MEASUREMENT_DURATION_MANDATORY] = { .type = NLA_FLAG },
- 	[NL80211_ATTR_MESH_PEER_AID] =
- 		NLA_POLICY_RANGE(NLA_U16, 1, IEEE80211_MAX_AID),
- 	[NL80211_ATTR_SCHED_SCAN_INTERVAL] = { .type = NLA_U32 },
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index e130233b50853..00c4beb760c35 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -2770,9 +2770,7 @@ static inline u16 dpaa_get_headroom(struct dpaa_buffer_layout *bl)
+ 	headroom = (u16)(bl->priv_data_size + DPAA_PARSE_RESULTS_SIZE +
+ 		DPAA_TIME_STAMP_SIZE + DPAA_HASH_RESULTS_SIZE);
+ 
+-	return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
+-					      DPAA_FD_DATA_ALIGNMENT) :
+-					headroom;
++	return ALIGN(headroom, DPAA_FD_DATA_ALIGNMENT);
+ }
+ 
+ static int dpaa_eth_probe(struct platform_device *pdev)
 -- 
 2.20.1
 
