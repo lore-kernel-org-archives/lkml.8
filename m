@@ -2,77 +2,135 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98D7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFE4C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE6520724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CAF20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584550731;
+	bh=50sIpwbTYylG3uOeXddKEerXCNu0A2f54RlDXQlgRCY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jOG66AGC1PiIFo7Bv170TsDxbaJXnjGbFZoq4cVoXzUSEkc0ENpRk1i3S0A7cMYrg
+	 LRtZz2akdAkEVFb5J9nPGacOnNDGDwoh0xMP7ry2oxnZCKNhF7QdkPshtS/L2i62K6
+	 UaGm5EtZfjuUlX3NvNT+n2hHKn8AqJ+JFMYsFEzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgCRQ5Q (ORCPT
+        id S1726943AbgCRQ6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:57:16 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:36338 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbgCRQ5Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 12:57:16 -0400
-Received: by mail-il1-f198.google.com with SMTP id e5so11824412ilg.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 09:57:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=E1FkQhwf4mJSyMmCp/VUuSy1JFivKfnOam6iBYk/dUs=;
-        b=TslRH8BuwPBbeeD55kncO7LMsq96vlIxQw9MsWxqxPPppH5SrAXxR/MwfgaBB4TbnC
-         qKlQ5ado6MT/OElDwTYWscGwL9QgFtbkGRpQOd082MeaW4c0vVWuCcosUjkf2d+Kzs2A
-         YwhplAPggt2fiFQND/HoLeG/dXNLS2VaCrhvZHdbYkAhuGosORbrvvWalgYMjGuPwQOm
-         MZmGpZKhco27y5/pIjT+LE5BAW/8GvVN2/BSLXlLYE9VMAXeRLn4+NAzL97eR53IRNCM
-         RL/RMYQIUwal14mE5P4T/DR4WT4qug5l0hzzFrjXCGepswyX6FsJdWo2tIEEewr6ry+0
-         71Ww==
-X-Gm-Message-State: ANhLgQ1Vvb5GmGgcXPk49uXOjhD/H9f1ojPYGZ9wLjB+sd7fybjJJT1d
-        GD85k0+pcAuz3pJ/8arQlYxeepNmfxz0kyytol8KCuzuYWRm
-X-Google-Smtp-Source: ADFU+vuycutbjia7WFspGOsLOiD+e7+CUVah1Ny/Ycu+I9GK1+Y07m2KFYLiDpYu296fs0BuDuNUi0ziQzBArJ5bkvW5PZx6Zbat
+        Wed, 18 Mar 2020 12:58:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726680AbgCRQ6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 12:58:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E9D820724;
+        Wed, 18 Mar 2020 16:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584550729;
+        bh=50sIpwbTYylG3uOeXddKEerXCNu0A2f54RlDXQlgRCY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I1pTko21+eEy3TFE/HCcnefGq5yIi0x+IohXiwaDCSA9CrlauuC40vheU5h3Cp7s4
+         uEiYvJoq0SGZTxXd5QNgGt1s4k3kXwiqkYH1zYdJr3NIKqfEWmFrbvXcK/Fswxr/IK
+         eUKAnxYn6eMILCn40d4TT2DXztIL4wjfjAdEaSCo=
+Date:   Wed, 18 Mar 2020 17:58:46 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Wambui Karuga <wambui.karugax@gmail.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 10/17] drm/vram-helper: make
+ drm_vram_mm_debugfs_init() return 0
+Message-ID: <20200318165846.GC3090655@kroah.com>
+References: <20200310133121.27913-1-wambui.karugax@gmail.com>
+ <20200310133121.27913-11-wambui.karugax@gmail.com>
+ <20200318152627.GY2363188@phenom.ffwll.local>
+ <alpine.LNX.2.21.99999.375.2003181857010.54051@wambui>
+ <CAKMK7uGwJ6nzLPzwtfUY79e1fSFxkrSgTfJuDeM4px6c0v13qg@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:900c:: with SMTP id w12mr5237836jaf.129.1584550634201;
- Wed, 18 Mar 2020 09:57:14 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 09:57:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ae2ab305a123f146@google.com>
-Subject: linux-next build error (8)
-From:   syzbot <syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uGwJ6nzLPzwtfUY79e1fSFxkrSgTfJuDeM4px6c0v13qg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Mar 18, 2020 at 05:31:47PM +0100, Daniel Vetter wrote:
+> On Wed, Mar 18, 2020 at 5:03 PM Wambui Karuga <wambui.karugax@gmail.com> wrote:
+> >
+> >
+> >
+> > On Wed, 18 Mar 2020, Daniel Vetter wrote:
+> >
+> > > On Tue, Mar 10, 2020 at 04:31:14PM +0300, Wambui Karuga wrote:
+> > >> Since 987d65d01356 (drm: debugfs: make
+> > >> drm_debugfs_create_files() never fail), drm_debugfs_create_files() never
+> > >> fails and should return void. Therefore, remove its use as the
+> > >> return value of drm_vram_mm_debugfs_init(), and have the function
+> > >> return 0 directly.
+> > >>
+> > >> v2: have drm_vram_mm_debugfs_init() return 0 instead of void to avoid
+> > >> introducing build issues and build breakage.
+> > >>
+> > >> References: https://lists.freedesktop.org/archives/dri-devel/2020-February/257183.html
+> > >> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> > >> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+> > >> ---
+> > >>  drivers/gpu/drm/drm_gem_vram_helper.c | 10 ++++------
+> > >>  1 file changed, 4 insertions(+), 6 deletions(-)
+> > >>
+> > >> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
+> > >> index 92a11bb42365..c8bcc8609650 100644
+> > >> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
+> > >> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+> > >> @@ -1048,14 +1048,12 @@ static const struct drm_info_list drm_vram_mm_debugfs_list[] = {
+> > >>   */
+> > >>  int drm_vram_mm_debugfs_init(struct drm_minor *minor)
+> > >>  {
+> > >> -    int ret = 0;
+> > >> -
+> > >>  #if defined(CONFIG_DEBUG_FS)
+> > >
+> > > Just noticed that this #if here is not needed, we already have a dummy
+> > > function for that case. Care to write a quick patch to remove it? On top
+> > > of this patch series here ofc, I'm in the processing of merging the entire
+> > > pile.
+> > >
+> > > Thanks, Daniel
+> > Hi Daniel,
+> > Without this check here, and compiling without CONFIG_DEBUG_FS, this
+> > function is run and the drm_debugfs_create_files() does not have access to
+> > the parameters also protected by an #if above this function. So the change
+> > throws an error for me. Is that correct?
+> 
+> Hm right. Other drivers don't #ifdef out their debugfs file functions
+> ... kinda a bit disappointing that we can't do this in the neatest way
+> possible.
+> 
+> Greg, has anyone ever suggested to convert the debugfs_create_file
+> function (and similar things) to macros that don't use any of the
+> arguments, and then also annotating all the static functions/tables as
+> __maybe_unused and let the compiler garbage collect everything?
+> Instead of explicit #ifdef in all the drivers ...
 
-syzbot found the following crash on:
+No, no one has suggested that, having the functions be static inline
+should make it all "just work" properly if debugfs is not enabled.  The
+variables will not be used, so the compiler should just optimize them
+away properly.
 
-HEAD commit:    47780d78 Add linux-next specific files for 20200318
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14228745e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b68b7b89ad96c62a
-dashboard link: https://syzkaller.appspot.com/bug?extid=792dec47d693ccdc05a0
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+No checks for CONFIG_DEBUG_FS should be needed anywhere in .c code.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+thanks,
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com
-
-kernel/rcu/tasks.h:1070:37: error: 'rcu_tasks_rude' undeclared (first use in this function); did you mean 'rcu_tasks_qs'?
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+greg k-h
