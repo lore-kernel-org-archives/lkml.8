@@ -2,89 +2,120 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AD9C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5A9C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6EDC20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584551640;
-	bh=zhaVfKAZ9DWXovGE8g99UowHd7QWKaEhgZ8kbNHW5y4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f2JBZNCevp8K+H5/TviNb6Rc0o3hJbvQpthZi1MApSuYvcK+YFxw8aKDl3KSbkIJE
-	 EtrkVUtSIom4eama8uGqCQQ/6GGZbPXQ/8FX6TFO/oNBYV/OSueo1H/hFFLipsWUG5
-	 efYAui+sDb8Xq3HlxwQioqlswbiUIMHg7RvcOgEU=
+	by mail.kernel.org (Postfix) with ESMTP id 96ED020752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 17:15:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjBEsemG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbgCRRN7 (ORCPT
+        id S1726857AbgCRRP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 13:13:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbgCRRN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 13:13:59 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 673D92071C;
-        Wed, 18 Mar 2020 17:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584551639;
-        bh=zhaVfKAZ9DWXovGE8g99UowHd7QWKaEhgZ8kbNHW5y4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Li0LZeQVZ4Y+/0pUIJSWmkVPN6EAdJ4YA8shQ6emtUWMi8hEJQGHidj0itPCT5YjZ
-         J/WugOmTS/lFVni8CuSA2eGGz3fW/At9p4z7XIE1RoDPRVvc5Gi5yl36aJNGAYM+Si
-         JjcaPcSbvU32yOWlb3huoFMM9NS9gdzU+1RNkoeA=
-Date:   Wed, 18 Mar 2020 19:13:55 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>
-Cc:     linux-kernel@vger.kernel.org, Eran Ben Elisha <eranbe@mellanox.com>
-Subject: Re: [RFC 1/1] net/mlx5: Fix failing fw tracer allocation on s390
-Message-ID: <20200318171355.GE126814@unreal>
-References: <20200318164431.85948-1-schnelle@linux.ibm.com>
- <20200318164431.85948-2-schnelle@linux.ibm.com>
+        Wed, 18 Mar 2020 13:15:27 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43953 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgCRRP1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 13:15:27 -0400
+Received: by mail-qt1-f195.google.com with SMTP id l13so21329372qtv.10;
+        Wed, 18 Mar 2020 10:15:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XxUwJet0pq87ma5H9uRR4f/E0DxPaM/eAomJtt++Wdw=;
+        b=DjBEsemG/jKOqxSvxcsYq29zun7ypTmpLQlvI1ddnFGNppkBPa5778wjuKJKsZDGlu
+         3Zm27jDFWKiXsSrxlqDpU0nCfpXFq2gC5OZ5+clXqP2yVzZqFyURbzLOQ93CI51pWG5r
+         Di+n5FOGn5h7LsdwPHcDObhKKDPaj3lRBf7PkJ39kkAmlfG1JSSZxddsxreA8dI77JZ7
+         aag2l+kVpPGquTTPvRAa9cAOgvquAR4UEyW8KQIo6igUQKOsQdLGggldAUrMRvfFkkCj
+         bjMNzxka5ko2dwdp4jpNCfKcvPnYk2bOGYJwVhDEzwIKwazryU1nhaiFpECKnPKdBXWU
+         J0HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XxUwJet0pq87ma5H9uRR4f/E0DxPaM/eAomJtt++Wdw=;
+        b=fg89ukY5udxVRVRkaWkyz+YVgtKPB92h0fit/BjVUvtNAvwUwQ2GYLTP+lMiey+K1f
+         WNnFpd9EK3yJ5eLdoGoUz7i6ZaI06yl2bOP5CfFWVFz5qoIcp4D/R3drKKWdSblMa8LZ
+         ekFDQnZ8OaOacytE+AZEmVTSWR1kEg5l1J9zbMrP9YWWFhHnZzpy8mNz932Qplf/938Q
+         5o+gidkHkJl30b/4/dLqRUsNUrxe2Ff88cROr2u/pxV3DRw5+cwHDsvXT0vBInz5ZrkA
+         ZDi0yHTlNjrr5RwFcY8OGVLPCvkCIVr/1qYRNuEBGLEvimz9bZiYoK6XEfcTaX/i4VC0
+         b7Vg==
+X-Gm-Message-State: ANhLgQ3H2YbXJVgyvEBN2PaFIGJUsb12ZTzhw3o60OaIr0C1P3baaqvy
+        yndEq7OBQgtEslq7tgKbaQW9OlYxGswWJwbz6BU=
+X-Google-Smtp-Source: ADFU+vt0lA5e23BmYcHnV5pD6m01L7MMTzT6+01UMHNRW+Plra58xvGh+bWIyVnJwqF4bumOrQysBnWAjSiMiv7iXmM=
+X-Received: by 2002:aed:200f:: with SMTP id 15mr5587101qta.152.1584551724821;
+ Wed, 18 Mar 2020 10:15:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318164431.85948-2-schnelle@linux.ibm.com>
+References: <20200318161906.3340959-1-lains@archlinux.org>
+In-Reply-To: <20200318161906.3340959-1-lains@archlinux.org>
+From:   Mario Limonciello <superm1@gmail.com>
+Date:   Wed, 18 Mar 2020 12:15:13 -0500
+Message-ID: <CA+EcB1MoTXMaueJfRHf51A5PU4oiKSJXrHazfTEvifZK54OrLQ@mail.gmail.com>
+Subject: Re: [PATCH] HID: logitech-dj: issue udev change event on device connection
+To:     =?UTF-8?Q?Filipe_La=C3=ADns?= <lains@archlinux.org>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Richard Hughes <hughsient@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 05:44:31PM +0100, Niklas Schnelle wrote:
-> On s390 FORCE_MAX_ZONEORDER is 9 instead of 11, thus a larger kzalloc()
-> allocation as done for the firmware tracer will always fail.
+On Wed, Mar 18, 2020 at 11:19 AM Filipe La=C3=ADns <lains@archlinux.org> wr=
+ote:
 >
-> Looking at mlx5_fw_tracer_save_trace(), it is actually the driver itself
-> that copies the debug data into the trace array and there is no need for
-> the allocation to be contiguous in physical memory. We can therefor use
-> kvzalloc() instead of kzalloc() and get rid of the large contiguous
-> allcoation.
+> As discussed in the mailing list:
 >
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > Right now the hid-logitech-dj driver will export one node for each
+> > connected device, even when the device is not connected. That causes
+> > some trouble because in userspace we don't have have any way to know if
+> > the device is connected or not, so when we try to communicate, if the
+> > device is disconnected it will fail.
+>
+> The solution reached to solve this issue is to trigger an udev change
+> event when the device connects, this way userspace can just wait on
+> those connections instead of trying to ping the device.
+>
+> Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
 > ---
->  drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/hid/hid-logitech-dj.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-> index 94d7b69a95c7..eb2e57ff08a6 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-> @@ -935,7 +935,7 @@ struct mlx5_fw_tracer *mlx5_fw_tracer_create(struct mlx5_core_dev *dev)
->  		return NULL;
->  	}
->
-> -	tracer = kzalloc(sizeof(*tracer), GFP_KERNEL);
-> +	tracer = kvzalloc(sizeof(*tracer), GFP_KERNEL);
+> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.=
+c
+> index 48dff5d6b605..fcd481a0be1f 100644
+> --- a/drivers/hid/hid-logitech-dj.c
+> +++ b/drivers/hid/hid-logitech-dj.c
+> @@ -1464,6 +1464,8 @@ static int logi_dj_dj_event(struct hid_device *hdev=
+,
+>                 if (dj_report->report_params[CONNECTION_STATUS_PARAM_STAT=
+US] =3D=3D
+>                     STATUS_LINKLOSS) {
+>                         logi_dj_recv_forward_null_report(djrcv_dev, dj_re=
+port);
+> +               } else {
+> +                       kobject_uevent(&hdev->dev.kobj, KOBJ_CHANGE);
+>                 }
+>                 break;
+>         default:
+> --
+> 2.25.1
 
-Saeed, Moshe
-
-Can we use vzalloc() instead of kvzalloc() here?
-
-Thanks
+The problem that will remain here is the transition period for
+userspace to start to rely upon
+this.  It will have no idea whether the kernel is expected to send
+events or not.  What do you
+think about adding a syfs attribute to indicate that events are being
+sent?  Or something similar?
