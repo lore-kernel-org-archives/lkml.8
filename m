@@ -2,226 +2,223 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E27C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41C4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC6220757
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AACAC20757
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:05:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SVfUpqll"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="agETx32Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbgCRPFE (ORCPT
+        id S1727321AbgCRPFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:05:04 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:27410 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727280AbgCRPFD (ORCPT
+        Wed, 18 Mar 2020 11:05:08 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:46128 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbgCRPFH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:05:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584543902;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0/CnksCBsQwZug6TofMO/DlPDAR/X0sM7NiA63phxVA=;
-        b=SVfUpqll94cbcxVlCF1ttQ8TTURypeFb45vZ49XD2lSKDICNo9Oa18bXFmF0uj/CTlq0zR
-        +iC8jtNHv1zvZ5x71Lzxt499/kJ8Jeqx1wA7ZWOr3px8Wfz4YA2Me2M8lnZV00WPEPvMoU
-        tM3K1cCbjk51DVocOlXDqnCvW6UX1LU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-229-Fr6f5LQLNMen6nFAOfePkw-1; Wed, 18 Mar 2020 11:05:00 -0400
-X-MC-Unique: Fr6f5LQLNMen6nFAOfePkw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AAA7C801E6C;
-        Wed, 18 Mar 2020 15:04:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AE0F719C58;
-        Wed, 18 Mar 2020 15:04:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 11/17] smack: Implement the watch_key and post_notification
- hooks [ver #5]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     Casey Schaufler <casey@schaufler-ca.com>, dhowells@redhat.com,
-        casey@schaufler-ca.com, sds@tycho.nsa.gov,
-        nicolas.dichtel@6wind.com, raven@themaw.net, christian@brauner.io,
-        andres@anarazel.de, jlayton@redhat.com, dray@redhat.com,
-        kzak@redhat.com, keyrings@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 18 Mar 2020 15:04:55 +0000
-Message-ID: <158454389492.2863966.1081946626597156477.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
-References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        Wed, 18 Mar 2020 11:05:07 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B831FF9;
+        Wed, 18 Mar 2020 16:05:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584543905;
+        bh=4XeE4TEsnH5MYOX96WeQj61o+elhBI7bp3OtoVjeJgo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=agETx32Y3rQ/mCj8O63i2CwrNmnxqYTx9vYR48w+UMxhVyGx9Fav95ZgeA1HYb/BA
+         84KzQ0nPck5ouJ8rh5/usYno1MaH0UAQ8yxTQbNm5XRmFyk9ivC3O6FJ8X+zMq7SCs
+         d8Mai5VkjVHsAuFAmskPkvEvEOrWwd4hdgsIMMsQ=
+Date:   Wed, 18 Mar 2020 17:05:00 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 1/3] dt-bindings: phy: Add DT bindings for Xilinx
+ ZynqMP PSGTR PHY
+Message-ID: <20200318150500.GO4733@pendragon.ideasonboard.com>
+References: <20200311103252.17514-1-laurent.pinchart@ideasonboard.com>
+ <20200311103252.17514-2-laurent.pinchart@ideasonboard.com>
+ <57072adb-9967-f5d1-7a3d-af713e8c35cd@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <57072adb-9967-f5d1-7a3d-af713e8c35cd@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the watch_key security hook in Smack to make sure that a key
-grants the caller Read permission in order to set a watch on a key.
+Hi Kishon,
 
-Also implement the post_notification security hook to make sure that the
-notification source is granted Write permission by the watch queue.
+On Fri, Mar 13, 2020 at 04:44:04PM +0530, Kishon Vijay Abraham I wrote:
+> +Rob
 
-For the moment, the watch_devices security hook is left unimplemented as
-it's not obvious what the object should be since the queue is global and
-didn't previously exist.
+Any comment regarding patch 2/3 ? :-) You mentioned in your review of v5
+that the exported symbols were a no-go, and that is now fixed. The
+driver uses the PHY .configure() API to configure DisplayPort
+parameters, .power_on() now waits for the PHY PLL to lock, and the
+USB-specific exported symbols were removed with reset support being
+moved to the PHY consumers (there's no reason for the PHY driver to
+reset the PHY consumers, that's a layering violation).
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Acked-by: Casey Schaufler <casey@schaufler-ca.com>
----
+> On 11/03/20 4:02 pm, Laurent Pinchart wrote:
+> > From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> > 
+> > Add DT bindings for the Xilinx ZynqMP PHY. ZynqMP SoCs have a High Speed
+> > Processing System Gigabit Transceiver which provides PHY capabilities to
+> > USB, SATA, PCIE, Display Port and Ehernet SGMII controllers.
+> > 
+> > Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > ---
+> > Changes since v5:
+> > 
+> > - Document clocks and clock-names properties
+> > - Document resets and reset-names properties
+> > - Replace subnodes with an additional entry in the PHY cells
+> > - Drop lane frequency PHY cell, replaced by reference clock phandle
+> > - Convert bindings to YAML
+> > - Reword the subject line
+> > - Drop Rob's R-b as the bindings have significantly changed
+> > - Drop resets and reset-names properties
+> > ---
+> >  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 104 ++++++++++++++++++
+> >  include/dt-bindings/phy/phy.h                 |   1 +
+> >  2 files changed, 105 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> > new file mode 100644
+> > index 000000000000..9948e4a60e45
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> > @@ -0,0 +1,104 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/phy/xlnx,zynqmp-psgtr.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Xilinx ZynqMP Gigabit Transceiver PHY Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > +
+> > +description: |
+> > +  This binding describes the Xilinx ZynqMP Gigabit Transceiver (GTR) PHY. The
+> > +  GTR provides four lanes and is used by USB, SATA, PCIE, Display port and
+> > +  Ethernet SGMII controllers.
+> > +
+> > +properties:
+> > +  "#phy-cells":
+> > +    const: 4
+> > +    description: |
+> > +      The cells contain the following arguments.
+> > +
+> > +      - description: The GTR lane
+> > +        minimum: 0
+> > +        maximum: 3
+> > +      - description: The PHY type
+> > +        enum:
+> > +          - PHY_TYPE_DP
+> > +          - PHY_TYPE_PCIE
+> > +          - PHY_TYPE_SATA
+> > +          - PHY_TYPE_SGMII
+> > +          - PHY_TYPE_USB
+> > +      - description: The PHY instance
+> > +        minimum: 0
+> > +        maximum: 1 # for DP, SATA or USB
+> > +        maximum: 3 # for PCIE or SGMII
+> > +      - description: The reference clock number
+> > +        minimum: 0
+> > +        maximum: 3
+> > +
+> > +  compatible:
+> > +    enum:
+> > +      - xlnx,zynqmp-psgtr-v1.1
+> > +      - xlnx,zynqmp-psgtr
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 4
+> > +    description: |
+> > +      Clock for each PS_MGTREFCLK[0-3] reference clock input. Unconnected
+> > +      inputs shall not have an entry.
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    maxItems: 4
+> > +    items:
+> > +      pattern: "^ref[0-3]$"
+> > +
+> > +  reg:
+> > +    items:
+> > +      - description: SERDES registers block
+> > +      - description: SIOU registers block
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: serdes
+> > +      - const: siou
+> > +
+> > +required:
+> > +  - "#phy-cells"
+> > +  - compatible
+> > +  - reg
+> > +  - reg-names
+> > +
+> > +if:
+> > +  properties:
+> > +    compatible:
+> > +      const: xlnx,zynqmp-psgtr
+> > +
+> > +then:
+> > +  properties:
+> > +    xlnx,tx-termination-fix:
+> > +      description: |
+> > +        Include this for fixing functional issue with the TX termination
+> > +        resistance in GT, which can be out of spec for the XCZU9EG silicon
+> > +        version.
+> > +      type: boolean
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    phy: phy@fd400000 {
+> > +      compatible = "xlnx,zynqmp-psgtr-v1.1";
+> > +      reg = <0x0 0xfd400000 0x0 0x40000>,
+> > +            <0x0 0xfd3d0000 0x0 0x1000>;
+> > +      reg-names = "serdes", "siou";
+> > +      clocks = <&refclks 3>, <&refclks 2>, <&refclks 0>;
+> > +      clock-names = "ref1", "ref2", "ref3";
+> > +      #phy-cells = <4>;
+> > +      status = "okay";
+> > +    };
+> > +
+> > +...
+> > diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+> > index 1f3f866fae7b..f6bc83b66ae9 100644
+> > --- a/include/dt-bindings/phy/phy.h
+> > +++ b/include/dt-bindings/phy/phy.h
+> > @@ -17,5 +17,6 @@
+> >  #define PHY_TYPE_USB3		4
+> >  #define PHY_TYPE_UFS		5
+> >  #define PHY_TYPE_DP		6
+> > +#define PHY_TYPE_SGMII		7
+> >  
+> >  #endif /* _DT_BINDINGS_PHY */
+> > 
 
- include/linux/lsm_audit.h  |    1 +
- security/smack/smack_lsm.c |   83 +++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 83 insertions(+), 1 deletion(-)
+-- 
+Regards,
 
-diff --git a/include/linux/lsm_audit.h b/include/linux/lsm_audit.h
-index 99d629fd9944..28f23b341c1c 100644
---- a/include/linux/lsm_audit.h
-+++ b/include/linux/lsm_audit.h
-@@ -75,6 +75,7 @@ struct common_audit_data {
- #define LSM_AUDIT_DATA_IBPKEY	13
- #define LSM_AUDIT_DATA_IBENDPORT 14
- #define LSM_AUDIT_DATA_LOCKDOWN 15
-+#define LSM_AUDIT_DATA_NOTIFICATION 16
- 	union 	{
- 		struct path path;
- 		struct dentry *dentry;
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 8c61d175e195..2862fc383473 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -41,6 +41,7 @@
- #include <linux/parser.h>
- #include <linux/fs_context.h>
- #include <linux/fs_parser.h>
-+#include <linux/watch_queue.h>
- #include "smack.h"
- 
- #define TRANS_TRUE	"TRUE"
-@@ -4265,7 +4266,7 @@ static int smack_key_permission(key_ref_t key_ref,
- 	if (tkp == NULL)
- 		return -EACCES;
- 
--	if (smack_privileged_cred(CAP_MAC_OVERRIDE, cred))
-+	if (smack_privileged(CAP_MAC_OVERRIDE))
- 		return 0;
- 
- #ifdef CONFIG_AUDIT
-@@ -4311,8 +4312,81 @@ static int smack_key_getsecurity(struct key *key, char **_buffer)
- 	return length;
- }
- 
-+
-+#ifdef CONFIG_KEY_NOTIFICATIONS
-+/**
-+ * smack_watch_key - Smack access to watch a key for notifications.
-+ * @key: The key to be watched
-+ *
-+ * Return 0 if the @watch->cred has permission to read from the key object and
-+ * an error otherwise.
-+ */
-+static int smack_watch_key(struct key *key)
-+{
-+	struct smk_audit_info ad;
-+	struct smack_known *tkp = smk_of_current();
-+	int rc;
-+
-+	if (key == NULL)
-+		return -EINVAL;
-+	/*
-+	 * If the key hasn't been initialized give it access so that
-+	 * it may do so.
-+	 */
-+	if (key->security == NULL)
-+		return 0;
-+	/*
-+	 * This should not occur
-+	 */
-+	if (tkp == NULL)
-+		return -EACCES;
-+
-+	if (smack_privileged_cred(CAP_MAC_OVERRIDE, current_cred()))
-+		return 0;
-+
-+#ifdef CONFIG_AUDIT
-+	smk_ad_init(&ad, __func__, LSM_AUDIT_DATA_KEY);
-+	ad.a.u.key_struct.key = key->serial;
-+	ad.a.u.key_struct.key_desc = key->description;
-+#endif
-+	rc = smk_access(tkp, key->security, MAY_READ, &ad);
-+	rc = smk_bu_note("key watch", tkp, key->security, MAY_READ, rc);
-+	return rc;
-+}
-+#endif /* CONFIG_KEY_NOTIFICATIONS */
- #endif /* CONFIG_KEYS */
- 
-+#ifdef CONFIG_WATCH_QUEUE
-+/**
-+ * smack_post_notification - Smack access to post a notification to a queue
-+ * @w_cred: The credentials of the watcher.
-+ * @cred: The credentials of the event source (may be NULL).
-+ * @n: The notification message to be posted.
-+ */
-+static int smack_post_notification(const struct cred *w_cred,
-+				   const struct cred *cred,
-+				   struct watch_notification *n)
-+{
-+	struct smk_audit_info ad;
-+	struct smack_known *subj, *obj;
-+	int rc;
-+
-+	/* Always let maintenance notifications through. */
-+	if (n->type == WATCH_TYPE_META)
-+		return 0;
-+
-+	if (!cred)
-+		return 0;
-+	subj = smk_of_task(smack_cred(cred));
-+	obj = smk_of_task(smack_cred(w_cred));
-+
-+	smk_ad_init(&ad, __func__, LSM_AUDIT_DATA_NOTIFICATION);
-+	rc = smk_access(subj, obj, MAY_WRITE, &ad);
-+	rc = smk_bu_note("notification", subj, obj, MAY_WRITE, rc);
-+	return rc;
-+}
-+#endif /* CONFIG_WATCH_QUEUE */
-+
- /*
-  * Smack Audit hooks
-  *
-@@ -4701,8 +4775,15 @@ static struct security_hook_list smack_hooks[] __lsm_ro_after_init = {
- 	LSM_HOOK_INIT(key_free, smack_key_free),
- 	LSM_HOOK_INIT(key_permission, smack_key_permission),
- 	LSM_HOOK_INIT(key_getsecurity, smack_key_getsecurity),
-+#ifdef CONFIG_KEY_NOTIFICATIONS
-+	LSM_HOOK_INIT(watch_key, smack_watch_key),
-+#endif
- #endif /* CONFIG_KEYS */
- 
-+#ifdef CONFIG_WATCH_QUEUE
-+	LSM_HOOK_INIT(post_notification, smack_post_notification),
-+#endif
-+
-  /* Audit hooks */
- #ifdef CONFIG_AUDIT
- 	LSM_HOOK_INIT(audit_rule_init, smack_audit_rule_init),
-
-
+Laurent Pinchart
