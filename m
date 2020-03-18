@@ -2,89 +2,232 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD29C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E58C5ACD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59EC120752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B2D20752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 06:27:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="QphiRFAc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QImxNQeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbgCRG07 (ORCPT
+        id S1727317AbgCRG1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 02:26:59 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:8011 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726553AbgCRG07 (ORCPT
+        Wed, 18 Mar 2020 02:27:33 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:32933 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgCRG1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 02:26:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1584512744;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=wfYixzilm1gZlhfT1UD6Dh4dE2sMP0s306i7VBtGiGI=;
-        b=QphiRFAcBShx/WoOwt8ndr0dOu7NdZnQONCMQYtj0i6fSqg7ybzWvD7mH2DTmBIq
-        1duMCRLbnyZOyoIunAZ6FVw34e/CkrNcMGB4G32w4/AvgK3BiwvtIqPJqy40NMksx8J
-        XZaWW9swG9sQpjlfS3Lj+c7GOsSqxVKqJtjG8X6w=
-Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1584512742231792.6229827957009; Wed, 18 Mar 2020 14:25:42 +0800 (CST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <20200318062102.8145-12-jiaxun.yang@flygoat.com>
-Subject: [PATCH v5 11/11] MIPS: Loongson64: Move MIPS_CPU_IRQ_BASE
-Date:   Wed, 18 Mar 2020 14:20:39 +0800
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200318062102.8145-1-jiaxun.yang@flygoat.com>
-References: <20200318062102.8145-1-jiaxun.yang@flygoat.com>
+        Wed, 18 Mar 2020 02:27:32 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ay11so10750916plb.0;
+        Tue, 17 Mar 2020 23:27:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=M0jLEpxC4l3IOb+KMA02Q30dEzRvhIJNxnX68azs+4A=;
+        b=QImxNQeUzuTppW30cpuiNPD4z63mXgEyiuPP9OnkZi83y/wsfIVKN2rpttBgdc5U+3
+         ZTWJkXPLNvMp8HH4Bh6MfDqK5dI5gHcaKoLDt4WbSojpxG/mgljzDR2LHHkX2DhX/nS2
+         RuMQS5fPsMV9Y7rK6ImRAp0P9AczCya+u0ErwXL/8kcnjlzRP+F91DKm27TV66hQ7TJT
+         0j3txo5hICGCZSjQAMkc++tcNyziLaBDpV2+AHfGHK1Mhacb34S42YkztdDdXCXz5Ahs
+         P4pHsIikKNfjwlM2qRJU6YJXQqjJLz/4OGOi5Oo3FWqZGrPFHGuhEGxYWuTk7l6YdAzo
+         VCNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=M0jLEpxC4l3IOb+KMA02Q30dEzRvhIJNxnX68azs+4A=;
+        b=mJXtjClbk2O4VvbfkUGJXBpszpOh60tsvGYK7puLnNywO57epVvDKl003JeFZ42nq9
+         2JRj21LKkaY45i2uNzZkX5e2bMoU+fPwQHl2V1TJiMT35gBHSzXV7MNA6tx7Lw+rBqbX
+         2EUhHoUYl+bYuRgNHrCpngT6aGHswZ/oHM6hermrO31ePhF4pAmB7EX1c+AiETatistN
+         GI6r4au1NFNP8NBH5go6FFmBn2Y9unoUi5lYLlCOFtlANtlsLbO2SuW8OApsOCmFF09w
+         SK3fNT36ow6q9yKo3e5blUq7sz0O3wgZ3xuD/YErokldzp3vw8DvAtNPe8VGXeFOGu7t
+         f12g==
+X-Gm-Message-State: ANhLgQ2nxPwZIzCOBbb+GJjkM4Rb4TFwiiGQmm8raD+DkizhaAiZXWjE
+        mlPQ8F1tT4fquvjZSuCgwhEGemW8
+X-Google-Smtp-Source: ADFU+vsUY1qyJ3MM5qkB5boM9kpHmxcYeaba4l01BHYDSgM3lynvyO19aBDRv/DFfRZ4K8mimcw9yg==
+X-Received: by 2002:a17:902:ab95:: with SMTP id f21mr2178201plr.188.1584512849727;
+        Tue, 17 Mar 2020 23:27:29 -0700 (PDT)
+Received: from ?IPv6:2409:4072:6086:470e:bc8d:c185:c429:a95b? ([2409:4072:6086:470e:bc8d:c185:c429:a95b])
+        by smtp.gmail.com with ESMTPSA id b25sm5060850pfp.201.2020.03.17.23.27.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Mar 2020 23:27:29 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: iio: tsl2563: convert bindings to YAML
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, mark.rutland@arm.com, sre@kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200314134237.12187-1-nish.malpani25@gmail.com>
+ <20200315105834.7a5f4475@archlinux>
+From:   Nishant Malpani <nish.malpani25@gmail.com>
+Message-ID: <1cfe5e97-1c0d-8ffe-88f3-90db77e0f03b@gmail.com>
+Date:   Wed, 18 Mar 2020 11:57:20 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+In-Reply-To: <20200315105834.7a5f4475@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To prevent CPU IRQ collide with PCH IRQ, we move down
-CPU IRQ BASE to 16.
+A v3 PATCH [1] was generated taking care of the reviews which can be 
+found inline.
 
-Co-developed-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- arch/mips/include/asm/mach-loongson64/irq.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[1] https://marc.info/?l=linux-iio&m=158451158827441&w=2
 
-diff --git a/arch/mips/include/asm/mach-loongson64/irq.h b/arch/mips/includ=
-e/asm/mach-loongson64/irq.h
-index 12208119aac0..1ce2e0bbe305 100644
---- a/arch/mips/include/asm/mach-loongson64/irq.h
-+++ b/arch/mips/include/asm/mach-loongson64/irq.h
-@@ -5,7 +5,7 @@
- #include <boot_param.h>
-=20
- /* cpu core interrupt numbers */
--#define MIPS_CPU_IRQ_BASE 56
-+#define MIPS_CPU_IRQ_BASE 16
-=20
- #include_next <irq.h>
- #endif /* __ASM_MACH_LOONGSON64_IRQ_H_ */
---=20
-2.26.0.rc2
+On 15/03/20 4:28 pm, Jonathan Cameron wrote:
+> On Sat, 14 Mar 2020 19:12:37 +0530
+> Nishant Malpani <nish.malpani25@gmail.com> wrote:
+> 
+>> Convert the TSL2563 device tree bindings to the new YAML format.
+>>
+>> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+>> ---
+>>
+>> The link for the datasheet is not attached in the binding document
+>> because it was not available on the manufacturer's (AMS) website [1].
+> 
+> Very old part now, though plenty of them in circulation or least there
+> used to be.  I have though not powered up that board for a while.
+> 
+> When doing these conversions, do sanity check them against the driver
+> as the old docs aren't always entirely accurate ; >
+> Jonathan
+> 
+>>
+>> [1] https://ams.com/ambient-light-sensors
+>> ---
+>>   .../devicetree/bindings/iio/light/tsl2563.txt | 19 --------
+>>   .../bindings/iio/light/tsl2563.yaml           | 46 +++++++++++++++++++
+>>   2 files changed, 46 insertions(+), 19 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.txt
+>>   create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2563.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.txt b/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+>> deleted file mode 100644
+>> index f91e809e736e..000000000000
+>> --- a/Documentation/devicetree/bindings/iio/light/tsl2563.txt
+>> +++ /dev/null
+>> @@ -1,19 +0,0 @@
+>> -* AMS TAOS TSL2563 ambient light sensor
+>> -
+>> -Required properties:
+>> -
+>> -  - compatible : should be "amstaos,tsl2563"
+>> -  - reg : the I2C address of the sensor
+>> -
+>> -Optional properties:
+>> -
+>> -  - amstaos,cover-comp-gain : integer used as multiplier for gain
+>> -                              compensation (default = 1)
+>> -
+>> -Example:
+>> -
+>> -tsl2563@29 {
+>> -	compatible = "amstaos,tsl2563";
+>> -	reg = <0x29>;
+>> -	amstaos,cover-comp-gain = <16>;
+>> -};
+>> diff --git a/Documentation/devicetree/bindings/iio/light/tsl2563.yaml b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
+>> new file mode 100644
+>> index 000000000000..2a70b8d62760
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/light/tsl2563.yaml
+>> @@ -0,0 +1,46 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/iio/light/tsl2563.yaml#
+> 
+> Convention is now to name files and this with the manufacturer part
+> as well.
 
+Got it! Taken care of in v3.
+> 
+> light/amstaos,tsl2563.yaml
+> 
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: AMS TAOS TSL2563 ambient light sensor
+>> +
+>> +maintainers:
+>> +  - Sebastian Reichel <sre@kernel.org>
+>> +
+>> +description: |
+>> +  Ambient light sensor with an i2c interface.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - amstaos,tsl2563
+> 
+> The original binding was wrong on this.   Check the driver :)
+> I'm a bit embarrassed I never noticed during review as I have
+> a tsl2561, be it on a board that was never converted to DT.
+> 
 
+You're right. Should have cross-checked with the driver before blindly 
+following the original binding. Corrected in v3.
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  amstaos,cover-comp-gain:
+>> +    description: Multiplier for gain compensation
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>> +      - enum: [1, 16]
+> 
+> Not sure it's that restricted...  or to be honest what
+> that is for at all.  Superficially it looks like
+> a multiplier to change the 'range' of the the sysfs control.
+> 
+> I wonder if anyone cares or if we can just start ignoring that going
+> forwards?  Sebastian, anyone else?
+> 
+
+ From what I understood while reading the datasheet [2] (Page 4), 
+'amstaos,cover-comp-gain' is used to switch between the low gain and 
+high gain mode which further adjusts the 'Illuminance Responsivity'. 
+Ergo, I've taken it forward even in v3 since the driver also relies on 
+it [3]. Please let me know if my reasoning is erroneous.
+
+[2] 
+https://media.digikey.com/pdf/Data%20Sheets/Austriamicrosystems%20PDFs/TSL2562,63.pdf
+
+[3] 
+https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/tree/drivers/iio/light/tsl2563.c#n494
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +examples:
+>> +  - |
+>> +    i2c {
+>> +
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +
+>> +      light-sensor@29 {
+>> +        compatible = "amstaos,tsl2563";
+>> +        reg = <0x29>;
+>> +        amstaos,cover-comp-gain = <16>;
+>> +      };
+>> +    };
+>> +...
+> 
+
+With regards,
+Nishant Malpani
