@@ -2,84 +2,71 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C416C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A5CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3844320714
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:45:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584542753;
-	bh=ZQkQoIgg/xqhZVGUaTIFz/2fg+YFJ3FuYTecjDyDUso=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oHteIzavV7Nk0ptzxNRcWoZ47hSFjpUspAMmQUn66NQa6Pt8wDD+3PjEPaHAPCmaK
-	 p/Uf6TQJ4KNX2qNwzvjeCiZIrAYsBWd8UKrmt6ySQIhcrZ0/KgRVJFANBOKBcDhzuM
-	 MAo3/H1wBO38Mvv5/981hG3/6XgCAq9rk/opKzWQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0311C20752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:46:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q/07svVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCROpw (ORCPT
+        id S1726872AbgCROq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:45:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbgCROpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:45:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF5C320714;
-        Wed, 18 Mar 2020 14:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584542751;
-        bh=ZQkQoIgg/xqhZVGUaTIFz/2fg+YFJ3FuYTecjDyDUso=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OfEKCu4CPRb2sAstSeiCqvxyvbWIMZh0wfec5kMJHltA0kmN4BmbkqjB3rSh9boTP
-         Im97KyzEF9niiA0VOxKg96tuq5mKiw0EKNRpt5P0lrV7lqhwVC8Cs3tyNkysxDWADJ
-         hzcqndB4g8l7LBqj8j//VRUdMaWN/k3y/dex250s=
-Date:   Wed, 18 Mar 2020 15:42:46 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     arnd@arndb.de, smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
-        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        Wed, 18 Mar 2020 10:46:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49136 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbgCROq3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 10:46:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=22sVcNbDCzARdRFC3MRVT7FnYchnm76kK5yHdzlXjIo=; b=q/07svVZajs+gu/v8igGPgZbpb
+        cYjBvKo/McnsG3YrnLst9dR2GjXqaL0a2ed/uPoTg/5TQn1WJxmgpbCzTTTDzqvJSHC66CkhyuV1X
+        b/ctGrv+vfF6KzNjM+rG2j9oeXvuTI+hYB6CeQ6jV/bJRHppOIhH1rMPAZFXxNH4WaNQ93eaNDtU4
+        PwRxwv9zUJEluh1weB8o8khCCmCZ1gIUM9prZbpDo81X2M13utKut4SHAuzza2cQQap6eGCqEKNgU
+        IpfQeocX61rd+wD0zxCQZS8rIbTFUITytw9uuA8k3BmHt4idJqeqXpzQ9kRbMvyBkPH1Tygt1VpPE
+        OiS+5sHw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEZxk-0002I7-NA; Wed, 18 Mar 2020 14:46:28 +0000
+Date:   Wed, 18 Mar 2020 07:46:28 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>,
         linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 14/16] net: qrtr: Add MHI transport layer
-Message-ID: <20200318144246.GA2859404@kroah.com>
-References: <20200220095854.4804-1-manivannan.sadhasivam@linaro.org>
- <20200220095854.4804-15-manivannan.sadhasivam@linaro.org>
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Subject: Re: [PATCH] fs/namespace: handle mount(MS_BIND|MS_REMOUNT) without
+ locking sb->s_umount
+Message-ID: <20200318144628.GI22433@bombadil.infradead.org>
+References: <158454107541.4470.14819321770893756073.stgit@buzz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220095854.4804-15-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <158454107541.4470.14819321770893756073.stgit@buzz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 03:28:52PM +0530, Manivannan Sadhasivam wrote:
-> MHI is the transport layer used for communicating to the external modems.
-> Hence, this commit adds MHI transport layer support to QRTR for
-> transferring the QMI messages over IPC Router.
-> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  net/qrtr/Kconfig  |   7 ++
->  net/qrtr/Makefile |   2 +
->  net/qrtr/mhi.c    | 209 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 218 insertions(+)
->  create mode 100644 net/qrtr/mhi.c
+On Wed, Mar 18, 2020 at 05:17:55PM +0300, Konstantin Khlebnikov wrote:
+> @@ -459,11 +459,11 @@ void mnt_drop_write_file(struct file *file)
+>  }
+>  EXPORT_SYMBOL(mnt_drop_write_file);
+>  
+> +/* mount_lock must be held */
+>  static int mnt_make_readonly(struct mount *mnt)
+>  {
+>  	int ret = 0;
+>  
+> -	lock_mount_hash();
 
-I stopped here in this series, as I do not feel comfortable merging
-stuff under net/.
+I'd rather see
++	lockdep_assert_held_write(&mount_lock);
+than a comment.  Maybe wrapped up into a macro like assert_hash_locked().
 
-Can you get some review by the networking developers and then I will be
-ok with taking it through my tree.
-
-thanks,
-
-greg k-h
