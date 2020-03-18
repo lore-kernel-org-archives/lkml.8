@@ -2,872 +2,329 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FE2C5ACDA
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66153C5ACD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1B82076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4AE2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:06:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgCRMEs (ORCPT
+        id S1726777AbgCRMGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 08:04:48 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59719 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbgCRMEr (ORCPT
+        Wed, 18 Mar 2020 08:06:47 -0400
+Received: from smtp-bc0c.mail.infomaniak.ch ([45.157.188.12]:45049 "EHLO
+        smtp-bc0c.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726663AbgCRMGr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:04:47 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jEXQW-00018b-2F; Wed, 18 Mar 2020 13:04:00 +0100
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jEXQT-0001Jd-Sa; Wed, 18 Mar 2020 13:03:57 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: [PATCH v1 2/6] ARM: dts: add Protonic PRTI6Q board
-Date:   Wed, 18 Mar 2020 13:03:50 +0100
-Message-Id: <20200318120354.4989-2-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200318120354.4989-1-o.rempel@pengutronix.de>
-References: <20200318120354.4989-1-o.rempel@pengutronix.de>
+        Wed, 18 Mar 2020 08:06:47 -0400
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 64BCE1004EFFF;
+        Wed, 18 Mar 2020 13:06:42 +0100 (CET)
+Received: from ns3096276.ip-94-23-54.eu (ns3096276.ip-94-23-54.eu [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 48j80H12DLzljFcN;
+        Wed, 18 Mar 2020 13:06:39 +0100 (CET)
+Subject: Re: [RFC PATCH v14 00/10] Landlock LSM
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+References: <20200224160215.4136-1-mic@digikod.net>
+ <CAG48ez21bEn0wL1bbmTiiu8j9jP5iEWtHOwz4tURUJ+ki0ydYw@mail.gmail.com>
+ <873d7419-bdd9-8a52-0a9b-dddbe31df4f9@digikod.net>
+ <CAG48ez0=0W5Ok-8nASqZrZ28JboXRRi3gDxV5u6mdcOtzwuRVA@mail.gmail.com>
+ <688dda0f-0907-34eb-c19e-3e9e5f613a74@digikod.net>
+ <CAG48ez16yT+zbK1WPxr2TnxrifW5c2DnpFLbWRRLUT_WpuFNmw@mail.gmail.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <e8530226-f295-a897-1132-7e6970dad49f@digikod.net>
+Date:   Wed, 18 Mar 2020 13:06:38 +0100
+User-Agent: 
 MIME-Version: 1.0
+In-Reply-To: <CAG48ez16yT+zbK1WPxr2TnxrifW5c2DnpFLbWRRLUT_WpuFNmw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Protonic PRTI6Q is a development board and a base class for different
-specific customer application boards based on the i.MX6 family of SoCs,
-developed by Protonic Holland.
 
-Signed-off-by: David Jander <david@protonic.nl>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- .../devicetree/bindings/arm/fsl.yaml          |   1 +
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/imx6q-prti6q.dts            | 271 ++++++++++
- arch/arm/boot/dts/imx6qdl-prti6q.dtsi         | 489 ++++++++++++++++++
- 4 files changed, 762 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-prti6q.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-prti6q.dtsi
+On 17/03/2020 20:45, Jann Horn wrote:
+> On Tue, Mar 17, 2020 at 6:50 PM Mickaël Salaün <mic@digikod.net> wrote:
+>> On 17/03/2020 17:19, Jann Horn wrote:
+>>> On Thu, Mar 12, 2020 at 12:38 AM Mickaël Salaün <mic@digikod.net> wrote:
+>>>> On 10/03/2020 00:44, Jann Horn wrote:
+>>>>> On Mon, Feb 24, 2020 at 5:03 PM Mickaël Salaün <mic@digikod.net> wrote:
+>>
+>> [...]
+>>
+>>>>> Aside from those things, there is also a major correctness issue where
+>>>>> I'm not sure how to solve it properly:
+>>>>>
+>>>>> Let's say a process installs a filter on itself like this:
+>>>>>
+>>>>> struct landlock_attr_ruleset ruleset = { .handled_access_fs =
+>>>>> ACCESS_FS_ROUGHLY_WRITE};
+>>>>> int ruleset_fd = landlock(LANDLOCK_CMD_CREATE_RULESET,
+>>>>> LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
+>>>>> struct landlock_attr_path_beneath path_beneath = {
+>>>>>   .ruleset_fd = ruleset_fd,
+>>>>>   .allowed_access = ACCESS_FS_ROUGHLY_WRITE,
+>>>>>   .parent_fd = open("/tmp/foobar", O_PATH),
+>>>>> };
+>>>>> landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
+>>>>> sizeof(path_beneath), &path_beneath);
+>>>>> prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+>>>>> struct landlock_attr_enforce attr_enforce = { .ruleset_fd = ruleset_fd };
+>>>>> landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
+>>>>> sizeof(attr_enforce), &attr_enforce);
+>>>>>
+>>>>> At this point, the process is not supposed to be able to write to
+>>>>> anything outside /tmp/foobar, right? But what happens if the process
+>>>>> does the following next?
+>>>>>
+>>>>> struct landlock_attr_ruleset ruleset = { .handled_access_fs =
+>>>>> ACCESS_FS_ROUGHLY_WRITE};
+>>>>> int ruleset_fd = landlock(LANDLOCK_CMD_CREATE_RULESET,
+>>>>> LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset), &ruleset);
+>>>>> struct landlock_attr_path_beneath path_beneath = {
+>>>>>   .ruleset_fd = ruleset_fd,
+>>>>>   .allowed_access = ACCESS_FS_ROUGHLY_WRITE,
+>>>>>   .parent_fd = open("/", O_PATH),
+>>>>> };
+>>>>> landlock(LANDLOCK_CMD_ADD_RULE, LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
+>>>>> sizeof(path_beneath), &path_beneath);
+>>>>> prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
+>>>>> struct landlock_attr_enforce attr_enforce = { .ruleset_fd = ruleset_fd };
+>>>>> landlock(LANDLOCK_CMD_ENFORCE_RULESET, LANDLOCK_OPT_ENFORCE_RULESET,
+>>>>> sizeof(attr_enforce), &attr_enforce);
+>>>>>
+>>>>> As far as I can tell from looking at the source, after this, you will
+>>>>> have write access to the entire filesystem again. I think the idea is
+>>>>> that LANDLOCK_CMD_ENFORCE_RULESET should only let you drop privileges,
+>>>>> not increase them, right?
+>>>>
+>>>> There is an additionnal check in syscall.c:get_path_from_fd(): it is
+>>>> forbidden to add a rule with a path which is not accessible (according
+>>>> to LANDLOCK_ACCESS_FS_OPEN) thanks to a call to security_file_open(),
+>>>> but this is definitely not perfect.
+>>>
+>>> Ah, I missed that.
+>>>
+>>>>> I think the easy way to fix this would be to add a bitmask to each
+>>>>> rule that says from which ruleset it originally comes, and then let
+>>>>> check_access_path() collect these bitmasks from each rule with OR, and
+>>>>> check at the end whether the resulting bitmask is full - if not, at
+>>>>> least one of the rulesets did not permit the access, and it should be
+>>>>> denied.
+>>>>>
+>>>>> But maybe it would make more sense to change how the API works
+>>>>> instead, and get rid of the concept of "merging" two rulesets
+>>>>> together? Instead, we could make the API work like this:
+>>>>>
+>>>>>  - LANDLOCK_CMD_CREATE_RULESET gives you a file descriptor whose
+>>>>> ->private_data contains a pointer to the old ruleset of the process,
+>>>>> as well as a pointer to a new empty ruleset.
+>>>>>  - LANDLOCK_CMD_ADD_RULE fails if the specified rule would not be
+>>>>> permitted by the old ruleset, then adds the rule to the new ruleset
+>>>>>  - LANDLOCK_CMD_ENFORCE_RULESET fails if the old ruleset pointer in
+>>>>> ->private_data doesn't match the current ruleset of the process, then
+>>>>> replaces the old ruleset with the new ruleset.
+>>>>>
+>>>>> With this, the new ruleset is guaranteed to be a subset of the old
+>>>>> ruleset because each of the new ruleset's rules is permitted by the
+>>>>> old ruleset. (Unless the directory hierarchy rotates, but in that case
+>>>>> the inaccuracy isn't much worse than what would've been possible
+>>>>> through RCU path walk anyway AFAIK.)
+>>>>>
+>>>>> What do you think?
+>>>>>
+>>>>
+>>>> I would prefer to add the same checks you described at first (with
+>>>> check_access_path), but only when creating a new ruleset with
+>>>> merge_ruleset() (which should probably be renamed). This enables not to
+>>>> rely on a parent ruleset/domain until the enforcement, which is the case
+>>>> anyway.
+>>>> Unfortunately this doesn't work for some cases with bind mounts. Because
+>>>> check_access_path() goes through one path, another (bind mounted) path
+>>>> could be illegitimately allowed.
+>>>
+>>> Hmm... I'm not sure what you mean. At the moment, landlock doesn't
+>>> allow any sandboxed process to change the mount hierarchy, right? Can
+>>> you give an example where this would go wrong?
+>>
+>> Indeed, a Landlocked process must no be able to change its mount
+>> namespace layout. However, bind mounts may already exist.
+>> Let's say a process sandbox itself to only access /a in a read-write
+>> way.
+> 
+> So, first policy:
+> 
+> /a RW
+> 
+>> Then, this process (or one of its children) add a new restriction
+>> on /a/b to only be able to read this hierarchy.
+> 
+> You mean with the second policy looking like this?
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index a8e0b4a813ed..3b52b582efdf 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -119,6 +119,7 @@ properties:
-               - fsl,imx6q-sabreauto
-               - fsl,imx6q-sabrelite
-               - fsl,imx6q-sabresd
-+              - prt,prti6q                      # Protonic PRTI6Q board
-               - technologic,imx6q-ts4900
-               - technologic,imx6q-ts7970
-               - toradex,apalis_imx6q            # Apalis iMX6 Module
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d6546d2676b9..3f500a9e88a9 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -530,6 +530,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-phytec-mira-rdk-nand.dtb \
- 	imx6q-phytec-pbab01.dtb \
- 	imx6q-pistachio.dtb \
-+	imx6q-prti6q.dtb \
- 	imx6q-rex-pro.dtb \
- 	imx6q-sabreauto.dtb \
- 	imx6q-sabrelite.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-prti6q.dts b/arch/arm/boot/dts/imx6q-prti6q.dts
-new file mode 100644
-index 000000000000..a6fd4eb2e78b
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-prti6q.dts
-@@ -0,0 +1,271 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright (c) 2014 Protonic Holland
-+ */
-+
-+/dts-v1/;
-+#include "imx6q.dtsi"
-+#include "imx6qdl-prti6q.dtsi"
-+
-+/ {
-+	model = "Protonic PRTI6Q board";
-+	compatible = "prt,prti6q", "fsl,imx6q";
-+
-+	memory@10000000 {
-+		device_type = "memory";
-+		reg = <0x10000000 0xf0000000>;
-+	};
-+
-+	sound-spdif {
-+		compatible = "fsl,imx-audio-spdif";
-+		model = "imx-spdif";
-+		spdif-controller = <&spdif>;
-+		spdif-in;
-+		spdif-out;
-+	};
-+
-+	clocks {
-+		spi3_crystal: spi3clk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <25000000>;
-+		};
-+	};
-+
-+	panel {
-+		compatible = "kyo,tcg121xglp";
-+		backlight = <&backlight_lcd>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&lvds0_out>;
-+			};
-+		};
-+	};
-+
-+	reg_wl12xx: regulator-wl12xx {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wl1271_npd>;
-+		compatible = "regulator-fixed";
-+		regulator-name = "regulator-WL12xx";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		gpio = <&gpio1 26 0>;
-+		startup-delay-us = <70000>;
-+		enable-active-high;
-+	};
-+};
-+
-+&ecspi2 {
-+	cs-gpios = <&gpio2 26 GPIO_ACTIVE_HIGH>, <&gpio4 25 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi2>;
-+	status = "okay";
-+
-+	can3: mcp2515@0 {
-+		compatible = "microchip,mcp2515";
-+		spi-max-frequency = <5000000>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
-+		reg = <0>;
-+		clocks = <&spi3_crystal>;
-+	};
-+
-+	adc128: adc128@1 {
-+		compatible = "ti,adc128s052";
-+		reg = <1>;
-+		vref-supply = <&reg_3v3>;
-+		spi-max-frequency = <2000000>;
-+	};
-+};
-+
-+&iomuxc {
-+	prti6q {
-+		pinctrl_nand: nandgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
-+				MX6QDL_PAD_NANDF_ALE__NAND_ALE		0xb0b1
-+				MX6QDL_PAD_NANDF_WP_B__NAND_WP_B	0xb0b1
-+				MX6QDL_PAD_NANDF_RB0__NAND_READY_B	0xb000
-+				MX6QDL_PAD_NANDF_CS0__NAND_CE0_B	0xb0b1
-+				MX6QDL_PAD_NANDF_CS1__NAND_CE1_B	0xb0b1
-+				MX6QDL_PAD_SD4_CMD__NAND_RE_B		0xb0b1
-+				MX6QDL_PAD_SD4_CLK__NAND_WE_B		0xb0b1
-+				MX6QDL_PAD_NANDF_D0__NAND_DATA00	0xb0b1
-+				MX6QDL_PAD_NANDF_D1__NAND_DATA01	0xb0b1
-+				MX6QDL_PAD_NANDF_D2__NAND_DATA02	0xb0b1
-+				MX6QDL_PAD_NANDF_D3__NAND_DATA03	0xb0b1
-+				MX6QDL_PAD_NANDF_D4__NAND_DATA04	0xb0b1
-+				MX6QDL_PAD_NANDF_D5__NAND_DATA05	0xb0b1
-+				MX6QDL_PAD_NANDF_D6__NAND_DATA06	0xb0b1
-+				MX6QDL_PAD_NANDF_D7__NAND_DATA07	0xb0b1
-+			>;
-+		};
-+
-+		pinctrl_usbotg: usbotggrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID	0x1f058
-+				MX6QDL_PAD_EIM_D21__USB_OTG_OC		0x1b0b0
-+				/* power enable, high active */
-+				MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x000b0
-+			>;
-+		};
-+
-+		pinctrl_hdmi: hdmigrp {
-+			fsl,pins = <
-+				/* NOTE: DDC is done via I2C2, so DON'T
-+				 * configure DDC pins for HDMI!
-+				 */
-+				MX6QDL_PAD_EIM_A25__HDMI_TX_CEC_LINE	0x1f8b0
-+			>;
-+		};
-+
-+		pinctrl_spdif: spdifgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_16__SPDIF_IN		0x1b0b0
-+				MX6QDL_PAD_GPIO_19__SPDIF_OUT		0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_leds: ledsgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_DI0_DISP_CLK__GPIO4_IO16	0x1b0b0
-+				MX6QDL_PAD_DI0_PIN15__GPIO4_IO17	0x1b0b0
-+			>;
-+		};
-+
-+		/* DDC */
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_COL3__I2C2_SCL	0x4001b8b1
-+				MX6QDL_PAD_KEY_ROW3__I2C2_SDA	0x4001b8b1
-+			>;
-+		};
-+
-+		pinctrl_ecspi2: ecspi2grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_OE__ECSPI2_MISO		0x100b1
-+				MX6QDL_PAD_EIM_CS0__ECSPI2_SCLK		0x100b1
-+				MX6QDL_PAD_EIM_CS1__ECSPI2_MOSI		0x100b1
-+				/* CAN3 CS */
-+				MX6QDL_PAD_EIM_RW__GPIO2_IO26		0x000b1
-+				/* ADC128S022 CS */
-+				MX6QDL_PAD_DISP0_DAT4__GPIO4_IO25	0x1b0b1
-+				/* CAN3_nINT */
-+				MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_enet: enetgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
-+				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
-+				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
-+				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
-+				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
-+				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
-+				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x10030
-+				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x10030
-+				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x10030
-+				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x10030
-+				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x10030
-+				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x10030
-+				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x10030
-+				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x10030
-+				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x10030
-+
-+				/* Phy reset */
-+				MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25	0x1b0b0
-+				MX6QDL_PAD_ENET_TX_EN__GPIO1_IO28	0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_usdhc2: usdhc2grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD2_CMD__SD2_CMD		0x170b9
-+				MX6QDL_PAD_SD2_CLK__SD2_CLK		0x100b9
-+				MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
-+				MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
-+				MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
-+				MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
-+				/* WL12xx IRQ */
-+				MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x10880
-+			>;
-+		};
-+
-+		pinctrl_wl1271_npd: wl1271_npd {
-+			fsl,pins = <
-+				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b8b0
-+			>;
-+		};
-+	};
-+};
-+
-+&hdmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hdmi>;
-+	ddc-i2c-bus = <&i2c2>;
-+	status = "okay";
-+};
-+
-+&spdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spdif>;
-+	status = "okay";
-+};
-+
-+/* DDC */
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet>;
-+	phy-mode = "rgmii";
-+	status = "okay";
-+};
-+
-+&ldb {
-+	status = "okay";
-+
-+	lvds-channel@0 {
-+		status = "okay";
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	vmmc-supply = <&reg_wl12xx>;
-+	non-removable;
-+	cap-power-off-card;
-+	keep-power-in-suspend;
-+	status = "okay";
-+
-+	wl1271 {
-+		compatible = "ti,wl1271";
-+		irq-gpio = <&gpio1 30 GPIO_ACTIVE_HIGH>;
-+		ref-clock-frequency = "38400000";
-+		tcxo-clock-frequency = "19200000";
-+	};
-+};
-+
-+&snvs_poweroff {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-prti6q.dtsi b/arch/arm/boot/dts/imx6qdl-prti6q.dtsi
-new file mode 100644
-index 000000000000..6515b96fa0a5
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-prti6q.dtsi
-@@ -0,0 +1,489 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright (c) 2014 Protonic Holland
-+ */
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
-+
-+/ {
-+	chosen {
-+		stdout-path = &uart4;
-+	};
-+
-+	reg_3v3: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_1v8: regulator-1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_1v2: regulator-1v2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1v2";
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_usb_otg_vbus: regulator-otg-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "otg-vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio3 22 0>;
-+		enable-active-high;
-+	};
-+
-+	reg_usb_h1_vbus: regulator-h1-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "h1-vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "prti6q-sgtl5000";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,widgets =
-+			"Microphone", "Microphone Jack",
-+			"Line", "Line In Jack",
-+			"Headphone", "Headphone Jack",
-+			"Speaker", "External Speaker";
-+		simple-audio-card,routing =
-+			"MIC_IN", "Microphone Jack",
-+			"LINE_IN", "Line In Jack",
-+			"Headphone Jack", "HP_OUT",
-+			"External Speaker", "LINE_OUT";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&ssi1>;
-+			system-clock-frequency = <0>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&codec>;
-+			bitclock-master;
-+			frame-master;
-+		};
-+	};
-+
-+	backlight_lcd: backlight-lcd {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_backlight>;
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 5000000>;
-+		brightness-levels = <0 1 2 4 6 8 12 16 24 32 48 64 96 128 192
-+                                     255>;
-+		default-brightness-level = <15>;
-+		power-supply = <&reg_3v3>;
-+		status = "okay";
-+		enable-gpios = <&gpio4 28 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	leds: led-controller {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_leds>;
-+
-+		led-hb0 {
-+			function = LED_FUNCTION_STATUS;
-+			gpios = <&gpio4 16 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led-mmc0 {
-+			function = LED_FUNCTION_SD;
-+			gpios = <&gpio4 17 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "disk-activity";
-+		};
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
-+
-+	mux_ssi1 {
-+		fsl,audmux-port = <0>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN 		0
-+			IMX_AUDMUX_V2_PTCR_TFSEL(2) 	0
-+			IMX_AUDMUX_V2_PTCR_TCSEL(2) 	0
-+			IMX_AUDMUX_V2_PTCR_TFSDIR 	0
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR IMX_AUDMUX_V2_PDCR_RXDSEL(2)
-+		>;
-+	};
-+
-+	mux_pins3 {
-+		fsl,audmux-port = <2>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN IMX_AUDMUX_V2_PDCR_RXDSEL(0)
-+			0		       IMX_AUDMUX_V2_PDCR_TXRXEN
-+		>;
-+	};
-+};
-+
-+&ecspi1 {
-+	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	status = "okay";
-+
-+	flash: s25sl032p@0 {
-+		compatible = "spansion,m25p80";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partition@0 {
-+			label = "boot";
-+			reg = <0x0 0x80000>;
-+		};
-+
-+		partition@80000 {
-+			label = "env";
-+			reg = <0x80000 0x10000>;
-+		};
-+
-+		partition@90000 {
-+			label = "spare";
-+			reg = <0x90000 0x370000>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	codec: sgtl5000@a {
-+		#sound-dai-cells = <0>;
-+		compatible = "fsl,sgtl5000";
-+		reg = <0xa>;
-+		clocks = <&clks 201>;
-+		VDDA-supply = <&reg_3v3>;
-+		VDDIO-supply = <&reg_3v3>;
-+		VDDD-supply = <&reg_1v8>;
-+	};
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+
-+	can_adc: ads1015@49 {
-+		compatible = "ti,ads1015";
-+		reg = <0x49>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		channel@4 {
-+			reg = <4>;
-+			ti,gain = <3>;
-+			ti,datarate = <3>;
-+		};
-+
-+		channel@5 {
-+			reg = <5>;
-+			ti,gain = <3>;
-+			ti,datarate = <3>;
-+		};
-+
-+		channel@6 {
-+			reg = <6>;
-+			ti,gain = <3>;
-+			ti,datarate = <3>;
-+		};
-+
-+		channel@7 {
-+			reg = <7>;
-+			ti,gain = <3>;
-+			ti,datarate = <3>;
-+		};
-+	};
-+
-+	tmp103: tmp103@70 {
-+		compatible = "ti,tmp103";
-+		reg = <0x70>;
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	prti6q {
-+		pinctrl_hog: hoggrp {
-+			fsl,pins = <
-+				/* SGTL5000 sys_mclk */
-+				MX6QDL_PAD_CSI0_MCLK__CCM_CLKO1		0x030b0
-+				MX6QDL_PAD_EIM_A24__GPIO5_IO04		0x100b0
-+				MX6QDL_PAD_EIM_WAIT__GPIO5_IO00		0x100b0
-+				MX6QDL_PAD_EIM_LBA__GPIO2_IO27		0x1b0b0
-+				MX6QDL_PAD_EIM_EB0__GPIO2_IO28		0x1b0b0
-+				MX6QDL_PAD_EIM_EB1__GPIO2_IO29		0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_audmux: audmuxgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_CSI0_DAT7__AUD3_RXD		0x130b0
-+				MX6QDL_PAD_CSI0_DAT4__AUD3_TXC		0x130b0
-+				MX6QDL_PAD_CSI0_DAT5__AUD3_TXD		0x110b0
-+				MX6QDL_PAD_CSI0_DAT6__AUD3_TXFS		0x130b0
-+			>;
-+		};
-+
-+		pinctrl_ecspi1: ecspi1grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_D17__ECSPI1_MISO		0x100b1
-+				MX6QDL_PAD_EIM_D18__ECSPI1_MOSI		0x100b1
-+				MX6QDL_PAD_EIM_D16__ECSPI1_SCLK		0x100b1
-+				/* CS */
-+				MX6QDL_PAD_EIM_D19__GPIO3_IO19		0x000b1
-+			>;
-+		};
-+
-+		pinctrl_ecspi2: ecspi2grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_OE__ECSPI2_MISO		0x100b1
-+				MX6QDL_PAD_EIM_CS0__ECSPI2_SCLK		0x100b1
-+				MX6QDL_PAD_EIM_CS1__ECSPI2_MOSI		0x100b1
-+				/* CS */
-+				MX6QDL_PAD_EIM_RW__GPIO2_IO26		0x000b1
-+				/* CAN3_nINT */
-+				MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_i2c1: i2c1grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_CSI0_DAT8__I2C1_SDA	0x4001f8b1
-+				MX6QDL_PAD_CSI0_DAT9__I2C1_SCL	0x4001f8b1
-+			>;
-+		};
-+
-+		pinctrl_i2c3: i2c3grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_5__I2C3_SCL	0x4001b8b1
-+				MX6QDL_PAD_GPIO_6__I2C3_SDA	0x4001b8b1
-+			>;
-+		};
-+
-+		pinctrl_uart2: uart2grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_D26__UART2_RX_DATA	0x1b0b1
-+				MX6QDL_PAD_EIM_D27__UART2_TX_DATA	0x1b0b1
-+				MX6QDL_PAD_EIM_D28__UART2_DTE_CTS_B	0x1b0b1
-+				MX6QDL_PAD_EIM_D29__UART2_DTE_RTS_B	0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_uart4: uart4grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
-+				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_uart5: uart5grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
-+				MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
-+			>;
-+		};
-+
-+		pinctrl_usdhc1: usdhc1grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD1_CMD__SD1_CMD		0x170f9
-+				MX6QDL_PAD_SD1_CLK__SD1_CLK		0x100f9
-+				MX6QDL_PAD_SD1_DAT0__SD1_DATA0		0x170f9
-+				MX6QDL_PAD_SD1_DAT1__SD1_DATA1		0x170f9
-+				MX6QDL_PAD_SD1_DAT2__SD1_DATA2		0x170f9
-+				MX6QDL_PAD_SD1_DAT3__SD1_DATA3		0x170f9
-+				MX6QDL_PAD_GPIO_1__SD1_CD_B		0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_usdhc2: usdhc2grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD2_CMD__SD2_CMD		0x170b9
-+				MX6QDL_PAD_SD2_CLK__SD2_CLK		0x100b9
-+				MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
-+				MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
-+				MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
-+				MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
-+			>;
-+		};
-+
-+		pinctrl_usdhc3: usdhc3grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17099
-+				MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10099
-+				MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17099
-+				MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17099
-+				MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17099
-+				MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17099
-+				MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x17099
-+				MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x17099
-+				MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x17099
-+				MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17099
-+			>;
-+		};
-+
-+		pinctrl_can1: can1grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX 0x80000000
-+				MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX 0x80000000
-+			>;
-+		};
-+
-+		pinctrl_can2: can2grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x80000000
-+				MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x80000000
-+			>;
-+		};
-+
-+		pinctrl_pwm1: pwm1grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_DISP0_DAT8__PWM1_OUT		0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_backlight: backlightgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_DISP0_DAT7__GPIO4_IO28	0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_ipu1_csi0: ipu1csi0grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12	0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13	0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14	0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15	0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16	0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17	0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18	0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19	0x1b0b0
-+				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK 0x1b0b0
-+			>;
-+		};
-+	};
-+};
-+
-+&pcie {
-+	status = "okay";
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&ssi1 {
-+	#sound-dai-cells = <0>;
-+	fsl,mode = "i2s-slave";
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	vbus-supply = <&reg_usb_h1_vbus>;
-+	phy_type = "utmi";
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
-+	phy_type = "utmi";
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "okay";
-+
-+	partitions {
-+		compatible = "fixed-partitions";
-+		#size-cells = <1>;
-+		#address-cells = <1>;
-+
-+		bootstate_backend: bootstate_backend@f0000 {
-+			reg = <0xf0000 0x10000>;
-+			label = "bootstate";
-+		};
-+	};
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_can1>;
-+	status = "okay";
-+};
-+
-+&can2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_can2>;
-+	status = "okay";
-+};
--- 
-2.25.1
+Right.
 
+> 
+> /a RW
+> /a/b R
+> 
+> Then the resulting policy would be:
+> 
+> /a RW policy_bitmask=0x00000003 (bits 0 and 1 set)
+> /a/b R policy_bitmask=0x00000002 (bit 1 set)
+> required_bits=0x00000003 (bits 0 and 1 set)
+> 
+>> The check at insertion
+>> time would allow this because this access right is a subset of the
+>> access right allowed with the parent directory. However, If /a/b is bind
+>> mounted somewhere else, let's say in /private/b, then the second
+>> enforcement just gave new access rights to this hierarchy too.
+> 
+> But with the solution I proposed, landlock's path walk would see
+> something like this when accessing a file at /private/b/foo:
+> /private/b/foo <no rules>
+>   policies seen until now: 0x00000000
+> /private/b <access: R, policy_bitmask=0x00000002>
+>   policies seen until now: 0x00000002
+> /private <no rules>
+>   policies seen until now: 0x00000002
+> / <no rules>
+>   policies seen until now: 0x00000002
+> 
+> It wouldn't encounter any rule from the first policy, so the OR of the
+> seen policy bitmasks would be 0x00000002, which is not the required
+> value 0x00000003, and so the access would be denied.
+As I understand your proposition, we need to build the required_bits
+when adding a rule or enforcing/merging a ruleset with a domain. The
+issue is that a rule only refers to a struct inode, not a struct path.
+For your proposition to work, we would need to walk through the file
+path when adding a rule to a ruleset, which means that we need to depend
+of the current view of the process (i.e. its mount namespace), and its
+Landlock domain. If the required_bits field is set when the ruleset is
+merged with the domain, it is not possible anymore to walk through the
+corresponding initial file path, which makes the enforcement step too
+late to check for such consistency. The important point is that a
+ruleset/domain doesn't have a notion of file hierarchy, a ruleset is
+only a set of tagged inodes.
+
+I'm not sure I got your proposition right, though. When and how would
+you generate the required_bits?
+
+Here is my updated proposition: add a layer level and a depth to each
+rule (once enforced/merged with a domain), and a top layer level for a
+domain. When enforcing a ruleset (i.e. merging a ruleset into the
+current domain), the layer level of a new rule would be the incremented
+top layer level. If there is no rule (from this domain) tied to the same
+inode, then the depth of the new rule is 1. However, if there is already
+a rule tied to the same inode and if this rule's layer level is the
+previous top layer level, then the depth and the layer level are both
+incremented and the rule is updated with the new access rights (boolean
+AND).
+
+The policy looks like this:
+domain top_layer=2
+/a RW policy_bitmask=0x00000003 layer=1 depth=1
+/a/b R policy_bitmask=0x00000002 layer=2 depth=1
+
+The path walk access check walks through all inodes and start with a
+layer counter equal to the top layer of the current domain. For each
+encountered inode tied to a rule, the access rights are checked and a
+new check ensures that the layer of the matching rule is the same as the
+counter (this may be a merged ruleset containing rules pertaining to the
+same hierarchy, which is fine) or equal to the decremented counter (i.e.
+the path walk just reached the underlying layer). If the path walk
+encounter a rule with a layer strictly less than the counter minus one,
+there is a whole in the layers which means that the ruleset
+hierarchy/subset does not match, and the access must be denied.
+
+When accessing a file at /private/b/foo for a read access:
+/private/b/foo <no rules>
+  allowed_access=unknown layer_counter=2
+/private/b <access: R, policy_bitmask=0x00000002, layer=2, depth=1>
+  allowed_access=allowed layer_counter=2
+/private <no rules>
+  allowed_access=allowed layer_counter=2
+/ <no rules>
+  allowed_access=allowed layer_counter=2
+
+Because the layer_counter didn't reach 1, the access request is then denied.
+
+This proposition enables not to rely on a parent ruleset at first, only
+when enforcing/merging a ruleset with a domain. This also solves the
+issue with multiple inherited/nested rules on the same inode (in which
+case the depth just grows). Moreover, this enables to safely stop the
+path walk as soon as we reach the layer 1.
+
+Here is a more complex example. A process sandbox itself with a first rule:
+domain top_layer=1
+/a RW policy_bitmask=0x00000003 layer=1 depth=1
+
+Then the sandbox process enforces to itself this second (useless) ruleset:
+/a/b RW policy_bitmask=0x00000003
+
+The resulting domain is then:
+domain top_layer=2
+/a RW policy_bitmask=0x00000003 layer=1 depth=1
+/a/b RW policy_bitmask=0x00000003 layer=2 depth=1
+
+Then the sandbox process enforces to itself this third ruleset (which
+effectively reduces its access):
+/a/b R policy_bitmask=0x00000002
+
+The resulting domain is then:
+domain top_layer=3
+/a RW policy_bitmask=0x00000003 layer=1 depth=1
+/a/b R policy_bitmask=0x00000002 layer=3 depth=2
+
+At this time, only /a/b is accessible in a read way. The access rights
+on /a are ignored (but still inherited).
+
+Then the sandbox process enforces to itself this fourth ruleset:
+/c R policy_bitmask=0x00000002
+
+The resulting domain is then:
+domain top_layer=4
+/a RW policy_bitmask=0x00000003 layer=1 depth=1
+/a/b R policy_bitmask=0x00000002 layer=3 depth=2
+/c R policy_bitmask=0x00000002 layer=4 depth=1
+
+Now, every read or write access requests will be denied.
+
+Then the sandbox process enforces to itself this fifth ruleset:
+/a R policy_bitmask=0x00000002
+
+Because /a is not in a contiguous underneath layer, the resulting domain
+is unchanged (except the top_layer which may be incremented anyway).
+Of course, we must check that the top_layer is not overflowing, in which
+case an error must be returned to inform userspace that the ruleset
+can't be enforced.
