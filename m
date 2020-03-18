@@ -2,176 +2,130 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A984C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A343C5ACD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A11020724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D251320724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:15:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="jvwZwXXB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgCRMPC (ORCPT
+        id S1726879AbgCRMPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 08:15:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45130 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726616AbgCRMPB (ORCPT
+        Wed, 18 Mar 2020 08:15:06 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38099 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgCRMPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:15:01 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02IC43sw171725
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:15:00 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yu7abyx30-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:15:00 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Wed, 18 Mar 2020 12:14:58 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Mar 2020 12:14:55 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02ICEr4e44695718
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 12:14:54 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE02752050;
-        Wed, 18 Mar 2020 12:14:53 +0000 (GMT)
-Received: from [9.199.38.35] (unknown [9.199.38.35])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5E0A052052;
-        Wed, 18 Mar 2020 12:14:22 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH 12/15] powerpc/watchpoint: Prepare handler to handle more
- than one watcnhpoint
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     mpe@ellerman.id.au, mikey@neuling.org, apopple@linux.ibm.com,
-        paulus@samba.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
-        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
-        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
- <20200309085806.155823-13-ravi.bangoria@linux.ibm.com>
- <3ba94856-0d87-5046-eca9-b5c3d99ec654@c-s.fr>
-Date:   Wed, 18 Mar 2020 17:44:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 08:15:06 -0400
+Received: by mail-qk1-f193.google.com with SMTP id h14so38225564qke.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 05:15:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JtFXIfIE3pIhsgNz5a2Tc68ESm0JIZ+L7JiGzETmzNE=;
+        b=jvwZwXXB/uqCF8yPkz7NyKvPz4BuL1Iz9UcqkYw93vszZJnrvUaCGtoSlvnfEOOdPH
+         XiQFYIOhsU8s+SjXT3HwWRpTtWkfSPAEHs3ObZkPlxCL7KN49qEovMOd5ZG7eGQMTx6U
+         cMKXqkD3IcjO57ExTFkXbIiJRLSTFNnXkbmmJHVXM104i1SIrsWZQeMlWhNQIaOF67Dz
+         QMF9gcnU0EwtBv3b5VvPJHAT4xzwCaV7404g6EtmsawjPtkJrmu1Me2L6vH7ahxK5+Gc
+         MDhAPYcAWWCjgSYhIF4yynBwAv7U0OcGqbR7y2i0w5g6W3leSv9I4/Wj7ub2DiMAqd3B
+         1+NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JtFXIfIE3pIhsgNz5a2Tc68ESm0JIZ+L7JiGzETmzNE=;
+        b=W5ke+wTkegEzDZS7VqyOzl3uaJ/UjI/muz8T9N7Ay/OND+5BBIWZIY9aBCxvPDqZyz
+         xnv3caKbjZi1XN+H4MKNfq5puIrH+njAqFmK1Bxl1hv2OJCDGs9tXqtki5z7fu5L7zb8
+         uyhDj8fOlJFj+x+pJgLcmhHw2I8zGUQuRaGPefFUwTjfwm5wgdco9ySMeGzGxyE7u/gE
+         oBulmrJRWOtlX5TJK6e2Caoa66M/946dm+ushJ/w7CU1nd7ruDWLPLpmFHG274pAeM2T
+         xKXukZQZcd+HQ1VSFgRZWyPK/iLpxWaQWeV0UsBDnufXTVM/rWPzhZLhtoBgWysjzlIo
+         m7ww==
+X-Gm-Message-State: ANhLgQ2/W+3vUW8OXnFf7p+wtesCzqMYD3289nfA7Vy/1P6HclZTMd0+
+        rqSmqG6sx9zsVIMxOm83KPlWTg==
+X-Google-Smtp-Source: ADFU+vtjjsOeFEoMC78iy2foUC8bNyQw3C4AqPG0xwLV9UcU+lPoMnjaKFzJDACesBiP1bV6BQMRQg==
+X-Received: by 2002:a05:620a:84d:: with SMTP id u13mr3705543qku.94.1584533705141;
+        Wed, 18 Mar 2020 05:15:05 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id s49sm4525733qtc.29.2020.03.18.05.15.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 18 Mar 2020 05:15:04 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jEXbC-0003dR-W7; Wed, 18 Mar 2020 09:15:03 -0300
+Date:   Wed, 18 Mar 2020 09:15:02 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     linux-mm@kvack.org, Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 2/3] mm/gup: fix omission of check on FOLL_LONGTERM in
+ gup fast path
+Message-ID: <20200318121502.GA13926@ziepe.ca>
+References: <1584333244-10480-3-git-send-email-kernelfans@gmail.com>
+ <1584445652-30064-1-git-send-email-kernelfans@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <3ba94856-0d87-5046-eca9-b5c3d99ec654@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031812-0028-0000-0000-000003E6E0E9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031812-0029-0000-0000-000024AC38BC
-Message-Id: <c3168391-9c3d-5de3-8419-87067098cf01@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-18_05:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 bulkscore=0
- suspectscore=0 clxscore=1015 adultscore=0 spamscore=0 impostorscore=0
- malwarescore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003180058
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584445652-30064-1-git-send-email-kernelfans@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/17/20 4:29 PM, Christophe Leroy wrote:
+On Tue, Mar 17, 2020 at 07:47:32PM +0800, Pingfan Liu wrote:
+> FOLL_LONGTERM is a special case of FOLL_PIN. It suggests a pin which is
+> going to be given to hardware and can't move. It would truncate CMA
+> permanently and should be excluded.
 > 
+> In gup slow path, slow path, where
+> __gup_longterm_locked->check_and_migrate_cma_pages() handles FOLL_LONGTERM,
+> but in fast path, there lacks such a check, which means a possible leak of
+> CMA page to longterm pinned.
 > 
-> Le 09/03/2020 à 09:58, Ravi Bangoria a écrit :
->> Currently we assume that we have only one watchpoint supported by hw.
->> Get rid of that assumption and use dynamic loop instead. This should
->> make supporting more watchpoints very easy.
+> Place a check in try_grab_compound_head() in the fast path to fix the leak,
+> and if FOLL_LONGTERM happens on CMA, it will fall back to slow path to
+> migrate the page.
 > 
-> I think using 'we' is to be avoided in commit message.
+> Some note about the check:
+> Huge page's subpages have the same migrate type due to either
+> allocation from a free_list[] or alloc_contig_range() with param
+> MIGRATE_MOVABLE. So it is enough to check on a single subpage
+> by is_migrate_cma_page(subpage)
 > 
-> Could be something like:
-> 
-> "Currently the handler assumes there is only one watchpoint supported by hw"
-> 
->>
->> So far, with only one watchpoint, the handler was simple. But with
->> multiple watchpoints, we need a mechanism to detect which watchpoint
->> caused the exception. HW doesn't provide that information and thus
->> we need software logic for this. This makes exception handling bit
->> more complex.
-> 
-> Same here, the 'we' should be avoided.
-> 
-> 
-> This patch is pretty big. I think you should explain a bit more what is done. Otherwise it is difficult to review.
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> To: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+> v6 -> v7: fix coding style issue
+>  mm/gup.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-I understand, and the diff is also messy. But splitting this into granular
-patches looks difficult to me.
+Much clearer, thank you
 
-The patch enables core hw-breakpoint subsystem to install/uninstall more than one
-watchpoint, basically converting direct accesses of data structures in a loop.
-Similarly changes in thread_chage_pc(), single_step_dabr_instruction() etc.
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 
-Now, with more than one watchpoints, exception handler need to know which DAWR
-caused the exception, and hw currently does not provide it. So we need sw logic
-for the same. To figure out which DAWR caused the exception, we check all
-different combinations of user specified range, dawr address range, actual
-access range and dawrx constrains. For ex, if user specified range and actual
-access range overlaps but dawrx is configured for readonly watchpoint and the
-instruction is store, this DAWR must not have caused exception. This logic is
-implemented by check_constraints() function.
-
-...
-
->> -static bool dar_within_range(unsigned long dar, struct arch_hw_breakpoint *info)
->> +static bool dar_in_user_range(unsigned long dar, struct arch_hw_breakpoint *info)
-> 
-> Is this name change directly related to the patch ?
-
-Yes. now we have two functions: dar_in_user_range() and dar_in_hw_range().
-More detail below...
-
-> 
->>   {
->>       return ((info->address <= dar) && (dar - info->address < info->len));
->>   }
->> -static bool
->> -dar_range_overlaps(unsigned long dar, int size, struct arch_hw_breakpoint *info)
->> +static bool dar_user_range_overlaps(unsigned long dar, int size,
->> +                    struct arch_hw_breakpoint *info)
-> 
-> Same question.
-
-For single DAWR, hw_breakpoint_handler() logic is:
-
-	if (user range overlaps with actual access range)
-		valid event;
-	else
-		valid but extraneous;
-
-With multiple breakpoints, this logic can't work when hw is not telling us which
-DAWR caused exception. So the logic is like:
-
-	for (i = 0; i < nr_wps; i++) {
-		if (user range overlaps with actual access range)
-			valid event;
-		else if (hw range overlaps with actual access range)
-			valid but extraneous;
-		else
-			exception cause by some other dawr;
-	}
-
-So we have two functions: dar_user_range_overlaps() and dar_hw_range_overlaps().
-If reading instruction fails, we can't get actual access range an in that case
-we use: dar_in_user_range() and dar_in_hw_range().
-
-Thanks,
-Ravi
-
+Jason
