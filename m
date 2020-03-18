@@ -2,93 +2,72 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2942CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F97FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43552076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEF320770
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:32:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nlt9uEKH"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eJyQsthw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgCRKcO (ORCPT
+        id S1727900AbgCRKcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:32:14 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7107 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727572AbgCRKcL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:32:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e71f89d0000>; Wed, 18 Mar 2020 03:31:57 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 18 Mar 2020 03:32:10 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 18 Mar 2020 03:32:10 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Mar
- 2020 10:32:10 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 18 Mar 2020 10:32:10 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.67.128]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e71f8a60007>; Wed, 18 Mar 2020 03:32:09 -0700
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <kishon@ti.com>, <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <balbi@kernel.org>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <jckuo@nvidia.com>, Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [PATCH V1 8/8] phy: tegra: xusb: Enable charger detect for Tegra210
-Date:   Wed, 18 Mar 2020 16:01:07 +0530
-Message-ID: <1584527467-8058-9-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
-References: <1584527467-8058-1-git-send-email-nkristam@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 18 Mar 2020 06:32:18 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34660 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727572AbgCRKcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 06:32:16 -0400
+Received: from zn.tnic (p200300EC2F0B45003CD01F459A0D41B0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:4500:3cd0:1f45:9a0d:41b0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B61581EC0BEA;
+        Wed, 18 Mar 2020 11:32:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584527534;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/OV7bmNavmDBih6YnNCbo6Axh98P53HfUokcmUccP4E=;
+        b=eJyQsthwWLJ1NZsg/zzf7W7rIbrR0am8FVcd3r3fx87R4zQWkT9yUQbKNyjISfj7D/4MXg
+        vQRkAl3dWGsd/0lA9BGDdA3A07fM4sXRwRJZBRLsf50R+EHhqR0MW74+c+efxRg72y0mTj
+        w+MiKfos/nnKYx7aBvdOYxMexQTIcbc=
+Date:   Wed, 18 Mar 2020 11:32:19 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/cpufeatures: make bits in cpu_caps_cleared[] and
+ cpu_cpus_set[] exclusive
+Message-ID: <20200318103219.GA4377@zn.tnic>
+References: <20200318061624.150313-1-xiaoyao.li@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1584527517; bh=uv1fkuSad4kBCRwzQTXQF9RBAm7wcOWJwqJqYeh9Dgk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=nlt9uEKHAIpz95lJP5LapcrgBgt5MBTTN31/B/CCweamN7BYeJg/1YQjP7JCYAh5Y
-         2debWzIoQcLnjabTZ2I6ojb/mckNczHj0CevzfXvM3qP6P9C8oZrZ80JdIjiYCBTcC
-         lehWiEekdhTX0y5KOV4IjSCm/QSTZ4ZXDNT5z6+ulN9+V995YBDfLSWpoGLkYFi2hx
-         IhiQJj+Y4fK858j0g0bJ74UYf7FEMBuT0OYefiO46tKfmnVIyt8tyfhRJrOHWrM/zO
-         7UIu0yDPg7sgSu6kYUi9y8PVkhhVGYRWAX7jzVM3ZypC+dExD1eCby9lV4B6DC8YOT
-         qUr3iAfDx9Dww==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200318061624.150313-1-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra210 SoC supports charger detect, set corresponding soc flag.
+On Wed, Mar 18, 2020 at 02:16:24PM +0800, Xiaoyao Li wrote:
+> In apply_forced_caps(), cpu_caps_set[] overrides cpu_caps_cleared[], so
+> that setup_clear_cpu_cap() cannot clear one cap if setup_force_cpu_cap()
+> sets the cap before it.
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
- drivers/phy/tegra/xusb-tegra210.c | 1 +
- 1 file changed, 1 insertion(+)
+Context pls: what is the observation, what are you trying to do,
+reproducer, etc?
 
-diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-index 93517b1..4c8cb0a 100644
---- a/drivers/phy/tegra/xusb-tegra210.c
-+++ b/drivers/phy/tegra/xusb-tegra210.c
-@@ -2347,6 +2347,7 @@ const struct tegra_xusb_padctl_soc tegra210_xusb_padctl_soc = {
- 	.supply_names = tegra210_xusb_padctl_supply_names,
- 	.num_supplies = ARRAY_SIZE(tegra210_xusb_padctl_supply_names),
- 	.need_fake_usb3_port = true,
-+	.charger_detect = true,
- };
- EXPORT_SYMBOL_GPL(tegra210_xusb_padctl_soc);
- 
+Thx.
+
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
