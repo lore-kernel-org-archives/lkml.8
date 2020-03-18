@@ -2,208 +2,81 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E267EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A256C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D4220767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:58:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f5IXPLPM"
+	by mail.kernel.org (Postfix) with ESMTP id D1AB420768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgCRP6b (ORCPT
+        id S1726994AbgCRP74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:58:31 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:25774 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726765AbgCRP6b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:58:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584547109;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=B6PGvx1icbG3tXj8E6e/64qZk/0Iq47yT74imlxqQuw=;
-        b=f5IXPLPMHr6aO0SBw75/h1W7RmsZFCDO4cOrfbqFJmTXy2kVpDZx94MjwYC5+FNjg11Vnm
-        13ZVGivmxQ/Y7xvx/oBcqYF0Vxi9lZBU+eqcWgLHW5endkK8Lm7IUF3nh2V9ZdtvyOMrrg
-        7UPOMjPlb4KVGligkKzxSU/uqag7mxU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-9yauU0mKMIq5sm1pJP_npg-1; Wed, 18 Mar 2020 11:58:28 -0400
-X-MC-Unique: 9yauU0mKMIq5sm1pJP_npg-1
-Received: by mail-wr1-f69.google.com with SMTP id 94so7877031wrr.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:58:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=B6PGvx1icbG3tXj8E6e/64qZk/0Iq47yT74imlxqQuw=;
-        b=hhUZeBImIGfnO+GNlsXA0x1AdC2UYSKgptjrQIqyNJjx1HaH1eJimMoQLMx8wl16q7
-         8J22fWnsmxXsTX74GGx2PF4lFrKoyUmJhkWKHJyCi3uZY0dMGswvTRpdYpKmHbn4O5In
-         ELvhspoFRuWEzI1lLLvSMoaARyJM/HvmZUcZa0ydoXThi0O8++we9iQ1kMf2W75BnjY5
-         NnpHiEFiLdUZ30SxvlwTkZAVgLFabxilhTllW+z2sFKel5hk8kynTL8jYRqC8Ff2eBUS
-         uzAk63bRHRdDqLjFym6q1CpSUcZbcUcvQT/h8dHRaqM0yTjMNULMy42ZL+lOauZIDL2V
-         946Q==
-X-Gm-Message-State: ANhLgQ0WpMJEmKEUy0SuDlNV5IDkpy0lCE4707ZbG3nnb5B9eQOI37DU
-        IZYw7ks4PRV+GSWbzQVX8vjC1MUItRMetR/hw1aRITn7zGrBb/IaEDqXCW+OD6j4KEcKiocZqhF
-        cyf5ebT+c4UW2+jX03rbcyxfH
-X-Received: by 2002:a05:6000:1203:: with SMTP id e3mr6638636wrx.166.1584547106462;
-        Wed, 18 Mar 2020 08:58:26 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtjCvuXMcOs5w1KWeJDGkuvTz8xovzZ8NGW9WL8cGrTCBgHDgeCsP0zhoZoCfieklc9vr3ULQ==
-X-Received: by 2002:a05:6000:1203:: with SMTP id e3mr6638599wrx.166.1584547106195;
-        Wed, 18 Mar 2020 08:58:26 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id v2sm10426967wrt.58.2020.03.18.08.58.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 08:58:25 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     ltykernel@gmail.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        michael.h.kelley@microsoft.com
-Subject: Re: [PATCH 0/4] x86/Hyper-V: Unload vmbus channel in hv panic callback
-In-Reply-To: <20200317132523.1508-2-Tianyu.Lan@microsoft.com>
-References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com> <20200317132523.1508-2-Tianyu.Lan@microsoft.com>
-Date:   Wed, 18 Mar 2020 16:58:23 +0100
-Message-ID: <871rpp3ba8.fsf@vitty.brq.redhat.com>
+        Wed, 18 Mar 2020 11:59:56 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52542 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726765AbgCRP74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 11:59:56 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7B456DF8DBCFF6A3482D;
+        Wed, 18 Mar 2020 23:59:49 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 18 Mar 2020 23:59:40 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <xuwei5@huawei.com>, <arnd@arndb.de>
+CC:     <okaya@kernel.org>, <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
+        <olof@lixom.net>, <jiaxun.yang@flygoat.com>,
+        "John Garry" <john.garry@huawei.com>
+Subject: [PATCH 3/3] logic_pio: Use _inX() and _outX()
+Date:   Wed, 18 Mar 2020 23:55:35 +0800
+Message-ID: <1584546935-75393-4-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1584546935-75393-1-git-send-email-john.garry@huawei.com>
+References: <1584546935-75393-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ltykernel@gmail.com writes:
+Use _inX() and _outX(), which include memory barriers which may be
+overridden per arch.
 
-> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
->
-> Customer reported Hyper-V VM still responded network traffic
-> ack packets after kernel panic with kernel parameter "panic=0”.
-> This becauses vmbus driver interrupt handler still works
-> on the panic cpu after kernel panic. Panic cpu falls into
-> infinite loop of panic() with interrupt enabled at that point.
-> Vmbus driver can still handle network traffic.
->
-> This confuses remote service that the panic system is still
-> alive when it gets ack packets. Unload vmbus channel in hv panic
-> callback and fix it.
->
-> vmbus_initiate_unload() maybe double called during panic process
-> (e.g, hyperv_panic_event() and hv_crash_handler()). So check
-> and set connection state in vmbus_initiate_unload() to resolve
-> reenter issue.
->
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  drivers/hv/channel_mgmt.c |  5 +++++
->  drivers/hv/vmbus_drv.c    | 17 +++++++++--------
->  2 files changed, 14 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-> index 0370364169c4..893493f2b420 100644
-> --- a/drivers/hv/channel_mgmt.c
-> +++ b/drivers/hv/channel_mgmt.c
-> @@ -839,6 +839,9 @@ void vmbus_initiate_unload(bool crash)
->  {
->  	struct vmbus_channel_message_header hdr;
->  
-> +	if (vmbus_connection.conn_state == DISCONNECTED)
-> +		return;
-> +
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ lib/logic_pio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-To make this less racy, can we do something like
-
-	if (xchg(&vmbus_connection.conn_state, DISCONNECTED) == DISCONNECTED)
-		return;
-
-?
-
->  	/* Pre-Win2012R2 hosts don't support reconnect */
->  	if (vmbus_proto_version < VERSION_WIN8_1)
->  		return;
-> @@ -857,6 +860,8 @@ void vmbus_initiate_unload(bool crash)
->  		wait_for_completion(&vmbus_connection.unload_event);
->  	else
->  		vmbus_wait_for_unload();
-> +
-> +	vmbus_connection.conn_state = DISCONNECTED;
->  }
->  
->  static void check_ready_for_resume_event(void)
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 029378c27421..b56b9fb9bd90 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -53,9 +53,12 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
->  {
->  	struct pt_regs *regs;
->  
-> -	regs = current_pt_regs();
-> +	vmbus_initiate_unload(true);
->  
-> -	hyperv_report_panic(regs, val);
-> +	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
-
-With Michael's effors to make code in drivers/hv arch agnostic, I think
-we need a better, arch-neutral way.
-
-> +		regs = current_pt_regs();
-> +		hyperv_report_panic(regs, val);
-> +	}
->  	return NOTIFY_DONE;
->  }
->  
-> @@ -1391,10 +1394,12 @@ static int vmbus_bus_init(void)
->  		}
->  
->  		register_die_notifier(&hyperv_die_block);
-> -		atomic_notifier_chain_register(&panic_notifier_list,
-> -					       &hyperv_panic_block);
->  	}
->  
-> +	/* Vmbus channel is unloaded in panic callback when panic happens.*/
-> +	atomic_notifier_chain_register(&panic_notifier_list,
-> +			       &hyperv_panic_block);
-> +
->  	vmbus_request_offers();
->  
->  	return 0;
-> @@ -2204,8 +2209,6 @@ static int vmbus_bus_suspend(struct device *dev)
->  
->  	vmbus_initiate_unload(false);
->  
-> -	vmbus_connection.conn_state = DISCONNECTED;
-> -
->  	/* Reset the event for the next resume. */
->  	reinit_completion(&vmbus_connection.ready_for_resume_event);
->  
-> @@ -2289,7 +2292,6 @@ static void hv_kexec_handler(void)
->  {
->  	hv_stimer_global_cleanup();
->  	vmbus_initiate_unload(false);
-> -	vmbus_connection.conn_state = DISCONNECTED;
->  	/* Make sure conn_state is set as hv_synic_cleanup checks for it */
->  	mb();
->  	cpuhp_remove_state(hyperv_cpuhp_online);
-> @@ -2306,7 +2308,6 @@ static void hv_crash_handler(struct pt_regs *regs)
->  	 * doing the cleanup for current CPU only. This should be sufficient
->  	 * for kdump.
->  	 */
-> -	vmbus_connection.conn_state = DISCONNECTED;
->  	cpu = smp_processor_id();
->  	hv_stimer_cleanup(cpu);
->  	hv_synic_disable_regs(cpu);
-
+diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+index 21dc731bec88..f32fe481b492 100644
+--- a/lib/logic_pio.c
++++ b/lib/logic_pio.c
+@@ -235,7 +235,7 @@ type logic_in##bwl(unsigned long addr)					\
+ 	type ret = (type)~0;						\
+ 									\
+ 	if (addr < MMIO_UPPER_LIMIT) {					\
+-		ret = read##bwl(PCI_IOBASE + addr);			\
++		ret = _in##bwl(addr);					\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+@@ -251,7 +251,7 @@ type logic_in##bwl(unsigned long addr)					\
+ void logic_out##bwl(type value, unsigned long addr)			\
+ {									\
+ 	if (addr < MMIO_UPPER_LIMIT) {					\
+-		write##bwl(value, PCI_IOBASE + addr);			\
++		_out##bwl(value, addr);				\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
 -- 
-Vitaly
+2.12.3
 
