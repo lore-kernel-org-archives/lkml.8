@@ -2,120 +2,101 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66A5C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC408C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A993C2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A525720767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584572059;
-	bh=2npaGP9myWXWoLNaPv4jAYfc7RYFPXKtndA7b70voqE=;
+	s=default; t=1584572127;
+	bh=78Nf4mARvPIs7QGbl8xZIjkTrHpzmUqX/N3OWsROUFg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z41a7eKihdTwWxY1xfwQGGywGTO9p8weg0daYJ5DuG+XNKjQ7PuklGWTdI73ak5+o
-	 Ds33gYGS+jMjzOxJa+9P/W27ECfY2KqMtU7c5Gz0bTOzAXuGRDS6wfK9NiZ+oapCyR
-	 PmQrPELtuh+jNY5yZFq1cuzlWwC3hl/BOyCe5DEw=
+	b=Nq/+ClizlhioX5b0+iqX2kYeRGljicy57q0m1k/OGoq5Xd5pCXRVHXpevQYaTlFrG
+	 eDYwswS9YeQ9L9sPxUSzrSoC0W45Y1NVPZ2KdM7z37nmRoh5rX/1ULFKLXTyJQCpSX
+	 zQUK2oh78pA1ZYLdzmqPfYkY6LrqGxmWDWiZCaCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgCRWyS (ORCPT
+        id S1727194AbgCRWz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60500 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 18:55:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgCRWyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:54:18 -0400
+        id S1726704AbgCRWz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 18:55:26 -0400
 Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A95820767;
-        Wed, 18 Mar 2020 22:54:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A5102076E;
+        Wed, 18 Mar 2020 22:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584572057;
-        bh=2npaGP9myWXWoLNaPv4jAYfc7RYFPXKtndA7b70voqE=;
+        s=default; t=1584572125;
+        bh=78Nf4mARvPIs7QGbl8xZIjkTrHpzmUqX/N3OWsROUFg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bDYdMKyb9v7DCaGd0DcQ6ZvuzY0GEVpi+j5YTgMAp7NVLBpuQFxeoCxaRTmOAAhzi
-         4szIBzFegXbg9z3kHpzfTk0zNp2aw0G86W7Z4vGsWd6Tw9cHTdqpHzIbkKcItLqKlE
-         jnE1dzcQni33XlgHrhOtYe03Cuib3Q6eJyC0sbk8=
-Date:   Wed, 18 Mar 2020 15:54:15 -0700
+        b=y/yyeu0KjeBpTQqqCv1PFKdv55ktqgLTSmEXO5irmyLXS71aUYAG1mjOihAnCYUdL
+         l7pyu2J4XhuK90TIpPEnrc/BOzluT7PfUOARLf+sxaevAi2NHHCMLHuo4gd7auejY7
+         4G/MsL+aEXd+Z5nEpftvxRVbZxuVrqgy+I+r+kPY=
+Date:   Wed, 18 Mar 2020 15:55:24 -0700
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jeff Vander Stoep <jeffv@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        NeilBrown <neilb@suse.com>, stable@vger.kernel.org
+        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>
 Subject: Re: [PATCH v3 2/5] fs/filesystems.c: downgrade user-reachable
  WARN_ONCE() to pr_warn_once()
-Message-ID: <20200318225415.GD2334@sol.localdomain>
-References: <20200314213426.134866-1-ebiggers@kernel.org>
- <20200314213426.134866-3-ebiggers@kernel.org>
- <20200318154315.GB4144@linux-8ccs>
+Message-ID: <20200318225524.GE2334@sol.localdomain>
+References: <20200314213426.134866-3-ebiggers@kernel.org>
+ <20200317223028.6840A20738@mail.kernel.org>
+ <20200318150926.GA4144@linux-8ccs>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200318154315.GB4144@linux-8ccs>
+In-Reply-To: <20200318150926.GA4144@linux-8ccs>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 04:43:15PM +0100, Jessica Yu wrote:
-> +++ Eric Biggers [14/03/20 14:34 -0700]:
-> > From: Eric Biggers <ebiggers@google.com>
+On Wed, Mar 18, 2020 at 04:09:26PM +0100, Jessica Yu wrote:
+> +++ Sasha Levin [17/03/20 22:30 +0000]:
+> > Hi
 > > 
-> > After request_module(), nothing is stopping the module from being
-> > unloaded until someone takes a reference to it via try_get_module().
+> > [This is an automated email]
 > > 
-> > The WARN_ONCE() in get_fs_type() is thus user-reachable, via userspace
-> > running 'rmmod' concurrently.
+> > This commit has been processed because it contains a -stable tag.
+> > The stable tag indicates that it's relevant for the following trees: all
 > > 
-> > Since WARN_ONCE() is for kernel bugs only, not for user-reachable
-> > situations, downgrade this warning to pr_warn_once().
+> > The bot has tested the following trees: v5.5.9, v5.4.25, v4.19.109, v4.14.173, v4.9.216, v4.4.216.
 > > 
-> > Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-> > Cc: stable@vger.kernel.org
-> > Cc: Alexei Starovoitov <ast@kernel.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Jeff Vander Stoep <jeffv@google.com>
-> > Cc: Jessica Yu <jeyu@kernel.org>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: NeilBrown <neilb@suse.com>
-> > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > ---
-> > fs/filesystems.c | 4 +++-
-> > 1 file changed, 3 insertions(+), 1 deletion(-)
+> > v5.5.9: Build OK!
+> > v5.4.25: Build OK!
+> > v4.19.109: Build OK!
+> > v4.14.173: Build OK!
+> > v4.9.216: Failed to apply! Possible dependencies:
+> >    41124db869b7 ("fs: warn in case userspace lied about modprobe return")
 > > 
-> > diff --git a/fs/filesystems.c b/fs/filesystems.c
-> > index 77bf5f95362da..90b8d879fbaf3 100644
-> > --- a/fs/filesystems.c
-> > +++ b/fs/filesystems.c
-> > @@ -272,7 +272,9 @@ struct file_system_type *get_fs_type(const char *name)
-> > 	fs = __get_fs_type(name, len);
-> > 	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
-> > 		fs = __get_fs_type(name, len);
-> > -		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
-> > +		if (!fs)
-> > +			pr_warn_once("request_module fs-%.*s succeeded, but still no fs?\n",
-> > +				     len, name);
+> > v4.4.216: Failed to apply! Possible dependencies:
+> >    41124db869b7 ("fs: warn in case userspace lied about modprobe return")
+> > 
+> > 
+> > NOTE: The patch will not be queued to stable trees until it is upstream.
+> > 
+> > How should we proceed with this patch?
 > 
-> Hm, what was the rationale for warning only once again? It might be useful
-> for debugging issues to see each instance of request_module() failure
-> (and with which fs). However, I don't have a concrete use case to
-> support this argument, so:
+> Since commit 41124db869b7 was introduced v4.13, I guess we should
+> change the stable tag to:
 > 
-> Reviewed-by: Jessica Yu <jeyu@kernel.org>
+> Cc: stable@vger.kernel.org # v4.13+
+> 
 
-This was discussed on v2, see
-https://lkml.kernel.org/lkml/20200313010053.GS11244@42.do-not-panic.com/.
-If the warning triggers, then it indicates a broken modprobe program.
-Printing the warning multiple times wouldn't really add any new information.
+It should use:
 
-And in any case, it's printed once both before and after this patch.
+ Fixes: 41124db869b7 ("fs: warn in case userspace lied about modprobe return")
+ Cc: <stable@vger.kernel.org> # v4.13+
 
-- Eric
+I'll add it.
