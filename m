@@ -2,386 +2,282 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB843C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C89C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 770A020757
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:09:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f6Ry/YVx"
+	by mail.kernel.org (Postfix) with ESMTP id C270720774
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbgCRPJN (ORCPT
+        id S1727361AbgCRPJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:09:13 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:21200 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727114AbgCRPJM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:09:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584544151;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=22lncxfcqZQcn2mal3JKyKdlMv6rjfIshC0XEA//c1o=;
-        b=f6Ry/YVxhvr6AZEvNRYjg9iKp+WYXkbpBc+CX+c8aJSyLH1ZRB0DxONCMQynM5RLctZ1zW
-        TAbAKE42A2fVshXjq/QPN/1rbFniVaGoa90AC2Nj4zkOk72MkX090FHKqq3uAaInOiK8d4
-        WLRDP+wAkApdd81s8S2vqbf+yHHJ7x4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-332-K6ZYSg-GOZCE1mq2i1ErxA-1; Wed, 18 Mar 2020 11:09:07 -0400
-X-MC-Unique: K6ZYSg-GOZCE1mq2i1ErxA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9107F8017CC;
-        Wed, 18 Mar 2020 15:09:05 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E361C5D9E2;
-        Wed, 18 Mar 2020 15:09:02 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 06/13] fsinfo: Allow mount information to be queried [ver #19]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com, raven@themaw.net, mszeredi@redhat.com,
-        christian@brauner.io, jannh@google.com, darrick.wong@oracle.com,
-        kzak@redhat.com, jlayton@redhat.com, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 18 Mar 2020 15:09:02 +0000
-Message-ID: <158454414209.2864823.11927146846876689886.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
-References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+        Wed, 18 Mar 2020 11:09:21 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:33784 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727291AbgCRPJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 11:09:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 0E6F7FB05;
+        Wed, 18 Mar 2020 16:09:14 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 1bdfLMJNkSUx; Wed, 18 Mar 2020 16:09:09 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id A5F0A412BE; Wed, 18 Mar 2020 16:09:08 +0100 (CET)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v9 0/2] drm: bridge: Add NWL MIPI DSI host controller support
+Date:   Wed, 18 Mar 2020 16:09:06 +0100
+Message-Id: <cover.1584544065.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow mount information, including information about a mount object to be
-queried with the fsinfo() system call.  Setting FSINFO_FLAGS_QUERY_MOUNT
-allows overlapping mounts to be queried by indicating that the syscall
-should interpret the pathname as a number indicating the mount ID.
+This adds initial support for the NWL MIPI DSI Host controller found on i.MX8
+SoCs.
 
-To this end, a number of fsinfo() attributes are provided:
+It adds support for the i.MX8MQ but the same IP core can also be found on e.g.
+i.MX8QXP. I added the necessary hooks to support other imx8 variants but since
+I only have imx8mq boards to test I omitted the platform data for other SoCs.
 
- (1) FSINFO_ATTR_MOUNT_INFO.
+The code is based on NXPs BSP so I added Robert Chiras as Co-authored-by.
 
-     This is a structure providing information about a mount, including:
+The most notable changes over the BSP driver are
+ - Calculate HS mode timing from phy_configure_opts_mipi_dphy
+ - Perform all clock setup via DT
+ - Merge nwl-imx and nwl drivers
+ - Add B0 silion revision quirk
+ - become a bridge driver to hook into mxsfb / dcss
+   imx-display-subsystem so it makes sense to make it drive a bridge for dsi as
+   well).
+ - Use panel_bridge to attach the panel
+ - Use multiplex framework instead of accessing syscon directly
 
-	- Mount ID (can be used with FSINFO_FLAGS_QUERY_MOUNT).
-	- Mount uniquifier ID.
-	- Mount attributes (eg. R/O, NOEXEC).
-	- Mount change/notification counters.
-	- Superblock ID.
-	- Superblock change/notification counters.
+This has been tested on a Librem 5 devkit using mxsfb with Robert's patches[1]
+and the mainline rocktech-jh057n00900 DSI panel driver on next-20200226 and on
+the Librem5 with the a Mantix MLAF057WE51-X DSI panel driver (not yet mainline)
+The DCSS (submitted for mainline inclusion now too) can also act as input
+source.
 
- (2) FSINFO_ATTR_MOUNT_PATH.
+Changes from v9:
+- Per review comments by Robert Chiras
+  https://lore.kernel.org/dri-devel/1575366594.6423.61.camel@nxp.com/
+  - don't mix DSI host and bridge initialization
+  - only select output source once
+  - defer probe when panel is not ready to fix usage as a module
+  - use correct reset sequence as described by Robert
+    (and provided by NWL)
+  - use mode->clock instead of mode->crtc_clock
+- Add tested by from Martin Kepplinger, thanks!
+- Drop platform specific data (as suggested previously by Laurent Pinchart and
+  Andrzej Hajda) since imx8q* needs another set of abstractions with the new
+  reset sequence and that's easier to do when adding imx8q* support rather then
+  adding wrong abstraction now.
+- Update bindings to use proper clock and irq names to make the example match
+  reality more closely.
+- Use `fallthrough;` instead of /* Fall through */ in switch statements
 
-     This a string providing information about a bind mount relative the
-     the root that was bound off, though it may get overridden by the
-     filesystem (NFS unconditionally sets it to "/", for example).
+Changes from v8:
+- Drop reset quirk. It's not needed with mxsfb and sometimes triggers a shifted display.
 
- (3) FSINFO_ATTR_MOUNT_POINT.
+Changes from v7:
+- Per review comments by Andrzej Hajda
+  https://lore.kernel.org/linux-arm-kernel/c86b7ca2-7799-eafd-c380-e4b551520837@samsung.com/
+  - Drop spare empty line
+  - handle nwl_dsi_write errors
+  - better handle read errors
+  - unwind in case of error in nwl_dsi_enable
+  - use bridge_to_dsi() instead of accessing driver_private
+  - don't log on -EPROBEDEFER when fething the reset controller
+  - use endpoint number to determine input
+- Spotted by kbuild test robot <lkp@intel.com>
+  https://lore.kernel.org/linux-arm-kernel/201909230644.qfSKbNf9%25lkp@intel.com/
+  Use signed return type for nwl_dsi_get_dpi_pixel_format
+- Drop connector type from drm_panel_bridge_add
+- Don't forget to set an error value on dsi reads
 
-     This is a string indicating the name of the mountpoint within the
-     parent mount, limited to the parent's mounted root and the chroot.
+Changes from v5:
+- Per review comments by Andrzej Hajda
+  https://lists.freedesktop.org/archives/dri-devel/2019-September/235281.html
+  - Fix include file ordering
+  - Add a comment to nwl_dsi_platform_data that will allow to add support
+    at least for the i.MX8QM
+  - Merge driver into a single file plus the register defs in a separate header
+- Make more functions and structs static
 
- (4) FSINFO_ATTR_MOUNT_POINT_FULL.
+Changes from v4:
+- Collect Reviewed-by: from Rob Herring, thanks!
+  https://lists.freedesktop.org/archives/dri-devel/2019-September/233979.html
+- Spotted by kbuild test robot <lkp@intel.com>
+  https://lists.freedesktop.org/archives/dri-devel/2019-September/233860.html
+  https://lists.freedesktop.org/archives/dri-devel/2019-September/233863.html
+  - fix format string for size_t
+  - Use DIV64_U64_ROUND_UP to fix build on 32 bit architectures
+    We can't use simple shift sind d and n are similar in size and
+    we need full precision
+- Fix debug cfg_t_post debug print out
+- Avoid PSEC_PER_SEC
+- Move timeout / overflow handling out of nwl_dsi_finish_transmission,
+  it would never end up being reported since the call to the function
+  was guarded by flags.
+- Drop 'support for' from KConfig title to make it match the other
+  drivers in that submenu
 
-     This is a string indicating the full path of the mountpoint, limited to
-     the chroot.
+Changes from v3:
+- Per review comments by Robert Chiras
+  https://lists.freedesktop.org/archives/dri-devel/2019-August/232580.html
+  - Add Robert's {Signed-off,Tested}-by:
+  - Respect number of lanes when calculting bandwidth limits
+  - Drop duplicate NWL_DSI_ENABLE_MULT_PKTS setup
+- Per testing by Rober Chiras
+  https://lists.freedesktop.org/archives/dri-devel/2019-August/233688.html
+  - Drop duplicate (and too early) drm_bridge_add() in nwl_dir_probe() that
+    made mxsfb fail to connect to the bridge since the panel_bridge was not up
+    yet. drm_bridge_add() happens in nwl_dsi_host_attach() where after the
+    panel_bridge was set up.
+- Per review comments by Rob Herring on bindings
+  https://lists.freedesktop.org/archives/dri-devel/2019-August/233196.html
+  - drop description from power-domains and resets
+  - allow BSD 2 clause license as well
+  - make ports more specific
+  - add #address-cells, #size-cells as required
+  - use additionalProperties
+  - panel is of type object
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+Changes from v2:
+- Per review comments by Rob Herring
+  https://lists.freedesktop.org/archives/dri-devel/2019-August/230448.html
+  - bindings:
+    - Simplify by restricting to fsl,imx8mq-nwl-dsi
+    - document reset lines
+    - add port@{0,1}
+    - use a real compatible string for the panel
+    - resets are required
+- Per review comments by Arnd Bergmann
+  https://lists.freedesktop.org/archives/dri-devel/2019-August/230868.html
+  - Don't access iomuxc_gpr regs directly. This allows us to drop the
+    first patch in the series with the iomuxc_gpr field defines.
+- Per review comments by Laurent Pinchart
+  Fix wording in bindings
+- Add mux-controls to bindings
+- Don't print error message on dphy probe deferral
 
- fs/d_path.c                 |    2 -
- fs/fsinfo.c                 |   13 +++++
- fs/internal.h               |    9 +++
- fs/namespace.c              |  111 +++++++++++++++++++++++++++++++++++++++++++
- include/uapi/linux/fsinfo.h |   17 +++++++
- samples/vfs/test-fsinfo.c   |   16 ++++++
- 6 files changed, 167 insertions(+), 1 deletion(-)
+Changes from v1:
+- Per review comments by Sam Ravnborg
+  https://lists.freedesktop.org/archives/dri-devel/2019-July/228130.html
+  - Change binding docs to YAML
+  - build: Don't always visit imx-nwl/
+  - build: Add header-test-y
+  - Sort headers according to DRM convention
+  - Use drm_display_mode instead of videmode
+- Per review comments by Fabio Estevam
+  https://lists.freedesktop.org/archives/dri-devel/2019-July/228299.html
+  - Don't restrict build to ARCH_MXC
+  - Drop unused includes
+  - Drop unreachable code in imx_nwl_dsi_bridge_mode_fixup()
+  - Drop remaining calls of dev_err() and use DRM_DEV_ERR()
+    consistently.
+  - Use devm_platform_ioremap_resource()
+  - Drop devm_free_irq() in probe() error path
+  - Use single line comments where sufficient
+  - Use <linux/time64.h> instead of defining USEC_PER_SEC
+  - Make input source select imx8 specific
+  - Drop <asm/unaligned.h> inclusion (after removal of get_unaligned_le32)
+  - Drop all EXPORT_SYMBOL_GPL() for functions used in the same module
+    but different source files.
+  - Drop nwl_dsi_enable_{rx,tx}_clock() by invoking clk_prepare_enable()
+    directly
+  - Remove pointless comment
+- Laurent Pinchart
+  https://lists.freedesktop.org/archives/dri-devel/2019-July/228313.html
+  https://lists.freedesktop.org/archives/dri-devel/2019-July/228308.html
+  - Drop (on iMX8MQ) unused csr regmap
+  - Use NWL_MAX_PLATFORM_CLOCKS everywhere
+  - Drop get_unaligned_le32() usage
+  - remove duplicate 'for the' in binding docs
+  - Don't include unused <linux/clk-provider.h>
+  - Don't include unused <linux/component.h>
+  - Drop dpms_mode for tracking state, trust the drm layer on that
+  - Use pm_runtime_put() instead of pm_runtime_put_sync()
+  - Don't overwrite encoder type
+  - Make imx_nwl_platform_data const
+  - Use the reset controller API instead of open coding that platform specific
+    part
+  - Use <linux/bitfield.h> intead of making up our own defines
+  - name mipi_dsi_transfer less generic: nwl_dsi_transfer
+  - ensure clean in .remove by calling mipi_dsi_host_unregister.
+  - prefix constants by NWL_DSI_
+  - properly format transfer_direction enum
+  - simplify platform clock handling
+  - Don't modify state in mode_fixup() and use mode_set() instead
+  - Drop bridge detach(), already handle by nwl_dsi_host_detach()
+  - Drop USE_*_QUIRK() macros
+- Drop (for now) unused clock defnitions. 'pixel' and 'bypass' clock will be
+  used for i.MX8 SoCs but since they're unused atm drop the definitions - but
+  keep the logic to enable/disable several clocks in place since we know we'll
+  need it in the future.
 
-diff --git a/fs/d_path.c b/fs/d_path.c
-index 0f1fc1743302..4c203f64e45e 100644
---- a/fs/d_path.c
-+++ b/fs/d_path.c
-@@ -229,7 +229,7 @@ static int prepend_unreachable(char **buffer, int *buflen)
- 	return prepend(buffer, buflen, "(unreachable)", 13);
- }
- 
--static void get_fs_root_rcu(struct fs_struct *fs, struct path *root)
-+void get_fs_root_rcu(struct fs_struct *fs, struct path *root)
- {
- 	unsigned seq;
- 
-diff --git a/fs/fsinfo.c b/fs/fsinfo.c
-index 3250b9ff2905..a08b172f71d2 100644
---- a/fs/fsinfo.c
-+++ b/fs/fsinfo.c
-@@ -236,6 +236,14 @@ static int fsinfo_generic_seq_read(struct path *path, struct fsinfo_context *ctx
- 			ret = sb->s_op->show_options(&m, path->mnt->mnt_root);
- 		break;
- 
-+	case FSINFO_ATTR_MOUNT_PATH:
-+		if (sb->s_op->show_path) {
-+			ret = sb->s_op->show_path(&m, path->mnt->mnt_root);
-+		} else {
-+			seq_dentry(&m, path->mnt->mnt_root, " \t\n\\");
-+		}
-+		break;
-+
- 	case FSINFO_ATTR_FS_STATISTICS:
- 		if (sb->s_op->show_stats)
- 			ret = sb->s_op->show_stats(&m, path->mnt->mnt_root);
-@@ -270,6 +278,11 @@ static const struct fsinfo_attribute fsinfo_common_attributes[] = {
- 
- 	FSINFO_LIST	(FSINFO_ATTR_FSINFO_ATTRIBUTES,	(void *)123UL),
- 	FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, (void *)123UL),
-+
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_MOUNT_INFO,	fsinfo_generic_mount_info),
-+	FSINFO_STRING	(FSINFO_ATTR_MOUNT_PATH,	fsinfo_generic_seq_read),
-+	FSINFO_STRING	(FSINFO_ATTR_MOUNT_POINT,	fsinfo_generic_mount_point),
-+	FSINFO_STRING	(FSINFO_ATTR_MOUNT_POINT_FULL,	fsinfo_generic_mount_point_full),
- 	{}
- };
- 
-diff --git a/fs/internal.h b/fs/internal.h
-index abbd5299e7dc..68e300a1e9a3 100644
---- a/fs/internal.h
-+++ b/fs/internal.h
-@@ -15,6 +15,7 @@ struct mount;
- struct shrink_control;
- struct fs_context;
- struct user_namespace;
-+struct fsinfo_context;
- 
- /*
-  * block_dev.c
-@@ -47,6 +48,11 @@ extern int __block_write_begin_int(struct page *page, loff_t pos, unsigned len,
-  */
- extern void __init chrdev_init(void);
- 
-+/*
-+ * d_path.c
-+ */
-+extern void get_fs_root_rcu(struct fs_struct *fs, struct path *root);
-+
- /*
-  * fs_context.c
-  */
-@@ -93,6 +99,9 @@ extern void __mnt_drop_write_file(struct file *);
- extern void dissolve_on_fput(struct vfsmount *);
- extern int lookup_mount_object(struct path *, int, struct path *);
- extern int fsinfo_generic_mount_source(struct path *, struct fsinfo_context *);
-+extern int fsinfo_generic_mount_info(struct path *, struct fsinfo_context *);
-+extern int fsinfo_generic_mount_point(struct path *, struct fsinfo_context *);
-+extern int fsinfo_generic_mount_point_full(struct path *, struct fsinfo_context *);
- 
- /*
-  * fs_struct.c
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 54e8eb93fdd6..483fbbde5c28 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -4149,4 +4149,115 @@ int lookup_mount_object(struct path *root, int mnt_id, struct path *_mntpt)
- 	goto out_unlock;
- }
- 
-+/*
-+ * Retrieve information about the nominated mount.
-+ */
-+int fsinfo_generic_mount_info(struct path *path, struct fsinfo_context *ctx)
-+{
-+	struct fsinfo_mount_info *p = ctx->buffer;
-+	struct super_block *sb;
-+	struct mount *m;
-+	unsigned int flags;
-+
-+	m = real_mount(path->mnt);
-+	sb = m->mnt.mnt_sb;
-+
-+	p->sb_unique_id		= sb->s_unique_id;
-+	p->mnt_unique_id	= m->mnt_unique_id;
-+	p->mnt_id		= m->mnt_id;
-+
-+	flags = READ_ONCE(m->mnt.mnt_flags);
-+	if (flags & MNT_READONLY)
-+		p->attr |= MOUNT_ATTR_RDONLY;
-+	if (flags & MNT_NOSUID)
-+		p->attr |= MOUNT_ATTR_NOSUID;
-+	if (flags & MNT_NODEV)
-+		p->attr |= MOUNT_ATTR_NODEV;
-+	if (flags & MNT_NOEXEC)
-+		p->attr |= MOUNT_ATTR_NOEXEC;
-+	if (flags & MNT_NODIRATIME)
-+		p->attr |= MOUNT_ATTR_NODIRATIME;
-+
-+	if (flags & MNT_NOATIME)
-+		p->attr |= MOUNT_ATTR_NOATIME;
-+	else if (flags & MNT_RELATIME)
-+		p->attr |= MOUNT_ATTR_RELATIME;
-+	else
-+		p->attr |= MOUNT_ATTR_STRICTATIME;
-+	return sizeof(*p);
-+}
-+
-+/*
-+ * Return the path of this mount relative to its parent and clipped to
-+ * the current chroot.
-+ */
-+int fsinfo_generic_mount_point(struct path *path, struct fsinfo_context *ctx)
-+{
-+	struct mountpoint *mp;
-+	struct mount *m, *parent;
-+	struct path mountpoint, root;
-+	void *p;
-+
-+	rcu_read_lock();
-+
-+	m = real_mount(path->mnt);
-+	parent = m->mnt_parent;
-+	if (parent == m)
-+		goto skip;
-+	mp = READ_ONCE(m->mnt_mp);
-+	if (mp)
-+		goto found;
-+skip:
-+	rcu_read_unlock();
-+	return -ENODATA;
-+
-+found:
-+	mountpoint.mnt = &parent->mnt;
-+	mountpoint.dentry = READ_ONCE(mp->m_dentry);
-+
-+	get_fs_root_rcu(current->fs, &root);
-+	if (path->mnt == root.mnt) {
-+		rcu_read_unlock();
-+		return fsinfo_string("/", ctx);
-+	}
-+
-+	if (root.mnt != &parent->mnt) {
-+		root.mnt = &parent->mnt;
-+		root.dentry = parent->mnt.mnt_root;
-+	}
-+
-+	p = __d_path(&mountpoint, &root, ctx->buffer, ctx->buf_size);
-+	rcu_read_unlock();
-+
-+	if (IS_ERR(p))
-+		return PTR_ERR(p);
-+	if (!p)
-+		return -EPERM;
-+
-+	ctx->skip = p - ctx->buffer;
-+	return (ctx->buffer + ctx->buf_size) - p;
-+}
-+
-+/*
-+ * Return the path of this mount from the current chroot.
-+ */
-+int fsinfo_generic_mount_point_full(struct path *path, struct fsinfo_context *ctx)
-+{
-+	struct path root;
-+	void *p;
-+
-+	rcu_read_lock();
-+	get_fs_root_rcu(current->fs, &root);
-+	p = __d_path(path, &root, ctx->buffer, ctx->buf_size);
-+	rcu_read_unlock();
-+
-+	if (IS_ERR(p))
-+		return PTR_ERR(p);
-+	if (!p)
-+		return -EPERM;
-+
-+	ctx->skip = p - ctx->buffer;
-+	return (ctx->buffer + ctx->buf_size) - p;
-+}
-+
- #endif /* CONFIG_FSINFO */
-diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
-index 0ae050a5227b..df96301dc612 100644
---- a/include/uapi/linux/fsinfo.h
-+++ b/include/uapi/linux/fsinfo.h
-@@ -31,6 +31,11 @@
- #define FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO 0x100	/* Information about attr N (for path) */
- #define FSINFO_ATTR_FSINFO_ATTRIBUTES	0x101	/* List of supported attrs (for path) */
- 
-+#define FSINFO_ATTR_MOUNT_INFO		0x200	/* Mount object information */
-+#define FSINFO_ATTR_MOUNT_PATH		0x201	/* Bind mount/superblock path (string) */
-+#define FSINFO_ATTR_MOUNT_POINT		0x202	/* Relative path of mount in parent (string) */
-+#define FSINFO_ATTR_MOUNT_POINT_FULL	0x203	/* Absolute path of mount (string) */
-+
- /*
-  * Optional fsinfo() parameter structure.
-  *
-@@ -85,6 +90,18 @@ struct fsinfo_u128 {
- #endif
- };
- 
-+/*
-+ * Information struct for fsinfo(FSINFO_ATTR_MOUNT_INFO).
-+ */
-+struct fsinfo_mount_info {
-+	__u64	sb_unique_id;		/* Kernel-lifetime unique superblock ID */
-+	__u64	mnt_unique_id;		/* Kernel-lifetime unique mount ID */
-+	__u32	mnt_id;			/* Mount identifier (use with AT_FSINFO_MOUNTID_PATH) */
-+	__u32	attr;			/* MOUNT_ATTR_* flags */
-+};
-+
-+#define FSINFO_ATTR_MOUNT_INFO__STRUCT struct fsinfo_mount_info
-+
- /*
-  * Information struct for fsinfo(FSINFO_ATTR_STATFS).
-  * - This gives extended filesystem information.
-diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
-index 90fd95c46f2e..b23d0d56988f 100644
---- a/samples/vfs/test-fsinfo.c
-+++ b/samples/vfs/test-fsinfo.c
-@@ -288,6 +288,17 @@ static void dump_fsinfo_generic_volume_uuid(void *reply, unsigned int size)
- 	       f->uuid[14], f->uuid[15]);
- }
- 
-+static void dump_fsinfo_generic_mount_info(void *reply, unsigned int size)
-+{
-+	struct fsinfo_mount_info *r = reply;
-+
-+	printf("\n");
-+	printf("\tsb_uniq : %llx\n", (unsigned long long)r->sb_unique_id);
-+	printf("\tmnt_uniq: %llx\n", (unsigned long long)r->mnt_unique_id);
-+	printf("\tmnt_id  : %x\n", r->mnt_id);
-+	printf("\tattr    : %x\n", r->attr);
-+}
-+
- static void dump_string(void *reply, unsigned int size)
- {
- 	char *s = reply, *p;
-@@ -364,6 +375,11 @@ static const struct fsinfo_attribute fsinfo_attributes[] = {
- 
- 	FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, fsinfo_meta_attribute_info),
- 	FSINFO_LIST	(FSINFO_ATTR_FSINFO_ATTRIBUTES,	fsinfo_meta_attributes),
-+
-+	FSINFO_VSTRUCT	(FSINFO_ATTR_MOUNT_INFO,	fsinfo_generic_mount_info),
-+	FSINFO_STRING	(FSINFO_ATTR_MOUNT_PATH,	string),
-+	FSINFO_STRING_N	(FSINFO_ATTR_MOUNT_POINT,	string),
-+	FSINFO_STRING_N	(FSINFO_ATTR_MOUNT_POINT_FULL,	string),
- 	{}
- };
- 
+Changes from v0:
+- Add quirk for IMQ8MQ silicon B0 revision to not mess with the
+  system reset controller on power down since enable() won't work
+  otherwise.
+- Drop devm_free_irq() handled by the device driver core
+- Disable tx esc clock after the phy power down to unbreak
+  disable/enable (unblank/blank)
+- Add ports to dt binding docs
+- Select GENERIC_PHY_MIPI_DPHY instead of GENERIC_PHY for
+  phy_mipi_dphy_get_default_config
+- Select DRM_MIPI_DSI
+- Include drm_print.h to fix build on next-20190408
+- Drop some debugging messages
+- Newline terminate all DRM_ printouts
+- Turn component driver into a drm bridge
 
+[0]: https://lists.freedesktop.org/archives/dri-devel/2019-May/219484.html
+[1]: https://patchwork.freedesktop.org/series/62822/
+
+Guido Günther (2):
+  dt-bindings: display/bridge: Add binding for NWL mipi dsi host
+    controller
+  drm/bridge: Add NWL MIPI DSI host controller support
+
+ .../bindings/display/bridge/nwl-dsi.yaml      |  216 +++
+ drivers/gpu/drm/bridge/Kconfig                |   16 +
+ drivers/gpu/drm/bridge/Makefile               |    3 +
+ drivers/gpu/drm/bridge/nwl-dsi.c              | 1213 +++++++++++++++++
+ drivers/gpu/drm/bridge/nwl-dsi.h              |  144 ++
+ 5 files changed, 1592 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+ create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.c
+ create mode 100644 drivers/gpu/drm/bridge/nwl-dsi.h
+
+-- 
+2.23.0
 
