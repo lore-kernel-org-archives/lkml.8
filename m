@@ -2,431 +2,297 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 075C2C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91FCC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34492071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7068D20754
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:10:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VhOm5g8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgCRUHs convert rfc822-to-8bit (ORCPT
+        id S1727048AbgCRUKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:07:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:42973 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726647AbgCRUHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:07:48 -0400
-IronPort-SDR: M4cvOJhmKrOoB+W7R5IyB793IkAHAVfJN08so+uIF9yAFzAVi9y5c8pFXJ/nIbWmhyfx6QOgCj
- ietzsBQrGZtA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 13:07:47 -0700
-IronPort-SDR: dCFBzEmBgG54nIn0WpzJir46FPYGnp4lICxbvllHLiOvOzapA3RHsYCY1YAWu4IvOvJuIo/udO
- KFvH4oxeCQ4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
-   d="scan'208";a="324289601"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 18 Mar 2020 13:07:46 -0700
-Date:   Wed, 18 Mar 2020 13:13:27 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     "Yi Liu" <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 2/2] iommu/vt-d: Replace intel SVM APIs with generic SVA
- APIs
-Message-ID: <20200318131327.5f5e6600@jacob-builder>
-In-Reply-To: <1582586797-61697-4-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1582586797-61697-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1582586797-61697-4-git-send-email-jacob.jun.pan@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 18 Mar 2020 16:10:37 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:42780 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbgCRUKg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:10:36 -0400
+Received: by mail-vs1-f67.google.com with SMTP id i25so24035vsq.9
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 13:10:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=deicxPfTPIgTvqDWUgB6URC9CH6HcGABwiA2ln5QVsQ=;
+        b=VhOm5g8vgPzKXgB1wxBrfDRHebq6hpAgVw1slq3jmk/AEcsv6D3PyCqQGBR12NtWJF
+         hnYmbthIJ7zUw2d4PM53OlROlAZ/HPO4l51c0lEpcQyKwwE4kUg2Tx4tFM5W48l0JpjT
+         BR68pIYwnvW24eISPw74viaADRr5xnB5UlIl8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=deicxPfTPIgTvqDWUgB6URC9CH6HcGABwiA2ln5QVsQ=;
+        b=E/iATs0gFHylIkjFu5M4rR3Xid63mONNLgcRvzIItNfhkhy/1DNn/4etO800t/tdHM
+         oj4B/4ikB73T8IO+sq6/AqrDZnTz0Jq7zFfG6CgwpTtdNOoZsrhowGjMemjlH+jxAFC7
+         ipD9rHEOBdkibgprmAvgugG6qnp1nG05oOJRyNBJtnVgtkloZhQwZvRE8W6hqFb+Q/5p
+         R7EGrszxUiqpWB1Bbg63QL6Gm4aZoWrdDCnqY7uqXC+dEV/I6DnJN+YnlNbyJX0u+toa
+         bsZHd5nEi/6XG/+RM3AfEUzBTlXj6QABdES0lx6VtyGrkfn0BMZCSlWZyGM79pvzSLfg
+         bxUw==
+X-Gm-Message-State: ANhLgQ0WhGQ8HnG+I+o4CcCezFoWfQSKjpeViv/awdMsMCsdmKH5K85J
+        S+t1Jb/H3fKHSUsN3KFBFby6aoVfw38=
+X-Google-Smtp-Source: ADFU+vscZgj6btnZI7oS7rpp+T52SCiedmmZURjSyCSt1xmtay//D657UdRwnrGEq00LEBtVy2aV2g==
+X-Received: by 2002:a67:2ecf:: with SMTP id u198mr4744131vsu.29.1584562234561;
+        Wed, 18 Mar 2020 13:10:34 -0700 (PDT)
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
+        by smtp.gmail.com with ESMTPSA id m82sm9183vke.53.2020.03.18.13.10.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Mar 2020 13:10:33 -0700 (PDT)
+Received: by mail-ua1-f53.google.com with SMTP id o16so9992966uap.6
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 13:10:33 -0700 (PDT)
+X-Received: by 2002:ab0:2881:: with SMTP id s1mr4346871uap.8.1584562232303;
+ Wed, 18 Mar 2020 13:10:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200317133653.v2.1.I752ebdcfd5e8bf0de06d66e767b8974932b3620e@changeid>
+ <158448096503.88485.8894151453752608519@swboyd.mtv.corp.google.com>
+ <CAD=FV=U+c4GZU1p3xYT3t=0Q2cLFxoiM=vqc8SsxOKehxbZPXw@mail.gmail.com> <158451865253.88485.11351400745937437114@swboyd.mtv.corp.google.com>
+In-Reply-To: <158451865253.88485.11351400745937437114@swboyd.mtv.corp.google.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 18 Mar 2020 13:10:20 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WzaOk1S+oXPa5JT9HMC_t19xdpSQmiQdEhtxUTcaDVQg@mail.gmail.com>
+Message-ID: <CAD=FV=WzaOk1S+oXPa5JT9HMC_t19xdpSQmiQdEhtxUTcaDVQg@mail.gmail.com>
+Subject: Re: [PATCH v2] spi: spi-geni-qcom: Speculative fix of "nobody cared"
+ about interrupt
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Alok Chauhan <alokc@codeaurora.org>, skakit@codeaurora.org,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Girish Mahadevan <girishm@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just a gentle reminder, any comments?
+Hi,
 
-Thanks,
+On Wed, Mar 18, 2020 at 1:04 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> > * Most of the cases I saw of the "nobody cared" for geni-spi was on a
+> > mostly idle system (presumably still doing periodic SPI transactions
+> > to the EC, though).  It seems weird that one of these other interrupts
+> > would suddenly fire.  It seems more likely that we just happened to
+> > win a race of some sort.
+>
+> Sure, I'm mostly interested in understanding what that race is. I think
+> it is something like cur_mcmd being stale when it's tested in the irq
+> handler because the IO access triggers the irq before mas->cur_mcmd can
+> be updated due to out of order execution. Nothing stops
+> spi_geni_set_cs() from being reordered like this, especially because
+> there isn't any sort of barrier besides the compiler barrier of asm
+> volatile inside geni_set_setup_m_cmd():
+>
+>   CPU0 (device write overtakes CPU)  CPU1
+>   ----                               ----
+>   mas->cur_mcmd = CMD_NONE;
+>   geni_se_setup_m_cmd(...)
+>                                      geni_spi_isr()
+>                                       <tests cur_mcmd and it's still NONE>
+>   mas->cur_mcmd = CMD_CS;
 
-Jacob
+This is my assumption about what must have happened, yes.  I have no
+proof, though.
 
-On Mon, 24 Feb 2020 15:26:37 -0800
-Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 
-> This patch is an initial step to replace Intel SVM code with the
-> following IOMMU SVA ops:
-> intel_svm_bind_mm() => iommu_sva_bind_device()
-> intel_svm_unbind_mm() => iommu_sva_unbind_device()
-> intel_svm_is_pasid_valid() => iommu_sva_get_pasid()
-> 
-> The features below will continue to work but are not included in this
-> patch in that they are handled mostly within the IOMMU subsystem.
-> - IO page fault
-> - mmu notifier
-> 
-> Consolidation of the above will come after merging generic IOMMU sva
-> code[1]. There should not be any changes needed for SVA users such as
-> accelerator device drivers during this time.
-> 
-> [1] http://jpbrucker.net/sva/
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/intel-iommu.c |   3 ++
->  drivers/iommu/intel-svm.c   | 123
-> ++++++++++++++++++++++++--------------------
-> include/linux/intel-iommu.h |   7 +++ include/linux/intel-svm.h   |
-> 85 ------------------------------ 4 files changed, 78 insertions(+),
-> 140 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 5eca6e10d2a4..ccfa5adfd06d 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -6475,6 +6475,9 @@ const struct iommu_ops intel_iommu_ops = {
->  	.cache_invalidate	= intel_iommu_sva_invalidate,
->  	.sva_bind_gpasid	= intel_svm_bind_gpasid,
->  	.sva_unbind_gpasid	= intel_svm_unbind_gpasid,
-> +	.sva_bind		= intel_svm_bind,
-> +	.sva_unbind		= intel_svm_unbind,
-> +	.sva_get_pasid		= intel_svm_get_pasid,
->  #endif
->  };
->  
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index 1d7a95372f8c..35d949513728 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -516,13 +516,14 @@ int intel_svm_unbind_gpasid(struct device *dev,
-> int pasid) return ret;
->  }
->  
-> -int intel_svm_bind_mm(struct device *dev, int *pasid, int flags,
-> struct svm_dev_ops *ops) +/* Caller must hold pasid_mutex, mm
-> reference */ +static int intel_svm_bind_mm(struct device *dev, int
-> flags, struct svm_dev_ops *ops,
-> +		      struct mm_struct *mm, struct intel_svm_dev
-> **sd) {
->  	struct intel_iommu *iommu = intel_svm_device_to_iommu(dev);
->  	struct device_domain_info *info;
->  	struct intel_svm_dev *sdev;
->  	struct intel_svm *svm = NULL;
-> -	struct mm_struct *mm = NULL;
->  	int pasid_max;
->  	int ret;
->  
-> @@ -539,16 +540,15 @@ int intel_svm_bind_mm(struct device *dev, int
-> *pasid, int flags, struct svm_dev_ } else
->  		pasid_max = 1 << 20;
->  
-> +	/* Bind supervisor PASID shuld have mm = NULL */
->  	if (flags & SVM_FLAG_SUPERVISOR_MODE) {
-> -		if (!ecap_srs(iommu->ecap))
-> +		if (!ecap_srs(iommu->ecap) || mm) {
-> +			pr_err("Supervisor PASID with user provided
-> mm.\n"); return -EINVAL;
-> -	} else if (pasid) {
-> -		mm = get_task_mm(current);
-> -		BUG_ON(!mm);
-> +		}
->  	}
->  
-> -	mutex_lock(&pasid_mutex);
-> -	if (pasid && !(flags & SVM_FLAG_PRIVATE_PASID)) {
-> +	if (!(flags & SVM_FLAG_PRIVATE_PASID)) {
->  		struct intel_svm *t;
->  
->  		list_for_each_entry(t, &global_svm_list, list) {
-> @@ -586,9 +586,7 @@ int intel_svm_bind_mm(struct device *dev, int
-> *pasid, int flags, struct svm_dev_ sdev->dev = dev;
->  
->  	ret = intel_iommu_enable_pasid(iommu, dev);
-> -	if (ret || !pasid) {
-> -		/* If they don't actually want to assign a PASID,
-> this is
-> -		 * just an enabling check/preparation. */
-> +	if (ret) {
->  		kfree(sdev);
->  		goto out;
->  	}
-> @@ -688,18 +686,17 @@ int intel_svm_bind_mm(struct device *dev, int
-> *pasid, int flags, struct svm_dev_ }
->  	}
->  	list_add_rcu(&sdev->list, &svm->devs);
-> -
-> - success:
-> -	*pasid = svm->pasid;
-> +success:
-> +	sdev->pasid = svm->pasid;
-> +	sdev->sva.dev = dev;
-> +	if (sd)
-> +		*sd = sdev;
->  	ret = 0;
->   out:
-> -	mutex_unlock(&pasid_mutex);
-> -	if (mm)
-> -		mmput(mm);
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(intel_svm_bind_mm);
->  
-> +/* Caller must hold pasid_mutex */
->  int intel_svm_unbind_mm(struct device *dev, int pasid)
->  {
->  	struct intel_svm_dev *sdev;
-> @@ -707,7 +704,6 @@ int intel_svm_unbind_mm(struct device *dev, int
-> pasid) struct intel_svm *svm;
->  	int ret = -EINVAL;
->  
-> -	mutex_lock(&pasid_mutex);
->  	iommu = intel_svm_device_to_iommu(dev);
->  	if (!iommu)
->  		goto out;
-> @@ -753,45 +749,9 @@ int intel_svm_unbind_mm(struct device *dev, int
-> pasid) break;
->  	}
->   out:
-> -	mutex_unlock(&pasid_mutex);
->  
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(intel_svm_unbind_mm);
-> -
-> -int intel_svm_is_pasid_valid(struct device *dev, int pasid)
-> -{
-> -	struct intel_iommu *iommu;
-> -	struct intel_svm *svm;
-> -	int ret = -EINVAL;
-> -
-> -	mutex_lock(&pasid_mutex);
-> -	iommu = intel_svm_device_to_iommu(dev);
-> -	if (!iommu)
-> -		goto out;
-> -
-> -	svm = ioasid_find(NULL, pasid, NULL);
-> -	if (!svm)
-> -		goto out;
-> -
-> -	if (IS_ERR(svm)) {
-> -		ret = PTR_ERR(svm);
-> -		goto out;
-> -	}
-> -	/* init_mm is used in this case */
-> -	if (!svm->mm)
-> -		ret = 1;
-> -	else if (atomic_read(&svm->mm->mm_users) > 0)
-> -		ret = 1;
-> -	else
-> -		ret = 0;
-> -
-> - out:
-> -	mutex_unlock(&pasid_mutex);
-> -
-> -	return ret;
-> -}
-> -EXPORT_SYMBOL_GPL(intel_svm_is_pasid_valid);
->  
->  /* Page request queue descriptor */
->  struct page_req_dsc {
-> @@ -984,3 +944,56 @@ static irqreturn_t prq_event_thread(int irq,
-> void *d) 
->  	return IRQ_RETVAL(handled);
->  }
-> +
-> +#define to_intel_svm_dev(handle) container_of(handle, struct
-> intel_svm_dev, sva) +struct iommu_sva *
-> +intel_svm_bind(struct device *dev, struct mm_struct *mm, void
-> *drvdata) +{
-> +	struct iommu_sva *sva = ERR_PTR(-EINVAL);
-> +	struct intel_svm_dev *sdev = NULL;
-> +	int flags = 0;
-> +	int ret;
-> +
-> +	/*
-> +	 * TODO: Consolidate with generic iommu-sva bind after it is
-> merged.
-> +	 * It will require shared SVM data structures, i.e. combine
-> io_mm
-> +	 * and intel_svm etc.
-> +	 */
-> +	if (drvdata)
-> +		flags = *(int *)drvdata;
-> +	mutex_lock(&pasid_mutex);
-> +	ret = intel_svm_bind_mm(dev, flags, NULL, mm, &sdev);
-> +	if (ret)
-> +		sva = ERR_PTR(ret);
-> +	else if (sdev)
-> +		sva = &sdev->sva;
-> +	else
-> +		WARN(!sdev, "SVM bind succeeded with no sdev!\n");
-> +
-> +	mutex_unlock(&pasid_mutex);
-> +
-> +	return sva;
-> +}
-> +
-> +void intel_svm_unbind(struct iommu_sva *sva)
-> +{
-> +	struct intel_svm_dev *sdev;
-> +
-> +	mutex_lock(&pasid_mutex);
-> +	sdev = to_intel_svm_dev(sva);
-> +	intel_svm_unbind_mm(sdev->dev, sdev->pasid);
-> +	mutex_unlock(&pasid_mutex);
-> +}
-> +
-> +int intel_svm_get_pasid(struct iommu_sva *sva)
-> +{
-> +	struct intel_svm_dev *sdev;
-> +	int pasid;
-> +
-> +	mutex_lock(&pasid_mutex);
-> +	sdev = to_intel_svm_dev(sva);
-> +	pasid = sdev->pasid;
-> +	mutex_unlock(&pasid_mutex);
-> +
-> +	return pasid;
-> +}
-> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-> index 37cfd35b7ccf..044493a11dce 100644
-> --- a/include/linux/intel-iommu.h
-> +++ b/include/linux/intel-iommu.h
-> @@ -702,6 +702,11 @@ extern int intel_svm_finish_prq(struct
-> intel_iommu *iommu); extern int intel_svm_bind_gpasid(struct
-> iommu_domain *domain, struct device *dev, struct
-> iommu_gpasid_bind_data *data); extern int
-> intel_svm_unbind_gpasid(struct device *dev, int pasid); +extern
-> struct iommu_sva * +intel_svm_bind(struct device *dev, struct
-> mm_struct *mm, void *drvdata); +extern void intel_svm_unbind(struct
-> iommu_sva *handle); +extern int intel_svm_get_pasid(struct iommu_sva
-> *handle); +
->  struct svm_dev_ops;
->  
->  struct intel_svm_dev {
-> @@ -709,6 +714,8 @@ struct intel_svm_dev {
->  	struct rcu_head rcu;
->  	struct device *dev;
->  	struct svm_dev_ops *ops;
-> +	struct iommu_sva sva;
-> +	int pasid;
->  	int users;
->  	u16 did;
->  	u16 dev_iotlb:1;
-> diff --git a/include/linux/intel-svm.h b/include/linux/intel-svm.h
-> index a2c189ad0b01..fb7e786d8877 100644
-> --- a/include/linux/intel-svm.h
-> +++ b/include/linux/intel-svm.h
-> @@ -62,89 +62,4 @@ struct svm_dev_ops {
->   */
->  #define SVM_FLAG_GUEST_PASID	(1<<3)
->  
-> -#ifdef CONFIG_INTEL_IOMMU_SVM
-> -
-> -/**
-> - * intel_svm_bind_mm() - Bind the current process to a PASID
-> - * @dev:	Device to be granted access
-> - * @pasid:	Address for allocated PASID
-> - * @flags:	Flags. Later for requesting supervisor mode, etc.
-> - * @ops:	Callbacks to device driver
-> - *
-> - * This function attempts to enable PASID support for the given
-> device.
-> - * If the @pasid argument is non-%NULL, a PASID is allocated for
-> access
-> - * to the MM of the current process.
-> - *
-> - * By using a %NULL value for the @pasid argument, this function can
-> - * be used to simply validate that PASID support is available for the
-> - * given device — i.e. that it is behind an IOMMU which has the
-> - * requisite support, and is enabled.
-> - *
-> - * Page faults are handled transparently by the IOMMU code, and there
-> - * should be no need for the device driver to be involved. If a page
-> - * fault cannot be handled (i.e. is an invalid address rather than
-> - * just needs paging in), then the page request will be completed by
-> - * the core IOMMU code with appropriate status, and the device itself
-> - * can then report the resulting fault to its driver via whatever
-> - * mechanism is appropriate.
-> - *
-> - * Multiple calls from the same process may result in the same PASID
-> - * being re-used. A reference count is kept.
-> - */
-> -extern int intel_svm_bind_mm(struct device *dev, int *pasid, int
-> flags,
-> -			     struct svm_dev_ops *ops);
-> -
-> -/**
-> - * intel_svm_unbind_mm() - Unbind a specified PASID
-> - * @dev:	Device for which PASID was allocated
-> - * @pasid:	PASID value to be unbound
-> - *
-> - * This function allows a PASID to be retired when the device no
-> - * longer requires access to the address space of a given process.
-> - *
-> - * If the use count for the PASID in question reaches zero, the
-> - * PASID is revoked and may no longer be used by hardware.
-> - *
-> - * Device drivers are required to ensure that no access (including
-> - * page requests) is currently outstanding for the PASID in question,
-> - * before calling this function.
-> - */
-> -extern int intel_svm_unbind_mm(struct device *dev, int pasid);
-> -
-> -/**
-> - * intel_svm_is_pasid_valid() - check if pasid is valid
-> - * @dev:	Device for which PASID was allocated
-> - * @pasid:	PASID value to be checked
-> - *
-> - * This function checks if the specified pasid is still valid. A
-> - * valid pasid means the backing mm is still having a valid user.
-> - * For kernel callers init_mm is always valid. for other mm, if
-> mm->mm_users
-> - * is non-zero, it is valid.
-> - *
-> - * returns -EINVAL if invalid pasid, 0 if pasid ref count is invalid
-> - * 1 if pasid is valid.
-> - */
-> -extern int intel_svm_is_pasid_valid(struct device *dev, int pasid);
-> -
-> -#else /* CONFIG_INTEL_IOMMU_SVM */
-> -
-> -static inline int intel_svm_bind_mm(struct device *dev, int *pasid,
-> -				    int flags, struct svm_dev_ops
-> *ops) -{
-> -	return -ENOSYS;
-> -}
-> -
-> -static inline int intel_svm_unbind_mm(struct device *dev, int pasid)
-> -{
-> -	BUG();
-> -}
-> -
-> -static int intel_svm_is_pasid_valid(struct device *dev, int pasid)
-> -{
-> -	return -EINVAL;
-> -}
-> -#endif /* CONFIG_INTEL_IOMMU_SVM */
-> -
-> -#define intel_svm_available(dev) (!intel_svm_bind_mm((dev), NULL, 0,
-> NULL)) -
->  #endif /* __INTEL_SVM_H__ */
+> > > > +       /* Check for spurious interrupt */
+> > > > +       if (!m_irq) {
+> > > > +               ret = IRQ_NONE;
+> > > > +               goto exit;
+> > >
+> > > I ask because it could be simplified by reading the status and then
+> > > immediately returning IRQ_NONE if no bits are set without having to do
+> > > the lock/unlock dance. And does writing 0 to the irq clear register do
+> > > anything?
+> >
+> > Sure.  I'll move it if you want.  It felt nicer to just keep the whole
+> > thing under lock so I didn't have to think about whether it mattered.
+> > ...and anyone else looking at it didn't need to think about if it
+> > mattered, too.  It it is very easy to say that it doesn't _hurt_ to
+> > have it under lock other than having one extra memory read under lock.
+> > ...and presumably the case where the optimization matters is
+> > incredibly rare (a spurious interrupt) and we just spent a whole lot
+> > of cycles calling the interrupt handler to begin with for this
+> > spurious interrupt.
+> >
+> > I would have a hard time believing that a write of 0 to a "write 1 to
+> > clear" register would have any impact.  It would be a pretty bad
+> > hardware design...
+>
+> This is a writel to a device so it may take some time for the memory
+> barrier to drain any other writes with the full memory barrier in there.
+> Not sure if we care about getting super high performance here but that's
+> a concern.
 
-[Jacob Pan]
+Right, but I guess the spurious interrupt case wasn't one I'm
+optimizing for.  ...and if it's a real problem we should figure out
+how to avoid so many spurious interrupts.  Presumably all the overhead
+that the Linux kernel did to call our interrupt handler in the first
+place is much more serious.
+
+
+> > So I guess in summary, I'm not planning to spin for any of these
+> > things unless you really insist or you say I'm wrong about something
+> > above or someone else says my opinions are the wrong opinions.
+> >
+>
+> Why do we need such large locking areas?
+
+We probably don't, but it's unlikely to matter at all and the large
+locking areas mean we don't have to spend time thinking about it.
+It's super clear that the locking is safe.
+
+
+In general there shouldn't be tons of downside to have large locking
+areas because there shouldn't be contention for this lock.  As you
+said, much of this is synchronized at higher levels, so mostly we're
+just worried about synchronizing with our interrupt handler and one
+would hope the interrupt handler wasn't firing at times we don't
+expect.
+
+...but I guess there is the downside that local interrupts are fully
+disabled for this whole large locking area and that does feel like
+something that might be worth optimizing for...
+
+
+In theory we _could_ just have a lock around updating 'cur_mcmd' and
+kicking off the transfer.  That would make sure that 'cur_mcmd' was
+definitely updated by the time the interrupt fired.  It feels at least
+a little awkward to me, though, because there is more shared state
+between the interrupt handler and the functions kicking off the
+transfers and we're really just using the lock as a poor man's memory
+barrier, but maybe it's OK.  I can give a shot at this approach if it
+feels viable to you.
+
+
+> Why can't we remove the enum
+> software tracking stuff and look at mas->cur_xfer to figure out if a cs
+> change is happening or not? I suppose mas->cur_xfer could be stale, so
+> we need to make sure that is modified and checked under a lock, and then
+> mas->rx_rem_bytes/tx_rem_bytes also need to be under a lock because
+> they're modified inside and outside the irq handler, but otherwise I
+> don't see any need to hold the lock over the register reads/writes. Most
+> other things are synchronized with the completions or in higher layers
+> of the SPI core.
+
+In general it's a big-ish change to code that's largely already tested
+and that (IMO) it makes readability slightly worse.  It can be worth
+it to make big changes for big gain, but I don't see it here.  It
+might have a slight performance boost, but seems like premature
+optimization since there's no evidence that the existing performance
+(even after my big locking patch) is a problem.
+
+If we want to go forward with your suggestion, I'd have to spend more
+time thinking about the cancel/abort cases, especially, which I'm not
+sure how to test super well.  Specifically does cancel/abort cause the
+"done" bit to be set?  If so your new code will finalize the current
+transfer, but the old code didn't.  I have no idea if this matters.
+You also removed the spinlock from handle_fifo_timeout() and I don't
+know if (for instance) it was important to clear the TX watermark
+register after firing off the abort command but before the interrupt
+handler could run.  It also doesn't necessarily appear that
+reinit_completion() has any safety, so is there some chance that the
+interrupt could fire and we'd still have the re-init pending on our
+side, then clear "done" back to zero after the interrupt handler
+completed us?
+
+...one extra thing to think about with all this is that (I think)
+handle_fifo_timeout() will be called if someone kicks off a SPI
+transfer and then hits "Ctrl-C" partway.  In this case
+spi_transfer_wait() will return -EINTR and I think that will change
+the chip select and then call "handle_err".  I have no idea if that
+works well today, but I have a feeling it will be harder to get right
+without an extra state variable.
+
+
+> I do wonder if we need to hold the lock again when we update the rx/tx
+> remaining bytes counter but I can't convince myself that the irq can run
+> on another CPU in parallel with the CPU that ran the irq first. That
+> seems impossible given that the interrupt would have to come again and
+> the irq controller would need to send it to a different CPU at the same
+> time. We should only need to grab the lock to make sure that cur_xfer
+> and remaining bytes is published by the CPU triggering the rx/tx
+> transfers and then assume the irq handler code is synchronous with
+> itself.
+
+At least needs a comment?
+
+...but even with a comment, what exactly are you gaining here by
+making me and all future readers of the code think about this?  One of
+your main goals here is to eliminate the need to have the spin lock
+locked for the whole of the IRQ handler, right?  If we're in the
+interrupt handler, local interrupts are already off, right?  That
+means that the only thing you can gain (in terms of speed) by
+decreasing the number of lines "under lock" is that you could allow
+someone else trying to get the same lock to run sooner.  As you've
+pointed out, there's already a lot of synchronization at higher
+layers, and many of the arguments you make are assuming that the other
+code isn't running anyway.
+
+So this overall seems like trying to shorten the amount of time that
+the lock is held just for the sheer principle of having spin locks
+held for the fewest lines of code, but not for any real gain?
+
+To get into micro-optimizations, too, I will also say that having fine
+grained locking in the interrupt handler also will lead to more than
+one call to spin_lock() per IRQ.  I put traces in and I often saw "rx"
+and "cmd_done" fall together and both separately lock in your code.
+In general isn't reducing the number of calls to spin_lock() (which I
+think has some overhead) more important?
+
+
+> -       if ((m_irq & M_CMD_CANCEL_EN) || (m_irq & M_CMD_ABORT_EN)) {
+> -               mas->cur_mcmd = CMD_NONE;
+> +       /* Wake up spi_geni_set_cs() or handle_fifo_timeout() */
+> +       if (cs_change || (m_irq & M_CMD_CANCEL_EN) || (m_irq & M_CMD_ABORT_EN))
+>                 complete(&mas->xfer_done);
+> -       }
+>
+>         writel(m_irq, se->base + SE_GENI_M_IRQ_CLEAR);
+> -       spin_unlock_irqrestore(&mas->lock, flags);
+> +
+
+It doesn't feel legit to release the spinlock before this writel().
+Once you complete(), can't (in theory) another transfer kick off on
+another CPU, and then cause an interrupt to fire?  You'd be clearing
+someone else's interrupt, perhaps?  Maybe this actually happens in
+handle_fifo_timeout() which (after your patch) waits for the
+completion and then immediate (with no locking) fires off an abort.
+
+As an aisde and unrelated to your change, I never like it when
+interrupt handler clear their IRQ bits at the end anyway because it
+always feels like a race.  The only time you clear at the end is if
+you have "latched level" interrupts (interrupts that are latched but
+will continually re-assert unless the thing that caused them goes
+away).  I have no idea of these bits are "latched level", but it feels
+unlikely.
+
+
+NOTE: I didn't do a complete review of your patch because (I think) I
+already found a few issues and am still not convinced it's a good use
+of time to fully re-architect the control flow of this driver.  If you
+still think this is something we need to do, I will try to make time
+to work through all the corner cases in my head and try my best to
+make sure there are no weird memory-ordering issues, but I can't
+promise I won't miss anything.
+
+
+-Doug
