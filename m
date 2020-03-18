@@ -2,93 +2,138 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C785C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67DDC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF042076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:33:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l81RBBfz"
+	by mail.kernel.org (Postfix) with ESMTP id C80A020773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 14:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgCROdX (ORCPT
+        id S1727202AbgCROd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 10:33:23 -0400
-Received: from mail-lj1-f176.google.com ([209.85.208.176]:44089 "EHLO
-        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbgCROdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 10:33:23 -0400
-Received: by mail-lj1-f176.google.com with SMTP id w4so12587752lji.11
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 07:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=XF5S4XxJDvzuKvczlMPC3brfPAk78vzQeXC6ETpLBZI=;
-        b=l81RBBfzP7Dw/gUWj2/x/6CbwsAtfF9hI/+ROQMlzJ85+02CYWcRou9ncfaDyyssCH
-         ejEaoS7axwEdCEbJloyWnQjeAqyRLvzQPTQki2cVvGGVBObg6nbjUI64ao/WLfuA5U9V
-         dThsCy8N5yaveHKJJ4S4jgBYVh2kN1FJsKoYa8cD5sLXMFgVrwKNSUhentKpaLvGTrPD
-         S5eTslz9LLWRlpgJAPV0IHN6wC5Ro5sTTVgd0MoI+UXvgw86dJMiUfB1Jl9Z8IDE1J3Z
-         UGcz0WMMx3dVmMhIu5o39jMKy+PheMk3gWKIlLJLoKqhzotkG3Ev4x6rwpaAHFq0Rqoo
-         w0zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=XF5S4XxJDvzuKvczlMPC3brfPAk78vzQeXC6ETpLBZI=;
-        b=gvs90HIXmcG/NZU6UjN5FNAHj96Zj/+Tsf8osg3vM5ZqcN9iap1A8rUf0YlB68W0kU
-         dj1LOil7oYKzO3q1Ff+CzFU4hdNh/7ND2JCYePekRW2IVeaHAcuMBj52IkRNCa1DrD1o
-         2w/C0KBNCdbMwOwXLkIYjcZLzimT3IWrvpZzbhnKAbNMOWYbME/weQbrLkx/fsZcbVXB
-         yATOqxqqztmTKyaB6foafvlVxsunu/4Z8/5X/vEzSIkE/ihDO7141zPqFB6Lggj0z1w8
-         kt5lUgNHAxvGrgdAN4RKhyjnqAEKYGI+SqnfpLtAgFAwDHEKALHZ2wUxpbF1t4+Fsd+I
-         9uUQ==
-X-Gm-Message-State: ANhLgQ0qxfGao+bOw9qO3/SOa1ZM8tTWQsFVUQRU7sXxW1tl46mi7oUr
-        v0YfQBzTEnpieFy2jLUfDzkwXrmz6kDHG1TZy1uGUlavoI10qA==
-X-Google-Smtp-Source: ADFU+vvDUw2azv5wuxvYN1sBPD4zgg6lx6ShyeW7lx3uJBMBnxMuGtEecjIe9jUXO8NzsyMmVaCSoFcH62+sHNrNuOY=
-X-Received: by 2002:a05:651c:285:: with SMTP id b5mr2500039ljo.165.1584542000262;
- Wed, 18 Mar 2020 07:33:20 -0700 (PDT)
+        Wed, 18 Mar 2020 10:33:26 -0400
+Received: from sauhun.de ([88.99.104.3]:48226 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbgCROdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 10:33:24 -0400
+Received: from localhost (p54B333FA.dip0.t-ipconnect.de [84.179.51.250])
+        by pokefinder.org (Postfix) with ESMTPSA id 039522C097D;
+        Wed, 18 Mar 2020 15:33:21 +0100 (CET)
+Date:   Wed, 18 Mar 2020 15:33:21 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-i3c@lists.infradead.org,
+        Kieran Bingham <kieran@ksquared.org.uk>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [RFC PATCH 6/7] i2c: of: mark a whole array of regs as reserved
+Message-ID: <20200318143321.GB8300@ninjato>
+References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
+ <20200220172403.26062-7-wsa+renesas@sang-engineering.com>
+ <CAMuHMdUvADDozCX6Bd0dDVejpTY-k42naEnB7Q5Z6w7Yg94_Vw@mail.gmail.com>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 18 Mar 2020 20:03:09 +0530
-Message-ID: <CA+G9fYtk0jCB1M=MeYP4SshXjyyhLJbHuSzpOkq0OPVjSRpqZg@mail.gmail.com>
-Subject: mm: hugetlb.c:5449:62: error: expected ';' before '{' token
-  for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL)
-To:     open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc:     lkft-triage@lists.linaro.org, Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>, andreas.schaufler@gmx.de,
-        js1304@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="aVD9QWMuhilNxW9f"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUvADDozCX6Bd0dDVejpTY-k42naEnB7Q5Z6w7Yg94_Vw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux next build failed on arm beagleboard x15.
 
-Build error:
-/mm/hugetlb.c: In function 'hugetlb_cma_reserve':
-/mm/hugetlb.c:5449:3: error: implicit declaration of function
-'for_each_mem_pfn_range'; did you mean 'for_each_mem_range'?
-[-Werror=implicit-function-declaration]
-   for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-   ^~~~~~~~~~~~~~~~~~~~~~
-   for_each_mem_range
-/mm/hugetlb.c:5449:62: error: expected ';' before '{' token
-   for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+--aVD9QWMuhilNxW9f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-config:
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-next/718/config
-                                                              ^
-full build url:
-https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/727/consoleText
 
--- 
-Linaro LKFT
-https://lkft.linaro.org
+> > +int of_i2c_get_board_info(struct device_node *node, struct i2c_board_i=
+nfo *info)
+> > +{
+> > +       u32 addr;
+> > +       int ret;
+> > +
+> > +       ret =3D of_property_read_u32(node, "reg", &addr);
+>=20
+> Perhaps the time is ripe to start considering #address-cells, instead
+> of assuming 1, here ...
+
+I think here it is okay because we really want the first entry of the
+first tuple.
+
+> > +       of_property_for_each_u32(node, "reg", prop, cur, reg) {
+>=20
+> ... and especially here, if this code can ever be reused for i3c, which u=
+ses 3.
+
+But here I agree. I reimplemented the code to handle it, and it worked
+with '#address-cells =3D <2>;' as expected. Here is the diff to this
+patch:
+
+@@ -16,6 +16,7 @@
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/of_device.h>
+ #include <linux/sysfs.h>
+=20
+@@ -75,13 +76,14 @@ static struct i2c_client *of_i2c_register_device(struct=
+ i2c_adapter *adap,
+ 	struct i2c_client *client, *first_client =3D ERR_PTR(-ENOENT);
+ 	struct i2c_board_info info;
+ 	bool first_reg =3D true;
+-	struct property *prop;
+-	const __be32 *cur;
+-	u32 reg;
++	unsigned int i =3D 0;
++	const __be32 *prop;
++	u16 reg;
+=20
+ 	pr_debug("register %pOF\n", node);
+=20
+-	of_property_for_each_u32(node, "reg", prop, cur, reg) {
++	while ((prop =3D of_get_address(node, i++, NULL, NULL))) {
++		reg =3D of_read_number(prop, 1);
+ 		of_i2c_decode_board_info(node, reg, first_reg, &info);
+=20
+ 		client =3D i2c_new_client_device(adap, &info);
+
+Thanks, Geert! I will send out the new version in a few minutes.
+
+
+--aVD9QWMuhilNxW9f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl5yMS0ACgkQFA3kzBSg
+KbYtfRAAil0f+6TG3T06kRnSNoNLPpEoqabj0ip7Vz7+gSloBvl8lszjT7CP//7R
+9gnjhLFvr6hPVbC64dzimreCL1JGYUtFOhKDl/pPSA+TrEFEARbOCxIbdhgieFC0
+DrSN2Ed+jK7ZRTPdTuT2y6DNf6bbDHo3ihnzd57I2wy6cEsTMdyIJSAnsxfn5QVf
+6EKTCLAeBI9hPd3jDB38ICvQ0Vf9/F9lHRZNOQo1hQwSkUbnyyqf26k8kt/VAnm9
+Ipcvlz8krmqY2FWnC/FlzhKV5lSc9i7VSZJTQOjtO39RHxRAsOytbzc6erlTp9Pz
+V1+Uw8HGIVMbQe1+kpaaJvomxTApQ2HqjTOPTQc/2h9qXUdCdeWFi56oaJzCl7hp
+WHCgqmUCfs4a1V75vuHk2Fj3mPMQsvmjiWrvW5Sz5nvto2GTjKsg2m/v6bdabTxk
+iMFjwBfQVun1ziMQOad0zycEFF+sBtQafAg4zmS/FAyrhGAVI9YQ57Z93dlk7D1L
+YLFvxifo+L5a6/ny1uEL0xrjMoYfiUCTXlySSuywl5dD5jsqBoUWduFXeHo0DezA
+Pe/Vht7ChN7WlI3kDt3X+zCVGmf5WnObEJPrzm39gUNjod7UpW39zgoKQWuF4Rpp
+JCKxZe174onb36K3lz83DRTkg5v5NU1AdVgwqrKM6RjakOs1aXM=
+=Ku4u
+-----END PGP SIGNATURE-----
+
+--aVD9QWMuhilNxW9f--
