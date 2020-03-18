@@ -2,118 +2,165 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B30C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0C5C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2331020773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="I1ljf0ad"
+	by mail.kernel.org (Postfix) with ESMTP id 59E5820773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584539457;
+	bh=9zcXYLKK5Dhr/+f1z2OMEWB6HxFE4z3Xgg7sGJiZW8o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kqxylZgevcVUYujZht2cHpx0kWmF1YGMHOYM5ldpJJBlKF8oVA9hc9hj0cluFEPBB
+	 6EJ30gjnXBtiwhRk2aWmeMXm2W5xMHDWl51ddLaS9CrMohJRKwKd+gG5akItO0wvo+
+	 xKFbPtHsGbxxm3gISpuNYg879OUMWNJlTXKzQQhc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbgCRNua (ORCPT
+        id S1727175AbgCRNuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:50:30 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42584 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgCRNu3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:50:29 -0400
-Received: by mail-wr1-f67.google.com with SMTP id v11so30553982wrm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 06:50:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XccCPctkAdV/8ABAxnQ5VwYEjRgb5OJA1jC/yCtBVYI=;
-        b=I1ljf0adRaW/V1KC7utnbIQYNKvRQb1ZxU01eNnezjuv6EmUivN+cWO5CNflsS0hfT
-         jEdCgSSpd2PjWSGulDFhZdEd5eMe927eZpiD8EAxAhIZW9sHj/TFlO+3WfH1U8fj4ecb
-         QMQkS+2Y3qzE0h9pV5V5sro3G19mLqWB/pfac=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=XccCPctkAdV/8ABAxnQ5VwYEjRgb5OJA1jC/yCtBVYI=;
-        b=gvOupIJh/IrgSkmPO4YGdIoAb793JCsgVCXywNSiR+0lBgCIETb/jmSiHqWtQQGPxP
-         MAq+/EHFbIF2cZLe7Y1YO98cVhYY/6HEPqyt7F04QgA5ewEMUcU8b+zhlpurTLPioMwW
-         FNzzFxuSjSOGvy4RTf/nyFTbXGt0yD94m50MVFK9Q7Hc+Rls2tHJKhjrA8cUmVCzWNMJ
-         fnAhNqiMalo2xoCDQJFJQQTja+z47q5cpYul3pHI7wintQYrGwFL7X7e8vdpNaNvfG+i
-         802jgl2uJRsezeJd6I2LUPrU5UJUgwIT8M8vk1Ay5zxKsOK+Pz04NZazjULVcKU0J5zt
-         BZCA==
-X-Gm-Message-State: ANhLgQ0/9FCdqtHw0kt0VcZsslOp/FA3OZi5fzbqOC/qXO7f9P8S9jIx
-        Yb3q7S19wv47tPVw3VadEj6dow==
-X-Google-Smtp-Source: ADFU+vuDk7wnQRImLnOiwAYtmQ9nntEm5AfmJm2mHPI5WuMxgr+Um1lVXT09iRpAmPaIlMWncT25VA==
-X-Received: by 2002:a5d:414f:: with SMTP id c15mr6321028wrq.60.1584539427182;
-        Wed, 18 Mar 2020 06:50:27 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id w19sm3880374wmi.0.2020.03.18.06.50.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 06:50:26 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 14:50:24 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Igor Matheus Andrade Torrente <igormtorrente@gmail.com>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch,
-        sumit.semwal@linaro.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Rodrigo.Siqueira@amd.com,
-        rodrigosiqueiramelo@gmail.com, andrealmeid@collabora.com
-Subject: Re: [PATCH v2] drm: Correct a typo in a function comment
-Message-ID: <20200318135024.GX2363188@phenom.ffwll.local>
-Mail-Followup-To: Igor Matheus Andrade Torrente <igormtorrente@gmail.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, airlied@linux.ie, sumit.semwal@linaro.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Rodrigo.Siqueira@amd.com, rodrigosiqueiramelo@gmail.com,
-        andrealmeid@collabora.com
-References: <20200317210339.2669-1-igormtorrente@gmail.com>
+        Wed, 18 Mar 2020 09:50:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbgCRNuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 09:50:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C79A020767;
+        Wed, 18 Mar 2020 13:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584539454;
+        bh=9zcXYLKK5Dhr/+f1z2OMEWB6HxFE4z3Xgg7sGJiZW8o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Xzl7WDy28mpXrKG2uuW9mWQWA6nDhybZpFEgynuX461hV6NyJmhE1pNlCmk69rfaW
+         FfhPC4crTBVLVlo4RJthEex5J1bu7XOcWh43uQA8WZnkPViZpYyossDRHrbsGrjRaM
+         lej9sKAIAKQVVgnpS6YCq5WXpAKLgH2POgcb/NAg=
+Date:   Wed, 18 Mar 2020 14:50:52 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "rafael@kernel.org" <rafael@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>
+Subject: Re: [PATCH v4 3/9] drivers: base: add linear ranges helpers
+Message-ID: <20200318135052.GA2804430@kroah.com>
+References: <cover.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+ <01ac2439f9d33ae405999065c5d28c368bad4a28.1582617178.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200318130838.GB2769584@kroah.com>
+ <910505f6a38298707fc27b135e49a7e2a941fb88.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200317210339.2669-1-igormtorrente@gmail.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <910505f6a38298707fc27b135e49a7e2a941fb88.camel@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 06:03:39PM -0300, Igor Matheus Andrade Torrente wrote:
-> Replace "pionter" with "pointer" in the drm_gem_handle_create description.
+On Wed, Mar 18, 2020 at 01:42:26PM +0000, Vaittinen, Matti wrote:
+> Hello Greg,
 > 
-> Changes in v2:
-> - Change subject text
+> On Wed, 2020-03-18 at 14:08 +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Feb 25, 2020 at 10:53:01AM +0200, Matti Vaittinen wrote:
+> > > Many devices have control registers which control some measurable
+> > > property. Often a register contains control field so that change in
+> > > this field causes linear change in the controlled property. It is
+> > > not
+> > > a rare case that user wants to give 'meaningful' control values and
+> > > driver needs to convert them to register field values. Even more
+> > > often user wants to 'see' the currently set value - again in
+> > > meaningful units - and driver needs to convert the values it reads
+> > > from register to these meaningful units. Examples of this include:
+> > > 
+> > > - regulators, voltage/current configurations
+> > > - power, voltage/current configurations
+> > > - clk(?) NCOs
+> > > 
+> > > and maybe others I can't think of right now.
+> > > 
+> > > Provide a linear_range helper which can do conversion from user
+> > > value
+> > > to register value 'selector'.
+> > > 
+> > > The idea here is stolen from regulator framework and patches
+> > > refactoring
+> > > the regulator helpers to use this are following.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > ---
+> > > 
+> > > Changes since rfc-v3:
+> > >   - Kerneldoc fixes
+> > >   - Corrected commit message typo meaningfull => meaningful
+> > > 
+> > >  drivers/base/Kconfig         |   3 +
+> > >  drivers/base/Makefile        |   1 +
+> > >  drivers/base/linear_ranges.c | 246
+> > > +++++++++++++++++++++++++++++++++++
+> > 
+> > Why in drivers/base/ ?
+> > 
+> > Why not in lib/ ?
 > 
-> Signed-off-by: Igor Matheus Andrade Torrente <igormtorrente@gmail.com>
+> I was pondering which of these would be better. I decided to do with
+> drivers/base because - in it's current form - this is really a driver
+> related stuff. I see it somehow in same position as regmap code -
+> although this is just a tiny helper compared to regmap. But this also
+> has pretty driver specific audience :)
+> 
+> And... I must admit I like things which I know. And I have been doing
+> driver development and "know" a few of the driver related colleagues -
+> hence working with them is easier for me ;) Getting to know the
+> colleagues maintaining lib is a bit scary :] Yep, I'm Finnish if you
+> happen to wonder why getting to know people is scary xD
+> 
+> > 
+> > >  include/linux/linear_range.h |  48 +++++++
+> > >  4 files changed, 298 insertions(+)
+> > >  create mode 100644 drivers/base/linear_ranges.c
+> > >  create mode 100644 include/linux/linear_range.h
+> > > 
+> > > diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
+> > > index 5f0bc74d2409..636b6fa8e499 100644
+> > > --- a/drivers/base/Kconfig
+> > > +++ b/drivers/base/Kconfig
+> > > @@ -209,4 +209,7 @@ config GENERIC_ARCH_TOPOLOGY
+> > >  	  appropriate scaling, sysfs interface for reading capacity
+> > > values at
+> > >  	  runtime.
+> > >  
+> > > +config LINEAR_RANGES
+> > > +	tristate
+> > 
+> > No help text at all???
+> 
+> Yes. The linear ranges has no meaning to be enabled alone. It only
+> plays a role if it is used by some driver/subsystem. And
+> drivers/subsystems should do
+> select LINEAR_RANGES. So showing help in any config tool is not needed.
+> This should actually not be visible in menuconfig or others. I think I
+> have seen a few examples like this.
+> 
+> Ayways, I have no obejctions to adding some text if absolutely needed.
+> Any suggestions for a text politely saying - "please, pretend I am not
+> here" - are welcome :) (Although, I think this really does not need
+> help text).
 
-Thanks for your patch, queued for 5.8 in drm-misc-next.
--Daniel
+This kind of implies it needs to be in lib/ that way the needed code
+links it and all should be fine.
 
-> ---
->  drivers/gpu/drm/drm_gem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-> index 6e960d57371e..c356379f5e97 100644
-> --- a/drivers/gpu/drm/drm_gem.c
-> +++ b/drivers/gpu/drm/drm_gem.c
-> @@ -432,7 +432,7 @@ drm_gem_handle_create_tail(struct drm_file *file_priv,
->   * drm_gem_handle_create - create a gem handle for an object
->   * @file_priv: drm file-private structure to register the handle for
->   * @obj: object to register
-> - * @handlep: pionter to return the created handle to the caller
-> + * @handlep: pointer to return the created handle to the caller
->   *
->   * Create a handle for this object. This adds a handle reference to the object,
->   * which includes a regular reference count. Callers will likely want to
-> -- 
-> 2.20.1
-> 
+thanks,
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+greg k-h
