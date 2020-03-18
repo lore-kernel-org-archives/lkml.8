@@ -2,141 +2,96 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96138C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D8BC5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E14920768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:47:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfA+GMmC"
+	by mail.kernel.org (Postfix) with ESMTP id 11AF32076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgCRErp (ORCPT
+        id S1726663AbgCRFBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 00:47:45 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43189 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbgCREro (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 00:47:44 -0400
-Received: by mail-io1-f67.google.com with SMTP id n21so23509931ioo.10;
-        Tue, 17 Mar 2020 21:47:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9t6OER6Nr8rTZmv9fIvbSoay6iMJgVOYfySsd9QPfc4=;
-        b=mfA+GMmCp4qNgKXbNcNzf8cghnXV6QQ3GtKTAxFhMdD6bRnE36h5Xo3rZwAUXBoNmZ
-         nuGj1WreHi2fmsfZ3wRWJPTwZWKbcwxcHCJJ3wl1PhnaN1X95rsCkpPT9b//wmJeXFSN
-         XgakKl2ogf7QvmgHiMGwTU/vTm6WUgtHxfFXS3ERvHEJEVThIiLpq+cKdg5fLQ27W3sx
-         JoeBXDa85cjpI5pO1PUKyF2t9NggC9wu7zf4SnCNRVVI10Kgcis7Op2/Aujk5er8KzEa
-         ij3V20oD2QMnmLU2JgWxoztvhNaHbXh9ndRIQm31FQ/yG/EtZrOI8COKYz9SBZiJchp4
-         h0Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9t6OER6Nr8rTZmv9fIvbSoay6iMJgVOYfySsd9QPfc4=;
-        b=NxIoQg14mbO2u4JEUeSZuTzdFxO35mzX23yZ9adfA+2OHSt2kYeex7UoIzlh4B66MB
-         nYcYA4uYuvEMT/Ty20WHJr+65pN4ALGJMbVs//nIaKYtPuoQDnZ4erong1inQuFVKCx9
-         p6MSrTAYVVG9UN12OLNSxnVATz7hDW6DPVHZJZ4KTqVbd9wyeGZYLQaBL6gCZJpeZkD/
-         2gK4E+yUXfaBXFbYcX/BTu0UFA8y6Mu+SC8AaCoABjMHMx1vweKgmTyNkyv+5q5I3rU1
-         vcOMJEww+pWnyhP63lTvhi4JycZhnTyNoUA5Qtgkg6m8Pq9qW3kX5cA9Vh3YMduFu37s
-         ecFg==
-X-Gm-Message-State: ANhLgQ0c2ArHHjJzIWScHDXPsZBwVROvuCE+Gw1rwKopvlLBAgkPCfeZ
-        FzbgOoz8sXYZ51b57VVH8Or8PHMoSpx1+pckktHV9g==
-X-Google-Smtp-Source: ADFU+vsgQ+qx2CLoR9BIj0WDMTsdIGixCf0zjYOE9Lr8efHI5AIL3zlIgFhzUgrpb+kZOdFKxZALyNWkE4zVHAWjSU8=
-X-Received: by 2002:a05:6638:a99:: with SMTP id 25mr2729836jas.37.1584506863812;
- Tue, 17 Mar 2020 21:47:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <ef49e240-fc8f-9eb4-af98-26bfd39104aa@huawei.com>
-In-Reply-To: <ef49e240-fc8f-9eb4-af98-26bfd39104aa@huawei.com>
-From:   ronnie sahlberg <ronniesahlberg@gmail.com>
-Date:   Wed, 18 Mar 2020 14:47:32 +1000
-Message-ID: <CAN05THQYxPcsgiHTqMcsTgB6ZDYaBMamu-sOe428H7EwSRU2HQ@mail.gmail.com>
-Subject: Re: [PATCH] CIFS: Fix bug which the return value by asynchronous read
- is error
-To:     Yilu Lin <linyilu@huawei.com>
-Cc:     linux-cifs <linux-cifs@vger.kernel.org>,
-        Steve French <sfrench@samba.org>,
-        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>, alex.chen@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 18 Mar 2020 01:01:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:45564 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726478AbgCRFBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 01:01:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C26D1FB;
+        Tue, 17 Mar 2020 22:01:42 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7D0353F67D;
+        Tue, 17 Mar 2020 22:01:38 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/mm: Make pud_present() check _PAGE_PROTNONE and _PAGE_PSE as well
+Date:   Wed, 18 Mar 2020 10:31:19 +0530
+Message-Id: <1584507679-11976-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yilu,
+pud_present() should also check _PAGE_PROTNONE and _PAGE_PSE bits like in
+case pmd_present(). This makes a PUD entry test positive for pud_present()
+after getting invalidated with pud_mknotpresent(), hence standardizing the
+semantics with PMD helpers.
 
-I think your reasoning makes sense.
-Do you have a small reproducer for this? A small C program that triggers this?
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: x86@kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+Even though pud_mknotpresent() is not used any where currently, there is
+a discrepancy between PMD and PUD.
 
-I am asking because if you do we would like to add it to our buildbot
-to make  sure we don't get regressions.
+WARN_ON(!pud_present(pud_mknotpresent(pud_mkhuge(pud)))) -> Fail
+WARN_ON(!pmd_present(pmd_mknotpresent(pmd_mkhuge(pmd)))) -> Pass
 
+Though pud_mknotpresent() currently clears _PAGE_PROTNONE, pud_present()
+does not check it. This change fixes both inconsistencies.
 
-regards
-ronnie sahlberg
+This has been build and boot tested on x86.
 
-On Wed, Mar 18, 2020 at 1:59 PM Yilu Lin <linyilu@huawei.com> wrote:
->
-> This patch is used to fix the bug in collect_uncached_read_data()
-> that rc is automatically converted from a signed number to an
-> unsigned number when the CIFS asynchronous read fails.
-> It will cause ctx->rc is error.
->
-> Example:
-> Share a directory and create a file on the Windows OS.
-> Mount the directory to the Linux OS using CIFS.
-> On the CIFS client of the Linux OS, invoke the pread interface to
-> deliver the read request.
->
-> The size of the read length plus offset of the read request is greater
-> than the maximum file size.
->
-> In this case, the CIFS server on the Windows OS returns a failure
-> message (for example, the return value of
-> smb2.nt_status is STATUS_INVALID_PARAMETER).
->
-> After receiving the response message, the CIFS client parses
-> smb2.nt_status to STATUS_INVALID_PARAMETER
-> and converts it to the Linux error code (rdata->result=-22).
->
-> Then the CIFS client invokes the collect_uncached_read_data function to
-> assign the value of rdata->result to rc, that is, rc=rdata->result=-22.
->
-> The type of the ctx->total_len variable is unsigned integer,
-> the type of the rc variable is integer, and the type of
-> the ctx->rc variable is ssize_t.
->
-> Therefore, during the ternary operation, the value of rc is
-> automatically converted to an unsigned number. The final result is
-> ctx->rc=4294967274. However, the expected result is ctx->rc=-22.
->
-> Signed-off-by: Yilu Lin <linyilu@huawei.com>
-> ---
->  fs/cifs/file.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-> index 022029a5d..ff4ac244c 100644
-> --- a/fs/cifs/file.c
-> +++ b/fs/cifs/file.c
-> @@ -3323,7 +3323,7 @@ again:
->         if (rc == -ENODATA)
->                 rc = 0;
->
-> -       ctx->rc = (rc == 0) ? ctx->total_len : rc;
-> +       ctx->rc = (rc == 0) ? (ssize_t)ctx->total_len : rc;
->
->         mutex_unlock(&ctx->aio_mutex);
->
-> --
-> 2.19.1
->
->
+ arch/x86/include/asm/pgtable.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 7e118660bbd9..8adf1d00b506 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -857,7 +857,13 @@ static inline int pud_none(pud_t pud)
+ 
+ static inline int pud_present(pud_t pud)
+ {
+-	return pud_flags(pud) & _PAGE_PRESENT;
++	/*
++	 * Checking for _PAGE_PSE is needed too because
++	 * split_huge_page will temporarily clear the present bit (but
++	 * the _PAGE_PSE flag will remain set at all times while the
++	 * _PAGE_PRESENT bit is clear).
++	 */
++	return pud_flags(pud) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PSE);
+ }
+ 
+ static inline unsigned long pud_page_vaddr(pud_t pud)
+-- 
+2.17.1
+
