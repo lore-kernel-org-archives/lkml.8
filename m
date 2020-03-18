@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0E5C43333
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3552C4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D872208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DC221473
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565150;
-	bh=5fy+DpjSqmh99XFyScJ450EPzLn3lYCObsESE/dMIBs=;
+	s=default; t=1584565153;
+	bh=Xbn6HVdf2Rr06BngOPRSafzwB1lYDKBAhjv8a6jaFNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ezNMz32Av1lj8Uk6aPoUEMaEHk5DpWIEFdBWrByXyh646BePcDFshycd7S9MrwEF/
-	 LhYSTYJl6ydH31LEmfRrJe7cYv4gw5DdZMiN5HRrlY8BAN1cZfnKPIf7NDt7eZdowi
-	 Mq3E3STHLkW6khtC946shUpoJR28anE0RqWE27XI=
+	b=wyZrX9k4bVF2t1bGHanPHzaTEsMpFvf/DYHjUx39K8ecuo8xDzFyiRAfUJZTCQh1+
+	 Zaofu852PXf0QGXCpR/4ZsMx883ceX08xmkzUY3zkexRgljzh+CtEPKk1X3XWXZ0J+
+	 XkXR0O4a5Uwb0PKdZzVawfPW6feLF8gUAPZi12E8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbgCRU44 (ORCPT
+        id S1728754AbgCRU7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:56:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57124 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728570AbgCRU4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:18 -0400
+        id S1728724AbgCRU4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488EA208CA;
-        Wed, 18 Mar 2020 20:56:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2797B208FE;
+        Wed, 18 Mar 2020 20:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564977;
-        bh=5fy+DpjSqmh99XFyScJ450EPzLn3lYCObsESE/dMIBs=;
+        s=default; t=1584565014;
+        bh=Xbn6HVdf2Rr06BngOPRSafzwB1lYDKBAhjv8a6jaFNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HtLd0RaJCciG4qSbjnMA2e8vtCn+Va4bBHkVisqB+eppa09MuhYFYo2CyKnvMhFOD
-         w16Oa2wcmVSaBgQXbpPoRWbDzbN92yfZ+3ymUcMOTynEKRwt4VDKHaVENz1WLlKLcJ
-         meYZxdEeUCGMcibrXRTUAYuyH0hprK+OEjFCSgNE=
+        b=hMd4tFHlwNHFn1/pIscteGqQrRI14g3eUKLraSyQRdEDJwSDsWjhVcxi8BZjleRXb
+         GxoPIAVnAsT4DWa2rZK4fg0qN4wqgjq2nuXNn4JWtnjmqqFoHrXeZTitZJfXf+89oH
+         7BZWmdX63JvEHFJocWByXmwEFTtXi+5BCfFOerWA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+Cc:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@mellanox.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 19/28] fsl/fman: detect FMan erratum A050385
-Date:   Wed, 18 Mar 2020 16:55:46 -0400
-Message-Id: <20200318205555.17447-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 05/12] team: add missing attribute validation for array index
+Date:   Wed, 18 Mar 2020 16:56:41 -0400
+Message-Id: <20200318205648.17937-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
-References: <20200318205555.17447-1-sashal@kernel.org>
+In-Reply-To: <20200318205648.17937-1-sashal@kernel.org>
+References: <20200318205648.17937-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,128 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@nxp.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit b281f7b93b258ce1419043bbd898a29254d5c9c7 ]
+[ Upstream commit 669fcd7795900cd1880237cbbb57a7db66cb9ac8 ]
 
-Detect the presence of the A050385 erratum.
+Add missing attribute validation for TEAM_ATTR_OPTION_ARRAY_INDEX
+to the netlink policy.
 
-Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Fixes: b13033262d24 ("team: introduce array options")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fman/Kconfig | 28 +++++++++++++++++++++
- drivers/net/ethernet/freescale/fman/fman.c  | 18 +++++++++++++
- drivers/net/ethernet/freescale/fman/fman.h  |  5 ++++
- 3 files changed, 51 insertions(+)
+ drivers/net/team/team.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/freescale/fman/Kconfig b/drivers/net/ethernet/freescale/fman/Kconfig
-index 8870a9a798ca4..91437b94bfcb6 100644
---- a/drivers/net/ethernet/freescale/fman/Kconfig
-+++ b/drivers/net/ethernet/freescale/fman/Kconfig
-@@ -8,3 +8,31 @@ config FSL_FMAN
- 	help
- 		Freescale Data-Path Acceleration Architecture Frame Manager
- 		(FMan) support
-+
-+config DPAA_ERRATUM_A050385
-+	bool
-+	depends on ARM64 && FSL_DPAA
-+	default y
-+	help
-+		DPAA FMan erratum A050385 software workaround implementation:
-+		align buffers, data start, SG fragment length to avoid FMan DMA
-+		splits.
-+		FMAN DMA read or writes under heavy traffic load may cause FMAN
-+		internal resource leak thus stopping further packet processing.
-+		The FMAN internal queue can overflow when FMAN splits single
-+		read or write transactions into multiple smaller transactions
-+		such that more than 17 AXI transactions are in flight from FMAN
-+		to interconnect. When the FMAN internal queue overflows, it can
-+		stall further packet processing. The issue can occur with any
-+		one of the following three conditions:
-+		1. FMAN AXI transaction crosses 4K address boundary (Errata
-+		A010022)
-+		2. FMAN DMA address for an AXI transaction is not 16 byte
-+		aligned, i.e. the last 4 bits of an address are non-zero
-+		3. Scatter Gather (SG) frames have more than one SG buffer in
-+		the SG list and any one of the buffers, except the last
-+		buffer in the SG list has data size that is not a multiple
-+		of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
-+		With any one of the above three conditions present, there is
-+		likelihood of stalled FMAN packet processing, especially under
-+		stress with multiple ports injecting line-rate traffic.
-diff --git a/drivers/net/ethernet/freescale/fman/fman.c b/drivers/net/ethernet/freescale/fman/fman.c
-index 97425d94e280d..9080d2332d030 100644
---- a/drivers/net/ethernet/freescale/fman/fman.c
-+++ b/drivers/net/ethernet/freescale/fman/fman.c
-@@ -1,5 +1,6 @@
- /*
-  * Copyright 2008-2015 Freescale Semiconductor Inc.
-+ * Copyright 2020 NXP
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -566,6 +567,10 @@ struct fman_cfg {
- 	u32 qmi_def_tnums_thresh;
+diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
+index adafc570c6507..e51fb7cb77282 100644
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -2170,6 +2170,7 @@ team_nl_option_policy[TEAM_ATTR_OPTION_MAX + 1] = {
+ 	[TEAM_ATTR_OPTION_TYPE]			= { .type = NLA_U8 },
+ 	[TEAM_ATTR_OPTION_DATA]			= { .type = NLA_BINARY },
+ 	[TEAM_ATTR_OPTION_PORT_IFINDEX]		= { .type = NLA_U32 },
++	[TEAM_ATTR_OPTION_ARRAY_INDEX]		= { .type = NLA_U32 },
  };
  
-+#ifdef CONFIG_DPAA_ERRATUM_A050385
-+static bool fman_has_err_a050385;
-+#endif
-+
- static irqreturn_t fman_exceptions(struct fman *fman,
- 				   enum fman_exceptions exception)
- {
-@@ -2517,6 +2522,14 @@ struct fman *fman_bind(struct device *fm_dev)
- }
- EXPORT_SYMBOL(fman_bind);
- 
-+#ifdef CONFIG_DPAA_ERRATUM_A050385
-+bool fman_has_errata_a050385(void)
-+{
-+	return fman_has_err_a050385;
-+}
-+EXPORT_SYMBOL(fman_has_errata_a050385);
-+#endif
-+
- static irqreturn_t fman_err_irq(int irq, void *handle)
- {
- 	struct fman *fman = (struct fman *)handle;
-@@ -2843,6 +2856,11 @@ static struct fman *read_dts_node(struct platform_device *of_dev)
- 		goto fman_free;
- 	}
- 
-+#ifdef CONFIG_DPAA_ERRATUM_A050385
-+	fman_has_err_a050385 =
-+		of_property_read_bool(fm_node, "fsl,erratum-a050385");
-+#endif
-+
- 	return fman;
- 
- fman_node_put:
-diff --git a/drivers/net/ethernet/freescale/fman/fman.h b/drivers/net/ethernet/freescale/fman/fman.h
-index bfa02e0014ae0..693401994fa2d 100644
---- a/drivers/net/ethernet/freescale/fman/fman.h
-+++ b/drivers/net/ethernet/freescale/fman/fman.h
-@@ -1,5 +1,6 @@
- /*
-  * Copyright 2008-2015 Freescale Semiconductor Inc.
-+ * Copyright 2020 NXP
-  *
-  * Redistribution and use in source and binary forms, with or without
-  * modification, are permitted provided that the following conditions are met:
-@@ -397,6 +398,10 @@ u16 fman_get_max_frm(void);
- 
- int fman_get_rx_extra_headroom(void);
- 
-+#ifdef CONFIG_DPAA_ERRATUM_A050385
-+bool fman_has_errata_a050385(void);
-+#endif
-+
- struct fman *fman_bind(struct device *dev);
- 
- #endif /* __FM_H */
+ static int team_nl_cmd_noop(struct sk_buff *skb, struct genl_info *info)
 -- 
 2.20.1
 
