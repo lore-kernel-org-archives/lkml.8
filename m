@@ -2,192 +2,158 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0784C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965CEC5ACD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A2D2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5592076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 08:24:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584519854;
+	bh=Ht469kuWo7IjZVc9alNP9GEoy2tDdgvWDMtW+s/gkCM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=g8YPKGAeq/zIQLVDrsRCFWuo146QmHqZ4qMH1QBEGqID0sUGl6iq0EomeqOTmN/m6
+	 Dy43XJSpdRNZXquH4qC7prSGhSYhnl4GOtns99fDhdHV49iJjPh4Fb2k5giSBuQuHG
+	 HAo9HEOLaCJqzehgFy3pUcV/yIY69hQreKOdEwDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbgCRIYK (ORCPT
+        id S1727433AbgCRIYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 04:24:10 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:43616 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726513AbgCRIYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 04:24:10 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E7C7026454CE003E0951;
-        Wed, 18 Mar 2020 16:23:19 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 18 Mar 2020 16:23:13 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2] f2fs: support partial truncation on compressed inode
-Date:   Wed, 18 Mar 2020 16:22:59 +0800
-Message-ID: <20200318082259.128833-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Wed, 18 Mar 2020 04:24:13 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:32864 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbgCRIYM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 04:24:12 -0400
+Received: by mail-ot1-f65.google.com with SMTP id x26so7593854otk.0;
+        Wed, 18 Mar 2020 01:24:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IQ0AIpy6289Hs4+0vUajVZqxzUHEdUAVpK8eg8j+VHE=;
+        b=VpCXkmUMJ9vmCsRMm7NT0Xj8R6wNxNEUEmONuevzauY8IZt0iaDFp4Ar+rTotAJXRD
+         r1meyr6HfWoBaAXmgpHsz6Afkt3lufdid4UAZ1GzvWBDzKxqAAtb87WrYbwvSWL30y4z
+         kYL1ko3XwjOMwrmDnxPH9X5oNuGuBgRS1x5tF7dqu+4LjaksmC50s+2v9BwAXIhIjoST
+         j1tGDSnA2009rL7a7oek+Lro94SiBaYsFtT3JaqM/l68icGF+9RAAv6GXJdHpS4qSWv1
+         Ndq5u8GfqEiqs47bdc8NX67H/P+1KWlhwtbnB3vv6kge6KoaTB68ijUaUBtAsMUrKOqJ
+         NGug==
+X-Gm-Message-State: ANhLgQ1Pa1z55vj794HJIaAGAkXOnsZuiDpO/Io7GECI4TrVxk87QMIA
+        FccVBvA5+FKmGCCwyIkuZ2sWMg8+yIceqbHqUbY=
+X-Google-Smtp-Source: ADFU+vtDUu/ENup+aXfCBKJZoHwE4fbxddOCHcfz5Gp/eR5kvQBbgkz/udoMueN3CldSwYbzXoAKDhG5hexnUlr09kY=
+X-Received: by 2002:a9d:1d07:: with SMTP id m7mr2678697otm.167.1584519851446;
+ Wed, 18 Mar 2020 01:24:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+References: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <158318760361.2216124.13612198312947463590.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAPcyv4hjgNruY84Kr9S5HZ6P03fNcPcmL7H2DN19Z+CbPZ7d+Q@mail.gmail.com>
+In-Reply-To: <CAPcyv4hjgNruY84Kr9S5HZ6P03fNcPcmL7H2DN19Z+CbPZ7d+Q@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 18 Mar 2020 09:24:00 +0100
+Message-ID: <CAJZ5v0heWeS1iZqHEZ5RB2a=UJbUQF0zAjeFfTa9qBxvQ193=w@mail.gmail.com>
+Subject: Re: [PATCH 1/5] ACPI: NUMA: Add 'nohmat' option
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Supports to truncate compressed/normal cluster partially on compressed
-inode.
+On Wed, Mar 18, 2020 at 1:09 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Mon, Mar 2, 2020 at 2:36 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> >
+> > Disable parsing of the HMAT for debug, to workaround broken platform
+> > instances, or cases where it is otherwise not wanted.
+>
+> Rafael, any heartburn with this change to the numa= option?
+>
+> ...as I look at this I realize I failed to also update
+> Documentation/x86/x86_64/boot-options.rst, will fix.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v2:
-- fix wrong page index calculated in f2fs_truncate_partial_cluster().
- fs/f2fs/compress.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++
- fs/f2fs/f2fs.h     |  2 ++
- fs/f2fs/file.c     | 19 +++++++++++++-----
- 3 files changed, 65 insertions(+), 5 deletions(-)
+Thanks!
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index 744ce2eb6ca7..758ef8183e59 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -956,6 +956,55 @@ bool f2fs_compress_write_end(struct inode *inode, void *fsdata,
- 	return first_index;
- }
- 
-+int f2fs_truncate_partial_cluster(struct inode *inode, u64 from, bool lock)
-+{
-+	void *fsdata = NULL;
-+	struct page *pagep;
-+	int log_cluster_size = F2FS_I(inode)->i_log_cluster_size;
-+	pgoff_t start_idx = from >> (PAGE_SHIFT + log_cluster_size) <<
-+							log_cluster_size;
-+	int err;
-+
-+	err = f2fs_is_compressed_cluster(inode, start_idx);
-+	if (err < 0)
-+		return err;
-+
-+	/* truncate normal cluster */
-+	if (!err)
-+		return f2fs_do_truncate_blocks(inode, from, lock);
-+
-+	/* truncate compressed cluster */
-+	err = f2fs_prepare_compress_overwrite(inode, &pagep,
-+						start_idx, &fsdata);
-+
-+	/* should not be a normal cluster */
-+	f2fs_bug_on(F2FS_I_SB(inode), err == 0);
-+
-+	if (err <= 0)
-+		return err;
-+
-+	if (err > 0) {
-+		struct page **rpages = fsdata;
-+		int cluster_size = F2FS_I(inode)->i_cluster_size;
-+		int i;
-+
-+		for (i = cluster_size - 1; i >= 0; i--) {
-+			loff_t start = rpages[i]->index << PAGE_SHIFT;
-+
-+			if (from <= start) {
-+				zero_user_segment(rpages[i], 0, PAGE_SIZE);
-+			} else {
-+				zero_user_segment(rpages[i], from - start,
-+								PAGE_SIZE);
-+				break;
-+			}
-+		}
-+
-+		f2fs_compress_write_end(inode, fsdata, start_idx, true);
-+	}
-+	return 0;
-+}
-+
- static int f2fs_write_compressed_pages(struct compress_ctx *cc,
- 					int *submitted,
- 					struct writeback_control *wbc,
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 76d2a99520bf..f5c55c966ed7 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3076,6 +3076,7 @@ static inline void f2fs_clear_page_private(struct page *page)
-  */
- int f2fs_sync_file(struct file *file, loff_t start, loff_t end, int datasync);
- void f2fs_truncate_data_blocks(struct dnode_of_data *dn);
-+int f2fs_do_truncate_blocks(struct inode *inode, u64 from, bool lock);
- int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock);
- int f2fs_truncate(struct inode *inode);
- int f2fs_getattr(const struct path *path, struct kstat *stat,
-@@ -3796,6 +3797,7 @@ int f2fs_prepare_compress_overwrite(struct inode *inode,
- 			struct page **pagep, pgoff_t index, void **fsdata);
- bool f2fs_compress_write_end(struct inode *inode, void *fsdata,
- 					pgoff_t index, unsigned copied);
-+int f2fs_truncate_partial_cluster(struct inode *inode, u64 from, bool lock);
- void f2fs_compress_write_end_io(struct bio *bio, struct page *page);
- bool f2fs_is_compress_backend_ready(struct inode *inode);
- void f2fs_decompress_pages(struct bio *bio, struct page *page, bool verity);
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 8dfbcf3b4c4c..257b3b629ee1 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -646,9 +646,6 @@ static int truncate_partial_data_page(struct inode *inode, u64 from,
- 		return 0;
- 	}
- 
--	if (f2fs_compressed_file(inode))
--		return 0;
--
- 	page = f2fs_get_lock_data_page(inode, index, true);
- 	if (IS_ERR(page))
- 		return PTR_ERR(page) == -ENOENT ? 0 : PTR_ERR(page);
-@@ -664,7 +661,7 @@ static int truncate_partial_data_page(struct inode *inode, u64 from,
- 	return 0;
- }
- 
--static int do_truncate_blocks(struct inode *inode, u64 from, bool lock)
-+int f2fs_do_truncate_blocks(struct inode *inode, u64 from, bool lock)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	struct dnode_of_data dn;
-@@ -732,7 +729,9 @@ static int do_truncate_blocks(struct inode *inode, u64 from, bool lock)
- int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
- {
- 	u64 free_from = from;
-+	int err;
- 
-+#ifdef CONFIG_F2FS_FS_COMPRESSION
- 	/*
- 	 * for compressed file, only support cluster size
- 	 * aligned truncation.
-@@ -747,8 +746,18 @@ int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
- 			free_from++;
- 		free_from <<= cluster_shift;
- 	}
-+#endif
-+
-+	err = f2fs_do_truncate_blocks(inode, free_from, lock);
-+	if (err)
-+		return err;
-+
-+#ifdef CONFIG_F2FS_FS_COMPRESSION
-+	if (from != free_from)
-+		err = f2fs_truncate_partial_cluster(inode, from, lock);
-+#endif
- 
--	return do_truncate_blocks(inode, free_from, lock);
-+	return err;
- }
- 
- int f2fs_truncate(struct inode *inode)
--- 
-2.18.0.rc1
+Apart from this just a minor nit below.
 
+> >
+> > Cc: x86@kernel.org
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: Andy Lutomirski <luto@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  arch/x86/mm/numa.c       |    4 ++++
+> >  drivers/acpi/numa/hmat.c |    3 ++-
+> >  include/acpi/acpi_numa.h |    1 +
+> >  3 files changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> > index 59ba008504dc..22de2e2610c1 100644
+> > --- a/arch/x86/mm/numa.c
+> > +++ b/arch/x86/mm/numa.c
+> > @@ -44,6 +44,10 @@ static __init int numa_setup(char *opt)
+> >  #ifdef CONFIG_ACPI_NUMA
+> >         if (!strncmp(opt, "noacpi", 6))
+> >                 acpi_numa = -1;
+> > +#ifdef CONFIG_ACPI_HMAT
+> > +       if (!strncmp(opt, "nohmat", 6))
+> > +               hmat_disable = 1;
+> > +#endif
+
+I wonder if IS_ENABLED() would work here?
+
+> >  #endif
+> >         return 0;
+> >  }
+> > diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+> > index 2c32cfb72370..d3db121e393a 100644
+> > --- a/drivers/acpi/numa/hmat.c
+> > +++ b/drivers/acpi/numa/hmat.c
+> > @@ -26,6 +26,7 @@
+> >  #include <linux/sysfs.h>
+> >
+> >  static u8 hmat_revision;
+> > +int hmat_disable __initdata;
+> >
+> >  static LIST_HEAD(targets);
+> >  static LIST_HEAD(initiators);
+> > @@ -814,7 +815,7 @@ static __init int hmat_init(void)
+> >         enum acpi_hmat_type i;
+> >         acpi_status status;
+> >
+> > -       if (srat_disabled())
+> > +       if (srat_disabled() || hmat_disable)
+> >                 return 0;
+> >
+> >         status = acpi_get_table(ACPI_SIG_SRAT, 0, &tbl);
+> > diff --git a/include/acpi/acpi_numa.h b/include/acpi/acpi_numa.h
+> > index fdebcfc6c8df..48ca468e9b61 100644
+> > --- a/include/acpi/acpi_numa.h
+> > +++ b/include/acpi/acpi_numa.h
+> > @@ -18,6 +18,7 @@ extern int node_to_pxm(int);
+> >  extern int acpi_map_pxm_to_node(int);
+> >  extern unsigned char acpi_srat_revision;
+> >  extern int acpi_numa __initdata;
+> > +extern int hmat_disable __initdata;
+> >
+> >  extern void bad_srat(void);
+> >  extern int srat_disabled(void);
+> >
