@@ -2,191 +2,146 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F27C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C57C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3842C20774
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2BB120724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:37:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pknIHKQ8";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="gl6OEm5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgCRPfM (ORCPT
+        id S1726988AbgCRPhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:35:12 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2576 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726495AbgCRPfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:35:11 -0400
-Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 034F84D0025CD28E4C92;
-        Wed, 18 Mar 2020 15:35:10 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 18 Mar 2020 15:35:09 +0000
-Received: from [127.0.0.1] (10.47.11.44) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 18 Mar
- 2020 15:35:08 +0000
-Subject: Re: [PATCH v3 2/2] irqchip/gic-v3-its: Balance initial LPI affinity
- across CPUs
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Jason Cooper <jason@lakedaemon.net>,
-        luojiaxing <luojiaxing@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Wangzhou (B)" <wangzhou1@hisilicon.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200316115433.9017-1-maz@kernel.org>
- <20200316115433.9017-3-maz@kernel.org>
- <d3a6435b-bc1f-e518-6461-2ebff72bbc59@huawei.com>
- <d74f9cb3df708335a56aec62963aa281@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <894aabcc-9676-3945-7a62-70fb930fd8a5@huawei.com>
-Date:   Wed, 18 Mar 2020 15:34:56 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 18 Mar 2020 11:37:16 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:45464 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726776AbgCRPhQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 11:37:16 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02IFFTc7016755;
+        Wed, 18 Mar 2020 08:37:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type :
+ content-transfer-encoding : in-reply-to : mime-version; s=facebook;
+ bh=KDrkWS+043x96sLDXdoncbyUSUAGOpKfbJ0+4DtRykc=;
+ b=pknIHKQ8HEzBYil/YhWHVv0vbHMShnGMURhlGCNaivnaeuf70S+QyIfKbGvNZpoRQvaY
+ iOujgGgTAxp8398M4tD5A87rVVd3dx2o3yOWoF3F1s1mngWxdVx7sk0vyhHiZmLfQC/L
+ 5MuDqHYVIZf/mhejLZIf8k6BiW0OpuXOCgY= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yu8x3k69k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 18 Mar 2020 08:37:09 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Wed, 18 Mar 2020 08:37:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J+CKUyyIRsWAF6w8cmxvb6Vi9AL42nzeC/qi5BlTzgeRk4sl9Vn5yAJ6uES75QVD17oqtxPJ8Qwm3GZWnCm8pDxMlzbozHlOifJpo8rK/ulUvTXBMPv5Dgj6nXGr05o4qryAf7wEnBav3y5pTQquNPe9DJl6bHTNk4HuICV+tMXJ7flR7zLP/vwfh2fbsdFtSY9AYY7oq+AuNr/EPVxFJvP8asiIZohM8b11cDhSVWRuFImZpAfJa44b8bWYOxuKH928oZ4Izcj3cUV0NksdTy8cJb9G27v4EH/v+eUhznn/SDJvwgsnVS5iMDmz6b5p3lNhA8t+kJLTfPDpdFtzVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KDrkWS+043x96sLDXdoncbyUSUAGOpKfbJ0+4DtRykc=;
+ b=n7LHQqH6vR3slN1zwJL2mTbQAjmJefEVPOhs3qWmCL49IUHzYJu+mTCpPcjTVYkGdli3zDlcsIVy3ive7h7PZVwkZeg6Kgv/3/ztIyIP3h9wplh6wKqky1SEd/gLMBe3GOY8k4rul7qXq7kVOjoTPjPHntpFm6lOKKqxnYv3huKMlLKuZ/D9BRGmiuZXi5F/ZwlC8ueTzOYBbmsFJ8SR/JEvFU+qZZdjdP+gSJhe2vTcI7epYfDOTi7Clj5+SQBO/+QTHxc6mqcevpSgbx8hroa1/CBWL/uz+SWIlYeA9ntxJXusBOxxGkSPNbym2R06AzpcWTsBm7ecM14QkHYX6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KDrkWS+043x96sLDXdoncbyUSUAGOpKfbJ0+4DtRykc=;
+ b=gl6OEm5fdlRYoZj1ytqnIoGssZnABIhfh04h3a5K/K9flBqQuz2K06YvaHngmzTaICAMqm2am+rPEhhVJN9LMMfMu/6gM3atnDWAiaf1nyGWQWZfobXAwo2S82IH1aI6OtcMZEqi4J9zJcv1/tOXtn3vkkR9yZ3uvaxVYz+Z6jw=
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
+ by BYAPR15MB3191.namprd15.prod.outlook.com (2603:10b6:a03:107::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15; Wed, 18 Mar
+ 2020 15:37:06 +0000
+Received: from BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::a0af:3ebe:a804:f648]) by BYAPR15MB4136.namprd15.prod.outlook.com
+ ([fe80::a0af:3ebe:a804:f648%6]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
+ 15:37:06 +0000
+Date:   Wed, 18 Mar 2020 08:37:02 -0700
+From:   Roman Gushchin <guro@fb.com>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-next@vger.kernel.org>
+Subject: Re: linux-next build failure on arm64 with CMA but !NUMA
+Message-ID: <20200318153702.GA22501@carbon.DHCP.thefacebook.com>
+References: <20200318114109.GA65068@bogon.m.sigxcpu.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200318114109.GA65068@bogon.m.sigxcpu.org>
+X-ClientProxiedBy: MWHPR19CA0008.namprd19.prod.outlook.com
+ (2603:10b6:300:d4::18) To BYAPR15MB4136.namprd15.prod.outlook.com
+ (2603:10b6:a03:96::24)
 MIME-Version: 1.0
-In-Reply-To: <d74f9cb3df708335a56aec62963aa281@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.11.44]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:6aee) by MWHPR19CA0008.namprd19.prod.outlook.com (2603:10b6:300:d4::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21 via Frontend Transport; Wed, 18 Mar 2020 15:37:05 +0000
+X-Originating-IP: [2620:10d:c090:400::5:6aee]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f264a5d0-9ce7-4772-5cb5-08d7cb5236ab
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3191:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3191AD5B07FC8C8BEE51C09CBEF70@BYAPR15MB3191.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 03468CBA43
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(199004)(8936002)(8676002)(81166006)(81156014)(66946007)(52116002)(7696005)(66556008)(66476007)(86362001)(6506007)(55016002)(6916009)(2906002)(4326008)(9686003)(33656002)(1076003)(498600001)(5660300002)(186003)(6666004)(4744005)(16526019);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3191;H:BYAPR15MB4136.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QdB1QbhhUkuJ+Lb7rV8scTCkkzObPxMywIWK63RNuCTJ0KAgw7Z0fRinYnvU1hOhPIKi3g3+bxDJqDtraXUXKO+yl+O7g9kC+et8oG13RRZK5ETexHqrWGtuQIbRT0d3zdMCOD/hkPCWRef24C+7gN4pv56ghmFnm+khBobY9M3uyHGzbFEP/Y4BcHoctA5kNCTPMAPb3gXIsufVZc6sNimCSWK6XR0DePsNH/UStsm3EP98ZBSXXvVd2POqsXphQxxTxwwj+4bAcEk+wxHbLe/2/mrCSoZpH5ICpfbtoXEtlSCIiXwFifuKv16NXtzAKxr4Els/4oDcPsEwCCSqeGsxEum9OUt5e6Y7hKkR7+Qoobf2tEQErR/H8fJuOEuUfkeUfu+xmj8RkPL16i8O3T1M4CFFWXOI+efdu6LBlnF6jSl/l4av3cPa1S+oUoSL
+X-MS-Exchange-AntiSpam-MessageData: pohI1PXwvXq2X2LQx4J//MsCw2wBw6bLdKOKh3b2XQAT2DVbjEavsoD0+zRrW5bLWZuTITNM0ABX0r8S84FK8j7ZtuQJOOIpkwX/8p3TFlxs4st8wrGK7W/e7cVgWv1YrOKVcVJ4nRgScyeE0/vVXInfFFzvZFL8W2BtjSMMxEIVnZ71rAjz0dL+2OZcPkqz
+X-MS-Exchange-CrossTenant-Network-Message-Id: f264a5d0-9ce7-4772-5cb5-08d7cb5236ab
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 15:37:06.2120
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VXsaEysgtpoU+APH0h8tJNEBpMcopEYXg28a7v34XoNJRtNQdhLJ8gJa9a2ngG03
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3191
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_07:2020-03-18,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
+ mlxlogscore=685 malwarescore=0 phishscore=0 spamscore=0 suspectscore=1
+ clxscore=1011 mlxscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003180073
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->>> +static int its_select_cpu(struct irq_data *d,
->>> +			  const struct cpumask *aff_mask)
->>> +{
->>> +	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
->>> +	cpumask_var_t tmpmask;
->>> +	int cpu, node;
->>> +
->>> +	if (!alloc_cpumask_var(&tmpmask, GFP_KERNEL))
->>> +		return -ENOMEM;
->>> +
->>> +	node = its_dev->its->numa_node;
->>> +
->>> +	if (!irqd_affinity_is_managed(d)) {
->>> +		/* First try the NUMA node */
->>> +		if (node != NUMA_NO_NODE) {
->>> +			/*
->>> +			 * Try the intersection of the affinity mask and the
->>> +			 * node mask (and the online mask, just to be safe).
->>> +			 */
->>> +			cpumask_and(tmpmask, cpumask_of_node(node), aff_mask);
->>> +			cpumask_and(tmpmask, tmpmask, cpu_online_mask);
->>> +
->>> +			/* If that doesn't work, try the nodemask itself */
->>
->> So if tmpmsk is empty...
+On Wed, Mar 18, 2020 at 12:41:09PM +0100, Guido Günther wrote:
+> Hi Roman,
+> 882d60d2ce725381236a158204d7ec13ff19ab25 in linux-next broke compilation
+> on arm64 CMA && !NUMA like
 > 
-> Which means the proposed affinity mask isn't part of the node mask the
-> first place.
-> Why did we get such an affinity the first place?
+>   CC      kernel/irq/irqdesc.o
+> mm/hugetlb.c: In function ‘hugetlb_cma_reserve’:
+> mm/hugetlb.c:5449:3: error: implicit declaration of function ‘for_each_mem_pfn_range’; did you mean ‘for_each_mem_range’? [-Werror=implicit-function-declaration]
+>    for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+>    ^~~~~~~~~~~~~~~~~~~~~~ 
+>    for_each_mem_range
+> mm/hugetlb.c:5449:61: error: expected ‘;’ before ‘{’ token
+>    for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+>                                                              ^~
+> Reverting that fixes the build for the moment. Would making all of this
+> dependent on CMA && NUMA be the right fix?
 
-It seems to be just irqbalance setting the affinity mask via sysfs:
+Hello Guido!
 
-[44.782116] Calltrace:
-[44.782119] its_select_cpu+0x420/0x6e0
-[44.782121] its_set_affinity+0x180/0x208
-[44.782126] msi_domain_set_affinity+0x44/0xb8
-[44.782130] irq_do_set_affinity+0x48/0x190
-[44.782132] irq_set_affinity_locked+0xc0/0xe8
-[44.782134] __irq_set_affinity+0x48/0x78
-[44.782136] write_irq_affinity.isra.8+0xec/0x110
-[44.782138] irq_affinity_proc_write+0x1c/0x28
-[44.782142] proc_reg_write+0x70/0xb8
-[44.782147] __vfs_write+0x18/0x40
-[44.782149] vfs_write+0xb0/0x1d0
-[44.782151] ksys_write+0x64/0xe8
-[44.782154] __arm64_sys_write+0x18/0x20
-[44.782157] el0_svc_common.constprop.2+0x88/0x150
-[44.782159] do_el0_svc+0x20/0x80
-[44.782162] el0_sync_handler+0x118/0x188
-[44.782164] el0_sync+0x140/0x180
+Thank you for the report!
 
-And for some reason fancied cpu62.
+We've been discussing the issue for a couple of days, and I've proposed a fix.
+I've just resent it to linux-mm@ (you're in cc), so hopefully it will be merged today.
 
-> 
->>
->>> +			if (cpumask_empty(tmpmask))
->>> +				cpumask_and(tmpmask, cpumask_of_node(node), cpu_online_mask);
->>
->>   now the tmpmask may have no intersection with the aff_mask...
-> 
-> But it has the mask for CPUs that are best suited for this interrupt,
-> right?
-> If I understand the topology of your machine, it has an ITS per 64 CPUs,
-> and
-> this device is connected to the ITS that serves the second socket.
-
-No, this one (D06ES) has a single ITS:
-
-john@ubuntu:~/kernel-dev$ dmesg | grep ITS
-[    0.000000] SRAT: PXM 0 -> ITS 0 -> Node 0
-[    0.000000] ITS [mem 0x202100000-0x20211ffff]
-[    0.000000] ITS@0x0000000202100000: Using ITS number 0
-[    0.000000] ITS@0x0000000202100000: allocated 8192 Devices 
-@23ea9f0000 (indirect, esz 8, psz 16K, shr 1)
-[    0.000000] ITS@0x0000000202100000: allocated 2048 Virtual CPUs 
-@23ea9d8000 (indirect, esz 16, psz 4K, shr 1)
-[    0.000000] ITS@0x0000000202100000: allocated 256 Interrupt 
-Collections @23ea9d3000 (flat, esz 16, psz 4K, shr 1)
-[    0.000000] ITS: Using DirectLPI for VPE invalidation
-[    0.000000] ITS: Enabling GICv4 support
-[    0.044034] Platform MSI: ITS@0x202100000 domain created
-[    0.044042] PCI/MSI: ITS@0x202100000 domain created
-
-D06CS has 2x ITS, as you may know :)
-
-And, FWIW, the device is on the 2nd socket, numa node #2.
-
-So the cpu mask of node #0 (where the ITS lives) is 0-23. So no 
-intersection with what userspace requested.
-
->> 	if (cpu < 0 || cpu >= nr_cpu_ids)
->> 		return -EINVAL;
->>
->> 	if (cpu != its_dev->event_map.col_map[id]) {
->> 		its_inc_lpi_count(d, cpu);
->> 		its_dec_lpi_count(d, its_dev->event_map.col_map[id]);
->> 		target_col = &its_dev->its->collections[cpu];
->> 		its_send_movi(its_dev, target_col, id);
->> 		its_dev->event_map.col_map[id] = cpu;
->> 		irq_data_update_effective_affinity(d, cpumask_of(cpu));
->> 	}
->>
->> So cpu may not be a member of mask_val. Hence the inconsistency of the
->> affinity list and effective affinity. We could just drop the AND of
->> the ITS node mask in its_select_cpu().
-> 
-> That would be a departure from the algorithm Thomas proposed, which made
-> a lot of sense in my opinion. What its_select_cpu() does in this case is
-> probably the best that can be achieved from a latency perspective,
-> as it keeps the interrupt local to the socket that generated it.
-
-We seem to be following what Thomas described for a non-managed 
-interrupt bound to a node. But is this interrupt bound to the node?
-
-Regardless of that, what you're saying seems right - keep local 
-interrupt bound to the node. But the problem is that userspace is doing 
-its own thing.
-
-> 
-> What I wonder is how we end-up with this silly aff_mask the first place.
-
-Cheers,
-John
-
-BTW, sorry if any text formatting is mangled. I have to improve my WFH 
-setup....
+Thanks!
