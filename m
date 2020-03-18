@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9649EC5ACD8
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB882C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5CF20757
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD45206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 01:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584493352;
-	bh=++bzRo5RK7SxZkez2gaa3Fm+VNDr89Moy/9LKUyEZfY=;
+	s=default; t=1584493355;
+	bh=SFattD/ZlKFBawfjwW4N1/55Y6nlkygYuEWqRuxj+Ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vX7Krxa2xYs8+zmRTvp4ys4FpuFdIUicAwxaZVv463H0pegTHiKtcP60KpDe8K+Fz
-	 dLRY6wm38J2jjq8W05j1Lh+V/ctyhmSc/tgRT6r9mbwq6WyMnoG3YWDqt5bYe3iwsH
-	 tpG1iFHfIDN44UTQrBSqk283ju9F0gb/jO5mDaI4=
+	b=lRwPEpFbFQXhQN5kEOl7Y9OKiO2EH00ztpHMgvVTADpdgv73ZC2+kVyK347RmhAFf
+	 uWoPWqEZ/oznHCzVohqV200QaIh3oBv/vZlkdSCEvjL+c42uHz6eTM0fr+lauvNydg
+	 lXWJHPDbINfIiSwBOew9hAVXk3h9NtnxfPBv9U4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbgCRBCb (ORCPT
+        id S1727398AbgCRBCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Mar 2020 21:02:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39270 "EHLO mail.kernel.org"
+        Tue, 17 Mar 2020 21:02:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727131AbgCRBCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Mar 2020 21:02:30 -0400
+        id S1727131AbgCRBCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Mar 2020 21:02:32 -0400
 Received: from kicinski-fedora-PC1C0HJN.thefacebook.com (unknown [163.114.132.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C25E20752;
-        Wed, 18 Mar 2020 01:02:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74D912073E;
+        Wed, 18 Mar 2020 01:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584493349;
-        bh=++bzRo5RK7SxZkez2gaa3Fm+VNDr89Moy/9LKUyEZfY=;
+        s=default; t=1584493351;
+        bh=SFattD/ZlKFBawfjwW4N1/55Y6nlkygYuEWqRuxj+Ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mEROG4AVIN1QJqnXgXJaaAECCRHii7oZgDDK1NciXLkkO2CLxwiueiRJjVMqVW+59
-         /yCl/6fsvcz98gWLm+scQ4zh5cZs8a2Dce8CmyMNY7loavp60g11I2u0W5MNVsq3GW
-         Wf6iryTsSKy5vyBOU8fdvP6Lba5atKiMP8Ym0zlA=
+        b=I5XqStm0r59pB05paE1OTRTOI8mNndq0VMAtPFRMRHBL3aE25HlM+1Fmda79tDFAl
+         eo6HBB3jjhSo8gDmT/GIMlchU60xkLX+u/gGtORv9RptjDxHaOcpBZVNlcERCJfznG
+         0LPJXL0Mlyqr7bSAl9rEPpEfUYhML+ns11apshHw=
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     keescook@chromium.org, shuah@kernel.org
 Cc:     netdev@vger.kernel.org, luto@amacapital.net, wad@chromium.org,
         linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@fb.com, Tim.Bird@sony.com,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH v5 1/5] kselftest: factor out list manipulation to a helper
-Date:   Tue, 17 Mar 2020 18:01:49 -0700
-Message-Id: <20200318010153.40797-2-kuba@kernel.org>
+Subject: [PATCH v5 5/5] selftests: tls: run all tests for TLS 1.2 and TLS 1.3
+Date:   Tue, 17 Mar 2020 18:01:53 -0700
+Message-Id: <20200318010153.40797-6-kuba@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200318010153.40797-1-kuba@kernel.org>
 References: <20200318010153.40797-1-kuba@kernel.org>
@@ -58,76 +58,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees suggest to factor out the list append code to a macro,
-since following commits need it, which leads to code duplication.
+TLS 1.2 and TLS 1.3 differ in the implementation.
+Use fixture parameters to run all tests for both
+versions, and remove the one-off TLS 1.2 test.
 
-Suggested-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- tools/testing/selftests/kselftest_harness.h | 42 ++++++++++++---------
- 1 file changed, 24 insertions(+), 18 deletions(-)
+ tools/testing/selftests/net/tls.c | 93 ++++++-------------------------
+ 1 file changed, 17 insertions(+), 76 deletions(-)
 
-diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 5336b26506ab..aaf58fffc8f7 100644
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@ -631,6 +631,29 @@
- 	} \
- } while (0); OPTIONAL_HANDLER(_assert)
+diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
+index 0ea44d975b6c..c5282e62df75 100644
+--- a/tools/testing/selftests/net/tls.c
++++ b/tools/testing/selftests/net/tls.c
+@@ -101,6 +101,21 @@ FIXTURE(tls)
+ 	bool notls;
+ };
  
-+/* List helpers */
-+#define __LIST_APPEND(head, item) \
-+{ \
-+	/* Circular linked list where only prev is circular. */ \
-+	if (head == NULL) { \
-+		head = item; \
-+		item->next = NULL; \
-+		item->prev = item; \
-+		return;	\
-+	} \
-+	if (__constructor_order == _CONSTRUCTOR_ORDER_FORWARD) { \
-+		item->next = NULL; \
-+		item->prev = head->prev; \
-+		item->prev->next = item; \
-+		head->prev = item; \
-+	} else { \
-+		item->next = head; \
-+		item->next->prev = item; \
-+		item->prev = item; \
-+		head = item; \
-+	} \
-+}
++FIXTURE_VARIANT(tls)
++{
++	unsigned int tls_version;
++};
 +
- /* Contains all the information for test execution and status checking. */
- struct __test_metadata {
- 	const char *name;
-@@ -665,24 +688,7 @@ static int __constructor_order;
- static inline void __register_test(struct __test_metadata *t)
++FIXTURE_VARIANT_ADD(tls, 12)
++{
++	.tls_version = TLS_1_2_VERSION,
++};
++
++FIXTURE_VARIANT_ADD(tls, 13)
++{
++	.tls_version = TLS_1_3_VERSION,
++};
++
+ FIXTURE_SETUP(tls)
  {
- 	__test_count++;
--	/* Circular linked list where only prev is circular. */
--	if (__test_list == NULL) {
--		__test_list = t;
--		t->next = NULL;
--		t->prev = t;
--		return;
--	}
--	if (__constructor_order == _CONSTRUCTOR_ORDER_FORWARD) {
--		t->next = NULL;
--		t->prev = __test_list->prev;
--		t->prev->next = t;
--		__test_list->prev = t;
--	} else {
--		t->next = __test_list;
--		t->next->prev = t;
--		t->prev = t;
--		__test_list = t;
--	}
-+	__LIST_APPEND(__test_list, t);
+ 	struct tls12_crypto_info_aes_gcm_128 tls12;
+@@ -112,7 +127,7 @@ FIXTURE_SETUP(tls)
+ 	len = sizeof(addr);
+ 
+ 	memset(&tls12, 0, sizeof(tls12));
+-	tls12.info.version = TLS_1_3_VERSION;
++	tls12.info.version = variant->tls_version;
+ 	tls12.info.cipher_type = TLS_CIPHER_AES_GCM_128;
+ 
+ 	addr.sin_family = AF_INET;
+@@ -733,7 +748,7 @@ TEST_F(tls, bidir)
+ 		struct tls12_crypto_info_aes_gcm_128 tls12;
+ 
+ 		memset(&tls12, 0, sizeof(tls12));
+-		tls12.info.version = TLS_1_3_VERSION;
++		tls12.info.version = variant->tls_version;
+ 		tls12.info.cipher_type = TLS_CIPHER_AES_GCM_128;
+ 
+ 		ret = setsockopt(self->fd, SOL_TLS, TLS_RX, &tls12,
+@@ -1258,78 +1273,4 @@ TEST(keysizes) {
+ 	close(cfd);
  }
  
- static inline int __bail(int for_realz, bool no_print, __u8 step)
+-TEST(tls12) {
+-	int fd, cfd;
+-	bool notls;
+-
+-	struct tls12_crypto_info_aes_gcm_128 tls12;
+-	struct sockaddr_in addr;
+-	socklen_t len;
+-	int sfd, ret;
+-
+-	notls = false;
+-	len = sizeof(addr);
+-
+-	memset(&tls12, 0, sizeof(tls12));
+-	tls12.info.version = TLS_1_2_VERSION;
+-	tls12.info.cipher_type = TLS_CIPHER_AES_GCM_128;
+-
+-	addr.sin_family = AF_INET;
+-	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+-	addr.sin_port = 0;
+-
+-	fd = socket(AF_INET, SOCK_STREAM, 0);
+-	sfd = socket(AF_INET, SOCK_STREAM, 0);
+-
+-	ret = bind(sfd, &addr, sizeof(addr));
+-	ASSERT_EQ(ret, 0);
+-	ret = listen(sfd, 10);
+-	ASSERT_EQ(ret, 0);
+-
+-	ret = getsockname(sfd, &addr, &len);
+-	ASSERT_EQ(ret, 0);
+-
+-	ret = connect(fd, &addr, sizeof(addr));
+-	ASSERT_EQ(ret, 0);
+-
+-	ret = setsockopt(fd, IPPROTO_TCP, TCP_ULP, "tls", sizeof("tls"));
+-	if (ret != 0) {
+-		notls = true;
+-		printf("Failure setting TCP_ULP, testing without tls\n");
+-	}
+-
+-	if (!notls) {
+-		ret = setsockopt(fd, SOL_TLS, TLS_TX, &tls12,
+-				 sizeof(tls12));
+-		ASSERT_EQ(ret, 0);
+-	}
+-
+-	cfd = accept(sfd, &addr, &len);
+-	ASSERT_GE(cfd, 0);
+-
+-	if (!notls) {
+-		ret = setsockopt(cfd, IPPROTO_TCP, TCP_ULP, "tls",
+-				 sizeof("tls"));
+-		ASSERT_EQ(ret, 0);
+-
+-		ret = setsockopt(cfd, SOL_TLS, TLS_RX, &tls12,
+-				 sizeof(tls12));
+-		ASSERT_EQ(ret, 0);
+-	}
+-
+-	close(sfd);
+-
+-	char const *test_str = "test_read";
+-	int send_len = 10;
+-	char buf[10];
+-
+-	send_len = strlen(test_str) + 1;
+-	EXPECT_EQ(send(fd, test_str, send_len, 0), send_len);
+-	EXPECT_NE(recv(cfd, buf, send_len, 0), -1);
+-	EXPECT_EQ(memcmp(buf, test_str, send_len), 0);
+-
+-	close(fd);
+-	close(cfd);
+-}
+-
+ TEST_HARNESS_MAIN
 -- 
 2.25.1
 
