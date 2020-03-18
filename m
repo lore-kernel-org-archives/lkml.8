@@ -2,92 +2,78 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE020C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5D4C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 934922076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D278C2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:44:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="esUinrc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbgCRLmy (ORCPT
+        id S1726789AbgCRLo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:42:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726586AbgCRLmy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:42:54 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02IBXlZx110838;
-        Wed, 18 Mar 2020 07:41:24 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8brdgdu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 07:41:24 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02IBYMRW113727;
-        Wed, 18 Mar 2020 07:41:23 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8brdgd4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 07:41:23 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02IBePNu012022;
-        Wed, 18 Mar 2020 11:41:22 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01dal.us.ibm.com with ESMTP id 2yrpw7048t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 11:41:22 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02IBfKQN52888044
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 11:41:20 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA768136053;
-        Wed, 18 Mar 2020 11:41:20 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1D22513604F;
-        Wed, 18 Mar 2020 11:41:07 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.35.107])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Mar 2020 11:41:06 +0000 (GMT)
-Subject: Re: [PATCH v5 08/11] perf/tools: Refactoring metricgroup__add_metric
- function
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
-        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
-        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-References: <20200317062333.14555-1-kjain@linux.ibm.com>
- <20200317062333.14555-9-kjain@linux.ibm.com> <20200317150945.GC757893@krava>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <8597c6e5-d604-e60d-e666-3420b20bd3fc@linux.ibm.com>
-Date:   Wed, 18 Mar 2020 17:11:04 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 18 Mar 2020 07:44:57 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:28754 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726631AbgCRLo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 07:44:57 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48j7WC0C0mz9ty2j;
+        Wed, 18 Mar 2020 12:44:55 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=esUinrc0; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 8uLqouGGgVFQ; Wed, 18 Mar 2020 12:44:54 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48j7WB5nk2zB09Zs;
+        Wed, 18 Mar 2020 12:44:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1584531894; bh=i9/g7S7vCeFnTbt92JfSyh0tklUAjkcV+vcz9GQlJLE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=esUinrc0CYXh5iVrqAAh4vbUTRmAaN6sx8GwlpVfFD8C3S1NXIIXXpHImrV86V06a
+         Wiwu8CV7Ulf3sBc68gS/OxjJ49ewarVB3vuzQj7QjpnK99HLEwfFEjf85Vx/tZ3t/l
+         5uXxdFhsR0ToRU7BSyuHr8sHQFwyi1mEvrhdPl9s=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0DA218B78B;
+        Wed, 18 Mar 2020 12:44:56 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 7BX-2czHO79Y; Wed, 18 Mar 2020 12:44:55 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3F4CA8B75B;
+        Wed, 18 Mar 2020 12:44:55 +0100 (CET)
+Subject: Re: [PATCH 12/15] powerpc/watchpoint: Prepare handler to handle more
+ than one watcnhpoint
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mikey@neuling.org
+Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
+        naveen.n.rao@linux.vnet.ibm.com, peterz@infradead.org,
+        jolsa@kernel.org, oleg@redhat.com, fweisbec@gmail.com,
+        mingo@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+References: <20200309085806.155823-1-ravi.bangoria@linux.ibm.com>
+ <20200309085806.155823-13-ravi.bangoria@linux.ibm.com>
+ <3ba94856-0d87-5046-eca9-b5c3d99ec654@c-s.fr>
+ <87zhcdevz7.fsf@mpe.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a7829a23-9b4d-0248-415e-85409f17dd77@c-s.fr>
+Date:   Wed, 18 Mar 2020 12:44:52 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200317150945.GC757893@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <87zhcdevz7.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-18_05:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=999 spamscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003180058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -95,134 +81,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 3/17/20 8:39 PM, Jiri Olsa wrote:
-> On Tue, Mar 17, 2020 at 11:53:30AM +0530, Kajol Jain wrote:
->> This patch refactor metricgroup__add_metric function where
->> some part of it move to function metricgroup__add_metric_param.
->> No logic change.
-> 
-> can't compile this change:
-> 
-> [jolsa@krava perf]$ make JOBS=1
->   BUILD:   Doing 'make -j1' parallel build
->   CC       util/metricgroup.o
-> util/metricgroup.c: In function ‘metricgroup__add_metric_param’:
-> util/metricgroup.c:486:6: error: too many arguments to function ‘expr__find_other’
->   486 |  if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum, 1) < 0)
->       |      ^~~~~~~~~~~~~~~~
-> In file included from util/metricgroup.c:14:
-> util/expr.h:25:5: note: declared here
->    25 | int expr__find_other(const char *expr, const char *one, const char ***other,
->       |     ^~~~~~~~~~~~~~~~
-> mv: cannot stat 'util/.metricgroup.o.tmp': No such file or directory
-> make[4]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:97: util/metricgroup.o] Error 1
-> make[3]: *** [/home/jolsa/kernel/linux-perf/tools/build/Makefile.build:139: util] Error 2
-> make[2]: *** [Makefile.perf:616: perf-in.o] Error 2
-> make[1]: *** [Makefile.perf:225: sub-make] Error 2
-> make: *** [Makefile:70: all] Error 2
-
-Hi Jiri,
-      I made a mistake while arranging the patches in the series. I'll re-arrange it
-and send it again.
-
-Thanks,
-Kajol
-
-> 
-> jirka
-> 
+Le 18/03/2020 à 12:35, Michael Ellerman a écrit :
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> Le 09/03/2020 à 09:58, Ravi Bangoria a écrit :
+>>> Currently we assume that we have only one watchpoint supported by hw.
+>>> Get rid of that assumption and use dynamic loop instead. This should
+>>> make supporting more watchpoints very easy.
 >>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> ---
->>  tools/perf/util/metricgroup.c | 63 +++++++++++++++++++++--------------
->>  1 file changed, 38 insertions(+), 25 deletions(-)
->>
->> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
->> index c3a8c701609a..b4919bcfbd8b 100644
->> --- a/tools/perf/util/metricgroup.c
->> +++ b/tools/perf/util/metricgroup.c
->> @@ -474,6 +474,41 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
->>  	return false;
->>  }
->>  
->> +static int metricgroup__add_metric_param(struct strbuf *events,
->> +			struct list_head *group_list, struct pmu_event *pe)
->> +{
->> +
->> +	const char **ids;
->> +	int idnum;
->> +	struct egroup *eg;
->> +	int ret = -EINVAL;
->> +
->> +	if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum, 1) < 0)
->> +		return ret;
->> +
->> +	if (events->len > 0)
->> +		strbuf_addf(events, ",");
->> +
->> +	if (metricgroup__has_constraint(pe))
->> +		metricgroup__add_metric_non_group(events, ids, idnum);
->> +	else
->> +		metricgroup__add_metric_weak_group(events, ids, idnum);
->> +
->> +	eg = malloc(sizeof(*eg));
->> +	if (!eg)
->> +		ret = -ENOMEM;
->> +
->> +	eg->ids = ids;
->> +	eg->idnum = idnum;
->> +	eg->metric_name = pe->metric_name;
->> +	eg->metric_expr = pe->metric_expr;
->> +	eg->metric_unit = pe->unit;
->> +	list_add_tail(&eg->nd, group_list);
->> +	ret = 0;
->> +
->> +	return ret;
->> +}
->> +
->>  static int metricgroup__add_metric(const char *metric, struct strbuf *events,
->>  				   struct list_head *group_list)
->>  {
->> @@ -493,35 +528,13 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
->>  			continue;
->>  		if (match_metric(pe->metric_group, metric) ||
->>  		    match_metric(pe->metric_name, metric)) {
->> -			const char **ids;
->> -			int idnum;
->> -			struct egroup *eg;
->>  
->>  			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
->>  
->> -			if (expr__find_other(pe->metric_expr,
->> -					     NULL, &ids, &idnum) < 0)
->> +			ret = metricgroup__add_metric_param(events,
->> +							group_list, pe);
->> +			if (ret == -EINVAL)
->>  				continue;
->> -			if (events->len > 0)
->> -				strbuf_addf(events, ",");
->> -
->> -			if (metricgroup__has_constraint(pe))
->> -				metricgroup__add_metric_non_group(events, ids, idnum);
->> -			else
->> -				metricgroup__add_metric_weak_group(events, ids, idnum);
->> -
->> -			eg = malloc(sizeof(struct egroup));
->> -			if (!eg) {
->> -				ret = -ENOMEM;
->> -				break;
->> -			}
->> -			eg->ids = ids;
->> -			eg->idnum = idnum;
->> -			eg->metric_name = pe->metric_name;
->> -			eg->metric_expr = pe->metric_expr;
->> -			eg->metric_unit = pe->unit;
->> -			list_add_tail(&eg->nd, group_list);
->> -			ret = 0;
->>  		}
->>  	}
->>  	return ret;
->> -- 
->> 2.18.1
->>
+>> I think using 'we' is to be avoided in commit message.
 > 
+> Hmm, is it?
+> 
+> I use 'we' all the time. Which doesn't mean it's correct, but I think it
+> reads OK.
+> 
+> cheers
+> 
+
+ From 
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html :
+
+Describe your changes in imperative mood, e.g. “make xyzzy do frotz” 
+instead of “[This patch] makes xyzzy do frotz” or “[I] changed xyzzy to 
+do frotz”, as if you are giving orders to the codebase to change its 
+behaviour.
+
+Christophe
