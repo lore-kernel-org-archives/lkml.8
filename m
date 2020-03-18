@@ -2,380 +2,179 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C0DC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0253C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBC820409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:19:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cmTApGZz"
+	by mail.kernel.org (Postfix) with ESMTP id 7683A20785
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 18:22:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584555727;
+	bh=0kLp7bEp/11sPwr/wXBGJSmj+PYzD+oXI6sOmSm+LUc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IQi1V7cRamgLzHH19BIw737p8tmt+Dm+onpGauaBqS/oVx0w21ikFTjoHpQ4Qf/gJ
+	 dlJ6IxWvJfuZlv5MWt3YgsynQdwgyeCObGZEd+nAgX3A0xlzuqETdb7CDlN2hRaau/
+	 ukva7WYjo/IH//k3dIKC1d4DGnXFa0ZwQec3mdVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgCRSTV (ORCPT
+        id S1726875AbgCRSWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 14:19:21 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35527 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgCRSTV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 14:19:21 -0400
-Received: by mail-pj1-f68.google.com with SMTP id j20so790657pjz.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 11:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CTr2t0c2xa7jdH96iaMDViqNbjQLWV33fu7YxVMDuJw=;
-        b=cmTApGZzQ1hj04rjJHaidyHnnN9o4KQxb1899XKFbPf/0Z3/QkBacVuE0XBx/U9TEL
-         KWRfgK62vbE9eX5dnLEnAT7wLWe3f0jXdOt4SUZ1HXte1RSluiwiFZ2UMAnkWEuacLFC
-         hsiGxQWEo1+Wc1wFgWlkX4vRoXEm3KWKewOJo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CTr2t0c2xa7jdH96iaMDViqNbjQLWV33fu7YxVMDuJw=;
-        b=K5vk6WoG+H+/1ZmW6DrxWokZsCY7hZYKfRfIiA8PG44RsLo7IXQ3F6Vx8vp4hIm4WJ
-         Hsvd3gr1USfIGBNQ5B1DLhBldY6Kylr2l1KdD8oGSmVMkYqMFqsdmhjGUFvTUgbWIp7n
-         DdYGjVN8fzDJkBUuczahOTS1dXBBmhSVyLBnyJCcVv7eYUqvhn9F1BZMViF3CJVPXEEz
-         Ng+oBAM9qJ1sb3geceCVlr6dg8UiD/rfiXwXyu1l6EYeQVEhiTOe1ZG6WwpfvLUZkmXg
-         FUZLM63Uc8V7YsqDdNXz6pohXCpUVJbufhujMvgaYm2MUPIZaTi/5gaDNJ/tf5sLOGIU
-         uvSw==
-X-Gm-Message-State: ANhLgQ1ryZCEtKo+q93KPi/ALStF4YjaUBsQfgFyh+9ntX7UhxLP7Kbv
-        9yPHwGHLpwO1mhcKp2FZ92u0kg==
-X-Google-Smtp-Source: ADFU+vtC4l8TwFrl7VoIbtaimEbJ1GrcLt70uEBuvEhZACWiGQHejlkfIupUeNx83OYmaV7WFh6usQ==
-X-Received: by 2002:a17:90a:a511:: with SMTP id a17mr5835102pjq.178.1584555559742;
-        Wed, 18 Mar 2020 11:19:19 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d5sm6946372pga.36.2020.03.18.11.19.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 11:19:18 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 11:19:17 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Cc:     Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 05/11] pstore/blk: blkoops: support ftrace recorder
-Message-ID: <202003181117.6EA5486@keescook>
-References: <1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1581078355-19647-6-git-send-email-liaoweixiong@allwinnertech.com>
+        Wed, 18 Mar 2020 14:22:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726747AbgCRSWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 14:22:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0338A2077E;
+        Wed, 18 Mar 2020 18:22:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584555723;
+        bh=0kLp7bEp/11sPwr/wXBGJSmj+PYzD+oXI6sOmSm+LUc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0Oa48EjSeTb/K5rRf47bm8c63ncn/iBXJ5ghH8MWC2/UNVxAosBp0kw0dVM1CYBIY
+         e5a068X1hqTCQ0rSF8NyfLuIEEVOjeO5jyLfqz9jWDJLak242HHegusdlKcUPV6dsR
+         guYzBqrLDcR7f/OuR7ZZB99Wm71AhkGClZLchqxo=
+Date:   Wed, 18 Mar 2020 19:22:01 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/13] coresight: cti: Add sysfs coresight mgmt register
+ access
+Message-ID: <20200318182201.GA3235688@kroah.com>
+References: <20200309161748.31975-1-mathieu.poirier@linaro.org>
+ <20200309161748.31975-3-mathieu.poirier@linaro.org>
+ <20200318131821.GA2789508@kroah.com>
+ <20200318181604.GB18359@xps15>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581078355-19647-6-git-send-email-liaoweixiong@allwinnertech.com>
+In-Reply-To: <20200318181604.GB18359@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 08:25:49PM +0800, WeiXiong Liao wrote:
-> Support recorder for ftrace. To enable ftrace recorder, just make
-> ftrace_size be greater than 0 and a multiple of 4096.
+On Wed, Mar 18, 2020 at 12:16:04PM -0600, Mathieu Poirier wrote:
+> On Wed, Mar 18, 2020 at 02:18:21PM +0100, Greg KH wrote:
+> > On Mon, Mar 09, 2020 at 10:17:37AM -0600, Mathieu Poirier wrote:
+> > > From: Mike Leach <mike.leach@linaro.org>
+> > > 
+> > > Adds sysfs access to the coresight management registers.
+> > > 
+> > > Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> > > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > > [Fixed abbreviation in title]
+> > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > ---
+> > >  .../hwtracing/coresight/coresight-cti-sysfs.c | 53 +++++++++++++++++++
+> > >  drivers/hwtracing/coresight/coresight-priv.h  |  1 +
+> > >  2 files changed, 54 insertions(+)
+> > > 
+> > > diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> > > index a832b8c6b866..507f8eb487fe 100644
+> > > --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> > > +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> > > @@ -62,11 +62,64 @@ static struct attribute *coresight_cti_attrs[] = {
+> > >  	NULL,
+> > >  };
+> > >  
+> > > +/* register based attributes */
+> > > +
+> > > +/* macro to access RO registers with power check only (no enable check). */
+> > > +#define coresight_cti_reg(name, offset)			\
+> > > +static ssize_t name##_show(struct device *dev,				\
+> > > +			   struct device_attribute *attr, char *buf)	\
+> > > +{									\
+> > > +	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);	\
+> > > +	u32 val = 0;							\
+> > > +	pm_runtime_get_sync(dev->parent);				\
+> > > +	spin_lock(&drvdata->spinlock);					\
+> > > +	if (drvdata->config.hw_powered)					\
+> > > +		val = readl_relaxed(drvdata->base + offset);		\
+> > > +	spin_unlock(&drvdata->spinlock);				\
+> > > +	pm_runtime_put_sync(dev->parent);				\
+> > > +	return scnprintf(buf, PAGE_SIZE, "0x%x\n", val);		\
+> > > +}									\
+> > > +static DEVICE_ATTR_RO(name)
+> > > +
+> > > +/* coresight management registers */
+> > > +coresight_cti_reg(devaff0, CTIDEVAFF0);
+> > > +coresight_cti_reg(devaff1, CTIDEVAFF1);
+> > > +coresight_cti_reg(authstatus, CORESIGHT_AUTHSTATUS);
+> > > +coresight_cti_reg(devarch, CORESIGHT_DEVARCH);
+> > > +coresight_cti_reg(devid, CORESIGHT_DEVID);
+> > > +coresight_cti_reg(devtype, CORESIGHT_DEVTYPE);
+> > > +coresight_cti_reg(pidr0, CORESIGHT_PERIPHIDR0);
+> > > +coresight_cti_reg(pidr1, CORESIGHT_PERIPHIDR1);
+> > > +coresight_cti_reg(pidr2, CORESIGHT_PERIPHIDR2);
+> > > +coresight_cti_reg(pidr3, CORESIGHT_PERIPHIDR3);
+> > > +coresight_cti_reg(pidr4, CORESIGHT_PERIPHIDR4);
+> > > +
+> > > +static struct attribute *coresight_cti_mgmt_attrs[] = {
+> > > +	&dev_attr_devaff0.attr,
+> > > +	&dev_attr_devaff1.attr,
+> > > +	&dev_attr_authstatus.attr,
+> > > +	&dev_attr_devarch.attr,
+> > > +	&dev_attr_devid.attr,
+> > > +	&dev_attr_devtype.attr,
+> > > +	&dev_attr_pidr0.attr,
+> > > +	&dev_attr_pidr1.attr,
+> > > +	&dev_attr_pidr2.attr,
+> > > +	&dev_attr_pidr3.attr,
+> > > +	&dev_attr_pidr4.attr,
+> > > +	NULL,
+> > > +};
+> > > +
+> > >  static const struct attribute_group coresight_cti_group = {
+> > >  	.attrs = coresight_cti_attrs,
+> > >  };
+> > >  
+> > > +static const struct attribute_group coresight_cti_mgmt_group = {
+> > > +	.attrs = coresight_cti_mgmt_attrs,
+> > > +	.name = "mgmt",
+> > > +};
+> > > +
+> > >  const struct attribute_group *coresight_cti_groups[] = {
+> > >  	&coresight_cti_group,
+> > > +	&coresight_cti_mgmt_group,
+> > >  	NULL,
+> > >  };
+> > > diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+> > > index 82e563cdc879..aba6b789c969 100644
+> > > --- a/drivers/hwtracing/coresight/coresight-priv.h
+> > > +++ b/drivers/hwtracing/coresight/coresight-priv.h
+> > > @@ -22,6 +22,7 @@
+> > >  #define CORESIGHT_CLAIMCLR	0xfa4
+> > >  #define CORESIGHT_LAR		0xfb0
+> > >  #define CORESIGHT_LSR		0xfb4
+> > > +#define CORESIGHT_DEVARCH	0xfbc
+> > >  #define CORESIGHT_AUTHSTATUS	0xfb8
+> > >  #define CORESIGHT_DEVID		0xfc8
+> > >  #define CORESIGHT_DEVTYPE	0xfcc
+> > > -- 
+> > > 2.20.1
+> > > 
+> > 
+> > I do not see any Documentation/ABI/ entries for these new sysfs files,
+> > did I miss it somehow?  I can't take new sysfs code without
+> > documentation.
 > 
-> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
-> ---
->  fs/pstore/Kconfig          | 12 ++++++++
->  fs/pstore/blkoops.c        | 11 +++++++
->  fs/pstore/blkzone.c        | 75 ++++++++++++++++++++++++++++++++++++++++++++--
->  include/linux/pstore_blk.h |  4 +++
->  4 files changed, 99 insertions(+), 3 deletions(-)
+> All the ABI is documented in this patch, which is part of this set.
 > 
-> diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-> index 5f0a42823028..308a0a4c5ee5 100644
-> --- a/fs/pstore/Kconfig
-> +++ b/fs/pstore/Kconfig
-> @@ -210,6 +210,18 @@ config PSTORE_BLKOOPS_CONSOLE_SIZE
->  	  NOTE that, both kconfig and module parameters can configure blkoops,
->  	  but module parameters have priority over kconfig.
->  
-> +config PSTORE_BLKOOPS_FTRACE_SIZE
-> +	int "ftrace size in kbytes for blkoops"
-> +	depends on PSTORE_BLKOOPS
-> +	depends on PSTORE_FTRACE
-> +	default 64
+> [1]. https://lkml.org/lkml/2020/3/9/642
 
-Same tricks. :)
+That is not in the required Documentation/ABI/ form that all sysfs files
+should have.  If they don't, it's a bug.
 
-> +	help
-> +	  This just sets size of ftrace (ftrace_size) for pstore/blk. The
-> +	  size is in KB and must be a multiple of 4.
-> +
-> +	  NOTE that, both kconfig and module parameters can configure blkoops,
-> +	  but module parameters have priority over kconfig.
-> +
->  config PSTORE_BLKOOPS_BLKDEV
->  	string "block device for blkoops"
->  	depends on PSTORE_BLKOOPS
-> diff --git a/fs/pstore/blkoops.c b/fs/pstore/blkoops.c
-> index 05990bc3b168..c76bab671b0b 100644
-> --- a/fs/pstore/blkoops.c
-> +++ b/fs/pstore/blkoops.c
-> @@ -24,6 +24,10 @@
->  module_param(console_size, long, 0400);
->  MODULE_PARM_DESC(console_size, "console size in kbytes");
->  
-> +static long ftrace_size = -1;
-> +module_param(ftrace_size, long, 0400);
-> +MODULE_PARM_DESC(ftrace_size, "ftrace size in kbytes");
-> +
->  static int dump_oops = -1;
->  module_param(dump_oops, int, 0400);
->  MODULE_PARM_DESC(total_size, "whether dump oops");
-> @@ -80,6 +84,12 @@
->  #define DEFAULT_CONSOLE_SIZE 0
->  #endif
->  
-> +#ifdef CONFIG_PSTORE_BLKOOPS_FTRACE_SIZE
-> +#define DEFAULT_FTRACE_SIZE CONFIG_PSTORE_BLKOOPS_FTRACE_SIZE
-> +#else
-> +#define DEFAULT_FTRACE_SIZE 0
-> +#endif
-> +
->  #ifdef CONFIG_PSTORE_BLKOOPS_DUMP_OOPS
->  #define DEFAULT_DUMP_OOPS CONFIG_PSTORE_BLKOOPS_DUMP_OOPS
->  #else
-> @@ -135,6 +145,7 @@ int blkoops_register_device(struct blkoops_device *bo_dev)
->  	verify_size(dmesg_size, DEFAULT_DMESG_SIZE, 4096);
->  	verify_size(pmsg_size, DEFAULT_PMSG_SIZE, 4096);
->  	verify_size(console_size, DEFAULT_CONSOLE_SIZE, 4096);
-> +	verify_size(ftrace_size, DEFAULT_FTRACE_SIZE, 4096);
->  #undef verify_size
->  	dump_oops = !!(dump_oops < 0 ? DEFAULT_DUMP_OOPS : dump_oops);
->  
-> diff --git a/fs/pstore/blkzone.c b/fs/pstore/blkzone.c
-> index 9a7e9b06ccf7..442e5a5bbfda 100644
-> --- a/fs/pstore/blkzone.c
-> +++ b/fs/pstore/blkzone.c
-> @@ -89,10 +89,13 @@ struct blkz_context {
->  	struct blkz_zone **dbzs;	/* dmesg block zones */
->  	struct blkz_zone *pbz;		/* Pmsg block zone */
->  	struct blkz_zone *cbz;		/* console block zone */
-> +	struct blkz_zone **fbzs;	/* Ftrace zones */
->  	unsigned int dmesg_max_cnt;
->  	unsigned int dmesg_read_cnt;
->  	unsigned int pmsg_read_cnt;
->  	unsigned int console_read_cnt;
-> +	unsigned int ftrace_max_cnt;
-> +	unsigned int ftrace_read_cnt;
->  	unsigned int dmesg_write_cnt;
->  	/*
->  	 * the counter should be recovered when recover.
-> @@ -281,6 +284,7 @@ static void blkz_flush_all_dirty_zones(struct work_struct *work)
->  	blkz_flush_dirty_zone(cxt->pbz);
->  	blkz_flush_dirty_zone(cxt->cbz);
->  	blkz_flush_dirty_zones(cxt->dbzs, cxt->dmesg_max_cnt);
-> +	blkz_flush_dirty_zones(cxt->fbzs, cxt->ftrace_max_cnt);
->  }
->  
->  static int blkz_recover_dmesg_data(struct blkz_context *cxt)
-> @@ -497,6 +501,31 @@ static int blkz_recover_zone(struct blkz_context *cxt, struct blkz_zone *zone)
->  	return ret;
->  }
->  
-> +static int blkz_recover_zones(struct blkz_context *cxt,
-> +		struct blkz_zone **zones, unsigned int cnt)
-> +{
-> +	int ret;
-> +	unsigned int i;
-> +	struct blkz_zone *zone;
-> +
-> +	if (!zones)
-> +		return 0;
-> +
-> +	for (i = 0; i < cnt; i++) {
-> +		zone = zones[i];
-> +		if (unlikely(!zone))
-> +			continue;
-> +		ret = blkz_recover_zone(cxt, zone);
-> +		if (ret)
-> +			goto recover_fail;
-> +	}
-> +
-> +	return 0;
-> +recover_fail:
-> +	pr_debug("recover %s[%u] failed\n", zone->name, i);
-> +	return ret;
-> +}
+Please use that format and do not make up your own, we already have
+tools that parse these files.
 
-Why is this introduced here? Shouldn't this be earlier in the series?
+thanks,
 
-> +
->  static inline int blkz_recovery(struct blkz_context *cxt)
->  {
->  	int ret = -EBUSY;
-> @@ -516,6 +545,10 @@ static inline int blkz_recovery(struct blkz_context *cxt)
->  	if (ret)
->  		goto recover_fail;
->  
-> +	ret = blkz_recover_zones(cxt, cxt->fbzs, cxt->ftrace_max_cnt);
-> +	if (ret)
-> +		goto recover_fail;
-> +
->  	pr_debug("recover end!\n");
->  	atomic_set(&cxt->recovered, 1);
->  	return 0;
-> @@ -532,6 +565,7 @@ static int blkz_pstore_open(struct pstore_info *psi)
->  	cxt->dmesg_read_cnt = 0;
->  	cxt->pmsg_read_cnt = 0;
->  	cxt->console_read_cnt = 0;
-> +	cxt->ftrace_read_cnt = 0;
->  	return 0;
->  }
->  
-> @@ -589,6 +623,8 @@ static int blkz_pstore_erase(struct pstore_record *record)
->  		return blkz_record_erase(cxt, cxt->pbz);
->  	case PSTORE_TYPE_CONSOLE:
->  		return blkz_record_erase(cxt, cxt->cbz);
-> +	case PSTORE_TYPE_FTRACE:
-> +		return blkz_record_erase(cxt, cxt->fbzs[record->id]);
->  	default: return -EINVAL;
->  	}
->  }
-> @@ -743,6 +779,13 @@ static int notrace blkz_pstore_write(struct pstore_record *record)
->  		return blkz_record_write(cxt, cxt->cbz, record);
->  	case PSTORE_TYPE_PMSG:
->  		return blkz_record_write(cxt, cxt->pbz, record);
-> +	case PSTORE_TYPE_FTRACE: {
-> +		int zonenum = smp_processor_id();
-> +
-> +		if (!cxt->fbzs)
-> +			return -ENOSPC;
-> +		return blkz_record_write(cxt, cxt->fbzs[zonenum], record);
-> +	}
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -759,6 +802,12 @@ static struct blkz_zone *blkz_read_next_zone(struct blkz_context *cxt)
->  			return zone;
->  	}
->  
-> +	while (cxt->ftrace_read_cnt < cxt->ftrace_max_cnt) {
-> +		zone = cxt->fbzs[cxt->ftrace_read_cnt++];
-> +		if (blkz_old_ok(zone))
-> +			return zone;
-> +	}
-> +
->  	if (cxt->pmsg_read_cnt == 0) {
->  		cxt->pmsg_read_cnt++;
->  		zone = cxt->pbz;
-> @@ -881,6 +930,9 @@ static ssize_t blkz_pstore_read(struct pstore_record *record)
->  		readop = blkz_dmesg_read;
->  		record->id = cxt->dmesg_read_cnt - 1;
->  		break;
-> +	case PSTORE_TYPE_FTRACE:
-> +		record->id = cxt->ftrace_read_cnt - 1;
-> +		/* fallthrough */
-
-Please mark with "fallthrough;".
-https://www.kernel.org/doc/html/latest/process/deprecated.html#implicit-switch-case-fall-through
-
->  	case PSTORE_TYPE_CONSOLE:
->  		/* fallthrough */
->  	case PSTORE_TYPE_PMSG:
-> @@ -1046,15 +1098,27 @@ static int blkz_cut_zones(struct blkz_context *cxt)
->  		goto free_pmsg;
->  	}
->  
-> +	off_size += info->ftrace_size;
-> +	cxt->fbzs = blkz_init_zones(PSTORE_TYPE_FTRACE, &off,
-> +			info->ftrace_size,
-> +			info->ftrace_size / nr_cpu_ids,
-> +			&cxt->ftrace_max_cnt);
-> +	if (IS_ERR(cxt->fbzs)) {
-> +		err = PTR_ERR(cxt->fbzs);
-> +		goto free_console;
-> +	}
-> +
->  	cxt->dbzs = blkz_init_zones(PSTORE_TYPE_DMESG, &off,
->  			info->total_size - off_size,
->  			info->dmesg_size, &cxt->dmesg_max_cnt);
->  	if (IS_ERR(cxt->dbzs)) {
->  		err = PTR_ERR(cxt->dbzs);
-> -		goto free_console;
-> +		goto free_ftrace;
->  	}
->  
->  	return 0;
-> +free_ftrace:
-> +	blkz_free_zones(&cxt->fbzs, &cxt->ftrace_max_cnt);
->  free_console:
->  	blkz_free_zone(&cxt->cbz);
->  free_pmsg:
-> @@ -1103,6 +1167,7 @@ int blkz_register(struct blkz_info *info)
->  	check_size(dmesg_size, SECTOR_SIZE);
->  	check_size(pmsg_size, SECTOR_SIZE);
->  	check_size(console_size, SECTOR_SIZE);
-> +	check_size(ftrace_size, SECTOR_SIZE);
->  
->  #undef check_size
->  
-> @@ -1136,6 +1201,7 @@ int blkz_register(struct blkz_info *info)
->  	pr_debug("\tdmesg size : %ld Bytes\n", info->dmesg_size);
->  	pr_debug("\tpmsg size : %ld Bytes\n", info->pmsg_size);
->  	pr_debug("\tconsole size : %ld Bytes\n", info->console_size);
-> +	pr_debug("\tftrace size : %ld Bytes\n", info->ftrace_size);
->  
->  	err = blkz_cut_zones(cxt);
->  	if (err) {
-> @@ -1159,13 +1225,16 @@ int blkz_register(struct blkz_info *info)
->  		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
->  	if (info->console_size)
->  		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
-> +	if (info->ftrace_size)
-> +		cxt->pstore.flags |= PSTORE_FLAGS_FTRACE;
->  
-> -	pr_info("Registered %s as blkzone backend for %s%s%s%s\n",
-> +	pr_info("Registered %s as blkzone backend for %s%s%s%s%s\n",
->  			info->name,
->  			cxt->dbzs && cxt->bzinfo->dump_oops ? "Oops " : "",
->  			cxt->dbzs && cxt->bzinfo->panic_write ? "Panic " : "",
->  			cxt->pbz ? "Pmsg " : "",
-> -			cxt->cbz ? "Console" : "");
-> +			cxt->cbz ? "Console " : "",
-> +			cxt->fbzs ? "Ftrace" : "");
->  
->  	err = pstore_register(&cxt->pstore);
->  	if (err) {
-> diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
-> index 546375e04419..77704c1b404a 100644
-> --- a/include/linux/pstore_blk.h
-> +++ b/include/linux/pstore_blk.h
-> @@ -25,6 +25,9 @@
->   * @console_size:
->   *	The size of zone for console. Zero means disabled, othewise, it must
->   *	be multiple of SECTOR_SIZE(512).
-> + * @ftrace_size:
-> + *	The size of zone for ftrace. Zero means disabled, othewise, it must
-> + *	be multiple of SECTOR_SIZE(512).
->   * @dump_oops:
->   *	Dump oops and panic log or only panic.
->   * @read, @write:
-> @@ -60,6 +63,7 @@ struct blkz_info {
->  	unsigned long dmesg_size;
->  	unsigned long pmsg_size;
->  	unsigned long console_size;
-> +	unsigned long ftrace_size;
->  	int dump_oops;
->  	blkz_read_op read;
->  	blkz_write_op write;
-> -- 
-> 1.9.1
-> 
-
--- 
-Kees Cook
+greg k-h
