@@ -2,91 +2,100 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF35C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2422EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE8F20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="W3UBXYh3"
+	by mail.kernel.org (Postfix) with ESMTP id EC07F20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgCRPaC (ORCPT
+        id S1726958AbgCRPcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:30:02 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52072 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbgCRPaC (ORCPT
+        Wed, 18 Mar 2020 11:32:18 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:3662 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726619AbgCRPcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:30:02 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c187so2607351wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=TaCGRE0ddOQFfvjcvGEAh9NQeOSr5Kg0auRkCXlkB9A=;
-        b=W3UBXYh31RvR0blEgis0zhsMRI88hYEvr9oLOl8gVTXgiL9H0D3IGOkpXRn2H8Tx0N
-         jqcmgyMkm9JIPIG+1Y6Q1Dll64O5ahHBkpmaZFR80mz8zCSOKQDjqFzWIZKgy/Pu5kif
-         H4ifB/yWB4RuKk2xbgIh48z/zfOkFi95uAGogll5/j4+boNXtSZsrM3pAa2ggksq/e6W
-         yT5pLTWvjOTRpdldS/MT94b6GuvuIc9AIh2746LBZrjjrSRNx2sDWjpNz00di+zxLRIC
-         wqvRKklO9Vy+u8Ajti1mPqcLyoDKTaKUx4z8jNvzF1UZspk4GfRQT8OcbYDWPLZhV3bm
-         6mXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TaCGRE0ddOQFfvjcvGEAh9NQeOSr5Kg0auRkCXlkB9A=;
-        b=QDRDOYMbI8OLYoDjyiatWrHyEz485c6TUo6gqMviP0wIza6xi7C4IIbtWaqy736YGP
-         mvGCZFsY0OwOM4e4b+vWKPtwcgQ793JVFYdRe9YITzwTkEwAU12dtISwGxGMDX8QjlH5
-         AI1FNu8z2uUfXf1l8ze56TcghC0KXQSw7gwTJwz9Sh3SUTKP/u+tYKLHY48RkaYnBNLL
-         FFU0f0Fo5vaH8NivPP0rEVc3jIlv9rT3HJeT7Hc2gd4sjxojn33goRTYx75lHOufgem/
-         fTrcisFFW2v8Ds1Ih8KD0QPFVBcD4XIyHvfnLQCRz6Ob4sQRqiPJkUkqpZPO70c+o2SJ
-         hWsg==
-X-Gm-Message-State: ANhLgQ38rq/I7JUhXotITE39RK71cMTk5RPXQBWlBcHmpI+FX5socliM
-        6vOi1pGMey3m4KBsxKUkfiKr5g==
-X-Google-Smtp-Source: ADFU+vsyKpeQKIsfzZhMgnHUIlxJK9C3vLhsK2vuOOu2pil/AdsY61Szi10LT/GQ7MH+tK+6zDJS1Q==
-X-Received: by 2002:a05:600c:350:: with SMTP id u16mr5681702wmd.27.1584545399916;
-        Wed, 18 Mar 2020 08:29:59 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id l5sm9678228wro.15.2020.03.18.08.29.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 18 Mar 2020 08:29:59 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     rjw@rjwysocki.net
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH] MAINTAINERS: Add linux-acpi list to PNP
-Date:   Wed, 18 Mar 2020 15:29:51 +0000
-Message-Id: <1584545391-20811-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 18 Mar 2020 11:32:17 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TsyvOKU_1584545517;
+Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TsyvOKU_1584545517)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 18 Mar 2020 23:32:05 +0800
+From:   Wen Yang <wenyang@linux.alibaba.com>
+To:     Joern Engel <joern@lazybastard.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Wen Yang <wenyang@linux.alibaba.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] mtd: phram: fix a double free issue in error path
+Date:   Wed, 18 Mar 2020 23:31:56 +0800
+Message-Id: <20200318153156.25612-1-wenyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As asked by the PNP maintainer, linux PNP patch should be CC to
-the linux-acpi mailing list.
+The variable 'name' is released multiple times in the error path,
+which may cause double free issues.
+This problem is avoided by adding a goto label to release the mem
+uniformly. And this change also makes the code a bit more cleaner.
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Fixes: 4f678a58d335 ("mtd: fix memory leaks in phram_setup")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Joern Engel <joern@lazybastard.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mtd/devices/phram.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index be44251d1e04..4979de5c0c61 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13452,6 +13452,7 @@ F:	Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+diff --git a/drivers/mtd/devices/phram.c b/drivers/mtd/devices/phram.c
+index 931e5c2481b5..b50ec7ecd10c 100644
+--- a/drivers/mtd/devices/phram.c
++++ b/drivers/mtd/devices/phram.c
+@@ -243,22 +243,25 @@ static int phram_setup(const char *val)
  
- PNP SUPPORT
- M:	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-+L:	linux-acpi@vger.kernel.org
- S:	Maintained
- F:	include/linux/pnp.h
- F:	drivers/pnp/
+ 	ret = parse_num64(&start, token[1]);
+ 	if (ret) {
+-		kfree(name);
+ 		parse_err("illegal start address\n");
++		goto error;
+ 	}
+ 
+ 	ret = parse_num64(&len, token[2]);
+ 	if (ret) {
+-		kfree(name);
+ 		parse_err("illegal device length\n");
++		goto error;
+ 	}
+ 
+ 	ret = register_device(name, start, len);
+-	if (!ret)
+-		pr_info("%s device: %#llx at %#llx\n", name, len, start);
+-	else
+-		kfree(name);
++	if (ret)
++		goto error;
++
++	pr_info("%s device: %#llx at %#llx\n", name, len, start);
++	return 0;
+ 
++error:
++	kfree(name);
+ 	return ret;
+ }
+ 
 -- 
-2.24.1
+2.23.0
 
