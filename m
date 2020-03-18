@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5A5C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC569C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FCEC20409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5CEF208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:05:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565502;
-	bh=daJyOW0sOserDwj6c/wyEngPkpN0nZaMY6eMShhTPQM=;
+	s=default; t=1584565512;
+	bh=WrLmrYraf+mK7cIgFLavPmqL/IOaaNICmzVAiwoZoPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OwlgeV7pJMKOkewMVJjn5xcEXMOPP3mE3jbxBse9/Y/2vCq3pmJ1w3JyIe1MpFn+5
-	 6DinEtK3HdAUIWRLcQF5hDN2ShZoyrxN2rcCmaMpc+XpQ8MBxG63+ZJm7QH8LIg81o
-	 PpL9bT0mJQb6KONndlN8Y7CZDpYakIIB6CjGGpt4=
+	b=f46Ln8NwFspN8MoSF18OEg8IV8wnnwF0hwv5aD8HVg/R0FMiv71Jc7HgPjZUhnOCE
+	 VkMu7xDS2Q+f8E07G0EoBRwrn53mkKhqati95KPtMJelmt4GBDloawxeOCKNUjNqFD
+	 GYHkJv6FIPnJ4wcpldo4VQo52HyrWaqsbvgCGrAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbgCRVFA (ORCPT
+        id S1728526AbgCRVFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55158 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:05:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbgCRUzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:04 -0400
+        id S1728096AbgCRUy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CAC5208E4;
-        Wed, 18 Mar 2020 20:55:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B484208CA;
+        Wed, 18 Mar 2020 20:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564903;
-        bh=daJyOW0sOserDwj6c/wyEngPkpN0nZaMY6eMShhTPQM=;
+        s=default; t=1584564897;
+        bh=WrLmrYraf+mK7cIgFLavPmqL/IOaaNICmzVAiwoZoPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K+ZaYDZcEqumHxYwnv4Sv8bTrt4Jqxkb5pBoEclOimUIO0PzdMXLNDwdSAHXa7ADW
-         +ZjHF/dgNPYvP59EZES4M0+JPBA6Liz+6V7p8qZCAY47P1FfFmNULeRGN3wFbTos5v
-         drjQSWxjBWeMsoAYg7xNW03POBu4f3C01xMBW1SI=
+        b=SqBKXGfP/vG0GjRfnyuryD8MjLDTytFq3o061l9arshS1snwJjPnzt+qVSARuRFqH
+         FcxTNeYoONBxlEN9iVqFw/RJjGkQkHntLQ15U5mSrDntm3W0uKcNRM76FsEl5TN6fC
+         DkTN3r9JXtqIV0D3wQvpjgkCQt0M2JZdiv0dwgdI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 70/73] iommu/vt-d: Fix the wrong printing in RHSA parsing
-Date:   Wed, 18 Mar 2020 16:53:34 -0400
-Message-Id: <20200318205337.16279-70-sashal@kernel.org>
+Cc:     Yonglong Liu <liuyonglong@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 65/73] net: hns3: fix "tc qdisc del" failed issue
+Date:   Wed, 18 Mar 2020 16:53:29 -0400
+Message-Id: <20200318205337.16279-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -61,38 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit b0bb0c22c4db623f2e7b1a471596fbf1c22c6dc5 ]
+[ Upstream commit 5eb01ddfcfb25e6ebc404a41deae946bde776731 ]
 
-When base address in RHSA structure doesn't match base address in
-each DRHD structure, the base address in last DRHD is printed out.
+The HNS3 driver supports to configure TC numbers and TC to priority
+map via "tc" tool. But when delete the rule, will fail, because
+the HNS3 driver needs at least one TC, but the "tc" tool sets TC
+number to zero when delete.
 
-This doesn't make sense when there are multiple DRHD units, fix it
-by printing the buggy RHSA's base address.
+This patch makes sure that the TC number is at least one.
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Fixes: fd0c8894893cb ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 30d240dfa2e8 ("net: hns3: Add mqprio hardware offload support in hns3 driver")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/dmar.c | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 6ec5da4d028f9..aa15155b9401f 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -476,7 +476,7 @@ static int dmar_parse_one_rhsa(struct acpi_dmar_header *header, void *arg)
- 		1, TAINT_FIRMWARE_WORKAROUND,
- 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
- 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
--		drhd->reg_base_addr,
-+		rhsa->base_address,
- 		dmi_get_system_info(DMI_BIOS_VENDOR),
- 		dmi_get_system_info(DMI_BIOS_VERSION),
- 		dmi_get_system_info(DMI_PRODUCT_VERSION));
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 0c8d2269bc46e..403e0f089f2af 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1596,7 +1596,7 @@ static int hns3_setup_tc(struct net_device *netdev, void *type_data)
+ 	netif_dbg(h, drv, netdev, "setup tc: num_tc=%u\n", tc);
+ 
+ 	return (kinfo->dcb_ops && kinfo->dcb_ops->setup_tc) ?
+-		kinfo->dcb_ops->setup_tc(h, tc, prio_tc) : -EOPNOTSUPP;
++		kinfo->dcb_ops->setup_tc(h, tc ? tc : 1, prio_tc) : -EOPNOTSUPP;
+ }
+ 
+ static int hns3_nic_setup_tc(struct net_device *dev, enum tc_setup_type type,
 -- 
 2.20.1
 
