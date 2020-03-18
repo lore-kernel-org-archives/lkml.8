@@ -2,100 +2,93 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511A6C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6295C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2439B2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:59:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ABwYvkSK"
+	by mail.kernel.org (Postfix) with ESMTP id 76B4F2076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:01:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584529272;
+	bh=M8URaHMyLbOAuXYgTHwd0O8zOnmlQoi9wjYDbhAlz30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0GSEoT+WAhldJGLv6hAN+CrI75wCdBv8BTX//Ge+XaVoJ31jcgu27MA0s/QmN4qwU
+	 noUtyK06pN72jGrjUT0tgvyDf6QJ6+/gfdoK0oplkOmTq1dkXr9lfw/oFzbIKhsWkT
+	 KmQZIBMzQcGE1raV2LKQlBwYNdO/C3ur5TINh08I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgCRK7T (ORCPT
+        id S1727415AbgCRLBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:59:19 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:46098 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726486AbgCRK7S (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:59:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584529157;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CMtZ4jmJycvgiYeU4inzJpOO5pgYuaE53x0jqDSCJMY=;
-        b=ABwYvkSKjrJTN9oVCeWZYqL1mDj7yumgWiQgFNoz+07clDA1rrhV3ruynqEW8Xpi3hI4T5
-        s1hjT3djUcNOR94cGbPIFPsTN/AuF/SI9rloALkCrA3kql1WPZm2D9DHv3wTNR0yybpyL4
-        ihCfMdVLrXpS2XLa/KNBnJZuRyukGCs=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-465-QBGxuCGjNjetbMjm0iBrYg-1; Wed, 18 Mar 2020 06:59:16 -0400
-X-MC-Unique: QBGxuCGjNjetbMjm0iBrYg-1
-Received: by mail-wm1-f70.google.com with SMTP id a11so839503wmm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:59:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CMtZ4jmJycvgiYeU4inzJpOO5pgYuaE53x0jqDSCJMY=;
-        b=LbvIk1tFhhysGzmIZnARxoMftlFkCSQ+HK9rMJ5nQ/rAYw+8xdYfe+hI+Mgy5qWIBS
-         oOk/94kDyz/lb5axm+oi2rTkBFktQbesx56Av6Xdnb92JtYZwHEwS9w2Dz8nq0CRL5BS
-         7h5mD/xm6X78grepw2fapCQLS9Bk4ueeQf26v1OTZqkwr0FQATobMmoDasDLkNr1qBT5
-         HpQBBr/T1CQt8MUjlRpb9naeOxc8UKPdKWAcxRq8bIHkHk1cgEyFph0Ltmvmh2yw+Kgc
-         ycwjXWhzE538x3L01juucM3tw8Yqg4Dt4xQA82rsmXofd90Uv4joJgibDa649IrFimM8
-         nITQ==
-X-Gm-Message-State: ANhLgQ26wqmtFBJmhL3Y9cExwadVn7wvznWd3civ1RZo8ZTOypllE3yh
-        m4sQDObsl+Z4Y8kpuzCSp5H/Lyif5HBp7md9YBgc1Dh2gCAHqyy7+BMnSVoLFEzfdJ4bl1OO0/P
-        lpP7RNFabJ9cYeJt8+uB24ecX
-X-Received: by 2002:a5d:4088:: with SMTP id o8mr5101797wrp.144.1584529154938;
-        Wed, 18 Mar 2020 03:59:14 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsqJPtOCO7Bop1hF8dkWynp+0emhgYuxiGeDzjWNh+m03OZOuGNFzkn+9eJ8E5YITVCMV0eaQ==
-X-Received: by 2002:a5d:4088:: with SMTP id o8mr5101782wrp.144.1584529154751;
-        Wed, 18 Mar 2020 03:59:14 -0700 (PDT)
-Received: from [192.168.178.58] ([151.21.15.43])
-        by smtp.gmail.com with ESMTPSA id 19sm3498623wma.3.2020.03.18.03.59.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Mar 2020 03:59:14 -0700 (PDT)
-Subject: Re: [PATCH] KVM: nVMX: remove side effects from
- nested_vmx_exit_reflected
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     sean.j.christopherson@intel.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <1584468059-3585-1-git-send-email-pbonzini@redhat.com>
- <87tv2m2av4.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <803177a8-c5ef-ac5e-087b-52b09398d78c@redhat.com>
-Date:   Wed, 18 Mar 2020 11:59:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 07:01:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbgCRLBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 07:01:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B8B42076D;
+        Wed, 18 Mar 2020 11:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584529270;
+        bh=M8URaHMyLbOAuXYgTHwd0O8zOnmlQoi9wjYDbhAlz30=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QwvR6OpwEeUWcjwMeYQZiyEmBLKi4CCnoeD3n0R/6HoPfpigLoZRIw5RA0jLBnorN
+         XTdG5fo+Kjy8ETKhQZuZzuhgchcq9iPlf9NVcbCXFCIL5jeOTrcWRL2LCr3i4Qcs/s
+         gN/OnsWSidwGOuiNMzDFmNgZv9qXNN4B1wiQlstw=
+Date:   Wed, 18 Mar 2020 12:01:08 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Vishnu DASA <vdasa@vmware.com>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, yuanxzhang@fudan.edu.cn, kjlu@umn.edu
+Subject: Re: [PATCH] VMCI: Fix potential NULL pointer dereference when
+ acquire a lock
+Message-ID: <20200318110108.GA2305113@kroah.com>
+References: <1584376610-11979-1-git-send-email-xiyuyang19@fudan.edu.cn>
 MIME-Version: 1.0
-In-Reply-To: <87tv2m2av4.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584376610-11979-1-git-send-email-xiyuyang19@fudan.edu.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/03/20 11:52, Vitaly Kuznetsov wrote:
-> The only functional difference seems to be that we're now doing
-> nested_mark_vmcs12_pages_dirty() in vmx->fail case too and this seems
-> superfluous: we failed to enter L2 so 'special' pages should remain
-> intact (right?) but this should be an uncommon case.
+On Tue, Mar 17, 2020 at 12:36:47AM +0800, Xiyu Yang wrote:
+> A NULL pointer can be returned by vmci_ctx_get(). Thus add a
+> corresponding check so that a NULL pointer dereference will
+> be avoided when acquire a lock in spin_lock.
 > 
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+> ---
+>  drivers/misc/vmw_vmci/vmci_context.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/misc/vmw_vmci/vmci_context.c b/drivers/misc/vmw_vmci/vmci_context.c
+> index 16695366ec92..a20878fba374 100644
+> --- a/drivers/misc/vmw_vmci/vmci_context.c
+> +++ b/drivers/misc/vmw_vmci/vmci_context.c
+> @@ -898,6 +898,8 @@ void vmci_ctx_rcv_notifications_release(u32 context_id,
+>  					bool success)
+>  {
+>  	struct vmci_ctx *context = vmci_ctx_get(context_id);
+> +	if (context == NULL)
+> +		return;
 
-I'm not entirely sure if the PID could be written before the processor
-decrees a vmfail.  It doesn't really hurt anyway as you say though.
-Thanks for the review!
+But, if you look at the code, context_id is guaranteed to point to a
+valid context, right?  Or can this somehow get dropped between the last
+"get" and this one?
 
-Paolo
+Anyway, the coding style is wrong here, always run checkpatch.pl on your
+patches please.
 
+thanks,
+
+greg k-h
