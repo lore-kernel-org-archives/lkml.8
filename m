@@ -2,135 +2,104 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B28C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62859C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF8F2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a53AcudG"
+	by mail.kernel.org (Postfix) with ESMTP id 27E7D20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbgCRJsb (ORCPT
+        id S1727483AbgCRJtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:48:31 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39568 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgCRJsa (ORCPT
+        Wed, 18 Mar 2020 05:49:53 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:45189 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgCRJtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:48:30 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f7so2456831wml.4;
-        Wed, 18 Mar 2020 02:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kZWoyvaHJSGd73srWJBm6fxD7x19530bbjXoByZ4qR4=;
-        b=a53AcudGGz6w3yGUUaIkUKc/2DADUIGgaeiEFOHYu9km7wuSMjqVT5ePukdJLlUj5r
-         zYc6tYkJBqLGvRFNS7niMFtFmLS3N5vB7Ba05TkOdtmfDcbjx8Q0OE2TbwXbgzTXjGCz
-         mhQI7z80kTOVifzTscM+FNwXEZCZyukNqWl64oqNac6SJYLiI/+SKw4i0ogJdP3/CzV8
-         V6mgZ+i4BinPE5YYsA1/iaA6GwxyZVvDoCTuX2O7/Nu3As8+EJIe7fs7ieXe6Sx52+qc
-         gt3MELJ/edUQhxUp/ycvxsE9kosBLKwuH4UsKq9uAW238nV7HnCO/xfrBV73mov2Asoy
-         4Owg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kZWoyvaHJSGd73srWJBm6fxD7x19530bbjXoByZ4qR4=;
-        b=V5Jq+7l0pAZL2y/pfcwM0aJwmxf0L+j7CW9ZOED/RcvV3wmQyKzVJVJGmVMk/wUlYY
-         w6un0x6FOC2Z8sJatk/JqHIJff3SknSTgGh+R1Txwu2547L/70fw4I+6RcxF55zYN8r6
-         /AwYvO8CBAkcmKZitxWcaMRSgbC3kucumVOphTPlDiZ5um0XMXEydVQIxyj2vV2GAveB
-         Vnf6fKt2RD5Nk6tyBcoedy/U+Olmm6RMlL2pM+m1yZNH1Tw0Ky8B4rtrVoPm4GjWy8UF
-         c6X7oeB3a58etKnVgK/QAtPk0aFB4WpMkXC1JutdVamYyBeNWZKa4SSk0C/VmEryGJGX
-         9I7A==
-X-Gm-Message-State: ANhLgQ1goLyBGLrmCdByDHHdzYFE4QC5gsRWgWQ7HzJNEMP6k397rQCu
-        ZcLue+Cd1KxTkNnyf/mACbd4KuDcz6rm/Lz06dc=
-X-Google-Smtp-Source: ADFU+vvt+aQ0K45DCFto4tqOEeYoZHwvLuJtLFWDetsV/skwz/0PCiKBEkPYkP6l0v7Mjcsa5dIpLDMp1MUZS8lonn0=
-X-Received: by 2002:a1c:f615:: with SMTP id w21mr4276473wmc.152.1584524908962;
- Wed, 18 Mar 2020 02:48:28 -0700 (PDT)
+        Wed, 18 Mar 2020 05:49:53 -0400
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M7ayR-1jD8Pi3tHx-0080EA; Wed, 18 Mar 2020 10:49:52 +0100
+Received: by mail-qt1-f181.google.com with SMTP id n5so20097201qtv.7;
+        Wed, 18 Mar 2020 02:49:51 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ074gg76hLHWhbR90Ftqsgg0fDdbaD+R5o+qXfuEDh0sBhsXjBs
+        Ufgp8B/uRgMiosC+zw7VqPTeENzXPJ/DqD2VgE8=
+X-Google-Smtp-Source: ADFU+vuZatV17Zl74+SHt/QiM6dlAWSwco+C3yE07S6yC/qyO02awDJyibHaLjvX8iQIPaB1c+EJ0/kfYHZL62HxXJ8=
+X-Received: by 2002:aed:3b4c:: with SMTP id q12mr3400957qte.18.1584524990718;
+ Wed, 18 Mar 2020 02:49:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200318083120.13805-1-zhang.lyra@gmail.com> <20200318083120.13805-2-zhang.lyra@gmail.com>
- <CADBw62rSE+MrQB_HSOwVNos_W=x-mHMEuVrZN=jU0Yt1KXFGvw@mail.gmail.com>
-In-Reply-To: <CADBw62rSE+MrQB_HSOwVNos_W=x-mHMEuVrZN=jU0Yt1KXFGvw@mail.gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Wed, 18 Mar 2020 17:47:52 +0800
-Message-ID: <CAAfSe-u-ui3SP8vnNPMuKHhB-iMCscc4OE16hoDWZ8xzsie+vQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] serial: sprd: cleanup the sprd_port for error case
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
+References: <cover.1584473399.git.gurus@codeaurora.org> <587f9ccae68ad7e1ce97fa8da6037292af1a5095.1584473399.git.gurus@codeaurora.org>
+ <CAK8P3a2Hi_AoRC3g7qKth4e_Y1jZrbBDhWUb3YPZm10FWMu-ig@mail.gmail.com> <20200317233003.GA11350@codeaurora.org>
+In-Reply-To: <20200317233003.GA11350@codeaurora.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 18 Mar 2020 10:49:34 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2a-QEwFfDE5FbFCVdDS+t9jirgbHWJQQv0i5_OMCYXJg@mail.gmail.com>
+Message-ID: <CAK8P3a2a-QEwFfDE5FbFCVdDS+t9jirgbHWJQQv0i5_OMCYXJg@mail.gmail.com>
+Subject: Re: [PATCH v9 04/11] pwm: clps711x: Use 64-bit division macro
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     Linux PWM List <linux-pwm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexander Shiyan <shc_work@mail.ru>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:GJNg+zbJ/QTr93mXo+ZUGvwLJZcrToMwk5hiStg0JKtSAfJ+jkx
+ DL/IFajK7amfBNdOpRZrLp3YsL1MG6AZdEAQ43ycfvw6LP36azEprK7WI+3ip29mhwwpaDQ
+ +hDpiajVtmgeYQBAbNZXGjIZ/boPADTXjK2MYiy4jeGywZpEarMgjXAH0dC6iF9PNm4aVVs
+ HjBwlYP2A+LbTzmWmQdiQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:D1cv3uqKd2M=:9LvQjGE/K8Nz7rkz10WynY
+ X0ykvFjkbkQ/SxwFchNgiEsqf9I3+6PElY3eKR4TS4iSkJi5F+IvrfYrY4r6yzonpJKAiDHec
+ epvr46nsD3ezZIyJB/tB5d5gLXNLiGNUfGE/Pw4V30el+aH8AWXcS8zDVeJoKVlrlnjRK4bOw
+ fq4vWIvaDOvIejDr2ny58Hbdmvx3xLeDevtNvxBaEBuFuSYNDRmnaYkS7tKW0auvPs4MvRFOw
+ XdMD2+Q/SqpsRaRzR+8BiURjoQk5+kjzKhSdydhZXJrhBtF7sdmwlsvWUDI1D4rlA+yfm6cdb
+ c3G93BUVhNax1ObtZcDurv2zuUe6912f4PQIC2Zi7rFhufP1iytyfrcHoX4sw8gXb0WzVrJOY
+ xZKLJP2dD9QrmEI5bFdLwovK+v95vrUj9N/eZlOFGzTvRw0mdTycPGmpfCEXDJR1uIazq/vaV
+ MkzhRo4N5Rr6gL+BhtTfK9Ss4k73SUHIvLE2u7mJO1nIyB6fTz1f7WdoiZGyi2zdDrYWESz8c
+ 2JRo0uhyyyl51u4pFPSocchxQoo/Cb64Dj7FnvmAj7glkNfwrdbISxxYYUN9aTnKqwl+zXsqA
+ fN2Tm0aetkdLpfcbLwmu3etv5xclhzMVFuRrH6qo9mXhIf2bAsRt2n2c+OGr31QJTR96IN446
+ HLZKvnvLKKvOW/X9KAIO/0/dgsHUi5NVPYD13+Xj3IOL3rFqTch6XZAkKXBWlEDPqCkmaj6so
+ RbQHgnZa5hwMh+CAU08G8HtP+S2hIfAxerNKQLxdrL2OC4iL+wPq1s+ITJgrwIMnkztPyl7Dj
+ 5NAJW07sFqtSAB8B1QSbYjJ6rITMPWxfD9veMDwrAoucC8RUuo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020 at 17:16, Baolin Wang <baolin.wang7@gmail.com> wrote:
+On Wed, Mar 18, 2020 at 12:30 AM Guru Das Srinagesh
+<gurus@codeaurora.org> wrote:
 >
-> On Wed, Mar 18, 2020 at 4:31 PM Chunyan Zhang <zhang.lyra@gmail.com> wrot=
-e:
+> On Tue, Mar 17, 2020 at 11:22:06PM +0100, Arnd Bergmann wrote:
+> > > diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+> > > index 924d39a..ba9500a 100644
+> > > --- a/drivers/pwm/pwm-clps711x.c
+> > > +++ b/drivers/pwm/pwm-clps711x.c
+> > > @@ -43,7 +43,7 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+> > >  static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
+> > >  {
+> > >         /* Duty cycle 0..15 max */
+> > > -       return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+> > > +       return DIV64_U64_ROUND_CLOSEST(v * 0xf, pwm->args.period);
+> > >  }
 > >
-> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> >
-> > It would be better to cleanup the sprd_port for the device before
-> > return error.
-> >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > ---
-> >  drivers/tty/serial/sprd_serial.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd=
-_serial.c
-> > index 9f8c14ff6454..54477de9822f 100644
-> > --- a/drivers/tty/serial/sprd_serial.c
-> > +++ b/drivers/tty/serial/sprd_serial.c
-> > @@ -1204,8 +1204,10 @@ static int sprd_probe(struct platform_device *pd=
-ev)
-> >         up->has_sysrq =3D IS_ENABLED(CONFIG_SERIAL_SPRD_CONSOLE);
-> >
-> >         ret =3D sprd_clk_init(up);
-> > -       if (ret)
-> > +       if (ret) {
-> > +               sprd_port[index] =3D NULL;
+> > Is it actually going to exceed U32_MAX? If not, a type cast may be
+> > more appropriate here than the expensive 64-bit division.
 >
-> =E5=A6=82=E6=9E=9C=E6=88=91=E4=BB=AC=E5=BC=BA=E5=88=B6=E4=BD=BF=E7=94=A8a=
-lias, =E5=88=99=E8=BF=99=E9=87=8C=E5=BA=94=E8=AF=A5=E4=B9=9F=E6=97=A0=E9=9C=
-=80=E6=B8=85=E9=99=A4=E4=BA=86=EF=BC=8C=E5=9B=A0=E4=B8=BA=E4=B8=80=E8=BF=9B=
-probe=E5=B0=B1=E4=BC=9A=E7=BB=99=E5=AE=83=E9=87=8D=E6=96=B0=E8=B5=8B=E5=80=
-=BC=E3=80=82 =E8=BF=98=E6=98=AF=E6=88=91=E6=BC=8F=E4=BA=86=E4=BB=80=E4=B9=
-=88=EF=BC=9F
+> With the final change in this patch series, the framework will support
+> periods that exceed U32_MAX. My concern is that using a typecast would
+> mean that in those cases, this driver will not support > U32_MAX values.
+> Using DIV64_U64_ROUND_CLOSEST makes the driver future proof and able to
+> handle > U32_MAX values correctly. What do you think?
 
-=E6=98=AF=E4=B8=8D=E9=9C=80=E8=A6=81, =E6=89=80=E4=BB=A5=E6=88=91comment me=
-ssage=E9=87=8C=E5=86=99=E7=9A=84=E6=98=AFit would be better...
+Ah, so if the period can actually be larger than U32_MAX, you need to
+handle that case. However, I see that the divident in this code (v * 0xf)
+is still a 32-bit number, so a correct and efficient implementation could be
 
-=E6=88=91=E8=A7=89=E5=BE=97=E6=98=AF=E4=B8=8B=E9=9D=A2=E8=BF=94=E5=9B=9E=E7=
-=9A=84=E5=9C=B0=E6=96=B9=E9=83=BD=E6=B8=85=E7=90=86=E4=BA=86, =E8=BF=99=E9=
-=87=8C=E4=B9=9F=E6=B8=85=E7=90=86=E6=8E=89
+   if (pwm->args.period > (UINT_MAX / 0xf))
+          return 0;
+   return DIV_ROUND_CLOSEST(v * 0xf, (u32)pwm->args.period);
 
-=E8=A6=81=E4=B9=88=E9=83=BD=E5=8E=BB=E6=8E=89?
-
-
->
->
-> >                 return ret;
-> > +       }
-> >
-> >         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >         up->membase =3D devm_ioremap_resource(&pdev->dev, res);
-> > --
-> > 2.20.1
-> >
->
->
-> --
-> Baolin Wang
+        Arnd
