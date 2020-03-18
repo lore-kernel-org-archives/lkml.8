@@ -2,98 +2,130 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0739C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD462C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5D720771
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD8E20771
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:02:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TG1fBoaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgCRJB7 (ORCPT
+        id S1727487AbgCRJC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:01:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:47076 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbgCRJB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:01:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A10E631B;
-        Wed, 18 Mar 2020 02:01:58 -0700 (PDT)
-Received: from [10.37.12.57] (unknown [10.37.12.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31F5D3F52E;
-        Wed, 18 Mar 2020 02:01:57 -0700 (PDT)
-Subject: Re: [PATCH v5 00/13] SCMI Notifications Core Support
-To:     Cristian Marussi <cristian.marussi@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com, james.quinlan@broadcom.com,
-        Jonathan.Cameron@Huawei.com
-References: <20200316150334.47463-1-cristian.marussi@arm.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <e51598b5-2c7b-56f2-4426-9cce3d5d3d52@arm.com>
-Date:   Wed, 18 Mar 2020 09:01:55 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200316150334.47463-1-cristian.marussi@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 18 Mar 2020 05:02:27 -0400
+Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:26439
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726523AbgCRJC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 05:02:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HfmOwDJnkXjuzQJDXeMKPPspZ50NiEEmForCtZHm/kn7UgOCfzPyZPhX0vCyyjCwZbbFGuRsOP+tShBSulB1man7MYk9qgzzi8HK7NNUc70sT6MP30jR5E8TaWdfZMRvbKTfkIZwr/HOLhDg8y2OyzbmZW2P61Sl0H1WHigo04GMxpRf+9GDsPJYNjwuYWIqbvTHZn2BLT87KXekVThOOhDkfZ16k3hTHPUQaqz1C3iiCV7t9Pi5ZhNq/xO0JOGnU1sfgSM8K/YhkkqAEFjq7Djwqr7UTJ0f89dFca3puJl8TQLe9hYJTo2aBMAhTA5Xa6NlvIjO2bk9Q15qTVZmzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JeU6SIX63l6k7b4DZXOo5AhU+rG60PfOaW5ir5GcdHg=;
+ b=MSgVuKv3ANNlKWq8JVyREW1Gxg6WQ2aESShts77kfnIMnxTOvpSPTHHueNETI8zMuCqEEsEd9kTng2APjoySVcQd4qyEwheTiwmncIkboqrlwLmZu0xo7jjT+vAPrn+UpBrWwrr54uvHzQI0WSi/ZwmaVm4gFM1kU13ZM0i5XFYDCnUlMzWr9LlWbRPgE3HN0L3AHk/u2vCGA3T2D6ZC75WnCBEBw49ZFZns9lKuW00IqgkCfziEGPP65xYUT7p6SbKdspodH0lTEEZw8puUAZhx7NaWg6zzcdjlJxsp/BkHQkOB6Rbk3e5KsCwpC3l1Bs2uQwa9YKmS7WZRoQVy6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JeU6SIX63l6k7b4DZXOo5AhU+rG60PfOaW5ir5GcdHg=;
+ b=TG1fBoaAr21MipCEtVO1lvZ/m3kPP3uUavXdj+fKiIwx72ajqh5F9dP5+Fi4cGQFMzgmgsOnOb4biaXsSVSkeuVTYU8n4kCYcCeX1gs7yJYKtqbzGe+y9MQfuk/O5Neyovb2JwyvAJ4oGy48ghZAv7F5syE/88+7rPByCTXYQMQ=
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.3.146) by
+ VI1PR0402MB3583.eurprd04.prod.outlook.com (52.134.7.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.13; Wed, 18 Mar 2020 09:02:23 +0000
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::c991:848b:cc80:2768]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::c991:848b:cc80:2768%7]) with mapi id 15.20.2814.025; Wed, 18 Mar 2020
+ 09:02:22 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     "Fuzzey, Martin" <martin.fuzzey@flowbird.group>
+CC:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [EXT] [PATCH 1/4] net: fec: set GPR bit on suspend by DT
+ connfiguration.
+Thread-Topic: [EXT] [PATCH 1/4] net: fec: set GPR bit on suspend by DT
+ connfiguration.
+Thread-Index: AQHV/Hwf7o5FT7bkakCxQQlLHyLZc6hN4MmAgAAmsoCAAAWh0A==
+Date:   Wed, 18 Mar 2020 09:02:22 +0000
+Message-ID: <VI1PR0402MB3600BF8115865C58A463FE37FFF70@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+References: <1584463806-15788-1-git-send-email-martin.fuzzey@flowbird.group>
+ <1584463806-15788-2-git-send-email-martin.fuzzey@flowbird.group>
+ <VI1PR0402MB3600396A11D0AB39FBF9C54AFFF70@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+ <CANh8QzxNYzLL8sAXwYEnic2-o-3xzyQaUZZ3LmaRO7fCfgoLQg@mail.gmail.com>
+In-Reply-To: <CANh8QzxNYzLL8sAXwYEnic2-o-3xzyQaUZZ3LmaRO7fCfgoLQg@mail.gmail.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fugang.duan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3bda70bd-8665-4997-693f-08d7cb1b1260
+x-ms-traffictypediagnostic: VI1PR0402MB3583:|VI1PR0402MB3583:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3583CF207077B3D68AEEAA9BFFF70@VI1PR0402MB3583.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 03468CBA43
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(366004)(346002)(376002)(199004)(33656002)(4326008)(76116006)(71200400001)(6916009)(64756008)(2906002)(86362001)(52536014)(66946007)(66556008)(15650500001)(66446008)(81166006)(66476007)(7696005)(81156014)(186003)(478600001)(8676002)(54906003)(55016002)(9686003)(8936002)(26005)(5660300002)(316002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3583;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JlMPaNER1fCP0+ql4AQ/WzmGumj7Ec3+Y3Q9iBGhVepXQWendyJjUyJecGnOYnbT5xqsbWjWpnFs7/sg1n/GgD1B64Plu89n5g9P3wf/G4pETc+vm8E9pALPFxJhIRF18tvEdrrjxZLDCWLt3NgQKZNIJ2eOZEYwBXnBZJuu0o53qWntEE9FYzVVePhiou2DO5J5xhxvMGtS+t532dlYiQ1l+uO72La2CTk7bNzClngaxLEfvMkyTYYPoB+2sBJKH1rztqFs71Cp+MDbS/7U64dCMo7nQS8RyN6lJ9494QuIQNcKoizdPOK2Ca7qS8dQmoikjXiPxvOxmLztBdSTaSVEfYaJofYxnW7VmbwlxuJt15LRrp5sPLDukCLVMNsz66tWSbSqY1f3T17QzqSAI+oeK9wEe5TSvC+7wM70kadQstqLgFX+UHrX5c2XEpvB
+x-ms-exchange-antispam-messagedata: 9rcw4rOAUY2cv8+hQodLzaqclHRjlNhVHiQw9XMOr6H6PK2oDvS8WHA7rwMgEIG4KniR+ufSsrgs22meg5plxlOH/2i4CwDgU3KpQrmEZifu1UZ/xDZuZE95hNrZn1VSfiDijzvzAVMor+k6K7TYvw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3bda70bd-8665-4997-693f-08d7cb1b1260
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2020 09:02:22.7539
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KdQdRMLV1ALxzBUp3fXSOoLGb/jIcuSb4lF8xNjPLfGv1odT+Be1EeKwyyDvDMVnH+O2r00D2jQzodjXUIS/gg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3583
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Cristian,
-
-On 3/16/20 3:03 PM, Cristian Marussi wrote:
-> Hi all,
-> 
-> this series wants to introduce SCMI Notification Support, built on top of
-> the standard Kernel notification chain subsystem.
-> 
-> At initialization time each SCMI Protocol takes care to register with the
-> new SCMI notification core the set of its own events which it intends to
-> support.
-> 
-> Using the API exposed via scmi_handle.notify_ops a Kernel user can register
-> its own notifier_t callback (via a notifier_block as usual) against any
-> registered event as identified by the tuple:
-> 
-> 		(proto_id, event_id, src_id)
-> 
-> where src_id represents a generic source identifier which is protocol
-> dependent like domain_id, performance_id, sensor_id and so forth.
-> (users can anyway do NOT provide any src_id, and subscribe instead to ALL
->   the existing (if any) src_id sources for that proto_id/evt_id combination)
-> 
-> Each of the above tuple-specified event will be served on its own dedicated
-> blocking notification chain, dynamically allocated on-demand when at least
-> one user has shown interest on that event.
-> 
-> Upon a notification delivery all the users' registered notifier_t callbacks
-> will be in turn invoked and fed with the event_id as @action param and a
-> generated custom per-event struct _report as @data param.
-> (as in include/linux/scmi_protocol.h)
-> 
-> The final step of notification delivery via users' callback invocation is
-> instead delegated to a pool of deferred workers (Kernel cmwq): each
-> SCMI protocol has its own dedicated worker and dedicated queue to push
-> events from the rx ISR to the worker.
-> 
-
-Could you give an example how the notification would be delivered
-further to the upper layers, like hwmon driver, cpufreq or thermal?
-For example, for sensor protocol which delivers event
-SENSOR_TRIP_POINT_EVENT indicating a trip point was crossed.
-
-Would it be possible for:
-drivers/hwmon/scmi-hwmon.c
-to get this temperature events like an interrupt?
-
-I couldn't find it in the implementation of the registered handlers.
-
-Regards,
-Lukasz
+RnJvbTogRnV6emV5LCBNYXJ0aW4gPG1hcnRpbi5mdXp6ZXlAZmxvd2JpcmQuZ3JvdXA+IFNlbnQ6
+IFdlZG5lc2RheSwgTWFyY2ggMTgsIDIwMjAgNDozNiBQTQ0KPiBPbiBXZWQsIDE4IE1hciAyMDIw
+IGF0IDA3OjI2LCBBbmR5IER1YW4gPGZ1Z2FuZy5kdWFuQG54cC5jb20+IHdyb3RlOg0KPiA+DQo+
+ID4gRnJvbTogTWFydGluIEZ1enpleSA8bWFydGluLmZ1enpleUBmbG93YmlyZC5ncm91cD4gU2Vu
+dDogV2VkbmVzZGF5LA0KPiA+IE1hcmNoIDE4LCAyMDIwIDEyOjUwIEFNDQo+ID4gPiArc3RhdGlj
+IGludCBmZWNfZW5ldF9vZl9wYXJzZV9zdG9wX21vZGUoc3RydWN0IGZlY19lbmV0X3ByaXZhdGUg
+KmZlcCwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVj
+dCBkZXZpY2Vfbm9kZSAqbnApIHsNCj4gPiA+ICsgICAgICAgc3RhdGljIGNvbnN0IGNoYXIgcHJv
+cFtdID0gImZzbCxzdG9wLW1vZGUiOw0KPiA+ID4gKyAgICAgICBzdHJ1Y3Qgb2ZfcGhhbmRsZV9h
+cmdzIGFyZ3M7DQo+ID4gPiArICAgICAgIGludCByZXQ7DQo+ID4gPiArDQo+ID4gPiArICAgICAg
+IHJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9maXhlZF9hcmdzKG5wLCBwcm9wLCAyLCAwLA0K
+PiA+ID4gKyAmYXJncyk7DQo+ID4gVG8gc2F2ZSBtZW1vcnk6DQo+ID4NCj4gPiAgICAgICAgICAg
+ICAgICAgIHJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9maXhlZF9hcmdzKG5wLA0KPiA+ICJm
+c2wsc3RvcC1tb2RlIiwgMiwgMCwgJmFyZ3MpOw0KPiA+DQo+IA0KPiBXaHkgd291bGQgdGhpcyBz
+YXZlIG1lbW9yeT8NCj4gcHJvcCBpcyBkZWZpbmVkIHN0YXRpYyBjb25zdCBjaGFyW10gKGFuZCBu
+b3QgY2hhciAqKSBzbyB0aGVyZSB3aWxsIG5vIGJlIGV4dHJhDQo+IHBvaW50ZXJzLg0KPiANCj4g
+SSBoYXZlbid0IGNoZWNrZWQgdGhlIGdlbmVyYXRlZCBhc3NlbWJsZXIgYnV0IHRoaXMgc2hvdWxk
+IGdlbmVyYXRlIHRoZSBzYW1lDQo+IGNvZGUgYXMgYSBzdHJpbmcgbGl0dGVyYWwgSSB0aGluay4N
+Cj4gDQo+IEl0IGlzIGFsc28gcmV1c2VkIGxhdGVyIGluIHRoZSBmdW5jdGlvbiBpbiBhIGRlYnVn
+ICh3aGljaCBpcyB0aGUgcmVhc29uIEkgZGlkIGl0DQo+IHRoaXMgd2F5IHRvIGVuc3VyZSB0aGUg
+cHJvcGVydHkgbmFtZSBpcyB1bmlxdWUgYW5kIGNvbnNpc3RlbnQuDQoNCnN0YXRpYyB2YXJpYWJs
+ZSBjb3N0IG1lbW9yeSBhbmQgbmV2ZXIgaXMgbm90IGZyZWVkIGlmIHRoZSBtb2R1bGUgaXMgYnVp
+bHQgaW4uIA0KDQp0aGUgbGF0ZXIgZGVidWcgbWVzc2FnZSBjYW5ub3QgZGVwZW5kIG9uIHRoZSB2
+YXJpYWJsZS4NCj4gDQo+IFJlZ2FyZHMsDQo+IA0KPiBNYXJ0aW4NCj4gDQo+IC0tDQo=
