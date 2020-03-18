@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE3BC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ACDC43332
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E8520409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151D920775
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565619;
-	bh=Bz1KfbscorsoPHnKCfjR5ivUakflhm5VAIEiOcqHq3w=;
+	s=default; t=1584565622;
+	bh=5f7NQkaEyeXGMmbAHbJt3GLRihTNK3xlTNMGjXXud98=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RXY9w1GrRA9ryXL6t5dSUkHZwLydxcTiR8Lbrj0yeVX4M8kSjqDM+xPnaftDWO3OT
-	 cgAAuYyWJafmS3hujrRLRGSI035aTRKRXWLZYkEua0TaTr3YxN5MWBVUQH4KbunOwH
-	 vXWU6oBCnGg5pjkS9s++sNGgpEb30w6jNiLWsOmk=
+	b=e97mtpNGh9E8orUch0wNzG36iFWBVIivTlnkppc61gegz/xDq9cJ8xlZwcSPuSBQI
+	 pIV6A6G07cknAVJTuW3LvbnW64saWEsdfEX0u74PyWUeUWYjXrUsrqFWJZKpmt7g5q
+	 k11Z6SBSKlFlu5211bftQb8EZuxEyedJ0W07Fols=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgCRVG5 (ORCPT
+        id S1727840AbgCRUy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:06:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54026 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:54:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727846AbgCRUya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:54:30 -0400
+        id S1727800AbgCRUyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF7220B1F;
-        Wed, 18 Mar 2020 20:54:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA81820B1F;
+        Wed, 18 Mar 2020 20:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564869;
-        bh=Bz1KfbscorsoPHnKCfjR5ivUakflhm5VAIEiOcqHq3w=;
+        s=default; t=1584564864;
+        bh=5f7NQkaEyeXGMmbAHbJt3GLRihTNK3xlTNMGjXXud98=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qziV+XYqD4NNSi8B50iSX51vVonS+cn4p3DaIbW48+KVpC4C1FGAzuHH1JTtXWh54
-         k8j7nDlivlvapM9+3RRpH6xsMyA4eGocBv7MlqHQB/xzNlwdLa+WdPeQo71xHDT/BG
-         Cstea8CWblYgKDJRAGRBbpdT90aui24hXiNm/AnY=
+        b=T+pDgNb6QJ+vOBXPbSY4RJWyklteeLa64n0GKnlBgk+fiScpTlDaq4X9poYn4O0RT
+         Paw8vQpRrSiorZVcRoFV/qlk6nuwlugELfuzTD9b/jEkUi+v5gxYHeUQ97sYJHd6rQ
+         oQneoVPsWtQpDZladUgMdyCfzKcBFGIbh7SS9Ljw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Leung <martin.leung@amd.com>, Jun Lei <Jun.Lei@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 41/73] drm/amd/display: update soc bb for nv14
-Date:   Wed, 18 Mar 2020 16:53:05 -0400
-Message-Id: <20200318205337.16279-41-sashal@kernel.org>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, Jens Axboe <axboe@kernel.dk>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 37/73] virtio-blk: fix hw_queue stopped on arbitrary error
+Date:   Wed, 18 Mar 2020 16:53:01 -0400
+Message-Id: <20200318205337.16279-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -61,159 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Leung <martin.leung@amd.com>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-[ Upstream commit d5349775c1726ce997b8eb4982cd85a01f1c8b42 ]
+[ Upstream commit f5f6b95c72f7f8bb46eace8c5306c752d0133daa ]
 
-[why]
-nv14 previously inherited soc bb from generic dcn 2, did not match
-watermark values according to memory team
+Since nobody else is going to restart our hw_queue for us, the
+blk_mq_start_stopped_hw_queues() is in virtblk_done() is not sufficient
+necessarily sufficient to ensure that the queue will get started again.
+In case of global resource outage (-ENOMEM because mapping failure,
+because of swiotlb full) our virtqueue may be empty and we can get
+stuck with a stopped hw_queue.
 
-[how]
-add nv14 specific soc bb: copy nv2 generic that it was
-using from before, but changed num channels to 8
+Let us not stop the queue on arbitrary errors, but only on -EONSPC which
+indicates a full virtqueue, where the hw_queue is guaranteed to get
+started by virtblk_done() before when it makes sense to carry on
+submitting requests. Let us also remove a stale comment.
 
-Signed-off-by: Martin Leung <martin.leung@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Fixes: f7728002c1c7 ("virtio_ring: fix return code on DMA mapping fails")
+Link: https://lore.kernel.org/r/20200213123728.61216-2-pasic@linux.ibm.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/display/dc/dcn20/dcn20_resource.c | 114 ++++++++++++++++++
- 1 file changed, 114 insertions(+)
+ drivers/block/virtio_blk.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index 3b7769a3e67e3..c13dce760098c 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -269,6 +269,117 @@ struct _vcs_dpi_soc_bounding_box_st dcn2_0_soc = {
- 	.use_urgent_burst_bw = 0
- };
- 
-+struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv14_soc = {
-+	.clock_limits = {
-+			{
-+				.state = 0,
-+				.dcfclk_mhz = 560.0,
-+				.fabricclk_mhz = 560.0,
-+				.dispclk_mhz = 513.0,
-+				.dppclk_mhz = 513.0,
-+				.phyclk_mhz = 540.0,
-+				.socclk_mhz = 560.0,
-+				.dscclk_mhz = 171.0,
-+				.dram_speed_mts = 8960.0,
-+			},
-+			{
-+				.state = 1,
-+				.dcfclk_mhz = 694.0,
-+				.fabricclk_mhz = 694.0,
-+				.dispclk_mhz = 642.0,
-+				.dppclk_mhz = 642.0,
-+				.phyclk_mhz = 600.0,
-+				.socclk_mhz = 694.0,
-+				.dscclk_mhz = 214.0,
-+				.dram_speed_mts = 11104.0,
-+			},
-+			{
-+				.state = 2,
-+				.dcfclk_mhz = 875.0,
-+				.fabricclk_mhz = 875.0,
-+				.dispclk_mhz = 734.0,
-+				.dppclk_mhz = 734.0,
-+				.phyclk_mhz = 810.0,
-+				.socclk_mhz = 875.0,
-+				.dscclk_mhz = 245.0,
-+				.dram_speed_mts = 14000.0,
-+			},
-+			{
-+				.state = 3,
-+				.dcfclk_mhz = 1000.0,
-+				.fabricclk_mhz = 1000.0,
-+				.dispclk_mhz = 1100.0,
-+				.dppclk_mhz = 1100.0,
-+				.phyclk_mhz = 810.0,
-+				.socclk_mhz = 1000.0,
-+				.dscclk_mhz = 367.0,
-+				.dram_speed_mts = 16000.0,
-+			},
-+			{
-+				.state = 4,
-+				.dcfclk_mhz = 1200.0,
-+				.fabricclk_mhz = 1200.0,
-+				.dispclk_mhz = 1284.0,
-+				.dppclk_mhz = 1284.0,
-+				.phyclk_mhz = 810.0,
-+				.socclk_mhz = 1200.0,
-+				.dscclk_mhz = 428.0,
-+				.dram_speed_mts = 16000.0,
-+			},
-+			/*Extra state, no dispclk ramping*/
-+			{
-+				.state = 5,
-+				.dcfclk_mhz = 1200.0,
-+				.fabricclk_mhz = 1200.0,
-+				.dispclk_mhz = 1284.0,
-+				.dppclk_mhz = 1284.0,
-+				.phyclk_mhz = 810.0,
-+				.socclk_mhz = 1200.0,
-+				.dscclk_mhz = 428.0,
-+				.dram_speed_mts = 16000.0,
-+			},
-+		},
-+	.num_states = 5,
-+	.sr_exit_time_us = 8.6,
-+	.sr_enter_plus_exit_time_us = 10.9,
-+	.urgent_latency_us = 4.0,
-+	.urgent_latency_pixel_data_only_us = 4.0,
-+	.urgent_latency_pixel_mixed_with_vm_data_us = 4.0,
-+	.urgent_latency_vm_data_only_us = 4.0,
-+	.urgent_out_of_order_return_per_channel_pixel_only_bytes = 4096,
-+	.urgent_out_of_order_return_per_channel_pixel_and_vm_bytes = 4096,
-+	.urgent_out_of_order_return_per_channel_vm_only_bytes = 4096,
-+	.pct_ideal_dram_sdp_bw_after_urgent_pixel_only = 40.0,
-+	.pct_ideal_dram_sdp_bw_after_urgent_pixel_and_vm = 40.0,
-+	.pct_ideal_dram_sdp_bw_after_urgent_vm_only = 40.0,
-+	.max_avg_sdp_bw_use_normal_percent = 40.0,
-+	.max_avg_dram_bw_use_normal_percent = 40.0,
-+	.writeback_latency_us = 12.0,
-+	.ideal_dram_bw_after_urgent_percent = 40.0,
-+	.max_request_size_bytes = 256,
-+	.dram_channel_width_bytes = 2,
-+	.fabric_datapath_to_dcn_data_return_bytes = 64,
-+	.dcn_downspread_percent = 0.5,
-+	.downspread_percent = 0.38,
-+	.dram_page_open_time_ns = 50.0,
-+	.dram_rw_turnaround_time_ns = 17.5,
-+	.dram_return_buffer_per_channel_bytes = 8192,
-+	.round_trip_ping_latency_dcfclk_cycles = 131,
-+	.urgent_out_of_order_return_per_channel_bytes = 256,
-+	.channel_interleave_bytes = 256,
-+	.num_banks = 8,
-+	.num_chans = 8,
-+	.vmm_page_size_bytes = 4096,
-+	.dram_clock_change_latency_us = 404.0,
-+	.dummy_pstate_latency_us = 5.0,
-+	.writeback_dram_clock_change_latency_us = 23.0,
-+	.return_bus_width_bytes = 64,
-+	.dispclk_dppclk_vco_speed_mhz = 3850,
-+	.xfc_bus_transport_time_us = 20,
-+	.xfc_xbuf_latency_tolerance_us = 4,
-+	.use_urgent_burst_bw = 0
-+};
-+
- struct _vcs_dpi_soc_bounding_box_st dcn2_0_nv12_soc = { 0 };
- 
- #ifndef mmDP0_DP_DPHY_INTERNAL_CTRL
-@@ -3135,6 +3246,9 @@ static void patch_bounding_box(struct dc *dc, struct _vcs_dpi_soc_bounding_box_s
- static struct _vcs_dpi_soc_bounding_box_st *get_asic_rev_soc_bb(
- 	uint32_t hw_internal_rev)
- {
-+	if (ASICREV_IS_NAVI14_M(hw_internal_rev))
-+		return &dcn2_0_nv14_soc;
-+
- 	if (ASICREV_IS_NAVI12_P(hw_internal_rev))
- 		return &dcn2_0_nv12_soc;
- 
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 7ffd719d89def..c2ed3e9128e3a 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -339,10 +339,12 @@ static blk_status_t virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 		err = virtblk_add_req(vblk->vqs[qid].vq, vbr, vbr->sg, num);
+ 	if (err) {
+ 		virtqueue_kick(vblk->vqs[qid].vq);
+-		blk_mq_stop_hw_queue(hctx);
++		/* Don't stop the queue if -ENOMEM: we may have failed to
++		 * bounce the buffer due to global resource outage.
++		 */
++		if (err == -ENOSPC)
++			blk_mq_stop_hw_queue(hctx);
+ 		spin_unlock_irqrestore(&vblk->vqs[qid].lock, flags);
+-		/* Out of mem doesn't actually happen, since we fall back
+-		 * to direct descriptors */
+ 		if (err == -ENOMEM || err == -ENOSPC)
+ 			return BLK_STS_DEV_RESOURCE;
+ 		return BLK_STS_IOERR;
 -- 
 2.20.1
 
