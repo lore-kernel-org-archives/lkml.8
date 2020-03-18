@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FE5C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CC7C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5F620409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F181220409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565578;
-	bh=XWR/c2mFyUnFBcN4ZvpH7CqF7hzlvBkCtiq0tbgxXLk=;
+	s=default; t=1584565586;
+	bh=gB9hbBP48Hz8qPz5kyjNgxTf9XL4OVrPxnIPTePJ07g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cOzNdGx+pjX7SNOYpgWF4UiBMiZ4fjJoM6GDxu4rs4Rxxf8EmqSWqVp5VsQgBVw/b
-	 SdQ5mM0H9Qds3qGFCV6uHB4kxtdV2qxBMXvagqxFARFscV5Rcu7HI+q86CbsxsNkHc
-	 l/7SyH0JRUlFmz1cv8LbWJBn4exV884RJa0y0ABg=
+	b=X+QCr9gazlH8NYH9KMZF07VXcHvKD8o4yUpi0Q0nXdodR4W52Dyj6sKPEq7Gf/iuk
+	 1N2pcnJA85cpsKypYNQX2Z6C2HnvaFuYQfGbHgE56NlFk5DgyADiBasEOXyHyLXla/
+	 L5wNp68p8hrVdHbNE5234HBY3gPFuiEgoYWNSn8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbgCRVGQ (ORCPT
+        id S1727905AbgCRUyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:06:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54370 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:54:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727932AbgCRUyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:54:40 -0400
+        id S1726827AbgCRUyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B5E2098B;
-        Wed, 18 Mar 2020 20:54:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 933452137B;
+        Wed, 18 Mar 2020 20:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564879;
-        bh=XWR/c2mFyUnFBcN4ZvpH7CqF7hzlvBkCtiq0tbgxXLk=;
+        s=default; t=1584564874;
+        bh=gB9hbBP48Hz8qPz5kyjNgxTf9XL4OVrPxnIPTePJ07g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uTxgcdKCYwAqUCwZO2VGhTMd1SAQR2KhziCNccTbRIXKYq/pZZbokU5k0yx2bH2Vy
-         CKiKdkTfdKML+FlTNB61/Sn8K/EPVVQ1rzp7DEnsVRfy511zmJDS+QWyEdZCnmLZyA
-         5oI90SmyCPj9S05Og6rAl4QUnxgAPbWUAaw5AC4M=
+        b=AiEBW3UtlWvEA8uz0Deq73vOFhXLYAvjlmZDiCttsjaSpWGmqZOCgqhTJcGLRexLH
+         BDMmZYWwgEIOOzh0jAxcpMs214bUABIO3x/z+9X+JMxUnKtpniM1I1+2xKg2UyGCyw
+         Rlz92FTPwqzeEutl+Mg9y19sfB4qZfI6mic6h62E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Martin Volf <martin.volf.42@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 49/73] i2c: i801: Do not add ICH_RES_IO_SMI for the iTCO_wdt device
-Date:   Wed, 18 Mar 2020 16:53:13 -0400
-Message-Id: <20200318205337.16279-49-sashal@kernel.org>
+Cc:     Mahesh Bandewar <maheshb@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 45/73] ipvlan: add cond_resched_rcu() while processing muticast backlog
+Date:   Wed, 18 Mar 2020 16:53:09 -0400
+Message-Id: <20200318205337.16279-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,137 +61,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Mahesh Bandewar <maheshb@google.com>
 
-[ Upstream commit 04bbb97d1b732b2d197f103c5818f5c214a4cf81 ]
+[ Upstream commit e18b353f102e371580f3f01dd47567a25acc3c1d ]
 
-Martin noticed that nct6775 driver does not load properly on his system
-in v5.4+ kernels. The issue was bisected to commit b84398d6d7f9 ("i2c:
-i801: Use iTCO version 6 in Cannon Lake PCH and beyond") but it is
-likely not the culprit because the faulty code has been in the driver
-already since commit 9424693035a5 ("i2c: i801: Create iTCO device on
-newer Intel PCHs"). So more likely some commit that added PCI IDs of
-recent chipsets made the driver to create the iTCO_wdt device on Martins
-system.
+If there are substantial number of slaves created as simulated by
+Syzbot, the backlog processing could take much longer and result
+into the issue found in the Syzbot report.
 
-The issue was debugged to be PCI configuration access to the PMC device
-that is not present. This returns all 1's when read and this caused the
-iTCO_wdt driver to accidentally request resourses used by nct6775.
+INFO: rcu_sched detected stalls on CPUs/tasks:
+        (detected by 1, t=10502 jiffies, g=5049, c=5048, q=752)
+All QSes seen, last rcu_sched kthread activity 10502 (4294965563-4294955061), jiffies_till_next_fqs=1, root ->qsmask 0x0
+syz-executor.1  R  running task on cpu   1  10984 11210   3866 0x30020008 179034491270
+Call Trace:
+ <IRQ>
+ [<ffffffff81497163>] _sched_show_task kernel/sched/core.c:8063 [inline]
+ [<ffffffff81497163>] _sched_show_task.cold+0x2fd/0x392 kernel/sched/core.c:8030
+ [<ffffffff8146a91b>] sched_show_task+0xb/0x10 kernel/sched/core.c:8073
+ [<ffffffff815c931b>] print_other_cpu_stall kernel/rcu/tree.c:1577 [inline]
+ [<ffffffff815c931b>] check_cpu_stall kernel/rcu/tree.c:1695 [inline]
+ [<ffffffff815c931b>] __rcu_pending kernel/rcu/tree.c:3478 [inline]
+ [<ffffffff815c931b>] rcu_pending kernel/rcu/tree.c:3540 [inline]
+ [<ffffffff815c931b>] rcu_check_callbacks.cold+0xbb4/0xc29 kernel/rcu/tree.c:2876
+ [<ffffffff815e3962>] update_process_times+0x32/0x80 kernel/time/timer.c:1635
+ [<ffffffff816164f0>] tick_sched_handle+0xa0/0x180 kernel/time/tick-sched.c:161
+ [<ffffffff81616ae4>] tick_sched_timer+0x44/0x130 kernel/time/tick-sched.c:1193
+ [<ffffffff815e75f7>] __run_hrtimer kernel/time/hrtimer.c:1393 [inline]
+ [<ffffffff815e75f7>] __hrtimer_run_queues+0x307/0xd90 kernel/time/hrtimer.c:1455
+ [<ffffffff815e90ea>] hrtimer_interrupt+0x2ea/0x730 kernel/time/hrtimer.c:1513
+ [<ffffffff844050f4>] local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1031 [inline]
+ [<ffffffff844050f4>] smp_apic_timer_interrupt+0x144/0x5e0 arch/x86/kernel/apic/apic.c:1056
+ [<ffffffff84401cbe>] apic_timer_interrupt+0x8e/0xa0 arch/x86/entry/entry_64.S:778
+RIP: 0010:do_raw_read_lock+0x22/0x80 kernel/locking/spinlock_debug.c:153
+RSP: 0018:ffff8801dad07ab8 EFLAGS: 00000a02 ORIG_RAX: ffffffffffffff12
+RAX: 0000000000000000 RBX: ffff8801c4135680 RCX: 0000000000000000
+RDX: 1ffff10038826afe RSI: ffff88019d816bb8 RDI: ffff8801c41357f0
+RBP: ffff8801dad07ac0 R08: 0000000000004b15 R09: 0000000000310273
+R10: ffff88019d816bb8 R11: 0000000000000001 R12: ffff8801c41357e8
+R13: 0000000000000000 R14: ffff8801cfb19850 R15: ffff8801cfb198b0
+ [<ffffffff8101460e>] __raw_read_lock_bh include/linux/rwlock_api_smp.h:177 [inline]
+ [<ffffffff8101460e>] _raw_read_lock_bh+0x3e/0x50 kernel/locking/spinlock.c:240
+ [<ffffffff840d78ca>] ipv6_chk_mcast_addr+0x11a/0x6f0 net/ipv6/mcast.c:1006
+ [<ffffffff84023439>] ip6_mc_input+0x319/0x8e0 net/ipv6/ip6_input.c:482
+ [<ffffffff840211c8>] dst_input include/net/dst.h:449 [inline]
+ [<ffffffff840211c8>] ip6_rcv_finish+0x408/0x610 net/ipv6/ip6_input.c:78
+ [<ffffffff840214de>] NF_HOOK include/linux/netfilter.h:292 [inline]
+ [<ffffffff840214de>] NF_HOOK include/linux/netfilter.h:286 [inline]
+ [<ffffffff840214de>] ipv6_rcv+0x10e/0x420 net/ipv6/ip6_input.c:278
+ [<ffffffff83a29efa>] __netif_receive_skb_one_core+0x12a/0x1f0 net/core/dev.c:5303
+ [<ffffffff83a2a15c>] __netif_receive_skb+0x2c/0x1b0 net/core/dev.c:5417
+ [<ffffffff83a2f536>] process_backlog+0x216/0x6c0 net/core/dev.c:6243
+ [<ffffffff83a30d1b>] napi_poll net/core/dev.c:6680 [inline]
+ [<ffffffff83a30d1b>] net_rx_action+0x47b/0xfb0 net/core/dev.c:6748
+ [<ffffffff846002c8>] __do_softirq+0x2c8/0x99a kernel/softirq.c:317
+ [<ffffffff813e656a>] invoke_softirq kernel/softirq.c:399 [inline]
+ [<ffffffff813e656a>] irq_exit+0x16a/0x1a0 kernel/softirq.c:439
+ [<ffffffff84405115>] exiting_irq arch/x86/include/asm/apic.h:561 [inline]
+ [<ffffffff84405115>] smp_apic_timer_interrupt+0x165/0x5e0 arch/x86/kernel/apic/apic.c:1058
+ [<ffffffff84401cbe>] apic_timer_interrupt+0x8e/0xa0 arch/x86/entry/entry_64.S:778
+ </IRQ>
+RIP: 0010:__sanitizer_cov_trace_pc+0x26/0x50 kernel/kcov.c:102
+RSP: 0018:ffff880196033bd8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff12
+RAX: ffff88019d8161c0 RBX: 00000000ffffffff RCX: ffffc90003501000
+RDX: 0000000000000002 RSI: ffffffff816236d1 RDI: 0000000000000005
+RBP: ffff880196033bd8 R08: ffff88019d8161c0 R09: 0000000000000000
+R10: 1ffff10032c067f0 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000080 R14: 0000000000000000 R15: 0000000000000000
+ [<ffffffff816236d1>] do_futex+0x151/0x1d50 kernel/futex.c:3548
+ [<ffffffff816260f0>] C_SYSC_futex kernel/futex_compat.c:201 [inline]
+ [<ffffffff816260f0>] compat_SyS_futex+0x270/0x3b0 kernel/futex_compat.c:175
+ [<ffffffff8101da17>] do_syscall_32_irqs_on arch/x86/entry/common.c:353 [inline]
+ [<ffffffff8101da17>] do_fast_syscall_32+0x357/0xe1c arch/x86/entry/common.c:415
+ [<ffffffff84401a9b>] entry_SYSENTER_compat+0x8b/0x9d arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f23c69
+RSP: 002b:00000000f5d1f12c EFLAGS: 00000282 ORIG_RAX: 00000000000000f0
+RAX: ffffffffffffffda RBX: 000000000816af88 RCX: 0000000000000080
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000816af8c
+RBP: 00000000f5d1f228 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+rcu_sched kthread starved for 10502 jiffies! g5049 c5048 f0x2 RCU_GP_WAIT_FQS(3) ->state=0x0 ->cpu=1
+rcu_sched       R  running task on cpu   1  13048     8      2 0x90000000 179099587640
+Call Trace:
+ [<ffffffff8147321f>] context_switch+0x60f/0xa60 kernel/sched/core.c:3209
+ [<ffffffff8100095a>] __schedule+0x5aa/0x1da0 kernel/sched/core.c:3934
+ [<ffffffff810021df>] schedule+0x8f/0x1b0 kernel/sched/core.c:4011
+ [<ffffffff8101116d>] schedule_timeout+0x50d/0xee0 kernel/time/timer.c:1803
+ [<ffffffff815c13f1>] rcu_gp_kthread+0xda1/0x3b50 kernel/rcu/tree.c:2327
+ [<ffffffff8144b318>] kthread+0x348/0x420 kernel/kthread.c:246
+ [<ffffffff84400266>] ret_from_fork+0x56/0x70 arch/x86/entry/entry_64.S:393
 
-It turns out that the SMI resource is only required for some ancient
-systems, not the ones supported by this driver. For this reason do not
-populate the SMI resource at all and drop all the related code. The
-driver now always populates the main I/O resource and only in case of SPT
-(Intel Sunrisepoint) compatible devices it adds another resource for the
-NO_REBOOT bit. These two resources are of different types so
-platform_get_resource() used by the iTCO_wdt driver continues to find
-the both resources at index 0.
-
-Link: https://lore.kernel.org/linux-hwmon/CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com/
-Fixes: 9424693035a5 ("i2c: i801: Create iTCO device on newer Intel PCHs")
-[wsa: complete fix needs all of http://patchwork.ozlabs.org/project/linux-i2c/list/?series=160959&state=*]
-Reported-by: Martin Volf <martin.volf.42@gmail.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: ba35f8588f47 (“ipvlan: Defer multicast / broadcast processing to a work-queue”)
+Signed-off-by: Mahesh Bandewar <maheshb@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-i801.c | 45 ++++++++++-------------------------
- 1 file changed, 12 insertions(+), 33 deletions(-)
+ drivers/net/ipvlan/ipvlan_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index f1c714acc2806..3ff6fbd79b127 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -129,11 +129,6 @@
- #define TCOBASE		0x050
- #define TCOCTL		0x054
+diff --git a/drivers/net/ipvlan/ipvlan_core.c b/drivers/net/ipvlan/ipvlan_core.c
+index 53dac397db37f..5759e91dec710 100644
+--- a/drivers/net/ipvlan/ipvlan_core.c
++++ b/drivers/net/ipvlan/ipvlan_core.c
+@@ -277,6 +277,7 @@ void ipvlan_process_multicast(struct work_struct *work)
+ 			}
+ 			ipvlan_count_rx(ipvlan, len, ret == NET_RX_SUCCESS, true);
+ 			local_bh_enable();
++			cond_resched_rcu();
+ 		}
+ 		rcu_read_unlock();
  
--#define ACPIBASE		0x040
--#define ACPIBASE_SMI_OFF	0x030
--#define ACPICTRL		0x044
--#define ACPICTRL_EN		0x080
--
- #define SBREG_BAR		0x10
- #define SBREG_SMBCTRL		0xc6000c
- #define SBREG_SMBCTRL_DNV	0xcf000c
-@@ -1544,7 +1539,7 @@ i801_add_tco_spt(struct i801_priv *priv, struct pci_dev *pci_dev,
- 		pci_bus_write_config_byte(pci_dev->bus, devfn, 0xe1, hidden);
- 	spin_unlock(&p2sb_spinlock);
- 
--	res = &tco_res[ICH_RES_MEM_OFF];
-+	res = &tco_res[1];
- 	if (pci_dev->device == PCI_DEVICE_ID_INTEL_DNV_SMBUS)
- 		res->start = (resource_size_t)base64_addr + SBREG_SMBCTRL_DNV;
- 	else
-@@ -1554,7 +1549,7 @@ i801_add_tco_spt(struct i801_priv *priv, struct pci_dev *pci_dev,
- 	res->flags = IORESOURCE_MEM;
- 
- 	return platform_device_register_resndata(&pci_dev->dev, "iTCO_wdt", -1,
--					tco_res, 3, &spt_tco_platform_data,
-+					tco_res, 2, &spt_tco_platform_data,
- 					sizeof(spt_tco_platform_data));
- }
- 
-@@ -1567,17 +1562,16 @@ static struct platform_device *
- i801_add_tco_cnl(struct i801_priv *priv, struct pci_dev *pci_dev,
- 		 struct resource *tco_res)
- {
--	return platform_device_register_resndata(&pci_dev->dev, "iTCO_wdt", -1,
--					tco_res, 2, &cnl_tco_platform_data,
--					sizeof(cnl_tco_platform_data));
-+	return platform_device_register_resndata(&pci_dev->dev,
-+			"iTCO_wdt", -1, tco_res, 1, &cnl_tco_platform_data,
-+			sizeof(cnl_tco_platform_data));
- }
- 
- static void i801_add_tco(struct i801_priv *priv)
- {
--	u32 base_addr, tco_base, tco_ctl, ctrl_val;
- 	struct pci_dev *pci_dev = priv->pci_dev;
--	struct resource tco_res[3], *res;
--	unsigned int devfn;
-+	struct resource tco_res[2], *res;
-+	u32 tco_base, tco_ctl;
- 
- 	/* If we have ACPI based watchdog use that instead */
- 	if (acpi_has_watchdog())
-@@ -1592,30 +1586,15 @@ static void i801_add_tco(struct i801_priv *priv)
- 		return;
- 
- 	memset(tco_res, 0, sizeof(tco_res));
--
--	res = &tco_res[ICH_RES_IO_TCO];
--	res->start = tco_base & ~1;
--	res->end = res->start + 32 - 1;
--	res->flags = IORESOURCE_IO;
--
- 	/*
--	 * Power Management registers.
-+	 * Always populate the main iTCO IO resource here. The second entry
-+	 * for NO_REBOOT MMIO is filled by the SPT specific function.
- 	 */
--	devfn = PCI_DEVFN(PCI_SLOT(pci_dev->devfn), 2);
--	pci_bus_read_config_dword(pci_dev->bus, devfn, ACPIBASE, &base_addr);
--
--	res = &tco_res[ICH_RES_IO_SMI];
--	res->start = (base_addr & ~1) + ACPIBASE_SMI_OFF;
--	res->end = res->start + 3;
-+	res = &tco_res[0];
-+	res->start = tco_base & ~1;
-+	res->end = res->start + 32 - 1;
- 	res->flags = IORESOURCE_IO;
- 
--	/*
--	 * Enable the ACPI I/O space.
--	 */
--	pci_bus_read_config_dword(pci_dev->bus, devfn, ACPICTRL, &ctrl_val);
--	ctrl_val |= ACPICTRL_EN;
--	pci_bus_write_config_dword(pci_dev->bus, devfn, ACPICTRL, ctrl_val);
--
- 	if (priv->features & FEATURE_TCO_CNL)
- 		priv->tco_pdev = i801_add_tco_cnl(priv, pci_dev, tco_res);
- 	else
 -- 
 2.20.1
 
