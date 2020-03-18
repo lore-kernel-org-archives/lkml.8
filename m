@@ -2,65 +2,70 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA85C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E66C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3D620768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4B420768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 07:35:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="TLCIhGXD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvNwNyny"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727169AbgCRHej (ORCPT
+        id S1727296AbgCRHfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 03:34:39 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43266 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgCRHei (ORCPT
+        Wed, 18 Mar 2020 03:35:30 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40472 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbgCRHf3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 03:34:38 -0400
-Received: by mail-oi1-f196.google.com with SMTP id p125so24720366oif.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 00:34:36 -0700 (PDT)
+        Wed, 18 Mar 2020 03:35:29 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 19so25781654ljj.7;
+        Wed, 18 Mar 2020 00:35:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ImnCZJDFg1rQOtfa/ceoUHZbJvEiQdm+R8XInF6JTFI=;
-        b=TLCIhGXDURuqIMeQG6s0U7WdW04eLC+XM2claAJPvoBsBajRsO4T5BSxY1ENJ2pHdb
-         5o/YLhQRdAgmNylO3lrZWRO9ItNtfg6L5fzgPjUdlET3pNOzgJqD4aqeEWqjy4VHDVZv
-         ZTl+0L6bKEMib/QdaRuLhuE+ZohrXXIYaExtA=
+        bh=k7ojDd8bH4rHuUROHL8yQ33iky3lTQUOUIq9HFOqbw0=;
+        b=fvNwNynyOikKBbNMPLWFivb8+f/I6G7r6/sGEbmTWHGmzpQjeP9wsYYAXLZOy0ELEs
+         uQxerWZnBTiM6a9jVTPHhErJlqLNLYHgux/6v9CSDe9kf1nez6AXTEiyIlPDWkyT4pYr
+         bQuatnuTbQSpLCEqyTaJeltoOLQ6fNNUCh9YOnaErd5yfyvoIBHRhsg5geZ5yd54bYun
+         0KXbm6R18BztDKMtycbA4Xd04h/VK2yJh/A9Pcfe5LRneZXcwA2Sz5iYx0MDHKstqVx4
+         oxyyrUVcF9wRb5FplwuzoHbs2aqwGM3m0P1Kqcp8TLCLHROj2YlHxbw11gR7/Q8FqApB
+         +CzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ImnCZJDFg1rQOtfa/ceoUHZbJvEiQdm+R8XInF6JTFI=;
-        b=tdDcUZo+vQE3t9H4ZdkVljeKkhVhKpGiJ15tPsdCs0zCG295/YWOcr6yyq/MdSjTmZ
-         W0c9EzpB4yxQ8l7U8wg4TsOCXzbcNonaWSrjMlkxpVtJ9pSF0oAUTRUCawjyov7vJgTz
-         w88vAS0pLWcDZjI/9DEJzhi943a53UWMMd7HKCz7cyFSswuX/5pJG7NPYBU2yfconnNH
-         KDbFXtly++/Sp2nLA+OuXpVnG7DO0QIbBOTdE/T4L+W2h5QMYIkQcby+Zm1YzCPp9LPy
-         2NfrKvixOeTjCkuYzzCmTgWdEQesubgb5hCHQMkCrwxRqNSnIy3UCITmT4/mbjoEJZqT
-         gDYg==
-X-Gm-Message-State: ANhLgQ2S98ZEuLKZOuYr2aRmTF/ujMvJ53PfFQ1ylm3NKbQaNSLm5tGj
-        SMhICyMxeSKlIkyPcATPJ6GKF7pKjyIN4bO+auj+pw==
-X-Google-Smtp-Source: ADFU+vtAn6lL50NwcHPgytvRZmg50l63XV0Syeur/1ju+uROCi3D9Op+vVl0likHxo8FG98msXAnnrAs8iSPt64+Xd8=
-X-Received: by 2002:aca:5345:: with SMTP id h66mr2229552oib.110.1584516876432;
- Wed, 18 Mar 2020 00:34:36 -0700 (PDT)
+        bh=k7ojDd8bH4rHuUROHL8yQ33iky3lTQUOUIq9HFOqbw0=;
+        b=TvgfDkQ1myW+0N9bsvhBEEefZP1oK5euf/hW2XPx3StBZvHCaECckJO+6JJ5d8ZnGX
+         PETUynC4ph6m7gdl10RFKnEvGNMQeiZuasZYp164X6i8A6WxMlMoQ8u6/JPKhu2yA4Ve
+         R6lW7jQhwYEon/fystqrFN0NMvkipBqz2Jk5nhhCE3X1OzQgpiIEM9eCgfNvk4bKzO14
+         r8tPSOYbZcuqGK0WW7xG2sMikDWTWGaCVXfJq65D4Ib5c6H99g4j3JULr8iBDhvywaxK
+         nU9FOm+joHqgajRXOb1JZgb46i9SbSZ1bmKtyesNzeOqgJ9WZ3trZgH4qppQQx4Mo7ot
+         hDYg==
+X-Gm-Message-State: ANhLgQ1LT84SLVNxnhHMeHHp0xTbZa3TjgRw1QBL513hU1RwYap2B1Tp
+        Hg1eGUNVyWFUZqMN6Oha1ZFu2bfIX4xUAK11YdE=
+X-Google-Smtp-Source: ADFU+vtpXx/uYsdmeJhw5fEuthwiRX9xrXySvD7fu+K1NVi3etsAr/tIqptomf57tOeij/3UfqnMGqSKp4p5gwy/kXs=
+X-Received: by 2002:a2e:8059:: with SMTP id p25mr1565366ljg.196.1584516927469;
+ Wed, 18 Mar 2020 00:35:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584343103-13896-1-git-send-email-hqjagain@gmail.com>
- <20200317170243.GR2363188@phenom.ffwll.local> <CAJRQjofSWYR--4V_4zmp6K9WVtqShdzpGuH1VFBPvHpViGYH5g@mail.gmail.com>
-In-Reply-To: <CAJRQjofSWYR--4V_4zmp6K9WVtqShdzpGuH1VFBPvHpViGYH5g@mail.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 18 Mar 2020 08:34:24 +0100
-Message-ID: <CAKMK7uG8v7cYUwqTJTgYGfC8LEZtczTZ5a+Z4NcRnbFVBcG4Fw@mail.gmail.com>
-Subject: Re: [PATCH RESEND] drm/lease: fix potential race in fill_object_idr
-To:     Qiujun Huang <hqjagain@gmail.com>, Marco Elver <elver@google.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Dave Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+References: <cover.1584428736.git.baolin.wang7@gmail.com> <7866e519-80ad-8678-6708-7726a53ea4f5@intel.com>
+ <CADBw62q7q=wqKGBnLRA+npYLVZVXeMiFwGP-K1TLkG2GPCwLjg@mail.gmail.com> <ce622b0c-6ec0-10c8-f71f-fa2bba8b4a66@intel.com>
+In-Reply-To: <ce622b0c-6ec0-10c8-f71f-fa2bba8b4a66@intel.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Wed, 18 Mar 2020 15:35:15 +0800
+Message-ID: <CADBw62pAm2h5m2Hz4uXHv6m0W3RpA7BoegwBHc+s2RK6spF_3Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Introduce the request_atomic() for the host
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,31 +73,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 11:33 PM Qiujun Huang <hqjagain@gmail.com> wrote:
+On Tue, Mar 17, 2020 at 11:07 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
-> On Wed, Mar 18, 2020 at 1:02 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> On 17/03/20 3:49 pm, Baolin Wang wrote:
+> > On Tue, Mar 17, 2020 at 9:25 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >>
+> >> On 17/03/20 12:14 pm, Baolin Wang wrote:
+> >>> This patch set introduces a new request_atomic() interface for the
+> >>> MMC host controller, which is used to submit a request to host in
+> >>> the atomic context, such as in the irq hard handler, to reduce the
+> >>> request latency.
+> >>>
+> >>> Any comments are welcome. Thanks.
+> >>>
+> >>> Note: Adrian pointed out that it is not good if moving the polling of
+> >>> inhibit bits in sdhci_send_command() into the interrupt context, but
+> >>> now I have not found a better way to address Adrian's concern. Moveover
+> >>> this is an unusual abnormal case and the original code has the same
+> >>> problem, so I plan to create another patch set to talk about and fix
+> >>> this issue.
+> >>
+> >> I tend to think the API requires the possibility for host controllers to
+> >> return "busy", so that should be sorted out first.
 > >
-> > On Mon, Mar 16, 2020 at 03:18:23PM +0800, Qiujun Huang wrote:
-> > > We should hold idr_mutex for idr_alloc.
-> > >
-> > > Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> >
-> > I've not seen the first version of this anywhere in my inbox, not sure
-> > where that got lost.
-> >
-> > Anyway, this seems like a false positive - I'm assuming this was caught
-> > with KCSAN. The commit message really should mention that.
-> >
-> > fill_object_idr creates the idr, which yes is only access later on under
-> > the idr_mutex. But here it's not yet visible to any other thread, and
-> > hence lockless access is safe and correct.
+> > If request_atomic() can return 'busy', the HSQ need queue a work to
+> > dispatch this request to host again?
 >
-> Agree that.
+> Sounds reasonable
+>
+> >
+> > I am thinking if I can introduce a new flag to avoid polling the
+> > status before sending commands, cause from the datasheet, I did not
+> > see we should need do this if the command complete and transfer
+> > complete interrupts are processed normally. At least on my platfrom, I
+> > did not see the inhibit bits are set. If we meet this issue, I think
+> > some abormal things are happened, we should give out errors. How do
+> > you think?
+>
+> For the atomic path, some kind of warning would be ok.
 
-Do you know what the recommended annotation for kcsan false positives
-like this should be? Adding kcsan author Marco.
--Daniel
+OK. I will try in next version. Thanks.
+
+> >
+> >>>
+> >>> Changes from v1:
+> >>>  - Re-split the changes to make them more clear suggested by Ulf.
+> >>>  - Factor out the auto CMD23 checking into a separate function.
+> >>>
+> >>> Baolin Wang (3):
+> >>>   mmc: host: Introduce the request_atomic() for the host
+> >>>   mmc: host: sdhci: Implement the request_atomic() API
+> >>>   mmc: host: sdhci-sprd: Implement the request_atomic() API
+> >>>
+> >>>  drivers/mmc/host/mmc_hsq.c    |  5 ++++-
+> >>>  drivers/mmc/host/sdhci-sprd.c | 23 ++++++++++++++++++++---
+> >>>  drivers/mmc/host/sdhci.c      | 27 +++++++++++++++++++--------
+> >>>  drivers/mmc/host/sdhci.h      |  1 +
+> >>>  include/linux/mmc/host.h      |  3 +++
+> >>>  5 files changed, 47 insertions(+), 12 deletions(-)
+> >>>
+> >>
+> >
+> >
+>
+
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Baolin Wang
