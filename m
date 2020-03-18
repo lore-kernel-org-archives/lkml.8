@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C90DC4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44173C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109862076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185F42076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 23:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584572780;
-	bh=ZxxGTjlO7NBT1wg1m3B0rlTJ0Dra1Fpr72IGr/O4DX8=;
+	s=default; t=1584572783;
+	bh=dUCSWxYUurc+Drotp7J4F6yRdq0QEiO/fiS1TK31ano=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pYfSJBtRpLE7dtbT83rmb4lBI504k9nXcIZ5frl7/8RK75YCHO8uyHcsyITEAh82e
-	 20N/KJmf8S5iI5WGhO162WNAOEgLoKajB79bioEcJ8OFpFta3c+ALMAxWPu+WwVC1i
-	 71q6gJo66ZRwPszMKw8/YNHFbY3ZFmdz8sT/lXX0=
+	b=xQN88qr4+S4kvZF5LJeiU3f4Of2CVyFj6zXxb0DgGoYy14tVy4wGU0OFtbOxsYu3t
+	 /OPyMPXcDe1r8vGugnvX1AD3YUiufm8eeIBHlOxIX9OtrVyh04L0ajeoKH5/Jo0wrU
+	 ph5D1vpPhwvFDOIjzkIQKxQTx8D83720pnrTKXdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbgCRXGT (ORCPT
+        id S1727384AbgCRXGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 19:06:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37532 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 19:06:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727132AbgCRXGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 19:06:16 -0400
+        id S1726619AbgCRXGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 19:06:15 -0400
 Received: from sol.hsd1.ca.comcast.net (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABD6A208E4;
-        Wed, 18 Mar 2020 23:06:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5184320776;
+        Wed, 18 Mar 2020 23:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584572776;
-        bh=ZxxGTjlO7NBT1wg1m3B0rlTJ0Dra1Fpr72IGr/O4DX8=;
+        s=default; t=1584572774;
+        bh=dUCSWxYUurc+Drotp7J4F6yRdq0QEiO/fiS1TK31ano=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IptXYSXW18xO1/N37NADiTKS5f81MTpgGfRNJSjZwCjf2z/kWyq9eHr1/4qK8nu+6
-         fInDML/N9dD7KW8P17M7Uqkio2B8dZbr8o9Gb9Cm340wt7ExyFXGPzKbCvAt479YiP
-         ZCekIzzPe2HTmAOrEpudt+Ma97Y8D54siaMfF5yk=
+        b=QsyBzEdN1TPH7R3GZId7GXtYOTZUr5WTh3bM+hnXjhBu4XAwnXe+fQQzjwVZqRyuP
+         pylThAiKxfGXAbl4vGLRWOFH7PUBSAQDVkzZcbZC/tGBPgoGH+m20J9oJ54c/jt4zs
+         15rXAobX2Hmnq4tN5y0TiAikCBzl/3ASt9H6G4GU=
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
@@ -48,10 +48,10 @@ Cc:     linux-fsdevel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
         Jessica Yu <jeyu@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
-        NeilBrown <neilb@suse.com>
-Subject: [PATCH v4 5/5] selftests: kmod: test disabling module autoloading
-Date:   Wed, 18 Mar 2020 16:05:15 -0700
-Message-Id: <20200318230515.171692-6-ebiggers@kernel.org>
+        NeilBrown <neilb@suse.com>, stable@vger.kernel.org
+Subject: [PATCH v4 2/5] fs/filesystems.c: downgrade user-reachable WARN_ONCE() to pr_warn_once()
+Date:   Wed, 18 Mar 2020 16:05:12 -0700
+Message-Id: <20200318230515.171692-3-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200318230515.171692-1-ebiggers@kernel.org>
 References: <20200318230515.171692-1-ebiggers@kernel.org>
@@ -64,98 +64,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-Test that request_module() fails with -ENOENT when
-/proc/sys/kernel/modprobe contains (a) a nonexistent path, and (b) an
-empty path.
+After request_module(), nothing is stopping the module from being
+unloaded until someone takes a reference to it via try_get_module().
 
-Case (b) is a regression test for the patch "kmod: make request_module()
-return an error when autoloading is disabled".
+The WARN_ONCE() in get_fs_type() is thus user-reachable, via userspace
+running 'rmmod' concurrently.
 
-Tested with 'kmod.sh -t 0010 && kmod.sh -t 0011', and also simply with
-'kmod.sh' to run all kmod tests.
+Since WARN_ONCE() is for kernel bugs only, not for user-reachable
+situations, downgrade this warning to pr_warn_once().
 
+Keep it printed once only, since the intent of this warning is to detect
+a bug in modprobe at boot time.  Printing the warning more than once
+wouldn't really provide any useful extra information.
+
+Fixes: 41124db869b7 ("fs: warn in case userspace lied about modprobe return")
 Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Reviewed-by: Jessica Yu <jeyu@kernel.org>
+Cc: <stable@vger.kernel.org> # v4.13+
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jeff Vander Stoep <jeffv@google.com>
-Cc: Jessica Yu <jeyu@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>
 Cc: NeilBrown <neilb@suse.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- tools/testing/selftests/kmod/kmod.sh | 30 ++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ fs/filesystems.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/kmod/kmod.sh b/tools/testing/selftests/kmod/kmod.sh
-index 315a43111e046..3702dbcc90a77 100755
---- a/tools/testing/selftests/kmod/kmod.sh
-+++ b/tools/testing/selftests/kmod/kmod.sh
-@@ -61,6 +61,8 @@ ALL_TESTS="$ALL_TESTS 0006:10:1"
- ALL_TESTS="$ALL_TESTS 0007:5:1"
- ALL_TESTS="$ALL_TESTS 0008:150:1"
- ALL_TESTS="$ALL_TESTS 0009:150:1"
-+ALL_TESTS="$ALL_TESTS 0010:1:1"
-+ALL_TESTS="$ALL_TESTS 0011:1:1"
+diff --git a/fs/filesystems.c b/fs/filesystems.c
+index 77bf5f95362da..90b8d879fbaf3 100644
+--- a/fs/filesystems.c
++++ b/fs/filesystems.c
+@@ -272,7 +272,9 @@ struct file_system_type *get_fs_type(const char *name)
+ 	fs = __get_fs_type(name, len);
+ 	if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
+ 		fs = __get_fs_type(name, len);
+-		WARN_ONCE(!fs, "request_module fs-%.*s succeeded, but still no fs?\n", len, name);
++		if (!fs)
++			pr_warn_once("request_module fs-%.*s succeeded, but still no fs?\n",
++				     len, name);
+ 	}
  
- # Kselftest framework requirement - SKIP code is 4.
- ksft_skip=4
-@@ -149,6 +151,7 @@ function load_req_mod()
- 
- test_finish()
- {
-+	echo "$MODPROBE" > /proc/sys/kernel/modprobe
- 	echo "Test completed"
- }
- 
-@@ -443,6 +446,30 @@ kmod_test_0009()
- 	config_expect_result ${FUNCNAME[0]} SUCCESS
- }
- 
-+kmod_test_0010()
-+{
-+	kmod_defaults_driver
-+	config_num_threads 1
-+	echo "/KMOD_TEST_NONEXISTENT" > /proc/sys/kernel/modprobe
-+	config_trigger ${FUNCNAME[0]}
-+	config_expect_result ${FUNCNAME[0]} -ENOENT
-+	echo "$MODPROBE" > /proc/sys/kernel/modprobe
-+}
-+
-+kmod_test_0011()
-+{
-+	kmod_defaults_driver
-+	config_num_threads 1
-+	# This causes the kernel to not even try executing modprobe.  The error
-+	# code is still -ENOENT like when modprobe doesn't exist, so we can't
-+	# easily test for the exact difference.  But this still is a useful test
-+	# since there was a bug where request_module() returned 0 in this case.
-+	echo > /proc/sys/kernel/modprobe
-+	config_trigger ${FUNCNAME[0]}
-+	config_expect_result ${FUNCNAME[0]} -ENOENT
-+	echo "$MODPROBE" > /proc/sys/kernel/modprobe
-+}
-+
- list_tests()
- {
- 	echo "Test ID list:"
-@@ -460,6 +487,8 @@ list_tests()
- 	echo "0007 x $(get_test_count 0007) - multithreaded tests with default setup test request_module() and get_fs_type()"
- 	echo "0008 x $(get_test_count 0008) - multithreaded - push kmod_concurrent over max_modprobes for request_module()"
- 	echo "0009 x $(get_test_count 0009) - multithreaded - push kmod_concurrent over max_modprobes for get_fs_type()"
-+	echo "0010 x $(get_test_count 0010) - test nonexistent modprobe path"
-+	echo "0011 x $(get_test_count 0011) - test completely disabling module autoloading"
- }
- 
- usage()
-@@ -616,6 +645,7 @@ test_reqs
- allow_user_defaults
- load_req_mod
- 
-+MODPROBE=$(</proc/sys/kernel/modprobe)
- trap "test_finish" EXIT
- 
- parse_args $@
+ 	if (dot && fs && !(fs->fs_flags & FS_HAS_SUBTYPE)) {
 -- 
 2.25.1
 
