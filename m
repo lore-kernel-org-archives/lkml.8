@@ -2,92 +2,69 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D41EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C69C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6CE2076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:16:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=emersion.fr header.i=@emersion.fr header.b="Do8Uytcv"
+	by mail.kernel.org (Postfix) with ESMTP id 5D93F2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgCRKQT (ORCPT
+        id S1727567AbgCRKRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:16:19 -0400
-Received: from mail2.protonmail.ch ([185.70.40.22]:35756 "EHLO
-        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726733AbgCRKQS (ORCPT
+        Wed, 18 Mar 2020 06:17:15 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:41884 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgCRKRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:16:18 -0400
-Date:   Wed, 18 Mar 2020 10:16:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
-        s=protonmail; t=1584526575;
-        bh=01MHuTHqNXmoKioUDGcRkUpZS1pvvS0nJPIk9ir/Q0Y=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=Do8UytcvmJJ8nANDCqp720vh0trtOLOccnZxDiiYcjdYwVY7VHb35kATIoegxJAOB
-         q/m9/c9sSBh8waQIyHnmNZNQkI3C8bVg+CvoDVPdQOsFZ2PlRfziGvAHWiRGCCb0Qs
-         G/Hzl5QJG+zYF6yuj5v0kslrUDUA52c7rIlw9CEA=
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-From:   Simon Ser <contact@emersion.fr>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "christian@brauner.io" <christian@brauner.io>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>
-Reply-To: Simon Ser <contact@emersion.fr>
-Subject: Re: SO_PEERCRED and pidfd
-Message-ID: <WuCKXl7CWZrfvKTWuYiwL6tkPq2YgA_j1lyVVczFB48s8ozWz_setJou9JO-VqsL2kJtRV8r4yOvyQhI5LsdCdIaSKYZpY1_9Bf3DwpQIMg=@emersion.fr>
-In-Reply-To: <20200317181843.iq3jaboqid2xfktv@wittgenstein>
-References: <go0RLOS7_DdxyAmfrDR38QPUloZuUtiFdXe2Ey3EkGGuvmW7z18Dvt4fY1qZ1k-Y75-YZSxqVWnZpWRGN7TZ6OPbDczfL7HI25bXLIYq1y4=@emersion.fr>
- <20200317181843.iq3jaboqid2xfktv@wittgenstein>
-Feedback-ID: FsVprHBOgyvh0T8bxcZ0CmvJCosWkwVUg658e_lOUQMnA9qynD8O1lGeniuBDfPSkDAUuhiKfOIXUZBfarMyvA==:Ext:ProtonMail
+        Wed, 18 Mar 2020 06:17:15 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 8f5f7f5efe089b69; Wed, 18 Mar 2020 11:17:12 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     ulf.hansson@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, khilman@kernel.org
+Subject: Re: [PATCH RFC] cpuidle: consolidate calls to time capture
+Date:   Wed, 18 Mar 2020 11:17:12 +0100
+Message-ID: <2605374.f08NWHE4iP@kreacher>
+In-Reply-To: <20200316210843.11678-1-daniel.lezcano@linaro.org>
+References: <20200316210843.11678-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, March 17, 2020 7:18 PM, Christian Brauner <christian.brauner@ub=
-untu.com> wrote:
+On Monday, March 16, 2020 10:08:43 PM CET Daniel Lezcano wrote:
+> A few years ago, we changed the code in cpuidle to replace ktime_get()
+> by a local_clock() to get rid of potential seq lock in the path and an
+> extra latency.
+> 
+> Meanwhile, the code evolved and we are getting the time in some other
+> places like the power domain governor and in the future break even
+> deadline proposal.
 
-> On Tue, Mar 17, 2020 at 05:54:47PM +0000, Simon Ser wrote:
->
-> > Hi all,
-> > I'm a Wayland developer and I've been working on protocol security,
-> > which involves identifying the process on the other end of a Unix
-> > socket [1]. This is already done by e.g. D-Bus via the PID, however
-> > this is racy [2].
-> > Getting the PID is done via SO_PEERCRED. Would there be interest in
-> > adding a way to get a pidfd out of a Unix socket to fix the race?
->
-> Puh, I knew this would happen. I've been asked to add this feature by
-> the systemd people as well and also at a conference last year. And
-> honestly, I don't know yet. pidfds right now are mostly about
-> guaranteeing (stable) identity and they come with the necessary
-> restrictions in place to prevent shenanigans (such as signaling across
-> pid namespaces a restriction I'd like to lift at some point). But I
-> have been thinking about attaching some capability like features to
-> pidfds soon as that has been an even more frequent request. At that
-> point having them receivable this way might be problematic unless we put
-> restrictions in place.
+Hmm?
 
-Wouldn't this new mechanism just be an atomic getsockopt+pidfd_open?
-(It would make sure the process is still alive of course.)
+Have any patches been posted for that?
 
-Can you elaborate wrt. capabilities? I'm not sure I understand what
-that means.
+> Unfortunately, as the time must be compared across the CPU, we have no
+> other option than using the ktime_get() again. Hopefully, we can
+> factor out all the calls to local_clock() and ktime_get() into a
+> single one when the CPU is entering idle as the value will be reuse in
+> different places.
 
-> I would like to go through codepaths for SO_PEERCRED as I don't have
-> them in my head and so can't really say something definitely about this
-> just now.
-> (From the top of my head it seems that if we were to do this it might
-> need to be a separate SO_* flag? Mainly so people don't suddenly receive
-> fds they didn't expect.)
+So there are cases in which it is not necessary to synchronize the time
+between CPUs and those would take the overhead unnecessarily.
 
-Yeah, this would need to be either a separate SO_* flag or a completely
-different thing to prevent surprises.
+This change looks premature to me at least.
+
+Thanks!
+
+
+
