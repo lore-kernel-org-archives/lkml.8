@@ -2,124 +2,124 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E13C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC4AC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4F12076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:13:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CV/gd6Gb"
+	by mail.kernel.org (Postfix) with ESMTP id 3007B2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 12:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgCRMN3 (ORCPT
+        id S1726780AbgCRMNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 08:13:29 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42368 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgCRMN2 (ORCPT
+        Wed, 18 Mar 2020 08:13:31 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36359 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbgCRMNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:13:28 -0400
-Received: by mail-qk1-f195.google.com with SMTP id e11so38143381qkg.9
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 05:13:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=j5lq+ZeR1e5BLS61AhHY/9aQpgtc96UUH7xL5gfZlA4=;
-        b=CV/gd6GbNBkHRzX6JGk52Gu52tpr+Ik38xHSjudsHMrtP3GG0SadQ/ERhtDU7kkGsE
-         JgQEcYrOmU5agISimpX5xfwdM8s+z2RYoYxtH+/EZLht/quMchPcvOZnF+aJDxK1JKAB
-         SFIbYlm7RqIlG6Ym6nJ4AM8uWuMtZ2VSK+DVdULVDkU/TE2VLsxbt4PLXTiL1wxEzmHU
-         fMMLDzeinxdeV4YBUU38jrTyYx73QMmbDvX+wK6I+dusQ13+9ddEWjN0pwn+4s3UGI49
-         oIdENEBzAzVDXSq+LsGLqAc6sdMxQzVD6XbuZdzmV/Vid71g52WOdJyziDHTFeDNFdUq
-         rtQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j5lq+ZeR1e5BLS61AhHY/9aQpgtc96UUH7xL5gfZlA4=;
-        b=jYWnm5frdGrsaj0ecZnbabKXJGh4Tf8vPbaXMKdDS0u1o0m6IriZYYGKsrzN2ELqZA
-         aIScpbiJpQK5jhR1cL+TxNB+Tovvjlg1sH9hygu3pqgTVI1gxu08Ywem8krtzdoxxcwa
-         X3/W/B5gMHiiRHcMn/K234mmotCeKonw5Ur7j+qJoDioKCrpzJWohgQUlMz1kagn3hLz
-         yjzRJuS4WkXphsDeaC6cUksy4lsIowk6doIZwchy0XgMm0sKu7fURghkLkFYqt/2k0j/
-         fdQOfvnhkNbTfrySOZMyH24yJ68P/8DNqn+haHCglwHWo+SbaBa2nQopd3feOZ+1IerL
-         4dBQ==
-X-Gm-Message-State: ANhLgQ1jDBKH9Pxa+9/d+6RdW/b5oB5dQli8SGAjtY6xbJ16aBJDjbde
-        r1tysleLY+OxkEXb3+FfLwtOgQ==
-X-Google-Smtp-Source: ADFU+vs9zNKs2Xu1t6dEyeygPPbCwubyJJzXUvpJUoWsTNJzUZXqoXmlWPE4G/BL5uZuyOnIhMu0ug==
-X-Received: by 2002:a37:aa54:: with SMTP id t81mr3827143qke.234.1584533607354;
-        Wed, 18 Mar 2020 05:13:27 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id p25sm312216qkm.97.2020.03.18.05.13.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Mar 2020 05:13:26 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jEXZe-0003a7-6B; Wed, 18 Mar 2020 09:13:26 -0300
-Date:   Wed, 18 Mar 2020 09:13:26 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, paulmck@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/mmu_notifier: silence PROVE_RCU_LIST warnings
-Message-ID: <20200318121326.GZ20941@ziepe.ca>
-References: <20200317175640.2047-1-cai@lca.pw>
+        Wed, 18 Mar 2020 08:13:30 -0400
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jEXZW-0001wI-9u; Wed, 18 Mar 2020 12:13:18 +0000
+Date:   Wed, 18 Mar 2020 13:13:17 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 2/4] clone3: allow creation of time namespace with offset
+Message-ID: <20200318121317.2vyfyqj223sx5ybq@wittgenstein>
+References: <20200317083043.226593-1-areber@redhat.com>
+ <20200317083043.226593-3-areber@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200317175640.2047-1-cai@lca.pw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200317083043.226593-3-areber@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 01:56:40PM -0400, Qian Cai wrote:
-> It is safe to traverse mm->notifier_subscriptions->list either under
-> SRCU read lock or mm->notifier_subscriptions->lock using
-> hlist_for_each_entry_rcu(). Silence the PROVE_RCU_LIST false positives,
-> for example,
+On Tue, Mar 17, 2020 at 09:30:42AM +0100, Adrian Reber wrote:
+> This extends clone3() to support the time namespace via CLONE_NEWTIME.
+> In addition to creating a new process in a new time namespace this
+> allows setting the clock offset in the newly created time namspace.
 > 
->  WARNING: suspicious RCU usage
->  -----------------------------
->  mm/mmu_notifier.c:484 RCU-list traversed in non-reader section!!
+> The time namespace allows to set an offset for two clocks.
+> CLOCK_MONOTONIC and CLOCK_BOOTTIME.
 > 
->  other info that might help us debug this:
+> This clone3() extension also offers setting both offsets through the
+> newly introduced clone_args members timens_offset and
+> timens_offset_size.
 > 
->  rcu_scheduler_active = 2, debug_locks = 1
->  3 locks held by libvirtd/802:
->   #0: ffff9321e3f58148 (&mm->mmap_sem#2){++++}, at: do_mprotect_pkey+0xe1/0x3e0
->   #1: ffffffff91ae6160 (mmu_notifier_invalidate_range_start){+.+.}, at: change_p4d_range+0x5fa/0x800
->   #2: ffffffff91ae6e08 (srcu){....}, at: __mmu_notifier_invalidate_range_start+0x178/0x460
+> timens_offset:      Pointer to an array of clock offsets for the
+>                     newly created process in a time namespaces.
+>                     This requires that a new time namespace has been
+>                     requested via CLONE_NEWTIME. It is only possible
+>                     to set an offset for CLOCK_MONOTONIC and
+>                     CLOCK_BOOTTIME. The array can therefore never
+>                     have more than two elements.
+>                     clone3() expects the array to contain the
+>                     following struct:
+>                     struct set_timens_offset {
+>                             int clockid;
+>                             struct timespec val;
+>                     };
 > 
->  stack backtrace:
->  CPU: 7 PID: 802 Comm: libvirtd Tainted: G          I       5.6.0-rc6-next-20200317+ #2
->  Hardware name: HP ProLiant BL460c Gen8, BIOS I31 11/02/2014
->  Call Trace:
->   dump_stack+0xa4/0xfe
->   lockdep_rcu_suspicious+0xeb/0xf5
->   __mmu_notifier_invalidate_range_start+0x3ff/0x460
->   change_p4d_range+0x746/0x800
->   change_protection+0x1df/0x300
->   mprotect_fixup+0x245/0x3e0
->   do_mprotect_pkey+0x23b/0x3e0
->   __x64_sys_mprotect+0x51/0x70
->   do_syscall_64+0x91/0xae8
->   entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> timens_offset_size: This defines the size of the array referenced
+>                     in timens_offset. Currently this is limited
+>                     to two elements.
 > 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  mm/mmu_notifier.c | 27 ++++++++++++++++++---------
->  1 file changed, 18 insertions(+), 9 deletions(-)
+> To create a new process using clone3() in a new time namespace with
+> clock offsets, something like this can be used:
+> 
+>   struct set_timens_offset timens_offset[2];
+> 
+>   timens_offset[0].clockid = CLOCK_BOOTTIME;
+>   timens_offset[0].val.tv_sec = -1000;
+>   timens_offset[0].val.tv_nsec = 42;
+>   timens_offset[1].clockid = CLOCK_MONOTONIC;
+>   timens_offset[1].val.tv_sec = 1000000;
+>   timens_offset[1].val.tv_nsec = 37;
+> 
+>   struct _clone_args args = {
+>     .flags = CLONE_NEWTIME,
+>     .timens_offset = ptr_to_u64(timens_offset),
+>     .timens_offset_size = 2;
+>   };
 
-Looks right to me
+In all honesty, this would be a terrible API and I think we need to come
+up with something better than this. I don't want to pass down an array
+of structs and in general would like to avoid this array + size pattern.
+That pattern kinda made sense for the pid array because of pid
+namespaces being nested but not for this case, I think. Also, why
+require the additional clockid argument here? That makes sense for
+clock_settime() and clock_gettime() but here we could just do:
 
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+struct timens {
+	struct timespec clock_bootime;
+	struct timespec clock_monotonic;
+};
 
-This was missed during testing because we don't run with
-PROVE_RCU_LIST enabled
+no? And since you need to expose that struct in a header somewhere
+anyway you can version it by size just like clone_args. So the kernel
+can apply the same pattern to be backwards compatible that we have with
+struct clone_args and for openat2()'s struct open_how via
+copy_struct_from_user. Then you only need one additional pointer in
+struct clone_args.
 
-Jason
+What do we think?
+
+Christian
