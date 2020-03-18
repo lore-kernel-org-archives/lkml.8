@@ -2,113 +2,159 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149A2C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6D0C5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E142720674
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF9E20768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="P9ymWRwz"
+	dkim=pass (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="i916ByAT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgCRPxT (ORCPT
+        id S1727171AbgCRPxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:53:19 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34265 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgCRPxT (ORCPT
+        Wed, 18 Mar 2020 11:53:30 -0400
+Received: from mx0b-00010702.pphosted.com ([148.163.158.57]:17482 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726473AbgCRPx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:53:19 -0400
-Received: by mail-oi1-f196.google.com with SMTP id j5so10234311oij.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 08:53:19 -0700 (PDT)
+        Wed, 18 Mar 2020 11:53:29 -0400
+Received: from pps.filterd (m0098778.ppops.net [127.0.0.1])
+        by mx0b-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02IFO94U022581;
+        Wed, 18 Mar 2020 10:34:50 -0500
+Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2052.outbound.protection.outlook.com [104.47.37.52])
+        by mx0b-00010702.pphosted.com with ESMTP id 2yu7rktc43-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Mar 2020 10:34:50 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Mi4bz6F4HXW9ESZ6+OZy7wc6kedM++ffiYKEVlayslWKvm+RqNuY0ZRKEaAK1U+B3WSDeCJ8foMKr2vXj4YkI5Loci7RLUyg22EomOIUtPUGPf/w+NwsZuDKbeOAhuYnbWOqMZhOOuXUf4tuCOW1g1yKW5WVTQFfCZPHO/Wy25+D1AclrJl+O62zQByQbr5cESFhI2DFfqZpRFny+TG2yehF/GB0ZC6FszhTBwLOggXIcqCqBZt6fc9DTTIBHKEr8NlWXcd8EHTxw8c9nEtPMOOfeA/fMH2ar2BCs9QVimL2zBbyMipzVbS0sICxVft/1Wf2QMgUsHNnaJFxpcKMfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jOktaHaR1FeDsyEa8//7X4tR7mSqAymI3aS7yWxRvEo=;
+ b=ix27+nh32LDjCnBcTZPCjgZ0sl80Dp43wx2lwsSlfB6hLI5YW/+RA7gMF1yEO/pAB2PHEStzm41vvGEsbjEk4UIcr7JCMDUrPM6x1GqOXzc8+RX/NPcvIGwlE9qd9AYQenXDTaidzKjFbY5IfRabj8e9yLfGhZHdqidtqfP7jMR4VCtvlT0KjQVO7v8A1BfgWb5nVap+NRJu3xNDKvJZydlT9WDTUYz+OTPyf1X0xSM97eFTOXRESk1ZKJ9GdfGnLbN9/MoBTXAi0HOiPG0ppWD+34aoonaRU5mbrZBdJ5ziWhP5yxRd8F7NwOCScQ7dGhlg4JEt4ybeSH33GDJXRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
+ header.d=ni.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/EsTMXwx4kqSqfiOJ+5VqxPy8ESW5kmMEvWmLUqRM04=;
-        b=P9ymWRwzUtq3KgWOv+H7Pij9fdoc090XCS4OPxI9A1QLtCEKaCE0cbmT4EYt3eDtCA
-         sb2dGnxnhqks0HWZ2ytr3VS8zMUcYfLKcIHEA9PbfqWjyRXfMwvq+5eqQXlSIW8W7DPU
-         BawYthbfaq3FoiLzwKCXiAw3J1amj2PcUSsDmvftnx0MJyWPGWH6Cr0DP+O2wJSO9WV8
-         JBJr1ILAo0xSr2VJcQVP2A9j4DLWMFiLIep3rETwXfcXbulb7bH5K9kGiW1Gk0idGUJU
-         c55Wnogd3bxGL9X742NwMMBylQNk5i+sAOuUYe/Lv4W+N7fnnBhIJMkdHG+GIXnH7Gia
-         ++Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/EsTMXwx4kqSqfiOJ+5VqxPy8ESW5kmMEvWmLUqRM04=;
-        b=BZZVnh5ueBegEiKGEyGo27v8x/2j8u/N/YZXLaUmih5g248O8MgtSr1jjZh28zZ7z7
-         chvpB/eGjjCAN448sJOTCwaIKi9oXQEgGTLEoZn7JowpxJudq4aILnvOKUDQswVhZPmy
-         adeBB7T9/0IvAliuM+5QXd0inZPIl0zncuM1B5/YfQrsELmxM6bKYZo1oCnVV00f+GgZ
-         eci/4ZWASBFG+p/F9At+qbPZBjT0Lf1Lv3DzjJcSypd+UT1IVOpWg0poXSqn8LkmFW0o
-         n0AEKjToQO3Xzabnt4iiOUk22/2gg46A24phanalIBQ2OqNLUsrz5M7xchAf6r0JVEhf
-         JuHA==
-X-Gm-Message-State: ANhLgQ1pIHlr2n6o/wyuWT6x5FTFSPO9Nc5pbCSWNMOP+IFJppobvqfO
-        mqfA+P/PFBpK+QXSNowDCiJgmOoNhaCCgYBWP0u2xQ==
-X-Google-Smtp-Source: ADFU+vutWXljLwy4LQhxFZY3HNaRb6NFkXajAdj6p1EAqEqrSw29FuzWdXXrb9ZA8cxm0hL7zE3UOGk1lBceIzIXLe0=
-X-Received: by 2002:a05:6808:90f:: with SMTP id w15mr3813640oih.0.1584546798751;
- Wed, 18 Mar 2020 08:53:18 -0700 (PDT)
+ d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jOktaHaR1FeDsyEa8//7X4tR7mSqAymI3aS7yWxRvEo=;
+ b=i916ByATC0ODQBA9EhQOJRVYw+rlCk4nr6lYHpRjRxsyiKqM2SJRwp/QAMCwd0boWQMJePPHIJeT8zK1aQJIKS1bvuklCgIOO6QQCVJti/BfzrHj8fsmj4RL6DXneuNs5psViXtJWkSJFhQQtAyZAtGj+tXeKGiC2V+LzPzeZG0=
+Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::29) by SN4PR0401MB3709.namprd04.prod.outlook.com
+ (2603:10b6:803:48::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.16; Wed, 18 Mar
+ 2020 15:34:49 +0000
+Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
+ ([fe80::d05b:1953:4111:38e4]) by SN4PR0401MB3646.namprd04.prod.outlook.com
+ ([fe80::d05b:1953:4111:38e4%5]) with mapi id 15.20.2793.023; Wed, 18 Mar 2020
+ 15:34:49 +0000
+From:   Michael Auchter <michael.auchter@ni.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     Michael Auchter <michael.auchter@ni.com>, linux-pm@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] iio: dac: ad5686: add of_match_table
+Date:   Wed, 18 Mar 2020 10:34:33 -0500
+Message-Id: <20200318153434.62833-2-michael.auchter@ni.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200318153434.62833-1-michael.auchter@ni.com>
+References: <20200318153434.62833-1-michael.auchter@ni.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: DM3PR14CA0146.namprd14.prod.outlook.com
+ (2603:10b6:0:53::30) To SN4PR0401MB3646.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::29)
 MIME-Version: 1.0
-References: <20200317061522.12685-1-rayagonda.kokatanur@broadcom.com>
- <20200317061522.12685-3-rayagonda.kokatanur@broadcom.com> <CAPcyv4j1BJStqSZvbNdjHs0RoSWWtk06ieQAXOUwJCjP8mqBLQ@mail.gmail.com>
- <CAHO=5PE9SLg2O1fp5YUp0Z0sbNfKNiu5kGXBRtHmGyXRW5w3pg@mail.gmail.com>
-In-Reply-To: <CAHO=5PE9SLg2O1fp5YUp0Z0sbNfKNiu5kGXBRtHmGyXRW5w3pg@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 18 Mar 2020 08:53:07 -0700
-Message-ID: <CAPcyv4j3Q6n8sj=ATtDL0cpHvMqZPaBxuZ13pgUsvhXWqDh1BA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] async_tx: fix possible negative array indexing
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Allison Randal <allison@lohutok.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xaphan.phire.org (66.90.216.181) by DM3PR14CA0146.namprd14.prod.outlook.com (2603:10b6:0:53::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.19 via Frontend Transport; Wed, 18 Mar 2020 15:34:48 +0000
+X-Mailer: git-send-email 2.24.1
+X-Originating-IP: [66.90.216.181]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bff450c7-af71-4d52-5d0d-08d7cb51e4e3
+X-MS-TrafficTypeDiagnostic: SN4PR0401MB3709:|SN4PR0401MB3709:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN4PR0401MB3709B6A91CE8C78D21496A3087F70@SN4PR0401MB3709.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:655;
+X-Forefront-PRVS: 03468CBA43
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(396003)(346002)(39860400002)(366004)(376002)(199004)(66556008)(66476007)(8676002)(2906002)(81166006)(81156014)(66946007)(2616005)(36756003)(6506007)(44832011)(6512007)(6486002)(5660300002)(110136005)(478600001)(16526019)(316002)(52116002)(956004)(4326008)(8936002)(6666004)(26005)(186003)(1076003)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN4PR0401MB3709;H:SN4PR0401MB3646.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: ni.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gSaic7SFmiCuUpeKlcXGjgUavpyhdjCEeEh83OxLuHvv4ESltRM6MTZ7e6USWc92udW1rFcnXY+qZrCl+9ImMXuJG+wLwODjfnivgiZjjwiowWetAunvb+Romq4fERpUiM/X2uyXnnm/CmkKxxGs+Z1T2z4GfQCjfDoEe9BTzyXqKyJEjPNWV/bIXHPfAjW21EeljfTq8w1Ouuj1fAMQWd7yYbjQa3wvkA0+J79bHKBGEDgqj7S9ZdOXshFQJymc416aiJ26LhMQP8Ze0nC+6HVktctKuhAgDb08RGEYIR5nwIftaqCih6ah6qp/NITfJra/xfrvJauFRV+f5z868ffcfVl1uvyhW51q1pvDeV6/J4xkC9G5VF4LCAzdP8tvSUTZjg88SOPFWlK3KaEj2/Mgr667VD5viGQa5I7g5wP9X0MYt8Df+YNbZW9oYiX9
+X-MS-Exchange-AntiSpam-MessageData: g2mag1oytM0hk+xDR5ubFXE64gTi2Lk3sDOyib0QdssXmVaP9pW3qNueQ8HzCyoe+jMwgCoQPeNobZ2IkSxzLZYP0Ahwp2Vi/Vt9N2pYKjl/pwCtMZA+BZ6wsp+1cZc0JJVr3oNqc+garYt8SuRhaA==
+X-OriginatorOrg: ni.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bff450c7-af71-4d52-5d0d-08d7cb51e4e3
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 15:34:49.1048
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mHeVEuzkXyc2NcyC68dYne0o6lSxZ3X4inxqGaX4d7mVdkjmEhqDJVb+GfDZ8dEVYK47G9b1BGq9xJmMophYCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3709
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_07:2020-03-18,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=inbound_policy_notspam policy=inbound_policy score=30 phishscore=0
+ impostorscore=0 spamscore=0 adultscore=0 clxscore=1015 priorityscore=1501
+ malwarescore=0 suspectscore=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam adjust=30 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003180073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 12:17 AM Rayagonda Kokatanur
-<rayagonda.kokatanur@broadcom.com> wrote:
->
-> On Tue, Mar 17, 2020 at 11:06 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Mon, Mar 16, 2020 at 11:16 PM Rayagonda Kokatanur
-> > <rayagonda.kokatanur@broadcom.com> wrote:
-> > >
-> > > Fix possible negative array index read in __2data_recov_5() function.
-> > >
-> > > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> > > ---
-> > >  crypto/async_tx/async_raid6_recov.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/crypto/async_tx/async_raid6_recov.c b/crypto/async_tx/async_raid6_recov.c
-> > > index 33f2a8f8c9f4..9cd016cb2d09 100644
-> > > --- a/crypto/async_tx/async_raid6_recov.c
-> > > +++ b/crypto/async_tx/async_raid6_recov.c
-> > > @@ -206,7 +206,7 @@ __2data_recov_5(int disks, size_t bytes, int faila, int failb,
-> > >                 good_srcs++;
-> > >         }
-> > >
-> > > -       if (good_srcs > 1)
-> > > +       if ((good_srcs > 1) || (good < 0))
-> > >                 return NULL;
-> >
-> > Read the code again, I don't see how this can happen.
->
-> This case can happen and it is reported by coverity tool.
-> In the for loop , the condition "if (blocks[i] == NULL)" true all the
-> time then variable 'good' will be -1.
+Add of_match_table to this driver, so devices can be probed based on
+device tree contents.
 
-Just because coverity reports it does not make it true. Please go read
-the full call path that gets us to this call and identify how all
-entries in blocks[] could be NULL. Hint, the answer is in how
-async_raid6_2data_recov() calls __2data_recov_5().
+Signed-off-by: Michael Auchter <michael.auchter@ni.com>
+---
+ drivers/iio/dac/ad5696-i2c.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/drivers/iio/dac/ad5696-i2c.c b/drivers/iio/dac/ad5696-i2c.c
+index f100a5fe4219..26818bccffa2 100644
+--- a/drivers/iio/dac/ad5696-i2c.c
++++ b/drivers/iio/dac/ad5696-i2c.c
+@@ -88,9 +88,28 @@ static const struct i2c_device_id ad5686_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, ad5686_i2c_id);
+ 
++static const struct of_device_id ad5686_of_match[] = {
++	{ .compatible = "adi,ad5311r" },
++	{ .compatible = "adi,ad5671r" },
++	{ .compatible = "adi,ad5675r" },
++	{ .compatible = "adi,ad5691r" },
++	{ .compatible = "adi,ad5692r" },
++	{ .compatible = "adi,ad5693" },
++	{ .compatible = "adi,ad5693r" },
++	{ .compatible = "adi,ad5694" },
++	{ .compatible = "adi,ad5694r" },
++	{ .compatible = "adi,ad5695r" },
++	{ .compatible = "adi,ad5696" },
++	{ .compatible = "adi,ad5696r" },
++	{ .compatible = "adi,ad5338r" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, ad5686_of_match);
++
+ static struct i2c_driver ad5686_i2c_driver = {
+ 	.driver = {
+ 		.name = "ad5696",
++		.of_match_table = of_match_ptr(ad5686_of_match),
+ 	},
+ 	.probe = ad5686_i2c_probe,
+ 	.remove = ad5686_i2c_remove,
+-- 
+2.24.1
+
