@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCE9C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E33C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36E320409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28F120775
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565449;
-	bh=uCf8Xa5e1EZfg3pH3wDYjbpMZWFlxudDFng9dlNucZk=;
+	s=default; t=1584565457;
+	bh=UwniKDGeUU73Sf0JXCV7za0k/OEPDIGoi5TlxQxh8Rc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJf4yVksKjEA3mVLxO0OdzRkWHI5gvu8rPncqa8lZVLkXS2PuVxo4dX1QGoX0kaQN
-	 0/9vFR32UbvarZ99m/A1yysXfts5s/egc+OSdeGhcHNjrBFQusmxqKvD2vLYkgZQad
-	 eULeK7Vsa3z2dKOItBkFJ4PyMPkQZLVgLDWmg/T0=
+	b=nD5lj8jFRxO9LwpvQon8gCA+41lGbbh/TRmgsNnDJs+RsWzQVv+Rax+fOeaA8Cki+
+	 u21vT60gYhRfutGJOWU3idiDOFJhBqx7ezB6L83MvS0D2gnqYDKi2Be/jjVElkhEj8
+	 P0WmwJSRRucqeS0JFOEld46wwmDLTpamAHilF2AY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgCRUz0 (ORCPT
+        id S1728969AbgCRVEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:55:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55638 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:04:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728266AbgCRUzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:19 -0400
+        id S1727444AbgCRUzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F41420BED;
-        Wed, 18 Mar 2020 20:55:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D78C208FE;
+        Wed, 18 Mar 2020 20:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564918;
-        bh=uCf8Xa5e1EZfg3pH3wDYjbpMZWFlxudDFng9dlNucZk=;
+        s=default; t=1584564922;
+        bh=UwniKDGeUU73Sf0JXCV7za0k/OEPDIGoi5TlxQxh8Rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fgHKXBlkt3+shwpPd8vC0q8c0G8YS7UGG2ZVFhVJkakxU28/BrgWOTtFtCuyUe11r
-         Zl77C5SXSHqpIB8ar73Mwo0FnB/QpLWS7WVGAPNhwEjPUzsdZQg8Zi0v1IM2mJhUix
-         C66hZ/j0Djqhotvxvlj50cG+H1DFx4iFSHWaFxwo=
+        b=qbOW0yLgdBlXXXJ97RH117/jY3SuExU/qqQp4rwoUHfKFnn1uXBAhusywQMbbll12
+         Y9nsToPeRLUB5TYQZ9rhWYEbEVTlzUSkKfs1tD2rYo0DrBD5y2BR7ipJH7kcVQuyRl
+         Gdh4qZnlDFohxIczVgQCD5OqDTwYuCViKhBOnhMU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     You-Sheng Yang <vicamo.yang@canonical.com>,
+Cc:     Jakub Kicinski <kuba@kernel.org>, David Ahern <dsahern@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/37] r8152: check disconnect status after long sleep
-Date:   Wed, 18 Mar 2020 16:54:39 -0400
-Message-Id: <20200318205509.17053-7-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/37] fib: add missing attribute validation for tun_id
+Date:   Wed, 18 Mar 2020 16:54:42 -0400
+Message-Id: <20200318205509.17053-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
@@ -60,127 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: You-Sheng Yang <vicamo.yang@canonical.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit d64c7a08034b32c285e576208ae44fc3ba3fa7df ]
+[ Upstream commit 4c16d64ea04056f1b1b324ab6916019f6a064114 ]
 
-Dell USB Type C docking WD19/WD19DC attaches additional peripherals as:
+Add missing netlink policy entry for FRA_TUN_ID.
 
-  /: Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
-      |__ Port 1: Dev 11, If 0, Class=Hub, Driver=hub/4p, 5000M
-          |__ Port 3: Dev 12, If 0, Class=Hub, Driver=hub/4p, 5000M
-          |__ Port 4: Dev 13, If 0, Class=Vendor Specific Class,
-              Driver=r8152, 5000M
-
-where usb 2-1-3 is a hub connecting all USB Type-A/C ports on the dock.
-
-When hotplugging such dock with additional usb devices already attached on
-it, the probing process may reset usb 2.1 port, therefore r8152 ethernet
-device is also reset. However, during r8152 device init there are several
-for-loops that, when it's unable to retrieve hardware registers due to
-being disconnected from USB, may take up to 14 seconds each in practice,
-and that has to be completed before USB may re-enumerate devices on the
-bus. As a result, devices attached to the dock will only be available
-after nearly 1 minute after the dock was plugged in:
-
-  [ 216.388290] [250] r8152 2-1.4:1.0: usb_probe_interface
-  [ 216.388292] [250] r8152 2-1.4:1.0: usb_probe_interface - got id
-  [ 258.830410] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): PHY not ready
-  [ 258.830460] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Invalid header when reading pass-thru MAC addr
-  [ 258.830464] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Get ether addr fail
-
-This happens in, for example, r8153_init:
-
-  static int generic_ocp_read(struct r8152 *tp, u16 index, u16 size,
-			    void *data, u16 type)
-  {
-    if (test_bit(RTL8152_UNPLUG, &tp->flags))
-      return -ENODEV;
-    ...
-  }
-
-  static u16 ocp_read_word(struct r8152 *tp, u16 type, u16 index)
-  {
-    u32 data;
-    ...
-    generic_ocp_read(tp, index, sizeof(tmp), &tmp, type | byen);
-
-    data = __le32_to_cpu(tmp);
-    ...
-    return (u16)data;
-  }
-
-  static void r8153_init(struct r8152 *tp)
-  {
-    ...
-    if (test_bit(RTL8152_UNPLUG, &tp->flags))
-      return;
-
-    for (i = 0; i < 500; i++) {
-      if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
-          AUTOLOAD_DONE)
-        break;
-      msleep(20);
-    }
-    ...
-  }
-
-Since ocp_read_word() doesn't check the return status of
-generic_ocp_read(), and the only exit condition for the loop is to have
-a match in the returned value, such loops will only ends after exceeding
-its maximum runs when the device has been marked as disconnected, which
-takes 500 * 20ms = 10 seconds in theory, 14 in practice.
-
-To solve this long latency another test to RTL8152_UNPLUG flag should be
-added after those 20ms sleep to skip unnecessary loops, so that the device
-probe can complete early and proceed to parent port reset/reprobe process.
-
-This can be reproduced on all kernel versions up to latest v5.6-rc2, but
-after v5.5-rc7 the reproduce rate is dramatically lowered to 1/30 or less
-while it was around 1/2.
-
-Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+Fixes: e7030878fc84 ("fib: Add fib rule match on tunnel id")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/r8152.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ include/net/fib_rules.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index c5c188dc66268..0639178cb0096 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -2701,6 +2701,8 @@ static u16 r8153_phy_status(struct r8152 *tp, u16 desired)
- 		}
- 
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
- 	}
- 
- 	return data;
-@@ -4062,7 +4064,10 @@ static void r8153_init(struct r8152 *tp)
- 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
- 		    AUTOLOAD_DONE)
- 			break;
-+
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
- 	}
- 
- 	data = r8153_phy_status(tp, 0);
-@@ -4180,7 +4185,10 @@ static void r8153b_init(struct r8152 *tp)
- 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
- 		    AUTOLOAD_DONE)
- 			break;
-+
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
- 	}
- 
- 	data = r8153_phy_status(tp, 0);
+diff --git a/include/net/fib_rules.h b/include/net/fib_rules.h
+index b473df5b95121..10886c19cfc58 100644
+--- a/include/net/fib_rules.h
++++ b/include/net/fib_rules.h
+@@ -107,6 +107,7 @@ struct fib_rule_notifier_info {
+ 	[FRA_OIFNAME]	= { .type = NLA_STRING, .len = IFNAMSIZ - 1 }, \
+ 	[FRA_PRIORITY]	= { .type = NLA_U32 }, \
+ 	[FRA_FWMARK]	= { .type = NLA_U32 }, \
++	[FRA_TUN_ID]	= { .type = NLA_U64 }, \
+ 	[FRA_FWMASK]	= { .type = NLA_U32 }, \
+ 	[FRA_TABLE]     = { .type = NLA_U32 }, \
+ 	[FRA_SUPPRESS_PREFIXLEN] = { .type = NLA_U32 }, \
 -- 
 2.20.1
 
