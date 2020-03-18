@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FEDC4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C57C4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84FE20409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC3920775
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565231;
-	bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
+	s=default; t=1584565238;
+	bh=hvwALjSpKoynKhiNQhcQrr2uB1Vf0tnBZy5zFLdjeNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t88oZCjVkh1oi6yoKhCT54M4ceFsZkJ2Rq+MK7E6D4GIE2KvaQKHsJm0L+pN5gwym
-	 tCBoJ2TzFpNgVFBFzngexIfgHtbS9tclJ8SO8Mc1w0sveikF+M7xtbIfGbfScbq7bc
-	 XiM3spyQg3b8C8/GS2D1o9niySZnmnksZcFY0zvo=
+	b=O/xwJYBQfWqpaBElQHx8+0JixAIppcGFWIdiE/oEWTxBncFJahRByryKb7wi2/dDH
+	 x1OR365MXMxOvqlPhqsV0+1sY4VoMu0Dbt2zR0rxC11CyCOBRb7XrJpWtyEutLz0cx
+	 AuDeXQWe2EBmIy+WNEQyB4CxoM14XGFVJGd7OWQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgCRU4e (ORCPT
+        id S1728607AbgCRU40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:56:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56776 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:56:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbgCRU4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:04 -0400
+        id S1726858AbgCRU4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72050208E4;
-        Wed, 18 Mar 2020 20:56:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0646320BED;
+        Wed, 18 Mar 2020 20:55:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564964;
-        bh=EY5R1QC2UFt4ZgEOuanrzEih+GHs096R2FsqatSo/3w=;
+        s=default; t=1584564960;
+        bh=hvwALjSpKoynKhiNQhcQrr2uB1Vf0tnBZy5zFLdjeNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PZQu2EPx0ypEEj28i3hXPq+/vcC8uTUZpEGsln4mBoLquKXpg23Lk9Edh1TqxokvL
-         F2uz2xeffuLYez9kUFrbGTDnr1g0lKUgmfZF/NOPQJReaID6DwaXhgiR0jpHyEtoDG
-         LGHJUqGgaEOZlQAdU7rsc+YvfmoI2+t+Omfp9NvA=
+        b=RyD0xRTeHS2LkmboLiBJUJ8MB6TD/OctojKpOlH+t32oEnyFAqPqETYiY9iLJDLvm
+         iiqRlC81yc0ktiw9yLxNQk3YcRWaMUQW/KNlcDqO9Wu7gQSKr0Qh3SfToqmhNNXLjo
+         WuXgabQ94l5sgYbyKrJaP2nxWtN+IQgl/evh2EZE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Gilbert <floppym@gentoo.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/28] cpupower: avoid multiple definition with gcc -fno-common
-Date:   Wed, 18 Mar 2020 16:55:34 -0400
-Message-Id: <20200318205555.17447-7-sashal@kernel.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/28] pinctrl: core: Remove extra kref_get which blocks hogs being freed
+Date:   Wed, 18 Mar 2020 16:55:31 -0400
+Message-Id: <20200318205555.17447-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
 References: <20200318205555.17447-1-sashal@kernel.org>
@@ -59,88 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Gilbert <floppym@gentoo.org>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-[ Upstream commit 2de7fb60a4740135e03cf55c1982e393ccb87b6b ]
+[ Upstream commit aafd56fc79041bf36f97712d4b35208cbe07db90 ]
 
-Building cpupower with -fno-common in CFLAGS results in errors due to
-multiple definitions of the 'cpu_count' and 'start_time' variables.
+kref_init starts with the reference count at 1, which will be balanced
+by the pinctrl_put in pinctrl_unregister. The additional kref_get in
+pinctrl_claim_hogs will increase this count to 2 and cause the hogs to
+not get freed when pinctrl_unregister is called.
 
-./utils/idle_monitor/snb_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-multiple definition of `cpu_count';
-./utils/idle_monitor/nhm_idle.o:./utils/idle_monitor/cpupower-monitor.h:28:
-first defined here
-...
-./utils/idle_monitor/cpuidle_sysfs.o:./utils/idle_monitor/cpuidle_sysfs.c:22:
-multiple definition of `start_time';
-./utils/idle_monitor/amd_fam14h_idle.o:./utils/idle_monitor/amd_fam14h_idle.c:85:
-first defined here
-
-The -fno-common option will be enabled by default in GCC 10.
-
-Bug: https://bugs.gentoo.org/707462
-Signed-off-by: Mike Gilbert <floppym@gentoo.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 6118714275f0 ("pinctrl: core: Fix pinctrl_register_and_init() with pinctrl_enable()")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200228154142.13860-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c  | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c    | 2 +-
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 2 ++
- tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h | 2 +-
- 4 files changed, 5 insertions(+), 3 deletions(-)
+ drivers/pinctrl/core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-index 2116df9ad8325..c097a3748674f 100644
---- a/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/amd_fam14h_idle.c
-@@ -83,7 +83,7 @@ static struct pci_access *pci_acc;
- static struct pci_dev *amd_fam14h_pci_dev;
- static int nbp1_entered;
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index c55517312485d..08ea74177de29 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -2031,7 +2031,6 @@ static int pinctrl_claim_hogs(struct pinctrl_dev *pctldev)
+ 		return PTR_ERR(pctldev->p);
+ 	}
  
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
- 
- #ifdef DEBUG
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-index 5b3205f162174..5277df27191f3 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpuidle_sysfs.c
-@@ -21,7 +21,7 @@ struct cpuidle_monitor cpuidle_sysfs_monitor;
- 
- static unsigned long long **previous_count;
- static unsigned long long **current_count;
--struct timespec start_time;
-+static struct timespec start_time;
- static unsigned long long timediff;
- 
- static int cpuidle_get_count_percent(unsigned int id, double *percent,
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-index 05f953f0f0a0c..80a21cb67d94f 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c
-@@ -29,6 +29,8 @@ struct cpuidle_monitor *all_monitors[] = {
- 0
- };
- 
-+int cpu_count;
-+
- static struct cpuidle_monitor *monitors[MONITORS_MAX];
- static unsigned int avail_monitors;
- 
-diff --git a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-index 9e43f3371fbc6..3558bbae2b5dc 100644
---- a/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-+++ b/tools/power/cpupower/utils/idle_monitor/cpupower-monitor.h
-@@ -18,7 +18,7 @@
- #define CSTATE_NAME_LEN 5
- #define CSTATE_DESC_LEN 60
- 
--int cpu_count;
-+extern int cpu_count;
- 
- /* Hard to define the right names ...: */
- enum power_range_e {
+-	kref_get(&pctldev->p->users);
+ 	pctldev->hog_default =
+ 		pinctrl_lookup_state(pctldev->p, PINCTRL_STATE_DEFAULT);
+ 	if (IS_ERR(pctldev->hog_default)) {
 -- 
 2.20.1
 
