@@ -2,96 +2,88 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D8BC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3552C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11AF32076D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE7B2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584507762;
+	bh=2ai/f+HExg/ApogpjE3zkT/L3aUSunYoWnzd+8Jg+RI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=y8KEhynonk7pCS7m66NBPbYwxNrgJM0cl1msIzsJgPz3XmNYmf+55UWfc92CkPAsN
+	 5wkwsq787yLR1bNHkEDMfOq+DK3Bq4Q0u6bODunR+UFs9J9VVwXCE0fn9//bPYIRF5
+	 +uCfnIw6ADxoDwD9DiOQ6R/CpjVpeYLSdhJYiC/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgCRFBn (ORCPT
+        id S1726940AbgCRFCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 01:01:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:45564 "EHLO foss.arm.com"
+        Wed, 18 Mar 2020 01:02:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbgCRFBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 01:01:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C26D1FB;
-        Tue, 17 Mar 2020 22:01:42 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.1.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7D0353F67D;
-        Tue, 17 Mar 2020 22:01:38 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/mm: Make pud_present() check _PAGE_PROTNONE and _PAGE_PSE as well
-Date:   Wed, 18 Mar 2020 10:31:19 +0530
-Message-Id: <1584507679-11976-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726227AbgCRFCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 01:02:40 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DC6920753;
+        Wed, 18 Mar 2020 05:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584507759;
+        bh=2ai/f+HExg/ApogpjE3zkT/L3aUSunYoWnzd+8Jg+RI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CyUKijURxIrw7Y5hqK8b4MyGIuvBKQqzc0ShkeQnzfNeUP+XVtWHVxC/N+AMH+Nn4
+         GrLlIg00R1sq2wptyRayLS6n0qP5J/MrmjaDlNXo63NeqLC558t0oP3tzKGcAbGiYX
+         kd4pXRH6BdsYja5CQLpelJmQ4875uf4js+qHEwBc=
+Date:   Tue, 17 Mar 2020 22:02:38 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Nishanth Aravamudan <nacc@us.ibm.com>,
+        Nick Piggin <npiggin@suse.de>, Adam Litke <agl@us.ibm.com>,
+        Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm/hugetlb: Fix build failure with HUGETLB_PAGE but not
+ HUGEBTLBFS
+Message-Id: <20200317220238.8344f8423327c8ae178fc63a@linux-foundation.org>
+In-Reply-To: <7e8c3a3c9a587b9cd8a2f146df32a421b961f3a2.1584432148.git.christophe.leroy@c-s.fr>
+References: <7e8c3a3c9a587b9cd8a2f146df32a421b961f3a2.1584432148.git.christophe.leroy@c-s.fr>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pud_present() should also check _PAGE_PROTNONE and _PAGE_PSE bits like in
-case pmd_present(). This makes a PUD entry test positive for pud_present()
-after getting invalidated with pud_mknotpresent(), hence standardizing the
-semantics with PMD helpers.
+On Tue, 17 Mar 2020 08:04:14 +0000 (UTC) Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: x86@kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-Even though pud_mknotpresent() is not used any where currently, there is
-a discrepancy between PMD and PUD.
+> When CONFIG_HUGETLB_PAGE is set but not CONFIG_HUGETLBFS, the
+> following build failure is encoutered:
+> 
+> In file included from arch/powerpc/mm/fault.c:33:0:
+> ./include/linux/hugetlb.h: In function 'hstate_inode':
+> ./include/linux/hugetlb.h:477:9: error: implicit declaration of function 'HUGETLBFS_SB' [-Werror=implicit-function-declaration]
+>   return HUGETLBFS_SB(i->i_sb)->hstate;
+>          ^
+> ./include/linux/hugetlb.h:477:30: error: invalid type argument of '->' (have 'int')
+>   return HUGETLBFS_SB(i->i_sb)->hstate;
+>                               ^
+> 
+> Gate hstate_inode() with CONFIG_HUGETLBFS instead of CONFIG_HUGETLB_PAGE.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Link: https://patchwork.ozlabs.org/patch/1255548/#2386036
+> Fixes: a137e1cc6d6e ("hugetlbfs: per mount huge page sizes")
 
-WARN_ON(!pud_present(pud_mknotpresent(pud_mkhuge(pud)))) -> Fail
-WARN_ON(!pmd_present(pmd_mknotpresent(pmd_mkhuge(pmd)))) -> Pass
+A 12 year old build error?  If accurate, that has to be a world record.
 
-Though pud_mknotpresent() currently clears _PAGE_PROTNONE, pud_present()
-does not check it. This change fixes both inconsistencies.
+> Cc: stable@vger.kernel.org
 
-This has been build and boot tested on x86.
+I think I'll remove this.  Obviously nobody is suffering from this problem!
 
- arch/x86/include/asm/pgtable.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 7e118660bbd9..8adf1d00b506 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -857,7 +857,13 @@ static inline int pud_none(pud_t pud)
- 
- static inline int pud_present(pud_t pud)
- {
--	return pud_flags(pud) & _PAGE_PRESENT;
-+	/*
-+	 * Checking for _PAGE_PSE is needed too because
-+	 * split_huge_page will temporarily clear the present bit (but
-+	 * the _PAGE_PSE flag will remain set at all times while the
-+	 * _PAGE_PRESENT bit is clear).
-+	 */
-+	return pud_flags(pud) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PSE);
- }
- 
- static inline unsigned long pud_page_vaddr(pud_t pud)
--- 
-2.17.1
 
