@@ -2,180 +2,194 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78912C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50083C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EE320767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2720320767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgCRW5l (ORCPT
+        id S1727277AbgCRW7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:57:41 -0400
-Received: from muru.com ([72.249.23.125]:60794 "EHLO muru.com"
+        Wed, 18 Mar 2020 18:59:03 -0400
+Received: from mga02.intel.com ([134.134.136.20]:4164 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727383AbgCRW5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:57:40 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 753A181B1;
-        Wed, 18 Mar 2020 22:58:25 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Arthur Demchenkov <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, ruleh <ruleh@gmx.de>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH 3/3] Input: omap4-keypad - check state again for lost key-up interrupts
-Date:   Wed, 18 Mar 2020 15:57:27 -0700
-Message-Id: <20200318225727.29327-4-tony@atomide.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200318225727.29327-1-tony@atomide.com>
-References: <20200318225727.29327-1-tony@atomide.com>
+        id S1726647AbgCRW7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 18:59:03 -0400
+IronPort-SDR: 9WLFitB2A/CCd9StxPkajMUfvQd1yT7jNwYB3zxIRMalGpC6yLrKnmHLW/YVnz8UI/49+yKWeq
+ BXcA9KdelbxQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 15:59:02 -0700
+IronPort-SDR: Kzst+XzI+DA9X70tno+9tD6RtOdSqyNfKYu4iKARH8e1uGk8kjFAyBcsBsbDzpfY8djoShcw5+
+ fj3lYTunmHAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,569,1574150400"; 
+   d="scan'208";a="263542576"
+Received: from mbeldzik-mobl.ger.corp.intel.com (HELO localhost) ([10.252.55.127])
+  by orsmga002.jf.intel.com with ESMTP; 18 Mar 2020 15:58:51 -0700
+Date:   Thu, 19 Mar 2020 00:58:50 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        cedric.xing@intel.com, Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200318225850.GD52244@linux.intel.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+ <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <20200315012523.GC208715@linux.intel.com>
+ <CAOASepP9GeTEqs1DSfPiSm9ER0whj9qwSc46ZiNj_K4dMekOfQ@mail.gmail.com>
+ <94ce05323c4de721c4a6347223885f2ad9f541af.camel@linux.intel.com>
+ <CAOASepM1pp1emPwSdFcaRkZfFm6sNmwPCJH+iFMiaJpFjU0VxQ@mail.gmail.com>
+ <5dc2ec4bc9433f9beae824759f411c32b45d4b74.camel@linux.intel.com>
+ <20200316225322.GJ24267@linux.intel.com>
+ <CAOASepNbvproKLFLUvH=+m1xXFeDCWup6O7Pi1py6ENFdarMKg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOASepNbvproKLFLUvH=+m1xXFeDCWup6O7Pi1py6ENFdarMKg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are still missing handling for errata i689 related issues for the
-case where we never see a key up interrupt for the last pressed key.
+On Tue, Mar 17, 2020 at 12:28:58PM -0400, Nathaniel McCallum wrote:
+> On Mon, Mar 16, 2020 at 6:53 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Mon, Mar 16, 2020 at 11:38:24PM +0200, Jarkko Sakkinen wrote:
+> > > On Mon, 2020-03-16 at 10:01 -0400, Nathaniel McCallum wrote:
+> > > > On Mon, Mar 16, 2020 at 9:56 AM Jarkko Sakkinen
+> > > > <jarkko.sakkinen@linux.intel.com> wrote:
+> > > > > On Sun, 2020-03-15 at 13:53 -0400, Nathaniel McCallum wrote:
+> > > > > > On Sat, Mar 14, 2020 at 9:25 PM Jarkko Sakkinen
+> > > > > > <jarkko.sakkinen@linux.intel.com> wrote:
+> > > > > > > On Wed, Mar 11, 2020 at 01:30:07PM -0400, Nathaniel McCallum wrote:
+> > > > > > > > Currently, the selftest has a wrapper around
+> > > > > > > > __vdso_sgx_enter_enclave() which preserves all x86-64 ABI callee-saved
+> > > > > > > > registers (CSRs), though it uses none of them. Then it calls this
+> > > > > > > > function which uses %rbx but preserves none of the CSRs. Then it jumps
+> > > > > > > > into an enclave which zeroes all these registers before returning.
+> > > > > > > > Thus:
+> > > > > > > >
+> > > > > > > >   1. wrapper saves all CSRs
+> > > > > > > >   2. wrapper repositions stack arguments
+> > > > > > > >   3. __vdso_sgx_enter_enclave() modifies, but does not save %rbx
+> > > > > > > >   4. selftest zeros all CSRs
+> > > > > > > >   5. wrapper loads all CSRs
+> > > > > > > >
+> > > > > > > > I'd like to propose instead that the enclave be responsible for saving
+> > > > > > > > and restoring CSRs. So instead of the above we have:
+> > > > > > > >   1. __vdso_sgx_enter_enclave() saves %rbx
+> > > > > > > >   2. enclave saves CSRs
+> > > > > > > >   3. enclave loads CSRs
+> > > > > > > >   4. __vdso_sgx_enter_enclave() loads %rbx
+> > > > > > > >
+> > > > > > > > I know that lots of other stuff happens during enclave transitions,
+> > > > > > > > but at the very least we could reduce the number of instructions
+> > > > > > > > through this critical path.
+> > > > > > >
+> > > > > > > What Jethro said and also that it is a good general principle to cut
+> > > > > > > down the semantics of any vdso as minimal as possible.
+> > > > > > >
+> > > > > > > I.e. even if saving RBX would make somehow sense it *can* be left
+> > > > > > > out without loss in terms of what can be done with the vDSO.
+> > > > > >
+> > > > > > Please read the rest of the thread. Sean and I have hammered out some
+> > > > > > sensible and effective changes.
+> > > > >
+> > > > > Have skimmed through that discussion but it comes down how much you get
+> > > > > by obviously degrading some of the robustness. Complexity of the calling
+> > > > > pattern is not something that should be emphasized as that is something
+> > > > > that is anyway hidden inside the runtime.
+> > > >
+> > > > My suggestions explicitly maintained robustness, and in fact increased
+> > > > it. If you think we've lost capability, please speak with specificity
+> > > > rather than in vague generalities. Under my suggestions we can:
+> > > > 1. call the vDSO from C
+> > > > 2. pass context to the handler
+> > > > 3. have additional stack manipulation options in the handler
+> > > >
+> > > > The cost for this is a net 2 additional instructions. No existing
+> > > > capability is lost.
+> > >
+> > > My vague generality in this case is just that the whole design
+> > > approach so far has been to minimize the amount of wrapping to
+> > > EENTER.
+> >
+> > Yes and no.   If we wanted to minimize the amount of wrapping around the
+> > vDSO's ENCLU then we wouldn't have the exit handler shenanigans in the
+> > first place.  The whole process has been about balancing the wants of each
+> > use case against the overall quality of the API and code.
+> >
+> > > And since this has been kind of agreed by most of the
+> > > stakeholders doing something against the chosen strategy is
+> > > something I do hold some resistance.
+> >
+> > Up until Nathaniel joined the party, the only stakeholder in terms of the
+> > exit handler was the Intel SDK.
+> 
+> I would hope that having additional stakeholders would ease the path
+> to adoption.
+> 
+> > There was a general consensus to pass
+> > registers as-is when there isn't a strong reason to do otherwise.  Note
+> > that Nathaniel has also expressed approval of that approach.
+> 
+> I still approve that approach.
+> 
+> > So I think the question that needs to be answered is whether the benefits
+> > of using %rcx instead of %rax to pass @leaf justify the "pass registers
+> > as-is" guideline.  We've effectively already given this waiver for %rbx,
+> > as the whole reason why the TCS is passed in on the stack instead of via
+> > %rbx is so that it can be passed to the exit handler.  E.g. the vDSO
+> > could take the TCS in %rbx and save it on the stack, but we're throwing
+> > the baby out with the bathwater at that point.
+> >
+> > The major benefits being that the vDSO would be callable from C and that
+> > the kernel could define a legitimate prototype instead of a frankenstein
+> > prototype that's half assembly and half C.  For me, those are significant
+> > benefits and well worth the extra MOV, PUSH and POP.  For some use cases
+> > it would eliminate the need for an assembly wrapper.  For runtimes that
+> > need an assembly wrapper for whatever reason, it's probably still a win as
+> > a well designed runtime can avoid register shuffling in the wrapper.  And
+> > if there is a runtime that isn't covered by the above, it's at worst an
+> > extra MOV.
+> >
+> 
 
-To fix the issue, we must scan the key state again after the keyboard
-controller has idled to check if a key up event was missed. This is
-described in the omap4 silicon errata documentation for Errata ID i689
-"1.32 Keyboard Key Up Event Can Be Missed":
+Guys, maybe it is just enough discussing. I see things go in circles at
+least. Just send a patch against current tree and we'll look into it
+then?
 
-"When a key is released for a time shorter than the debounce time,
- in-between 2 key press (KP1 and KP2), the keyboard state machine will go
- to idle mode and will never detect the key release (after KP1, and also
- after KP2), and thus will never generate a new IRQ indicating the key
- release."
+I'm a strong believer of "good enough" well, in everything in life. With
+a legit patch it is easier to evaluate if what we get is just a
+different version of good enough, or perhaps we might get some useful
+value out of it.
 
-Let's use delayed_work after each key down event to catch stuck keys if
-no more interrupts are seen. We use mod_delayed_work() as we already
-scan for lost key up events in case of new interrupts, so only the
-last key down interrupt needs the delayed_work handling.
+If you think that you get together something C callable, please
+*prove* that by also updating the self test.
 
-Cc: Arthur Demchenkov <spinal.by@gmail.com>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: ruleh <ruleh@gmx.de>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/input/keyboard/omap4-keypad.c | 55 ++++++++++++++++++++++++---
- 1 file changed, 49 insertions(+), 6 deletions(-)
+Fair enough?
 
-diff --git a/drivers/input/keyboard/omap4-keypad.c b/drivers/input/keyboard/omap4-keypad.c
---- a/drivers/input/keyboard/omap4-keypad.c
-+++ b/drivers/input/keyboard/omap4-keypad.c
-@@ -71,6 +71,8 @@ struct omap4_keypad {
- 	void __iomem *base;
- 	bool irq_wake_enabled;
- 	unsigned int irq;
-+	struct delayed_work key_work;
-+	struct mutex lock;		/* for key scan */
- 
- 	unsigned int rows;
- 	unsigned int cols;
-@@ -154,17 +156,19 @@ static irqreturn_t omap4_keypad_irq_handler(int irq, void *dev_id)
- 	return IRQ_NONE;
- }
- 
--static irqreturn_t omap4_keypad_irq_thread_fn(int irq, void *dev_id)
-+static bool omap4_keypad_scan_keys(struct omap4_keypad *keypad_data, bool clear)
- {
--	struct omap4_keypad *keypad_data = dev_id;
- 	struct input_dev *input_dev = keypad_data->input;
- 	int keys_up, keys_down;
- 	u32 low, high;
--	u64 keys;
-+	u64 keys = 0;
- 
--	low = kbd_readl(keypad_data, OMAP4_KBD_FULLCODE31_0);
--	high = kbd_readl(keypad_data, OMAP4_KBD_FULLCODE63_32);
--	keys = low | (u64)high << 32;
-+	mutex_lock(&keypad_data->lock);
-+	if (!clear) {
-+		low = kbd_readl(keypad_data, OMAP4_KBD_FULLCODE31_0);
-+		high = kbd_readl(keypad_data, OMAP4_KBD_FULLCODE63_32);
-+		keys = low | (u64)high << 32;
-+	}
- 
- 	/* Scan for key up events for lost key-up interrupts */
- 	keys_up = omap4_keypad_scan_state(keypad_data, keys, false);
-@@ -176,6 +180,23 @@ static irqreturn_t omap4_keypad_irq_thread_fn(int irq, void *dev_id)
- 
- 	keypad_data->keys = keys;
- 
-+	mutex_unlock(&keypad_data->lock);
-+
-+	return keys_down;
-+}
-+
-+static irqreturn_t omap4_keypad_irq_thread_fn(int irq, void *dev_id)
-+{
-+	struct omap4_keypad *keypad_data = dev_id;
-+	bool down_events;
-+
-+	down_events = omap4_keypad_scan_keys(keypad_data, false);
-+	if (down_events)
-+		mod_delayed_work(system_wq, &keypad_data->key_work,
-+				 msecs_to_jiffies(50));
-+	else
-+		cancel_delayed_work_sync(&keypad_data->key_work);
-+
- 	/* clear pending interrupts */
- 	kbd_write_irqreg(keypad_data, OMAP4_KBD_IRQSTATUS,
- 			 kbd_read_irqreg(keypad_data, OMAP4_KBD_IRQSTATUS));
-@@ -183,6 +204,25 @@ static irqreturn_t omap4_keypad_irq_thread_fn(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+/*
-+ * Errata ID i689 "1.32 Keyboard Key Up Event Can Be Missed".
-+ * Interrupt may not happen for key-up events.
-+ */
-+static void omap4_keypad_work(struct work_struct *work)
-+{
-+	struct omap4_keypad *keypad_data =
-+		container_of(work, struct omap4_keypad, key_work.work);
-+	bool events;
-+	u32 active;
-+
-+	active = kbd_readl(keypad_data, OMAP4_KBD_STATEMACHINE);
-+	if (active)
-+		return;
-+
-+	dev_dbg(keypad_data->input->dev.parent, "idle with events\n");
-+	events = omap4_keypad_scan_keys(keypad_data, true);
-+}
-+
- static int omap4_keypad_open(struct input_dev *input)
- {
- 	struct omap4_keypad *keypad_data = input_get_drvdata(input);
-@@ -275,6 +315,8 @@ static int omap4_keypad_probe(struct platform_device *pdev)
- 	}
- 
- 	keypad_data->irq = irq;
-+	mutex_init(&keypad_data->lock);
-+	INIT_DELAYED_WORK(&keypad_data->key_work, omap4_keypad_work);
- 
- 	error = omap4_keypad_parse_dt(&pdev->dev, keypad_data);
- 	if (error)
-@@ -410,6 +452,7 @@ static int omap4_keypad_remove(struct platform_device *pdev)
- 	struct resource *res;
- 
- 	free_irq(keypad_data->irq, keypad_data);
-+	cancel_delayed_work_sync(&keypad_data->key_work);
- 
- 	pm_runtime_disable(&pdev->dev);
- 
--- 
-2.25.1
+/Jarkko
