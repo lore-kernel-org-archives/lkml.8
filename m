@@ -2,122 +2,119 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C8EC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950ACC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8908820772
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB7420768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 04:29:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="V2FURspA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ayIBDgSA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgCRE1j (ORCPT
+        id S1726840AbgCRE3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 00:27:39 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41781 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbgCRE1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 00:27:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 18 Mar 2020 00:29:44 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23719 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726506AbgCRE3o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 00:29:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584505783; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=FIu1T3HMTZXt9ODBDrrZB2SocHW6vdKWod8Vtd9936o=; b=ayIBDgSA9vNxx3+ISH2/6LQhdWqwacz1xzoKN1D2rScFCqbVCJ8B5M3NZA1EEYbpqx+3lCwO
+ UWqtOfKizmpW0pQol5VcHKjPTiJeFKGNtTIL+/jTguOKkdLKZgqXhTmijUqvZQb2J3QXcTHT
+ IwWgY9kgu3L8xMsfUOF0oLiTfbA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e71a3b6.7fc5722ff810-smtp-out-n01;
+ Wed, 18 Mar 2020 04:29:42 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 00DF1C432C2; Wed, 18 Mar 2020 04:29:41 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48hxpY5tS1z9sP7;
-        Wed, 18 Mar 2020 15:27:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584505656;
-        bh=dOom9243483APTZDiyPHNPbFu2OaGWNAJteJqH6nYOE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=V2FURspAyd6rp2hfmM0VQz+6s314vqb7VwTQpddc4UfOXOUAaSAFfcD6C0Qp6AKYl
-         w1ph966rg1RKcLcPMCUYr3z+5ioIoVnx9ufUVLiYTcA3gEnG94zCihuqvYvZYfG8mC
-         L3lWevvqdUJlShqFTpE8Kfr0NwQl5vv2q4f1w21W9lvkdaofnfS98IhQhVJf8FYFgU
-         oiWZp9jcFlL20FNJdda4aWFWWPDt0KNKzeyOnELGhY9jRuvJZbvWp+zLU6IjZDProZ
-         Ahxwb7nnR+n5W1glTGXFp+JCjptMN/lDsu+/A6ms2+MBp6RNlHQu/72XwOmSIM/OqG
-         Mv4wn+oPQ7vDw==
-Date:   Wed, 18 Mar 2020 15:27:31 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: linux-next: manual merge of the tip tree with the arm64 tree
-Message-ID: <20200318152731.0114975c@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Tx/x6nL20AR7lvSvJW/WvKc";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B27BBC433CB;
+        Wed, 18 Mar 2020 04:29:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B27BBC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v5 0/4] Introduce SoC sleep stats driver
+Date:   Wed, 18 Mar 2020 09:59:14 +0530
+Message-Id: <1584505758-21037-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Tx/x6nL20AR7lvSvJW/WvKc
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Changes in v5:
+- Remove underscore from node name in Documentation and DTSI change
+- Remove global config from driver change
 
-Hi all,
+Changes in v4:
+- Address bjorn's comments from v3 on change 2.
+- Add bjorn's Reviewed-by on change 3 and 4.
 
-Today's linux-next merge of the tip tree got a conflict in:
+Changes in v3:
+- Address stephen's comments from v2 in change 1 and 2.
+- Address bjorn's comments from v2 in change 3 and 4.
+- Add Rob and bjorn's Reviewed-by on YAML change.
 
-  arch/arm64/Kconfig
+Changes in v2:
+- Convert Documentation to YAML.
+- Address stephen's comments from v1.
+- Use debugfs instead of sysfs.
+- Add sc7180 dts changes for sleep stats
+- Add defconfig changes to enable driver
+- Include subsystem stats from [1] in this single stats driver.
+- Address stephen's comments from [1]
+- Update cover letter inline to mention [1]
 
-between commit:
+Qualcomm Technologies, Inc. (QTI)'s chipsets support SoC level low power
+modes. SoCs Always On Processor/Resource Power Manager produces statistics
+of the SoC sleep modes involving lowering or powering down of the rails and
+the oscillator clock.
 
-  ab7876a98a21 ("arm64: elf: Enable BTI at exec based on ELF program proper=
-ties")
+Additionally multiple subsystems present on SoC like modem, spss, adsp,
+cdsp maintains their low power mode statistics in shared memory (SMEM).
 
-from the arm64 tree and commit:
+Statistics includes SoC sleep mode type, number of times LPM entered, time
+of last entry, exit, and accumulated sleep duration in seconds.
 
-  5e3c6a312a09 ("ARM/arm64: vdso: Use common vdso clock mode storage")
+This series adds a driver to read the stats and export to debugfs.
 
-from the tip tree.
+[1] https://lore.kernel.org/patchwork/patch/1149381/
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+Mahesh Sivasubramanian (2):
+  dt-bindings: Introduce SoC sleep stats bindings
+  soc: qcom: Add SoC sleep stats driver
 
---=20
-Cheers,
-Stephen Rothwell
+Maulik Shah (2):
+  arm64: dts: qcom: sc7180: Enable SoC sleep stats
+  arm64: defconfig: Enable SoC sleep stats driver
 
-diff --cc arch/arm64/Kconfig
-index fdfdc77c5067,c6c32fb7f546..000000000000
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@@ -9,8 -9,6 +9,7 @@@ config ARM6
-  	select ACPI_MCFG if (ACPI && PCI)
-  	select ACPI_SPCR_TABLE if ACPI
-  	select ACPI_PPTT if ACPI
- +	select ARCH_BINFMT_ELF_STATE
-- 	select ARCH_CLOCKSOURCE_DATA
-  	select ARCH_HAS_DEBUG_VIRTUAL
-  	select ARCH_HAS_DEVMEM_IS_ALLOWED
-  	select ARCH_HAS_DMA_PREP_COHERENT
+ .../bindings/soc/qcom/soc-sleep-stats.yaml         |  46 ++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               |   7 +-
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/soc/qcom/Kconfig                           |   9 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/soc_sleep_stats.c                 | 244 +++++++++++++++++++++
+ 6 files changed, 307 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/soc-sleep-stats.yaml
+ create mode 100644 drivers/soc/qcom/soc_sleep_stats.c
 
---Sig_/Tx/x6nL20AR7lvSvJW/WvKc
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5xozMACgkQAVBC80lX
-0Gx2/Af/SkdPef8QdhKnLjlPoRG6LCcDhCTftfEGrL+BS5vepl3QAfYxFf6qWDXg
-PZHuRXlqBMySa9yLUZaBSBgIidGvQ95TpxzKtL2B4jhfw4xNlvdq+fq8FOEQfWyf
-V71FrWoxU4xTw6fGC5t+U0aM3FVQgN5atdjtp3DeI8VCvk6JtbIp0y14GHqiRGEE
-6xtIDLBB/qLnY3bwgdvjvF6P8DiyQgPTrJ9qMH3Ln6CtC5dff0Dt2MFa9MCYfCAI
-rxbzgqFW+++ubUK+gNNNXBLFJ01edaASkb0IxQDgHeBpXitdaTAzO+BbUOwi6eAM
-Xa24s7qldsRaj+gTpc6WuLb53RybQA==
-=nvGD
------END PGP SIGNATURE-----
-
---Sig_/Tx/x6nL20AR7lvSvJW/WvKc--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
