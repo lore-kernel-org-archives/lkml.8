@@ -2,103 +2,217 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F4BC5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357DCC5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3809420768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:57:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQMcUSiu"
+	by mail.kernel.org (Postfix) with ESMTP id 0386720773
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:58:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584529102;
+	bh=MkDsN2Eq2l8VIZO5CKor3u0iTn/XfXUIR6VH4pbo2VE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tpOOWcqNyZBEuqraq3Suj6SIQUJnBU04BWuWNQSVIlGnzvd6GXI45Vjkfk9gz5/Zc
+	 a7qvHdoCeSGgt76FFJuriX0Bl+Bo7xed9OjSzfdoIVV4zTy+hJHVAYrqQRKUImrAS4
+	 3jncxNTZyrVcuMGNvvGEKrJsyi5sTLWJLILMW4HA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbgCRK5v (ORCPT
+        id S1727766AbgCRK6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:57:51 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44683 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgCRK5u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:57:50 -0400
-Received: by mail-lj1-f196.google.com with SMTP id w4so11751476lji.11
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 03:57:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nV3Qdu0HYWee3j5+6+aGekWI3rUXVXUf4iMVPL1IdEw=;
-        b=vQMcUSiu8Ef0t/A+g7adc3drzAiCtfzj33O0acSrVOG2GH/5HUcySiy/OVWguyqDH8
-         6q4v6t92onicU3oTLVR4CXmPiztXSa8MgRhdKRrkBmkRBwKelns6VtY0l5Zj66cDOTzZ
-         tWV6S3ScsVbJYqgW3yeSzxir4h8mLgggfwYzxGjhHSEw4Oi4uxi2lNWHiiszt6+EMbK7
-         cljVksEQPxpT8QkS8aqy5jFCYesMSUO6c1ioO9QziWcEDhjP1MzIS0P+KgDrPZ3YPDe1
-         Y1D8pJS8UkGfI4p31s2MqwDM8AQZDLCCcgaGnZ6/pddL86EplPtt9qmLIVfm9BCP0UHW
-         2Qbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nV3Qdu0HYWee3j5+6+aGekWI3rUXVXUf4iMVPL1IdEw=;
-        b=mRiNJyaMCagTY3Y+zEcD0shQPVe5qRBTZBR9ZC6rtpG0GD8n2mDu7uysbFs+nFAB8G
-         K3I4Gc8DPGh4u0D8Vu/l0+4WlPlcWYCWlfwiQDerbsgq5iQW9w4c8Fe6AoXen1wZQKJ3
-         GOkFPniZ1JpkO7zEorO1XUaZN5iXSH7CKBJnq2PtcnfxU9AShdkTlxkmF2yXszFo6s/G
-         lOGBgQJhcpE4V3iFewWgUgj7RwHWLSFlvh6P6gS4FdZLivYjbFwheE+VxRWDMjXbm5/h
-         IWBPwgnUoMpSHc+Y74p2pZxkitCIsGBdcvNlLhy7madYzu79naUCZushHCaU7xyMtNk/
-         3KEA==
-X-Gm-Message-State: ANhLgQ1rA24x00dCprkGwm6DLyX/QdKWz729NQYdW0QySfwFuWUBj2Yo
-        lWs82iEZyN1sLd+LhAwSjcA=
-X-Google-Smtp-Source: ADFU+vuAMc40DsHrVvUWs8uz714p07itpr22m3meWGZtkyJFaun/GQtn3rU5sYmCyq+9r9bJMr3lxA==
-X-Received: by 2002:a2e:b60d:: with SMTP id r13mr2056552ljn.185.1584529069502;
-        Wed, 18 Mar 2020 03:57:49 -0700 (PDT)
-Received: from uranus.localdomain ([5.18.171.94])
-        by smtp.gmail.com with ESMTPSA id t1sm4114152lji.98.2020.03.18.03.57.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 03:57:48 -0700 (PDT)
-Received: by uranus.localdomain (Postfix, from userid 1000)
-        id BC321461840; Wed, 18 Mar 2020 13:57:47 +0300 (MSK)
-Date:   Wed, 18 Mar 2020 13:57:47 +0300
-From:   Cyrill Gorcunov <gorcunov@gmail.com>
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 1/4] ns: prepare time namespace for clone3()
-Message-ID: <20200318105747.GP27301@uranus>
-References: <20200317083043.226593-1-areber@redhat.com>
- <20200317083043.226593-2-areber@redhat.com>
+        Wed, 18 Mar 2020 06:58:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726486AbgCRK6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 06:58:20 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEF6520768;
+        Wed, 18 Mar 2020 10:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584529099;
+        bh=MkDsN2Eq2l8VIZO5CKor3u0iTn/XfXUIR6VH4pbo2VE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ABGGj5t1ki/X3Ld4aDl0EVAb5f3hFnHX3kNMM2/faz3vwQmNZJGbLUZtj/rrT+pzB
+         wnO9PlaYuaMngKaY3fHIiq9yPccg5QmVmjyNzug+WtgcNHARXLIU3COndGKK56+vf3
+         8lc7xAs7Qf+niJz+XfsivFYzEC+feoutPzG5ZRNA=
+Date:   Wed, 18 Mar 2020 12:58:15 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Jaewon Kim <jaewon31.kim@samsung.com>
+Cc:     Jaewon Kim <jaewon31.kim@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>, adobriyan@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>, minchan@kernel.org,
+        ngupta@vflare.org, sergey.senozhatsky.work@gmail.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/3] meminfo: introduce extra meminfo
+Message-ID: <20200318105815.GV3351@unreal>
+References: <CGME20200311034454epcas1p2ef0c0081971dd82282583559398e58b2@epcas1p2.samsung.com>
+ <20200311034441.23243-1-jaewon31.kim@samsung.com>
+ <af4ace34-0db2-dd17-351f-eaa806f0a6ac@suse.cz>
+ <20200313174827.GA67638@unreal>
+ <5E6EFB6C.7050105@samsung.com>
+ <20200316083154.GF8510@unreal>
+ <CAJrd-UvttDDSL=q1RXC6Z+jvZAGsN2iM8C8xOSrpJFdLb0e-3g@mail.gmail.com>
+ <20200317143715.GI3351@unreal>
+ <5E71E2CB.4030704@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200317083043.226593-2-areber@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5E71E2CB.4030704@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 09:30:41AM +0100, Adrian Reber wrote:
-...
-> +/*
-> + * This structure is used to set the time namespace offset
-> + * via /proc as well as via clone3().
-> + */
-> +struct set_timens_offset {
-> +	int			clockid;
-> +	struct timespec64	val;
-> +};
-> +
+On Wed, Mar 18, 2020 at 05:58:51PM +0900, Jaewon Kim wrote:
+>
+>
+> On 2020년 03월 17일 23:37, Leon Romanovsky wrote:
+> > On Tue, Mar 17, 2020 at 12:04:46PM +0900, Jaewon Kim wrote:
+> >> 2020년 3월 16일 (월) 오후 5:32, Leon Romanovsky <leon@kernel.org>님이 작성:
+> >>> On Mon, Mar 16, 2020 at 01:07:08PM +0900, Jaewon Kim wrote:
+> >>>>
+> >>>> On 2020년 03월 14일 02:48, Leon Romanovsky wrote:
+> >>>>> On Fri, Mar 13, 2020 at 04:19:36PM +0100, Vlastimil Babka wrote:
+> >>>>>> +CC linux-api, please include in future versions as well
+> >>>>>>
+> >>>>>> On 3/11/20 4:44 AM, Jaewon Kim wrote:
+> >>>>>>> /proc/meminfo or show_free_areas does not show full system wide memory
+> >>>>>>> usage status. There seems to be huge hidden memory especially on
+> >>>>>>> embedded Android system. Because it usually have some HW IP which do not
+> >>>>>>> have internal memory and use common DRAM memory.
+> >>>>>>>
+> >>>>>>> In Android system, most of those hidden memory seems to be vmalloc pages
+> >>>>>>> , ion system heap memory, graphics memory, and memory for DRAM based
+> >>>>>>> compressed swap storage. They may be shown in other node but it seems to
+> >>>>>>> useful if /proc/meminfo shows all those extra memory information. And
+> >>>>>>> show_mem also need to print the info in oom situation.
+> >>>>>>>
+> >>>>>>> Fortunately vmalloc pages is alread shown by commit 97105f0ab7b8
+> >>>>>>> ("mm: vmalloc: show number of vmalloc pages in /proc/meminfo"). Swap
+> >>>>>>> memory using zsmalloc can be seen through vmstat by commit 91537fee0013
+> >>>>>>> ("mm: add NR_ZSMALLOC to vmstat") but not on /proc/meminfo.
+> >>>>>>>
+> >>>>>>> Memory usage of specific driver can be various so that showing the usage
+> >>>>>>> through upstream meminfo.c is not easy. To print the extra memory usage
+> >>>>>>> of a driver, introduce following APIs. Each driver needs to count as
+> >>>>>>> atomic_long_t.
+> >>>>>>>
+> >>>>>>> int register_extra_meminfo(atomic_long_t *val, int shift,
+> >>>>>>>                      const char *name);
+> >>>>>>> int unregister_extra_meminfo(atomic_long_t *val);
+> >>>>>>>
+> >>>>>>> Currently register ION system heap allocator and zsmalloc pages.
+> >>>>>>> Additionally tested on local graphics driver.
+> >>>>>>>
+> >>>>>>> i.e) cat /proc/meminfo | tail -3
+> >>>>>>> IonSystemHeap:    242620 kB
+> >>>>>>> ZsPages:          203860 kB
+> >>>>>>> GraphicDriver:    196576 kB
+> >>>>>>>
+> >>>>>>> i.e.) show_mem on oom
+> >>>>>>> <6>[  420.856428]  Mem-Info:
+> >>>>>>> <6>[  420.856433]  IonSystemHeap:32813kB ZsPages:44114kB GraphicDriver::13091kB
+> >>>>>>> <6>[  420.856450]  active_anon:957205 inactive_anon:159383 isolated_anon:0
+> >>>>>> I like the idea and the dynamic nature of this, so that drivers not present
+> >>>>>> wouldn't add lots of useless zeroes to the output.
+> >>>>>> It also makes simpler the decisions of "what is important enough to need its own
+> >>>>>> meminfo entry".
+> >>>>>>
+> >>>>>> The suggestion for hunting per-driver /sys files would only work if there was a
+> >>>>>> common name to such files so once can find(1) them easily.
+> >>>>>> It also doesn't work for the oom/failed alloc warning output.
+> >>>>> Of course there is a need to have a stable name for such an output, this
+> >>>>> is why driver/core should be responsible for that and not drivers authors.
+> >>>>>
+> >>>>> The use case which I had in mind slightly different than to look after OOM.
+> >>>>>
+> >>>>> I'm interested to optimize our drivers in their memory footprint to
+> >>>>> allow better scale in SR-IOV mode where one device creates many separate
+> >>>>> copies of itself. Those copies easily can take gigabytes of RAM due to
+> >>>>> the need to optimize for high-performance networking. Sometimes the
+> >>>>> amount of memory and not HW is actually limits the scale factor.
+> >>>>>
+> >>>>> So I would imagine this feature being used as an aid for the driver
+> >>>>> developers and not for the runtime decisions.
+> >>>>>
+> >>>>> My 2-cents.
+> >>>>>
+> >>>>> Thanks
+> >>>>>
+> >>>>>
+> >>>> Thank you for your comment.
+> >>>> My idea, I think, may be able to help each driver developer to see their memory usage.
+> >>>> But I'd like to see overall memory usage through the one node.
+> >>> It is more than enough :).
+> >>>
+> >>>> Let me know if you have more comment.
+> >>>> I am planning to move my logic to be shown on a new node, /proc/meminfo_extra at v2.
+> >>> Can you please help me to understand how that file will look like once
+> >>> many drivers will start to use this interface? Will I see multiple
+> >>> lines?
+> >>>
+> >>> Something like:
+> >>> driver1 ....
+> >>> driver2 ....
+> >>> driver3 ....
+> >>> ...
+> >>> driver1000 ....
+> >>>
+> >>> How can we extend it to support subsystems core code?
+> >> I do not have a plan to support subsystem core.
+> > Fair enough.
+> >
+> >> I just want the /proc/meminfo_extra to show size of alloc_pages APIs
+> >> rather than slub size. It is to show hidden huge memory.
+> >> I think most of drivers do not need to register its size to
+> >> /proc/meminfo_extra because
+> >> drivers usually use slub APIs and rather than alloc_pages APIs.
+> >> /proc/slabinfo helps for slub size in detail.
+> > The problem with this statement that the drivers that consuming memory
+> > are the ones who are interested in this interface. I can be not accurate
+> > here, but I think that all RDMA and major NICs will want to get this
+> > information.
+> >
+> > On my machine, it is something like 6 devices.
+> >
+> >> As a candidate of /proc/meminfo_extra, I hope only few drivers using
+> >> huge memory like over 100 MB got from alloc_pages APIs.
+> >>
+> >> As you say, if there is a static node on /sys for each driver, it may
+> >> be used for all the drivers.
+> >> I think sysfs class way may be better to show categorized sum size.
+> >> But /proc/meminfo_extra can be another way to show those hidden huge memory.
+> >> I mean your idea and my idea is not exclusive.
+> > It is just better to have one interface.
+> Sorry about that one interface.
+>
+> If we need to create a-meminfo_extra-like node on /sysfs, then
+> I think further discussion with more people is needed.
+> If there is no logical problem on creating /proc/meminfo_extra,
+> I'd like to prepare v2 patch and get more comment on that v2
+> patch. Please help again for further discussion.
 
-I'm sorry, I didn't follow this series much so can't comment right now.
-Still this structure made me a bit wonder -- the @val seems to be 8 byte
-aligned and I guess we have a useless pad between these members. If so
-can we swap them? Or it is already part of api?
+No problem, but can you please the summary of that discussion in the
+cover letter of v2 and add Greg KH as the driver/core maintainer?
+
+It will save from us to go in circles.
+
+Thanks
+
+>
+> Thank you
+> >
+> >> Thank you
+> >>> Thanks
+> >>>
+> >>>> Thank you
+> >>>> Jaewon Kim
+> >
+>
