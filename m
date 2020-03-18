@@ -2,124 +2,105 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD7DC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DADC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE742076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2C52077C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 09:54:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qnMfDccG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbgCRJxD (ORCPT
+        id S1727511AbgCRJyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 05:53:03 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60706 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726786AbgCRJxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 05:53:02 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D795AB3176922763EE12;
-        Wed, 18 Mar 2020 17:52:22 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 18 Mar 2020
- 17:52:16 +0800
-Subject: Re: [PATCH] block, bfq: fix use-after-free in
- bfq_idle_slice_timer_body
-To:     Paolo Valente <paolo.valente@linaro.org>
-CC:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>, renxudong <renxudong1@huawei.com>,
-        Louhongxiang <louhongxiang@huawei.com>
-References: <6c0d0b36-751b-a63a-418b-888a88ce58f4@huawei.com>
- <C69604D5-CBB7-4A5F-AD73-7A9C0B6B3360@linaro.org>
- <0a6e190a-3393-53f9-b127-d57d67cdcdc8@huawei.com>
- <4171EF13-7956-44DA-A5BF-0245E4926436@linaro.org>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <241f9766-bfe6-485a-331c-fdc693738ffc@huawei.com>
-Date:   Wed, 18 Mar 2020 17:52:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <4171EF13-7956-44DA-A5BF-0245E4926436@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+        Wed, 18 Mar 2020 05:54:18 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:52007 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726786AbgCRJyS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 05:54:18 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584525258; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=78NW6MNOkJx39ThDhsqaw3fGUuX3C/kjkgZ8D3avYQo=; b=qnMfDccGOW8FoUMETMxl5mfpWpG0e6zUc3jVsr9ZWy6Sw3w82zxjGRBsTnrstKJ2J6Yvg7S5
+ WoJszD/AWz/FdegZQ/4bdBH1AHDwyH4A307TEICyn38Jvw4iFoWInBV85rd0AFwVKOd8kXuL
+ xPrPzf+O3seE6+k04g2qmbjQIec=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e71efbc.7f1bdb071068-smtp-out-n05;
+ Wed, 18 Mar 2020 09:54:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 50DC4C432C2; Wed, 18 Mar 2020 09:54:03 +0000 (UTC)
+Received: from maggarwa-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: maggarwa)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E171FC433CB;
+        Wed, 18 Mar 2020 09:54:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E171FC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=maggarwa@codeaurora.org
+From:   Mohit Aggarwal <maggarwa@codeaurora.org>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc:     Mohit Aggarwal <maggarwa@codeaurora.org>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] rtc-pm8xxx: Clear Alarm register on resume
+Date:   Wed, 18 Mar 2020 15:23:38 +0530
+Message-Id: <1584525218-14719-1-git-send-email-maggarwa@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently, alarm register is not cleared on resume
+leading to reboot during power off charging mode.
 
+Signed-off-by: Mohit Aggarwal <maggarwa@codeaurora.org>
+---
+ drivers/rtc/rtc-pm8xxx.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-On 2020/3/18 16:45, Paolo Valente wrote:
-> 
-> 
->>>> 	spin_lock_irqsave(&bfqd->lock, flags);
->>>> -	bfq_clear_bfqq_wait_request(bfqq);
->>>> -
->>>> 	if (bfqq != bfqd->in_service_queue) {
->>>> 		spin_unlock_irqrestore(&bfqd->lock, flags);
->>>> 		return;
->>>> 	}
->>>>
->>>> +	bfq_clear_bfqq_wait_request(bfqq);
->>>> +
->>>
->>> Please add a comment on why you (correctly) clear this flag only if bfqq is in service.
->>>
->>> For the rest, seems ok to me.
->>>
->>> Thank you very much for spotting and fixing this bug,
->>> Paolo
->>>
->> Thanks for your reply.
->> Considering that the bfqq may be in race, we should firstly check whether bfqq is in service before
->> doing something on it.
->>
-> 
-> The comment you propose is correct, but the correctness issue I raised
-> is essentially the opposite.  Sorry for not being clear.
-> 
-> Let me put it the other way round: why is it still correct that, if
-> bfqq is not the queue in service, then that flag is not cleared at all?
-> IOW, why is it not a problem that that flag remains untouched is bfqq
-> is not in service?
-> 
-> Thanks,
-> Paolo
-> 
-Thanks for your patient.
-As you comment in bfq_idle_slice_timer, there are two race situations as follows,
-a) bfqq is null
-   bfq_idle_slice_timer will not call bfq_idle_slice_timer_body ->no problem
-b) bfqq are not in service
-   1) bfqq is freed
-      it will cause use-after-free problem before calling bfq_clear_bfqq_wait_request
-      in bfq_idle_slice_timer_body. -> use-after-free problem as analyzed in the patch.
-   2) bfqq is not freed
-      it means in_service_queue has been set to a new bfqq. The old bfqq has been expired
-      through __bfq_bfqq_expire func. Then the wait_request flags of old bfqq will be cleared
-      in __bfq_bfqd_reset_in_service func. -> it is no a problem to re-clear the wait_request
-      flags before checking whether bfqq is in service.
-
-In one word, the old bfqq in race has already cleared the wait_request flag when switching in_service_queue.
-
-Thanks,
-Zhiqiang Liu
-
->>>>
->>>
->>>
->>> .
-> 
-> 
-> .
-> 
-
+diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
+index bbe013f..bfcd878 100644
+--- a/drivers/rtc/rtc-pm8xxx.c
++++ b/drivers/rtc/rtc-pm8xxx.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+-/* Copyright (c) 2010-2011, 2019, The Linux Foundation. All rights reserved. */
++/* Copyright (c) 2010-2011, 2019-2020, The Linux Foundation. All rights reserved. */
+ 
+ #include <linux/of.h>
+ #include <linux/module.h>
+@@ -301,6 +301,7 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
+ 	struct pm8xxx_rtc *rtc_dd = dev_get_drvdata(dev);
+ 	const struct pm8xxx_rtc_regs *regs = rtc_dd->regs;
+ 	unsigned int ctrl_reg;
++	u8 value[NUM_8_BIT_RTC_REGS] = {0};
+ 
+ 	spin_lock_irqsave(&rtc_dd->ctrl_reg_lock, irq_flags);
+ 
+@@ -319,6 +320,16 @@ static int pm8xxx_rtc_alarm_irq_enable(struct device *dev, unsigned int enable)
+ 		goto rtc_rw_fail;
+ 	}
+ 
++	/* Clear Alarm register */
++	if (!enable) {
++		     rc = regmap_bulk_write(rtc_dd->regmap, regs->alarm_rw, value,
++					sizeof(value));
++		     if (rc) {
++			     dev_err(dev, "Write to RTC ALARM register failed\n");
++			     goto rtc_rw_fail;
++		     }
++	}
++
+ rtc_rw_fail:
+ 	spin_unlock_irqrestore(&rtc_dd->ctrl_reg_lock, irq_flags);
+ 	return rc;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
