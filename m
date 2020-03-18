@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD00C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31C1C4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B954B20773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7008820409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565425;
-	bh=aT7inr3kbkcrO/yezXU9W+OrYI6fOi2oIoeNDjMUW10=;
+	s=default; t=1584565437;
+	bh=I41Sg0VH3MhQ8yN+hre0/s5r5x55aDp8n7eIk54CK5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WurYXGxxLLjcuHxdIKUqYvHFx/p7qBdM7Uu6TH3g28P7CpF4C0mpATXxLBQUHO1ax
-	 v6S2BKJTyRfzRp6bNCbJVzRkHnnhbypCHyYZJIUG4Cd435jgpWgoyBjCTpKENXONas
-	 iSbP+0AfBmMMeTMZfcaqvLctKOAmKXU4+nNU5osI=
+	b=Gq4vBMosN4SPkZeunJ97A5qpQEqkd6F3QV2HTJU4nUeBkPpwPdHbISx/Tl0+qSecj
+	 bw026mHz++Y0x7zc0DUkf2OfTYfp1yfQjP52eyVdc8n/ZlaoC2G4hGLqmtXLSOjoCd
+	 HbcRuknBZZ1PCU+RB/aDzxSm2gb+D/6nX0Rfl9Ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgCRVDn (ORCPT
+        id S1728910AbgCRVD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:03:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55928 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 17:03:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgCRUzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:31 -0400
+        id S1728327AbgCRUz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:55:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5E9A20B1F;
-        Wed, 18 Mar 2020 20:55:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DD47208FE;
+        Wed, 18 Mar 2020 20:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564930;
-        bh=aT7inr3kbkcrO/yezXU9W+OrYI6fOi2oIoeNDjMUW10=;
+        s=default; t=1584564929;
+        bh=I41Sg0VH3MhQ8yN+hre0/s5r5x55aDp8n7eIk54CK5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bh49jOOtMk4hO9SpuQE8IEZSFTHkwfe45PZnPIf6oYGHpANM4hhpHG9YyJR73FmVM
-         VlA05W6TngrvwEP1MZg923l1v+pg+8YoLxYIVqv8MopvfcmcLE4ahSyPbbIsAkv77v
-         J2pJ2naqanqPvA1i+weBZPwLJNLeUisAU7pztkJM=
+        b=og5iBccPkMD8XqUHRsiS9KonVy+ZL7/TZ9plCm3D/cDUoHUsJBQFg+bIu8o1jBKy5
+         Y+YGGrz2ISXqWRBvfnmjEuOd23ACm89NvRnMghL8rU4si/zSOvDTCEiv80NRNLZJVS
+         ZhQcIK23Zc1D0K0AYSXX9la5C+ogj9HfikS6gZAg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jakub Kicinski <kuba@kernel.org>,
@@ -46,9 +46,9 @@ Cc:     Jakub Kicinski <kuba@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/37] netfilter: nft_tunnel: add missing attribute validation for tunnels
-Date:   Wed, 18 Mar 2020 16:54:49 -0400
-Message-Id: <20200318205509.17053-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 16/37] netfilter: nft_payload: add missing attribute validation for payload csum flags
+Date:   Wed, 18 Mar 2020 16:54:48 -0400
+Message-Id: <20200318205509.17053-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
 References: <20200318205509.17053-1-sashal@kernel.org>
@@ -63,32 +63,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 88a637719a1570705c02cacb3297af164b1714e7 ]
+[ Upstream commit 9d6effb2f1523eb84516e44213c00f2fd9e6afff ]
 
-Add missing attribute validation for tunnel source and
-destination ports to the netlink policy.
+Add missing attribute validation for NFTA_PAYLOAD_CSUM_FLAGS
+to the netlink policy.
 
-Fixes: af308b94a2a4 ("netfilter: nf_tables: add tunnel support")
+Fixes: 1814096980bb ("netfilter: nft_payload: layer 4 checksum adjustment for pseudoheader fields")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_tunnel.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/netfilter/nft_payload.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/nft_tunnel.c b/net/netfilter/nft_tunnel.c
-index 1c6d15ea76d4a..8ae948fd9dcfc 100644
---- a/net/netfilter/nft_tunnel.c
-+++ b/net/netfilter/nft_tunnel.c
-@@ -308,6 +308,8 @@ static const struct nla_policy nft_tunnel_key_policy[NFTA_TUNNEL_KEY_MAX + 1] =
- 	[NFTA_TUNNEL_KEY_FLAGS]	= { .type = NLA_U32, },
- 	[NFTA_TUNNEL_KEY_TOS]	= { .type = NLA_U8, },
- 	[NFTA_TUNNEL_KEY_TTL]	= { .type = NLA_U8, },
-+	[NFTA_TUNNEL_KEY_SPORT]	= { .type = NLA_U16, },
-+	[NFTA_TUNNEL_KEY_DPORT]	= { .type = NLA_U16, },
- 	[NFTA_TUNNEL_KEY_OPTS]	= { .type = NLA_NESTED, },
+diff --git a/net/netfilter/nft_payload.c b/net/netfilter/nft_payload.c
+index e110b0ebbf58b..19446a89a2a81 100644
+--- a/net/netfilter/nft_payload.c
++++ b/net/netfilter/nft_payload.c
+@@ -121,6 +121,7 @@ static const struct nla_policy nft_payload_policy[NFTA_PAYLOAD_MAX + 1] = {
+ 	[NFTA_PAYLOAD_LEN]		= { .type = NLA_U32 },
+ 	[NFTA_PAYLOAD_CSUM_TYPE]	= { .type = NLA_U32 },
+ 	[NFTA_PAYLOAD_CSUM_OFFSET]	= { .type = NLA_U32 },
++	[NFTA_PAYLOAD_CSUM_FLAGS]	= { .type = NLA_U32 },
  };
  
+ static int nft_payload_init(const struct nft_ctx *ctx,
 -- 
 2.20.1
 
