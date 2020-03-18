@@ -2,93 +2,232 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA903C5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C25ACC5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B538120768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:00:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584525632;
-	bh=5c2FXHcEPPONO3hnWx4jiIZQLap5qdvdpB6yL1YUluI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WuoqJxJJ5zoRV8qpQ4DnpJO16R3JirdM9knnIqzz5LEn4eSUj8pMplhHHSPxrRXNB
-	 BD5ERZd4DoZHltFvwXDnzGvO8cKdc++U/6VbjwLkNIFIZVtnZ37XpZItMCnORF6zEH
-	 yq01rCyAc/9Yln+CeoIGjKgIewmkYKz9EODq0v8U=
+	by mail.kernel.org (Postfix) with ESMTP id 8932D20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 10:01:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hSCslElY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbgCRKAb (ORCPT
+        id S1727590AbgCRKB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 06:00:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgCRKAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 06:00:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 18 Mar 2020 06:01:57 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:34284 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727281AbgCRKB5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 06:01:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584525715;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fIDPv0twhcfXNaP20R9DWcbGavIfGu/f+ml33xGXCTs=;
+        b=hSCslElYCYSQotwnLrH+x00JxZPuEFSFi8fSUQ6x2+mDxD6hIcuCXufepSbJ8FgK1eKVTe
+        5OGi2rL8NcKoF52evvgrQZS6KcaIft/O85iKh9jt8Rpnd4FkW5yXtSk3j+LLhMFcG7VCsY
+        OPNsJOJIswcNsGOu28Eewy164EfFUSY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-468-uRccquc5MfuCMZc-AM7fBg-1; Wed, 18 Mar 2020 06:01:51 -0400
+X-MC-Unique: uRccquc5MfuCMZc-AM7fBg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5D6E20767;
-        Wed, 18 Mar 2020 10:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584525630;
-        bh=5c2FXHcEPPONO3hnWx4jiIZQLap5qdvdpB6yL1YUluI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rQ55VDnayXBKYbZlpDqzWlFoBpLE2SJSfBAI07qcmpPDPIxACE3tOLkMYYvmQhVrJ
-         2INnIpg+9K1FwONwSQFNZPUJ6yp2gFy5TZhpZaA5KExVkATDCcz6nLGGSEnqI45DKu
-         NMF6suP5B1POriGrISPYbtMqrelH4by09r/LZVRQ=
-Date:   Wed, 18 Mar 2020 11:00:26 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 5.5 000/151] 5.5.10-rc1 review
-Message-ID: <20200318100026.GC2034476@kroah.com>
-References: <20200317103326.593639086@linuxfoundation.org>
- <CA+G9fYsNxuHUFmPwOn9JmJN+-NM1TF-io8SnSs+XehCB+vrTEw@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B6A2E8026B0;
+        Wed, 18 Mar 2020 10:01:49 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-30.pek2.redhat.com [10.72.8.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F3C805C545;
+        Wed, 18 Mar 2020 10:01:27 +0000 (UTC)
+Date:   Wed, 18 Mar 2020 18:01:23 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Baolin Wang <baolin.wang7@gmail.com>
+Cc:     axboe@kernel.dk, paolo.valente@linaro.org, ulf.hansson@linaro.org,
+        adrian.hunter@intel.com, arnd@arndb.de, linus.walleij@linaro.org,
+        orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        linux-mmc@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND RFC PATCH 2/8] block: Allow sending a batch of requests
+ from the scheduler to hardware
+Message-ID: <20200318100123.GA27531@ming.t460p>
+References: <cover.1584350380.git.baolin.wang7@gmail.com>
+ <c2e62e5a9942fb833dfc0cdc8c967a12f3c34b03.1584350380.git.baolin.wang7@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYsNxuHUFmPwOn9JmJN+-NM1TF-io8SnSs+XehCB+vrTEw@mail.gmail.com>
+In-Reply-To: <c2e62e5a9942fb833dfc0cdc8c967a12f3c34b03.1584350380.git.baolin.wang7@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 01:51:56AM +0530, Naresh Kamboju wrote:
-> On Tue, 17 Mar 2020 at 16:37, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.5.10 release.
-> > There are 151 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Thu, 19 Mar 2020 10:31:16 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.10-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
+On Mon, Mar 16, 2020 at 06:01:19PM +0800, Baolin Wang wrote:
+> As we know, some SD/MMC host controllers can support packed request,
+> that means we can package several requests to host controller at one
+> time to improve performence. So the hardware driver expects the blk-mq
+> can dispatch a batch of requests at one time, and driver can use bd.last
+> to indicate if it is the last request in the batch to help to combine
+> requests as much as possible.
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> Thus we should add batch requests setting from the block driver to tell
+> the scheduler how many requests can be dispatched in a batch, as well
+> as changing the scheduler to dispatch more than one request if setting
+> the maximum batch requests number.
+> 
 
-Thanks for testing all of these and letting me know.
+I feel this batch dispatch style is more complicated, and some other
+drivers(virtio blk/scsi) still may get benefit if we can pass real 'last' flag in
+.queue_rq().
 
-greg k-h
+So what about the following way by extending .commit_rqs() to this usage?
+And you can do whatever batch processing in .commit_rqs() which will be
+guaranteed to be called if BLK_MQ_F_FORCE_COMMIT_RQS is set by driver.
+
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 856356b1619e..cd2bbe56f83f 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -85,11 +85,12 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+  * its queue by itself in its completion handler, so we don't need to
+  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
+  */
+-static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
++static bool blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	struct elevator_queue *e = q->elevator;
+ 	LIST_HEAD(rq_list);
++	bool ret = false;
+ 
+ 	do {
+ 		struct request *rq;
+@@ -112,7 +113,10 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ 		 * in blk_mq_dispatch_rq_list().
+ 		 */
+ 		list_add(&rq->queuelist, &rq_list);
+-	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
++		ret = blk_mq_dispatch_rq_list(q, &rq_list, true);
++	} while (ret);
++
++	return ret;
+ }
+ 
+ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+@@ -131,11 +135,12 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+  * its queue by itself in its completion handler, so we don't need to
+  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
+  */
+-static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
++static bool blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	LIST_HEAD(rq_list);
+ 	struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
++	bool ret = false;
+ 
+ 	do {
+ 		struct request *rq;
+@@ -161,10 +166,12 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+ 
+ 		/* round robin for fair dispatch */
+ 		ctx = blk_mq_next_ctx(hctx, rq->mq_ctx);
+-
+-	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
++		ret = blk_mq_dispatch_rq_list(q, &rq_list, true);
++	} while (ret);
+ 
+ 	WRITE_ONCE(hctx->dispatch_from, ctx);
++
++	return ret;
+ }
+ 
+ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+@@ -173,6 +180,7 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 	struct elevator_queue *e = q->elevator;
+ 	const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
+ 	LIST_HEAD(rq_list);
++	bool dispatch_ret;
+ 
+ 	/* RCU or SRCU read lock is needed before checking quiesced flag */
+ 	if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)))
+@@ -206,20 +214,26 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 	 */
+ 	if (!list_empty(&rq_list)) {
+ 		blk_mq_sched_mark_restart_hctx(hctx);
+-		if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
++		dispatch_ret = blk_mq_dispatch_rq_list(q, &rq_list, false);
++		if (dispatch_ret) {
+ 			if (has_sched_dispatch)
+-				blk_mq_do_dispatch_sched(hctx);
++				dispatch_ret = blk_mq_do_dispatch_sched(hctx);
+ 			else
+-				blk_mq_do_dispatch_ctx(hctx);
++				dispatch_ret = blk_mq_do_dispatch_ctx(hctx);
+ 		}
+ 	} else if (has_sched_dispatch) {
+-		blk_mq_do_dispatch_sched(hctx);
++		dispatch_ret = blk_mq_do_dispatch_sched(hctx);
+ 	} else if (hctx->dispatch_busy) {
+ 		/* dequeue request one by one from sw queue if queue is busy */
+-		blk_mq_do_dispatch_ctx(hctx);
++		dispatch_ret = blk_mq_do_dispatch_ctx(hctx);
+ 	} else {
+ 		blk_mq_flush_busy_ctxs(hctx, &rq_list);
+-		blk_mq_dispatch_rq_list(q, &rq_list, false);
++		dispatch_ret = blk_mq_dispatch_rq_list(q, &rq_list, false);
++	}
++
++	if (dispatch_ret) {
++		if (hctx->flags & BLK_MQ_F_FORCE_COMMIT_RQS)
++			hctx->queue->mq_ops->commit_rqs(hctx);
+ 	}
+ }
+ 
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 87c6699f35ae..9b46f5d6c7fd 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1238,11 +1238,15 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
+ 		 * Flag last if we have no more requests, or if we have more
+ 		 * but can't assign a driver tag to it.
+ 		 */
+-		if (list_empty(list))
+-			bd.last = true;
+-		else {
+-			nxt = list_first_entry(list, struct request, queuelist);
+-			bd.last = !blk_mq_get_driver_tag(nxt);
++		if (!(hctx->flags & BLK_MQ_F_FORCE_COMMIT_RQS)) {
++			if (list_empty(list))
++				bd.last = true;
++			else {
++				nxt = list_first_entry(list, struct request, queuelist);
++				bd.last = !blk_mq_get_driver_tag(nxt);
++			}
++		} else {
++			bd.last = false;
+ 		}
+ 
+ 		ret = q->mq_ops->queue_rq(hctx, &bd);
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 07fa767bff86..c0ef6990b698 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -394,6 +394,7 @@ enum {
+ 	BLK_MQ_F_SHOULD_MERGE	= 1 << 0,
+ 	BLK_MQ_F_TAG_SHARED	= 1 << 1,
+ 	BLK_MQ_F_NO_MANAGED_IRQ	= 1 << 2,
++	BLK_MQ_F_FORCE_COMMIT_RQS = 1 << 3,
+ 	BLK_MQ_F_BLOCKING	= 1 << 5,
+ 	BLK_MQ_F_NO_SCHED	= 1 << 6,
+ 	BLK_MQ_F_ALLOC_POLICY_START_BIT = 8,
+
+Thanks, 
+Ming
+
