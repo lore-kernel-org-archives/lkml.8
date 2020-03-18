@@ -2,85 +2,90 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CA6C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B9DC5ACD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B338F20770
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1990A20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 15:14:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OixeC8J5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbgCRPNs (ORCPT
+        id S1727175AbgCRPOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 11:13:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726866AbgCRPNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 11:13:48 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 18 Mar 2020 11:14:37 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:40664 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727035AbgCRPOg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 11:14:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584544475;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rDahFV9TPWnSHYGEo4pu2LmiluREcgL9pHQHEehqYmE=;
+        b=OixeC8J5rWvPM1HvR4PADk47xq4+qPr5lrz4KoHSeL30EOX9RKsD7nfzdj1wrhdV5wxf5B
+        u5IDcKW6ceyVQdpR1XWgAWqwJqYwzTISc/dgEiEWMBKjNfTMAvrYrmzkfEFt8OB5y+tCEB
+        g/ag96fPTgyi4laZED0PaMe6mluUgsY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-115-zLovBwwuOPCXLkjvjN2tvw-1; Wed, 18 Mar 2020 11:14:34 -0400
+X-MC-Unique: zLovBwwuOPCXLkjvjN2tvw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11F6F20757;
-        Wed, 18 Mar 2020 15:13:46 +0000 (UTC)
-Date:   Wed, 18 Mar 2020 11:13:45 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Shuah Khan <shuahkhan@gmail.com>
-Subject: [RFC][PATCH 12/11] selftest/ftrace: Fix function trigger test to
- handle trace not disabling the tracer
-Message-ID: <20200318111345.0516642e@gandalf.local.home>
-In-Reply-To: <20200317213222.421100128@goodmis.org>
-References: <20200317213222.421100128@goodmis.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97683107ACC7;
+        Wed, 18 Mar 2020 15:14:31 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0851A5C1D8;
+        Wed, 18 Mar 2020 15:14:25 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <e47bef56-9271-93e0-0e59-c77c253babea@redhat.com>
+References: <e47bef56-9271-93e0-0e59-c77c253babea@redhat.com> <20200317194140.6031-5-longman@redhat.com> <20200317194140.6031-1-longman@redhat.com> <2832139.1584520054@warthog.procyon.org.uk>
+To:     Waiman Long <longman@redhat.com>
+Cc:     dhowells@redhat.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH v4 4/4] KEYS: Avoid false positive ENOMEM error on key read
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2866041.1584544464.1@warthog.procyon.org.uk>
+Date:   Wed, 18 Mar 2020 15:14:24 +0000
+Message-ID: <2866042.1584544464@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Waiman Long <longman@redhat.com> wrote:
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> Doing this is micro-optimization. As the keys subsystem is that
+> performance critical, do we need to do that to save a cycle or two while
+> making the code a bit harder to read?
 
-The ftrace selftest "ftrace - test for function traceon/off triggers"
-enables all events and reads the trace file. Now that the trace file does
-not disable tracing, and will attempt to continually read new data that is
-added, the selftest gets stuck reading the trace file. This is because the
-data added to the trace file will fill up quicker than the reading of it.
+It was more sort of a musing comment.  Feel free to ignore it.  kvfree()
+doesn't do this.
 
-By only enabling scheduling events, the read can keep up with the writes.
-Instead of enabling all events, only enable the scheduler events.
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- .../selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc  | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
-index 0c04282d33dd..1947387fe976 100644
---- a/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
-+++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_traceonoff_triggers.tc
-@@ -41,7 +41,7 @@ fi
- 
- echo '** ENABLE EVENTS'
- 
--echo 1 > events/enable
-+echo 1 > events/sched/enable
- 
- echo '** ENABLE TRACING'
- enable_tracing
--- 
-2.20.1
-
+David
 
