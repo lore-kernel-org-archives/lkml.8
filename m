@@ -2,56 +2,55 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E469C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689FCC4332D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D910120A8B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B0D208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584564959;
-	bh=686YRKAd4tXgH5ZOv46xNnA79jrJmQXA57XHnRANPoQ=;
+	s=default; t=1584564983;
+	bh=QF/GYMkHLxXCI0oXGqXah6iopHeOKnwoPfvv7v33fx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SfB7FdR3dwWe1EHnJz6g8TAbPgTByjM/IjWs+36DS1a6KuDz45nYT+l2uBTPCuQkU
-	 gIn/n/qXRJJLo4G4Gtr+WsIKgReki9Oo4eoi2q+IUb/WD50naJtMpkgMcs9HVXkEio
-	 VAEJFznoZknzSJer2zc7CGOTw37OD2w32D2tYapY=
+	b=NAZ1wYW0dLnMIMCgX9foBORVamo3RgLlOsM0eA4UXsAl52Ja6L4GhhbhQ02fn5Mi+
+	 vMui7KkNzmJx9QqC3Fk+Z49wSnGNtI+5W+1sxTyUX5P0t/NcJL1u2iJNy/wTjIJxgn
+	 jM/jgO1KQLP9LcmO3e3Ki9YnJ3YxYU6dZbj4bayM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgCRUz5 (ORCPT
+        id S1728590AbgCRU4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:55:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56348 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728465AbgCRUzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:49 -0400
+        id S1726961AbgCRU4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:56:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D1F520A8B;
-        Wed, 18 Mar 2020 20:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 103A420A8B;
+        Wed, 18 Mar 2020 20:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564949;
-        bh=686YRKAd4tXgH5ZOv46xNnA79jrJmQXA57XHnRANPoQ=;
+        s=default; t=1584564961;
+        bh=QF/GYMkHLxXCI0oXGqXah6iopHeOKnwoPfvv7v33fx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cJ9jcOzzcOqdhtFCcecw/wRZpR/4JP8pI9nzZ/aNddrYKiw7RyCdKekdkJ+E5DRrj
-         66vLEA6ktvyOQIlluPL1UePuJTHxq5pOMCHM8pJGEWBalwpQYNFqFQgyqcU6uj0nmu
-         L1QUg9AUajLfSTqcs6YFzRZINX/Yn4jdG48940ak=
+        b=jkSiSj/Sg18f6YKXn7JRz8KdjAYvl9n6ujYjy8lkUmcThvpz8txi5H/YqeGpU51VO
+         21BddRA8dH+XMzFXNjZNNWMLeDuV8JWUM53DMLQm2PYWmuf+d+owI9FRvW8iuj8L/S
+         RGkKaGwOEv3Ovl4nHl9ehFXYFaND+/pzmqLuZjQg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+Cc:     You-Sheng Yang <vicamo.yang@canonical.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 33/37] dpaa_eth: Remove unnecessary boolean expression in dpaa_get_headroom
-Date:   Wed, 18 Mar 2020 16:55:05 -0400
-Message-Id: <20200318205509.17053-33-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/28] r8152: check disconnect status after long sleep
+Date:   Wed, 18 Mar 2020 16:55:32 -0400
+Message-Id: <20200318205555.17447-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
-References: <20200318205509.17053-1-sashal@kernel.org>
+In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
+References: <20200318205555.17447-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,55 +60,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: You-Sheng Yang <vicamo.yang@canonical.com>
 
-[ Upstream commit 7395f62d95aafacdb9bd4996ec2f95b4a655d7e6 ]
+[ Upstream commit d64c7a08034b32c285e576208ae44fc3ba3fa7df ]
 
-Clang warns:
+Dell USB Type C docking WD19/WD19DC attaches additional peripherals as:
 
-drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:2860:9: warning:
-converting the result of '?:' with integer constants to a boolean always
-evaluates to 'true' [-Wtautological-constant-compare]
-        return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
-               ^
-drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:131:34: note: expanded
-from macro 'DPAA_FD_DATA_ALIGNMENT'
-\#define DPAA_FD_DATA_ALIGNMENT  (fman_has_errata_a050385() ? 64 : 16)
-                                 ^
-1 warning generated.
+  /: Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
+      |__ Port 1: Dev 11, If 0, Class=Hub, Driver=hub/4p, 5000M
+          |__ Port 3: Dev 12, If 0, Class=Hub, Driver=hub/4p, 5000M
+          |__ Port 4: Dev 13, If 0, Class=Vendor Specific Class,
+              Driver=r8152, 5000M
 
-This was exposed by commit 3c68b8fffb48 ("dpaa_eth: FMan erratum A050385
-workaround") even though it appears to have been an issue since the
-introductory commit 9ad1a3749333 ("dpaa_eth: add support for DPAA
-Ethernet") since DPAA_FD_DATA_ALIGNMENT has never been able to be zero.
+where usb 2-1-3 is a hub connecting all USB Type-A/C ports on the dock.
 
-Just replace the whole boolean expression with the true branch, as it is
-always been true.
+When hotplugging such dock with additional usb devices already attached on
+it, the probing process may reset usb 2.1 port, therefore r8152 ethernet
+device is also reset. However, during r8152 device init there are several
+for-loops that, when it's unable to retrieve hardware registers due to
+being disconnected from USB, may take up to 14 seconds each in practice,
+and that has to be completed before USB may re-enumerate devices on the
+bus. As a result, devices attached to the dock will only be available
+after nearly 1 minute after the dock was plugged in:
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/928
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+  [ 216.388290] [250] r8152 2-1.4:1.0: usb_probe_interface
+  [ 216.388292] [250] r8152 2-1.4:1.0: usb_probe_interface - got id
+  [ 258.830410] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): PHY not ready
+  [ 258.830460] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Invalid header when reading pass-thru MAC addr
+  [ 258.830464] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Get ether addr fail
+
+This happens in, for example, r8153_init:
+
+  static int generic_ocp_read(struct r8152 *tp, u16 index, u16 size,
+			    void *data, u16 type)
+  {
+    if (test_bit(RTL8152_UNPLUG, &tp->flags))
+      return -ENODEV;
+    ...
+  }
+
+  static u16 ocp_read_word(struct r8152 *tp, u16 type, u16 index)
+  {
+    u32 data;
+    ...
+    generic_ocp_read(tp, index, sizeof(tmp), &tmp, type | byen);
+
+    data = __le32_to_cpu(tmp);
+    ...
+    return (u16)data;
+  }
+
+  static void r8153_init(struct r8152 *tp)
+  {
+    ...
+    if (test_bit(RTL8152_UNPLUG, &tp->flags))
+      return;
+
+    for (i = 0; i < 500; i++) {
+      if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+          AUTOLOAD_DONE)
+        break;
+      msleep(20);
+    }
+    ...
+  }
+
+Since ocp_read_word() doesn't check the return status of
+generic_ocp_read(), and the only exit condition for the loop is to have
+a match in the returned value, such loops will only ends after exceeding
+its maximum runs when the device has been marked as disconnected, which
+takes 500 * 20ms = 10 seconds in theory, 14 in practice.
+
+To solve this long latency another test to RTL8152_UNPLUG flag should be
+added after those 20ms sleep to skip unnecessary loops, so that the device
+probe can complete early and proceed to parent port reset/reprobe process.
+
+This can be reproduced on all kernel versions up to latest v5.6-rc2, but
+after v5.5-rc7 the reproduce rate is dramatically lowered to 1/30 or less
+while it was around 1/2.
+
+Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/usb/r8152.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index d7736c9c6339a..4b21ae27a9fde 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -2764,9 +2764,7 @@ static inline u16 dpaa_get_headroom(struct dpaa_buffer_layout *bl)
- 	headroom = (u16)(bl->priv_data_size + DPAA_PARSE_RESULTS_SIZE +
- 		DPAA_TIME_STAMP_SIZE + DPAA_HASH_RESULTS_SIZE);
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index a7f9c1886bd4c..cadf5ded45a9b 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -2696,6 +2696,8 @@ static u16 r8153_phy_status(struct r8152 *tp, u16 desired)
+ 		}
  
--	return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
--					      DPAA_FD_DATA_ALIGNMENT) :
--					headroom;
-+	return ALIGN(headroom, DPAA_FD_DATA_ALIGNMENT);
- }
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
  
- static int dpaa_eth_probe(struct platform_device *pdev)
+ 	return data;
+@@ -4055,7 +4057,10 @@ static void r8153_init(struct r8152 *tp)
+ 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+ 		    AUTOLOAD_DONE)
+ 			break;
++
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
+ 
+ 	data = r8153_phy_status(tp, 0);
+@@ -4170,7 +4175,10 @@ static void r8153b_init(struct r8152 *tp)
+ 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+ 		    AUTOLOAD_DONE)
+ 			break;
++
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
+ 	}
+ 
+ 	data = r8153_phy_status(tp, 0);
 -- 
 2.20.1
 
