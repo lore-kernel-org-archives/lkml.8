@@ -2,27 +2,28 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390F4C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE05DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0301B20768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B022920768
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgCRNVt (ORCPT
+        id S1727070AbgCRNVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:21:49 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44446 "EHLO
+        Wed, 18 Mar 2020 09:21:53 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44456 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgCRNVs (ORCPT
+        with ESMTP id S1726638AbgCRNVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:21:48 -0400
+        Wed, 18 Mar 2020 09:21:53 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: ezequiel)
-        with ESMTPSA id 60E0429661A
+        with ESMTPSA id 8D2D229661B
 From:   Ezequiel Garcia <ezequiel@collabora.com>
 To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
         linux-kernel@vger.kernel.org
@@ -34,11 +35,14 @@ Cc:     Tomasz Figa <tfiga@chromium.org>,
         Alexandre Courbot <acourbot@chromium.org>,
         Jeffrey Kardatzke <jkardatzke@chromium.org>,
         Rob Herring <robh@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 0/8] hantro: set of small cleanups and fixes
-Date:   Wed, 18 Mar 2020 10:21:00 -0300
-Message-Id: <20200318132108.21873-1-ezequiel@collabora.com>
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Subject: [PATCH v2 1/8] v4l2-mem2mem: return CAPTURE buffer first
+Date:   Wed, 18 Mar 2020 10:21:01 -0300
+Message-Id: <20200318132108.21873-2-ezequiel@collabora.com>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200318132108.21873-1-ezequiel@collabora.com>
+References: <20200318132108.21873-1-ezequiel@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,58 +50,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+When the request API is used, typically an OUTPUT (src) buffer
+will be part of a request. A userspace process will be typically
+blocked, waiting on the request file descriptor.
 
-Cleanups and fixes, second iteration.
+Returning the OUTPUT (src) buffer will wake-up such processes,
+who will immediately attempt to dequeue the CAPTURE buffer,
+only to find it's still unavailable.
 
-The main idea here is to address two issues, and while
-at it, clean the driver a bit.
+Therefore, change v4l2_m2m_buf_done_and_job_finish returning
+the CAPTURE (dst) buffer first, to avoid signalling the request
+file descriptor prematurely, i.e. before the CAPTURE buffer is done.
 
-The first issue can be found in Patch 1, when the Request
-API is used, the CAPTURE buffer should be returned _before_
-the OUTPUT buffer, to avoid waking up userspace prematurely.
+When the request API is not used, this change should have
+no impact.
 
-I noticed this issue while working on the rkvdec driver,
-but this time I've decided to tackle it at the core,
-in v4l2_m2m_buf_done_and_job_finish().
+Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+ drivers/media/v4l2-core/v4l2-mem2mem.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-The second issue is a simple compliance issue, which is solved
-by refactoring the driver, dealing with internal set format
-properly.
-
-Changes v2:
-
-* Fix compile warning introduced by patch 6.
-
-* I'm adding two additional patches this time.
-  Patch 7 converts the binding to json-schema,
-  and patch 8 puts linux-rockchip mailing list in MAINTAINERS. 
-
-Thanks,
-Ezequiel
-
-Ezequiel Garcia (8):
-  v4l2-mem2mem: return CAPTURE buffer first
-  hantro: Set buffers' zeroth plane payload in .buf_prepare
-  hantro: Use v4l2_m2m_buf_done_and_job_finish
-  hantro: Remove unneeded hantro_dec_buf_finish
-  hantro: Move H264 motion vector calculation to a helper
-  hantro: Refactor for V4L2 API spec compliancy
-  dt-bindings: rockchip-vpu: Convert bindings to json-schema
-  hantro: Add linux-rockchip mailing list to MAINTAINERS
-
- .../bindings/media/rockchip-vpu.txt           |  43 -------
- .../bindings/media/rockchip-vpu.yaml          |  82 +++++++++++++
- MAINTAINERS                                   |   3 +-
- drivers/media/v4l2-core/v4l2-mem2mem.c        |  11 +-
- drivers/staging/media/hantro/hantro.h         |   7 +-
- drivers/staging/media/hantro/hantro_drv.c     |  37 ++----
- drivers/staging/media/hantro/hantro_hw.h      |  31 +++++
- drivers/staging/media/hantro/hantro_v4l2.c    | 111 +++++++++---------
- 8 files changed, 194 insertions(+), 131 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-
+diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
+index 8986c31176e9..62ac9424c92a 100644
+--- a/drivers/media/v4l2-core/v4l2-mem2mem.c
++++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+@@ -504,12 +504,21 @@ void v4l2_m2m_buf_done_and_job_finish(struct v4l2_m2m_dev *m2m_dev,
+ 
+ 	if (WARN_ON(!src_buf || !dst_buf))
+ 		goto unlock;
+-	v4l2_m2m_buf_done(src_buf, state);
+ 	dst_buf->is_held = src_buf->flags & V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
+ 	if (!dst_buf->is_held) {
+ 		v4l2_m2m_dst_buf_remove(m2m_ctx);
+ 		v4l2_m2m_buf_done(dst_buf, state);
+ 	}
++	/*
++	 * If the request API is being used, returning the OUTPUT
++	 * (src) buffer will wake-up any process waiting on the
++	 * request file descriptor.
++	 *
++	 * Therefore, return the CAPTURE (dst) buffer first,
++	 * to avoid signalling the request file descriptor
++	 * before the CAPTURE buffer is done.
++	 */
++	v4l2_m2m_buf_done(src_buf, state);
+ 	schedule_next = _v4l2_m2m_job_finish(m2m_dev, m2m_ctx);
+ unlock:
+ 	spin_unlock_irqrestore(&m2m_dev->job_spinlock, flags);
 -- 
 2.25.0
 
