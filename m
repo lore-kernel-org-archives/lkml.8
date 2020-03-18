@@ -2,56 +2,56 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B22C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB3AC4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D8520A8B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABB5208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565111;
-	bh=I2oYdk8F22AfoJfmc1204FRw4JaaneDeqgX+3KuBpV0=;
+	s=default; t=1584565113;
+	bh=wX77u3Iu7CzdmteVdcnCZC7NOOHtdLSWOkJXPhZcwkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y28k/S7ZKaIWcM+ot0NxIDFXNDsMUw16fD5HS7Hh2ydd5M6m94ZXa0WmrVhuRQ8DB
-	 cZ+lQuqLXbjxHPo2kGTnN3UQQMjnMDT/vIrqclRRmszeG+y6o6cyphU3hzJvjufGMU
-	 LAtAqAqmC4ifBKggMBCthF0S1l39MVLjmw6QkW5Q=
+	b=YEKdHZYzyaYCvTITnvZcGhtNHKcIwd4+zgo57cbyGXDi8UhPgfdU1IG6L4BfWK45B
+	 iDURhaKabfawGVSQHn59r+JjcIVBuXvZ73F4bLBrHpfMXvqWDIwQ1fA6jryGSCOtKf
+	 Vtoe9sQUbGfigbgBvfsaITqBzut/XTqkQcM3SMjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgCRU5D (ORCPT
+        id S1728390AbgCRU6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57314 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:58:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728598AbgCRU4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:56:25 -0400
+        id S1727427AbgCRU5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:57:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25D76208CA;
-        Wed, 18 Mar 2020 20:56:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32E7D208FE;
+        Wed, 18 Mar 2020 20:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564985;
-        bh=I2oYdk8F22AfoJfmc1204FRw4JaaneDeqgX+3KuBpV0=;
+        s=default; t=1584565022;
+        bh=wX77u3Iu7CzdmteVdcnCZC7NOOHtdLSWOkJXPhZcwkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wGFtqFycE13d5Sj2YibkNMAl1MZZ8i1Tzevyc+e7Klv44xVZqkQBEWckVidhhL28v
-         I3TguVumDz0rcsu083SiuMRL4w5IcKQeHAYd6ABbuADNhXw/gRG1rTmo8dyYwkxWWf
-         P7l94ryrKi6WVytWXZDbJZeXUAEjsllL2HLj0Qmc=
+        b=YS6eBY9nZSVFs0Ms4n0g/414AIDFkwxKQLgqChme5hpP+swUD7YvG36p+Bl9gB5O9
+         2ENNezbZuyU+f7aXjGaI8XZTBJRpWO5GWGYgwmcwyVahFrYdvGzMuM794slLK/3ZCi
+         ideivAZcCww972Vo+QiPPQJgEC3mD6Ew5RxuCW3Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 25/28] dpaa_eth: Remove unnecessary boolean expression in dpaa_get_headroom
-Date:   Wed, 18 Mar 2020 16:55:52 -0400
-Message-Id: <20200318205555.17447-25-sashal@kernel.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.4 12/12] iommu/vt-d: Fix the wrong printing in RHSA parsing
+Date:   Wed, 18 Mar 2020 16:56:48 -0400
+Message-Id: <20200318205648.17937-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205555.17447-1-sashal@kernel.org>
-References: <20200318205555.17447-1-sashal@kernel.org>
+In-Reply-To: <20200318205648.17937-1-sashal@kernel.org>
+References: <20200318205648.17937-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,55 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-[ Upstream commit 7395f62d95aafacdb9bd4996ec2f95b4a655d7e6 ]
+[ Upstream commit b0bb0c22c4db623f2e7b1a471596fbf1c22c6dc5 ]
 
-Clang warns:
+When base address in RHSA structure doesn't match base address in
+each DRHD structure, the base address in last DRHD is printed out.
 
-drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:2860:9: warning:
-converting the result of '?:' with integer constants to a boolean always
-evaluates to 'true' [-Wtautological-constant-compare]
-        return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
-               ^
-drivers/net/ethernet/freescale/dpaa/dpaa_eth.c:131:34: note: expanded
-from macro 'DPAA_FD_DATA_ALIGNMENT'
-\#define DPAA_FD_DATA_ALIGNMENT  (fman_has_errata_a050385() ? 64 : 16)
-                                 ^
-1 warning generated.
+This doesn't make sense when there are multiple DRHD units, fix it
+by printing the buggy RHSA's base address.
 
-This was exposed by commit 3c68b8fffb48 ("dpaa_eth: FMan erratum A050385
-workaround") even though it appears to have been an issue since the
-introductory commit 9ad1a3749333 ("dpaa_eth: add support for DPAA
-Ethernet") since DPAA_FD_DATA_ALIGNMENT has never been able to be zero.
-
-Just replace the whole boolean expression with the true branch, as it is
-always been true.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/928
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Fixes: fd0c8894893cb ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/iommu/dmar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index 39b8b6730e77c..67246d42c3d9f 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -2646,9 +2646,7 @@ static inline u16 dpaa_get_headroom(struct dpaa_buffer_layout *bl)
- 	headroom = (u16)(bl->priv_data_size + DPAA_PARSE_RESULTS_SIZE +
- 		DPAA_TIME_STAMP_SIZE + DPAA_HASH_RESULTS_SIZE);
- 
--	return DPAA_FD_DATA_ALIGNMENT ? ALIGN(headroom,
--					      DPAA_FD_DATA_ALIGNMENT) :
--					headroom;
-+	return ALIGN(headroom, DPAA_FD_DATA_ALIGNMENT);
- }
- 
- static int dpaa_eth_probe(struct platform_device *pdev)
+diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+index cbad1926cec1e..bfa442d91e3bd 100644
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -473,7 +473,7 @@ static int dmar_parse_one_rhsa(struct acpi_dmar_header *header, void *arg)
+ 		1, TAINT_FIRMWARE_WORKAROUND,
+ 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
+ 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+-		drhd->reg_base_addr,
++		rhsa->base_address,
+ 		dmi_get_system_info(DMI_BIOS_VENDOR),
+ 		dmi_get_system_info(DMI_BIOS_VERSION),
+ 		dmi_get_system_info(DMI_PRODUCT_VERSION));
 -- 
 2.20.1
 
