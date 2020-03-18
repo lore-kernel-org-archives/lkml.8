@@ -2,122 +2,221 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14646C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DB6C5ACD9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E005420772
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF655205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584532343;
-	bh=j4eMMoarX1f4rYZawVdTSJLmd2Yr8lYae78R5pTEHGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YUQhJRN9VIMbZhrGWVtt1KpV/MqdnwWHOLKb6U7790ENdr+H2uV7G/9mEOIs2oC7R
-	 /K63d1MsVYofKQDdsDyzVMriQh+liVX8UmNTD6SupbEbchw8WHTMSh7VeaeNUxmWIp
-	 fzQxJS4cmn9FuRcGpqs0msyWvuKoolxuymU2zr40=
+	s=default; t=1584532346;
+	bh=5GLWT1f9E683xDdoXqNUxPS3l1Q+Rt9YCz4xV7Th2WQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pxV340jowmn0Zg1kCwbiBa9A0FmjKCZHg+y19d6dVJ7R/rJSWzryIH3ON/xtAS2bf
+	 H7K+1FttoPFBD3d/vrD3wIkBbrIuOOOvdfVaoqafOm2kCf+wIelOKwYOJf8fRyt+wM
+	 iTOs8eqBC31/kaWMO8oTQ42/ZYXHu+2UCHYCGmfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgCRLwW (ORCPT
+        id S1727151AbgCRLwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33038 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 07:52:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgCRLwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:52:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726586AbgCRLwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 07:52:25 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97191205ED;
-        Wed, 18 Mar 2020 11:52:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C494120770;
+        Wed, 18 Mar 2020 11:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584532342;
-        bh=j4eMMoarX1f4rYZawVdTSJLmd2Yr8lYae78R5pTEHGg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tx+/3CzPnBDsnwzf8p0lZ7jLmQGWwOz1Ql9yItxh/eRbr/BxG26LeROVZBZ+nGwB0
-         ZZ/AFlTnjMlrBbxyfvIbMkO0MeCJco8di0kIAsHdPzooI3IYc67PFNkI567Y3n6xY2
-         wBkLIeOLIbn0DDewBarQDdqltUU0OIxwolHXdjts=
-Date:   Wed, 18 Mar 2020 12:52:19 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jolly Shah <jolly.shah@xilinx.com>
-Cc:     ard.biesheuvel@linaro.org, mingo@kernel.org,
-        matt@codeblueprint.co.uk, sudeep.holla@arm.com,
-        hkallweit1@gmail.com, keescook@chromium.org,
-        dmitry.torokhov@gmail.com, michal.simek@xilinx.com,
-        rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
-        Jolly Shah <jollys@xilinx.com>
-Subject: Re: [PATCH v3 22/24] firmware: xilinx: Add system shutdown API
- interface
-Message-ID: <20200318115219.GC2472686@kroah.com>
-References: <1583538452-1992-1-git-send-email-jolly.shah@xilinx.com>
- <1583538452-1992-23-git-send-email-jolly.shah@xilinx.com>
+        s=default; t=1584532343;
+        bh=5GLWT1f9E683xDdoXqNUxPS3l1Q+Rt9YCz4xV7Th2WQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gqVorwm6ZZJFKDnX+/RkNZB7QEWGyZCOQyAdkUbfdmn0rSyCgjp80B81QdwcNa/8a
+         A86BASt5L6Hp3xDtLhizhVLCozZFitehHCeMzwLIlB3MVvqhtqp1R+zd7Ou3DxN+mU
+         zUIqmU28QphTL6+b3FQultdJXBD8QnFbBDhxqiJc=
+From:   Jeff Layton <jlayton@kernel.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yangerkun@huawei.com, neilb@suse.de, sfrench@samba.org,
+        viro@zeniv.linux.org.uk, bfields@fieldses.org,
+        linux-cifs@vger.kernel.org
+Subject: [PATCH] locks: reinstate locks_delete_block optimization
+Date:   Wed, 18 Mar 2020 07:52:21 -0400
+Message-Id: <20200318115221.13870-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583538452-1992-23-git-send-email-jolly.shah@xilinx.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 03:47:30PM -0800, Jolly Shah wrote:
-> From: Rajan Vaja <rajan.vaja@xilinx.com>
-> 
-> Add system shutdown API interface which asks firmware to
-> perform system shutdown/restart.
-> 
-> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
-> ---
->  drivers/firmware/xilinx/zynqmp.c     | 13 +++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h |  4 +++-
->  2 files changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-> index f671b6b..d3f637b 100644
-> --- a/drivers/firmware/xilinx/zynqmp.c
-> +++ b/drivers/firmware/xilinx/zynqmp.c
-> @@ -834,6 +834,19 @@ int zynqmp_pm_set_requirement(const u32 node, const u32 capabilities,
->  EXPORT_SYMBOL_GPL(zynqmp_pm_set_requirement);
->  
->  /**
-> + * zynqmp_pm_system_shutdown - PM call to request a system shutdown or restart
-> + * @type:	Shutdown or restart? 0 for shutdown, 1 for restart
-> + * @subtype:	Specifies which system should be restarted or shut down
-> + *
-> + * Return:	Returns status, either success or error+reason
-> + */
-> +int zynqmp_pm_system_shutdown(const u32 type, const u32 subtype)
-> +{
-> +	return zynqmp_pm_invoke_fn(PM_SYSTEM_SHUTDOWN, type, subtype,
-> +				   0, 0, NULL);
-> +}
-> +
-> +/**
->   * ggs_show - Show global general storage (ggs) sysfs attribute
->   * @device: Device structure
->   * @attr: Device attribute structure
-> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-> index 8ccaa39..13b9fdb 100644
-> --- a/include/linux/firmware/xlnx-zynqmp.h
-> +++ b/include/linux/firmware/xlnx-zynqmp.h
-> @@ -66,7 +66,8 @@
->  
->  enum pm_api_id {
->  	PM_GET_API_VERSION = 1,
-> -	PM_REQUEST_NODE = 13,
-> +	PM_SYSTEM_SHUTDOWN = 12,
-> +	PM_REQUEST_NODE,
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-So you might have changed the value of PM_REQUEST_NODE, is that ok?
+There is measurable performance impact in some synthetic tests due to
+commit 6d390e4b5d48 (locks: fix a potential use-after-free problem when
+wakeup a waiter). Fix the race condition instead by clearing the
+fl_blocker pointer after the wake_up, using explicit acquire/release
+semantics.
 
-Why remove the explicit value?
+This does mean that we can no longer use the clearing of fl_blocker as
+the wait condition, so switch the waiters over to checking whether the
+fl_blocked_member list_head is empty.
 
-thanks,
+Reviewed-by: yangerkun <yangerkun@huawei.com>
+Reviewed-by: NeilBrown <neilb@suse.de>
+Fixes: 6d390e4b5d48 (locks: fix a potential use-after-free problem when wakeup a waiter)
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/cifs/file.c |  3 ++-
+ fs/locks.c     | 54 ++++++++++++++++++++++++++++++++++++++++++++------
+ 2 files changed, 50 insertions(+), 7 deletions(-)
 
-greg k-h
+Hi Linus,
+
+Sending this individually since it's just a single patch. If you'd
+prefer a pull request, let me know.
+
+-- Jeff
+
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 3b942ecdd4be..8f9d849a0012 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -1169,7 +1169,8 @@ cifs_posix_lock_set(struct file *file, struct file_lock *flock)
+ 	rc = posix_lock_file(file, flock, NULL);
+ 	up_write(&cinode->lock_sem);
+ 	if (rc == FILE_LOCK_DEFERRED) {
+-		rc = wait_event_interruptible(flock->fl_wait, !flock->fl_blocker);
++		rc = wait_event_interruptible(flock->fl_wait,
++					list_empty(&flock->fl_blocked_member));
+ 		if (!rc)
+ 			goto try_again;
+ 		locks_delete_block(flock);
+diff --git a/fs/locks.c b/fs/locks.c
+index 426b55d333d5..b8a31c1c4fff 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -725,7 +725,6 @@ static void __locks_delete_block(struct file_lock *waiter)
+ {
+ 	locks_delete_global_blocked(waiter);
+ 	list_del_init(&waiter->fl_blocked_member);
+-	waiter->fl_blocker = NULL;
+ }
+ 
+ static void __locks_wake_up_blocks(struct file_lock *blocker)
+@@ -740,6 +739,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
+ 			waiter->fl_lmops->lm_notify(waiter);
+ 		else
+ 			wake_up(&waiter->fl_wait);
++
++		/*
++		 * The setting of fl_blocker to NULL marks the "done"
++		 * point in deleting a block. Paired with acquire at the top
++		 * of locks_delete_block().
++		 */
++		smp_store_release(&waiter->fl_blocker, NULL);
+ 	}
+ }
+ 
+@@ -753,11 +759,42 @@ int locks_delete_block(struct file_lock *waiter)
+ {
+ 	int status = -ENOENT;
+ 
++	/*
++	 * If fl_blocker is NULL, it won't be set again as this thread "owns"
++	 * the lock and is the only one that might try to claim the lock.
++	 *
++	 * We use acquire/release to manage fl_blocker so that we can
++	 * optimize away taking the blocked_lock_lock in many cases.
++	 *
++	 * The smp_load_acquire guarantees two things:
++	 *
++	 * 1/ that fl_blocked_requests can be tested locklessly. If something
++	 * was recently added to that list it must have been in a locked region
++	 * *before* the locked region when fl_blocker was set to NULL.
++	 *
++	 * 2/ that no other thread is accessing 'waiter', so it is safe to free
++	 * it.  __locks_wake_up_blocks is careful not to touch waiter after
++	 * fl_blocker is released.
++	 *
++	 * If a lockless check of fl_blocker shows it to be NULL, we know that
++	 * no new locks can be inserted into its fl_blocked_requests list, and
++	 * can avoid doing anything further if the list is empty.
++	 */
++	if (!smp_load_acquire(&waiter->fl_blocker) &&
++	    list_empty(&waiter->fl_blocked_requests))
++		return status;
++
+ 	spin_lock(&blocked_lock_lock);
+ 	if (waiter->fl_blocker)
+ 		status = 0;
+ 	__locks_wake_up_blocks(waiter);
+ 	__locks_delete_block(waiter);
++
++	/*
++	 * The setting of fl_blocker to NULL marks the "done" point in deleting
++	 * a block. Paired with acquire at the top of this function.
++	 */
++	smp_store_release(&waiter->fl_blocker, NULL);
+ 	spin_unlock(&blocked_lock_lock);
+ 	return status;
+ }
+@@ -1350,7 +1387,8 @@ static int posix_lock_inode_wait(struct inode *inode, struct file_lock *fl)
+ 		error = posix_lock_inode(inode, fl, NULL);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
++		error = wait_event_interruptible(fl->fl_wait,
++					list_empty(&fl->fl_blocked_member));
+ 		if (error)
+ 			break;
+ 	}
+@@ -1435,7 +1473,8 @@ int locks_mandatory_area(struct inode *inode, struct file *filp, loff_t start,
+ 		error = posix_lock_inode(inode, &fl, NULL);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl.fl_wait, !fl.fl_blocker);
++		error = wait_event_interruptible(fl.fl_wait,
++					list_empty(&fl.fl_blocked_member));
+ 		if (!error) {
+ 			/*
+ 			 * If we've been sleeping someone might have
+@@ -1638,7 +1677,8 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
+ 
+ 	locks_dispose_list(&dispose);
+ 	error = wait_event_interruptible_timeout(new_fl->fl_wait,
+-						!new_fl->fl_blocker, break_time);
++					list_empty(&new_fl->fl_blocked_member),
++					break_time);
+ 
+ 	percpu_down_read(&file_rwsem);
+ 	spin_lock(&ctx->flc_lock);
+@@ -2122,7 +2162,8 @@ static int flock_lock_inode_wait(struct inode *inode, struct file_lock *fl)
+ 		error = flock_lock_inode(inode, fl);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
++		error = wait_event_interruptible(fl->fl_wait,
++				list_empty(&fl->fl_blocked_member));
+ 		if (error)
+ 			break;
+ 	}
+@@ -2399,7 +2440,8 @@ static int do_lock_file_wait(struct file *filp, unsigned int cmd,
+ 		error = vfs_lock_file(filp, cmd, fl, NULL);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
++		error = wait_event_interruptible(fl->fl_wait,
++					list_empty(&fl->fl_blocked_member));
+ 		if (error)
+ 			break;
+ 	}
+-- 
+2.24.1
+
