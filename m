@@ -2,185 +2,156 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF00C4332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3BFC4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B44D720767
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584572135;
-	bh=uTyNAhR02/lueaTrSpsEtzvYiAwF0pB5xc/FKKpl73o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=q+wu4H6IuNjTpV7oyeKPOPuaPJ652yvKaTZvnb7OsaWE2IUQoIl0eHvTp5sQwIILw
-	 Z+mNLhCT88bcYYM8gUtAnI3t8kkQ8J42QZc4sY/Oaoa0PbZJh8bwY9qKthQg6PJpSy
-	 JH+Od4hOppUyGolqCixltU7Mw4e7hZTEtUvTl3WU=
+	by mail.kernel.org (Postfix) with ESMTP id 6BC7C2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ce2szXcq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbgCRWze (ORCPT
+        id S1727368AbgCRWzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbgCRWze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:55:34 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB16620767;
-        Wed, 18 Mar 2020 22:55:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584572133;
-        bh=uTyNAhR02/lueaTrSpsEtzvYiAwF0pB5xc/FKKpl73o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ro+4MZPj8/lr9itNf5dBH8a0rGlg1/wfIPWd62qVHcJMz5O10Y3Mue4fJROANWR2M
-         d9Id+B6QYs3dyhoYst2vuOUd2TWEt+ABTNjT89wpllcLEIOsJgqknKRgSJf4HGNAhX
-         +I2/h5ahnh8tO9lM4ZKnPS35fNMJ5ZBu0SkyHzks=
-Received: by mail-qk1-f172.google.com with SMTP id z25so199267qkj.4;
-        Wed, 18 Mar 2020 15:55:32 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ36jYfueqEy5UxYViMD1YiHbousaFRN8I7EmfobmxjrBDQLcRoq
-        i/P/Y9JyL1JbOjNlXKxd+DR+D2i3Fspg7glRmQ==
-X-Google-Smtp-Source: ADFU+vvCBiYODaoYfbldWLW9rUsXW8+xYy7ob9N5BeJKkvAFoqoJHOy2oWFdT1cWnjoHpZxefKYgPbVzCXJcCqWfkKI=
-X-Received: by 2002:a37:393:: with SMTP id 141mr196155qkd.393.1584572131923;
- Wed, 18 Mar 2020 15:55:31 -0700 (PDT)
+        Wed, 18 Mar 2020 18:55:37 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36380 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbgCRWzg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 18:55:36 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02IMrlf6071331;
+        Wed, 18 Mar 2020 22:54:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=k6GRUsKzVXLcCjYW1URm4LWEsIVLbuUR75pRpcs7jfc=;
+ b=Ce2szXcqKXTI+HYLH8FYP/wXV6iZiiKOFiXrEFWqdPJZZGa+j5A6up1nM+H+PFvqAruq
+ 2bmtsY7uC4VN2eaTZy/ynVjVztGCL0aB3JQxl3COHF0Ov0PwR4HlLwExDxRFMh2/cNXG
+ i1ybAR233CYhUfDGv/pxrloIrywaQulPtyk7ClLHZs9yCHfZzR5cpSIIIa+WT1rA5dzF
+ NFd4ZArbsmv7PEUgi2CZJ24KAFXN2HF//8sIVskEaOldoq6xbpUb/mM3QxImkymGPtMk
+ aIwWY1Fs+z9eC6yx+apJdCdvWN5RNRjcCWh+OF3G1lU2Pog392rIPJcyhg+sABAAxpu/ Rg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2yub2757m3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 22:54:54 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02IMq3hY125264;
+        Wed, 18 Mar 2020 22:52:53 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2ys92j3h77-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 22:52:53 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02IMqo0j011508;
+        Wed, 18 Mar 2020 22:52:50 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 18 Mar 2020 15:52:49 -0700
+Subject: Re: [PATCH 1/4] hugetlbfs: add arch_hugetlb_valid_size
+To:     Dave Hansen <dave.hansen@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S.Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200318220634.32100-1-mike.kravetz@oracle.com>
+ <20200318220634.32100-2-mike.kravetz@oracle.com>
+ <831a0773-1ba6-4d72-44b9-7472123b8528@intel.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <5aceea6a-8dc0-a44b-80c6-94511b5c75ca@oracle.com>
+Date:   Wed, 18 Mar 2020 15:52:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200317163555.18107-1-jbx6244@gmail.com>
-In-Reply-To: <20200317163555.18107-1-jbx6244@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 18 Mar 2020 16:55:20 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+0M1n7M1EjnJhum9Sn30FEb3ux4agJSa1KhNwUxv4THg@mail.gmail.com>
-Message-ID: <CAL_Jsq+0M1n7M1EjnJhum9Sn30FEb3ux4agJSa1KhNwUxv4THg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: sram: convert rockchip-pmu-sram
- bindings to yaml
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     "heiko@sntech.de" <heiko@sntech.de>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <831a0773-1ba6-4d72-44b9-7472123b8528@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ mlxscore=0 spamscore=0 bulkscore=0 adultscore=0 suspectscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003180098
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
+ clxscore=1015 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003180098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 10:36 AM Johan Jonker <jbx6244@gmail.com> wrote:
->
-> Current dts files with 'rockchip-pmu-sram' compatible nodes
-> are manually verified. In order to automate this process
-> rockchip-pmu-sram.txt has to be converted to yaml.
->
-> A check with the command below gives for example this error:
->
-> arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff700000:
-> compatible:0:
-> 'rockchip,rk3288-pmu-sram' was expected
-> arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff700000:
-> compatible:
-> ['mmio-sram'] is too short
->
-> Fix this error by adding an extra 'mmio-sram' compatible and
-> 'if then' structure to filter yaml warnings.
+On 3/18/20 3:15 PM, Dave Hansen wrote:
+> Hi Mike,
+> 
+> The series looks like a great idea to me.  One nit on the x86 bits,
+> though...
+> 
+>> diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
+>> index 5bfd5aef5378..51e6208fdeec 100644
+>> --- a/arch/x86/mm/hugetlbpage.c
+>> +++ b/arch/x86/mm/hugetlbpage.c
+>> @@ -181,16 +181,25 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+>>  #endif /* CONFIG_HUGETLB_PAGE */
+>>  
+>>  #ifdef CONFIG_X86_64
+>> +bool __init arch_hugetlb_valid_size(unsigned long long size)
+>> +{
+>> +	if (size == PMD_SIZE)
+>> +		return true;
+>> +	else if (size == PUD_SIZE && boot_cpu_has(X86_FEATURE_GBPAGES))
+>> +		return true;
+>> +	else
+>> +		return false;
+>> +}
+> 
+> I'm pretty sure it's possible to have a system without 2M/PMD page
+> support.  We even have a handy-dandy comment about it in
+> arch/x86/include/asm/required-features.h:
+> 
+> 	#ifdef CONFIG_X86_64
+> 	#ifdef CONFIG_PARAVIRT
+> 	/* Paravirtualized systems may not have PSE or PGE available */
+> 	#define NEED_PSE        0
+> 	...
+> 
+> I *think* you need an X86_FEATURE_PSE check here to be totally correct.
+> 
+> 	if (size == PMD_SIZE && cpu_feature_enabled(X86_FEATURE_PSE))
+> 		return true;
+> 
+> BTW, I prefer cpu_feature_enabled() to boot_cpu_has() because it
+> includes disabled-features checking.  I don't think any of it matters
+> for these specific features, but I generally prefer it on principle.
 
-Seems to me you should fix the .dts file. If we adjust schemas to make
-dts files pass, then what is the point of the schemas?
+Sounds good.  I'll incorporate those changes into a v2, unless someone
+else with has a different opinion.
 
-> make ARCH=arm dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/sram/
-> rockchip-pmu-sram.yaml
-
-Until recent changes in linux-next now, this is not sufficient as all
-examples are not checked against all schemas.
-
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  .../devicetree/bindings/sram/rockchip-pmu-sram.txt | 16 --------
->  .../bindings/sram/rockchip-pmu-sram.yaml           | 46 ++++++++++++++++++++++
->  2 files changed, 46 insertions(+), 16 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
->  create mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.yaml
->
-> diff --git a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-> deleted file mode 100644
-> index 6b42fda30..000000000
-> --- a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
-> +++ /dev/null
-> @@ -1,16 +0,0 @@
-> -Rockchip SRAM for pmu:
-> -------------------------------
-> -
-> -The sram of pmu is used to store the function of resume from maskrom(the 1st
-> -level loader). This is a common use of the "pmu-sram" because it keeps power
-> -even in low power states in the system.
-> -
-> -Required node properties:
-> -- compatible : should be "rockchip,rk3288-pmu-sram"
-> -- reg : physical base address and the size of the registers window
-> -
-> -Example:
-> -       sram@ff720000 {
-> -               compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
-> -               reg = <0xff720000 0x1000>;
-> -       };
-> diff --git a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.yaml b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.yaml
-> new file mode 100644
-> index 000000000..bb72e4f53
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sram/rockchip-pmu-sram.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip SRAM for pmu
-> +
-> +description:
-> +  The sram of pmu is used to store the function of resume from maskrom(the 1st
-> +  level loader). This is a common use of the "pmu-sram" because it keeps power
-> +  even in low power states in the system.
-> +
-> +maintainers:
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +
-> +# The extra 'mmio-sram' compatible and 'if then' structure is needed
-> +# to filter yaml warnings.
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: mmio-sram
-> +      - items:
-> +        - const: rockchip,rk3288-pmu-sram
-
-We've been just adding the compatibles to the common sram.yaml for the
-simple cases like this.
-
-
-> +        - const: mmio-sram
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: rockchip,rk3288-pmu-sram
-> +
-> +then:
-> +  required:
-> +    - compatible
-> +    - reg
-> +
-> +examples:
-> +  - |
-> +    pmu_sram: sram@ff720000 {
-> +      compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
-> +      reg = <0xff720000 0x1000>;
-> +    };
-> --
-> 2.11.0
->
+BTW, this patch should not really change the way the code works today.
+It is mostly a movement of code.  Unless I am missing something, the
+existing code will always allow setup of PMD_SIZE hugetlb pages.
+-- 
+Mike Kravetz
