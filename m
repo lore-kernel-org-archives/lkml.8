@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7C7C4332E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E0DC4332E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC15320409
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02EA620409
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 21:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584565631;
-	bh=AkUXhWTvMH5WqnlJ+9dw58ZG2shO13fuumDz8hrq7iU=;
+	s=default; t=1584565639;
+	bh=0H/mgTxHED+MukhexfpZh7oqusfR3tQHOtZTdFpL1OU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1bzkkmfgrSKpncIyuc6s+QtzDeMnFWFrPzMbczKqQrfICYDLMzMUZJ1LRyc5BwKub
-	 9uRKI+UNpq2Chz9JHw0om46+86B3JOvDEPtdMXvLpyNEK0J45++tZb6UwQ/TQ4UBi0
-	 pteeLob0+cF9pTroLLzO/wgyDH8fw6NsarhLoNYU=
+	b=uG2Nm6tpmeu/bZaepZFL0MHlog5D4rKVfincQ/KmrhOlivUbeScj0wt6GmTCEpvdB
+	 R1HNwhfAVLr20riteMPlGMEOIpbVffsoAyQF38PwAvu2affvhOpJ7ftLNerA9xwnO7
+	 fyK9r8pxR+axQKkjpA0Kxw35anjtwOvnwPkeLph4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgCRVHJ (ORCPT
+        id S1727730AbgCRUyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 17:07:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53916 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 16:54:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727789AbgCRUyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:54:23 -0400
+        id S1727562AbgCRUyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80F232098B;
-        Wed, 18 Mar 2020 20:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62C7E208DB;
+        Wed, 18 Mar 2020 20:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564863;
-        bh=AkUXhWTvMH5WqnlJ+9dw58ZG2shO13fuumDz8hrq7iU=;
+        s=default; t=1584564852;
+        bh=0H/mgTxHED+MukhexfpZh7oqusfR3tQHOtZTdFpL1OU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j65JHtwu9+zn7xa8U3XFTbm9X8NlSAO0WYhZpusJ9Ww01bRF7xrWUMBAaCGUWKqve
-         wV1LIGDAu+1HsSn5AkDfGppNci8ze8tr3eWEUA9rmXzNStPrH/XlfWRLTDIiwicOON
-         9PfaoQhwl5r0Il2B1c1MMGTqclQEslakxaZd2h5Q=
+        b=JBcwzH5COnDrFrfuZF9N25HBgSesS2Y1HyQKXnr32vzZkMTYAW2qyrS/j96pTfkL1
+         2e29u9Qg9iZ/y/Ts+UEY5+AGfvdFBO3ncNxB1Amz7PAalfB4cb68qRxyWDo2ZKZA5/
+         /SjdhOHax5c1YOYEF45BEzDzBSTUSX6VrtSjH87c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suman Anna <s-anna@ti.com>, "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 36/73] virtio_ring: Fix mem leak with vring_new_virtqueue()
-Date:   Wed, 18 Mar 2020 16:53:00 -0400
-Message-Id: <20200318205337.16279-36-sashal@kernel.org>
+Cc:     Jian Shen <shenjian15@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 29/73] net: hns3: fix a not link up issue when fibre port supports autoneg
+Date:   Wed, 18 Mar 2020 16:52:53 -0400
+Message-Id: <20200318205337.16279-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
 References: <20200318205337.16279-1-sashal@kernel.org>
@@ -60,49 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-[ Upstream commit f13f09a12cbd0c7b776e083c5d008b6c6a9c4e0b ]
+[ Upstream commit 68e1006f618e509fc7869259fe83ceec4a95dac3 ]
 
-The functions vring_new_virtqueue() and __vring_new_virtqueue() are used
-with split rings, and any allocations within these functions are managed
-outside of the .we_own_ring flag. The commit cbeedb72b97a ("virtio_ring:
-allocate desc state for split ring separately") allocates the desc state
-within the __vring_new_virtqueue() but frees it only when the .we_own_ring
-flag is set. This leads to a memory leak when freeing such allocated
-virtqueues with the vring_del_virtqueue() function.
+When fibre port supports auto-negotiation, the IMP(Intelligent
+Management Process) processes the speed of auto-negotiation
+and the  user's speed separately.
+For below case, the port will get a not link up problem.
+step 1: disables auto-negotiation and sets speed to A, then
+the driver's MAC speed will be updated to A.
+step 2: enables auto-negotiation and MAC gets negotiated
+speed B, then the driver's MAC speed will be updated to B
+through querying in periodical task.
+step 3: MAC gets new negotiated speed A.
+step 4: disables auto-negotiation and sets speed to B before
+periodical task query new MAC speed A, the driver will  ignore
+the speed configuration.
 
-Fix this by moving the desc_state free code outside the flag and only
-for split rings. Issue was discovered during testing with remoteproc
-and virtio_rpmsg.
+This patch fixes it by skipping speed and duplex checking when
+fibre port supports auto-negotiation.
 
-Fixes: cbeedb72b97a ("virtio_ring: allocate desc state for split ring separately")
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Link: https://lore.kernel.org/r/20200224212643.30672-1-s-anna@ti.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+Fixes: 22f48e24a23d ("net: hns3: add autoneg and change speed support for fibre port")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_ring.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index 867c7ebd3f107..58b96baa8d488 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -2203,10 +2203,10 @@ void vring_del_virtqueue(struct virtqueue *_vq)
- 					 vq->split.queue_size_in_bytes,
- 					 vq->split.vring.desc,
- 					 vq->split.queue_dma_addr);
--
--			kfree(vq->split.desc_state);
- 		}
- 	}
-+	if (!vq->packed_ring)
-+		kfree(vq->split.desc_state);
- 	list_del(&_vq->list);
- 	kfree(vq);
- }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index c01cf8ef69df9..d4652dea4569b 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -2417,10 +2417,12 @@ static int hclge_cfg_mac_speed_dup_hw(struct hclge_dev *hdev, int speed,
+ 
+ int hclge_cfg_mac_speed_dup(struct hclge_dev *hdev, int speed, u8 duplex)
+ {
++	struct hclge_mac *mac = &hdev->hw.mac;
+ 	int ret;
+ 
+ 	duplex = hclge_check_speed_dup(duplex, speed);
+-	if (hdev->hw.mac.speed == speed && hdev->hw.mac.duplex == duplex)
++	if (!mac->support_autoneg && mac->speed == speed &&
++	    mac->duplex == duplex)
+ 		return 0;
+ 
+ 	ret = hclge_cfg_mac_speed_dup_hw(hdev, speed, duplex);
 -- 
 2.20.1
 
