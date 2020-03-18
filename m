@@ -2,125 +2,194 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFB3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8869FC5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D02C20773
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D6820767
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 13:50:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jJIEU+TN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QBE4SJFN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgCRNtO (ORCPT
+        id S1727148AbgCRNu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 09:49:14 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34958 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbgCRNtN (ORCPT
+        Wed, 18 Mar 2020 09:50:27 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:35702 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726897AbgCRNu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 09:49:13 -0400
-Received: by mail-wm1-f67.google.com with SMTP id m3so3456113wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 06:49:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nhjSzraoBOeWPVT3LQo7Ng/qwFROJg9Ku7xc0QPbKjI=;
-        b=jJIEU+TNBKOQ4016fYVaddPzkMst3rQ/3p4Xx3wFIZf72OaeRdXqtmSGdKlWghdzNC
-         VpteDO5ULaAuOLTMOG3h73tSIo+42mAS/8SC2fcV9B1nVUpFMsICMGHTsKjANBqMSymI
-         vUdJNQpr3MUfg1nQcTUJV3WCigBgClEDXWlLI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=nhjSzraoBOeWPVT3LQo7Ng/qwFROJg9Ku7xc0QPbKjI=;
-        b=aSoTkM+tgi9BIYinM271Fu1Uja4sCKqFhDtpspvAZd+Rca9gC7Ha+7IbtbwBMLYwtd
-         H+lBMuDg5xMyaiSxl1TyWWsJvSxGY2PdSm1AwYawzw1FM7Xfz2ddnLbHFkyJjTOC0Sd7
-         aMrsxTBXNM5/vezGTRQVIMwstxc+EBCFzjz+nIU5heg500l8Tb30wspocdwnS6VspZBY
-         FtqOnPXyClOVCNR59+OHkCnFfeX4UEiRwxE3nb7m+WBdluV3nG+H2Ai81kFLt1wWhqhc
-         DaURIhOWqqXMBjZveuY5gE1wF+N6X5p3oHKzI+5uLPSkmFM6ojysGhYB6j+4ZHYOSpsB
-         ZWOg==
-X-Gm-Message-State: ANhLgQ2SAcRVq4IQ/gApAAYQAiE9ajdFPpEK2IaqT6RRa5EZ93aZ/ekh
-        QBURUiOzMeXgfRRd9bDXbAzuAA==
-X-Google-Smtp-Source: ADFU+vs5ilQvxkbVvgYWAdqliMhxQa+MQFIS4q+2x/7fT0/rVzc8bp98oG9vOKtAIrgiSeNYnlDm7g==
-X-Received: by 2002:a1c:a950:: with SMTP id s77mr5281804wme.176.1584539351962;
-        Wed, 18 Mar 2020 06:49:11 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id t1sm9719981wrq.36.2020.03.18.06.49.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 06:49:10 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 14:49:09 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Joe Perches <joe@perches.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] drm: drm_vm: Use fallthrough;
-Message-ID: <20200318134909.GW2363188@phenom.ffwll.local>
-Mail-Followup-To: Joe Perches <joe@perches.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1584040050.git.joe@perches.com>
- <398db73cdc8a584fd7f34f5013c04df13ba90f64.1584040050.git.joe@perches.com>
- <20200317164806.GO2363188@phenom.ffwll.local>
- <623eb1bc61951ed3c68a9224b9aa99a25e763913.camel@perches.com>
+        Wed, 18 Mar 2020 09:50:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584539426;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=gXZwvmBo8DHFVt6LhIa/MMBfh0m6YycvZpBWNrfzRaY=;
+        b=QBE4SJFNjoLX7GP48abOk/JVXR1hNXiQZux/W5gYZR9WGMz3moWkzYDHLwGcvuZzlLqGRf
+        94SdXQwgx6qENy5SX8d3e5YIUdJ3T34DLYYsJmbDDyk7vZPDODHYy5sSW1NOA2WhpT98TO
+        9+BdTPpD9ntO3VZZuCBHeaEVh9GI2b0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-292-Gw8ViglfPhSkSGPwrex7pw-1; Wed, 18 Mar 2020 09:50:22 -0400
+X-MC-Unique: Gw8ViglfPhSkSGPwrex7pw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B6728800D5A;
+        Wed, 18 Mar 2020 13:50:17 +0000 (UTC)
+Received: from [10.36.114.65] (ovpn-114-65.ams2.redhat.com [10.36.114.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9584160BF1;
+        Wed, 18 Mar 2020 13:50:12 +0000 (UTC)
+Subject: Re: [PATCH v2 0/8] mm/memory_hotplug: allow to specify a default
+ online_type
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Yumei Huang <yuhuang@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Eduardo Habkost <ehabkost@redhat.com>,
+        Milan Zamazal <mzamazal@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20200317104942.11178-1-david@redhat.com>
+ <20200318130517.GC30899@MiWiFi-R3L-srv>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <67a054f6-df07-e4fb-dd4b-e503cb767276@redhat.com>
+Date:   Wed, 18 Mar 2020 14:50:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <623eb1bc61951ed3c68a9224b9aa99a25e763913.camel@perches.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <20200318130517.GC30899@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 03:13:29PM -0700, Joe Perches wrote:
-> On Tue, 2020-03-17 at 17:48 +0100, Daniel Vetter wrote:
-> > On Thu, Mar 12, 2020 at 12:17:12PM -0700, Joe Perches wrote:
-> > > Convert /* fallthrough */ style comments to fallthrough;
-> > > 
-> > > Convert the various uses of fallthrough comments to fallthrough;
-> > > 
-> > > Done via script
-> > > Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com/
-> > > 
-> > > And by hand:
-> > > 
-> > > This file has a fallthrough comment outside of an #ifdef block
-> > > that causes gcc to emit a warning if converted in-place.
-> > > 
-> > > So move the new fallthrough; inside the containing #ifdef/#endif too.
-> > > 
-> > > Signed-off-by: Joe Perches <joe@perches.com>
-> > 
-> > Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > 
-> > I'm assuming this all lands through a special pull? Or should I apply
-> > this?
-> 
-> Hi Daniel.
-> 
-> I think you should apply this.
-> 
-> The idea here is to allow a scripted conversion at some
-> point and this patch is necessary to avoid new compiler
-> warnings after running the script.
+On 18.03.20 14:05, Baoquan He wrote:
+> On 03/17/20 at 11:49am, David Hildenbrand wrote:
+>> Distributions nowadays use udev rules ([1] [2]) to specify if and
+>> how to online hotplugged memory. The rules seem to get more complex wi=
+th
+>> many special cases. Due to the various special cases,
+>> CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE cannot be used. All memory hotplu=
+g
+>> is handled via udev rules.
+>>
+>> Everytime we hotplug memory, the udev rule will come to the same
+>> conclusion. Especially Hyper-V (but also soon virtio-mem) add a lot of
+>> memory in separate memory blocks and wait for memory to get onlined by=
+ user
+>> space before continuing to add more memory blocks (to not add memory f=
+aster
+>> than it is getting onlined). This of course slows down the whole memor=
+y
+>> hotplug process.
+>>
+>> To make the job of distributions easier and to avoid udev rules that g=
+et
+>> more and more complicated, let's extend the mechanism provided by
+>> - /sys/devices/system/memory/auto_online_blocks
+>> - "memhp_default_state=3D" on the kernel cmdline
+>> to be able to specify also "online_movable" as well as "online_kernel"
+>=20
+> This patch series looks good, thanks. Since Andrew has merged it to -mm=
+ again,
+> I won't add my Reviewed-by to bother.=20
+>=20
+> Hi David, Vitaly
+>=20
+> There are several things unclear to me.
+>=20
+> So, these improved interfaces are used to alleviate the burden of the=20
+> existing udev rules, or try to replace it? As you know, we have been
 
-Ok, put into the queue but missed the 5.7 feature freeze for drm so 5.8
-probably.
+At least in RHEL, my plan is to replace it / use a udev rules as a
+fallback on older kernels (see the example scripts below). But other
+distribution can handle it as they want.
 
-Thanks, Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+> using udev rules to interact between kernel and user space on bare meta=
+l,
+> and guests who want to hot add/remove.>
+> And also the OOM issue in hyperV when onlining pages after adding memor=
+y
+> block. I am not a virt devel expert, could this happen on bare metal
+> system?
+
+Don't think it's relevant on bare metal. If you plug a big DIMM, all
+memory blocks will be added first in one shot and then all memory blocks
+will be onlined. So it doesn't matter "how fast" you online that memory.
+
+In contrast, Hyper-V (and virtio-mem) add one (or a limited number of)
+memory block at a time and wait for them to get onlined.
+
+--=20
+Thanks,
+
+David / dhildenb
+
