@@ -2,208 +2,126 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A330C10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4D5C5ACD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698CB2077A
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E5F2072C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 19:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgCRTXO (ORCPT
+        id S1727085AbgCRTXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 15:23:14 -0400
-Received: from mga02.intel.com ([134.134.136.20]:53523 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgCRTXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 15:23:12 -0400
-IronPort-SDR: l17tzpdCnhbsuD5T0P8p9+cq8hLw4x84jbkeo2nz+pY2euY6mv2ghEsuQtAkJiGsYubbcul9nH
- PuUsPVkjipkQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 12:23:12 -0700
-IronPort-SDR: lc5+nY8X20RmwOMgWKXaoabS743UxfyckFxokQD5dmmPSwnKBEfxIjKKUuruIrUw8jnowK2Hls
- iHuLWM/iNJkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,568,1574150400"; 
-   d="scan'208";a="244923072"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga003.jf.intel.com with ESMTP; 18 Mar 2020 12:23:09 -0700
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
-Openpgp: preference=signencrypt
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- mQINBFMB0ccBEADd+nZnZrFDsIjQtclVz6OsqFOQ6k0nQdveiDNeBuwyFYykkBpaGekoHZ6f
- lH4ogPZzQ+pzoJEMlRGXc881BIggKMCMH86fYJGfZKWdfpg9O6mqSxyEuvBHKe9eZCBKPvoC
- L2iwygtO8TcXXSCynvXSeZrOwqAlwnxWNRm4J2ikDck5S5R+Qie0ZLJIfaId1hELofWfuhy+
- tOK0plFR0HgVVp8O7zWYT2ewNcgAzQrRbzidA3LNRfkL7jrzyAxDapuejuK8TMrFQT/wW53e
- uegnXcRJaibJD84RUJt+mJrn5BvZ0MYfyDSc1yHVO+aZcpNr+71yZBQVgVEI/AuEQ0+p9wpt
- O9Wt4zO2KT/R5lq2lSz1MYMJrtfFRKkqC6PsDSB4lGSgl91XbibK5poxrIouVO2g9Jabg04T
- MIPpVUlPme3mkYHLZUsboemRQp5/pxV4HTFR0xNBCmsidBICHOYAepCzNmfLhfo1EW2Uf+t4
- L8IowAaoURKdgcR2ydUXjhACVEA/Ldtp3ftF4hTQ46Qhba/p4MUFtDAQ5yeA5vQVuspiwsqB
- BoL/298+V119JzM998d70Z1clqTc8fiGMXyVnFv92QKShDKyXpiisQn2rrJVWeXEIVoldh6+
- J8M3vTwzetnvIKpoQdSFJ2qxOdQ8iYRtz36WYl7hhT3/hwkHuQARAQABtCdNYXRoaWFzIE55
- bWFuIDxtYXRoaWFzLm55bWFuQGdtYWlsLmNvbT6JAjsEEwECACUCGwMGCwkIBwMCBhUIAgkK
- CwQWAgMBAh4BAheABQJTAeo1AhkBAAoJEFiDn/uYk8VJOdIP/jhA+RpIZ7rdUHFIYkHEKzHw
- tkwrJczGA5TyLgQaI8YTCTPSvdNHU9Rj19mkjhUO/9MKvwfoT2RFYqhkrtk0K92STDaBNXTL
- JIi4IHBqjXOyJ/dPADU0xiRVtCHWkBgjEgR7Wihr7McSdVpgupsaXhbZjXXgtR/N7PE0Wltz
- hAL2GAnMuIeJyXhIdIMLb+uyoydPCzKdH6znfu6Ox76XfGWBCqLBbvqPXvk4oH03jcdt+8UG
- 2nfSeti/To9ANRZIlSKGjddCGMa3xzjtTx9ryf1Xr0MnY5PeyNLexpgHp93sc1BKxKKtYaT0
- lR6p0QEKeaZ70623oB7Sa2Ts4IytqUVxkQKRkJVWeQiPJ/dZYTK5uo15GaVwufuF8VTwnMkC
- 4l5X+NUYNAH1U1bpRtlT40aoLEUhWKAyVdowxW4yGCP3nL5E69tZQQgsag+OnxBa6f88j63u
- wxmOJGNXcwCerkCb+wUPwJzChSifFYmuV5l89LKHgSbv0WHSN9OLkuhJO+I9fsCNvro1Y7dT
- U/yq4aSVzjaqPT3yrnQkzVDxrYT54FLWO1ssFKAOlcfeWzqrT9QNcHIzHMQYf5c03Kyq3yMI
- Xi91hkw2uc/GuA2CZ8dUD3BZhUT1dm0igE9NViE1M7F5lHQONEr7MOCg1hcrkngY62V6vh0f
- RcDeV0ISwlZWuQINBFMB0ccBEACXKmWvojkaG+kh/yipMmqZTrCozsLeGitxJzo5hq9ev31N
- 2XpPGx4AGhpccbco63SygpVN2bOd0W62fJJoxGohtf/g0uVtRSuK43OTstoBPqyY/35+VnAV
- oA5cnfvtdx5kQPIL6LRcxmYKgN4/3+A7ejIxbOrjWFmbWCC+SgX6mzHHBrV0OMki8R+NnrNa
- NkUmMmosi7jBSKdoi9VqDqgQTJF/GftvmaZHqgmVJDWNrCv7UiorhesfIWPt1O/AIk9luxlE
- dHwkx5zkWa9CGYvV6LfP9BznendEoO3qYZ9IcUlW727Le80Q1oh69QnHoI8pODDBBTJvEq1h
- bOWcPm/DsNmDD8Rwr/msRmRyIoxjasFi5WkM/K/pzujICKeUcNGNsDsEDJC5TCmRO/TlvCvm
- 0X+vdfEJRZV6Z+QFBflK1asUz9QHFre5csG8MyVZkwTR9yUiKi3KiqQdaEu+LuDD2CGF5t68
- xEl66Y6mwfyiISkkm3ETA4E8rVZP1rZQBBm83c5kJEDvs0A4zrhKIPTcI1smK+TWbyVyrZ/a
- mGYDrZzpF2N8DfuNSqOQkLHIOL3vuOyx3HPzS05lY3p+IIVmnPOEdZhMsNDIGmVorFyRWa4K
- uYjBP/W3E5p9e6TvDSDzqhLoY1RHfAIadM3I8kEx5wqco67VIgbIHHB9DbRcxQARAQABiQIf
- BBgBAgAJBQJTAdHHAhsMAAoJEFiDn/uYk8VJb7AQAK56tgX8V1Wa6RmZDmZ8dmBC7W8nsMRz
- PcKWiDSMIvTJT5bygMy1lf7gbHXm7fqezRtSfXAXr/OJqSA8LB2LWfThLyuuCvrdNsQNrI+3
- D+hjHJjhW/4185y3EdmwwHcelixPg0X9EF+lHCltV/w29Pv3PiGDkoKxJrnOpnU6jrwiBebz
- eAYBfpSEvrCm4CR4hf+T6MdCs64UzZnNt0nxL8mLCCAGmq1iks9M4bZk+LG36QjCKGh8PDXz
- 9OsnJmCggptClgjTa7pO6040OW76pcVrP2rZrkjo/Ld/gvSc7yMO/m9sIYxLIsR2NDxMNpmE
- q/H7WO+2bRG0vMmsndxpEYS4WnuhKutoTA/goBEhtHu1fg5KC+WYXp9wZyTfeNPrL0L8F3N1
- BCEYefp2JSZ/a355X6r2ROGSRgIIeYjAiSMgGAZMPEVsdvKsYw6BH17hDRzltNyIj5S0dIhb
- Gjynb3sXforM/GVbr4mnuxTdLXQYlj2EJ4O4f0tkLlADT7podzKSlSuZsLi2D+ohKxtP3U/r
- 42i8PBnX2oAV0UIkYk7Oel/3hr0+BP666SnTls9RJuoXc7R5XQVsomqXID6GmjwFQR5Wh/RE
- IJtkiDAsk37cfZ9d1kZ2gCQryTV9lmflSOB6AFZkOLuEVSC5qW8M/s6IGDfYXN12YJaZPptJ fiD/
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Evan Green <evgreen@chromium.org>,
-        "Ghorai, Sukumar" <sukumar.ghorai@intel.com>,
-        "Amara, Madhusudanarao" <madhusudanarao.amara@intel.com>,
-        "Nandamuri, Srikanth" <srikanth.nandamuri@intel.com>
-To:     x86@kernel.org
-Message-ID: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com>
-Date:   Wed, 18 Mar 2020 21:25:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 18 Mar 2020 15:23:16 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:43296 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727027AbgCRTXP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 15:23:15 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id E11721A33B3EAB;
+        Wed, 18 Mar 2020 19:23:12 +0000 (UTC)
+Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Wed, 18 Mar 2020 19:23:11 +0000 (UTC)
+Message-ID: <5404e421520419a8031593179798b95bd0970bd8.camel@archlinux.org>
+Subject: Re: [PATCH] HID: logitech-dj: issue udev change event on device
+ connection
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <superm1@gmail.com>,
+        Richard Hughes <hughsient@gmail.com>
+In-Reply-To: <20200318161906.3340959-1-lains@archlinux.org>
+References: <20200318161906.3340959-1-lains@archlinux.org>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-ciTeMDtrJBxBOS7lKYqJ"
+Date:   Wed, 18 Mar 2020 19:23:10 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+User-Agent: Evolution 3.36.0 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
 
-I can reproduce the lost MSI interrupt issue on 5.6-rc6 which includes
-the "Plug non-maskable MSI affinity race" patch.
+--=-ciTeMDtrJBxBOS7lKYqJ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I can see this on a couple platforms, I'm running a script that first generates
-a lot of usb traffic, and then in a busyloop sets irq affinity and turns off
-and on cpus:
+On Wed, 2020-03-18 at 16:19 +0000, Filipe La=C3=ADns wrote:
+> As discussed in the mailing list:
+>=20
+> > Right now the hid-logitech-dj driver will export one node for each
+> > connected device, even when the device is not connected. That
+> > causes
+> > some trouble because in userspace we don't have have any way to
+> > know if
+> > the device is connected or not, so when we try to communicate, if
+> > the
+> > device is disconnected it will fail.
+>=20
+> The solution reached to solve this issue is to trigger an udev change
+> event when the device connects, this way userspace can just wait on
+> those connections instead of trying to ping the device.
+>=20
+> Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
+> ---
+>  drivers/hid/hid-logitech-dj.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
+> logitech-dj.c
+> index 48dff5d6b605..fcd481a0be1f 100644
+> --- a/drivers/hid/hid-logitech-dj.c
+> +++ b/drivers/hid/hid-logitech-dj.c
+> @@ -1464,6 +1464,8 @@ static int logi_dj_dj_event(struct hid_device
+> *hdev,
+>  		if (dj_report-
+> >report_params[CONNECTION_STATUS_PARAM_STATUS] =3D=3D
+>  		    STATUS_LINKLOSS) {
+>  			logi_dj_recv_forward_null_report(djrcv_dev,
+> dj_report);
+> +		} else {
+> +			kobject_uevent(&hdev->dev.kobj, KOBJ_CHANGE);
+>  		}
+>  		break;
+>  	default:
 
-for i in 1 3 5 7; do
-	echo "1" > /sys/devices/system/cpu/cpu$i/online
-done
-echo "A" > "/proc/irq/*/smp_affinity"
-echo "A" > "/proc/irq/*/smp_affinity"
-echo "F" > "/proc/irq/*/smp_affinity"
-for i in 1 3 5 7; do
-	echo "0" > /sys/devices/system/cpu/cpu$i/online
-done
+Just noticed I was issuing the udev event on the receiver instead of
+the connected device. I will send a v2.
 
-I added some very simple debugging but I don't really know what to look for.
-xhci interrupts (122) just stop after a setting msi affinity, it survived many
-similar msi_set_affinity() calls before this.
+Filipe La=C3=ADns
 
-I'm not that familiar with the inner workings of this, but I'll be happy to
-help out with adding debugging and testing patches.
+--=-ciTeMDtrJBxBOS7lKYqJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-Details:
+-----BEGIN PGP SIGNATURE-----
 
- cat /proc/interrupts
-            CPU0       CPU1       CPU2       CPU3       CPU4       CPU5       CPU6       CPU7
-   0:         26          0          0          0          0          0          0          0   IO-APIC    2-edge      timer
-   1:          0          0          0          0          0          7          0          0   IO-APIC    1-edge      i8042
-   4:          0          4      59941          0          0          0          0          0   IO-APIC    4-edge      ttyS0
-   8:          0          0          0          0          0          0          1          0   IO-APIC    8-edge      rtc0
-   9:          0         40          8          0          0          0          0          0   IO-APIC    9-fasteoi   acpi
-  16:          0          0          0          0          0          0          0          0   IO-APIC   16-fasteoi   i801_smbus
- 120:          0          0        293          0          0          0          0          0   PCI-MSI 32768-edge      i915
- 121:        728          0          0         58          0          0          0          0   PCI-MSI 520192-edge      enp0s31f6
- 122:      63575       2271          0       1957       7262          0          0          0   PCI-MSI 327680-edge      xhci_hcd
- 123:          0          0          0          0          0          0          0          0   PCI-MSI 514048-edge      snd_hda_intel:card0
- NMI:          0          0          0          0          0          0          0          0   Non-maskable interrupts
- 
-trace snippet: 
-      <idle>-0     [001] d.h.   129.676900: xhci_irq: xhci irq
-      <idle>-0     [001] d.h.   129.677507: xhci_irq: xhci irq
-      <idle>-0     [001] d.h.   129.677556: xhci_irq: xhci irq
-      <idle>-0     [001] d.h.   129.677647: xhci_irq: xhci irq
-      <...>-14    [001] d..1   129.679802: msi_set_affinity: direct update msi 122, vector 33 -> 33, apicid: 2 -> 6
-      <idle>-0     [003] d.h.   129.682639: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.682769: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.682908: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.683552: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.683677: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.683819: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.689017: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.689140: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.689307: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.689984: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.690107: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.690278: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.695541: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.695674: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.695839: xhci_irq: xhci irq
-      <idle>-0     [003] d.H.   129.696667: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.696797: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.696973: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.702288: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.702380: xhci_irq: xhci irq
-      <idle>-0     [003] d.h.   129.702493: xhci_irq: xhci irq
- migration/3-24    [003] d..1   129.703150: msi_set_affinity: direct update msi 122, vector 33 -> 33, apicid: 6 -> 0
- kworker/0:0-5     [000] d.h.   131.328790: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
- kworker/0:0-5     [000] d.h.   133.312704: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
- kworker/0:0-5     [000] d.h.   135.360786: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
-      <idle>-0     [000] d.h.   137.344694: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
- kworker/0:0-5     [000] d.h.   139.128679: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
- kworker/0:0-5     [000] d.h.   141.312686: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
- kworker/0:0-5     [000] d.h.   143.360703: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
- kworker/0:0-5     [000] d.h.   145.344791: msi_set_affinity: direct update msi 121, vector 34 -> 34, apicid: 0 -> 0
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl5ydR4ACgkQ+JPGdIFq
+qV1RJBAAj8gSKs5gc9e2B7HN6c0ThwipBVm0xPCzfKpvXHga7vYi5ouUNcfCxQoo
+wLEbEtbkUWjxh/ooQQEudjA5PBCDIkcjrNpxttxEZuVM2UPrGLYKvnRusV8cCxnR
+o08Rgbx+882R0me5IMl1806TUfF8bPk3bhKXn7pry1sCAl0I2uYJGCoNU17e8DDC
+Q0c8IZg4+Kd1vEOJ9GjmFV4Tx4lX4m8kqZsxZ0Ku0KDdjM4mM9CDAT4Zh0oRfcce
+nfEs2I1w1a/aJRaIAI6VWFgaqXauSA+DTKeS/slit64tLdWhOhL6xbtOqCTqqPgv
+hkDISj8IZ6BDfkTWAp5ttxvm79m9qI7iK8GVX6KqLzBtuFHm1Xm4OnTMLFZMu8vi
+DrfqMrgezkoczFQja8PttcfITJQ/SaKTPt0rgxEXExt0JNDR2cuF1TPNkIaGI3DV
+nRbKN5vRkq66d/BoG4UFHQGHjitUcoZdoo17dd9A5qcM6LXVXi2J4kWHP98aYzxX
+CJmg+k8UlMUO8OuHQQXdAkYjfnZf/uDnxRGaRpfupeCh0PJp8bzBtmVNdhRFLa3s
+Hksu0F75X+Ujx5NtH6RG10iyN9sJtBsvnbJn0iuxeYMEJJIK+3vGfU31E1EqDjtH
+BUII0wcvBB/q9h23bkcIaNW+o7vW764gyEeDUZi0meA5eFEqNP4=
+=gWhb
+-----END PGP SIGNATURE-----
 
-
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -92,6 +92,10 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
-            cfg->vector == old_cfg.vector ||
-            old_cfg.vector == MANAGED_IRQ_SHUTDOWN_VECTOR ||
-            cfg->dest_apicid == old_cfg.dest_apicid) {
-+               trace_printk("direct update msi %u, vector %u -> %u, apicid: %u -> %u\n",
-+                    irqd->irq,
-+                    old_cfg.vector, cfg->vector,
-+                    old_cfg.dest_apicid, cfg->dest_apicid);
-                irq_msi_update_msg(irqd, cfg);
-                return ret;
-        }
-@@ -134,7 +138,10 @@ msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
-         */
-        if (IS_ERR_OR_NULL(this_cpu_read(vector_irq[cfg->vector])))
-                this_cpu_write(vector_irq[cfg->vector], VECTOR_RETRIGGERED);
--
-+       trace_printk("twostep update msi, irq %u, vector %u -> %u, apicid: %u -> %u\n",
-+                    irqd->irq,
-+                    old_cfg.vector, cfg->vector,
-+                    old_cfg.dest_apicid, cfg->dest_apicid);
-        /* Redirect it to the new vector on the local CPU temporarily */
-        old_cfg.vector = cfg->vector;
-        irq_msi_update_msg(irqd, &old_cfg);
-
-Thanks
--Mathias
+--=-ciTeMDtrJBxBOS7lKYqJ--
