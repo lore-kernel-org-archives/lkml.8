@@ -2,450 +2,328 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EB7C5ACD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE43BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB53205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925C2205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 11:51:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584532273;
+	bh=1Yb33p2EOgcIG+yF6C3ogUaPMdffTiWMrhOm8DQm7bM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XmHbNAzffFJiaVxuPid7wpAyqIOml2CpANngQKK4Ox8XlJpVYFTzoYvR4zb1SnC2P
+	 WTbMaEuMNYY9oiIU7kx6JAHHHzWfc7IM5TiXVA5cpDEzjgmpNHO0aVXu9GuZtJLuz2
+	 H7VfWmHVftitai4u5BeIvcoXCDvT/lRdtnvbCki4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgCRLuu (ORCPT
+        id S1726824AbgCRLvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 07:50:50 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41393 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgCRLut (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 07:50:49 -0400
-Received: by mail-lj1-f193.google.com with SMTP id o10so26644256ljc.8;
-        Wed, 18 Mar 2020 04:50:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zh5NDBblpbI+7tR1wpNxJ0+mQOL9i1LB8o9GdU6Et3A=;
-        b=sC+xwWgvY/NNnWZlUgHxVkGWk0UFrb4GytukJTtWjt1wXCvqNLHCa93JZAaGwgOwgT
-         PGQ3gwXyU2NU7RO6hDTW99O6KLf8TEBaM5/ua/pqTM7EQMOmSIvTsjmjue1JtC3rYUGb
-         8wNdKybHY3QV6a3+UTWoilsB+jIQCeT3qNfzN9JqGR40qY+OscSnosgn3YFDHoGaSoIp
-         3Tqk0p1TYZrP9l36wxVOm8ZJCwuBSJ2gPAgyRtW3OHfzNZn9q+8VhKnaRk3XA4rgmEc4
-         kezfzhq8ayg5dTJmWNpZE1wac0hNz2RtHj1j5WVQvYmFKeLdhJZO4+SFYGtRhDM3aWsk
-         uaZg==
-X-Gm-Message-State: ANhLgQ14GeCAScKpm8ZJT1+4uSrreVKEXiNoYvquox8C6Mnqb760v+o8
-        P2R06GoJeuPM2D2VmgLa3ADdDZaU
-X-Google-Smtp-Source: ADFU+vtVqa269j3tcXUJywRkqVk7Dzv9ilaD07jX2CPu2GumbQLgH8muD78B54djjKJnwojTjNRSRQ==
-X-Received: by 2002:a2e:a487:: with SMTP id h7mr2224072lji.127.1584532245481;
-        Wed, 18 Mar 2020 04:50:45 -0700 (PDT)
-Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
-        by smtp.gmail.com with ESMTPSA id 9sm4868003ljf.0.2020.03.18.04.50.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 04:50:44 -0700 (PDT)
-Date:   Wed, 18 Mar 2020 13:50:37 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-Subject: [PATCH v5 3/9] drivers: base: add linear ranges helpers
-Message-ID: <f89f46b5a1e3d2582e6c1b61aaa2ccdc62d3ee2c.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 18 Mar 2020 07:51:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbgCRLvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 07:51:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10DDE205ED;
+        Wed, 18 Mar 2020 11:51:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584532269;
+        bh=1Yb33p2EOgcIG+yF6C3ogUaPMdffTiWMrhOm8DQm7bM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qvb6ZWhVn28Qg7oOgvHErkfXXIlDizOs4yMIVZRaGpjLFjAU0jN2Qi+GJ9hdGt1x6
+         oCZ6Wgq1P5omPGzSx7PyxGVaf+qptbxBgBSNrFd75c0lGPgTb6jYvByhE2kmnOs3VH
+         F1dHYqNIgWq6TJh8cxtu/OexhJn8CDiSuyG3Nu1Q=
+Date:   Wed, 18 Mar 2020 12:51:05 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jolly Shah <jolly.shah@xilinx.com>
+Cc:     ard.biesheuvel@linaro.org, mingo@kernel.org,
+        matt@codeblueprint.co.uk, sudeep.holla@arm.com,
+        hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com,
+        rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jollys@xilinx.com>,
+        Tejas Patel <tejas.patel@xilinx.com>
+Subject: Re: [PATCH v3 21/24] firmware: xilinx: Add sysfs interface
+Message-ID: <20200318115105.GA2472686@kroah.com>
+References: <1583538452-1992-1-git-send-email-jolly.shah@xilinx.com>
+ <1583538452-1992-22-git-send-email-jolly.shah@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1584468798.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1583538452-1992-22-git-send-email-jolly.shah@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many devices have control registers which control some measurable
-property. Often a register contains control field so that change in
-this field causes linear change in the controlled property. It is not
-a rare case that user wants to give 'meaningful' control values and
-driver needs to convert them to register field values. Even more
-often user wants to 'see' the currently set value - again in
-meaningful units - and driver needs to convert the values it reads
-from register to these meaningful units. Examples of this include:
+On Fri, Mar 06, 2020 at 03:47:29PM -0800, Jolly Shah wrote:
+> +/**
+> + * ggs_store - Store global general storage (ggs) sysfs attribute
+> + * @device: Device structure
+> + * @attr: Device attribute structure
+> + * @buf: User entered shutdown_scope attribute string
+> + * @count: Size of buf
+> + * @reg: Register number
+> + *
+> + * Return: count argument if request succeeds, the corresponding
+> + * error code otherwise
+> + *
+> + * Helper function for storing a ggs register value.
+> + *
+> + * For example, the user-space interface for storing a value to the
+> + * ggs0 register:
+> + * echo 0xFFFFFFFF 0x1234ABCD > /sys/devices/platform/firmware\:zynqmp-firmware/ggs0
+> + */
 
-- regulators, voltage/current configurations
-- power, voltage/current configurations
-- clk(?) NCOs
+Do you really need a whole kernel_doc format for a static function?
+Anyway...
 
-and maybe others I can't think of right now.
+> +static ssize_t ggs_store(struct device *device,
+> +			 struct device_attribute *attr,
+> +			 const char *buf, size_t count,
+> +			 u32 reg)
+> +{
+> +	char *kern_buff, *inbuf, *tok;
+> +	long mask, value;
+> +	int ret;
+> +	u32 ret_payload[PAYLOAD_ARG_CNT];
+> +
+> +	if (!device || !attr || !buf || !count || reg >= GSS_NUM_REGS)
 
-Provide a linear_range helper which can do conversion from user value
-to register value 'selector'.
+How can !device, !attr, !buf, or !count ever happen?
 
-The idea here is stolen from regulator framework and patches refactoring
-the regulator helpers to use this are following.
+Do not check for things that are impossible please.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
+> +		return -EINVAL;
+> +
+> +	kern_buff = kzalloc(count, GFP_KERNEL);
+> +	if (!kern_buff)
+> +		return -ENOMEM;
+> +
+> +	ret = strlcpy(kern_buff, buf, count);
+> +	if (ret < 0) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
+> +
+> +	inbuf = kern_buff;
+> +
+> +	/* Read the write mask */
+> +	tok = strsep(&inbuf, " ");
+> +	if (!tok) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
+> +
+> +	ret = kstrtol(tok, 16, &mask);
+> +	if (ret) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
+> +
+> +	/* Read the write value */
+> +	tok = strsep(&inbuf, " ");
+> +	if (!tok) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
+> +
+> +	ret = kstrtol(tok, 16, &value);
+> +	if (ret) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
 
-No changes since v4 (rebased only)
+sysfs files are "one value per file" which prevents this string parsing
+mess.  Please do not do that.
 
- drivers/base/Kconfig         |   3 +
- drivers/base/Makefile        |   1 +
- drivers/base/linear_ranges.c | 246 +++++++++++++++++++++++++++++++++++
- include/linux/linear_range.h |  48 +++++++
- 4 files changed, 298 insertions(+)
- create mode 100644 drivers/base/linear_ranges.c
- create mode 100644 include/linux/linear_range.h
-
-diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-index 5f0bc74d2409..636b6fa8e499 100644
---- a/drivers/base/Kconfig
-+++ b/drivers/base/Kconfig
-@@ -209,4 +209,7 @@ config GENERIC_ARCH_TOPOLOGY
- 	  appropriate scaling, sysfs interface for reading capacity values at
- 	  runtime.
- 
-+config LINEAR_RANGES
-+	tristate
-+
- endmenu
-diff --git a/drivers/base/Makefile b/drivers/base/Makefile
-index 157452080f3d..dbb6c4f7ef07 100644
---- a/drivers/base/Makefile
-+++ b/drivers/base/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_PINCTRL) += pinctrl.o
- obj-$(CONFIG_DEV_COREDUMP) += devcoredump.o
- obj-$(CONFIG_GENERIC_MSI_IRQ_DOMAIN) += platform-msi.o
- obj-$(CONFIG_GENERIC_ARCH_TOPOLOGY) += arch_topology.o
-+obj-$(CONFIG_LINEAR_RANGES) += linear_ranges.o
- 
- obj-y			+= test/
- 
-diff --git a/drivers/base/linear_ranges.c b/drivers/base/linear_ranges.c
-new file mode 100644
-index 000000000000..d9e1559b0e7b
---- /dev/null
-+++ b/drivers/base/linear_ranges.c
-@@ -0,0 +1,246 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * linear_ranges.c -- helpers to map values in a linear range to range index
-+ *
-+ * Original idea borrowed from regulator framework
-+ *
-+ * It might be useful if we could support also inversely proportional ranges?
-+ * Copyright 2020 ROHM Semiconductors
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/export.h>
-+#include <linux/kernel.h>
-+#include <linux/linear_range.h>
-+
-+/**
-+ * linear_range_values_in_range - return the amount of values in a range
-+ *
-+ * @r:		pointer to linear range where values are counted
-+ *
-+ * Compute the amount of values in range pointed by @r. Note, values can
-+ * be all equal - range with selectors 0,...,2 with step 0 still contains
-+ * 3 values even though they are all equal.
-+ *
-+ * Return: the amount of values in range pointed by @r
-+ */
-+unsigned int linear_range_values_in_range(const struct linear_range *r)
-+{
-+	if (!r)
-+		return 0;
-+	return r->max_sel - r->min_sel + 1;
-+}
-+EXPORT_SYMBOL(linear_range_values_in_range);
-+
-+/**
-+ * linear_range_values_in_range_array - return the amount of values in ranges
-+ *
-+ * @r:		pointer to array of linear ranges where values are counted
-+ * @ranges:	amount of ranges we include in computation.
-+ *
-+ * Compute the amount of values in ranges pointed by @r. Note, values can
-+ * be all equal - range with selectors 0,...,2 with step 0 still contains
-+ * 3 values even though they are all equal.
-+ *
-+ * Return: the amount of values in first @ranges ranges pointed by @r
-+ */
-+unsigned int linear_range_values_in_range_array(const struct linear_range *r,
-+						int ranges)
-+{
-+	int i, values_in_range = 0;
-+
-+	for (i = 0; i < ranges; i++) {
-+		int values;
-+
-+		values = linear_range_values_in_range(&r[i]);
-+		if (!values)
-+			return values;
-+
-+		values_in_range += values;
-+	}
-+	return values_in_range;
-+}
-+EXPORT_SYMBOL(linear_range_values_in_range_array);
-+
-+/**
-+ * linear_range_get_max_value - return the largest value in a range
-+ *
-+ * @r:		pointer to linear range where value is looked from
-+ *
-+ * Return: the largest value in the given range
-+ */
-+unsigned int linear_range_get_max_value(const struct linear_range *r)
-+{
-+	return r->min + (r->max_sel - r->min_sel) * r->step;
-+}
-+EXPORT_SYMBOL(linear_range_get_max_value);
-+
-+/**
-+ * linear_range_get_value - fetch a value from given range
-+ *
-+ * @r:		pointer to linear range where value is looked from
-+ * @selector:	selector for which the value is searched
-+ * @val:	address where found value is updated
-+ *
-+ * Search given ranges for value which matches given selector.
-+ *
-+ * Return: 0 on success, -EINVAL given selector is not found from any of the
-+ * ranges.
-+ */
-+int linear_range_get_value(const struct linear_range *r, unsigned int selector,
-+			   unsigned int *val)
-+{
-+	if (r->min_sel > selector || r->max_sel < selector)
-+		return -EINVAL;
-+
-+	*val = r->min + (selector - r->min_sel) * r->step;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(linear_range_get_value);
-+
-+/**
-+ * linear_range_get_value_array - fetch a value from array of ranges
-+ *
-+ * @r:		pointer to array of linear ranges where value is looked from
-+ * @ranges:	amount of ranges in an array
-+ * @selector:	selector for which the value is searched
-+ * @val:	address where found value is updated
-+ *
-+ * Search through an array of ranges for value which matches given selector.
-+ *
-+ * Return: 0 on success, -EINVAL given selector is not found from any of the
-+ * ranges.
-+ */
-+int linear_range_get_value_array(const struct linear_range *r, int ranges,
-+				 unsigned int selector, unsigned int *val)
-+{
-+	int i;
-+
-+	for (i = 0; i < ranges; i++)
-+		if (r[i].min_sel <= selector && r[i].max_sel >= selector)
-+			return linear_range_get_value(&r[i], selector, val);
-+
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL(linear_range_get_value_array);
-+
-+/**
-+ * linear_range_get_selector_low - return linear range selector for value
-+ *
-+ * @r:		pointer to linear range where selector is looked from
-+ * @val:	value for which the selector is searched
-+ * @selector:	address where found selector value is updated
-+ * @found:	flag to indicate that given value was in the range
-+ *
-+ * Return selector which which range value is closest match for given
-+ * input value. Value is matching if it is equal or smaller than given
-+ * value. If given value is in the range, then @found is set true.
-+ *
-+ * Return: 0 on success, -EINVAL if range is invalid or does not contain
-+ * value smaller or equal to given value
-+ */
-+int linear_range_get_selector_low(const struct linear_range *r,
-+				  unsigned int val, unsigned int *selector,
-+				  bool *found)
-+{
-+	*found = false;
-+
-+	if (r->min > val)
-+		return -EINVAL;
-+
-+	if (linear_range_get_max_value(r) >= val)
-+		*found = true;
-+
-+	if (!r->step)
-+		*selector = r->min_sel;
-+	else
-+		*selector = (val - r->min) / r->step + r->min_sel;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(linear_range_get_selector_low);
-+
-+/**
-+ * linear_range_get_selector_low_array - return linear range selector for value
-+ *
-+ * @r:		pointer to array of linear ranges where selector is looked from
-+ * @ranges:	amount of ranges to scan from array
-+ * @val:	value for which the selector is searched
-+ * @selector:	address where found selector value is updated
-+ * @found:	flag to indicate that given value was in the range
-+ *
-+ * Scan array of ranges for selector which which range value matches given
-+ * input value. Value is matching if it is equal or smaller than given
-+ * value. If given value is found to be in a range scannins is stopped and
-+ * @found is set true. If a range with values smaller than given value is found
-+ * but the range max is being smaller than given value, then the ranges
-+ * biggest selector is updated to @selector but scanning ranges is continued
-+ * and @found is set to false.
-+ *
-+ * Return: 0 on success, -EINVAL if range array is invalid or does not contain
-+ * range with a value smaller or equal to given value
-+ */
-+int linear_range_get_selector_low_array(const struct linear_range *r,
-+					int ranges, unsigned int val,
-+					unsigned int *selector, bool *found)
-+{
-+	int i;
-+	int ret = -EINVAL;
-+
-+	for (i = 0; i < ranges; i++) {
-+		int tmpret;
-+
-+		tmpret = linear_range_get_selector_low(&r[i], val, selector,
-+						       found);
-+
-+		if (!tmpret)
-+			ret = 0;
-+
-+		if (*found)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(linear_range_get_selector_low_array);
-+
-+/**
-+ * linear_range_get_selector_high - return linear range selector for value
-+ *
-+ * @r:		pointer to linear range where selector is looked from
-+ * @val:	value for which the selector is searched
-+ * @selector:	address where found selector value is updated
-+ * @found:	flag to indicate that given value was in the range
-+ *
-+ * Return selector which which range value is closest match for given
-+ * input value. Value is matching if it is equal or higher than given
-+ * value. If given value is in the range, then @found is set true.
-+ *
-+ * Return: 0 on success, -EINVAL if range is invalid or does not contain
-+ * value greater or equal to given value
-+ */
-+int linear_range_get_selector_high(const struct linear_range *r,
-+				   unsigned int val, unsigned int *selector,
-+				   bool *found)
-+{
-+	*found = false;
-+
-+	if (linear_range_get_max_value(r) < val)
-+		return -EINVAL;
-+
-+	if (r->min <= val) {
-+		*found = true;
-+	} else {
-+		*selector = r->min_sel;
-+		return 0;
-+	}
-+
-+	if (!r->step)
-+		*selector = r->max_sel;
-+	else
-+		*selector = DIV_ROUND_UP(val - r->min, r->step) + r->min_sel;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(linear_range_get_selector_high);
-diff --git a/include/linux/linear_range.h b/include/linux/linear_range.h
-new file mode 100644
-index 000000000000..534ca59a308a
---- /dev/null
-+++ b/include/linux/linear_range.h
-@@ -0,0 +1,48 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/* Copyright (C) 2020 ROHM Semiconductors */
-+
-+#ifndef LINEAR_RANGE_H
-+#define LINEAR_RANGE_H
-+
-+#include <linux/types.h>
-+
-+/**
-+ * struct linear_range - table of selector - value pairs
-+ *
-+ * Define a lookup-table for range of values. Intended to help when looking
-+ * for a register value matching certaing physical measure (like voltage).
-+ * Usable when increment of one in register always results a constant increment
-+ * of the physical measure (like voltage).
-+ *
-+ * @min:  Lowest value in range
-+ * @min_sel: Lowest selector for range
-+ * @max_sel: Highest selector for range
-+ * @step: Value step size
-+ */
-+struct linear_range {
-+	unsigned int min;
-+	unsigned int min_sel;
-+	unsigned int max_sel;
-+	unsigned int step;
-+};
-+
-+unsigned int linear_range_values_in_range(const struct linear_range *r);
-+unsigned int linear_range_values_in_range_array(const struct linear_range *r,
-+						int ranges);
-+unsigned int linear_range_get_max_value(const struct linear_range *r);
-+
-+int linear_range_get_value(const struct linear_range *r, unsigned int selector,
-+			   unsigned int *val);
-+int linear_range_get_value_array(const struct linear_range *r, int ranges,
-+				 unsigned int selector, unsigned int *val);
-+int linear_range_get_selector_low(const struct linear_range *r,
-+				  unsigned int val, unsigned int *selector,
-+				  bool *found);
-+int linear_range_get_selector_high(const struct linear_range *r,
-+				   unsigned int val, unsigned int *selector,
-+				   bool *found);
-+int linear_range_get_selector_low_array(const struct linear_range *r,
-+					int ranges, unsigned int val,
-+					unsigned int *selector, bool *found);
-+
-+#endif
--- 
-2.21.0
+Again, one value per file, not X values.
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+> +
+> +	ret = zynqmp_pm_read_ggs(reg, ret_payload);
+> +	if (ret) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
+> +	ret_payload[1] &= ~mask;
+> +	value &= mask;
+> +	value |= ret_payload[1];
+> +
+> +	ret = zynqmp_pm_write_ggs(reg, value);
+> +	if (ret)
+> +		count = -EFAULT;
+> +
+> +err:
+> +	kfree(kern_buff);
+> +
+> +	return count;
+> +}
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+> +/**
+> + * pggs_store - Store persistent global general storage (pggs) sysfs attribute
+> + * @device: Device structure
+> + * @attr: Device attribute structure
+> + * @buf: User entered shutdown_scope attribute string
+> + * @count: Size of buf
+> + * @reg: Register number
+> + *
+> + * Return: count argument if request succeeds, the corresponding
+> + * error code otherwise
+> + *
+> + * Helper function for storing a pggs register value.
+> + */
+> +static ssize_t pggs_store(struct device *device,
+> +			  struct device_attribute *attr,
+> +			  const char *buf, size_t count,
+> +			  u32 reg)
+> +{
+> +	char *kern_buff, *inbuf, *tok;
+> +	long mask, value;
+> +	int ret;
+> +	u32 ret_payload[PAYLOAD_ARG_CNT];
+> +
+> +	if (!device || !attr || !buf || !count || reg >= GSS_NUM_REGS)
+> +		return -EINVAL;
+
+Again, clean this up.
+
+> +
+> +	kern_buff = kzalloc(count, GFP_KERNEL);
+> +	if (!kern_buff)
+> +		return -ENOMEM;
+> +
+> +	ret = strlcpy(kern_buff, buf, count);
+> +	if (ret < 0) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
+> +
+> +	inbuf = kern_buff;
+> +
+> +	/* Read the write mask */
+> +	tok = strsep(&inbuf, " ");
+
+No need to parse when there is only one value.
+
+> +	if (!tok) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
+> +
+> +	ret = kstrtol(tok, 16, &mask);
+> +	if (ret) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
+> +
+> +	/* Read the write value */
+> +	tok = strsep(&inbuf, " ");
+> +	if (!tok) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
+> +
+> +	ret = kstrtol(tok, 16, &value);
+> +	if (ret) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
+> +
+> +	ret = zynqmp_pm_read_pggs(reg, ret_payload);
+> +	if (ret) {
+> +		count = -EFAULT;
+> +		goto err;
+> +	}
+> +	ret_payload[1] &= ~mask;
+> +	value &= mask;
+> +	value |= ret_payload[1];
+> +
+> +	ret = zynqmp_pm_write_pggs(reg, value);
+> +	if (ret)
+> +		count = -EFAULT;
+> +
+> +err:
+> +	kfree(kern_buff);
+> +
+> +	return count;
+> +}
+
+> +static struct attribute *zynqmp_ggs_attrs[] = {
+> +	&dev_attr_ggs0.attr,
+> +	&dev_attr_ggs1.attr,
+> +	&dev_attr_ggs2.attr,
+> +	&dev_attr_ggs3.attr,
+> +	&dev_attr_pggs0.attr,
+> +	&dev_attr_pggs1.attr,
+> +	&dev_attr_pggs2.attr,
+> +	&dev_attr_pggs3.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group ggs_attribute_group = {
+> +	.attrs = zynqmp_ggs_attrs,
+> +};
+> +
+> +const struct attribute_group *firmware_attribute_groups[] = {
+> +	&ggs_attribute_group,
+> +	NULL,
+> +};
+
+ATTRIBUTE_GROUPS()?
+
+
+
+> +
+>  static int zynqmp_firmware_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -910,6 +1226,7 @@ static struct platform_driver zynqmp_firmware_driver = {
+>  	.driver = {
+>  		.name = "zynqmp_firmware",
+>  		.of_match_table = zynqmp_firmware_of_match,
+> +		.dev_groups = firmware_attribute_groups,
+>  	},
+>  	.probe = zynqmp_firmware_probe,
+>  	.remove = zynqmp_firmware_remove,
+> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+> index 725dccf..8ccaa39 100644
+> --- a/include/linux/firmware/xlnx-zynqmp.h
+> +++ b/include/linux/firmware/xlnx-zynqmp.h
+> @@ -13,6 +13,8 @@
+>  #ifndef __FIRMWARE_ZYNQMP_H__
+>  #define __FIRMWARE_ZYNQMP_H__
+>  
+> +#include <linux/device.h>
+
+Why is this needed here?
+
+> +
+>  #define ZYNQMP_PM_VERSION_MAJOR	1
+>  #define ZYNQMP_PM_VERSION_MINOR	0
+>  
+> @@ -42,6 +44,8 @@
+>  
+>  #define ZYNQMP_PM_MAX_QOS		100U
+>  
+> +#define GSS_NUM_REGS	(4)
+> +
+>  /* Node capabilities */
+>  #define	ZYNQMP_PM_CAPABILITY_ACCESS	0x1U
+>  #define	ZYNQMP_PM_CAPABILITY_CONTEXT	0x2U
+
+
+You are not adding anything that depends on device.h in this file, so
+just include the needed .h file in the .c file that needs it please.
+
+Helps unwind .h include messes.
+
+thanks,
+
+greg k-h
