@@ -2,87 +2,189 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A78DC5ACD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013ECC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C0820768
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D103A2076D
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 16:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgCRQAt (ORCPT
+        id S1727152AbgCRQBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 12:00:49 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57744 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgCRQAs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 12:00:48 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1jEb7G-0007Tj-3p; Wed, 18 Mar 2020 17:00:22 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Eugeniu Rosca <roscaeugeniu@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: Re: [RFC PATCH 2/3] printk: add console_verbose_{start,end}
-References: <20200315170903.17393-1-erosca@de.adit-jv.com>
-        <20200315170903.17393-3-erosca@de.adit-jv.com>
-Date:   Wed, 18 Mar 2020 17:00:20 +0100
-In-Reply-To: <20200315170903.17393-3-erosca@de.adit-jv.com> (Eugeniu Rosca's
-        message of "Sun, 15 Mar 2020 18:09:02 +0100")
-Message-ID: <87o8stmz57.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Wed, 18 Mar 2020 12:01:07 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52544 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726817AbgCRQBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 12:01:07 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 74B381DFBFC724B5E42D;
+        Wed, 18 Mar 2020 23:59:49 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 18 Mar 2020 23:59:39 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <xuwei5@huawei.com>, <arnd@arndb.de>
+CC:     <okaya@kernel.org>, <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
+        <olof@lixom.net>, <jiaxun.yang@flygoat.com>,
+        "John Garry" <john.garry@huawei.com>
+Subject: [PATCH 1/3] io: Provide _inX() and _outX()
+Date:   Wed, 18 Mar 2020 23:55:33 +0800
+Message-ID: <1584546935-75393-2-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1584546935-75393-1-git-send-email-john.garry@huawei.com>
+References: <1584546935-75393-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-15, Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
-> diff --git a/include/linux/printk.h b/include/linux/printk.h
-> index 1e6108b8d15f..14755ef7b017 100644
-> --- a/include/linux/printk.h
-> +++ b/include/linux/printk.h
-> @@ -3,6 +3,7 @@
->  #define __KERNEL_PRINTK__
->  
->  #include <stdarg.h>
-> +#include <linux/atomic.h>
->  #include <linux/init.h>
->  #include <linux/kern_levels.h>
->  #include <linux/linkage.h>
-> @@ -77,6 +78,15 @@ static inline void console_verbose(void)
->  		console_loglevel = CONSOLE_LOGLEVEL_MOTORMOUTH;
->  }
->  
-> +#ifdef CONFIG_PRINTK
-> +extern atomic_t ignore_loglevel;
-> +static inline void console_verbose_start(void) { atomic_inc(&ignore_loglevel); }
-> +static inline void console_verbose_end(void) { atomic_dec(&ignore_loglevel); }
+Since commit a7851aa54c0c ("io: change outX() to have their own IO
+barrier overrides") and commit 87fe2d543f81 ("io: change inX() to have
+their own IO barrier overrides"), the outX and inX functions have memory
+barriers which can be overridden.
 
-To be compatible with console_verbose() semantics, this should also
-respect console_loglevel=0. Perhaps by updating
-suppress_message_printing() to be something like:
+However, the generic logic_pio lib has continued to use readl/writel et al
+for IO port accesses, which has weaker barriers on arm64.
 
-static bool suppress_message_printing(int level)
-{
-        return (!console_loglevel ||
-                (level >= console_loglevel && !ignore_loglevel));
-}
+Provide generic _inX() and _outX(), which can be used by logic pio.
 
-John Ogness
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ include/asm-generic/io.h | 64 +++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 44 insertions(+), 20 deletions(-)
+
+diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+index d39ac997dda8..31f647389c84 100644
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -448,17 +448,15 @@ static inline void writesq(volatile void __iomem *addr, const void *buffer,
+ #define IO_SPACE_LIMIT 0xffff
+ #endif
+ 
+-#include <linux/logic_pio.h>
+-
+ /*
+  * {in,out}{b,w,l}() access little endian I/O. {in,out}{b,w,l}_p() can be
+  * implemented on hardware that needs an additional delay for I/O accesses to
+  * take effect.
+  */
+ 
+-#ifndef inb
+-#define inb inb
+-static inline u8 inb(unsigned long addr)
++#ifndef _inb
++#define _inb _inb
++static inline u16 _inb(unsigned long addr)
+ {
+ 	u8 val;
+ 
+@@ -469,9 +467,9 @@ static inline u8 inb(unsigned long addr)
+ }
+ #endif
+ 
+-#ifndef inw
+-#define inw inw
+-static inline u16 inw(unsigned long addr)
++#ifndef _inw
++#define _inw _inw
++static inline u16 _inw(unsigned long addr)
+ {
+ 	u16 val;
+ 
+@@ -482,9 +480,9 @@ static inline u16 inw(unsigned long addr)
+ }
+ #endif
+ 
+-#ifndef inl
+-#define inl inl
+-static inline u32 inl(unsigned long addr)
++#ifndef _inl
++#define _inl _inl
++static inline u16 _inl(unsigned long addr)
+ {
+ 	u32 val;
+ 
+@@ -495,9 +493,9 @@ static inline u32 inl(unsigned long addr)
+ }
+ #endif
+ 
+-#ifndef outb
+-#define outb outb
+-static inline void outb(u8 value, unsigned long addr)
++#ifndef _outb
++#define _outb _outb
++static inline void _outb(u8 value, unsigned long addr)
+ {
+ 	__io_pbw();
+ 	__raw_writeb(value, PCI_IOBASE + addr);
+@@ -505,9 +503,9 @@ static inline void outb(u8 value, unsigned long addr)
+ }
+ #endif
+ 
+-#ifndef outw
+-#define outw outw
+-static inline void outw(u16 value, unsigned long addr)
++#ifndef _outw
++#define _outw _outw
++static inline void _outw(u16 value, unsigned long addr)
+ {
+ 	__io_pbw();
+ 	__raw_writew(cpu_to_le16(value), PCI_IOBASE + addr);
+@@ -515,9 +513,9 @@ static inline void outw(u16 value, unsigned long addr)
+ }
+ #endif
+ 
+-#ifndef outl
+-#define outl outl
+-static inline void outl(u32 value, unsigned long addr)
++#ifndef _outl
++#define _outl _outl
++static inline void _outl(u32 value, unsigned long addr)
+ {
+ 	__io_pbw();
+ 	__raw_writel(cpu_to_le32(value), PCI_IOBASE + addr);
+@@ -525,6 +523,32 @@ static inline void outl(u32 value, unsigned long addr)
+ }
+ #endif
+ 
++#include <linux/logic_pio.h>
++
++#ifndef inb
++#define inb _inb
++#endif
++
++#ifndef inw
++#define inw _inw
++#endif
++
++#ifndef inl
++#define inl _inl
++#endif
++
++#ifndef outb
++#define outb _outb
++#endif
++
++#ifndef outw
++#define outw _outw
++#endif
++
++#ifndef outl
++#define outl _outl
++#endif
++
+ #ifndef inb_p
+ #define inb_p inb_p
+ static inline u8 inb_p(unsigned long addr)
+-- 
+2.12.3
+
