@@ -2,319 +2,161 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E650C4332D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ECCC4332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0262620752
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79BA20752
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 22:09:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j7RRCoSX"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="uJavj6m3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgCRWJB (ORCPT
+        id S1727310AbgCRWJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 18:09:01 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51298 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgCRWJB (ORCPT
+        Wed, 18 Mar 2020 18:09:51 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45460 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbgCRWJv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 18:09:01 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ILx6Gx105391;
-        Wed, 18 Mar 2020 22:06:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=ox5qUf5D6WTBPl3rtmnft5xufOmx+0Hi+IA1Hia8V2k=;
- b=j7RRCoSXNAacP2Bdds6O491TkrTiNOQIhpKAKir7hYE4YlJ8R5R+doFi0DEojOtv5YXd
- YoC2mTGkjKoYJ9jSfBQLMLmFdMHhpY8+ULqmaJs9rXHaz0GEEeWIUzhIqwo0DQzYS7Qy
- LkcKiJ8WrfXBaoxPftbsO9YBUFDsfAZSWtwtCmrl553kTOu/+zjx5CKpSrP6u53wNCG8
- ZDKkD0UlRXN6KRUmggXuXx4btzi6xthw81ykExv6hmWxQX0KaWrjQ8Pnu/s7SXc/xJXY
- IomP50Dc4YOFdKfqFmiNfMKaXX4F9kZrq90uIP9+Vu1nJRbEJP5c+d9Rqb5uA0KZoHJq WQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2yrpprd9m7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 22:06:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ILv9Oq058865;
-        Wed, 18 Mar 2020 22:06:58 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2ys8tuteuj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 22:06:58 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02IM6vVZ006849;
-        Wed, 18 Mar 2020 22:06:57 GMT
-Received: from monkey.oracle.com (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Mar 2020 15:06:57 -0700
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Longpeng <longpeng2@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: [PATCH 4/4] hugetlbfs: clean up command line processing
-Date:   Wed, 18 Mar 2020 15:06:34 -0700
-Message-Id: <20200318220634.32100-5-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200318220634.32100-1-mike.kravetz@oracle.com>
-References: <20200318220634.32100-1-mike.kravetz@oracle.com>
+        Wed, 18 Mar 2020 18:09:51 -0400
+Received: by mail-ed1-f66.google.com with SMTP id u59so41520edc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 15:09:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JfzzU/d7+bs7S8RW80xj5NfJqnX96IweXITa93PwcGY=;
+        b=uJavj6m3YaJ4njZZvPkkoXHwM7Y47+mKdHuh/KmTdTEAuJIqvcdvHnavGeq0mxKhHq
+         FQf/+og8unjjRryFT1v8JempfBALvfWwTfB5QZppzzDzvZaCYDI9TZC1vDkN+5+3nHuZ
+         FJw2LCwt/4fcfWLZtKC/fvuKEnrKzzRFix/IIVYKFAKA59oeuYybEcFcJxcIi4+/QSwe
+         53dHRPpC7Sz01DK/Pjj55IrBCapM8oVYy+2OV3UnnjocmfcGWgLVwgVVnF2ZWAyUMLRh
+         rW0iZFy1BGl/CZSTlfVlQNnAUdiOYaStXxZSH8m93VafBtO7pg4K09E92RGeTTchFYY5
+         Izdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JfzzU/d7+bs7S8RW80xj5NfJqnX96IweXITa93PwcGY=;
+        b=TXtmi0DxBq++eOb4Cmvzur7LC3jxGE2xNAlpp6KCL0vgFPM+T1y+uc0cRULuhV5zVE
+         5BIrFVwrxKVH9KHrza1U5A4Jjby/sVD/DclJdJx8BNZLNkxn/Ht8L2EaWoDkVIb1emfF
+         0OJs5gPgTJMe6MUDpRJePNNGlILirMM16pwy3WLjwUUydPEg9l5SdS52nStMpPSZbV4Z
+         wOCKbAYAa4pPeKsgzFGn9rb7HzRlvjQKPY1vwzuskTTWsFIV9tj9Oe9O8TDPdBwMeasL
+         bwE3WO28L3s4s4nBWGxS+YhkttQdKV6vqcQRQeuOKGTNWFHSPEoThptn3BhtNRxn7G0W
+         dAQQ==
+X-Gm-Message-State: ANhLgQ0NiStLNQVzq6kpPM2EFaFlxlNFK4IXR5FA2bgJMup1JEAZz5/4
+        LzCtsGDHy/SYII3OncahXenyHd1pmkw65dmpPZwZ
+X-Google-Smtp-Source: ADFU+vtv7H8q642zA3Wkxs658/ZoOMch5bUgWLX+GZ4bvwWx9WnStK5co0hnRa4gNXJW1Fh+y+4mGyf0BwiQnb6dSVs=
+X-Received: by 2002:a17:906:7b8d:: with SMTP id s13mr352313ejo.77.1584569386895;
+ Wed, 18 Mar 2020 15:09:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003180094
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 clxscore=1015
- impostorscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003180094
+References: <cover.1584480281.git.rgb@redhat.com> <3d591dc49fcb643890b93e5b9a8169612b1c96e1.1584480281.git.rgb@redhat.com>
+ <CAHC9VhTQBxzFrGn=+b9MzoapV0iiccPOLvkwemdESSb6nOFGXQ@mail.gmail.com> <20200318220012.xeeoeidz5vs6x7g4@madcap2.tricolour.ca>
+In-Reply-To: <20200318220012.xeeoeidz5vs6x7g4@madcap2.tricolour.ca>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 18 Mar 2020 18:09:36 -0400
+Message-ID: <CAHC9VhTFSNhedSmJA38zdq3gXira9FQ6D-bFUFxnwWKcJOfpUQ@mail.gmail.com>
+Subject: Re: [PATCH ghak25 v3 1/3] audit: tidy and extend netfilter_cfg
+ x_tables and ebtables logging
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
+        tgraf@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With all hugetlb page processing done in a single file clean up code.
-- Make code match desired semantics
-  - Update documentation with semantics
-- Make all warnings and errors messages start with 'HugeTLB:'.
-- Consistently name command line parsing routines.
-- Add comments to code
-  - Describe some of the subtle interactions
-  - Describe semantics of command line arguments
+On Wed, Mar 18, 2020 at 6:00 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2020-03-18 17:54, Paul Moore wrote:
+> > On Tue, Mar 17, 2020 at 5:31 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > >
+> > > NETFILTER_CFG record generation was inconsistent for x_tables and
+> > > ebtables configuration changes.  The call was needlessly messy and there
+> > > were supporting records missing at times while they were produced when
+> > > not requested.  Simplify the logging call into a new audit_log_nfcfg
+> > > call.  Honour the audit_enabled setting while more consistently
+> > > recording information including supporting records by tidying up dummy
+> > > checks.
+> > >
+> > > Add an op= field that indicates the operation being performed (register
+> > > or replace).
+> > >
+> > > Here is the enhanced sample record:
+> > >   type=NETFILTER_CFG msg=audit(1580905834.919:82970): table=filter family=2 entries=83 op=replace
+> > >
+> > > Generate audit NETFILTER_CFG records on ebtables table registration.
+> > > Previously this was being done for x_tables registration and replacement
+> > > operations and ebtables table replacement only.
+> > >
+> > > See: https://github.com/linux-audit/audit-kernel/issues/25
+> > > See: https://github.com/linux-audit/audit-kernel/issues/35
+> > > See: https://github.com/linux-audit/audit-kernel/issues/43
+> > >
+> > > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > > ---
+> > >  include/linux/audit.h           | 19 +++++++++++++++++++
+> > >  kernel/auditsc.c                | 24 ++++++++++++++++++++++++
+> > >  net/bridge/netfilter/ebtables.c | 12 ++++--------
+> > >  net/netfilter/x_tables.c        | 12 +++---------
+> > >  4 files changed, 50 insertions(+), 17 deletions(-)
+> > >
+> > > diff --git a/include/linux/audit.h b/include/linux/audit.h
+> > > index f9ceae57ca8d..f4aed2b9be8d 100644
+> > > --- a/include/linux/audit.h
+> > > +++ b/include/linux/audit.h
+> > > @@ -94,6 +94,11 @@ struct audit_ntp_data {
+> > >  struct audit_ntp_data {};
+> > >  #endif
+> > >
+> > > +enum audit_nfcfgop {
+> > > +       AUDIT_XT_OP_REGISTER,
+> > > +       AUDIT_XT_OP_REPLACE,
+> > > +};
+> > > +
+> > >  extern int is_audit_feature_set(int which);
+> > >
+> > >  extern int __init audit_register_class(int class, unsigned *list);
+> > > @@ -379,6 +384,8 @@ extern int __audit_log_bprm_fcaps(struct linux_binprm *bprm,
+> > >  extern void __audit_fanotify(unsigned int response);
+> > >  extern void __audit_tk_injoffset(struct timespec64 offset);
+> > >  extern void __audit_ntp_log(const struct audit_ntp_data *ad);
+> > > +extern void __audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
+> > > +                             enum audit_nfcfgop op);
+> > >
+> > >  static inline void audit_ipc_obj(struct kern_ipc_perm *ipcp)
+> > >  {
+> > > @@ -514,6 +521,13 @@ static inline void audit_ntp_log(const struct audit_ntp_data *ad)
+> > >                 __audit_ntp_log(ad);
+> > >  }
+> > >
+> > > +static inline void audit_log_nfcfg(const char *name, u8 af, unsigned int nentries,
+> > > +                                  enum audit_nfcfgop op)
+> > > +{
+> > > +       if (audit_enabled)
+> > > +               __audit_log_nfcfg(name, af, nentries, op);
+> >
+> > Do we want a dummy check here too?  Or do we always want to generate
+> > this record (assuming audit is enabled) because it is a configuration
+> > related record?
+>
+> This is an audit configuration change, so it is mandatory unless there
+> is a rule that excludes it.  I talked about this in the cover letter,
+> but perhaps my wording wasn't as clear as it could have been.
 
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
----
- Documentation/admin-guide/mm/hugetlbpage.rst | 26 +++++++
- mm/hugetlb.c                                 | 78 +++++++++++++++-----
- 2 files changed, 87 insertions(+), 17 deletions(-)
+Yes, it wasn't clear to me what your goals were.
 
-diff --git a/Documentation/admin-guide/mm/hugetlbpage.rst b/Documentation/admin-guide/mm/hugetlbpage.rst
-index 1cc0bc78d10e..afc8888f33c3 100644
---- a/Documentation/admin-guide/mm/hugetlbpage.rst
-+++ b/Documentation/admin-guide/mm/hugetlbpage.rst
-@@ -100,6 +100,32 @@ with a huge page size selection parameter "hugepagesz=<size>".  <size> must
- be specified in bytes with optional scale suffix [kKmMgG].  The default huge
- page size may be selected with the "default_hugepagesz=<size>" boot parameter.
- 
-+Hugetlb boot command line parameter semantics
-+hugepagesz - Specify a huge page size.  Used in conjunction with hugepages
-+	parameter to preallocate a number of huge pages of the specified
-+	size.  Hence, hugepagesz and hugepages are typically specified in
-+	pairs such as:
-+		hugepagesz=2M hugepages=512
-+	hugepagesz can only be specified once on the command line for a
-+	specific huge page size.  Valid huge page sizes are architecture
-+	dependent.
-+hugepages - Specify the number of huge pages to preallocate.  This typically
-+	follows a valid hugepagesz parameter.  However, if hugepages is the
-+	first or only hugetlb command line parameter it specifies the number
-+	of huge pages of default size to allocate.  The number of huge pages
-+	of default size specified in this manner can be overwritten by a
-+	hugepagesz,hugepages parameter pair for the default size.
-+	For example, on an architecture with 2M default huge page size:
-+		hugepages=256 hugepagesz=2M hugepages=512
-+	will result in 512 2M huge pages being allocated.  If a hugepages
-+	parameter is preceded by an invalid hugepagesz parameter, it will
-+	be ignored.
-+default_hugepagesz - Specify the default huge page size.  This parameter can
-+	only be specified on the command line.  No other hugetlb command line
-+	parameter is associated with default_hugepagesz.  Therefore, it can
-+	appear anywhere on the command line.  Valid default huge page size is
-+	architecture dependent.
-+
- When multiple huge page sizes are supported, ``/proc/sys/vm/nr_hugepages``
- indicates the current number of pre-allocated huge pages of the default size.
- Thus, one can use the following command to dynamically allocate/deallocate
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index cc85b4f156ca..2b9bf01db2b6 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -2954,7 +2954,7 @@ static void __init hugetlb_sysfs_init(void)
- 		err = hugetlb_sysfs_add_hstate(h, hugepages_kobj,
- 					 hstate_kobjs, &hstate_attr_group);
- 		if (err)
--			pr_err("Hugetlb: Unable to add hstate %s", h->name);
-+			pr_err("HugeTLB: Unable to add hstate %s", h->name);
- 	}
- }
- 
-@@ -3058,7 +3058,7 @@ static void hugetlb_register_node(struct node *node)
- 						nhs->hstate_kobjs,
- 						&per_node_hstate_attr_group);
- 		if (err) {
--			pr_err("Hugetlb: Unable to add hstate %s for node %d\n",
-+			pr_err("HugeTLB: Unable to add hstate %s for node %d\n",
- 				h->name, node->dev.id);
- 			hugetlb_unregister_node(node);
- 			break;
-@@ -3109,19 +3109,35 @@ static int __init hugetlb_init(void)
- 	if (!hugepages_supported())
- 		return 0;
- 
--	if (!size_to_hstate(default_hstate_size)) {
--		if (default_hstate_size != 0) {
--			pr_err("HugeTLB: unsupported default_hugepagesz %lu. Reverting to %lu\n",
--			       default_hstate_size, HPAGE_SIZE);
--		}
--
-+	/*
-+	 * Make sure HPAGE_SIZE (HUGETLB_PAGE_ORDER) hstate exists.  Some
-+	 * architectures depend on setup being done here.
-+	 *
-+	 * If a valid default huge page size was specified on the command line,
-+	 * add associated hstate if necessary.  If not, set default_hstate_size
-+	 * to default size.  default_hstate_idx is used at runtime to identify
-+	 * the default huge page size/hstate.
-+	 */
-+	hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
-+	if (default_hstate_size)
-+		hugetlb_add_hstate(ilog2(default_hstate_size) - PAGE_SHIFT);
-+	else
- 		default_hstate_size = HPAGE_SIZE;
--		hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
--	}
- 	default_hstate_idx = hstate_index(size_to_hstate(default_hstate_size));
-+
-+	/*
-+	 * default_hstate_max_huge_pages != 0 indicates a count (hugepages=)
-+	 * specified before a size (hugepagesz=).  Use this count for the
-+	 * default huge page size, unless a specific value was specified for
-+	 * this size in a hugepagesz/hugepages pair.
-+	 */
- 	if (default_hstate_max_huge_pages) {
- 		if (!default_hstate.max_huge_pages)
--			default_hstate.max_huge_pages = default_hstate_max_huge_pages;
-+			default_hstate.max_huge_pages =
-+				default_hstate_max_huge_pages;
-+		else
-+			pr_warn("HugeTLB: First hugepages=%lu kB ignored\n",
-+				default_hstate_max_huge_pages);
- 	}
- 
- 	hugetlb_init_hstates();
-@@ -3174,20 +3190,27 @@ void __init hugetlb_add_hstate(unsigned int order)
- 	parsed_hstate = h;
- }
- 
--static int __init hugetlb_nrpages_setup(char *s)
-+/*
-+ * hugepages command line processing
-+ * hugepages must normally follows a valid hugepagsz specification.  If not,
-+ * ignore the hugepages value.  hugepages can also be the first huge page
-+ * command line option in which case it specifies the number of huge pages
-+ * for the default size.
-+ */
-+static int __init hugepages_setup(char *s)
- {
- 	unsigned long *mhp;
- 	static unsigned long *last_mhp;
- 
- 	if (!parsed_valid_hugepagesz) {
--		pr_warn("hugepages = %s preceded by "
-+		pr_warn("HugeTLB: hugepages = %s preceded by "
- 			"an unsupported hugepagesz, ignoring\n", s);
- 		parsed_valid_hugepagesz = true;
- 		return 1;
- 	}
- 	/*
--	 * !hugetlb_max_hstate means we haven't parsed a hugepagesz= parameter yet,
--	 * so this hugepages= parameter goes to the "default hstate".
-+	 * !hugetlb_max_hstate means we haven't parsed a hugepagesz= parameter
-+	 * yet, so this hugepages= parameter goes to the "default hstate".
- 	 */
- 	else if (!hugetlb_max_hstate)
- 		mhp = &default_hstate_max_huge_pages;
-@@ -3195,7 +3218,8 @@ static int __init hugetlb_nrpages_setup(char *s)
- 		mhp = &parsed_hstate->max_huge_pages;
- 
- 	if (mhp == last_mhp) {
--		pr_warn("hugepages= specified twice without interleaving hugepagesz=, ignoring\n");
-+		pr_warn("HugeTLB: hugepages= specified twice without interleaving hugepagesz=, ignoring hugepages=%s\n",
-+			s);
- 		return 1;
- 	}
- 
-@@ -3214,8 +3238,15 @@ static int __init hugetlb_nrpages_setup(char *s)
- 
- 	return 1;
- }
--__setup("hugepages=", hugetlb_nrpages_setup);
-+__setup("hugepages=", hugepages_setup);
- 
-+/*
-+ * hugepagesz command line processing
-+ * A specific huge page size can only be specified once with hugepagesz.
-+ * hugepagesz is followed by hugepages on the commnad line.  The global
-+ * variable 'parsed_valid_hugepagesz' is used to determine if prior
-+ * hugepagesz argument was valid.
-+ */
- static int __init hugepagesz_setup(char *s)
- {
- 	unsigned long long size;
-@@ -3230,16 +3261,23 @@ static int __init hugepagesz_setup(char *s)
- 	}
- 
- 	if (size_to_hstate(size)) {
-+		parsed_valid_hugepagesz = false;
- 		pr_warn("HugeTLB: hugepagesz %s specified twice, ignoring\n",
- 			saved_s);
- 		return 0;
- 	}
- 
-+	parsed_valid_hugepagesz = true;
- 	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
- 	return 1;
- }
- __setup("hugepagesz=", hugepagesz_setup);
- 
-+/*
-+ * default_hugepagesz command line input
-+ * Only one instance of default_hugepagesz allowed on command line.  Do not
-+ * add hstate here as that will confuse hugepagesz/hugepages processing.
-+ */
- static int __init default_hugepagesz_setup(char *s)
- {
- 	unsigned long long size;
-@@ -3252,6 +3290,12 @@ static int __init default_hugepagesz_setup(char *s)
- 		return 0;
- 	}
- 
-+	if (default_hstate_size) {
-+		pr_err("HugeTLB: default_hugepagesz previously specified, ignoring %s\n",
-+			saved_s);
-+		return 0;
-+	}
-+
- 	default_hstate_size = size;
- 	return 1;
- }
+In general I think this patchset looks okay, but it's -rc6 so this
+should wait for the next cycle; it will also give the netdev/netfilter
+folks a chance to comment on this latest revision.
+
 -- 
-2.24.1
-
+paul moore
+www.paul-moore.com
