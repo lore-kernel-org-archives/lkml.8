@@ -2,171 +2,115 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBCDC10F29
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84041C10F29
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680C12071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:13:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdyaXSK/"
+	by mail.kernel.org (Postfix) with ESMTP id 5E3232077A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 20:13:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584562428;
+	bh=4COnoFw4zZTTnD0icQvz2MrvlZlhqnrg/n8Iz1/EMx4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=y8dGe5f3K2PVxsTbIEKot59iRJxvNkXW7t8R3y6oorq/Oc99wc2JCBy+45itFXfl6
+	 yUcRsFVMQPK4Er56QgqZjKgTP7wlLctYkTINwejtpYlK59aFaQTvlADkSXztXo8iBR
+	 A6tnHCd4f1cwgx2B3/jD2DZn4jLE4gvVVi/GsJao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgCRUN2 (ORCPT
+        id S1726894AbgCRUNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 16:13:28 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42414 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCRUN1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:13:27 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 13so158390oiy.9;
-        Wed, 18 Mar 2020 13:13:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TTrA+tMwfg5GaaL0pTTB4SX2vmA9Q9FMRW/WsoCZ0JE=;
-        b=EdyaXSK/9dSzcuY7KwTimocBCtQucM4yN4ilyd0nhsZPKf/UZPVgHsa27qIqIEWXnQ
-         cPh0Eqo1ASE1ekQGfsFtJNbZhhy1L/klvGKLYsRpvUQhWP06l5H7cwN0ynA4d7cnjgB9
-         +mSQIHNkMZW8leB3bfjIIfD9iUaGIpkiVUeiZ526JEb9RorazGGJUyLQGtYJ1Rp9Vngi
-         XiuI7qVILh/vxu/878w2zvYPf99V8I/i1Fon1swKN8rVHN1BILMMtig7NlQzyC2xR3Vl
-         90HSAqD4+MRRWe0jOLDzen4quH5t9LZP3htJmM24EpiC7E4DvRe4sti7AhcEdUghPqIK
-         ZVag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TTrA+tMwfg5GaaL0pTTB4SX2vmA9Q9FMRW/WsoCZ0JE=;
-        b=ekdjUyFQv2TSMcoOYLYe9YJcq4hwSQZM4jcNX3jjjug/alRE/pMZGcnMhKi6qxWYm8
-         s19DRdCoZAjj++czh1IdTQIPfulOAFIO0pjmoUogbRutOvo3P9zmoFuhJIScr9yuIM7H
-         LiPFmlt3bLaEsfVe9Io0UP1sMtlOr297ax5ZdBhvP6JpYKexSVx8h7Z19P+hFHT0uQ5U
-         0TbLIKFECs2B99Stk787Ox7zS2QZEIuPJAwUvXrLcbNv9M3JfR9iDm643kOniuCaP3rC
-         GXvs6NE8BFXUyxA5E+JtjfsodSJnTih8OvHzSR/EAFh5iNlVJ27OsLztNL8VIsy6+Tnw
-         AC9Q==
-X-Gm-Message-State: ANhLgQ3CT6GATjWRYXWJgU3Y5G2ceYxba5LOOu3bFvru0B56hu1ruLgn
-        +4u4eD5MZpgdKJ1k4jg/+CQUuaZoPPNeiR0ls4M=
-X-Google-Smtp-Source: ADFU+vufu0AMNL2diBAQJHFss43B9g2oEZMBku7DzmuqAqCY+mQmcA2SGVTBSVyu9mf3O/z+lZkGA1kzO8O/MIO5lqs=
-X-Received: by 2002:aca:7512:: with SMTP id q18mr4630250oic.71.1584562407110;
- Wed, 18 Mar 2020 13:13:27 -0700 (PDT)
+        Wed, 18 Mar 2020 16:13:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726733AbgCRUNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:13:46 -0400
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1432020780
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 20:13:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584562426;
+        bh=4COnoFw4zZTTnD0icQvz2MrvlZlhqnrg/n8Iz1/EMx4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hG3NmuBEg/VNJF/IzasJRv+KrhKn+chfwwim8Zb9QBC6PEP9RK7WhXO6Ozcvpoajp
+         o2uT+sbqXtoNk9wLw4UdvfiYnCrwx6H8PzyQgeaPmwR321fVuj+8CQWqgSHLDO71Kn
+         CsyL8chkBDdoLaUByLk+zYQ6P3dQ0+H8ur6eIKAc=
+Received: by mail-qk1-f175.google.com with SMTP id s11so29804831qks.8
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 13:13:46 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0OLz2Jg3oHXYPj31/DpUOijaAdDw0GhEI2Ey+E02Dj3u4f6hfK
+        b+VxKf5V/6M19VpY5YDlg1w2JZnCE66tAYgvpGlTYw==
+X-Google-Smtp-Source: ADFU+vv74xrkhSks5Z1lN+CW1yz6xICk4LN6UCwfLkqXNiod5pEmiZcGPF75Cr+JQKJXgdsr8mOh0nXsoF/xtGiZ/nA=
+X-Received: by 2002:a37:634d:: with SMTP id x74mr6249300qkb.254.1584562425124;
+ Wed, 18 Mar 2020 13:13:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200313212012.GL4751@pendragon.ideasonboard.com> <OSBPR01MB35905D6D72DCBF154FCF7C88AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
- <20200313212717.GO4751@pendragon.ideasonboard.com>
-In-Reply-To: <20200313212717.GO4751@pendragon.ideasonboard.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 18 Mar 2020 20:13:00 +0000
-Message-ID: <CA+V-a8veXbwMrda8UEu2mN6gGgrBJA8Mp7gdN7Q3-iXNw9c4pg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to assigned-clock-rates
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+References: <20200313110258.94A0668C4E@verein.lst.de> <20200317221743.GD20788@willie-the-truck>
+In-Reply-To: <20200317221743.GD20788@willie-the-truck>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 18 Mar 2020 16:13:33 -0400
+X-Gmail-Original-Message-ID: <CAKv+Gu9_gV0aVwa2QG7jgaR71bTz12vs386R9uPjdQTtm0HcUw@mail.gmail.com>
+Message-ID: <CAKv+Gu9_gV0aVwa2QG7jgaR71bTz12vs386R9uPjdQTtm0HcUw@mail.gmail.com>
+Subject: Re: [Patch][Fix] crypto: arm{,64} neon: memzero_explicit aes-cbc key
+To:     Will Deacon <will@kernel.org>
+Cc:     Torsten Duwe <duwe@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
-
-On Fri, Mar 13, 2020 at 9:27 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
+On Tue, 17 Mar 2020 at 18:17, Will Deacon <will@kernel.org> wrote:
 >
-> Hi Prabhakar,
+> [+Ard]
 >
-> On Fri, Mar 13, 2020 at 09:25:01PM +0000, Prabhakar Mahadev Lad wrote:
-> > On Sent: 13 March 2020 21:20, Laurent Pinchart wrote:
-> > > On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
-> > > > Use assigned-clock-rates to specify the clock rate. Also mark
-> > > > clock-frequency property as deprecated.
-> > >
-> > > I would phrase it the other way around, this patch mainly deprecates clock-
-> > > frequency, and as a side effect recommends usage of assigned-clock-rates.
-> > >
-> > > "Deprecate usage of the clock-frequency propertly. The preferred method
-> > > to set clock rates is to use assigned-clock-rates."
+> On Fri, Mar 13, 2020 at 12:02:58PM +0100, Torsten Duwe wrote:
+> > From: Torsten Duwe <duwe@suse.de>
 > >
-> > Agreed will do that.
+> > At function exit, do not leave the expanded key in the rk struct
+> > which got allocated on the stack.
 > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
-> > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > index 72ad992..e62fe82 100644
-> > > > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > @@ -8,7 +8,7 @@ Required Properties:
-> > > >  - compatible: Value should be "ovti,ov5645".
-> > > >  - clocks: Reference to the xclk clock.
-> > > >  - clock-names: Should be "xclk".
-> > > > -- clock-frequency: Frequency of the xclk clock.
-> > > > +- clock-frequency (deprecated): Frequency of the xclk clock.
-> > >
-> > > I would drop this completely. Drivers need to ensure backward compatibility,
-> > > but DT bindings should only document the latest version, the history is
-> > > available in git.
-> > >
-> > Sure will drop it.
+> > Signed-off-by: Torsten Duwe <duwe@suse.de>
+> > ---
+> > Another small fix from our FIPS evaluation. I hope you don't mind I merged
+> > arm32 and arm64 into one patch -- this is really simple.
+> > --- a/arch/arm/crypto/aes-neonbs-glue.c
+> > +++ b/arch/arm/crypto/aes-neonbs-glue.c
+> > @@ -138,6 +138,7 @@ static int aesbs_cbc_setkey(struct crypto_skcipher *tfm, const u8 *in_key,
+> >       kernel_neon_begin();
+> >       aesbs_convert_key(ctx->key.rk, rk.key_enc, ctx->key.rounds);
+> >       kernel_neon_end();
+> > +     memzero_explicit(&rk, sizeof(rk));
 > >
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > >
-> > > While at it, can I enlist you to convert these bindings to yaml ? :-)
-> > >
-> > Sure will do the honours , will make sure yaml patch is ontop of this patch too.
+> >       return crypto_cipher_setkey(ctx->enc_tfm, in_key, key_len);
+> >  }
+> > diff --git a/arch/arm64/crypto/aes-neonbs-glue.c b/arch/arm64/crypto/aes-neonbs-glue.c
+> > index e3e27349a9fe..c0b980503643 100644
+> > --- a/arch/arm64/crypto/aes-neonbs-glue.c
+> > +++ b/arch/arm64/crypto/aes-neonbs-glue.c
+> > @@ -151,6 +151,7 @@ static int aesbs_cbc_setkey(struct crypto_skcipher *tfm, const u8 *in_key,
+> >       kernel_neon_begin();
+> >       aesbs_convert_key(ctx->key.rk, rk.key_enc, ctx->key.rounds);
+> >       kernel_neon_end();
+> > +     memzero_explicit(&rk, sizeof(rk));
+> >
+> >       return 0;
+> >  }
 >
-Shall I enlist you as the maintainer  in the json-schema ?
-dt_binding_check says  'maintainers' is a required property.
+> I'm certainly not a crypto person, but this looks sensible to me and I
+> couldn't find any other similar stack variable usage under
+> arch/arm64/crypto/ at a quick glance.
+>
+> Acked-by: Will Deacon <will@kernel.org>
+>
 
-Cheers,
---Prabhakar Lad
-
-> Thank you :-)
->
-> > > >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > > >    to the hardware pin PWDNB which is physically active low.
-> > > >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > > > @@ -37,7 +37,8 @@ Example:
-> > > >
-> > > >  clocks = <&clks 200>;
-> > > >  clock-names = "xclk";
-> > > > -clock-frequency = <24000000>;
-> > > > +assigned-clocks = <&clks 200>;
-> > > > +assigned-clock-rates = <24000000>;
-> > > >
-> > > >  vdddo-supply = <&camera_dovdd_1v8>;
-> > > >  vdda-supply = <&camera_avdd_2v8>;
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
