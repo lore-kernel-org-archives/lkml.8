@@ -2,104 +2,88 @@ Return-Path: <SRS0=Fjb+=5D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389CAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD439C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132AA20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824302076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Mar 2020 05:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgCRF14 (ORCPT
+        id S1726950AbgCRFcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 01:27:56 -0400
-Received: from mga17.intel.com ([192.55.52.151]:55088 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbgCRF14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 01:27:56 -0400
-IronPort-SDR: zw2HLDlMOcu2DBo3Yy2tZdFq6JirdkSixExbqtuwI08s1f0Tdnom/cV5NFMh5fGur7zgR1K8IU
- LvPhWCY9mIqQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2020 22:27:56 -0700
-IronPort-SDR: uZEuCHI+tEzJyoqs0pj1nsWFmlhiL3CqHyjZh9IskV9mrJQUfPSjNCQIs+AwzKnKtdhWXFt1tu
- TFHnYSwAOQvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,566,1574150400"; 
-   d="scan'208";a="263274199"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.212.140]) ([10.254.212.140])
-  by orsmga002.jf.intel.com with ESMTP; 17 Mar 2020 22:27:54 -0700
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/vt-d: silence a RCU-list debugging warning
-To:     Qian Cai <cai@lca.pw>, jroedel@suse.de
-References: <20200317150326.1659-1-cai@lca.pw>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <36b9e69b-ee3f-c17d-1788-64448ce8bc14@linux.intel.com>
-Date:   Wed, 18 Mar 2020 13:27:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 18 Mar 2020 01:32:45 -0400
+Received: from m177129.mail.qiye.163.com ([123.58.177.129]:15146 "EHLO
+        m177129.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgCRFcp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 01:32:45 -0400
+Received: from vivo.com (wm-2.qy.internal [127.0.0.1])
+        by m177129.mail.qiye.163.com (Hmail) with ESMTP id 1ABAA5C18EA;
+        Wed, 18 Mar 2020 13:32:28 +0800 (CST)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Message-ID: <AG*ACQC2CEOOiVKFwxZXw4qM.3.1584509548085.Hmail.wenhu.wang@vivo.com>
+To:     Zheng Wei <wei.zheng@vivo.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yunfeng Ye <yeyunfeng@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel@vivo.com, Will Deacon <will@kernel.org>
+Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gYXJtNjQ6IGFkZCBibGFuayBhZnRlciAnaWYn?=
+X-Priority: 3
+X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
+X-Originating-IP: 58.251.74.227
+In-Reply-To: <20200317222823.GG20788@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200317150326.1659-1-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: from wenhu.wang@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Wed, 18 Mar 2020 13:32:28 +0800 (GMT+08:00)
+From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
+Date:   Wed, 18 Mar 2020 13:32:28 +0800 (GMT+08:00)
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VJTkNCQkJDSU9OSUhCSFlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kJHlYWEh9ZQUhNTE9LTEJNQ0xPN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
+        WUc6PFE6OCo4STg#NDQSLTA9DAMhIwxPCjZVSFVKTkNPTktCTk5LSUNCVTMWGhIXVQweFRMOVQwa
+        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlMWVdZCAFZQU9NQkw3Bg++
+X-HM-Tid: 0a70ec20f65c6447kurs1abaa5c18ea
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/17 23:03, Qian Cai wrote:
-> dmar_find_atsr() calls list_for_each_entry_rcu() outside of an RCU read
-> side critical section but with dmar_global_lock held. Silence this
-> false positive.
-> 
->   drivers/iommu/intel-iommu.c:4504 RCU-list traversed in non-reader section!!
->   1 lock held by swapper/0/1:
->   #0: ffffffff9755bee8 (dmar_global_lock){+.+.}, at: intel_iommu_init+0x1a6/0xe19
-> 
->   Call Trace:
->    dump_stack+0xa4/0xfe
->    lockdep_rcu_suspicious+0xeb/0xf5
->    dmar_find_atsr+0x1ab/0x1c0
->    dmar_parse_one_atsr+0x64/0x220
->    dmar_walk_remapping_entries+0x130/0x380
->    dmar_table_init+0x166/0x243
->    intel_iommu_init+0x1ab/0xe19
->    pci_iommu_init+0x1a/0x44
->    do_one_initcall+0xae/0x4d0
->    kernel_init_freeable+0x412/0x4c5
->    kernel_init+0x19/0x193
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-
-How about changing the commit subject to
-"iommu/vt-d: Silence RCU-list debugging warning in dmar_find_atsr()"?
-
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-
-Best regards,
-baolu
-
-> ---
->   drivers/iommu/intel-iommu.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 4be549478691..ef0a5246700e 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -4501,7 +4501,8 @@ static struct dmar_atsr_unit *dmar_find_atsr(struct acpi_dmar_atsr *atsr)
->   	struct dmar_atsr_unit *atsru;
->   	struct acpi_dmar_atsr *tmp;
->   
-> -	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list) {
-> +	list_for_each_entry_rcu(atsru, &dmar_atsr_units, list,
-> +				dmar_rcu_check()) {
->   		tmp = (struct acpi_dmar_atsr *)atsru->hdr;
->   		if (atsr->segment != tmp->segment)
->   			continue;
-> 
+RnJvbTogV2lsbCBEZWFjb24gPHdpbGxAa2VybmVsLm9yZz4KRGF0ZTogMjAyMC0wMy0xOCAwNjoy
+ODoyNApUbzogIFpoZW5nIFdlaSA8d2VpLnpoZW5nQHZpdm8uY29tPgpDYzogIENhdGFsaW4gTWFy
+aW5hcyA8Y2F0YWxpbi5tYXJpbmFzQGFybS5jb20+LEhhbmp1biBHdW8gPGd1b2hhbmp1bkBodWF3
+ZWkuY29tPixFbnJpY28gV2VpZ2VsdCA8aW5mb0BtZXR1eC5uZXQ+LEFsbGlzb24gUmFuZGFsIDxh
+bGxpc29uQGxvaHV0b2submV0PixHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5k
+YXRpb24ub3JnPixUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4sWXVuZmVuZyBZ
+ZSA8eWV5dW5mZW5nQGh1YXdlaS5jb20+LGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZyxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLGtlcm5lbEB2aXZvLmNvbSx3ZW5odS53
+YW5nQHZpdm8uY29tClN1YmplY3Q6IFJlOiBbUEFUQ0hdIGFybTY0OiBhZGQgYmxhbmsgYWZ0ZXIg
+J2lmJz5PbiBGcmksIE1hciAxMywgMjAyMCBhdCAxMDo1NDowMlBNICswODAwLCBaaGVuZyBXZWkg
+d3JvdGU6Cj4+IGFkZCBibGFuayBhZnRlciAnaWYnIGZvciBhcm12OF9kZXByZWNhdGVkX2luaXQo
+KQo+PiB0byBtYWtlIGl0IGNvbXBseSB3aXRoIGtlcm5lbCBjb2Rpbmcgc3R5bGUuCj4+IAo+PiBT
+aWduZWQtb2ZmLWJ5OiBaaGVuZyBXZWkgPHdlaS56aGVuZ0B2aXZvLmNvbT4KPj4gLS0tCj4+ICBh
+cmNoL2FybTY0L2tlcm5lbC9hcm12OF9kZXByZWNhdGVkLmMgfCAyICstCj4+ICAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPj4gCj4+IGRpZmYgLS1naXQgYS9h
+cmNoL2FybTY0L2tlcm5lbC9hcm12OF9kZXByZWNhdGVkLmMgYi9hcmNoL2FybTY0L2tlcm5lbC9h
+cm12OF9kZXByZWNhdGVkLmMKPj4gaW5kZXggNzgzMmIzMjE2MzcwLi40Y2M1ODFhZjJkOTYgMTAw
+NjQ0Cj4+IC0tLSBhL2FyY2gvYXJtNjQva2VybmVsL2FybXY4X2RlcHJlY2F0ZWQuYwo+PiArKysg
+Yi9hcmNoL2FybTY0L2tlcm5lbC9hcm12OF9kZXByZWNhdGVkLmMKPj4gQEAgLTYzMCw3ICs2MzAs
+NyBAQCBzdGF0aWMgaW50IF9faW5pdCBhcm12OF9kZXByZWNhdGVkX2luaXQodm9pZCkKPj4gIAkJ
+cmVnaXN0ZXJfaW5zbl9lbXVsYXRpb24oJmNwMTVfYmFycmllcl9vcHMpOwo+PiAgCj4+ICAJaWYg
+KElTX0VOQUJMRUQoQ09ORklHX1NFVEVORF9FTVVMQVRJT04pKSB7Cj4+IC0JCWlmKHN5c3RlbV9z
+dXBwb3J0c19taXhlZF9lbmRpYW5fZWwwKCkpCj4+ICsJCWlmIChzeXN0ZW1fc3VwcG9ydHNfbWl4
+ZWRfZW5kaWFuX2VsMCgpKQo+PiAgCQkJcmVnaXN0ZXJfaW5zbl9lbXVsYXRpb24oJnNldGVuZF9v
+cHMpOwo+PiAgCQllbHNlCj4+ICAJCQlwcl9pbmZvKCJzZXRlbmQgaW5zdHJ1Y3Rpb24gZW11bGF0
+aW9uIGlzIG5vdCBzdXBwb3J0ZWQgb24gdGhpcyBzeXN0ZW1cbiIpOwo+Cj4oQ2F0YWxpbjogSSdt
+IGp1c3QgYWNraW5nIHRoZXNlIHRyaXZpYWwgdHlwby9zdHlsZSBmaXhlcyB0byBnZXQgdGhlbSBv
+dXQKPm9mIG15IGluYm94OyBkbyB3aGF0ZXZlciB5b3UgbGlrZSB3aXRoIHRoZW0gOykKPgo+QWNr
+ZWQtYnk6IFdpbGwgRGVhY29uIDx3aWxsQGtlcm5lbC5vcmc+Cj4KPldpbGwKClNob3VsZG4ndCB5
+b3UgaGF2ZSBDYyB0cml2aWFsPHRyaXZpYWxAa2VybmVsLm9yZz4/CkFza2VkLWJ5OiBXYW5nIFdl
+bmh1IDx3ZW5odS53YW5nQHZpdm8uY29tPgoKV2VuaHUKDQoNCg==
