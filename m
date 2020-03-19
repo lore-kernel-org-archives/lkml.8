@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE58BC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86115C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B1521835
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3652098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623821;
-	bh=V4xWq3JFZKaFnCaWtFMsf0H1tB3lHuRr4tXUOBArnFk=;
+	s=default; t=1584623824;
+	bh=QxtaDxcfQEQ1UKz0PJyRYKh2BCVbPnsBm3vuLhOG/lI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V/b2Z8r+ybtkcQU/mOnp4d3/aFl38sR0dA6Hr/qBZ74jV1eBpMOjKHTSd6U6cfUpa
-	 nu8vkRrFVQnESlb2QUF1qeLKBEvsiHTsC5WVCQ3IoXJyaXUPDFdMKFEjIIWqeEaMQG
-	 HQDSU8WoYUhl/Zp5ZE+JaG94tWbpOGqHmQBRI024=
+	b=Y0GNUXQgVp9dWhqQ9FmeeyroPWR1okmuBbcqOc2w7ktBRz9QlAskl373MqqaY2ZuS
+	 91WJutVNaVjp5vzXuJoJzGW5Au0jYt/amlwlDuklpFOWCjGwkoYE1Wo1EeE5xTGnAZ
+	 AI+bdpA0xtfaEQc1l1gpWTi85f9THqPJ1sfh4dx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgCSNRA (ORCPT
+        id S1729381AbgCSNRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:17:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728250AbgCSNQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:16:58 -0400
+        id S1728587AbgCSNQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:16:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 806AE20724;
-        Thu, 19 Mar 2020 13:16:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04C952098B;
+        Thu, 19 Mar 2020 13:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623817;
-        bh=V4xWq3JFZKaFnCaWtFMsf0H1tB3lHuRr4tXUOBArnFk=;
+        s=default; t=1584623819;
+        bh=QxtaDxcfQEQ1UKz0PJyRYKh2BCVbPnsBm3vuLhOG/lI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LVPZrUuyojDCuY4kFac7wdOKgpnZl8lTcTYAb834Zgabzctxu23HP78/cct11415L
-         S1mthQ4r9LsxnY2dOcG7O2fO/kNC7m+wP0dkwIDtViMmFrHkzrf0He2s4hMQY8ES0Q
-         6Cm2T/uQlX/VZ0gv3UKRc1/UtkkbA25T8dsZPJLc=
+        b=AL0twPKEWbf454bozPApl9kC4TKPTJlI03qfrZSRCvrKvGJ+rz8OoB4wKoVT5+bWP
+         a6lEa/iNrKDX6shrxnhE2vqcLg3p1PY3IODCOSsTV1ezgOuMqrLZegdz0Q4IGSEf9u
+         ToXW1VAF1EXAAtw9g3T0mRA9k1X9v7J5acu+zUu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 4.14 63/99] i2c: acpi: put device when verifying client fails
-Date:   Thu, 19 Mar 2020 14:03:41 +0100
-Message-Id: <20200319124000.596762299@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4.14 37/99] cgroup: cgroup_procs_next should increase position index
+Date:   Thu, 19 Mar 2020 14:03:15 +0100
+Message-Id: <20200319123953.062335196@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -63,47 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 8daee952b4389729358665fb91949460641659d4 upstream.
+commit 2d4ecb030dcc90fb725ecbfc82ce5d6c37906e0e upstream.
 
-i2c_verify_client() can fail, so we need to put the device when that
-happens.
+If seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output:
 
-Fixes: 525e6fabeae2 ("i2c / ACPI: add support for ACPI reconfigure notifications")
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+1) dd bs=1 skip output of each 2nd elements
+$ dd if=/sys/fs/cgroup/cgroup.procs bs=8 count=1
+2
+3
+4
+5
+1+0 records in
+1+0 records out
+8 bytes copied, 0,000267297 s, 29,9 kB/s
+[test@localhost ~]$ dd if=/sys/fs/cgroup/cgroup.procs bs=1 count=8
+2
+4 <<< NB! 3 was skipped
+6 <<<    ... and 5 too
+8 <<<    ... and 7
+8+0 records in
+8+0 records out
+8 bytes copied, 5,2123e-05 s, 153 kB/s
+
+ This happen because __cgroup_procs_start() makes an extra
+ extra cgroup_procs_next() call
+
+2) read after lseek beyond end of file generates whole last line.
+3) read after lseek into middle of last line generates
+expected rest of last line and unexpected whole line once again.
+
+Additionally patch removes an extra position index changes in
+__cgroup_procs_start()
+
+Cc: stable@vger.kernel.org
+https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/i2c-core-acpi.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ kernel/cgroup/cgroup.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -352,10 +352,18 @@ static struct i2c_adapter *i2c_acpi_find
- static struct i2c_client *i2c_acpi_find_client_by_adev(struct acpi_device *adev)
- {
- 	struct device *dev;
-+	struct i2c_client *client;
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4249,6 +4249,9 @@ static void *cgroup_procs_next(struct se
+ 	struct kernfs_open_file *of = s->private;
+ 	struct css_task_iter *it = of->priv;
  
- 	dev = bus_find_device(&i2c_bus_type, NULL, adev,
- 			      i2c_acpi_find_match_device);
--	return dev ? i2c_verify_client(dev) : NULL;
-+	if (!dev)
-+		return NULL;
++	if (pos)
++		(*pos)++;
 +
-+	client = i2c_verify_client(dev);
-+	if (!client)
-+		put_device(dev);
-+
-+	return client;
+ 	return css_task_iter_next(it);
  }
  
- static int i2c_acpi_notify(struct notifier_block *nb, unsigned long value,
+@@ -4264,7 +4267,7 @@ static void *__cgroup_procs_start(struct
+ 	 * from position 0, so we can simply keep iterating on !0 *pos.
+ 	 */
+ 	if (!it) {
+-		if (WARN_ON_ONCE((*pos)++))
++		if (WARN_ON_ONCE((*pos)))
+ 			return ERR_PTR(-EINVAL);
+ 
+ 		it = kzalloc(sizeof(*it), GFP_KERNEL);
+@@ -4272,10 +4275,11 @@ static void *__cgroup_procs_start(struct
+ 			return ERR_PTR(-ENOMEM);
+ 		of->priv = it;
+ 		css_task_iter_start(&cgrp->self, iter_flags, it);
+-	} else if (!(*pos)++) {
++	} else if (!(*pos)) {
+ 		css_task_iter_end(it);
+ 		css_task_iter_start(&cgrp->self, iter_flags, it);
+-	}
++	} else
++		return it->cur_task;
+ 
+ 	return cgroup_procs_next(s, NULL, NULL);
+ }
 
 
