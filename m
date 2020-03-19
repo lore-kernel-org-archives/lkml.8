@@ -2,160 +2,223 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86209C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED67C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4987B20752
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:38:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="c7eEWwMn"
+	by mail.kernel.org (Postfix) with ESMTP id B5F5E20754
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:38:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgCSAiM (ORCPT
+        id S1727093AbgCSAie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 20:38:12 -0400
-Received: from mail-bn8nam12on2122.outbound.protection.outlook.com ([40.107.237.122]:22656
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726596AbgCSAiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 20:38:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HIXXZK4AwHZ4uRcBh34xTE9xS7ZmmGbOI/2TxZHrNYvO37ynNYxBsyK5mGhRtMy+X31PQ7X2PZd13LL3xtwjTUKK90ZfKsVYlMiqu9byxpdzLUYO68Mz+IsIwBc4XCUSHFw8Q/rUqGmyDNHe/aJKJyKVo+QjcaHeLUC40CGbCJMwjPl6nE2fQAPb6L+EN0l3XuO4ODMdWxhMNMXdPS6v1OzqEKwUp2t5UsdIZBr1vIEV3WX3FAoxt5QSLkFCn0uASTQaN41x9qNmRmVAjoAvBHhUs7gJJeTngpe2UMddoACro7lbsLkAOv2AQL8vDmPTwXUHBIgRhSk/HiC6UuQ4IA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4feH0XEoLGPJJPyok2wjZnLy5XTkCOT1Wdb7ATfEp5g=;
- b=SDWeK9TMUesYTjt/rx4Peknh2UldSoJJYvyk6kf8SbImnXNKMFwGcyQR7C/Ku4AV5kNjaUL8TsLbEwjFPBz5y2AMT1tmhaDP7B3ThNRVZ04D4KlzEfFMIMo6ILnAJUEIGV+xbEsLf1K3v2W1MFap4CpcDMnQKbYWSn+j75+pCuUvlMSNt+ZSisMvgmJhyIwjOJlmHVXzFGM+lyao7rGltBjVRACMDUK6YXoSc0xTXNk1G6R4alrv/QDJ1JaPCCBgVhuAf7w+mntZIf5T3duLnjOn+5fOU/2ktOK3X9v5C/KRjb0kT55iRKf3O9Ur/pMYLo7wHKIM9EadvG8yUGuciQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4feH0XEoLGPJJPyok2wjZnLy5XTkCOT1Wdb7ATfEp5g=;
- b=c7eEWwMnlpPOmnFjw+uqrdCg+C68Iqo1M+3j046iSkEUj8XMPDTBZ4iZZanEl9/HdPwZHejScmvscxMCu8t3F9yocvh4+IVwoSV1Dgsj/B9EE/VvKcOYhGRuV7Usu6J/0HTupncXM13uiyTCpd/IOLKoHirBjtMUWvkFwqN05Fk=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0891.namprd21.prod.outlook.com (2603:10b6:302:10::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.8; Thu, 19 Mar
- 2020 00:38:07 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2835.003; Thu, 19 Mar 2020
- 00:38:07 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH 2/4] x86/Hyper-V: Free hv_panic_page when fail to register
- kmsg dump
-Thread-Topic: [PATCH 2/4] x86/Hyper-V: Free hv_panic_page when fail to
- register kmsg dump
-Thread-Index: AQHV/F+KwFvVZiqNDUGYYVaANTfMEKhPE6RA
-Date:   Thu, 19 Mar 2020 00:38:07 +0000
-Message-ID: <MW2PR2101MB105297BB206C91C1CBF1477DD7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
- <20200317132523.1508-3-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20200317132523.1508-3-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-19T00:38:04.8384421Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4b402ae7-a782-4d46-a74b-ab472edb2b86;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c9b3cb3c-1fde-4f09-4331-08d7cb9dcb0e
-x-ms-traffictypediagnostic: MW2PR2101MB0891:|MW2PR2101MB0891:|MW2PR2101MB0891:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB089153063AE75CDA642A1258D7F40@MW2PR2101MB0891.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:78;
-x-forefront-prvs: 0347410860
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(396003)(39860400002)(366004)(346002)(199004)(66446008)(52536014)(64756008)(8990500004)(66556008)(66946007)(5660300002)(66476007)(76116006)(26005)(186003)(9686003)(4326008)(55016002)(71200400001)(110136005)(8936002)(7696005)(316002)(2906002)(86362001)(33656002)(6506007)(54906003)(10290500003)(8676002)(81156014)(478600001)(81166006)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0891;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pNCzLQXp0zHrYSqDIxOYsXowmgmx752RwDknbBhV6XtpwSkOSQVdKI9rFNIRjyDWbxm2gNiHN0C506lempUf1DgzANU6oTbigDFRn8RGn1AIHFpkzAsEXU+C6TySaFCe2ENamyv8xFfbGU2Fq+qgkYlH1d+zvH/q02Pm0A03gYQSdWWr9H1L3dSUvRHYGHUUC/jJHNqANzYA+t3sIgw+3DQX0rA+D0g5mV/tMuUkMFwxm2Qr8cWcjNvTZyFp7ZP32sRxAnICbWqs1NArDc0vDMN2bNiD8aRVpOdI8jbhsN9IJlsEvPw+4t78URoMF5ekvYcvxQV8Wz54XZqXfcaeOAW6fvAubcbbY97cljbRy3xZdZHHe8wqCZHLDdrpm81cQRy3QE4L9V36e9kk8EuWX9UO6JvNsKJalJap9gjayDpbwQ8IO4SyNQy+ucj4G91M1dlymyVBgHYBmrfrdCBtJRpsFlPwEX90Z/krsvPcYVdfQ96FVNL9Fo7WKImj2pzf
-x-ms-exchange-antispam-messagedata: Ve27rDqAN+5xSRPVUJ/gyn3arVXX12fTL3qOOiSopASqbNn8A4mS2wBtKto57kMXDEKz+Dy+Epe4VTo5K3JfQmLd6QKbYN+lTQCbIVdbMODVfpIuP09yX9vtjMRWH318bjewDhLvhRbmmYosa6LrOA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Mar 2020 20:38:34 -0400
+Received: from mga05.intel.com ([192.55.52.43]:39210 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbgCSAie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 20:38:34 -0400
+IronPort-SDR: PLO/IHPNv6XPrr4CzR33lbvkr/olIUPZjekq6xrODtOxJToJopWUjsiiW8+S9ZPOqhKEwFhv5G
+ uZY163HNNCwQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 17:38:33 -0700
+IronPort-SDR: vT8maMTOcWgDmJyN8AhIEyRYNa9iOkBQcsCuCK7QfCe4l+pS+tzcNuOn4b6vDfBgYY8wymh2Pg
+ hSB+EsPtqNaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,569,1574150400"; 
+   d="scan'208";a="234013777"
+Received: from bxing-mobl.amr.corp.intel.com (HELO [10.135.9.124]) ([10.135.9.124])
+  by orsmga007.jf.intel.com with ESMTP; 18 Mar 2020 17:38:30 -0700
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+References: <20200303233609.713348-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPi4byhQ21hngsSx8tosCC-xa=y6r4j=pWo2MZGeyhi4Q@mail.gmail.com>
+ <254f1e35-4302-e55f-c00d-0f91d9503498@fortanix.com>
+ <CAOASepOm8-2UCdEnVMopEprMGWjkYUbUTX++dHaqCafi2ju8mA@mail.gmail.com>
+ <20200313164622.GC5181@linux.intel.com>
+ <CAOASepN1hxSgxVJAJiAbSmuCTCHd=95Mnvh6BKNSPJs=EpAmbQ@mail.gmail.com>
+ <20200313184452.GD5181@linux.intel.com>
+ <CAOASepP_oGOenjCvAvLg+e+=fz4H0X=cyD+v5ywD0peeXEEmYg@mail.gmail.com>
+ <20200313220820.GE5181@linux.intel.com>
+ <CAOASepMicT6CrYyDkoYizh4nAZ+1Zn4rGQh7QjfzSK72Fj6u_g@mail.gmail.com>
+ <20200318234057.GE26164@linux.intel.com>
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+Message-ID: <858d19ed-868b-b4be-cbac-6cb92349d8fb@intel.com>
+Date:   Wed, 18 Mar 2020 17:38:29 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9b3cb3c-1fde-4f09-4331-08d7cb9dcb0e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2020 00:38:07.1499
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pSQYreDow8ve8M69/jhZozWYCBjJ9CdL4KFHPFgrsPebgBq6XRJYNdN5AxVLxbzoG/l8l/NcXeEaVQ30sjPIbSLqoNyD0KDgk2LjgWqR1Zg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0891
+In-Reply-To: <20200318234057.GE26164@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ltykernel@gmail.com <ltykernel@gmail.com> Sent: Tuesday, March 17, 20=
-20 6:25 AM
->=20
-> If fail to register kmsg dump on Hyper-V platform, hv_panic_page
-> will not be used anywhere. So free and reset it.
+On 3/18/2020 4:40 PM, Sean Christopherson wrote:
+> On Sat, Mar 14, 2020 at 10:10:26AM -0400, Nathaniel McCallum wrote:
+>> On Fri, Mar 13, 2020 at 6:08 PM Sean Christopherson
+>> <sean.j.christopherson@intel.com> wrote:
+>>>>>> 4. sub/add to %rsp rather than save/restore
+>>>>>
+>>>>> Can you elaborate on why you want to sub/add to %rsp instead of having the
+>>>>> enclave unwind the stack?  Preserving %rsp across EEXIT/ERESUME seems more
+>>>>> in line with function call semantics, which I assume is desirable?  E.g.
+>>>>>
+>>>>>    push param3
+>>>>>    push param2
+>>>>>    push param1
+>>>>>
+>>>>>    enclu[EEXIT]
+>>>>>
+>>>>>    add $0x18, %rsp
+>>>>
+>>>> Before enclave EEXIT, the enclave restores %rsp to the value it had
+>>>> before EENTER was called. Then it pushes additional output arguments
+>>>> onto the stack. The enclave calls EENCLU[EEXIT].
+>>>>
+>>>> We are now in __vdso...() on the way back to the caller. However, %rsp
+>>>> has a different value than we entered the function with. This breaks
+>>>> x86_64 ABI, obviously. The handler needs to fix this up: how does it
+>>>> do so?
+> 
+> Circling back to this request, because I just realized that the above is
+> handled by saving %rsp into %rbp and requiring the enclave and handler
+> to preserve %rbp at all times.
+> 
+> So the below discussion on making the %rsp adjustment relative is moot,
+> at least with respect to getting out of __vdso() if the enclave has mucked
+> with the untrusted stack.
+> 
+I didn't follow the discussion closely enough to understand the 
+motivation behind "add/sub" rather than "restore" %rsp. Now I understand 
+and I agree with you that the requested change is unnecessary.
 
-Slight commit message wording cleanup:
+>>>> In the current code, __vdso..() saves the value of %rsp, calls the
+>>>> handler and then restores %rsp. The handler can fix up the stack by
+>>>> setting the correct value to %rbx and returning without restoring it.
+>>>
+>>> Ah, you're referring to the patch where the handler decides to return all
+>>> the way back to the caller of __vdso...().
+>>>
+>>>> But this requires internal knowledge of the __vdso...() function,
+>>>> which could theoretically change in the future.
+>>>>
+>>>> If instead the __vdso...() only did add/sub, then the handler could do:
+>>>> 1. pop return address
+>>>> 2. pop handler stack params
+>>>> 3. pop enclave additional output stack params
+>>>> 4. push handler stack params
+>>>> 5. push return address
+> 
+> Per above, this is unnecessary when returning to the caller of __vdso().
+> It would be necessary if the enclave wasn't smart enough to do it's own
+> stack cleanup, but that seems like a very bizarre contract between the
+> enclave and its runtime.
+> 
+> The caveat is if %rbx is saved/restored by __vdso().  If we want a
+> traditional frame pointer, then %rbx would be restored from the stack
+> before %rsp itself is restored (from %rbp), in which case the exit handler
+> would need to adjust %rsp using a sequence similar to what you listed
+> above.
+> 
+> If __vdso() uses a non-standard frame pointer, e.g.
+> 
+>    push %rbp
+>    push %rbx
+>    mov  %rsp, %rbp
+> 
+> then %rbx would come off the stack after %rsp is restored from %rbp, i.e.
+> would be guaranteed to be restored to the pre-EENTER value (unless the
+> enclave or handler mucks with %rbp).
+> 
+> Anyways, we can discuss how to implement the frame pointer in the context
+> of the patches, just wanted to point this out here for completeness.
+> 
+%rbx can always be restored as long as it is saved at a fixed offset 
+from %rbp. For example, given the standard prolog below:
 
-If kmsg_dump_register() fails, hv_panic_page will not be used
-anywhere.  So free and reset it.
+	push	%rbp
+	mov	%rsp, %rbp
+	push	%rbx
 
->=20
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index b56b9fb9bd90..b043efea092a 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1385,9 +1385,13 @@ static int vmbus_bus_init(void)
->  			hv_panic_page =3D (void *)hv_alloc_hyperv_zeroed_page();
->  			if (hv_panic_page) {
->  				ret =3D kmsg_dump_register(&hv_kmsg_dumper);
-> -				if (ret)
-> +				if (ret) {
->  					pr_err("Hyper-V: kmsg dump register "
->  						"error 0x%x\n", ret);
-> +					hv_free_hyperv_page(
-> +					    (unsigned long)hv_panic_page);
-> +					hv_panic_page =3D NULL;
-> +				}
->  			} else
->  				pr_err("Hyper-V: panic message page memory "
->  					"allocation failed");
-> --
-> 2.14.5
+It can be paired with the following standard epilog:
 
+	mov	-8(%rbp), %rbx
+	leave
+	ret
+
+Alternatively, given "red zone" of 128 bytes, the following epilog will 
+also work:
+
+	leave
+	mov	-0x10(%rsp), %rbx
+	ret
+
+In no cases do we have to worry about enclave mucking the stack as long 
+as %rbp is preserved.
+
+>>>> While this is more work, it is standard calling convention work that
+>>>> doesn't require internal knowledge of __vdso..(). Alternatively, if we
+>>>> don't like the extra work, we can document the %rbx hack explicitly
+>>>> into the handler documentation and make it part of the interface. But
+>>>> we need some explicit way for the handler to pop enclave output stack
+>>>> params that doesn't depend on internal knowledge of the __vdso...()
+>>>> invariants.
+>>>
+>>> IIUC, this is what you're suggesting?  Having to align the stack makes this
+>>> a bit annoying, but it's not bad by any means.
+>>>
+>>> diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+>>> index 94a8e5f99961..05d54f79b557 100644
+>>> --- a/arch/x86/entry/vdso/vsgx_enter_enclave.S
+>>> +++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+>>> @@ -139,8 +139,9 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+>>>          /* Pass the untrusted RSP (at exit) to the callback via %rcx. */
+>>>          mov     %rsp, %rcx
+>>>
+>>> -       /* Save the untrusted RSP in %rbx (non-volatile register). */
+>>> +       /* Save the untrusted RSP offset in %rbx (non-volatile register). */
+>>>          mov     %rsp, %rbx
+>>> +       and     $0xf, %rbx
+>>>
+>>>          /*
+>>>           * Align stack per x86_64 ABI. Note, %rsp needs to be 16-byte aligned
+>>> @@ -161,8 +162,8 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+>>>          mov     0x20(%rbp), %rax
+>>>          call    .Lretpoline
+>>>
+>>> -       /* Restore %rsp to its post-exit value. */
+>>> -       mov     %rbx, %rsp
+>>> +       /* Undo the post-exit %rsp adjustment. */
+>>> +       lea     0x20(%rsp,%rbx), %rsp
+>>>
+
+Per discussion above, this is useful only if the enclave has problem 
+cleaning up its own mess left on the untrusted stack, and the exit 
+handler wants to EENTER the enclave again by returning to __vdso...(). 
+It sounds very uncommon to me, and more like a bug than an expected 
+behavior. Are there any existing code doing this or any particular 
+application that needs this. If no, I'd say not to do it.
