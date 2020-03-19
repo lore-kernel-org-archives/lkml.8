@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C0CC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 804E8C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C32E20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5824A214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623859;
-	bh=7qKJKaoue0qyG5bgDF4ILaTZnNgNtd65fVC3HmfCXys=;
+	s=default; t=1584623861;
+	bh=FbcZCwOBpIKtkGwLCBFpBHjyL2yg+SCnL9LA0x74+K0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JydfiX0xxfCnkt0OzetScmPm3hSs9sr3xMhhGJ87wyy9Ew30aKkcwslbQSu1d0UAu
-	 WlTbyVE8qqO6k+4gtMi80pqk8R70Zbi1leS37x8TAwZsMyyhrxqEtzeOrGFC68zsNX
-	 QgtGhF9k2xl0Yc9/4UWnXblQTqFCzCk23C/aq+kg=
+	b=kYk0usYEiTKxWKVpYah8l1MFqT0RS27kAgt+7//sdqK6FWN74RrPgOMjJrgf5oz1C
+	 gI9yb5FR+pDrF68Odti+GBaSkUJsTQLlxSV+g09cV0NPWK/VGEht/ldWKxbJo+cAX8
+	 OxuvDKc4tuvLBOhWlFZ/V4aAY5RQOrX8D4a+f9bY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbgCSNRh (ORCPT
+        id S1729675AbgCSNRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:17:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38910 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:17:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729125AbgCSNRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:17:33 -0400
+        id S1728668AbgCSNRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:17:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A69F20724;
-        Thu, 19 Mar 2020 13:17:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE5F920787;
+        Thu, 19 Mar 2020 13:17:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623852;
-        bh=7qKJKaoue0qyG5bgDF4ILaTZnNgNtd65fVC3HmfCXys=;
+        s=default; t=1584623856;
+        bh=FbcZCwOBpIKtkGwLCBFpBHjyL2yg+SCnL9LA0x74+K0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jKy+jh5kycBV4s1ZgOt5OuBPov3hHIuy6i7hRUOAbZcdqxFkB7rZLkWy1G9vELejY
-         GoBXMN6ZYD17yu4dmsvdRzzY5ROUzT69N5Hp2Rx1AXOnX7wakV6I1zU8Qu1u/NTpPZ
-         b5mYt3W02pFLLQ8Z35aPgdxtuRwJdWjp0tsmaV3w=
+        b=TxRTdX38rufFQ0hGtgK4Uv25QJWXhcvYyRWZhlvdFMu5+P9CquNvb7YjJkZi4z+hj
+         JJyp+e/CvpUtg0PRihuiRI9v1HzVlzIQsb2PbfhW9h7h7RGclfHtL/slZPhPlmulxc
+         SEKzf6+sM9tD9wAu3qmMRsgeFBTZryFZRIBODk78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Per Sundstrom <per.sundstrom@redqube.se>,
-        Jiri Wiesner <jwiesner@suse.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Mahesh Bandewar <maheshb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 34/99] ipvlan: do not add hardware address of master to its unicast filter list
-Date:   Thu, 19 Mar 2020 14:03:12 +0100
-Message-Id: <20200319123952.105371048@linuxfoundation.org>
+        Sven Eckelmann <sven.eckelmann@openmesh.com>,
+        Antonio Quartulli <a@unstable.cc>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.14 69/99] batman-adv: Fix check of retrieved orig_gw in batadv_v_gw_is_eligible
+Date:   Thu, 19 Mar 2020 14:03:47 +0100
+Message-Id: <20200319124002.125050165@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -62,70 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Wiesner <jwiesner@suse.com>
+From: Sven Eckelmann <sven.eckelmann@openmesh.com>
 
-[ Upstream commit 63aae7b17344d4b08a7d05cb07044de4c0f9dcc6 ]
+commit 198a62ddffa4a4ffaeb741f642b7b52f2d91ae9b upstream.
 
-There is a problem when ipvlan slaves are created on a master device that
-is a vmxnet3 device (ipvlan in VMware guests). The vmxnet3 driver does not
-support unicast address filtering. When an ipvlan device is brought up in
-ipvlan_open(), the ipvlan driver calls dev_uc_add() to add the hardware
-address of the vmxnet3 master device to the unicast address list of the
-master device, phy_dev->uc. This inevitably leads to the vmxnet3 master
-device being forced into promiscuous mode by __dev_set_rx_mode().
+The batadv_v_gw_is_eligible function already assumes that orig_node is not
+NULL. But batadv_gw_node_get may have failed to find the originator. It
+must therefore be checked whether the batadv_gw_node_get failed and not
+whether orig_node is NULL to detect this error.
 
-Promiscuous mode is switched on the master despite the fact that there is
-still only one hardware address that the master device should use for
-filtering in order for the ipvlan device to be able to receive packets.
-The comment above struct net_device describes the uc_promisc member as a
-"counter, that indicates, that promiscuous mode has been enabled due to
-the need to listen to additional unicast addresses in a device that does
-not implement ndo_set_rx_mode()". Moreover, the design of ipvlan
-guarantees that only the hardware address of a master device,
-phy_dev->dev_addr, will be used to transmit and receive all packets from
-its ipvlan slaves. Thus, the unicast address list of the master device
-should not be modified by ipvlan_open() and ipvlan_stop() in order to make
-ipvlan a workable option on masters that do not support unicast address
-filtering.
-
-Fixes: 2ad7bf3638411 ("ipvlan: Initial check-in of the IPVLAN driver")
-Reported-by: Per Sundstrom <per.sundstrom@redqube.se>
-Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Mahesh Bandewar <maheshb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 50164d8f500f ("batman-adv: B.A.T.M.A.N. V - implement GW selection logic")
+Signed-off-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
+Acked-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ipvlan/ipvlan_main.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ net/batman-adv/bat_v.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ipvlan/ipvlan_main.c
-+++ b/drivers/net/ipvlan/ipvlan_main.c
-@@ -236,7 +236,6 @@ static void ipvlan_uninit(struct net_dev
- static int ipvlan_open(struct net_device *dev)
- {
- 	struct ipvl_dev *ipvlan = netdev_priv(dev);
--	struct net_device *phy_dev = ipvlan->phy_dev;
- 	struct ipvl_addr *addr;
+--- a/net/batman-adv/bat_v.c
++++ b/net/batman-adv/bat_v.c
+@@ -814,7 +814,7 @@ static bool batadv_v_gw_is_eligible(stru
+ 	}
  
- 	if (ipvlan->port->mode == IPVLAN_MODE_L3 ||
-@@ -248,7 +247,7 @@ static int ipvlan_open(struct net_device
- 	list_for_each_entry(addr, &ipvlan->addrs, anode)
- 		ipvlan_ht_addr_add(ipvlan, addr);
+ 	orig_gw = batadv_gw_node_get(bat_priv, orig_node);
+-	if (!orig_node)
++	if (!orig_gw)
+ 		goto out;
  
--	return dev_uc_add(phy_dev, phy_dev->dev_addr);
-+	return 0;
- }
- 
- static int ipvlan_stop(struct net_device *dev)
-@@ -260,8 +259,6 @@ static int ipvlan_stop(struct net_device
- 	dev_uc_unsync(phy_dev, dev);
- 	dev_mc_unsync(phy_dev, dev);
- 
--	dev_uc_del(phy_dev, phy_dev->dev_addr);
--
- 	list_for_each_entry(addr, &ipvlan->addrs, anode)
- 		ipvlan_ht_addr_del(addr);
- 
+ 	if (batadv_v_gw_throughput_get(orig_gw, &orig_throughput) < 0)
 
 
