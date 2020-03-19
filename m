@@ -2,104 +2,231 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9DDC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCA1C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C86F2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:51:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y1tKqnND"
+	by mail.kernel.org (Postfix) with ESMTP id 46228206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbgCSEvZ (ORCPT
+        id S1726462AbgCSE6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 00:51:25 -0400
-Received: from mail-qk1-f182.google.com ([209.85.222.182]:42612 "EHLO
-        mail-qk1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgCSEvZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 00:51:25 -0400
-Received: by mail-qk1-f182.google.com with SMTP id e11so1256185qkg.9;
-        Wed, 18 Mar 2020 21:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=7fk/+QxBD56VKIEKurBU0QH83djSBt83PbELLkY6Dfc=;
-        b=Y1tKqnNDn4aL/eiK9aD+2TTxYePBWdmg3ntC/AMPJ8JkjEG8EJF+CrN9zCLxXb7LkF
-         uOMu8vLb81XiUS5XWshmrbY/XpUOeIOuvCyNSKNwE+VAcBYdbcLV5yABDcU4wiWto2y6
-         5IylnHgjOBAqYn+mutYDLgjO3WdHozeRxJxFVZZdnNZYtxXrG25ZsRpCsIe6wOpysOGz
-         /xYLi2dyU20PEcErVIgENvYvJaC9GLW5WC5mBXFQtwrEhPO6FaaZJPKkbClIqI93Xbet
-         1zAyJPCHjw5RDNh+dT5jgNqQVqhzGKcqcD2Xcq6IqHqrhT20UFWXQN1vId/FZBZzAgo3
-         vNdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=7fk/+QxBD56VKIEKurBU0QH83djSBt83PbELLkY6Dfc=;
-        b=i8baEDyjKVy2Xi4KZqFMdbQt9ABWx12b5ckgjDryboP9xWpGqLbI1nHV5LsuAsRQqX
-         xQlT1LreTSynR5bu8msIHJ9fsj5m7dUXS5RryX/Aa5+N3bPVNHjVb/MVZUqgrT9cC1d8
-         pPZK+TIaQ3NouBiqX7/wJ/2KZBFCKNzsglHKZup6dlhHOhhgItaxUz7pnE9yC7aXndJG
-         RBW7ZqyQvFtywyp5lTRNTNvEXP0pxu9y3NrNqz37GmZ/au9bYt0wxNc/R0aARfn95YWh
-         J47tkCqrGMsJiwF9Vas4NY4VZNUc2Yd0IT22Q0zLonbn5nuUGPlh6CZcYSSkEZEFQjfH
-         zCCA==
-X-Gm-Message-State: ANhLgQ2/EYBBMLBJyv/u2B2Vopcf6yAyg7ztS3qeZMh5WD6h5qgqFREN
-        tTy5OchS5Ix7TystLpX/HGrZuqpSfgn6xxRvjouk+dO4MW8=
-X-Google-Smtp-Source: ADFU+vti6fNwCLQfSx4hYjXE02FphrC9q0B4cBPWlOsP5udPYUAUr3OaT91ApbbU8IemLFFupkupWhUaHeiZSfjeScI=
-X-Received: by 2002:a25:e805:: with SMTP id k5mr1924778ybd.14.1584593483734;
- Wed, 18 Mar 2020 21:51:23 -0700 (PDT)
+        Thu, 19 Mar 2020 00:58:51 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48746 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgCSE6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 00:58:51 -0400
+IronPort-SDR: 3BcXqSKeq2bRbNvVAmkBD751l6GR1FPikM6smPQfT7IHpw48eLAD02NWhkCG9c3p/oxiizbCvI
+ 2zgWABqtX/Yg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 21:58:50 -0700
+IronPort-SDR: SNckE4tX452DJ+4L9+XxjWdEBU5fN/ziE9p1VG1MPKwXf1f/OsLr2XxemVFLfn1BVvtfU5fWW5
+ 8oWqZL7ba4wg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,570,1574150400"; 
+   d="scan'208";a="291528604"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Mar 2020 21:58:49 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jEnGa-0006ZA-W7; Thu, 19 Mar 2020 12:58:48 +0800
+Date:   Thu, 19 Mar 2020 12:58:37 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:rcu/next] BUILD SUCCESS
+ fafdc445db3c5cfc46843a3b61ad10660ecdfd60
+Message-ID: <5e72fbfd.ZXazGYPZ4ZrajlIl%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Wed, 18 Mar 2020 23:51:13 -0500
-Message-ID: <CAH2r5msOYEYH_YrSwGn6KYW83U0kyNS9U04xLgVFMx4xr32J1Q@mail.gmail.com>
-Subject: [GIT PULL] CIFS/SMB3 fixes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull the following changes since commit
-fb33c6510d5595144d585aa194d377cf74d31911:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
+branch HEAD: fafdc445db3c5cfc46843a3b61ad10660ecdfd60  rcu-tasks: Add grace-period and IPI counts to statistics
 
-  Linux 5.6-rc6 (2020-03-15 15:01:23 -0700)
+elapsed time: 482m
 
-are available in the Git repository at:
+configs tested: 164
+configs skipped: 0
 
-  git://git.samba.org/sfrench/cifs-2.6.git 5.6-rc6-smb3-fixes
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-for you to fetch changes up to 979a2665eb6c603ddce0ab374041ab101827b2e7:
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+riscv                          rv32_defconfig
+riscv                            allyesconfig
+microblaze                      mmu_defconfig
+um                                  defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200318
+x86_64               randconfig-a002-20200318
+x86_64               randconfig-a003-20200318
+i386                 randconfig-a001-20200318
+i386                 randconfig-a002-20200318
+i386                 randconfig-a003-20200318
+alpha                randconfig-a001-20200318
+m68k                 randconfig-a001-20200318
+mips                 randconfig-a001-20200318
+nds32                randconfig-a001-20200318
+parisc               randconfig-a001-20200318
+riscv                randconfig-a001-20200318
+c6x                  randconfig-a001-20200318
+h8300                randconfig-a001-20200318
+microblaze           randconfig-a001-20200318
+nios2                randconfig-a001-20200318
+sparc64              randconfig-a001-20200318
+csky                 randconfig-a001-20200318
+openrisc             randconfig-a001-20200318
+s390                 randconfig-a001-20200318
+sh                   randconfig-a001-20200318
+xtensa               randconfig-a001-20200318
+x86_64               randconfig-b001-20200318
+x86_64               randconfig-b002-20200318
+x86_64               randconfig-b003-20200318
+i386                 randconfig-b001-20200318
+i386                 randconfig-b002-20200318
+i386                 randconfig-b003-20200318
+x86_64               randconfig-c001-20200318
+x86_64               randconfig-c002-20200318
+x86_64               randconfig-c003-20200318
+i386                 randconfig-c001-20200318
+i386                 randconfig-c002-20200318
+i386                 randconfig-c003-20200318
+x86_64               randconfig-d001-20200318
+x86_64               randconfig-d002-20200318
+x86_64               randconfig-d003-20200318
+i386                 randconfig-d001-20200318
+i386                 randconfig-d002-20200318
+i386                 randconfig-d003-20200318
+x86_64               randconfig-e001-20200318
+x86_64               randconfig-e002-20200318
+x86_64               randconfig-e003-20200318
+i386                 randconfig-e001-20200318
+i386                 randconfig-e002-20200318
+i386                 randconfig-e003-20200318
+x86_64               randconfig-f001-20200318
+x86_64               randconfig-f002-20200318
+x86_64               randconfig-f003-20200318
+i386                 randconfig-f001-20200318
+i386                 randconfig-f002-20200318
+i386                 randconfig-f003-20200318
+x86_64               randconfig-g001-20200318
+x86_64               randconfig-g002-20200318
+x86_64               randconfig-g003-20200318
+i386                 randconfig-g001-20200318
+i386                 randconfig-g002-20200318
+i386                 randconfig-g003-20200318
+x86_64               randconfig-h001-20200318
+x86_64               randconfig-h002-20200318
+x86_64               randconfig-h003-20200318
+i386                 randconfig-h001-20200318
+i386                 randconfig-h002-20200318
+i386                 randconfig-h003-20200318
+arc                  randconfig-a001-20200318
+arm                  randconfig-a001-20200318
+arm64                randconfig-a001-20200318
+ia64                 randconfig-a001-20200318
+powerpc              randconfig-a001-20200318
+sparc                randconfig-a001-20200318
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-  CIFS: fiemap: do not return EINVAL if get nothing (2020-03-17 13:27:06 -0500)
-
-----------------------------------------------------------------
-Three small cifs/smb3 fixes, 2 for stable
-
-Regression test results:
-http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/323
-----------------------------------------------------------------
-Dan Carpenter (1):
-      cifs: potential unintitliazed error code in cifs_getattr()
-
-Murphy Zhou (1):
-      CIFS: fiemap: do not return EINVAL if get nothing
-
-Shyam Prasad N (1):
-      CIFS: Increment num_remote_opens stats counter even in case of
-smb2_query_dir_first
-
- fs/cifs/inode.c   | 2 +-
- fs/cifs/smb2ops.c | 4 +++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-
--- 
-Thanks,
-
-Steve
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
