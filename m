@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA62C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F23C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA88C206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2BB20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624007;
-	bh=yu0OQg9mtWybAg8zQkF89S3HXx9wOddmhC4LOHRruJs=;
+	s=default; t=1584624012;
+	bh=69rsICkI8eozxZQ9XSrN2M2D2eupyhs3guIH7y+XBOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D/YhlS08pe9zrFhgPiNhH5POL+QDmW0i5IU/EMU96AamAut8vbklubq9kGJ8v8Adj
-	 JaduLPo+8PZwXRku9L/BTctN1qhCMpnvvx4AFxZpzbCUX4eezVEIyOOFPh2Age2frd
-	 LETE8PzDjMWnSHKn/6GkR9atYHggQUa9dDHkg9+E=
+	b=kIrzgTyalCo/1ExY5aJZSuV8Ir0lhVxUSlgUImKH9LcPKU5CU+YOwrryA0Rark1sd
+	 u2LTFDPt0lZx3muWRSwfRbXA0VYfUGfUp2yAkBIl1krnfCM2YPsWBl1DTyDndIVC8S
+	 zrQ6krytCnLPfHdtXmd2Mpof4aHWJ8gSf5I60yUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbgCSNUG (ORCPT
+        id S1727984AbgCSNUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43852 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:20:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729800AbgCSNUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:20:02 -0400
+        id S1727954AbgCSNUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:20:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D68E20724;
-        Thu, 19 Mar 2020 13:20:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7EA1206D7;
+        Thu, 19 Mar 2020 13:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624001;
-        bh=yu0OQg9mtWybAg8zQkF89S3HXx9wOddmhC4LOHRruJs=;
+        s=default; t=1584624009;
+        bh=69rsICkI8eozxZQ9XSrN2M2D2eupyhs3guIH7y+XBOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wMJROgg4xqmVHSIkbgOhE7SayRvRfzNI+4+JD6qG+UeC0UFlxBS5ul0YU+5xirGOw
-         oZR3cfZbheMw/bEoA7acNDYZjpM6+1OHBQM4BscDKV8uHqvOObTly4gAAWTYzso54/
-         H3HvE2tEG7SJfFERqI7qt4n3XpSiPl/saOjuU7bs=
+        b=hxj3n5vC27xKMoOZp7AKxR+9/HCFmu9O3eY5Tk2c6MxdpmVEqp0YmLXkpeAc91/ev
+         GxW7+dGXDpxBaBBHAo9L2a6go8cpuV3JVX19Dfi6xLRYR4IIBsvQiqnMX0odv38la5
+         6m+1qSOAcPDzVbvno5Hah9y6+6bBFTIfFIVmHOLs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 25/48] net: rmnet: remove rcu_read_lock in rmnet_force_unassociate_device()
-Date:   Thu, 19 Mar 2020 14:04:07 +0100
-Message-Id: <20200319123910.916911212@linuxfoundation.org>
+Subject: [PATCH 4.19 26/48] net: rmnet: do not allow to change mux id if mux id is duplicated
+Date:   Thu, 19 Mar 2020 14:04:08 +0100
+Message-Id: <20200319123911.227381715@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
 References: <20200319123902.941451241@linuxfoundation.org>
@@ -62,91 +62,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit c026d970102e9af9958edefb4a015702c6aab636 ]
+[ Upstream commit 1dc49e9d164cd7e11c81279c83db84a147e14740 ]
 
-The notifier_call() of the slave interface removes rmnet interface with
-unregister_netdevice_queue().
-But, before calling unregister_netdevice_queue(), it acquires
-rcu readlock.
-In the RCU critical section, sleeping isn't be allowed.
-But, unregister_netdevice_queue() internally calls synchronize_net(),
-which would sleep.
-So, suspicious RCU usage warning occurs.
+Basically, duplicate mux id isn't be allowed.
+So, the creation of rmnet will be failed if there is duplicate mux id
+is existing.
+But, changelink routine doesn't check duplicate mux id.
 
 Test commands:
     modprobe rmnet
     ip link add dummy0 type dummy
-    ip link add dummy1 type dummy
     ip link add rmnet0 link dummy0 type rmnet mux_id 1
-    ip link set dummy1 master rmnet0
-    ip link del dummy0
+    ip link add rmnet1 link dummy0 type rmnet mux_id 2
+    ip link set rmnet1 type rmnet mux_id 1
 
-Splat looks like:
-[   79.639245][ T1195] =============================
-[   79.640134][ T1195] WARNING: suspicious RCU usage
-[   79.640852][ T1195] 5.6.0-rc1+ #447 Not tainted
-[   79.641657][ T1195] -----------------------------
-[   79.642472][ T1195] ./include/linux/rcupdate.h:273 Illegal context switch in RCU read-side critical section!
-[   79.644043][ T1195]
-[   79.644043][ T1195] other info that might help us debug this:
-[   79.644043][ T1195]
-[   79.645682][ T1195]
-[   79.645682][ T1195] rcu_scheduler_active = 2, debug_locks = 1
-[   79.646980][ T1195] 2 locks held by ip/1195:
-[   79.647629][ T1195]  #0: ffffffffa3cf64f0 (rtnl_mutex){+.+.}, at: rtnetlink_rcv_msg+0x457/0x890
-[   79.649312][ T1195]  #1: ffffffffa39256c0 (rcu_read_lock){....}, at: rmnet_config_notify_cb+0xf0/0x590 [rmnet]
-[   79.651717][ T1195]
-[   79.651717][ T1195] stack backtrace:
-[   79.652650][ T1195] CPU: 3 PID: 1195 Comm: ip Not tainted 5.6.0-rc1+ #447
-[   79.653702][ T1195] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   79.655037][ T1195] Call Trace:
-[   79.655560][ T1195]  dump_stack+0x96/0xdb
-[   79.656252][ T1195]  ___might_sleep+0x345/0x440
-[   79.656994][ T1195]  synchronize_net+0x18/0x30
-[   79.661132][ T1195]  netdev_rx_handler_unregister+0x40/0xb0
-[   79.666266][ T1195]  rmnet_unregister_real_device+0x42/0xb0 [rmnet]
-[   79.667211][ T1195]  rmnet_config_notify_cb+0x1f7/0x590 [rmnet]
-[   79.668121][ T1195]  ? rmnet_unregister_bridge.isra.6+0xf0/0xf0 [rmnet]
-[   79.669166][ T1195]  ? rmnet_unregister_bridge.isra.6+0xf0/0xf0 [rmnet]
-[   79.670286][ T1195]  ? __module_text_address+0x13/0x140
-[   79.671139][ T1195]  notifier_call_chain+0x90/0x160
-[   79.671973][ T1195]  rollback_registered_many+0x660/0xcf0
-[   79.672893][ T1195]  ? netif_set_real_num_tx_queues+0x780/0x780
-[   79.675091][ T1195]  ? __lock_acquire+0xdfe/0x3de0
-[   79.675825][ T1195]  ? memset+0x1f/0x40
-[   79.676367][ T1195]  ? __nla_validate_parse+0x98/0x1ab0
-[   79.677290][ T1195]  unregister_netdevice_many.part.133+0x13/0x1b0
-[   79.678163][ T1195]  rtnl_delete_link+0xbc/0x100
-[ ... ]
-
-Fixes: ceed73a2cf4a ("drivers: net: ethernet: qualcomm: rmnet: Initial implementation")
+Fixes: 23790ef12082 ("net: qualcomm: rmnet: Allow to configure flags for existing devices")
 Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-index 915165cda996f..b7acedf76aa0b 100644
+index b7acedf76aa0b..272a08f521e11 100644
 --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
 +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -239,7 +239,6 @@ static void rmnet_force_unassociate_device(struct net_device *dev)
+@@ -315,6 +315,10 @@ static int rmnet_changelink(struct net_device *dev, struct nlattr *tb[],
  
- 	port = rmnet_get_port_rtnl(dev);
- 
--	rcu_read_lock();
- 	rmnet_unregister_bridge(dev, port);
- 
- 	hash_for_each_safe(port->muxed_ep, bkt_ep, tmp_ep, ep, hlnode) {
-@@ -250,7 +249,6 @@ static void rmnet_force_unassociate_device(struct net_device *dev)
- 		kfree(ep);
- 	}
- 
--	rcu_read_unlock();
- 	unregister_netdevice_many(&list);
- 
- 	rmnet_unregister_real_device(real_dev, port);
+ 	if (data[IFLA_RMNET_MUX_ID]) {
+ 		mux_id = nla_get_u16(data[IFLA_RMNET_MUX_ID]);
++		if (rmnet_get_endpoint(port, mux_id)) {
++			NL_SET_ERR_MSG_MOD(extack, "MUX ID already exists");
++			return -EINVAL;
++		}
+ 		ep = rmnet_get_endpoint(port, priv->mux_id);
+ 		if (!ep)
+ 			return -ENODEV;
 -- 
 2.20.1
 
