@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B24CC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E859C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FA120722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728B820724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgCSJOr (ORCPT
+        id S1727582AbgCSJPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:14:47 -0400
+        Thu, 19 Mar 2020 05:15:55 -0400
 Received: from 8bytes.org ([81.169.241.247]:52476 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727337AbgCSJOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:34 -0400
+        id S1727504AbgCSJOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:47 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 6428B546; Thu, 19 Mar 2020 10:14:21 +0100 (CET)
+        id 32B06ED8; Thu, 19 Mar 2020 10:14:28 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 28/70] x86/idt: Move two function from k/idt.c to i/a/desc.h
-Date:   Thu, 19 Mar 2020 10:13:25 +0100
-Message-Id: <20200319091407.1481-29-joro@8bytes.org>
+Subject: [PATCH 64/70] x86/realmode: Add SEV-ES specific trampoline entry point
+Date:   Thu, 19 Mar 2020 10:14:01 +0100
+Message-Id: <20200319091407.1481-65-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -48,139 +48,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Move these two functions from kernel/idt.c to include/asm/desc.h:
+The code at the trampoline entry point is executed in real-mode. In
+real-mode #VC exceptions can't be handled, so anything that might cause
+such an exception must be avoided.
 
-	* init_idt_data()
-	* idt_init_desc()
-
-These functions are needed to setup IDT entries very early and need to
-be called from head64.c. To be usable this early these functions need to
-be compiled without instrumentation and the stack-protector feature.
-These features need to be kept enabled for kernel/idt.c, so head64.c
-must use its own versions.
+In the standard trampoline entry code this is the WBINVD instruction and
+the call to verify_cpu(), which are both not needed anyway when running
+as an SEV-ES guest.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/desc.h      | 27 +++++++++++++++++++++++++
- arch/x86/include/asm/desc_defs.h |  7 +++++++
- arch/x86/kernel/idt.c            | 34 --------------------------------
- 3 files changed, 34 insertions(+), 34 deletions(-)
+ arch/x86/include/asm/realmode.h      |  3 +++
+ arch/x86/realmode/rm/header.S        |  3 +++
+ arch/x86/realmode/rm/trampoline_64.S | 20 ++++++++++++++++++++
+ 3 files changed, 26 insertions(+)
 
-diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
-index 68a99d2a5f33..80bf63c08007 100644
---- a/arch/x86/include/asm/desc.h
-+++ b/arch/x86/include/asm/desc.h
-@@ -389,6 +389,33 @@ static inline void set_desc_limit(struct desc_struct *desc, unsigned long limit)
- void update_intr_gate(unsigned int n, const void *addr);
- void alloc_intr_gate(unsigned int n, const void *addr);
- 
-+static inline void init_idt_data(struct idt_data *data, unsigned int n,
-+				 const void *addr)
-+{
-+	BUG_ON(n > 0xFF);
-+
-+	memset(data, 0, sizeof(*data));
-+	data->vector	= n;
-+	data->addr	= addr;
-+	data->segment	= __KERNEL_CS;
-+	data->bits.type	= GATE_INTERRUPT;
-+	data->bits.p	= 1;
-+}
-+
-+static inline void idt_init_desc(gate_desc *gate, const struct idt_data *d)
-+{
-+	unsigned long addr = (unsigned long) d->addr;
-+
-+	gate->offset_low	= (u16) addr;
-+	gate->segment		= (u16) d->segment;
-+	gate->bits		= d->bits;
-+	gate->offset_middle	= (u16) (addr >> 16);
-+#ifdef CONFIG_X86_64
-+	gate->offset_high	= (u32) (addr >> 32);
-+	gate->reserved		= 0;
+diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
+index b35030eeec36..6590394af309 100644
+--- a/arch/x86/include/asm/realmode.h
++++ b/arch/x86/include/asm/realmode.h
+@@ -21,6 +21,9 @@ struct real_mode_header {
+ 	/* SMP trampoline */
+ 	u32	trampoline_start;
+ 	u32	trampoline_header;
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	u32	sev_es_trampoline_start;
 +#endif
-+}
-+
- extern unsigned long system_vectors[];
- 
  #ifdef CONFIG_X86_64
-diff --git a/arch/x86/include/asm/desc_defs.h b/arch/x86/include/asm/desc_defs.h
-index 5621fb3f2d1a..f7e7099af595 100644
---- a/arch/x86/include/asm/desc_defs.h
-+++ b/arch/x86/include/asm/desc_defs.h
-@@ -74,6 +74,13 @@ struct idt_bits {
- 			p	: 1;
- } __attribute__((packed));
- 
-+struct idt_data {
-+	unsigned int	vector;
-+	unsigned int	segment;
-+	struct idt_bits	bits;
-+	const void	*addr;
-+};
-+
- struct gate_struct {
- 	u16		offset_low;
- 	u16		segment;
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index c752027abc9e..4a2c7791c697 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -9,13 +9,6 @@
- #include <asm/desc.h>
- #include <asm/hw_irq.h>
- 
--struct idt_data {
--	unsigned int	vector;
--	unsigned int	segment;
--	struct idt_bits	bits;
--	const void	*addr;
--};
--
- #define DPL0		0x0
- #define DPL3		0x3
- 
-@@ -204,20 +197,6 @@ const struct desc_ptr debug_idt_descr = {
- };
+ 	u32	trampoline_pgd;
  #endif
+diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
+index af04512c02d9..8c1db5bf5d78 100644
+--- a/arch/x86/realmode/rm/header.S
++++ b/arch/x86/realmode/rm/header.S
+@@ -20,6 +20,9 @@ SYM_DATA_START(real_mode_header)
+ 	/* SMP trampoline */
+ 	.long	pa_trampoline_start
+ 	.long	pa_trampoline_header
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	.long	pa_sev_es_trampoline_start
++#endif
+ #ifdef CONFIG_X86_64
+ 	.long	pa_trampoline_pgd;
+ #endif
+diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
+index 251758ed7443..84c5d1b33d10 100644
+--- a/arch/x86/realmode/rm/trampoline_64.S
++++ b/arch/x86/realmode/rm/trampoline_64.S
+@@ -56,6 +56,7 @@ SYM_CODE_START(trampoline_start)
+ 	testl   %eax, %eax		# Check for return code
+ 	jnz	no_longmode
  
--static inline void idt_init_desc(gate_desc *gate, const struct idt_data *d)
--{
--	unsigned long addr = (unsigned long) d->addr;
--
--	gate->offset_low	= (u16) addr;
--	gate->segment		= (u16) d->segment;
--	gate->bits		= d->bits;
--	gate->offset_middle	= (u16) (addr >> 16);
--#ifdef CONFIG_X86_64
--	gate->offset_high	= (u32) (addr >> 32);
--	gate->reserved		= 0;
--#endif
--}
--
- static void
- idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sys)
- {
-@@ -231,19 +210,6 @@ idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sy
- 	}
- }
++.Lswitch_to_protected:
+ 	/*
+ 	 * GDT tables in non default location kernel can be beyond 16MB and
+ 	 * lgdt will not be able to load the address as in real mode default
+@@ -80,6 +81,25 @@ no_longmode:
+ 	jmp no_longmode
+ SYM_CODE_END(trampoline_start)
  
--static void init_idt_data(struct idt_data *data, unsigned int n,
--			  const void *addr)
--{
--	BUG_ON(n > 0xFF);
--
--	memset(data, 0, sizeof(*data));
--	data->vector	= n;
--	data->addr	= addr;
--	data->segment	= __KERNEL_CS;
--	data->bits.type	= GATE_INTERRUPT;
--	data->bits.p	= 1;
--}
--
- static void set_intr_gate(unsigned int n, const void *addr)
- {
- 	struct idt_data data;
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++/* SEV-ES supports non-zero IP for entry points - no alignment needed */
++SYM_CODE_START(sev_es_trampoline_start)
++	cli			# We should be safe anyway
++
++	LJMPW_RM(1f)
++1:
++	mov	%cs, %ax	# Code and data in the same place
++	mov	%ax, %ds
++	mov	%ax, %es
++	mov	%ax, %ss
++
++	# Setup stack
++	movl	$rm_stack_end, %esp
++
++	jmp	.Lswitch_to_protected
++SYM_CODE_END(sev_es_trampoline_start)
++#endif	/* CONFIG_AMD_MEM_ENCRYPT */
++
+ #include "../kernel/verify_cpu.S"
+ 
+ 	.section ".text32","ax"
 -- 
 2.17.1
 
