@@ -2,110 +2,205 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3554C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B53C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CE720663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A928207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625303;
-	bh=38o30hEvqmGagEyrNXlCMAobxn0SdVwqjNnaeQeIwwI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=srFrAWkdJlIuF6dXad3DG1qTvD7jSaRPPIKYmV2Sx1Ik+bagFcdkurTJSazdl3F8i
-	 HMmw0gym70sMaYRpiNe1rt0cCCArG1BEptrLiPiIsg7fq8bcs7vB3HvCjZkET9Fvcd
-	 /oyopcH8h3WKJ0aHVnfAS2arWEMcq/se0uJphRQ8=
+	s=default; t=1584625312;
+	bh=OTiOI9NpVgAuHMhA+pe29888F5J5ckdUeAQZInkekaQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PYubo36noLTmbnH0QOUkNXwAkjeU8ISxJbZOm21soBYssfeF9HrjVG2QeyuDlap0u
+	 4bAuXiSDaDiyoIzoA/IHsagndC3xYhwEhm0a/avWirJhvTJy8HGUWLWpI23g4Jb+77
+	 OG7J/yu1jpGQr0b41qgWIRBucyDSQXDlVqj8+H/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgCSNlm (ORCPT
+        id S1727386AbgCSNlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:41:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:36264 "EHLO foss.arm.com"
+        Thu, 19 Mar 2020 09:41:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgCSNlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:41:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3D7830E;
-        Thu, 19 Mar 2020 06:41:41 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 668483F52E;
-        Thu, 19 Mar 2020 06:41:41 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 13:41:39 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        kuninori.morimoto.gx@renesas.com,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-Message-ID: <20200319134139.GB3983@sirena.org.uk>
-References: <41d0b2b5-6014-6fab-b6a2-7a7dbc4fe020@linux.intel.com>
- <20200318123930.GA2433@light.dominikbrodowski.net>
- <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
- <20200318162029.GA3999@light.dominikbrodowski.net>
- <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
- <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
- <20200319130049.GA2244@light.dominikbrodowski.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
-Content-Disposition: inline
-In-Reply-To: <20200319130049.GA2244@light.dominikbrodowski.net>
-X-Cookie: Captain's Log, star date 21:34.5...
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726793AbgCSNlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:41:50 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29B5320663;
+        Thu, 19 Mar 2020 13:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584625309;
+        bh=OTiOI9NpVgAuHMhA+pe29888F5J5ckdUeAQZInkekaQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FUdGwNLlsVxO3xUB6XATLkNW2L4CKFDFFZ2NuC5jY47TDNKO0AwzaBoO63/wIa70d
+         HGaxGGV+hnyezyBixqb0ro9Rrvm5D+dKmAgAHbtBA0AVy/kR1/pZ+KVh7nGSDbdwKM
+         jf73+Ey2WwxJRUHRj8rOh3i7cyGgufOBMxn3kipg=
+Date:   Thu, 19 Mar 2020 22:41:44 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [RFC][PATCH 01/11] tracing: Save off entry when peeking at next
+ entry
+Message-Id: <20200319224144.cc16357a3476506fd64ad448@kernel.org>
+In-Reply-To: <20200317213415.722539921@goodmis.org>
+References: <20200317213222.421100128@goodmis.org>
+        <20200317213415.722539921@goodmis.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---oLBj+sq0vYjzfsbl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, 17 Mar 2020 17:32:23 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On Thu, Mar 19, 2020 at 02:00:49PM +0100, Dominik Brodowski wrote:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> In order to have the iterator read the buffer even when it's still updating,
+> it requires that the ring buffer iterator saves each event in a separate
+> location outside the ring buffer such that its use is immutable.
+> 
+> There's one use case that saves off the event returned from the ring buffer
+> interator and calls it again to look at the next event, before going back to
+> use the first event. As the ring buffer iterator will only have a single
+> copy, this use case will no longer be supported.
+> 
+> Instead, have the one use case create its own buffer to store the first
+> event when looking at the next event. This way, when looking at the first
+> event again, it wont be corrupted by the second read.
+> 
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  include/linux/trace_events.h |  2 ++
+>  kernel/trace/trace.c         | 27 ++++++++++++++++++++++++++-
+>  kernel/trace/trace_output.c  | 15 ++++++---------
+>  3 files changed, 34 insertions(+), 10 deletions(-)
+> 
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 6c7a10a6d71e..5c6943354049 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -85,6 +85,8 @@ struct trace_iterator {
+>  	struct mutex		mutex;
+>  	struct ring_buffer_iter	**buffer_iter;
+>  	unsigned long		iter_flags;
+> +	void			*temp;	/* temp holder */
+> +	unsigned int		temp_size;
+>  
+>  	/* trace_seq for __print_flags() and __print_symbolic() etc. */
+>  	struct trace_seq	tmp_seq;
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 6b11e4e2150c..52425aaf26c2 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -3466,7 +3466,31 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
+>  struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+>  					  int *ent_cpu, u64 *ent_ts)
+>  {
+> -	return __find_next_entry(iter, ent_cpu, NULL, ent_ts);
+> +	/* __find_next_entry will reset ent_size */
+> +	int ent_size = iter->ent_size;
+> +	struct trace_entry *entry;
+> +
+> +	/*
+> +	 * The __find_next_entry() may update iter->ent, making
+> +	 * the current iter->ent pointing to stale data.
+> +	 * Need to copy it over.
+> +	 */
 
-> Have some good news now, namely that a bisect is complete: That pointed to
-> 1272063a7ee4 ("ASoC: soc-core: care .ignore_suspend for Component suspend");
-> therefore I've added Kuninori Morimoto to this e-mail thread.
+Is this comment correct? I can not find the code which update
+iter->ent in __find_next_entry() and peek_next_entry().
+Maybe writer updates the "*iter->ent"?
 
-If that's an issue it feels more like a driver bug in that if the driver
-asked for ignore_suspend then it should expect not to have the suspend
-callback called.
+> +	if (iter->ent && iter->ent != iter->temp) {
+> +		if (!iter->temp || iter->temp_size < iter->ent_size) {
+> +			kfree(iter->temp);
+> +			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
 
-> Additionally, I have tested mainline (v5.6-rc6+ as of 5076190daded) with
-> *both* 64df6afa0dab (which you suggested yesterday) and 1272063a7ee4
-> reverted. And that works like a charm as well.
+This can be alloc/free several times on one iteration. Should we
+be so careful about memory consumption for this small piece?
 
-Please include human readable descriptions of things like commits and
-issues being discussed in e-mail in your mails, this makes them much
-easier for humans to read especially when they have no internet access.
-I do frequently catch up on my mail on flights or while otherwise
-travelling so this is even more pressing for me than just being about
-making things a bit easier to read.
+Since the reader will not run in parallel (or very rare case),
+iter->temp can allocate the max entry size at the beginning.
 
---oLBj+sq0vYjzfsbl
-Content-Type: application/pgp-signature; name="signature.asc"
+Thank you,
 
------BEGIN PGP SIGNATURE-----
+> +			if (!iter->temp)
+> +				return NULL;
+> +		}
+> +		memcpy(iter->temp, iter->ent, iter->ent_size);
+> +		iter->temp_size = iter->ent_size;
+> +		iter->ent = iter->temp;
+> +	}
+> +	entry = __find_next_entry(iter, ent_cpu, NULL, ent_ts);
+> +	/* Put back the original ent_size */
+> +	iter->ent_size = ent_size;
+> +
+> +	return entry;
+>  }
+>  
+>  /* Find the next real entry, and increment the iterator to the next entry */
+> @@ -4344,6 +4368,7 @@ static int tracing_release(struct inode *inode, struct file *file)
+>  
+>  	mutex_destroy(&iter->mutex);
+>  	free_cpumask_var(iter->started);
+> +	kfree(iter->temp);
+>  	kfree(iter->trace);
+>  	kfree(iter->buffer_iter);
+>  	seq_release_private(inode, file);
+> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+> index e25a7da79c6b..9a121e147102 100644
+> --- a/kernel/trace/trace_output.c
+> +++ b/kernel/trace/trace_output.c
+> @@ -617,22 +617,19 @@ int trace_print_context(struct trace_iterator *iter)
+>  
+>  int trace_print_lat_context(struct trace_iterator *iter)
+>  {
+> +	struct trace_entry *entry, *next_entry;
+>  	struct trace_array *tr = iter->tr;
+> -	/* trace_find_next_entry will reset ent_size */
+> -	int ent_size = iter->ent_size;
+>  	struct trace_seq *s = &iter->seq;
+> -	u64 next_ts;
+> -	struct trace_entry *entry = iter->ent,
+> -			   *next_entry = trace_find_next_entry(iter, NULL,
+> -							       &next_ts);
+>  	unsigned long verbose = (tr->trace_flags & TRACE_ITER_VERBOSE);
+> +	u64 next_ts;
+>  
+> -	/* Restore the original ent_size */
+> -	iter->ent_size = ent_size;
+> -
+> +	next_entry = trace_find_next_entry(iter, NULL, &next_ts);
+>  	if (!next_entry)
+>  		next_ts = iter->ts;
+>  
+> +	/* trace_find_next_entry() may change iter->ent */
+> +	entry = iter->ent;
+> +
+>  	if (verbose) {
+>  		char comm[TASK_COMM_LEN];
+>  
+> -- 
+> 2.25.1
+> 
+> 
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5zdpMACgkQJNaLcl1U
-h9C9pAf/RrCobt9NlyJGaB9AaEXAdgTfVIaiKtTXJ5DhvxWM/1HLH5xPAWkrBa32
-EVE4KvTS0DinbpCuAEeJRcQVFEpH6+y+kRnzntxmdsLJFRHzfcLYq/d/robTV221
-r5m6o8+hQSDrSPyQ4UXtUuWcaf8BSWogQpdhBYvhd/AU5yLjRiRc5P3p13A8nliv
-mLpj3QoOlBMigo3MnqGSFBp1AG6Nroyqt/G9uVsyOEZazhPHVX93NCIf/z5v3KHk
-7MKeZjgFbJc5hphI+nZoMa1GuraTXSn0f4tfm99wRRu0Pcb1yoyYWpTiYOKziwXX
-wR44Gs0iHetTwjYP+jmjXGeO6rjTkw==
-=bKjM
------END PGP SIGNATURE-----
 
---oLBj+sq0vYjzfsbl--
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
