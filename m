@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A44C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBCBC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A9020753
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 667A820732
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623173;
-	bh=TR6pipZLEliX57JMcvym6sJGsYd66ngAeILcBPDXjC8=;
+	s=default; t=1584623176;
+	bh=8mjxTOiY7jUCy5oNZ2Nth+B6EYgs6wniQaBkZLtmxKY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2s1VNjx+/sWStDKTDDY45JzxGzT5UnkeicKSKFiMfwX+Ie/PktFU2ZoAl4lLpmSkG
-	 yk4qWMfGu2102fZXJbv3tTQQohVOd0ezkDGoXnYpBBX+cHBNjygql6AnM1KQeO1pKJ
-	 0vTbM+hjkHX5XwNthrrHidi5I4sJUvYTy3dCE4m4=
+	b=KDVMqMFcFpfvoTr0I5XlWpL8kiMGW++4NM5nfuRAILcgkQa+7iOKc9Xs+Y5JamiFb
+	 nI2GvcomdMEk5Dm1w8JE7qysHx0Lvr9hUcfgQD+1q5KHQ9lwrqPs+EaBy5t1iEWj2o
+	 0BG4KKGa7tleBOPa/An78bvqIo8/wNEsAIbWyqIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbgCSNGM (ORCPT
+        id S1727619AbgCSNGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49240 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:06:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727563AbgCSNGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:06:10 -0400
+        id S1727601AbgCSNGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:06:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CCCD20732;
-        Thu, 19 Mar 2020 13:06:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01E2820740;
+        Thu, 19 Mar 2020 13:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623168;
-        bh=TR6pipZLEliX57JMcvym6sJGsYd66ngAeILcBPDXjC8=;
+        s=default; t=1584623171;
+        bh=8mjxTOiY7jUCy5oNZ2Nth+B6EYgs6wniQaBkZLtmxKY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wN8tgut1CMLPIqtnp4zOdTwAktaDGfPzCSUFjFKh3R/FrUrOn15x3gS9IsJyuVHtv
-         Iq1Xhq/3ACPpT2e/5vXYvB8GH/sckJCq/eK+kdK325hHPvI2pZe4qIVAa9SGcQezwb
-         goo122quwHIu/35l5UdhR3GmghPioQgUwJ5en/n8=
+        b=Na0sal0KhaTDskgiYkHQF97j71EE+3coc7d+58k91uT60UdhvDr9Cw3bD9dQRO52P
+         IMWUE1MEVXpIf1FjuyKDpw9nqPFDA+Nwg9AdbOLgBUte4JWyx9RYfbmIDOEd+62ue2
+         waZkmvzT+pw19D2pMDVv7nQc2hIQnyvN7d7idkt8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.4 31/93] nl80211: add missing attribute validation for channel switch
-Date:   Thu, 19 Mar 2020 13:59:35 +0100
-Message-Id: <20200319123934.915512433@linuxfoundation.org>
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.4 32/93] netfilter: cthelper: add missing attribute validation for cthelper
+Date:   Thu, 19 Mar 2020 13:59:36 +0100
+Message-Id: <20200319123935.158649931@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -61,30 +61,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-commit 5cde05c61cbe13cbb3fa66d52b9ae84f7975e5e6 upstream.
+commit c049b3450072b8e3998053490e025839fecfef31 upstream.
 
-Add missing attribute validation for NL80211_ATTR_OPER_CLASS
+Add missing attribute validation for cthelper
 to the netlink policy.
 
-Fixes: 1057d35ede5d ("cfg80211: introduce TDLS channel switch commands")
+Fixes: 12f7a505331e ("netfilter: add user-space connection tracking helper infrastructure")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Link: https://lore.kernel.org/r/20200303051058.4089398-4-kuba@kernel.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/nl80211.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/nfnetlink_cthelper.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -431,6 +431,7 @@ static const struct nla_policy nl80211_p
- 	[NL80211_ATTR_USER_PRIO] = { .type = NLA_U8 },
- 	[NL80211_ATTR_ADMITTED_TIME] = { .type = NLA_U16 },
- 	[NL80211_ATTR_SMPS_MODE] = { .type = NLA_U8 },
-+	[NL80211_ATTR_OPER_CLASS] = { .type = NLA_U8 },
- 	[NL80211_ATTR_MAC_MASK] = { .len = ETH_ALEN },
- 	[NL80211_ATTR_WIPHY_SELF_MANAGED_REG] = { .type = NLA_FLAG },
- 	[NL80211_ATTR_NETNS_FD] = { .type = NLA_U32 },
+--- a/net/netfilter/nfnetlink_cthelper.c
++++ b/net/netfilter/nfnetlink_cthelper.c
+@@ -711,6 +711,8 @@ static const struct nla_policy nfnl_cthe
+ 	[NFCTH_NAME] = { .type = NLA_NUL_STRING,
+ 			 .len = NF_CT_HELPER_NAME_LEN-1 },
+ 	[NFCTH_QUEUE_NUM] = { .type = NLA_U32, },
++	[NFCTH_PRIV_DATA_LEN] = { .type = NLA_U32, },
++	[NFCTH_STATUS] = { .type = NLA_U32, },
+ };
+ 
+ static const struct nfnl_callback nfnl_cthelper_cb[NFNL_MSG_CTHELPER_MAX] = {
 
 
