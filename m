@@ -2,114 +2,63 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A2EC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2271EC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA412072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE362072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:58:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="A1k9XRKu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="6AH3qy+l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgCSP4h (ORCPT
+        id S1727936AbgCSP6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:56:37 -0400
-Received: from mail.efficios.com ([167.114.26.124]:56496 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727470AbgCSP4h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:56:37 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id ED29C278DA8;
-        Thu, 19 Mar 2020 11:56:35 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 00H5Rq2IezWF; Thu, 19 Mar 2020 11:56:35 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 76296278DA7;
-        Thu, 19 Mar 2020 11:56:35 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 76296278DA7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1584633395;
-        bh=wzmjzK7D6MR+WzKCsHdIPE5bCMu9VKLlVLXpnXJgfGI=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=A1k9XRKuzGSqub6T4NlGnRKjrdw5bz7hGJ3vR4t8IuSsDZNszJQpnkGEnQepmSQcZ
-         RxkzHUmfo5nMYCwQzrcTO1nuXH+xh9QYyqNcxuEL2y8SaDWymAZ/6/s/8j1QwIB7uy
-         ootn5pshFMpisHmKlHtkZ2iQyTLc+cR29tTTVS8E+8vrYi/gMi+3KcyElMoArE7Nxf
-         fcN0mW63vmSl1EMSjAigS4WFr9FKnj/Uu7h8dOueX8XlOGXhWfRRCdSwy9nyPo6t+p
-         bv49rx+zfO/G2L7WdVCquT+saWIZI6IxeB9ZalnxEJE7W2eLyFAZxUXjkhdbjtOmSg
-         k/0tRcj75960Q==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id nYNsfCZiSBRm; Thu, 19 Mar 2020 11:56:35 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 619D7278DA6;
-        Thu, 19 Mar 2020 11:56:35 -0400 (EDT)
-Date:   Thu, 19 Mar 2020 11:56:35 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Message-ID: <2147217200.3240.1584633395285.JavaMail.zimbra@efficios.com>
-In-Reply-To: <874kukpf9f.fsf@mid.deneb.enyo.de>
-References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com> <20200319144110.3733-5-mathieu.desnoyers@efficios.com> <874kukpf9f.fsf@mid.deneb.enyo.de>
-Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C
- startup and thread creation (v15)
+        Thu, 19 Mar 2020 11:58:16 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45390 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727377AbgCSP6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:58:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=yE1NFJcE5krlUa9FgrGPKy80AyO4EMe719xrJPy3izQ=; b=6AH3qy+lM+hJVUzQ/QzW1k0zs2
+        sWHm+MvrdO5G8ZnZJz5uMC38705xWIGXbVwWqOiWy8BNRZXzSPi46TkCzzKzAO1FdE9Jv7bRUdN9/
+        4AI1ZsgFTy06ZBaN62K64/LFLlbnRPJVeTkTMsn/FH15i7gLkASSLiZgodITmEzGMsRs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jExYj-0007YU-2o; Thu, 19 Mar 2020 16:58:13 +0100
+Date:   Thu, 19 Mar 2020 16:58:13 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 1/2] net: phy: mscc: add support for RGMII
+ MAC mode
+Message-ID: <20200319155813.GD27807@lunn.ch>
+References: <20200319141958.383626-1-antoine.tenart@bootlin.com>
+ <20200319141958.383626-2-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v15)
-Thread-Index: +wQ/afczq9ft3jDapmb/EGDwKihxiQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319141958.383626-2-antoine.tenart@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Mar 19, 2020, at 10:53 AM, Florian Weimer fw@deneb.enyo.de wrote:
-
-> * Mathieu Desnoyers via Libc-alpha:
+On Thu, Mar 19, 2020 at 03:19:57PM +0100, Antoine Tenart wrote:
+> This patch adds support for connecting VSC8584 PHYs to the MAC using
+> RGMII.
 > 
->> Changes since v14:
->> - Update copyright range to include 2020.
->> - Introduce __ASSUME_RSEQ defined for --enable-kernel=4.18.0 and higher.
->> - Use ifdef __ASSUME_RSEQ rather than ifdef __NR_rseq to discover rseq
->>   availability. This is necessary now that the system call numbers are
->>   integrated within glibc.
-> 
-> It's not quite clear to me why you need __ASSUME_RSEQ.
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 
-This is how I noticed other Linux features were being integrated,
-so I figured this is how I should do it. Monkey see, monkey do. ;-)
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-> Can you use __has_include in <sys/rseq.h>, with a copy of the kernel
-> definitions if the kernel header is not available?
+    Andrew
 
-Sure. Should I pull a verbatim copy of uapi linux/rseq.h into glibc ?
-If so, where should I put it ?
-
-Thanks,
-
-Mathieu
-
-
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
