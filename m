@@ -2,102 +2,121 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA09BC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6442C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B044E206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB0F206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:24:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OuLtf1Cv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hMfSKg1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgCSKYN (ORCPT
+        id S1727050AbgCSKYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:24:13 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37868 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgCSKYN (ORCPT
+        Thu, 19 Mar 2020 06:24:17 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45135 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgCSKYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:24:13 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f16so878914plj.4;
-        Thu, 19 Mar 2020 03:24:12 -0700 (PDT)
+        Thu, 19 Mar 2020 06:24:15 -0400
+Received: by mail-pg1-f193.google.com with SMTP id m15so1014239pgv.12
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 03:24:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p3r+VAHql+NP8pG7ZRzCI1tKv/6Ke1R8Od0R0hVXCz4=;
-        b=OuLtf1CvxjTW12d4iEIOBP4cT+yNyQ4jW6U1i1yAILpZN2xtuL445eKHtrwDy9o0Fg
-         Ck3rGRt1jNxV5Mj1Ligt1lBm6TY+4O4Dzehr7sAStYtFzmAz0pDzJH4CDZfVGoXguJ+z
-         BkMXwOlqvpohkTuI3hmL8O9nACqQP7pPqY9BwWZtDHrcLX+T3/mMAe0ODmsDXTYYgcHv
-         g4t2ShsrJp3OBJegNBZmCSIwc/kq/qgfx0lu7gPFY9L/HFDM7cIDzmxseg4iMN75dsgL
-         Z6w90VKsNG68UliJ8yefBdtcMSyKYjsezaNiOaZAs5P3Ohj6Ym1A/f7cmmjAo6V5yMWk
-         O5gA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ejqis7jZWtiS2ZJTMrRUUKldwFIqOJuqqMCf3220n+4=;
+        b=hMfSKg1AkvvlQME8YGZu9tky0WqVsplrt7JrWxrTqFiKboOzIKmDiLwh38WSiez0Fx
+         vXZMCa3A7gMmUsjJPEhaooP1Ibtae1V2h41wqN/eazLKPEHSNnKKYuQf/0b0+zE5J8Wi
+         0I1L0Tle35xHNWanMkUymga3f0fTvI7mHSCwYYn58YQJAYcyHXN3zU8YKYvpx+e0vH6D
+         kWPR9rMXZVqj3BbI5CqtsWgQ9GYbokoBYeInrFcSgvNOeHJmSS/l1Sledp1LRbZm+RYk
+         mQqtoEoCncsJ7+Xu3Lk5JAWFh3UVJojPdtcpy+wOXJm/sOhMva0WyyI1C8WDvdOBA5JR
+         rxMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p3r+VAHql+NP8pG7ZRzCI1tKv/6Ke1R8Od0R0hVXCz4=;
-        b=B8ay17Os8l9v0l2Ad5Ps45wStrSg+meMGwxYhEzs0cvn7OWTZgQR27BwAjGV6xBWVJ
-         ozZW6oiqI4gaCfziav9KMgJoYugWo/54z+DHVFzhaFYD+iFFibaS6Ss7P8jEC7WeVZwG
-         a3/Xc+X9+gFGRLrn5cPMn/RL78nrkFUiQk6CkAR+2zqlOccyji81dm00Vxd1Qxz4nnWT
-         sYR5QZywWkPKKQ4YV2GMqi7NCPnVQ4T4uLq8vzgCDi1baWrUnsrMCcUE5lgBflUbd1OL
-         gnDO51g274opxRkABgXPZHReAsO/+WYyFiDcZqWgjGcEnjs9wWZn+89q6ytuU/Q9AzsW
-         TsGw==
-X-Gm-Message-State: ANhLgQ34rHiyeWB84M9eBFkQcWNtSju63yOmn0rj47WHy0zCyqt+LFGU
-        pM/GI7jNkormnZ4nNH41MffdsdhnvL3vhPqt1Bk=
-X-Google-Smtp-Source: ADFU+vtSQwZTCu2Njzsv2xzB4wNSocYdn1ZQQiF6gB56AeE27bNJyfK+qypfWdy4jN5YrJnS52/hcob4sWOz7z575Ws=
-X-Received: by 2002:a17:90a:a48b:: with SMTP id z11mr3147372pjp.1.1584613451888;
- Thu, 19 Mar 2020 03:24:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ejqis7jZWtiS2ZJTMrRUUKldwFIqOJuqqMCf3220n+4=;
+        b=RsfbW4YjDkuIy6iW+F0Vl6aakOR8x1gIYEHtw0u7QalpQP/vY0aSqybrijrP369AoC
+         nPYic5p9cPj5queCQWW4ORnnSgaZFMYi7znip54RWHdJGFqMi00ox/cu3jJu7SA+nvX9
+         DEvsIofjNRc1hm5ZWh3U/ZaCHRLZb4q8r+fCkm+M5VM20lww0W8C55FR+hhAQKdkiDZy
+         jNXKL2v/o0RRy6DCwbUmo9GuMdb1G6sYvFIsWcZX5jjwgNXDS/yzHg3nK0v0xUgVpwiC
+         6bB4LtjRpDat3zmxAH9QZjmCt0ghw+3f+vigUdA0uFtMoCi2PiAzoEqdnmn/z0j2z5i5
+         /2Xg==
+X-Gm-Message-State: ANhLgQ0nO5SlvKINmpjZycGuMr2vTc8bpwo4/azAJHfF6YlWuOqrP70z
+        MAufKngfLKkOAi5WVD4wUiBrcA==
+X-Google-Smtp-Source: ADFU+vsfsrSDZTmHpVU3LAAmj3UlUBy/81zcWkCE3fx118L6TIcuQvcw29TgeFrn42KkMnYAVFhMaQ==
+X-Received: by 2002:aa7:8708:: with SMTP id b8mr3375903pfo.209.1584613454639;
+        Thu, 19 Mar 2020 03:24:14 -0700 (PDT)
+Received: from localhost ([122.171.118.46])
+        by smtp.gmail.com with ESMTPSA id i126sm1850038pfc.105.2020.03.19.03.24.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Mar 2020 03:24:13 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 15:54:11 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+Message-ID: <20200319102411.oivesngrk7gy7vtw@vireshk-i7>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
+ <20200318034243.o2metmggzuah6cqw@vireshk-i7>
+ <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
+ <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
 MIME-Version: 1.0
-References: <5e730c2f.1c69fb81.9eda3.5c70@mx.google.com>
-In-Reply-To: <5e730c2f.1c69fb81.9eda3.5c70@mx.google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 19 Mar 2020 12:24:00 +0200
-Message-ID: <CAHp75Vf+SA7ptRQRxvMtVfN0MzQeQ_AgzAP7fc3eaT5nmsxo_g@mail.gmail.com>
-Subject: Re: [PATCH] iio: imu: inv_mpu6050: add debugfs register r/w interface
-To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 8:10 AM Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
->
-> The iio debugfs interface provides direct access to read and write device
-> registers if debugfs is enabled.
+On 19-03-20, 15:41, Sibi Sankar wrote:
+> Viresh,
+> Saravana's example does show a device
+> with multiple opp tables but doesn't
+> need multiple opp table support to
+> land though (since it works fine with
+> the current implementation). I am more
+> interested  in understanding your/
+> Stephen's/Saravana's stance on adding
+> multiple opp-table support. Personally
+> I feel its inevitable, since multiple
+> qc drivers using interconnect opp-tables,
+> routinely need vote on multiple paths in
+> a non-trivial manner.
 
-But regmap API provides at least reading facility. Isn't it enough?
+The OPP core doesn't support multiple OPP tables for a device and I
+don't understand how it will. And so I have been waiting for a reply.
 
-...
+> > 
+> > Could you please post a link to the discussion that you are referring to
+> > here?
+> > I looked at a few links posted in the cover letter as dependencies and
+> > it seems
+> > like the discussions are pending for *months* and not weeks but I
+> > might have looked
+> > at the wrong ones.
+> 
+> https://lore.kernel.org/lkml/20200114103448.odnvqawnqb3twst5@vireshk-i7/
+> 
+> Rajendra,
+> Viresh is referring to ^^ one
 
->  static const struct iio_info mpu_info = {
->         .read_raw = &inv_mpu6050_read_raw,
->         .write_raw = &inv_mpu6050_write_raw,
->         .write_raw_get_fmt = &inv_write_raw_get_fmt,
->         .attrs = &inv_attribute_group,
->         .validate_trigger = inv_mpu6050_validate_trigger,
-
-> +       .debugfs_reg_access = &inv_mpu6050_reg_access
-
-Leaving comma is helpful for future development.
-
->  };
-
+Right, thanks.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+viresh
