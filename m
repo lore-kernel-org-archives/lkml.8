@@ -2,130 +2,148 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8FEC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EC2C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6EC20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D2A20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:23:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=who-t.net header.i=@who-t.net header.b="FdtRg9aC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="1ilLJKOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbgCSCVQ (ORCPT
+        id S1727082AbgCSCXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 22:21:16 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:45810 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726596AbgCSCVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 22:21:15 -0400
-Received: from [10.20.42.25] (unknown [10.20.42.25])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxH2kV13Je8mMcAA--.28S3;
-        Thu, 19 Mar 2020 10:21:09 +0800 (CST)
-Subject: Re: [PATCH RFC 4/4] KVM: MIPS: Define arch-specific
- kvm_flush_remote_tlbs()
-To:     Peter Xu <peterx@redhat.com>
-References: <20200207223520.735523-1-peterx@redhat.com>
- <20200207223520.735523-5-peterx@redhat.com>
- <e434cbe0-8d1c-c7fe-e169-01268bd4541c@loongson.cn>
- <20200318152837.GB26585@xz-x1>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-mips@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-From:   maobibo <maobibo@loongson.cn>
-Message-ID: <a78041a0-a987-5456-ed3f-44eb1a6022a7@loongson.cn>
-Date:   Thu, 19 Mar 2020 10:21:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 18 Mar 2020 22:23:41 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:59757 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726596AbgCSCXl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 22:23:41 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id B4164731;
+        Wed, 18 Mar 2020 22:23:39 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Wed, 18 Mar 2020 22:23:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm2; bh=Q
+        J6VgA9GCMrQDzsqr9+ykTR/nUPvG0fbwxidI4X0tLM=; b=FdtRg9aCnX1I9InM4
+        VVdeu3YFDXCBgOJlO4nqW+gwggY/MxecYBZdk2a8cYRCwsVcWA1d518IZVcQ92dn
+        2pzFvXAFEHF3uyer8vZJhW3xF9AX1DpLTVqLjtWmo3e+90vlebJeft/y6nnbWXBD
+        CWZmcFUOwSscd4VuQXTQmMScQpF1Fw32FiYoPGXo8fMWaodyExy8EETUXdovh67p
+        bC7gDoHaBKDE/aRuz6eTZGTp+aLFBsWbA5+PByMr10nQLZu0Quko9lMsVpHgUwsj
+        a6kAkzbMt/75UfDfB0OIYx5wSjzKQu+h6i7zj3txtv9PY4JRiRd4Pi3/8m7+2IO5
+        18M7g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=QJ6VgA9GCMrQDzsqr9+ykTR/nUPvG0fbwxidI4X0t
+        LM=; b=1ilLJKOHYLMFzD/cXAvNgy+EAXggg+angcm5t7egRpBPnG1TTr4EUlRZq
+        LFgLGuqeLj601lVN4vRyyi2xzIToHx7U2GhZeOf6Ddhl5Cu45TIcqseoACv9w342
+        OBF0ILomIA+f721pD5iZos4tUVaszRqTooL+ERdQFoGiDU5ybRNgcqVnSK7u+26/
+        qw+EfZPE6IXf1YaxBkX4gb7kzOjo4WhliT9yD/Z6qIuFLfvpozuOqFJ7xVBjkYQx
+        R2HVJLhZNa2O8qQfxQ4NcME51G3F2nTNxrcr/yRg3BgAL99fBxeCbqVcIlqNkPZo
+        l0C6griq2aKZ4Tb8KD8Q6L9I4Zsew==
+X-ME-Sender: <xms:qtdyXkPtRTT-401mCiXYbAgwZnkspmW6o1-mGW1y7cX714Su_w37FQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudefkedggeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtudenucfhrhhomheprfgvthgv
+    rhcujfhuthhtvghrvghruceophgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvg
+    htqeenucfkphepuddujedrvddtrdejuddruddtleenucevlhhushhtvghrufhiiigvpedt
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehpvghtvghrrdhhuhhtthgvrhgvrhesfihhoh
+    dqthdrnhgvth
+X-ME-Proxy: <xmx:qtdyXmaFSjfk_wBQYjeYZ_AOLLKNCRvdtHZ_3Tc3HPLWpYoLrIBFqQ>
+    <xmx:qtdyXuyDh3TjnyNtBZrsaLoeJH90SS3ZFqjtx7WfoCV0QV-SWf3c8g>
+    <xmx:qtdyXhIa9r5gFnOPksFfEiBtNHvNGUiuLkzmVa24UNeCwjylberAcQ>
+    <xmx:q9dyXo6ZfZrFnzD7jeQE4cBwoElB4ITuwjwq9jQhnlqlPHrJKyY4lA>
+Received: from jelly (117-20-71-109.751447.bne.nbn.aussiebb.net [117.20.71.109])
+        by mail.messagingengine.com (Postfix) with ESMTPA id ECC3F328005A;
+        Wed, 18 Mar 2020 22:23:35 -0400 (EDT)
+Date:   Thu, 19 Mar 2020 12:23:31 +1000
+From:   Peter Hutterer <peter.hutterer@who-t.net>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mario Limonciello <superm1@gmail.com>,
+        Filipe =?iso-8859-1?Q?La=EDns?= <lains@archlinux.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Richard Hughes <hughsient@gmail.com>
+Subject: Re: [PATCH] HID: logitech-dj: issue udev change event on device
+ connection
+Message-ID: <20200319022331.GA2384843@jelly>
+References: <20200318161906.3340959-1-lains@archlinux.org>
+ <CA+EcB1MoTXMaueJfRHf51A5PU4oiKSJXrHazfTEvifZK54OrLQ@mail.gmail.com>
+ <e8ea0c2e-445f-21e2-a248-3368f26bf391@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318152837.GB26585@xz-x1>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9DxH2kV13Je8mMcAA--.28S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4UAFykAw1kXF15Gw43Awb_yoW8uFy8pF
-        W7C3ZrCF4UWrWkWa4SvwnxWr1aqws3JFWUW3WUK345Xr90qr1kJFWfGr4F9ryUWrySqw1S
-        9F1rX3W3W3y7Aa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvFb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
-        MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
-        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
-        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj
-        xU2xR6UUUUU
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e8ea0c2e-445f-21e2-a248-3368f26bf391@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 18, 2020 at 06:20:03PM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 3/18/20 6:15 PM, Mario Limonciello wrote:
+> > On Wed, Mar 18, 2020 at 11:19 AM Filipe Laíns <lains@archlinux.org> wrote:
+> > > 
+> > > As discussed in the mailing list:
+> > > 
+> > > > Right now the hid-logitech-dj driver will export one node for each
+> > > > connected device, even when the device is not connected. That causes
+> > > > some trouble because in userspace we don't have have any way to know if
+> > > > the device is connected or not, so when we try to communicate, if the
+> > > > device is disconnected it will fail.
+> > > 
+> > > The solution reached to solve this issue is to trigger an udev change
+> > > event when the device connects, this way userspace can just wait on
+> > > those connections instead of trying to ping the device.
+> > > 
+> > > Signed-off-by: Filipe Laíns <lains@archlinux.org>
+> > > ---
+> > >   drivers/hid/hid-logitech-dj.c | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
+> > > index 48dff5d6b605..fcd481a0be1f 100644
+> > > --- a/drivers/hid/hid-logitech-dj.c
+> > > +++ b/drivers/hid/hid-logitech-dj.c
+> > > @@ -1464,6 +1464,8 @@ static int logi_dj_dj_event(struct hid_device *hdev,
+> > >                  if (dj_report->report_params[CONNECTION_STATUS_PARAM_STATUS] ==
+> > >                      STATUS_LINKLOSS) {
+> > >                          logi_dj_recv_forward_null_report(djrcv_dev, dj_report);
+> > > +               } else {
+> > > +                       kobject_uevent(&hdev->dev.kobj, KOBJ_CHANGE);
+> > >                  }
+> > >                  break;
+> > >          default:
+> > > --
+> > > 2.25.1
+> > 
+> > The problem that will remain here is the transition period for
+> > userspace to start to rely upon
+> > this.  It will have no idea whether the kernel is expected to send
+> > events or not.  What do you
+> > think about adding a syfs attribute to indicate that events are being
+> > sent?  Or something similar?
+> 
+> Then we would need to support that attribute forever. IMHO the best
+> option is to just make a uname call and check the kernel version, with
+> the code marked to be removed in the future when kernels older then
+> $version are no longer something we want to support.
 
+Also note that we may not have access to /sys.
 
-On 03/18/2020 11:28 PM, Peter Xu wrote:
-> On Wed, Mar 18, 2020 at 11:03:13AM +0800, maobibo wrote:
->>
->>
->> On 02/08/2020 06:35 AM, Peter Xu wrote:
->>> Select HAVE_KVM_ARCH_TLB_FLUSH_ALL for MIPS to define its own
->>> kvm_flush_remote_tlbs().  It's as simple as calling the
->>> flush_shadow_all(kvm) hook.  Then replace all the flush_shadow_all()
->>> calls to use this KVM generic API to do TLB flush.
->>>
->>> Signed-off-by: Peter Xu <peterx@redhat.com>
->>> ---
->>>  arch/mips/kvm/Kconfig |  1 +
->>>  arch/mips/kvm/mips.c  | 22 ++++++++++------------
->>>  2 files changed, 11 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
->>> index eac25aef21e0..8a06f660d39e 100644
->>> --- a/arch/mips/kvm/Kconfig
->>> +++ b/arch/mips/kvm/Kconfig
->>> @@ -26,6 +26,7 @@ config KVM
->>>  	select KVM_MMIO
->>>  	select MMU_NOTIFIER
->>>  	select SRCU
->>> +	select HAVE_KVM_ARCH_TLB_FLUSH_ALL
->>>  	---help---
->>>  	  Support for hosting Guest kernels.
->>>
->>> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
->>> index 1d5e7ffda746..518020b466bf 100644
->>> --- a/arch/mips/kvm/mips.c
->>> +++ b/arch/mips/kvm/mips.c
->>> @@ -194,13 +194,16 @@ int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
->>>  	return 0;
->>>  }
->>>
->>> +void kvm_flush_remote_tlbs(struct kvm *kvm)
->>> +{
->>> +	kvm_mips_callbacks->flush_shadow_all(kvm);
->>> +}
->>> +
->> Hi Peter,
->
-> Hi, Bibo,
->
->>
->> Although I do not understand mip VZ fully, however it changes behavior of
->> MIPS VZ, since kvm_flush_remote_tlbs is also called in function
->> kvm_mmu_notifier_change_pte/kvm_mmu_notifier_invalidate_range_start
->
-> I'm not familiar with MIPS either, however... I would start to suspect
-> MIPS could be problematic with MMU notifiers when cpu_has_guestid is
-> not set.  If that's the case, then this series might instead fix it.
-
-yeap, from my viewpoint this series actually fix it when cpu_has_guestid 
-is not set, previous kvm_flush_remote_tlbs function do nothing actually 
-for MIPS VZ machine without cpu_has_guestid flag.
-
->
-> Thanks,
->
-
+Cheers,
+   Peter
