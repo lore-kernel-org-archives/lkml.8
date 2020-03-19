@@ -2,78 +2,149 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CEDC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CEBC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05788206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E18D206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IP+8fN97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbgCSTrC (ORCPT
+        id S1726895AbgCSTuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:47:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:56401 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgCSTrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:47:01 -0400
-IronPort-SDR: Po8Z/pzT4ZyzATKERnc1WJgjSBvnAiGgTZcOVGdH2Sbi5IJn62f1jnNywVcCqPEXMi+J7xo/x9
- wwy0XEFxe94Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 12:46:58 -0700
-IronPort-SDR: a6SaYj/xeKftbSen3LWYA6qWR9ApLeeTa+v5cjiVyF9UB9Q7xyMMQqIfWGC7lVjo5Zg0E1J0nu
- 0ljRFqFI0wdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="391910291"
-Received: from oamor-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.182.181])
-  by orsmga004.jf.intel.com with ESMTP; 19 Mar 2020 12:46:51 -0700
-Date:   Thu, 19 Mar 2020 21:46:50 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>
-Subject: Re: [PATCH v5 2/2] KEYS: Avoid false positive ENOMEM error on key
- read
-Message-ID: <20200319194650.GA24804@linux.intel.com>
-References: <20200318221457.1330-1-longman@redhat.com>
- <20200318221457.1330-3-longman@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318221457.1330-3-longman@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Thu, 19 Mar 2020 15:50:00 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41221 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgCSTuA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:50:00 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z65so1968769pfz.8
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 12:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=pYVz/q/oYfSRcEW9kuy6vXjgqJxNH9kUoZVwT624bk4=;
+        b=IP+8fN97RRyISsjp13UrNbWub91yoKTrJ+dLi/IFdFwlMeln8RUzPJABNSvRg7oClB
+         4IDElPtf6Zru/hDRJxfOkImoE/cCiAZrwUfBKSF6Khxu4tws9CFZOSqS02HprXba4v5Q
+         48YvYNN/O4/8h1zIZB5nBxGah70564rlEWJtLtYlZnO8HFIlLenjL0hobrKL2mA6UvHm
+         dXW0caDwGhwnvupdjGg57HjhXZlrcFEJRemF04YTcrUJeUR++df5K5mrlLj74xZ6mfUJ
+         qMH5/ZPC/KKas94YUIfeh5x436aeTceIo2Two2AZQWmBRISXkbrw4koErmNvEP75UsAy
+         f1Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pYVz/q/oYfSRcEW9kuy6vXjgqJxNH9kUoZVwT624bk4=;
+        b=iqTKURVYR3Q0veslCCpkT8JfEUPfstVIWw8v6+0YhdBlv12pxK3zzSpadqKPmtQiyO
+         LObbTvlugLBwxxCdcsKMfXnskSdDwpqTDo7hRsJMvDGdB6d8vflM/zic64hqJsgl0cIC
+         UC+Cr+ArIpRoDwNwLhY6YvxEuWX5/BacuR5t6zYbOF7VyM92IhxOta2mDtzeMez514CD
+         R9+QM/JwuorD18I+PKMpvRifd4dck03BUlEl2paKuR5m6zcU+ubRoOsT27cIE506mV2i
+         MMMk7dHJtxNMxdDltQuBQYCw1WWOzDvZNBhTpDJd69uZUbR/F57hqdvFsm5/qOy+SHCS
+         7awg==
+X-Gm-Message-State: ANhLgQ0IB+TddrkoWTBWt334cdeRWGoGWUPAaSc755BdKNPtM+l7JHGu
+        XDBfde379iS3ctjvtum9UjEMmg3O9ks=
+X-Google-Smtp-Source: ADFU+vvlVU94t5LjsSahudUpZjzSkyz8yES5tDVu4tZoZ6z3hwxUvIzmiDn8xe4iH/duCOlp9e8+ag==
+X-Received: by 2002:a63:8c51:: with SMTP id q17mr5094662pgn.320.1584647398261;
+        Thu, 19 Mar 2020 12:49:58 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id y28sm2989377pgc.69.2020.03.19.12.49.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 12:49:57 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>, Todd Kjos <tkjos@google.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2] soc: qcom: rpmpd: Allow RPMPD driver to be loaded as a module
+Date:   Thu, 19 Mar 2020 19:49:54 +0000
+Message-Id: <20200319194954.39853-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 06:14:57PM -0400, Waiman Long wrote:
-> +			 * It is possible, though unlikely, that the key
-> +			 * changes in between the up_read->down_read period.
-> +			 * If the key becomes longer, we will have to
-> +			 * allocate a larger buffer and redo the key read
-> +			 * again.
-> +			 */
-> +			if (!tmpbuf || unlikely(ret > tmpbuflen)) {
+This patch allow the rpmpd driver to be loaded as a permenent
+module. Meaning it can be loaded from a module, but then cannot
+be unloaded.
 
-Shouldn't you check that tmpbuflen stays below buflen (why else
-you had made copy of buflen otherwise)?
+Ideally, it would include a remove hook and related logic, but
+apparently the genpd code isn't able to track usage and cleaning
+things up? (See: https://lkml.org/lkml/2019/1/24/38)
 
-/Jarkko
+So making it a permenent module at least improves things slightly
+over requiring it to be a built in driver.
+
+Feedback would be appreciated!
+
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Saravana Kannan <saravanak@google.com>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+v2:
+* Fix MODULE_LICENSE to be GPL v2 as suggested by Bjorn
+* Leave initcall as core_initcall, since that switches to module_initcall
+  only when built as a module, also suggested by Bjorn
+* Add module tags taken from Rajendra's earlier patch
+---
+ drivers/soc/qcom/Kconfig | 4 ++--
+ drivers/soc/qcom/rpmpd.c | 6 ++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index d0a73e76d563..af774555b9d2 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -123,8 +123,8 @@ config QCOM_RPMHPD
+ 	  for the voltage rail.
+ 
+ config QCOM_RPMPD
+-	bool "Qualcomm RPM Power domain driver"
+-	depends on QCOM_SMD_RPM=y
++	tristate "Qualcomm RPM Power domain driver"
++	depends on QCOM_SMD_RPM
+ 	help
+ 	  QCOM RPM Power domain driver to support power-domains with
+ 	  performance states. The driver communicates a performance state
+diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
+index 2b1834c5609a..22fe94c03e79 100644
+--- a/drivers/soc/qcom/rpmpd.c
++++ b/drivers/soc/qcom/rpmpd.c
+@@ -5,6 +5,7 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/mutex.h>
++#include <linux/module.h>
+ #include <linux/pm_domain.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+@@ -226,6 +227,7 @@ static const struct of_device_id rpmpd_match_table[] = {
+ 	{ .compatible = "qcom,qcs404-rpmpd", .data = &qcs404_desc },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, rpmpd_match_table);
+ 
+ static int rpmpd_send_enable(struct rpmpd *pd, bool enable)
+ {
+@@ -422,3 +424,7 @@ static int __init rpmpd_init(void)
+ 	return platform_driver_register(&rpmpd_driver);
+ }
+ core_initcall(rpmpd_init);
++
++MODULE_DESCRIPTION("Qualcomm Technologies, Inc. RPM Power Domain Driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:qcom-rpmpd");
+-- 
+2.17.1
+
