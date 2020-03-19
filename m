@@ -2,107 +2,84 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D780DC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FB7C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB5120774
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:49:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="Qx4UOPeD"
+	by mail.kernel.org (Postfix) with ESMTP id B7C0320774
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgCSUtt (ORCPT
+        id S1727207AbgCSUuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:49:49 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45988 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSUtt (ORCPT
+        Thu, 19 Mar 2020 16:50:20 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:27920 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725787AbgCSUuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 16:49:49 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e9so3850630otr.12
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 13:49:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kyf9ajsDR4vppAgtNsM21ihbXytHvjaLDq9vutqF0Ow=;
-        b=Qx4UOPeDeAXY7YtTyphjv7NW1pUfalmORDqsPGqF3oMer7S9vHDnPTqDb/GbNTIabD
-         YFY1UdwynVf2OPtuDZSrud7apoNYFrG2S5rPF2fgv+LXlr3NjGlIOsHoWlsIbDkLmIQA
-         /sX4ZD1zud1H24z3wvGB7Syk4AqwlBXw+zKUYVvhpESNcP7VQG0IMH/1hKYd9WtLbgI+
-         tkex+3lFg71V/Aai2J74wMGkJ5rC0nx+q0xoYdOs1G+xwQE7MbcF7bBicyLduY5OUcec
-         moFPsa0TpyubUErOHpUgkQyXc9z4go+Qg7gG5qivHeGQ5fiHjxlfyvPaH4pB6CiAwhBf
-         neTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kyf9ajsDR4vppAgtNsM21ihbXytHvjaLDq9vutqF0Ow=;
-        b=tD0NVjdTbQIZKtRxWsVD/PLFwAQmntPlDJpk4MrdhrlEVwbQg6UTXummv3Xfb4k7pA
-         GxOr9V3YnrMFS/khlDA2rLu8pEOHFJ/JcH02D5u3XeKh7P+LALgIaHuvClWXEpBvKuaX
-         NG2jnyADVr3+hAH6ErDJZkroxGaLsvJ4xj0Jk7RGgev6fsLmbsmRHGbWjPqpO6yG9AQx
-         B0zOeSxGzbl/oI0maOn0gRP9M/x4+shF5MYR+J6WJ05yeRTfcV8EZO3WFRTDlB3m+qu1
-         NzZfZQpzwcYxpGrsyp6KuTMxEzJa5mKpiHmNMa90hZ0S5TkA5QBuOPwgQmA2+xUTHZeD
-         +loA==
-X-Gm-Message-State: ANhLgQ1bkCi/ltUhUliSqhmgpDdi5VOj0pLe1D7xhJ1YHAybO+/Of4fk
-        jYdI7ntwEKylzAVNy8Bjg5gJ6uLRzIaCpC2ZW8DxYQ==
-X-Google-Smtp-Source: ADFU+vuqkdgiVtQGhhHLai1JnzgDoVhjusIptb9AQOM1sFQLW+udrSlRkNFjBlfJV/724Z4ANjmbIaqm1SOWnNWOnaY=
-X-Received: by 2002:a05:6830:1e38:: with SMTP id t24mr4047611otr.33.1584650988486;
- Thu, 19 Mar 2020 13:49:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20191212071847.45561-1-alison.wang@nxp.com> <CAGgjyvHHzPWjRTqxYmGCmk3qa6=kOezHywVDFomgD6UNj-zwpQ@mail.gmail.com>
- <VI1PR04MB40627CDD5F0C17D8DCDCFFE2F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <VI1PR04MB4062C67906888DA8142C17E1F4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <CAGgjyvGAjx1SV=K66AM24DxMTA_sAF2uhhDw5gXCFTGNZi8E7Q@mail.gmail.com>
- <VI1PR04MB40620DD55D5ED0FDC3E94C2BF4550@VI1PR04MB4062.eurprd04.prod.outlook.com>
- <20191212122318.GB4310@sirena.org.uk>
-In-Reply-To: <20191212122318.GB4310@sirena.org.uk>
-From:   Tim Harvey <tharvey@gateworks.com>
-Date:   Thu, 19 Mar 2020 13:49:37 -0700
-Message-ID: <CAJ+vNU0xZOb0R2VNkq6k3efdkgQUtO_-cEdNgZ643nt_G=vevQ@mail.gmail.com>
-Subject: Re: [alsa-devel] [EXT] Re: [PATCH] ASoC: sgtl5000: Revert "ASoC:
- sgtl5000: Fix of unmute outputs on probe"
-To:     Mark Brown <broonie@kernel.org>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     Alison Wang <alison.wang@nxp.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 19 Mar 2020 16:50:19 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 19 Mar 2020 13:50:18 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 19 Mar 2020 13:50:18 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id C21324B82; Thu, 19 Mar 2020 13:50:18 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v10 04/12] pwm: clps711x: Cast period to u32 before use as divisor
+Date:   Thu, 19 Mar 2020 13:50:07 -0700
+Message-Id: <8822fc43463039744581398be844f4417f62abcd.1584650604.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1584650604.git.gurus@codeaurora.org>
+References: <cover.1584650604.git.gurus@codeaurora.org>
+In-Reply-To: <cover.1584650604.git.gurus@codeaurora.org>
+References: <cover.1584650604.git.gurus@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 4:24 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Thu, Dec 12, 2019 at 10:46:31AM +0000, Alison Wang wrote:
->
-> > We tested this standard solution using gstreamer and standard ALSA
-> > tools like aplay, arecord and all these tools unmute needed blocks
-> > successfully.
->
-> > [Alison Wang] I am using aplay. Do you mean I need to add some parameters for aplay or others to unmute the outputs?
->
-> Use amixer.
+Since the PWM framework is switching struct pwm_args.period's datatype
+to u64, prepare for this transition by typecasting it to u32.
 
-Marc / Oleksandr,
+Also, since the dividend is still a 32-bit number, any divisor greater
+than UINT_MAX will cause the quotient to be zero, so return 0 in that
+case to efficiently skip the division.
 
-I can't seem to find the original patch in my mailbox for 631bc8f:
-('ASoC: sgtl5000: Fix of unmute outputs on probe') however I find it
-breaks sgtl5000 audio output on the Gateworks boards which is still
-broken on 5.6-rc6. Was there some follow-up patches that haven't made
-it into mainline yet regarding this?
+Cc: Alexander Shiyan <shc_work@mail.ru>
+Cc: Arnd Bergmann <arnd@arndb.de>
 
-The response above indicates maybe there was an additional ALSA
-control perhaps added as a resolution but I don't see any differences
-there.
+Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+---
+ drivers/pwm/pwm-clps711x.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Best Regards,
+diff --git a/drivers/pwm/pwm-clps711x.c b/drivers/pwm/pwm-clps711x.c
+index 924d39a..f34f1f3 100644
+--- a/drivers/pwm/pwm-clps711x.c
++++ b/drivers/pwm/pwm-clps711x.c
+@@ -43,7 +43,10 @@ static void clps711x_pwm_update_val(struct clps711x_chip *priv, u32 n, u32 v)
+ static unsigned int clps711x_get_duty(struct pwm_device *pwm, unsigned int v)
+ {
+ 	/* Duty cycle 0..15 max */
+-	return DIV_ROUND_CLOSEST(v * 0xf, pwm->args.period);
++	if (pwm->args.period > UINT_MAX)
++		return 0;
++
++	return DIV_ROUND_CLOSEST(v * 0xf, (u32)pwm->args.period);
+ }
+ 
+ static int clps711x_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-Tim
