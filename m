@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C71C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CD7C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7902320789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 500D9214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623360;
-	bh=ixfSi+nQKN8jDvtP4pDnPwS76OFP62rBBdyNT2rRxIQ=;
+	s=default; t=1584623364;
+	bh=7XS8OHBApcyUM7SsocyIfhCZel6pYeXzBAVonk65o3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b0S1CLgZHQL7bXa17mhNyOKqjNpdFOn6UH6xoqrqIcMENMDejTkNSj7itTLXDGyru
-	 2Bji3na7rUNZCtxT1t/Z2QdMR+ruHZHt5VNcOfOLjKYaz9PJdh5lgB4j+5m7Gf2gF0
-	 O59LuH7MgzugahZLZ33J6qTb5RuLjPzErzaNZL6s=
+	b=UW8EUjB7VxIW0J+3NE2iLxC3CCwor+wxWB2HSUqLa72EYaS5PbX1qJYfrJUR3u1pj
+	 fDDx4Tjz90UryZuwCxdpbfCUkZhbrPAhKC3SvO8hZ4jzEKpgmnMq1Bw2nC7QIMawq1
+	 16E7/36nyrVU00UIEPqzs1wIpvHiZhfe38n7yaMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgCSNJT (ORCPT
+        id S1727180AbgCSNJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:09:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53662 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:09:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbgCSNJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:09:14 -0400
+        id S1728301AbgCSNJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:09:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0DB421556;
-        Thu, 19 Mar 2020 13:09:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C16F520722;
+        Thu, 19 Mar 2020 13:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623354;
-        bh=ixfSi+nQKN8jDvtP4pDnPwS76OFP62rBBdyNT2rRxIQ=;
+        s=default; t=1584623360;
+        bh=7XS8OHBApcyUM7SsocyIfhCZel6pYeXzBAVonk65o3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tmSdbo44y7VfFzMwXY8eTeK9vR76ducTX3FpcOk1qIukY+iroQ3axc0jptK2wpnko
-         DZDkR2ndmJsjMY7BiLelSQpW6eZQW384YcR5rFb6dgB5pXs5YeCAQ77oW0BIWmo9rj
-         jXdPI4qq9hJf0N2SHoNlMJgnExIGzCz5N/adLtD4=
+        b=ADHoD+/kxiDQcWpY99KxKNmftimW6ttiR2A8pnLrun/rnGi1LbAP7AltP/M5eCPVW
+         834mZeAdVOCtLKXqqCx/2ydDlxsO+R2V9x+P+lkntU7VWATdWGtN76S1ZE6UA2W6sj
+         kYavXkll9fQHFJVXMWQTWHzeQ10Fq1aQxQe8htiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Linus=20L=FCssing?= <linus.luessing@c0d3.blue>,
         Sven Eckelmann <sven@narfation.org>,
+        Marek Lindner <mareklindner@neomailbox.ch>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 75/93] batman-adv: Avoid storing non-TT-sync flags on singular entries too
-Date:   Thu, 19 Mar 2020 14:00:19 +0100
-Message-Id: <20200319123948.678550482@linuxfoundation.org>
+Subject: [PATCH 4.4 77/93] batman-adv: Prevent duplicated nc_node entry
+Date:   Thu, 19 Mar 2020 14:00:21 +0100
+Message-Id: <20200319123949.150591940@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -60,41 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Lüssing <linus.luessing@c0d3.blue>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit 4a519b83da16927fb98fd32b0f598e639d1f1859 upstream.
+commit fa122fec8640eb7186ce5a41b83a4c1744ceef8f upstream.
 
-Since commit 54e22f265e87 ("batman-adv: fix TT sync flag inconsistencies")
-TT sync flags and TT non-sync'd flags are supposed to be stored
-separately.
+The function batadv_nc_get_nc_node is responsible for adding new nc_nodes
+to the in_coding_list and out_coding_list. It first checks whether the
+entry already is in the list or not. If it is, then the creation of a new
+entry is aborted.
 
-The previous patch missed to apply this separation on a TT entry with
-only a single TT orig entry.
+But the lock for the list is only held when the list is really modified.
+This could lead to duplicated entries because another context could create
+an entry with the same key between the check and the list manipulation.
 
-This is a minor fix because with only a single TT orig entry the DDoS
-issue the former patch solves does not apply.
+The check and the manipulation of the list must therefore be in the same
+locked code section.
 
-Fixes: 54e22f265e87 ("batman-adv: fix TT sync flag inconsistencies")
-Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Fixes: d56b1705e28c ("batman-adv: network coding - detect coding nodes and remove these after timeout")
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Marek Lindner <mareklindner@neomailbox.ch>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/translation-table.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/batman-adv/network-coding.c |   33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -1405,7 +1405,8 @@ static bool batadv_tt_global_add(struct
- 		ether_addr_copy(common->addr, tt_addr);
- 		common->vid = vid;
+--- a/net/batman-adv/network-coding.c
++++ b/net/batman-adv/network-coding.c
+@@ -828,19 +828,29 @@ static struct batadv_nc_node
+ 	spinlock_t *lock; /* Used to lock list selected by "int in_coding" */
+ 	struct list_head *list;
  
--		common->flags = flags;
-+		common->flags = flags & (~BATADV_TT_SYNC_MASK);
++	/* Select ingoing or outgoing coding node */
++	if (in_coding) {
++		lock = &orig_neigh_node->in_coding_list_lock;
++		list = &orig_neigh_node->in_coding_list;
++	} else {
++		lock = &orig_neigh_node->out_coding_list_lock;
++		list = &orig_neigh_node->out_coding_list;
++	}
 +
- 		tt_global_entry->roam_at = 0;
- 		/* node must store current time in case of roaming. This is
- 		 * needed to purge this entry out on timeout (if nobody claims
++	spin_lock_bh(lock);
++
+ 	/* Check if nc_node is already added */
+ 	nc_node = batadv_nc_find_nc_node(orig_node, orig_neigh_node, in_coding);
+ 
+ 	/* Node found */
+ 	if (nc_node)
+-		return nc_node;
++		goto unlock;
+ 
+ 	nc_node = kzalloc(sizeof(*nc_node), GFP_ATOMIC);
+ 	if (!nc_node)
+-		return NULL;
++		goto unlock;
+ 
+-	if (!atomic_inc_not_zero(&orig_neigh_node->refcount))
+-		goto free;
++	atomic_inc(&orig_neigh_node->refcount);
+ 
+ 	/* Initialize nc_node */
+ 	INIT_LIST_HEAD(&nc_node->list);
+@@ -848,28 +858,15 @@ static struct batadv_nc_node
+ 	nc_node->orig_node = orig_neigh_node;
+ 	atomic_set(&nc_node->refcount, 2);
+ 
+-	/* Select ingoing or outgoing coding node */
+-	if (in_coding) {
+-		lock = &orig_neigh_node->in_coding_list_lock;
+-		list = &orig_neigh_node->in_coding_list;
+-	} else {
+-		lock = &orig_neigh_node->out_coding_list_lock;
+-		list = &orig_neigh_node->out_coding_list;
+-	}
+-
+ 	batadv_dbg(BATADV_DBG_NC, bat_priv, "Adding nc_node %pM -> %pM\n",
+ 		   nc_node->addr, nc_node->orig_node->orig);
+ 
+ 	/* Add nc_node to orig_node */
+-	spin_lock_bh(lock);
+ 	list_add_tail_rcu(&nc_node->list, list);
++unlock:
+ 	spin_unlock_bh(lock);
+ 
+ 	return nc_node;
+-
+-free:
+-	kfree(nc_node);
+-	return NULL;
+ }
+ 
+ /**
 
 
