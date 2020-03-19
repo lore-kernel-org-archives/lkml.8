@@ -2,53 +2,52 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719EBC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4B6C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F3E21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C222166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623634;
-	bh=Ibns6yabCqjeqH2at4IQLztiSvf1V4JSW/Y2OeryvaI=;
+	s=default; t=1584623636;
+	bh=fzdg16jit59N7FXifsHK8DKb7NghhFYVaQ6brJqnmTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MrAqILR7jFZ/rNZdoXHcrMZG5sqcxf6GcEmRirJjlDyS6+E3FuQ1y8DAi92CsHCcZ
-	 x/pJZ0LbS/km5V8Th8z7sVyTIrFkGQihU8w8QgC1YIzdJNg01Wv1Lqq0PDdUmaQpdM
-	 BWgyfL8ecNssgZhOjyKgZkeGkl6qOHSco4nFrF8I=
+	b=B3IrnUQAGs4EunwcYfzzKGPkfxfDb5cur6SvJlXLuFSXE0u36spXf8WPgCsJ+v2uC
+	 JRZMUuXYUj/v9yrBqNnh/5qOjDPhe0ODswKUsJCbpEhfV4EGqJ5SsKpdAqtSwwx6Zi
+	 mSfeUHxLnEAVW+RDhbtW7khWyCLABtW5RObIb/qY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbgCSNNx (ORCPT
+        id S1729211AbgCSNNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:13:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33004 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728732AbgCSNNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:13:50 -0400
+        id S1727710AbgCSNNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:13:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9788620722;
-        Thu, 19 Mar 2020 13:13:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B28620722;
+        Thu, 19 Mar 2020 13:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623630;
-        bh=Ibns6yabCqjeqH2at4IQLztiSvf1V4JSW/Y2OeryvaI=;
+        s=default; t=1584623627;
+        bh=fzdg16jit59N7FXifsHK8DKb7NghhFYVaQ6brJqnmTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tm8z/k78Kc5JsRSTS3/oH91t1KPdUr9hbnpqvX1KCCcK3/O9hM91HR6P9i7A0Bd3k
-         XPEICGpx3O0dQM3DmhriuHFwRvoXNq0P0E3jaDBIsTZE5B5pt2SYub8cNjLmxz6jPC
-         mRnqH9bBq5IxGeCGfItsqg1p/7jcszLehrczRDBU=
+        b=gGgTz9uv5N4Rzxyh03YL9PUBjxLedWC/oB0TA26cRsuaoz8cFWYHjs2eHn7sX/rTv
+         haEt/ccnsOAvrZQBwplnCblQvL+LmMmVGihCz5DoEygrgcXuUDeaYEYJe2TWyiTzCd
+         h3JqxN3bCKA/BbPkI6ByA6/6ctTE03vJz4kK/JMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 78/90] perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
-Date:   Thu, 19 Mar 2020 14:00:40 +0100
-Message-Id: <20200319123952.550140510@linuxfoundation.org>
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.9 77/90] batman-adv: Use explicit tvlv padding for ELP packets
+Date:   Thu, 19 Mar 2020 14:00:39 +0100
+Message-Id: <20200319123952.254552777@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -61,87 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-[ Upstream commit f967140dfb7442e2db0868b03b961f9c59418a1b ]
+commit f4156f9656feac21f4de712fac94fae964c5d402 upstream.
 
-Enable the sampling check in kernel/events/core.c::perf_event_open(),
-which returns the more appropriate -EOPNOTSUPP.
+The announcement messages of batman-adv COMPAT_VERSION 15 have the
+possibility to announce additional information via a dynamic TVLV part.
+This part is optional for the ELP packets and currently not parsed by the
+Linux implementation. Still out-of-tree versions are using it to transport
+things like neighbor hashes to optimize the rebroadcast behavior.
 
-BEFORE:
+Since the ELP broadcast packets are smaller than the minimal ethernet
+packet, it often has to be padded. This is often done (as specified in
+RFC894) with octets of zero and thus work perfectly fine with the TVLV
+part (making it a zero length and thus empty). But not all ethernet
+compatible hardware seems to follow this advice. To avoid ambiguous
+situations when parsing the TVLV header, just force the 4 bytes (TVLV
+length + padding) after the required ELP header to zero.
 
-  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
-  Error:
-  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (l3_request_g1.caching_l3_cache_accesses).
-  /bin/dmesg | grep -i perf may provide additional information.
-
-With nothing relevant in dmesg.
-
-AFTER:
-
-  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
-  Error:
-  l3_request_g1.caching_l3_cache_accesses: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
-
-Fixes: c43ca5091a37 ("perf/x86/amd: Add support for AMD NB and L2I "uncore" counters")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200311191323.13124-1-kim.phillips@amd.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: d6f94d91f766 ("batman-adv: ELP - adding basic infrastructure")
+Reported-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/events/amd/uncore.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ net/batman-adv/bat_v_elp.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index c16c99bc2a109..6bfb9a68134c1 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -185,20 +185,18 @@ static int amd_uncore_event_init(struct perf_event *event)
+--- a/net/batman-adv/bat_v_elp.c
++++ b/net/batman-adv/bat_v_elp.c
+@@ -335,21 +335,23 @@ out:
+  */
+ int batadv_v_elp_iface_enable(struct batadv_hard_iface *hard_iface)
+ {
++	static const size_t tvlv_padding = sizeof(__be32);
+ 	struct batadv_elp_packet *elp_packet;
+ 	unsigned char *elp_buff;
+ 	u32 random_seqno;
+ 	size_t size;
+ 	int res = -ENOMEM;
  
- 	/*
- 	 * NB and Last level cache counters (MSRs) are shared across all cores
--	 * that share the same NB / Last level cache. Interrupts can be directed
--	 * to a single target core, however, event counts generated by processes
--	 * running on other cores cannot be masked out. So we do not support
--	 * sampling and per-thread events.
-+	 * that share the same NB / Last level cache.  On family 16h and below,
-+	 * Interrupts can be directed to a single target core, however, event
-+	 * counts generated by processes running on other cores cannot be masked
-+	 * out. So we do not support sampling and per-thread events via
-+	 * CAP_NO_INTERRUPT, and we do not enable counter overflow interrupts:
- 	 */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
+-	size = ETH_HLEN + NET_IP_ALIGN + BATADV_ELP_HLEN;
++	size = ETH_HLEN + NET_IP_ALIGN + BATADV_ELP_HLEN + tvlv_padding;
+ 	hard_iface->bat_v.elp_skb = dev_alloc_skb(size);
+ 	if (!hard_iface->bat_v.elp_skb)
+ 		goto out;
  
- 	/* NB and Last level cache counters do not have usr/os/guest/host bits */
- 	if (event->attr.exclude_user || event->attr.exclude_kernel ||
- 	    event->attr.exclude_host || event->attr.exclude_guest)
- 		return -EINVAL;
+ 	skb_reserve(hard_iface->bat_v.elp_skb, ETH_HLEN + NET_IP_ALIGN);
+-	elp_buff = skb_put(hard_iface->bat_v.elp_skb, BATADV_ELP_HLEN);
++	elp_buff = skb_put(hard_iface->bat_v.elp_skb,
++			   BATADV_ELP_HLEN + tvlv_padding);
+ 	elp_packet = (struct batadv_elp_packet *)elp_buff;
+-	memset(elp_packet, 0, BATADV_ELP_HLEN);
++	memset(elp_packet, 0, BATADV_ELP_HLEN + tvlv_padding);
  
--	/* and we do not enable counter overflow interrupts */
- 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
- 	hwc->idx = -1;
- 
-@@ -275,6 +273,7 @@ static struct pmu amd_nb_pmu = {
- 	.start		= amd_uncore_start,
- 	.stop		= amd_uncore_stop,
- 	.read		= amd_uncore_read,
-+	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT,
- };
- 
- static struct pmu amd_llc_pmu = {
-@@ -287,6 +286,7 @@ static struct pmu amd_llc_pmu = {
- 	.start		= amd_uncore_start,
- 	.stop		= amd_uncore_stop,
- 	.read		= amd_uncore_read,
-+	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT,
- };
- 
- static struct amd_uncore *amd_uncore_alloc(unsigned int cpu)
--- 
-2.20.1
-
+ 	elp_packet->packet_type = BATADV_ELP;
+ 	elp_packet->version = BATADV_COMPAT_VERSION;
 
 
