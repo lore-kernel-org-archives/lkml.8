@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01340C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CF3C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7A9220787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38FA20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625091;
-	bh=JrmUqTgMon90qUzbBMJ2CgVIQapLMr7+IEomIsc6lNE=;
+	s=default; t=1584625105;
+	bh=CEmXS+Uh92PctpDbQE3BuX1dcUwZkaWTfiyUoV7XZBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BCJe3AFtmwa8Y706q7u7I9EB1NbyKbYAgKzP/zFdBpaPFRz05bNoqWONA7LAd1zXt
-	 YE4S4eA001xHE9ciGKZB8TiM1wEXtnk/AJrKYLUqoykeYMlwz75+i1CSO0x0FNTX51
-	 qpSZ5btwmD4BFixoFQ2AQrJEQZfOEVb0Zb4k7gqE=
+	b=OPJ8ATidcskF8jM4VZVB5Gczlk7qDqW+8dBmLSLBne1D7Iw2IDl76J9wUntWnVraw
+	 F5YR5E5nz5AMMCYH2S0l6pACYdzJ66pYQBoZv6ZrERE61PQZKcc523kDOqvr/mykq/
+	 IxZplQgHRsw7EYWroPJg+psYygXpZJUHlqQK+NqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgCSNiK (ORCPT
+        id S1727802AbgCSNiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:38:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50838 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:38:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbgCSNHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:07:16 -0400
+        id S1727137AbgCSNGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:06:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD6820772;
-        Thu, 19 Mar 2020 13:07:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A850C20752;
+        Thu, 19 Mar 2020 13:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623235;
-        bh=JrmUqTgMon90qUzbBMJ2CgVIQapLMr7+IEomIsc6lNE=;
+        s=default; t=1584623190;
+        bh=CEmXS+Uh92PctpDbQE3BuX1dcUwZkaWTfiyUoV7XZBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RSzIu4E2lDAY8kOhF34XMz4//dg8Cbk3ighaYGtzbjfUaOkFbD2ZCZISvIxhJGig4
-         UJX3Xk0tVu77mrH9PIZhqVYkYxTjMEvwyebBmXlHrvQYmQ/XA1p9SaVtmoGQLSXblm
-         w6qyn7DuI9Xm3IanZWsKHq4u38jXVUVDlRjHSkGY=
+        b=zSvNtDAUjW/RMKmN4WZ/uiXKZaHhVX3O78p3OSIz+7aw68mXimqJO9hHvp9xvjq3/
+         3NJ+Du97IXMxy3hHP0sZuVcQMd1Z+kM72lnq8F4MBqqr9u1NC6EqOJPH7TJcIxsMAp
+         /YlN75iiHIJv35iJNNcmIhOz2d033QDJTuQYlQFM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Marek Lindner <mareklindner@neomailbox.ch>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 53/93] batman-adv: Avoid nullptr dereference in bla after vlan_insert_tag
-Date:   Thu, 19 Mar 2020 13:59:57 +0100
-Message-Id: <20200319123941.828317784@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 21/93] net: fq: add missing attribute validation for orphan mask
+Date:   Thu, 19 Mar 2020 13:59:25 +0100
+Message-Id: <20200319123931.818982356@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -60,38 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit 10c78f5854d361ded4736c1831948e0a5f67b932 upstream.
+[ Upstream commit 7e6dc03eeb023e18427a373522f1d247b916a641 ]
 
-vlan_insert_tag can return NULL on errors. The bridge loop avoidance code
-therefore has to check the return value of vlan_insert_tag for NULL before
-it can safely operate on this pointer.
+Add missing attribute validation for TCA_FQ_ORPHAN_MASK
+to the netlink policy.
 
-Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Marek Lindner <mareklindner@neomailbox.ch>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: 06eb395fa985 ("pkt_sched: fq: better control of DDOS traffic")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/bridge_loop_avoidance.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/sched/sch_fq.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/batman-adv/bridge_loop_avoidance.c
-+++ b/net/batman-adv/bridge_loop_avoidance.c
-@@ -352,9 +352,12 @@ static void batadv_bla_send_claim(struct
- 		break;
- 	}
+--- a/net/sched/sch_fq.c
++++ b/net/sched/sch_fq.c
+@@ -668,6 +668,7 @@ static const struct nla_policy fq_policy
+ 	[TCA_FQ_FLOW_MAX_RATE]		= { .type = NLA_U32 },
+ 	[TCA_FQ_BUCKETS_LOG]		= { .type = NLA_U32 },
+ 	[TCA_FQ_FLOW_REFILL_DELAY]	= { .type = NLA_U32 },
++	[TCA_FQ_ORPHAN_MASK]		= { .type = NLA_U32 },
+ };
  
--	if (vid & BATADV_VLAN_HAS_TAG)
-+	if (vid & BATADV_VLAN_HAS_TAG) {
- 		skb = vlan_insert_tag(skb, htons(ETH_P_8021Q),
- 				      vid & VLAN_VID_MASK);
-+		if (!skb)
-+			goto out;
-+	}
- 
- 	skb_reset_mac_header(skb);
- 	skb->protocol = eth_type_trans(skb, soft_iface);
+ static int fq_change(struct Qdisc *sch, struct nlattr *opt)
 
 
