@@ -2,129 +2,134 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD0EC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D3BC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E570820772
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B7B20772
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ROk97njR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="iEW0dPXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgCSVoy (ORCPT
+        id S1727244AbgCSVpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 17:44:54 -0400
-Received: from mail-bn7nam10on2040.outbound.protection.outlook.com ([40.107.92.40]:6240
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725768AbgCSVox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:44:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P46WU3i+KlwIcpC4YAplfjkl4PuQMZf1hwwyafayuMw7qYHAIah/6NBjpYRQ46878r990ydG9NLzI5QE57aq8KkmEXtIL13SxGnOGBAqGl0PjHqvtg0lavnehKr78Kyuk9WfnLTHHLF/Ubhr0oN1RUcF24jkAi3vF1ejM3NHZK1nSFEaJAyX9MMXc4tC/YbWVzBGRLUAX2XNMjdJie+FSIqgymNzxvNCPZwx5mViakKcfU1z41mPJmmY1BZNbYdAGEQx0ewTx3KQcvfGAL1IjtlP8w16xwF4ALSZWwiaxSObJ2oo7sv66WsGrHWBdkO3KQXDTARCYnB/hr8ZIAwSlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XAALqzfbQRmEgy2WCCsoYSNpiWRt727vPCiU1jnO2ew=;
- b=EvqDCRerCcnbAJaAV9tkY/eYQJqA+Il5lDQUnnK8zCETFxki99MV8gbgrsw6nPgg+IHtE8ZmU3AmTZwGWJTqI9/l3qqGFYulwr6vwDvLzeU3ibVo6A5nlBnLfgS4WH/MuG5HtHLgBfIZQ+s3yQXQbt7J0IVVGgr8f42ET96vtjO8Vs3pPEpBv9he0dbiLfeh2XThcr9NcAc7GuF9ZJgpN15cmL2MzcUd5zYjaxy8Vve3f23Dz5mkdw7i605VZnivIt7+dV7dKt4H9g1pAqr169MHwUIOVVVd8jjhpNUTFImDkGIjSh8qP13+3e0N0SkuYkhdlahBZwKnQ9FDIhR/RQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XAALqzfbQRmEgy2WCCsoYSNpiWRt727vPCiU1jnO2ew=;
- b=ROk97njRpDtCLXCwmF3T2nlUFcbyd2z8bPzU61YhMLVGKyGuZIQykV4DwpU05VCgbxXqIH3wsRxzCWaZ7tgcHp39tR61Z8Czoqq1vcKp470ZcMFCOxW65KKZp0ZeurT79piJkEycagNAiX3Pfbdh8P1kABvTQ1uX+Kek6nC8Bns=
-Received: from CY4PR12MB1352.namprd12.prod.outlook.com (2603:10b6:903:3a::13)
- by CY4PR12MB1224.namprd12.prod.outlook.com (2603:10b6:903:39::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14; Thu, 19 Mar
- 2020 21:44:48 +0000
-Received: from CY4PR12MB1352.namprd12.prod.outlook.com
- ([fe80::5cdb:285d:f962:c2a8]) by CY4PR12MB1352.namprd12.prod.outlook.com
- ([fe80::5cdb:285d:f962:c2a8%12]) with mapi id 15.20.2814.021; Thu, 19 Mar
- 2020 21:44:48 +0000
-From:   "Huang2, Wei" <Wei.Huang2@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Koralahalli Channabasappa, Smita" 
-        <Smita.KoralahalliChannabasappa@amd.com>
-Subject: Re: [PATCH 1/1] x86/mce/amd: Add PPIN support for AMD MCE
-Thread-Topic: [PATCH 1/1] x86/mce/amd: Add PPIN support for AMD MCE
-Thread-Index: AQHV91+4T7XLGb2nU0+KbGhK1YZA8KhLjQqAgATaUICAAAHeAIAABltZgAAG8ICAAAf6og==
-Date:   Thu, 19 Mar 2020 21:44:48 +0000
-Message-ID: <CY4PR12MB1352B6348409EE4FE3D40086CFF40@CY4PR12MB1352.namprd12.prod.outlook.com>
-References: <20200311044409.2717587-1-wei.huang2@amd.com>
- <20200316180829.GP26126@zn.tnic>
- <53d25b8c-dabe-1b91-4d3b-0a223075e42a@amd.com>
- <20200319202134.GG13073@zn.tnic>
- <CY4PR12MB1352F7AED37C67DAECC063E6CFF40@CY4PR12MB1352.namprd12.prod.outlook.com>,<20200319210909.GH13073@zn.tnic>
-In-Reply-To: <20200319210909.GH13073@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Enabled=True;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SetDate=2020-03-19T21:44:47.330Z;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Name=Internal
- Distribution
- Only;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ContentBits=0;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Method=Standard;
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Wei.Huang2@amd.com; 
-x-originating-ip: [165.204.77.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: dee882c3-aa3d-4a83-487a-08d7cc4ebf18
-x-ms-traffictypediagnostic: CY4PR12MB1224:|CY4PR12MB1224:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR12MB1224BC76E01AF309A2FE7AA5CFF40@CY4PR12MB1224.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0347410860
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(366004)(39860400002)(199004)(7696005)(71200400001)(6916009)(8676002)(6506007)(9686003)(55016002)(4326008)(5660300002)(81156014)(316002)(86362001)(81166006)(478600001)(52536014)(33656002)(186003)(54906003)(4744005)(64756008)(66556008)(66476007)(76116006)(66946007)(8936002)(26005)(2906002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1224;H:CY4PR12MB1352.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: igyWtVrCDXAKu+Me18Y+gZ10V7K9y0HPZ+5mU5aUyKJHcjgYZmfVKzT0DmH4KDyd/6IeY2DLOWCm0k46sG1AuMeW/brKN7Got3O0sP+YPcmxBlhcKTDU8zBgJt0xU0hphjjYpNY7YnQVRESlpvg3AfXfeM6uwUHIjerZ5+CSsze+V0MlxHZFd1G34MetwvOEslUWwMjsnyumYl4jYmh8aQUoeYk7yy5kMZlSieQIsikyBHDbqBJoeeQgH9dmmrYcCdLprHdYOOSkaRbNTXRj2UKp/KQMVRqHSAVxnAEFhuUm24qAxngDGOWqqgU4jMVkGhcXZT5gi7+KOzWcN+xxeoXV1rZqsr10qMXmgTdzChOG9j/HwsbRk+i2HrXUMHwjbAsEFN05kv7YHSDO3cQMCqCnxFuj3vOC6n43I3YWjxqpfgv2U9011fFeS45MSMaV
-x-ms-exchange-antispam-messagedata: vgCXitXDuoJUGf1xFDZGmVXSCN8qXMffQ855VmEm4zFqO9lFQjUQh3F8GbEVKZG6iaR65moTpzLdGfv11PxTvlw0ZSBByibBUDcdfdf+OH++JQxguab4PQU7OQ9GCahCi/lziRU+g2H/jvFkyWVEKg==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 19 Mar 2020 17:45:34 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.95]:46406 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725787AbgCSVpe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 17:45:34 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id BAF4353
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:45:33 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id F2yrjFnyWSl8qF2yrjoSHb; Thu, 19 Mar 2020 16:45:33 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=WTd7EnKGo4FHnu7wihfWR6l+ZPWeBMrxMRWj0hfozns=; b=iEW0dPXzzTfXLnGkz53SLNDyD3
+        CTTLk+c944hiowrTvKsJ+qJ1lQ4KKtc0l+lDpE+nETILJ/ZLuiv4CIF3Fzc94tRlZSztYKy3spgyS
+        SA1fMFZMgsS0wAWyrsSyU1qstD4dsnU8sIurO1XEqbC2b12X83lhwbbo4nGZeBwIBvQUNPEjJsQkQ
+        xPutaP+4ieTHk1841qOOyViu9TtIJgLUvtoAUZ1vwJLQ0rGOlKP69WSl3kPZ24ddJV2CeyEs5bFKM
+        c8BMHILYtOqOdzIUnxpRvD91hnSXK1Uk65y7Z75KLzqJjvxRT6+IVyndDdJ2N7PxT6ngcjUpAl0Aw
+        bb21qTTQ==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53386 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jF2yq-001ks2-2s; Thu, 19 Mar 2020 16:45:32 -0500
+Date:   Thu, 19 Mar 2020 16:45:31 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] irqchip: qcom-irq-combiner: Replace zero-length array
+ with flexible-array member
+Message-ID: <20200319214531.GA21326@embeddedor.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dee882c3-aa3d-4a83-487a-08d7cc4ebf18
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2020 21:44:48.0340
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: S+lFTnip62/2PApqcGLChz1/bmqqF7UjXm7CBXiDugd7PwbbRxpbUcxTMfMxdk4F
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1224
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jF2yq-001ks2-2s
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53386
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 64
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[AMD Official Use Only - Internal Distribution Only]
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
->> However, there is a small problem: during boot, mce_setup() is called
->> once before mce_amd_ppin_init() is invoked.
->Which call site is that exactly?
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-It was from machine_check_poll() =3D=3D> mce_gather_info(), right around th=
-e invoke of identify_cpu() inside arch/x86/kernel/cpu/common.c file.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
--Wei
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-> --
-> Regards/Gruss,
->
-> Boris.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/irqchip/qcom-irq-combiner.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/irqchip/qcom-irq-combiner.c b/drivers/irqchip/qcom-irq-combiner.c
+index abfe59284ff2..aa54bfcb0433 100644
+--- a/drivers/irqchip/qcom-irq-combiner.c
++++ b/drivers/irqchip/qcom-irq-combiner.c
+@@ -33,7 +33,7 @@ struct combiner {
+ 	int                 parent_irq;
+ 	u32                 nirqs;
+ 	u32                 nregs;
+-	struct combiner_reg regs[0];
++	struct combiner_reg regs[];
+ };
+ 
+ static inline int irq_nr(u32 reg, u32 bit)
+-- 
+2.23.0
 
