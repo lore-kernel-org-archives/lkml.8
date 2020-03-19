@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CF3C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F78C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38FA20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5464620663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625105;
-	bh=CEmXS+Uh92PctpDbQE3BuX1dcUwZkaWTfiyUoV7XZBc=;
+	s=default; t=1584625114;
+	bh=NjDtdMyGhV1PjDxXEszjBKSlYA/uWjw5FVglPfxVC6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OPJ8ATidcskF8jM4VZVB5Gczlk7qDqW+8dBmLSLBne1D7Iw2IDl76J9wUntWnVraw
-	 F5YR5E5nz5AMMCYH2S0l6pACYdzJ66pYQBoZv6ZrERE61PQZKcc523kDOqvr/mykq/
-	 IxZplQgHRsw7EYWroPJg+psYygXpZJUHlqQK+NqM=
+	b=0cpn4KbzhSXBg2uz7IFXm1Y4yIXaX5ovczsONXpP+FYRtTHM9FgveWc/w8f5XqiO7
+	 OQvAuAj9pVgEkNSk0/xi08rEwwF/sB7KTdSiP1mNxMREZgsvONZ2eXZ7RyjC+p2/le
+	 iClkzEoSbUvAbG6+9JnKGELwgV3G4NX7unCQkVng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgCSNiY (ORCPT
+        id S1727900AbgCSNid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:38:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49778 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:38:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727137AbgCSNGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:06:30 -0400
+        id S1727570AbgCSNGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:06:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A850C20752;
-        Thu, 19 Mar 2020 13:06:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A807207FC;
+        Thu, 19 Mar 2020 13:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623190;
-        bh=CEmXS+Uh92PctpDbQE3BuX1dcUwZkaWTfiyUoV7XZBc=;
+        s=default; t=1584623165;
+        bh=NjDtdMyGhV1PjDxXEszjBKSlYA/uWjw5FVglPfxVC6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zSvNtDAUjW/RMKmN4WZ/uiXKZaHhVX3O78p3OSIz+7aw68mXimqJO9hHvp9xvjq3/
-         3NJ+Du97IXMxy3hHP0sZuVcQMd1Z+kM72lnq8F4MBqqr9u1NC6EqOJPH7TJcIxsMAp
-         /YlN75iiHIJv35iJNNcmIhOz2d033QDJTuQYlQFM=
+        b=Rsw3nNz+aSmqiiYW+cO5hc7CELMWOgdDrPYQS3ML9H32kKHaBQouVMIYsbQscWbKX
+         gJVDDSLtqlbCGCbAj9lSb302Q0XznbSq4ZGjkyCEtExzmec/x9f2GCyDxh2kGDCMmE
+         rJ8QGwEhxmDA1fLPfxPTYLI3sj4l0Fl+tkLELwk4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 21/93] net: fq: add missing attribute validation for orphan mask
-Date:   Thu, 19 Mar 2020 13:59:25 +0100
-Message-Id: <20200319123931.818982356@linuxfoundation.org>
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.4 30/93] nl80211: add missing attribute validation for critical protocol indication
+Date:   Thu, 19 Mar 2020 13:59:34 +0100
+Message-Id: <20200319123934.629726211@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -61,28 +61,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 7e6dc03eeb023e18427a373522f1d247b916a641 ]
+commit 0e1a1d853ecedc99da9d27f9f5c376935547a0e2 upstream.
 
-Add missing attribute validation for TCA_FQ_ORPHAN_MASK
+Add missing attribute validation for critical protocol fields
 to the netlink policy.
 
-Fixes: 06eb395fa985 ("pkt_sched: fq: better control of DDOS traffic")
+Fixes: 5de17984898c ("cfg80211: introduce critical protocol indication from user-space")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/r/20200303051058.4089398-2-kuba@kernel.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/sch_fq.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/net/sched/sch_fq.c
-+++ b/net/sched/sch_fq.c
-@@ -668,6 +668,7 @@ static const struct nla_policy fq_policy
- 	[TCA_FQ_FLOW_MAX_RATE]		= { .type = NLA_U32 },
- 	[TCA_FQ_BUCKETS_LOG]		= { .type = NLA_U32 },
- 	[TCA_FQ_FLOW_REFILL_DELAY]	= { .type = NLA_U32 },
-+	[TCA_FQ_ORPHAN_MASK]		= { .type = NLA_U32 },
- };
- 
- static int fq_change(struct Qdisc *sch, struct nlattr *opt)
+---
+ net/wireless/nl80211.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -404,6 +404,8 @@ static const struct nla_policy nl80211_p
+ 	[NL80211_ATTR_MDID] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_IE_RIC] = { .type = NLA_BINARY,
+ 				  .len = IEEE80211_MAX_DATA_LEN },
++	[NL80211_ATTR_CRIT_PROT_ID] = { .type = NLA_U16 },
++	[NL80211_ATTR_MAX_CRIT_PROT_DURATION] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_PEER_AID] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_CH_SWITCH_COUNT] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_CH_SWITCH_BLOCK_TX] = { .type = NLA_FLAG },
 
 
