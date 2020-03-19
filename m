@@ -2,114 +2,119 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322CDC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2A7C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111D520774
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61F420774
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:53:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sl3qviOG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgCSUxJ (ORCPT
+        id S1727162AbgCSUx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:53:09 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:64684 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725817AbgCSUxI (ORCPT
+        Thu, 19 Mar 2020 16:53:26 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39242 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgCSUx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 16:53:08 -0400
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 19 Mar 2020 13:53:08 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 19 Mar 2020 13:53:07 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id E84BE4B82; Thu, 19 Mar 2020 13:53:07 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 13:53:07 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v8 01/12] clk: pwm: Use 64-bit division function
-Message-ID: <20200319205307.GB17255@codeaurora.org>
-References: <cover.1583889178.git.gurus@codeaurora.org>
- <338966686a673c241905716c90049993e7bb7d6a.1583889178.git.gurus@codeaurora.org>
- <7506bc2972324fd286dac6327ec73a3a@AcuMS.aculab.com>
- <20200312020938.GA14827@codeaurora.org>
- <fea86a43b28f4493abe0826654369513@AcuMS.aculab.com>
- <20200312190859.GA19605@codeaurora.org>
+        Thu, 19 Mar 2020 16:53:26 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j15so2821956lfk.6;
+        Thu, 19 Mar 2020 13:53:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VQOqpNHGnRKqa1sVk84jtgEeheH2BERwpE6r8gHxAwI=;
+        b=Sl3qviOGUGcq21NwxmkMyha+skQwAVSa5SALUzxn2Ds40Mk6CdYbDlTvxemxMzyYPR
+         ZzvqoF4kMign3pl2qO27q9vskJPFCdExM0ue7Vp9LBaDchDttasy3hF5bHSvzLGikWQD
+         BpNIJvCyVd3k7ofcml0LcAHRjrI7Sq+aHGfskNVweF2Kz+a5Cxb+teB6sF/Avz9S9IhO
+         USm2BIWEo+bUtGHnpdHJ5sBncpsMREt+XKjbDhkuYHHhfgWrtAuTc62Z82FozlEuVBRr
+         Fp1tAF5pNDchv8w6+S3hKfldDZ4u6+sCIRxFofm1imtW0N6aA3T0PxMHJOnRs672qIY3
+         wbqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VQOqpNHGnRKqa1sVk84jtgEeheH2BERwpE6r8gHxAwI=;
+        b=txomMYu7FKuQeMXd1y7bawoY3HuDmuwsWcEY8I3ShVH7usri+Xsp4AKlmIbsQyfFp/
+         mRlhOrK3Izj7UOro1byL0v65gFY6HA9jfliURVMJazy3IT3hUawDhcJ0NQwyIPJL8Zto
+         yNRyImD4Y8ONdSeQ2iYDfLQM4DO+cuHGPUaMBodY4/KkZ1LnTWwMTPQumcq4kF1fgpr+
+         OMYNNd/ckNbWThgyw2e99qvWLf1mi3nc//X/+YV6oj3s6gSNDDIM8y9tOgZ7qMAionem
+         mSCaRiutcLi+W5BjYDPV0uelD5dEBQ4bts233Ih36AejDsng3Cyzcs78oBBX0jMWulFO
+         HT0Q==
+X-Gm-Message-State: ANhLgQ23PvSnd9JRerXYUKz4XwBJJ/TQtOszqGc3gI9840AUyon8gcGD
+        XyxA2w92fh8JQj5DQn6YToQ=
+X-Google-Smtp-Source: ADFU+vsc3c/MwtGCczXQuWkx6DHW6qLqYcGdD+uVtu8ONWi4VFFUYKaZpRo12NRQRiDoVSOqOON5gA==
+X-Received: by 2002:a19:5008:: with SMTP id e8mr2181030lfb.32.1584651202774;
+        Thu, 19 Mar 2020 13:53:22 -0700 (PDT)
+Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.gmail.com with ESMTPSA id u10sm2108661ljk.56.2020.03.19.13.53.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 13:53:22 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] dmaengine: tegra-apb: Don't save/restore IRQ flags in interrupt handler
+Date:   Thu, 19 Mar 2020 23:52:27 +0300
+Message-Id: <20200319205228.8883-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312190859.GA19605@codeaurora.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 12:09:12PM -0700, Guru Das Srinagesh wrote:
-> On Thu, Mar 12, 2020 at 09:14:09AM +0000, David Laight wrote:
-> > From: Guru Das Srinagesh
-> > > Sent: 12 March 2020 02:10
-> > > On Wed, Mar 11, 2020 at 04:58:24PM +0000, David Laight wrote:
-> > > > From: Guru Das Srinagesh
-> > > > > Sent: 11 March 2020 01:41
-> > > > >
-> > > > > Since the PWM framework is switching struct pwm_args.period's datatype
-> > > > > to u64, prepare for this transition by using div64_u64 to handle a
-> > > > > 64-bit divisor.
-> > > > >
-> > ...
-> > > > > --- a/drivers/clk/clk-pwm.c
-> > > > > +++ b/drivers/clk/clk-pwm.c
-> > > > > @@ -89,7 +89,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
-> > > > >  	}
-> > > > >
-> > > > >  	if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
-> > > > > -		clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-> > > > > +		clk_pwm->fixed_rate = div64_u64(NSEC_PER_SEC, pargs.period);
-> > > >
-> > > > That cannot be needed, a 32 bit division is fine.
-> > > 
-> > > Could you please explain why? I think the use of this function is
-> > > warranted in order to handle the division properly with a 64-bit
-> > > divisor.
-> > ...
-> > > > I'd assign pargs.period to an 'unsigned int' variable
-> > > > prior to the division (I hate casts - been bitten by them in the past.).
-> > > 
-> > > Wouldn't this truncate the 64-bit value? The intention behind this patch
-> > > is to allow the processing of 64-bit values in full.
-> > 
-> > You are dividing a 32bit constant by a value.
-> > If pargs.period is greater than 2^32 the result is zero.
-> 
-> Thanks for the explanation. 
-> 
-> > I think you divide by 'fixed_rate' a bit later on - better not be zero.
-> 
-> Good point, but this issue exists with or without this patch, and fixing
-> it is beyond this patch's scope.
-> 
-> Just to check if this patch can be dropped, I tested out compilation
-> with this patch reverted and there were no errors, so I'm leaning
-> towards dropping this patch unless you have any further comments on how
-> to proceed.
+The interrupt is already disabled while interrupt handler is running, and
+thus, there is no need to save/restore the IRQ flags within the spinlock.
 
-Turns out I couldn't drop this patch after all - kbuild test robot
-complained [1]. Accordingly, I've brought this patch back in my v10
-patchset with the modifications you suggested. Could you kindly review it?
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/dma/tegra20-apb-dma.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-[1] https://www.spinics.net/lists/linux-pwm/msg11906.html
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 4e295d121be6..26f427e02369 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -672,10 +672,9 @@ static void tegra_dma_tasklet(unsigned long data)
+ static irqreturn_t tegra_dma_isr(int irq, void *dev_id)
+ {
+ 	struct tegra_dma_channel *tdc = dev_id;
+-	unsigned long flags;
+ 	u32 status;
+ 
+-	spin_lock_irqsave(&tdc->lock, flags);
++	spin_lock(&tdc->lock);
+ 
+ 	trace_tegra_dma_isr(&tdc->dma_chan, irq);
+ 	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+@@ -683,11 +682,11 @@ static irqreturn_t tegra_dma_isr(int irq, void *dev_id)
+ 		tdc_write(tdc, TEGRA_APBDMA_CHAN_STATUS, status);
+ 		tdc->isr_handler(tdc, false);
+ 		tasklet_schedule(&tdc->tasklet);
+-		spin_unlock_irqrestore(&tdc->lock, flags);
++		spin_unlock(&tdc->lock);
+ 		return IRQ_HANDLED;
+ 	}
+ 
+-	spin_unlock_irqrestore(&tdc->lock, flags);
++	spin_unlock(&tdc->lock);
+ 	dev_info(tdc2dev(tdc), "Interrupt already served status 0x%08x\n",
+ 		 status);
+ 
+-- 
+2.25.1
 
-Thank you.
-
-Guru Das.
