@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BE0C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9164C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2095720753
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9462920752
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:55:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uju42OeH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/B8JAwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgCSKzT (ORCPT
+        id S1727193AbgCSKzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:55:19 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33627 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSKzR (ORCPT
+        Thu, 19 Mar 2020 06:55:22 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:50808 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCSKzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:55:17 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g18so920516plq.0;
-        Thu, 19 Mar 2020 03:55:16 -0700 (PDT)
+        Thu, 19 Mar 2020 06:55:20 -0400
+Received: by mail-pj1-f66.google.com with SMTP id v13so869918pjb.0;
+        Thu, 19 Mar 2020 03:55:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=RnuPX1r2mFAI/A72C+v2CFVMojx/n50SdvshtlGYixw=;
-        b=uju42OeHSKtnyKRnPW1/YiV8qcIg56COqPIBfv6T0yM96+14MRNYNXhO15JGSNMSJQ
-         DAXxYbt/6N1eJA1CGoaTGvUvlTfWDeH52NsRlvwn7pfVdCTHbYyAPQs3YLA0ceVHJjgD
-         y+RUtHvZvHbCpm6wtolwaRdlQr4WdvO/CaGVZmdNzAKFsYeWikHi3OnB9xZuuzqa6ZK/
-         zUrYwPK9HcWfNbeEhKGn+trtatj3cjrD5lHmPGj7rVkMQ/PpcccYIq1fDgOPmC6vfY5q
-         MglNkGGihIVKEdvJZJ9oNU8ttpsCOqv9+Aiw5uaxHJe5w2TrHJXA2hvAkGL3exWRKv3F
-         +5EQ==
+        bh=yPu+Tsh1vDBZEMyMTwJs45J9Q+S4JNSfOUTW+nfLI0I=;
+        b=V/B8JAwYgx2pDyQwqdGWZmIy+yLQe2pXcMPuFZWaPvnj3upkP9Csx1S+tqr/tdvfSV
+         0DfQ6Ryhq3FNaHjN2chEFpasaEgwSsQPc4ALSfhPuhvXYALZyERShtEQ7IagBXZC1zwh
+         NJxONjJJuNOvgn9hl/6OKA7ndQlrvANLieBn2Uc/YUP2bQPmFsMqY1gp7SSsKjFcy7ax
+         FC/eqad6WxN2B1iyDruttTOdjJcy5gRw6Z4QNn19qxKimhCRwdwBlD2B8/1hVDPShu9h
+         pbToXBkOa1XXLgqTCVQyV8Cad9ieDSRGhwecaMptaZ/fQyU8Ll/RXCf6TWf+XrOyzbre
+         Kalw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=RnuPX1r2mFAI/A72C+v2CFVMojx/n50SdvshtlGYixw=;
-        b=W5KeSwyi8pwjCKgp1UO0tjlJRpY3cBolLKDuaKmEqSAl3lsS3xsyaB4LnqThMF9ISr
-         Hk+q08NKz5cMTUpxxFjUQUyCCuZ18H9z0Xs65iJtWE7BuuAOE+JUWueMhtdodqK+WfQZ
-         5fJmv1huaRC0eBWXfy/+nRiUhzWrMqwbBjsOlV47ZagFyXyj0SATHpWMSFZO+OjYzwc6
-         KebfTPSDjTblbAOeFF0zEtUkN7wi99qJorY6PhrLJUmBSb4yRg6njB8/1UMpA8RFZGQQ
-         gkBl2BKOQDWsdREg+LHW+1GsYb3CefYbWDi0eBwOBIKYH+ceLDsxmRhuxR79rB1ScI0C
-         VJbg==
-X-Gm-Message-State: ANhLgQ1bYmTxrMf3/vKEbt/qLg7HHb9dV6ND+snGmld7sNlI2eKgGFFP
-        Fhynk9vhYpEi9cO4Qc/+r+rGRV14
-X-Google-Smtp-Source: ADFU+vuvIE63is1kB36eE0cb1LIYFHHZbai9871V3uGGAcY1un7kWo3JvaH9wsIRNYjOxXUS1C8C6w==
-X-Received: by 2002:a17:902:207:: with SMTP id 7mr3072020plc.216.1584615316285;
-        Thu, 19 Mar 2020 03:55:16 -0700 (PDT)
+        bh=yPu+Tsh1vDBZEMyMTwJs45J9Q+S4JNSfOUTW+nfLI0I=;
+        b=l99v11SqHFvfmvkzhjz8A+UBdkh9jYy+4/+7qOmSBDB54bhM3Jc8hIwYE9IE0024rI
+         4131MA00JhkOmmGUCKcTiuwFYn/yOmm6HuzESJLcZKfJ7uOlMtWx9asgnH0E8U9JTWsq
+         VJC0YyDqERDe8VEzg4iW9jCXwiDcXXY3WSgzQuSXPlf3lFviRH7U8zthGmw/KIYEVaOF
+         GAxRJCzjCbMwec/nlzi2rRB8qFiUnANln+EzIgVi5Rf9Pb9gGzzA6L+6y4TjZlSqavUe
+         hTS+w5x+Gm4Vu6ffTR4iVu01rriwxx25qzkdkq3Ku4lIYGYBS7dYiAFFC4y/pVX3xmKM
+         kfXw==
+X-Gm-Message-State: ANhLgQ0NB1VWIZ3pl1x/KxiKKQ3ULUipzl5rmdg8yoppb+2AcLJU6j36
+        wojl1OgOqPPujmsTa8C9sw8=
+X-Google-Smtp-Source: ADFU+vuZlkT0wvI3GWKvr/tjlaWpJZv+n3i9HlYNHUBN0BRxpQi5a4UBmK71smj1CmKtrOAlVpNICQ==
+X-Received: by 2002:a17:90a:5d85:: with SMTP id t5mr3221589pji.126.1584615319129;
+        Thu, 19 Mar 2020 03:55:19 -0700 (PDT)
 Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id f6sm2209949pfk.99.2020.03.19.03.55.13
+        by smtp.gmail.com with ESMTPSA id f6sm2209949pfk.99.2020.03.19.03.55.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 19 Mar 2020 03:55:15 -0700 (PDT)
+        Thu, 19 Mar 2020 03:55:18 -0700 (PDT)
 From:   Baolin Wang <baolin.wang7@gmail.com>
 To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
 Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
         arnd@arndb.de, linux-mmc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/4] mmc: host: Introduce the request_atomic() for the host
-Date:   Thu, 19 Mar 2020 18:54:19 +0800
-Message-Id: <cfab9b3d78487ff02e1df087457a7716f337af67.1584615043.git.baolin.wang7@gmail.com>
+Subject: [PATCH v3 2/4] mmc: host: sdhci: Implement the request_atomic() API
+Date:   Thu, 19 Mar 2020 18:54:20 +0800
+Message-Id: <485c1fc03e31007bf1464e94693569509c41d366.1584615043.git.baolin.wang7@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1584615043.git.baolin.wang7@gmail.com>
 References: <cover.1584615043.git.baolin.wang7@gmail.com>
@@ -75,50 +75,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SD host controller can process one request in the atomic context if
-the card is nonremovable, which means we can submit next request in the
-irq hard handler when using the MMC host software queue to reduce the
-latency. Thus this patch adds a new API request_atomic() for the host
-controller, as well as adding support for host software queue to submit
-a request by the new request_atomic() API.
+Implement the request_atomic() ops for the sdhci driver to process
+one request in the atomic context if the card is nonremovable.
 
-Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+Moreover, add a boolean parameter for sdhci_send_command() function
+to indicate if need poll the inhibit bits, which can avoid
+time-consuming polling in interrupt context by returning BUSY if
+we met this unusual case through request_atomic() API.
+
 Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 ---
- drivers/mmc/host/mmc_hsq.c | 5 ++++-
- include/linux/mmc/host.h   | 3 +++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci.c | 65 +++++++++++++++++++++++++++++++++++-------------
+ drivers/mmc/host/sdhci.h |  4 ++-
+ 2 files changed, 51 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/mmc/host/mmc_hsq.c b/drivers/mmc/host/mmc_hsq.c
-index 59d2776..fdbaa98 100644
---- a/drivers/mmc/host/mmc_hsq.c
-+++ b/drivers/mmc/host/mmc_hsq.c
-@@ -41,7 +41,10 @@ static void mmc_hsq_pump_requests(struct mmc_hsq *hsq)
- 
- 	spin_unlock_irqrestore(&hsq->lock, flags);
- 
--	mmc->ops->request(mmc, hsq->mrq);
-+	if (mmc->ops->request_atomic)
-+		mmc->ops->request_atomic(mmc, hsq->mrq);
-+	else
-+		mmc->ops->request(mmc, hsq->mrq);
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 9c37451..8f4b985 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1538,14 +1538,15 @@ static void sdhci_finish_data(struct sdhci_host *host)
+ 		} else {
+ 			/* Avoid triggering warning in sdhci_send_command() */
+ 			host->cmd = NULL;
+-			sdhci_send_command(host, data->stop);
++			sdhci_send_command(host, data->stop, true);
+ 		}
+ 	} else {
+ 		__sdhci_finish_mrq(host, data->mrq);
+ 	}
  }
  
- static void mmc_hsq_update_next_tag(struct mmc_hsq *hsq, int remains)
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 562ed06..787a7b5 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -92,6 +92,9 @@ struct mmc_host_ops {
- 			    int err);
- 	void	(*pre_req)(struct mmc_host *host, struct mmc_request *req);
- 	void	(*request)(struct mmc_host *host, struct mmc_request *req);
-+	/* Submit one request to host in atomic context. */
-+	int	(*request_atomic)(struct mmc_host *host,
-+				  struct mmc_request *req);
+-void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
++int sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd,
++		       bool polling)
+ {
+ 	int flags;
+ 	u32 mask;
+@@ -1573,13 +1574,26 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+ 		mask &= ~SDHCI_DATA_INHIBIT;
  
- 	/*
- 	 * Avoid calling the next three functions too often or in a "fast
+ 	while (sdhci_readl(host, SDHCI_PRESENT_STATE) & mask) {
+-		if (timeout == 0) {
++		if (!polling) {
++			pr_err("%s: Controller has not released inhibit bit(s), try again.\n",
++			       mmc_hostname(host->mmc));
++
++			/*
++			 * HSQ may send a command in interrupt context without
++			 * polling the busy signaling, which means we should
++			 * return BUSY if controller has not released inhibit
++			 * bits to allow HSQ trying to send request again in
++			 * non-atomic context. so we should not finish this
++			 * request here.
++			 */
++			return -EBUSY;
++		} else if (timeout == 0) {
+ 			pr_err("%s: Controller never released inhibit bit(s).\n",
+ 			       mmc_hostname(host->mmc));
+ 			sdhci_dumpregs(host);
+ 			cmd->error = -EIO;
+ 			sdhci_finish_mrq(host, cmd->mrq);
+-			return;
++			return -EIO;
+ 		}
+ 		timeout--;
+ 		mdelay(1);
+@@ -1609,7 +1623,7 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+ 			mmc_hostname(host->mmc));
+ 		cmd->error = -EINVAL;
+ 		sdhci_finish_mrq(host, cmd->mrq);
+-		return;
++		return -EINVAL;
+ 	}
+ 
+ 	if (!(cmd->flags & MMC_RSP_PRESENT))
+@@ -1644,6 +1658,8 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+ 		sdhci_external_dma_pre_transfer(host, cmd);
+ 
+ 	sdhci_writew(host, SDHCI_MAKE_CMD(cmd->opcode, flags), SDHCI_COMMAND);
++
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(sdhci_send_command);
+ 
+@@ -1706,7 +1722,7 @@ static void sdhci_finish_command(struct sdhci_host *host)
+ 
+ 	/* Finished CMD23, now send actual command. */
+ 	if (cmd == cmd->mrq->sbc) {
+-		sdhci_send_command(host, cmd->mrq->cmd);
++		sdhci_send_command(host, cmd->mrq->cmd, true);
+ 	} else {
+ 
+ 		/* Processed actual command. */
+@@ -2016,16 +2032,12 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
+  *                                                                           *
+ \*****************************************************************************/
+ 
+-void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
++static int sdhci_start_request(struct mmc_host *mmc, struct mmc_request *mrq,
++				int present, bool polling)
+ {
+-	struct sdhci_host *host;
+-	int present;
++	struct sdhci_host *host = mmc_priv(mmc);
+ 	unsigned long flags;
+-
+-	host = mmc_priv(mmc);
+-
+-	/* Firstly check card presence */
+-	present = mmc->ops->get_cd(mmc);
++	int ret;
+ 
+ 	spin_lock_irqsave(&host->lock, flags);
+ 
+@@ -2033,15 +2045,34 @@ void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+ 
+ 	if (!present || host->flags & SDHCI_DEVICE_DEAD) {
+ 		mrq->cmd->error = -ENOMEDIUM;
++		ret = -ENOMEDIUM;
+ 		sdhci_finish_mrq(host, mrq);
+ 	} else {
+ 		if (mrq->sbc && !(host->flags & SDHCI_AUTO_CMD23))
+-			sdhci_send_command(host, mrq->sbc);
++			ret = sdhci_send_command(host, mrq->sbc, polling);
+ 		else
+-			sdhci_send_command(host, mrq->cmd);
++			ret = sdhci_send_command(host, mrq->cmd, polling);
+ 	}
+ 
+ 	spin_unlock_irqrestore(&host->lock, flags);
++
++	return ret;
++}
++
++int sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq)
++{
++	return sdhci_start_request(mmc, mrq, 1, false);
++}
++EXPORT_SYMBOL_GPL(sdhci_request_atomic);
++
++void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
++{
++	int present;
++
++	/* Firstly check card presence */
++	present = mmc->ops->get_cd(mmc);
++
++	sdhci_start_request(mmc, mrq, present, true);
+ }
+ EXPORT_SYMBOL_GPL(sdhci_request);
+ 
+@@ -2581,7 +2612,7 @@ void sdhci_send_tuning(struct sdhci_host *host, u32 opcode)
+ 	 */
+ 	sdhci_writew(host, SDHCI_TRNS_READ, SDHCI_TRANSFER_MODE);
+ 
+-	sdhci_send_command(host, &cmd);
++	sdhci_send_command(host, &cmd, true);
+ 
+ 	host->cmd = NULL;
+ 
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index cac2d97..73e15c5 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -759,7 +759,8 @@ void __sdhci_read_caps(struct sdhci_host *host, const u16 *ver,
+ int __sdhci_add_host(struct sdhci_host *host);
+ int sdhci_add_host(struct sdhci_host *host);
+ void sdhci_remove_host(struct sdhci_host *host, int dead);
+-void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd);
++int sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd,
++		       bool polling);
+ 
+ static inline void sdhci_read_caps(struct sdhci_host *host)
+ {
+@@ -775,6 +776,7 @@ void sdhci_set_power(struct sdhci_host *host, unsigned char mode,
+ void sdhci_set_power_noreg(struct sdhci_host *host, unsigned char mode,
+ 			   unsigned short vdd);
+ void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
++int sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
+ void sdhci_set_bus_width(struct sdhci_host *host, int width);
+ void sdhci_reset(struct sdhci_host *host, u8 mask);
+ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
 -- 
 1.9.1
 
