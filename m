@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E85BC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319AEC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B092072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02CC52072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:20:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="HmiGlcHJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="XX0jWltH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCSVSw (ORCPT
+        id S1727189AbgCSVT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 17:18:52 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.91]:44259 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726680AbgCSVSv (ORCPT
+        Thu, 19 Mar 2020 17:19:59 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.119]:18178 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726619AbgCSVT7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:18:51 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 977944BDB8
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:18:50 -0500 (CDT)
+        Thu, 19 Mar 2020 17:19:59 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id A39A012E2E6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:19:58 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id F2Z0jKmnZXVkQF2Z0jbtkd; Thu, 19 Mar 2020 16:18:50 -0500
+        id F2a6jjOrRAGTXF2a6j9LTh; Thu, 19 Mar 2020 16:19:58 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +36,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=r5HlPDuxrsVXq6VYWoARvW6vv4oS/EL6J5+Kn6lcldI=; b=HmiGlcHJOCXxibJhbEpBYCZuOU
-        XlmDMFfA65klqMKVDFyjbugbNhR+LkFJIBiv9nAR5jmgF+AW4B9mjlm8IsSjY8mJqRtZ+Xwcq9qpR
-        1pnFo4Z1OfDpn+Y/bLE3qK973IBB/Qtt48XN+m7TuEZwAo0M+0xnhR7+nlOL67v5QRCaNCkFrQHUG
-        fCOi6L8wTPWNfOsL/ez/w/IGUXKpVop+QlbCRn1adx0PFEOyshriSTmkob9bOc1Rwkj7bhO/gKUdG
-        TCcxieHeM9Fgh65ZJd0bx1dSDapvBONs3TWDq8fSi6xXFVb1KGW5IlL6jpiUQcr2IdKCFFIx3fUbz
-        +W2x95tg==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53240 helo=embeddedor)
+        bh=Ajq7OTNyMIVgTunyQt5eTItrR7T7jWAA7SICM0tM8GY=; b=XX0jWltHCRRmn/Ez/vLbd2cqBP
+        VhHtKdcE1xu413uGkKQYEaCnZW4fA1/uArq2Rt97YRXVe7KIYOAUkcOUV4IDtXzR1VqQPi4hD9VQB
+        GJKsm0XBD5wwtgNSoivsxW75Yjaznn/BMYBGBD46K6UeTEaSrdF/tUBClRVUQz/9yrKHmUrY+7hLy
+        jSHHLdf4uzzkgtJpHwiTZTwVmJrzZaiF3ssrF/3pIB4yN+EFq0ySsdV4UcDyfEJcOa35e6hE33jrI
+        QdZRSRPQUSZhfN884Aoo4UjFD4jxG/mSRRztdIRDrMJqjlbF46vKPD1h3yBjOenGZa9X4oioSHVZz
+        gwCCWyIg==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53246 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jF2Yz-001WoO-2M; Thu, 19 Mar 2020 16:18:49 -0500
-Date:   Thu, 19 Mar 2020 16:18:48 -0500
+        id 1jF2a5-001XEf-8r; Thu, 19 Mar 2020 16:19:57 -0500
+Date:   Thu, 19 Mar 2020 16:19:56 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
 Cc:     linux1394-devel@lists.sourceforge.net,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] firewire: core-transaction: Replace zero-length array
- with flexible-array member
-Message-ID: <20200319211848.GA3252@embeddedor.com>
+Subject: [PATCH][next] firewire: core.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200319211956.GA3448@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,13 +67,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.218.116.241
 X-Source-L: No
-X-Exim-ID: 1jF2Yz-001WoO-2M
+X-Exim-ID: 1jF2a5-001XEf-8r
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53240
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53246
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
+X-Email-Count: 11
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -111,22 +111,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/firewire/core-transaction.c | 2 +-
+ drivers/firewire/core.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/firewire/core-transaction.c b/drivers/firewire/core-transaction.c
-index 404a035f104d..439d918bbaaf 100644
---- a/drivers/firewire/core-transaction.c
-+++ b/drivers/firewire/core-transaction.c
-@@ -620,7 +620,7 @@ struct fw_request {
- 	u32 request_header[4];
- 	int ack;
- 	u32 length;
--	u32 data[0];
-+	u32 data[];
+diff --git a/drivers/firewire/core.h b/drivers/firewire/core.h
+index 4b0e4ee655a1..71d5f16f311c 100644
+--- a/drivers/firewire/core.h
++++ b/drivers/firewire/core.h
+@@ -191,7 +191,7 @@ struct fw_node {
+ 	/* Upper layer specific data. */
+ 	void *data;
+ 
+-	struct fw_node *ports[0];
++	struct fw_node *ports[];
  };
  
- static void free_response_callback(struct fw_packet *packet,
+ static inline struct fw_node *fw_node_get(struct fw_node *node)
 -- 
 2.23.0
 
