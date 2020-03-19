@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DEBC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAADC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26E42076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9E820836
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623227;
-	bh=37Q0VzHVs35DMggwk1CLuRYmLTNx/OILxzaKA6W2pto=;
+	s=default; t=1584623232;
+	bh=5GdR2swVliXuxsOsPP7mk6l4w61TEMDgCeFcDYqZRx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XdxJgrL+05TaylXQycZofUcoepeoh/uGT0Sbuw8Yj+4Cqi+HWe76E1vjmIn/JX066
-	 9n2hB7B0CCttdXHjq73bt9VOnXlCRn6bODQ957WcNK1rr1uxgfPg9VXPI5L46oEn4B
-	 RjSqdhGdrcgM5rza5M1Qu3PewlhFCjrVZ3piPhY0=
+	b=AJrgiawpQceIzAa0j/a8WzNqVqq1YFLBzsGNYVFbXhUH2jyytOj/uWFBOjWEYI5mx
+	 uwbl/McLXT6C3By1AVBSXHMxp1Mw7BTtHwRXnPlbES3/H8eV65LMDnzMPg7RIn5vnq
+	 hSYVmNLqYavc0FWZ+q8ACQWCLCFT0kuJyWQxyixM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgCSNHF (ORCPT
+        id S1727854AbgCSNHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:07:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50470 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:07:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbgCSNHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:07:00 -0400
+        id S1727822AbgCSNHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:07:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 254C320781;
-        Thu, 19 Mar 2020 13:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F5A3207FC;
+        Thu, 19 Mar 2020 13:07:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623219;
-        bh=37Q0VzHVs35DMggwk1CLuRYmLTNx/OILxzaKA6W2pto=;
+        s=default; t=1584623224;
+        bh=5GdR2swVliXuxsOsPP7mk6l4w61TEMDgCeFcDYqZRx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q2WDDgRddh12g4GOt3ih+k7pqf2c9CtL+VwL6Pm+P5XoRd/NSdW7i0udvz5qq86IP
-         M9jD5Khu/nkJlHGIZT8DU/Bzx6kbvNkb5ACBqLkxjdLsefWD9trjo7LNuWnvDp7O3l
-         wju3jJ81DUmogTFkftJt1IYcM/oI5hVzBwNXfOys=
+        b=S/wZ4H2xSMngR7OcPHfjLtmIyTa5z5p9+Mofm1EiduS+bTru4OYV4cBicHuiRInme
+         WJu0prS7oANOfwdUAVaOx5LyKeRLWg3YmIcq/TQvjy8iEXUGYsrHX+8OwsC7pXPyJp
+         iym4K4Cm2z5p5eTw0hzH2Db4eLag2siTd/cidF70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sven Eckelmann <sven@narfation.org>,
         Martin Weinelt <martin@darmstadt.freifunk.net>,
-        =?UTF-8?q?Linus=20L=FCssing?= <linus.luessing@c0d3.blue>,
+        Amadeus Alfa <amadeus@chemnitz.freifunk.net>,
         Marek Lindner <mareklindner@neomailbox.ch>,
-        Antonio Quartulli <a@unstable.cc>
-Subject: [PATCH 4.4 48/93] batman-adv: Avoid duplicate neigh_node additions
-Date:   Thu, 19 Mar 2020 13:59:52 +0100
-Message-Id: <20200319123940.292122929@linuxfoundation.org>
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 50/93] batman-adv: Fix use-after-free/double-free of tt_req_node
+Date:   Thu, 19 Mar 2020 13:59:54 +0100
+Message-Id: <20200319123940.847996821@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -61,88 +62,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Lüssing <linus.luessing@c0d3.blue>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit e123705e58bf171be8c6eb0902ebfb5d6ed255ad upstream.
+commit 9c4604a298e0a9807eaf2cd912d1ebf24d98fbeb upstream.
 
-Two parallel calls to batadv_neigh_node_new() might race for creating
-and adding the same neig_node. Fix this by including the check for any
-already existing, identical neigh_node within the spin-lock.
+The tt_req_node is added and removed from a list inside a spinlock. But the
+locking is sometimes removed even when the object is still referenced and
+will be used later via this reference. For example batadv_send_tt_request
+can create a new tt_req_node (including add to a list) and later
+re-acquires the lock to remove it from the list and to free it. But at this
+time another context could have already removed this tt_req_node from the
+list and freed it.
 
-This fixes splats like the following:
+CPU#0
 
-[  739.535069] ------------[ cut here ]------------
-[  739.535079] WARNING: CPU: 0 PID: 0 at /usr/src/batman-adv/git/batman-adv/net/batman-adv/bat_iv_ogm.c:1004 batadv_iv_ogm_process_per_outif+0xe3f/0xe60 [batman_adv]()
-[  739.535092] too many matching neigh_nodes
-[  739.535094] Modules linked in: dm_mod tun ip6table_filter ip6table_mangle ip6table_nat nf_nat_ipv6 ip6_tables xt_nat iptable_nat nf_nat_ipv4 nf_nat xt_TCPMSS xt_mark iptable_mangle xt_tcpudp xt_conntrack iptable_filter ip_tables x_tables ip_gre ip_tunnel gre bridge stp llc thermal_sys kvm_intel kvm crct10dif_pclmul crc32_pclmul sha256_ssse3 sha256_generic hmac drbg ansi_cprng aesni_intel aes_x86_64 lrw gf128mul glue_helper ablk_helper cryptd evdev pcspkr ip6_gre ip6_tunnel tunnel6 batman_adv(O) libcrc32c nf_conntrack_ipv6 nf_defrag_ipv6 nf_conntrack_ipv4 nf_defrag_ipv4 nf_conntrack autofs4 ext4 crc16 mbcache jbd2 xen_netfront xen_blkfront crc32c_intel
-[  739.535177] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W  O    4.2.0-0.bpo.1-amd64 #1 Debian 4.2.6-3~bpo8+2
-[  739.535186]  0000000000000000 ffffffffa013b050 ffffffff81554521 ffff88007d003c18
-[  739.535201]  ffffffff8106fa01 0000000000000000 ffff8800047a087a ffff880079c3a000
-[  739.735602]  ffff88007b82bf40 ffff88007bc2d1c0 ffffffff8106fa7a ffffffffa013aa8e
-[  739.735624] Call Trace:
-[  739.735639]  <IRQ>  [<ffffffff81554521>] ? dump_stack+0x40/0x50
-[  739.735677]  [<ffffffff8106fa01>] ? warn_slowpath_common+0x81/0xb0
-[  739.735692]  [<ffffffff8106fa7a>] ? warn_slowpath_fmt+0x4a/0x50
-[  739.735715]  [<ffffffffa012448f>] ? batadv_iv_ogm_process_per_outif+0xe3f/0xe60 [batman_adv]
-[  739.735740]  [<ffffffffa0124813>] ? batadv_iv_ogm_receive+0x363/0x380 [batman_adv]
-[  739.735762]  [<ffffffffa0124813>] ? batadv_iv_ogm_receive+0x363/0x380 [batman_adv]
-[  739.735783]  [<ffffffff810b0841>] ? __raw_callee_save___pv_queued_spin_unlock+0x11/0x20
-[  739.735804]  [<ffffffffa012cb39>] ? batadv_batman_skb_recv+0xc9/0x110 [batman_adv]
-[  739.735825]  [<ffffffff81464891>] ? __netif_receive_skb_core+0x841/0x9a0
-[  739.735838]  [<ffffffff810b0841>] ? __raw_callee_save___pv_queued_spin_unlock+0x11/0x20
-[  739.735853]  [<ffffffff81465681>] ? process_backlog+0xa1/0x140
-[  739.735864]  [<ffffffff81464f1a>] ? net_rx_action+0x20a/0x320
-[  739.735878]  [<ffffffff81073aa7>] ? __do_softirq+0x107/0x270
-[  739.735891]  [<ffffffff81073d82>] ? irq_exit+0x92/0xa0
-[  739.735905]  [<ffffffff8137e0d1>] ? xen_evtchn_do_upcall+0x31/0x40
-[  739.735924]  [<ffffffff8155b8fe>] ? xen_do_hypervisor_callback+0x1e/0x40
-[  739.735939]  <EOI>  [<ffffffff810013aa>] ? xen_hypercall_sched_op+0xa/0x20
-[  739.735965]  [<ffffffff810013aa>] ? xen_hypercall_sched_op+0xa/0x20
-[  739.735979]  [<ffffffff8100a39c>] ? xen_safe_halt+0xc/0x20
-[  739.735991]  [<ffffffff8101da6c>] ? default_idle+0x1c/0xa0
-[  739.736004]  [<ffffffff810abf6b>] ? cpu_startup_entry+0x2eb/0x350
-[  739.736019]  [<ffffffff81b2af5e>] ? start_kernel+0x480/0x48b
-[  739.736032]  [<ffffffff81b2d116>] ? xen_start_kernel+0x507/0x511
-[  739.736048] ---[ end trace c106bb901244bc8c ]---
+    batadv_batman_skb_recv from net_device 0
+    -> batadv_iv_ogm_receive
+      -> batadv_iv_ogm_process
+        -> batadv_iv_ogm_process_per_outif
+          -> batadv_tvlv_ogm_receive
+            -> batadv_tvlv_ogm_receive
+              -> batadv_tvlv_containers_process
+                -> batadv_tvlv_call_handler
+                  -> batadv_tt_tvlv_ogm_handler_v1
+                    -> batadv_tt_update_orig
+                      -> batadv_send_tt_request
+                        -> batadv_tt_req_node_new
+                           spin_lock(...)
+                           allocates new tt_req_node and adds it to list
+                           spin_unlock(...)
+                           return tt_req_node
 
-Fixes: f987ed6ebd99 ("batman-adv: protect neighbor list with rcu locks")
-Reported-by: Martin Weinelt <martin@darmstadt.freifunk.net>
-Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+CPU#1
+
+    batadv_batman_skb_recv from net_device 1
+    -> batadv_recv_unicast_tvlv
+      -> batadv_tvlv_containers_process
+        -> batadv_tvlv_call_handler
+          -> batadv_tt_tvlv_unicast_handler_v1
+            -> batadv_handle_tt_response
+               spin_lock(...)
+               tt_req_node gets removed from list and is freed
+               spin_unlock(...)
+
+CPU#0
+
+                      <- returned to batadv_send_tt_request
+                         spin_lock(...)
+                         tt_req_node gets removed from list and is freed
+                         MEMORY CORRUPTION/SEGFAULT/...
+                         spin_unlock(...)
+
+This can only be solved via reference counting to allow multiple contexts
+to handle the list manipulation while making sure that only the last
+context holding a reference will free the object.
+
+Fixes: a73105b8d4c7 ("batman-adv: improved client announcement mechanism")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Tested-by: Martin Weinelt <martin@darmstadt.freifunk.net>
+Tested-by: Amadeus Alfa <amadeus@chemnitz.freifunk.net>
 Signed-off-by: Marek Lindner <mareklindner@neomailbox.ch>
-Signed-off-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/originator.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/batman-adv/translation-table.c |   43 +++++++++++++++++++++++++++++++------
+ net/batman-adv/types.h             |    2 +
+ 2 files changed, 39 insertions(+), 6 deletions(-)
 
---- a/net/batman-adv/originator.c
-+++ b/net/batman-adv/originator.c
-@@ -462,6 +462,8 @@ batadv_neigh_node_new(struct batadv_orig
- {
- 	struct batadv_neigh_node *neigh_node;
- 
-+	spin_lock_bh(&orig_node->neigh_list_lock);
-+
- 	neigh_node = batadv_neigh_node_get(orig_node, hard_iface, neigh_addr);
- 	if (neigh_node)
- 		goto out;
-@@ -488,15 +490,15 @@ batadv_neigh_node_new(struct batadv_orig
- 	/* extra reference for return */
- 	atomic_set(&neigh_node->refcount, 2);
- 
--	spin_lock_bh(&orig_node->neigh_list_lock);
- 	hlist_add_head_rcu(&neigh_node->list, &orig_node->neigh_list);
--	spin_unlock_bh(&orig_node->neigh_list_lock);
- 
- 	batadv_dbg(BATADV_DBG_BATMAN, orig_node->bat_priv,
- 		   "Creating new neighbor %pM for orig_node %pM on interface %s\n",
- 		   neigh_addr, orig_node->orig, hard_iface->net_dev->name);
- 
- out:
-+	spin_unlock_bh(&orig_node->neigh_list_lock);
-+
- 	return neigh_node;
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -2206,6 +2206,29 @@ static u32 batadv_tt_local_crc(struct ba
+ 	return crc;
  }
+ 
++/**
++ * batadv_tt_req_node_release - free tt_req node entry
++ * @ref: kref pointer of the tt req_node entry
++ */
++static void batadv_tt_req_node_release(struct kref *ref)
++{
++	struct batadv_tt_req_node *tt_req_node;
++
++	tt_req_node = container_of(ref, struct batadv_tt_req_node, refcount);
++
++	kfree(tt_req_node);
++}
++
++/**
++ * batadv_tt_req_node_put - decrement the tt_req_node refcounter and
++ *  possibly release it
++ * @tt_req_node: tt_req_node to be free'd
++ */
++static void batadv_tt_req_node_put(struct batadv_tt_req_node *tt_req_node)
++{
++	kref_put(&tt_req_node->refcount, batadv_tt_req_node_release);
++}
++
+ static void batadv_tt_req_list_free(struct batadv_priv *bat_priv)
+ {
+ 	struct batadv_tt_req_node *node;
+@@ -2215,7 +2238,7 @@ static void batadv_tt_req_list_free(stru
+ 
+ 	hlist_for_each_entry_safe(node, safe, &bat_priv->tt.req_list, list) {
+ 		hlist_del_init(&node->list);
+-		kfree(node);
++		batadv_tt_req_node_put(node);
+ 	}
+ 
+ 	spin_unlock_bh(&bat_priv->tt.req_list_lock);
+@@ -2252,7 +2275,7 @@ static void batadv_tt_req_purge(struct b
+ 		if (batadv_has_timed_out(node->issued_at,
+ 					 BATADV_TT_REQUEST_TIMEOUT)) {
+ 			hlist_del_init(&node->list);
+-			kfree(node);
++			batadv_tt_req_node_put(node);
+ 		}
+ 	}
+ 	spin_unlock_bh(&bat_priv->tt.req_list_lock);
+@@ -2284,9 +2307,11 @@ batadv_tt_req_node_new(struct batadv_pri
+ 	if (!tt_req_node)
+ 		goto unlock;
+ 
++	kref_init(&tt_req_node->refcount);
+ 	ether_addr_copy(tt_req_node->addr, orig_node->orig);
+ 	tt_req_node->issued_at = jiffies;
+ 
++	kref_get(&tt_req_node->refcount);
+ 	hlist_add_head(&tt_req_node->list, &bat_priv->tt.req_list);
+ unlock:
+ 	spin_unlock_bh(&bat_priv->tt.req_list_lock);
+@@ -2536,13 +2561,19 @@ static int batadv_send_tt_request(struct
+ out:
+ 	if (primary_if)
+ 		batadv_hardif_free_ref(primary_if);
++
+ 	if (ret && tt_req_node) {
+ 		spin_lock_bh(&bat_priv->tt.req_list_lock);
+-		/* hlist_del_init() verifies tt_req_node still is in the list */
+-		hlist_del_init(&tt_req_node->list);
++		if (!hlist_unhashed(&tt_req_node->list)) {
++			hlist_del_init(&tt_req_node->list);
++			batadv_tt_req_node_put(tt_req_node);
++		}
+ 		spin_unlock_bh(&bat_priv->tt.req_list_lock);
+-		kfree(tt_req_node);
+ 	}
++
++	if (tt_req_node)
++		batadv_tt_req_node_put(tt_req_node);
++
+ 	kfree(tvlv_tt_data);
+ 	return ret;
+ }
+@@ -2978,7 +3009,7 @@ static void batadv_handle_tt_response(st
+ 		if (!batadv_compare_eth(node->addr, resp_src))
+ 			continue;
+ 		hlist_del_init(&node->list);
+-		kfree(node);
++		batadv_tt_req_node_put(node);
+ 	}
+ 
+ 	spin_unlock_bh(&bat_priv->tt.req_list_lock);
+--- a/net/batman-adv/types.h
++++ b/net/batman-adv/types.h
+@@ -1001,11 +1001,13 @@ struct batadv_tt_change_node {
+  * struct batadv_tt_req_node - data to keep track of the tt requests in flight
+  * @addr: mac address address of the originator this request was sent to
+  * @issued_at: timestamp used for purging stale tt requests
++ * @refcount: number of contexts the object is used by
+  * @list: list node for batadv_priv_tt::req_list
+  */
+ struct batadv_tt_req_node {
+ 	u8 addr[ETH_ALEN];
+ 	unsigned long issued_at;
++	struct kref refcount;
+ 	struct hlist_node list;
+ };
  
 
 
