@@ -2,140 +2,134 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CCCC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE035C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD3B20772
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50A120772
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="hzQ9Ozgc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vi4yd//X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbgCSWL6 (ORCPT
+        id S1727473AbgCSWMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 18:11:58 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:39480 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727414AbgCSWLw (ORCPT
+        Thu, 19 Mar 2020 18:12:02 -0400
+Received: from mail-ua1-f74.google.com ([209.85.222.74]:46739 "EHLO
+        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727414AbgCSWL7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 18:11:52 -0400
-Received: by mail-qv1-f68.google.com with SMTP id v38so1955567qvf.6
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 15:11:50 -0700 (PDT)
+        Thu, 19 Mar 2020 18:11:59 -0400
+Received: by mail-ua1-f74.google.com with SMTP id 16so1137878uag.13
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 15:11:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pzfdJRx1oF6jiIvR2C9U9rEyO4S41Htu1IVIdua7ZaQ=;
-        b=hzQ9Ozgc3eHqxFwistOuYhvE2qISqi2ldxN1oF5OZ+DuD8DfcdzWGvcgWGprkU23gj
-         1UrAGG5mtmeu8Ny9Y37Kse9f8a4kCaBCz0aSoNkKdnYn3siLeFx6MLWELNnnuT8m1T9H
-         PDJj+UvFUPet3RDP2CoyTlY3ZYUGpcvTeC61TfEbnIh2Pr5n8nI3L0GgHxDdbFjEDZUe
-         6L/mb6aqKD/4IIAJYjdcc/8zO6J3TWS/51gmh7UKYsbEW8n69IZ6EuD6XRdsZqnXxXx5
-         FpkAUkxjm3IpfzXpjj6LUJ20seDXd++BpAQga6H5Ma/swI7kxBSMCEbzGjwVD21aqi4o
-         FEsQ==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=ld+R5siiu+UwqEtDb2zf/maAwFxPn7jOV9EKhch9NhQ=;
+        b=vi4yd//XT/ycSMaTNHQqhaOLWRGn33ZoH4GU+cE7Gp4hJydy8CkIKJ71fjfYqHiaoq
+         3qyUHWxlOqDPc4jUzTgEvVFzYwBbk6sKcVhdkQVm8rP07jXijGRrptyfiDB5E0CLEg3J
+         NGYp7tysmwQ3rGZWUTBaAn7OUHk+SgQ6WnUMN+F/qZG30yBCuQghffizGGc+rOo7s5SG
+         3LQnqDXks6FYQspWrcYVuSZZNjULqkxKrR8/FgnnNjZwm0BzxrQvrHXc3oZDSybxhttw
+         0LIuSRGeri1Et75dEh4xe6YlRaZoLSPuhZTR+aNNvKzLU+mMQ1yHzHsbsAdsPodMOK/O
+         m9Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pzfdJRx1oF6jiIvR2C9U9rEyO4S41Htu1IVIdua7ZaQ=;
-        b=kPWAMqIuK6zXnxZuwPM/lBjcOHi4vUxWR+fpZzKm7aRflD0KiLYNnaWLimNjk/g7qc
-         zsOJP7vvSu4RyrZHmHONq64x0d/viwMnfRVhqD/bccIThKFc2bs/EaglRvm8CAvL6vp8
-         8oABwABkIZbxhhhnVkVduARuzNZQ4A94oBhtlHOx7I4iHrz2ekRHvKSRVie24Sp5VNQS
-         p/MflpM94NEMMkLUd9IK3e2jQwsbU3Did9OrN3v7hOl9u+q1yLTTo45zMt1Vkn8gsEw0
-         rTXhCDiEDksuBbJXiGO2w/xG4zwqwJFRrsGQkCQsdZJT4s8NZe1XvFg066UvZIsmtgM/
-         ihEA==
-X-Gm-Message-State: ANhLgQ2xyxlg1o5CuLnzDLV9z/k38Y2fBUWcme2zVXMOvGDl4lcWLOA5
-        7XNkzMgobKU7eM+1X+vS9JetjGF4TkjbcA==
-X-Google-Smtp-Source: ADFU+vtSKBdVdLUNbDulH29r3gYb5+UBaLtQ+hKG13rkQbY88mxT+6kICnVtmSCjJ3pRmBBejOm5fA==
-X-Received: by 2002:a0c:db86:: with SMTP id m6mr5133668qvk.116.1584655908780;
-        Thu, 19 Mar 2020 15:11:48 -0700 (PDT)
-Received: from ovpn-66-200.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id m10sm2635693qte.71.2020.03.19.15.11.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Mar 2020 15:11:48 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     davem@davemloft.net
-Cc:     alexander.h.duyck@linux.intel.com, kuznet@ms2.inr.ac.ru,
-        kuba@kernel.org, yoshfuji@linux-ipv6.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] ipv4: fix a RCU-list bug in inet_dump_fib()
-Date:   Thu, 19 Mar 2020 18:11:41 -0400
-Message-Id: <20200319221141.8814-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=ld+R5siiu+UwqEtDb2zf/maAwFxPn7jOV9EKhch9NhQ=;
+        b=QhUZw0TLdO/hOqnJVPjj/+PRn9UrYUPU8veWLvNKD87XRI+ex/3MWyeBMPPEom+zor
+         eWH8BiBxjk3cfGO/RVYaW1PwjQng1NsL2LLzQD4wiHX2Zo766uAuxTyFinajI7hZnw8+
+         O9mjrMDiqADi9psoeJTgtXhP65MCCONQ9cw6owVo6xygg3EriYA9GgwS+3+9x9/vF2fR
+         SNTaxj/CAgq0AvfgIOxhIc8eSlX4Xzqe24U0BRjQD0EUVWl61rGocArJBQ2VWinLgKHq
+         S9su/POP5ZcExRIuxs7TuimKJ0n9vQNvgqVHMzfT4UIK1lmd+WCIl1NDfQFYrjd7ZF+9
+         POLg==
+X-Gm-Message-State: ANhLgQ1tZ9Iuo66aD0KchoLHo6I3Qv3SpucENS6FBRN586aDYzRMnmjh
+        zcAX4o1aT/7+KBildsyV/50f7ii8E1q1sSnc
+X-Google-Smtp-Source: ADFU+vv1mUpuq5PW/oJ6gSyaoeZD4m+C1EOIoJQygnrtzOhMLarXysTNKxk6+S5zvGfSBgotQugAPT6j//2vkVh3
+X-Received: by 2002:a1f:640c:: with SMTP id y12mr4359974vkb.73.1584655916275;
+ Thu, 19 Mar 2020 15:11:56 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 23:11:36 +0100
+In-Reply-To: <cover.1584655448.git.andreyknvl@google.com>
+Message-Id: <de0d3d30ff90776a2a509cc34c7c1c7521bda125.1584655448.git.andreyknvl@google.com>
+Mime-Version: 1.0
+References: <cover.1584655448.git.andreyknvl@google.com>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v3 2/7] kcov: fix potential use-after-free in kcov_remote_start
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a place,
+From: Andrey Konovalov <andreyknvl@gmail.com>
 
-inet_dump_fib()
-  fib_table_dump
-    fn_trie_dump_leaf()
-      hlist_for_each_entry_rcu()
+If vmalloc() fails in kcov_remote_start() we'll access remote->kcov
+without holding kcov_remote_lock, so remote might potentially be freed
+at that point. Cache kcov pointer in a local variable.
 
-without rcu_read_lock() triggers a warning,
-
- WARNING: suspicious RCU usage
- -----------------------------
- net/ipv4/fib_trie.c:2216 RCU-list traversed in non-reader section!!
-
- other info that might help us debug this:
-
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by ip/1923:
-  #0: ffffffff8ce76e40 (rtnl_mutex){+.+.}, at: netlink_dump+0xd6/0x840
-
- Call Trace:
-  dump_stack+0xa1/0xea
-  lockdep_rcu_suspicious+0x103/0x10d
-  fn_trie_dump_leaf+0x581/0x590
-  fib_table_dump+0x15f/0x220
-  inet_dump_fib+0x4ad/0x5d0
-  netlink_dump+0x350/0x840
-  __netlink_dump_start+0x315/0x3e0
-  rtnetlink_rcv_msg+0x4d1/0x720
-  netlink_rcv_skb+0xf0/0x220
-  rtnetlink_rcv+0x15/0x20
-  netlink_unicast+0x306/0x460
-  netlink_sendmsg+0x44b/0x770
-  __sys_sendto+0x259/0x270
-  __x64_sys_sendto+0x80/0xa0
-  do_syscall_64+0x69/0xf4
-  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- net/ipv4/fib_frontend.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/kcov.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/net/ipv4/fib_frontend.c b/net/ipv4/fib_frontend.c
-index 577db1d50a24..5e441282d647 100644
---- a/net/ipv4/fib_frontend.c
-+++ b/net/ipv4/fib_frontend.c
-@@ -987,6 +987,8 @@ static int inet_dump_fib(struct sk_buff *skb, struct netlink_callback *cb)
- 	if (filter.flags & RTM_F_PREFIX)
- 		return skb->len;
+diff --git a/kernel/kcov.c b/kernel/kcov.c
+index f6bd119c9419..cc5900ac2467 100644
+--- a/kernel/kcov.c
++++ b/kernel/kcov.c
+@@ -748,6 +748,7 @@ static const struct file_operations kcov_fops = {
+ void kcov_remote_start(u64 handle)
+ {
+ 	struct kcov_remote *remote;
++	struct kcov *kcov;
+ 	void *area;
+ 	struct task_struct *t;
+ 	unsigned int size;
+@@ -774,16 +775,17 @@ void kcov_remote_start(u64 handle)
+ 		spin_unlock(&kcov_remote_lock);
+ 		return;
+ 	}
++	kcov = remote->kcov;
+ 	/* Put in kcov_remote_stop(). */
+-	kcov_get(remote->kcov);
+-	t->kcov = remote->kcov;
++	kcov_get(kcov);
++	t->kcov = kcov;
+ 	/*
+ 	 * Read kcov fields before unlock to prevent races with
+ 	 * KCOV_DISABLE / kcov_remote_reset().
+ 	 */
+-	size = remote->kcov->remote_size;
+-	mode = remote->kcov->mode;
+-	sequence = remote->kcov->sequence;
++	size = kcov->remote_size;
++	mode = kcov->mode;
++	sequence = kcov->sequence;
+ 	area = kcov_remote_area_get(size);
+ 	spin_unlock(&kcov_remote_lock);
  
-+	rcu_read_lock();
-+
- 	if (filter.table_id) {
- 		tb = fib_get_table(net, filter.table_id);
- 		if (!tb) {
-@@ -1004,8 +1006,6 @@ static int inet_dump_fib(struct sk_buff *skb, struct netlink_callback *cb)
- 	s_h = cb->args[0];
- 	s_e = cb->args[1];
- 
--	rcu_read_lock();
--
- 	for (h = s_h; h < FIB_TABLE_HASHSZ; h++, s_e = 0) {
- 		e = 0;
- 		head = &net->ipv4.fib_table_hash[h];
+@@ -791,7 +793,7 @@ void kcov_remote_start(u64 handle)
+ 		area = vmalloc(size * sizeof(unsigned long));
+ 		if (!area) {
+ 			t->kcov = NULL;
+-			kcov_put(remote->kcov);
++			kcov_put(kcov);
+ 			return;
+ 		}
+ 	}
 -- 
-2.21.0 (Apple Git-122.2)
+2.25.1.696.g5e7596f4ac-goog
 
