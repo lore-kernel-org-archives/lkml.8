@@ -2,165 +2,165 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D9EC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB64DC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D0762051A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAFBD20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584602467;
+	bh=M/+gIwp7Og4UwL0x4S0nuR7p3ZYcveFGq7vavNhUOdg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FvnMBa0+SVWRe+FGm/25oFlAfKHXAjOxK464cuoEbya/IrJ93NhvDJyHUGw+iI2Vc
+	 nfOoqj0kLNNDMe5ZjagUuMBjB6Xg9+cKSFP59m6g3EfbicQADWga1uENTEbmwWXnjt
+	 3qKo8xiAEytlpPAO26kXUm7aDiE7nKbVqRTVjfEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgCSHTb (ORCPT
+        id S1727236AbgCSHVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:19:31 -0400
-Received: from mail-oln040092075049.outbound.protection.outlook.com ([40.92.75.49]:2786
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725767AbgCSHTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:19:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mrUPWrUqOaKWAf1aMquFWlh4Oy1/f/HAOKhSlD6Lq7bfYuyHysoA+YgnYq7Tig7teDFyTX0FYGrpM1WYW6k2B5RbRd7LgR7rGzMpGL+HWtwOhFAlLolluq/4qRWH8uSBTVO9tObA5433/I46ZARG8P0T/H3ujw5AqC/5pp24sITW4VaZMadUMjmT74O3B6LDzPADDqKTnPD0RRY1LhVWLq9M6ZFy+x8KltzZPmLxEAbRQFI0azbnGkXg8kjjTDtwxV924ubNMyAQODVOwNLkXxCIFchEqXhCSihTSMTfhFwhfZwdvna9EfBIbB1zMkXt/uyLDKJy+5oMLneZtUTp2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vxIBA0eTTJmtvzqWujapOEKtGUqHaJJ9YhL5aqFDIao=;
- b=JW99FeZsWUIITD8fpMR3hGfOMBcqQrH7wYWyz0Fga13fF43wnK+J2vMKuFm6ns93H/AZwamPUZf8a1YqxzaKbMzsRKe2EQoVFLz0dwtihP9NAL7uPbvBmvcDHgKQGrXzLivWI1+9GGcQPCM/Bu96k/qunjdNmd8I7AUw7AE83zf50jfKCUtTj/KcnlXKDQBft9ZW9YcGqScztgHYmPgIQiiEk7HdXlbjxLnC9u1VlvEEG3a/CVHU/9CFMzhNndnf2G7Y5BMd28HTpWjcnL4DIPTmqZi+DXoRuieAZRoTFvGIAKzOjy7Qc51E6yKRkjHXV6HHnVEiL0ThfNxCPJUcbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from HE1EUR04FT040.eop-eur04.prod.protection.outlook.com
- (2a01:111:e400:7e0d::39) by
- HE1EUR04HT022.eop-eur04.prod.protection.outlook.com (2a01:111:e400:7e0d::180)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13; Thu, 19 Mar
- 2020 07:19:25 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com (10.152.26.56) by
- HE1EUR04FT040.mail.protection.outlook.com (10.152.26.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.13 via Frontend Transport; Thu, 19 Mar 2020 07:19:25 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:B5C2B2B81A31B114FA65B0D3F3DB93E518946F7458CE334BF9BEEB6C89AFCEC9;UpperCasedChecksum:D4F0E88236249F7EB1A0DF7531DD5D2B4DADEA94CB0CF94780BC0E257E4A6F30;SizeAsReceived:10330;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::1956:d274:cab3:b4dd%6]) with mapi id 15.20.2835.017; Thu, 19 Mar 2020
- 07:19:25 +0000
-Subject: Re: [PATCH v3 5/5] exec: Add a exec_update_mutex to replace
- cred_guard_mutex
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
- <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
- <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
- <f37a5d68-9674-533f-ee9c-a49174605710@virtuozzo.com>
- <87d09hn4kt.fsf@x220.int.ebiederm.org>
- <dbce35c7-c060-cfd8-bde1-98fd9a0747a9@virtuozzo.com>
- <87lfo5lju6.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170E9E71B9F84330B098BADE4FA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <6002ac56-025a-d50f-e89d-1bf42a072323@virtuozzo.com>
- <AM6PR03MB5170353DF3575FF7742BB155E4FB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <532ce6a3-f0df-e3e4-6966-473c608246e1@virtuozzo.com>
- <AM6PR03MB51705D8A5631B53844CE447CE4F60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <13c4d333-9c33-8036-3142-dac22c392c60@virtuozzo.com>
- <AM6PR03MB5170110A5D332DD0C1AC929FE4F70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <f7c1508a-a456-6ae4-a81e-8e8aa41d8d39@virtuozzo.com>
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-Message-ID: <AM6PR03MB5170F50FD049FA7B365924F7E4F40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Thu, 19 Mar 2020 08:19:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <f7c1508a-a456-6ae4-a81e-8e8aa41d8d39@virtuozzo.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0015.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a::25) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <5e38267c-cb7f-8049-26b8-3a0a155ca51a@hotmail.de>
+        Thu, 19 Mar 2020 03:21:07 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:32234 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgCSHVG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:21:06 -0400
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02J7KsFk016064;
+        Thu, 19 Mar 2020 16:20:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02J7KsFk016064
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1584602455;
+        bh=7mIqQ7KnCxUIjZLM3J+eJp954uanv6Sg/97Cuvsmk4c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0/vp+6Jtj1Jf9pHf20OEFJxJhhrn1mdJev9TauRC4vXqodip+RusjM3QIkyoXis1P
+         RtKrXhgPnx9bAnwpZGzTGG5qjOR6ezFT3A4rfttICM2tpkpovl58GKrKXRr/UDwdIp
+         Y60Pw7ejP9xJxsenNXP3QzbbFAaJKJM06yBOYt8UYlomgIDwETTgCSczKjfjkbfyMG
+         2G7y0R/tnf/F1Pn8P0oQrszyDyomurI+yJXSn7LjyaAh+2wc3gd3DDaWYFK8B2Ikut
+         ptUU5vmyLHkd9ROwJEXs7oTVUGJHq+VvpoNYz6x61HxCO6afSfVOddEeO4N/OyJO7e
+         47EuGeM4lyUOQ==
+X-Nifty-SrcIP: [209.85.221.178]
+Received: by mail-vk1-f178.google.com with SMTP id t3so425719vkm.10;
+        Thu, 19 Mar 2020 00:20:54 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3bozs7GTmtjtF35/3uuxbdfO5DpAvtjM8HBranG2JeWseAEh+d
+        3POW/mWp8mv9sv7FCDzoCmhwuQTOot+TT8/Pdqw=
+X-Google-Smtp-Source: ADFU+vuCxl0Onrw3EfkEIVZzViurJVhPaxrRYjvLS9lcpMK1fWxXsaeLxg0lCp9XSBbeKesKsW+vyK1hPHtm6/H5GpI=
+X-Received: by 2002:a1f:32cf:: with SMTP id y198mr1387267vky.96.1584602453713;
+ Thu, 19 Mar 2020 00:20:53 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by FR2P281CA0015.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19 via Frontend Transport; Thu, 19 Mar 2020 07:19:24 +0000
-X-Microsoft-Original-Message-ID: <5e38267c-cb7f-8049-26b8-3a0a155ca51a@hotmail.de>
-X-TMN:  [m8LpYdCrZRxzdlzBeoQ2jXshgvDIn49Y]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 6f08d5e8-2023-42ff-f29b-08d7cbd5da79
-X-MS-TrafficTypeDiagnostic: HE1EUR04HT022:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /X3jasuoM4he5VZ9efsssHDT2JLhi+bxnFrvMzKBipdJq7PD6e1D3/bieeI+FRYDf1zu8JdLQmLUzGDcaXiDwKTRfzWDlY4HKjKE1ClgnhUj/k1I4A0xVwI9yQP0cDl3+OODdh/HupnOxdzAZ6UwpbpvWEJxgTkH/ntX1CCGMo+usNsJbOlaazkqIIBvXCVq
-X-MS-Exchange-AntiSpam-MessageData: oK1Nj1SgfWb6a6HS+SOIRMvtP8Dk22KU8zlA/X9NBlFcG2WdV9gjSZSZq4/B5BXm38PHa2SVMw3oR2Ff4pKPD3eBa2RPrJmDDXxkgrdHqhsUh7iJDtEjjA2UjoJY/rG0uZBmz3FKFDndoIrTvEzKSQ==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f08d5e8-2023-42ff-f29b-08d7cbd5da79
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2020 07:19:25.4399
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR04HT022
+References: <20200220110807.32534-1-masahiroy@kernel.org>
+In-Reply-To: <20200220110807.32534-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 19 Mar 2020 16:20:17 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARHBfp=gkVO9q3pC9o_w9PgNW=5AP95s1MR1tHLJV=0fg@mail.gmail.com>
+Message-ID: <CAK7LNARHBfp=gkVO9q3pC9o_w9PgNW=5AP95s1MR1tHLJV=0fg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] sparc,x86: vdso: remove meaningless undefining CONFIG_OPTIMIZE_INLINING
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andrew,
+
+Ping.
+Could you pick up this series?
 
 
-On 3/19/20 8:13 AM, Kirill Tkhai wrote:
-> On 18.03.2020 23:06, Bernd Edlinger wrote:
->>
->> I was thinking of something like that:
->>
->> --- a/fs/exec.c
->> +++ b/fs/exec.c
->> @@ -1010,6 +1010,11 @@ ssize_t read_code(struct file *file, unsigned long addr, 
->>  }
->>  EXPORT_SYMBOL(read_code);
->>  
->> +/*
->> + * Maps the mm_struct mm into the current task struct.
->> + * On success, this function returns with the mutex
->> + * exec_update_mutex locked.
->> + */
-> 
-> Looks OK for me.
-> 
-
-Cool, yeah, then I will post an updated patch in a moment.
+Thanks.
 
 
-Thanks
-Bernd.
+On Thu, Feb 20, 2020 at 8:08 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> The code, #undef CONFIG_OPTIMIZE_INLINING, is not working as expected
+> because <linux/compiler_types.h> is parsed before vclock_gettime.c
+> since 28128c61e08e ("kconfig.h: Include compiler types to avoid missed
+> struct attributes").
+>
+> Since then, <linux/compiler_types.h> is included really early by
+> using the '-include' option. So, you cannot negate the decision of
+> <linux/compiler_types.h> in this way.
+>
+> You can confirm it by checking the pre-processed code, like this:
+>
+>   $ make arch/x86/entry/vdso/vdso32/vclock_gettime.i
+>
+> There is no difference with/without CONFIG_CC_OPTIMIZE_FOR_SIZE.
+>
+> It is about two years since 28128c61e08e. Nobody has reported a
+> problem (or, nobody has even noticed the fact that this code is not
+> working).
+>
+> It is ugly and unreliable to attempt to undefine a CONFIG option from
+> C files, and anyway the inlining heuristic is up to the compiler.
+>
+> Just remove the broken code.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> ---
+>
+> Changes in v2:
+>   - fix a type
+>   - add Acked-by
+>
+>  arch/sparc/vdso/vdso32/vclock_gettime.c     | 4 ----
+>  arch/x86/entry/vdso/vdso32/vclock_gettime.c | 4 ----
+>  2 files changed, 8 deletions(-)
+>
+> diff --git a/arch/sparc/vdso/vdso32/vclock_gettime.c b/arch/sparc/vdso/vdso32/vclock_gettime.c
+> index 026abb3b826c..d7f99e6745ea 100644
+> --- a/arch/sparc/vdso/vdso32/vclock_gettime.c
+> +++ b/arch/sparc/vdso/vdso32/vclock_gettime.c
+> @@ -4,10 +4,6 @@
+>
+>  #define        BUILD_VDSO32
+>
+> -#ifndef        CONFIG_CC_OPTIMIZE_FOR_SIZE
+> -#undef CONFIG_OPTIMIZE_INLINING
+> -#endif
+> -
+>  #ifdef CONFIG_SPARC64
+>
+>  /*
+> diff --git a/arch/x86/entry/vdso/vdso32/vclock_gettime.c b/arch/x86/entry/vdso/vdso32/vclock_gettime.c
+> index 9242b28418d5..3c26488db94d 100644
+> --- a/arch/x86/entry/vdso/vdso32/vclock_gettime.c
+> +++ b/arch/x86/entry/vdso/vdso32/vclock_gettime.c
+> @@ -1,10 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #define BUILD_VDSO32
+>
+> -#ifndef CONFIG_CC_OPTIMIZE_FOR_SIZE
+> -#undef CONFIG_OPTIMIZE_INLINING
+> -#endif
+> -
+>  #ifdef CONFIG_X86_64
+>
+>  /*
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200220110807.32534-1-masahiroy%40kernel.org.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
