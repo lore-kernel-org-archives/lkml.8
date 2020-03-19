@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EEBC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D42C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 461F620B80
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A31320658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624426;
-	bh=qWd20iwAOFru1dkdrmNhZZetuO5TaElp0urtUJVUjOk=;
+	s=default; t=1584624429;
+	bh=gAdyxCZ+yxxTQGLWhGNzle5A/ZiLR73gT3huUdst+pA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CnDu474HN8VuJiFxJcAcD3jdxQ3fTSU43Kdr+L+DoxCTS4jE0rVxeNiAHjXe0W0iQ
-	 /T8+OPf1F6r+h4rO21e+6sAP4yk20XkDfFxuHzG9H8+hoZVXfpqHnE7DmPFsor09Y+
-	 2S1Yt9g3e+n7yf+NP7LfUJ0ienUgVSkicoiqhmfk=
+	b=ZuGu+WpFNkL0buUKqqlajQ/BmWmvhIkusS3Z6XwF0nPzfGt6LyhSedmKBqwEwuCTI
+	 CD6t1ruX8jkAjgGrHb5E2gnDQRN0BoTpDNWhUU5jHwvum7zbiJ5BhLsHK5UGW+nZwz
+	 kTUgWRRcG+CA6IgVbgdcIEzghMAVZB2yCWDIsNuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbgCSN1A (ORCPT
+        id S1730362AbgCSN1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:27:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55034 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:27:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730832AbgCSN05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:26:57 -0400
+        id S1729983AbgCSN1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:27:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32278207FC;
-        Thu, 19 Mar 2020 13:26:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22A7820658;
+        Thu, 19 Mar 2020 13:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624416;
-        bh=qWd20iwAOFru1dkdrmNhZZetuO5TaElp0urtUJVUjOk=;
+        s=default; t=1584624423;
+        bh=gAdyxCZ+yxxTQGLWhGNzle5A/ZiLR73gT3huUdst+pA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lAPax4ipGwTOSq5JUgOARFk7v/rziTxBFAYZsk1XaBem0yBerNpdOeEPGhnkYS2Cm
-         CVC2vbyRkNC/rKlfl8xPRs56DZPw85HtPwfbRyKdKXPGOrp5wC+7iQTFxDVzMO3Xem
-         h1rsez5XQ2C68IVpJAxcvf/OfeBW/shuwU/uQ9NA=
+        b=qNA9pL/Bel/s/Iw3sy7d+B32FN+XcyzJtGrHUBd8646MYhcSflKwlW5wcKuadgxuz
+         5z7fs5Ork6Ctu0eUH9cDktRJJ/V8zx3toPM1EsSq0huOfaACsp70A8Pivjz7cAMgCN
+         oFIgQOQkE3pEd48D131C1X/OQY/yKCDeAIeE4yFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Monk Liu <Monk.Liu@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 35/65] drm/amdgpu: fix memory leak during TDR test(v2)
-Date:   Thu, 19 Mar 2020 14:04:17 +0100
-Message-Id: <20200319123937.637687088@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 37/65] kbuild: add dtbs_check to PHONY
+Date:   Thu, 19 Mar 2020 14:04:19 +0100
+Message-Id: <20200319123938.172053501@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -61,41 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Monk Liu <Monk.Liu@amd.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 4829f89855f1d3a3d8014e74cceab51b421503db ]
+[ Upstream commit 964a596db8db8c77c9903dd05655696696e6b3ad ]
 
-fix system memory leak
+The dtbs_check should be a phony target, but currently it is not
+specified so.
 
-v2:
-fix coding style
+'make dtbs_check' works even if a file named 'dtbs_check' exists
+because it depends on another phony target, scripts_dtc, but we
+should not rely on it.
 
-Signed-off-by: Monk Liu <Monk.Liu@amd.com>
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Add dtbs_check to PHONY.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/smu_v11_0.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-index 8b13d18c6414c..e4149e6b68b39 100644
---- a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-+++ b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
-@@ -948,8 +948,12 @@ int smu_v11_0_init_max_sustainable_clocks(struct smu_context *smu)
- 	struct smu_11_0_max_sustainable_clocks *max_sustainable_clocks;
- 	int ret = 0;
+diff --git a/Makefile b/Makefile
+index 5d0fdaf900e9d..362f1e2ca63ff 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1239,7 +1239,7 @@ ifneq ($(dtstree),)
+ %.dtb: include/config/kernel.release scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
  
--	max_sustainable_clocks = kzalloc(sizeof(struct smu_11_0_max_sustainable_clocks),
-+	if (!smu->smu_table.max_sustainable_clocks)
-+		max_sustainable_clocks = kzalloc(sizeof(struct smu_11_0_max_sustainable_clocks),
- 					 GFP_KERNEL);
-+	else
-+		max_sustainable_clocks = smu->smu_table.max_sustainable_clocks;
-+
- 	smu->smu_table.max_sustainable_clocks = (void *)max_sustainable_clocks;
+-PHONY += dtbs dtbs_install dt_binding_check
++PHONY += dtbs dtbs_install dtbs_check dt_binding_check
+ dtbs dtbs_check: include/config/kernel.release scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree)
  
- 	max_sustainable_clocks->uclock = smu->smu_table.boot_values.uclk / 100;
 -- 
 2.20.1
 
