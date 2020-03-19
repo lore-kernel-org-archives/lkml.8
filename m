@@ -2,140 +2,114 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B58C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6C8C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 870922076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537EF2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LagBVjmR"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="j8G9K+B+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgCSXhX (ORCPT
+        id S1727213AbgCSXjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:37:23 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46581 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgCSXhX (ORCPT
+        Thu, 19 Mar 2020 19:39:31 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37063 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgCSXjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:37:23 -0400
-Received: by mail-pl1-f193.google.com with SMTP id r3so1718672pls.13;
-        Thu, 19 Mar 2020 16:37:22 -0700 (PDT)
+        Thu, 19 Mar 2020 19:39:31 -0400
+Received: by mail-ed1-f65.google.com with SMTP id b23so4967395edx.4;
+        Thu, 19 Mar 2020 16:39:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Hhj6WBQVF3TWPX/IPpk5CTbQpOHlUi1VVJvn+Rweasc=;
-        b=LagBVjmRDlhG0YEoHc+CTeVsr1pwRgoBw1gF1rbV7QqkH/Z1VR32GfqCUcaRD5unTi
-         Es+vOkZW5ftsr6gnzXWg8LZD0kb24adShcwjo1MB18/KyExe78pxQjMvb+Z/EhJh8Siq
-         RnCFyg/9zpV9hGwwkhZxqkRbmNaT9Q8d3gPBnIX3muUBKoxUUqL9xcTI5ms0pWudXw1R
-         BwM47DAiO287jx4div7lJElrKE/BL/v4T0z2j4FHNrfB5aYOo059O6x846b9ALwO1DdW
-         iTcybcPh1XanRoNOmVqHg9OUvOQMF9LRmP3KwVS35TGv3b9cHYNNkX8rp3dFHMYu5HDB
-         5KMg==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T/mfJWmxNQuzD0dp6KizZYLJ7CLCpefixytllKpkTzc=;
+        b=j8G9K+B+n/Ojbh81OEur+lMEXOYshUECgbkp9tY2M6biLvzxuXxFN6lSXsbzkFslae
+         jc9HBRJfL/ELl9ivB2zl+RB7BwJBWe6Fe3cJUqDS3BvY8Ew3qTlSEHLOlAxL28+8zSzI
+         K5mjzp5BIPEOKCjcxnOZcDUWvMDfzyFwri/UuDoqUNbN7Qbjb/4+tlqa9mer6w8iaXHu
+         eWkmtlPpdTgLysTFsSzvDEb9VUTf7QQ61jEIzK6nEAYhOoZRP38YT3+XgmgwbWUc83Mm
+         gE+Xe2D0Vbn9fvK4gxEZ/0IYCMKCgwcybXlA0udklqhacor6tDl6DYRYOk6EVgM544Zt
+         dSDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Hhj6WBQVF3TWPX/IPpk5CTbQpOHlUi1VVJvn+Rweasc=;
-        b=tES2iGifPcFkcCyl511+k0GwYSfh5sqsik7Mn4O7F7Oj0E0IfsH/s0NfyHJSaj28x0
-         BmJNH5YxRNv6AkUVef21x5UvH9JVU8AyCsuU/u8HXcqKSvyeC1RW1Ue7xQx/oTazvXFN
-         itPySoP8pGOpUJehgmJXI6Ro78Lh57scmD2K/qCKVrwyYIeV1qRRtJE2CLcppJ6pVLoK
-         PXEadKPiAPmwxNmZS4NbHL6xTVl2a18p+hUwRJw8qEi/E6jS8WJm77U0v5FVMpQt2ZaU
-         JbVWuaECsBOiO6nhkd7xwCGZwfV4IvndPpVI1pqy6dYDlfrujQqIvw1kzUCZrNAaQdgG
-         QfFQ==
-X-Gm-Message-State: ANhLgQ3dU8oJPt2lxjAeGsWYzTJ2Weuwfd2ODWHt/jsc//qEcJwMK9mA
-        c3SK6gQX6cFrwttDPmXDzdMP+UYj
-X-Google-Smtp-Source: ADFU+vtoJxJ7sV0N+6s5bIgG1W5RTIEWIQc5HCgpkImTmiq5JFuNtedlicIsG7Hf1/wkmtigGMHa3A==
-X-Received: by 2002:a17:902:7e05:: with SMTP id b5mr5182398plm.253.1584661041360;
-        Thu, 19 Mar 2020 16:37:21 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w19sm3503848pgm.27.2020.03.19.16.37.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 16:37:20 -0700 (PDT)
-Subject: Re: [PATCH 5.5 00/64] 5.5.11-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200319150225.148464084@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <6d8445e2-048e-87d1-e2a7-d9c8342e5eb6@roeck-us.net>
-Date:   Thu, 19 Mar 2020 16:37:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T/mfJWmxNQuzD0dp6KizZYLJ7CLCpefixytllKpkTzc=;
+        b=GncQZth+nlvs++c2VJZ0NAM/l5AFnCyjqtO7c8jn+Mnzbc0RDxuST/b8VbhMglk9Hm
+         ynA4ns4GrepRKaloPNuCtMwwq9Cfhqs4lOnCZYcWPAHrjAZzvY2WQ8zFmxF+HkzhpGcT
+         M1cuPDGV9CUJk/qNO1OM/DpwuZoWAxC+NWUfN+LdoB413aS6K60Ibiheb+bT5Zrso2I4
+         XR5enLnfg91Cs2dcwlVmJgYzCGNeUaxM/EUmXpTuzw9oWdYSBPCj32GIsPIhtKam7d67
+         xQP735ypVFpYGzbS+Yd5ZWhtAT2TDUVQpVVY++BQEt55TRYQ3odEz04Jc9iCf+WUV6Cz
+         j53w==
+X-Gm-Message-State: ANhLgQ3l9e/ap/emrSOEN7ctCRlr8ECFgOR5NaNa5Gvm4zsuNd+Jjfp/
+        USS+zrG2U/JAUe/LEDvrSpVirm2Af3dE95+Q5vI=
+X-Google-Smtp-Source: ADFU+vsBYF3lmb/S9MivVj1ar9fEgyHh9mNe7PH/to4h3/J9OWLSH5rf3wC8erfomQYZyINKFfGztDXrzBfrtovFz/I=
+X-Received: by 2002:a17:906:6d0:: with SMTP id v16mr5698516ejb.90.1584661168372;
+ Thu, 19 Mar 2020 16:39:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200319150225.148464084@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200302125310.742-1-linux.amoon@gmail.com> <20200302125310.742-3-linux.amoon@gmail.com>
+ <7hlfoir8rj.fsf@baylibre.com>
+In-Reply-To: <7hlfoir8rj.fsf@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 20 Mar 2020 00:39:17 +0100
+Message-ID: <CAFBinCB2WXZNRg4wdFD0RJ5k4hHqcfAOCHemvHzZE42-Mo5vzA@mail.gmail.com>
+Subject: Re: [PATCHv2 2/2] clk: meson: g12a: set cpub_clk flags to CLK_IS_CRITICAL
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Anand Moon <linux.amoon@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/20 8:03 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.11 release.
-> There are 64 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 21 Mar 2020 15:02:02 +0000.
-> Anything received after that time might be too late.
-> 
+Hi Kevin,
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 428 pass: 428 fail: 0
+On Mon, Mar 2, 2020 at 6:01 PM Kevin Hilman <khilman@baylibre.com> wrote:
+[...]
+> > updating flags to CLK_IS_CRITICAL which help enable all the parent for
+> > cpub_clk.
+>
+> With current mainline, I've tested DVFS using CPUfreq on both clusters
+> on odroid-n2, and both clusters are booting, so I don't understand the
+> need for this patch.
+I *think* there is a race condition at kernel boot between cpufreq and
+disabling orphaned clocks
+I'm not sure I fully understand it though and I don't have any G12B
+board to verify it
 
-Guenter
+my understanding is that u-boot runs Linux off CPU0 which is clocked by cpub_clk
+this means we need to keep cpub_clk enabled as long as Linux wants the
+CPU0 processor to be enabled (on 32-bit ARM platforms that would be
+smp_operations.cpu_{kill,die})
+cpufreq does not call clk_prepare_enable on the CPU clocks so this
+means that the orphaned clock cleanup mechanism can disable it "at any
+time", killing everything running on CPU0 and CPU1 (which are both
+clocked by cpub_clk)
+
+I have no explanation why this depends on booting from SD or eMMC.
+
+for the 32-bit SoCs we have CLK_IS_CRITICAL on the CPU clock as well
+since commit 0dad1ec65bc30a
+on G12A we have CLK_IS_CRITICAL on the sys_pll clocks, however my
+understanding is that cpub_clk could also be fed by one of the
+fixed_pll derived clocks (which have a gate as well, which may or may
+not be turned off by the orphaned clock cleanup - that is pure
+speculation from my side though).
+
+
+Martin
