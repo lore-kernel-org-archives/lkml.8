@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D7AC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE31C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033EB21973
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1657A20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584576668;
-	bh=OAXhNjGCNsGolcnMIdr3Ze6K8Cz/XNNVgY6Ut7+6JRE=;
+	s=default; t=1584576670;
+	bh=hSbQDuf8vTlOMjI6rgIo5X6FzzD0x98qmRWJGH4U1u8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QzdnACmuO0WVI6mnpISA4QX8j9JIZ2NLsCdY56EpvLsTvazvmJrh0qNEHV4aonLeZ
-	 nBniqP/q5WNkZPB6H5ZXIEaMpwkNNZlBUOKXcvNvPoCVjwagTJHtvxRqwRYqRGl5Xk
-	 diY+jr9Ex6oYAN7Hx11iuVXd26lm7SeiybEbBxUo=
+	b=nQcjNkasi8IY/ppBEBngV3/scbt+QcpIaiIM1LMWEbinVTpK99uTMyRWHhKUOME8u
+	 063TYZDV7wQP09TwO6VUoNxpyu1F4VM5Cg5Ismu7jgGFIZJyXcBjiRt64nd3VGEnhI
+	 kMOOzSOwjmJ9EPmcJiXKIbaM3pMKvrye324dDp2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgCSALG (ORCPT
+        id S1727461AbgCSALI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 20:11:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37022 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 20:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgCSALD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 20:11:03 -0400
+        id S1727389AbgCSALE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 20:11:04 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD71620777;
-        Thu, 19 Mar 2020 00:11:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB75D208CA;
+        Thu, 19 Mar 2020 00:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584576663;
-        bh=OAXhNjGCNsGolcnMIdr3Ze6K8Cz/XNNVgY6Ut7+6JRE=;
+        s=default; t=1584576664;
+        bh=hSbQDuf8vTlOMjI6rgIo5X6FzzD0x98qmRWJGH4U1u8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X12M2yixPcTmA39ofFOarP0imJYmjZPxlWK1gTBx1EjGt5hyWWLTIsW9GutT21PCo
-         FMkQr3LyinKmoGvSBsZStlol6qTfuT0euWUt/rrG34XpU2N2s3yLM6q+a1OmWOarhr
-         WKzFIVgGmxvq8HSMoMxRg49XiZvVCXCsNvp3/1WU=
+        b=EKC6weUI7rfBZJWjNzpQ+nx5U+bVGddfrFydosG3Qj4PodkewARrtHOsouRiVeGl8
+         +xfhM9WNry1jsnBMtD/zNU40M38vRWfy66spn8b5J0QmnxC9BFsIYLGv5Y8gyIYKmL
+         TDxTjINcnU1NyAd7/xswQhs2cd3HGgbrQfaLMX0w=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH RFC v2 tip/core/rcu 03/22] rcutorture: Add flag to produce non-busy-wait task stalls
-Date:   Wed, 18 Mar 2020 17:10:41 -0700
-Message-Id: <20200319001100.24917-3-paulmck@kernel.org>
+Subject: [PATCH RFC v2 tip/core/rcu 06/22] rcu: Reinstate synchronize_rcu_mult()
+Date:   Wed, 18 Mar 2020 17:10:44 -0700
+Message-Id: <20200319001100.24917-6-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200319001024.GA28798@paulmck-ThinkPad-P72>
 References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
@@ -61,87 +61,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit aids testing of RCU task stall warning messages by adding
-an rcutorture.stall_cpu_block module parameter that results in the
-induced stall sleeping within the RCU read-side critical section.
-Spinning with interrupts disabled is still available via the
-rcutorture.stall_cpu_irqsoff module parameter, and specifying neither
-of these two module parameters will spin with preemption disabled.
-
-Note that sleeping (as opposed to preemption) results in additional
-complaints from RCU at context-switch time, so yet more testing.
+With the advent and likely usage of synchronize_rcu_rude(), there is
+again a need to wait on multiple types of RCU grace periods, for
+example, call_rcu_tasks() and call_rcu_tasks_rude().  This commit
+therefore reinstates synchronize_rcu_mult() in order to allow these
+grace periods to be straightforwardly waited on concurrently.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  5 +++++
- kernel/rcu/rcutorture.c                         | 15 +++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
+ include/linux/rcupdate_wait.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 6d16b78..17eff15 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4161,6 +4161,11 @@
- 			Duration of CPU stall (s) to test RCU CPU stall
- 			warnings, zero to disable.
+diff --git a/include/linux/rcupdate_wait.h b/include/linux/rcupdate_wait.h
+index c0578ba..699b938 100644
+--- a/include/linux/rcupdate_wait.h
++++ b/include/linux/rcupdate_wait.h
+@@ -31,4 +31,23 @@ do {									\
  
-+	rcutorture.stall_cpu_block= [KNL]
-+			Sleep while stalling if set.  This will result
-+			in warnings from preemptible RCU in addition
-+			to any other stall-related activity.
+ #define wait_rcu_gp(...) _wait_rcu_gp(false, __VA_ARGS__)
+ 
++/**
++ * synchronize_rcu_mult - Wait concurrently for multiple grace periods
++ * @...: List of call_rcu() functions for different grace periods to wait on
++ *
++ * This macro waits concurrently for multiple types of RCU grace periods.
++ * For example, synchronize_rcu_mult(call_rcu, call_rcu_tasks) would wait
++ * on concurrent RCU and RCU-tasks grace periods.  Waiting on a given SRCU
++ * domain requires you to write a wrapper function for that SRCU domain's
++ * call_srcu() function, with this wrapper supplying the pointer to the
++ * corresponding srcu_struct.
++ *
++ * The first argument tells Tiny RCU's _wait_rcu_gp() not to
++ * bother waiting for RCU.  The reason for this is because anywhere
++ * synchronize_rcu_mult() can be called is automatically already a full
++ * grace period.
++ */
++#define synchronize_rcu_mult(...) \
++	_wait_rcu_gp(IS_ENABLED(CONFIG_TINY_RCU), __VA_ARGS__)
 +
- 	rcutorture.stall_cpu_holdoff= [KNL]
- 			Time to wait (s) after boot before inducing stall.
- 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index b3301f3..ada5b91 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -102,6 +102,7 @@ torture_param(int, stall_cpu, 0, "Stall duration (s), zero to disable.");
- torture_param(int, stall_cpu_holdoff, 10,
- 	     "Time to wait before starting stall (s).");
- torture_param(int, stall_cpu_irqsoff, 0, "Disable interrupts while stalling.");
-+torture_param(int, stall_cpu_block, 0, "Sleep while stalling.");
- torture_param(int, stat_interval, 60,
- 	     "Number of seconds between stats printk()s");
- torture_param(int, stutter, 5, "Number of seconds to run/halt test");
-@@ -1599,6 +1600,7 @@ static int rcutorture_booster_init(unsigned int cpu)
-  */
- static int rcu_torture_stall(void *args)
- {
-+	int idx;
- 	unsigned long stop_at;
- 
- 	VERBOSE_TOROUT_STRING("rcu_torture_stall task started");
-@@ -1610,21 +1612,22 @@ static int rcu_torture_stall(void *args)
- 	if (!kthread_should_stop()) {
- 		stop_at = ktime_get_seconds() + stall_cpu;
- 		/* RCU CPU stall is expected behavior in following code. */
--		rcu_read_lock();
-+		idx = cur_ops->readlock();
- 		if (stall_cpu_irqsoff)
- 			local_irq_disable();
--		else
-+		else if (!stall_cpu_block)
- 			preempt_disable();
- 		pr_alert("rcu_torture_stall start on CPU %d.\n",
--			 smp_processor_id());
-+			 raw_smp_processor_id());
- 		while (ULONG_CMP_LT((unsigned long)ktime_get_seconds(),
- 				    stop_at))
--			continue;  /* Induce RCU CPU stall warning. */
-+			if (stall_cpu_block)
-+				schedule_timeout_uninterruptible(HZ);
- 		if (stall_cpu_irqsoff)
- 			local_irq_enable();
--		else
-+		else if (!stall_cpu_block)
- 			preempt_enable();
--		rcu_read_unlock();
-+		cur_ops->readunlock(idx);
- 		pr_alert("rcu_torture_stall end.\n");
- 	}
- 	torture_shutdown_absorb("rcu_torture_stall");
+ #endif /* _LINUX_SCHED_RCUPDATE_WAIT_H */
 -- 
 2.9.5
 
