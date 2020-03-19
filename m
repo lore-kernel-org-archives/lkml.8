@@ -2,163 +2,197 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A58C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FE1C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2B720775
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC412072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFqUgnck"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LXcBuV5u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgCSQ2V (ORCPT
+        id S1728113AbgCSQ2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:28:21 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39764 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727416AbgCSQ2T (ORCPT
+        Thu, 19 Mar 2020 12:28:25 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57218 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgCSQ2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:28:19 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h6so3858779wrs.6;
-        Thu, 19 Mar 2020 09:28:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SPgbvNOx93ZbKq64/B6/Z1gW0+quFKremjRSKVCy664=;
-        b=LFqUgnckFAOA9p+wCjOZ+EhTau2SI0k45PYdANda466lpPHrNJ665SzPzR+aNSKJxB
-         Rwm3nn/XF7a0al/6zmG4QENhSXWyEmxDnpnirHW4YW2XKi/1n/5jYuUl+/xCRq5n4oPC
-         O4XQzz8H4fKscVlPYfA2098A+MPZKS6Xhyf/chTQglAkwcbL4wa4mXMSoWDWgaQ5ZqtA
-         xuFpKp2fRITG0nc1x4ZJniRpm88xs0+d62KmZg2ZGrzTY3bzKNvjXFwmmFWNn8EQsksT
-         91cj7xrLFx3tLg+RklBpueUhbArZ/yDFXB2H44fIiYwTqkkYQ1JP3xjPeG1RGJm1Hurv
-         EXQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SPgbvNOx93ZbKq64/B6/Z1gW0+quFKremjRSKVCy664=;
-        b=QXs7c4Z5n/TJ9frAFuk9VmxebokU5ETsFl5AbzrjodejXmcFRQMrBS0V9pu73yzij2
-         W3/CxTp/MSHcrGz8HOer+bLAfg7WRmPgw2R33wAEWS5JP1KbaCGkclJOXmgN3Zb6cXyq
-         8vZ83w+CTVavNIiOh+cK+bdyVB+eOtnT/klr6tYXkDoBpAccejUAITuHnJpOqRNld1F3
-         K7380/xIVTU4yugNwxs56/+H6crYol8PVJBCYHLXp+3cbYARswUF8UUpiSw09iQKPOlk
-         8yuzDCHK2V2ZqAxHVYMQJOx0o1fdLeP/4sul5IrwYbv74Ulj8X5lNybayPKCsu7Lz7XO
-         Buvw==
-X-Gm-Message-State: ANhLgQ1B5oJA1eloo76uEK6/3KfCSM6lGJbXD2v5wk6cJcGG6pw7v2DA
-        wdwHT8x5TBjTokH9yRIES7VrbSCR+zZCuOiQ3Rk=
-X-Google-Smtp-Source: ADFU+vuaZB2YqdQTSwwXNJGT/DzeIMoI6zgsU2pirhzQONlQGEuJaSY7zIUne4g6UI8NM14HSloKXFs1XHhWX101AEo=
-X-Received: by 2002:a5d:56c9:: with SMTP id m9mr5082680wrw.289.1584635297101;
- Thu, 19 Mar 2020 09:28:17 -0700 (PDT)
+        Thu, 19 Mar 2020 12:28:18 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JGSAZ4026976;
+        Thu, 19 Mar 2020 11:28:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584635290;
+        bh=k6bkA/KJdYJk33YAk4UWI+sIZqfJh9tELgeOYvF7XsQ=;
+        h=From:To:CC:Subject:Date;
+        b=LXcBuV5uoYiWNRuRJ39gVYcOEG5aEnGj64X5zrI75NOJFo3GQqu460bTUHxe9kAFe
+         Nrvb8dJ+URcBcWH5+IglSkN5woeX1BvibUmENjhmnXhlVy6wUs3Bjsp5ai+dfkMDC7
+         1OzTVBmou6alUWMwhMabhk1sK0MpXa2JjF7bXFuk=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JGSA6N093215;
+        Thu, 19 Mar 2020 11:28:10 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Mar 2020 11:28:10 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Mar 2020 11:28:10 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JGS90o109899;
+        Thu, 19 Mar 2020 11:28:09 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
+CC:     Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v5 00/11] net: ethernet: ti: add networking support for k3 am65x/j721e soc
+Date:   Thu, 19 Mar 2020 18:27:55 +0200
+Message-ID: <20200319162806.25705-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200319131221.14044-1-david@redhat.com> <20200319131221.14044-2-david@redhat.com>
-In-Reply-To: <20200319131221.14044-2-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 19 Mar 2020 17:28:05 +0100
-Message-ID: <CAM9Jb+gD9YWgio5Nod577iH9=HHf8jZFspVHstQ7cyCWzE2PKQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/8] drivers/base/memory: rename MMOP_ONLINE_KEEP to MMOP_ONLINE
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The name is misleading and it's not really clear what is "kept". Let's just
-> name it like the online_type name we expose to user space ("online").
->
-> Add some documentation to the types.
->
-> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/base/memory.c          | 9 +++++----
->  include/linux/memory_hotplug.h | 6 +++++-
->  2 files changed, 10 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 6448c9ece2cb..8c5ce42c0fc3 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -216,7 +216,7 @@ static int memory_subsys_online(struct device *dev)
->          * attribute and need to set the online_type.
->          */
->         if (mem->online_type < 0)
-> -               mem->online_type = MMOP_ONLINE_KEEP;
-> +               mem->online_type = MMOP_ONLINE;
->
->         ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
->
-> @@ -251,7 +251,7 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
->         else if (sysfs_streq(buf, "online_movable"))
->                 online_type = MMOP_ONLINE_MOVABLE;
->         else if (sysfs_streq(buf, "online"))
-> -               online_type = MMOP_ONLINE_KEEP;
-> +               online_type = MMOP_ONLINE;
->         else if (sysfs_streq(buf, "offline"))
->                 online_type = MMOP_OFFLINE;
->         else {
-> @@ -262,7 +262,7 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
->         switch (online_type) {
->         case MMOP_ONLINE_KERNEL:
->         case MMOP_ONLINE_MOVABLE:
-> -       case MMOP_ONLINE_KEEP:
-> +       case MMOP_ONLINE:
->                 /* mem->online_type is protected by device_hotplug_lock */
->                 mem->online_type = online_type;
->                 ret = device_online(&mem->dev);
-> @@ -342,7 +342,8 @@ static ssize_t valid_zones_show(struct device *dev,
->         }
->
->         nid = mem->nid;
-> -       default_zone = zone_for_pfn_range(MMOP_ONLINE_KEEP, nid, start_pfn, nr_pages);
-> +       default_zone = zone_for_pfn_range(MMOP_ONLINE, nid, start_pfn,
-> +                                         nr_pages);
->         strcat(buf, default_zone->name);
->
->         print_allowed_zone(buf, nid, start_pfn, nr_pages, MMOP_ONLINE_KERNEL,
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 3195d11876ea..3aaf00db224c 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -47,9 +47,13 @@ enum {
->
->  /* Types for control the zone type of onlined and offlined memory */
->  enum {
-> +       /* Offline the memory. */
->         MMOP_OFFLINE = -1,
-> -       MMOP_ONLINE_KEEP,
-> +       /* Online the memory. Zone depends, see default_zone_for_pfn(). */
-> +       MMOP_ONLINE,
-> +       /* Online the memory to ZONE_NORMAL. */
->         MMOP_ONLINE_KERNEL,
-> +       /* Online the memory to ZONE_MOVABLE. */
->         MMOP_ONLINE_MOVABLE,
->  };
->
-> --
-Looks good to me.
+Hi
 
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+This v5 series adds basic networking support support TI K3 AM654x/J721E SoC which
+have integrated Gigabit Ethernet MAC (Media Access Controller) into device MCU
+domain and named MCU_CPSW0 (CPSW2G NUSS).
 
-> 2.24.1
->
->
+Formally TRMs refer CPSW2G NUSS as two-port Gigabit Ethernet Switch subsystem
+with port 0 being the CPPI DMA host port and port 1 being the external Ethernet
+port, but for 1 external port device it's just Port 0 <-> ALE <-> Port 1 and it's
+rather device with HW filtering capabilities then actually switching device.
+It's expected to have similar devices, but with more external ports.
+
+The new Host port 0 Communications Port Programming Interface (CPPI5) is
+operating by TI AM654x/J721E NAVSS Unified DMA Peripheral Root Complex (UDMA-P)
+controller [1].
+
+The CPSW2G contains below modules for which existing code is re-used:
+ - MAC SL: cpsw_sl.c
+ - Address Lookup Engine (ALE): cpsw_ale.c, basically compatible with K2 66AK2E/G
+ - Management Data Input/Output interface (MDIO): davinci_mdio.c, fully 
+   compatible with TI AM3/4/5 devices
+
+Basic features supported by CPSW2G NUSS driver:
+ - VLAN support, 802.1Q compliant, Auto add port VLAN for untagged frames on
+   ingress, Auto VLAN removal on egress and auto pad to minimum frame size.
+ - multicast filtering
+ - promisc mode
+ - TX multiq support in Round Robin or Fixed priority modes
+ - RX checksum offload for non-fragmented IPv4/IPv6 TCP/UDP packets
+ - TX checksum offload support for IPv4/IPv6 TCP/UDP packets (J721E only).
+
+Features under development:
+ - Support for IEEE 1588 Clock Synchronization. The CPSW2G NUSS includes new
+   version of Common Platform Time Sync (CPTS)
+ - tc-mqprio: priority level Quality Of Service (QOS) support (802.1p)
+ - tc-cbs: Support for Audio/Video Bridging (P802.1Qav/D6.0) HW shapers
+ - tc-taprio: IEEE 802.1Qbv/D2.2 Enhancements for Scheduled Traffic
+ - frame preemption: IEEE P902.3br/D2.0 Interspersing Express Traffic, 802.1Qbu
+ - extended ALE features: classifier/policers, auto-aging
+
+Patches 1-6 are intended for netdev, Patches 7-11 are intended for K3 Platform
+tree and provided here for testing purposes.
+
+Changes in v5:
+ - renamed files k3-udma-desc-pool.*  k3-udma-desc-pool to k3-cppi-desc-pool.*,
+   and API to k3_cppi_desc_pool_* as requested by Peter Ujfalusi <peter.ujfalusi@ti.com>
+ - fixed copy-paste err in am65_cpsw_nuss_ndo_slave_set_rx_mode() which blocked
+   recieving of mcast frames.
+ - added Tested-by: Murali Karicheri <m-karicheri2@ti.com> 
+
+Changes in v4:
+ - fixed minor comments from Jakub Kicinski <kuba@kernel.org>
+ - dependencies resolved: required phy-rmii-sel changes [2] queued for merge
+   except one [3] which is included in this series with Kishon's ask.
+
+Changes in v3:
+ - add ARM64 defconfig changes for testing purposes
+ - fixed DT yaml definition
+ - fixed comments from Jakub Kicinski <kuba@kernel.org>
+
+Changes in v2:
+ - fixed DT yaml definition
+ - fixed comments from David Miller
+
+v4: https://patchwork.ozlabs.org/cover/1256092/
+v3: https://patchwork.ozlabs.org/cover/1254568/
+v2: https://patchwork.ozlabs.org/cover/1250674/
+v1: https://lwn.net/Articles/813087/
+
+TRMs:
+ AM654: http://www.ti.com/lit/ug/spruid7e/spruid7e.pdf
+ J721E: http://www.ti.com/lit/ug/spruil1a/spruil1a.pdf
+
+Preliminary documentation can be found at:
+ http://software-dl.ti.com/processor-sdk-linux/esd/docs/latest/linux/Foundational_Components/Kernel/Kernel_Drivers/Network/K3_CPSW2g.html
+
+[1] https://lwn.net/Articles/808030/
+[2] https://lkml.org/lkml/2020/2/22/100
+[3] https://lkml.org/lkml/2020/3/3/724
+Grygorii Strashko (11):
+  phy: ti: gmii-sel: simplify config dependencies between net drivers
+    and gmii phy
+  net: ethernet: ti: ale: fix seeing unreg mcast packets with promisc
+    and allmulti disabled
+  net: ethernet: ti: ale: add support for mac-only mode
+  net: ethernet: ti: ale: am65: add support for default thread cfg
+  dt-binding: ti: am65x: document mcu cpsw nuss
+  net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver
+  arm64: dts: ti: k3-am65-mcu: add cpsw nuss node
+  arm64: dts: k3-am654-base-board: add mcu cpsw nuss pinmux and phy defs
+  arm64: dts: ti: k3-j721e-mcu: add mcu cpsw nuss node
+  arm64: dts: ti: k3-j721e-common-proc-board: add mcu cpsw nuss pinmux
+    and phy defs
+  arm64: defconfig: ti: k3: enable dma and networking
+
+ .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |  226 ++
+ arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |   49 +
+ arch/arm64/boot/dts/ti/k3-am65.dtsi           |    1 +
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts |   42 +
+ .../dts/ti/k3-j721e-common-proc-board.dts     |   43 +
+ .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |   49 +
+ arch/arm64/boot/dts/ti/k3-j721e.dtsi          |    1 +
+ arch/arm64/configs/defconfig                  |    3 +
+ drivers/net/ethernet/ti/Kconfig               |   20 +-
+ drivers/net/ethernet/ti/Makefile              |    3 +
+ drivers/net/ethernet/ti/am65-cpsw-ethtool.c   |  747 +++++++
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c      | 1965 +++++++++++++++++
+ drivers/net/ethernet/ti/am65-cpsw-nuss.h      |  142 ++
+ drivers/net/ethernet/ti/cpsw_ale.c            |   38 +
+ drivers/net/ethernet/ti/cpsw_ale.h            |    4 +
+ drivers/net/ethernet/ti/k3-cppi-desc-pool.c   |  126 ++
+ drivers/net/ethernet/ti/k3-cppi-desc-pool.h   |   30 +
+ drivers/phy/ti/Kconfig                        |    3 -
+ 18 files changed, 3487 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+ create mode 100644 drivers/net/ethernet/ti/am65-cpsw-ethtool.c
+ create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.c
+ create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.h
+ create mode 100644 drivers/net/ethernet/ti/k3-cppi-desc-pool.c
+ create mode 100644 drivers/net/ethernet/ti/k3-cppi-desc-pool.h
+
+-- 
+2.17.1
+
