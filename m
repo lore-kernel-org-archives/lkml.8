@@ -2,143 +2,160 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6712AC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA9BC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421072072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFE720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgCSTHQ (ORCPT
+        id S1727500AbgCSTHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:07:16 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:53667 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSTHP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:07:15 -0400
-Received: by mail-il1-f198.google.com with SMTP id z19so2867310ils.20
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 12:07:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=JK4j91aQp8xu0adgIRNWGetww6zGg0DWJPZzVkz/f5s=;
-        b=lJpfy6UF4R9+Kh6U5Rbov7lpuV/mkkegwx2I9U6hC9xbW8wpROncO9xE6hkG+TzNGn
-         DV8RmCqKetTU5fIoAPi7+gulI7+s3py/VZKI8ipBRfYT4+XcduMqPnreTucZH6xJsUbr
-         Xj5PFT33+XQZt4qOVtJZNLmjyj80NTsKK34G5EpLIhKO2wvtSCIAhtLL34O/02O80OUN
-         Klr6s7FwYprDDyhwQ9rJjNsBcM4EK6vfkwAIzRa3WiURV9q/p3uInCb8TyYPgcjb/qTw
-         miyeyYvWK1+U8pE4RZusL9E3WeEiesgRl18RST3ulpi3iBwur2GKB+Wxq3N0fxuxNhe1
-         LyhQ==
-X-Gm-Message-State: ANhLgQ0g1fZvjVUo32V5VP0UeEmSVqoiIKI829gbVeNd4lrPIzG+MlJD
-        VcIiW/BQmczWH6syGWQMF7vHWn12hodmzpHniZDeVJy1hhS/
-X-Google-Smtp-Source: ADFU+vtvBsH7etlrl1Zx74wee00IqMfrHha6pAhzcBYU4nKxhFmdO8EF/gSiaAdL5UWYDiwqoAN6Zej/knvSVfttizzdrh8HPPpU
+        Thu, 19 Mar 2020 15:07:19 -0400
+Received: from albireo.enyo.de ([37.24.231.21]:52842 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727256AbgCSTHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:07:17 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jF0VY-00029N-1A; Thu, 19 Mar 2020 19:07:08 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1jF0UB-00083N-Mg; Thu, 19 Mar 2020 20:05:43 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>
+Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C startup and thread creation (v15)
+References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com>
+        <874kukpf9f.fsf@mid.deneb.enyo.de>
+        <2147217200.3240.1584633395285.JavaMail.zimbra@efficios.com>
+        <87r1xo5o2s.fsf@mid.deneb.enyo.de>
+        <1302331358.3965.1584641354569.JavaMail.zimbra@efficios.com>
+        <87sgi4gqhf.fsf@mid.deneb.enyo.de>
+        <1103782439.4046.1584642531222.JavaMail.zimbra@efficios.com>
+        <87k13ggpmf.fsf@mid.deneb.enyo.de>
+        <900536577.4062.1584644126425.JavaMail.zimbra@efficios.com>
+Date:   Thu, 19 Mar 2020 20:05:43 +0100
+In-Reply-To: <900536577.4062.1584644126425.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Thu, 19 Mar 2020 14:55:26 -0400
+        (EDT)")
+Message-ID: <87fte4go6w.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-X-Received: by 2002:a92:358b:: with SMTP id c11mr4415053ilf.64.1584644834463;
- Thu, 19 Mar 2020 12:07:14 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 12:07:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000074219d05a139e082@google.com>
-Subject: general protection fault in sctp_ulpevent_nofity_peer_addr_change
-From:   syzbot <syzbot+3950016bd95c2ca0377b@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+* Mathieu Desnoyers:
 
-syzbot found the following crash on:
+>> Inside glibc, you can assume __attribute__ support.
+>
+> OK, so the _Static_assert () could sit in sys/rseq.h
 
-HEAD commit:    5076190d mm: slub: be more careful about the double cmpxch..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14d2a61de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
-dashboard link: https://syzkaller.appspot.com/bug?extid=3950016bd95c2ca0377b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1162bbe3e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13c93b45e00000
+It requires a C11 compiler.  In this case, you could use _Alignas.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3950016bd95c2ca0377b@syzkaller.appspotmail.com
+>
+>> 
+>>>>>> The struct rseq/struct rseq_cs definitions
+>>>>>> are broken, they should not try to change the alignment.
+>>>>>
+>>>>> AFAIU, this means we should ideally not have used __attribute__((aligned))
+>>>>> in the uapi headers in the first place. Why is it broken ?
+>>>> 
+>>>> Compilers which are not sufficiently GCC-compatible define
+>>>> __attribute__(X) as the empty expansion, so you silently get a
+>>>> different ABI.
+>>>
+>>> It is worth noting that rseq.h is not the only Linux uapi header
+>>> which uses __attribute__ ((aligned)), so this ABI problem exists today
+>>> anyway for those compilers.
+>> 
+>> Yuck.  Even with larger-than-16 alignment?
+>
+> There are two:
+>
+> target_core_user.h
+> 45:#define ALIGN_SIZE 64 /* Should be enough for most CPUs */
+> 58:	__u32 cmd_tail __attribute__((__aligned__(ALIGN_SIZE)));
 
-general protection fault, probably for non-canonical address 0xdffffc0000000017: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x00000000000000b8-0x00000000000000bf]
-CPU: 0 PID: 10161 Comm: syz-executor044 Not tainted 5.6.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:sctp_ulpevent_nofity_peer_addr_change+0xed/0xa30 net/sctp/ulpevent.c:347
-Code: 03 80 3c 02 00 0f 85 19 08 00 00 48 8b ab a8 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d bd bc 00 00 00 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 70
-RSP: 0018:ffffc900022a7308 EFLAGS: 00010207
-RAX: dffffc0000000000 RBX: ffff888096004150 RCX: 0000000000000000
-RDX: 0000000000000017 RSI: 0000000000000000 RDI: 00000000000000bc
-RBP: 0000000000000000 R08: ffff88809419a500 R09: ffffc900022a7358
-R10: fffff52000454e7a R11: ffffc900022a73d7 R12: 0000000000000000
-R13: 0000000000000004 R14: 0000000000000000 R15: ffff888096004150
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0063) knlGS:000000000935d840
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 0000000020000180 CR3: 0000000093589000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- sctp_assoc_set_primary+0x6c/0x300 net/sctp/associola.c:435
- sctp_assoc_rm_peer+0x77c/0xa40 net/sctp/associola.c:508
- sctp_assoc_update+0x50a/0xe30 net/sctp/associola.c:1116
- sctp_cmd_assoc_update net/sctp/sm_sideeffect.c:836 [inline]
- sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1305 [inline]
- sctp_side_effects net/sctp/sm_sideeffect.c:1185 [inline]
- sctp_do_sm+0x1c57/0x4ed0 net/sctp/sm_sideeffect.c:1156
- sctp_assoc_bh_rcv+0x386/0x6d0 net/sctp/associola.c:1044
- sctp_inq_push+0x1da/0x270 net/sctp/inqueue.c:80
- sctp_backlog_rcv+0x1f3/0x1290 net/sctp/input.c:344
- sk_backlog_rcv include/net/sock.h:963 [inline]
- __release_sock+0x134/0x3a0 net/core/sock.c:2440
- release_sock+0x54/0x1b0 net/core/sock.c:2956
- sctp_wait_for_connect+0x308/0x530 net/sctp/socket.c:9280
- __sctp_connect+0x9d2/0xc70 net/sctp/socket.c:1225
- __sctp_setsockopt_connectx+0x127/0x180 net/sctp/socket.c:1321
- sctp_setsockopt_connectx net/sctp/socket.c:1353 [inline]
- sctp_setsockopt net/sctp/socket.c:4698 [inline]
- sctp_setsockopt+0x15a1/0x7090 net/sctp/socket.c:4655
- compat_sock_common_setsockopt+0xf6/0x120 net/core/sock.c:3165
- __compat_sys_setsockopt+0x15d/0x310 net/compat.c:384
- __do_compat_sys_setsockopt net/compat.c:397 [inline]
- __se_compat_sys_setsockopt net/compat.c:394 [inline]
- __ia32_compat_sys_setsockopt+0xb9/0x150 net/compat.c:394
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x270/0xe8f arch/x86/entry/common.c:408
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-Modules linked in:
----[ end trace a970df05c462f077 ]---
-RIP: 0010:sctp_ulpevent_nofity_peer_addr_change+0xed/0xa30 net/sctp/ulpevent.c:347
-Code: 03 80 3c 02 00 0f 85 19 08 00 00 48 8b ab a8 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d bd bc 00 00 00 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 70
-RSP: 0018:ffffc900022a7308 EFLAGS: 00010207
-RAX: dffffc0000000000 RBX: ffff888096004150 RCX: 0000000000000000
-RDX: 0000000000000017 RSI: 0000000000000000 RDI: 00000000000000bc
-RBP: 0000000000000000 R08: ffff88809419a500 R09: ffffc900022a7358
-R10: fffff52000454e7a R11: ffffc900022a73d7 R12: 0000000000000000
-R13: 0000000000000004 R14: 0000000000000000 R15: ffff888096004150
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0063) knlGS:000000000935d840
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 0000000020000180 CR3: 0000000093589000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+That one is tough to figure out:
 
+struct tcmu_mailbox {
+        __u16 version;
+        __u16 flags;
+        __u32 cmdr_off;
+        __u32 cmdr_size;
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+        __u32 cmd_head;
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+        /* Updated by user. On its own cacheline */
+        __u32 cmd_tail __attribute__((__aligned__(ALIGN_SIZE)));
+
+} __attribute__((packed));
+
+Apparently, the expectation is that the compiler ignores __attribute__
+((packed) in this context.  Ugh.
+
+> netfilter_bridge/ebtables.h:90:	char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+> netfilter_bridge/ebtables.h:132:	unsigned char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+> netfilter_bridge/ebtables.h:145:	unsigned char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+> netfilter_bridge/ebtables.h:158:	unsigned char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+> netfilter_bridge/ebtables.h:191:	unsigned char elems[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+
+I think these values are lower than max_align_t, so uncritical.
+
+>>>> There is really no need to specify 32-byte alignment here.  Is not
+>>>> even the size of a standard cache line.  It can result in crashes if
+>>>> these structs are heap-allocated using malloc, when optimizing for
+>>>> AVX2.
+>>>
+>>> Why would it be valid to allocate those with malloc ? Isn't it the
+>>> purpose of posix_memalign() ?
+>> 
+>> It would not be valid, but I don't think we have diagnostics for C
+>> like we have them for C++'s operator new.
+>
+> We could at least make an effort to let people know that alignment is
+> required here when allocating struct rseq and struct rseq_cs on the
+> heap by adding some comments to that effect in linux/rseq.h ?
+
+We could use different types on the glibc side, then no special
+programmer action will be needed.
+
+>>>>> However, now that it is in the wild, it's a bit late to change that.
+>>>> 
+>>>> I had forgotten about the alignment crashes.  I think we should
+>>>> seriously consider changing the types. 8-(
+>>>
+>>> I don't think this is an option at this stage given that it is part
+>>> of the Linux kernel UAPI. I am not convinced that it is valid at all
+>>> to allocate struct rseq or struct rseq_cs with malloc(), because it
+>>> does not guarantee any alignment.
+>> 
+>> The kernel ABI doesn't change.  The kernel cannot use the alignment
+>> information anyway.  Userspace struct layout may change in subtle
+>> ways, though.
+>
+> Considering the amount of pain this can cause in user-space, and because
+> it can break userspace, this is not a UAPI change I am willing to consider.
+> I'm not sure why we are even discussing the possibility of breaking a Linux
+> UAPI considering that those are set in stone.
+
+Again, the kernel interface is NOT affected.  Only if the struct is
+used in a non-top-level fashion across an ABI boundary in userspace.
+I think making the change now is better than dealing with the breakage
+in rseq users when they are built with -mavx2.
