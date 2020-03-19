@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AC1C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6C1C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334EF206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0A12098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623935;
-	bh=fuzt+gkqcWWcc3b+r9jFWZQX1Lp5kb7EvCjG3e3PFtg=;
+	s=default; t=1584623941;
+	bh=+pU4LulTU4mEYekBOst0ONklTIF3qN/8m0GK1PJ5h18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WwRN7UjjvSmk54rIHfojoJQ/3bVs4XNeAxIlsrcHgq5fONH0WE9W0OZzj3Q3swCui
-	 cgroXIxaJBF4/bCENaozyNaP2E7IUjMNFdc4JnMGVRznSK+Xx9BIqpLx4e5hvUGmAK
-	 8Q/FYtf+Os3m2PMXdirwqvrK/edVktz7/oUDMFlI=
+	b=eDLpWFUMH0RmHqYtMzk6d2Yx4wVMMU9VLmurksv8Eztns/3FW1kIjdqOJnvOxo4TD
+	 vtGIO9mAy+c4PqLVq8CRUZgolcVBt3iZRNF7tixS+Z07oL3MeHpQawpsKEvrFNUJny
+	 PeL4W/lWWbwi96LB4GYpBXEqPOxjkBOPMhi5+cco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgCSNSx (ORCPT
+        id S1728944AbgCSNTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:18:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41546 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:19:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729836AbgCSNSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:18:49 -0400
+        id S1727731AbgCSNSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:18:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE84E2098B;
-        Thu, 19 Mar 2020 13:18:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A19E52098B;
+        Thu, 19 Mar 2020 13:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623929;
-        bh=fuzt+gkqcWWcc3b+r9jFWZQX1Lp5kb7EvCjG3e3PFtg=;
+        s=default; t=1584623934;
+        bh=+pU4LulTU4mEYekBOst0ONklTIF3qN/8m0GK1PJ5h18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R8XeY6OvZe7W+yHNGeGJgYymiL1A/H5wSHKj1LmHQ12cUBw35dGNetItwlJFWieuz
-         jKHGfsgrgJu/RMpWzFnaji6u/iJRQBOf9naKCBIZtOnOk+sfRgQKdB2wZdMcgC0a07
-         wNESLyQCuc4KcZNp1gD7FnqhWDHSrsz2sKXXpUuo=
+        b=vtQrYCAof7De8ao9pktjsSbj3zoaZPC4FoHKsSDhaTkZdTEUj4m0FxBb1/o1x6Inz
+         JvYyDyOYIr3xDs24dcA7drSYu7MctR3IYlWVwdvMZgkngnax9zJ0sM+UtontbxuGr5
+         TrA7sJKZTw3k72Tqxcd2rB/pk6HPhb97DQTeaY2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Leonardo=20M=F6rlein?= <me@irrelefant.net>,
-        =?UTF-8?q?Linus=20L=FCssing?= <linus.luessing@c0d3.blue>,
+        John Soros <sorosj@gmail.com>,
         Sven Eckelmann <sven@narfation.org>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.14 74/99] batman-adv: Fix TT sync flags for intermediate TT responses
-Date:   Thu, 19 Mar 2020 14:03:52 +0100
-Message-Id: <20200319124003.573698856@linuxfoundation.org>
+Subject: [PATCH 4.14 76/99] batman-adv: Fix debugfs path for renamed hardif
+Date:   Thu, 19 Mar 2020 14:03:54 +0100
+Message-Id: <20200319124004.043668318@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -61,184 +60,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Lüssing <linus.luessing@c0d3.blue>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit 7072337e52b3e9d5460500d8dc9cbc1ba2db084c upstream.
+commit 36dc621ceca1be3ec885aeade5fdafbbcc452a6d upstream.
 
-The previous TT sync fix so far only fixed TT responses issued by the
-target node directly. So far, TT responses issued by intermediate nodes
-still lead to the wrong flags being added, leading to CRC mismatches.
+batman-adv is creating special debugfs directories in the init
+net_namespace for each valid hard-interface (net_device). But it is
+possible to rename a net_device to a completely different name then the
+original one.
 
-This behaviour was observed at Freifunk Hannover in a 800 nodes setup
-where a considerable amount of nodes were still infected with 'WI'
-TT flags even with (most) nodes having the previous TT sync fix applied.
+It can therefore happen that a user registers a new net_device which gets
+the name "wlan0" assigned by default. batman-adv is also adding a new
+directory under $debugfs/batman-adv/ with the name "wlan0".
 
-I was able to reproduce the issue with intermediate TT responses in a
-four node test setup and this patch fixes this issue by ensuring to
-use the per originator instead of the summarized, OR'd ones.
+The user then decides to rename this device to "wl_pri" and registers a
+different device. The kernel may now decide to use the name "wlan0" again
+for this new device. batman-adv will detect it as a valid net_device and
+tries to create a directory with the name "wlan0" under
+$debugfs/batman-adv/. But there already exists one with this name under
+this path and thus this fails. batman-adv will detect a problem and
+rollback the registering of this device.
 
-Fixes: e9c00136a475 ("batman-adv: fix tt_global_entries flags update")
-Reported-by: Leonardo Mörlein <me@irrelefant.net>
-Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+batman-adv must therefore take care of renaming the debugfs directories
+for hard-interfaces whenever it detects such a net_device rename.
+
+Fixes: 5bc7c1eb44f2 ("batman-adv: add debugfs structure for information per interface")
+Reported-by: John Soros <sorosj@gmail.com>
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/translation-table.c |   61 ++++++++++++++++++++++++++++++-------
- 1 file changed, 51 insertions(+), 10 deletions(-)
+ net/batman-adv/debugfs.c        |   22 +++++++++++++++++++++-
+ net/batman-adv/debugfs.h        |    6 ++++++
+ net/batman-adv/hard-interface.c |    3 +++
+ 3 files changed, 30 insertions(+), 1 deletion(-)
 
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -1544,6 +1544,8 @@ batadv_tt_global_orig_entry_find(const s
-  *  by a given originator
-  * @entry: the TT global entry to check
-  * @orig_node: the originator to search in the list
-+ * @flags: a pointer to store TT flags for the given @entry received
-+ *  from @orig_node
-  *
-  * find out if an orig_node is already in the list of a tt_global_entry.
-  *
-@@ -1551,7 +1553,8 @@ batadv_tt_global_orig_entry_find(const s
-  */
- static bool
- batadv_tt_global_entry_has_orig(const struct batadv_tt_global_entry *entry,
--				const struct batadv_orig_node *orig_node)
-+				const struct batadv_orig_node *orig_node,
-+				u8 *flags)
- {
- 	struct batadv_tt_orig_list_entry *orig_entry;
- 	bool found = false;
-@@ -1559,6 +1562,10 @@ batadv_tt_global_entry_has_orig(const st
- 	orig_entry = batadv_tt_global_orig_entry_find(entry, orig_node);
- 	if (orig_entry) {
- 		found = true;
-+
-+		if (flags)
-+			*flags = orig_entry->flags;
-+
- 		batadv_tt_orig_list_entry_put(orig_entry);
- 	}
+--- a/net/batman-adv/debugfs.c
++++ b/net/batman-adv/debugfs.c
+@@ -18,6 +18,7 @@
+ #include "debugfs.h"
+ #include "main.h"
  
-@@ -1741,7 +1748,7 @@ static bool batadv_tt_global_add(struct
- 			if (!(common->flags & BATADV_TT_CLIENT_TEMP))
- 				goto out;
- 			if (batadv_tt_global_entry_has_orig(tt_global_entry,
--							    orig_node))
-+							    orig_node, NULL))
- 				goto out_remove;
- 			batadv_tt_global_del_orig_list(tt_global_entry);
- 			goto add_orig_entry;
-@@ -2884,23 +2891,46 @@ unlock:
++#include <linux/dcache.h>
+ #include <linux/debugfs.h>
+ #include <linux/err.h>
+ #include <linux/errno.h>
+@@ -338,7 +339,26 @@ out:
  }
  
  /**
-- * batadv_tt_local_valid - verify that given tt entry is a valid one
-+ * batadv_tt_local_valid() - verify local tt entry and get flags
-  * @entry_ptr: to be checked local tt entry
-  * @data_ptr: not used but definition required to satisfy the callback prototype
-+ * @flags: a pointer to store TT flags for this client to
-+ *
-+ * Checks the validity of the given local TT entry. If it is, then the provided
-+ * flags pointer is updated.
-  *
-  * Return: true if the entry is a valid, false otherwise.
-  */
--static bool batadv_tt_local_valid(const void *entry_ptr, const void *data_ptr)
-+static bool batadv_tt_local_valid(const void *entry_ptr,
-+				  const void *data_ptr,
-+				  u8 *flags)
- {
- 	const struct batadv_tt_common_entry *tt_common_entry = entry_ptr;
- 
- 	if (tt_common_entry->flags & BATADV_TT_CLIENT_NEW)
- 		return false;
-+
-+	if (flags)
-+		*flags = tt_common_entry->flags;
-+
- 	return true;
- }
- 
-+/**
-+ * batadv_tt_global_valid() - verify global tt entry and get flags
-+ * @entry_ptr: to be checked global tt entry
-+ * @data_ptr: an orig_node object (may be NULL)
-+ * @flags: a pointer to store TT flags for this client to
-+ *
-+ * Checks the validity of the given global TT entry. If it is, then the provided
-+ * flags pointer is updated either with the common (summed) TT flags if data_ptr
-+ * is NULL or the specific, per originator TT flags otherwise.
-+ *
-+ * Return: true if the entry is a valid, false otherwise.
+- * batadv_debugfs_del_hardif - delete the base directory for a hard interface
++ * batadv_debugfs_rename_hardif() - Fix debugfs path for renamed hardif
++ * @hard_iface: hard interface which was renamed
 + */
- static bool batadv_tt_global_valid(const void *entry_ptr,
--				   const void *data_ptr)
-+				   const void *data_ptr,
-+				   u8 *flags)
- {
- 	const struct batadv_tt_common_entry *tt_common_entry = entry_ptr;
- 	const struct batadv_tt_global_entry *tt_global_entry;
-@@ -2914,7 +2944,8 @@ static bool batadv_tt_global_valid(const
- 				       struct batadv_tt_global_entry,
- 				       common);
- 
--	return batadv_tt_global_entry_has_orig(tt_global_entry, orig_node);
-+	return batadv_tt_global_entry_has_orig(tt_global_entry, orig_node,
-+					       flags);
- }
- 
- /**
-@@ -2924,25 +2955,34 @@ static bool batadv_tt_global_valid(const
-  * @hash: hash table containing the tt entries
-  * @tt_len: expected tvlv tt data buffer length in number of bytes
-  * @tvlv_buff: pointer to the buffer to fill with the TT data
-- * @valid_cb: function to filter tt change entries
-+ * @valid_cb: function to filter tt change entries and to return TT flags
-  * @cb_data: data passed to the filter function as argument
-+ *
-+ * Fills the tvlv buff with the tt entries from the specified hash. If valid_cb
-+ * is not provided then this becomes a no-op.
-  */
- static void batadv_tt_tvlv_generate(struct batadv_priv *bat_priv,
- 				    struct batadv_hashtable *hash,
- 				    void *tvlv_buff, u16 tt_len,
- 				    bool (*valid_cb)(const void *,
--						     const void *),
-+						     const void *,
-+						     u8 *flags),
- 				    void *cb_data)
- {
- 	struct batadv_tt_common_entry *tt_common_entry;
- 	struct batadv_tvlv_tt_change *tt_change;
- 	struct hlist_head *head;
- 	u16 tt_tot, tt_num_entries = 0;
-+	u8 flags;
-+	bool ret;
- 	u32 i;
- 
- 	tt_tot = batadv_tt_entries(tt_len);
- 	tt_change = (struct batadv_tvlv_tt_change *)tvlv_buff;
- 
-+	if (!valid_cb)
++void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface)
++{
++	const char *name = hard_iface->net_dev->name;
++	struct dentry *dir;
++	struct dentry *d;
++
++	dir = hard_iface->debug_dir;
++	if (!dir)
 +		return;
 +
- 	rcu_read_lock();
- 	for (i = 0; i < hash->size; i++) {
- 		head = &hash->table[i];
-@@ -2952,11 +2992,12 @@ static void batadv_tt_tvlv_generate(stru
- 			if (tt_tot == tt_num_entries)
- 				break;
++	d = debugfs_rename(dir->d_parent, dir, dir->d_parent, name);
++	if (!d)
++		pr_err("Can't rename debugfs dir to %s\n", name);
++}
++
++/**
++ * batadv_debugfs_del_hardif() - delete the base directory for a hard interface
+  *  in debugfs.
+  * @hard_iface: hard interface which is deleted.
+  */
+--- a/net/batman-adv/debugfs.h
++++ b/net/batman-adv/debugfs.h
+@@ -31,6 +31,7 @@ void batadv_debugfs_destroy(void);
+ int batadv_debugfs_add_meshif(struct net_device *dev);
+ void batadv_debugfs_del_meshif(struct net_device *dev);
+ int batadv_debugfs_add_hardif(struct batadv_hard_iface *hard_iface);
++void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface);
+ void batadv_debugfs_del_hardif(struct batadv_hard_iface *hard_iface);
  
--			if ((valid_cb) && (!valid_cb(tt_common_entry, cb_data)))
-+			ret = valid_cb(tt_common_entry, cb_data, &flags);
-+			if (!ret)
- 				continue;
+ #else
+@@ -59,6 +60,11 @@ int batadv_debugfs_add_hardif(struct bat
+ }
  
- 			ether_addr_copy(tt_change->addr, tt_common_entry->addr);
--			tt_change->flags = tt_common_entry->flags;
-+			tt_change->flags = flags;
- 			tt_change->vid = htons(tt_common_entry->vid);
- 			memset(tt_change->reserved, 0,
- 			       sizeof(tt_change->reserved));
+ static inline
++void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface)
++{
++}
++
++static inline
+ void batadv_debugfs_del_hardif(struct batadv_hard_iface *hard_iface)
+ {
+ }
+--- a/net/batman-adv/hard-interface.c
++++ b/net/batman-adv/hard-interface.c
+@@ -1017,6 +1017,9 @@ static int batadv_hard_if_event(struct n
+ 		if (batadv_is_wifi_hardif(hard_iface))
+ 			hard_iface->num_bcasts = BATADV_NUM_BCASTS_WIRELESS;
+ 		break;
++	case NETDEV_CHANGENAME:
++		batadv_debugfs_rename_hardif(hard_iface);
++		break;
+ 	default:
+ 		break;
+ 	}
 
 
