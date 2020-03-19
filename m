@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AC9C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED89FC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA952098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC67F21775
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623834;
-	bh=dhGUR4xatn233XksUDPF0ILpwQzNjiz/U8o9OsPwpEc=;
+	s=default; t=1584623836;
+	bh=MNISfiGq26FrWPxt9X9i15XovzbjQzDF8bZvT5s9xpc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=clT6ZfLu0wzf+vT5PvgGkLaIbyMYHJDMXDnGr71rO/RpyC1NX/jXe1nrlRKNfkzg/
-	 QqS6UvBMlF/STtdvGmwwst/fahxLhnuORm35DECr12RYx4BWfjHwavy1juKQZQgSmT
-	 wAEdvtqMhtBqv93DvJleWJb3aQP7aU4H44lex5R4=
+	b=gwYWyjp3k7pCiTE8+x3dW6vUl/lYoCC90P5H2MRMg64YJIQKXHv+rcgT9LVAAA/sn
+	 hPUJAriyKEphMPQVXraUZ702MObsS1SL1pbAftlKS5s2Kk2W1haCbXEgv2/EpFRpDL
+	 SeezUzEIn/3XAviYuxtd6s2KA1aMchJuJnMSXd2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgCSNRM (ORCPT
+        id S1729617AbgCSNRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:17:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38174 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:17:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729607AbgCSNRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:17:10 -0400
+        id S1729355AbgCSNRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:17:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B7CE2098B;
-        Thu, 19 Mar 2020 13:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBAE421775;
+        Thu, 19 Mar 2020 13:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623829;
-        bh=dhGUR4xatn233XksUDPF0ILpwQzNjiz/U8o9OsPwpEc=;
+        s=default; t=1584623832;
+        bh=MNISfiGq26FrWPxt9X9i15XovzbjQzDF8bZvT5s9xpc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D/NVDLQVbR/3A4qHZKVwp26VYGtXUrk/BcL1WMoDv4UpBQKRqIo9BpAIBlUpCF5gL
-         uPtjEhU1oZB5OF09yb9S8bMa/P4hJamXwdpcYAzpJj3wTxIwttzwGIH7x7IRxCNmbL
-         lOdUKpleXi4Sg/IoTTZ6Pq9zct3I53TGCBdfhaOc=
+        b=fi0sfW2g1BdTl+i+wgvSXJntoB5ieRbfoagrptiSvt+Q/G4L4+c/RfFz1m5f6AYdh
+         UkaML+xsLqM/EcU4+roh2hJpMWNAAClh0pHcWAWHSwii1DNgL4tkBiMaQwa20f3lRG
+         yEYEG2i1phISIunz3R9yH7Ln/FUtJ5P1CLaJeYO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladis Dronov <vdronov@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.14 66/99] efi: Add a sanity check to efivar_store_raw()
-Date:   Thu, 19 Mar 2020 14:03:44 +0100
-Message-Id: <20200319124001.396792169@linuxfoundation.org>
+        Sven Eckelmann <sven.eckelmann@openmesh.com>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.14 67/99] batman-adv: Avoid spurious warnings from bat_v neigh_cmp implementation
+Date:   Thu, 19 Mar 2020 14:03:45 +0100
+Message-Id: <20200319124001.631716954@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -60,37 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+From: Sven Eckelmann <sven.eckelmann@openmesh.com>
 
-commit d6c066fda90d578aacdf19771a027ed484a79825 upstream.
+commit 6a4bc44b012cbc29c9d824be2c7ab9eac8ee6b6f upstream.
 
-Add a sanity check to efivar_store_raw() the same way
-efivar_{attr,size,data}_read() and efivar_show_raw() have it.
+The neighbor compare API implementation for B.A.T.M.A.N. V checks whether
+the neigh_ifinfo for this neighbor on a specific interface exists. A
+warning is printed when it isn't found.
 
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200305084041.24053-3-vdronov@redhat.com
-Link: https://lore.kernel.org/r/20200308080859.21568-25-ardb@kernel.org
+But it is not called inside a lock which would prevent that this
+information is lost right before batadv_neigh_ifinfo_get. It must therefore
+be expected that batadv_v_neigh_(cmp|is_sob) might not be able to get the
+requested neigh_ifinfo.
+
+A WARN_ON for such a situation seems not to be appropriate because this
+will only flood the kernel logs. The warnings must therefore be removed.
+
+Signed-off-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
 ---
- drivers/firmware/efi/efivars.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/batman-adv/bat_v.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -272,6 +272,9 @@ efivar_store_raw(struct efivar_entry *en
- 	u8 *data;
- 	int err;
+--- a/net/batman-adv/bat_v.c
++++ b/net/batman-adv/bat_v.c
+@@ -19,7 +19,6 @@
+ #include "main.h"
  
-+	if (!entry || !buf)
-+		return -EINVAL;
-+
- 	if (is_compat()) {
- 		struct compat_efi_variable *compat;
+ #include <linux/atomic.h>
+-#include <linux/bug.h>
+ #include <linux/cache.h>
+ #include <linux/errno.h>
+ #include <linux/if_ether.h>
+@@ -623,11 +622,11 @@ static int batadv_v_neigh_cmp(struct bat
+ 	int ret = 0;
  
+ 	ifinfo1 = batadv_neigh_ifinfo_get(neigh1, if_outgoing1);
+-	if (WARN_ON(!ifinfo1))
++	if (!ifinfo1)
+ 		goto err_ifinfo1;
+ 
+ 	ifinfo2 = batadv_neigh_ifinfo_get(neigh2, if_outgoing2);
+-	if (WARN_ON(!ifinfo2))
++	if (!ifinfo2)
+ 		goto err_ifinfo2;
+ 
+ 	ret = ifinfo1->bat_v.throughput - ifinfo2->bat_v.throughput;
+@@ -649,11 +648,11 @@ static bool batadv_v_neigh_is_sob(struct
+ 	bool ret = false;
+ 
+ 	ifinfo1 = batadv_neigh_ifinfo_get(neigh1, if_outgoing1);
+-	if (WARN_ON(!ifinfo1))
++	if (!ifinfo1)
+ 		goto err_ifinfo1;
+ 
+ 	ifinfo2 = batadv_neigh_ifinfo_get(neigh2, if_outgoing2);
+-	if (WARN_ON(!ifinfo2))
++	if (!ifinfo2)
+ 		goto err_ifinfo2;
+ 
+ 	threshold = ifinfo1->bat_v.throughput / 4;
 
 
