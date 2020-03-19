@@ -2,106 +2,99 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C64CC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D36EC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED402137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B912137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:07:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F8StPHa0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FUIQinlx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbgCSOHJ (ORCPT
+        id S1727407AbgCSOH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:07:09 -0400
-Received: from mail-qt1-f181.google.com ([209.85.160.181]:44884 "EHLO
-        mail-qt1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgCSOHI (ORCPT
+        Thu, 19 Mar 2020 10:07:56 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38310 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbgCSOHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:07:08 -0400
-Received: by mail-qt1-f181.google.com with SMTP id y24so1820795qtv.11;
-        Thu, 19 Mar 2020 07:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sdeaYYBfZlT1xYUHd26MRFrRt9KEfvL1onkmyw+4xTc=;
-        b=F8StPHa0DXeINnvt7XXdUu3vfuzCHzw/q5QED5DuC9GVL5vIlTxZ057HvcIUL8kNml
-         o0XMPt8jbJsqXrM+pkMyGW1u0tZc93RHWJsvrqTRVDVAOO41lZtB15fKcnoM/KJpiu2S
-         tW2L9KFnrkXudCOufZkuILtXiXQAuair3f79sRtx8+NuGkUR3UiB4RJDNA/DxCmCLia2
-         q8017nnf0jS9maOGl076hvZtjj71otVPArUQdK9VA8ef+BqqjE69BaeAie63aA7h+jUC
-         tOw19i4PNtB0ommhNCuG4FbeWo2KRb1R7qSK7WwTKnsqFfu6BDePmnSfroicp5RUs/td
-         /iuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sdeaYYBfZlT1xYUHd26MRFrRt9KEfvL1onkmyw+4xTc=;
-        b=ZrhKjwJuOoIYGfe/t7lAUzsf/ZyrL9Ryp1zoTSHoaRp3HThXEhIhBlamaQNnHdfcQm
-         SLpIwyADnBC+dveHF5RZj63hb6hJH1Gi7ecVZZNHbHRk1j7fKHFEvwVyY3vpJIqyBjLR
-         xYSzZxI87WcjXY9EvCgTMgO0OPRIctAbqP53nEpWNZqoA2HycUH7V9lUIKamnpIVXlGA
-         E+nQ9UOypNnFngpGm015ckQK88bnR4QEtC79fTz2mIP68yY9ILt8SMgbsCspKWm/yPac
-         og+N2FdSLrLPgbby8iDRHDczwJgVmo4i0BadWyza3UVhQCzgihsWp5HxeO0SyDtLuPnl
-         +rOw==
-X-Gm-Message-State: ANhLgQ2Jsr7FJ/2+H2niySCClqelldFP95hNXiM7iw2kiGqsgLC0ILkc
-        vtst4+ZZF4Ee6dOqVzSenIM=
-X-Google-Smtp-Source: ADFU+vsEwBUBlanCAYLYUw6EvkJN/q4YXeJFafD7hFVQMtLb28DsXo/MtSiupJ5GtPo+HPCzJmSVUQ==
-X-Received: by 2002:ac8:12c8:: with SMTP id b8mr3005401qtj.60.1584626825978;
-        Thu, 19 Mar 2020 07:07:05 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id 128sm1574928qki.103.2020.03.19.07.07.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 07:07:05 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8D610404E4; Thu, 19 Mar 2020 11:07:02 -0300 (-03)
-Date:   Thu, 19 Mar 2020 11:07:02 -0300
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        disconnect3d <dominik.b.czarnota@gmail.com>,
-        Ian Rogers <irogers@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Message-ID: <20200319140702.GA14841@kernel.org>
-References: <20200317213259.15494-1-acme@kernel.org>
- <20200319140338.GB52834@gmail.com>
+        Thu, 19 Mar 2020 10:07:55 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JE77L3048046;
+        Thu, 19 Mar 2020 09:07:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584626827;
+        bh=F8cnBozYX8/iF9YH+60dq/RPVSZvGKSsyeEtA3GUHiY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=FUIQinlxjeigNZMn1OTmCITKd7pTLCtLHdjpqObiI5xXQgpEQT2Wo5ZRTHr02bDpR
+         m00TJZbPf6va34eqFVVpqQaBkhh0SQar92NarCwP468LvJ4ZCqMdYD3BJwrdwd2xU5
+         edsOfZgPicfvccrirHYADFMd+WtyTTISsX6abwRc=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JE77UJ026756;
+        Thu, 19 Mar 2020 09:07:07 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Mar 2020 09:07:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Mar 2020 09:07:07 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JE76v3049010;
+        Thu, 19 Mar 2020 09:07:06 -0500
+Subject: Re: [PATCH] ASoC: tas2562: Fixed incorrect amp_level setting.
+To:     Jonghwan Choi <charlie.jh@kakaocorp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+References: <20200319140043.GA6688@jhbirdchoi-MS-7B79>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <0b4a59c9-6af7-a34f-fb08-f5200fbe5926@ti.com>
+Date:   Thu, 19 Mar 2020 09:01:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319140338.GB52834@gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200319140043.GA6688@jhbirdchoi-MS-7B79>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 19, 2020 at 03:03:38PM +0100, Ingo Molnar escreveu:
-> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >  32 files changed, 1340 insertions(+), 1123 deletions(-)
-> >  create mode 100644 tools/perf/Documentation/perf-intel-pt.txt
- 
-> Pulled this and the previous perf/core pull request into tip:perf/core, thanks Arnaldo!
- 
-> (You might want to double check my conflict resolution with perf/urgent, 
-> to tools/perf/util/map.c.)
+Jonghwan
 
-I'll check, thanks for pulling the outstanding pull reqs!
+On 3/19/20 9:00 AM, Jonghwan Choi wrote:
+> According to the tas2562 datasheet,the bits[5:1] represents the amp_level value.
+> So to set the amp_level value correctly,the shift value should be set to 1.
+>
+> Signed-off-by: Jonghwan Choi <charlie.jh@kakaocorp.com>
+> ---
+>   sound/soc/codecs/tas2562.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
+> index be52886a5edb..fb2233ca9103 100644
+> --- a/sound/soc/codecs/tas2562.c
+> +++ b/sound/soc/codecs/tas2562.c
+> @@ -409,7 +409,7 @@ static const struct snd_kcontrol_new vsense_switch =
+>   			1, 1);
+>   
+>   static const struct snd_kcontrol_new tas2562_snd_controls[] = {
+> -	SOC_SINGLE_TLV("Amp Gain Volume", TAS2562_PB_CFG1, 0, 0x1c, 0,
+> +	SOC_SINGLE_TLV("Amp Gain Volume", TAS2562_PB_CFG1, 1, 0x1c, 0,
+>   		       tas2562_dac_tlv),
+>   };
+>   
 
-- Arnaldo
+
+Acked-by: Dan Murphy <dmurphy@ti.com>
+
