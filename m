@@ -2,112 +2,131 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2348FC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EE0C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB92B20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:36:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EMduB5pR"
+	by mail.kernel.org (Postfix) with ESMTP id A62FF20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbgCSSg0 (ORCPT
+        id S1727459AbgCSSg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:36:26 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:46509 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSSg0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:36:26 -0400
-Received: by mail-qt1-f194.google.com with SMTP id t13so2712245qtn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 11:36:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KNebSnBdrZ/6z/FStqy7M9Zyh+LbdANWWGx5FjzQeMY=;
-        b=EMduB5pR07+Ca/I8dIlgrqu86DsieUYz8q81Jx/Glsqn35g1stMn+NaUOkH5/DrQsh
-         Q+Ihnd8KmM4/1Q6JR2ZM3lpS68B1M+yo+GiJ8mbzKqbSBzCjIDjZ+U1BFXpZUb3ZvE/n
-         nkJQq9SR+8N/iDvZlCrn67yLzntV3tA7floas8ki7s3ivTS/fjgQXBNCVJo13PpsENZk
-         XPSkxicss5faQW0FKHCquAc8IGNy6F57KNEaKW2AgTKzYZkQ4S2XEg8yYDvGYjRRPiSc
-         XiJT0aCyI/6HNlmErTTOfcdxY+/jilbMk5eDXRHA2ZshRj0ZjmhrAZ60MN3V4zKpCsLH
-         gikg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KNebSnBdrZ/6z/FStqy7M9Zyh+LbdANWWGx5FjzQeMY=;
-        b=jANjwY8kK+IdbELNLEn28siDrnPwKKQ9hkNH2P7LEGbBWClc/rPw5XcTvOUriyCUih
-         BDlqzMVp3OcP7Ycl5G9e3fQDGwPwaKQXqbowUapPHRAJ3/48jqFAdwQVYzi1k4PM36nT
-         TSLZSA6gfzcnE/Yyvnet9aP4WXhOgR79EYkKED06df+Mt3g0nImSOSorRfrEw7M8tIr9
-         LNVE5Oug9wusWhlv7oSj0ksSgXZYQHEnQG+j0zfXsQw2KgNSEuu1Bkph7JSvRtElYDYM
-         GdBVonZkgXm8GXQGaoZv8Il+zSbCd8SiiTN4zlYIYO3Wrv1A9QgieFDMSq9M0WUjB1Qr
-         rejQ==
-X-Gm-Message-State: ANhLgQ3cheCRqFa+EtLJD3n17SAJW6kEwXlr8LK3P9ICmW4wJtfGJjuj
-        ZxD8t7yY8yfgWSuyDRZUOLU=
-X-Google-Smtp-Source: ADFU+vsiivgYrHXYoDPQr91JLkSKO7wJqI7DGeOf0RHnQvx4YfeqWIaYO2RF7kxB+WaE8415qcOphg==
-X-Received: by 2002:ac8:8b9:: with SMTP id v54mr4341613qth.229.1584642985439;
-        Thu, 19 Mar 2020 11:36:25 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id e2sm2074630qkb.112.2020.03.19.11.36.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 11:36:24 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B23FB404E4; Thu, 19 Mar 2020 15:36:22 -0300 (-03)
-Date:   Thu, 19 Mar 2020 15:36:22 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     John Garry <john.garry@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        will@kernel.org, ak@linux.intel.com, linuxarm@huawei.com,
-        linux-kernel@vger.kernel.org, james.clark@arm.com,
-        qiangqing.zhang@nxp.com
-Subject: Re: [PATCH v2 7/7] perf test: Test pmu-events aliases
-Message-ID: <20200319183622.GD14841@kernel.org>
-References: <1584442939-8911-1-git-send-email-john.garry@huawei.com>
- <1584442939-8911-8-git-send-email-john.garry@huawei.com>
- <20200317162043.GC759708@krava>
- <01dd565b-931c-e853-a721-aa995f87469c@huawei.com>
- <20200317170730.GF759708@krava>
+        Thu, 19 Mar 2020 14:36:29 -0400
+Received: from albireo.enyo.de ([37.24.231.21]:52338 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgCSSg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:36:28 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jF01j-0001Sy-Qw; Thu, 19 Mar 2020 18:36:19 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1jF00G-0006ml-Aj; Thu, 19 Mar 2020 19:34:48 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>
+Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C startup and thread creation (v15)
+References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com>
+        <20200319144110.3733-5-mathieu.desnoyers@efficios.com>
+        <874kukpf9f.fsf@mid.deneb.enyo.de>
+        <2147217200.3240.1584633395285.JavaMail.zimbra@efficios.com>
+        <87r1xo5o2s.fsf@mid.deneb.enyo.de>
+        <1302331358.3965.1584641354569.JavaMail.zimbra@efficios.com>
+        <87sgi4gqhf.fsf@mid.deneb.enyo.de>
+        <1103782439.4046.1584642531222.JavaMail.zimbra@efficios.com>
+Date:   Thu, 19 Mar 2020 19:34:48 +0100
+In-Reply-To: <1103782439.4046.1584642531222.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Thu, 19 Mar 2020 14:28:51 -0400
+        (EDT)")
+Message-ID: <87k13ggpmf.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317170730.GF759708@krava>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Mar 17, 2020 at 06:07:30PM +0100, Jiri Olsa escreveu:
-> On Tue, Mar 17, 2020 at 04:41:04PM +0000, John Garry wrote:
-> > On 17/03/2020 16:20, Jiri Olsa wrote:
-> > > On Tue, Mar 17, 2020 at 07:02:19PM +0800, John Garry wrote:
-> > > > @@ -36,6 +51,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
-> > > >   			.desc = "Number of segment register loads",
-> > > >   			.topic = "other",
-> > > >   		},
-> > > > +		.alias_str = "umask=0x80,(null)=0x30d40,event=0x6",
+* Mathieu Desnoyers:
 
-> > > ah so we are using other pmus because of the format definitions
+> ----- On Mar 19, 2020, at 2:16 PM, Florian Weimer fw@deneb.enyo.de wrote:
+>
+>> * Mathieu Desnoyers:
+>> 
+>>>> You also need to add an assert that the compiler supports
+>>>> __attribute__ ((aligned)) because ignoring it produces an
+>>>> ABI-incompatible header.
+>>>
+>>> Are you aware of some helper macro I should use to do this, or
+>>> is it done elsewhere in glibc ?
+>> 
+>> I don't think we have any such GCC-only types yet.  max_align_t is
+>> provided by GCC itself.
+>
+> I was thinking of adding the following to
+>
+> sysdeps/unix/sysv/linux/rseq-internal.h: rseq_register_current_thread()
+>
+> +  /* Ensure the compiler supports __attribute__ ((aligned)).  */
+> +  _Static_assert (__alignof__ (struct rseq_cs) >= 4 * sizeof(uint64_t),
+> +                 "alignment");
+> +  _Static_assert (__alignof__ (struct rseq) >= 4 * sizeof(uint64_t),
+> +                 "alignment");
+> +
 
-> > > why is there the '(null)' in there?
+Something like it would have to go into the *public* header.
 
-> > Well this is just coming from the generated alias string in the pmu code,
-> > and it does not seem to be handling "period" argument properly. It needs to
-> > be checked.
- 
-> nice, it found first issue already ;-)
+Inside glibc, you can assume __attribute__ support.
 
-Applied the series to perf/core, good job! What about the fix for the
-above (null) problem?
+>>>> The struct rseq/struct rseq_cs definitions
+>>>> are broken, they should not try to change the alignment.
+>>>
+>>> AFAIU, this means we should ideally not have used __attribute__((aligned))
+>>> in the uapi headers in the first place. Why is it broken ?
+>> 
+>> Compilers which are not sufficiently GCC-compatible define
+>> __attribute__(X) as the empty expansion, so you silently get a
+>> different ABI.
+>
+> It is worth noting that rseq.h is not the only Linux uapi header
+> which uses __attribute__ ((aligned)), so this ABI problem exists today
+> anyway for those compilers.
 
-Cheers,
+Yuck.  Even with larger-than-16 alignment?
 
-- Arnaldo
+>> There is really no need to specify 32-byte alignment here.  Is not
+>> even the size of a standard cache line.  It can result in crashes if
+>> these structs are heap-allocated using malloc, when optimizing for
+>> AVX2.
+>
+> Why would it be valid to allocate those with malloc ? Isn't it the
+> purpose of posix_memalign() ?
+
+It would not be valid, but I don't think we have diagnostics for C
+like we have them for C++'s operator new.
+
+>>> However, now that it is in the wild, it's a bit late to change that.
+>> 
+>> I had forgotten about the alignment crashes.  I think we should
+>> seriously consider changing the types. 8-(
+>
+> I don't think this is an option at this stage given that it is part
+> of the Linux kernel UAPI. I am not convinced that it is valid at all
+> to allocate struct rseq or struct rseq_cs with malloc(), because it
+> does not guarantee any alignment.
+
+The kernel ABI doesn't change.  The kernel cannot use the alignment
+information anyway.  Userspace struct layout may change in subtle
+ways, though.
