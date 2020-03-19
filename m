@@ -2,128 +2,123 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48968C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8051DC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2118920732
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539DA2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:07:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rGUmJAis"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WseahAeA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgCSGBP (ORCPT
+        id S1727023AbgCSGHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 02:01:15 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35211 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgCSGBP (ORCPT
+        Thu, 19 Mar 2020 02:07:47 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40199 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgCSGHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 02:01:15 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d8so1499147qka.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 23:01:14 -0700 (PDT)
+        Thu, 19 Mar 2020 02:07:47 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so594914plk.7;
+        Wed, 18 Mar 2020 23:07:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eCxSZQRC9mU6ikJj9Kf2AGR9r6dmYjhkzwdN+IOcnFY=;
-        b=rGUmJAisnmikEgH17MaYp7Q5qSWFp9gsorLUBBhdz/QhY/IyZ3zL8fE6Mrwb2HbrvK
-         b2WLU51qN7OZyVPpMx98aqTyOzmi5+5/fEkO36QEP1khJWiJAhYZngbkwKAMh9tSRKms
-         AfZHxiVWEFqXdu/xGS0W3vC9m1WxLUllS3YlAPNa5yCTp9t4+oMxsTOj+av5155+MtEk
-         55YCA+xkjdZ3BvFqXglkGOfY5h/J6rUPiowWAIBqRWGibuZiVLGV0h8Mjt/ERIxiLCMl
-         U86heWXmXtTxu3AoXF+pTaz/sW9hgRYWM1L3VahOpBmIMF5PZ5Oi2PHJ+PKBMYE94U0Q
-         SJQg==
+        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
+         :user-agent;
+        bh=+2KAuRbCHFjdVsAIugVgzHXogj+I1RX4aDDbYGi4B8g=;
+        b=WseahAeA87QIienqpmBo30l6efUR+0R6dpvRzdrVSewkXLfooA25wLzMsilWQcETjm
+         6PLQro56I34pZJlxK/RMf7i9TJD8ylVOXqA/SvMWR4Inwv5V55FlLH+SiuZ2B8bE58p7
+         OXloOqQxBKWH3y4UqU4QHkql88qSfk4XUVPX+wfygLKZobpLvHg+Fmw6sGwuPr1q0xhL
+         CmkGWork/JR9usXA3MfAOk1T0nMDCoiHBqJUhQrBvd0vID0Xie2cfOJc5OnK3dlmHc7T
+         /zCBjNMqwFiZCLP/JO3XAzkTPBtWdg8uV1SH+e7MiC6vEoC+YpLAh3h21qgxHxdJYhk9
+         mp+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eCxSZQRC9mU6ikJj9Kf2AGR9r6dmYjhkzwdN+IOcnFY=;
-        b=gtLvt48EkINNJuzNQB205QLKlXLwxWWnvrWt1D55Y897ELrtV755xhWclrYdn3I0uK
-         qg6/wf92xE7uHO1Lzalug/tlfS0YOknnAQIJ5/9lxARzs5cZ/V1E/5K95ruiFBHV2/YN
-         MPzD1fMlRMO8OsVkNhsYyXMj1ja2onwaO/z97RasaZtv+LNl37rZJqmjL2eCJLaMhsOs
-         MWwaVNQMiEDqk2SL7QYZgCWADjMKawcLWMUtS+z3BQI+4QNJ2yrTq4MfAgcPI/JG6i/P
-         LiNkt5/JQlQvaa/pwRRfNOZ1PZUK3X3uRP2VQVP7NLZqBw7+ywNAtgqdSd7bZ3pV9AoB
-         Y19w==
-X-Gm-Message-State: ANhLgQ2NZoXXpL2cfHoSwYXaZO5+ui6LWAnZuqTQT0hodPE1SF/Dbv45
-        EgW+pLEqlk9kFYu6NZ6H09rqiJmOzIGe+zYjdGM=
-X-Google-Smtp-Source: ADFU+vtlCKIt8CYc1mLZdtKBx+I3STE84KKoWJY9XTbvMMi5W52y+DXmlXlks513cy5hVUjF9+9MDEeuW3cYcb8lHzk=
-X-Received: by 2002:a37:b4c1:: with SMTP id d184mr1490325qkf.452.1584597674075;
- Wed, 18 Mar 2020 23:01:14 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
+         :content-disposition:user-agent;
+        bh=+2KAuRbCHFjdVsAIugVgzHXogj+I1RX4aDDbYGi4B8g=;
+        b=SdPMRUWiTnECbZqJHttt0DR8jY4lEAjP8gZb2ukPKRKL1IRm8gGSB72kz35v7Sp5bA
+         Vs3RwSrLAd/6O3h6cz9dVMHMELb2VBIAQDMqe4fsB2YIw9jRtVz6zUff1nogMCd2kYON
+         sY1TxZHio7oKgT4QZbBUSOlCEWhNNWgVXyAdFplYr4y8ptIFkA9UNGNRHFbE0NPirji3
+         dyUY+vjhgA9usaff6jWw+ZnsWewwLaA7ZsGkryIzuoNZC+xkXC1qhU/scBIMM0mQb9L8
+         1MAITCI6B8W6rrk6eW4DOi040FTbEFXLFJ9D6lIzDrPls248RLuoYy6nd6q67xdzu1N7
+         jc7Q==
+X-Gm-Message-State: ANhLgQ3osSgvLY+WRqkXVK9kPHAYGVytlEkIGvSwB7fofM4QosXh4/yC
+        I2GM9vcGp6c2nbT/n0xPpS7bSLWt5SU=
+X-Google-Smtp-Source: ADFU+vtWp7i934vx1L84aHVsVMikSBxRJwdHutRfb316sKwixUiTwRNWBCSHz5z+LnPi2TgldTynHg==
+X-Received: by 2002:a17:90a:2601:: with SMTP id l1mr2169816pje.74.1584598064293;
+        Wed, 18 Mar 2020 23:07:44 -0700 (PDT)
+Received: from SARKAR ([43.224.157.34])
+        by smtp.gmail.com with ESMTPSA id r186sm936300pfc.181.2020.03.18.23.07.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 23:07:43 -0700 (PDT)
+Message-ID: <5e730c2f.1c69fb81.9eda3.5c70@mx.google.com>
+X-Google-Original-Message-ID: <20200319060739.GA22714@rohitsarkar5398@gmail.com>
+Date:   Thu, 19 Mar 2020 11:37:39 +0530
+From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
+To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: imu: inv_mpu6050: add debugfs register r/w interface
 MIME-Version: 1.0
-References: <1584423717-3440-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1584423717-3440-5-git-send-email-iamjoonsoo.kim@lge.com> <20200318183318.GD154135@cmpxchg.org>
-In-Reply-To: <20200318183318.GD154135@cmpxchg.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Thu, 19 Mar 2020 15:01:03 +0900
-Message-ID: <CAAmzW4M2wqA4kJ7rzR7GsoS72krQRZx5i53jZh2uGikmVWLntQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/9] mm/swapcache: support to handle the value in swapcache
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 3=EC=9B=94 19=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 3:33, J=
-ohannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Tue, Mar 17, 2020 at 02:41:52PM +0900, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > Swapcache doesn't handle the value since there is no case using the val=
-ue.
-> > In the following patch, workingset detection for anonymous page will be
-> > implemented and it stores the value into the swapcache. So, we need to
-> > handle it and this patch implement handling.
->
-> "value" is too generic, it's not quite clear what this refers to
-> here. "Exceptional entries" or "shadow entries" would be better.
+The iio debugfs interface provides direct access to read and write device
+registers if debugfs is enabled.
 
-Okay. Will change it.
+Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
+---
+ drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-> > @@ -155,24 +163,33 @@ int add_to_swap_cache(struct page *page, swp_entr=
-y_t entry, gfp_t gfp)
-> >   * This must be called only on pages that have
-> >   * been verified to be in the swap cache.
-> >   */
-> > -void __delete_from_swap_cache(struct page *page, swp_entry_t entry)
-> > +void __delete_from_swap_cache(struct page *page,
-> > +                     swp_entry_t entry, void *shadow)
-> >  {
-> >       struct address_space *address_space =3D swap_address_space(entry)=
-;
-> >       int i, nr =3D hpage_nr_pages(page);
-> >       pgoff_t idx =3D swp_offset(entry);
-> >       XA_STATE(xas, &address_space->i_pages, idx);
-> >
-> > +     /* Do not apply workingset detection for the hugh page */
-> > +     if (nr > 1)
-> > +             shadow =3D NULL;
->
-> Hm, why is that? Should that be an XXX/TODO item? The comment should
-> explain the reason, not necessarily what the code is doing.
+diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+index 7cb9ff3d3e94..3f40db8ea9e2 100644
+--- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
++++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+@@ -1248,12 +1248,26 @@ static const struct attribute_group inv_attribute_group = {
+ 	.attrs = inv_attributes
+ };
+ 
++static int inv_mpu6050_reg_access(struct iio_dev *indio_dev,
++				  unsigned int reg,
++				  unsigned int writeval,
++				  unsigned int *readval)
++{
++	struct inv_mpu6050_state *st = iio_priv(indio_dev);
++
++	if (readval)
++		return regmap_read(st->map, reg, readval);
++	else
++		return regmap_write(st->map, reg, writeval);
++}
++
+ static const struct iio_info mpu_info = {
+ 	.read_raw = &inv_mpu6050_read_raw,
+ 	.write_raw = &inv_mpu6050_write_raw,
+ 	.write_raw_get_fmt = &inv_write_raw_get_fmt,
+ 	.attrs = &inv_attribute_group,
+ 	.validate_trigger = inv_mpu6050_validate_trigger,
++	.debugfs_reg_access = &inv_mpu6050_reg_access
+ };
+ 
+ /**
+-- 
+2.23.0.385.gbc12974a89
 
-It was my TODO. Now, I check the code and find that there is no blocker
-for the huge page support. So, I will remove this code and enable the
-workingset detection even for the huge page.
-
-> Also, s/hugh/huge/
-
-Okay.
-
-> The rest of the patch looks straight-forward to me.
-
-Thanks.
