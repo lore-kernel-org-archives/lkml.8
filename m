@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C41C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E1DC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA862206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A03C6206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624246;
-	bh=LijBeT8ghRz4OhfDqJrmVw3kAoNl4ItiK+qJNyWxjHs=;
+	s=default; t=1584624243;
+	bh=3af7f/CO/fTsD3hpWvzuPtjznu2o9Apvd9AMygwOY9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jabOY/NYE3miFLi8qEpqDUERbPugkixcrlzEOtgGJEcCL9hWScMnp2H4njLLNXmYZ
-	 pDn/dkYrIl7Ptu+99KNQGEMOs80Vxls52xawNSxeADXBdWsjEdLSc86pzj4WPReGEN
-	 tCn9UfpuaNCgmiRz9xIsbRo2MI7Jc2Hpk2TvNLCs=
+	b=CJJBZRb4WPXoZWu6M4L6CrwOQNM82bfO/+vKfCDMHeJRsR8r7sRvvFWbQEN/LdX5N
+	 N0uknbmHkmYVdERn9dvI6ZZVXNzX/33PzBGfzK+AR5ZEPHNxJN91YwpVUfmkCote9y
+	 tvb8xNHDol86nSivbRN8KiEVR+PhnftzvPRV6FRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbgCSNYF (ORCPT
+        id S1730412AbgCSNX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:24:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50390 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:23:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728033AbgCSNYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:24:02 -0400
+        id S1729985AbgCSNXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:23:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4447E208D6;
-        Thu, 19 Mar 2020 13:24:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7373B21655;
+        Thu, 19 Mar 2020 13:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624241;
-        bh=LijBeT8ghRz4OhfDqJrmVw3kAoNl4ItiK+qJNyWxjHs=;
+        s=default; t=1584624234;
+        bh=3af7f/CO/fTsD3hpWvzuPtjznu2o9Apvd9AMygwOY9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BaR8Fm2lBa6rZRRtP+XsY/pOY5MCuDtSTO5mvh5Dyz16uoEoIADAI52sgdAT/+pQT
-         jjyuAKXyZ1fikl/ssrFNHOhkr6SDIKL3Ew3f+AAyf0P+OXp19zlrZjTxw+z68RbgMw
-         oV+HAZ1zrCf8N7/6iUHEieQD3aXEzKJ9kvkvGIdk=
+        b=apoINyBWGgWm11YMgszUWRrIxGC8CrWYNKZL65AZMOf36rI9es1B5O9Fjkx4imALz
+         y+vZX4+XdXNYXPQGas9R756yYTGz9xSzBSGsd+kmsfHyk5+7PYCvaXnPC4Efaz+3kR
+         Iy3tx7LiaOY40j8qY8pBchYBesCB0sroK7TLMWOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 27/60] mac80211: rx: avoid RCU list traversal under mutex
-Date:   Thu, 19 Mar 2020 14:04:05 +0100
-Message-Id: <20200319123928.101586855@linuxfoundation.org>
+Subject: [PATCH 5.4 25/60] net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
+Date:   Thu, 19 Mar 2020 14:04:03 +0100
+Message-Id: <20200319123927.351958308@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -61,37 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-[ Upstream commit 253216ffb2a002a682c6f68bd3adff5b98b71de8 ]
+[ Upstream commit eae7172f8141eb98e64e6e81acc9e9d5b2add127 ]
 
-local->sta_mtx is held in __ieee80211_check_fast_rx_iface().
-No need to use list_for_each_entry_rcu() as it also requires
-a cond argument to avoid false lockdep warnings when not used in
-RCU read-side section (with CONFIG_PROVE_RCU_LIST).
-Therefore use list_for_each_entry();
+usbnet creates network interfaces with min_mtu = 0 and
+max_mtu = ETH_MAX_MTU.
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Link: https://lore.kernel.org/r/20200223143302.15390-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+These values are not modified by qmi_wwan when the network interface
+is created initially, allowing, for example, to set mtu greater than 1500.
+
+When a raw_ip switch is done (raw_ip set to 'Y', then set to 'N') the mtu
+values for the network interface are set through ether_setup, with
+min_mtu = ETH_MIN_MTU and max_mtu = ETH_DATA_LEN, not allowing anymore to
+set mtu greater than 1500 (error: mtu greater than device maximum).
+
+The patch restores the original min/max mtu values set by usbnet after a
+raw_ip switch.
+
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 0e05ff0376726..0ba98ad9bc854 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -4114,7 +4114,7 @@ void __ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
- 
- 	lockdep_assert_held(&local->sta_mtx);
- 
--	list_for_each_entry_rcu(sta, &local->sta_list, list) {
-+	list_for_each_entry(sta, &local->sta_list, list) {
- 		if (sdata != sta->sdata &&
- 		    (!sta->sdata->bss || sta->sdata->bss != sdata->bss))
- 			continue;
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 3b7a3b8a5e067..5754bb6ca0eec 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -337,6 +337,9 @@ static void qmi_wwan_netdev_setup(struct net_device *net)
+ 		netdev_dbg(net, "mode: raw IP\n");
+ 	} else if (!net->header_ops) { /* don't bother if already set */
+ 		ether_setup(net);
++		/* Restoring min/max mtu values set originally by usbnet */
++		net->min_mtu = 0;
++		net->max_mtu = ETH_MAX_MTU;
+ 		clear_bit(EVENT_NO_IP_ALIGN, &dev->flags);
+ 		netdev_dbg(net, "mode: Ethernet\n");
+ 	}
 -- 
 2.20.1
 
