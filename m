@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8104C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CDBC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71BD92080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A979F214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624303;
-	bh=tofIbnmadnKlW1E9aujzGi22xYXbLQFA4YGG/fxn2lA=;
+	s=default; t=1584624305;
+	bh=+ZWBgP1H1PJaYmkcqqo0h/4VC5fxqrnCIWwQ5MstPNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AVzG0Hegk5cNAtQnZQ0nOWaZafzdPMSlBuoClSWHvfLbu+V2+1mcVmQh9OH6bssjb
-	 wzF2RTMrn1s6EvU2xc/JVy3YgwrUXLzF0P915XgllMKOQg6ioqKKiPZ/GiIqymC5sy
-	 4gzcV3riJYBcGSQsMFDkJt5aXVFpNa5jGwRndUsE=
+	b=DJdWaV0XPvkJ4a0m6HrOW5PNcT0hKv7vhby4rSZtDVjAMIdT7cZ4il+rjT0hGMEb2
+	 FQnB59gOWPbfNEM+/u1AGz7C75xA7yJEgujYzy46ZY475QCo3FW8++lDpw2qaf1cA0
+	 gHuI/ihlW4Tnw+uyrIRIQRBFghGJY2Fn4Az9Fpj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730573AbgCSNZC (ORCPT
+        id S1730585AbgCSNZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52238 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730558AbgCSNY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:24:59 -0400
+        id S1730572AbgCSNZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 608432080C;
-        Thu, 19 Mar 2020 13:24:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72C262080C;
+        Thu, 19 Mar 2020 13:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624298;
-        bh=tofIbnmadnKlW1E9aujzGi22xYXbLQFA4YGG/fxn2lA=;
+        s=default; t=1584624301;
+        bh=+ZWBgP1H1PJaYmkcqqo0h/4VC5fxqrnCIWwQ5MstPNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uEvuGMvJP3Dbn1uWIEiVhQIolg5tJrrubmT7CfRsGuA3q/YLVQ4UMopG+jS5wNPrj
-         A6KlLnTOoCIJSJRIVNkQi3ydzJfq/eI3+XtO1SvbUyDNRS5yNFCls8NuT+Bkwry8ch
-         MZZZA3d9JsrRrjg9/oE3StOEHnP+onmjZltR0hs8=
+        b=VjL0HK8WSQxIJSuGunH9wxmcwAX/V+C07rSnXjyWrBFrGADJ7AfNmBjPAr463hQ+y
+         ws2mefF/5lEK/nx1TO8aD2vzbkXiNh8M2RZNyjALoB9ctPzm10JaJ+e87l1bdySpKl
+         1tPxa5ZY20qUwMTgMIcdbBswR+/ZdREqvjvOAgv8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 06/65] mmc: sdhci-omap: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
-Date:   Thu, 19 Mar 2020 14:03:48 +0100
-Message-Id: <20200319123928.305408568@linuxfoundation.org>
+Subject: [PATCH 5.5 07/65] mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for eMMC sleep command
+Date:   Thu, 19 Mar 2020 14:03:49 +0100
+Message-Id: <20200319123928.582537483@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -64,42 +63,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 055e04830d4544c57f2a5192a26c9e25915c29c0 ]
+[ Upstream commit 18d200460cd73636d4f20674085c39e32b4e0097 ]
 
-It has turned out that the sdhci-omap controller requires the R1B response,
-for commands that has this response associated with them. So, converting
-from an R1B to an R1 response for a CMD6 for example, leads to problems
-with the HW busy detection support.
+The busy timeout for the CMD5 to put the eMMC into sleep state, is specific
+to the card. Potentially the timeout may exceed the host->max_busy_timeout.
+If that becomes the case, mmc_sleep() converts from using an R1B response
+to an R1 response, as to prevent the host from doing HW busy detection.
 
-Fix this by informing the mmc core about the requirement, via setting the
-host cap, MMC_CAP_NEED_RSP_BUSY.
+However, it has turned out that some hosts requires an R1B response no
+matter what, so let's respect that via checking MMC_CAP_NEED_RSP_BUSY. Note
+that, if the R1B gets enforced, the host becomes fully responsible of
+managing the needed busy timeout, in one way or the other.
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Reported-by: Faiz Abbas <faiz_abbas@ti.com>
+Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Cc: <stable@vger.kernel.org>
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
-Tested-by: Faiz Abbas <faiz_abbas@ti.com>
+Link: https://lore.kernel.org/r/20200311092036.16084-1-ulf.hansson@linaro.org
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-omap.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mmc/core/mmc.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 083e7e053c954..d3135249b2e40 100644
---- a/drivers/mmc/host/sdhci-omap.c
-+++ b/drivers/mmc/host/sdhci-omap.c
-@@ -1134,6 +1134,9 @@ static int sdhci_omap_probe(struct platform_device *pdev)
- 	host->mmc_host_ops.execute_tuning = sdhci_omap_execute_tuning;
- 	host->mmc_host_ops.enable_sdio_irq = sdhci_omap_enable_sdio_irq;
- 
-+	/* R1B responses is required to properly manage HW busy detection. */
-+	mmc->caps |= MMC_CAP_NEED_RSP_BUSY;
-+
- 	ret = sdhci_setup_host(host);
- 	if (ret)
- 		goto err_put_sync;
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index f6912ded652dc..de14b5845f525 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -1910,9 +1910,12 @@ static int mmc_sleep(struct mmc_host *host)
+ 	 * If the max_busy_timeout of the host is specified, validate it against
+ 	 * the sleep cmd timeout. A failure means we need to prevent the host
+ 	 * from doing hw busy detection, which is done by converting to a R1
+-	 * response instead of a R1B.
++	 * response instead of a R1B. Note, some hosts requires R1B, which also
++	 * means they are on their own when it comes to deal with the busy
++	 * timeout.
+ 	 */
+-	if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout)) {
++	if (!(host->caps & MMC_CAP_NEED_RSP_BUSY) && host->max_busy_timeout &&
++	    (timeout_ms > host->max_busy_timeout)) {
+ 		cmd.flags = MMC_RSP_R1 | MMC_CMD_AC;
+ 	} else {
+ 		cmd.flags = MMC_RSP_R1B | MMC_CMD_AC;
 -- 
 2.20.1
 
