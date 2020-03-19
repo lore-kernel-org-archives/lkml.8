@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77353C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B2EC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5963E21473
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483B9215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgCSOE4 (ORCPT
+        id S1727790AbgCSOE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:04:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60728 "EHLO
+        Thu, 19 Mar 2020 10:04:59 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60733 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbgCSOEz (ORCPT
+        with ESMTP id S1727695AbgCSOE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:04:55 -0400
+        Thu, 19 Mar 2020 10:04:57 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEvmt-0001oU-TI; Thu, 19 Mar 2020 15:04:44 +0100
+        id 1jEvmu-0001oY-OL; Thu, 19 Mar 2020 15:04:44 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6481B1C22A1;
-        Thu, 19 Mar 2020 15:04:43 +0100 (CET)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 358171C22A1;
+        Thu, 19 Mar 2020 15:04:44 +0100 (CET)
 Date:   Thu, 19 Mar 2020 14:04:43 -0000
-From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Ian Rogers" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf probe: Do not depend on dwfl_module_addrsym()
-Cc:     Alexandre Ghiti <alex@ghiti.fr>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+Subject: [tip: perf/urgent] perf parse-events: Fix reading of invalid memory
+ in event parsing
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        clang-built-linux@googlegroups.com,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <158281812176.476.14164573830975116234.stgit@devnote2>
-References: <158281812176.476.14164573830975116234.stgit@devnote2>
+In-Reply-To: <20200307073121.203816-1-irogers@google.com>
+References: <20200307073121.203816-1-irogers@google.com>
 MIME-Version: 1.0
-Message-ID: <158462668303.28353.5082928065747740360.tip-bot2@tip-bot2>
+Message-ID: <158462668393.28353.16174426995039122842.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,66 +65,164 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     1efde2754275dbd9d11c6e0132a4f09facf297ab
-Gitweb:        https://git.kernel.org/tip/1efde2754275dbd9d11c6e0132a4f09facf297ab
-Author:        Masami Hiramatsu <mhiramat@kernel.org>
-AuthorDate:    Fri, 28 Feb 2020 00:42:01 +09:00
+Commit-ID:     05e54e2386733dfdb62b6784b3d6e1b0bd9bb559
+Gitweb:        https://git.kernel.org/tip/05e54e2386733dfdb62b6784b3d6e1b0bd9bb559
+Author:        Ian Rogers <irogers@google.com>
+AuthorDate:    Fri, 06 Mar 2020 23:31:21 -08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 09 Mar 2020 10:43:53 -03:00
+CommitterDate: Mon, 09 Mar 2020 10:29:45 -03:00
 
-perf probe: Do not depend on dwfl_module_addrsym()
+perf parse-events: Fix reading of invalid memory in event parsing
 
-Do not depend on dwfl_module_addrsym() because it can fail on user-space
-shared libraries.
+ADD_CONFIG_TERM accesses term->weak, however, in get_config_chgs this
+value is accessed outside of the list_for_each_entry and references
+invalid memory. Add an argument for ADD_CONFIG_TERM for weak and set it
+to false in the get_config_chgs case.
 
-Actually, same bug was fixed by commit 664fee3dc379 ("perf probe: Do not
-use dwfl_module_addrsym if dwarf_diename finds symbol name"), but commit
-07d369857808 ("perf probe: Fix wrong address verification) reverted to
-get actual symbol address from symtab.
+This bug was cause by clang's address sanitizer and libfuzzer. It can be
+reproduced with a command line of:
 
-This fixes it again by getting symbol address from DIE, and only if the
-DIE has only address range, it uses dwfl_module_addrsym().
+  perf stat -a -e i/bs,tsc,L2/o
 
-Fixes: 07d369857808 ("perf probe: Fix wrong address verification)
-Reported-by: Alexandre Ghiti <alex@ghiti.fr>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Alexandre Ghiti <alex@ghiti.fr>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Link: http://lore.kernel.org/lkml/158281812176.476.14164573830975116234.stgit@devnote2
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20200307073121.203816-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-finder.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ tools/perf/util/parse-events.c | 46 ++++++++++++++++-----------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 1c817ad..e4cff49 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -637,14 +637,19 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
- 		return -EINVAL;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index a149958..a7dc0b0 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1213,7 +1213,7 @@ static int config_attr(struct perf_event_attr *attr,
+ static int get_config_terms(struct list_head *head_config,
+ 			    struct list_head *head_terms __maybe_unused)
+ {
+-#define ADD_CONFIG_TERM(__type)					\
++#define ADD_CONFIG_TERM(__type, __weak)				\
+ 	struct perf_evsel_config_term *__t;			\
+ 								\
+ 	__t = zalloc(sizeof(*__t));				\
+@@ -1222,18 +1222,18 @@ static int get_config_terms(struct list_head *head_config,
+ 								\
+ 	INIT_LIST_HEAD(&__t->list);				\
+ 	__t->type       = PERF_EVSEL__CONFIG_TERM_ ## __type;	\
+-	__t->weak	= term->weak;				\
++	__t->weak	= __weak;				\
+ 	list_add_tail(&__t->list, head_terms)
+ 
+-#define ADD_CONFIG_TERM_VAL(__type, __name, __val)		\
++#define ADD_CONFIG_TERM_VAL(__type, __name, __val, __weak)	\
+ do {								\
+-	ADD_CONFIG_TERM(__type);				\
++	ADD_CONFIG_TERM(__type, __weak);			\
+ 	__t->val.__name = __val;				\
+ } while (0)
+ 
+-#define ADD_CONFIG_TERM_STR(__type, __val)			\
++#define ADD_CONFIG_TERM_STR(__type, __val, __weak)		\
+ do {								\
+-	ADD_CONFIG_TERM(__type);				\
++	ADD_CONFIG_TERM(__type, __weak);			\
+ 	__t->val.str = strdup(__val);				\
+ 	if (!__t->val.str) {					\
+ 		zfree(&__t);					\
+@@ -1247,62 +1247,62 @@ do {								\
+ 	list_for_each_entry(term, head_config, list) {
+ 		switch (term->type_term) {
+ 		case PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD:
+-			ADD_CONFIG_TERM_VAL(PERIOD, period, term->val.num);
++			ADD_CONFIG_TERM_VAL(PERIOD, period, term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_SAMPLE_FREQ:
+-			ADD_CONFIG_TERM_VAL(FREQ, freq, term->val.num);
++			ADD_CONFIG_TERM_VAL(FREQ, freq, term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_TIME:
+-			ADD_CONFIG_TERM_VAL(TIME, time, term->val.num);
++			ADD_CONFIG_TERM_VAL(TIME, time, term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_CALLGRAPH:
+-			ADD_CONFIG_TERM_STR(CALLGRAPH, term->val.str);
++			ADD_CONFIG_TERM_STR(CALLGRAPH, term->val.str, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_BRANCH_SAMPLE_TYPE:
+-			ADD_CONFIG_TERM_STR(BRANCH, term->val.str);
++			ADD_CONFIG_TERM_STR(BRANCH, term->val.str, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_STACKSIZE:
+ 			ADD_CONFIG_TERM_VAL(STACK_USER, stack_user,
+-					    term->val.num);
++					    term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_INHERIT:
+ 			ADD_CONFIG_TERM_VAL(INHERIT, inherit,
+-					    term->val.num ? 1 : 0);
++					    term->val.num ? 1 : 0, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_NOINHERIT:
+ 			ADD_CONFIG_TERM_VAL(INHERIT, inherit,
+-					    term->val.num ? 0 : 1);
++					    term->val.num ? 0 : 1, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_MAX_STACK:
+ 			ADD_CONFIG_TERM_VAL(MAX_STACK, max_stack,
+-					    term->val.num);
++					    term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_MAX_EVENTS:
+ 			ADD_CONFIG_TERM_VAL(MAX_EVENTS, max_events,
+-					    term->val.num);
++					    term->val.num, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_OVERWRITE:
+ 			ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite,
+-					    term->val.num ? 1 : 0);
++					    term->val.num ? 1 : 0, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_NOOVERWRITE:
+ 			ADD_CONFIG_TERM_VAL(OVERWRITE, overwrite,
+-					    term->val.num ? 0 : 1);
++					    term->val.num ? 0 : 1, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_DRV_CFG:
+-			ADD_CONFIG_TERM_STR(DRV_CFG, term->val.str);
++			ADD_CONFIG_TERM_STR(DRV_CFG, term->val.str, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_PERCORE:
+ 			ADD_CONFIG_TERM_VAL(PERCORE, percore,
+-					    term->val.num ? true : false);
++					    term->val.num ? true : false, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
+ 			ADD_CONFIG_TERM_VAL(AUX_OUTPUT, aux_output,
+-					    term->val.num ? 1 : 0);
++					    term->val.num ? 1 : 0, term->weak);
+ 			break;
+ 		case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
+ 			ADD_CONFIG_TERM_VAL(AUX_SAMPLE_SIZE, aux_sample_size,
+-					    term->val.num);
++					    term->val.num, term->weak);
+ 			break;
+ 		default:
+ 			break;
+@@ -1339,7 +1339,7 @@ static int get_config_chgs(struct perf_pmu *pmu, struct list_head *head_config,
  	}
  
--	/* Try to get actual symbol name from symtab */
--	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-+	if (dwarf_entrypc(sp_die, &eaddr) == 0) {
-+		/* If the DIE has entrypc, use it. */
-+		symbol = dwarf_diename(sp_die);
-+	} else {
-+		/* Try to get actual symbol name and address from symtab */
-+		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
-+		eaddr = sym.st_value;
-+	}
- 	if (!symbol) {
- 		pr_warning("Failed to find symbol at 0x%lx\n",
- 			   (unsigned long)paddr);
- 		return -ENOENT;
- 	}
--	eaddr = sym.st_value;
+ 	if (bits)
+-		ADD_CONFIG_TERM_VAL(CFG_CHG, cfg_chg, bits);
++		ADD_CONFIG_TERM_VAL(CFG_CHG, cfg_chg, bits, false);
  
- 	tp->offset = (unsigned long)(paddr - eaddr);
- 	tp->address = (unsigned long)paddr;
+ #undef ADD_CONFIG_TERM
+ 	return 0;
