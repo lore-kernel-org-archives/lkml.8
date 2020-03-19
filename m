@@ -2,162 +2,116 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEACC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 221E9C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D7C20732
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:45:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="P54ryr6c";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BJksx+PB"
+	by mail.kernel.org (Postfix) with ESMTP id 03C6E20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgCSMo7 (ORCPT
+        id S1727141AbgCSMrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:44:59 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:33199 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726589AbgCSMo6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:44:58 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 172F258066E;
-        Thu, 19 Mar 2020 08:44:57 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 19 Mar 2020 08:44:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=fPef86flXx0XBtfvoeNEs+6nqE5
-        kjHbY/H2scm6omuc=; b=P54ryr6cYmDL3HtEmHxTsHrnPfMlr4pYagLUkS7ib6U
-        IOsPIXi8dXU4dBWVk8gkZr2UKAt1i+V1i0veGvLvTAWfaPNSqzxjTYDC4Kk9OxKw
-        FJTjiecptq6P3vlPWZxPF8W6AiAMprS5FeVKu7yUg/uCwo+g+WDFDeKVPULVHN4/
-        zcYD4Yxo7qj93XuM75MVktOz4aIbcrpWGzI7yiupyv+H8c3L7xbnNRJR/gIpvgEt
-        dQWyzJX8TZZJlfOA3GEQcEOlsUp/8qYUOZ1KLKa5cDr3KUOhvJ1nazwc+ERjlEmm
-        5B3PEl2iAPM66FtXNnrVm3jIAZVFNez3aDYMo+qucdQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=fPef86
-        flXx0XBtfvoeNEs+6nqE5kjHbY/H2scm6omuc=; b=BJksx+PBF56TFgnOUEJ/kw
-        QYXX0L26+g+4Cw1qAQ79baQSlMIrv7ZTfJLTnWZVVV6wQFmy82Dc8FaOaidq1CKo
-        +2JoVnkIBoaTOLU87oR//m2HOUsHzqw7y5jAW8O4xV6hkqY5UDsQctLlwR4AMVHg
-        GYKD47FuwoDwgzbx0yILhumliPKt3JN/iLDrxL+bp7JvYGkyjKrVQ08UWKgFDPni
-        eAHy1x7Zi9xAYq8g34OQ+uuWTXfRU5ovY931qS6bQQ9y8m/195yyn1xo1uhn1Rb4
-        f/Wx4H3Df1KWSY8HXG1TUokdODU9QKDr4g16hLhSv9Zyk2/t/gbpSGRUno9L2Odg
-        ==
-X-ME-Sender: <xms:RmlzXoTyYLruReR4fEM0EZvVGx3em7prj6ItaYEYTSZV26yRnpGTFw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudefledggeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:RmlzXtY1tPKrM6iWyQqASsTBEGtmgOPWGqhrEs3xnNQqk5vuqNZGyw>
-    <xmx:RmlzXjcrygJZCEd_r1wE2kBm2DARMoXFqq3ORMp_UnaSKchfDCJm2Q>
-    <xmx:RmlzXmKOKO9aidJcE9GYNfnbTaV_5jXHPN6vJMdMmBwUC3t183rxYQ>
-    <xmx:SWlzXp97jLbUzb-fmPLA-z2NnPcEfHSko1oXqiOB69IY6YKZfezmkg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8AF24328005D;
-        Thu, 19 Mar 2020 08:44:54 -0400 (EDT)
-Date:   Thu, 19 Mar 2020 13:44:52 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to
- assigned-clock-rates
-Message-ID: <20200319124452.3yfcvq754vi4q2rv@gilmour.lan>
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 19 Mar 2020 08:47:05 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12102 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726589AbgCSMrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:47:04 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9810353EC2277E87DC44;
+        Thu, 19 Mar 2020 20:46:57 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 19 Mar 2020
+ 20:46:51 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <lmb@cloudflare.com>, <daniel@iogearbox.net>,
+        <jakub@cloudflare.com>, <john.fastabend@gmail.com>
+CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH bpf-next] bpf: tcp: Fix unused function warnings
+Date:   Thu, 19 Mar 2020 20:46:31 +0800
+Message-ID: <20200319124631.58432-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5j65trj5d3psj2o7"
-Content-Disposition: inline
-In-Reply-To: <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If BPF_STREAM_PARSER is not set, gcc warns:
 
---5j65trj5d3psj2o7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+net/ipv4/tcp_bpf.c:483:12: warning: 'tcp_bpf_sendpage' defined but not used [-Wunused-function]
+net/ipv4/tcp_bpf.c:395:12: warning: 'tcp_bpf_sendmsg' defined but not used [-Wunused-function]
+net/ipv4/tcp_bpf.c:13:13: warning: 'tcp_bpf_stream_read' defined but not used [-Wunused-function]
 
-Hi,
+Moves the unused functions into the #ifdef
 
-On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
-> Use assigned-clock-rates to specify the clock rate. Also mark
-> clock-frequency property as deprecated.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> index 72ad992..e62fe82 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> @@ -8,7 +8,7 @@ Required Properties:
->  - compatible: Value should be "ovti,ov5645".
->  - clocks: Reference to the xclk clock.
->  - clock-names: Should be "xclk".
-> -- clock-frequency: Frequency of the xclk clock.
-> +- clock-frequency (deprecated): Frequency of the xclk clock.
->  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
->    to the hardware pin PWDNB which is physically active low.
->  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> @@ -37,7 +37,8 @@ Example:
->
->  			clocks = <&clks 200>;
->  			clock-names = "xclk";
-> -			clock-frequency = <24000000>;
-> +			assigned-clocks = <&clks 200>;
-> +			assigned-clock-rates = <24000000>;
->
->  			vdddo-supply = <&camera_dovdd_1v8>;
->  			vdda-supply = <&camera_avdd_2v8>;
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ net/ipv4/tcp_bpf.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-clock-frequency is quite different from assigned-clock-rates though,
-semantically speaking. clock-frequency is only about what the clock
-frequency is, while assigned-clock-rates will change the rate as well,
-and you have no idea how long it will last.
+diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+index fe7b4fbc31c1..37c91f25cae3 100644
+--- a/net/ipv4/tcp_bpf.c
++++ b/net/ipv4/tcp_bpf.c
+@@ -10,19 +10,6 @@
+ #include <net/inet_common.h>
+ #include <net/tls.h>
+ 
+-static bool tcp_bpf_stream_read(const struct sock *sk)
+-{
+-	struct sk_psock *psock;
+-	bool empty = true;
+-
+-	rcu_read_lock();
+-	psock = sk_psock(sk);
+-	if (likely(psock))
+-		empty = list_empty(&psock->ingress_msg);
+-	rcu_read_unlock();
+-	return !empty;
+-}
+-
+ static int tcp_bpf_wait_data(struct sock *sk, struct sk_psock *psock,
+ 			     int flags, long timeo, int *err)
+ {
+@@ -298,6 +285,20 @@ int tcp_bpf_sendmsg_redir(struct sock *sk, struct sk_msg *msg,
+ }
+ EXPORT_SYMBOL_GPL(tcp_bpf_sendmsg_redir);
+ 
++#ifdef CONFIG_BPF_STREAM_PARSER
++static bool tcp_bpf_stream_read(const struct sock *sk)
++{
++	struct sk_psock *psock;
++	bool empty = true;
++
++	rcu_read_lock();
++	psock = sk_psock(sk);
++	if (likely(psock))
++		empty = list_empty(&psock->ingress_msg);
++	rcu_read_unlock();
++	return !empty;
++}
++
+ static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
+ 				struct sk_msg *msg, int *copied, int flags)
+ {
+@@ -528,7 +529,6 @@ static int tcp_bpf_sendpage(struct sock *sk, struct page *page, int offset,
+ 	return copied ? copied : err;
+ }
+ 
+-#ifdef CONFIG_BPF_STREAM_PARSER
+ enum {
+ 	TCP_BPF_IPV4,
+ 	TCP_BPF_IPV6,
+-- 
+2.17.1
 
-If you want to retrieve that through the clock framework, then just
-making clock-frequency optional is enough and falling back to
-clk_get_rate on the clocks property already provided is enough.
 
-Maxime
-
---5j65trj5d3psj2o7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXnNpRAAKCRDj7w1vZxhR
-xesHAP9VTAePw+WAADpRdawWbVIeQrmRXEWIUIh4/u+DB1CnCQEAtrdAD6cdnFZV
-PoQsLM8/8h0mlE9auOHjPVUcOLYy1gs=
-=qLmi
------END PGP SIGNATURE-----
-
---5j65trj5d3psj2o7--
