@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837E5C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EEBC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4977920658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 461F620B80
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624422;
-	bh=b3bOkk7ZC4+C3aa6UbVcLXBKkb5po7Ss9Qec2vR6Up0=;
+	s=default; t=1584624426;
+	bh=qWd20iwAOFru1dkdrmNhZZetuO5TaElp0urtUJVUjOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GSyY1mvAiDi0JjLYZ2/HNZikVMQ18xpJL5DDVu6IleZUOxKmv/m2gOw9lkmHAXqkA
-	 3K9N2EQF6XpG3h2jtvvPZcPXTkBBb1W7TQ1TmUJ/4SedI1uaB1NUHy9vEjZ8HA0nCR
-	 boW7FbhALohO60Wa3IftXQ8bZ7VF7Qcitm7XxHT4=
+	b=CnDu474HN8VuJiFxJcAcD3jdxQ3fTSU43Kdr+L+DoxCTS4jE0rVxeNiAHjXe0W0iQ
+	 /T8+OPf1F6r+h4rO21e+6sAP4yk20XkDfFxuHzG9H8+hoZVXfpqHnE7DmPFsor09Y+
+	 2S1Yt9g3e+n7yf+NP7LfUJ0ienUgVSkicoiqhmfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730847AbgCSN1B (ORCPT
+        id S1730344AbgCSN1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:27:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55088 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:27:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730598AbgCSN07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:26:59 -0400
+        id S1730832AbgCSN05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:26:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8602208C3;
-        Thu, 19 Mar 2020 13:26:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32278207FC;
+        Thu, 19 Mar 2020 13:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624419;
-        bh=b3bOkk7ZC4+C3aa6UbVcLXBKkb5po7Ss9Qec2vR6Up0=;
+        s=default; t=1584624416;
+        bh=qWd20iwAOFru1dkdrmNhZZetuO5TaElp0urtUJVUjOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cFT1SgD6b4R8ct+vcdRaEx/O3CarG/OOozlQHKp+6CW/IREBt7TpcKiQmlLbLg4Jq
-         q+qOuLnG0avd7yqkJfem1Wm+5n3AiMYfmn93b7gcUpqOHK2aXlvPOdXT0khhHuOjEP
-         QQUnSitFjKHJUz5/8FaObGdMBgtI1tvk9YGOkC4A=
+        b=lAPax4ipGwTOSq5JUgOARFk7v/rziTxBFAYZsk1XaBem0yBerNpdOeEPGhnkYS2Cm
+         CVC2vbyRkNC/rKlfl8xPRs56DZPw85HtPwfbRyKdKXPGOrp5wC+7iQTFxDVzMO3Xem
+         h1rsez5XQ2C68IVpJAxcvf/OfeBW/shuwU/uQ9NA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 36/65] io_uring: pick up link work on submit reference drop
-Date:   Thu, 19 Mar 2020 14:04:18 +0100
-Message-Id: <20200319123937.881530419@linuxfoundation.org>
+        stable@vger.kernel.org, Monk Liu <Monk.Liu@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 35/65] drm/amdgpu: fix memory leak during TDR test(v2)
+Date:   Thu, 19 Mar 2020 14:04:17 +0100
+Message-Id: <20200319123937.637687088@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -59,56 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Monk Liu <Monk.Liu@amd.com>
 
-[ Upstream commit 2a44f46781617c5040372b59da33553a02b1f46d ]
+[ Upstream commit 4829f89855f1d3a3d8014e74cceab51b421503db ]
 
-If work completes inline, then we should pick up a dependent link item
-in __io_queue_sqe() as well. If we don't do so, we're forced to go async
-with that item, which is suboptimal.
+fix system memory leak
 
-This also fixes an issue with io_put_req_find_next(), which always looks
-up the next work item. That should only be done if we're dropping the
-last reference to the request, to prevent multiple lookups of the same
-work item.
+v2:
+fix coding style
 
-Outside of being a fix, this also enables a good cleanup series for 5.7,
-where we never have to pass 'nxt' around or into the work handlers.
-
-Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Monk Liu <Monk.Liu@amd.com>
+Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/powerplay/smu_v11_0.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index c8f8cc2463986..2547c6395d5e4 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1099,10 +1099,10 @@ static void io_free_req(struct io_kiocb *req)
- __attribute__((nonnull))
- static void io_put_req_find_next(struct io_kiocb *req, struct io_kiocb **nxtptr)
- {
--	io_req_find_next(req, nxtptr);
--
--	if (refcount_dec_and_test(&req->refs))
-+	if (refcount_dec_and_test(&req->refs)) {
-+		io_req_find_next(req, nxtptr);
- 		__io_free_req(req);
-+	}
- }
+diff --git a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+index 8b13d18c6414c..e4149e6b68b39 100644
+--- a/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
++++ b/drivers/gpu/drm/amd/powerplay/smu_v11_0.c
+@@ -948,8 +948,12 @@ int smu_v11_0_init_max_sustainable_clocks(struct smu_context *smu)
+ 	struct smu_11_0_max_sustainable_clocks *max_sustainable_clocks;
+ 	int ret = 0;
  
- static void io_put_req(struct io_kiocb *req)
-@@ -3569,7 +3569,7 @@ static void __io_queue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+-	max_sustainable_clocks = kzalloc(sizeof(struct smu_11_0_max_sustainable_clocks),
++	if (!smu->smu_table.max_sustainable_clocks)
++		max_sustainable_clocks = kzalloc(sizeof(struct smu_11_0_max_sustainable_clocks),
+ 					 GFP_KERNEL);
++	else
++		max_sustainable_clocks = smu->smu_table.max_sustainable_clocks;
++
+ 	smu->smu_table.max_sustainable_clocks = (void *)max_sustainable_clocks;
  
- err:
- 	/* drop submission reference */
--	io_put_req(req);
-+	io_put_req_find_next(req, &nxt);
- 
- 	if (linked_timeout) {
- 		if (!ret)
+ 	max_sustainable_clocks->uclock = smu->smu_table.boot_values.uclk / 100;
 -- 
 2.20.1
 
