@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22B4C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56A4C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A9F20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B250220787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623784;
-	bh=z4pFOs3pCJ7v5bqIJHEteayYnHveym/B6cPfj+vAvPE=;
+	s=default; t=1584623789;
+	bh=bg/H4w9x/Y5OH3AJYyYxL/aEubN2iXPYUHMOqSsRVOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0KwI04qkw70LApC7YO/hQMG2u0YnKIG2NfvexYqE09SG7lBBQ1RDyDtjzc9yH0oLr
-	 ycFGXiV9LisDQuIDZGQ1lucr5t6gKY1PZ0oCBP10snvSZ0ts9j7kqWYFoGJyqVcAOr
-	 E+xI0E9tukEZM2QmilTbV0fbICLIPGTWwmxAzb3Q=
+	b=PrFW0xYG5eApIA73kHcK+MzqPpqxsOoCC43lX/4rIW5MrJG/lrSSr2hrg8u6MMc5v
+	 jQIzRwxyf0zU0Uw9fJWn3XBN5FreDl6mfnQus7kwJh5LyYrweURLFOgaY5oo8i0MDB
+	 NkYVP4Ult7tvdwdGh5KZT+6BUGdBEeOutVCr3XCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgCSNQX (ORCPT
+        id S1729530AbgCSNQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:16:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36574 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:16:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728094AbgCSNQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:16:18 -0400
+        id S1729291AbgCSNQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:16:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8183A2098B;
-        Thu, 19 Mar 2020 13:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3B2020724;
+        Thu, 19 Mar 2020 13:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623778;
-        bh=z4pFOs3pCJ7v5bqIJHEteayYnHveym/B6cPfj+vAvPE=;
+        s=default; t=1584623785;
+        bh=bg/H4w9x/Y5OH3AJYyYxL/aEubN2iXPYUHMOqSsRVOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PReceiOOPGsCc7uORDT9ghr5kLlF/zIhUIys8XNSeKV4C9+vFumDIC+svpNiDMivN
-         TQVT+ND3gPYjYmf0WQ9mYgHHhVuyTN+SZmnFk+OOuELslLRBFV5/iXbgSOlTgNKiRh
-         wnGRhx/67GdixwhNUjCioLz7Lw+pcikqXl6WlZD0=
+        b=2hVyp2okG7l9QaoZEdzf6TNG4S52qzSsj8XYiBfy8v1zHY6VMQV8Ms9cMiuT84hLW
+         O+Dkq8F2TV02FDIC77evaqb12YOWoPx+tkKbXXk97QnNQNcJf8cb1RFuo96JCQw6Ge
+         SfFCJhnV9G1CyFu7CXmL2OX/LmDPdvXu5Mw5u6uQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>, Will Deacon <will@kernel.org>
-Subject: [PATCH 4.14 51/99] iommu/dma: Fix MSI reservation allocation
-Date:   Thu, 19 Mar 2020 14:03:29 +0100
-Message-Id: <20200319123957.302692071@linuxfoundation.org>
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Yonghyun Hwang <yonghyun@google.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 4.14 53/99] iommu/vt-d: Fix a bug in intel_iommu_iova_to_phys() for huge page
+Date:   Thu, 19 Mar 2020 14:03:31 +0100
+Message-Id: <20200319123957.987008616@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -61,66 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Yonghyun Hwang <yonghyun@google.com>
 
-commit 65ac74f1de3334852fb7d9b1b430fa5a06524276 upstream.
+commit 77a1bce84bba01f3f143d77127b72e872b573795 upstream.
 
-The way cookie_init_hw_msi_region() allocates the iommu_dma_msi_page
-structures doesn't match the way iommu_put_dma_cookie() frees them.
+intel_iommu_iova_to_phys() has a bug when it translates an IOVA for a huge
+page onto its corresponding physical address. This commit fixes the bug by
+accomodating the level of page entry for the IOVA and adds IOVA's lower
+address to the physical address.
 
-The former performs a single allocation of all the required structures,
-while the latter tries to free them one at a time. It doesn't quite
-work for the main use case (the GICv3 ITS where the range is 64kB)
-when the base granule size is 4kB.
-
-This leads to a nice slab corruption on teardown, which is easily
-observable by simply creating a VF on a SRIOV-capable device, and
-tearing it down immediately (no need to even make use of it).
-Fortunately, this only affects systems where the ITS isn't translated
-by the SMMU, which are both rare and non-standard.
-
-Fix it by allocating iommu_dma_msi_page structures one at a time.
-
-Fixes: 7c1b058c8b5a3 ("iommu/dma: Handle IOMMU API reserved regions")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Will Deacon <will@kernel.org>
-Cc: stable@vger.kernel.org
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Cc: <stable@vger.kernel.org>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Moritz Fischer <mdf@kernel.org>
+Signed-off-by: Yonghyun Hwang <yonghyun@google.com>
+Fixes: 3871794642579 ("VT-d: Changes to support KVM")
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/dma-iommu.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/iommu/intel-iommu.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -208,15 +208,15 @@ static int cookie_init_hw_msi_region(str
- 	start -= iova_offset(iovad, start);
- 	num_pages = iova_align(iovad, end - start) >> iova_shift(iovad);
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5124,8 +5124,10 @@ static phys_addr_t intel_iommu_iova_to_p
+ 	u64 phys = 0;
  
--	msi_page = kcalloc(num_pages, sizeof(*msi_page), GFP_KERNEL);
--	if (!msi_page)
--		return -ENOMEM;
--
- 	for (i = 0; i < num_pages; i++) {
--		msi_page[i].phys = start;
--		msi_page[i].iova = start;
--		INIT_LIST_HEAD(&msi_page[i].list);
--		list_add(&msi_page[i].list, &cookie->msi_page_list);
-+		msi_page = kmalloc(sizeof(*msi_page), GFP_KERNEL);
-+		if (!msi_page)
-+			return -ENOMEM;
-+
-+		msi_page->phys = start;
-+		msi_page->iova = start;
-+		INIT_LIST_HEAD(&msi_page->list);
-+		list_add(&msi_page->list, &cookie->msi_page_list);
- 		start += iovad->granule;
- 	}
+ 	pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
+-	if (pte)
+-		phys = dma_pte_addr(pte);
++	if (pte && dma_pte_present(pte))
++		phys = dma_pte_addr(pte) +
++			(iova & (BIT_MASK(level_to_offset_bits(level) +
++						VTD_PAGE_SHIFT) - 1));
  
+ 	return phys;
+ }
 
 
