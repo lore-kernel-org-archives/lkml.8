@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB30C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C237C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CB7214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B7BA21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgCSOLQ (ORCPT
+        id S1728036AbgCSOLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:11:16 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:32848 "EHLO
+        Thu, 19 Mar 2020 10:11:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:32857 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727949AbgCSOLL (ORCPT
+        with ESMTP id S1727966AbgCSOLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:11:11 -0400
+        Thu, 19 Mar 2020 10:11:12 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEvsw-0002Fw-Th; Thu, 19 Mar 2020 15:10:59 +0100
+        id 1jEvsx-0002HP-P4; Thu, 19 Mar 2020 15:10:59 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 32D0D1C22AC;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A39F91C22AF;
         Thu, 19 Mar 2020 15:10:52 +0100 (CET)
-Date:   Thu, 19 Mar 2020 14:10:51 -0000
-From:   "tip-bot2 for Jiri Olsa" <tip-bot2@linutronix.de>
+Date:   Thu, 19 Mar 2020 14:10:52 -0000
+From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf expr: Add expr.c object
-Cc:     Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Michael Petlan <mpetlan@redhat.com>,
+Subject: [tip: perf/core] perf header: Add check for unexpected use of
+ reserved membrs in event attr
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Namhyung Kim <namhyung@kernel.org>,
+        Pavel Gerasimov <pavel.gerasimov@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200228093616.67125-2-jolsa@kernel.org>
-References: <20200228093616.67125-2-jolsa@kernel.org>
+In-Reply-To: <20200228163011.19358-4-kan.liang@linux.intel.com>
+References: <20200228163011.19358-4-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <158462705181.28353.9884213405921971659.tip-bot2@tip-bot2>
+Message-ID: <158462705229.28353.13860248194825167200.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,106 +68,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     576a65b6974ddc830a89b6feb6823bd6b5914bde
-Gitweb:        https://git.kernel.org/tip/576a65b6974ddc830a89b6feb6823bd6b5914bde
-Author:        Jiri Olsa <jolsa@kernel.org>
-AuthorDate:    Fri, 28 Feb 2020 10:36:12 +01:00
+Commit-ID:     277ce1efa7b504873cd32a4106654836c2f80e1b
+Gitweb:        https://git.kernel.org/tip/277ce1efa7b504873cd32a4106654836c2f80e1b
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Fri, 28 Feb 2020 08:30:02 -08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Mon, 09 Mar 2020 21:43:24 -03:00
 
-perf expr: Add expr.c object
+perf header: Add check for unexpected use of reserved membrs in event attr
 
-Add generic expr code into new expr.c object.
+The perf.data may be generated by a newer version of perf tool, which
+support new input bits in attr, e.g. new bit for branch_sample_type.
 
-The expr.c object will be mainly used in following change that will get
-rid of the manual flex code,
+The perf.data may be parsed by an older version of perf tool later.  The
+old perf tool may parse the perf.data incorrectly. There is no warning
+message for this case.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Current perf header never check for unknown input bits in attr.
+
+When read the event desc from header, check the stored event attr.  The
+reserved bits, sample type, read format and branch sample type will be
+checked.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Pavel Gerasimov <pavel.gerasimov@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20200228093616.67125-2-jolsa@kernel.org
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
+Link: http://lkml.kernel.org/r/20200228163011.19358-4-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/Build  |  1 +
- tools/perf/util/expr.c | 19 +++++++++++++++++++
- tools/perf/util/expr.y | 16 ----------------
- 3 files changed, 20 insertions(+), 16 deletions(-)
- create mode 100644 tools/perf/util/expr.c
+ tools/perf/util/header.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 07da6c7..6fdf073 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -122,6 +122,7 @@ perf-y += vsprintf.o
- perf-y += units.o
- perf-y += time-utils.o
- perf-y += expr-bison.o
-+perf-y += expr.o
- perf-y += branch.o
- perf-y += mem2node.o
- 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-new file mode 100644
-index 0000000..816b23b
---- /dev/null
-+++ b/tools/perf/util/expr.c
-@@ -0,0 +1,19 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <assert.h>
-+#include "expr.h"
-+
-+/* Caller must make sure id is allocated */
-+void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
-+{
-+	int idx;
-+
-+	assert(ctx->num_ids < MAX_PARSE_ID);
-+	idx = ctx->num_ids++;
-+	ctx->ids[idx].name = name;
-+	ctx->ids[idx].val = val;
-+}
-+
-+void expr__ctx_init(struct parse_ctx *ctx)
-+{
-+	ctx->num_ids = 0;
-+}
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index 7d22624..7cea8b7 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -6,7 +6,6 @@
- #define IN_EXPR_Y 1
- #include "expr.h"
- #include "smt.h"
--#include <assert.h>
- #include <string.h>
- 
- #define MAXIDLEN 256
-@@ -169,21 +168,6 @@ static int expr__lex(YYSTYPE *res, const char **pp)
- 	return tok;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 4246e74..acbd046 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1590,6 +1590,40 @@ static void free_event_desc(struct evsel *events)
+ 	free(events);
  }
  
--/* Caller must make sure id is allocated */
--void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
--{
--	int idx;
--	assert(ctx->num_ids < MAX_PARSE_ID);
--	idx = ctx->num_ids++;
--	ctx->ids[idx].name = name;
--	ctx->ids[idx].val = val;
--}
--
--void expr__ctx_init(struct parse_ctx *ctx)
--{
--	ctx->num_ids = 0;
--}
--
- static bool already_seen(const char *val, const char *one, const char **other,
- 			 int num_other)
++static bool perf_attr_check(struct perf_event_attr *attr)
++{
++	if (attr->__reserved_1 || attr->__reserved_2 || attr->__reserved_3) {
++		pr_warning("Reserved bits are set unexpectedly. "
++			   "Please update perf tool.\n");
++		return false;
++	}
++
++	if (attr->sample_type & ~(PERF_SAMPLE_MAX-1)) {
++		pr_warning("Unknown sample type (0x%llx) is detected. "
++			   "Please update perf tool.\n",
++			   attr->sample_type);
++		return false;
++	}
++
++	if (attr->read_format & ~(PERF_FORMAT_MAX-1)) {
++		pr_warning("Unknown read format (0x%llx) is detected. "
++			   "Please update perf tool.\n",
++			   attr->read_format);
++		return false;
++	}
++
++	if ((attr->sample_type & PERF_SAMPLE_BRANCH_STACK) &&
++	    (attr->branch_sample_type & ~(PERF_SAMPLE_BRANCH_MAX-1))) {
++		pr_warning("Unknown branch sample type (0x%llx) is detected. "
++			   "Please update perf tool.\n",
++			   attr->branch_sample_type);
++
++		return false;
++	}
++
++	return true;
++}
++
+ static struct evsel *read_event_desc(struct feat_fd *ff)
  {
+ 	struct evsel *evsel, *events = NULL;
+@@ -1634,6 +1668,9 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
+ 
+ 		memcpy(&evsel->core.attr, buf, msz);
+ 
++		if (!perf_attr_check(&evsel->core.attr))
++			goto error;
++
+ 		if (do_read_u32(ff, &nr))
+ 			goto error;
+ 
