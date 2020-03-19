@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE8FC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A06C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38E0208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9182098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624346;
-	bh=LijBeT8ghRz4OhfDqJrmVw3kAoNl4ItiK+qJNyWxjHs=;
+	s=default; t=1584624350;
+	bh=WCE4+VYZhrwFUZKCCcqJqUTgAjKlW0Go2G+/HwLWmO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YuL67NxvaqaBOHens87xzslxSGKiCK0ds3l9lj9LS98lBDI5+fBmb8kHvuS8QoQaP
-	 PAnXl0jz7V0nkqgCiGnpWTSD6nQLTGIVB4xcB46/2Do+snHmCTsEtDEo3zIo7OSr2h
-	 2JBCxO4AWUaRmUSqowP+qBA6t+MlPGQf8ITyqdeQ=
+	b=LZ8VMwSfR0VCucKgXcZNKwRaatN9X6JnmBaynuOozQhPYEmD4dOhP6mCqrpf0JAjP
+	 kP0/Z6eK/ghJpfuG96JD+hJOg4Q5CK0ovmKP6duWlIxAk2NYpt4olkE5xaTpa0boPl
+	 Wgnbr0fhAi2cVaV/3C02eCYaBISWNrLBe0Na621k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbgCSNZp (ORCPT
+        id S1730684AbgCSNZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730672AbgCSNZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:43 -0400
+        id S1730678AbgCSNZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D26C920658;
-        Thu, 19 Mar 2020 13:25:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BA3C2080C;
+        Thu, 19 Mar 2020 13:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624342;
-        bh=LijBeT8ghRz4OhfDqJrmVw3kAoNl4ItiK+qJNyWxjHs=;
+        s=default; t=1584624344;
+        bh=WCE4+VYZhrwFUZKCCcqJqUTgAjKlW0Go2G+/HwLWmO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qSeWNhbsbGo4YjWqna3ioHEE9NOU6wLkZZfZiH6tt7wI6Li8Hx7++RhDvdrTpiFc4
-         yKiQ1S9UDlQ6ySrCFRQnlh/jSDYL6Ezjzui98zf4f0ikRpjaR33F7Q91koG5QegkuZ
-         bwZuxrAH3kE0Sbpan4rMkS+JGzphZ+1t4aQZEwas=
+        b=sEQry4LTZbBpP84r9eMQyQzlA3lZipjQJTzWgysMzVgD7wP7UeV5m0fT9aJm5yMFS
+         Vw4utiKazRwC2WfZbhS3GyuASSEu5MTVIQFRAPKaMDwj/rk5rxNkY2UZ4fNeUKVLCy
+         uRIc+p99Q4EYoiikeZHBFvlW3PslInvo7DqwzArc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 28/65] mac80211: rx: avoid RCU list traversal under mutex
-Date:   Thu, 19 Mar 2020 14:04:10 +0100
-Message-Id: <20200319123935.249074287@linuxfoundation.org>
+Subject: [PATCH 5.5 11/65] ACPI: watchdog: Set default timeout in probe
+Date:   Thu, 19 Mar 2020 14:03:53 +0100
+Message-Id: <20200319123929.806674971@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -61,37 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 253216ffb2a002a682c6f68bd3adff5b98b71de8 ]
+[ Upstream commit cabe17d0173ab04bd3f87b8199ae75f43f1ea473 ]
 
-local->sta_mtx is held in __ieee80211_check_fast_rx_iface().
-No need to use list_for_each_entry_rcu() as it also requires
-a cond argument to avoid false lockdep warnings when not used in
-RCU read-side section (with CONFIG_PROVE_RCU_LIST).
-Therefore use list_for_each_entry();
+If the BIOS default timeout for the watchdog is too small userspace may
+not have enough time to configure new timeout after opening the device
+before the system is already reset. For this reason program default
+timeout of 30 seconds in the driver probe and allow userspace to change
+this from command line or through module parameter (wdat_wdt.timeout).
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Link: https://lore.kernel.org/r/20200223143302.15390-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reported-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/wdat_wdt.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 0e05ff0376726..0ba98ad9bc854 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -4114,7 +4114,7 @@ void __ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
+diff --git a/drivers/watchdog/wdat_wdt.c b/drivers/watchdog/wdat_wdt.c
+index e1b1fcfc02af8..3065dd670a182 100644
+--- a/drivers/watchdog/wdat_wdt.c
++++ b/drivers/watchdog/wdat_wdt.c
+@@ -54,6 +54,13 @@ module_param(nowayout, bool, 0);
+ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+ 		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
  
- 	lockdep_assert_held(&local->sta_mtx);
++#define WDAT_DEFAULT_TIMEOUT	30
++
++static int timeout = WDAT_DEFAULT_TIMEOUT;
++module_param(timeout, int, 0);
++MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default="
++		 __MODULE_STRING(WDAT_DEFAULT_TIMEOUT) ")");
++
+ static int wdat_wdt_read(struct wdat_wdt *wdat,
+ 	 const struct wdat_instruction *instr, u32 *value)
+ {
+@@ -438,6 +445,22 @@ static int wdat_wdt_probe(struct platform_device *pdev)
  
--	list_for_each_entry_rcu(sta, &local->sta_list, list) {
-+	list_for_each_entry(sta, &local->sta_list, list) {
- 		if (sdata != sta->sdata &&
- 		    (!sta->sdata->bss || sta->sdata->bss != sdata->bss))
- 			continue;
+ 	platform_set_drvdata(pdev, wdat);
+ 
++	/*
++	 * Set initial timeout so that userspace has time to configure the
++	 * watchdog properly after it has opened the device. In some cases
++	 * the BIOS default is too short and causes immediate reboot.
++	 */
++	if (timeout * 1000 < wdat->wdd.min_hw_heartbeat_ms ||
++	    timeout * 1000 > wdat->wdd.max_hw_heartbeat_ms) {
++		dev_warn(dev, "Invalid timeout %d given, using %d\n",
++			 timeout, WDAT_DEFAULT_TIMEOUT);
++		timeout = WDAT_DEFAULT_TIMEOUT;
++	}
++
++	ret = wdat_wdt_set_timeout(&wdat->wdd, timeout);
++	if (ret)
++		return ret;
++
+ 	watchdog_set_nowayout(&wdat->wdd, nowayout);
+ 	return devm_watchdog_register_device(dev, &wdat->wdd);
+ }
 -- 
 2.20.1
 
