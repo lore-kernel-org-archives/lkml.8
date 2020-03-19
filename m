@@ -2,52 +2,51 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B71A4C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1A6C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77316208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE1120B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624255;
-	bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
+	s=default; t=1584624257;
+	bh=fZ4m9eC8ZORxTJx+xJn9/9GooWKhh4XXJWDTYVajMAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qsOVHCSs3s/YA/88M5QJFy+LHU+RT3OFhEr1W71YmmGb75ei6VB4uwLIYbmQVvnNM
-	 RFAj2X81RB+ef59bytlMrniqno+qp5qPMDSxIJHs9ZCXTq70zVrj7L2sX8RkwMPH7n
-	 ct3PFwnCb5W7CnIyb3D/dNTczL34fkA7c9GZLok0=
+	b=dm6kAGaJinGzzwvhw+VFGKkstkN7pLLHzIBaELmHJL3IBtA0xiKaG25TUE8A9hTSM
+	 /DT1vE0z1u6eykz3U4in0X4XqlC5PmqjadBE6QPB/aAu5S57TnmyleY5ZmsLLYiL/V
+	 wSY8o6ZnhqSfgQ+ExB6jCpmL+b2qT9OQRLFoMPwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbgCSNYJ (ORCPT
+        id S1730441AbgCSNYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:24:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50476 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:24:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730420AbgCSNYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:24:04 -0400
+        id S1727619AbgCSNYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:24:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4AA320724;
-        Thu, 19 Mar 2020 13:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A651206D7;
+        Thu, 19 Mar 2020 13:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624244;
-        bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
+        s=default; t=1584624250;
+        bh=fZ4m9eC8ZORxTJx+xJn9/9GooWKhh4XXJWDTYVajMAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nr/M2Gg8cnklsckswGMi06MtUP/Rs+v5icJq0zbf9ZS+O5nJt/LEerFqORSVcCiOI
-         fvC80zrpV5tnOW/G9Bo9Zz7CfhJv8V0aQwG/uCs4VQwvun+5bWd6aOrXzG6bKPO1G5
-         bQWWUe5iuvw6wnumKU5BhqkMx+S0kfs5IGwQYPjs=
+        b=WEOgmUSpN3wiP2gvZA+8pblHeYzkauIeaXNQL6nl6pa9gFuM5dIMvun+27cdqzbb6
+         ObJKvOP/mvrOWdYXIBXhJKHjg68idx8hy5m2LyhTHphz9xPjRQ0z8lTo2Eyq02fnxB
+         79OSBeCz6bGnwt2t/Ey5Ea66LXjrR0mZudlX3GyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hanno Zulla <kontakt@hanno.de>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 18/60] HID: hid-bigbenff: call hid_hw_stop() in case of error
-Date:   Thu, 19 Mar 2020 14:03:56 +0100
-Message-Id: <20200319123924.935663763@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Fischetti <tony.fischetti@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.4 58/60] HID: add ALWAYS_POLL quirk to lenovo pixart mouse
+Date:   Thu, 19 Mar 2020 14:04:36 +0100
+Message-Id: <20200319123937.662304530@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -60,77 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hanno Zulla <kontakt@hanno.de>
+From: Tony Fischetti <tony.fischetti@gmail.com>
 
-[ Upstream commit 976a54d0f4202cb412a3b1fc7f117e1d97db35f3 ]
+commit 819d578d51d0ce73f06e35d69395ef55cd683a74 upstream.
 
-It's required to call hid_hw_stop() once hid_hw_start() was called
-previously, so error cases need to handle this. Also, hid_hw_close() is
-not necessary during removal.
+A lenovo pixart mouse (17ef:608d) is afflicted common the the malfunction
+where it disconnects and reconnects every minute--each time incrementing
+the device number. This patch adds the device id of the device and
+specifies that it needs the HID_QUIRK_ALWAYS_POLL quirk in order to
+work properly.
 
-Signed-off-by: Hanno Zulla <kontakt@hanno.de>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Tony Fischetti <tony.fischetti@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hid/hid-bigbenff.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/hid/hid-ids.h    |    1 +
+ drivers/hid/hid-quirks.c |    1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
-index f7e85bacb6889..f8c552b64a899 100644
---- a/drivers/hid/hid-bigbenff.c
-+++ b/drivers/hid/hid-bigbenff.c
-@@ -305,7 +305,6 @@ static void bigben_remove(struct hid_device *hid)
- 	struct bigben_device *bigben = hid_get_drvdata(hid);
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -727,6 +727,7 @@
+ #define USB_DEVICE_ID_LENOVO_X1_COVER	0x6085
+ #define USB_DEVICE_ID_LENOVO_X1_TAB	0x60a3
+ #define USB_DEVICE_ID_LENOVO_X1_TAB3	0x60b5
++#define USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_608D	0x608d
  
- 	cancel_work_sync(&bigben->worker);
--	hid_hw_close(hid);
- 	hid_hw_stop(hid);
- }
- 
-@@ -350,7 +349,7 @@ static int bigben_probe(struct hid_device *hid,
- 	error = input_ff_create_memless(hidinput->input, NULL,
- 		hid_bigben_play_effect);
- 	if (error)
--		return error;
-+		goto error_hw_stop;
- 
- 	name_sz = strlen(dev_name(&hid->dev)) + strlen(":red:bigben#") + 1;
- 
-@@ -360,8 +359,10 @@ static int bigben_probe(struct hid_device *hid,
- 			sizeof(struct led_classdev) + name_sz,
- 			GFP_KERNEL
- 		);
--		if (!led)
--			return -ENOMEM;
-+		if (!led) {
-+			error = -ENOMEM;
-+			goto error_hw_stop;
-+		}
- 		name = (void *)(&led[1]);
- 		snprintf(name, name_sz,
- 			"%s:red:bigben%d",
-@@ -375,7 +376,7 @@ static int bigben_probe(struct hid_device *hid,
- 		bigben->leds[n] = led;
- 		error = devm_led_classdev_register(&hid->dev, led);
- 		if (error)
--			return error;
-+			goto error_hw_stop;
- 	}
- 
- 	/* initial state: LED1 is on, no rumble effect */
-@@ -389,6 +390,10 @@ static int bigben_probe(struct hid_device *hid,
- 	hid_info(hid, "LED and force feedback support for BigBen gamepad\n");
- 
- 	return 0;
-+
-+error_hw_stop:
-+	hid_hw_stop(hid);
-+	return error;
- }
- 
- static __u8 *bigben_report_fixup(struct hid_device *hid, __u8 *rdesc,
--- 
-2.20.1
-
+ #define USB_VENDOR_ID_LG		0x1fd2
+ #define USB_DEVICE_ID_LG_MULTITOUCH	0x0064
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -103,6 +103,7 @@ static const struct hid_device_id hid_qu
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_PENSKETCH_M912), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M406XE), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_PIXART_USB_OPTICAL_MOUSE_ID2), HID_QUIRK_ALWAYS_POLL },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_608D), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C007), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C077), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_KEYBOARD_G710_PLUS), HID_QUIRK_NOGET },
 
 
