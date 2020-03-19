@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A253CC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E149C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8E92145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269DE20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623495;
-	bh=nOADCBPFTAIRjOeiOmXpOXpC+G5KCw0hroB8KVfhh3o=;
+	s=default; t=1584623500;
+	bh=c1KzFJe5ugMP3VUC9zUPA27C2lYVFTsHoL03CCM2Mlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZhkC5GhnUcMoNGHnAiSSF4k7HjSTIJHuq+M/MG/zgOdEvYU/AFE3+WD9k5P0nHET
-	 pGXSOiXbVg00iMBbf/oT0UDcqWTmecTXDFHnn9T8ccU07lwp3n0CsV3kPmGBCyB3bo
-	 h/2VZUqvF9YGCo1BV5vP9Et0TktJwOcwo6XKTP2Q=
+	b=PtcNqtSUQhF9X71RZ69S6zsTgegr+Z8o5N3YqGJREcZ7vEgXU81DIJj27EyBEGl3M
+	 DrYinj0OMR5ia5z/IpTuyFVVz23+NEwxcsxDfGokPIhq1uGEpKH+BvhMQDeSTpzitQ
+	 3q9a8joLLz9XkdvZnGKRrkzEWYv/fcQEUHXIxwl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgCSNLe (ORCPT
+        id S1728747AbgCSNLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56654 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727806AbgCSNL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:11:27 -0400
+        id S1727745AbgCSNLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:11:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1165220722;
-        Thu, 19 Mar 2020 13:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E8220722;
+        Thu, 19 Mar 2020 13:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623486;
-        bh=nOADCBPFTAIRjOeiOmXpOXpC+G5KCw0hroB8KVfhh3o=;
+        s=default; t=1584623491;
+        bh=c1KzFJe5ugMP3VUC9zUPA27C2lYVFTsHoL03CCM2Mlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wOPgcCdLm3mZexr1F7hvPfmOfYi0qeaPg1HzfET10g31C+QGDKb+1toTzVmqFHgl/
-         K0A0cj6OoA7Iw0HwnKbN+s0kLJKB/rpC78vA8nhoDSBsbcsIzXuCZKeZGF0tfGaqk1
-         hPCGLT2peVUyAsGz/Z6+tAsUIScXk2743mnYa/AM=
+        b=X3cbel7V5xeQMwZMkeShXABzpPdBVahBvTur1Os/MNE9qxKkjeXbwJg0Rw9UBoYUg
+         ly7Scz7nkZlttDW/pbv72VpDdWebPXIvhU6iaBdI9nGvA9ACoSbgQ0nfUXl7PuX5pR
+         J+0arGdgLKOnxZzPCGN/9k8BuIbL1Uo1MHFB74GQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mahesh Bandewar <maheshb@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 24/90] ipvlan: dont deref eth hdr before checking its set
-Date:   Thu, 19 Mar 2020 13:59:46 +0100
-Message-Id: <20200319123936.081546659@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH 4.9 37/90] KVM: x86: clear stale x86_emulate_ctxt->intercept value
+Date:   Thu, 19 Mar 2020 13:59:59 +0100
+Message-Id: <20200319123940.116286423@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -60,54 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mahesh Bandewar <maheshb@google.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit ad8192767c9f9cf97da57b9ffcea70fb100febef ]
+commit 342993f96ab24d5864ab1216f46c0b199c2baf8e upstream.
 
-IPvlan in L3 mode discards outbound multicast packets but performs
-the check before ensuring the ether-header is set or not. This is
-an error that Eric found through code browsing.
+After commit 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest
+mode") Hyper-V guests on KVM stopped booting with:
 
-Fixes: 2ad7bf363841 (“ipvlan: Initial check-in of the IPVLAN driver.”)
-Signed-off-by: Mahesh Bandewar <maheshb@google.com>
-Reported-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ kvm_nested_vmexit:    rip fffff802987d6169 reason EPT_VIOLATION info1 181
+    info2 0 int_info 0 int_info_err 0
+ kvm_page_fault:       address febd0000 error_code 181
+ kvm_emulate_insn:     0:fffff802987d6169: f3 a5
+ kvm_emulate_insn:     0:fffff802987d6169: f3 a5 FAIL
+ kvm_inj_exception:    #UD (0x0)
+
+"f3 a5" is a "rep movsw" instruction, which should not be intercepted
+at all.  Commit c44b4c6ab80e ("KVM: emulate: clean up initializations in
+init_decode_cache") reduced the number of fields cleared by
+init_decode_cache() claiming that they are being cleared elsewhere,
+'intercept', however, is left uncleared if the instruction does not have
+any of the "slow path" flags (NotImpl, Stack, Op3264, Sse, Mmx, CheckPerm,
+NearBranch, No16 and of course Intercept itself).
+
+Fixes: c44b4c6ab80e ("KVM: emulate: clean up initializations in init_decode_cache")
+Fixes: 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest mode")
+Cc: stable@vger.kernel.org
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ipvlan/ipvlan_core.c |   18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
 
---- a/drivers/net/ipvlan/ipvlan_core.c
-+++ b/drivers/net/ipvlan/ipvlan_core.c
-@@ -444,19 +444,21 @@ static int ipvlan_process_outbound(struc
- 	struct ethhdr *ethh = eth_hdr(skb);
- 	int ret = NET_XMIT_DROP;
- 
--	/* In this mode we dont care about multicast and broadcast traffic */
--	if (is_multicast_ether_addr(ethh->h_dest)) {
--		pr_debug_ratelimited("Dropped {multi|broad}cast of type=[%x]\n",
--				     ntohs(skb->protocol));
--		kfree_skb(skb);
--		goto out;
--	}
--
- 	/* The ipvlan is a pseudo-L2 device, so the packets that we receive
- 	 * will have L2; which need to discarded and processed further
- 	 * in the net-ns of the main-device.
- 	 */
- 	if (skb_mac_header_was_set(skb)) {
-+		/* In this mode we dont care about
-+		 * multicast and broadcast traffic */
-+		if (is_multicast_ether_addr(ethh->h_dest)) {
-+			pr_debug_ratelimited(
-+				"Dropped {multi|broad}cast of type=[%x]\n",
-+				ntohs(skb->protocol));
-+			kfree_skb(skb);
-+			goto out;
-+		}
-+
- 		skb_pull(skb, sizeof(*ethh));
- 		skb->mac_header = (typeof(skb->mac_header))~0U;
- 		skb_reset_network_header(skb);
+---
+ arch/x86/kvm/emulate.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -5022,6 +5022,7 @@ int x86_decode_insn(struct x86_emulate_c
+ 	ctxt->fetch.ptr = ctxt->fetch.data;
+ 	ctxt->fetch.end = ctxt->fetch.data + insn_len;
+ 	ctxt->opcode_len = 1;
++	ctxt->intercept = x86_intercept_none;
+ 	if (insn_len > 0)
+ 		memcpy(ctxt->fetch.data, insn, insn_len);
+ 	else {
 
 
