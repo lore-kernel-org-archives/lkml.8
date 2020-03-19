@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C01FC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65837C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE6A206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A73920724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624200;
-	bh=CF0oxVd1Ljc33k3LLpWxJqOxe/MbmHC6fvTOzBAh5b0=;
+	s=default; t=1584624202;
+	bh=rVwnGkhNTYwIoFHx0+0sHhcgL9v6Bj8IyNf+gwKmd2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C0xLE2sL/GCBust+SVFY6MwCthaUJm+uGPeatgJcYLBCi7JKHqCRzGky0wqf9l6HD
-	 /SEIcmfaSFdWzB61jahJYARl4g54d7UEkcgted+p9CS4wDzhzRyHDqAJZNyHfsO2+B
-	 Eioi/ABGgrLndnFvPMMEIErp4kxNRUDZjtdP0q+c=
+	b=J6uaKg2iKVaYwUmW4/99mO66Qc203Y+mzzCf2ZjtbjKQOPfCcoJ/RvGwWaDHrkDmj
+	 AFayWFENd0ycEWDsF9+qI/VRyIt353PjNqqpTxfr/82Y712daXBDE0QGnGOdUmuOgP
+	 m+hdiykWPpZmUiHG9mSTOTomZL8b5xC347UxU5i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbgCSNXS (ORCPT
+        id S1730187AbgCSNXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:23:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49132 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:23:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730313AbgCSNXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:23:15 -0400
+        id S1730322AbgCSNXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:23:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77936206D7;
-        Thu, 19 Mar 2020 13:23:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D18432098B;
+        Thu, 19 Mar 2020 13:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624194;
-        bh=CF0oxVd1Ljc33k3LLpWxJqOxe/MbmHC6fvTOzBAh5b0=;
+        s=default; t=1584624192;
+        bh=rVwnGkhNTYwIoFHx0+0sHhcgL9v6Bj8IyNf+gwKmd2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+dh4bfyxxyFeDekt7Flg1IHDT47OzzbroPZSFOyfjkU4tx9Jw+aTwXR32hfZYehX
-         zZE1Mo+lPZ1sO1mgBVfxnNMrfiA7XhAAtCkK6Mh/83orHay7CLFzVimQvdija6KLh0
-         kHB1sYNXZKwjpzaNebQTJrbYyjWtQ2fJmf/KTDmI=
+        b=Dd/lfxIOD8NyTrSyhe3dBMw249H9dlIwjzb2YChT02DyOPyFyNZOsUuYkfN4hRDfv
+         D8B3YlVvQ0aLX57AfRyBiUnqLfsyL8N9nRYHLkJJpea2YR1wYj2hBLzl2X9oMG0sg3
+         EqyWRHpZZEs42CGWRMgkwVw9b8Ib9vDRbWZeZW+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
+        stable@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 39/60] hinic: fix a irq affinity bug
-Date:   Thu, 19 Mar 2020 14:04:17 +0100
-Message-Id: <20200319123932.030604081@linuxfoundation.org>
+Subject: [PATCH 5.4 38/60] net: phy: mscc: fix firmware paths
+Date:   Thu, 19 Mar 2020 14:04:16 +0100
+Message-Id: <20200319123931.718827095@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -60,56 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
+From: Antoine Tenart <antoine.tenart@bootlin.com>
 
-[ Upstream commit 0bff777bd0cba73ad4cd0145696ad284d7e6a99f ]
+[ Upstream commit c87a9d6fc6d555e4981f2ded77d9a8cce950743e ]
 
-can not use a local variable as an input parameter of
-irq_set_affinity_hint
+The firmware paths for the VSC8584 PHYs not not contain the leading
+'microchip/' directory, as used in linux-firmware, resulting in an
+error when probing the driver. This patch fixes it.
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
+Fixes: a5afc1678044 ("net: phy: mscc: add support for VSC8584 PHY")
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h | 1 +
- drivers/net/ethernet/huawei/hinic/hinic_rx.c    | 5 ++---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/phy/mscc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
-index f4a339b10b10b..79091e1314181 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
-@@ -94,6 +94,7 @@ struct hinic_rq {
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index 7ada1fd9ca710..2339b9381d216 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -302,11 +302,11 @@ enum rgmii_rx_clock_delay {
+ 				BIT(VSC8531_FORCE_LED_OFF) | \
+ 				BIT(VSC8531_FORCE_LED_ON))
  
- 	struct hinic_wq         *wq;
+-#define MSCC_VSC8584_REVB_INT8051_FW		"mscc_vsc8584_revb_int8051_fb48.bin"
++#define MSCC_VSC8584_REVB_INT8051_FW		"microchip/mscc_vsc8584_revb_int8051_fb48.bin"
+ #define MSCC_VSC8584_REVB_INT8051_FW_START_ADDR	0xe800
+ #define MSCC_VSC8584_REVB_INT8051_FW_CRC	0xfb48
  
-+	struct cpumask		affinity_mask;
- 	u32                     irq;
- 	u16                     msix_entry;
+-#define MSCC_VSC8574_REVB_INT8051_FW		"mscc_vsc8574_revb_int8051_29e8.bin"
++#define MSCC_VSC8574_REVB_INT8051_FW		"microchip/mscc_vsc8574_revb_int8051_29e8.bin"
+ #define MSCC_VSC8574_REVB_INT8051_FW_START_ADDR	0x4000
+ #define MSCC_VSC8574_REVB_INT8051_FW_CRC	0x29e8
  
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-index 56ea6d692f1c3..2695ad69fca60 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-@@ -475,7 +475,6 @@ static int rx_request_irq(struct hinic_rxq *rxq)
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
- 	struct hinic_rq *rq = rxq->rq;
- 	struct hinic_qp *qp;
--	struct cpumask mask;
- 	int err;
- 
- 	rx_add_napi(rxq);
-@@ -492,8 +491,8 @@ static int rx_request_irq(struct hinic_rxq *rxq)
- 	}
- 
- 	qp = container_of(rq, struct hinic_qp, rq);
--	cpumask_set_cpu(qp->q_id % num_online_cpus(), &mask);
--	return irq_set_affinity_hint(rq->irq, &mask);
-+	cpumask_set_cpu(qp->q_id % num_online_cpus(), &rq->affinity_mask);
-+	return irq_set_affinity_hint(rq->irq, &rq->affinity_mask);
- }
- 
- static void rx_free_irq(struct hinic_rxq *rxq)
 -- 
 2.20.1
 
