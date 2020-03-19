@@ -2,211 +2,105 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEEAC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F5FC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2875C20754
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB122070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgCST3S (ORCPT
+        id S1727982AbgCST3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 19 Mar 2020 15:29:20 -0400
+Received: from mga05.intel.com ([192.55.52.43]:4273 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727941AbgCST3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 15:29:18 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38844 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727594AbgCST3J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:29:09 -0400
-Received: by mail-qk1-f193.google.com with SMTP id h14so4423480qke.5;
-        Thu, 19 Mar 2020 12:29:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NGk7Uv+/O2ikybvT2arJQO+plGFIej/aR9Wwj+bPPqM=;
-        b=KHrFDVMFauRhvmPOfw7i7pkJa709Ioa+qNzpI2rVIpGDeY18tudMQfxqr4nDdIq8KR
-         pcMyrcBps1iqjoGdTZ5z9R4Dn8ub/zQ+3pojFb1UvgNNIhWeaJyoTx8pI4IJ46hy/3FF
-         MnmkymGGOxywFG5LjPmZi5lfT+v760mkTtquo9zYVAMJv3QlB/jub98YY7YdqtvJliH+
-         W5UhpW3MgGbqyVgNTuR8em45CZDJtDHOax2T6tRORu51VrrMwN20BMAR3JlTGriJU8/p
-         GbfuMzCEj4cVv2rv5bvR56Cmv7brV4/OpZIPDdKF3NkrisnmnyGDd5r0LuKIq9dTGzd5
-         4NUA==
-X-Gm-Message-State: ANhLgQ08QBmfrWGttbYv5CVARbqt7QKFENzfTYdMES4NBeErEFQ6oK25
-        tGApjq9Q4xpDB/tm3iBUi9s=
-X-Google-Smtp-Source: ADFU+vunSSufb+vK/Rv5oaLgv4fBhZkecOBbA75ZsTD1LDfVmUrPtBqRn3nkSrWaH2DXn0IJa3IFPw==
-X-Received: by 2002:a37:4fd4:: with SMTP id d203mr4758671qkb.249.1584646148579;
-        Thu, 19 Mar 2020 12:29:08 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id x89sm2292649qtd.43.2020.03.19.12.29.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 12:29:08 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 14/14] efi/gop: Allow automatically choosing the best mode
-Date:   Thu, 19 Mar 2020 15:28:55 -0400
-Message-Id: <20200319192855.29876-15-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200319192855.29876-1-nivedita@alum.mit.edu>
-References: <20200319192855.29876-1-nivedita@alum.mit.edu>
+IronPort-SDR: bVWigo4Fv7jMZyA8pdsTJL894LCyvB4w8iMEtmVuDfE3IjJ2NMT/eGARjscM85dFS/oo7XS7PB
+ p0fkxyguuBXA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 12:29:18 -0700
+IronPort-SDR: MQXloGgtmfQmn2lTbl+0WLbHTx9QpCVk0qFlUxv6GOqn/OpUgA3EDvcUSRLeEL1HnuDHbQR4cA
+ TjDyvYis4T+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="391905475"
+Received: from mallani-mobl.amr.corp.intel.com (HELO [10.255.35.49]) ([10.255.35.49])
+  by orsmga004.jf.intel.com with ESMTP; 19 Mar 2020 12:29:16 -0700
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+To:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com,
+        curtis@malainey.com, tiwai@suse.com,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        linux-kernel@vger.kernel.org, liam.r.girdwood@linux.intel.com,
+        Mark Brown <broonie@kernel.org>
+References: <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+ <20200318215218.GA2439@light.dominikbrodowski.net>
+ <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+ <20200319130049.GA2244@light.dominikbrodowski.net>
+ <20200319134139.GB3983@sirena.org.uk>
+ <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
+ <20200319165157.GA2254@light.dominikbrodowski.net>
+ <a7bf2aee-78e7-f905-bcc3-cd21bf16a976@intel.com>
+ <20200319182413.GA3968@light.dominikbrodowski.net>
+ <750f7841-0b95-9fa8-d858-e0bff4d834d5@intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <f6b7c60a-d99e-c140-31d0-0b56960c3ec9@linux.intel.com>
+Date:   Thu, 19 Mar 2020 14:05:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <750f7841-0b95-9fa8-d858-e0bff4d834d5@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ability to automatically pick the highest resolution video mode
-(defined as the product of vertical and horizontal resolution) by using
-a command-line argument of the form
-	video=efifb:auto
 
-If there are multiple modes with the highest resolution, pick one with
-the highest color depth.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- Documentation/fb/efifb.rst         |  6 +++
- drivers/firmware/efi/libstub/gop.c | 81 +++++++++++++++++++++++++++++-
- 2 files changed, 86 insertions(+), 1 deletion(-)
+On 3/19/20 1:35 PM, Cezary Rojewski wrote:
+> On 2020-03-19 19:24, Dominik Brodowski wrote:
+>> On Thu, Mar 19, 2020 at 06:33:50PM +0100, Cezary Rojewski wrote:
+>>>
+>>> Could you confirm the same happens on your machine when revert of 
+>>> mentioned
+>>> patch is not applied ("stream is NULL" messages occur)? Issue may be
+>>> harmless but explained sequence does not look right.
+>>
+>> Indeed, I still see
+>>
+>> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no 
+>> stream to reset, ignore it.
+>> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no 
+>> stream to free, ignore it.
+>> haswell-pcm-audio haswell-pcm-audio: FW loaded, mailbox readback FW 
+>> info: type 01, - version: 00.00, build 77, source commit id: 
+>> 876ac6906f31a43b6772b23c7c983ce9dcb18a19
+>> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no 
+>> stream to reset, ignore it.
+>> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no 
+>> stream to free, ignore it.
+>>
+>> though sounds continues to work.
+>>
+> 
+> Thanks once again for your input and time!
+> 
+> I'll prepare patches for both issues. My guess is haswell-pcm could be 
+> updated to handle 'platform' component param just fine, but it is 
+> probably a change of more than few lines. I'd rather revert non-SOF 
+> broadwell to its previous behavior and start a separate task from there.
 
-diff --git a/Documentation/fb/efifb.rst b/Documentation/fb/efifb.rst
-index eca38466487a..519550517fd4 100644
---- a/Documentation/fb/efifb.rst
-+++ b/Documentation/fb/efifb.rst
-@@ -57,4 +57,10 @@ mode=n
-         "rgb" or "bgr" to match specifically those pixel formats, or a number
-         for a mode with matching bits per pixel.
- 
-+auto
-+        The EFI stub will choose the mode with the highest resolution (product
-+        of horizontal and vertical resolution). If there are multiple modes
-+        with the highest resolution, it will choose one with the highest color
-+        depth.
-+
- Edgar Hucek <gimli@dark-green.com>
-diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
-index 671f812e0b5a..affdcb6cca9a 100644
---- a/drivers/firmware/efi/libstub/gop.c
-+++ b/drivers/firmware/efi/libstub/gop.c
-@@ -18,7 +18,8 @@
- enum efi_cmdline_option {
- 	EFI_CMDLINE_NONE,
- 	EFI_CMDLINE_MODE_NUM,
--	EFI_CMDLINE_RES
-+	EFI_CMDLINE_RES,
-+	EFI_CMDLINE_AUTO
- };
- 
- static struct {
-@@ -86,6 +87,19 @@ static bool parse_res(char *option, char **next)
- 	return true;
- }
- 
-+static bool parse_auto(char *option, char **next)
-+{
-+	if (!strstarts(option, "auto"))
-+		return false;
-+	option += strlen("auto");
-+	if (*option && *option++ != ',')
-+		return false;
-+	cmdline.option = EFI_CMDLINE_AUTO;
-+
-+	*next = option;
-+	return true;
-+}
-+
- void efi_parse_option_graphics(char *option)
- {
- 	while (*option) {
-@@ -93,6 +107,8 @@ void efi_parse_option_graphics(char *option)
- 			continue;
- 		if (parse_res(option, &option))
- 			continue;
-+		if (parse_auto(option, &option))
-+			continue;
- 
- 		while (*option && *option++ != ',')
- 			;
-@@ -211,6 +227,66 @@ static u32 choose_mode_res(efi_graphics_output_protocol_t *gop)
- 	return cur_mode;
- }
- 
-+static u32 choose_mode_auto(efi_graphics_output_protocol_t *gop)
-+{
-+	efi_status_t status;
-+
-+	efi_graphics_output_protocol_mode_t *mode;
-+	efi_graphics_output_mode_info_t *info;
-+	unsigned long info_size;
-+
-+	u32 max_mode, cur_mode, best_mode, area;
-+	u8 depth;
-+	int pf;
-+	efi_pixel_bitmask_t pi;
-+	u32 m, w, h, a;
-+	u8 d;
-+
-+	mode = efi_table_attr(gop, mode);
-+
-+	cur_mode = efi_table_attr(mode, mode);
-+	max_mode = efi_table_attr(mode, max_mode);
-+
-+	info = efi_table_attr(mode, info);
-+
-+	pf = info->pixel_format;
-+	pi = info->pixel_information;
-+	w  = info->horizontal_resolution;
-+	h  = info->vertical_resolution;
-+
-+	best_mode = cur_mode;
-+	area = w * h;
-+	depth = pixel_bpp(pf, pi);
-+
-+	for (m = 0; m < max_mode; m++) {
-+		status = efi_call_proto(gop, query_mode, m,
-+					&info_size, &info);
-+		if (status != EFI_SUCCESS)
-+			continue;
-+
-+		pf = info->pixel_format;
-+		pi = info->pixel_information;
-+		w  = info->horizontal_resolution;
-+		h  = info->vertical_resolution;
-+
-+		efi_bs_call(free_pool, info);
-+
-+		if (pf == PIXEL_BLT_ONLY || pf >= PIXEL_FORMAT_MAX)
-+			continue;
-+		a = w * h;
-+		if (a < area)
-+			continue;
-+		d = pixel_bpp(pf, pi);
-+		if (a > area || d > depth) {
-+			best_mode = m;
-+			area = a;
-+			depth = d;
-+		}
-+	}
-+
-+	return best_mode;
-+}
-+
- static void set_mode(efi_graphics_output_protocol_t *gop)
- {
- 	efi_graphics_output_protocol_mode_t *mode;
-@@ -225,6 +301,9 @@ static void set_mode(efi_graphics_output_protocol_t *gop)
- 	case EFI_CMDLINE_RES:
- 		new_mode = choose_mode_res(gop);
- 		break;
-+	case EFI_CMDLINE_AUTO:
-+		new_mode = choose_mode_auto(gop);
-+		break;
- 	}
- 
- 	mode = efi_table_attr(gop, mode);
--- 
-2.24.1
-
+It'd be good to know why a dummy platform component is required though.
