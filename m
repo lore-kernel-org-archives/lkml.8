@@ -2,167 +2,134 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AC5C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C4AC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C7D2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6782071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:39:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="FK+oh8+k"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tg2aN6xt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgCSEg1 (ORCPT
+        id S1726525AbgCSEjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 00:36:27 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:41735 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgCSEg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 00:36:27 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 925fe938;
-        Thu, 19 Mar 2020 04:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=+s2FzirMB0tlloariI/IcCb8oyc=; b=FK+oh8
-        +kTiQrNR+RQf497KyPeLBun7Pt/xmB8nKb5wFXjc8Kh/FPxpHm/YcuY/c/UjWH5y
-        3RwUHzSHH7WfAuOtEPOdm9l4guCBxQ5l1w0m4GXFBNHFa8rgUCVRqa2YZx3zllOd
-        TSx2zq1nhSIFF/W4qXuxAYSDdZzK68VCuCIwY5gMKN2cbZFnf/uZio6kqcB9U6kC
-        4x9f0/wyIPraPCXYoaOPaYX2Z0qxiiMwKzegIrxxmS0elEmvjwM9VR6TSq2if66+
-        WBv1gokoNGJ4YYISvFdo2g/y7VEwXQfJCrk3XtTJ6razqIHUjF37tcMRz4UMFOzM
-        Lqj7Bh0uFPEU1dGw==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id b03adda6 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 19 Mar 2020 04:29:58 +0000 (UTC)
-Received: by mail-il1-f179.google.com with SMTP id p1so1018299ils.5;
-        Wed, 18 Mar 2020 21:36:24 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2vbqw8m/piboOdH9O/0iQSb2pEwr6jcGa21yR8bAdK7nWsEIY3
-        AWKQuYPY5U/Pujd9SGS4lVehCL4JLNQUaGAxqkw=
-X-Google-Smtp-Source: ADFU+vvf9AsZriRw4R+MQ2btVMLhM7//ex/Lj+zPbU7bBo6NKPrcPmpj5qASRSvJQHh9LZzrSUW12e6/1cVA23qNtZc=
-X-Received: by 2002:a92:358b:: with SMTP id c11mr1400687ilf.64.1584592584049;
- Wed, 18 Mar 2020 21:36:24 -0700 (PDT)
+        Thu, 19 Mar 2020 00:39:22 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45348 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgCSEjW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 00:39:22 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m15so534227pgv.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 21:39:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ruMvWKaCTsbInQhs/V5bAwFT4fo/B2LhqokROVX1RJo=;
+        b=tg2aN6xtBRVVIsylVN35uS278/h81kU5E3rrZb4l9rasLTWQ0gO2RA0UvpzzCntSPD
+         ZPIiYQ8t6hnvWpKofzzGzll+jfkqbYURB0VtpYDjsIKqvD4B3bKHij1aLEY1qdFdWFUR
+         6II5O54rz9PrCLotYrETJh1NIQT3fKEtfL/DUGC2rs/BPsqoqb+egLQnKbiBy7uwf55n
+         U+kLTmtbRTdj3d3FG0Jk7dNBxxYhnOvKmqe0Oau6zQGq5nEoJVoE1nooNnvWQxELdLl8
+         0bNe9Qqfe61hyW/e5KaoNY32tTxagRuyKyaKC1epbe1ve6VNNVmKXpriu+88+RagG67M
+         Ixvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ruMvWKaCTsbInQhs/V5bAwFT4fo/B2LhqokROVX1RJo=;
+        b=rN1D5dF2LaZWZa1EXPhQwc4ZaGgKuqFsTU6ofd+PQb6uvZY90xAi8++Zm4YL6M0N2L
+         nb6ns0czJchFQYvnnItRlKlnlV8Po717jqqk5JQmKohjAH8mseMbIjmWR678+IFM2WlK
+         lV57I3X5aUhR2HlKWltb5FGspDmUjQU+oVGYSo/dcXMV07pOCuPVnVJUvnbscLJnP2lK
+         jBFkiK5JFFaUHctndprKmDuD8lUuQrVwr/Ypk0qnDNdSw7ekNtHSleq+XcyWQpJpXLFA
+         gH24wXt9BDTz+CJdCw6LAxpe+0gMJ5TNkow3touRFOwBWwx29aoLtkQ91DAjHHin+iwG
+         UYhg==
+X-Gm-Message-State: ANhLgQ3zx6FiWsIlRzFlmTFEHLgWOUIt3XzYIsF7xoI5RUqi0SvtlQDz
+        PyXDPnYvH5wF/PDZBuk+soXCgrXTv/Y=
+X-Google-Smtp-Source: ADFU+vvT12s0aAoLNNrPFmHAx5hQiycl6q/fBkWc1OwJE6FPv7umjTrZuM7h/FPuLb8vCrLAF5uWdw==
+X-Received: by 2002:a63:2a4b:: with SMTP id q72mr1309267pgq.441.1584592760401;
+        Wed, 18 Mar 2020 21:39:20 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 25sm571370pfn.190.2020.03.18.21.39.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 21:39:19 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/msm: Don't attempt to attach HDMI bridge twice
+Date:   Wed, 18 Mar 2020 21:37:41 -0700
+Message-Id: <20200319043741.3338842-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <CAHmME9otcAe7H4Anan8Tv1KreTZtwt4XXEPMG--x2Ljr0M+o1Q@mail.gmail.com>
- <20200319022732.166085-1-Jason@zx2c4.com> <20200319032526.GH2334@sol.localdomain>
- <CAHmME9rV7rknXMmjhNj--ZWvya7ZG37tnKQB+vxuqok4nLJwTg@mail.gmail.com>
-In-Reply-To: <CAHmME9rV7rknXMmjhNj--ZWvya7ZG37tnKQB+vxuqok4nLJwTg@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 18 Mar 2020 22:36:13 -0600
-X-Gmail-Original-Message-ID: <CAHmME9qNfb6N4bg4j-Y+KOT-S9DMnUpUT3TB8KKHD2wB7yvukA@mail.gmail.com>
-Message-ID: <CAHmME9qNfb6N4bg4j-Y+KOT-S9DMnUpUT3TB8KKHD2wB7yvukA@mail.gmail.com>
-Subject: Re: [PATCH URGENT crypto v2] crypto: arm64/chacha - correctly walk
- through blocks
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 10:25 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> On Wed, Mar 18, 2020 at 9:25 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > On Wed, Mar 18, 2020 at 08:27:32PM -0600, Jason A. Donenfeld wrote:
-> > > It also fixes up a bug in the (optional, costly) stride test that
-> > > prevented it from running on arm64.
-> > [...]
-> > > diff --git a/lib/crypto/chacha20poly1305-selftest.c b/lib/crypto/chacha20poly1305-selftest.c
-> > > index c391a91364e9..fa43deda2660 100644
-> > > --- a/lib/crypto/chacha20poly1305-selftest.c
-> > > +++ b/lib/crypto/chacha20poly1305-selftest.c
-> > > @@ -9028,10 +9028,15 @@ bool __init chacha20poly1305_selftest(void)
-> > >            && total_len <= 1 << 10; ++total_len) {
-> > >               for (i = 0; i <= total_len; ++i) {
-> > >                       for (j = i; j <= total_len; ++j) {
-> > > +                             k = 0;
-> > >                               sg_init_table(sg_src, 3);
-> > > -                             sg_set_buf(&sg_src[0], input, i);
-> > > -                             sg_set_buf(&sg_src[1], input + i, j - i);
-> > > -                             sg_set_buf(&sg_src[2], input + j, total_len - j);
-> > > +                             if (i)
-> > > +                                     sg_set_buf(&sg_src[k++], input, i);
-> > > +                             if (j - i)
-> > > +                                     sg_set_buf(&sg_src[k++], input + i, j - i);
-> > > +                             if (total_len - j)
-> > > +                                     sg_set_buf(&sg_src[k++], input + j, total_len - j);
-> > > +                             sg_init_marker(sg_src, k);
-> > >                               memset(computed_output, 0, total_len);
-> > >                               memset(input, 0, total_len);
-> >
-> > So with this test fix, does this test find the bug?
->
-> Yes.
->
-> > Apparently the empty scatterlist elements caused some problem?  What was
-> > that problem exactly?  And what do you mean by this "prevented the test
-> > from running on arm64"?  If there is a problem it seems we should
-> > something else about about it, e.g. debug checks that work in consistent
-> > way on all architectures, documenting what the function expects, or make
-> > it just work properly with empty scatterlist elements.
->
-> Yea, my next plan was to look into what's going on there. In case
-> you're curious, here's what happens:
->
-> [    0.355761] [ffffffff041e9508] pgd=000000004ffe9003,
-> pud=000000004ffe9003, pmd=0000000000000000
-> [    0.356212] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-> [    0.356587] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc5+ #10
-> [    0.356695] Hardware name: linux,dummy-virt (DT)
-> [    0.356972] pstate: 20000005 (nzCv daif -PAN -UAO)
-> [    0.357158] pc : scatterwalk_copychunks+0x13c/0x1e0
-> [    0.357257] lr : scatterwalk_copychunks+0xe0/0x1e0
-> [    0.357379] sp : ffffff800f82f970
-> [    0.357450] x29: ffffff800f82f970 x28: ffffff800f838000
-> [    0.357607] x27: ffffff800f838000 x26: 0000000000000001
-> [    0.357725] x25: ffffff800f82faf0 x24: ffffff800f82fa10
-> [    0.357820] x23: 0000000000000010 x22: 0000000000000000
-> [    0.357898] x21: 0000000000000000 x20: 0000000100200000
-> [    0.357978] x19: ffffff8000000000 x18: 0000000000000014
-> [    0.358132] x17: 0000000000000000 x16: 0000000000000002
-> [    0.358214] x15: 00000000074c5755 x14: 0000000000000002
-> [    0.358310] x13: 074c57550311ac67 x12: 09579e470077af1a
-> [    0.358453] x11: 1d3f98018ec6f5bb x10: 3e6144a223343e11
-> [    0.358560] x9 : 0000000000000000 x8 : ffffff800f82fcc0
-> [    0.358638] x7 : 0000000000000000 x6 : ffffff800fa55000
-> [    0.358711] x5 : 0000000000001000 x4 : 0000000000000000
-> [    0.358781] x3 : ffffffff001e9540 x2 : ffffffff001e9540
-> [    0.358855] x1 : ffffffff041e9500 x0 : ffffff800f82fd60
-> [    0.359007] Call trace:
-> [    0.359177]  scatterwalk_copychunks+0x13c/0x1e0
-> [    0.359269]  scatterwalk_map_and_copy+0x50/0xa8
-> [    0.359339]  chacha20poly1305_crypt_sg_inplace+0x3f4/0x418
-> [    0.359418]  chacha20poly1305_encrypt_sg_inplace+0x10/0x18
-> [    0.359511]  chacha20poly1305_selftest+0x4dc/0x618
-> [    0.359581]  mod_init+0xc/0x2c
-> [    0.359630]  do_one_initcall+0x58/0x11c
-> [    0.359687]  kernel_init_freeable+0x174/0x1e0
-> [    0.359751]  kernel_init+0x10/0x100
-> [    0.359803]  ret_from_fork+0x10/0x18
-> [    0.360074] Code: f9400002 530c7c21 927ef442 8b011841 (f9400423)
-> [    0.360257] ---[ end trace 0b64264f8a25dbdf ]---
-> [    0.360453] Kernel panic - not syncing: Fatal exception
-> [    0.360597] SMP: stopping secondary CPUs
-> [    0.360835] Kernel Offset: disabled
-> [    0.360985] CPU features: 0x00002,00002000
-> [    0.361042] Memory Limit: none
+With the introduction of '3ef2f119bd3e ("drm/msm: Use
+drm_attach_bridge() to attach a bridge to an encoder")' the HDMI bridge
+is attached both in msm_hdmi_bridge_init() and later in
+msm_hdmi_modeset_init().
 
-__read_once_size at include/linux/compiler.h:199
-(inlined by) compound_head at include/linux/page-flags.h:174
-(inlined by) PageSlab at include/linux/page-flags.h:325
-(inlined by) scatterwalk_pagedone at include/crypto/scatterwalk.h:88
-(inlined by) scatterwalk_copychunks at crypto/scatterwalk.c:50
+The second attempt fails as the bridge is already attached to the
+encoder and the whole process is aborted.
 
-Bug makes sense.
+So instead make msm_hdmi_bridge_init() just initialize the hdmi_bridge
+object and let msm_hdmi_modeset_init() attach it later.
 
-scatterwalk_copychunks->scatterwalk_pagedone->PageSlab, but length
-zero page means we're looking at nonsense.
+Fixes: 3ef2f119bd3e ("drm/msm: Use drm_attach_bridge() to attach a bridge to an encoder")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
 
-So this v2 seems to be the correct fix.
+diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+index 6e380db9287b..0e103ee1b730 100644
+--- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
++++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+@@ -271,31 +271,18 @@ static const struct drm_bridge_funcs msm_hdmi_bridge_funcs = {
+ /* initialize bridge */
+ struct drm_bridge *msm_hdmi_bridge_init(struct hdmi *hdmi)
+ {
+-	struct drm_bridge *bridge = NULL;
+ 	struct hdmi_bridge *hdmi_bridge;
+-	int ret;
++	struct drm_bridge *bridge;
+ 
+ 	hdmi_bridge = devm_kzalloc(hdmi->dev->dev,
+ 			sizeof(*hdmi_bridge), GFP_KERNEL);
+-	if (!hdmi_bridge) {
+-		ret = -ENOMEM;
+-		goto fail;
+-	}
++	if (!hdmi_bridge)
++		return ERR_PTR(-ENOMEM);
+ 
+ 	hdmi_bridge->hdmi = hdmi;
+ 
+ 	bridge = &hdmi_bridge->base;
+ 	bridge->funcs = &msm_hdmi_bridge_funcs;
+ 
+-	ret = drm_bridge_attach(hdmi->encoder, bridge, NULL, 0);
+-	if (ret)
+-		goto fail;
+-
+ 	return bridge;
+-
+-fail:
+-	if (bridge)
+-		msm_hdmi_bridge_destroy(bridge);
+-
+-	return ERR_PTR(ret);
+ }
+-- 
+2.24.0
+
