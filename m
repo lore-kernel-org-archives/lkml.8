@@ -2,113 +2,108 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2802C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 315ACC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B929B2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584638496;
-	bh=Wa5WhY7NV/amydUQxKZOOUXAC72lGMcK0NhEdS62D74=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yM3Sk8FyvVPkeZmFh2rUS82aft+iNxWc1oWr5kLZbSZ2aU97J37OP5acwx9ZRQWBb
-	 zq9v5e+6z4bZNvo+SBt9/+d25D1z/LGIbFLc6BN+2fSMqottJSF3U0G9qqca2qZl2s
-	 QhqfRt3S207l6SMYjlrW3ej7k5enR4pmS9QPsKdk=
+	by mail.kernel.org (Postfix) with ESMTP id 0A5F92070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgCSRVf (ORCPT
+        id S1728226AbgCSRVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:21:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55360 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 13:21:50 -0400
+Received: from mga01.intel.com ([192.55.52.88]:42321 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727146AbgCSRVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:21:35 -0400
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F51520836;
-        Thu, 19 Mar 2020 17:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584638494;
-        bh=Wa5WhY7NV/amydUQxKZOOUXAC72lGMcK0NhEdS62D74=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ft7/kE4yvSeKvAW7bbRrolP0UaF4xWVzoUrxHpX0nmu8GiUwsWuPjC9AXv1rRvqzH
-         sVRiUQ2587taXsEXy1sB2Zk5TBLyJLMygLxbHZVX7XO/h+r/38lcGeiLC0wZaFDnYu
-         Y4lX75HTJ+SSMrlihdhmMBdXg2cJ2f851/tEqHBo=
-Received: by mail-qk1-f174.google.com with SMTP id c145so3855298qke.12;
-        Thu, 19 Mar 2020 10:21:34 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ13TX7m3D5QlSqmEd7vWKhcYbGOigfeWKTOCs/0JJzHGkIJY/Gp
-        gOrbfhLp3rgKSUMWL67AMN7RGw+g8gqZeHXyEw==
-X-Google-Smtp-Source: ADFU+vulofMsciR5pLApGaBb0QXCqdfQARLGVOuL0yu914G08i7K943mRV5VQl5ypvWeXQ6VTH6kM8/ISVQqrL9dm34=
-X-Received: by 2002:a37:8502:: with SMTP id h2mr4136038qkd.223.1584638493344;
- Thu, 19 Mar 2020 10:21:33 -0700 (PDT)
+        id S1727146AbgCSRVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:21:49 -0400
+IronPort-SDR: 1/KrzT0QTyEvjKRTQFuw2mO8rtUFckSCjhLVuxaO5HuxQde5qA2/e2RKJqGvdc67LtKAQdw7Xw
+ z5/FC4rHldeg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 10:21:49 -0700
+IronPort-SDR: uhvihpBxhcKPDcFU+cU4PT8LMnYRGNXufez+qTl2y/miMWDn7R+AHq2l/iLIuFqEwYpy4+CCCh
+ A5VqQaktpONA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="444650210"
+Received: from tvanlang-mobl.ger.corp.intel.com (HELO [10.255.34.72]) ([10.255.34.72])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Mar 2020 10:21:48 -0700
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+To:     Dominik Brodowski <linux@dominikbrodowski.net>,
+        Cezary Rojewski <cezary.rojewski@intel.com>
+Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, curtis@malainey.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        liam.r.girdwood@linux.intel.com
+References: <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
+ <20200318162029.GA3999@light.dominikbrodowski.net>
+ <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+ <20200318215218.GA2439@light.dominikbrodowski.net>
+ <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+ <20200319130049.GA2244@light.dominikbrodowski.net>
+ <20200319134139.GB3983@sirena.org.uk>
+ <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
+ <20200319165157.GA2254@light.dominikbrodowski.net>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <eef45d20-3bce-184a-842c-216c15252014@linux.intel.com>
+Date:   Thu, 19 Mar 2020 12:21:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
- <1584211798-10332-2-git-send-email-tdas@codeaurora.org> <20200318220443.GA16192@bogus>
- <2ceccbac-b289-03d0-665b-6e9ca57b4333@codeaurora.org>
-In-Reply-To: <2ceccbac-b289-03d0-665b-6e9ca57b4333@codeaurora.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 19 Mar 2020 11:21:21 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKOTRzvtTjHPmOR60tpxUoPsoaB5ZbLdPG0VrN-NnFxWg@mail.gmail.com>
-Message-ID: <CAL_JsqKOTRzvtTjHPmOR60tpxUoPsoaB5ZbLdPG0VrN-NnFxWg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200319165157.GA2254@light.dominikbrodowski.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 11:37 PM Taniya Das <tdas@codeaurora.org> wrote:
->
->
->
-> On 3/19/2020 3:34 AM, Rob Herring wrote:
-> > On Sun, 15 Mar 2020 00:19:56 +0530, Taniya Das wrote:
-> >> The Modem Subsystem clock provider have a bunch of generic properties
-> >> that are needed in a device tree. Add a YAML schemas for those.
-> >>
-> >> Add clock ids for GCC MSS and MSS clocks which are required to bring
-> >> the modem out of reset.
-> >>
-> >> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> >> ---
-> >>   .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
-> >>   include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
-> >>   include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
-> >>   3 files changed, 80 insertions(+), 1 deletion(-)
-> >>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
-> >>   create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
-> >>
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
-> > Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml: $id: relative path/filename doesn't match actual path or filename
-> >       expected: http://devicetree.org/schemas/clock/qcom,sc7180-mss.yaml#
-> >
-> > See https://patchwork.ozlabs.org/patch/1254940
-> > Please check and re-submit.
-> >
-> Hi Rob,
->
-> Thanks, I have fixed it in the next patch series.
->
-> Is there a way to catch these before submitting? As I do not see these
-> errors on my machine.
 
-If you ran 'make dt_binding_check' already, then update dt-schema with pip.
 
-Rob
+On 3/19/20 11:51 AM, Dominik Brodowski wrote:
+> On Thu, Mar 19, 2020 at 04:48:03PM +0100, Cezary Rojewski wrote:
+>> On 2020-03-19 14:41, Mark Brown wrote:
+>>> On Thu, Mar 19, 2020 at 02:00:49PM +0100, Dominik Brodowski wrote:
+>>>
+>>>> Have some good news now, namely that a bisect is complete: That pointed to
+>>>> 1272063a7ee4 ("ASoC: soc-core: care .ignore_suspend for Component suspend");
+>>>> therefore I've added Kuninori Morimoto to this e-mail thread.
+>>>
+>>> If that's an issue it feels more like a driver bug in that if the driver
+>>> asked for ignore_suspend then it should expect not to have the suspend
+>>> callback called.
+>>>
+>>
+>> Requested for tests with following diff applied:
+>>
+>> diff --git a/sound/soc/intel/boards/broadwell.c
+>> b/sound/soc/intel/boards/broadwell.c
+>> index db7e1e87156d..6ed4c1b0a515 100644
+>> --- a/sound/soc/intel/boards/broadwell.c
+>> +++ b/sound/soc/intel/boards/broadwell.c
+>> @@ -212,7 +212,6 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] =
+>> {
+>>                  .init = broadwell_rt286_codec_init,
+>>                  .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
+>>                          SND_SOC_DAIFMT_CBS_CFS,
+>> -               .ignore_suspend = 1,
+>>                  .ignore_pmdown_time = 1,
+>>                  .be_hw_params_fixup = broadwell_ssp0_fixup,
+>>                  .ops = &broadwell_rt286_ops,
+> 
+> That patch fixes the issue(s). I didn't even need to revert 64df6afa0dab
+> ("ASoC: Intel: broadwell: change cpu_dai and platform components for SOF")
+> on top of that. But you can assess better whether that patch needs care for
+> other reasons; for me, this one-liner you have suggested is perfect.
+
+.ignore_suspend is set for bdw-rt5677.c and bdw-rt5650.c as well. I 
+don't know if that was intentional.
