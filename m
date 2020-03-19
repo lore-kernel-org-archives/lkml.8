@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86115C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559C4C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3652098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE412098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623824;
-	bh=QxtaDxcfQEQ1UKz0PJyRYKh2BCVbPnsBm3vuLhOG/lI=;
+	s=default; t=1584623828;
+	bh=NtVO8LRWjvuQqw8jJnihBjciJWVRxF+cJQoyoevWB6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y0GNUXQgVp9dWhqQ9FmeeyroPWR1okmuBbcqOc2w7ktBRz9QlAskl373MqqaY2ZuS
-	 91WJutVNaVjp5vzXuJoJzGW5Au0jYt/amlwlDuklpFOWCjGwkoYE1Wo1EeE5xTGnAZ
-	 AI+bdpA0xtfaEQc1l1gpWTi85f9THqPJ1sfh4dx0=
+	b=DqUS59vzwRjXgClknNffp2iNKluELeT+Y2fo3aKh7vLW73pv0k7Z8cP6mb0dGZqbH
+	 s9nUAJdXX6+OshwoLEKzzHloPsr03fwAmGLmlKpYvl6T2r+qcQZ9lSG8kIJIl3keHe
+	 pQsbyA6AG+jMBnFGUEfvOsLc1qWHrRs7UEndorD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbgCSNRD (ORCPT
+        id S1729328AbgCSNRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:17:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37886 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:17:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728587AbgCSNQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:16:59 -0400
+        id S1729421AbgCSNRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:17:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04C952098B;
-        Thu, 19 Mar 2020 13:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D1E521835;
+        Thu, 19 Mar 2020 13:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623819;
-        bh=QxtaDxcfQEQ1UKz0PJyRYKh2BCVbPnsBm3vuLhOG/lI=;
+        s=default; t=1584623823;
+        bh=NtVO8LRWjvuQqw8jJnihBjciJWVRxF+cJQoyoevWB6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AL0twPKEWbf454bozPApl9kC4TKPTJlI03qfrZSRCvrKvGJ+rz8OoB4wKoVT5+bWP
-         a6lEa/iNrKDX6shrxnhE2vqcLg3p1PY3IODCOSsTV1ezgOuMqrLZegdz0Q4IGSEf9u
-         ToXW1VAF1EXAAtw9g3T0mRA9k1X9v7J5acu+zUu8=
+        b=lUMMbr/iqvIQ+pVzU43OBtSPlkgw6MqcaTClSN5ZxzWvWr8BxipL7XRUqrq8CbDUG
+         BWe1WsMTrugoPJWICaOE8uzbAPQpUVCoL4p0ie+it10i3e5x+CdjH07zfgF+a2vzT/
+         SVG8ioDb7AtUk4i4NMv5ymnztB776OGUy+/7pz/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.14 37/99] cgroup: cgroup_procs_next should increase position index
-Date:   Thu, 19 Mar 2020 14:03:15 +0100
-Message-Id: <20200319123953.062335196@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 64/99] ipv6: restrict IPV6_ADDRFORM operation
+Date:   Thu, 19 Mar 2020 14:03:42 +0100
+Message-Id: <20200319124000.822089234@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -59,85 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 2d4ecb030dcc90fb725ecbfc82ce5d6c37906e0e upstream.
+commit b6f6118901d1e867ac9177bbff3b00b185bd4fdc upstream.
 
-If seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output:
+IPV6_ADDRFORM is able to transform IPv6 socket to IPv4 one.
+While this operation sounds illogical, we have to support it.
 
-1) dd bs=1 skip output of each 2nd elements
-$ dd if=/sys/fs/cgroup/cgroup.procs bs=8 count=1
-2
-3
-4
-5
-1+0 records in
-1+0 records out
-8 bytes copied, 0,000267297 s, 29,9 kB/s
-[test@localhost ~]$ dd if=/sys/fs/cgroup/cgroup.procs bs=1 count=8
-2
-4 <<< NB! 3 was skipped
-6 <<<    ... and 5 too
-8 <<<    ... and 7
-8+0 records in
-8+0 records out
-8 bytes copied, 5,2123e-05 s, 153 kB/s
+One of the things it does for TCP socket is to switch sk->sk_prot
+to tcp_prot.
 
- This happen because __cgroup_procs_start() makes an extra
- extra cgroup_procs_next() call
+We now have other layers playing with sk->sk_prot, so we should make
+sure to not interfere with them.
 
-2) read after lseek beyond end of file generates whole last line.
-3) read after lseek into middle of last line generates
-expected rest of last line and unexpected whole line once again.
+This patch makes sure sk_prot is the default pointer for TCP IPv6 socket.
 
-Additionally patch removes an extra position index changes in
-__cgroup_procs_start()
+syzbot reported :
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+PGD a0113067 P4D a0113067 PUD a8771067 PMD 0
+Oops: 0010 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 10686 Comm: syz-executor.0 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
+RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
+RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
+R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
+R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
+FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ inet_release+0x165/0x1c0 net/ipv4/af_inet.c:427
+ __sock_release net/socket.c:605 [inline]
+ sock_close+0xe1/0x260 net/socket.c:1283
+ __fput+0x2e4/0x740 fs/file_table.c:280
+ ____fput+0x15/0x20 fs/file_table.c:313
+ task_work_run+0x176/0x1b0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
+ prepare_exit_to_usermode+0x480/0x5b0 arch/x86/entry/common.c:195
+ syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:278
+ do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c429
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f2ae75dac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
+RAX: 0000000000000000 RBX: 00007f2ae75db6d4 RCX: 000000000045c429
+RDX: 0000000000000001 RSI: 000000000000011a RDI: 0000000000000004
+RBP: 000000000076bf20 R08: 0000000000000038 R09: 0000000000000000
+R10: 0000000020000180 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000a9d R14: 00000000004ccfb4 R15: 000000000076bf2c
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace 82567b5207e87bae ]---
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
+RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
+RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
+R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
+R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
+FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Cc: stable@vger.kernel.org
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cgroup/cgroup.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/ipv6/ipv6_sockglue.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -4249,6 +4249,9 @@ static void *cgroup_procs_next(struct se
- 	struct kernfs_open_file *of = s->private;
- 	struct css_task_iter *it = of->priv;
- 
-+	if (pos)
-+		(*pos)++;
-+
- 	return css_task_iter_next(it);
- }
- 
-@@ -4264,7 +4267,7 @@ static void *__cgroup_procs_start(struct
- 	 * from position 0, so we can simply keep iterating on !0 *pos.
- 	 */
- 	if (!it) {
--		if (WARN_ON_ONCE((*pos)++))
-+		if (WARN_ON_ONCE((*pos)))
- 			return ERR_PTR(-EINVAL);
- 
- 		it = kzalloc(sizeof(*it), GFP_KERNEL);
-@@ -4272,10 +4275,11 @@ static void *__cgroup_procs_start(struct
- 			return ERR_PTR(-ENOMEM);
- 		of->priv = it;
- 		css_task_iter_start(&cgrp->self, iter_flags, it);
--	} else if (!(*pos)++) {
-+	} else if (!(*pos)) {
- 		css_task_iter_end(it);
- 		css_task_iter_start(&cgrp->self, iter_flags, it);
--	}
-+	} else
-+		return it->cur_task;
- 
- 	return cgroup_procs_next(s, NULL, NULL);
- }
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -185,9 +185,15 @@ static int do_ipv6_setsockopt(struct soc
+ 					retv = -EBUSY;
+ 					break;
+ 				}
+-			} else if (sk->sk_protocol != IPPROTO_TCP)
++			} else if (sk->sk_protocol == IPPROTO_TCP) {
++				if (sk->sk_prot != &tcpv6_prot) {
++					retv = -EBUSY;
++					break;
++				}
++				break;
++			} else {
+ 				break;
+-
++			}
+ 			if (sk->sk_state != TCP_ESTABLISHED) {
+ 				retv = -ENOTCONN;
+ 				break;
 
 
