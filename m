@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19F2C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06F8C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D027E20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E7120774
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbgCSUum (ORCPT
+        id S1727494AbgCSUux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:50:42 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:27946 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727256AbgCSUuV (ORCPT
+        Thu, 19 Mar 2020 16:50:53 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:14450 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727238AbgCSUuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 16:50:21 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
+  by ironmsg05-sd.qualcomm.com with ESMTP; 19 Mar 2020 13:50:18 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id F3D204BC0; Thu, 19 Mar 2020 13:50:18 -0700 (PDT)
+        id A4F584BBC; Thu, 19 Mar 2020 13:50:18 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -33,13 +33,15 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, Yash Shah <yash.shah@sifive.com>,
-        Atish Patra <atish.patra@wdc.com>
-Subject: [PATCH v10 07/12] pwm: sifive: Use 64-bit division macro
-Date:   Thu, 19 Mar 2020 13:50:10 -0700
-Message-Id: <9cf530f3a35b4542cc02e95d2cb9c95495a10170.1584650604.git.gurus@codeaurora.org>
+        Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH v10 02/12] hwmon: pwm-fan: Use 64-bit division macro
+Date:   Thu, 19 Mar 2020 13:50:05 -0700
+Message-Id: <b8d8e51723f99844abc6a3f637ac42be3e084709.1584650604.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1584650604.git.gurus@codeaurora.org>
 References: <cover.1584650604.git.gurus@codeaurora.org>
@@ -51,33 +53,35 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Since the PWM framework is switching struct pwm_args.period's datatype
-to u64, prepare for this transition by using DIV64_U64_ROUND_CLOSEST to
-handle a 64-bit divisor.
+to u64, prepare for this transition by using DIV_ROUND_UP_ULL to handle
+a 64-bit dividend.
 
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: linux-riscv@lists.infradead.org
-Cc: Yash Shah <yash.shah@sifive.com>
-Cc: Atish Patra <atish.patra@wdc.com>
+Cc: Kamil Debski <kamil@wypas.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-hwmon@vger.kernel.org
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/pwm/pwm-sifive.c | 2 +-
+ drivers/hwmon/pwm-fan.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index cc63f9b..62de0bb 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -181,7 +181,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * consecutively
- 	 */
- 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
--	frac = DIV_ROUND_CLOSEST_ULL(num, state->period);
-+	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
- 	/* The hardware cannot generate a 100% duty cycle */
- 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+index 42ffd2e..283423a 100644
+--- a/drivers/hwmon/pwm-fan.c
++++ b/drivers/hwmon/pwm-fan.c
+@@ -437,7 +437,7 @@ static int pwm_fan_resume(struct device *dev)
+ 		return 0;
  
+ 	pwm_get_args(ctx->pwm, &pargs);
+-	duty = DIV_ROUND_UP(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
++	duty = DIV_ROUND_UP_ULL(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
+ 	ret = pwm_config(ctx->pwm, duty, pargs.period);
+ 	if (ret)
+ 		return ret;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
