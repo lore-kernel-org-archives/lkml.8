@@ -2,158 +2,383 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F8C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252B7C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC7820409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:15:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2wPsd5e"
+	by mail.kernel.org (Postfix) with ESMTP id E479720409
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgCSPPp (ORCPT
+        id S1727837AbgCSPQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:15:45 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34078 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbgCSPPp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:15:45 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a23so1203428plm.1;
-        Thu, 19 Mar 2020 08:15:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uHJGQXmL96S+ux+ssxyQDazEjTpL8ZpuwcZafnV+i50=;
-        b=m2wPsd5eU+GG5ea6yCk0HuCl3l0VDt7lz/JTfHP/yWz/o/dBKr8dimksUSh/TEmdcj
-         x1tmBJ8k+NjjQZVA2C2f0W2HfjJvGL/3xHcEi6VEQvuaRFnzTaK9x6TLYKa4jzvU1rXF
-         mBF1NLtFBKiUzXld3+ltumzlWwUZuNr4tjewYm+QoiO+cJ4f0jKqXrXCRyFk9hqHbZhT
-         SGVx58UracaclCAz8y0mdEdWfDyYba0+2IQ7zcIIIY+bKizFiwpnjEyZ3WyrKlvnt5aG
-         +gwlzL0v0qeluaZFY9bVRn8q6d4kBV6GpWO1twIxKUgmNxR+cisGU5dG/JzfLuS2zlN3
-         8Pkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=uHJGQXmL96S+ux+ssxyQDazEjTpL8ZpuwcZafnV+i50=;
-        b=Rjsa5HCx2XcGI3t+4z6vQwHn+/lGiDgKFI8bkGAXUembHLfiMsMvDYjDN97dQaXLPP
-         rBMBDE8Od7PTSSBcEk6gCVaLq5GpQoBnFkV9qy7P9GVDl8gmoCL/Sr6baEnQJ+OaljtX
-         X9mqrYRaouUKrd+DFcQvSOZbNImo3XfzHXWOH9ICQTxY2nX1qtbgJnRevLjVVlFs/fqN
-         PpX/OI45TRHUoiWovg3/t3Rj8f1ccgD53rahTj+5Ewbv5w5tO6y7EM9NnENFo16SxjYk
-         JpGAPacrqo1TI1RXh8ABlvrhNSY8pUPRXX05S+ISQDMgejyex1rDOLDfEuDCUxieWvDj
-         3low==
-X-Gm-Message-State: ANhLgQ2nVsES+4fd4ZAGtqrAUpEKbLEoKhMr9fSceH5teLHPs24guUMU
-        IukI3RZhHbsPVK9SPqz83hc=
-X-Google-Smtp-Source: ADFU+vvHbndJ5Ga3yWtDe/v8OSvQB/FsD3B6Tta6S+R7vdqAVBH0J9urhE3cWuAzhpwF8+xR6xALvg==
-X-Received: by 2002:a17:90a:4487:: with SMTP id t7mr4326052pjg.104.1584630943565;
-        Thu, 19 Mar 2020 08:15:43 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b24sm2709466pfi.52.2020.03.19.08.15.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 08:15:42 -0700 (PDT)
-Subject: Re: [PATCH 5.5 00/65] 5.5.11-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>
-References: <20200319123926.466988514@linuxfoundation.org>
- <fcf6db4c-cebe-9ad3-9f19-00d49a7b1043@roeck-us.net>
- <20200319145900.GC92193@kroah.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <32c627bf-0e6b-8bc4-88d3-032a69484aa6@roeck-us.net>
-Date:   Thu, 19 Mar 2020 08:15:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 19 Mar 2020 11:16:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:37610 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726795AbgCSPQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:16:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D57BE30E;
+        Thu, 19 Mar 2020 08:16:49 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 157663F52E;
+        Thu, 19 Mar 2020 08:16:48 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 15:16:47 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Tuan Phan <tuanphan@os.amperecomputing.com>
+Cc:     paches@amperecomputing.com, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] driver/perf: Add PMU driver for the ARM DMC-620 memory
+ controller.
+Message-ID: <20200319151646.GC4876@lakrids.cambridge.arm.com>
+References: <1584491381-31492-1-git-send-email-tuanphan@os.amperecomputing.com>
 MIME-Version: 1.0
-In-Reply-To: <20200319145900.GC92193@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584491381-31492-1-git-send-email-tuanphan@os.amperecomputing.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/19/20 7:59 AM, Greg Kroah-Hartman wrote:
-> On Thu, Mar 19, 2020 at 07:44:33AM -0700, Guenter Roeck wrote:
->> On 3/19/20 6:03 AM, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 5.5.11 release.
->>> There are 65 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
->>> Anything received after that time might be too late.
->>>
->>
->> arm:davinci_all_defconfig fails to build.
->>
->> include/linux/gpio/driver.h: In function 'gpiochip_populate_parent_fwspec_twocell':
->> include/linux/gpio/driver.h:552:1: error: no return statement in function returning non-void [-Werror=return-type]
->>   552 | }
->>
->> The problem is caused by commit 8db6a5905e98 ("gpiolib: Add support for the
->> irqdomain which doesn't use irq_fwspec as arg") which is missing its fix,
->> commit 9c6722d85e922 ("gpio: Fix the no return statement warning"). That one
->> is missing a Fixes: tag, providing a good example why such tags are desirable.
-> 
-> Thanks for letting me know, I've now dropped that patch (others
-> complained about it for other reasons) and will push out a -rc2 with
-> that fix.
-> 
+Hi Tuan,
 
-I did wonder why the offending patch was included, but then I figured that
-I lost the "we apply too many patches to stable releases" battle, and I didn't
-want to re-litigate it.
+On Tue, Mar 17, 2020 at 05:29:38PM -0700, Tuan Phan wrote:
+> DMC-620 PMU supports total 10 counters which each is
+> independently programmable to different events and can
+> be started and stopped individually.
 
-Guenter
+Looking at the TRM for DMC-620, the PMU registers are not in a separate
+frame from the other DMC control registers, and start at offset 0xA00
+(AKA 2560). I would generally expect that access to the DMC control
+registers was restricted to the secure world; is that not the case on
+your platform?
+
+I ask because if those are not restricted, the Normal world could
+potentially undermine the Secure world through this (e.g. playing with
+training settings, messing with the physical memory map, injecting RAS
+errors). Have you considered this?
+
+> DMC-620 PMU devices are named as arm_dmc620_<uid> where
+> <uid> is the UID of DMC-620 PMU ACPI node. Currently, it only
+> supports ACPI. Other platforms feel free to test and add
+> support for device tree.
+> 
+> Usage example:
+>   #perf stat -e arm_dmc620_0/clk_cycle_count/ -C 0
+>   Get perf event for clk_cycle_count counter.
+> 
+>   #perf stat -e arm_dmc620_0/clkdiv2_allocate,mask=0x1f,match=0x2f,
+>   incr=2,invert=1/ -C 0
+>   The above example shows how to specify mask, match, incr,
+>   invert parameters for clkdiv2_allocate event.
+
+[...]
+
+> +#define DMC620_CNT_MAX_PERIOD				0xffffffff
+> +#define DMC620_PMU_CLKDIV2_MAX_COUNTERS			8
+> +#define DMC620_PMU_CLK_MAX_COUNTERS			2
+> +#define DMC620_PMU_MAX_COUNTERS				\
+> +	(DMC620_PMU_CLKDIV2_MAX_COUNTERS + DMC620_PMU_CLK_MAX_COUNTERS)
+> +
+> +#define DMC620_PMU_OVERFLOW_STATUS_CLKDIV2_OFFSET	8
+
+This appears to be relative to 0xA00. What exactly does your ACPI
+description provide? The whole set of DMC registers, or just the PMU
+registers?
+
+[...]
+
+> +struct arm_dmc620_pmu {
+> +	struct pmu		pmu;
+> +	struct platform_device	*pdev;
+> +
+> +	void __iomem		*pmu_csr;
+
+Please call this `base` for consistency with other Arm Ltd PMU drivers.
+
+[...]
+
+> +static void arm_dmc620_pmu_enable_counter(struct perf_event *event)
+> +{
+> +	struct arm_dmc620_pmu *dmc620_pmu = to_dmc620_pmu(event->pmu);
+> +	unsigned int reg;
+> +
+> +	reg = arm_dmc620_pmu_counter_read32(dmc620_pmu,
+> +			  event->hw.idx, DMC620_PMU_COUNTER_CONTROL_OFFSET);
+> +	reg |= DMC620_PMU_COUNTER_CONTROL_ENABLE_MASK;
+> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
+> +			  event->hw.idx, DMC620_PMU_COUNTER_CONTROL_OFFSET,
+> +			  reg);
+> +}
+> +
+> +static void arm_dmc620_pmu_disable_counter(struct perf_event *event)
+> +{
+> +	struct arm_dmc620_pmu *dmc620_pmu = to_dmc620_pmu(event->pmu);
+> +	unsigned int reg;
+> +
+> +	reg = arm_dmc620_pmu_counter_read32(dmc620_pmu,
+> +			  event->hw.idx, DMC620_PMU_COUNTER_CONTROL_OFFSET);
+> +	reg &= ~DMC620_PMU_COUNTER_CONTROL_ENABLE_MASK;
+> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
+> +			  event->hw.idx, DMC620_PMU_COUNTER_CONTROL_OFFSET,
+> +			  reg);
+> +}
+> +
+> +static irqreturn_t arm_dmc620_pmu_handle_irq(int irq_num, void *dev)
+> +{
+> +	struct arm_dmc620_pmu *dmc620_pmu = dev;
+> +	struct perf_event *event;
+> +	bool handled = false;
+> +	unsigned long overflow_clkdiv2, overflow_clk;
+> +	int i;
+> +
+> +	overflow_clkdiv2 = readl(dmc620_pmu->pmu_csr +
+> +				DMC620_PMU_OVERFLOW_STATUS_CLKDIV2_OFFSET);
+> +	overflow_clk = readl(dmc620_pmu->pmu_csr +
+> +				DMC620_PMU_OVERFLOW_STATUS_CLK_OFFSET);
+> +	if (!overflow_clkdiv2 && !overflow_clk)
+> +		return IRQ_NONE;
+> +
+> +	for_each_set_bit(i, &overflow_clkdiv2,
+> +				DMC620_PMU_CLKDIV2_MAX_COUNTERS) {
+> +		/* clkdiv2 event overflow */
+> +		event = dmc620_pmu->act_counter[i];
+> +		if (!event)
+> +			continue;
+> +		arm_dmc620_pmu_disable_counter(event);
+> +		arm_dmc620_pmu_event_update(event);
+> +		arm_dmc620_pmu_event_set_period(event);
+> +		arm_dmc620_pmu_enable_counter(event);
+> +		handled = true;
+> +	}
+> +
+> +	for_each_set_bit(i, &overflow_clk,
+> +				DMC620_PMU_CLK_MAX_COUNTERS) {
+> +		/* clk event overflow */
+> +		event = dmc620_pmu->act_counter[i +
+> +			DMC620_PMU_CLKDIV2_MAX_COUNTERS];
+> +		if (!event)
+> +			continue;
+> +		arm_dmc620_pmu_disable_counter(event);
+> +		arm_dmc620_pmu_event_update(event);
+> +		arm_dmc620_pmu_event_set_period(event);
+> +		arm_dmc620_pmu_enable_counter(event);
+> +		handled = true;
+> +	}
+
+This isn't right for event groups, which need to start/stop all
+associated events atomically. Do we have PMU-wide start/stop controls
+that we can wrap the entire loop with, instead?
+
+
+
+> +
+> +	if (overflow_clkdiv2)
+> +		writel(0, dmc620_pmu->pmu_csr +
+> +			DMC620_PMU_OVERFLOW_STATUS_CLKDIV2_OFFSET);
+> +	if (overflow_clk)
+> +		writel(0, dmc620_pmu->pmu_csr +
+> +			DMC620_PMU_OVERFLOW_STATUS_CLK_OFFSET);
+
+IIUC we can race and miss an overflow here. If we don't have separate
+clear registers, we definitely need to stop all events in the handler,
+then check/clear their overflow bits, then re-enable all events.
+
+> +
+> +	return IRQ_RETVAL(handled);
+> +}
+> +
+> +static int arm_dmc620_pmu_event_init(struct perf_event *event)
+> +{
+> +	struct arm_dmc620_pmu *dmc620_pmu = to_dmc620_pmu(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	struct perf_event *sibling;
+> +
+> +	if (event->attr.type != event->pmu->type)
+> +		return -ENOENT;
+> +
+> +	/*
+> +	 * DMC 620 PMUs are shared across all cpus and cannot
+> +	 * support task bound and sampling events.
+> +	 */
+> +	if (is_sampling_event(event) ||
+> +		event->attach_state & PERF_ATTACH_TASK) {
+> +		dev_dbg(dmc620_pmu->pmu.dev,
+> +			"Can't support per-task counters\n");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	if (event->cpu < 0) {
+> +		dev_dbg(dmc620_pmu->pmu.dev,
+> +			"Per-task mode not supported\n");
+> +		return -EOPNOTSUPP;
+> +	}
+> +	/*
+> +	 * Many perf core operations (eg. events rotation) operate on a
+> +	 * single CPU context. This is obvious for CPU PMUs, where one
+> +	 * expects the same sets of events being observed on all CPUs,
+> +	 * but can lead to issues for off-core PMUs, where each
+> +	 * event could be theoretically assigned to a different CPU. To
+> +	 * mitigate this, we enforce CPU assignment to one, selected
+> +	 * processor.
+> +	 */
+> +	event->cpu = cpumask_first(&dmc620_pmu->cpu);
+> +
+> +	/*
+> +	 * We must NOT create groups containing mixed PMUs, although software
+> +	 * events are acceptable
+> +	 */
+> +	if (event->group_leader->pmu != event->pmu &&
+> +			!is_software_event(event->group_leader))
+> +		return -EINVAL;
+> +
+> +	for_each_sibling_event(sibling, event->group_leader) {
+> +		if (sibling->pmu != event->pmu &&
+> +				!is_software_event(sibling))
+> +			return -EINVAL;
+> +	}
+
+The IRQ handler doesn't respect group semantics at the moment. If we
+don't have global start/stop controls, we must disallow groups.
+
+[...]
+
+> +static int arm_dmc620_pmu_add(struct perf_event *event, int flags)
+> +{
+> +	struct arm_dmc620_pmu *dmc620_pmu = to_dmc620_pmu(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	struct perf_event_attr *attr = &event->attr;
+> +	unsigned long reg;
+> +	int idx = 0;
+> +
+> +	idx = arm_dmc620_get_event_idx(event);
+> +	if (idx < 0)
+> +		return idx;
+> +
+> +	hwc->idx = idx;
+> +	dmc620_pmu->act_counter[idx] = event;
+> +	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
+> +
+> +	/* Write to mask 31-00 register */
+> +	reg = ATTR_CFG_GET_FLD(attr, mask);
+> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
+> +			  event->hw.idx, DMC620_PMU_COUNTER_MASK_31_00_OFFSET,
+> +			  (unsigned int)(reg & 0xffffffff));
+> +	/* Write to mask 63-32 register */
+> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
+> +			  event->hw.idx, DMC620_PMU_COUNTER_MASK_63_32_OFFSET,
+> +			  (unsigned int)(reg >> 32));
+
+Please use the upper_32_bits() and lower_32_bits() helpers.
+
+> +
+> +	/* Write to match 31-00 register */
+> +	reg = ATTR_CFG_GET_FLD(attr, match);
+> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
+> +			  event->hw.idx, DMC620_PMU_COUNTER_MATCH_31_00_OFFSET,
+> +			  (unsigned int)(reg & 0xffffffff));
+> +	/* Write to match 63-32 register */
+> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
+> +			  event->hw.idx, DMC620_PMU_COUNTER_MATCH_63_32_OFFSET,
+> +			  (unsigned int)(reg >> 32));
+
+Likewise.
+
+[...]
+
+> +static int arm_dmc620_pmu_perf_init(struct arm_dmc620_pmu *dmc620_pmu)
+> +{
+> +	struct device *dev = &dmc620_pmu->pdev->dev;
+> +	unsigned long long value;
+> +	char *name;
+> +	acpi_handle handle;
+> +	acpi_status status;
+> +
+> +	dmc620_pmu->pmu = (struct pmu) {
+> +		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+> +		.task_ctx_nr	= perf_invalid_context,
+> +		.event_init	= arm_dmc620_pmu_event_init,
+> +		.add		= arm_dmc620_pmu_add,
+> +		.del		= arm_dmc620_pmu_del,
+> +		.start		= arm_dmc620_pmu_start,
+> +		.stop		= arm_dmc620_pmu_stop,
+> +		.read		= arm_dmc620_pmu_read,
+> +		.attr_groups	= arm_dmc620_pmu_attr_groups,
+> +	};
+> +
+> +	handle = ACPI_HANDLE(dev);
+> +	if (!handle)
+> +		return -ENODEV;
+> +
+> +	status = acpi_evaluate_integer(handle, METHOD_NAME__UID, NULL,
+> +					&value);
+> +	if (ACPI_FAILURE(status)) {
+> +		dev_err(dev, "Failed to evaluate _UID (0x%x)\n", status);
+> +		return -ENODEV;
+> +	}
+> +
+> +	name = devm_kasprintf(dev, GFP_KERNEL, "%s_%d", PMUNAME,
+> +				(unsigned int)value);
+
+Is there any guarantee `value` is unique?
+
+> +
+> +	return perf_pmu_register(&dmc620_pmu->pmu, name, -1);
+> +}
+
+> +static void arm_dmc620_pmu_perf_destroy(struct arm_dmc620_pmu *dmc620_pmu)
+> +{
+> +	perf_pmu_unregister(&dmc620_pmu->pmu);
+> +}
+> +
+> +static int arm_dmc620_pmu_cpu_startup(unsigned int cpu,
+> +				   struct hlist_node *node)
+> +{
+> +	struct arm_dmc620_pmu *dmc620_pmu = hlist_entry_safe(node,
+> +						struct arm_dmc620_pmu,
+> +						hotplug_node);
+> +
+> +	dmc620_pmu = hlist_entry_safe(node, struct arm_dmc620_pmu,
+> +					hotplug_node);
+> +	if (cpumask_empty(&dmc620_pmu->cpu))
+> +		cpumask_set_cpu(cpu, &dmc620_pmu->cpu);
+> +
+> +	/* Overflow interrupt also should use the same CPU */
+> +	WARN_ON(irq_set_affinity(dmc620_pmu->irq, &dmc620_pmu->cpu));
+
+We should only have to set the affinity if that changes, so above we can
+do:
+
+	if (!cpumask_empty(&dmc620_pmu->cpu))
+		return 0;
+
+[...]
+
+> +static int arm_dmc620_pmu_dev_init(struct arm_dmc620_pmu *dmc620_pmu)
+> +{
+> +	struct platform_device *pdev = dmc620_pmu->pdev;
+> +	int ret;
+> +
+> +	ret = devm_request_irq(&pdev->dev, dmc620_pmu->irq,
+> +				arm_dmc620_pmu_handle_irq,
+> +				IRQF_SHARED,
+> +				dev_name(&pdev->dev), dmc620_pmu);
+
+This should have IRQF_NOBALANCING | IRQF_NO_THREAD. I don't think we
+should have IRQF_SHARED.
+
+[...]
+
+> +static const struct acpi_device_id arm_dmc620_acpi_match[] = {
+> +	{ "ARMHD620", 0},
+> +	{},
+> +};
+
+Just to check, was this ID allocated by Arm, or have you allocated it?
+
+Thanks,
+Mark.
