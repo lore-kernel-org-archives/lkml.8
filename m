@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E9EC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98314C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D49DF208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 713CD208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624093;
-	bh=UGWtmPm+WNKJEuJQoiIL1Ngs1uBanAoxuujyjH7SKi4=;
+	s=default; t=1584624096;
+	bh=JwmYO+T78n5hPTS8cxcIzBbs9aFdkcJ8A4d/0YHzVdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QjW/m/9+3nzL6PLTzKIZhK8NadGfDMpVcvhvN95EWlchmDSOS1Cj8MkbHx7GvImVn
-	 NPfG7jH10xcjaLYv+C1UUOwd5GQ/458fCApdsiUZHi9/0iiIOWSF0pkDBL/+KFDHwa
-	 QFzewNek/q94JBdMWm8/uQ3daaKJoQ0whrdghJgU=
+	b=rKzkOVmtz2cZWi3gN3GbbR55zA3Zli/vuLjmCSkihEbJM3p5OT2ghudKitD/pzXq4
+	 HRA3WofJa90U3kJVzRYirdDi9GNGt8U6n5nSMsSgsqm99r5/Ag3kTMzZi1rw50U2pc
+	 M9epN9/e1CtfW2JJVKY1tDHlXQh1dzzdVxFz/IoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgCSNVc (ORCPT
+        id S1730127AbgCSNVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46106 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730089AbgCSNVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:21:23 -0400
+        id S1730120AbgCSNVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:21:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A819821556;
-        Thu, 19 Mar 2020 13:21:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E18B3206D7;
+        Thu, 19 Mar 2020 13:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624083;
-        bh=UGWtmPm+WNKJEuJQoiIL1Ngs1uBanAoxuujyjH7SKi4=;
+        s=default; t=1584624089;
+        bh=JwmYO+T78n5hPTS8cxcIzBbs9aFdkcJ8A4d/0YHzVdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hjOk+wrVQlwnYH+OP6oTa8GKBMZiBsJMKwxHpNxv9wif2vzs9L8LOVmbgyvoWqDY+
-         HwJVOZkREcITCbBsS0rK3/6ImfB+J22xcwJrRaC4PB4px7VnjiFpsPcWcv/nTJiDXz
-         wRFX6pofCMcLv5r5EEptDNKQpGvluYhYVAcbu4Kw=
+        b=QQEYogs7ohzYWNJTc+weCBQ+v1meLT+nPtjgNHlYyk9jcGdM0gsWgDm45Dz1dePPB
+         pJoK7zBQ8VePHWfvpQ0oExKPe/9IK/ZolTiWhFm47jYYGN5a2J7tR5DSggiDyHWcfO
+         5XKFUKgRS3dKljRzczcCoRcIp3sC6SrJvcfdOThQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 32/48] wimax: i2400: fix memory leak
-Date:   Thu, 19 Mar 2020 14:04:14 +0100
-Message-Id: <20200319123913.117347888@linuxfoundation.org>
+Subject: [PATCH 4.19 34/48] mmc: sdhci-omap: Dont finish_mrq() on a command error during tuning
+Date:   Thu, 19 Mar 2020 14:04:16 +0100
+Message-Id: <20200319123913.644900190@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
 References: <20200319123902.941451241@linuxfoundation.org>
@@ -61,32 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
 
-[ Upstream commit 2507e6ab7a9a440773be476141a255934468c5ef ]
+[ Upstream commit 5c41ea6d52003b5bc77c2a82fd5ca7d480237d89 ]
 
-In i2400m_op_rfkill_sw_toggle cmd buffer should be released along with
-skb response.
+commit 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
+callback") skips data resets during tuning operation. Because of this,
+a data error or data finish interrupt might still arrive after a command
+error has been handled and the mrq ended. This ends up with a "mmc0: Got
+data interrupt 0x00000002 even though no data operation was in progress"
+error message.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix this by adding a platform specific callback for sdhci_irq. Mark the
+mrq as a failure but wait for a data interrupt instead of calling
+finish_mrq().
+
+Fixes: 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
+callback")
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wimax/i2400m/op-rfkill.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/sdhci-omap.c | 38 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/drivers/net/wimax/i2400m/op-rfkill.c b/drivers/net/wimax/i2400m/op-rfkill.c
-index b0dba35a8ad2a..7c92e8ace9c2f 100644
---- a/drivers/net/wimax/i2400m/op-rfkill.c
-+++ b/drivers/net/wimax/i2400m/op-rfkill.c
-@@ -142,6 +142,7 @@ int i2400m_op_rfkill_sw_toggle(struct wimax_dev *wimax_dev,
- 			"%d\n", result);
- 	result = 0;
- error_cmd:
-+	kfree(cmd);
- 	kfree_skb(ack_skb);
- error_msg_to_dev:
- error_alloc:
+diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+index 79ee5fc5a2013..833e13cabd2a8 100644
+--- a/drivers/mmc/host/sdhci-omap.c
++++ b/drivers/mmc/host/sdhci-omap.c
+@@ -801,6 +801,43 @@ void sdhci_omap_reset(struct sdhci_host *host, u8 mask)
+ 	sdhci_reset(host, mask);
+ }
+ 
++#define CMD_ERR_MASK (SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX |\
++		      SDHCI_INT_TIMEOUT)
++#define CMD_MASK (CMD_ERR_MASK | SDHCI_INT_RESPONSE)
++
++static u32 sdhci_omap_irq(struct sdhci_host *host, u32 intmask)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
++
++	if (omap_host->is_tuning && host->cmd && !host->data_early &&
++	    (intmask & CMD_ERR_MASK)) {
++
++		/*
++		 * Since we are not resetting data lines during tuning
++		 * operation, data error or data complete interrupts
++		 * might still arrive. Mark this request as a failure
++		 * but still wait for the data interrupt
++		 */
++		if (intmask & SDHCI_INT_TIMEOUT)
++			host->cmd->error = -ETIMEDOUT;
++		else
++			host->cmd->error = -EILSEQ;
++
++		host->cmd = NULL;
++
++		/*
++		 * Sometimes command error interrupts and command complete
++		 * interrupt will arrive together. Clear all command related
++		 * interrupts here.
++		 */
++		sdhci_writel(host, intmask & CMD_MASK, SDHCI_INT_STATUS);
++		intmask &= ~CMD_MASK;
++	}
++
++	return intmask;
++}
++
+ static struct sdhci_ops sdhci_omap_ops = {
+ 	.set_clock = sdhci_omap_set_clock,
+ 	.set_power = sdhci_omap_set_power,
+@@ -811,6 +848,7 @@ static struct sdhci_ops sdhci_omap_ops = {
+ 	.platform_send_init_74_clocks = sdhci_omap_init_74_clocks,
+ 	.reset = sdhci_omap_reset,
+ 	.set_uhs_signaling = sdhci_omap_set_uhs_signaling,
++	.irq = sdhci_omap_irq,
+ };
+ 
+ static int sdhci_omap_set_capabilities(struct sdhci_omap_host *omap_host)
 -- 
 2.20.1
 
