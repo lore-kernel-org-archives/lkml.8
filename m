@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EE7C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39660C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99B721655
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02ED620722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623465;
-	bh=HcFsNp3XYCBkZR4tEFW8Zcl8QhdgAavIYqCgaU7LXxM=;
+	s=default; t=1584623473;
+	bh=52y55w0rqNYpPUljx483CSkXB9D/bZmyrc6yu2+pbtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kfVqZxXwjQKjHjl1j6WV5GjqLUwYvCSsjRWZcnZSmXPfiELLA5eBpp4arHk6mDze0
-	 sG28KaJrRS4cC/67Y3Cj9moNONRHts1/KKei34D/o4KQtZE558eCFUPLuKBG4uVhoL
-	 wbH/TnYgoVvaXpm9jFvzMDySPlVyWnc70xzePEcE=
+	b=RNsqK2EQnJKn5cvp/Q5CCcnaKhetZ3G3l0yuvVkaa0e6UjeRLK9X5aIFD3L3G+QId
+	 Hw+50uP7BnBWpWB3mSxdxER9uaL7ZlfcnEqaPui+pw6Y5xS4DV05ECqpn+bJXhfji4
+	 NmuN1nB4asE8wa3JRVWxOofGJjb1wCKkop6DT3O4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgCSNLE (ORCPT
+        id S1728043AbgCSNLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:11:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55924 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:11:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727939AbgCSNK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:10:57 -0400
+        id S1728676AbgCSNLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:11:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9716720722;
-        Thu, 19 Mar 2020 13:10:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 118E320722;
+        Thu, 19 Mar 2020 13:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623457;
-        bh=HcFsNp3XYCBkZR4tEFW8Zcl8QhdgAavIYqCgaU7LXxM=;
+        s=default; t=1584623468;
+        bh=52y55w0rqNYpPUljx483CSkXB9D/bZmyrc6yu2+pbtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wykKCOntlNuqfaITiDKicII9ml2MWcDULjVh7eocLHY3U+k5TVJVU6io4nRn2JHnp
-         id6tXhFicgpsKjcfvm19Y1ovcY+FpnZKwbdSvYuxXwN4kCgCF6kD0V/RKbW2wPGsLv
-         5f8GPcf5eyq2rEQTbsFPT44c+M6wQ+gRstOuTFdE=
+        b=LGBJfF+U3DMRBmFcMZpmLp/Z9nn+oOqCZ91BeqvQwhNSxPSOuTjIUOyRzzYJEcbB2
+         avr4i87Y2/9yutPeFlRxb6jCFQHNdbdEaWUjqI/IpUKXGcK3ujnGfV/p8vmSVXLR/G
+         Cs0Aq7aGShMqBU08NhezmZk005bhqINjcbR7de7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [PATCH 4.9 33/90] workqueue: dont use wq_select_unbound_cpu() for bound works
-Date:   Thu, 19 Mar 2020 13:59:55 +0100
-Message-Id: <20200319123938.848438391@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 18/90] nfc: add missing attribute validation for SE API
+Date:   Thu, 19 Mar 2020 13:59:40 +0100
+Message-Id: <20200319123934.358273105@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -61,61 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit aa202f1f56960c60e7befaa0f49c72b8fa11b0a8 upstream.
+[ Upstream commit 361d23e41ca6e504033f7e66a03b95788377caae ]
 
-wq_select_unbound_cpu() is designed for unbound workqueues only, but
-it's wrongly called when using a bound workqueue too.
+Add missing attribute validation for NFC_ATTR_SE_INDEX
+to the netlink policy.
 
-Fixing this ensures work queued to a bound workqueue with
-cpu=WORK_CPU_UNBOUND always runs on the local CPU.
-
-Before, that would happen only if wq_unbound_cpumask happened to include
-it (likely almost always the case), or was empty, or we got lucky with
-forced round-robin placement.  So restricting
-/sys/devices/virtual/workqueue/cpumask to a small subset of a machine's
-CPUs would cause some bound work items to run unexpectedly there.
-
-Fixes: ef557180447f ("workqueue: schedule WORK_CPU_UNBOUND work on wq_unbound_cpumask CPUs")
-Cc: stable@vger.kernel.org # v4.5+
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-[dj: massage changelog]
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 5ce3f32b5264 ("NFC: netlink: SE API implementation")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/workqueue.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ net/nfc/netlink.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -1384,14 +1384,16 @@ static void __queue_work(int cpu, struct
- 	    WARN_ON_ONCE(!is_chained_work(wq)))
- 		return;
- retry:
--	if (req_cpu == WORK_CPU_UNBOUND)
--		cpu = wq_select_unbound_cpu(raw_smp_processor_id());
--
- 	/* pwq which will be used unless @work is executing elsewhere */
--	if (!(wq->flags & WQ_UNBOUND))
--		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
--	else
-+	if (wq->flags & WQ_UNBOUND) {
-+		if (req_cpu == WORK_CPU_UNBOUND)
-+			cpu = wq_select_unbound_cpu(raw_smp_processor_id());
- 		pwq = unbound_pwq_by_node(wq, cpu_to_node(cpu));
-+	} else {
-+		if (req_cpu == WORK_CPU_UNBOUND)
-+			cpu = raw_smp_processor_id();
-+		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
-+	}
+--- a/net/nfc/netlink.c
++++ b/net/nfc/netlink.c
+@@ -62,6 +62,7 @@ static const struct nla_policy nfc_genl_
+ 	[NFC_ATTR_LLC_SDP] = { .type = NLA_NESTED },
+ 	[NFC_ATTR_FIRMWARE_NAME] = { .type = NLA_STRING,
+ 				     .len = NFC_FIRMWARE_NAME_MAXSIZE },
++	[NFC_ATTR_SE_INDEX] = { .type = NLA_U32 },
+ 	[NFC_ATTR_SE_APDU] = { .type = NLA_BINARY },
+ 	[NFC_ATTR_VENDOR_DATA] = { .type = NLA_BINARY },
  
- 	/*
- 	 * If @work was previously on a different pool, it might still be
 
 
