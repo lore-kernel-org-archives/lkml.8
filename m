@@ -2,53 +2,52 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33E3C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116E7C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC8F20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB67820789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624801;
-	bh=h++JHvlq0URUaxWR2YFil30omclmOjygV8exSEpksy0=;
+	s=default; t=1584624808;
+	bh=XQSVEoxeqOnegSNEAFDMlk1BrADYTQjI3PdYm62NnW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LThkZyssTktcbRWCc2rpKLK8p6c+7hGR9YsTSALS8u2toOodlQlsybCysDSjPYsKY
-	 kJ89ah4X7166cztxw/n3Qe5QGqdAUSosoo+LbKSA2WoNYb1Q1dPxM0D08KoNax8ckJ
-	 Fgqap4yN/Jnk57BZmjRsMbQjZFj5NdzRGSMQo84U=
+	b=EIf9QgvpzKYPKlAlc2qgNufOa0E9+Tqy33/RlOBye1VT9lJC6sN9TBdkXcXjxHr3p
+	 8XCAHMDtR8Fnm3VA2HaBsQLlyRcLDe+i/haCGD/5XChF12vOd/5fuseCwO1Nn8PiUf
+	 aERzqS0n2V12+zPY5zrDs4hjCk1f/b6utQsDlqkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgCSNNt (ORCPT
+        id S1727514AbgCSNd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32856 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:33:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727549AbgCSNNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:13:44 -0400
+        id S1727806AbgCSNNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:13:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B460120722;
-        Thu, 19 Mar 2020 13:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C2F220722;
+        Thu, 19 Mar 2020 13:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623623;
-        bh=h++JHvlq0URUaxWR2YFil30omclmOjygV8exSEpksy0=;
+        s=default; t=1584623611;
+        bh=XQSVEoxeqOnegSNEAFDMlk1BrADYTQjI3PdYm62NnW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jnOTQXdwSSC+cxp/EYKcDGM009C4h7jcsq3rjr8N8RgpjF8Y6YT2U36QT70Nb/ABc
-         ACd8Gs5cLMsb0QxRBATA76VnaQdN/u489V5VNmXE3E6busUroEPoxIhwyNozv00AuF
-         wcc1kJe7D1C9BYL4d84ANopcGGoGZoeXmgT37xC4=
+        b=1elN9ni5TIfWzLpT3Xp2TbOYywOpAkXgNRw8fq5X9d3/Qo3mGBT8wwyR0ACJiQIoD
+         q8fg+SVZjfNXin590YYw53e+FuDWGa8bCNDeIcbZY4jX9ogHzhQwO7jzIJ4/Trnoma
+         Ywvz0sNlnIFFONP39P1S0vTiO8wM1xUTCWuCDjJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 90/90] ipv4: ensure rcu_read_lock() in cipso_v4_error()
-Date:   Thu, 19 Mar 2020 14:00:52 +0100
-Message-Id: <20200319123955.953025598@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Qian Cai <cai@lca.pw>, Theodore Tso <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 86/90] jbd2: fix data races at struct journal_head
+Date:   Thu, 19 Mar 2020 14:00:48 +0100
+Message-Id: <20200319123954.894820451@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -61,47 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Qian Cai <cai@lca.pw>
 
-commit 3e72dfdf8227b052393f71d820ec7599909dddc2 upstream.
+[ Upstream commit 6c5d911249290f41f7b50b43344a7520605b1acb ]
 
-Similarly to commit c543cb4a5f07 ("ipv4: ensure rcu_read_lock() in
-ipv4_link_failure()"), __ip_options_compile() must be called under rcu
-protection.
+journal_head::b_transaction and journal_head::b_next_transaction could
+be accessed concurrently as noticed by KCSAN,
 
-Fixes: 3da1ed7ac398 ("net: avoid use IPCB in cipso_v4_error")
-Suggested-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ LTP: starting fsync04
+ /dev/zero: Can't open blockdev
+ EXT4-fs (loop0): mounting ext3 file system using the ext4 subsystem
+ EXT4-fs (loop0): mounted filesystem with ordered data mode. Opts: (null)
+ ==================================================================
+ BUG: KCSAN: data-race in __jbd2_journal_refile_buffer [jbd2] / jbd2_write_access_granted [jbd2]
 
+ write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on cpu 70:
+  __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
+  __jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
+  jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
+  (inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1034
+  kjournald2+0x13b/0x450 [jbd2]
+  kthread+0x1cd/0x1f0
+  ret_from_fork+0x27/0x50
+
+ read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on cpu 68:
+  jbd2_write_access_granted+0x1b2/0x250 [jbd2]
+  jbd2_write_access_granted at fs/jbd2/transaction.c:1155
+  jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
+  __ext4_journal_get_write_access+0x50/0x90 [ext4]
+  ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
+  ext4_mb_new_blocks+0x54f/0xca0 [ext4]
+  ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
+  ext4_map_blocks+0x3b4/0x950 [ext4]
+  _ext4_get_block+0xfc/0x270 [ext4]
+  ext4_get_block+0x3b/0x50 [ext4]
+  __block_write_begin_int+0x22e/0xae0
+  __block_write_begin+0x39/0x50
+  ext4_write_begin+0x388/0xb50 [ext4]
+  generic_perform_write+0x15d/0x290
+  ext4_buffered_write_iter+0x11f/0x210 [ext4]
+  ext4_file_write_iter+0xce/0x9e0 [ext4]
+  new_sync_write+0x29c/0x3b0
+  __vfs_write+0x92/0xa0
+  vfs_write+0x103/0x260
+  ksys_write+0x9d/0x130
+  __x64_sys_write+0x4c/0x60
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ 5 locks held by fsync04/25724:
+  #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at: vfs_write+0x21c/0x260
+  #1: ffff99f9db4c0348 (&sb->s_type->i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
+  #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
+  #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at: ext4_map_blocks+0x176/0x950 [ext4]
+  #4: ffffffff99086b40 (rcu_read_lock){....}, at: jbd2_write_access_granted+0x4e/0x250 [jbd2]
+ irq event stamp: 1407125
+ hardirqs last  enabled at (1407125): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
+ hardirqs last disabled at (1407124): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
+ softirqs last  enabled at (1405528): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
+ softirqs last disabled at (1405521): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
+
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 68 PID: 25724 Comm: fsync04 Tainted: G L 5.6.0-rc2-next-20200221+ #7
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+
+The plain reads are outside of jh->b_state_lock critical section which result
+in data races. Fix them by adding pairs of READ|WRITE_ONCE().
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/20200222043111.2227-1-cai@lca.pw
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/cipso_ipv4.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/jbd2/transaction.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -1738,6 +1738,7 @@ void cipso_v4_error(struct sk_buff *skb,
- {
- 	unsigned char optbuf[sizeof(struct ip_options) + 40];
- 	struct ip_options *opt = (struct ip_options *)optbuf;
-+	int res;
- 
- 	if (ip_hdr(skb)->protocol == IPPROTO_ICMP || error != -EACCES)
- 		return;
-@@ -1749,7 +1750,11 @@ void cipso_v4_error(struct sk_buff *skb,
- 
- 	memset(opt, 0, sizeof(struct ip_options));
- 	opt->optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
--	if (__ip_options_compile(dev_net(skb->dev), opt, skb, NULL))
-+	rcu_read_lock();
-+	res = __ip_options_compile(dev_net(skb->dev), opt, skb, NULL);
-+	rcu_read_unlock();
-+
-+	if (res)
- 		return;
- 
- 	if (gateway)
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 04dd0652bb5ca..8de458d64134a 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1037,8 +1037,8 @@ static bool jbd2_write_access_granted(handle_t *handle, struct buffer_head *bh,
+ 	/* For undo access buffer must have data copied */
+ 	if (undo && !jh->b_committed_data)
+ 		goto out;
+-	if (jh->b_transaction != handle->h_transaction &&
+-	    jh->b_next_transaction != handle->h_transaction)
++	if (READ_ONCE(jh->b_transaction) != handle->h_transaction &&
++	    READ_ONCE(jh->b_next_transaction) != handle->h_transaction)
+ 		goto out;
+ 	/*
+ 	 * There are two reasons for the barrier here:
+@@ -2448,8 +2448,8 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
+ 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
+ 	 * take a new one.
+ 	 */
+-	jh->b_transaction = jh->b_next_transaction;
+-	jh->b_next_transaction = NULL;
++	WRITE_ONCE(jh->b_transaction, jh->b_next_transaction);
++	WRITE_ONCE(jh->b_next_transaction, NULL);
+ 	if (buffer_freed(bh))
+ 		jlist = BJ_Forget;
+ 	else if (jh->b_modified)
+-- 
+2.20.1
+
 
 
