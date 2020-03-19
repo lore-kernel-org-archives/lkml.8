@@ -2,96 +2,152 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B875C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B08C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1B420714
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:07:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="DsNwuT5p"
+	by mail.kernel.org (Postfix) with ESMTP id ECF5920724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584601758;
+	bh=IbJUY0dKnqFpXE+UCqZekrCggkw4tLbIu2upEZr15mE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bmEyQPflkBVIn0YzOPF5TCNzgpVCIZMfiZMQZVB8MQS5o9tK642nrQTlzcV0U84Zl
+	 blz7Ub1FDFSsYVpsiF5M/ol+xU2Y00sZ0AFwjXtLGojBw0r2jvq5TjY7oKnbN64MS2
+	 EYoPYFw7x3oPPnCjEupSoPhGyii13TplVJXT6xLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbgCSHHj (ORCPT
+        id S1727218AbgCSHJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:07:39 -0400
-Received: from canardo.mork.no ([148.122.252.1]:41195 "EHLO canardo.mork.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSHHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:07:39 -0400
-Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id 02J77Bpc005985
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 19 Mar 2020 08:07:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1584601632; bh=r/4K24OT0deWd8YUUm6JdctYt4wSWEamTge4QGcoXFc=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=DsNwuT5pO1BrL2BJt+8dt8/hxLnv6e8aJ6OSS+rCJcULtKttn9aJVMLAp8E8NS132
-         xJxIHf+6F2qX++qhgbXkkbz276F1Ity6MWljxSQIjxFyWrD5KgKu6ROh+vWAymNU9f
-         qbNC343wi1uvKdf82/lF0ayv7yAV9W6iLDMmWgHQ=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
-        (envelope-from <bjorn@mork.no>)
-        id 1jEpGp-0003ku-CW; Thu, 19 Mar 2020 08:07:11 +0100
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     linux-usb@vger.kernel.org, Cezary Jackiewicz <cezary@eko.one.pl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: qmi_wwan: add support for ASKEY WWHC050
-Organization: m
-References: <20200319055845.6431-1-paweldembicki@gmail.com>
-Date:   Thu, 19 Mar 2020 08:07:11 +0100
-In-Reply-To: <20200319055845.6431-1-paweldembicki@gmail.com> (Pawel Dembicki's
-        message of "Thu, 19 Mar 2020 06:58:45 +0100")
-Message-ID: <87sgi4257k.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 19 Mar 2020 03:09:16 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44332 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbgCSHJQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:09:16 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o12so797670wrh.11
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 00:09:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5EdXwbHlmoDhjXzrHF/yteEF/2NqvDtwOOg1hPGy1hY=;
+        b=SZkBNmuKbrkF/LPOHOqA32KPwbfgFDO1Dd3gB1/sK0sGP3hHIx8GkgHQRadgMDiFrd
+         1P21NpLIpNmIT/k4MjeWBctz3HeKs7yofkQ9oUZvFPbHT8P2nHxNS5f/qpdV0gj7csqm
+         GPnFEyQ781HWOxERZx7BgDOX8W+uuLHk0uFpxv/rBF20dB5OaEUhzsp2ufWPKxVY/Ri8
+         z2c04j5nCFHPIwNUGX0tvplHTp30E9j+BFQtQ0p81wGqLJcHtykkJ9BAkc9/gtlP4iD1
+         pqmLpUiH38gMOe7PD0hSW94PLAuuEQQGnr3Kr5WfoL43tbRFuh0g8hHj/2kFRkM+Lbdl
+         0Xog==
+X-Gm-Message-State: ANhLgQ3b0KELeNvMYuBUCuXVnTCVdJ/AfGWyHgVtzfuruoY5Z6lvzW0a
+        gM7Il73FZvpWIZ5uuQGfhmbCMbAU
+X-Google-Smtp-Source: ADFU+vuMB+9CO0Bl+u+dYlKaD0f4Vcgw8SbDFNPTXAMPt8ki60UKv2knVQgWQ58kmN0nw3+McZJ+HA==
+X-Received: by 2002:a5d:6ca7:: with SMTP id a7mr2398248wra.157.1584601754367;
+        Thu, 19 Mar 2020 00:09:14 -0700 (PDT)
+Received: from localhost (ip-37-188-140-107.eurotel.cz. [37.188.140.107])
+        by smtp.gmail.com with ESMTPSA id a184sm1820443wmf.29.2020.03.19.00.09.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 00:09:12 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 08:09:11 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Robert Kolchmeyer <rkolchmeyer@google.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [patch v3] mm, oom: prevent soft lockup on memcg oom for UP
+ systems
+Message-ID: <20200319070911.GU21362@dhcp22.suse.cz>
+References: <8395df04-9b7a-0084-4bb5-e430efe18b97@i-love.sakura.ne.jp>
+ <alpine.DEB.2.21.2003161648370.47327@chino.kir.corp.google.com>
+ <202003170318.02H3IpSx047471@www262.sakura.ne.jp>
+ <alpine.DEB.2.21.2003162107580.97351@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.2003171752030.115787@chino.kir.corp.google.com>
+ <20200318094219.GE21362@dhcp22.suse.cz>
+ <alpine.DEB.2.21.2003181437270.70237@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.2003181458100.70237@chino.kir.corp.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.102.1 at canardo
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2003181458100.70237@chino.kir.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pawel Dembicki <paweldembicki@gmail.com> writes:
+On Wed 18-03-20 15:03:52, David Rientjes wrote:
+> When a process is oom killed as a result of memcg limits and the victim
+> is waiting to exit, nothing ends up actually yielding the processor back
+> to the victim on UP systems with preemption disabled.  Instead, the
+> charging process simply loops in memcg reclaim and eventually soft
+> lockups.
+> 
+> For example, on an UP system with a memcg limited to 100MB, if three 
+> processes each charge 40MB of heap with swap disabled, one of the charging 
+> processes can loop endlessly trying to charge memory which starves the oom 
+> victim.
 
-> [add commit message]
+This only happens if there is no reclaimable memory in the hierarchy.
+That is a very specific condition. I do not see any other way than
+having a misconfigured system with min protection preventing any
+reclaim. Otherwise we have cond_resched both in slab shrinking code
+(do_shrink_slab) and LRU shrinking shrink_lruvec. If I am wrong and
+those are insufficient then please be explicit about the scenario.
 
-Forgot to delete that line? :-)
+This is a very important information to have in the changelog!
 
-> ---
->  drivers/net/usb/qmi_wwan.c  | 1 +
->  drivers/usb/serial/option.c | 2 ++
->  2 files changed, 3 insertions(+)
+[...]
 
-You need to split this in two patches.  The drivers are in two different
-subsystems.
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1576,6 +1576,12 @@ static bool mem_cgroup_out_of_memory(struct mem_cgroup *memcg, gfp_t gfp_mask,
+>  	 */
+>  	ret = should_force_charge() || out_of_memory(&oc);
+>  	mutex_unlock(&oom_lock);
+> +        /*
+> +         * Give a killed process a good chance to exit before trying to
+> +         * charge memory again.
+> +         */
+> +	if (ret)
+> +		schedule_timeout_killable(1);
 
-> diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-> index 5754bb6ca0ee..6c738a271257 100644
-> --- a/drivers/net/usb/qmi_wwan.c
-> +++ b/drivers/net/usb/qmi_wwan.c
-> @@ -1210,6 +1210,7 @@ static const struct usb_device_id products[] =3D {
->  	{QMI_FIXED_INTF(0x1435, 0xd182, 5)},	/* Wistron NeWeb D18 */
->  	{QMI_FIXED_INTF(0x1435, 0xd191, 4)},	/* Wistron NeWeb D19Q1 */
->  	{QMI_QUIRK_SET_DTR(0x1508, 0x1001, 4)},	/* Fibocom NL668 series */
-> +	{QMI_FIXED_INTF(0x1690, 0x7588, 4)},    /* ASKEY WWHC050 */
->  	{QMI_FIXED_INTF(0x16d8, 0x6003, 0)},	/* CMOTech 6003 */
->  	{QMI_FIXED_INTF(0x16d8, 0x6007, 0)},	/* CMOTech CHE-628S */
->  	{QMI_FIXED_INTF(0x16d8, 0x6008, 0)},	/* CMOTech CMU-301 */
+Why are you making this conditional? Say that there is no victim to
+kill. The charge path would simply bail out and it would really depend
+on the call chain whether there is a scheduling point or not. Isn't it
+simply safer to call schedule_timeout_killable unconditioanlly at this
+stage?
 
-I know it isn't perfect as it is, but please try to sort new entries by
-vid/pid if possible.  Keep any logical grouping of entries though, of
-that applies.
+>  	return ret;
+>  }
+>  
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -3861,6 +3861,12 @@ __alloc_pages_may_oom(gfp_t gfp_mask, unsigned int order,
+>  	}
+>  out:
+>  	mutex_unlock(&oom_lock);
+> +	/*
+> +	 * Give a killed process a good chance to exit before trying to
+> +	 * allocate memory again.
+> +	 */
+> +	if (*did_some_progress)
+> +		schedule_timeout_killable(1);
 
-Thanks
+This doesn't make much sense either. Please remember that the primary
+reason you are adding this schedule_timeout_killable in this path is
+because you want to somehow reduce the priority inversion problem
+mentioned by Tetsuo. Because the page allocator path doesn't lack
+regular scheduling points - compaction, reclaim and should_reclaim_retry
+etc have them.
 
+>  	return page;
+>  }
+>  
 
-Bj=C3=B8rn
+-- 
+Michal Hocko
+SUSE Labs
