@@ -2,77 +2,166 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B90BC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE6AC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20500206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E02206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GqMq4pnk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbgCSTuQ (ORCPT
+        id S1727534AbgCSTuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:50:16 -0400
-Received: from mga09.intel.com ([134.134.136.24]:56609 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgCSTuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:50:16 -0400
-IronPort-SDR: hKfHissdjwBklOU32ObzkksMfw+FH9z1yKa0Ci4Mslf/qPnet8r/lz7PXbJfxAtHdUbZPHcb8O
- WvMxqxygJC8Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 12:50:15 -0700
-IronPort-SDR: BYxoJ7jptfyU+TPIae5+d54PIcg3caerdEfPmOY8aOHzDUqK9S5WCGbr3R+pS29zweUNwyX2qA
- yLwsjb+mLcJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="418466982"
-Received: from oamor-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.182.181])
-  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2020 12:50:12 -0700
-Date:   Thu, 19 Mar 2020 21:50:11 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     George Wilson <gcwilson@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Nayna Jain <nayna@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-        Linh Pham <phaml@us.ibm.com>
-Subject: Re: [PATCH v3] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
-Message-ID: <20200319195011.GB24804@linux.intel.com>
-References: <20200318234927.206075-1-gcwilson@linux.ibm.com>
+        Thu, 19 Mar 2020 15:50:51 -0400
+Received: from gateway30.websitewelcome.com ([192.185.197.25]:37800 "EHLO
+        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725747AbgCSTuv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:50:51 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway30.websitewelcome.com (Postfix) with ESMTP id B516E13293
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 14:50:48 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id F1BojhLcZAGTXF1Boj7IvB; Thu, 19 Mar 2020 14:50:48 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=9Wv3jbj7V3+afTv1zkiRc6/kzb45qZM0mlCOpT5a6Vw=; b=GqMq4pnkbHIJSyj16jS/IXGon5
+        AEK/9C5A6VCq+zyljXQCj3ZPDd6r0vwMi+/18RhWGw3wWgiXIa0/QH9fFbUimH8EX8ZLLhraHmjHS
+        snmVD9enTefCRw9Y1O1txFkR4D40WMSnEL8tPoDHUxDhN7oUCGn2s2nRt8huwibaYN9e3Abq9iixp
+        vgWV6VI3P07cp9/Yb2VonQwMzLAI+Z+Hk0o917cOW297KF/7ozJnexvQcsrF1psDNFLBGY1KKeCX7
+        hWb2RYznbyyH9IwB4sr2lBO0J40VD0KxaadhtPCTSakKVqQ0Ir8sROTfJvSFpMYVXvxVfnZ7g6Gwz
+        4kIpaSow==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:52652 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jF1Bm-000mHI-HG; Thu, 19 Mar 2020 14:50:46 -0500
+Date:   Thu, 19 Mar 2020 14:50:46 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     linux-nvdimm@lists.01.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] acpi: nfit.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200319195046.GA452@embeddedor.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200318234927.206075-1-gcwilson@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jF1Bm-000mHI-HG
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:52652
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 11
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 07:49:27PM -0400, George Wilson wrote:
-> tpm_ibmvtpm_send() can fail during PowerVM Live Partition Mobility resume
-> with an H_CLOSED return from ibmvtpm_send_crq().  The PAPR says, 'The
-> “partner partition suspended” transport event disables the associated CRQ
-> such that any H_SEND_CRQ hcall() to the associated CRQ returns H_Closed
-> until the CRQ has been explicitly enabled using the H_ENABLE_CRQ hcall.'
-> This patch adds a check in tpm_ibmvtpm_send() for an H_CLOSED return from
-> ibmvtpm_send_crq() and in that case calls tpm_ibmvtpm_resume() and
-> retries the ibmvtpm_send_crq() once.
-> 
-> Reported-by: Linh Pham <phaml@us.ibm.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> Signed-off-by: George Wilson <gcwilson@linux.ibm.com>
-> Tested-by: Linh Pham <phaml@us.ibm.com>
-> Fixes: 132f76294744 ("Add new device driver to support IBM vTPM")
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-Thank you.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-/Jarkko
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/acpi/nfit/nfit.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
+index 24241941181c..af09143ce403 100644
+--- a/drivers/acpi/nfit/nfit.h
++++ b/drivers/acpi/nfit/nfit.h
+@@ -144,32 +144,32 @@ struct nfit_spa {
+ 	unsigned long ars_state;
+ 	u32 clear_err_unit;
+ 	u32 max_ars;
+-	struct acpi_nfit_system_address spa[0];
++	struct acpi_nfit_system_address spa[];
+ };
+ 
+ struct nfit_dcr {
+ 	struct list_head list;
+-	struct acpi_nfit_control_region dcr[0];
++	struct acpi_nfit_control_region dcr[];
+ };
+ 
+ struct nfit_bdw {
+ 	struct list_head list;
+-	struct acpi_nfit_data_region bdw[0];
++	struct acpi_nfit_data_region bdw[];
+ };
+ 
+ struct nfit_idt {
+ 	struct list_head list;
+-	struct acpi_nfit_interleave idt[0];
++	struct acpi_nfit_interleave idt[];
+ };
+ 
+ struct nfit_flush {
+ 	struct list_head list;
+-	struct acpi_nfit_flush_address flush[0];
++	struct acpi_nfit_flush_address flush[];
+ };
+ 
+ struct nfit_memdev {
+ 	struct list_head list;
+-	struct acpi_nfit_memory_map memdev[0];
++	struct acpi_nfit_memory_map memdev[];
+ };
+ 
+ enum nfit_mem_flags {
+-- 
+2.23.0
+
