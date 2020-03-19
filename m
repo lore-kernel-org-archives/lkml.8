@@ -2,73 +2,74 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E95C43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8661C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A48220663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C5DD20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:13:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjM+U9z/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrcNObS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgCSQNS (ORCPT
+        id S1728435AbgCSQNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:13:18 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35945 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728451AbgCSQNP (ORCPT
+        Thu, 19 Mar 2020 12:13:13 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34394 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbgCSQNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:13:15 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g2so1260669plo.3;
-        Thu, 19 Mar 2020 09:13:14 -0700 (PDT)
+        Thu, 19 Mar 2020 12:13:11 -0400
+Received: by mail-pg1-f195.google.com with SMTP id t3so1531488pgn.1;
+        Thu, 19 Mar 2020 09:13:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JqqHZc4mDxy3aXLOeDIjzEXKU4xYTgoxmYnKR8gehFo=;
-        b=HjM+U9z/XZTlYhdv3Sk+x3hZJ6CpC/cdHsB3IK2QTz6jfjPtDIXz0ab4FAVKVT9Wyr
-         3CiF5xRdQKogS/l6wsdAiysCwl7WImUBvRM4Uh8FnhgIxIfdd77NzfYVIWs0uH5txoKH
-         f88ABy/7kIomD0XBZMCfGfxKTmLI+kFMZgLzG/PFDgZIX93J8nJGEn64AtE1m0yIkINl
-         uaAx/nt3pGichXQm6rHsAszPiT7rOA4LJ4E97cuZvi9ZXqcMEbJIeTkxncLdLVKhqZ0J
-         5KSBYarfHTXkWd8bJY1U9zQqtbHaNcf463uTh/47OkVCZc2rg2796wrg1I9GD0XZpC7Z
-         WLMQ==
+        bh=rqGhDfe/l3VrM3s9b0bpdG7gXHo9u6mXfCQLIUi04fc=;
+        b=DrcNObS3h0a19UBO/Bk1ikFhx7Dv3h9vWztSpmnOZN/O3xQWtIJoFwvZ4WbxzZ+pFx
+         8sODoDvo1dIvuS0Rqqe0ca3BBLXbdrw5ZBX8XQofn/BGHIDBrITtsNSJ/N2Wp430FdYw
+         HQ5j2ShSiRNswdlouMwx9Op1wj0RgUT9Mq+3gKOh3RL1Lz5YuV/epWbWFuY8qUdSRQVP
+         3c/VOJxeEgVNM64gLlSiE3GQ0eO6V7d6oeRikoUYAL6TfkAr25bSjp+sIO6rIn8Zj9b4
+         IrNt/ucSV0f9BgVF1R3fgQ5vQxR2B9v3hIi1UxXnZZ8wt7yUtGMgruEvzDGbYhiUIbMK
+         PKvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JqqHZc4mDxy3aXLOeDIjzEXKU4xYTgoxmYnKR8gehFo=;
-        b=QEOr9nNbJMKZsB8mqhWyn3pxF69D+g8ptqRondKVaHayPEzioi5Ofh/iAfbcCYmNR9
-         Lp51AQdhrHrA/OVRGCviVamsxdrh1d9098CjhAhKG7o3Hj7o2eFTvTbsfm9VAQjk3Jee
-         d1ikwyEbaq34qVC7wepO1Xb85BAJ5fEQrem15CuAYwqkEblBzZpaGA5QHNd1RI58jeDK
-         2zwy2RBrRi03VfrJZHsaH4NjHiHwJSg63ngjD8rDbemLP+7sCgENGpIEnAMeMwg+Vi2P
-         nHoJyKf7teMLi22IW96CgmUpFcbq0SWMIHsitCIQOG+PaHcWs+mgUQn658lL1w3CFCjH
-         wTew==
-X-Gm-Message-State: ANhLgQ0gQqXalqSgLUTt54llPrRr0cuN+htR2LO0pDFYsXybo6/fXz+j
-        B7YCiK52GuO2W00jGK78h5+wz43l
-X-Google-Smtp-Source: ADFU+vtD+ZU1UZxrL6uW3d0LIHHlr0wSfkXr7nmblPWYrzoL4s8Y2yHIN7DrjMMkkRLLEPfXbNyYFQ==
-X-Received: by 2002:a17:90a:8403:: with SMTP id j3mr4685474pjn.8.1584634393466;
-        Thu, 19 Mar 2020 09:13:13 -0700 (PDT)
+        bh=rqGhDfe/l3VrM3s9b0bpdG7gXHo9u6mXfCQLIUi04fc=;
+        b=XWT5nWVyK90xhOw7RiXyFjCKfTOX5p91CrYeQFdi8YI4BfLg+sPZ1eHsXF7d+9tM7n
+         T2MUoPvpyBrROXYwdg9XHpLrzk3gWHEBrBReLpqdbl4GNo3Whd8hjSpEZg/2UZhfSqVX
+         yqZHRI6dS3scNsqQP5/hwwPJ3BqZVFu111MKLuDLznOA55jtNHx2f2F6nobPOsBTkLvx
+         yBpysV4yQDNoL9hWT2UFui8Rvc8YP0hFleZCXo3fXM9tROsgqWd5SPPjuzWDLE3Oym3v
+         SvZPL2jYQEVwVIlE1cQpFKX2EEj413H6vfig8YtqZNXAj9zzS1Cm52T40whs/J7u1Hix
+         AF2A==
+X-Gm-Message-State: ANhLgQ1QXYBKnDg0RcfnpSrRiLHcqU2jue5hEvhFC++fnfJSBrqgPeHo
+        w17AJTujLu1ht97JpibRNbKZKTtd
+X-Google-Smtp-Source: ADFU+vs9RaTqIxpnTGtHvbkTOm5DPCfnXe1NVnZlOwDsjQFhfpB1jVnTisyuxGjygQettlYTFkd40w==
+X-Received: by 2002:a65:53c5:: with SMTP id z5mr4339151pgr.0.1584634389164;
+        Thu, 19 Mar 2020 09:13:09 -0700 (PDT)
 Received: from localhost.localdomain (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
-        by smtp.gmail.com with ESMTPSA id x189sm3000078pfb.1.2020.03.19.09.13.11
+        by smtp.gmail.com with ESMTPSA id x189sm3000078pfb.1.2020.03.19.09.13.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 09:13:12 -0700 (PDT)
+        Thu, 19 Mar 2020 09:13:08 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-crypto@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+Cc:     Andrei Botila <andrei.botila@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
         =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
         Chris Healy <cphealy@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         Iuliana Prodan <iuliana.prodan@nxp.com>,
         linux-kernel@vger.kernel.org, linux-imx@nxp.com
-Subject: [PATCH v9 9/9] crypto: caam - limit single JD RNG output to maximum of 16 bytes
-Date:   Thu, 19 Mar 2020 09:12:33 -0700
-Message-Id: <20200319161233.8134-10-andrew.smirnov@gmail.com>
+Subject: [PATCH v9 7/9] bus: fsl-mc: add api to retrieve mc version
+Date:   Thu, 19 Mar 2020 09:12:31 -0700
+Message-Id: <20200319161233.8134-8-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200319161233.8134-1-andrew.smirnov@gmail.com>
 References: <20200319161233.8134-1-andrew.smirnov@gmail.com>
@@ -80,16 +81,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to follow recommendation in SP800-90C (section "9.4 The
-Oversampling-NRBG Construction") limit the output of "generate" JD
-submitted to CAAM. See
-https://lore.kernel.org/linux-crypto/VI1PR0402MB3485EF10976A4A69F90E5B0F98580@VI1PR0402MB3485.eurprd04.prod.outlook.com/
-for more details.
+From: Andrei Botila <andrei.botila@nxp.com>
 
-This change should make CAAM's hwrng driver good enough to have 1024
-quality rating.
+Add a new api that returns Management Complex firmware version
+and make the required structure public. The api's first user will be
+the caam driver for setting prediction resistance bits.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
+Acked-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
 Cc: Chris Healy <cphealy@gmail.com>
 Cc: Lucas Stach <l.stach@pengutronix.de>
@@ -100,96 +99,108 @@ Cc: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-imx@nxp.com
 ---
- drivers/crypto/caam/caamrng.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/bus/fsl-mc/fsl-mc-bus.c | 33 +++++++++++++++++----------------
+ include/linux/fsl/mc.h          | 16 ++++++++++++++++
+ 2 files changed, 33 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.c
-index 988bfddbadc6..77d048dfe5d0 100644
---- a/drivers/crypto/caam/caamrng.c
-+++ b/drivers/crypto/caam/caamrng.c
-@@ -22,9 +22,7 @@
- #include "jr.h"
- #include "error.h"
- 
--#define CAAM_RNG_MAX_FIFO_STORE_SIZE	U16_MAX
+diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+index c78d10ea641f..40526da5c6a6 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-bus.c
++++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+@@ -26,6 +26,8 @@
+  */
+ #define FSL_MC_DEFAULT_DMA_MASK	(~0ULL)
+
++static struct fsl_mc_version mc_version;
++
+ /**
+  * struct fsl_mc - Private data of a "fsl,qoriq-mc" platform device
+  * @root_mc_bus_dev: fsl-mc device representing the root DPRC
+@@ -54,20 +56,6 @@ struct fsl_mc_addr_translation_range {
+ 	phys_addr_t start_phys_addr;
+ };
+
+-/**
+- * struct mc_version
+- * @major: Major version number: incremented on API compatibility changes
+- * @minor: Minor version number: incremented on API additions (that are
+- *		backward compatible); reset when major version is incremented
+- * @revision: Internal revision number: incremented on implementation changes
+- *		and/or bug fixes that have no impact on API
+- */
+-struct mc_version {
+-	u32 major;
+-	u32 minor;
+-	u32 revision;
+-};
 -
--#define CAAM_RNG_FIFO_LEN		SZ_32K /* Must be a multiple of 2 */
-+#define CAAM_RNG_MAX_FIFO_STORE_SIZE	16
- 
- /*
-  * Length of used descriptors, see caam_init_desc()
-@@ -65,14 +63,15 @@ static void caam_rng_done(struct device *jrdev, u32 *desc, u32 err,
- 	complete(jctx->done);
- }
- 
--static u32 *caam_init_desc(u32 *desc, dma_addr_t dst_dma, int len)
-+static u32 *caam_init_desc(u32 *desc, dma_addr_t dst_dma)
+ /**
+  * fsl_mc_bus_match - device to driver matching callback
+  * @dev: the fsl-mc device to match against
+@@ -338,7 +326,7 @@ EXPORT_SYMBOL_GPL(fsl_mc_driver_unregister);
+  */
+ static int mc_get_version(struct fsl_mc_io *mc_io,
+ 			  u32 cmd_flags,
+-			  struct mc_version *mc_ver_info)
++			  struct fsl_mc_version *mc_ver_info)
  {
- 	init_job_desc(desc, 0);	/* + 1 cmd_sz */
- 	/* Generate random bytes: + 1 cmd_sz */
- 	append_operation(desc, OP_ALG_ALGSEL_RNG | OP_TYPE_CLASS1_ALG |
- 			 OP_ALG_PR_ON);
- 	/* Store bytes: + 1 cmd_sz + caam_ptr_sz  */
--	append_fifo_store(desc, dst_dma, len, FIFOST_TYPE_RNGSTORE);
-+	append_fifo_store(desc, dst_dma,
-+			  CAAM_RNG_MAX_FIFO_STORE_SIZE, FIFOST_TYPE_RNGSTORE);
- 
- 	print_hex_dump_debug("rng job desc@: ", DUMP_PREFIX_ADDRESS,
- 			     16, 4, desc, desc_bytes(desc), 1);
-@@ -92,7 +91,7 @@ static int caam_rng_read_one(struct device *jrdev,
- 		.err  = &ret,
- 	};
- 
--	len = min_t(int, len, CAAM_RNG_MAX_FIFO_STORE_SIZE);
-+	len = CAAM_RNG_MAX_FIFO_STORE_SIZE;
- 
- 	dst_dma = dma_map_single(jrdev, dst, len, DMA_FROM_DEVICE);
- 	if (dma_mapping_error(jrdev, dst_dma)) {
-@@ -102,7 +101,7 @@ static int caam_rng_read_one(struct device *jrdev,
- 
- 	init_completion(done);
- 	err = caam_jr_enqueue(jrdev,
--			      caam_init_desc(desc, dst_dma, len),
-+			      caam_init_desc(desc, dst_dma),
- 			      caam_rng_done, &jctx);
- 	if (err == -EINPROGRESS) {
- 		wait_for_completion(done);
-@@ -122,7 +121,7 @@ static void caam_rng_fill_async(struct caam_rng_ctx *ctx)
- 
- 	sg_init_table(sg, ARRAY_SIZE(sg));
- 	nents = kfifo_dma_in_prepare(&ctx->fifo, sg, ARRAY_SIZE(sg),
--				     CAAM_RNG_FIFO_LEN);
-+				     CAAM_RNG_MAX_FIFO_STORE_SIZE);
- 	if (!nents)
- 		return;
- 
-@@ -156,7 +155,7 @@ static int caam_read(struct hwrng *rng, void *dst, size_t max, bool wait)
- 	}
- 
- 	out = kfifo_out(&ctx->fifo, dst, max);
--	if (kfifo_len(&ctx->fifo) <= CAAM_RNG_FIFO_LEN / 2)
-+	if (kfifo_is_empty(&ctx->fifo))
- 		schedule_work(&ctx->worker);
- 
- 	return out;
-@@ -186,7 +185,8 @@ static int caam_init(struct hwrng *rng)
- 	if (!ctx->desc_async)
- 		return -ENOMEM;
- 
--	if (kfifo_alloc(&ctx->fifo, CAAM_RNG_FIFO_LEN, GFP_DMA | GFP_KERNEL))
-+	if (kfifo_alloc(&ctx->fifo, CAAM_RNG_MAX_FIFO_STORE_SIZE,
-+			GFP_DMA | GFP_KERNEL))
- 		return -ENOMEM;
- 
- 	INIT_WORK(&ctx->worker, caam_rng_worker);
-@@ -246,6 +246,7 @@ int caam_rng_init(struct device *ctrldev)
- 	ctx->rng.cleanup = caam_cleanup;
- 	ctx->rng.read    = caam_read;
- 	ctx->rng.priv    = (unsigned long)ctx;
-+	ctx->rng.quality = 1024;
- 
- 	dev_info(ctrldev, "registering rng-caam\n");
- 
--- 
-2.21.0
+ 	struct fsl_mc_command cmd = { 0 };
+ 	struct dpmng_rsp_get_version *rsp_params;
+@@ -363,6 +351,20 @@ static int mc_get_version(struct fsl_mc_io *mc_io,
+ 	return 0;
+ }
 
++/**
++ * fsl_mc_get_version - function to retrieve the MC f/w version information
++ *
++ * Return:	mc version when called after fsl-mc-bus probe; NULL otherwise.
++ */
++struct fsl_mc_version *fsl_mc_get_version(void)
++{
++	if (mc_version.major)
++		return &mc_version;
++
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(fsl_mc_get_version);
++
+ /**
+  * fsl_mc_get_root_dprc - function to traverse to the root dprc
+  */
+@@ -862,7 +864,6 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+ 	int container_id;
+ 	phys_addr_t mc_portal_phys_addr;
+ 	u32 mc_portal_size;
+-	struct mc_version mc_version;
+ 	struct resource res;
+
+ 	mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
+diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
+index 54d9436600c7..2b5f8366dbe1 100644
+--- a/include/linux/fsl/mc.h
++++ b/include/linux/fsl/mc.h
+@@ -381,6 +381,22 @@ int __must_check __fsl_mc_driver_register(struct fsl_mc_driver *fsl_mc_driver,
+
+ void fsl_mc_driver_unregister(struct fsl_mc_driver *driver);
+
++/**
++ * struct fsl_mc_version
++ * @major: Major version number: incremented on API compatibility changes
++ * @minor: Minor version number: incremented on API additions (that are
++ *		backward compatible); reset when major version is incremented
++ * @revision: Internal revision number: incremented on implementation changes
++ *		and/or bug fixes that have no impact on API
++ */
++struct fsl_mc_version {
++	u32 major;
++	u32 minor;
++	u32 revision;
++};
++
++struct fsl_mc_version *fsl_mc_get_version(void);
++
+ int __must_check fsl_mc_portal_allocate(struct fsl_mc_device *mc_dev,
+ 					u16 mc_io_flags,
+ 					struct fsl_mc_io **new_mc_io);
+--
+2.21.0
