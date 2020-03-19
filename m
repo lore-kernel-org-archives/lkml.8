@@ -2,171 +2,238 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9331EC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E38C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D322071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8B22071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:58:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OAzb32aF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgCSQ6J (ORCPT
+        id S1728447AbgCSQ6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:58:09 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:58042 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727399AbgCSQ6J (ORCPT
+        Thu, 19 Mar 2020 12:58:12 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59984 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727399AbgCSQ6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:58:09 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R901e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tt2WDss_1584637067;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tt2WDss_1584637067)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 20 Mar 2020 00:57:50 +0800
-Subject: Re: [PATCH] mm: khugepaged: fix potential page state corruption
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1584573582-116702-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200319001258.creziw6ffw4jvwl3@box>
- <2cdc734c-c222-4b9d-9114-1762b29dafb4@linux.alibaba.com>
- <db660bef-c927-b793-7a79-a88df197a756@linux.alibaba.com>
- <20200319104938.vphyajoyz6ob6jtl@box>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <e716c8c6-898e-5199-019c-161ea3ec06c3@linux.alibaba.com>
-Date:   Thu, 19 Mar 2020 09:57:47 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 19 Mar 2020 12:58:11 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JGw6GU033844;
+        Thu, 19 Mar 2020 11:58:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584637086;
+        bh=aQNDZpwoD//NddOMwwOcYJ+olavsk0mn5RxqJOKX+0w=;
+        h=From:To:CC:Subject:Date;
+        b=OAzb32aFvJdopTSf9FiR51L2n3uu4PBPUMChpOG14NHszhyVB3YgldiiX4I4bVJx6
+         QCq+IL4p7OrPfZaUF7XCEv0898T21U82xR8K4FTnw6KZXOloD7zwqFFqBpmjW7yRt2
+         UqtJ7hAx+uyFHYCEe+YIPlqlMNm066JiAy4OOOGs=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JGw6GT022866
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Mar 2020 11:58:06 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Mar 2020 11:58:06 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Mar 2020 11:58:06 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JGw5ST036056;
+        Thu, 19 Mar 2020 11:58:05 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        netdev <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 00/10] net: ethernet: ti: cpts: add irq and HW_TS_PUSH events
+Date:   Thu, 19 Mar 2020 18:57:52 +0200
+Message-ID: <20200319165802.30898-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200319104938.vphyajoyz6ob6jtl@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Richard, All,
+
+v2: no functional changes.
+
+This is re-spin of patches to add CPSW IRQ and HW_TS_PUSH events support I've
+sent long time ago [1]. In this series, I've tried to restructure and split changes,
+and also add few additional optimizations comparing to initial RFC submission [1].
+
+The HW_TS_PUSH events intended to serve for different timesync purposes on of
+which is to add PPS generation function, which can be implemented as below:
+
+                     +-----------------+
+                     | Control         |
+                     | application     |
+            +------->+                 +----------+
+            |        |                 |          |
+            |        |                 |          |
+            |        +-----------------+          |
+            |                                     |
+            |                                     |
+            | PTP_EXTTS_REQUEST                   |
+            |                                     |
+            |                                     |
+ +----------------------------------------------------------------+
+            |                                     |    Kernel
+    +-------+----------+                  +-------v--------+
+    |  \dev\ptpX       |                  | /sys/class/pwm/|
+    |                  |                  |                |
+    +-------^----------+                  +-------+--------+
+            |                                     |
+            |                                     |
+            |                             +-------v-------------------+
+    +-------+----------+                  |                           |
+    | CPTS driver      |                  |pwm/pwm-omap-dmtimer.c     |
+    |                  |                  +---------------------------+
+    +-------^----------+                  |clocksource/timer_ti_dm.c  |
+            |                             +-------+-------------------+
+            |HWx_TS_PUSH evt                      |
+ +----------------------------------------------------------------+
+            |                                     |         HW
+    +-------+----------+                  +-------v--------+
+    | CPTS             |                  | DMTimer        |
+    |                  |                  |                |
+    |      HWx_TS_PUSH X<-----------------+                |
+    |                  +                  |                |
+    +------------------+                  +-------+--------+
+                                                  |
+                                                  X timer4
 
 
-On 3/19/20 3:49 AM, Kirill A. Shutemov wrote:
-> On Wed, Mar 18, 2020 at 10:39:21PM -0700, Yang Shi wrote:
->>
->> On 3/18/20 5:55 PM, Yang Shi wrote:
->>>
->>> On 3/18/20 5:12 PM, Kirill A. Shutemov wrote:
->>>> On Thu, Mar 19, 2020 at 07:19:42AM +0800, Yang Shi wrote:
->>>>> When khugepaged collapses anonymous pages, the base pages would
->>>>> be freed
->>>>> via pagevec or free_page_and_swap_cache().  But, the anonymous page may
->>>>> be added back to LRU, then it might result in the below race:
->>>>>
->>>>>      CPU A                CPU B
->>>>> khugepaged:
->>>>>     unlock page
->>>>>     putback_lru_page
->>>>>       add to lru
->>>>>                  page reclaim:
->>>>>                    isolate this page
->>>>>                    try_to_unmap
->>>>>     page_remove_rmap <-- corrupt _mapcount
->>>>>
->>>>> It looks nothing would prevent the pages from isolating by reclaimer.
->>>> Hm. Why should it?
->>>>
->>>> try_to_unmap() doesn't exclude parallel page unmapping. _mapcount is
->>>> protected by ptl. And this particular _mapcount pin is reachable for
->>>> reclaim as it's not part of usual page table tree. Basically
->>>> try_to_unmap() will never succeeds until we give up the _mapcount on
->>>> khugepaged side.
->>> I don't quite get. What does "not part of usual page table tree" means?
->>>
->>> How's about try_to_unmap() acquires ptl before khugepaged?
-> The page table we are dealing with was detached from the process' page
-> table tree: see pmdp_collapse_flush(). try_to_unmap() will not see the
-> pte.
->
-> try_to_unmap() can only reach the ptl if split ptl is disabled
-> (mm->page_table_lock is used), but it still will not be able to reach pte.
+As per my knowledge there is at least one public implemented above PPS generation
+schema from Tusori Tibor [2] based on initial HW_TS_PUSH enable submission[1].
+And now there is work done by Lokesh Vutla <lokeshvutla@ti.com> published to
+enable PWM enable/improve PWM adjustment from user space [3][4][5].
 
-Aha, got it. Thanks for explaining. I definitely missed this point. Yes, 
-pmdp_collapse_flush() would clear the pmd, then others won't see the 
-page table.
+Main changes comparing to initial submission:
+- both RX/TX timestamp processing deferred to ptp worker
+- both CPTS IRQ and polling events processing supported to make it work for
+  Keystone 2 also
+- switch to use new .gettimex64() interface
+- no DT updates as number of HWx_TS_PUSH inputs is static per HW
 
-However, it looks the vmscan would not stop at try_to_unmap() at all, 
-try_to_unmap() would just return true since pmd_present() should return 
-false in pvmw. Then it would go all the way down to __remove_mapping(), 
-but freezing the page would fail since try_to_unmap() doesn't actually 
-drop the refcount from the pte map.
+Dependency:
+ ff7cf1822b93 kthread: mark timer used by delayed kthread works as IRQ safe
+ which was merged in -next, but has to be back-ported for testing with earlier
+ versions
 
-It would not result in any critical problem AFAICT, but suboptimal and 
-it may causes some unnecessary I/O due to swap.
+Testing on am571x-idk/omap2plus_defconfig/+CONFIG_PREEMPT=y:
+1) testing HW_TS_PUSH
+ - enable pwm in DT
+	pwm16: dmtimer-pwm {
+		compatible = "ti,omap-dmtimer-pwm";
+		ti,timers = <&timer16>;
+		#pwm-cells = <3>;
+	};
+ - configure and start pwm
+  echo 0 > /sys/class/pwm/pwmchip0/export                                                                          
+  echo 1000000000 > /sys/class/pwm/pwmchip0/pwm0/period                                                            
+  echo 500000000 > /sys/class/pwm/pwmchip0/pwm0/duty_cycle                                                         
+  echo 1 > /sys/class/pwm/pwmchip0/pwm0/enable   
+ - test HWx_TS_PUSH using Kernel selftest testptp application
+  ./tools/testing/selftests/ptp/testptp -d /dev/ptp0 -e 1000 -i 3
 
->
->>>> I don't see the issue right away.
->>>>
->>>>> The other problem is the page's active or unevictable flag might be
->>>>> still set when freeing the page via free_page_and_swap_cache().
->>>> So what?
->>> The flags may leak to page free path then kernel may complain if
->>> DEBUG_VM is set.
-> Could you elaborate on what codepath you are talking about?
+2) testing phc2sys
+# ./linuxptp/phc2sys -s CLOCK_REALTIME -c eth0 -m -O 0 -u30                                            
+phc2sys[1616.791]: eth0 rms 408190379792180864 max 1580914543017209856 freq +864 +/- 4635 delay 645 +/- 29
+phc2sys[1646.795]: eth0 rms 41 max 108 freq +0 +/- 36 delay 656 +/- 29
+phc2sys[1676.800]: eth0 rms 43 max 83 freq +2 +/- 38 delay 650 +/- 0
+phc2sys[1706.804]: eth0 rms 39 max 87 freq +4 +/- 34 delay 672 +/- 55
+phc2sys[1736.808]: eth0 rms 35 max 66 freq +1 +/- 30 delay 667 +/- 49
+phc2sys[1766.813]: eth0 rms 38 max 79 freq +2 +/- 33 delay 656 +/- 29
+phc2sys[1796.817]: eth0 rms 45 max 98 freq +1 +/- 39 delay 656 +/- 29
+phc2sys[1826.821]: eth0 rms 40 max 87 freq +5 +/- 35 delay 650 +/- 0
+phc2sys[1856.826]: eth0 rms 29 max 76 freq -0 +/- 25 delay 656 +/- 29
+phc2sys[1886.830]: eth0 rms 40 max 97 freq +4 +/- 35 delay 667 +/- 49
+phc2sys[1916.834]: eth0 rms 42 max 94 freq +2 +/- 36 delay 661 +/- 41
+phc2sys[1946.839]: eth0 rms 40 max 91 freq +2 +/- 35 delay 661 +/- 41
+phc2sys[1976.843]: eth0 rms 46 max 88 freq -0 +/- 40 delay 667 +/- 49
+phc2sys[2006.847]: eth0 rms 49 max 97 freq +2 +/- 43 delay 650 +/- 0
 
-__put_page ->
-     __put_single_page ->
-         free_unref_page ->
-             put_unref_page_prepare ->
-                 free_pcp_prepare ->
-                     free_pages_prepare ->
-                         free_pages_check
+3) testing ptp4l
+- 1G connection
+# ./linuxptp/ptp4l -P -2 -H -i eth0 -l 6 -m -q -p /dev/ptp0 -f ptp.cfg -s                              
+ptp4l[862.891]: port 1: UNCALIBRATED to SLAVE on MASTER_CLOCK_SELECTED
+ptp4l[923.894]: rms 1019697354682 max 5768279314068 freq +26053 +/- 72 delay 488 +/- 1
+ptp4l[987.896]: rms 13 max 26 freq +26005 +/- 29 delay 488 +/- 1
+ptp4l[1051.899]: rms 14 max 50 freq +25895 +/- 21 delay 488 +/- 1
+ptp4l[1115.901]: rms 11 max 27 freq +25878 +/- 17 delay 488 +/- 1
+ptp4l[1179.904]: rms 10 max 27 freq +25857 +/- 12 delay 488 +/- 1
+ptp4l[1243.906]: rms 14 max 37 freq +25851 +/- 15 delay 488 +/- 1
+ptp4l[1307.909]: rms 12 max 33 freq +25835 +/- 15 delay 488 +/- 1
+ptp4l[1371.911]: rms 11 max 27 freq +25832 +/- 14 delay 488 +/- 1
+ptp4l[1435.914]: rms 11 max 26 freq +25823 +/- 11 delay 488 +/- 1
+ptp4l[1499.916]: rms 10 max 29 freq +25829 +/- 11 delay 489 +/- 1
+ptp4l[1563.919]: rms 11 max 27 freq +25827 +/- 12 delay 488 +/- 1
 
-This check would just be run when DEBUG_VM is enabled.
+- 10M connection
+# ./linuxptp/ptp4l -P -2 -H -i eth0 -l 6 -m -q -p /dev/ptp0 -f ptp.cfg -s                              
+ptp4l[51.955]: port 1: UNCALIBRATED to SLAVE on MASTER_CLOCK_SELECTED
+ptp4l[112.957]: rms 279468848453933920 max 1580914542977391360 freq +25390 +/- 3207 delay 8222 +/- 36
+ptp4l[176.960]: rms 254 max 522 freq +25809 +/- 219 delay 8271 +/- 30
+ptp4l[240.962]: rms 271 max 684 freq +25868 +/- 234 delay 8249 +/- 22
+ptp4l[304.965]: rms 263 max 556 freq +25894 +/- 227 delay 8225 +/- 47
+ptp4l[368.967]: rms 238 max 648 freq +25908 +/- 204 delay 8234 +/- 40
+ptp4l[432.970]: rms 274 max 658 freq +25932 +/- 237 delay 8241 +/- 22
+ptp4l[496.972]: rms 247 max 557 freq +25943 +/- 213 delay 8223 +/- 26
+ptp4l[560.974]: rms 291 max 756 freq +25968 +/- 251 delay 8244 +/- 41
+ptp4l[624.977]: rms 249 max 697 freq +25975 +/- 216 delay 8258 +/- 22
 
->
->>>>> The putback_lru_page() would not clear those two flags if the pages are
->>>>> released via pagevec, it sounds nothing prevents from isolating active
->> Sorry, this is a typo. If the page is freed via pagevec, active and
->> unevictable flag would get cleared before freeing by page_off_lru().
->>
->> But, if the page is freed by free_page_and_swap_cache(), these two flags are
->> not cleared. But, it seems this path is hit rare, the pages are freed by
->> pagevec for the most cases.
->>
->>>>> or unevictable pages.
->>>> Again, why should it? vmscan is equipped to deal with this.
->>> I don't mean vmscan, I mean khugepaged may isolate active and
->>> unevictable pages since it just simply walks page table.
-> Why it is wrong? lru_cache_add() only complains if both flags set, it
-> shouldn't happen.
+Changes in v2:
+ - fixed (formatting) comments from David Miller <davem@davemloft.net>
 
-Noting wrong about isolating active or unevictable pages. I just mean it 
-seems possible active or unevictable flag may be there if the page is 
-freed via free_page_add_swap_cache() path.
+v1: https://patchwork.ozlabs.org/cover/1254708/
 
->
->>>>> However I didn't really run into these problems, just in theory
->>>>> by visual
->>>>> inspection.
->>>>>
->>>>> And, it also seems unnecessary to have the pages add back to LRU
->>>>> again since
->>>>> they are about to be freed when reaching this point.  So,
->>>>> clearing active
->>>>> and unevictable flags, unlocking and dropping refcount from isolate
->>>>> instead of calling putback_lru_page() as what page cache collapse does.
->>>> Hm? But we do call putback_lru_page() on the way out. I do not follow.
->>> It just calls putback_lru_page() at error path, not success path.
->>> Putting pages back to lru on error path definitely makes sense. Here it
->>> is the success path.
-> I agree that putting the apage on LRU just before free the page is
-> suboptimal, but I don't see it as a critical issue.
+[1] https://lore.kernel.org/patchwork/cover/799251/
+[2] https://usermanual.wiki/Document/SetupGuide.632280828.pdf
+    https://github.com/t-tibor/msc_thesis
+[3] https://patchwork.kernel.org/cover/11421329/
+[4] https://patchwork.kernel.org/cover/11433197/
+[5] https://sourceforge.net/p/linuxptp/mailman/message/36943248/
 
-Yes, given the code analysis above, I agree. If you thought the patch is 
-a fine micro-optimization, I would like to re-submit it with rectified 
-commit log. Thank you for your time.
+Grygorii Strashko (10):
+  net: ethernet: ti: cpts: use dev_yy() api for logs
+  net: ethernet: ti: cpts: separate hw counter read from timecounter
+  net: ethernet: ti: cpts: move tc mult update in cpts_fifo_read()
+  net: ethernet: ti: cpts: switch to use new .gettimex64() interface
+  net: ethernet: ti: cpts: optimize packet to event matching
+  net: ethernet: ti: cpts: move tx timestamp processing to ptp worker
+    only
+  net: ethernet: ti: cpts: rework locking
+  net: ethernet: ti: cpts: move rx timestamp processing to ptp worker
+    only
+  net: ethernet: ti: cpts: add irq support
+  net: ethernet: ti: cpsw: enable cpts irq
 
->
->
+ drivers/net/ethernet/ti/cpsw.c        |  35 +-
+ drivers/net/ethernet/ti/cpsw_new.c    |  33 +-
+ drivers/net/ethernet/ti/cpsw_priv.c   |  17 +-
+ drivers/net/ethernet/ti/cpsw_priv.h   |   2 +
+ drivers/net/ethernet/ti/cpts.c        | 508 +++++++++++++++++---------
+ drivers/net/ethernet/ti/cpts.h        |  27 +-
+ drivers/net/ethernet/ti/netcp_ethss.c |   3 +-
+ 7 files changed, 442 insertions(+), 183 deletions(-)
+
+-- 
+2.17.1
 
