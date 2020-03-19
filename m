@@ -2,90 +2,138 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B776C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655D2C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6324420768
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:33:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="YDvQtoOS"
+	by mail.kernel.org (Postfix) with ESMTP id 4819620767
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgCSBdd (ORCPT
+        id S1726997AbgCSBfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 21:33:33 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:37707 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbgCSBdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 21:33:33 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id ab13c9fe;
-        Thu, 19 Mar 2020 01:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=tbcq0Axwh/JCWoU7MoZFYwgJiLg=; b=YDvQto
-        OSHTMslNq2WZ1KXNACW9+HFA8PUj+L0xzCytT/Yf3Erm0TadPRNyDbo3hlNcQDtP
-        QFSoNA9at8Y0pc05Cv0I7js9EJo5ibqIleXIYbEdOxiNiy4zXC+nJYf+w12ILRLe
-        gMC9tomWTsuamgpbLfzXI7WO2Sg+hfFntfw1akLVVY4+IRIrRAEBMBced92ZRdyg
-        gO6wnXDlpA1/mAZXmYOUGTTZdnrAUojCzgkeKQahd/7QhjwuFlva8lT+pH4IoRgR
-        6y5XXHjwwAxdqKk/MWfrtxFgK3959VJt0t82BCvD3dHrX6GNLmorrFydm93DsoX4
-        Tobk62KxeByIuxbw==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e9c52afb (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 19 Mar 2020 01:27:04 +0000 (UTC)
-Received: by mail-il1-f169.google.com with SMTP id p1so737731ils.5;
-        Wed, 18 Mar 2020 18:33:29 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1l+qhaRz9jed+HRS5mZKCweV6/lp4nFaqvRZpCDXDU4VQUhu2T
-        W5nQY4i2i/rs8Ub/4/hQPOWNwtNYpR1UgJ3T0N4=
-X-Google-Smtp-Source: ADFU+vvrGYpI+OaDphhDjrefdHS6y36hdlyfqznfvb/SncGk9mGJ8cnLFNQbtq7omqAImuJ0wndJxEnWVJhEI6H4xo0=
-X-Received: by 2002:a92:c52b:: with SMTP id m11mr1034387ili.38.1584581609026;
- Wed, 18 Mar 2020 18:33:29 -0700 (PDT)
+        Wed, 18 Mar 2020 21:35:03 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12093 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726596AbgCSBfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 21:35:02 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5F4303A32EB79CAF7C94;
+        Thu, 19 Mar 2020 09:34:59 +0800 (CST)
+Received: from [127.0.0.1] (10.65.95.32) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Thu, 19 Mar 2020
+ 09:34:50 +0800
+Subject: Re: [PATCH RFC] perf:Add driver for HiSilicon PCIe PMU
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <1584014816-1908-1-git-send-email-liuqi115@huawei.com>
+ <49a04327-b58b-3103-f992-97e8838c41df@arm.com>
+ <20200313135940.GK42546@lakrids.cambridge.arm.com>
+CC:     <will@kernel.org>, <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linuxarm@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Qi Liu <liuqi115@huawei.com>
+Message-ID: <8a154c7b-9698-a329-a63a-4d13680d5916@huawei.com>
+Date:   Thu, 19 Mar 2020 09:34:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-References: <20200318234518.83906-1-Jason@zx2c4.com> <20200319002359.GF2334@sol.localdomain>
-In-Reply-To: <20200319002359.GF2334@sol.localdomain>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 18 Mar 2020 19:33:18 -0600
-X-Gmail-Original-Message-ID: <CAHmME9otcAe7H4Anan8Tv1KreTZtwt4XXEPMG--x2Ljr0M+o1Q@mail.gmail.com>
-Message-ID: <CAHmME9otcAe7H4Anan8Tv1KreTZtwt4XXEPMG--x2Ljr0M+o1Q@mail.gmail.com>
-Subject: Re: [PATCH URGENT crypto] crypto: arm64/chacha - correctly walk
- through blocks
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200313135940.GK42546@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.95.32]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Eric,
+Thanks for reviewing this patch, will fix these in v2 patch!
 
-On Wed, Mar 18, 2020 at 6:24 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> Thanks for fixing this!  We definitely should get this fix to Linus for 5.6.
-> But I don't think your description of this bug dating back to 2018 is accurate,
-> because this bug only affects the new library interface to ChaCha20 which was
-> added in v5.5.  In the "regular" crypto API case, the "walksize" is set to
-> '5 * CHACHA_BLOCK_SIZE', and chacha_doneon() is guaranteed to be called with a
-> multiple of '5 * CHACHA_BLOCK_SIZE' except at the end.  Thus the code worked
-> fine with the regular crypto API.
+On 2020/3/13 21:59, Mark Rutland wrote:
+> On Fri, Mar 13, 2020 at 01:23:53PM +0000, Robin Murphy wrote:
+>> On 2020-03-12 12:06 pm, Qi Liu wrote:
+>>> From: Qi liu <liuqi115@huawei.com>
+> 
+> [...]
+> 
+>>> +#define HISI_PCIE_EVENT_SHIFT_M			GENMASK(15, 0)
+>>> +#define HISI_PCIE_SUBEVENT_SHIFT_M		GENMASK(31, 16)
+>>> +#define HISI_PCIE_SUBEVENT_SHIFT_S		16
+>>> +#define HISI_PCIE_PORT_SHIFT_M			GENMASK(7, 0)
+>>> +#define HISI_PCIE_FUNC_SHIFT_M			GENMASK(15, 8)
+>>> +#define HISI_PCIE_FUNC_SHIFT_S			8
+>>
+>> So "SHIFT_S" means "shift" and "SHIFT_M" actually means "mask"? That's
+>> unnecessarily confusing. Furthermore it might be helpful if there was a more
+>> obvious distinction between hardware register fields and config fields.
+> 
+> Also, If you use the FIELD_GET() and FIELD_PREP() helpers, you only need
+> to define the mask. See <linux/bitfield.h>.
+> 
+>>> +int hisi_pcie_pmu_event_init(struct perf_event *event)
+>>> +{
+>>> +	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(event->pmu);
+>>> +	struct hw_perf_event *hwc = &event->hw;
+>>> +	u32 subevent_id, event_id, func_id, port_id;
+>>> +
+>>> +	if (event->attr.type != event->pmu->type)
+>>> +		return -ENOENT;
+>>> +
+>>> +	/*
+>>> +	 * We do not support sampling as the counters are all shared by all
+>>> +	 * CPU cores in a CPU die(SCCL). Also we do not support attach to a
+>>
+>> Do the PCIe counters have anything to do with CPU clusters at all?
+>>
+>>> +	 * task(per-process mode)
+>>> +	 */
+>>> +	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+>>> +		return -EOPNOTSUPP;
+>>> +
+>>> +	/*
+>>> +	 * The uncore counters not specific to any CPU, so cannot
+>>> +	 * support per-task
+>>> +	 */
+>>> +	if (event->cpu < 0)
+>>> +		return -EINVAL;
+>>> +
+>>> +	/*
+>>> +	 * Validate if the events in group does not exceed the
+>>> +	 * available counters in hardware.
+>>> +	 */
+>>> +	if (!hisi_validate_event_group(event))
+>>> +		return -EINVAL;
+>>> +
+>>> +	event_id = event->attr.config && HISI_PCIE_EVENT_SHIFT_M;
+>>
+>> Really? Are you sure you've tested this properly?
+> 
+> If you had:
+> 
+> #define HISI_PCI_EVENT_ID	GENMASK(15, 0)
+> #define HISI_PCI_SUBEVENT_ID	GENMASK(31, 16)
+> 
+> ... here you could do:
+> 
+> 	event_id = FIELD_GET(HISI_PCI_EVENT_ID, event->attr.config);
+> 
+>>
+>>> +	subevent_id = (event->attr.config && HISI_PCIE_SUBEVENT_SHIFT_M)
+>>> +		       >> HISI_PCIE_SUBEVENT_SHIFT_S;
+> 
+> ... and:
+> 
+> 	subevent_id = FIELD_GET(HISI_PCI_SUBEVENT_ID, event->attr.config);
+> 
+> ... and so on for other fields.
+> 
+> Thanks,
+> Mark.
+> 
+> .
+> 
 
-Ahhh, that seems correct.
-
-> > +             state[12] += round_up(l, CHACHA_BLOCK_SIZE) / CHACHA_BLOCK_SIZE;
->
-> Use DIV_ROUND_UP(l, CHACHA_BLOCK_SIZE)?
-
-Duh, oops, thanks. Will send a v2 in a few minutes.
-
-By the way, I took a brief look at the other implementations
-accessible from lib/crypto and I didn't see the same issue over there.
-But I wouldn't mind an extra pair of eyes, if you want to give it a
-quick look too.
-
-Jason
