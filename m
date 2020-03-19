@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A8EC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8031C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C3A208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFEAC214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623386;
-	bh=ce4/0yJFxALgb2ftcjgb8O0SohBFJNFqKkJZpzCh/qY=;
+	s=default; t=1584623389;
+	bh=QnLz3/BkTibGRELwWVCE0MtGduZJ0AkQOLxS6ziDWMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EzzpWW5gTrz+7bRlbk8nAIUAHfNOUTugAhcM+bMwrGdJNQt9SdNGfPvj2V94X+MNg
-	 8YrWbow/2GWgHOn1BhnjnoXxPm3uHykbbL3STGoxTLWw8hPbpboPAFvPTJ79yI/dM+
-	 B5sH3RgDL8KgdDlbyChMAXQcCJ8s6Txxf4SrEyks=
+	b=HYVIeE9q6sIZR11ofkNIc/lFeEYMIXv0dEgm5Fu1Y/DRvmgwX+4/1mtbxkVekydod
+	 nBIWrM36dBlMeL6Rhk+BaCmvjWV5t9Y7AQ7YOBQgFh08FnAiNBVa0jzNbYu8zZ5jYg
+	 3/jlcxhjJn+pu7j/TWNjefjnzOJ1DtPrGQ5bgvZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbgCSNJl (ORCPT
+        id S1728380AbgCSNJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:09:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54138 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:09:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727659AbgCSNJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:09:36 -0400
+        id S1728377AbgCSNJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:09:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24C6B20789;
-        Thu, 19 Mar 2020 13:09:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41210208D6;
+        Thu, 19 Mar 2020 13:09:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623375;
-        bh=ce4/0yJFxALgb2ftcjgb8O0SohBFJNFqKkJZpzCh/qY=;
+        s=default; t=1584623381;
+        bh=QnLz3/BkTibGRELwWVCE0MtGduZJ0AkQOLxS6ziDWMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kNOiU6PeNX4nGDvK9g5xEggOYDF4PeF/jbq60u3mPcKs+ivEdolZLW6N/JF93SdIo
-         X5EmGzb7NR37McU6URNfCbNVCfRzrwboCrBVHOzBQSzbR5y+9M0oW6vd2g4bx1BXqz
-         ETEOUQsl0YatoAiwl6L3+/i6i3rpYBBNjKmWQggI=
+        b=YhM/RNVGV/euH7nZ3F6CIkkbTSwODCb+SIwIq1gjiPhsaHVYXYE8ReNEMrAsiWQlV
+         JJXnlbdndMVCoAIL6l9DrwI7jG8AEBfAC9LrgqDY6RG8fJhNNr3lZi+djnjjT/eYZd
+         Eop7c1XNH5HuJyLsQ9Ca421VnzUUe5cIyquLaybw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marek Lindner <mareklindner@neomailbox.ch>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 72/93] batman-adv: prevent TT request storms by not sending inconsistent TT TLVLs
-Date:   Thu, 19 Mar 2020 14:00:16 +0100
-Message-Id: <20200319123947.748365919@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 92/93] mm: slub: add missing TID bump in kmem_cache_alloc_bulk()
+Date:   Thu, 19 Mar 2020 14:00:36 +0100
+Message-Id: <20200319123953.547695284@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -60,80 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Lindner <mareklindner@neomailbox.ch>
+From: Jann Horn <jannh@google.com>
 
-commit 16116dac23396e73c01eeee97b102e4833a4b205 upstream.
+commit fd4d9c7d0c71866ec0c2825189ebd2ce35bd95b8 upstream.
 
-A translation table TVLV changset sent with an OGM consists
-of a number of headers (one per VLAN) plus the changeset
-itself (addition and/or deletion of entries).
+When kmem_cache_alloc_bulk() attempts to allocate N objects from a percpu
+freelist of length M, and N > M > 0, it will first remove the M elements
+from the percpu freelist, then call ___slab_alloc() to allocate the next
+element and repopulate the percpu freelist. ___slab_alloc() can re-enable
+IRQs via allocate_slab(), so the TID must be bumped before ___slab_alloc()
+to properly commit the freelist head change.
 
-The per-VLAN headers are used by OGM recipients for consistency
-checks. Said consistency check might determine that a full
-translation table request is needed to restore consistency. If
-the TT sender adds per-VLAN headers of empty VLANs into the OGM,
-recipients are led to believe to have reached an inconsistent
-state and thus request a full table update. The full table does
-not contain empty VLANs (due to missing entries) the cycle
-restarts when the next OGM is issued.
+Fix it by unconditionally bumping c->tid when entering the slowpath.
 
-Consequently, when the translation table TVLV headers are
-composed, empty VLANs are to be excluded.
-
-Fixes: 21a57f6e7a3b ("batman-adv: make the TT CRC logic VLAN specific")
-Signed-off-by: Marek Lindner <mareklindner@neomailbox.ch>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Cc: stable@vger.kernel.org
+Fixes: ebe909e0fdb3 ("slub: improve bulk alloc strategy")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/batman-adv/translation-table.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
 
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -813,15 +813,20 @@ batadv_tt_prepare_tvlv_local_data(struct
- 	struct batadv_tvlv_tt_vlan_data *tt_vlan;
- 	struct batadv_softif_vlan *vlan;
- 	u16 num_vlan = 0;
--	u16 num_entries = 0;
-+	u16 vlan_entries = 0;
-+	u16 total_entries = 0;
- 	u16 tvlv_len;
- 	u8 *tt_change_ptr;
- 	int change_offset;
+---
+ mm/slub.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2932,6 +2932,15 @@ int kmem_cache_alloc_bulk(struct kmem_ca
  
- 	spin_lock_bh(&bat_priv->softif_vlan_list_lock);
- 	hlist_for_each_entry_rcu(vlan, &bat_priv->softif_vlan_list, list) {
-+		vlan_entries = atomic_read(&vlan->tt.num_entries);
-+		if (vlan_entries < 1)
-+			continue;
+ 		if (unlikely(!object)) {
+ 			/*
++			 * We may have removed an object from c->freelist using
++			 * the fastpath in the previous iteration; in that case,
++			 * c->tid has not been bumped yet.
++			 * Since ___slab_alloc() may reenable interrupts while
++			 * allocating memory, we should bump c->tid now.
++			 */
++			c->tid = next_tid(c->tid);
 +
- 		num_vlan++;
--		num_entries += atomic_read(&vlan->tt.num_entries);
-+		total_entries += vlan_entries;
- 	}
- 
- 	change_offset = sizeof(**tt_data);
-@@ -829,7 +834,7 @@ batadv_tt_prepare_tvlv_local_data(struct
- 
- 	/* if tt_len is negative, allocate the space needed by the full table */
- 	if (*tt_len < 0)
--		*tt_len = batadv_tt_len(num_entries);
-+		*tt_len = batadv_tt_len(total_entries);
- 
- 	tvlv_len = *tt_len;
- 	tvlv_len += change_offset;
-@@ -846,6 +851,10 @@ batadv_tt_prepare_tvlv_local_data(struct
- 
- 	tt_vlan = (struct batadv_tvlv_tt_vlan_data *)(*tt_data + 1);
- 	hlist_for_each_entry_rcu(vlan, &bat_priv->softif_vlan_list, list) {
-+		vlan_entries = atomic_read(&vlan->tt.num_entries);
-+		if (vlan_entries < 1)
-+			continue;
-+
- 		tt_vlan->vid = htons(vlan->vid);
- 		tt_vlan->crc = htonl(vlan->tt.crc);
- 
++			/*
+ 			 * Invoking slow path likely have side-effect
+ 			 * of re-populating per CPU c->freelist
+ 			 */
 
 
