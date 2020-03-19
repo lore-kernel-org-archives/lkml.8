@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0560FC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8659C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9807207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C9AE207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624480;
-	bh=TpFKppsHlbmQgTv/fK2iH3Nvlu/Qp5uatdLZ8XR+MIo=;
+	s=default; t=1584624486;
+	bh=vxseYOJeQCS6fWbwxaaYEYi2MoV+stP5GL0I0dHdpzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IXCUOWy8L2RJe+s7VSsIwVYArVVCwelXMcbw9p7WqpzDtI4ZAIbsKxNsoJsMeuco5
-	 LfBtOEX4orHRXcJFZjntFh9aKp0qFhaF2Yav5ldu/v4L+RARKsgMBNMfUK0H/u/Kl3
-	 NawuogsekyFhIM6LDJoumRgOiQjyzXQAT4QYzPDA=
+	b=YFQ6KdlPua0TCmKoHtVegSnk2haumHNrHLscZFf8sNmXJMSzEDguC8ZEEv8LMFoGr
+	 cUS2oJEKBzLsVSRMztetFXgob9YwPn+5TyzsdUeMpLwkVL8Mf/0w6T1gcd1iWOqhX2
+	 +nIqgoEO/xj450f9emK47ozufpdoAFgs07Tv58dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730973AbgCSN17 (ORCPT
+        id S1729395AbgCSN2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:27:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56374 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:28:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730785AbgCSN1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:27:53 -0400
+        id S1730971AbgCSN2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:28:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A6B120658;
-        Thu, 19 Mar 2020 13:27:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 650AF2080C;
+        Thu, 19 Mar 2020 13:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624472;
-        bh=TpFKppsHlbmQgTv/fK2iH3Nvlu/Qp5uatdLZ8XR+MIo=;
+        s=default; t=1584624478;
+        bh=vxseYOJeQCS6fWbwxaaYEYi2MoV+stP5GL0I0dHdpzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vfJ+fSYzI5OqESXuDK3KZbb4Smj8Lv4ABMZO/AIHUoGYgsg822xGoPvmdqTW0HN0C
-         32g3ebeb9vkzEDoZA/HrBy6TzAR+qgQpx6QEBeC5x+Tz9ssWFA6OzKFSLJEC9eKnBF
-         MajGfzDJ7cj0n4WsZdjvhkklOJ9rUHcaGvKOn3bA=
+        b=LazX3j+roJopGq7AsF2RhF3vougycIJEHdBolNVH87Ca5wlgJZWP3aQULTc1iEhqO
+         kVvJKTznqznp58NCPaq2qn8yRtIe+R0UAOJlfX+lQJsV6jL3PloqBmcZ9DswrlXqGp
+         TMZXm80nTtzHEVs7HoDNp2tt1q49eHP3PBUqKMS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Qian Cai <cai@lca.pw>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 57/65] jbd2: fix data races at struct journal_head
-Date:   Thu, 19 Mar 2020 14:04:39 +0100
-Message-Id: <20200319123944.322675087@linuxfoundation.org>
+Subject: [PATCH 5.5 49/65] net: rmnet: remove rcu_read_lock in rmnet_force_unassociate_device()
+Date:   Thu, 19 Mar 2020 14:04:31 +0100
+Message-Id: <20200319123941.803097321@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -60,108 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 6c5d911249290f41f7b50b43344a7520605b1acb ]
+[ Upstream commit c026d970102e9af9958edefb4a015702c6aab636 ]
 
-journal_head::b_transaction and journal_head::b_next_transaction could
-be accessed concurrently as noticed by KCSAN,
+The notifier_call() of the slave interface removes rmnet interface with
+unregister_netdevice_queue().
+But, before calling unregister_netdevice_queue(), it acquires
+rcu readlock.
+In the RCU critical section, sleeping isn't be allowed.
+But, unregister_netdevice_queue() internally calls synchronize_net(),
+which would sleep.
+So, suspicious RCU usage warning occurs.
 
- LTP: starting fsync04
- /dev/zero: Can't open blockdev
- EXT4-fs (loop0): mounting ext3 file system using the ext4 subsystem
- EXT4-fs (loop0): mounted filesystem with ordered data mode. Opts: (null)
- ==================================================================
- BUG: KCSAN: data-race in __jbd2_journal_refile_buffer [jbd2] / jbd2_write_access_granted [jbd2]
+Test commands:
+    modprobe rmnet
+    ip link add dummy0 type dummy
+    ip link add dummy1 type dummy
+    ip link add rmnet0 link dummy0 type rmnet mux_id 1
+    ip link set dummy1 master rmnet0
+    ip link del dummy0
 
- write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on cpu 70:
-  __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
-  __jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
-  jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
-  (inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1034
-  kjournald2+0x13b/0x450 [jbd2]
-  kthread+0x1cd/0x1f0
-  ret_from_fork+0x27/0x50
+Splat looks like:
+[   79.639245][ T1195] =============================
+[   79.640134][ T1195] WARNING: suspicious RCU usage
+[   79.640852][ T1195] 5.6.0-rc1+ #447 Not tainted
+[   79.641657][ T1195] -----------------------------
+[   79.642472][ T1195] ./include/linux/rcupdate.h:273 Illegal context switch in RCU read-side critical section!
+[   79.644043][ T1195]
+[   79.644043][ T1195] other info that might help us debug this:
+[   79.644043][ T1195]
+[   79.645682][ T1195]
+[   79.645682][ T1195] rcu_scheduler_active = 2, debug_locks = 1
+[   79.646980][ T1195] 2 locks held by ip/1195:
+[   79.647629][ T1195]  #0: ffffffffa3cf64f0 (rtnl_mutex){+.+.}, at: rtnetlink_rcv_msg+0x457/0x890
+[   79.649312][ T1195]  #1: ffffffffa39256c0 (rcu_read_lock){....}, at: rmnet_config_notify_cb+0xf0/0x590 [rmnet]
+[   79.651717][ T1195]
+[   79.651717][ T1195] stack backtrace:
+[   79.652650][ T1195] CPU: 3 PID: 1195 Comm: ip Not tainted 5.6.0-rc1+ #447
+[   79.653702][ T1195] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   79.655037][ T1195] Call Trace:
+[   79.655560][ T1195]  dump_stack+0x96/0xdb
+[   79.656252][ T1195]  ___might_sleep+0x345/0x440
+[   79.656994][ T1195]  synchronize_net+0x18/0x30
+[   79.661132][ T1195]  netdev_rx_handler_unregister+0x40/0xb0
+[   79.666266][ T1195]  rmnet_unregister_real_device+0x42/0xb0 [rmnet]
+[   79.667211][ T1195]  rmnet_config_notify_cb+0x1f7/0x590 [rmnet]
+[   79.668121][ T1195]  ? rmnet_unregister_bridge.isra.6+0xf0/0xf0 [rmnet]
+[   79.669166][ T1195]  ? rmnet_unregister_bridge.isra.6+0xf0/0xf0 [rmnet]
+[   79.670286][ T1195]  ? __module_text_address+0x13/0x140
+[   79.671139][ T1195]  notifier_call_chain+0x90/0x160
+[   79.671973][ T1195]  rollback_registered_many+0x660/0xcf0
+[   79.672893][ T1195]  ? netif_set_real_num_tx_queues+0x780/0x780
+[   79.675091][ T1195]  ? __lock_acquire+0xdfe/0x3de0
+[   79.675825][ T1195]  ? memset+0x1f/0x40
+[   79.676367][ T1195]  ? __nla_validate_parse+0x98/0x1ab0
+[   79.677290][ T1195]  unregister_netdevice_many.part.133+0x13/0x1b0
+[   79.678163][ T1195]  rtnl_delete_link+0xbc/0x100
+[ ... ]
 
- read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on cpu 68:
-  jbd2_write_access_granted+0x1b2/0x250 [jbd2]
-  jbd2_write_access_granted at fs/jbd2/transaction.c:1155
-  jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
-  __ext4_journal_get_write_access+0x50/0x90 [ext4]
-  ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
-  ext4_mb_new_blocks+0x54f/0xca0 [ext4]
-  ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
-  ext4_map_blocks+0x3b4/0x950 [ext4]
-  _ext4_get_block+0xfc/0x270 [ext4]
-  ext4_get_block+0x3b/0x50 [ext4]
-  __block_write_begin_int+0x22e/0xae0
-  __block_write_begin+0x39/0x50
-  ext4_write_begin+0x388/0xb50 [ext4]
-  generic_perform_write+0x15d/0x290
-  ext4_buffered_write_iter+0x11f/0x210 [ext4]
-  ext4_file_write_iter+0xce/0x9e0 [ext4]
-  new_sync_write+0x29c/0x3b0
-  __vfs_write+0x92/0xa0
-  vfs_write+0x103/0x260
-  ksys_write+0x9d/0x130
-  __x64_sys_write+0x4c/0x60
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- 5 locks held by fsync04/25724:
-  #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at: vfs_write+0x21c/0x260
-  #1: ffff99f9db4c0348 (&sb->s_type->i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
-  #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
-  #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at: ext4_map_blocks+0x176/0x950 [ext4]
-  #4: ffffffff99086b40 (rcu_read_lock){....}, at: jbd2_write_access_granted+0x4e/0x250 [jbd2]
- irq event stamp: 1407125
- hardirqs last  enabled at (1407125): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
- hardirqs last disabled at (1407124): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
- softirqs last  enabled at (1405528): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
- softirqs last disabled at (1405521): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
-
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 68 PID: 25724 Comm: fsync04 Tainted: G L 5.6.0-rc2-next-20200221+ #7
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-
-The plain reads are outside of jh->b_state_lock critical section which result
-in data races. Fix them by adding pairs of READ|WRITE_ONCE().
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/r/20200222043111.2227-1-cai@lca.pw
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: ceed73a2cf4a ("drivers: net: ethernet: qualcomm: rmnet: Initial implementation")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/transaction.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index ab1078e85a58e..295e3cdb4461b 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1150,8 +1150,8 @@ static bool jbd2_write_access_granted(handle_t *handle, struct buffer_head *bh,
- 	/* For undo access buffer must have data copied */
- 	if (undo && !jh->b_committed_data)
- 		goto out;
--	if (jh->b_transaction != handle->h_transaction &&
--	    jh->b_next_transaction != handle->h_transaction)
-+	if (READ_ONCE(jh->b_transaction) != handle->h_transaction &&
-+	    READ_ONCE(jh->b_next_transaction) != handle->h_transaction)
- 		goto out;
- 	/*
- 	 * There are two reasons for the barrier here:
-@@ -2569,8 +2569,8 @@ bool __jbd2_journal_refile_buffer(struct journal_head *jh)
- 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
- 	 * take a new one.
- 	 */
--	jh->b_transaction = jh->b_next_transaction;
--	jh->b_next_transaction = NULL;
-+	WRITE_ONCE(jh->b_transaction, jh->b_next_transaction);
-+	WRITE_ONCE(jh->b_next_transaction, NULL);
- 	if (buffer_freed(bh))
- 		jlist = BJ_Forget;
- 	else if (jh->b_modified)
+diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
+index fc68ecdd804bc..0ad64aa665925 100644
+--- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
++++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
+@@ -230,7 +230,6 @@ static void rmnet_force_unassociate_device(struct net_device *dev)
+ 
+ 	port = rmnet_get_port_rtnl(dev);
+ 
+-	rcu_read_lock();
+ 	rmnet_unregister_bridge(dev, port);
+ 
+ 	hash_for_each_safe(port->muxed_ep, bkt_ep, tmp_ep, ep, hlnode) {
+@@ -241,7 +240,6 @@ static void rmnet_force_unassociate_device(struct net_device *dev)
+ 		kfree(ep);
+ 	}
+ 
+-	rcu_read_unlock();
+ 	unregister_netdevice_many(&list);
+ 
+ 	rmnet_unregister_real_device(real_dev, port);
 -- 
 2.20.1
 
