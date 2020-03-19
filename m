@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47021C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E858C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E08208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF272208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623394;
-	bh=3S/jIxAI27CH0YWuMRaXG5pmwYxMSxN84q6DcMOIarc=;
+	s=default; t=1584623396;
+	bh=O1OxejklrZEJykSJGu3mE7lIoPOU6R/IBRhohna7Urk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tV1sSX3czQXbEvBC+9XTq0YtZt9iMdPpq0ct/IpMRwUIWURn/uwNyf0j8Up1QSnVv
-	 kdDtupXxa8d5LzyvkwJYmG2IMNSPw9837p7yslekEhBGBvkme6FifrB2pzrv/Ffabv
-	 wNL6SOkYci3698eREw1baRP5JbuAbbHyTEpWZqNI=
+	b=WXaNaEHu+lsE42iNlVXsSUJ8idQ7dkcZPBJyUlalxx3iwffhTCxP6MDxsQ5utMxGo
+	 lMmuE9etUbHsddFVYQ8SFXdk1h0Gpz/ynSSdOgwf/RMYTDgx/PG4m47wYdCosBYh/g
+	 pZdXrELIHwVkB+CWFSEvnx7QwWa1/GNcKp1OgJYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgCSNJx (ORCPT
+        id S1728416AbgCSNJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:09:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727751AbgCSNJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:09:48 -0400
+        id S1728377AbgCSNJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:09:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DC9220789;
-        Thu, 19 Mar 2020 13:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18F8320789;
+        Thu, 19 Mar 2020 13:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623387;
-        bh=3S/jIxAI27CH0YWuMRaXG5pmwYxMSxN84q6DcMOIarc=;
+        s=default; t=1584623391;
+        bh=O1OxejklrZEJykSJGu3mE7lIoPOU6R/IBRhohna7Urk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0PieLSE81SJj1ajePJRJeQD3LWAPfv3T9yQIWn/kShUSVbrEaojSIunqcmgYZfVXQ
-         ic7v2Y4CN3rjh+pI6HUXmYgRocRn9f1L2EzrM86tRt/iVVyc1wvDewI9U1U6sy16oo
-         kjBnGVVELbNITGwNuBIFll+Cp9It1HCUbF6/a+4Q=
+        b=y/6nx6uAeF/m7sGv5ZojRhkL9caOu42sm4bABnItlXTMdNNU4ol6I6XzFN3vTMVMP
+         +FKnbIjwekO9c5A0xwl9ORHhOkha/edWAbXs9J5he2cEYTCIC5GGOpxnyZc6to3WtJ
+         mi04GFHxXGGZK2gC3xgar0fJ5PiMBqREVzqhwSP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 10/90] bnxt_en: reinitialize IRQs when MTU is modified
-Date:   Thu, 19 Mar 2020 13:59:32 +0100
-Message-Id: <20200319123931.888290293@linuxfoundation.org>
+Subject: [PATCH 4.9 11/90] fib: add missing attribute validation for tun_id
+Date:   Thu, 19 Mar 2020 13:59:33 +0100
+Message-Id: <20200319123932.196684572@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -61,45 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
+[ Upstream commit 4c16d64ea04056f1b1b324ab6916019f6a064114 ]
 
-MTU changes may affect the number of IRQs so we must call
-bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
-set to true.  The reason is that a larger MTU may require
-aggregation rings not needed with smaller MTU.  We may not be
-able to allocate the required number of aggregation rings and
-so we reduce the number of channels which will change the number
-of IRQs.  Without this patch, it may crash eventually in
-pci_disable_msix() when the IRQs are not properly unwound.
+Add missing netlink policy entry for FRA_TUN_ID.
 
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Fixes: e7030878fc84 ("fib: Add fib rule match on tunnel id")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/net/fib_rules.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -6439,13 +6439,13 @@ static int bnxt_change_mtu(struct net_de
- 		return -EINVAL;
- 
- 	if (netif_running(dev))
--		bnxt_close_nic(bp, false, false);
-+		bnxt_close_nic(bp, true, false);
- 
- 	dev->mtu = new_mtu;
- 	bnxt_set_ring_params(bp);
- 
- 	if (netif_running(dev))
--		return bnxt_open_nic(bp, false, false);
-+		return bnxt_open_nic(bp, true, false);
- 
- 	return 0;
- }
+--- a/include/net/fib_rules.h
++++ b/include/net/fib_rules.h
+@@ -87,6 +87,7 @@ struct fib_rules_ops {
+ 	[FRA_OIFNAME]	= { .type = NLA_STRING, .len = IFNAMSIZ - 1 }, \
+ 	[FRA_PRIORITY]	= { .type = NLA_U32 }, \
+ 	[FRA_FWMARK]	= { .type = NLA_U32 }, \
++	[FRA_TUN_ID]	= { .type = NLA_U64 }, \
+ 	[FRA_FWMASK]	= { .type = NLA_U32 }, \
+ 	[FRA_TABLE]     = { .type = NLA_U32 }, \
+ 	[FRA_SUPPRESS_PREFIXLEN] = { .type = NLA_U32 }, \
 
 
