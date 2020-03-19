@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C29C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55E8C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E5D2098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7C221655
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623990;
-	bh=maftcec7q/7Gg+skBb0iIpevHKDV5RwkZc9HnEZIWp4=;
+	s=default; t=1584623995;
+	bh=dAYWix8Jg6hGhzvaDV1XsHPPGx04dZUJtlMCI5t2iMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AQSD77WwHwcm1I5qL/pMasm37fFj7CarsA5zsFKcq/gy79mmRK/AMBP5Sx28tNatz
-	 YW/kT1YFcU2VR92Mq43pwZTKbW64zz2r6VWzbgltEJun384QuOO5lugykuSkfCT4pW
-	 47AOpNPxlhVD6R4g4HtjrZHMBGWQCu+adRUKY/3Q=
+	b=hW0vggpT8rFvqdG8s0LFQ92a3tAw9kKlGb5apf7F93CzipthRKwkpjT6PMQb8cvC9
+	 zjBno36lUUISfS5QyAnTYi4kWW3zTLkhr56H++n0nBftyKwObgT57LxaaX3pPj4vgn
+	 FBXAOsFjfAb3j4chzmQVtPPo6pqvqarw1AoeTIGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbgCSNTt (ORCPT
+        id S1729940AbgCSNTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43330 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:19:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728503AbgCSNTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:19:47 -0400
+        id S1729929AbgCSNTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:19:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A3E42098B;
-        Thu, 19 Mar 2020 13:19:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE0932166E;
+        Thu, 19 Mar 2020 13:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623986;
-        bh=maftcec7q/7Gg+skBb0iIpevHKDV5RwkZc9HnEZIWp4=;
+        s=default; t=1584623989;
+        bh=dAYWix8Jg6hGhzvaDV1XsHPPGx04dZUJtlMCI5t2iMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0rEP3si22LQHdSGoyeYRanbYXHFlF3tAZWX/NcirpzIk+a6EwjPQLUApDkwkDdInT
-         IWklAeJmEyUlPgogMg40bpoXfjrd6ltKyYje6odw3ScIAg1QhgutAPNzUyyCFEwy2O
-         POOK59dPCHYCDvhfgkhipvuBxrMz+KrnCXEmxM/I=
+        b=MCjkPLC2gFy4zKfaPM+y8hTSA2ikD/YTwE451PQvuoJ3VMKKgTC2+eTliI8N6NZHx
+         Dk+HbF/ys2GqXEQJhAi/oSddeNwkBPn/8UHYunfbJQZKqLPmUHuMaCqcd3mZmtD5n5
+         DcNirG69b3nCTR5pJeuCZW+zIdnO6McB1f0x/d68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 20/48] hinic: fix a irq affinity bug
-Date:   Thu, 19 Mar 2020 14:04:02 +0100
-Message-Id: <20200319123909.403633619@linuxfoundation.org>
+Subject: [PATCH 4.19 21/48] hinic: fix a bug of setting hw_ioctxt
+Date:   Thu, 19 Mar 2020 14:04:03 +0100
+Message-Id: <20200319123909.723289878@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
 References: <20200319123902.941451241@linuxfoundation.org>
@@ -62,54 +62,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit 0bff777bd0cba73ad4cd0145696ad284d7e6a99f ]
+[ Upstream commit d2ed69ce9ed3477e2a9527e6b89fe4689d99510e ]
 
-can not use a local variable as an input parameter of
-irq_set_affinity_hint
+a reserved field is used to signify prime physical function index
+in the latest firmware version, so we must assign a value to it
+correctly
 
 Signed-off-by: Luo bin <luobin9@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h | 1 +
- drivers/net/ethernet/huawei/hinic/hinic_rx.c    | 5 ++---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c | 1 +
+ drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h | 2 +-
+ drivers/net/ethernet/huawei/hinic/hinic_hw_if.h  | 1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
-index 6c84f83ec2831..d46cfd4fbbbc5 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
-@@ -103,6 +103,7 @@ struct hinic_rq {
- 
- 	struct hinic_wq         *wq;
- 
-+	struct cpumask		affinity_mask;
- 	u32                     irq;
- 	u16                     msix_entry;
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-index 06b24a92ed7d4..3467d84d96c39 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-@@ -414,7 +414,6 @@ static int rx_request_irq(struct hinic_rxq *rxq)
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
- 	struct hinic_rq *rq = rxq->rq;
- 	struct hinic_qp *qp;
--	struct cpumask mask;
- 	int err;
- 
- 	rx_add_napi(rxq);
-@@ -431,8 +430,8 @@ static int rx_request_irq(struct hinic_rxq *rxq)
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+index 6b19607a4caac..9deec13d98e93 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+@@ -309,6 +309,7 @@ static int set_hw_ioctxt(struct hinic_hwdev *hwdev, unsigned int rq_depth,
  	}
  
- 	qp = container_of(rq, struct hinic_qp, rq);
--	cpumask_set_cpu(qp->q_id % num_online_cpus(), &mask);
--	return irq_set_affinity_hint(rq->irq, &mask);
-+	cpumask_set_cpu(qp->q_id % num_online_cpus(), &rq->affinity_mask);
-+	return irq_set_affinity_hint(rq->irq, &rq->affinity_mask);
- }
+ 	hw_ioctxt.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
++	hw_ioctxt.ppf_idx = HINIC_HWIF_PPF_IDX(hwif);
  
- static void rx_free_irq(struct hinic_rxq *rxq)
+ 	hw_ioctxt.set_cmdq_depth = HW_IOCTXT_SET_CMDQ_DEPTH_DEFAULT;
+ 	hw_ioctxt.cmdq_depth = 0;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
+index 0f5563f3b7798..a011fd2d26270 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
+@@ -104,8 +104,8 @@ struct hinic_cmd_hw_ioctxt {
+ 
+ 	u8      rsvd2;
+ 	u8      rsvd3;
++	u8      ppf_idx;
+ 	u8      rsvd4;
+-	u8      rsvd5;
+ 
+ 	u16     rq_depth;
+ 	u16     rx_buf_sz_idx;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
+index 5b4760c0e9f53..f683ccbdfca02 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
+@@ -146,6 +146,7 @@
+ #define HINIC_HWIF_FUNC_IDX(hwif)       ((hwif)->attr.func_idx)
+ #define HINIC_HWIF_PCI_INTF(hwif)       ((hwif)->attr.pci_intf_idx)
+ #define HINIC_HWIF_PF_IDX(hwif)         ((hwif)->attr.pf_idx)
++#define HINIC_HWIF_PPF_IDX(hwif)        ((hwif)->attr.ppf_idx)
+ 
+ #define HINIC_FUNC_TYPE(hwif)           ((hwif)->attr.func_type)
+ #define HINIC_IS_PF(hwif)               (HINIC_FUNC_TYPE(hwif) == HINIC_PF)
 -- 
 2.20.1
 
