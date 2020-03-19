@@ -2,246 +2,123 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21E5C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334D9C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB112076F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:12:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584576720;
-	bh=VX0fhkTHGpTTVQNLQ6YVf7+3W71egg1ysRdaAxsTytc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ECYN+xOkvDJVYwL1WTU/8UmWgGtCzjVFTAsE8mRkD5glQKjk6HsSSLmtalnOeQ0mI
-	 Dhf8kaYvZYChH8RVOUgIYbFdSCjXo4yq092wDmP/bV0ahNLG6r+Hr7JOhtD1j69jE+
-	 AKJ3ugylqIeJOtVldi4LXuhI7xdXWOcq6fv9PXaI=
+	by mail.kernel.org (Postfix) with ESMTP id BC3932076F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:12:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WDWvPg/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbgCSAL7 (ORCPT
+        id S1727791AbgCSAMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 20:11:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37280 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 20:12:03 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49299 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727416AbgCSALF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 20:11:05 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727321AbgCSALE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 20:11:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6DC120774;
-        Thu, 19 Mar 2020 00:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584576665;
-        bh=VX0fhkTHGpTTVQNLQ6YVf7+3W71egg1ysRdaAxsTytc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p3EMpWtJIPydev6f5k2ETgxwSq/SO67Sh8H/7FSOwNok38Uq/J1mE9n9/zrih8zkd
-         5SrgMtJ/mQK969m01lSMuKYoH+kEMTe7lXcP8lYChRS4YJALhoFgQmxCTGfDcvB7qI
-         x0ZruyXHT3wcSNBhmWCkgt6kPYPo4ZnMZtLIIIw4=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH RFC v2 tip/core/rcu 09/22] rcu-tasks: Add an RCU-tasks rude variant
-Date:   Wed, 18 Mar 2020 17:10:47 -0700
-Message-Id: <20200319001100.24917-9-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200319001024.GA28798@paulmck-ThinkPad-P72>
-References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48jS4626w6z9sPk;
+        Thu, 19 Mar 2020 11:11:02 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584576662;
+        bh=4NeHfuenkCF6u/+kEoesLWlSHw3XkaaPyGQc98hjRGQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WDWvPg/wLRHG3UHvKXOZH8kDol+lSTsMmw0hkBGJaT742jX2qdWR8r8HEpRfKiGeU
+         wJdjcRBuTUam5RpR3JdszpnZYzYIlSqleCh0qLceAxD6Mey+RIetnjxEUHDrBelurR
+         F8+zRbC5VcOOhlTksTbrCF1U61NLlQRHlpLMiWsEuOhsqZhBO6mn0S79y/RCc64cdf
+         ohc6P+D10KTCjwkzEsCgay0Jux/CzM13FaXu6cwAeE+s/+WKErUTVfptVc5CecLk0I
+         gD3guZfOcG13qtkc9GYDg33SyBuckEHfSdjQiGfKICPCooc+WDupeoVVdJQbK7hrox
+         w+kIk6MIQZi6Q==
+Date:   Thu, 19 Mar 2020 11:10:53 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        Noam Dagan <ndagan@amazon.com>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20200319111053.597bd4d1@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/5vHI_Q_c2A6E/.8i+PNP8Go";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+--Sig_/5vHI_Q_c2A6E/.8i+PNP8Go
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This commit adds a "rude" variant of RCU-tasks that has as quiescent
-states schedule(), cond_resched_tasks_rcu_qs(), userspace execution,
-and (in theory, anyway) cond_resched().  In other words, RCU-tasks rude
-readers are regions of code with preemption disabled, but excluding code
-early in the CPU-online sequence and late in the CPU-offline sequence.
-Updates make use of IPIs and force an IPI and a context switch on each
-online CPU.  This variant is useful in some situations in tracing.
+Hi all,
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-[ paulmck: Apply EXPORT_SYMBOL_GPL() feedback from Qiujun Huang. ]
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- include/linux/rcupdate.h |  3 ++
- kernel/rcu/Kconfig       | 12 +++++-
- kernel/rcu/tasks.h       | 98 ++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 112 insertions(+), 1 deletion(-)
+Today's linux-next merge of the net-next tree got a conflict in:
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 5523145..2be97a8 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -37,6 +37,7 @@
- /* Exported common interfaces */
- void call_rcu(struct rcu_head *head, rcu_callback_t func);
- void rcu_barrier_tasks(void);
-+void rcu_barrier_tasks_rude(void);
- void synchronize_rcu(void);
- 
- #ifdef CONFIG_PREEMPT_RCU
-@@ -138,6 +139,8 @@ static inline void rcu_init_nohz(void) { }
- #define rcu_note_voluntary_context_switch(t) rcu_tasks_qs(t)
- void call_rcu_tasks(struct rcu_head *head, rcu_callback_t func);
- void synchronize_rcu_tasks(void);
-+void call_rcu_tasks_rude(struct rcu_head *head, rcu_callback_t func);
-+void synchronize_rcu_tasks_rude(void);
- void exit_tasks_rcu_start(void);
- void exit_tasks_rcu_finish(void);
- #else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
-diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
-index 38475d0..0d43ec1 100644
---- a/kernel/rcu/Kconfig
-+++ b/kernel/rcu/Kconfig
-@@ -71,7 +71,7 @@ config TREE_SRCU
- 	  This option selects the full-fledged version of SRCU.
- 
- config TASKS_RCU_GENERIC
--	def_bool TASKS_RCU
-+	def_bool TASKS_RCU || TASKS_RUDE_RCU
- 	select SRCU
- 	help
- 	  This option enables generic infrastructure code supporting
-@@ -84,6 +84,16 @@ config TASKS_RCU
- 	  only voluntary context switch (not preemption!), idle, and
- 	  user-mode execution as quiescent states.  Not for manual selection.
- 
-+config TASKS_RUDE_RCU
-+	def_bool 0
-+	default n
-+	help
-+	  This option enables a task-based RCU implementation that uses
-+	  only context switch (including preemption) and user-mode
-+	  execution as quiescent states.  It forces IPIs and context
-+	  switches on all online CPUs, including idle ones, so use
-+	  with caution.  Not for manual selection.
-+
- config RCU_STALL_COMMON
- 	def_bool TREE_RCU
- 	help
-diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index d77921e..7ba1730 100644
---- a/kernel/rcu/tasks.h
-+++ b/kernel/rcu/tasks.h
-@@ -180,6 +180,9 @@ static void __init rcu_tasks_bootup_oddness(void)
- 	else
- 		pr_info("\tTasks RCU enabled.\n");
- #endif /* #ifdef CONFIG_TASKS_RCU */
-+#ifdef CONFIG_TASKS_RUDE_RCU
-+	pr_info("\tRude variant of Tasks RCU enabled.\n");
-+#endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
- }
- 
- #endif /* #ifndef CONFIG_TINY_RCU */
-@@ -410,3 +413,98 @@ static int __init rcu_spawn_tasks_kthread(void)
- core_initcall(rcu_spawn_tasks_kthread);
- 
- #endif /* #ifdef CONFIG_TASKS_RCU */
-+
-+#ifdef CONFIG_TASKS_RUDE_RCU
-+
-+////////////////////////////////////////////////////////////////////////
-+//
-+// "Rude" variant of Tasks RCU, inspired by Steve Rostedt's trick of
-+// passing an empty function to schedule_on_each_cpu().  This approach
-+// provides an asynchronous call_rcu_rude() API and batching of concurrent
-+// calls to the synchronous synchronize_rcu_rude() API.  This sends IPIs
-+// far and wide and induces otherwise unnecessary context switches on all
-+// online CPUs, whether online or not.
-+
-+// Empty function to allow workqueues to force a context switch.
-+static void rcu_tasks_be_rude(struct work_struct *work)
-+{
-+}
-+
-+// Wait for one rude RCU-tasks grace period.
-+static void rcu_tasks_rude_wait_gp(struct rcu_tasks *rtp)
-+{
-+	schedule_on_each_cpu(rcu_tasks_be_rude);
-+}
-+
-+void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func);
-+DEFINE_RCU_TASKS(rcu_tasks_rude, rcu_tasks_rude_wait_gp, call_rcu_tasks_rude);
-+
-+/**
-+ * call_rcu_tasks_rude() - Queue a callback rude task-based grace period
-+ * @rhp: structure to be used for queueing the RCU updates.
-+ * @func: actual callback function to be invoked after the grace period
-+ *
-+ * The callback function will be invoked some time after a full grace
-+ * period elapses, in other words after all currently executing RCU
-+ * read-side critical sections have completed. call_rcu_tasks_rude()
-+ * assumes that the read-side critical sections end at context switch,
-+ * cond_resched_rcu_qs(), or transition to usermode execution.  As such,
-+ * there are no read-side primitives analogous to rcu_read_lock() and
-+ * rcu_read_unlock() because this primitive is intended to determine
-+ * that all tasks have passed through a safe state, not so much for
-+ * data-strcuture synchronization.
-+ *
-+ * See the description of call_rcu() for more detailed information on
-+ * memory ordering guarantees.
-+ */
-+void call_rcu_tasks_rude(struct rcu_head *rhp, rcu_callback_t func)
-+{
-+	call_rcu_tasks_generic(rhp, func, &rcu_tasks_rude);
-+}
-+EXPORT_SYMBOL_GPL(call_rcu_tasks_rude);
-+
-+/**
-+ * synchronize_rcu_tasks_rude - wait for a rude rcu-tasks grace period
-+ *
-+ * Control will return to the caller some time after a rude rcu-tasks
-+ * grace period has elapsed, in other words after all currently
-+ * executing rcu-tasks read-side critical sections have elapsed.  These
-+ * read-side critical sections are delimited by calls to schedule(),
-+ * cond_resched_tasks_rcu_qs(), userspace execution, and (in theory,
-+ * anyway) cond_resched().
-+ *
-+ * This is a very specialized primitive, intended only for a few uses in
-+ * tracing and other situations requiring manipulation of function preambles
-+ * and profiling hooks.  The synchronize_rcu_tasks_rude() function is not
-+ * (yet) intended for heavy use from multiple CPUs.
-+ *
-+ * See the description of synchronize_rcu() for more detailed information
-+ * on memory ordering guarantees.
-+ */
-+void synchronize_rcu_tasks_rude(void)
-+{
-+	synchronize_rcu_tasks_generic(&rcu_tasks_rude);
-+}
-+EXPORT_SYMBOL_GPL(synchronize_rcu_tasks_rude);
-+
-+/**
-+ * rcu_barrier_tasks_rude - Wait for in-flight call_rcu_tasks_rude() callbacks.
-+ *
-+ * Although the current implementation is guaranteed to wait, it is not
-+ * obligated to, for example, if there are no pending callbacks.
-+ */
-+void rcu_barrier_tasks_rude(void)
-+{
-+	/* There is only one callback queue, so this is easy.  ;-) */
-+	synchronize_rcu_tasks_rude();
-+}
-+EXPORT_SYMBOL_GPL(rcu_barrier_tasks_rude);
-+
-+static int __init rcu_spawn_tasks_rude_kthread(void)
-+{
-+	rcu_spawn_tasks_kthread_generic(&rcu_tasks_rude);
-+	return 0;
-+}
-+core_initcall(rcu_spawn_tasks_rude_kthread);
-+
-+#endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
--- 
-2.9.5
+  drivers/net/ethernet/amazon/ena/ena_netdev.c
 
+between commit:
+
+  dfdde1345bc1 ("net: ena: fix continuous keep-alive resets")
+
+from the net tree and commit:
+
+  1a63443afd70 ("net/amazon: Ensure that driver version is aligned to the l=
+inux kernel")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 4647d7656761,555c7273d712..000000000000
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@@ -3486,10 -3473,7 +3483,8 @@@ static int ena_restore_device(struct en
+  		netif_carrier_on(adapter->netdev);
+ =20
+  	mod_timer(&adapter->timer_service, round_jiffies(jiffies + HZ));
+ +	adapter->last_keep_alive_jiffies =3D jiffies;
+- 	dev_err(&pdev->dev,
+- 		"Device reset completed successfully, Driver info: %s\n",
+- 		version);
++ 	dev_err(&pdev->dev, "Device reset completed successfully\n");
+ =20
+  	return rc;
+  err_disable_msix:
+
+--Sig_/5vHI_Q_c2A6E/.8i+PNP8Go
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5yuI0ACgkQAVBC80lX
+0GxwDQf/Uho6IaGCmfwvaMFtSKnQW6lVYzKQ9v6sVtTjaTch6Vnj4DOGZDMUPN/G
+KaGHYNehY4s4L/jicSCImhMkY7Lm5aFmnDsCLhhjBt93EypyW0KDvNGg9CbwYfjY
+dYr7Ii3RQnhJCxgocnF5HQNxtg2Ssns9m1Ynj2LxTYxN065b9ELGOI56zEUI2bp4
++rxlXgJuG1SeZMXNYj2+FZIpgZM2P8D/CXcgQuhr7Q038YmKQFscdTEoh1Jj6yio
+GH2kNEjMpMjmSnzR+E4So8gTMVyGGEXe6kqtzGgqQq73mM3pfI3x1FCZP/bl62KO
+6LvklCycRNGSyv7JmuMsJYjYEp72NQ==
+=/Xxx
+-----END PGP SIGNATURE-----
+
+--Sig_/5vHI_Q_c2A6E/.8i+PNP8Go--
