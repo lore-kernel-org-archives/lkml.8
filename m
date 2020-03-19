@@ -2,110 +2,320 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99F8C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A76FC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC4B20770
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584609553;
-	bh=4ELwAs4r++m0CrqR7Z3cbvZffSziVHNOV9Nhno1MLfI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U6tIyX10Jts05i3vdbr/lv9zZAy186wW1g7cCyZZZYi80bcmLCODPXIvgCeUdA5w2
-	 oPZU1uruDHaTHeDpl3me1mbfZ0UMDMqSqV9quA5XhjK16jISYuYnrA79N+17mzUQWj
-	 66azLwdMQl5S82dKSxNSpfrf8RGI2EpmZe6XpMC8=
+	by mail.kernel.org (Postfix) with ESMTP id 0EDC020724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbgCSJTM (ORCPT
+        id S1727458AbgCSJTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:19:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45256 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 05:19:20 -0400
+Received: from 8bytes.org ([81.169.241.247]:51922 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727399AbgCSJTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:19:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC9CD20722;
-        Thu, 19 Mar 2020 09:19:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584609549;
-        bh=4ELwAs4r++m0CrqR7Z3cbvZffSziVHNOV9Nhno1MLfI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F3E4jwytvaGrRTPAf4qrnrm/mg2eNuHO4eBbywNXHTMGWB7NxPJCwfM56vTbUifxK
-         e2qf3Io0STy6LvAB50RtzUHRynYxJGvdUTpD3cSFW2FBYKSXcAuD9ETBKKZNw1k6nI
-         QEWGK3MroGnEypvUw009yBQRQ4ibVOlcu2m8WGKc=
-Date:   Thu, 19 Mar 2020 10:19:07 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
+        id S1727281AbgCSJOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:31 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 5B90D451; Thu, 19 Mar 2020 10:14:19 +0100 (CET)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCH v4 3/5] exec: Add a exec_update_mutex to replace
- cred_guard_mutex
-Message-ID: <20200319091907.GC3495501@kroah.com>
-References: <AM6PR03MB5170E9E71B9F84330B098BADE4FA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <6002ac56-025a-d50f-e89d-1bf42a072323@virtuozzo.com>
- <AM6PR03MB5170353DF3575FF7742BB155E4FB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <532ce6a3-f0df-e3e4-6966-473c608246e1@virtuozzo.com>
- <AM6PR03MB51705D8A5631B53844CE447CE4F60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <13c4d333-9c33-8036-3142-dac22c392c60@virtuozzo.com>
- <AM6PR03MB5170110A5D332DD0C1AC929FE4F70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <f7c1508a-a456-6ae4-a81e-8e8aa41d8d39@virtuozzo.com>
- <AM6PR03MB5170946BCC61F5D6CA233390E4F40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB51703082215BDFE074E9D735E4F40@AM6PR03MB5170.eurprd03.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR03MB51703082215BDFE074E9D735E4F40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 18/70] x86/boot/compressed/64: Add stage1 #VC handler
+Date:   Thu, 19 Mar 2020 10:13:15 +0100
+Message-Id: <20200319091407.1481-19-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
+References: <20200319091407.1481-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 10:13:20AM +0100, Bernd Edlinger wrote:
-> Ah, sorry this is actuall v4 5/5.
-> Should I send a new version or can you handle it?
+From: Joerg Roedel <jroedel@suse.de>
 
-This thread is a total crazy mess of different versions.
+Add the first handler for #VC exceptions. At stage 1 there is no GHCB
+yet becaue we might still be on the EFI page table and thus can't map
+memory unencrypted.
 
-I know I can't unwind any of this, so I _STRONGLY_ suggest resending the
-whole series, properly versioned, as a new thread.
+The stage 1 handler is limited to the MSR based protocol to talk to
+the hypervisor and can only support CPUID exit-codes, but that is
+enough to get to stage 2.
 
-Would you want to try to pick out the proper patches from this pile?
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/boot/compressed/Makefile          |  1 +
+ arch/x86/boot/compressed/idt_64.c          |  4 ++
+ arch/x86/boot/compressed/idt_handlers_64.S |  4 ++
+ arch/x86/boot/compressed/misc.h            |  1 +
+ arch/x86/boot/compressed/sev-es.c          | 42 ++++++++++++++
+ arch/x86/include/asm/msr-index.h           |  1 +
+ arch/x86/include/asm/sev-es.h              | 45 +++++++++++++++
+ arch/x86/include/asm/trap_defs.h           |  1 +
+ arch/x86/kernel/sev-es-shared.c            | 65 ++++++++++++++++++++++
+ 9 files changed, 164 insertions(+)
+ create mode 100644 arch/x86/boot/compressed/sev-es.c
+ create mode 100644 arch/x86/include/asm/sev-es.h
+ create mode 100644 arch/x86/kernel/sev-es-shared.c
 
-thanks,
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index e6b3e0fc48de..583678c78e1b 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -84,6 +84,7 @@ ifdef CONFIG_X86_64
+ 	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
+ 	vmlinux-objs-y += $(obj)/mem_encrypt.o
+ 	vmlinux-objs-y += $(obj)/pgtable_64.o
++	vmlinux-objs-$(CONFIG_AMD_MEM_ENCRYPT) += $(obj)/sev-es.o
+ endif
+ 
+ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
+index 84ba57d9d436..bdd20dfd1fd0 100644
+--- a/arch/x86/boot/compressed/idt_64.c
++++ b/arch/x86/boot/compressed/idt_64.c
+@@ -31,6 +31,10 @@ void load_stage1_idt(void)
+ {
+ 	boot_idt_desc.address = (unsigned long)boot_idt;
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	set_idt_entry(X86_TRAP_VC, boot_stage1_vc_handler);
++#endif
++
+ 	load_boot_idt(&boot_idt_desc);
+ }
+ 
+diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
+index bfb3fc5aa144..67ddafab2943 100644
+--- a/arch/x86/boot/compressed/idt_handlers_64.S
++++ b/arch/x86/boot/compressed/idt_handlers_64.S
+@@ -75,3 +75,7 @@ SYM_FUNC_END(\name)
+ 	.code64
+ 
+ EXCEPTION_HANDLER	boot_pf_handler do_boot_page_fault error_code=1
++
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++EXCEPTION_HANDLER	boot_stage1_vc_handler vc_no_ghcb_handler error_code=1
++#endif
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 4e5bc688f467..0e3508c5c15c 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -141,5 +141,6 @@ extern struct desc_ptr boot_idt_desc;
+ 
+ /* IDT Entry Points */
+ void boot_pf_handler(void);
++void boot_stage1_vc_handler(void);
+ 
+ #endif /* BOOT_COMPRESSED_MISC_H */
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+new file mode 100644
+index 000000000000..eeeb3553547c
+--- /dev/null
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -0,0 +1,42 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * AMD Encrypted Register State Support
++ *
++ * Author: Joerg Roedel <jroedel@suse.de>
++ */
++
++#include <linux/kernel.h>
++
++#include <asm/sev-es.h>
++#include <asm/msr-index.h>
++#include <asm/ptrace.h>
++#include <asm/svm.h>
++
++#include "misc.h"
++
++static inline u64 sev_es_rd_ghcb_msr(void)
++{
++	unsigned long low, high;
++
++	asm volatile("rdmsr\n" : "=a" (low), "=d" (high) :
++			"c" (MSR_AMD64_SEV_ES_GHCB));
++
++	return ((high << 32) | low);
++}
++
++static inline void sev_es_wr_ghcb_msr(u64 val)
++{
++	u32 low, high;
++
++	low  = val & 0xffffffffUL;
++	high = val >> 32;
++
++	asm volatile("wrmsr\n" : : "c" (MSR_AMD64_SEV_ES_GHCB),
++			"a"(low), "d" (high) : "memory");
++}
++
++#undef __init
++#define __init
++
++/* Include code for early handlers */
++#include "../../kernel/sev-es-shared.c"
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index d5e517d1c3dd..9eb279927fc2 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -432,6 +432,7 @@
+ #define MSR_AMD64_IBSBRTARGET		0xc001103b
+ #define MSR_AMD64_IBSOPDATA4		0xc001103d
+ #define MSR_AMD64_IBS_REG_COUNT_MAX	8 /* includes MSR_AMD64_IBSBRTARGET */
++#define MSR_AMD64_SEV_ES_GHCB		0xc0010130
+ #define MSR_AMD64_SEV			0xc0010131
+ #define MSR_AMD64_SEV_ENABLED_BIT	0
+ #define MSR_AMD64_SEV_ENABLED		BIT_ULL(MSR_AMD64_SEV_ENABLED_BIT)
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+new file mode 100644
+index 000000000000..f524b40aef07
+--- /dev/null
++++ b/arch/x86/include/asm/sev-es.h
+@@ -0,0 +1,45 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * AMD Encrypted Register State Support
++ *
++ * Author: Joerg Roedel <jroedel@suse.de>
++ */
++
++#ifndef __ASM_ENCRYPTED_STATE_H
++#define __ASM_ENCRYPTED_STATE_H
++
++#include <linux/types.h>
++
++#define GHCB_SEV_CPUID_REQ	0x004UL
++#define		GHCB_CPUID_REQ_EAX	0
++#define		GHCB_CPUID_REQ_EBX	1
++#define		GHCB_CPUID_REQ_ECX	2
++#define		GHCB_CPUID_REQ_EDX	3
++#define		GHCB_CPUID_REQ(fn, reg) (GHCB_SEV_CPUID_REQ | \
++					(((unsigned long)reg & 3) << 30) | \
++					(((unsigned long)fn) << 32))
++
++#define GHCB_SEV_CPUID_RESP	0x005UL
++#define GHCB_SEV_TERMINATE	0x100UL
++
++#define	GHCB_SEV_GHCB_RESP_CODE(v)	((v) & 0xfff)
++#define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
++
++static inline u64 lower_bits(u64 val, unsigned int bits)
++{
++	u64 mask = (1ULL << bits) - 1;
++
++	return (val & mask);
++}
++
++static inline u64 copy_lower_bits(u64 out, u64 in, unsigned int bits)
++{
++	u64 mask = (1ULL << bits) - 1;
++
++	out &= ~mask;
++	out |= lower_bits(in, bits);
++
++	return out;
++}
++
++#endif
+diff --git a/arch/x86/include/asm/trap_defs.h b/arch/x86/include/asm/trap_defs.h
+index 488f82ac36da..af45d65f0458 100644
+--- a/arch/x86/include/asm/trap_defs.h
++++ b/arch/x86/include/asm/trap_defs.h
+@@ -24,6 +24,7 @@ enum {
+ 	X86_TRAP_AC,		/* 17, Alignment Check */
+ 	X86_TRAP_MC,		/* 18, Machine Check */
+ 	X86_TRAP_XF,		/* 19, SIMD Floating-Point Exception */
++	X86_TRAP_VC = 29,	/* 29, VMM Communication Exception */
+ 	X86_TRAP_IRET = 32,	/* 32, IRET Exception */
+ };
+ 
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+new file mode 100644
+index 000000000000..e963b48d3e86
+--- /dev/null
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -0,0 +1,65 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * AMD Encrypted Register State Support
++ *
++ * Author: Joerg Roedel <jroedel@suse.de>
++ *
++ * This file is not compiled stand-alone. It contains code shared
++ * between the pre-decompression boot code and the running Linux kernel
++ * and is included directly into both code-bases.
++ */
++
++/*
++ * Boot VC Handler - This is the first VC handler during boot, there is no GHCB
++ * page yet, so it only supports the MSR based communication with the
++ * hypervisor and only the CPUID exit-code.
++ */
++void __init vc_no_ghcb_handler(struct pt_regs *regs, unsigned long exit_code)
++{
++	unsigned int fn = lower_bits(regs->ax, 32);
++	unsigned long val;
++
++	/* Only CPUID is supported via MSR protocol */
++	if (exit_code != SVM_EXIT_CPUID)
++		goto fail;
++
++	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EAX));
++	VMGEXIT();
++	val = sev_es_rd_ghcb_msr();
++	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
++		goto fail;
++	regs->ax = val >> 32;
++
++	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EBX));
++	VMGEXIT();
++	val = sev_es_rd_ghcb_msr();
++	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
++		goto fail;
++	regs->bx = val >> 32;
++
++	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_ECX));
++	VMGEXIT();
++	val = sev_es_rd_ghcb_msr();
++	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
++		goto fail;
++	regs->cx = val >> 32;
++
++	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EDX));
++	VMGEXIT();
++	val = sev_es_rd_ghcb_msr();
++	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
++		goto fail;
++	regs->dx = val >> 32;
++
++	regs->ip += 2;
++
++	return;
++
++fail:
++	sev_es_wr_ghcb_msr(GHCB_SEV_TERMINATE);
++	VMGEXIT();
++
++	/* Shouldn't get here - if we do halt the machine */
++	while (true)
++		asm volatile("hlt\n");
++}
+-- 
+2.17.1
 
-greg k-h
