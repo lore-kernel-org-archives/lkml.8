@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B7DC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F5CC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D8DD20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D45A214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624151;
-	bh=tofIbnmadnKlW1E9aujzGi22xYXbLQFA4YGG/fxn2lA=;
+	s=default; t=1584624155;
+	bh=pedXLTfJpQVGrJP7cjM0hvFmyCL6sf5H6VR6PRA7Ru4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OTxWyJ3rZ4Gh9rnhvmIENoxVtAl6GICn2pV2KsA01xBWgVs918BfZ+tp4qutsDBr+
-	 dbDxVnZgpAPpQIMJWc6GLlcyAQUQJC6ifA6WJAqtHpQWwuMwkq5xGW9Xdok43+QUOs
-	 uuPkz0PUH47xRwdtIBOKR9GbvUNtuWkd1Lchf4+U=
+	b=mrTE3+L0TRI+cuTT8/9bw3LYhwqjGoo8hOHc1AbIYNPapIv+SFpIt0nFlif52B6hc
+	 ITcGVM8nC9bRz03PUXopel3k3McX6HfsH7uevZ6588XioLJ+A2eyalLEPj/3Rb2aTW
+	 iHL70hujJpL2VbU5Fqx8Diz0bEmLDk5rYouR7fHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730223AbgCSNWa (ORCPT
+        id S1730235AbgCSNWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:22:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47742 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730209AbgCSNW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:22:26 -0400
+        id S1728266AbgCSNWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:22:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77749206D7;
-        Thu, 19 Mar 2020 13:22:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A867206D7;
+        Thu, 19 Mar 2020 13:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624145;
-        bh=tofIbnmadnKlW1E9aujzGi22xYXbLQFA4YGG/fxn2lA=;
+        s=default; t=1584624152;
+        bh=pedXLTfJpQVGrJP7cjM0hvFmyCL6sf5H6VR6PRA7Ru4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wgUeaboqWoVlwHquUmawDJ1JCCWaecAo8HemlHWfGYyCgErkJq4jElGiTOdGbx5rh
-         DU1eY9EXbG69nUyNDclpl3XdglbS6UW9uffWfQkN3IOS8bEEXM8QVLfhAmOyo2QGro
-         pO4zOAFfRkvEPXYZb85kLMnbs3ORM2SVv5EX05q4=
+        b=zLl+vbm/d7CYWVHUOHOmhPQton5rzDMZDy/6Rizm6MRVu8PENE4hbY57KIad1ubcs
+         r5hxyR2jIgS3s3sErbdvLz+all9JUNfBlh38Kqv+yTC4GgellHmJ1cNI15PTdbzovE
+         JFh5CrzlNTyHwqU/y/VhF+qV3NB2sxLdTq6guhnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        stable@vger.kernel.org,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
         Anders Roxell <anders.roxell@linaro.org>,
         Faiz Abbas <faiz_abbas@ti.com>,
+        Peter Geis <pgwipeout@gmail.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 07/60] mmc: sdhci-omap: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
-Date:   Thu, 19 Mar 2020 14:03:45 +0100
-Message-Id: <20200319123921.556308239@linuxfoundation.org>
+Subject: [PATCH 5.4 09/60] mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for erase/trim/discard
+Date:   Thu, 19 Mar 2020 14:03:47 +0100
+Message-Id: <20200319123922.147166477@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -64,42 +66,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 055e04830d4544c57f2a5192a26c9e25915c29c0 ]
+[ Upstream commit 43cc64e5221cc6741252b64bc4531dd1eefb733d ]
 
-It has turned out that the sdhci-omap controller requires the R1B response,
-for commands that has this response associated with them. So, converting
-from an R1B to an R1 response for a CMD6 for example, leads to problems
-with the HW busy detection support.
+The busy timeout that is computed for each erase/trim/discard operation,
+can become quite long and may thus exceed the host->max_busy_timeout. If
+that becomes the case, mmc_do_erase() converts from using an R1B response
+to an R1 response, as to prevent the host from doing HW busy detection.
 
-Fix this by informing the mmc core about the requirement, via setting the
-host cap, MMC_CAP_NEED_RSP_BUSY.
+However, it has turned out that some hosts requires an R1B response no
+matter what, so let's respect that via checking MMC_CAP_NEED_RSP_BUSY. Note
+that, if the R1B gets enforced, the host becomes fully responsible of
+managing the needed busy timeout, in one way or the other.
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Reported-by: Faiz Abbas <faiz_abbas@ti.com>
+Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Cc: <stable@vger.kernel.org>
 Tested-by: Anders Roxell <anders.roxell@linaro.org>
+Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Tested-by: Faiz Abbas <faiz_abbas@ti.com>
+Tested-By: Peter Geis <pgwipeout@gmail.com>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-omap.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mmc/core/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 083e7e053c954..d3135249b2e40 100644
---- a/drivers/mmc/host/sdhci-omap.c
-+++ b/drivers/mmc/host/sdhci-omap.c
-@@ -1134,6 +1134,9 @@ static int sdhci_omap_probe(struct platform_device *pdev)
- 	host->mmc_host_ops.execute_tuning = sdhci_omap_execute_tuning;
- 	host->mmc_host_ops.enable_sdio_irq = sdhci_omap_enable_sdio_irq;
- 
-+	/* R1B responses is required to properly manage HW busy detection. */
-+	mmc->caps |= MMC_CAP_NEED_RSP_BUSY;
-+
- 	ret = sdhci_setup_host(host);
- 	if (ret)
- 		goto err_put_sync;
+diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+index abf8f5eb0a1c8..26644b7ec13e3 100644
+--- a/drivers/mmc/core/core.c
++++ b/drivers/mmc/core/core.c
+@@ -1732,8 +1732,11 @@ static int mmc_do_erase(struct mmc_card *card, unsigned int from,
+ 	 * the erase operation does not exceed the max_busy_timeout, we should
+ 	 * use R1B response. Or we need to prevent the host from doing hw busy
+ 	 * detection, which is done by converting to a R1 response instead.
++	 * Note, some hosts requires R1B, which also means they are on their own
++	 * when it comes to deal with the busy timeout.
+ 	 */
+-	if (card->host->max_busy_timeout &&
++	if (!(card->host->caps & MMC_CAP_NEED_RSP_BUSY) &&
++	    card->host->max_busy_timeout &&
+ 	    busy_timeout > card->host->max_busy_timeout) {
+ 		cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
+ 	} else {
 -- 
 2.20.1
 
