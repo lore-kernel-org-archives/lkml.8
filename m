@@ -2,355 +2,385 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAECBC43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF2CC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD14D20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA2E20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgCSGXx (ORCPT
+        id S1727063AbgCSG0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 02:23:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:50413 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbgCSGXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 02:23:53 -0400
-IronPort-SDR: 0y3S/Iujc6Tc0dBScMjK0PV2rgKJ58yCj1lgrPUqCkUZpsa7AS4M3EmmvSFNGxIablfk+FwX1j
- qiVrMzKJPRFQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 23:23:37 -0700
-IronPort-SDR: U0DSjPfJikY2HWcaU2QwiF2ptyOrLrkLSuNAuiU53ZVxBzjcKR9yLKoq1w7KgFFKiTbJ2ZCCXu
- aTPpa6K9XmnQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,570,1574150400"; 
-   d="scan'208";a="263636207"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 18 Mar 2020 23:23:36 -0700
-Received: from [10.249.228.137] (abudanko-mobl.ccr.corp.intel.com [10.249.228.137])
-        by linux.intel.com (Postfix) with ESMTP id EA715580270;
-        Wed, 18 Mar 2020 23:23:31 -0700 (PDT)
-Subject: Re: [PATCH v1] perf tool: make Perf tool aware of SELinux access
- control
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>
-References: <b8a0669e-36e4-a0e8-fd35-3dbd890d2170@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <f5ed60b2-4a61-dc72-bfd5-6d0af74bc152@linux.intel.com>
-Date:   Thu, 19 Mar 2020 09:23:30 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 02:26:38 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:39896 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725767AbgCSG0h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 02:26:37 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Tt04BxJ_1584599154;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tt04BxJ_1584599154)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 19 Mar 2020 14:25:54 +0800
+Subject: Re: [PATCH v2] Translate Documentation/filesystems/debugfs.txt into
+ Chinese
+To:     Chucheng Luo <luochucheng@vivo.com>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kernel@vivo.com
+References: <20200319030039.29006-1-luochucheng@vivo.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <21d534e9-e7f6-f3ed-c7cc-0fd3691ad679@linux.alibaba.com>
+Date:   Thu, 19 Mar 2020 14:25:54 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <b8a0669e-36e4-a0e8-fd35-3dbd890d2170@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200319030039.29006-1-luochucheng@vivo.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-Is there any thougts, comments or questions so far?
-Please share you mind.
 
-Thanks,
-Alexey
-
-On 13.03.2020 20:27, Alexey Budankov wrote:
+在 2020/3/19 上午11:00, Chucheng Luo 写道:
+> Translate debugfs.txt into Chinese and link it to the index.
 > 
-> Extend Perf tool with the check of /sys/fs/selinux/enforce value and notify 
-> in case access to perf_event_open() syscall is restricted by the enforced 
-> SELinux policy settings.
-> 
-> Testing and evaluation (Fedora 31 x86_64 with enforced Targeted policy extended
-> by perf_event class (see refpolicy [1] master branch)):
-> 
-> [root@host ~]# ps -Z
-> LABEL                               PID TTY          TIME CMD
-> unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 3960 pts/1 00:00:00 bash
-> unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4167 pts/1 00:00:00 ps
-> 
-> [root@host ~]# ls -alhZ /usr/local/bin/
-> total 56M
-> drwxr-xr-x.  2 root root       system_u:object_r:bin_t:s0     4.0K Mar  4 12:27 .
-> drwxr-xr-x. 12 root root       system_u:object_r:usr_t:s0     4.0K Jul 25  2019 ..
-> -rwxr-xr-x.  1 root root       system_u:object_r:bin_t:s0     4.1M Jan 23  2017 bash
-> -rwxr-xr-x.  1 root root       system_u:object_r:bin_t:s0     4.1M Jan 23  2017 bash.before_shellshock_patch
-> ...
-> -rwxr-xr-x.  1 root root       system_u:object_r:bin_t:s0      372 May 14  2019 flask
-> -rwxr-xr-x.  1 root root       unconfined_u:object_r:bin_t:s0  24M Mar  4 12:15 perf     <== unprivileged users (perf_event_paranoid)
-> -rwxr-x---.  1 root perf_users unconfined_u:object_r:bin_t:s0  24M Mar  4 12:19 perf.cap <== perf_users (CAP_SYS_ADMIN)
-> -rwxr-xr-x.  1 root root       system_u:object_r:bin_t:s0      44K Dec  8  2016 spiff
-> ...
-> lrwxrwxrwx.  1 root root       system_u:object_r:bin_t:s0        4 Aug 21  2018 zstdmt -> zstd
-> 
-> [root@host ~]# getenforce
-> Enforcing
-> 
-> === Access by unprivileged user ===
-> 
-> [user@host ~]$ ps -Z
-> LABEL                               PID TTY          TIME CMD
-> unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4043 pts/2 00:00:00 bash
-> unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4168 pts/2 00:00:00 ps
-> 
-> [user@host ~]$ /usr/local/bin/perf stat -- ls
-> Error:
-> Access to performance monitoring and observability operations is limited.
-> SELinux Enforcing mode is enabled and can limit access to performance
-> monitoring and observability operations. Inspect system audit records
-> for more perf_event access control information and adjusting the policy.
-> Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-> access to performance monitoring and observability operations for users
-> without CAP_SYS_ADMIN capability. perf_event_paranoid setting is -1:
->   -1: Allow use of (almost) all events by all users
->       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->> = 0: Disallow raw and ftrace function tracepoint access
->> = 1: Disallow CPU event access
->> = 2: Disallow kernel profiling
-> To make the adjusted perf_event_paranoid setting permanent preserve it
-> in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-> 
-> [root@host ~]# journalctl --follow
-> ... audit[4186]: AVC avc:  denied  { open } for  pid=4186 comm="perf" scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tclass=perf_event permissive=0
-> ... audit[4186]: AVC avc:  denied  { open } for  pid=4186 comm="perf" scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tclass=perf_event permissive=0
-> ... setroubleshoot[4194]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t. For complete SELinux messages run: sealert -l 9a6f3db2-3d8f-461e-afad-0b5c3a9c3b9d
-> ... python3[4194]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t.
->                                           
->                                           *****  Plugin catchall (100. confidence) suggests   **************************
->                                           
->                                           If you believe that perf should be allowed open access on perf_event labeled unconfined_t by default.
->                                           Then you should report this as a bug.
->                                           You can generate a local policy module to allow this access.
->                                           Do
->                                           allow this access for now by executing:
->                                           # ausearch -c 'perf' --raw | audit2allow -M my-perf
->                                           # semodule -X 300 -i my-perf.pp
->                                           
-> === Access by perf privileged user ===
-> 
-> [user@host ~]$ ps -Z
-> LABEL                               PID TTY          TIME CMD
-> unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4043 pts/2 00:00:00 bash
-> unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4168 pts/2 00:00:00 ps
-> 
-> [user@host ~]$ libcap/progs/getcap /usr/local/bin/perf.cap
-> /usr/local/bin/perf.cap = cap_sys_ptrace,cap_syslog,cap_sys_admin+ep
-> 
-> [user@host ~]$ /usr/local/bin/perf.cap stat -- ls
-> Error:
-> Access to performance monitoring and observability operations is limited.
-> SELinux Enforcing mode is enabled and can limit access to performance
-> monitoring and observability operations. Inspect system audit records
-> for more perf_event access control information and adjusting the policy.
-> Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-> access to performance monitoring and observability operations for users
-> without CAP_SYS_ADMIN capability. perf_event_paranoid setting is -1:
->   -1: Allow use of (almost) all events by all users
->       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->> = 0: Disallow raw and ftrace function tracepoint access
->> = 1: Disallow CPU event access
->> = 2: Disallow kernel profiling
-> To make the adjusted perf_event_paranoid setting permanent preserve it
-> in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-> 
-> [root@host ~]# journalctl --follow
-> 
-> ... audit[3926]: AVC avc:  denied  { open } for  pid=3926 comm="perf.cap" scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tclass=perf_event permissive=0
-> ... audit[3926]: AVC avc:  denied  { open } for  pid=3926 comm="perf.cap" scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tclass=perf_event permissive=0
-> 
-> ... setroubleshoot[3934]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t. For complete SELinux messages run: sealert -l 9a6f3db2-3d8f-461e-afad-0b5c3a9c3b9d
-> ... python3[3934]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t.
->                                           
->                                           *****  Plugin catchall (100. confidence) suggests   **************************
->                                           
->                                           If you believe that perf should be allowed open access on perf_event labeled unconfined_t by default.
->                                           Then you should report this as a bug.
->                                           You can generate a local policy module to allow this access.
->                                           Do
->                                           allow this access for now by executing:
->                                           # ausearch -c 'perf' --raw | audit2allow -M my-perf
->                                           # semodule -X 300 -i my-perf.pp
->                                           
-> === Open access to performance monitoring and observability operations in unconfined_t domain ===
-> 
-> [root@host ~]# ausearch -c 'perf' --raw | audit2allow -M my-perf && cat my-perf.te
-> 
-> module my-perf 1.0;
-> 
-> require {
-> 	type unconfined_t;
-> 	class perf_event { cpu kernel open read tracepoint write };
-> }
-> 
-> #============= unconfined_t ==============
-> allow unconfined_t self:perf_event { cpu kernel open read tracepoint write };
-> 
-> [root@host ~]# semodule -X 300 -i my-perf.pp
-> 
-> [user@host ~]$ ps -Z
-> LABEL                               PID TTY          TIME CMD
-> unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4043 pts/2 00:00:00 bash
-> unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4168 pts/2 00:00:00 ps
-> 
-> [user@host ~]$ /usr/local/bin/perf stat -- ls
-> Desktop  Documents  Downloads  intel  Music  perf.data	perf.data.old  Pictures  Public  Templates  Videos
-> 
->  Performance counter stats for 'ls':
-> 
->               0.72 msec task-clock:u              #    0.655 CPUs utilized          
->                  0      context-switches:u        #    0.000 K/sec                  
->                  0      cpu-migrations:u          #    0.000 K/sec                  
->                 98      page-faults:u             #    0.137 M/sec                  
->            908,356      cycles:u                  #    1.266 GHz                    
->            729,984      instructions:u            #    0.80  insn per cycle         
->            142,774      branches:u                #  198.968 M/sec                  
->              8,238      branch-misses:u           #    5.77% of all branches        
-> 
->        0.001095239 seconds time elapsed
-> 
->        0.001147000 seconds user
->        0.000000000 seconds sys
-> 
-> [user@host ~]$ /usr/local/bin/perf stat -a
-> Error:
-> Access to performance monitoring and observability operations is limited.
-> SELinux Enforcing mode is enabled and can limit access to performance
-> monitoring and observability operations. Inspect system audit records
-> for more perf_event access control information and adjusting the policy.
-> Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-> access to performance monitoring and observability operations for users
-> without CAP_SYS_ADMIN capability. perf_event_paranoid setting is -1:
->   -1: Allow use of (almost) all events by all users
->       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->> = 0: Disallow raw and ftrace function tracepoint access
->> = 1: Disallow CPU event access
->> = 2: Disallow kernel profiling
-> To make the adjusted perf_event_paranoid setting permanent preserve it
-> in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-> 
-> [user@host ~]$ /usr/local/bin/perf.cap stat -a
-> ^C
->  Performance counter stats for 'system wide':
-> 
->          13,427.05 msec cpu-clock                 #    7.997 CPUs utilized          
->                783      context-switches          #    0.058 K/sec                  
->                 29      cpu-migrations            #    0.002 K/sec                  
->                  6      page-faults               #    0.000 K/sec                  
->        161,084,874      cycles                    #    0.012 GHz                    
->        146,823,131      instructions              #    0.91  insn per cycle         
->         12,164,802      branches                  #    0.906 M/sec                  
->            380,350      branch-misses             #    3.13% of all branches        
-> 
->        1.678938906 seconds time elapsed
-> 
-> [1] https://github.com/SELinuxProject/refpolicy
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> Signed-off-by: Chucheng Luo <luochucheng@vivo.com>
+> Acked-by: Jonathan Corbet<corbet@lwn.net>
 > ---
->  tools/perf/util/cloexec.c |  4 ++--
->  tools/perf/util/evsel.c   | 40 +++++++++++++++++++++++----------------
->  2 files changed, 26 insertions(+), 18 deletions(-)
+>  .../zh_CN/filesystems/debugfs.rst             | 257 ++++++++++++++++++
+>  .../translations/zh_CN/filesystems/index.rst  |  19 ++
+>  Documentation/translations/zh_CN/index.rst    |   1 +
+>  3 files changed, 277 insertions(+)
+>  create mode 100755 Documentation/translations/zh_CN/filesystems/debugfs.rst
+>  create mode 100755 Documentation/translations/zh_CN/filesystems/index.rst
 > 
-> diff --git a/tools/perf/util/cloexec.c b/tools/perf/util/cloexec.c
-> index a12872f2856a..9c8ec816261b 100644
-> --- a/tools/perf/util/cloexec.c
-> +++ b/tools/perf/util/cloexec.c
-> @@ -65,7 +65,7 @@ static int perf_flag_probe(void)
->  		return 1;
->  	}
->  
-> -	WARN_ONCE(err != EINVAL && err != EBUSY,
-> +	WARN_ONCE(err != EINVAL && err != EBUSY && err != EACCES,
->  		  "perf_event_open(..., PERF_FLAG_FD_CLOEXEC) failed with unexpected error %d (%s)\n",
->  		  err, str_error_r(err, sbuf, sizeof(sbuf)));
->  
-> @@ -83,7 +83,7 @@ static int perf_flag_probe(void)
->  	if (fd >= 0)
->  		close(fd);
->  
-> -	if (WARN_ONCE(fd < 0 && err != EBUSY,
-> +	if (WARN_ONCE(fd < 0 && err != EBUSY && err != EACCES,
->  		      "perf_event_open(..., 0) failed unexpectedly with error %d (%s)\n",
->  		      err, str_error_r(err, sbuf, sizeof(sbuf))))
->  		return -1;
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 816d930d774e..f03ce1d362d3 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2493,32 +2493,40 @@ int perf_evsel__open_strerror(struct evsel *evsel, struct target *target,
->  			      int err, char *msg, size_t size)
->  {
->  	char sbuf[STRERR_BUFSIZE];
-> -	int printed = 0;
-> +	int printed = 0, enforced = 0;
->  
->  	switch (err) {
->  	case EPERM:
->  	case EACCES:
-> +		printed += scnprintf(msg + printed, size - printed,
-> +			"Access to performance monitoring and observability operations is limited.\n");
+> diff --git a/Documentation/translations/zh_CN/filesystems/debugfs.rst b/Documentation/translations/zh_CN/filesystems/debugfs.rst
+> new file mode 100755
+> index 000000000000..02f639445d3d
+> --- /dev/null
+> +++ b/Documentation/translations/zh_CN/filesystems/debugfs.rst
+> @@ -0,0 +1,257 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +		if (!sysfs__read_int("fs/selinux/enforce", &enforced)) {
-> +			if (enforced) {
-> +				printed += scnprintf(msg + printed, size - printed,
-> +					"SELinux Enforcing mode is enabled and can limit access to performance\n"
-> +					"monitoring and observability operations. Inspect system audit records\n"
-> +					"for more perf_event access control information and adjusting the policy.\n");
-> +			}
-> +		}
+> +.. include:: ../disclaimer-zh_CN.rst
 > +
->  		if (err == EPERM)
-> -			printed = scnprintf(msg, size,
-> -				"No permission to enable %s event.\n\n",
-> +			printed += scnprintf(msg, size,
-> +				"No permission to enable %s event.\n",
->  				perf_evsel__name(evsel));
+> +:Original: :ref:`Documentation/filesystems/debugfs.txt<debugfs_index>`
+> +
+> +==========================
+> +Debugfs
+> +==========================
+> +
+> +译者
+> +::
+> +
+> +	中文版维护者： 罗楚成 Chucheng Luo <luochucheng@vivo.com>
+> +	中文版翻译者： 罗楚成 Chucheng Luo <luochucheng@vivo.com>
+> +	中文版校译者:  罗楚成 Chucheng Luo <luochucheng@vivo.com>
+> +
+> +
+> +
+> +
+> +版权所有2009 Jonathan Corbet <corbet@lwn.net>
+> +
+> +介绍
+> +====
+> +
+> +Debugfs是内核开发人员在用户空间获取信息的简单方法。
+> +与/proc不同，proc只提供进程信息。也不像sysfs,具有严格的“每个文件一个值“的规则。
+> +debugfs根本没有规则。开发人员可以放置他们想要的任何信息在那里。
+> +debugfs文件系统也不能用作稳定的
+
+Could we follow 80 chars rule here and all following?
+
+
+> +ABI接口到用户空间；从理论上讲，文件在debugfs里导出没有任何稳定性的约束。
+> +尽管[1]现实世界并不总是那么简单。
+> +即使是debugfs接口，也最好根据需要进行设计
+> +永远保持下去。
+
+It's hard to understand in Chinese here.
+ 
+> +
+> +用法
+> +====
+> +
+> +Debugfs通常使用以下命令安装::
+> +
+> +    mount -t debugfs none /sys/kernel/debug
+> +
+> +（或等效的/etc/fstab行）。
+> +debugfs根目录默认仅可由root用户访问。
+> +要更改对树的访问，请使用“ uid”，“ gid”和“ mode”挂载选项。
+> +
+> +请注意，debugfs API仅导出为GPL到模块。
+> +
+> +使用debugfs的代码应包含<linux/debugfs.h>。然后，第一阶
+> +业务将是创建至少一个目录来保存一组debugfs文件::
+> +
+> +    struct dentry *debugfs_create_dir(const char *name, struct dentry *parent);
+> +
+> +如果成功，此调用将在指定的父目录目录下创建一个名为name的目录。
+> +如果parent为NULL，则目录为
+> +在debugfs根目录中创建。成功时，返回值是一个结构
+> +dentry指针，可用于在目录中创建文件（以及
+> +最后将其清理干净）。 ERR_PTR（-ERROR）返回值表面出错。如果返回ERR_PTR（-ENODEV），则为
+> +表明内核是在没有debugfs支持的情况下构建的，并且下述函数都不会起作用。
+> +
+> +在debugfs目录中创建文件的最通用方法是::
+> +
+> +    struct dentry *debugfs_create_file(const char *name, umode_t mode,
+> +				       struct dentry *parent, void *data,
+> +				       const struct file_operations *fops);
+> +
+> +在这里，name是要创建的文件的名称，mode描述了访问
+> +文件应具有的权限，parent指向应该保存文件的目录
+> +，data将存储在产生的inode结构的i_private字段中
+> +，而fops是一组文件操作，其中
+> +实现文件的行为。至少，read（）和/或write（）
+> +操作应提供；其他可以根据需要包括在内。再次，
+> +返回值将是指向创建文件的dentry指针，
+> +错误时显示ERR_PTR（-ERROR），不支持debugfs时返回值为ERR_PTR（-ENODEV）。
+> +
+> +创建一个初始大小的文件，可以使用以下函数代替::
+> +
+> +    struct dentry *debugfs_create_file_size(const char *name, umode_t mode,
+> +				struct dentry *parent, void *data,
+> +				const struct file_operations *fops,
+> +				loff_t file_size);
+> +
+> +file_size是初始文件大小。其他参数跟函数debugfs_create_file的相同。
+> +
+> +在许多情况下，创建一组文件操作不是
+> +实际必要的，
+
+Change to "没有实际必要去创建一组文件操作" ?
+
+Chinese often has different words sequence from English in sentence.  
+Please pay attention on this.
+ 
+对于简单的情况。debugfs代码提供了许多帮助函数
+> +。包含单个整数值的文件可以使用以下任何一项创建::
+> +
+> +    void debugfs_create_u8(const char *name, umode_t mode,
+> +			   struct dentry *parent, u8 *value);
+> +    void debugfs_create_u16(const char *name, umode_t mode,
+> +			    struct dentry *parent, u16 *value);
+> +    struct dentry *debugfs_create_u32(const char *name, umode_t mode,
+> +				      struct dentry *parent, u32 *value);
+> +    void debugfs_create_u64(const char *name, umode_t mode,
+> +			    struct dentry *parent, u64 *value);
+> +
+> +这些文件支持读取和写入给定值。如果具体
+> +不应写入文件，只需相应地设置模式位。的
+> +这些文件中的值以十进制表示；如果十六进制更合适，
+> +可以使用以下功能::
+> +
+> +    void debugfs_create_x8(const char *name, umode_t mode,
+> +			   struct dentry *parent, u8 *value);
+> +    void debugfs_create_x16(const char *name, umode_t mode,
+> +			    struct dentry *parent, u16 *value);
+> +    void debugfs_create_x32(const char *name, umode_t mode,
+> +			    struct dentry *parent, u32 *value);
+> +    void debugfs_create_x64(const char *name, umode_t mode,
+> +			    struct dentry *parent, u64 *value);
+> +
+> +只要开发人员知道导出值的大小，这些功能就很有用。
+> +某些类型在不同的架构上可以具有不同的宽度
+> +但是，这样会使情况变得有些复杂。有
+> +在以下特殊情况下可以提供帮助的功能::
+> +
+> +    void debugfs_create_size_t(const char *name, umode_t mode,
+> +			       struct dentry *parent, size_t *value);
+> +
+> +不出所料，此函数将创建一个debugfs文件来表示
+> +类型为size_t的变量。
+> +
+> +同样地，也有无符号长整型型变量的助手，以十进制表示
+> +和十六进制::
+> +
+> +    struct dentry *debugfs_create_ulong(const char *name, umode_t mode,
+> +					struct dentry *parent,
+> +					unsigned long *value);
+> +    void debugfs_create_xul(const char *name, umode_t mode,
+> +			    struct dentry *parent, unsigned long *value);
+> +
+> +布尔值可以通过以下方式放置在debugfs中::
+> +
+> +    struct dentry *debugfs_create_bool(const char *name, umode_t mode,
+> +				       struct dentry *parent, bool *value);
+> +
+> +
+> +读取结果文件将产生Y（对于非零值）或
+> +N，后跟换行符。如果写入，它将接受大写或
+> +小写值或1或0。任何其他输入将被忽略。
+> +
+> +同样，可以使用以下命令将atomic_t值放置在debugfs中::
+> +
+> +    void debugfs_create_atomic_t(const char *name, umode_t mode,
+> +				 struct dentry *parent, atomic_t *value)
+> +
+> +读取此文件将获得atomic_t值，并写入该文件
+> +将设置atomic_t值。
+> +
+> +另一个选择是导出一个任意二进制数据块，
+> +这个结构和功能::
+> +
+> +    struct debugfs_blob_wrapper {
+> +	void *data;
+> +	unsigned long size;
+> +    };
+> +
+> +    struct dentry *debugfs_create_blob(const char *name, umode_t mode,
+> +				       struct dentry *parent,
+> +				       struct debugfs_blob_wrapper *blob);
+> +
+> +读取此文件将返回由指针指向debugfs_blob_wrapper结构
+> +的数据。一些驱动使用“blobs”作为一种简单的方法
+> +返回几行（静态）格式化文本输出。这个功能
+> +可用于导出二进制信息，但似乎没有
+> +在主线中执行此操作的任何代码。请注意，使用debugfs_create_blob（）命令创建的所有文件
+> +是只读的。
+> +
+> +如果您要转储一个寄存器块（发生的事情相当
+> +通常在开发过程中，即使很少有这样的代码到达主线。
+> +Debugfs提供两个功能：一个用于创建仅寄存器文件，另一个
+> +把一个寄存器块插入一个顺序文件中::
+> +
+> +    struct debugfs_reg32 {
+> +	char *name;
+> +	unsigned long offset;
+> +    };
+> +
+> +    struct debugfs_regset32 {
+> +	struct debugfs_reg32 *regs;
+> +	int nregs;
+> +	void __iomem *base;
+> +    };
+> +
+> +    struct dentry *debugfs_create_regset32(const char *name, umode_t mode,
+> +				     struct dentry *parent,
+> +				     struct debugfs_regset32 *regset);
+> +
+> +    void debugfs_print_regs32(struct seq_file *s, struct debugfs_reg32 *regs,
+> +			 int nregs, void __iomem *base, char *prefix);
+> +
+> +“base”参数可能为0，但您可能需要构建reg32数组
+> +使用__stringify，实际上有许多寄存器名称（宏）
+> +寄存器块的基址上的字节偏移量。
+> +
+> +如果要在debugfs中转储u32数组，可以使用以下命令创建文件::
+> +
+> +     void debugfs_create_u32_array(const char *name, umode_t mode,
+> +			struct dentry *parent,
+> +			u32 *array, u32 elements);
+> +
+> +“array”参数提供数据，而“elements”参数为
+> +数组中元素的数量。注意：建立数组后，
+> +大小无法更改。
+> +
+> +有一个帮助函数来创建与设备相关的seq_file::
+> +
+> +   struct dentry *debugfs_create_devm_seqfile(struct device *dev,
+> +				const char *name,
+> +				struct dentry *parent,
+> +				int (*read_fn)(struct seq_file *s,
+> +					void *data));
+> +
+> +“dev”参数是与此debugfs文件相关的设备，并且
+> +“read_fn”是一个函数指针，将被调用以打印
+> +seq_file内容。
+> +
+> +还有一些其他的面向目录的帮助器功能::
+> +
+> +    struct dentry *debugfs_rename(struct dentry *old_dir,
+> +		                  struct dentry *old_dentry,
+> +		                  struct dentry *new_dir,
+> +				  const char *new_name);
+> +
+> +    struct dentry *debugfs_create_symlink(const char *name,
+> +                                          struct dentry *parent,
+> +                                          const char *target);
+> +
+> +调用debugfs_rename()将为现有的debugfs文件提供一个新名称，
+> +可能在其他目录中。 new_name函数调用之前不能存在；
+> +返回值为old_dentry，其中包含更新的信息。
+> +可以使用debugfs_create_symlink（）创建符号链接。
+> +
+> +所有debugfs用户必须考虑的一件事是：
+> +没有自动清除在debugfs中创建的任何目录。如果一个
+> +在不显式删除debugfs条目的情况下卸载模块，结果
+> +将会有很多陈旧的指针，和没完没了的高度反社会行为。
+
+it's hard to understand.
+
+
+> +因此，所有debugfs用户-至少是那些可以作为模块构建的用户-必须
+> +准备删除在此创建的所有文件和目录。一份文件
+> +可以通过以下方式删除::
+> +
+> +    void debugfs_remove(struct dentry *dentry);
+> +
+> +dentry值可以为NULL或错误值，在这种情况下，不会有任何结果
+> +被删除。
+> +
+> +从前，debugfs用户需要记住该dentry
+> +他们创建的每个debugfs文件的指针，以便所有文件都可以
+
+Could you understand this?
+
+> +清理。但是，我们现在生活在更加文明的时代，并且debugfs用户
+> +能调用::
+> +
+> +    void debugfs_remove_recursive(struct dentry *dentry);
+> +
+> +如果传递了此函数，则对应于
+> +顶层目录，该目录下的整个层次结构将会被删除。
+> +
+> +注意：
+> +[1] http://lwn.net/Articles/309298/
+> diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
+> new file mode 100755
+> index 000000000000..79b6c20f9575
+> --- /dev/null
+> +++ b/Documentation/translations/zh_CN/filesystems/index.rst
+> @@ -0,0 +1,19 @@
+> +===============================
+> +Linux 内核中的文件系统
+> +===============================
+> +
+> +这个不完整的指南在某一天将会提供关于Linux 虚拟文件系统(VFS)层如何工作的
+> +完整信息。以及VFS以下的的文件系统。目前为止，我们提供了以下信息。
+> +
+> +
+> +
+> +
+> +文件系统
+> +===========
+> +
+> +关于文件系统实现的文档.
+> +
+> +.. toctree::
+> +   :maxdepth: 2
+> +
+> +   debugfs
+> diff --git a/Documentation/translations/zh_CN/index.rst b/Documentation/translations/zh_CN/index.rst
+> index d3165535ec9e..76850a5dd982 100644
+> --- a/Documentation/translations/zh_CN/index.rst
+> +++ b/Documentation/translations/zh_CN/index.rst
+> @@ -14,6 +14,7 @@
+>     :maxdepth: 2
 >  
->  		return scnprintf(msg + printed, size - printed,
-> -		 "You may not have permission to collect %sstats.\n\n"
-> -		 "Consider tweaking /proc/sys/kernel/perf_event_paranoid,\n"
-> -		 "which controls use of the performance events system by\n"
-> -		 "unprivileged users (without CAP_SYS_ADMIN).\n\n"
-> -		 "The current value is %d:\n\n"
-> +		 "Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open\n"
-> +		 "access to performance monitoring and observability operations for users\n"
-> +		 "without CAP_SYS_ADMIN capability. perf_event_paranoid setting is %d:\n"
->  		 "  -1: Allow use of (almost) all events by all users\n"
->  		 "      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK\n"
-> -		 ">= 0: Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN\n"
-> -		 "      Disallow raw tracepoint access by users without CAP_SYS_ADMIN\n"
-> -		 ">= 1: Disallow CPU event access by users without CAP_SYS_ADMIN\n"
-> -		 ">= 2: Disallow kernel profiling by users without CAP_SYS_ADMIN\n\n"
-> -		 "To make this setting permanent, edit /etc/sysctl.conf too, e.g.:\n\n"
-> -		 "	kernel.perf_event_paranoid = -1\n" ,
-> -				 target->system_wide ? "system-wide " : "",
-> -				 perf_event_paranoid());
-> +		 ">= 0: Disallow raw and ftrace function tracepoint access\n"
-> +		 ">= 1: Disallow CPU event access\n"
-> +		 ">= 2: Disallow kernel profiling\n"
-> +		 "To make the adjusted perf_event_paranoid setting permanent preserve it\n"
-> +		 "in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)",
-> +		 perf_event_paranoid());
->  	case ENOENT:
->  		return scnprintf(msg, size, "The %s event is not supported.",
->  				 perf_evsel__name(evsel));
+>     process/index
+> +   filesystems/index
+>  
+>  目录和表格
+>  ----------
 > 
