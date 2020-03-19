@@ -2,132 +2,126 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E85DC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FF6C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E67A20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:10:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Zb3sKzT6"
+	by mail.kernel.org (Postfix) with ESMTP id 11C7620767
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCSBKG (ORCPT
+        id S1726971AbgCSBLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 21:10:06 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55877 "EHLO ozlabs.org"
+        Wed, 18 Mar 2020 21:11:54 -0400
+Received: from mga01.intel.com ([192.55.52.88]:27255 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgCSBKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 21:10:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48jTNB4zmfz9sPR;
-        Thu, 19 Mar 2020 12:10:02 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1584580202;
-        bh=dsAYUpBIHWyRqWv4FX0udbRGa8tLjAzSdzZd9Xm8pUc=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Zb3sKzT6T9ViFk6GbzMBqYOtExyqc326gRnRRFeY93+ikmdpL/2w3BjoZYonb8xdB
-         zNGeceQor22vgMsAqPzV2zcAEAQUhN/6BsBts7nvjXHmHscSS+eLB8ZFbBgwCe9amv
-         NacobufLfRXgHz8hrby6XyLxQ3lsJUIsOARwMvDXgt85rL5f/2LK+yI42UsqXzRn41
-         Fa8suzuIUejDuskRsHDvt9HYad1CfrU9dJvQ1JQGcMp1+eLS+4qK2FiqAG9Pf99xm+
-         EahjJq64zjm9cSrJ5jwNLAy+G5YP9Kfy9U56PFB4b85CGiBQZxnicbvCaM3SjNcVen
-         pnT8waua6xXjw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Anton Blanchard <anton@ozlabs.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, christophe.leroy@c-s.fr,
-        benh@kernel.crashing.org, paulus@ozlabs.org
-Subject: Re: [PATCH] powerpc/vdso: Fix multiple issues with sys_call_table
-In-Reply-To: <20200306135705.7f80fcad@kryten.localdomain>
-References: <20200306135705.7f80fcad@kryten.localdomain>
-Date:   Thu, 19 Mar 2020 12:10:03 +1100
-Message-ID: <87pnd9duac.fsf@mpe.ellerman.id.au>
+        id S1726596AbgCSBLy (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 21:11:54 -0400
+IronPort-SDR: DnmcFwTDOp7Iq4LRCUGFEXSJf1bC2U7W6HNXDB8xLNn2m3HFJdrSKz9nCeQfWwZiAM23DCxO36
+ Gl7e2SXou1pw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 18:11:54 -0700
+IronPort-SDR: ztMcsKJBA38s6wjMa3oUBeF5xZ26ZGq7hVMB2CwrpKIojRR4bRdDwlniRlcZVzI8Gq5zHKCWMJ
+ zmOkmTTmeI/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,569,1574150400"; 
+   d="scan'208";a="236796077"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.151]) ([10.238.4.151])
+  by fmsmga007.fm.intel.com with ESMTP; 18 Mar 2020 18:11:52 -0700
+Subject: Re: [PATCH v5 2/3] perf report: Support interactive annotation of
+ code without symbols
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+References: <20200227043939.4403-1-yao.jin@linux.intel.com>
+ <20200227043939.4403-3-yao.jin@linux.intel.com>
+ <20200318154206.GG11531@kernel.org> <20200318154358.GH11531@kernel.org>
+ <20200318154656.GI11531@kernel.org>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <57c99254-7764-0e69-82be-8d84b3072729@linux.intel.com>
+Date:   Thu, 19 Mar 2020 09:11:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200318154656.GI11531@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anton Blanchard <anton@ozlabs.org> writes:
-> The VDSO exports a bitmap of valid syscalls. vdso_setup_syscall_map()
-> sets this up, but there are both little and big endian bugs. The issue
-> is with:
->
->        if (sys_call_table[i] != sys_ni_syscall)
->
-> On little endian, instead of comparing pointers to the two functions,
-> we compare the first two instructions of each function. If a function
-> happens to have the same first two instructions as sys_ni_syscall, then
-> we have a spurious match and mark the instruction as not implemented.
-> Fix this by removing the inline declarations.
->
-> On big endian we have a further issue where sys_ni_syscall is a function
-> descriptor and sys_call_table[] holds pointers to the instruction text.
-> Fix this by using dereference_kernel_function_descriptor().
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Anton Blanchard <anton@ozlabs.org>
 
-That's some pretty epic breakage.
 
-Is it even worth keeping, or should we just rip it out and declare that
-the syscall map is junk? Userspace can hardly rely on it given it's been
-this broken for so long.
+On 3/18/2020 11:46 PM, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Mar 18, 2020 at 12:43:58PM -0300, Arnaldo Carvalho de Melo escreveu:
+>> Em Wed, Mar 18, 2020 at 12:42:06PM -0300, Arnaldo Carvalho de Melo escreveu:
+>>> Em Thu, Feb 27, 2020 at 12:39:38PM +0800, Jin Yao escreveu:
+>>>> Now we can see the dump of object starting from 0x628.
+> 
+>>> Testing this I noticed this discrepancy when using 'o' in the annotate
+>>> view to see the address columns:
+> 
+>>> Samples: 10K of event 'cycles', 4000 Hz, Event count (approx.): 7738221585
+>>> 0x0000000000ea8b97  /usr/libexec/gcc/x86_64-redhat-linux/9/cc1 [Percent: local period]
+>>> Percent│
+>>>         │        Disassembly of section .text:
+>>>         │
+>>>         │        00000000012a8b97 <linemap_get_expansion_line@@Base+0x227>:
+>>>         │12a8b97:   cmp     %rax,(%rdi)
+>>>         │12a8b9a: ↓ je      12a8ba0 <linemap_get_expansion_line@@Base+0x230>
+>>>         │12a8b9c:   xor     %eax,%eax
+>>>         │12a8b9e: ← retq
+>>>         │12a8b9f:   nop
+>>>         │12a8ba0:   mov     0x8(%rsi),%edx
+> 
+>>>   See that 0x0000000000ea8b97 != 12a8b97
+> 
+>>> How can we explain that?
+> 
+>> On another machine, in 'perf top', its ok, the same address appears on
+>> the second line and in the first line in the disassembled code.
+> 
+>> I'm applying the patch,
+> 
+> With this adjustments, ok?
+> 
+> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> index 2f07680559c4..c2556901f7b6 100644
+> --- a/tools/perf/ui/browsers/hists.c
+> +++ b/tools/perf/ui/browsers/hists.c
+> @@ -2465,10 +2465,10 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+>   	return 0;
+>   }
+>   
+> -static struct symbol *new_annotate_sym(u64 addr, struct map *map)
+> +static struct symbol *symbol__new_unresolved(u64 addr, struct map *map)
+>   {
+> -	struct symbol *sym;
+>   	struct annotated_source *src;
+> +	struct symbol *sym;
+>   	char name[64];
+>   
+>   	snprintf(name, sizeof(name), "%-#.*lx", BITS_PER_LONG / 4, addr);
+> @@ -2497,7 +2497,7 @@ add_annotate_opt(struct hist_browser *browser __maybe_unused,
+>   		return 0;
+>   
+>   	if (!ms->sym)
+> -		ms->sym = new_annotate_sym(addr, ms->map);
+> +		ms->sym = symbol__new_unresolved(addr, ms->map);
+>   
+>   	if (ms->sym == NULL || symbol__annotation(ms->sym)->src == NULL)
+>   		return 0;
+> 
 
-If not it would be really nice to have a selftest of this stuff so we
-can verify it works and not break it again in future.
+Sure, that's OK, thanks! The name "symbol__new_unresolved" is much 
+better than "new_annotate_sym".
 
-cheers
-
-> ---
-> diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-> index b9a108411c0d..d186b729026e 100644
-> --- a/arch/powerpc/kernel/vdso.c
-> +++ b/arch/powerpc/kernel/vdso.c
-> @@ -17,6 +17,7 @@
->  #include <linux/elf.h>
->  #include <linux/security.h>
->  #include <linux/memblock.h>
-> +#include <linux/syscalls.h>
->  
->  #include <asm/pgtable.h>
->  #include <asm/processor.h>
-> @@ -30,6 +31,7 @@
->  #include <asm/vdso.h>
->  #include <asm/vdso_datapage.h>
->  #include <asm/setup.h>
-> +#include <asm/syscall.h>
->  
->  #undef DEBUG
->  
-> @@ -644,19 +646,16 @@ static __init int vdso_setup(void)
->  static void __init vdso_setup_syscall_map(void)
->  {
->  	unsigned int i;
-> -	extern unsigned long *sys_call_table;
-> -#ifdef CONFIG_PPC64
-> -	extern unsigned long *compat_sys_call_table;
-> -#endif
-> -	extern unsigned long sys_ni_syscall;
-> +	unsigned long ni_syscall;
->  
-> +	ni_syscall = (unsigned long)dereference_kernel_function_descriptor(sys_ni_syscall);
->  
->  	for (i = 0; i < NR_syscalls; i++) {
->  #ifdef CONFIG_PPC64
-> -		if (sys_call_table[i] != sys_ni_syscall)
-> +		if (sys_call_table[i] != ni_syscall)
->  			vdso_data->syscall_map_64[i >> 5] |=
->  				0x80000000UL >> (i & 0x1f);
-> -		if (compat_sys_call_table[i] != sys_ni_syscall)
-> +		if (compat_sys_call_table[i] != ni_syscall)
->  			vdso_data->syscall_map_32[i >> 5] |=
->  				0x80000000UL >> (i & 0x1f);
->  #else /* CONFIG_PPC64 */
+Thanks
+Jin Yao
