@@ -2,137 +2,109 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C557C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C56FC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12AD320722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1481520722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584603573;
+	bh=B+kuIQBeqbL5y1IBvD1kqR+vLTh4kU6kglLn21OfosA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ILBeBrOKgw+VlE3YGpZqVOkFNUJTvP9KQGumBJSEqew43wGb+KaSemq0/DJpvyErl
+	 /q0ZX6nwFBcyWFGCBcOz7WkmGB0W2XouBmdmJ8jnrC59JEna0DWSXsT0g3Z9auO23E
+	 tD6CK223Oc0fdOGgvGNIb5/7chtB+pRUz/2g+xpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgCSHip (ORCPT
+        id S1727239AbgCSHja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:38:45 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:41896 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726063AbgCSHio (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:38:44 -0400
-Received: from mr4.cc.vt.edu (smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 02J7chLI031441
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 03:38:43 -0400
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 02J7cbVY024147
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 03:38:43 -0400
-Received: by mail-qv1-f71.google.com with SMTP id a12so1889691qvv.8
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 00:38:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=LmFAxMO76NO0La6oBWVkJamYtde7uPLbuFYwcxlRUEc=;
-        b=Xx00Wj3upN++jRtQoRpEpN8epuR56o1A6o2tLcMRQMdxq+CJ1YbkKZTqAQJn9WVoeC
-         YgDcsjkHWK6+VxW6GiTSyHFcJo9gwsIeUbIcAMB59+sXHbwf5p+JPm1Vt5fHanr6f8o+
-         hLkJUF2KMYA62az4uqtNu7AMjWto1pGxlJRORfq8s9qBN/b7suNQmBbQsBlpVltvyVmD
-         Y4v6qLKCP0XmxpRD7cTjwOv0+f/xcacO1K7Y3uH1rkO7ttK8gxGQwY55auGaMhnS+cJo
-         tCV/pQkXASKVfbW07SqrSA+wOMVRR8O3rIHjfzN+u8sHWf2CZjTNVz7DwvLfOGa31TDc
-         XY2w==
-X-Gm-Message-State: ANhLgQ09zI8r9pG3120Zs22XQRSS11ZKFAZl09dTPcneK0z2YiKQqZEJ
-        ZxXLKKpiVACdyNXQotPtDnbgJHnlKrCKj+OsF+Ux3o/3JX2Wov5pRXmDGt9sGGRM60OqkHYr9xF
-        NlQ2YbHtFn7FvqqyL1z16fsz+qcdqvMX8p3M=
-X-Received: by 2002:ae9:e88c:: with SMTP id a134mr1670360qkg.183.1584603517694;
-        Thu, 19 Mar 2020 00:38:37 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vu5nmlZn+ioj/Zt1VHBcBqqR6EtKC1AKYeG5RLTAlqJL+VK8m7il49SUS0scAxOwaRtRIWEaw==
-X-Received: by 2002:ae9:e88c:: with SMTP id a134mr1670054qkg.183.1584603509610;
-        Thu, 19 Mar 2020 00:38:29 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id u24sm34623qtu.96.2020.03.19.00.38.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 00:38:28 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        linux-kernel@vger.kernel.org,
-        John Ogness <john.ogness@linutronix.de>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [RFC PATCH 3/3] watchdog: Turn console verbosity on when reporting softlockup
-In-Reply-To: <20200319064836.GB24020@google.com>
-References: <20200315170903.17393-1-erosca@de.adit-jv.com> <20200315170903.17393-4-erosca@de.adit-jv.com> <20200317021818.GD219881@google.com> <20200318180525.GA5790@lxhi-065.adit-jv.com>
- <20200319064836.GB24020@google.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1584603506_13116P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Mar 2020 03:38:26 -0400
-Message-ID: <16373.1584603506@turing-police>
+        Thu, 19 Mar 2020 03:39:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726589AbgCSHja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:39:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2B2420722;
+        Thu, 19 Mar 2020 07:39:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584603569;
+        bh=B+kuIQBeqbL5y1IBvD1kqR+vLTh4kU6kglLn21OfosA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=slBOoSo8jU7XWJNyt9HMs/D7BU5N4d1RWZrIl/AtrtSC/WcoQIO4czzdaSRiPFznN
+         jR87nNzz6pcQWRv5f/53sFP9ybja1lCun4m25ZukioZGVcLoZgl07Ri1GbYQraNWtn
+         Jy6NBOaOFzZYF0WuHE0s2ki/s3IxdldCRotalTZw=
+Date:   Thu, 19 Mar 2020 08:39:27 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     stable <stable@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v1 0/6] Fix device links functional breakage in 4.19.99
+Message-ID: <20200319073927.GA3442166@kroah.com>
+References: <20200317065452.236670-1-saravanak@google.com>
+ <CAGETcx-uZ3YJHCYqFm3so8-woTvL3SSDY2deNonthTetcE+mXQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx-uZ3YJHCYqFm3so8-woTvL3SSDY2deNonthTetcE+mXQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1584603506_13116P
-Content-Type: text/plain; charset=us-ascii
+On Wed, Mar 18, 2020 at 12:10:43PM -0700, Saravana Kannan wrote:
+> On Mon, Mar 16, 2020 at 11:54 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > As mentioned in an earlier email thread [1], 4.19.99 broke the ability
+> > to create stateful and stateless device links between the same set of
+> > devices when it pulled in a valid bug fix [2]. While the fix was valid,
+> > it removes a functionality that was present before the bug fix.
+> >
+> > This patch series attempts to fix that by pulling in more patches from
+> > upstream. I've just done compilation testing so far. But wanted to send
+> > out a v1 to see if this patch list was acceptable before I fixed up the
+> > commit text format to match what's needed for stable mailing list.
+> >
+> > Some of the patches are new functionality, but for a first pass, it was
+> > easier to pull these in than try and fix the conflicts. If these patches
+> > are okay to pull into stable, then all I need to do is fix the commit
+> > text.
+> 
+> I took a closer look at all the patches. Everyone of them is a bug fix
+> except Patch 4/6. But Patch 4/6 is a fairly minimal change and I think
+> it's easier/cleaner to just pick it up too instead of trying to
+> resolve merge conflicts in the stable branch.
+> 
+> 1/6 - Fixes what appears to be a memory leak bug in upstream.
+> 2/6 - Fixes error in initial state of the device link if it's created
+> under some circumstances.
+> 3/6 - Fixes a ref count bug in upstream. Looks like it can lead to memory leaks?
+> 4/6 - Adds a minor feature to kick off a probe attempt of a consumer
+> 5/6 - Fixes the break in functionality that happened in 4.19.99
+> 6/6 - Fixes bug in 5/6 (upstream bug)
+> 
+> Greg
+> 
+> Do these patches look okay for you to pull into 4.19 stable? If so,
+> please let me know if you need me to send v2 with commit fix up.
+> 
+> The only fix up needed is to these patches at this point is changing
+> "(cherry picked from commit ...)" with "[ Upstream commit ... ]". The
+> SHAs themselves are the correct SHAs from upstream.
 
-On Thu, 19 Mar 2020 15:48:36 +0900, Sergey Senozhatsky said:
+These all look good to me, now all queued up, thanks.
 
-> So the issue is that when we bump `console_loglevel' or `ignore_loglevel'
-> we lift restrictions globally. For all CPUs, for all contexts which call
-> printk(). This may have negative impact. Fuzzing is one example. It
-> usually generates a lot of printk() noise, so lifting global printk()
-> log_level restrictions does cause problems. I recall that fuzzing people
-> really disliked the
-> 			old_level = console_loglevel
-> 			console_loglevel = new_level
-> 			....
-> 			console_loglevel = old_level
->
-> approach. Because if lets all CPUs and tasks to pollute serial logs.
-> While what we want is to print messages from a particular CPU/task.
-
-Well... how does this sound for a RFC idea?  We already have CONFIG_PRINTK_TIME
-and CONFIG_PRINTK_CALLER.  How about adding an option to allow printing the
-calling CPU as well, or just extend CALLER to print [pid/cpu] rather than just
-[pid]?
-
-(And yes, I know that the concept of "this CPU" can change quickly, which is
-why per_cpu data may not be accurate for anything more than statistical
-aggregation purposes.  It's only worth pondering how to deal with that if it's
-worth developing the patch at all... :)
-
-
---==_Exmh_1584603506_13116P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXnMhcgdmEQWDXROgAQIpVxAAh/dMuQn+/WY3Tf02NolMacc55goAz7jP
-wuQz4/9+SseYJBe6eq8bjshKtvexOSEjWwfC2TtuJUDLuLwASqUXaUchGGJs6z5z
-bXl0aDmK9jQW8ogcd1S1NZMs3iOqC4e0+Ej3pkWNFiUpvY5hcKar/+w/G/6v80hw
-3fF835wFNjGOtsmFBPvvqSjTrDX7QQnfAJ5frFDlMgvgXqKtPqzZUaFJaoUgvOia
-gFJb2vbX86ilYj0W/FOax+8EfVLgBUEjTO2/ubZNXRnEykQKVVDL2i6xwTyj4Jk7
-cJcCDWwk4oJCTUdTxC6+EcpCZSQB+dqBDxRwhRQZfesnM9g6w88Gc1Gdl+oVlVRo
-ktCbwL7+Wy3epQRIO+gNFJm5V/DnElMCNr5ZDviQLGQvS0jiyp4baxt59hitG8De
-l09n8V8mRXxQhfy/z8tyQzPwN01OaVB1XR9762BrXJ/sOwNRU8cF5UHtyhGXzEdO
-QgIcQIUTnZ6dBr+vA30/NrP2iHvvodguJktXPDZGgzsxAAtNbA25UybM+9rZAEtE
-FNka9fKe29GojsGCrSCkgICjO4N0JvqJ2ZXBgvz+4y6cX/7rqf4TXVHxxXgV74kt
-BnPuWnduDE9E3qKzhDBdtBAFflQCLg/B33W3DMwvo49C/cLvY11rH+4OvMyPRglx
-G8wVW+Un+dU=
-=MV91
------END PGP SIGNATURE-----
-
---==_Exmh_1584603506_13116P--
+greg k-h
