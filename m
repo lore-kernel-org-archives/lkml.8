@@ -2,101 +2,106 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DA4C43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528E1C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7E72071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BEBC2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:38:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgCSRhc (ORCPT
+        id S1728165AbgCSRiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:37:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:39494 "EHLO foss.arm.com"
+        Thu, 19 Mar 2020 13:38:01 -0400
+Received: from muru.com ([72.249.23.125]:60920 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727189AbgCSRhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:37:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0B4D30E;
-        Thu, 19 Mar 2020 10:37:31 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB83A3F305;
-        Thu, 19 Mar 2020 10:37:30 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 17:37:19 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Qiujun Huang <hqjagain@gmail.com>, anders.roxell@linaro.org,
-        vidyas@nvidia.com
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        amurray@thegoodpenguin.co.uk, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: dwc: fix compile err for pcie-tagra194
-Message-ID: <20200319173710.GA7433@e121166-lin.cambridge.arm.com>
-References: <1584621380-21152-1-git-send-email-hqjagain@gmail.com>
+        id S1726867AbgCSRiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:38:01 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 1278180A5;
+        Thu, 19 Mar 2020 17:38:44 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>
+Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: [PATCHv5 0/4] n_gsm serdev support and protocol driver for droid4 modem
+Date:   Thu, 19 Mar 2020 10:37:51 -0700
+Message-Id: <20200319173755.65082-1-tony@atomide.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584621380-21152-1-git-send-email-hqjagain@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 08:36:20PM +0800, Qiujun Huang wrote:
-> make allmodconfig
-> ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-> ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-> ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-> make[2]: *** [__modpost] Error 1
-> make[1]: *** [modules] Error 2
-> make: *** [sub-make] Error 2
-> 
-> need to export the symbols.
-> 
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c | 3 +++
->  1 file changed, 3 insertions(+)
+Hi all,
 
-I have squashed this in with the original patch.
+Here's v4 set of n_gsm serdev support patches, and the related protocol
+driver for the modem found on Motorola Mapphone phones and tablets
+like droid4.
 
-@Vidya: is this something we missed in the review cycle ? Asking just
-to make sure it was not me who made a mistake while merging the code.
+This series only adds basic character device support for the serdev
+driver. Other serdev consumer drivers for specific devices will be
+posted separately.
 
-Thanks,
-Lorenzo
+The patches are against v5.6-rc series.
 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 4233c43..60d62ef 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -18,6 +18,7 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
->  
->  	pci_epc_linkup(epc);
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
->  
->  void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
->  {
-> @@ -25,6 +26,7 @@ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
->  
->  	pci_epc_init_notify(epc);
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
->  
->  static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
->  				   int flags)
-> @@ -535,6 +537,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
->  
->  int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  {
-> -- 
-> 1.8.3.1
-> 
+Regards,
+
+Tony
+
+Changes since v4:
+- Use drivers/tty/serdev/protocol directory for the driver instead of
+  drivers/mfd as discussed on the lists for v3 set of patches
+- Fix remove to call kfree only after removing device from the list
+
+Changes since v3:
+- Update list of folks in Cc, looks like I sent v3 only to Lee and lkml
+- Init privdata before motmdm_register_dlci calls gsm_serdev_register_dlci
+- Update binding based on Rob's comments for license and "allOf"
+
+Changes since v2:
+- Drop useless send_command indirection, use static motmdm_send_command
+
+Changes since v1:
+
+- Simplified usage and got rid of few pointless inline functions
+- Added consumer MFD driver, devicetree binding, and dts changes
+
+
+Tony Lindgren (4):
+  tty: n_gsm: Add support for serdev drivers
+  serdev: ngsm-motmdm: Add Motorola TS 27.010 serdev modem driver for
+    droid4
+  dt-bindings: mfd: motmdm: Add binding for motorola-mdm
+  ARM: dts: omap4-droid4: Enable basic modem support
+
+ .../serdev/motorola,mapphone-mdm6600.yaml     |   34 +
+ .../boot/dts/motorola-mapphone-common.dtsi    |    6 +
+ drivers/tty/n_gsm.c                           |  372 +++++
+ drivers/tty/serdev/Kconfig                    |    3 +
+ drivers/tty/serdev/Makefile                   |    2 +
+ drivers/tty/serdev/protocol/Kconfig           |   14 +
+ drivers/tty/serdev/protocol/Makefile          |    3 +
+ .../tty/serdev/protocol/serdev-ngsm-motmdm.c  | 1200 +++++++++++++++++
+ include/linux/serdev-gsm.h                    |  168 +++
+ 9 files changed, 1802 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serdev/motorola,mapphone-mdm6600.yaml
+ create mode 100644 drivers/tty/serdev/protocol/Kconfig
+ create mode 100644 drivers/tty/serdev/protocol/Makefile
+ create mode 100644 drivers/tty/serdev/protocol/serdev-ngsm-motmdm.c
+ create mode 100644 include/linux/serdev-gsm.h
+
+-- 
+2.25.1
