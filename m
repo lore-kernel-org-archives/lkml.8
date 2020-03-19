@@ -7,46 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855A6C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF6EC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 648282145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204B4214DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbgCSOLJ (ORCPT
+        id S1727972AbgCSOLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:11:09 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60983 "EHLO
+        Thu, 19 Mar 2020 10:11:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:32828 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727846AbgCSOLD (ORCPT
+        with ESMTP id S1727933AbgCSOLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:11:03 -0400
+        Thu, 19 Mar 2020 10:11:09 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEvst-0002Aw-7r; Thu, 19 Mar 2020 15:10:55 +0100
+        id 1jEvt3-0002Mj-Kz; Thu, 19 Mar 2020 15:11:05 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0B07F1C22AD;
-        Thu, 19 Mar 2020 15:10:49 +0100 (CET)
-Date:   Thu, 19 Mar 2020 14:10:48 -0000
-From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8796D1C22AD;
+        Thu, 19 Mar 2020 15:10:56 +0100 (CET)
+Date:   Thu, 19 Mar 2020 14:10:56 -0000
+From:   "tip-bot2 for Namhyung Kim" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf block-info: Support color ops to print block
- percents in color
-Cc:     Jin Yao <yao.jin@linux.intel.com>,
+Subject: [tip: perf/core] tools lib api fs: Move cgroupsfs_find_mountpoint()
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200202141655.32053-5-yao.jin@linux.intel.com>
-References: <20200202141655.32053-5-yao.jin@linux.intel.com>
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200127100031.1368732-1-namhyung@kernel.org>
+References: <20200127100031.1368732-1-namhyung@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158462704867.28353.17655295732213321321.tip-bot2@tip-bot2>
+Message-ID: <158462705621.28353.16079958689067092641.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,114 +56,216 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     f787feff69c466dfc6f261c9632627e383b49187
-Gitweb:        https://git.kernel.org/tip/f787feff69c466dfc6f261c9632627e383b49187
-Author:        Jin Yao <yao.jin@linux.intel.com>
-AuthorDate:    Sun, 02 Feb 2020 22:16:55 +08:00
+Commit-ID:     7982a898515064ba180d958bfc89ed22d13905ee
+Gitweb:        https://git.kernel.org/tip/7982a898515064ba180d958bfc89ed22d13905ee
+Author:        Namhyung Kim <namhyung@kernel.org>
+AuthorDate:    Mon, 27 Jan 2020 19:00:31 +09:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 09 Mar 2020 21:43:25 -03:00
+CommitterDate: Wed, 04 Mar 2020 10:34:09 -03:00
 
-perf block-info: Support color ops to print block percents in color
+tools lib api fs: Move cgroupsfs_find_mountpoint()
 
-It would be nice to print the block percents with colors.
+Move it from tools/perf/util/cgroup.c as it can be used by other places.
+Note that cgroup filesystem is different from others since it's usually
+mounted separately (in v1) for each subsystem.
 
-This patch supports the 'Sampled Cycles%' and 'Avg Cycles%' printed in
-colors.
+I just copied the code with a little modification to pass a name of
+subsystem.
 
-For example,
-
-perf record -b ...
-perf report --total-cycles or perf report --total-cycles --stdio
-
-percent > 5%, colored in red
-percent > 0.5%, colored in green
-percent < 0.5%, default color
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200202141655.32053-5-yao.jin@linux.intel.com
+Suggested-by: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lore.kernel.org/lkml/20200127100031.1368732-1-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/block-info.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ tools/lib/api/fs/Build    |  1 +-
+ tools/lib/api/fs/cgroup.c | 67 ++++++++++++++++++++++++++++++++++++++-
+ tools/lib/api/fs/fs.h     |  2 +-
+ tools/perf/util/cgroup.c  | 63 +-----------------------------------
+ 4 files changed, 72 insertions(+), 61 deletions(-)
+ create mode 100644 tools/lib/api/fs/cgroup.c
 
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index debb8b1..423ec69 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -181,6 +181,17 @@ static int block_column_width(struct perf_hpp_fmt *fmt,
- 	return block_fmt->width;
- }
- 
-+static int color_pct(struct perf_hpp *hpp, int width, double pct)
-+{
-+#ifdef HAVE_SLANG_SUPPORT
-+	if (use_browser) {
-+		return __hpp__slsmg_color_printf(hpp, "%*.2f%%",
-+						 width - 1, pct);
-+	}
-+#endif
-+	return hpp_color_scnprintf(hpp, "%*.2f%%", width - 1, pct);
-+}
+diff --git a/tools/lib/api/fs/Build b/tools/lib/api/fs/Build
+index f4ed962..0f75b28 100644
+--- a/tools/lib/api/fs/Build
++++ b/tools/lib/api/fs/Build
+@@ -1,2 +1,3 @@
+ libapi-y += fs.o
+ libapi-y += tracing_path.o
++libapi-y += cgroup.o
+diff --git a/tools/lib/api/fs/cgroup.c b/tools/lib/api/fs/cgroup.c
+new file mode 100644
+index 0000000..889a6eb
+--- /dev/null
++++ b/tools/lib/api/fs/cgroup.c
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/stringify.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include "fs.h"
 +
- static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 					struct perf_hpp *hpp,
- 					struct hist_entry *he)
-@@ -188,14 +199,11 @@ static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
- 	struct block_info *bi = he->block_info;
- 	double ratio = 0.0;
--	char buf[16];
++int cgroupfs_find_mountpoint(char *buf, size_t maxlen, const char *subsys)
++{
++	FILE *fp;
++	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
++	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
++	char *token, *saved_ptr = NULL;
++
++	fp = fopen("/proc/mounts", "r");
++	if (!fp)
++		return -1;
++
++	/*
++	 * in order to handle split hierarchy, we need to scan /proc/mounts
++	 * and inspect every cgroupfs mount point to find one that has
++	 * perf_event subsystem
++	 */
++	path_v1[0] = '\0';
++	path_v2[0] = '\0';
++
++	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
++				__stringify(PATH_MAX)"s %*d %*d\n",
++				mountpoint, type, tokens) == 3) {
++
++		if (!path_v1[0] && !strcmp(type, "cgroup")) {
++
++			token = strtok_r(tokens, ",", &saved_ptr);
++
++			while (token != NULL) {
++				if (subsys && !strcmp(token, subsys)) {
++					strcpy(path_v1, mountpoint);
++					break;
++				}
++				token = strtok_r(NULL, ",", &saved_ptr);
++			}
++		}
++
++		if (!path_v2[0] && !strcmp(type, "cgroup2"))
++			strcpy(path_v2, mountpoint);
++
++		if (path_v1[0] && path_v2[0])
++			break;
++	}
++	fclose(fp);
++
++	if (path_v1[0])
++		path = path_v1;
++	else if (path_v2[0])
++		path = path_v2;
++	else
++		return -1;
++
++	if (strlen(path) < maxlen) {
++		strcpy(buf, path);
++		return 0;
++	}
++	return -1;
++}
+diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
+index 92d03b8..936edb9 100644
+--- a/tools/lib/api/fs/fs.h
++++ b/tools/lib/api/fs/fs.h
+@@ -28,6 +28,8 @@ FS(bpf_fs)
+ #undef FS
  
- 	if (block_fmt->total_cycles)
- 		ratio = (double)bi->cycles / (double)block_fmt->total_cycles;
  
--	sprintf(buf, "%.2f%%", 100.0 * ratio);
++int cgroupfs_find_mountpoint(char *buf, size_t maxlen, const char *subsys);
++
+ int filename__read_int(const char *filename, int *value);
+ int filename__read_ull(const char *filename, unsigned long long *value);
+ int filename__read_xll(const char *filename, unsigned long long *value);
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index 4881d4a..5bc9d3b 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -3,75 +3,16 @@
+ #include "evsel.h"
+ #include "cgroup.h"
+ #include "evlist.h"
+-#include <linux/stringify.h>
+ #include <linux/zalloc.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <api/fs/fs.h>
+ 
+ int nr_cgroups;
+ 
+-static int
+-cgroupfs_find_mountpoint(char *buf, size_t maxlen)
+-{
+-	FILE *fp;
+-	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
+-	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
+-	char *token, *saved_ptr = NULL;
 -
--	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
-+	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
- }
- 
- static int64_t block_total_cycles_pct_sort(struct perf_hpp_fmt *fmt,
-@@ -248,16 +256,13 @@ static int block_cycles_pct_entry(struct perf_hpp_fmt *fmt,
- 	struct block_info *bi = he->block_info;
- 	double ratio = 0.0;
- 	u64 avg;
--	char buf[16];
- 
- 	if (block_fmt->block_cycles && bi->num_aggr) {
- 		avg = bi->cycles_aggr / bi->num_aggr;
- 		ratio = (double)avg / (double)block_fmt->block_cycles;
- 	}
- 
--	sprintf(buf, "%.2f%%", 100.0 * ratio);
+-	fp = fopen("/proc/mounts", "r");
+-	if (!fp)
+-		return -1;
 -
--	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
-+	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
- }
+-	/*
+-	 * in order to handle split hierarchy, we need to scan /proc/mounts
+-	 * and inspect every cgroupfs mount point to find one that has
+-	 * perf_event subsystem
+-	 */
+-	path_v1[0] = '\0';
+-	path_v2[0] = '\0';
+-
+-	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
+-				__stringify(PATH_MAX)"s %*d %*d\n",
+-				mountpoint, type, tokens) == 3) {
+-
+-		if (!path_v1[0] && !strcmp(type, "cgroup")) {
+-
+-			token = strtok_r(tokens, ",", &saved_ptr);
+-
+-			while (token != NULL) {
+-				if (!strcmp(token, "perf_event")) {
+-					strcpy(path_v1, mountpoint);
+-					break;
+-				}
+-				token = strtok_r(NULL, ",", &saved_ptr);
+-			}
+-		}
+-
+-		if (!path_v2[0] && !strcmp(type, "cgroup2"))
+-			strcpy(path_v2, mountpoint);
+-
+-		if (path_v1[0] && path_v2[0])
+-			break;
+-	}
+-	fclose(fp);
+-
+-	if (path_v1[0])
+-		path = path_v1;
+-	else if (path_v2[0])
+-		path = path_v2;
+-	else
+-		return -1;
+-
+-	if (strlen(path) < maxlen) {
+-		strcpy(buf, path);
+-		return 0;
+-	}
+-	return -1;
+-}
+-
+ static int open_cgroup(const char *name)
+ {
+ 	char path[PATH_MAX + 1];
+@@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
+ 	int fd;
  
- static int block_avg_cycles_entry(struct perf_hpp_fmt *fmt,
-@@ -345,7 +350,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
  
- 	switch (idx) {
- 	case PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT:
--		fmt->entry = block_total_cycles_pct_entry;
-+		fmt->color = block_total_cycles_pct_entry;
- 		fmt->cmp = block_info__cmp;
- 		fmt->sort = block_total_cycles_pct_sort;
- 		break;
-@@ -353,7 +358,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
- 		fmt->entry = block_cycles_lbr_entry;
- 		break;
- 	case PERF_HPP_REPORT__BLOCK_CYCLES_PCT:
--		fmt->entry = block_cycles_pct_entry;
-+		fmt->color = block_cycles_pct_entry;
- 		break;
- 	case PERF_HPP_REPORT__BLOCK_AVG_CYCLES:
- 		fmt->entry = block_avg_cycles_entry;
+-	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
++	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
+ 		return -1;
+ 
+ 	scnprintf(path, PATH_MAX, "%s/%s", mnt, name);
