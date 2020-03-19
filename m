@@ -2,27 +2,27 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B9FC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4A4C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 025D92071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B122071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgCSLw4 (ORCPT
+        id S1727089AbgCSLxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 07:52:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45102 "EHLO mx2.suse.de"
+        Thu, 19 Mar 2020 07:53:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45226 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbgCSLw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 07:52:56 -0400
+        id S1726912AbgCSLw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 07:52:57 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B2E7BAC84;
-        Thu, 19 Mar 2020 11:52:50 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id E6CF6AF33;
+        Thu, 19 Mar 2020 11:52:54 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -63,10 +63,12 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         linux-kernel@vger.kernel.org,
         "linux-fsdevel @ vger . kernel . org --in-reply-to=" 
         <20200225173541.1549955-1-npiggin@gmail.com>
-Subject: [PATCH v11 0/8] Disable compat cruft on ppc64le v11
-Date:   Thu, 19 Mar 2020 12:52:20 +0100
-Message-Id: <cover.1584613649.git.msuchanek@suse.de>
+Subject: [PATCH v11 3/8] powerpc/perf: consolidate read_user_stack_32
+Date:   Thu, 19 Mar 2020 12:52:23 +0100
+Message-Id: <184347595442b4ca664613008a09e8cea7188c36.1584613649.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1584613649.git.msuchanek@suse.de>
+References: <cover.1584613649.git.msuchanek@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,72 +76,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Less code means less bugs so add a knob to skip the compat stuff.
+There are two almost identical copies for 32bit and 64bit.
 
-Changes in v2: saner CONFIG_COMPAT ifdefs
-Changes in v3:
- - change llseek to 32bit instead of builing it unconditionally in fs
- - clanup the makefile conditionals
- - remove some ifdefs or convert to IS_DEFINED where possible
-Changes in v4:
- - cleanup is_32bit_task and current_is_64bit
- - more makefile cleanup
-Changes in v5:
- - more current_is_64bit cleanup
- - split off callchain.c 32bit and 64bit parts
-Changes in v6:
- - cleanup makefile after split
- - consolidate read_user_stack_32
- - fix some checkpatch warnings
-Changes in v7:
- - add back __ARCH_WANT_SYS_LLSEEK to fix build with llseek
- - remove leftover hunk
- - add review tags
-Changes in v8:
- - consolidate valid_user_sp to fix it in the split callchain.c
- - fix build errors/warnings with PPC64 !COMPAT and PPC32
-Changes in v9:
- - remove current_is_64bit()
-Chanegs in v10:
- - rebase, sent together with the syscall cleanup
-Changes in v11:
- - rebase
- - add MAINTAINERS pattern for ppc perf
+The function is used only in 32bit code which will be split out in next
+patch so consolidate to one function.
 
-Michal Suchanek (8):
-  powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
-  powerpc: move common register copy functions from signal_32.c to
-    signal.c
-  powerpc/perf: consolidate read_user_stack_32
-  powerpc/perf: consolidate valid_user_sp
-  powerpc/64: make buildable without CONFIG_COMPAT
-  powerpc/64: Make COMPAT user-selectable disabled on littleendian by
-    default.
-  powerpc/perf: split callchain.c by bitness
-  MAINTAINERS: perf: Add pattern that matches ppc perf to the perf
-    entry.
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+v6:  new patch
+v8:  move the consolidated function out of the ifdef block.
+v11: rebase on top of def0bfdbd603
+---
+ arch/powerpc/perf/callchain.c | 48 +++++++++++++++++------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
- MAINTAINERS                            |   2 +
- arch/powerpc/Kconfig                   |   5 +-
- arch/powerpc/include/asm/thread_info.h |   4 +-
- arch/powerpc/include/asm/unistd.h      |   1 +
- arch/powerpc/kernel/Makefile           |   6 +-
- arch/powerpc/kernel/entry_64.S         |   2 +
- arch/powerpc/kernel/signal.c           | 144 +++++++++-
- arch/powerpc/kernel/signal_32.c        | 140 ----------
- arch/powerpc/kernel/syscall_64.c       |   6 +-
- arch/powerpc/kernel/vdso.c             |   3 +-
- arch/powerpc/perf/Makefile             |   5 +-
- arch/powerpc/perf/callchain.c          | 356 +------------------------
- arch/powerpc/perf/callchain.h          |  20 ++
- arch/powerpc/perf/callchain_32.c       | 196 ++++++++++++++
- arch/powerpc/perf/callchain_64.c       | 174 ++++++++++++
- fs/read_write.c                        |   3 +-
- 16 files changed, 556 insertions(+), 511 deletions(-)
- create mode 100644 arch/powerpc/perf/callchain.h
- create mode 100644 arch/powerpc/perf/callchain_32.c
- create mode 100644 arch/powerpc/perf/callchain_64.c
-
+diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
+index cbc251981209..c9a78c6e4361 100644
+--- a/arch/powerpc/perf/callchain.c
++++ b/arch/powerpc/perf/callchain.c
+@@ -161,18 +161,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+ 	return read_user_stack_slow(ptr, ret, 8);
+ }
+ 
+-static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
+-{
+-	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+-	    ((unsigned long)ptr & 3))
+-		return -EFAULT;
+-
+-	if (!probe_user_read(ret, ptr, sizeof(*ret)))
+-		return 0;
+-
+-	return read_user_stack_slow(ptr, ret, 4);
+-}
+-
+ static inline int valid_user_sp(unsigned long sp, int is_64)
+ {
+ 	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
+@@ -277,19 +265,9 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+ }
+ 
+ #else  /* CONFIG_PPC64 */
+-/*
+- * On 32-bit we just access the address and let hash_page create a
+- * HPTE if necessary, so there is no need to fall back to reading
+- * the page tables.  Since this is called at interrupt level,
+- * do_page_fault() won't treat a DSI as a page fault.
+- */
+-static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
++static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+ {
+-	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+-	    ((unsigned long)ptr & 3))
+-		return -EFAULT;
+-
+-	return probe_user_read(ret, ptr, sizeof(*ret));
++	return 0;
+ }
+ 
+ static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
+@@ -312,6 +290,28 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
+ 
+ #endif /* CONFIG_PPC64 */
+ 
++/*
++ * On 32-bit we just access the address and let hash_page create a
++ * HPTE if necessary, so there is no need to fall back to reading
++ * the page tables.  Since this is called at interrupt level,
++ * do_page_fault() won't treat a DSI as a page fault.
++ */
++static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
++{
++	int rc;
++
++	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
++	    ((unsigned long)ptr & 3))
++		return -EFAULT;
++
++	rc = probe_user_read(ret, ptr, sizeof(*ret));
++
++	if (IS_ENABLED(CONFIG_PPC64) && rc)
++		return read_user_stack_slow(ptr, ret, 4);
++
++	return rc;
++}
++
+ /*
+  * Layout for non-RT signal frames
+  */
 -- 
 2.23.0
 
