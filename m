@@ -2,166 +2,132 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE6AC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C97C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1E02206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5583206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="GqMq4pnk"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="FPJvvm45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbgCSTuv (ORCPT
+        id S1727194AbgCSTvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:50:51 -0400
-Received: from gateway30.websitewelcome.com ([192.185.197.25]:37800 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725747AbgCSTuv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:50:51 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id B516E13293
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 14:50:48 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id F1BojhLcZAGTXF1Boj7IvB; Thu, 19 Mar 2020 14:50:48 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9Wv3jbj7V3+afTv1zkiRc6/kzb45qZM0mlCOpT5a6Vw=; b=GqMq4pnkbHIJSyj16jS/IXGon5
-        AEK/9C5A6VCq+zyljXQCj3ZPDd6r0vwMi+/18RhWGw3wWgiXIa0/QH9fFbUimH8EX8ZLLhraHmjHS
-        snmVD9enTefCRw9Y1O1txFkR4D40WMSnEL8tPoDHUxDhN7oUCGn2s2nRt8huwibaYN9e3Abq9iixp
-        vgWV6VI3P07cp9/Yb2VonQwMzLAI+Z+Hk0o917cOW297KF/7ozJnexvQcsrF1psDNFLBGY1KKeCX7
-        hWb2RYznbyyH9IwB4sr2lBO0J40VD0KxaadhtPCTSakKVqQ0Ir8sROTfJvSFpMYVXvxVfnZ7g6Gwz
-        4kIpaSow==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:52652 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jF1Bm-000mHI-HG; Thu, 19 Mar 2020 14:50:46 -0500
-Date:   Thu, 19 Mar 2020 14:50:46 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     linux-nvdimm@lists.01.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] acpi: nfit.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200319195046.GA452@embeddedor.com>
+        Thu, 19 Mar 2020 15:51:46 -0400
+Received: from mail-eopbgr80052.outbound.protection.outlook.com ([40.107.8.52]:28703
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725787AbgCSTvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:51:46 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q4zofgkZ7zP6Gw5Te1xkIS+tjd1YGkHLrhfPGnfOiRvErYMAgViuVPaTQrEMDWEtRISSCAIel84/8LCKJwC0/fbdD5Eo4R89msT6/BLqsBs5u4TeWK5HiMLN7UuxS+lqCjQUGKMjZZKTdLdILDRVvf9D3G+wL34JgtVyAxZ/opHL9xaXb9Qn0k1uyB0Ypl0M08kQzj0TRBTEvDmkCaOEfpiQXeIXGLGbvbQjigeKqpvqnOg1hLEiGS7xSxykxtkhslw7b85SEr3c/OICfJAUm3XCh75S7ZfozVHCyhAapypdugcR+mdmJciFSIkI7/1N12nk//PqlbZdJPiiWR51ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=33Y+k5XVFn4hawpiqiZ0JEg5M5ZSQ1Lh1jAjmWH3bMM=;
+ b=Ybd27aeWUUnUhk2QjfLJm2sknDmYXiz1xNGOQNbhjlX8bLEhHwWwyC6IYqdJs+KaB9Fi/Pp+SvELGwODESU2fwpAefb1QZKVBKLSUDnrDSRvsQfPxQNAuQF57qboYMunyXPOWrfx16S0felcIA3MUqe9prO57Aj8R5mbzwVHTnmEPpMYp0T/T6sjJAg8dB+T+7GfM1fxmgFxAffNzl0Fdwp9ia3SeR+OVyJ1FcM9NlAWDKXy/9Lj9J+8e8xDR1GVnhC13nBUZT47LbIzG36XpDYz40KTB6RX1x8D0EnEzAb+P6LMvHww6hgS8+MdUV/PlUFbw6s5OnBHOKCviRGoPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=33Y+k5XVFn4hawpiqiZ0JEg5M5ZSQ1Lh1jAjmWH3bMM=;
+ b=FPJvvm45tYSLWmK1t3fz230Rah/0tsGBqJGsEFXNeCkaM4QBSrRsKEmbN9bTP7+KawAeah1Byc/x5XADhdyhN1f2JjQctdMPqKhka2xErmIFCVvRyRqy8dXtiDZGX0vTy0rx+1Slt+LgTsjXK0grapLURuYDWlIlfFGeSSGc3lA=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@oss.nxp.com; 
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com (52.134.16.147) by
+ VI1PR0402MB3486.eurprd04.prod.outlook.com (52.134.4.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.13; Thu, 19 Mar 2020 19:51:41 +0000
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::35d0:31bc:91d9:ceb0]) by VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::35d0:31bc:91d9:ceb0%7]) with mapi id 15.20.2835.017; Thu, 19 Mar 2020
+ 19:51:41 +0000
+From:   Daniel Baluta <daniel.baluta@oss.nxp.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org
+Cc:     pierre-louis.bossart@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, kai.vehmanen@linux.intel.com,
+        daniel.baluta@gmail.com, linux-imx@nxp.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        yuehaibing@huawei.com, krzk@kernel.org,
+        linux-kernel@vger.kernel.org, sound-open-firmware@alsa-project.org,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH 0/5] Add support for SOF on i.MX8M 
+Date:   Thu, 19 Mar 2020 21:49:52 +0200
+Message-Id: <20200319194957.9569-1-daniel.baluta@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR07CA0031.eurprd07.prod.outlook.com
+ (2603:10a6:208:ac::44) To VI1PR0402MB3839.eurprd04.prod.outlook.com
+ (2603:10a6:803:21::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.218.116.241
-X-Source-L: No
-X-Exim-ID: 1jF1Bm-000mHI-HG
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:52652
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 11
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1864-103.ro-buh02.nxp.com (89.37.124.34) by AM0PR07CA0031.eurprd07.prod.outlook.com (2603:10a6:208:ac::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.12 via Frontend Transport; Thu, 19 Mar 2020 19:51:39 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [89.37.124.34]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a7eaeb31-5b4e-4855-98a2-08d7cc3ef1a9
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3486:|VI1PR0402MB3486:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB3486E70DDEC1DB7B40580ECAB8F40@VI1PR0402MB3486.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 0347410860
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(39860400002)(396003)(136003)(376002)(199004)(81156014)(4744005)(8676002)(8936002)(1076003)(81166006)(186003)(26005)(956004)(4326008)(16526019)(2616005)(478600001)(4743002)(6506007)(316002)(6666004)(2906002)(44832011)(86362001)(66946007)(7416002)(66476007)(6486002)(52116002)(66556008)(6512007)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3486;H:VI1PR0402MB3839.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aGxMB3yr3NIjHkL71VSOamB8pUYzRhtj+Y69FHeMnXpqosZCzEsvF4WZykGvw/aShyOMo+/h3UTCJozdkub208TvYO1NUc74WYu9Wkql8DeAFF8w1yNcjnGxHrUkIT4lDFxSZ8eqAZ7gT7cV/+g+OOSixF5aGAgkH4dcd3YXM+49CzjxJ7aTwgXCxyqZxqY7mEe8R0oVwBE5OE4AaXXLzvYUerICiqiVE4Y+uQS4VXsETM20BUME3VxEcsgMapJcsij1m/Rxzrk57ndIRakEizf5DGaYV0qO47bC0gOY4An3ck6JdChXM92+oWvs7kh7hym3TKtdz6y4PC1Omk3vXCGm4Lud8UmJJx6J9wHRrLaQO/ICyzGzccx31M5afE7X2F8+7DGhB41avpt1ooD4b532lTeck8GDweJ3RSrZmc169vGuaIpgjESJ3UJHVYCJ
+X-MS-Exchange-AntiSpam-MessageData: FicdRk1BQFUw6771FAeXE17a6AScZSlpPKbpH8y5VRYwX4HeiKfVnybF1LT8QOobjmMYop3956oSdqSkDQEhg2fXvwcFu8otfQMdLyZfpJbqmmzPusx/aKlei5T28dmstalS8ILDiC7OiiXuqcQhQA==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7eaeb31-5b4e-4855-98a2-08d7cc3ef1a9
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2020 19:51:41.6233
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SUxIjWvQbxuE+3Gt3pxQ00551TH/bQ1atvALi2LoP9OCkPfgBWLINSwVfh4lZgdPoSh0IVs+ADv4EZJUhI62+w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3486
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+This patch series adds support for SOF on i.MX8M family. First board
+from this family that has a DSP is i.MX8MP.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+First 2 patches are trying to fix some compilation issues, the next two
+are adding the imx8m support and the last one adds the devicetree
+binding.
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+Daniel Baluta (4):
+  ASoC: SOF: imx: fix undefined reference issue
+  ASoC: SOF: imx: Add i.MX8M HW support
+  ASoC: SOF: Add i.MX8MP device descriptor
+  dt-bindings: dsp: fsl: Add fsl,imx8mp-dsp entry
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+YueHaibing (1):
+  ASoC: SOF: imx8: Fix randbuild error
 
-This issue was found with the help of Coccinelle.
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      |   2 +
+ sound/soc/sof/imx/Kconfig                     |  32 +-
+ sound/soc/sof/imx/Makefile                    |   2 +
+ sound/soc/sof/imx/imx8m.c                     | 279 ++++++++++++++++++
+ sound/soc/sof/sof-of-dev.c                    |  14 +
+ 5 files changed, 325 insertions(+), 4 deletions(-)
+ create mode 100644 sound/soc/sof/imx/imx8m.c
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/acpi/nfit/nfit.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
-index 24241941181c..af09143ce403 100644
---- a/drivers/acpi/nfit/nfit.h
-+++ b/drivers/acpi/nfit/nfit.h
-@@ -144,32 +144,32 @@ struct nfit_spa {
- 	unsigned long ars_state;
- 	u32 clear_err_unit;
- 	u32 max_ars;
--	struct acpi_nfit_system_address spa[0];
-+	struct acpi_nfit_system_address spa[];
- };
- 
- struct nfit_dcr {
- 	struct list_head list;
--	struct acpi_nfit_control_region dcr[0];
-+	struct acpi_nfit_control_region dcr[];
- };
- 
- struct nfit_bdw {
- 	struct list_head list;
--	struct acpi_nfit_data_region bdw[0];
-+	struct acpi_nfit_data_region bdw[];
- };
- 
- struct nfit_idt {
- 	struct list_head list;
--	struct acpi_nfit_interleave idt[0];
-+	struct acpi_nfit_interleave idt[];
- };
- 
- struct nfit_flush {
- 	struct list_head list;
--	struct acpi_nfit_flush_address flush[0];
-+	struct acpi_nfit_flush_address flush[];
- };
- 
- struct nfit_memdev {
- 	struct list_head list;
--	struct acpi_nfit_memory_map memdev[0];
-+	struct acpi_nfit_memory_map memdev[];
- };
- 
- enum nfit_mem_flags {
 -- 
-2.23.0
+2.17.1
 
