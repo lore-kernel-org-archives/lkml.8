@@ -2,205 +2,221 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8661C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25492C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5DD20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80792072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:15:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrcNObS3"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vcvcXvtZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbgCSQNN (ORCPT
+        id S1727906AbgCSQPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:13:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34394 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbgCSQNL (ORCPT
+        Thu, 19 Mar 2020 12:15:13 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:53970 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727636AbgCSQPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:13:11 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t3so1531488pgn.1;
-        Thu, 19 Mar 2020 09:13:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rqGhDfe/l3VrM3s9b0bpdG7gXHo9u6mXfCQLIUi04fc=;
-        b=DrcNObS3h0a19UBO/Bk1ikFhx7Dv3h9vWztSpmnOZN/O3xQWtIJoFwvZ4WbxzZ+pFx
-         8sODoDvo1dIvuS0Rqqe0ca3BBLXbdrw5ZBX8XQofn/BGHIDBrITtsNSJ/N2Wp430FdYw
-         HQ5j2ShSiRNswdlouMwx9Op1wj0RgUT9Mq+3gKOh3RL1Lz5YuV/epWbWFuY8qUdSRQVP
-         3c/VOJxeEgVNM64gLlSiE3GQ0eO6V7d6oeRikoUYAL6TfkAr25bSjp+sIO6rIn8Zj9b4
-         IrNt/ucSV0f9BgVF1R3fgQ5vQxR2B9v3hIi1UxXnZZ8wt7yUtGMgruEvzDGbYhiUIbMK
-         PKvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rqGhDfe/l3VrM3s9b0bpdG7gXHo9u6mXfCQLIUi04fc=;
-        b=XWT5nWVyK90xhOw7RiXyFjCKfTOX5p91CrYeQFdi8YI4BfLg+sPZ1eHsXF7d+9tM7n
-         T2MUoPvpyBrROXYwdg9XHpLrzk3gWHEBrBReLpqdbl4GNo3Whd8hjSpEZg/2UZhfSqVX
-         yqZHRI6dS3scNsqQP5/hwwPJ3BqZVFu111MKLuDLznOA55jtNHx2f2F6nobPOsBTkLvx
-         yBpysV4yQDNoL9hWT2UFui8Rvc8YP0hFleZCXo3fXM9tROsgqWd5SPPjuzWDLE3Oym3v
-         SvZPL2jYQEVwVIlE1cQpFKX2EEj413H6vfig8YtqZNXAj9zzS1Cm52T40whs/J7u1Hix
-         AF2A==
-X-Gm-Message-State: ANhLgQ1QXYBKnDg0RcfnpSrRiLHcqU2jue5hEvhFC++fnfJSBrqgPeHo
-        w17AJTujLu1ht97JpibRNbKZKTtd
-X-Google-Smtp-Source: ADFU+vs9RaTqIxpnTGtHvbkTOm5DPCfnXe1NVnZlOwDsjQFhfpB1jVnTisyuxGjygQettlYTFkd40w==
-X-Received: by 2002:a65:53c5:: with SMTP id z5mr4339151pgr.0.1584634389164;
-        Thu, 19 Mar 2020 09:13:09 -0700 (PDT)
-Received: from localhost.localdomain (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
-        by smtp.gmail.com with ESMTPSA id x189sm3000078pfb.1.2020.03.19.09.13.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 09:13:08 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Andrei Botila <andrei.botila@nxp.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com
-Subject: [PATCH v9 7/9] bus: fsl-mc: add api to retrieve mc version
-Date:   Thu, 19 Mar 2020 09:12:31 -0700
-Message-Id: <20200319161233.8134-8-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200319161233.8134-1-andrew.smirnov@gmail.com>
-References: <20200319161233.8134-1-andrew.smirnov@gmail.com>
+        Thu, 19 Mar 2020 12:15:12 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200319161510euoutp026b1704d1b9928f8856d7a1ac8e9b7c80~9wLD0MeOn1016710167euoutp02_
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:15:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200319161510euoutp026b1704d1b9928f8856d7a1ac8e9b7c80~9wLD0MeOn1016710167euoutp02_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1584634510;
+        bh=PH4XpAvDTqRnnkexutJQDHffmNTuPS+R8AFy6ym3OEM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=vcvcXvtZ0abSCDV5pqEpaQzKGOi4w1noRZh0iJRinft5n6kAqAlxXeZgVyNZNjsmA
+         ed3OGumeWAuvn7Z8znSPwkrekb0c0snAq91g02c0u7v6HQtoSjNEc+zblGICeEnxiv
+         bobP1n0GEg7f/drPlw1Fuyi1peRrm/73pXqJTpvQ=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200319161509eucas1p2afddab88cb58d0c9e5010bb10f3f84ce~9wLDnhj6C0339903399eucas1p27;
+        Thu, 19 Mar 2020 16:15:09 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 23.E1.60698.D8A937E5; Thu, 19
+        Mar 2020 16:15:09 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200319161509eucas1p168ca3c148f341f23e29d4637a538e17c~9wLDQWr5P0720007200eucas1p1R;
+        Thu, 19 Mar 2020 16:15:09 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200319161509eusmtrp1c6b0b994825553f20d23c3288fa585dd~9wLDPrUl80891708917eusmtrp1U;
+        Thu, 19 Mar 2020 16:15:09 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-65-5e739a8d0b35
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 7A.08.07950.D8A937E5; Thu, 19
+        Mar 2020 16:15:09 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200319161509eusmtip273a87bca46d0e365c4c4666d945b2d29~9wLCxGxdz1186411864eusmtip2i;
+        Thu, 19 Mar 2020 16:15:08 +0000 (GMT)
+Subject: Re: [PATCH v4 03/27] ata: make SATA_PMP option selectable only if
+ any SATA host driver is enabled
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <8b77928f-5985-046c-f760-b50625dbeeb4@samsung.com>
+Date:   Thu, 19 Mar 2020 17:15:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1584456957.4545.7.camel@linux.ibm.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRTu3b279244uc7FDhZGw6IMtZjlxUKMgu6vDPoTgtbUy9R0yq5a
+        +kejTBtFpsZwKJaBuqn5kfkVikzcEMtEf2TL+dX6UFpkVpqotO0q+e85z3mec84Dh8LkQ+Ig
+        Kk2Xw+l1mgwVIcW7bH/Hwh6Y+MTj01Y10+R8SDCfHf0ixtw0LGLqprpEjK1nQcRM9lUTTIOr
+        BWMa7FsipqbYSMZK2F6Tk2Qn3+Sy1qFSxJbVDSJ2pPgPzr56X0Swy58cOLvSEXyJipeeSeEy
+        0vI4fUTMNWnqyq0fWLYz+KZlVF+EusGAJBTQkTDzYhY3ICklpxsRPG1ux4TiF4KN8VWxUKwg
+        sHUaxTsWY4uNFBoNCNz9PdsWN4KRwUrSqwqkM6C5thL3YgV9BLrX55FXhNFmETwb/ugTEXQ0
+        PCqxIC+W0THgmqv3GXD6EHwfLPHhvfQV+Dk3JBY0ATBS5fLxEs8ZlrV5zIsxWgkOV61IwAeg
+        213tuwjoCRJer1Z7FlCe4jxsfUsTIgTCkr2TFPB+GK24jwv65wg2S79um7sRNFRsEYLqNEyP
+        rRPeQRh9FFr7IgT6LHQ0bpLCfH+YcgcIN/hDeZcRE2gZlN6VC+rD0FbfRuysNfSasTKkMu1K
+        ZtqVxrQrjen/3icItyAll8tnajlereNuhPOaTD5Xpw1PzsrsQJ7XGt2y/+5BAxtJVkRTSOUn
+        i73DJ8rFmjw+P9OKgMJUClmY1kPJUjT5BZw+66o+N4PjrWgfhauUMnXdYoKc1mpyuOscl83p
+        d7oiShJUhBKwwuykcqwufdwRQrrVF3XtjStRoaXWHt7JOCHE4LwXV/UyTqp6nGhclM7ET7xV
+        LBTGX/7SyyvssRfWXP3v0nPshqhCNuLcxp7K6E2zMoRsTx3Q8rVT+tsF2dONNZHV5EjrsXSF
+        fHhp+VT8rE1S+8GPUB6UJQcV5Z9cDFbhfKrmRCim5zX/ANwXbrNWAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKIsWRmVeSWpSXmKPExsVy+t/xe7q9s4rjDM6skrVYfbefzeLZrb1M
+        FitXH2WyWHRjG5PFsR2PmCwu75rDZrH8yVpmi+XH/zFZzG2dzu7A6bFz1l12j8tnSz0OHe5g
+        9Jiw6ACjx8nWbyweu282sHl8fHqLxePzJrkAjig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMT
+        Sz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jM+NH5gL7spVrDpd1MC4XaKLkZNDQsBEYvraY+xd
+        jFwcQgJLGSWufbjP0sXIAZSQkTi+vgyiRljiz7UuNoia14wSExe8YAZJCAvkSNy8+YEFxBYR
+        0JDY/ushI0gRs8BKJok3W55CdbxllGjp/gLWwSZgJTGxfRUjiM0rYCfx5MEysG4WAVWJdwfa
+        wWxRgQiJwztmQdUISpyc+QQszgl06qofD8HmMAuoS/yZdwnKFpe49WQ+E4QtL7H97RzmCYxC
+        s5C0z0LSMgtJyywkLQsYWVYxiqSWFuem5xYb6RUn5haX5qXrJefnbmIERum2Yz+37GDsehd8
+        iFGAg1GJh3dGW3GcEGtiWXFl7iFGCQ5mJRFe3XSgEG9KYmVValF+fFFpTmrxIUZToOcmMkuJ
+        JucDE0heSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbGbcqCVQoL
+        ufc33RO1EnZWSi8R6jJbbrhtRpNTi3uh66vjYkw8ZzrWnPvbwGreYOs69bbRCl7WvzGH27WU
+        +XxfOU384aB/SKlwwa/HJ3SEtmgstRbutmUrmep77FfV3+zOFbEt1+ZPn2Tz4qie+uamjNn+
+        Zkf/MuxKXu/iwXuHa4+Uz5N7qR+VWIozEg21mIuKEwEFGdgb6AIAAA==
+X-CMS-MailID: 20200319161509eucas1p168ca3c148f341f23e29d4637a538e17c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200317144342eucas1p2d73deadcdb4cee860dd610f9f8e26bda
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200317144342eucas1p2d73deadcdb4cee860dd610f9f8e26bda
+References: <20200317144333.2904-1-b.zolnierkie@samsung.com>
+        <CGME20200317144342eucas1p2d73deadcdb4cee860dd610f9f8e26bda@eucas1p2.samsung.com>
+        <20200317144333.2904-4-b.zolnierkie@samsung.com>
+        <1584456957.4545.7.camel@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Botila <andrei.botila@nxp.com>
 
-Add a new api that returns Management Complex firmware version
-and make the required structure public. The api's first user will be
-the caam driver for setting prediction resistance bits.
+On 3/17/20 3:55 PM, James Bottomley wrote:
+> On Tue, 2020-03-17 at 15:43 +0100, Bartlomiej Zolnierkiewicz wrote:
+>> There is no reason to expose SATA_PMP config option when no SATA
+>> host drivers are enabled. To fix it add SATA_HOST config option,
+>> make all SATA host drivers select it and finally make SATA_PMP
+>> config options depend on it.
+>>
+>> This also serves as preparation for the future changes which
+>> optimize libata core code size on PATA only setups.
+>>
+>> CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
+>> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com> # for
+>> SCSI bits
+>> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>> ---
+>>  drivers/ata/Kconfig         | 40
+>> +++++++++++++++++++++++++++++++++++++
+>>  drivers/scsi/Kconfig        |  1 +
+>>  drivers/scsi/libsas/Kconfig |  1 +
+>>  3 files changed, 42 insertions(+)
+>>
+>> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+>> index a6beb2c5a692..ad7760656f71 100644
+>> --- a/drivers/ata/Kconfig
+>> +++ b/drivers/ata/Kconfig
+>> @@ -34,6 +34,9 @@ if ATA
+>>  config ATA_NONSTANDARD
+>>         bool
+>>  
+>> +config SATA_HOST
+>> +	bool
+>> +
+>>  config ATA_VERBOSE_ERROR
+>>  	bool "Verbose ATA error reporting"
+>>  	default y
+>> @@ -73,6 +76,7 @@ config SATA_ZPODD
+>>  
+>>  config SATA_PMP
+>>  	bool "SATA Port Multiplier support"
+>> +	depends on SATA_HOST
+>>  	default y
+>>  	help
+>>  	  This option adds support for SATA Port Multipliers
+>> @@ -85,6 +89,7 @@ comment "Controllers with non-SFF native interface"
+>>  config SATA_AHCI
+>>  	tristate "AHCI SATA support"
+>>  	depends on PCI
+>> +	select SATA_HOST
+>>  	help
+>>  	  This option enables support for AHCI Serial ATA.
+> 
+> This is a bit fragile and not the way Kconfig should be done.  The
+> fragility comes because anyone adding a new host has also to remember
+> to add the select, and there will be no real consequences for not doing
 
-Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
-Acked-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Horia Geantă <horia.geanta@nxp.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-imx@nxp.com
----
- drivers/bus/fsl-mc/fsl-mc-bus.c | 33 +++++++++++++++++----------------
- include/linux/fsl/mc.h          | 16 ++++++++++++++++
- 2 files changed, 33 insertions(+), 16 deletions(-)
+People adding the new host driver usually look at the existing Kconfig
+entries before introducing the new one (most probably just copy and then
+modify existing entry) so they should notice that the existing entries
+contain the select.
 
-diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-index c78d10ea641f..40526da5c6a6 100644
---- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-+++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-@@ -26,6 +26,8 @@
-  */
- #define FSL_MC_DEFAULT_DMA_MASK	(~0ULL)
+Also we shouldn't have problem in catching potential select omissions
+during the code review.
 
-+static struct fsl_mc_version mc_version;
-+
- /**
-  * struct fsl_mc - Private data of a "fsl,qoriq-mc" platform device
-  * @root_mc_bus_dev: fsl-mc device representing the root DPRC
-@@ -54,20 +56,6 @@ struct fsl_mc_addr_translation_range {
- 	phys_addr_t start_phys_addr;
- };
+Not to mention that the addition of the new ATA host driver is quite
+a rare event nowadays.. ;)
 
--/**
-- * struct mc_version
-- * @major: Major version number: incremented on API compatibility changes
-- * @minor: Minor version number: incremented on API additions (that are
-- *		backward compatible); reset when major version is incremented
-- * @revision: Internal revision number: incremented on implementation changes
-- *		and/or bug fixes that have no impact on API
-- */
--struct mc_version {
--	u32 major;
--	u32 minor;
--	u32 revision;
--};
--
- /**
-  * fsl_mc_bus_match - device to driver matching callback
-  * @dev: the fsl-mc device to match against
-@@ -338,7 +326,7 @@ EXPORT_SYMBOL_GPL(fsl_mc_driver_unregister);
-  */
- static int mc_get_version(struct fsl_mc_io *mc_io,
- 			  u32 cmd_flags,
--			  struct mc_version *mc_ver_info)
-+			  struct fsl_mc_version *mc_ver_info)
- {
- 	struct fsl_mc_command cmd = { 0 };
- 	struct dpmng_rsp_get_version *rsp_params;
-@@ -363,6 +351,20 @@ static int mc_get_version(struct fsl_mc_io *mc_io,
- 	return 0;
- }
+> so.  The way to get rid of the fragility is to make SATA_HOST a
+> menuconfig option enclosing all the hosts, which makes the patch much
+> smaller as well.  The hint implies you want to separate out all the
+> PATA drivers, which also makes a menuconfig sound like the better
+> option.
+SATA_HOST is not for grouping SATA hosts, it is for core libata
+code to enable SATA support (please see patches #13-26 for details,
+maybe it should have been named ATA_SATA?) and menuconfig usage in
+this case is problematic:
 
-+/**
-+ * fsl_mc_get_version - function to retrieve the MC f/w version information
-+ *
-+ * Return:	mc version when called after fsl-mc-bus probe; NULL otherwise.
-+ */
-+struct fsl_mc_version *fsl_mc_get_version(void)
-+{
-+	if (mc_version.major)
-+		return &mc_version;
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(fsl_mc_get_version);
-+
- /**
-  * fsl_mc_get_root_dprc - function to traverse to the root dprc
-  */
-@@ -862,7 +864,6 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
- 	int container_id;
- 	phys_addr_t mc_portal_phys_addr;
- 	u32 mc_portal_size;
--	struct mc_version mc_version;
- 	struct resource res;
+- we have host drivers supporting both SATA and PATA (i.e. ata_piix)
 
- 	mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
-diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
-index 54d9436600c7..2b5f8366dbe1 100644
---- a/include/linux/fsl/mc.h
-+++ b/include/linux/fsl/mc.h
-@@ -381,6 +381,22 @@ int __must_check __fsl_mc_driver_register(struct fsl_mc_driver *fsl_mc_driver,
+- we have currently host drivers sorted in Kconfig by different 
+  criteria than SATA or PATA support
 
- void fsl_mc_driver_unregister(struct fsl_mc_driver *driver);
+- I would prefer to avoid making users to have explicitly select
+  SATA_HOST option (right now it gets auto-selected when needed)
 
-+/**
-+ * struct fsl_mc_version
-+ * @major: Major version number: incremented on API compatibility changes
-+ * @minor: Minor version number: incremented on API additions (that are
-+ *		backward compatible); reset when major version is incremented
-+ * @revision: Internal revision number: incremented on implementation changes
-+ *		and/or bug fixes that have no impact on API
-+ */
-+struct fsl_mc_version {
-+	u32 major;
-+	u32 minor;
-+	u32 revision;
-+};
-+
-+struct fsl_mc_version *fsl_mc_get_version(void);
-+
- int __must_check fsl_mc_portal_allocate(struct fsl_mc_device *mc_dev,
- 					u16 mc_io_flags,
- 					struct fsl_mc_io **new_mc_io);
+- SCSI_SAS_ATA (which also needs to select SATA_HOST) lives in
+  drivers/scsi/libsas/Kconfig so menuconfig will not cover it
+
+> I've also got to say that the problem doesn't seem to be one ... even
+> if some raving lunatic disables all SATA hosts and then enables PMP it
+> doesn't cause any problems does it?
+
+It doesn't cause any real problems (just some dead code being present
+in the kernel image) but this patch is a prerequisite for patches #13-26
+(patch description mentions that this change is needed for the future
+changes which optimize libata core code size on PATA only setups).
+
+Best regards,
 --
-2.21.0
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
