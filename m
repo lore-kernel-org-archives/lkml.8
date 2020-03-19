@@ -2,159 +2,219 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B086AC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E1EC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3F92072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584647566;
-	bh=UMFRuMeWN29pb4882uOYxANHVABCplgj+koAb1z+2dE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=y0dfDesqk+rHhUi7czPFBicfTxYu1b/WV7FC7euVstvJsAA7ayYLCSC/KDHZp9U/i
-	 OmGnLw488MV2DG2D7gCNK7tPMehcKGJXI94NCCv0or6JxbIhb9FDSIFQtfJhKAQgFj
-	 yoY5ZmQmyHh8ufsexPTplW2ph+Z0L4Ok7RmdM3SY=
+	by mail.kernel.org (Postfix) with ESMTP id 93A2520739
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgCSTwp (ORCPT
+        id S1727503AbgCSTxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34816 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 15:53:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSTwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:52:45 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1725787AbgCSTxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:53:25 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19B8A206D7;
-        Thu, 19 Mar 2020 19:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584647564;
-        bh=UMFRuMeWN29pb4882uOYxANHVABCplgj+koAb1z+2dE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qkSTKb4utIarMQd8CDJcC0r66jjv4E6Grgajl0GaZ2NsWZFpgnSsxvNw5d1trhyVf
-         m/hfAowH8zpNjr3UjCBAXtljDdoHJ8gci0Db/rlJFpoF62Ej37wABUnI3eg2J6bWh9
-         n0uwur1NEU7m4GqQdTUpOURPTJro6MWBSuqnHrzk=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jF1Dd-00E46F-Ts; Thu, 19 Mar 2020 19:52:42 +0000
+        by mail.kernel.org (Postfix) with ESMTPSA id EBFAB206D7;
+        Thu, 19 Mar 2020 19:53:22 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 15:53:21 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [RFC][PATCH 01/11] tracing: Save off entry when peeking at next
+ entry
+Message-ID: <20200319155321.6d636b3f@gandalf.local.home>
+In-Reply-To: <20200319224144.cc16357a3476506fd64ad448@kernel.org>
+References: <20200317213222.421100128@goodmis.org>
+        <20200317213415.722539921@goodmis.org>
+        <20200319224144.cc16357a3476506fd64ad448@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Mar 2020 19:52:41 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v5 19/23] KVM: arm64: GICv4.1: Allow SGIs to switch
- between HW and SW interrupts
-In-Reply-To: <8a6cf87a-7eee-5502-3b54-093ea0ab5e2d@redhat.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-20-maz@kernel.org>
- <8a6cf87a-7eee-5502-3b54-093ea0ab5e2d@redhat.com>
-Message-ID: <877ba4711c6b9456314ea580b9c4718c@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, yuzenghui@huawei.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+On Thu, 19 Mar 2020 22:41:44 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-On 2020-03-19 16:16, Auger Eric wrote:
-> Hi Marc,
+> Hi,
+
+Hi Masami,
+
 > 
-> On 3/4/20 9:33 PM, Marc Zyngier wrote:
->> In order to let a guest buy in the new, active-less SGIs, we
->> need to be able to switch between the two modes.
->> 
->> Handle this by stopping all guest activity, transfer the state
->> from one mode to the other, and resume the guest. Nothing calls
->> this code so far, but a later patch will plug it into the MMIO
->> emulation.
->> 
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---
->>  include/kvm/arm_vgic.h      |  3 ++
->>  virt/kvm/arm/vgic/vgic-v4.c | 94 
->> +++++++++++++++++++++++++++++++++++++
->>  virt/kvm/arm/vgic/vgic.h    |  1 +
->>  3 files changed, 98 insertions(+)
->> 
->> diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
->> index 63457908c9c4..69f4164d6477 100644
->> --- a/include/kvm/arm_vgic.h
->> +++ b/include/kvm/arm_vgic.h
->> @@ -231,6 +231,9 @@ struct vgic_dist {
->>  	/* distributor enabled */
->>  	bool			enabled;
->> 
->> +	/* Wants SGIs without active state */
->> +	bool			nassgireq;
->> +
->>  	struct vgic_irq		*spis;
->> 
->>  	struct vgic_io_device	dist_iodev;
->> diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
->> index c2fcde104ea2..a65dc1c85363 100644
->> --- a/virt/kvm/arm/vgic/vgic-v4.c
->> +++ b/virt/kvm/arm/vgic/vgic-v4.c
->> @@ -97,6 +97,100 @@ static irqreturn_t vgic_v4_doorbell_handler(int 
->> irq, void *info)
->>  	return IRQ_HANDLED;
->>  }
->> 
->> +static void vgic_v4_sync_sgi_config(struct its_vpe *vpe, struct 
->> vgic_irq *irq)
->> +{
->> +	vpe->sgi_config[irq->intid].enabled	= irq->enabled;
->> +	vpe->sgi_config[irq->intid].group 	= irq->group;
->> +	vpe->sgi_config[irq->intid].priority	= irq->priority;
->> +}
->> +
->> +static void vgic_v4_enable_vsgis(struct kvm_vcpu *vcpu)
->> +{
->> +	struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
->> +	int i;
->> +
->> +	/*
->> +	 * With GICv4.1, every virtual SGI can be directly injected. So
->> +	 * let's pretend that they are HW interrupts, tied to a host
->> +	 * IRQ. The SGI code will do its magic.
->> +	 */
->> +	for (i = 0; i < VGIC_NR_SGIS; i++) {
->> +		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
->> +		struct irq_desc *desc;
->> +		int ret;
-> Is is safe without holding the irq->irq_lock?
+> On Tue, 17 Mar 2020 17:32:23 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> > 
+> > In order to have the iterator read the buffer even when it's still updating,
+> > it requires that the ring buffer iterator saves each event in a separate
+> > location outside the ring buffer such that its use is immutable.
+> > 
+> > There's one use case that saves off the event returned from the ring buffer
+> > interator and calls it again to look at the next event, before going back to
+> > use the first event. As the ring buffer iterator will only have a single
+> > copy, this use case will no longer be supported.
+> > 
+> > Instead, have the one use case create its own buffer to store the first
+> > event when looking at the next event. This way, when looking at the first
+> > event again, it wont be corrupted by the second read.
+> > 
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > ---
+> >  include/linux/trace_events.h |  2 ++
+> >  kernel/trace/trace.c         | 27 ++++++++++++++++++++++++++-
+> >  kernel/trace/trace_output.c  | 15 ++++++---------
+> >  3 files changed, 34 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> > index 6c7a10a6d71e..5c6943354049 100644
+> > --- a/include/linux/trace_events.h
+> > +++ b/include/linux/trace_events.h
+> > @@ -85,6 +85,8 @@ struct trace_iterator {
+> >  	struct mutex		mutex;
+> >  	struct ring_buffer_iter	**buffer_iter;
+> >  	unsigned long		iter_flags;
+> > +	void			*temp;	/* temp holder */
+> > +	unsigned int		temp_size;
+> >  
+> >  	/* trace_seq for __print_flags() and __print_symbolic() etc. */
+> >  	struct trace_seq	tmp_seq;
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 6b11e4e2150c..52425aaf26c2 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -3466,7 +3466,31 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
+> >  struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
+> >  					  int *ent_cpu, u64 *ent_ts)
+> >  {
+> > -	return __find_next_entry(iter, ent_cpu, NULL, ent_ts);
+> > +	/* __find_next_entry will reset ent_size */
+> > +	int ent_size = iter->ent_size;
+> > +	struct trace_entry *entry;
+> > +
+> > +	/*
+> > +	 * The __find_next_entry() may update iter->ent, making
+> > +	 * the current iter->ent pointing to stale data.
+> > +	 * Need to copy it over.
+> > +	 */  
+> 
+> Is this comment correct? I can not find the code which update
+> iter->ent in __find_next_entry() and peek_next_entry().
+> Maybe writer updates the "*iter->ent"?
 
-The assumption here is that we're coming vgic_v4_configure_vsgis(), 
-which starts
-by stopping the whole guest. My guess is that it should be safe enough, 
-but
-maybe you are thinking of something else?
+Ah, that comment doesn't explain the situation well. I'll update it.
+Something like this should work:
 
-Thanks,
+	/*
+	 * The __find_next_entry() may call peek_next_entry(), which may
+	 * call ring_buffer_peek() that may make the contents of iter->ent
+	 * undefined. Need to copy iter->ent now.
+	 */
 
-          M.
--- 
-Jazz is not dead. It just smells funny...
+
+> 
+> > +	if (iter->ent && iter->ent != iter->temp) {
+> > +		if (!iter->temp || iter->temp_size < iter->ent_size) {
+> > +			kfree(iter->temp);
+> > +			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);  
+> 
+> This can be alloc/free several times on one iteration. Should we
+> be so careful about memory consumption for this small piece?
+> 
+> Since the reader will not run in parallel (or very rare case),
+> iter->temp can allocate the max entry size at the beginning.
+
+I thought about this, but then I need to pass over the ring buffer max
+entry size, which currently lives in the ring_buffer.c code, and there's a
+todo list to change even this. Thus, I don't want to export that max size.
+
+In testing, this doesn't appear to be an issue, as it is done in the slow
+path (the iterator is only used for ASCII output for human consumption).
+
+Thanks for having a look!
+
+-- Steve
+
+> 
+> Thank you,
+> 
+> > +			if (!iter->temp)
+> > +				return NULL;
+> > +		}
+> > +		memcpy(iter->temp, iter->ent, iter->ent_size);
+> > +		iter->temp_size = iter->ent_size;
+> > +		iter->ent = iter->temp;
+> > +	}
+> > +	entry = __find_next_entry(iter, ent_cpu, NULL, ent_ts);
+> > +	/* Put back the original ent_size */
+> > +	iter->ent_size = ent_size;
+> > +
+> > +	return entry;
+> >  }
+> >  
+> >  /* Find the next real entry, and increment the iterator to the next entry */
+> > @@ -4344,6 +4368,7 @@ static int tracing_release(struct inode *inode, struct file *file)
+> >  
+> >  	mutex_destroy(&iter->mutex);
+> >  	free_cpumask_var(iter->started);
+> > +	kfree(iter->temp);
+> >  	kfree(iter->trace);
+> >  	kfree(iter->buffer_iter);
+> >  	seq_release_private(inode, file);
+> > diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+> > index e25a7da79c6b..9a121e147102 100644
+> > --- a/kernel/trace/trace_output.c
+> > +++ b/kernel/trace/trace_output.c
+> > @@ -617,22 +617,19 @@ int trace_print_context(struct trace_iterator *iter)
+> >  
+> >  int trace_print_lat_context(struct trace_iterator *iter)
+> >  {
+> > +	struct trace_entry *entry, *next_entry;
+> >  	struct trace_array *tr = iter->tr;
+> > -	/* trace_find_next_entry will reset ent_size */
+> > -	int ent_size = iter->ent_size;
+> >  	struct trace_seq *s = &iter->seq;
+> > -	u64 next_ts;
+> > -	struct trace_entry *entry = iter->ent,
+> > -			   *next_entry = trace_find_next_entry(iter, NULL,
+> > -							       &next_ts);
+> >  	unsigned long verbose = (tr->trace_flags & TRACE_ITER_VERBOSE);
+> > +	u64 next_ts;
+> >  
+> > -	/* Restore the original ent_size */
+> > -	iter->ent_size = ent_size;
+> > -
+> > +	next_entry = trace_find_next_entry(iter, NULL, &next_ts);
+> >  	if (!next_entry)
+> >  		next_ts = iter->ts;
+> >  
+> > +	/* trace_find_next_entry() may change iter->ent */
+> > +	entry = iter->ent;
+> > +
+> >  	if (verbose) {
+> >  		char comm[TASK_COMM_LEN];
+> >  
+> > -- 
+> > 2.25.1
+> > 
+> >   
+> 
+> 
+
