@@ -2,76 +2,95 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AF0C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61271C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A8920754
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C8E2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:38:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QreGGVLW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgCSRiM (ORCPT
+        id S1728610AbgCSRim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:38:12 -0400
-Received: from muru.com ([72.249.23.125]:60994 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728559AbgCSRiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:38:10 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id B6DCB81BC;
-        Thu, 19 Mar 2020 17:38:55 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>
-Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: [PATCH 4/4] ARM: dts: omap4-droid4: Enable basic modem support
-Date:   Thu, 19 Mar 2020 10:37:55 -0700
-Message-Id: <20200319173755.65082-5-tony@atomide.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200319173755.65082-1-tony@atomide.com>
-References: <20200319173755.65082-1-tony@atomide.com>
+        Thu, 19 Mar 2020 13:38:42 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37511 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgCSRil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:38:41 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d12so114540qtj.4;
+        Thu, 19 Mar 2020 10:38:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PPbGgs4Rz2rmlkEGYcxAMjdsYAQ4dAfXfNpPuXXsgYU=;
+        b=QreGGVLWyJYHh1IFERLJOEvXAy98RixUjHEQKXn5F5+8e7H9hnbWpFmUVdguLCUY2T
+         V4qKC8tmI2glfuWKvVNdgba1uiISdjRZ/r/6NQp1wZOSyfdmJpNVBkkLSmAItLb6E3ur
+         3hZB6IbL3Jt/0MMTTEZnzAwpsoa0yJ+jybm2JqJvb8W/FBPCAEbOmkwavuUHDgY6RN0Y
+         yJOutyqjFWb8uiZXn7DdKQV0xV8fi1W8FY1Z7wXzOLbStS4ZhpWqSW8rCMzpjWivMKps
+         09qc39s7ByX4vF/P4tQuPZHJ6kPIs4c1SCRL8qO1sdL5TM0usqaCCFuIYfhMRRVc74+D
+         D5Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PPbGgs4Rz2rmlkEGYcxAMjdsYAQ4dAfXfNpPuXXsgYU=;
+        b=aQs5h9qK1OaXgXxmjPE7WjkLNiVzAOvOJnEmktARzZgjxQTStVJNwOYT5F6vUedawk
+         KB49SK2UTmve4MEIe6d1bor1zqVtdDGHWGmyP2oIRE+p8ei2mFVi1Bm5V6r6slATDZ+3
+         fqO1t3FrklaIiZk+OTUuWHVS182vyuxx2GZkJ2G+pkwtA0cmqMFxldNcQ/d29WEYcncL
+         PSAzJ8j9axjLWQ20Xr9L7TUwJOARlIzvmfBbpgioOonA+iRNoqEwcKz59C/0jHgAR/UW
+         pMYq51vd6cYafoerq5lxzCZ9LoOdVkaixDwpMJSOG/HoM5CB+xxfcd1LMUYWav9fcv0A
+         2pqw==
+X-Gm-Message-State: ANhLgQ0EsIpMqXqJFLwUEfXEQMAfmNM5Xt27jERH0+limAKoXpU8NryL
+        F+L26I6/POKD9TEMrEojYgQ8Cp8L0fTAGQ35RPg=
+X-Google-Smtp-Source: ADFU+vuvyXkeruxCSr9kM6D2FDoaXom6uXzfhzHnUGEBohTdbUr3hhmsS8s+HR3XOWBKS3xhb5fXb3kaGdEkbq92mbg=
+X-Received: by 2002:ac8:7448:: with SMTP id h8mr4101625qtr.117.1584639520560;
+ Thu, 19 Mar 2020 10:38:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200319124631.58432-1-yuehaibing@huawei.com> <87fte4xot3.fsf@cloudflare.com>
+In-Reply-To: <87fte4xot3.fsf@cloudflare.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 19 Mar 2020 10:38:29 -0700
+Message-ID: <CAEf4BzYbrXW-eYpKmr07Xba_wZkuws-7fChGw17u1nFLLmu2Zw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: tcp: Fix unused function warnings
+To:     Jakub Sitnicki <jakub@cloudflare.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        john fastabend <john.fastabend@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows apps to use /dev/motmdm1 for voice call AT commands,
-/dev/motmdm3 for sending SMS, and /dev/motmdm9 for reading SMS.
+On Thu, Mar 19, 2020 at 10:00 AM Jakub Sitnicki <jakub@cloudflare.com> wrote:
+>
+> On Thu, Mar 19, 2020 at 01:46 PM CET, YueHaibing wrote:
+> > If BPF_STREAM_PARSER is not set, gcc warns:
+> >
+> > net/ipv4/tcp_bpf.c:483:12: warning: 'tcp_bpf_sendpage' defined but not used [-Wunused-function]
+> > net/ipv4/tcp_bpf.c:395:12: warning: 'tcp_bpf_sendmsg' defined but not used [-Wunused-function]
+> > net/ipv4/tcp_bpf.c:13:13: warning: 'tcp_bpf_stream_read' defined but not used [-Wunused-function]
+> >
+> > Moves the unused functions into the #ifdef
+> >
+> > Reported-by: Hulk Robot <hulkci@huawei.com>
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > ---
+>
+> In addition to this fix, looks like tcp_bpf_recvmsg can be static and
+> also conditional on CONFIG_BPF_STREAM_PARSER.
+>
+> Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
 
-Voice call audio mixer and GNSS are not yet supported.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/motorola-mapphone-common.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
---- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-+++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-@@ -698,6 +698,12 @@ &uart1 {
- 	pinctrl-0 = <&uart1_pins>;
- 	interrupts-extended = <&wakeupgen GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH
- 			       &omap4_pmx_core 0xfc>;
-+
-+	modem {
-+		compatible = "motorola,mapphone-mdm6600-serial";
-+		phys = <&fsusb1_phy>;
-+		phy-names = "usb";
-+	};
- };
- 
- &uart3 {
--- 
-2.25.1
+Fixes tag is missing as well?
