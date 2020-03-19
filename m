@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEBBC43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2530CC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2269020724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE67920724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623678;
-	bh=saqBANQJbeRvoQmiKiyt2ebe9H6CFM0oj10gcBaJu5A=;
+	s=default; t=1584623681;
+	bh=3J71idgcuS7F1zoVhJFs+RnAKFrKs7xBL1+eUS1nj1M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JUQxoSSI7IWxhmcaiI9kYpyHhUmZ6dLKS67NAEdSMIOIkx/iC1FnB466lyuIpG058
-	 2nSh2cvoL4Yk6+gH28jIOlcWNvBgHA7rJn/2GdL51d7UYJWOWPQ9ooQEt++cXCK8B9
-	 HJ0/yoils1xgyxIKqNsFletCXIrERy+oWxSF9Ns4=
+	b=h2S0T7GvAQiBUMTW3WKodt+NZIBYaorKHvj9n4RE6jLASC/9MT/BFfNsSNsnK8632
+	 B9gAMivruHLYB8YoCR+Uq1fz+6Ma7Fz8eqi/N0S5B8WwAqut4Oc7iqKvQfwt6dIdAf
+	 t4GpZLsII6xgr2XNyschV4ghAc985H6cO+wTnFUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbgCSNOh (ORCPT
+        id S1729312AbgCSNOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34032 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:14:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729307AbgCSNOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:14:35 -0400
+        id S1729295AbgCSNO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:14:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F77921D7F;
-        Thu, 19 Mar 2020 13:14:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5794C206D7;
+        Thu, 19 Mar 2020 13:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623674;
-        bh=saqBANQJbeRvoQmiKiyt2ebe9H6CFM0oj10gcBaJu5A=;
+        s=default; t=1584623665;
+        bh=3J71idgcuS7F1zoVhJFs+RnAKFrKs7xBL1+eUS1nj1M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OZtNOiraMMTGD78ivO8096Z2l8oQRX0v1XAqlnV0zZ6gn1h5l7jO58nsw5+gxwKDe
-         Ailq6/neRDt7h2CdFz7vwxheEnIImD29wH/sIOjbtCeFMfYVXPIBgGy3Jomxv+8xxo
-         05jgdU1jtN2MPQTO+usDEmaWLuHVj5dciaVB4sHk=
+        b=W+Qse36g/B2SuGDdm2vqDZip/4gtWGd+1SM91lSKYCN5AW+PYs0NqFTpzKHa47b51
+         ko0eKhXzcXQ7sxVEfeHt5g7KxiXnRUEAJek98xu5X+rqYkvlXRPDRrNCi8rsrlVZAG
+         lbrU26Bc01/IdZnOHCJDUzV+uCmI+gpQr+uWHgY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Derek Shute <Derek.Shute@stratus.com>,
+        Edward Cree <ecree@solarflare.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 16/99] net: memcg: late association of sock to memcg
-Date:   Thu, 19 Mar 2020 14:02:54 +0100
-Message-Id: <20200319123946.565820734@linuxfoundation.org>
+Subject: [PATCH 4.14 13/99] sfc: detach from cb_page in efx_copy_channel()
+Date:   Thu, 19 Mar 2020 14:02:51 +0100
+Message-Id: <20200319123945.560952967@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -60,99 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shakeel Butt <shakeelb@google.com>
+From: Edward Cree <ecree@solarflare.com>
 
-[ Upstream commit d752a4986532cb6305dfd5290a614cde8072769d ]
+[ Upstream commit 4b1bd9db078f7d5332c8601a2f5bd43cf0458fd4 ]
 
-If a TCP socket is allocated in IRQ context or cloned from unassociated
-(i.e. not associated to a memcg) in IRQ context then it will remain
-unassociated for its whole life. Almost half of the TCPs created on the
-system are created in IRQ context, so, memory used by such sockets will
-not be accounted by the memcg.
+It's a resource, not a parameter, so we can't copy it into the new
+ channel's TX queues, otherwise aliasing will lead to resource-
+ management bugs if the channel is subsequently torn down without
+ being initialised.
 
-This issue is more widespread in cgroup v1 where network memory
-accounting is opt-in but it can happen in cgroup v2 if the source socket
-for the cloning was created in root memcg.
+Before the Fixes:-tagged commit there was a similar bug with
+ tsoh_page, but I'm not sure it's worth doing another fix for such
+ old kernels.
 
-To fix the issue, just do the association of the sockets at the accept()
-time in the process context and then force charge the memory buffer
-already used and reserved by the socket.
-
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Fixes: e9117e5099ea ("sfc: Firmware-Assisted TSO version 2")
+Suggested-by: Derek Shute <Derek.Shute@stratus.com>
+Signed-off-by: Edward Cree <ecree@solarflare.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/memcontrol.c                 |   14 --------------
- net/core/sock.c                 |    5 ++++-
- net/ipv4/inet_connection_sock.c |   20 ++++++++++++++++++++
- 3 files changed, 24 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/sfc/efx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5867,20 +5867,6 @@ void mem_cgroup_sk_alloc(struct sock *sk
- 	if (!mem_cgroup_sockets_enabled)
- 		return;
- 
--	/*
--	 * Socket cloning can throw us here with sk_memcg already
--	 * filled. It won't however, necessarily happen from
--	 * process context. So the test for root memcg given
--	 * the current task's memcg won't help us in this case.
--	 *
--	 * Respecting the original socket's memcg is a better
--	 * decision in this case.
--	 */
--	if (sk->sk_memcg) {
--		css_get(&sk->sk_memcg->css);
--		return;
--	}
--
- 	/* Do not associate the sock with unrelated interrupted task's memcg. */
- 	if (in_interrupt())
- 		return;
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1684,7 +1684,10 @@ struct sock *sk_clone_lock(const struct
- 		atomic_set(&newsk->sk_zckey, 0);
- 
- 		sock_reset_flag(newsk, SOCK_DONE);
--		mem_cgroup_sk_alloc(newsk);
-+
-+		/* sk->sk_memcg will be populated at accept() time */
-+		newsk->sk_memcg = NULL;
-+
- 		cgroup_sk_alloc(&newsk->sk_cgrp_data);
- 
- 		rcu_read_lock();
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -475,6 +475,26 @@ struct sock *inet_csk_accept(struct sock
- 		}
- 		spin_unlock_bh(&queue->fastopenq.lock);
+--- a/drivers/net/ethernet/sfc/efx.c
++++ b/drivers/net/ethernet/sfc/efx.c
+@@ -505,6 +505,7 @@ efx_copy_channel(const struct efx_channe
+ 		if (tx_queue->channel)
+ 			tx_queue->channel = channel;
+ 		tx_queue->buffer = NULL;
++		tx_queue->cb_page = NULL;
+ 		memset(&tx_queue->txd, 0, sizeof(tx_queue->txd));
  	}
-+
-+	if (mem_cgroup_sockets_enabled) {
-+		int amt;
-+
-+		/* atomically get the memory usage, set and charge the
-+		 * sk->sk_memcg.
-+		 */
-+		lock_sock(newsk);
-+
-+		/* The sk has not been accepted yet, no need to look at
-+		 * sk->sk_wmem_queued.
-+		 */
-+		amt = sk_mem_pages(newsk->sk_forward_alloc +
-+				   atomic_read(&sk->sk_rmem_alloc));
-+		mem_cgroup_sk_alloc(newsk);
-+		if (newsk->sk_memcg && amt)
-+			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
-+
-+		release_sock(newsk);
-+	}
- out:
- 	release_sock(sk);
- 	if (req)
+ 
 
 
