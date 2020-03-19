@@ -2,83 +2,187 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6E3C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB9CC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1FA20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584604111;
-	bh=DpO44T5jLSZKdnEhkl065vGcFlq3vORTR/bjAmB0qzY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pAiTOTPIwr5bUxJopsbQj6pE/MVKjzv+L5hOFVe+0W30r5UrfCz7UF6t6uMIJBcjH
-	 daSSnRr2zpKHuYcY78Z4DFBxwpTeQ5XX4vonc8gZFgLuPmSyvn2EFYwaDFk7m+AkPg
-	 NzCbxzXEPVWJ/hnHMDsg4Ofwbzwz9JSzYqhrNRbU=
+	by mail.kernel.org (Postfix) with ESMTP id B238E20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:50:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UbMUmzy5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgCSHs3 (ORCPT
+        id S1726562AbgCSHu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:48:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbgCSHs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:48:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 19 Mar 2020 03:50:28 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:47337 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725767AbgCSHu2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:50:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584604225;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1FjOpHO7DVBelpmj+x+16nQtzOUq2HDnloAulowS+9c=;
+        b=UbMUmzy5f7AAaLS37gyPNpzBZ/fUPDzolPvLBO5elu9rUwQr9kh5wwQLG66j3i1NtbeuXu
+        h8OoGRAZi0j4BtaPU4xnwp3Sxm/U7crp5XAFDr3ueWabuikJZtJszecAm2ij/+GL6waecq
+        qoIyo38yOVXBnazs58KbtS57ZVcTNMQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-127-bZiPtl6MN6-Z1oAlMHQFdA-1; Thu, 19 Mar 2020 03:50:24 -0400
+X-MC-Unique: bZiPtl6MN6-Z1oAlMHQFdA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FA4E20722;
-        Thu, 19 Mar 2020 07:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584604109;
-        bh=DpO44T5jLSZKdnEhkl065vGcFlq3vORTR/bjAmB0qzY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f7I3czoT7LXJzenE68cfpJA+9lwbm8n0vpJEu647VjqTazfvK7mWmVuKmn+LEBtaZ
-         zFW/IPkHtzbAl8nMFfMTc1KSQCV9sfnkpR0gkGVfWD3LHi4i2uFDlk4SUjn9HByvzi
-         sZbbFlkH5Uhb2BfNNIHQASyyJA/A6uwvQYc0PKI8=
-Date:   Thu, 19 Mar 2020 08:48:26 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Qiang Su <suqiang4@huawei.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3] UIO: make maximum memory and port regions configurable
-Message-ID: <20200319074826.GA3444175@kroah.com>
-References: <20200319073923.51812-1-suqiang4@huawei.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED885477;
+        Thu, 19 Mar 2020 07:50:22 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.192.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 925316EFA7;
+        Thu, 19 Mar 2020 07:50:08 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 08:50:05 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v7 11/14] KVM: selftests: Introduce after_vcpu_run hook
+ for dirty log test
+Message-ID: <20200319075005.hdddb4xiqzuxcqbn@kamzik.brq.redhat.com>
+References: <20200318163720.93929-1-peterx@redhat.com>
+ <20200318163720.93929-12-peterx@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200319073923.51812-1-suqiang4@huawei.com>
+In-Reply-To: <20200318163720.93929-12-peterx@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 03:39:23PM +0800, Qiang Su wrote:
-> Now each uio device can only support 5 memory regions and
-> 5 port regions. It may be far from enough for some big system.
-> On the other hand, the hard-coded style is not flexible.
-> So make these values configurable by menuconfig, thus users
-> can easily expand them according to their actual situation.
+On Wed, Mar 18, 2020 at 12:37:17PM -0400, Peter Xu wrote:
+> Provide a hook for the checks after vcpu_run() completes.  Preparation
+> for the dirty ring test because we'll need to take care of another
+> exit reason.
 > 
-> Consider the marco is used as array index, so a range for
-> the config is set in menuconfig. The range is set as 1 to 512.
-> The default value is still set as 5 to keep consistent with
-> current code.
+> Since at it, drop the pages_count because after all we have a better
+> summary right now with statistics, and clean it up a bit.
 > 
-> Signed-off-by: Qiang Su <suqiang4@huawei.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reviewed-by: Greg KH <gregkh@linuxfoundation.org>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/dirty_log_test.c | 41 ++++++++++++++------
+>  1 file changed, 30 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+> index 139ccb550618..94122c2e0185 100644
+> --- a/tools/testing/selftests/kvm/dirty_log_test.c
+> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
+> @@ -178,6 +178,15 @@ static void clear_log_collect_dirty_pages(struct kvm_vm *vm, int slot,
+>  	kvm_vm_clear_dirty_log(vm, slot, bitmap, 0, num_pages);
+>  }
+>  
+> +static void default_after_vcpu_run(struct kvm_vm *vm)
+> +{
+> +	struct kvm_run *run = vcpu_state(vm, VCPU_ID);
+> +
+> +	TEST_ASSERT(get_ucall(vm, VCPU_ID, NULL) == UCALL_SYNC,
+> +		    "Invalid guest sync status: exit_reason=%s\n",
+> +		    exit_reason_str(run->exit_reason));
+> +}
+> +
+>  struct log_mode {
+>  	const char *name;
+>  	/* Return true if this mode is supported, otherwise false */
+> @@ -187,16 +196,20 @@ struct log_mode {
+>  	/* Hook to collect the dirty pages into the bitmap provided */
+>  	void (*collect_dirty_pages) (struct kvm_vm *vm, int slot,
+>  				     void *bitmap, uint32_t num_pages);
+> +	/* Hook to call when after each vcpu run */
+> +	void (*after_vcpu_run)(struct kvm_vm *vm);
+>  } log_modes[LOG_MODE_NUM] = {
+>  	{
+>  		.name = "dirty-log",
+>  		.collect_dirty_pages = dirty_log_collect_dirty_pages,
+> +		.after_vcpu_run = default_after_vcpu_run,
+>  	},
+>  	{
+>  		.name = "clear-log",
+>  		.supported = clear_log_supported,
+>  		.create_vm_done = clear_log_create_vm_done,
+>  		.collect_dirty_pages = clear_log_collect_dirty_pages,
+> +		.after_vcpu_run = default_after_vcpu_run,
+>  	},
+>  };
+>  
+> @@ -247,6 +260,14 @@ static void log_mode_collect_dirty_pages(struct kvm_vm *vm, int slot,
+>  	mode->collect_dirty_pages(vm, slot, bitmap, num_pages);
+>  }
+>  
+> +static void log_mode_after_vcpu_run(struct kvm_vm *vm)
+> +{
+> +	struct log_mode *mode = &log_modes[host_log_mode];
+> +
+> +	if (mode->after_vcpu_run)
+> +		mode->after_vcpu_run(vm);
+> +}
+> +
+>  static void generate_random_array(uint64_t *guest_array, uint64_t size)
+>  {
+>  	uint64_t i;
+> @@ -261,25 +282,23 @@ static void *vcpu_worker(void *data)
+>  	struct kvm_vm *vm = data;
+>  	uint64_t *guest_array;
+>  	uint64_t pages_count = 0;
+> -	struct kvm_run *run;
+> +	struct sigaction sigact;
+>  
+> -	run = vcpu_state(vm, VCPU_ID);
+> +	current_vm = vm;
+> +	vcpu_fd = vcpu_get_fd(vm, VCPU_ID);
 
-What?  No, I did not review this, do not add a tag like that for a patch
-that I have not explicitly given it for.
+You don't add this call until 13/14, which means bisection is broken.
+Please test the series with 'git rebase -i -x make'.
 
-And how is the kbuild bot reporting problems that this patch fixes?
-Where is that report?
 
-Also, I want this to be dynamic, not static, please do that instead, no
-one rebuilds their kernels for something like this.
+> +	memset(&sigact, 0, sizeof(sigact));
+> +	sigact.sa_handler = vcpu_sig_handler;
+> +	sigaction(SIG_IPI, &sigact, NULL);
+>  
+>  	guest_array = addr_gva2hva(vm, (vm_vaddr_t)random_array);
+> -	generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
+>  
+>  	while (!READ_ONCE(host_quit)) {
+> +		generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
+> +		pages_count += TEST_PAGES_PER_LOOP;
+>  		/* Let the guest dirty the random pages */
+>  		ret = _vcpu_run(vm, VCPU_ID);
+>  		TEST_ASSERT(ret == 0, "vcpu_run failed: %d\n", ret);
+> -		if (get_ucall(vm, VCPU_ID, NULL) == UCALL_SYNC) {
+> -			pages_count += TEST_PAGES_PER_LOOP;
+> -			generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
+> -		} else {
+> -			TEST_FAIL("Invalid guest sync status: "
+> -				  "exit_reason=%s\n",
+> -				  exit_reason_str(run->exit_reason));
+> -		}
+> +		log_mode_after_vcpu_run(vm);
+>  	}
+>  
+>  	pr_info("Dirtied %"PRIu64" pages\n", pages_count);
+> -- 
+> 2.24.1
+> 
 
-thanks,
-
-greg k-h
