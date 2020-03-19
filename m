@@ -2,160 +2,219 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4C5C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE11C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C5C20768
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AEC20767
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:03:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lTy0INGy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgCSBDJ (ORCPT
+        id S1727108AbgCSBDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 21:03:09 -0400
-Received: from mga11.intel.com ([192.55.52.93]:15997 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbgCSBDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 21:03:08 -0400
-IronPort-SDR: UDarT0/D/mTUCwecBuFy32V5q6u2OVguKKwZO/R5comHwo7QHJFjRJzkXUgig5dXe+4XWRoNTG
- 4AT+xjx+B/Dw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 18:03:07 -0700
-IronPort-SDR: CGUYWfkphOuI4TIm7YiOkLmPVqj85z7yp25k0oamOOD/R+j1F8nhSgN8bm9EUnvY4ZnaYA4Y3C
- 1ot4B9TZezhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,569,1574150400"; 
-   d="scan'208";a="238348272"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Mar 2020 18:03:06 -0700
-Date:   Wed, 18 Mar 2020 18:03:06 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Connor Kuehl <ckuehl@redhat.com>,
-        Harald Hoyer <harald@redhat.com>,
-        Lily Sturmann <lsturman@redhat.com>
-Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-Message-ID: <20200319010306.GA8347@linux.intel.com>
-References: <254f1e35-4302-e55f-c00d-0f91d9503498@fortanix.com>
- <CAOASepOm8-2UCdEnVMopEprMGWjkYUbUTX++dHaqCafi2ju8mA@mail.gmail.com>
- <20200313164622.GC5181@linux.intel.com>
- <CAOASepN1hxSgxVJAJiAbSmuCTCHd=95Mnvh6BKNSPJs=EpAmbQ@mail.gmail.com>
- <20200313184452.GD5181@linux.intel.com>
- <CAOASepP_oGOenjCvAvLg+e+=fz4H0X=cyD+v5ywD0peeXEEmYg@mail.gmail.com>
- <20200313220820.GE5181@linux.intel.com>
- <CAOASepMicT6CrYyDkoYizh4nAZ+1Zn4rGQh7QjfzSK72Fj6u_g@mail.gmail.com>
- <20200318234057.GE26164@linux.intel.com>
- <858d19ed-868b-b4be-cbac-6cb92349d8fb@intel.com>
+        Wed, 18 Mar 2020 21:03:13 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40106 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgCSBDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 21:03:12 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t24so245052pgj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 18:03:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=cxvWWdiLWhwcBWA6ADvkCOYt4fG2zyPQ2T9tIxIBDEQ=;
+        b=lTy0INGyi6isNdz4BWtj2OHapIpXObN/A5Bw5xR2jUiAyFrM0ev10C0DXvExOlxwhc
+         ImZia8GiXsiPGuNaM/4kS8ZVnHfFUYJ2HWiWCkHtxE2eL6fhgDfNjv8fDe5Y3TDI0/og
+         7WX/Gjp9iTU9Hl6Uqs4FH6jOiVv/YankzE2fo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=cxvWWdiLWhwcBWA6ADvkCOYt4fG2zyPQ2T9tIxIBDEQ=;
+        b=OMxTv/o8gk47AsMkcquJnQAYXtp8xFrM4pwI+amE4QkwHBIRxcDpXAvUERpl9qrArf
+         gvlHUb7qMZCQZzLVSUeDT8KIXCkQGCBybyZBlSpdufb0QUdFHybGhNJXYusHQwBWHFFC
+         FhbV4VnbfqkjPADteZ2ssXdbrCy0QnnRWQdAqNdQBsXXN0IzjQW4Hos4tjoZ7pyOAluK
+         220ajjRcjaN8YZUg8TDjxIIz6cW+9SikdrrdjphTsVRvUBCOGxRHryuniQ+uh1UGHfYB
+         nz9IZG/i92ZF9ykQ9BPYMjv/Z2Ka7rAaTfEXCX+EeD+hjHFB0ZvI/BL6tS8ykRCaE+1L
+         YKzg==
+X-Gm-Message-State: ANhLgQ2eQbeq0n83iZSl/arpFberras8kUgPqLuftuntNc+Ufz5SUDY4
+        yL7VU1eJ6lr9zerod+T8Bs3zww==
+X-Google-Smtp-Source: ADFU+vvJQBekMCStovu5VWz10374hQ0R97C2UWDJEFdyIkEHKe7U2rbXhUVHYtmBV6EUNpQHMp4PHg==
+X-Received: by 2002:a63:1404:: with SMTP id u4mr564252pgl.172.1584579790905;
+        Wed, 18 Mar 2020 18:03:10 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id u14sm250068pgg.67.2020.03.18.18.03.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 18:03:10 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <858d19ed-868b-b4be-cbac-6cb92349d8fb@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1583928252-21246-2-git-send-email-sanm@codeaurora.org>
+References: <1583928252-21246-1-git-send-email-sanm@codeaurora.org> <1583928252-21246-2-git-send-email-sanm@codeaurora.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: phy: qcom,qmp: Convert QMP PHY bindings to yaml
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Date:   Wed, 18 Mar 2020 18:03:09 -0700
+Message-ID: <158457978900.152100.4898904631535195370@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 05:38:29PM -0700, Xing, Cedric wrote:
-> On 3/18/2020 4:40 PM, Sean Christopherson wrote:
-> %rbx can always be restored as long as it is saved at a fixed offset from
-> %rbp. For example, given the standard prolog below:
-> 
-> 	push	%rbp
-> 	mov	%rsp, %rbp
-> 	push	%rbx
-> 
-> It can be paired with the following standard epilog:
-> 
-> 	mov	-8(%rbp), %rbx
-> 	leave
-> 	ret
-> 
-> Alternatively, given "red zone" of 128 bytes, the following epilog will also
-> work:
-> 
-> 	leave
-> 	mov	-0x10(%rsp), %rbx
-> 	ret
-> 
-> In no cases do we have to worry about enclave mucking the stack as long as
-> %rbp is preserved.
-> 
-> >>>>While this is more work, it is standard calling convention work that
-> >>>>doesn't require internal knowledge of __vdso..(). Alternatively, if we
-> >>>>don't like the extra work, we can document the %rbx hack explicitly
-> >>>>into the handler documentation and make it part of the interface. But
-> >>>>we need some explicit way for the handler to pop enclave output stack
-> >>>>params that doesn't depend on internal knowledge of the __vdso...()
-> >>>>invariants.
-> >>>
-> >>>IIUC, this is what you're suggesting?  Having to align the stack makes this
-> >>>a bit annoying, but it's not bad by any means.
-> >>>
-> >>>diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> >>>index 94a8e5f99961..05d54f79b557 100644
-> >>>--- a/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> >>>+++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
-> >>>@@ -139,8 +139,9 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
-> >>>         /* Pass the untrusted RSP (at exit) to the callback via %rcx. */
-> >>>         mov     %rsp, %rcx
-> >>>
-> >>>-       /* Save the untrusted RSP in %rbx (non-volatile register). */
-> >>>+       /* Save the untrusted RSP offset in %rbx (non-volatile register). */
-> >>>         mov     %rsp, %rbx
-> >>>+       and     $0xf, %rbx
-> >>>
-> >>>         /*
-> >>>          * Align stack per x86_64 ABI. Note, %rsp needs to be 16-byte aligned
-> >>>@@ -161,8 +162,8 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
-> >>>         mov     0x20(%rbp), %rax
-> >>>         call    .Lretpoline
-> >>>
-> >>>-       /* Restore %rsp to its post-exit value. */
-> >>>-       mov     %rbx, %rsp
-> >>>+       /* Undo the post-exit %rsp adjustment. */
-> >>>+       lea     0x20(%rsp,%rbx), %rsp
-> >>>
-> 
-> Per discussion above, this is useful only if the enclave has problem
-> cleaning up its own mess left on the untrusted stack, and the exit handler
-> wants to EENTER the enclave again by returning to __vdso...(). It sounds
-> very uncommon to me, and more like a bug than an expected behavior. Are
-> there any existing code doing this or any particular application that needs
-> this. If no, I'd say not to do it.
+Quoting Sandeep Maheswaram (2020-03-11 05:04:09)
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Do=
+cumentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> new file mode 100644
+> index 0000000..39ec3f24
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
+> @@ -0,0 +1,311 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/qcom,qmp-phy.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm QMP PHY controller
+> +
+> +maintainers:
+> +  - Manu Gautam <mgautam@codeaurora.org>
+> +
+> +description:
+> +  QMP phy controller supports physical layer functionality for a number =
+of
+> +  controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,ipq8074-qmp-pcie-phy
+> +      - qcom,msm8996-qmp-pcie-phy
+> +      - qcom,msm8996-qmp-usb3-phy
+> +      - qcom,msm8998-qmp-pcie-phy
+> +      - qcom,msm8998-qmp-ufs-phy
+> +      - qcom,msm8998-qmp-usb3-phy
+> +      - qcom,sdm845-qhp-pcie-phy
+> +      - qcom,sdm845-qmp-pcie-phy
+> +      - qcom,sdm845-qmp-ufs-phy
+> +      - qcom,sdm845-qmp-usb3-phy
+> +      - qcom,sdm845-qmp-usb3-uni-phy
 
-Ya, I'm on the fence as well.  The only counter-argument is that doing:
+I was looking at the DP phy binding in another thread and I'm wondering
+what qmp-usb3-uni-phy means. Is that a usb3 phy that doesn't have DP phy
+combined with it? It looks like the DP phy binding needs to be merged
+with this binding (and some of the driver part too), so I'm not sure
+this binding is correct as it stands. Probably needs to be updated to
+support DP too.
 
-	push	%rbp
-	mov	%rsp, %rbp
-	push	%rbx
+> +      - qcom,sm8150-qmp-ufs-phy
+> +
+> +  reg:
+> +    minItems: 1
+> +    items:
+> +      - description: Address and length of PHY's common serdes block.
+> +      - description: Address and length of the DP_COM control block.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: reg-base
+> +      - const: dp_com
+> +
+> +  "#clock-cells":
+> +     enum: [ 1, 2 ]
+> +
+> +  "#address-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  "#size-cells":
+> +    enum: [ 1, 2 ]
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 4
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 4
+> +
+> +  resets:
+> +    minItems: 1
+> +    maxItems: 3
+> +
+> +  reset-names:
+> +    minItems: 1
+> +    maxItems: 3
+> +
+> +  vdda-phy-supply:
+> +    description:
+> +        Phandle to a regulator supply to PHY core block.
+> +
+> +  vdda-pll-supply:
+> +    description:
+> +        Phandle to 1.8V regulator supply to PHY refclk pll block.
+> +
+> +  vddp-ref-clk-supply:
+> +    description:
+> +        Phandle to a regulator supply to any specific refclk
+> +        pll block.
+> +
+> +#Required nodes:
+> +patternProperties:
+> +  "^phy@[0-9a-f]+$":
+> +    type: object
+> +    description:
+> +      Each device node of QMP phy is required to have as many child node=
+s as
+> +      the number of lanes the PHY has.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#clock-cells"
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +  - vdda-phy-supply
+> +  - vdda-pll-supply
+> +
+> +additionalProperties: false
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,sdm845-qmp-usb3-phy
+> +              - qcom,sdm845-qmp-usb3-uni-phy
+> +    then:
 
-	...
+There's a lot of if-then nesting stuff. Maybe we could split the binding
+into many files for the different compatibles so that it is more
+readable.
 
-	pop	%rbx
-	leave
-	ret
-
-with the relative adjustment would allow the exit handler (or enclave) to
-change %rbx.  I'm not saying that is remote sane, but if we're going for
-maximum flexibility...
-
-Anyways, patches incoming, let's discuss there.
+> +      properties:
+> +        clocks:
