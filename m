@@ -2,159 +2,146 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F345C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A32EC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 232E520409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F0D2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:29:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wzRkehLu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KOuV7mgf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgCSQ2s (ORCPT
+        id S1728073AbgCSQ36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:28:48 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54256 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728274AbgCSQ2o (ORCPT
+        Thu, 19 Mar 2020 12:29:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41825 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbgCSQ36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:28:44 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JGSV6i085374;
-        Thu, 19 Mar 2020 11:28:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584635311;
-        bh=9FXZPzYPifqRYzvGBy5KD5uaJYiPNXkyPdC17ysMMLo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=wzRkehLu/Wkt0I/zWWwbLvzr7pt8GZMW7zR4ZeU1qX3yp2UIp6iX6MLqIVt+H6G2L
-         5Qf7wsSDaP9SoyipDC2ly74ylBjEGs2WrRKBKzkfsPuHyK96uHkvBepVKThP7UeGXM
-         7oJybDJl7qMZ3bEVSYNlDp2aqCzOluz6K04dibSU=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JGSVR6104960
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Mar 2020 11:28:31 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Mar 2020 11:28:30 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Mar 2020 11:28:30 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JGST0m047764;
-        Thu, 19 Mar 2020 11:28:30 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
-        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
-CC:     Murali Karicheri <m-karicheri2@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v5 07/11] arm64: dts: ti: k3-am65-mcu: add cpsw nuss node
-Date:   Thu, 19 Mar 2020 18:28:02 +0200
-Message-ID: <20200319162806.25705-8-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200319162806.25705-1-grygorii.strashko@ti.com>
-References: <20200319162806.25705-1-grygorii.strashko@ti.com>
+        Thu, 19 Mar 2020 12:29:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h9so3861034wrc.8;
+        Thu, 19 Mar 2020 09:29:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dUjkv/1kdxAPc8FvGXSwJvqVlpdlMdd7sScfjZuLtXU=;
+        b=KOuV7mgfPxa5BS7QM1EmpVKHl+utg3R1NuD+eghOx5tCnKmaPuHRVXjvk7ETGC7+IH
+         pWrSjx5ZFJvHZf44R+FxNhYQeCT5QW+rQ4hPqVWEYiBB13CMSgH3RlgZseLHIeM1bG2l
+         1obkvh3OhbRF8Mk7ezjkpUNYtcONq6/QkjHI3j/LQhbXuFNPvr+ozb6qq6d7/OoORL65
+         flbWD6QSUtjzo8zmFjsywEco3MosobFFfwQQ/QEi9RDyxPZkUizLDlfsgEoBkxyn28FZ
+         T+rxTDp7rTvNrrva4WA9EN5sBtyDWyGY0mu7exVkkA3+j062YpuZVJfNb//An6i8J7Dg
+         Q10w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dUjkv/1kdxAPc8FvGXSwJvqVlpdlMdd7sScfjZuLtXU=;
+        b=mb3uXV8MHRlmY9fKmY3YGk3cp92PK7ShiWGBBnZzAb5E6VpUW5JaBD68jyvPRFgP5G
+         HikdmtNbV4a0kWuZf8QVGbJqStnVnD23UjePVC+bFqLzOgj9AHm1UWXTR/Rmc/tNeHpz
+         u6TCqIIleuOpEoWx31JKK0vE2cEuY/8KHm6pxNx+ItASME3UBNo8Ii4Pk7BcR/NR5J9m
+         QuKWQvnH7AFqucjW507fi8U+HtRarAZxi2rvIeduiP24aMmn+xn4J5qSGD6ubR1e6apW
+         Z0H2AhZRTFoo8AARps2lNQIZdZPW1eSmG0fDIdMK+6OwUrRwPmGyd+G9AM4BDpZ8z7TC
+         6caQ==
+X-Gm-Message-State: ANhLgQ0ClMCYQG+YuoioJnu0IvdwV4gpKeR3v2oYMZrJ1lUJhlLXVaqX
+        tLUTjP4ZK8nu1PcwaVjUw0HJd0o9poKprYDSV3o=
+X-Google-Smtp-Source: ADFU+vvErlZUbjGMAWaIpw3qbv9beB1N3R3kHK0bJH6Z7AaZmsMVBHwa/EoutXRVLGkwpqQKNDNT9RewnuF5ANVC4ms=
+X-Received: by 2002:a5d:6146:: with SMTP id y6mr5298504wrt.107.1584635395363;
+ Thu, 19 Mar 2020 09:29:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200319131221.14044-1-david@redhat.com> <20200319131221.14044-3-david@redhat.com>
+In-Reply-To: <20200319131221.14044-3-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 19 Mar 2020 17:29:44 +0100
+Message-ID: <CAM9Jb+heQ+Z_Hx5F-0vGLWfc4gxQRzh7am-gw+gGTJxn-7kyZA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/8] drivers/base/memory: map MMOP_OFFLINE to 0
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT node for the TI AM65x SoC Gigabit Ethernet two ports Switch
-subsystem (CPSW NUSS).
+> Historically, we used the value -1. Just treat 0 as the special
+> case now. Clarify a comment (which was wrong, when we come via
+> device_online() the first time, the online_type would have been 0 /
+> MEM_ONLINE). The default is now always MMOP_OFFLINE. This removes the
+> last user of the manual "-1", which didn't use the enum value.
+>
+> This is a preparation to use the online_type as an array index.
+>
+> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/base/memory.c          | 11 ++++-------
+>  include/linux/memory_hotplug.h |  2 +-
+>  2 files changed, 5 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 8c5ce42c0fc3..e7e77cafef80 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -211,17 +211,14 @@ static int memory_subsys_online(struct device *dev)
+>                 return 0;
+>
+>         /*
+> -        * If we are called from state_store(), online_type will be
+> -        * set >= 0 Otherwise we were called from the device online
+> -        * attribute and need to set the online_type.
+> +        * When called via device_online() without configuring the online_type,
+> +        * we want to default to MMOP_ONLINE.
+>          */
+> -       if (mem->online_type < 0)
+> +       if (mem->online_type == MMOP_OFFLINE)
+>                 mem->online_type = MMOP_ONLINE;
+>
+>         ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
+> -
+> -       /* clear online_type */
+> -       mem->online_type = -1;
+> +       mem->online_type = MMOP_OFFLINE;
+>
+>         return ret;
+>  }
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 3aaf00db224c..76f3c617a8ab 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -48,7 +48,7 @@ enum {
+>  /* Types for control the zone type of onlined and offlined memory */
+>  enum {
+>         /* Offline the memory. */
+> -       MMOP_OFFLINE = -1,
+> +       MMOP_OFFLINE = 0,
+>         /* Online the memory. Zone depends, see default_zone_for_pfn(). */
+>         MMOP_ONLINE,
+>         /* Online the memory to ZONE_NORMAL. */
+> --
+> 2.24.1
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Tested-by: Murali Karicheri <m-karicheri2@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi | 49 +++++++++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-am65.dtsi     |  1 +
- 2 files changed, 50 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index ad89f93f30e5..e645664f004e 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -193,4 +193,53 @@
- 			#size-cells = <0>;
- 		};
- 	};
-+
-+	mcu_cpsw: ethernet@46000000 {
-+		compatible = "ti,am654-cpsw-nuss";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		reg = <0x0 0x46000000 0x0 0x200000>;
-+		reg-names = "cpsw_nuss";
-+		ranges = <0x0 0x0 0x0 0x46000000 0x0 0x200000>;
-+		dma-coherent;
-+		clocks = <&k3_clks 5 10>;
-+		clock-names = "fck";
-+		power-domains = <&k3_pds 5 TI_SCI_PD_EXCLUSIVE>;
-+
-+		dmas = <&mcu_udmap 0xf000>,
-+		       <&mcu_udmap 0xf001>,
-+		       <&mcu_udmap 0xf002>,
-+		       <&mcu_udmap 0xf003>,
-+		       <&mcu_udmap 0xf004>,
-+		       <&mcu_udmap 0xf005>,
-+		       <&mcu_udmap 0xf006>,
-+		       <&mcu_udmap 0xf007>,
-+		       <&mcu_udmap 0x7000>;
-+		dma-names = "tx0", "tx1", "tx2", "tx3",
-+			    "tx4", "tx5", "tx6", "tx7",
-+			    "rx";
-+
-+		ethernet-ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			cpsw_port1: port@1 {
-+				reg = <1>;
-+				ti,mac-only;
-+				label = "port1";
-+				ti,syscon-efuse = <&mcu_conf 0x200>;
-+				phys = <&phy_gmii_sel 1>;
-+			};
-+		};
-+
-+		davinci_mdio: mdio@f00 {
-+			compatible = "ti,cpsw-mdio","ti,davinci_mdio";
-+			reg = <0x0 0xf00 0x0 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&k3_clks 5 10>;
-+			clock-names = "fck";
-+			bus_freq = <1000000>;
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-index aea36e29dd32..5be75e430965 100644
---- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-@@ -30,6 +30,7 @@
- 		i2c3 = &main_i2c1;
- 		i2c4 = &main_i2c2;
- 		i2c5 = &main_i2c3;
-+		ethernet0 = &cpsw_port1;
- 	};
- 
- 	chosen { };
--- 
-2.17.1
-
+Looks good to me.
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+>
+>
