@@ -2,110 +2,101 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA30C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C22C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B422F20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A84B220789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ilA6UgYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCSSRr convert rfc822-to-8bit (ORCPT
+        id S1727159AbgCSSTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:17:47 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:51982 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgCSSRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:17:47 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jEzjc-000123-KO; Thu, 19 Mar 2020 18:17:36 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jEziG-0006VC-Ak; Thu, 19 Mar 2020 19:16:12 +0100
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C startup and thread creation (v15)
-References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com>
-        <20200319144110.3733-5-mathieu.desnoyers@efficios.com>
-        <874kukpf9f.fsf@mid.deneb.enyo.de>
-        <2147217200.3240.1584633395285.JavaMail.zimbra@efficios.com>
-        <87r1xo5o2s.fsf@mid.deneb.enyo.de>
-        <1302331358.3965.1584641354569.JavaMail.zimbra@efficios.com>
-Date:   Thu, 19 Mar 2020 19:16:12 +0100
-In-Reply-To: <1302331358.3965.1584641354569.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Thu, 19 Mar 2020 14:09:14 -0400
-        (EDT)")
-Message-ID: <87sgi4gqhf.fsf@mid.deneb.enyo.de>
+        Thu, 19 Mar 2020 14:19:20 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35317 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726663AbgCSSTU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:19:20 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JIEBPw006390;
+        Thu, 19 Mar 2020 19:18:54 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=/NryDuotj7GwNZeRIKiNEE04efcoGmBTQAarcZjEeEM=;
+ b=ilA6UgYTk/SDj4tn5Z6fnFBav5jjz1+QPUuhykOWCICXnTQbuN9lCImuGO5mfM74pK5G
+ zwHzIGNe8OZtgvP8b5h5uHX0X664bbc8r2oBXBCViIyVq6UU8eCUfmYGPO8UL857euAg
+ Gl2bMIbLLfn8BKroKXWRAudQVM0xht+L59+g07dQg8c9X9ox8mDre43QM2mDXwS8j4Ck
+ v6Pfv3qj514b276Bct9qyAKQAjVmywK3rRSN3IDEN3TU36uvbU9i3ZJugxrVWoWsB56w
+ SGT5h/Ct2mhkqEEqorqZVUL2hJ2XgJY3U4MJC3z/gG+fMxSwKZdKbI9BlZoXv0KbXF4e +w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yu8etkc0q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 19:18:54 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 733AC10002A;
+        Thu, 19 Mar 2020 19:18:49 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3AC7A2A70CB;
+        Thu, 19 Mar 2020 19:18:49 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar 2020 19:18:48
+ +0100
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <robh+dt@kernel.org>, <jic23@kernel.org>
+CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <fabrice.gasnier@st.com>,
+        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dt-bindings: iio: adc: stm32-adc: fix id relative path
+Date:   Thu, 19 Mar 2020 19:18:27 +0100
+Message-ID: <1584641907-8228-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_07:2020-03-19,2020-03-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+Fix id relative path that shouldn't contain 'bindings', as pointed out
+when submitting st,stm32-dac bindings conversion to json-schema [1].
+[1] https://patchwork.ozlabs.org/patch/1257568/
 
->> You also need to add an assert that the compiler supports
->> __attribute__ ((aligned)) because ignoring it produces an
->> ABI-incompatible header.
->
-> Are you aware of some helper macro I should use to do this, or
-> is it done elsewhere in glibc ?
+Fixes: a8cf1723c4b7 ("dt-bindings: iio: adc: stm32-adc: convert bindings to json-schema")
 
-I don't think we have any such GCC-only types yet.  max_align_t is
-provided by GCC itself.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->> The struct rseq/struct rseq_cs definitions
->> are broken, they should not try to change the alignment.
->
-> AFAIU, this means we should ideally not have used __attribute__((aligned))
-> in the uapi headers in the first place. Why is it broken ?
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
+index 933ba37..dd8eb15 100644
+--- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: "http://devicetree.org/schemas/bindings/iio/adc/st,stm32-adc.yaml#"
++$id: "http://devicetree.org/schemas/iio/adc/st,stm32-adc.yaml#"
+ $schema: "http://devicetree.org/meta-schemas/core.yaml#"
+ 
+ title: STMicroelectronics STM32 ADC bindings
+-- 
+2.7.4
 
-Compilers which are not sufficiently GCC-compatible define
-__attribute__(X) as the empty expansion, so you silently get a
-different ABI.
-
-There is really no need to specify 32-byte alignment here.  Is not
-even the size of a standard cache line.  It can result in crashes if
-these structs are heap-allocated using malloc, when optimizing for
-AVX2.
-
-For example, clang turns
-
-void
-clear (struct rseq *p)
-{
-  memset (p, 0, sizeof (*p));
-}
-
-into:
-
-	vxorps	%xmm0, %xmm0, %xmm0
-	vmovaps	%ymm0, (%rdi)
-	vzeroupper
-	retq
-
-My understanding is that vmovaps will trap if the pointer is
-misaligned (“When the source or destination operand is a memory
-operand, the operand must be aligned on a 32-byte boundary or a
-general-protection exception (#GP) will be generated.”).
-
-> However, now that it is in the wild, it's a bit late to change that.
-
-I had forgotten about the alignment crashes.  I think we should
-seriously consider changing the types. 8-(
