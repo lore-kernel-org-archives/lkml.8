@@ -2,123 +2,138 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8051DC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68378C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539DA2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:07:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WseahAeA"
+	by mail.kernel.org (Postfix) with ESMTP id 4409620722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCSGHr (ORCPT
+        id S1727014AbgCSGNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 02:07:47 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40199 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgCSGHr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 02:07:47 -0400
-Received: by mail-pl1-f194.google.com with SMTP id h11so594914plk.7;
-        Wed, 18 Mar 2020 23:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
-         :user-agent;
-        bh=+2KAuRbCHFjdVsAIugVgzHXogj+I1RX4aDDbYGi4B8g=;
-        b=WseahAeA87QIienqpmBo30l6efUR+0R6dpvRzdrVSewkXLfooA25wLzMsilWQcETjm
-         6PLQro56I34pZJlxK/RMf7i9TJD8ylVOXqA/SvMWR4Inwv5V55FlLH+SiuZ2B8bE58p7
-         OXloOqQxBKWH3y4UqU4QHkql88qSfk4XUVPX+wfygLKZobpLvHg+Fmw6sGwuPr1q0xhL
-         CmkGWork/JR9usXA3MfAOk1T0nMDCoiHBqJUhQrBvd0vID0Xie2cfOJc5OnK3dlmHc7T
-         /zCBjNMqwFiZCLP/JO3XAzkTPBtWdg8uV1SH+e7MiC6vEoC+YpLAh3h21qgxHxdJYhk9
-         mp+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
-         :content-disposition:user-agent;
-        bh=+2KAuRbCHFjdVsAIugVgzHXogj+I1RX4aDDbYGi4B8g=;
-        b=SdPMRUWiTnECbZqJHttt0DR8jY4lEAjP8gZb2ukPKRKL1IRm8gGSB72kz35v7Sp5bA
-         Vs3RwSrLAd/6O3h6cz9dVMHMELb2VBIAQDMqe4fsB2YIw9jRtVz6zUff1nogMCd2kYON
-         sY1TxZHio7oKgT4QZbBUSOlCEWhNNWgVXyAdFplYr4y8ptIFkA9UNGNRHFbE0NPirji3
-         dyUY+vjhgA9usaff6jWw+ZnsWewwLaA7ZsGkryIzuoNZC+xkXC1qhU/scBIMM0mQb9L8
-         1MAITCI6B8W6rrk6eW4DOi040FTbEFXLFJ9D6lIzDrPls248RLuoYy6nd6q67xdzu1N7
-         jc7Q==
-X-Gm-Message-State: ANhLgQ3osSgvLY+WRqkXVK9kPHAYGVytlEkIGvSwB7fofM4QosXh4/yC
-        I2GM9vcGp6c2nbT/n0xPpS7bSLWt5SU=
-X-Google-Smtp-Source: ADFU+vtWp7i934vx1L84aHVsVMikSBxRJwdHutRfb316sKwixUiTwRNWBCSHz5z+LnPi2TgldTynHg==
-X-Received: by 2002:a17:90a:2601:: with SMTP id l1mr2169816pje.74.1584598064293;
-        Wed, 18 Mar 2020 23:07:44 -0700 (PDT)
-Received: from SARKAR ([43.224.157.34])
-        by smtp.gmail.com with ESMTPSA id r186sm936300pfc.181.2020.03.18.23.07.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 23:07:43 -0700 (PDT)
-Message-ID: <5e730c2f.1c69fb81.9eda3.5c70@mx.google.com>
-X-Google-Original-Message-ID: <20200319060739.GA22714@rohitsarkar5398@gmail.com>
-Date:   Thu, 19 Mar 2020 11:37:39 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: imu: inv_mpu6050: add debugfs register r/w interface
+        Thu, 19 Mar 2020 02:13:17 -0400
+Received: from mga04.intel.com ([192.55.52.120]:62892 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbgCSGNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 02:13:16 -0400
+IronPort-SDR: +BHVM9Ee+l4dg2OfdYk2TT/x7akb4dod2o4/934llKl9bMdlvP476vZwBIxWU2kG8LKeO4r7NU
+ HkT06CK5GzTg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 23:13:16 -0700
+IronPort-SDR: tCGZPbLdaeDR2b3+pyNi2ayHDMczwriRIZZYMGnHOfV8Sd3ukDD1KpOxz7CHjFCYuzmMLAyOWf
+ Tw/xugilGiIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,570,1574150400"; 
+   d="scan'208";a="418229706"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga005.jf.intel.com with ESMTP; 18 Mar 2020 23:13:15 -0700
+Received: from fmsmsx123.amr.corp.intel.com (10.18.125.38) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 18 Mar 2020 23:13:15 -0700
+Received: from shsmsx153.ccr.corp.intel.com (10.239.6.53) by
+ fmsmsx123.amr.corp.intel.com (10.18.125.38) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 18 Mar 2020 23:13:15 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.206]) by
+ SHSMSX153.ccr.corp.intel.com ([169.254.12.96]) with mapi id 14.03.0439.000;
+ Thu, 19 Mar 2020 14:13:12 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>
+Subject: RE: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
+Thread-Topic: [PATCH] KVM: VMX: Disable Intel PT before VM-entry
+Thread-Index: AQHV/Nh9FI7fbfgIUkqDZ3DrcNQ1xKhN+YUAgAFLryA=
+Date:   Thu, 19 Mar 2020 06:13:11 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E1738A8E20@SHSMSX104.ccr.corp.intel.com>
+References: <1584503298-18731-1-git-send-email-luwei.kang@intel.com>
+ <20200318154826.GC24357@linux.intel.com>
+In-Reply-To: <20200318154826.GC24357@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The iio debugfs interface provides direct access to read and write device
-registers if debugfs is enabled.
-
-Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
----
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index 7cb9ff3d3e94..3f40db8ea9e2 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -1248,12 +1248,26 @@ static const struct attribute_group inv_attribute_group = {
- 	.attrs = inv_attributes
- };
- 
-+static int inv_mpu6050_reg_access(struct iio_dev *indio_dev,
-+				  unsigned int reg,
-+				  unsigned int writeval,
-+				  unsigned int *readval)
-+{
-+	struct inv_mpu6050_state *st = iio_priv(indio_dev);
-+
-+	if (readval)
-+		return regmap_read(st->map, reg, readval);
-+	else
-+		return regmap_write(st->map, reg, writeval);
-+}
-+
- static const struct iio_info mpu_info = {
- 	.read_raw = &inv_mpu6050_read_raw,
- 	.write_raw = &inv_mpu6050_write_raw,
- 	.write_raw_get_fmt = &inv_write_raw_get_fmt,
- 	.attrs = &inv_attribute_group,
- 	.validate_trigger = inv_mpu6050_validate_trigger,
-+	.debugfs_reg_access = &inv_mpu6050_reg_access
- };
- 
- /**
--- 
-2.23.0.385.gbc12974a89
-
+PiA+IElmIHRoZSBsb2dpY2FsIHByb2Nlc3NvciBpcyBvcGVyYXRpbmcgd2l0aCBJbnRlbCBQVCBl
+bmFibGVkICgNCj4gPiBJQTMyX1JUSVRfQ1RMLlRyYWNlRW4gPSAxKSBhdCB0aGUgdGltZSBvZiBW
+TSBlbnRyeSwgdGhlIOKAnGxvYWQNCj4gPiBJQTMyX1JUSVRfQ1RM4oCdIFZNLWVudHJ5IGNvbnRy
+b2wgbXVzdCBiZSAwKFNETSAyNi4yLjEuMSkuDQo+ID4NCj4gPiBUaGUgZmlyc3QgZGlzYWJsZWQg
+dGhlIGhvc3QgSW50ZWwgUFQoQ2xlYXIgVHJhY2VFbikgd2lsbCBtYWtlIGFsbCB0aGUNCj4gPiBi
+dWZmZXJlZCBwYWNrZXRzIGFyZSBmbHVzaGVkIG91dCBvZiB0aGUgcHJvY2Vzc29yIGFuZCBpdCBt
+YXkgY2F1c2UgYW4NCj4gPiBJbnRlbCBQVCBQTUkuIFRoZSBob3N0IEludGVsIFBUIHdpbGwgYmUg
+cmUtZW5hYmxlZCBpbiB0aGUgaG9zdCBJbnRlbA0KPiA+IFBUIFBNSSBoYW5kbGVyLg0KPiA+DQo+
+ID4gaGFuZGxlX3BtaV9jb21tb24oKQ0KPiA+ICAgICAtPiBpbnRlbF9wdF9pbnRlcnJ1cHQoKQ0K
+PiA+ICAgICAgICAgICAgIC0+IHB0X2NvbmZpZ19zdGFydCgpDQo+IA0KPiBJSVVDLCB0aGlzIGlz
+IG9ubHkgcG9zc2libGUgd2hlbiBQVCAicGxheXMgbmljZSIgd2l0aCBWTVgsIGNvcnJlY3Q/DQo+
+IE90aGVyd2lzZSBwdC0+dm14X29uIHdpbGwgYmUgdHJ1ZSBhbmQgcHRfY29uZmlnX3N0YXJ0KCkg
+d291bGQgc2tpcCB0aGUNCj4gV1JNU1IuDQoNClllcy4gVGhlIHB0X2NvbmZpZ19zdGFydCgpIHdv
+dWxkIHNraXAgdGhlIFdSTVNSIGlmIHRoZSBIVyBkb2Vzbid0IHN1cHBvcnQgZW5hYmxlIFBUIGFj
+cm9zcyB0aGUgVk1YLg0KDQo+IA0KPiBBbmQgSVBUIFBNSSBtdXN0IGJlIGRlbGl2ZXJlZCB2aWEg
+Tk1JICh0aG91Z2ggbWF5YmUgdGhleSdyZSBhbHdheXMNCj4gZGVsaXZlcmVkIHZpYSBOTUk/KS4N
+Cg0KWWVzLCBJUFQgUE1JIGlzIGFuIE5NSSBpbiB0aGUgaG9zdC4NCg0KPiANCj4gSW4gYW55IGNh
+c2UsIHJlZG9pbmcgV1JNU1IgZG9lc24ndCBzZWVtIHNhZmUsIGFuZCBpdCBjZXJ0YWlubHkgaXNu
+J3QNCj4gcGVyZm9ybWFudCwgZS5nLiB3aGF0IHByZXZlbnRzIHRoZSBzZWNvbmQgV1JNU1IgZnJv
+bSB0cmlnZ2VyaW5nIGEgc2Vjb25kDQo+IElQVCBQTUk/DQoNClR3aWNlIGlzIGVub3VnaC4gVGhl
+cmUgaXMgcHJvYmFibHkgYSBsb3Qgb2YgUFQgdHJhY2Ugbm90IGZsdXNoIG91dCBhbmQgYSBQTUkg
+d2lsbCBoYXBwZW4gYWZ0ZXIgdGhlIGZpcnN0IFdSTVNSLiBUaGVyZSBhcmUgbm90IHNvIG11Y2gg
+ZGF0YSBiZXR3ZWVuIHRoZSBlbmQgb2YgdGhlIFBNSSBoYW5kbGVyIGFuZCB0aGUgc2Vjb25kIFdS
+TVNSLg0KDQo+IA0KPiBwdF9ndWVzdF9lbnRlcigpIGlzIGNhbGxlZCBhZnRlciB0aGUgc3dpdGNo
+IHRvIHRoZSB2Q1BVIGhhcyBhbHJlYWR5IGJlZW4NCj4gcmVjb3JkZWQsIGNhbid0IHRoaXMgYmUg
+aGFuZGxlZCBpbiB0aGUgSVBUIGNvZGUsIGUuZy4gc29tZXRoaW5nIGxpa2UgdGhpcz8NCj4gDQo+
+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9ldmVudHMvaW50ZWwvcHQuYyBiL2FyY2gveDg2L2V2ZW50
+cy9pbnRlbC9wdC5jIGluZGV4DQo+IDFkYjdhNTFkOTc5Mi4uZTM4ZGRhZTlmMGQxIDEwMDY0NA0K
+PiAtLS0gYS9hcmNoL3g4Ni9ldmVudHMvaW50ZWwvcHQuYw0KPiArKysgYi9hcmNoL3g4Ni9ldmVu
+dHMvaW50ZWwvcHQuYw0KPiBAQCAtNDA1LDcgKzQwNSw3IEBAIHN0YXRpYyB2b2lkIHB0X2NvbmZp
+Z19zdGFydChzdHJ1Y3QgcGVyZl9ldmVudCAqZXZlbnQpDQo+ICAgICAgICAgY3RsIHw9IFJUSVRf
+Q1RMX1RSQUNFRU47DQo+ICAgICAgICAgaWYgKFJFQURfT05DRShwdC0+dm14X29uKSkNCj4gICAg
+ICAgICAgICAgICAgIHBlcmZfYXV4X291dHB1dF9mbGFnKCZwdC0+aGFuZGxlLCBQRVJGX0FVWF9G
+TEFHX1BBUlRJQUwpOw0KPiAtICAgICAgIGVsc2UNCj4gKyAgICAgICBlbHNlICghKGN1cnJlbnQt
+PmZsYWdzICYgUEZfVkNQVSkpDQo+ICAgICAgICAgICAgICAgICB3cm1zcmwoTVNSX0lBMzJfUlRJ
+VF9DVEwsIGN0bCk7DQo+IA0KPiAgICAgICAgIFdSSVRFX09OQ0UoZXZlbnQtPmh3LmNvbmZpZywg
+Y3RsKTsNCg0KVGhhbmtzLiBCdXQgSSBhbSBhZnJhaWQgdGhlIGhvc3QgcGVyZiBkb27igJl0IGxp
+a2UgYW55IHZpcnR1YWxpemF0aW9uIHNwZWNpZmljIGNoYW5nZXMuIEkgd2lsbCB0cnkgdGhpcy4N
+Cg0KTHV3ZWkgS2FuZw0KDQo+IA0KPiA+IFRoaXMgcGF0Y2ggd2lsbCBkaXNhYmxlIHRoZSBJbnRl
+bCBQVCB0d2ljZSB0byBtYWtlIHN1cmUgdGhlIEludGVsIFBUDQo+ID4gaXMgZGlzYWJsZWQgYmVm
+b3JlIFZNLUVudHJ5Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTHV3ZWkgS2FuZyA8bHV3ZWku
+a2FuZ0BpbnRlbC5jb20+DQo+ID4gLS0tDQo+ID4gIGFyY2gveDg2L2t2bS92bXgvdm14LmMgfCAx
+MCArKysrKysrKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDEgZGVs
+ZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rdm0vdm14L3ZteC5jIGIv
+YXJjaC94ODYva3ZtL3ZteC92bXguYyBpbmRleA0KPiA+IDI2ZjhmMzEuLmQ5MzZhOTEgMTAwNjQ0
+DQo+ID4gLS0tIGEvYXJjaC94ODYva3ZtL3ZteC92bXguYw0KPiA+ICsrKyBiL2FyY2gveDg2L2t2
+bS92bXgvdm14LmMNCj4gPiBAQCAtMTA5NSw2ICsxMDk1LDggQEAgc3RhdGljIGlubGluZSB2b2lk
+IHB0X3NhdmVfbXNyKHN0cnVjdCBwdF9jdHgNCj4gPiAqY3R4LCB1MzIgYWRkcl9yYW5nZSkNCj4g
+Pg0KPiA+ICBzdGF0aWMgdm9pZCBwdF9ndWVzdF9lbnRlcihzdHJ1Y3QgdmNwdV92bXggKnZteCkg
+IHsNCj4gPiArCXU2NCBydGl0X2N0bDsNCj4gPiArDQo+ID4gIAlpZiAocHRfbW9kZSA9PSBQVF9N
+T0RFX1NZU1RFTSkNCj4gPiAgCQlyZXR1cm47DQo+ID4NCj4gPiBAQCAtMTEwMyw4ICsxMTA1LDE0
+IEBAIHN0YXRpYyB2b2lkIHB0X2d1ZXN0X2VudGVyKHN0cnVjdCB2Y3B1X3ZteCAqdm14KQ0KPiA+
+ICAJICogU2F2ZSBob3N0IHN0YXRlIGJlZm9yZSBWTSBlbnRyeS4NCj4gPiAgCSAqLw0KPiA+ICAJ
+cmRtc3JsKE1TUl9JQTMyX1JUSVRfQ1RMLCB2bXgtPnB0X2Rlc2MuaG9zdC5jdGwpOw0KPiA+IC0J
+aWYgKHZteC0+cHRfZGVzYy5ndWVzdC5jdGwgJiBSVElUX0NUTF9UUkFDRUVOKSB7DQo+ID4gKwlp
+ZiAodm14LT5wdF9kZXNjLmhvc3QuY3RsICYgUlRJVF9DVExfVFJBQ0VFTikgew0KPiA+ICAJCXdy
+bXNybChNU1JfSUEzMl9SVElUX0NUTCwgMCk7DQo+ID4gKwkJcmRtc3JsKE1TUl9JQTMyX1JUSVRf
+Q1RMLCBydGl0X2N0bCk7DQo+ID4gKwkJaWYgKHJ0aXRfY3RsKQ0KPiA+ICsJCQl3cm1zcmwoTVNS
+X0lBMzJfUlRJVF9DVEwsIDApOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWlmICh2bXgtPnB0X2Rl
+c2MuZ3Vlc3QuY3RsICYgUlRJVF9DVExfVFJBQ0VFTikgew0KPiA+ICAJCXB0X3NhdmVfbXNyKCZ2
+bXgtPnB0X2Rlc2MuaG9zdCwgdm14LQ0KPiA+cHRfZGVzYy5hZGRyX3JhbmdlKTsNCj4gPiAgCQlw
+dF9sb2FkX21zcigmdm14LT5wdF9kZXNjLmd1ZXN0LCB2bXgtDQo+ID5wdF9kZXNjLmFkZHJfcmFu
+Z2UpOw0KPiA+ICAJfQ0KPiA+IC0tDQo+ID4gMS44LjMuMQ0KPiA+DQo=
