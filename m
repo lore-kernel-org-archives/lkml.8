@@ -2,116 +2,129 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 221E9C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C42C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C6E20732
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B21D820732
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:48:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M/71xg2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgCSMrF (ORCPT
+        id S1727053AbgCSMst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:47:05 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12102 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726589AbgCSMrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:47:04 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9810353EC2277E87DC44;
-        Thu, 19 Mar 2020 20:46:57 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 19 Mar 2020
- 20:46:51 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lmb@cloudflare.com>, <daniel@iogearbox.net>,
-        <jakub@cloudflare.com>, <john.fastabend@gmail.com>
-CC:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH bpf-next] bpf: tcp: Fix unused function warnings
-Date:   Thu, 19 Mar 2020 20:46:31 +0800
-Message-ID: <20200319124631.58432-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 19 Mar 2020 08:48:49 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39475 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgCSMst (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:48:49 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j15so1507237lfk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 05:48:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ClZxlMhKdTHfajskxZDRWXcL3ALgK+kLArLrTOCwgyw=;
+        b=M/71xg2N4jYJ2rI7E2oJ6vVQN2VbgmjAhziH1DJKvHak/gbDELAL2mO55GZLOCp67S
+         9gvkRaVfvjs6x0IVR4w6bKeGeVVH65N+M66tTsGukJHmWlFFsXpIWU39O5hnNTvCHIbW
+         iOAdFjQUGMnx/pCC3hysWQ6Eby/an59wWRPQ1ZX0NBj8/Am7JDVgvVsZol7c7RNamEBH
+         RPwr5tdHz7EmC0Fr0bvs3GNrJai9FdZjhurFiuOYR/WP/paWWYN8CZK6+dM+pVS5bLcM
+         tdQj9ZooVU48jG4ofvosZyzbfCijpc2McmOnq9hVR2uxT5Ye1NC2HtNkoYMJYnv+Tbak
+         xOuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ClZxlMhKdTHfajskxZDRWXcL3ALgK+kLArLrTOCwgyw=;
+        b=l+ys974tScjhwXzoTsHpUbACEIO2qhemjPqVuwFEXkbKyC9+qfzH3qd3Z5W0qBtF5C
+         pTonUjn9rLBHnhj6dkMpPpICppJzFEsEsMvmMnlVx76v+6nq+yP2VvtvAT8xuF9vb9ov
+         9eaqqyuou5PfUH510gNbH3gP/LoduglM20c3fZlmCUoqOUDBSs1ZXpXKB0t6pmke4Dr6
+         ULTiovVN7WbC2C8VfXHHnxyn88UJrJRmfFkwPWgFeYyAkhfPYOsKxe5FdyNNxqxKJ8e1
+         VoabMCpn6gb8LLWKZ3V4Y9Vf7jQqP+/kLytVuDNKajTywkpo3AZsnYxhWzXhynh8KvD2
+         kENw==
+X-Gm-Message-State: ANhLgQ2vwlBFBXR9kF1ZNH3V3Y2FsiaDPl2JnL+vnWmUHS5T+MWUcqAn
+        d19v617SNbHONaj/2pZHZj1vhg==
+X-Google-Smtp-Source: ADFU+vvCG0ZDxkEsR+Dm6t8GAGvD8YGco8T5g9cjSFQQ1PsZ5IYBPAfflyfv1aRsgr3ArEoxIGDpzA==
+X-Received: by 2002:ac2:5587:: with SMTP id v7mr2105554lfg.198.1584622126779;
+        Thu, 19 Mar 2020 05:48:46 -0700 (PDT)
+Received: from localhost (c-413e70d5.07-21-73746f28.bbcust.telenor.se. [213.112.62.65])
+        by smtp.gmail.com with ESMTPSA id r18sm1578017lji.16.2020.03.19.05.48.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 05:48:46 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] PCI: dwc: fix ERROR: modpost: dw_pcie_ep_*.o undefined
+Date:   Thu, 19 Mar 2020 13:48:32 +0100
+Message-Id: <20200319124832.15165-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If BPF_STREAM_PARSER is not set, gcc warns:
+When building the PCIE_TEGRA194 as a module the common parts are
+build-in.  That leads us to the following modpost error:
 
-net/ipv4/tcp_bpf.c:483:12: warning: 'tcp_bpf_sendpage' defined but not used [-Wunused-function]
-net/ipv4/tcp_bpf.c:395:12: warning: 'tcp_bpf_sendmsg' defined but not used [-Wunused-function]
-net/ipv4/tcp_bpf.c:13:13: warning: 'tcp_bpf_stream_read' defined but not used [-Wunused-function]
+ERROR: modpost: "dw_pcie_ep_init" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+make[2]: *** [../scripts/Makefile.modpost:94: __modpost] Error 1
+make[1]: *** [/linux/Makefile:1298: modules] Error 2
+make: *** [Makefile:180: sub-make] Error 2
+make: Target 'modules' not remade because of errors.
 
-Moves the unused functions into the #ifdef
+Rework to EXPORT_SYMBOL_GPL for those functions.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: 5b645b7fade9 ("PCI: tegra: Add support for PCIe endpoint mode in Tegra194")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- net/ipv4/tcp_bpf.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index fe7b4fbc31c1..37c91f25cae3 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -10,19 +10,6 @@
- #include <net/inet_common.h>
- #include <net/tls.h>
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 4233c4321373..1cdcbd102ce8 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -18,6 +18,7 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
  
--static bool tcp_bpf_stream_read(const struct sock *sk)
--{
--	struct sk_psock *psock;
--	bool empty = true;
--
--	rcu_read_lock();
--	psock = sk_psock(sk);
--	if (likely(psock))
--		empty = list_empty(&psock->ingress_msg);
--	rcu_read_unlock();
--	return !empty;
--}
--
- static int tcp_bpf_wait_data(struct sock *sk, struct sk_psock *psock,
- 			     int flags, long timeo, int *err)
- {
-@@ -298,6 +285,20 @@ int tcp_bpf_sendmsg_redir(struct sock *sk, struct sk_msg *msg,
+ 	pci_epc_linkup(epc);
  }
- EXPORT_SYMBOL_GPL(tcp_bpf_sendmsg_redir);
++EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
  
-+#ifdef CONFIG_BPF_STREAM_PARSER
-+static bool tcp_bpf_stream_read(const struct sock *sk)
-+{
-+	struct sk_psock *psock;
-+	bool empty = true;
-+
-+	rcu_read_lock();
-+	psock = sk_psock(sk);
-+	if (likely(psock))
-+		empty = list_empty(&psock->ingress_msg);
-+	rcu_read_unlock();
-+	return !empty;
-+}
-+
- static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
- 				struct sk_msg *msg, int *copied, int flags)
+ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
  {
-@@ -528,7 +529,6 @@ static int tcp_bpf_sendpage(struct sock *sk, struct page *page, int offset,
- 	return copied ? copied : err;
- }
+@@ -25,6 +26,7 @@ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
  
--#ifdef CONFIG_BPF_STREAM_PARSER
- enum {
- 	TCP_BPF_IPV4,
- 	TCP_BPF_IPV6,
+ 	pci_epc_init_notify(epc);
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
+ 
+ static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
+ 				   int flags)
+@@ -535,6 +537,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
+ 
+ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ {
+@@ -629,3 +632,4 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+ 
+ 	return dw_pcie_ep_init_complete(ep);
+ }
++EXPORT_SYMBOL_GPL(dw_pcie_ep_init);
 -- 
-2.17.1
-
+2.20.1
 
