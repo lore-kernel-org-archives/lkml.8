@@ -2,101 +2,123 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A73C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2341C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0578A20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F16520724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:11:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zy7A3gLv"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YrHOULcD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgCSKJa (ORCPT
+        id S1725768AbgCSKL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:09:30 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54115 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgCSKJa (ORCPT
+        Thu, 19 Mar 2020 06:11:26 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:22502 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726188AbgCSKL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:09:30 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 25so1397715wmk.3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 03:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=RUn9UxzNYqDlVvjBdc02JsbNjG/1HKK11KHzgN8DpHk=;
-        b=Zy7A3gLvgvG/ej7PLOBuw+h4UHQ5YbbbobNUkbeATbvkfuxaQMOb0vCCzKzXulEcjw
-         Bflohb+c02EaGzLqe2kK0BuFaN6SiD4Vh3o5Z5DsCwi/hTTnjafJiooBLOzlmiLonQfq
-         VErW8XaIC6T6pTsNu7/AX+kP031rgbcXZ6HgannJPJPKd2wqBCXPu006yPFmo21RUGiN
-         L+Uzh/7ygSs1dOedYs1gEKqoqeQMW7ydWG1eRuOmfe3pM3dwE2yYYcQzmxvI3QcPe2f3
-         XzwNrVNlGh2T8ZCEksGYeFItDSMGoRFJuF3kAKSgBT79fR1850m+Cy0qSAYAGwYgneQl
-         Pkuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=RUn9UxzNYqDlVvjBdc02JsbNjG/1HKK11KHzgN8DpHk=;
-        b=bCVtoLu1+9T+qomcNAc/K+ZGztv9eX9eYIEZjB1iH3d+Jby/yH+7FdJ00wF/W1AaZi
-         6BcpzcdQJnjFkJ65/17MGKo7mAGRch9mFV4yCP+y1/dkULom8udLzoi3rHgMto05kfiB
-         aialQRTMG0WJIIDLkbFy3+GYnPOek9agzw2xCxS+s3HP3OjEsBDRVuuTgml01TIjbECE
-         +3BY1YeDUCy38LQh2BEb10cCxhRm0ZWzAenv0mMFEFBwbyASIVpKTagf5PDckb1nVu1/
-         7KOkM4XbIU2ycDoBzKe6u2Te5oGsRbGkAOqTYwB4Wp8YM7GR44AXF37yk3Fhctb1Ugm0
-         0omA==
-X-Gm-Message-State: ANhLgQ3gK+eC6cjWbZm/5DpOfYBhEUEoeWjzMGqm1wed2xUFcdZQJIlf
-        6IC1cZFtQACZS6txmYNQ0mTF+Q==
-X-Google-Smtp-Source: ADFU+vvPWW5ImdZ2pav4UsRH9+6PgZUguig9OJgjiIdwzr6ph+GkNIPoA4BMw5D7ED82x6qxdypSqw==
-X-Received: by 2002:a05:600c:2319:: with SMTP id 25mr2829698wmo.106.1584612568933;
-        Thu, 19 Mar 2020 03:09:28 -0700 (PDT)
-Received: from dell ([2.27.35.213])
-        by smtp.gmail.com with ESMTPSA id h16sm2730355wrr.48.2020.03.19.03.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 03:09:28 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 10:10:14 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, tglx@linutronix.de,
-        fabrice.gasnier@st.com, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] mfd: stm32: Add defines to be used for clkevent
- purpose
-Message-ID: <20200319101014.GA5477@dell>
-References: <20200217134546.14562-1-benjamin.gaignard@st.com>
- <20200217134546.14562-3-benjamin.gaignard@st.com>
- <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
+        Thu, 19 Mar 2020 06:11:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584612685; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=M1HzhVB6T9UZUN6Oig36KI7SQdXHk/1MM2NC6JmVWog=;
+ b=YrHOULcD/Q4lswZjbvoK+GxOzq/d64CaG4mkcAlVyHMpQ68jdd2il12Bs5nMrypOa+JtROPJ
+ Rm/xVHU8kpqCBMOYYunA4zQ9WiZVkMdedCKtT4/pEOJMJIEK8Z4pIubvJ/oiiTMa5Ts5fFhS
+ N7fwnDjOjDd+NE6/OxFlqvzSkX4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e734544.7f13f5a2f8f0-smtp-out-n05;
+ Thu, 19 Mar 2020 10:11:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6BBB9C4478F; Thu, 19 Mar 2020 10:11:16 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA8B3C433D2;
+        Thu, 19 Mar 2020 10:11:15 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 19 Mar 2020 15:41:15 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+In-Reply-To: <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
+ <20200318034243.o2metmggzuah6cqw@vireshk-i7>
+ <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
+Message-ID: <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020, Daniel Lezcano wrote:
-> On 17/02/2020 14:45, Benjamin Gaignard wrote:
-> > Add defines to be able to enable/clear irq and configure one shot mode.
-> > 
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+On 2020-03-19 15:12, Rajendra Nayak wrote:
+> On 3/18/2020 9:12 AM, Viresh Kumar wrote:
+>> On 18-03-20, 02:13, Sibi Sankar wrote:
+>>> On 2020-01-28 01:33, Sibi Sankar wrote:
+>>>> This RFC series aims to extend cpu based scaling support to L3/DDR 
+>>>> on
+>>>> SDM845 and SC7180 SoCs.
+>>>> 
+>>> 
+>>> Hey Viresh/Saravana,
+>>> 
+>>> Ping! Can you take a stab at reviewing
+>>> the series, it has been on the list for
+>>> a while now.
+>> 
+>> I believe this depends on Saravana's series on which I have raised
+>> some doubts few weeks back ? I am still waiting for them to get
+>> clarified by him.
+
+Viresh,
+Saravana's example does show a device
+with multiple opp tables but doesn't
+need multiple opp table support to
+land though (since it works fine with
+the current implementation). I am more
+interested  in understanding your/
+Stephen's/Saravana's stance on adding
+multiple opp-table support. Personally
+I feel its inevitable, since multiple
+qc drivers using interconnect opp-tables,
+routinely need vote on multiple paths in
+a non-trivial manner.
+
 > 
-> Are you fine if I pick this patch with the series?
+> Could you please post a link to the discussion that you are referring 
+> to here?
+> I looked at a few links posted in the cover letter as dependencies and 
+> it seems
+> like the discussions are pending for *months* and not weeks but I
+> might have looked
+> at the wrong ones.
 
-Nothing heard from you since I Acked this.
+https://lore.kernel.org/lkml/20200114103448.odnvqawnqb3twst5@vireshk-i7/
 
-Are you still planning on taking this patch?
-
-If so, can you also take patch 1 please?
+Rajendra,
+Viresh is referring to ^^ one
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
