@@ -2,876 +2,108 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088A0C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D31FC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A830D2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:34:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="beW9rUTc"
+	by mail.kernel.org (Postfix) with ESMTP id E978D2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584639307;
+	bh=H6+Zt68q6NpwZY74Cv9pAkKGS0V2iIXKJCpMSO5Ui6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=W+z49nf2U3dk8/derhRPGssVMbUJE2GP6OCLxjA0IzVMevmCXOI30jAoWotIQFEFk
+	 3QQ6/7FKlotgeUlsB84DOTibk2ZY0+RIYTxWkqxpslN7g6A4AC9Sjow5757wgVAI81
+	 kFOrqs8LVOqQDQHTNpp3j5wQOh8xJwED4X4u9om0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgCSRe2 (ORCPT
+        id S1728313AbgCSRfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:34:28 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:57010 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbgCSRe2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:34:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1584639258; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=18a4lIsFRB2+ZKigoJK5xTVAuW10rKL6AztAWVH3Lgc=;
-        b=beW9rUTcuR4qGKh/k4cn4Ir4oYqS5NO2Uyafa6YrLcZiU42/OixBUJACoFDJfaJckWiFzf
-        Cl9KesLv/FBz3lvo7SF6BsOYZUY3/G9RmNkIkirJpUc2a7LrEjXxxfmQ5SemKUuY66lPlm
-        LvLwI50J07h6KhALUbBn2H7pYQgca2M=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Stenkin Evgeniy <stenkinevgeniy@gmail.com>,
-        Jonas Heinrich <onny@project-insanity.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 2/2] ARM: DTS: Add devicetree file for the Galaxy S2
-Date:   Thu, 19 Mar 2020 18:34:11 +0100
-Message-Id: <20200319173411.20607-2-paul@crapouillou.net>
-In-Reply-To: <20200319173411.20607-1-paul@crapouillou.net>
-References: <20200319173411.20607-1-paul@crapouillou.net>
+        Thu, 19 Mar 2020 13:35:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:39466 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727009AbgCSRfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:35:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB94F30E;
+        Thu, 19 Mar 2020 10:35:04 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FD7C3F305;
+        Thu, 19 Mar 2020 10:35:04 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 17:35:02 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        kuninori.morimoto.gx@renesas.com,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, curtis@malainey.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        liam.r.girdwood@linux.intel.com
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+Message-ID: <20200319173502.GC3983@sirena.org.uk>
+References: <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+ <20200318215218.GA2439@light.dominikbrodowski.net>
+ <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+ <20200319130049.GA2244@light.dominikbrodowski.net>
+ <20200319134139.GB3983@sirena.org.uk>
+ <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
+ <20200319165157.GA2254@light.dominikbrodowski.net>
+ <eef45d20-3bce-184a-842c-216c15252014@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ALfTUftag+2gvp1h"
+Content-Disposition: inline
+In-Reply-To: <eef45d20-3bce-184a-842c-216c15252014@linux.intel.com>
+X-Cookie: Captain's Log, star date 21:34.5...
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
 
-Add devicetree file for the Exynos 4210 based Galaxy S2 (i9100 version).
+--ALfTUftag+2gvp1h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Stenkin Evgeniy <stenkinevgeniy@gmail.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+On Thu, Mar 19, 2020 at 12:21:47PM -0500, Pierre-Louis Bossart wrote:
+> On 3/19/20 11:51 AM, Dominik Brodowski wrote:
 
-Notes:
-    v2: - Change i9100 to GT-I9100
-        - Remove redundant description in header
-    	- Add chosen node with stdout-path
-    	- Rename regulator nodes since there was no regulator-2
-    	- Rename i2c-gpio-3 to i2c-gpio
-    	- Use IRQ_TYPE_EDGE_FALLING instead of hardcoded '2'
-        - Remove spi-cpol, spi-cpha as they glitch the LCD panel
-    	- Make CS gpio active-low
-    	- Update ehci node to add 'phys' instead of ports
-    	- Remove duplicated ehci node
-    	- Reorder nodes to appear in alphabetical order
-    	- Remove useless newlines
-    	- Remove regulator provided to touchscreen node since it does not expect any
-    
-    v3: - Change CPU regulator name to VARM_1.2V_C210 as in the datasheet
-        - Remove unused gpios for the max8997 pmic
-        - Remove redundant interrupts/interrupt-parent for max8997 pmic
+> > That patch fixes the issue(s). I didn't even need to revert 64df6afa0dab
+> > ("ASoC: Intel: broadwell: change cpu_dai and platform components for SOF")
+> > on top of that. But you can assess better whether that patch needs care for
+> > other reasons; for me, this one-liner you have suggested is perfect.
 
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/exynos4210-i9100.dts | 768 +++++++++++++++++++++++++
- 2 files changed, 769 insertions(+)
- create mode 100644 arch/arm/boot/dts/exynos4210-i9100.dts
+Good news!
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index d6546d2676b9..522436d30690 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -181,6 +181,7 @@ dtb-$(CONFIG_ARCH_EXYNOS3) += \
- 	exynos3250-monk.dtb \
- 	exynos3250-rinato.dtb
- dtb-$(CONFIG_ARCH_EXYNOS4) += \
-+	exynos4210-i9100.dtb \
- 	exynos4210-origen.dtb \
- 	exynos4210-smdkv310.dtb \
- 	exynos4210-trats.dtb \
-diff --git a/arch/arm/boot/dts/exynos4210-i9100.dts b/arch/arm/boot/dts/exynos4210-i9100.dts
-new file mode 100644
-index 000000000000..a4147113f0c4
---- /dev/null
-+++ b/arch/arm/boot/dts/exynos4210-i9100.dts
-@@ -0,0 +1,768 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Samsung's Exynos4210 based Galaxy S2 (GT-I9100 version) device tree
-+ *
-+ * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com
-+ * Copyright (c) 2020 Stenkin Evgeniy <stenkinevgeniy@gmail.com>
-+ * Copyright (c) 2020 Paul Cercueil <paul@crapouillou.net>
-+ */
-+
-+/dts-v1/;
-+#include "exynos4210.dtsi"
-+#include "exynos4412-ppmu-common.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/linux-event-codes.h>
-+
-+/ {
-+	model = "Samsung Galaxy S2 (GT-I9100)";
-+	compatible = "samsung,i9100", "samsung,exynos4210", "samsung,exynos4";
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0x40000000 0x40000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial2:115200n8";
-+	};
-+
-+	vemmc_reg: regulator-0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VMEM_VDD_2.8V";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		gpio = <&gpk0 2 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	tsp_reg: regulator-1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "TSP_FIXED_VOLTAGES";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpl0 3 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <70000>;
-+		enable-active-high;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	cam_af_28v_reg: regulator-2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "8M_AF_2.8V_EN";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		gpio = <&gpk1 1 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	cam_io_en_reg: regulator-3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "CAM_IO_EN";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		gpio = <&gpe2 1 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	cam_io_12v_reg: regulator-4 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "8M_1.2V_EN";
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
-+		gpio = <&gpe2 5 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	vt_core_15v_reg: regulator-5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VT_CORE_1.5V";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		gpio = <&gpe2 2 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		vol-down {
-+			gpios = <&gpx2 1 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			label = "volume down";
-+			debounce-interval = <10>;
-+		};
-+
-+		vol-up {
-+			gpios = <&gpx2 0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			label = "volume up";
-+			debounce-interval = <10>;
-+		};
-+
-+		power {
-+			gpios = <&gpx2 7 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+			label = "power";
-+			debounce-interval = <10>;
-+			wakeup-source;
-+		};
-+
-+		ok {
-+			gpios = <&gpx3 5 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_OK>;
-+			label = "ok";
-+			debounce-interval = <10>;
-+		};
-+	};
-+
-+	wlan_pwrseq: sdhci3-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpl1 2 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	i2c_max17042_fuel: i2c-gpio {
-+		compatible = "i2c-gpio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		sda-gpios = <&gpy4 0 GPIO_ACTIVE_HIGH>;
-+		scl-gpios = <&gpy4 1 GPIO_ACTIVE_HIGH>;
-+		i2c-gpio,delay-us = <5>;
-+
-+		battery@36 {
-+			compatible = "maxim,max17042";
-+
-+			interrupt-parent = <&gpx2>;
-+			interrupts = <3 IRQ_TYPE_EDGE_FALLING>;
-+
-+			pinctrl-0 = <&max17042_fuel_irq>;
-+			pinctrl-names = "default";
-+
-+			reg = <0x36>;
-+			maxim,over-heat-temp = <700>;
-+			maxim,over-volt = <4500>;
-+		};
-+	};
-+
-+	spi-lcd {
-+		compatible = "spi-gpio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		num-chipselects = <1>;
-+		cs-gpios = <&gpy4 3 GPIO_ACTIVE_LOW>;
-+		sck-gpios = <&gpy3 1 GPIO_ACTIVE_HIGH>;
-+		mosi-gpios = <&gpy3 3 GPIO_ACTIVE_HIGH>;
-+
-+		lcd@0 {
-+			compatible = "samsung,ld9040";
-+			reg = <0>;
-+
-+			spi-max-frequency = <1200000>;
-+
-+			vdd3-supply = <&vmipi_reg>;
-+			vci-supply = <&vcclcd_reg>;
-+
-+			reset-gpios = <&gpy4 5 GPIO_ACTIVE_HIGH>;
-+			power-on-delay = <10>;
-+			reset-delay = <10>;
-+
-+			panel-width-mm = <90>;
-+			panel-height-mm = <154>;
-+
-+			display-timings {
-+				timing {
-+					clock-frequency = <23492370>;
-+					hactive = <480>;
-+					vactive = <800>;
-+					hback-porch = <16>;
-+					hfront-porch = <16>;
-+					vback-porch = <2>;
-+					vfront-porch = <28>;
-+					hsync-len = <2>;
-+					vsync-len = <1>;
-+					hsync-active = <0>;
-+					vsync-active = <0>;
-+					de-active = <0>;
-+					pixelclk-active = <0>;
-+				};
-+			};
-+
-+			port {
-+				lcd_ep: endpoint {
-+					remote-endpoint = <&fimd_dpi_ep>;
-+				};
-+			};
-+		};
-+	};
-+
-+	fixed-rate-clocks {
-+		xxti {
-+			compatible = "samsung,clock-xxti";
-+			clock-frequency = <0>;
-+		};
-+
-+		xusbxti {
-+			compatible = "samsung,clock-xusbxti";
-+			clock-frequency = <24000000>;
-+		};
-+	};
-+
-+	thermal-zones {
-+		cpu_thermal: cpu-thermal {
-+			cooling-maps {
-+				map0 {
-+					/* Corresponds to 800MHz */
-+					cooling-device = <&cpu0 2 2>;
-+				};
-+				map1 {
-+					/* Corresponds to 200MHz */
-+					cooling-device = <&cpu0 4 4>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&camera {
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu0-supply = <&varm_breg>;
-+};
-+
-+&ehci {
-+	status = "okay";
-+
-+	phys = <&exynos_usbphy 1>;
-+	phy-names = "host";
-+};
-+
-+&exynos_usbphy {
-+	status = "okay";
-+
-+	vbus-supply = <&safe1_sreg>;
-+};
-+
-+&fimc_0 {
-+	status = "okay";
-+
-+	assigned-clocks = <&clock CLK_MOUT_FIMC0>, <&clock CLK_SCLK_FIMC0>;
-+	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
-+	assigned-clock-rates = <0>, <160000000>;
-+};
-+
-+&fimc_1 {
-+	status = "okay";
-+
-+	assigned-clocks = <&clock CLK_MOUT_FIMC1>, <&clock CLK_SCLK_FIMC1>;
-+	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
-+	assigned-clock-rates = <0>, <160000000>;
-+};
-+
-+&fimc_2 {
-+	status = "okay";
-+
-+	assigned-clocks = <&clock CLK_MOUT_FIMC2>, <&clock CLK_SCLK_FIMC2>;
-+	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
-+	assigned-clock-rates = <0>, <160000000>;
-+};
-+
-+&fimc_3 {
-+	status = "okay";
-+
-+	assigned-clocks = <&clock CLK_MOUT_FIMC3>, <&clock CLK_SCLK_FIMC3>;
-+	assigned-clock-parents = <&clock CLK_SCLK_MPLL>;
-+	assigned-clock-rates = <0>, <160000000>;
-+};
-+
-+&fimd {
-+	status = "okay";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	samsung,invert-vden;
-+	samsung,invert-vclk;
-+
-+	pinctrl-0 = <&lcd_clk>, <&lcd_data24>;
-+	pinctrl-names = "default";
-+
-+	port@3 {
-+		reg = <3>;
-+
-+		fimd_dpi_ep: endpoint {
-+			remote-endpoint = <&lcd_ep>;
-+		};
-+	};
-+};
-+
-+&gpu {
-+	status = "okay";
-+
-+	mali-supply = <&vg3d_breg>;
-+	regulator-microvolt-offset = <50000>;
-+	regulator-microsecs-delay = <50>;
-+};
-+
-+&hsotg {
-+	status = "okay";
-+
-+	dr_mode = "otg";
-+	vusb_d-supply = <&vusb_reg>;
-+	vusb_a-supply = <&vusbdac_reg>;
-+};
-+
-+&i2c_3 {
-+	status = "okay";
-+
-+	samsung,i2c-sda-delay = <100>;
-+	samsung,i2c-slave-addr = <0x10>;
-+	samsung,i2c-max-bus-freq = <100000>;
-+
-+	pinctrl-0 = <&i2c3_bus>;
-+	pinctrl-names = "default";
-+
-+	mxt224-touchscreen@4a {
-+		compatible = "atmel,maxtouch";
-+		reg = <0x4a>;
-+
-+		interrupt-parent = <&gpx0>;
-+		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+};
-+
-+&i2c_5 {
-+	status = "okay";
-+
-+	samsung,i2c-sda-delay = <100>;
-+	samsung,i2c-slave-addr = <0x10>;
-+	samsung,i2c-max-bus-freq = <100000>;
-+
-+	pinctrl-0 = <&i2c5_bus>;
-+	pinctrl-names = "default";
-+
-+	max8997_pmic@66 {
-+		compatible = "maxim,max8997-pmic";
-+		reg = <0x66>;
-+
-+		interrupts-extended = <&gpx0 7 IRQ_TYPE_NONE>,
-+				      <&gpx2 3 IRQ_TYPE_EDGE_FALLING>;
-+
-+		max8997,pmic-buck1-uses-gpio-dvs;
-+		max8997,pmic-buck2-uses-gpio-dvs;
-+		max8997,pmic-buck5-uses-gpio-dvs;
-+
-+		max8997,pmic-ignore-gpiodvs-side-effect;
-+		max8997,pmic-buck125-default-dvs-idx = <0>;
-+
-+		max8997,pmic-buck125-dvs-gpios = <&gpx0 5 GPIO_ACTIVE_HIGH>,
-+						 <&gpx0 6 GPIO_ACTIVE_HIGH>,
-+						 <&gpl0 0 GPIO_ACTIVE_HIGH>;
-+
-+		max8997,pmic-buck1-dvs-voltage = <1350000>, <1300000>,
-+						 <1250000>, <1200000>,
-+						 <1150000>, <1100000>,
-+						 <1000000>, <950000>;
-+
-+		max8997,pmic-buck2-dvs-voltage = <1100000>, <1000000>,
-+						 <950000>,  <900000>,
-+						 <1100000>, <1000000>,
-+						 <950000>,  <900000>;
-+
-+		max8997,pmic-buck5-dvs-voltage = <1200000>, <1200000>,
-+						 <1200000>, <1200000>,
-+						 <1200000>, <1200000>,
-+						 <1200000>, <1200000>;
-+
-+		pinctrl-0 = <&max8997_irq>, <&otg_gp>, <&usb_sel>;
-+		pinctrl-names = "default";
-+
-+		regulators {
-+			vadc_reg: LDO1 {
-+				regulator-name = "VADC_3.3V_C210";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+
-+			};
-+			valive_reg: LDO2 {
-+				regulator-name = "VALIVE_1.1V_C210";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-always-on;
-+
-+			};
-+
-+			vusb_reg: LDO3 {
-+				regulator-name = "VUSB_1.1V_C210";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+			};
-+
-+			vmipi_reg: LDO4 {
-+				regulator-name = "VMIPI_1.8V";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			vhsic_reg: LDO5 {
-+				regulator-name = "VHSIC_1.2V";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+			};
-+
-+			vpda_reg: LDO6 {
-+				regulator-name = "VCC_1.8V_PDA";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			vcam_reg: LDO7 {
-+				regulator-name = "CAM_ISP_1.8V";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+			};
-+
-+			vusbdac_reg: LDO8 {
-+				regulator-name = "VUSB+VDAC_3.3V_C210";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vccpda_reg: LDO9 {
-+				regulator-name = "VCC_2.8V_PDA";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+			};
-+
-+			vtouch_reg: LDO11 {
-+				regulator-name = "TOUCH_2.8V";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+			};
-+
-+			vpll_reg: LDO10 {
-+				regulator-name = "VPLL_1.1V";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-always-on;
-+			};
-+
-+			vtcam_reg: LDO12 {
-+				regulator-name = "VT_CAM_1.8V";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+			};
-+
-+			vcclcd_reg: LDO13 {
-+				regulator-name = "VCC_3.0V_LCD";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+			};
-+
-+			vmotor_reg: LDO14 {
-+				regulator-name = "VCC_2.8V_MOTOR";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+			};
-+
-+			vled_reg: LDO15 {
-+				regulator-name = "LED_A_2.8V";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+			};
-+
-+			camsensor_reg: LDO16 {
-+				regulator-name = "CAM_SENSOR_IO_1.8V";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+			};
-+
-+			vtf_reg: LDO17 {
-+				regulator-name = "VTF_2.8V";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+			};
-+
-+			vtouchled_reg: LDO18 {
-+				regulator-name = "TOUCH_LED_3.3V";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vddq_reg: LDO21 {
-+				regulator-name = "VDDQ_M1M2_1.2V";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+			};
-+
-+			varm_breg: BUCK1 {
-+				regulator-name = "VARM_1.2V_C210";
-+				regulator-min-microvolt = <65000>;
-+				regulator-max-microvolt = <2225000>;
-+				regulator-always-on;
-+			};
-+
-+			vint_breg: BUCK2 {
-+				regulator-name = "VINT_1.1V_C210";
-+				regulator-min-microvolt = <65000>;
-+				regulator-max-microvolt = <2225000>;
-+				regulator-always-on;
-+			};
-+
-+			vg3d_breg: BUCK3 {
-+				regulator-name = "G3D_1.1V";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+			};
-+
-+			camisp_breg: BUCK4 {
-+				regulator-name = "CAM_ISP_CORE_1.2V";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+			};
-+
-+			vmem_breg: BUCK5 {
-+				regulator-name = "VMEM_1.2V";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+			};
-+
-+			vccsub_breg: BUCK7 {
-+				regulator-name = "VCC_SUB_2.0V";
-+				regulator-min-microvolt = <2000000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-always-on;
-+			};
-+
-+			safe1_sreg: ESAFEOUT1 {
-+				regulator-name = "SAFEOUT1";
-+			};
-+
-+			safe2_sreg: ESAFEOUT2 {
-+				regulator-name = "SAFEOUT2";
-+				regulator-boot-on;
-+			};
-+
-+			charger_reg: CHARGER {
-+				regulator-name = "CHARGER";
-+				regulator-min-microamp = <60000>;
-+				regulator-max-microamp = <2580000>;
-+				regulator-always-on;
-+			};
-+
-+			chargercv_reg: CHARGER_CV {
-+				regulator-name = "CHARGER_CV";
-+				regulator-min-microvolt = <3800000>;
-+				regulator-max-microvolt = <4100000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c_7 {
-+	status = "okay";
-+
-+	samsung,i2c-sda-delay = <100>;
-+	samsung,i2c-slave-addr = <0x10>;
-+	samsung,i2c-max-bus-freq = <400000>;
-+
-+	pinctrl-0 = <&i2c7_bus>;
-+	pinctrl-names = "default";
-+
-+	ak8975@c {
-+		compatible = "asahi-kasei,ak8975";
-+		reg = <0x0c>;
-+
-+		gpios = <&gpx2 2 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&pinctrl_0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sleep0>;
-+
-+	sleep0: sleep-states {
-+		gpa0-0 {
-+			samsung,pins = "gpa0-0";
-+			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_INPUT>;
-+			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-+		};
-+
-+		gpa0-1 {
-+			samsung,pins = "gpa0-1";
-+			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_OUT0>;
-+			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-+		};
-+
-+		gpa0-2 {
-+			samsung,pins = "gpa0-2";
-+			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_INPUT>;
-+			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-+		};
-+
-+		gpa0-3 {
-+			samsung,pins = "gpa0-3";
-+			samsung,pin-con-pdn = <EXYNOS_PIN_PDN_OUT1>;
-+			samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
-+		};
-+	};
-+};
-+
-+&pinctrl_1 {
-+	mhl_int: mhl-int {
-+		samsung,pins = "gpf3-5";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+
-+	i2c_mhl_bus: i2c-mhl-bus {
-+		samsung,pins = "gpf0-4", "gpf0-6";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-+	};
-+
-+	usb_sel: usb-sel {
-+		samsung,pins = "gpl0-6";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-+		samsung,pin-val = <0>;
-+	};
-+
-+	bt_en: bt-en {
-+		samsung,pins = "gpl0-4";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
-+		samsung,pin-val = <0>;
-+	};
-+
-+	bt_res: bt-res {
-+		samsung,pins = "gpl1-0";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
-+		samsung,pin-val = <0>;
-+	};
-+
-+	otg_gp: otg-gp {
-+		samsung,pins = "gpx3-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-+		samsung,pin-val = <0>;
-+	};
-+
-+	mag_mhl_gpio: mag-mhl-gpio {
-+		samsung,pins = "gpd0-2";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+
-+	max8997_irq: max8997-irq {
-+		samsung,pins = "gpx0-7";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+
-+	max17042_fuel_irq: max17042-fuel-irq {
-+		samsung,pins = "gpx2-3";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+
-+	tsp224_irq: tsp224-irq {
-+		samsung,pins = "gpx0-4";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-+	};
-+};
-+
-+&sdhci_0 {
-+	status = "okay";
-+
-+	bus-width = <8>;
-+	non-removable;
-+	vmmc-supply = <&vemmc_reg>;
-+
-+	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_bus8>;
-+	pinctrl-names = "default";
-+};
-+
-+&sdhci_2 {
-+	status = "okay";
-+
-+	bus-width = <4>;
-+	cd-gpios = <&gpx3 4 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&vtf_reg>;
-+
-+	pinctrl-0 = <&sd2_clk>, <&sd2_cmd>, <&sd2_bus4>;
-+	pinctrl-names = "default";
-+};
-+
-+&sdhci_3 {
-+	status = "okay";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	non-removable;
-+	bus-width = <4>;
-+	mmc-pwrseq = <&wlan_pwrseq>;
-+	vmmc-supply = <&vtf_reg>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd3_clk>, <&sd3_cmd>, <&sd3_bus4>;
-+
-+	brcmf: wifi@1 {
-+		compatible = "brcm,bcm4330-fmac";
-+		reg = <1>;
-+
-+		interrupt-parent = <&gpx2>;
-+		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
-+&serial_0 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&bt_en>, <&bt_res>, <&uart0_data>, <&uart0_fctl>;
-+
-+	bluetooth {
-+		compatible = "brcm,bcm4330-bt";
-+
-+		shutdown-gpios = <&gpl0 4 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpl1 0 GPIO_ACTIVE_HIGH>;
-+		device-wakeup-gpios = <&gpx3 1 GPIO_ACTIVE_HIGH>;
-+		host-wakeup-gpios = <&gpx2 6 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&serial_1 {
-+	status = "okay";
-+};
-+
-+&serial_2 {
-+	status = "okay";
-+};
-+
-+&serial_3 {
-+	status = "okay";
-+};
-+
-+&tmu {
-+	status = "okay";
-+};
--- 
-2.25.1
+> .ignore_suspend is set for bdw-rt5677.c and bdw-rt5650.c as well. I don't
+> know if that was intentional.
 
+The intended use case is for applications doing audio during suspend
+like telephony audio between the modem and CODEC on a phone or
+compressed audio playback.  I guess the compressed audio playback case
+could possibly apply with these systems though x86 suspend/resume is
+usually sufficiently heavyweight that it's surprising.
+
+--ALfTUftag+2gvp1h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5zrUYACgkQJNaLcl1U
+h9DIEwf9FLcdiU91qM0+JTKeKiJu3mL1vlW6iLHqYEhaCUw36glNuoopk/9psyqr
+hB6DFa3EJketJQe9qh1VdB6kmTVNYALb6XL8xnXG0S5vbviIFlm/cZjCFm+ZJMCK
+ugGjuCb6oqwAjWL/0WVtgA+v7Vw7RQYVpiz+3rq3IdXIFKhTvvN/F804ZgMWkCv8
+Qu+s/2EZg3gfln2oPzbKfJiL/5rV8ksQf0kptl5oe4PRRrdaGdlHnuSqYem/da5W
+c/i3ub8sriBXvmEEgyDh7J8H0qywfe0w/awxnWoagYyZevMIazW8qI3o5oCU3m/J
+o2EEEyz0OhGHeadxs4nmhxCASV4xyw==
+=IDeG
+-----END PGP SIGNATURE-----
+
+--ALfTUftag+2gvp1h--
