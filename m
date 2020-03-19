@@ -2,103 +2,97 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BE2C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFA5C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BC220663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:14:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="njOQ4F8k"
+	by mail.kernel.org (Postfix) with ESMTP id 5228B2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584620322;
+	bh=9n5iSscoqYAjXl49/svHpLf5qsJKzfPfCazHWgnTthY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1sR+jUDkCnGHyRoQW7S5Ll+G4Xq3N0AuZ2Wf6O4PRFB/AbxbEkbIAYaI6z3hO8C5/
+	 Y0wYkanmNAFrqeC7gislX4z/5UAckCNsPE0gqpGhWQt9Wz2+sirjPeB8y6jOEmP/gP
+	 5KnltaNfl6qSZsWpFRBGwJPr9A8SSVOVf9NtYuK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgCSMOb (ORCPT
+        id S1727003AbgCSMSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:14:31 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45823 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgCSMOa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:14:30 -0400
-Received: by mail-wr1-f68.google.com with SMTP id i9so2608194wrx.12
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 05:14:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X2Xv4uORm87l+84uMG+Z6O9csFS6Z05eg8XvBedWYqw=;
-        b=njOQ4F8kt/r3GjPvAzUyBYTgWq111kBIjNvQFumoP24lpirM/JRS32i7mCVLBAITCi
-         cgiYylpSdPnpyFSwyawXbeFzc1KdwmAbCRNhWrvybOpBDtnQQiQK2bq/okxVMSP7NaCX
-         7bBvGtZ5YwrbK4yH7oOvieqdjMtx4erDTKjJyt/OzwZi131VLgkiU9Pa44pS1i3WJvFs
-         vPGmnFXcmqDLGxd3OVVOQlNZWufB0Dks+OxA4p4z4tW/3yroj4QIdTPRJlx5QrWeFkAY
-         g7cOh1gkk4K/rH1mndJ7M9wVr52N9ZqFiXrMm93At1zZlereR94Z0BjZFxeMRZqNgmU8
-         f0KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=X2Xv4uORm87l+84uMG+Z6O9csFS6Z05eg8XvBedWYqw=;
-        b=SD6kmuETtfMSZ8bfycPh2pDcwurs3gRoKl4fMNRsOuXImURTy9yRBl61Z82XVWJe/S
-         0Niv6Tp1CU6CeWM33x81txTYoA+jN4vAjb193VLrprsFUpvU9i/uqXDo4DR5g6WPdXBO
-         nt0KmyCW9rTQwEuCaABKMyN3vFLZ3TJ0tHCEDETFGZWg+PsNTRL02u9BZjvYt0nJHyJJ
-         wv3oKRn9jQZxQJsnbNfEr43zQI9gQ8nh0xdwE9GmDvM9AWQEFA/vpFwB+BlL173ak3zM
-         QHIuTvsVbFyRByWCtYNATkYVwc7M2y/kGjs7vAsnSvx6GvpuHPI1Rfmtn//3xE/K+IC+
-         CQFw==
-X-Gm-Message-State: ANhLgQ0niyHPIrdbN7HeWwZVsLzEuprodh1QUVm6a56JMchiKEHkOja4
-        4UGh4BtnG8uDGwfFhjwz3XvAlw==
-X-Google-Smtp-Source: ADFU+vtRmac6JqvgKSJgSidNRtitLeNCe4QcW4CA86WQGWpD3QSiU9DNPQqam6jsn2srAoi7DF6rEg==
-X-Received: by 2002:adf:ef92:: with SMTP id d18mr3813859wro.193.1584620066954;
-        Thu, 19 Mar 2020 05:14:26 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id a73sm2770455wme.47.2020.03.19.05.14.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 05:14:25 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2] soc: qcom: socinfo: add missing soc_id sysfs entry
-Date:   Thu, 19 Mar 2020 12:14:18 +0000
-Message-Id: <20200319121418.5180-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Thu, 19 Mar 2020 08:18:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgCSMSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:18:41 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6518E20663;
+        Thu, 19 Mar 2020 12:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584620320;
+        bh=9n5iSscoqYAjXl49/svHpLf5qsJKzfPfCazHWgnTthY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hMSyvzWudmn5PzqltwH9zVaoJflLaueZMoY7JuIBTmbwkmjCNT2hHrPKP5wQH72Yh
+         QFw0yTyO2UEaw6WkBq6MKpEtt6gXN8nHKmL84bm4cma4fb8H2wB9x2hE3YrL1/HpSO
+         TyT89wwVpUtFpxgCHtakHPiwm6ZKyuZAtda9p8uI=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jEu8E-00Dvom-M6; Thu, 19 Mar 2020 12:18:38 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 19 Mar 2020 12:18:38 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v5 21/23] KVM: arm64: GICv4.1: Reload VLPI configuration
+ on distributor enable/disable
+In-Reply-To: <7f112d75-166b-24eb-538d-e100242d8e9a@huawei.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-22-maz@kernel.org>
+ <7f112d75-166b-24eb-538d-e100242d8e9a@huawei.com>
+Message-ID: <ed4b6d1f4a156e22c5c619e197fa4752@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like SoC ID is not exported to sysfs for some reason.
-This patch adds it!
+On 2020-03-18 03:17, Zenghui Yu wrote:
+> On 2020/3/5 4:33, Marc Zyngier wrote:
+>> Each time a Group-enable bit gets flipped, the state of these bits
+>> needs to be forwarded to the hardware. This is a pretty heavy
+>> handed operation, requiring all vcpus to reload their GICv4
+>> configuration. It is thus implemented as a new request type.
+> 
+> [note to myself]
+> ... and the status are forwarded to HW by programming VGrp{0,1}En
+> fields of GICR_VPENDBASER when vPEs are made resident next time.
 
-This is mostly used by userspace libraries like Snapdragon
-Neural Processing Engine (SNPE) SDK for checking supported SoC info.
+I've added something based on this comment to the commit message.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
-Changes since v1:
-	- expanded SNPE short form for more clarity
+Thanks!
 
- drivers/soc/qcom/socinfo.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/soc/qcom/socinfo.c b/drivers/soc/qcom/socinfo.c
-index ebb49aee179b..08a4b8ae1764 100644
---- a/drivers/soc/qcom/socinfo.c
-+++ b/drivers/soc/qcom/socinfo.c
-@@ -430,6 +430,8 @@ static int qcom_socinfo_probe(struct platform_device *pdev)
- 	qs->attr.family = "Snapdragon";
- 	qs->attr.machine = socinfo_machine(&pdev->dev,
- 					   le32_to_cpu(info->id));
-+	qs->attr.soc_id = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%u",
-+					 le32_to_cpu(info->id));
- 	qs->attr.revision = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%u.%u",
- 					   SOCINFO_MAJOR(le32_to_cpu(info->ver)),
- 					   SOCINFO_MINOR(le32_to_cpu(info->ver)));
+         M.
 -- 
-2.21.0
-
+Jazz is not dead. It just smells funny...
