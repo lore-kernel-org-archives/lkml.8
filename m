@@ -2,109 +2,141 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1392C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D95BC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B34B20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17502080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:05:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jx/5n7+K"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UpiOUVjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgCSQFJ (ORCPT
+        id S1727943AbgCSQFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:05:09 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45402 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727212AbgCSQFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:05:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=zJnEspx9nUpxqY4oZ6sWyqjLedPnwb/JDmykq5Fz/1M=; b=jx/5n7+KC18GCR5gh5RC5Uu7Cq
-        Q/sz8HEgxnrFiv8mLmwLAmZ+N1cf43mUrBNqFvCXTMobK/b3lKoUGzXsQUO7zPJbi4NM7P9UXG9qE
-        Lz2hUkREitCNlfc7Xcfs36LleSpZrmZvX7vrLnEFVESYmHrfMNHAY8W1GPCBLRJF/6OU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jExfN-0007aG-81; Thu, 19 Mar 2020 17:05:05 +0100
-Date:   Thu, 19 Mar 2020 17:05:05 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 2/2] net: phy: mscc: RGMII skew delay
- configuration
-Message-ID: <20200319160505.GE27807@lunn.ch>
-References: <20200319141958.383626-1-antoine.tenart@bootlin.com>
- <20200319141958.383626-3-antoine.tenart@bootlin.com>
+        Thu, 19 Mar 2020 12:05:34 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:55651 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727064AbgCSQFe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 12:05:34 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id C5CA65C020F;
+        Thu, 19 Mar 2020 12:05:32 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 19 Mar 2020 12:05:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=wWFORM
+        IkzrdKUS43ENF76LKOdqMsS2ZRBw2Ost6Bedk=; b=UpiOUVjNjhubGU+xk98dcZ
+        +pBWDcBQKE0scE+jmFJkt8CwffNG9cakLSwvN+FlsU5Upb/Fuwx3GsoN70U2jMRY
+        6OXKbuo5XnITjcGDjdnRF/C+Vk4LZv61ySbhMBasYhYdGkgzzQmwaZQRC/1RRQBB
+        hjMyEVE5UfjeH2WbMHcEMqg+2bRs02GqBFpSJ/ZdSCm/L6/ZnKrgf1BI93Y2+9Ss
+        Q+aoGkY68+MnhGqz1PujRA3JLxZ5/uKX7RDJ8gCL7hMasVDQ6h83uIQ4BNSuFCoL
+        0jiS7yUJTI13GQN0a6XMYqDbWJr7dSfxOcV5iO4b0c50fwUc9NeGyNfAoAnVHT1w
+        ==
+X-ME-Sender: <xms:TJhzXt7yPI9118_5BN3joj3j7JwD9wTXuf8vwNgTspPhZ8-PqtJu7A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudefledgkeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforghrvghk
+    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucfkphepledurdeihedrfeegrdef
+    feenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrg
+    hrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhm
+X-ME-Proxy: <xmx:TJhzXiXUoNnHka3YRbjFwxVTlOT11qUyGRA_CaK7q2ZXMIlrnNcNEg>
+    <xmx:TJhzXh2arQRsRd0lV3hTFp67helnAXBaKjQIIDc13LOmErjn85H6Yg>
+    <xmx:TJhzXv0v5xepb7d2yfGtutEncQQQEM3DfEuU6auMqJXsFfC-5YWJfQ>
+    <xmx:TJhzXpHkJOrxQJAypVl9S32j4_DGuuda2GrZT93FgdOMvtYkKLyk9w>
+Received: from mail-itl (ip5b412221.dynamic.kabel-deutschland.de [91.65.34.33])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 51E47328005E;
+        Thu, 19 Mar 2020 12:05:31 -0400 (EDT)
+Date:   Thu, 19 Mar 2020 17:05:24 +0100
+From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+        Simon Gaiser <simon@invisiblethingslab.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] xen-pciback: fix INTERRUPT_TYPE_* defines
+Message-ID: <20200319160524.GX18599@mail-itl>
+References: <20200319040648.10396-1-marmarek@invisiblethingslab.com>
+ <e6c48552-9866-497c-7d2f-62849122f867@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xaJmculcd5PV2weY"
 Content-Disposition: inline
-In-Reply-To: <20200319141958.383626-3-antoine.tenart@bootlin.com>
+In-Reply-To: <e6c48552-9866-497c-7d2f-62849122f867@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 03:19:58PM +0100, Antoine Tenart wrote:
-> This patch adds support for configuring the RGMII skew delays in Rx and
-> Tx. The Rx and Tx skews are set based on the interface mode. By default
-> their configuration is set to the default value in hardware (0.2ns);
-> this means the driver do not rely anymore on the bootloader
-> configuration.
-> 
-> Then based on the interface mode being used, a 2ns delay is added:
-> - RGMII_ID adds it for both Rx and Tx.
-> - RGMII_RXID adds it for Rx.
-> - RGMII_TXID adds it for Tx.
-> 
-> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-> ---
->  drivers/net/phy/mscc/mscc.h      | 14 ++++++++++++++
->  drivers/net/phy/mscc/mscc_main.c | 29 +++++++++++++++++++++++++++++
->  2 files changed, 43 insertions(+)
-> 
-> diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
-> index d1b8bbe8acca..25729302714c 100644
-> --- a/drivers/net/phy/mscc/mscc.h
-> +++ b/drivers/net/phy/mscc/mscc.h
-> @@ -161,6 +161,20 @@ enum rgmii_rx_clock_delay {
->  /* Extended Page 2 Registers */
->  #define MSCC_PHY_CU_PMD_TX_CNTL		  16
->  
-> +#define MSCC_PHY_RGMII_SETTINGS		  18
-> +#define RGMII_SKEW_RX_POS		  1
-> +#define RGMII_SKEW_TX_POS		  4
-> +
-> +/* RGMII skew values, in ns */
-> +#define VSC8584_RGMII_SKEW_0_2		  0
-> +#define VSC8584_RGMII_SKEW_0_8		  1
-> +#define VSC8584_RGMII_SKEW_1_1		  2
-> +#define VSC8584_RGMII_SKEW_1_7		  3
-> +#define VSC8584_RGMII_SKEW_2_0		  4
-> +#define VSC8584_RGMII_SKEW_2_3		  5
-> +#define VSC8584_RGMII_SKEW_2_6		  6
-> +#define VSC8584_RGMII_SKEW_3_4		  7
 
-  
-> +static void vsc8584_rgmii_set_skews(struct phy_device *phydev)
-> +{
-> +	u32 skew_rx, skew_tx;
-> +
-> +	/* We first set the Rx and Tx skews to their default value in h/w
-> +	 * (0.2 ns).
-> +	 */
-> +	skew_rx = VSC8584_RGMII_SKEW_0_2;
-> +	skew_tx = VSC8584_RGMII_SKEW_0_2;
+--xaJmculcd5PV2weY
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] xen-pciback: fix INTERRUPT_TYPE_* defines
 
-Hi Antoine
+On Thu, Mar 19, 2020 at 11:07:13AM -0400, Boris Ostrovsky wrote:
+>=20
+> On 3/19/20 12:06 AM, Marek Marczykowski-G=C3=B3recki wrote:
+> > INTERRUPT_TYPE_NONE should be 0,
+>=20
+>=20
+> Would
+>=20
+> =C2=A0 return ret ?: INTERRUPT_TYPE_NONE
+>=20
+> in xen_pcibk_get_interrupt_type() work?
+>=20
+>=20
+> I think it's better not to tie macro name to a particular value.
 
-Does this mean it is impossible to have a skew of 0ns?
+I can do that too. But I'd change INTERRUPT_TYPE_NONE to 0 anyway, as
+more logical value (as the value is a bitmask).
 
-     Andrew
+> -boris
+>=20
+>=20
+> >   as it is assumed in
+> > xen_pcibk_get_interrupt_type(). Fix the definition, and also shift other
+> > values to not leave holes.
+> > But also use INTERRUPT_TYPE_NONE in xen_pcibk_get_interrupt_type() to
+> > avoid similar confusions in the future.
+> >=20
+> > Fixes: 476878e4b2be ("xen-pciback: optionally allow interrupt enable fl=
+ag writes")
+> > Signed-off-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblething=
+slab.com>
+> >=20
+
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+
+--xaJmculcd5PV2weY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAl5zmEQACgkQ24/THMrX
+1yyYtwf+Pg91y5j0VuyfObz5D6ca2GNocsfVmm3WdXCHHpgx6nmJMWkfq+JWk+De
+Qqp/HjmenfTPVnYbkRgE9A9qiCT/eQ1WTkfAmk+0oqQIcuNrv4lssV5QtS+b3D8X
+ToKagzMOYGS0WMcMEbbAs9N9rLnJVOJw0PRI3HcTsoNoWNymyIVrLgoyoBYTGx0O
+J8vHvSydTsAuwf1KESUnglaEBr/KTLwNOya5lccQaSEYYu2vbqIhinyOI1v2pP27
+cTMYNR5TGxjcCCAWB7BvzhUq0Xe4OTYEbB3WMhHnq+OsxrHKsAMYpm+3CCBI/suJ
+oJ22cTJ/CG7dyGddWmdrkbbtUHuVFA==
+=uRFZ
+-----END PGP SIGNATURE-----
+
+--xaJmculcd5PV2weY--
