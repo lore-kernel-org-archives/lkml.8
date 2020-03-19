@@ -2,231 +2,156 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43552C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE5DC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11CC820836
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:16:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KgBlCxjb"
+	by mail.kernel.org (Postfix) with ESMTP id 3C0EC2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584634621;
+	bh=czCpJ8y0zyIMrb16loRBDNoPc3JFCft+Emc2g/RzqIw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=SQO8Cszt4speqlYBaj4b14YBRcxPm0D7LeZ+xoTp9XaMsWlQ8J/qFd++d5BRDSSQK
+	 OfU5a+cepwQhbOaQxHZK84xTdauUM3uOq8gTk5Q0qSeXL6OWWcz/f2gc2i2SUdiuoG
+	 XpWc2BlSNd1wBQViVhMhY7jHpqANyE9qVV0xBTGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgCSQQt (ORCPT
+        id S1728199AbgCSQRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:16:49 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:37997 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727885AbgCSQQs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:16:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584634607;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6L0/RW+VybIY9YlBcySb8qcqc4y1OrahRYFLfqqgB0g=;
-        b=KgBlCxjbqbYoiqatd3+NrXxrG1HfjarWdYT+tNn9EAWFB3JdUaqdCsiZ0OqukyF7W9ENBs
-        wbprPRpodh4ZFVA/gq0B0DgZupq2QRUSMDn3Gfijzrbc2m7lLT4NrMjKtvA4m20vKdIq8F
-        LTWjWZqJHiWl0L/1WI/di8SoYGAHSFQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-378-vX5yTDLbP-aj3TcYLVcNAw-1; Thu, 19 Mar 2020 12:16:43 -0400
-X-MC-Unique: vX5yTDLbP-aj3TcYLVcNAw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 19 Mar 2020 12:17:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728033AbgCSQQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 12:16:59 -0400
+Received: from [192.168.1.31] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 129021005516;
-        Thu, 19 Mar 2020 16:16:41 +0000 (UTC)
-Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D7D6F60BF1;
-        Thu, 19 Mar 2020 16:16:37 +0000 (UTC)
-Subject: Re: [PATCH v5 19/23] KVM: arm64: GICv4.1: Allow SGIs to switch
- between HW and SW interrupts
-To:     Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-20-maz@kernel.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <8a6cf87a-7eee-5502-3b54-093ea0ab5e2d@redhat.com>
-Date:   Thu, 19 Mar 2020 17:16:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A19B2072C;
+        Thu, 19 Mar 2020 16:16:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584634618;
+        bh=czCpJ8y0zyIMrb16loRBDNoPc3JFCft+Emc2g/RzqIw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ggW2ImWE6fut/X+eJIbds8cFs5QEN295nURqqWwE0gnDEHhAHDvdeiUm9/TPSkZnz
+         rZw1syAOYzFSQH5TzOoKFxEX/UPau0CagrKTvHPJOy6ZXf83ZWKZzrSk8RIzVyDRWo
+         Zhx5pdg2W+TdLDZmTr82ex4sk2lN30/NxAD2bGhU=
+Subject: Re: [PATCHv3 4/5] dt-bindings: documentation: add clock bindings
+ information for Agilex
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+References: <20200317161022.11181-1-dinguyen@kernel.org>
+ <20200317161022.11181-5-dinguyen@kernel.org> <20200318224042.GA32101@bogus>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <30180323-3c74-d04a-b715-3b1f655d6a81@kernel.org>
+Date:   Thu, 19 Mar 2020 11:16:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200304203330.4967-20-maz@kernel.org>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200318224042.GA32101@bogus>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi Rob,
 
-On 3/4/20 9:33 PM, Marc Zyngier wrote:
-> In order to let a guest buy in the new, active-less SGIs, we
-> need to be able to switch between the two modes.
+On 3/18/20 5:40 PM, Rob Herring wrote:
+> On Tue, 17 Mar 2020 11:10:21 -0500, Dinh Nguyen wrote:
+>> Document the Agilex clock bindings, and add the clock header file. The
+>> clock header is an enumeration of all the different clocks on the Agilex
+>> platform.
+>>
+>> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+>> ---
+>> v3: address comments from Stephen Boyd
+>>     fix build error(tab removed in line 37)
+>>     renamed to intel,agilex.yaml
+>> v2: convert original document to YAML
+>> ---
+>>  .../bindings/clock/intel,agilex.yaml          | 36 ++++++++++
+>>  include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
+>>  2 files changed, 106 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/intel,agilex.yaml
+>>  create mode 100644 include/dt-bindings/clock/agilex-clock.h
+>>
 > 
-> Handle this by stopping all guest activity, transfer the state
-> from one mode to the other, and resume the guest. Nothing calls
-> this code so far, but a later patch will plug it into the MMIO
-> emulation.
+> My bot found errors running 'make dt_binding_check' on your patch:
 > 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  include/kvm/arm_vgic.h      |  3 ++
->  virt/kvm/arm/vgic/vgic-v4.c | 94 +++++++++++++++++++++++++++++++++++++
->  virt/kvm/arm/vgic/vgic.h    |  1 +
->  3 files changed, 98 insertions(+)
+> Error: Documentation/devicetree/bindings/clock/intel,agilex.example.dts:17.3-4 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:311: recipe for target 'Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/clock/intel,agilex.example.dt.yaml] Error 1
+> Makefile:1262: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
 > 
-> diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
-> index 63457908c9c4..69f4164d6477 100644
-> --- a/include/kvm/arm_vgic.h
-> +++ b/include/kvm/arm_vgic.h
-> @@ -231,6 +231,9 @@ struct vgic_dist {
->  	/* distributor enabled */
->  	bool			enabled;
->  
-> +	/* Wants SGIs without active state */
-> +	bool			nassgireq;
-> +
->  	struct vgic_irq		*spis;
->  
->  	struct vgic_io_device	dist_iodev;
-> diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
-> index c2fcde104ea2..a65dc1c85363 100644
-> --- a/virt/kvm/arm/vgic/vgic-v4.c
-> +++ b/virt/kvm/arm/vgic/vgic-v4.c
-> @@ -97,6 +97,100 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
->  	return IRQ_HANDLED;
->  }
->  
-> +static void vgic_v4_sync_sgi_config(struct its_vpe *vpe, struct vgic_irq *irq)
-> +{
-> +	vpe->sgi_config[irq->intid].enabled	= irq->enabled;
-> +	vpe->sgi_config[irq->intid].group 	= irq->group;
-> +	vpe->sgi_config[irq->intid].priority	= irq->priority;
-> +}
-> +
-> +static void vgic_v4_enable_vsgis(struct kvm_vcpu *vcpu)
-> +{
-> +	struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
-> +	int i;
-> +
-> +	/*
-> +	 * With GICv4.1, every virtual SGI can be directly injected. So
-> +	 * let's pretend that they are HW interrupts, tied to a host
-> +	 * IRQ. The SGI code will do its magic.
-> +	 */
-> +	for (i = 0; i < VGIC_NR_SGIS; i++) {
-> +		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
-> +		struct irq_desc *desc;
-> +		int ret;
-Is is safe without holding the irq->irq_lock?
-> +
-> +		if (irq->hw) {
-> +			vgic_put_irq(vcpu->kvm, irq);
-> +			continue;
-> +		}
-> +
-> +		irq->hw = true;
-> +		irq->host_irq = irq_find_mapping(vpe->sgi_domain, i);
-> +
-> +		/* Transfer the full irq state to the vPE */
-> +		vgic_v4_sync_sgi_config(vpe, irq);
-> +		desc = irq_to_desc(irq->host_irq);
-> +		ret = irq_domain_activate_irq(irq_desc_get_irq_data(desc),
-> +					      false);
-> +		if (!WARN_ON(ret)) {
-> +			/* Transfer pending state */
-> +			ret = irq_set_irqchip_state(irq->host_irq,
-> +						    IRQCHIP_STATE_PENDING,
-> +						    irq->pending_latch);
-> +			WARN_ON(ret);
-> +			irq->pending_latch = false;
-> +		}
-> +
-> +		vgic_put_irq(vcpu->kvm, irq);
-> +	}
-> +}
-> +
-> +static void vgic_v4_disable_vsgis(struct kvm_vcpu *vcpu)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < VGIC_NR_SGIS; i++) {
-> +		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
-> +		struct irq_desc *desc;
-> +		int ret;
-> +
-> +		if (!irq->hw) {
-> +			vgic_put_irq(vcpu->kvm, irq);
-> +			continue;
-> +		}
-> +
-> +		irq->hw = false;
-> +		ret = irq_get_irqchip_state(irq->host_irq,
-> +					    IRQCHIP_STATE_PENDING,
-> +					    &irq->pending_latch);
-> +		WARN_ON(ret);
-> +
-> +		desc = irq_to_desc(irq->host_irq);
-> +		irq_domain_deactivate_irq(irq_desc_get_irq_data(desc));
-> +
-> +		vgic_put_irq(vcpu->kvm, irq);
-> +	}
-> +}
-> +
-> +/* Must be called with the kvm lock held */
-> +void vgic_v4_configure_vsgis(struct kvm *kvm)
-> +{
-> +	struct vgic_dist *dist = &kvm->arch.vgic;
-> +	struct kvm_vcpu *vcpu;
-> +	int i;
-> +
-> +	kvm_arm_halt_guest(kvm);
-> +
-> +	kvm_for_each_vcpu(i, vcpu, kvm) {
-> +		if (dist->nassgireq)
-> +			vgic_v4_enable_vsgis(vcpu);
-> +		else
-> +			vgic_v4_disable_vsgis(vcpu);
-> +	}
-> +
-> +	kvm_arm_resume_guest(kvm);
-> +}
-> +
->  /**
->   * vgic_v4_init - Initialize the GICv4 data structures
->   * @kvm:	Pointer to the VM being initialized
-> diff --git a/virt/kvm/arm/vgic/vgic.h b/virt/kvm/arm/vgic/vgic.h
-> index c7fefd6b1c80..769e4802645e 100644
-> --- a/virt/kvm/arm/vgic/vgic.h
-> +++ b/virt/kvm/arm/vgic/vgic.h
-> @@ -316,5 +316,6 @@ void vgic_its_invalidate_cache(struct kvm *kvm);
->  bool vgic_supports_direct_msis(struct kvm *kvm);
->  int vgic_v4_init(struct kvm *kvm);
->  void vgic_v4_teardown(struct kvm *kvm);
-> +void vgic_v4_configure_vsgis(struct kvm *kvm);
->  
->  #endif
+> See https://patchwork.ozlabs.org/patch/1256630
+> Please check and re-submit.
 > 
-Thanks
 
-Eric
+I want to be able check these errors locally before sending the next
+version. But I keep getting various errors when I try to "make
+dt_binding_check":
 
+Traceback (most recent call last):
+  File "/bin/dt-doc-validate", line 15, in <module>
+    import ruamel.yaml
+ImportError: No module named 'ruamel'
+Documentation/devicetree/bindings/Makefile:12: recipe for target
+'Documentation/devicetree/bindings/arm/l2c2x0.example.dts' failed
+
+
+Do you have a pointer on how to run the dt_binding_check?
+
+Thanks,
+Dinh
