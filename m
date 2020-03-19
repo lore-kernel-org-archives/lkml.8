@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFC7C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFDAC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B3720774
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3789920774
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgCSUu6 (ORCPT
+        id S1727521AbgCSUvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:50:58 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:27946 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727236AbgCSUuV (ORCPT
+        Thu, 19 Mar 2020 16:51:01 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:14450 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727213AbgCSUuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 16:50:21 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
+        Thu, 19 Mar 2020 16:50:20 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 19 Mar 2020 13:50:19 -0700
+  by ironmsg02-sd.qualcomm.com with ESMTP; 19 Mar 2020 13:50:18 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 1AB3A4B82; Thu, 19 Mar 2020 13:50:19 -0700 (PDT)
+        id DF18C4B48; Thu, 19 Mar 2020 13:50:18 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
@@ -33,12 +33,14 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-kernel@vger.kernel.org,
         Guru Das Srinagesh <gurus@codeaurora.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v10 09/12] pwm: sun4i: Use 64-bit division function
-Date:   Thu, 19 Mar 2020 13:50:12 -0700
-Message-Id: <35175421d61379c28702d4be0e137bca8a554eb2.1584650604.git.gurus@codeaurora.org>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH v10 06/12] pwm: imx27: Use 64-bit division macro and function
+Date:   Thu, 19 Mar 2020 13:50:09 -0700
+Message-Id: <5c1d3c5f6e82597ff5ac10b4bf91f15c9e37922d.1584650604.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1584650604.git.gurus@codeaurora.org>
 References: <cover.1584650604.git.gurus@codeaurora.org>
@@ -49,32 +51,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.period's datatype
-to u64, prepare for this transition by using div_u64 to handle a 64-bit
-dividend instead of a straight division operation.
+Since the PWM framework is switching struct pwm_state.period's
+datatype to u64, prepare for this transition by using
+DIV_ROUND_UP_ULL to handle a 64-bit dividend, and div64_u64 to handle a
+64-bit divisor.
 
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
 
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
 ---
- drivers/pwm/pwm-sun4i.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-imx27.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 3e3efa6..772fdf4 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -286,7 +286,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	val = (duty & PWM_DTY_MASK) | PWM_PRD(period);
- 	sun4i_pwm_writel(sun4i_pwm, val, PWM_CH_PRD(pwm->hwpwm));
- 	sun4i_pwm->next_period[pwm->hwpwm] = jiffies +
--		usecs_to_jiffies(cstate.period / 1000 + 1);
-+		usecs_to_jiffies(div_u64(cstate.period, 1000) + 1);
- 	sun4i_pwm->needs_delay[pwm->hwpwm] = true;
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index 35a7ac42..b7d38d0 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -208,7 +208,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
+ 	sr = readl(imx->mmio_base + MX3_PWMSR);
+ 	fifoav = FIELD_GET(MX3_PWMSR_FIFOAV, sr);
+ 	if (fifoav == MX3_PWMSR_FIFOAV_4WORDS) {
+-		period_ms = DIV_ROUND_UP(pwm_get_period(pwm),
++		period_ms = DIV_ROUND_UP_ULL(pwm_get_period(pwm),
+ 					 NSEC_PER_MSEC);
+ 		msleep(period_ms);
  
- 	if (state->polarity != PWM_POLARITY_NORMAL)
+@@ -240,8 +240,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	period_cycles /= prescale;
+ 	c = (unsigned long long)period_cycles * state->duty_cycle;
+-	do_div(c, state->period);
+-	duty_cycles = c;
++	duty_cycles = div64_u64(c, state->period);
+ 
+ 	/*
+ 	 * according to imx pwm RM, the real period value should be PERIOD
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
