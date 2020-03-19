@@ -2,250 +2,145 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75B2C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1079BC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A0C20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:28:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQxiGA25"
+	by mail.kernel.org (Postfix) with ESMTP id DD6B52071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgCSP2b (ORCPT
+        id S1727711AbgCSPcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:28:31 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36996 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbgCSP2a (ORCPT
+        Thu, 19 Mar 2020 11:32:33 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:55373 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgCSPcd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:28:30 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 3so1614371pff.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 08:28:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9fQqai2gqFpYcX1wUjo6UxR57b9P4LhGEX1peb8WMV4=;
-        b=aQxiGA25wruzqIUlSjkHFPlp8jQiKXfdQk3Tzb9B4tbtPocSloNGmKZRsqvcfaPoc2
-         0EzAtmA7xylTfRzBRrrxyFG9dmRUQg3TH1mYwWP4YMihKsqHd0RUK4xr45JKZHzq474d
-         MlkWwSdxIkI0u1UnhJVF+tad8UZoJJPXDQHqcWxbvGv9v+WpOcaCwt3ZFFyFHNgIz99G
-         Az/Oz0lMwXPk7CCugBuxphriTn5DUjdK1tvdBbfGqPTeLzipe8vlCcd1h6m6r8B09azr
-         NrhB0bIRInRdP4zF+0RLHrQ47TFhcGcBMv8dyNYpWM1S6bM07wrjtS3HSDhRVQ0iDgbx
-         03mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=9fQqai2gqFpYcX1wUjo6UxR57b9P4LhGEX1peb8WMV4=;
-        b=tDCsPekPC6OxFaS7JQnEQlt1Q8g9wj3R7DH10nYXRjUwTHCBE/qdS9WQOAJITgayBO
-         wqZ8zVa0Jz77Zv1yI41AkLOWweOuQB0xi+N7S6Tysrk7SbM/rgB/65tZROs+GRc6uGPe
-         LeMS50o9laH+P3fB+ngy1oHyRQHLdyToJ2s6q4X6tC7BS1llPLWOkXCg6SrCUn1dRYoj
-         6bNx0egkFac7Xs4NAwSLjbxKxiyarDH+OYsNtT0HFWep8kU0drKWSzUIPwJl8+PXxhRa
-         NAFp2dDEpZrsNttF4pSkL5A7koZyZLKLLLPph8vmUKvDLp3Y+tQeqfFFT6nT3I3L5fFw
-         Ff1g==
-X-Gm-Message-State: ANhLgQ3WUsLRHuGIgBuAlfTFVUB8xGgqXKe8GlkiGAaeYR1RZdlZbdz1
-        hWxQ401Qf4Sxr/4cImfDXxQ=
-X-Google-Smtp-Source: ADFU+vt6KSAHQ3Rp5U6Z5bUs+O0j+x8Gc6RZPnoYUwavDCKzRie5eXX2KymgGNEx+9FXsnOZjDPLpA==
-X-Received: by 2002:a62:30c6:: with SMTP id w189mr4618556pfw.257.1584631708743;
-        Thu, 19 Mar 2020 08:28:28 -0700 (PDT)
-Received: from lenovo ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id z6sm2808906pfn.212.2020.03.19.08.28.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Mar 2020 08:28:27 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 23:28:21 +0800
-From:   Orson Zhai <orson.unisoc@gmail.com>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        David Gow <davidgow@google.com>,
-        Mark Rutland <mark.rutland@arm.com>, orsonzhai@gmail.com,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [RFC PATCH] dynamic_debug: Add config option of
- DYNAMIC_DEBUG_CORE
-Message-ID: <20200319152820.GA2793@lenovo>
-Mail-Followup-To: Jason Baron <jbaron@akamai.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        David Gow <davidgow@google.com>,
-        Mark Rutland <mark.rutland@arm.com>, orsonzhai@gmail.com,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-References: <1584558186-23373-1-git-send-email-orson.unisoc@gmail.com>
- <51568376-da8b-3265-ddb3-6ddba74207dc@akamai.com>
+        Thu, 19 Mar 2020 11:32:33 -0400
+Received: from methusalix.internal.home.lespocky.de ([92.117.55.187]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MZCKd-1ijxzP1qAz-00VCg6; Thu, 19 Mar 2020 16:32:02 +0100
+Received: from falbala.internal.home.lespocky.de ([192.168.243.94])
+        by methusalix.internal.home.lespocky.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <post@lespocky.de>)
+        id 1jEx9I-0001AW-FT; Thu, 19 Mar 2020 16:31:58 +0100
+Date:   Thu, 19 Mar 2020 16:31:55 +0100
+From:   Alexander Dahl <post@lespocky.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Alexander Dahl <post@lespocky.de>, x86@kernel.org,
+        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] dma: Fix max PFN arithmetic overflow on 32 bit systems
+Message-ID: <20200319153154.usbqsk6uspegw5pr@falbala.internal.home.lespocky.de>
+Mail-Followup-To: Robin Murphy <robin.murphy@arm.com>, x86@kernel.org,
+        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200302181612.20597-1-post@lespocky.de>
+ <b6f6c1de-13bc-79b4-ad0a-fdfb5cb33cec@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="iodayy4zmltei4qo"
 Content-Disposition: inline
-In-Reply-To: <51568376-da8b-3265-ddb3-6ddba74207dc@akamai.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <b6f6c1de-13bc-79b4-ad0a-fdfb5cb33cec@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Scan-Signature: 5d1699e822705c24f051c25a2c63fb4e
+X-Provags-ID: V03:K1:cXX8UFKkqY3BP0w/SJ8Qky/hBe1VOgQfSpYwQ3wWO3BhAMLQKyT
+ qMaCMxG5eW95fMiDqh86DxQy+xspNijXV4Q3uJ1/OI25ImFc4FxujtbJ11u+AQ1gGV567ka
+ pcuaaUtu2xqpMHk3muaoI2tLNhKeqTojiZ1uCBrHHAl9y/bMVqkPNIiNpzrYyA07rXYKshv
+ vDCZ3jgc70lqvX/wcAadg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:z8K1UPtmbVQ=:zfFGrxNZow9huDeuP1mOQQ
+ ouDWGDnzdQBxAUPDYKX4hNt/pkY6G/efTqmMrjkdtq1iSSYI4sWp4u+V/k/xfTWuYS6BHFVUY
+ 223AHSsqZuLPUV85ssU+fiJwXJ5RCOqsG/jwONJtcASGXUoUulKLwAKxFb24Z21ZEZNgz5ZHJ
+ RLgWOo1l+9zy+zHwBX4oLZM34Kbgh6LcnDXtKudoCdmzrw/gtJ/+X0rOqzqhC1B4g1TZKZyZ0
+ VrgYB6FJjzglKcTeN0z2V7kyqPvl/xu4FG1ePgu0eFD+mhmVQilHEpvEuZdiMLeDmjZ/ab1LL
+ CtqX2KOOh7isTa61DH0ZTYCMeYMCp0HWcYXQZwAK8VlkfgeRkm8hrg/ttffnLvYVC8x+2MyGF
+ S2Bsas8hXT1FyM/1suf9+DPyVZ/WGr5X8Yy4+pOng+/3pa9NpMdoGpdhE5l8pA5jYl7MAb7xT
+ xeDFQElYjrsNmpC2elgfAQY9tqZ/c9R2Uu2t4oXXHfmGXEzOQOKMo6BN1Gy33xxuNZh6xRzKC
+ NXR+rmmG9OHzLeOcvmh6acG95ww+kQcbjGKBQkIfD/t04yDcP57FD+PSnJsLprpqC2wz/RMhO
+ BtXyXKfH1Tzx++gThQjAvIi6x0tnYKHmyerHrNxraispxHeG/4Zm9dv122XiEIt/TacJJwHtM
+ ZKd8Hho/HBnk1h2PDTFwqN4R3IRB6ed5ROjh1nIQ1i7goOAQMAgPlw4k9iUFdI0ygRiUmMhLj
+ pDWiWbZDoFRwIOwrBMRCVpEMGxTCpdjW17np1NOkn0YYuDlPWjxAEmyRAvf3Z90m3o26Y1vWa
+ Fda3aVNKAbNK+0fAPJLPgAi3ZsWj9G0Wz7yXzafU2icqRipRaIXyOZSZuk2JFhoXEyb/cR1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
 
-On Wed, Mar 18, 2020 at 05:18:43PM -0400, Jason Baron wrote:
-> 
-> 
-> On 3/18/20 3:03 PM, Orson Zhai wrote:
-> > There is the requirement from new Android that kernel image (GKI) and
-> > kernel modules are supposed to be built at differnet places. Some people
-> > want to enable dynamic debug for kernel modules only but not for kernel
-> > image itself with the consideration of binary size increased or more
-> > memory being used.
-> > 
-> > By this patch, dynamic debug is divided into core part (the defination of
-> > functions) and macro replacement part. We can only have the core part to
-> > be built-in and do not have to activate the debug output from kenrel image.
-> > 
-> > Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
-> 
-> Hi Orson,
-> 
-> I think this is a nice feature. Is the idea then that driver can do
-> something like:
-> 
-> #if defined(CONFIG_DRIVER_FOO_DEBUG)
-> #define driver_foo_debug(fmt, ...) \
->         dynamic_pr_debug(fmt, ##__VA_ARGS__)
-> #else
-> 	no_printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__)
-> #enif
-> 
-> And then the Kconfig:
-> 
-> config DYNAMIC_DRIVER_FOO_DEBUG
-> 	bool "Enable dynamic driver foo printk() support"
-> 	select DYNAMIC_DEBUG_CORE
-> 
-I highly appreciate you for giving this good example to us.
-To be honest I did not really think of this kind of usage. :)
-But it makes much sense. I think dynamic debug might be a little
-bit high for requirement of memory. Every line of pr_debug will be
-added with a static data structure and malloc with an item in link table.
-It might be sensitive especially in embeded system.
-So this example shows how to avoid to turn on dynamci debug for whole
-system but part of it when being needed.
+--iodayy4zmltei4qo
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Or did you have something else in mind? Do you have an example
-> code for the drivers that you mention?
+Hello Robin,
 
-My motivation comes from new Andorid GKI release flow. Android kernel team will
-be in charge of GKI release. And SoC vendors will build their device driver as
-kernel modules which are diffrent from each vendor. End-users will get their phones
-installed with GKI plus some modules all together.
-
-So at Google side, they can only set DYNAMIC_DEBUG_CORE in their defconfig to build
-out GKI without worrying about the kernel image size increased too much. Actually
-GKI is relatively stable as a common binary and there is no strong reason to do 
-dynamic debugging to it.
-
-And at vendor side, they will use a local defconfig which is same with Google one but add 
-CONFIG_DYNAMIC_DEBUG to build their kenrel modules. As DYNAMIC_DEBUG enables only a
-set of macro expansion, so it has no impact to kernel ABI or the modversion.
-All modules will be compatible with GKI and with dynamic debug enabled.
-
-Then the result will be that Google has his clean GKI and vendors have their dynamic-debug-powered modules.
-
-Best Regards,
--Orson
-
-> 
-> Thanks,
-> 
-> -Jason
-> 
-> 
+On Thu, Mar 19, 2020 at 01:50:56PM +0000, Robin Murphy wrote:
+> On 2020-03-02 6:16 pm, Alexander Dahl wrote:
 > > ---
-> >  include/linux/dynamic_debug.h |  2 +-
-> >  lib/Kconfig.debug             | 18 ++++++++++++++++--
-> >  lib/Makefile                  |  2 +-
-> >  3 files changed, 18 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-> > index 4cf02ec..abcd5fd 100644
-> > --- a/include/linux/dynamic_debug.h
-> > +++ b/include/linux/dynamic_debug.h
-> > @@ -48,7 +48,7 @@ struct _ddebug {
-> >  
-> >  
-> >  
-> > -#if defined(CONFIG_DYNAMIC_DEBUG)
-> > +#if defined(CONFIG_DYNAMIC_DEBUG_CORE)
-> >  int ddebug_add_module(struct _ddebug *tab, unsigned int n,
-> >  				const char *modname);
-> >  extern int ddebug_remove_module(const char *mod_name);
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index 69def4a..78a7256 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -97,8 +97,7 @@ config BOOT_PRINTK_DELAY
-> >  config DYNAMIC_DEBUG
-> >  	bool "Enable dynamic printk() support"
-> >  	default n
-> > -	depends on PRINTK
-> > -	depends on DEBUG_FS
-> > +	select DYNAMIC_DEBUG_CORE
-> >  	help
-> >  
-> >  	  Compiles debug level messages into the kernel, which would not
-> > @@ -164,6 +163,21 @@ config DYNAMIC_DEBUG
-> >  	  See Documentation/admin-guide/dynamic-debug-howto.rst for additional
-> >  	  information.
-> >  
-> > +config DYNAMIC_DEBUG_CORE
-> > +	bool "Enable core functions of dynamic debug support"
-> > +	depends on PRINTK
-> > +	depends on DEBUG_FS
-> > +	help
-> > +	  Enable this option to build ddebug_* and __dynamic_* routines
-> > +	  into kernel. If you want enable whole dynamic debug features,
-> > +	  select CONFIG_DYNAMIC_DEBUG directly and this option will be
-> > +	  automatically selected.
-> > +
-> > +	  This option is selected when you want to enable dynamic debug
-> > +	  for kernel modules only but not for the kernel base. Especailly
-> > +	  in the case that kernel modules are built out of the place where
-> > +	  kernel base is built.
-> > +
-> >  config SYMBOLIC_ERRNAME
-> >  	bool "Support symbolic error names in printf"
-> >  	default y if PRINTK
-> > diff --git a/lib/Makefile b/lib/Makefile
-> > index 611872c..2096d83 100644
-> > --- a/lib/Makefile
-> > +++ b/lib/Makefile
-> > @@ -183,7 +183,7 @@ lib-$(CONFIG_GENERIC_BUG) += bug.o
-> >  
-> >  obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
-> >  
-> > -obj-$(CONFIG_DYNAMIC_DEBUG) += dynamic_debug.o
-> > +obj-$(CONFIG_DYNAMIC_DEBUG_CORE) += dynamic_debug.o
-> >  obj-$(CONFIG_SYMBOLIC_ERRNAME) += errname.o
-> >  
-> >  obj-$(CONFIG_NLATTR) += nlattr.o
-> > 
+> >   arch/x86/include/asm/dma.h | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/arch/x86/include/asm/dma.h b/arch/x86/include/asm/dma.h
+> > index 00f7cf45e699..e25514eca8d6 100644
+> > --- a/arch/x86/include/asm/dma.h
+> > +++ b/arch/x86/include/asm/dma.h
+> > @@ -74,7 +74,7 @@
+> >   #define MAX_DMA_PFN   ((16UL * 1024 * 1024) >> PAGE_SHIFT)
+> >   /* 4GB broken PCI/AGP hardware bus master zone */
+> > -#define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
+> > +#define MAX_DMA32_PFN (4UL * ((1024 * 1024 * 1024) >> PAGE_SHIFT))
+>=20
+> FWIW, wouldn't s/UL/ULL/ in the original expression suffice? Failing that,
+> rather than awkward parenthesis trickery it might be clearer to just copy
+> the one from arch/mips/include/asm/dma.h.
+
+Both of your suggestions yield the correct result, and at least for me
+both look easier to understand than what Alan proposed in the first
+place.=20
+
+I would opt for the variant which is already in arch/mips, because it
+avoids 64 bit calculation, is most obvious in intent in my eyes, and
+we have the same calculation twice then instead of two variants.
+
+Thanks for your review, I'll send a v2. :-)
+
+Greets
+Alex
+
+--=20
+/"\ ASCII RIBBON | =BBWith the first link, the chain is forged. The first
+\ / CAMPAIGN     | speech censured, the first thought forbidden, the
+ X  AGAINST      | first freedom denied, chains us all irrevocably.=AB
+/ \ HTML MAIL    | (Jean-Luc Picard, quoting Judge Aaron Satie)
+
+--iodayy4zmltei4qo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEwo7muQJjlc+Prwj6NK3NAHIhXMYFAl5zkGYACgkQNK3NAHIh
+XMZVuBAAiot7wus5KYr1BSz88DPoujOTs5xhPjApYgOx9xpEOlKq1GmMXbiiumEX
+U55+iU1afQEvSNJbHrsaLDtWxOQtWcZOuQcBCCBE7s6+fZQ21IbdoxqUlnurMZcm
+O1nAoNxqQ+IzKVsQk2g7M5LKZZpZe0xHQNrBw/Jkhwx1ePLAuJRYNzWlV2zTE533
+0UiNmWQweS4tUleXtne8ErWWCyq9Gic2wtK+IMApvbG6iHbhjIggOIDzLWFUB+Zm
+67KWFhKT/rbLDjT1dx4FsTw1Lve0zk2/I+nPMUpXs2uSX7vHsR0nymZ/UQrD6u+C
+vIqfa3RbgBFB+McCqFDPgJIuvA0/MsXujHnSDdGjltWqVPsOcd8MV8uEi8FfZoPE
+1n/29F+wSMmgi1GB2uV+mBC8/uKzzFGr2r42P1OhJwieKW7sxyigC9v+IlLPm2hE
+8LxN9B9It0GViBTYt6IfyD6XDOEjFwE/e8FlhzyRBj2Bn6vsqzwSLTjBxgjxEtLg
+VuGSBjCCHc9vxZ/gfIOeDzQxiBKX7DiwtbuEG4VjcIqJWOgdX9h6Un2aG8H2tXhs
+q5FVUtb1IcEAKIwd+ESXGSuwvBDIP6jdl9JGKk/MhEg2THpCH3zLgZE3z1kabVE2
+DSdbRJnZuf5xz7+R45KBCXI3Vyjr4o1EluQgH+kM84Es/TKIzGU=
+=LvT4
+-----END PGP SIGNATURE-----
+
+--iodayy4zmltei4qo--
