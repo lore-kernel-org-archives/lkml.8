@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC7EC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F78C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C107D20789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E8E820789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624960;
-	bh=WRySZW8fLQ0TeUzjBJOrEWL4Rs2ic516l9hMByXwoYg=;
+	s=default; t=1584624968;
+	bh=jJUYZqV0w3aihbIA7hyyPBRaBtdQxZjgWV0UghJS45A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sGcrOrtu7hp33hxMWL57or5E6RcHE0HMiqVDLg58WttQB98x1xm2tde2MCPhj6tPo
-	 AM4JYTkREI97P5Yk3BiSlCF36GZ9MMD5SR9Ni8lA6WXN+p8DcKuri6pTg8IxLNpuMo
-	 aJUgGB+94rRZscEfsKmiAY2meXhPLPW4iD7B0eqY=
+	b=Vf5Fb3vmkN4/sOwIGy7ZxokkxGBuV5UYzlHwLRlvSETV+Yz9pia0iMWbRFjrNRKiW
+	 aOf9ZLFObOjiJODxHJ3+PPcSkT/0vmkBw+2J4xLDxClYPuEzNx0DssX24w0OaZpxEi
+	 tSWZ72IHXW2wA7c5pnDyf2ttqd2GmmsMqIo9iufI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgCSNKx (ORCPT
+        id S1727963AbgCSNK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55686 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:10:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbgCSNKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:10:47 -0400
+        id S1728523AbgCSNKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:10:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 670C320722;
-        Thu, 19 Mar 2020 13:10:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35BD42145D;
+        Thu, 19 Mar 2020 13:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623445;
-        bh=WRySZW8fLQ0TeUzjBJOrEWL4Rs2ic516l9hMByXwoYg=;
+        s=default; t=1584623424;
+        bh=jJUYZqV0w3aihbIA7hyyPBRaBtdQxZjgWV0UghJS45A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C/EbC6GYNYooPdein+pEGSenHrYVg2Du4ywcaEJt2GIGxlj+WzqrZIwlVaKGAagWG
-         v75nIl5uuAGbYMVuiQqeYBLLHCDxSsRGT7SQ43IsaqkJTg+GwiIX+3erFojyltB9JS
-         SIhS3pADz7S/rwQG0b65a2tUgox7ohK1aeFnrhLw=
+        b=0FOeEtJs76t7XEdYrIwmdExM5I45L3UqIJeVuQaJNmH5M55nxba1sAXgouPLG8yHT
+         SEyr4G0Z7YWHdBmF8St1RbchUllkFn2GSA9eXMIdCT88bDTQZlaEoYiqmRm1Y9fGmH
+         pAreSulcALere09tgP4mS6SxZ2x5puxCIikTXYdk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>,
+        stable@vger.kernel.org, You-Sheng Yang <vicamo.yang@canonical.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 29/90] cgroup: memcg: net: do not associate sock with unrelated cgroup
-Date:   Thu, 19 Mar 2020 13:59:51 +0100
-Message-Id: <20200319123937.605932836@linuxfoundation.org>
+Subject: [PATCH 4.9 09/90] r8152: check disconnect status after long sleep
+Date:   Thu, 19 Mar 2020 13:59:31 +0100
+Message-Id: <20200319123931.564917852@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -60,124 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shakeel Butt <shakeelb@google.com>
+From: You-Sheng Yang <vicamo.yang@canonical.com>
 
-[ Upstream commit e876ecc67db80dfdb8e237f71e5b43bb88ae549c ]
+[ Upstream commit d64c7a08034b32c285e576208ae44fc3ba3fa7df ]
 
-We are testing network memory accounting in our setup and noticed
-inconsistent network memory usage and often unrelated cgroups network
-usage correlates with testing workload. On further inspection, it
-seems like mem_cgroup_sk_alloc() and cgroup_sk_alloc() are broken in
-irq context specially for cgroup v1.
+Dell USB Type C docking WD19/WD19DC attaches additional peripherals as:
 
-mem_cgroup_sk_alloc() and cgroup_sk_alloc() can be called in irq context
-and kind of assumes that this can only happen from sk_clone_lock()
-and the source sock object has already associated cgroup. However in
-cgroup v1, where network memory accounting is opt-in, the source sock
-can be unassociated with any cgroup and the new cloned sock can get
-associated with unrelated interrupted cgroup.
+  /: Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
+      |__ Port 1: Dev 11, If 0, Class=Hub, Driver=hub/4p, 5000M
+          |__ Port 3: Dev 12, If 0, Class=Hub, Driver=hub/4p, 5000M
+          |__ Port 4: Dev 13, If 0, Class=Vendor Specific Class,
+              Driver=r8152, 5000M
 
-Cgroup v2 can also suffer if the source sock object was created by
-process in the root cgroup or if sk_alloc() is called in irq context.
-The fix is to just do nothing in interrupt.
+where usb 2-1-3 is a hub connecting all USB Type-A/C ports on the dock.
 
-WARNING: Please note that about half of the TCP sockets are allocated
-from the IRQ context, so, memory used by such sockets will not be
-accouted by the memcg.
+When hotplugging such dock with additional usb devices already attached on
+it, the probing process may reset usb 2.1 port, therefore r8152 ethernet
+device is also reset. However, during r8152 device init there are several
+for-loops that, when it's unable to retrieve hardware registers due to
+being disconnected from USB, may take up to 14 seconds each in practice,
+and that has to be completed before USB may re-enumerate devices on the
+bus. As a result, devices attached to the dock will only be available
+after nearly 1 minute after the dock was plugged in:
 
-The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
+  [ 216.388290] [250] r8152 2-1.4:1.0: usb_probe_interface
+  [ 216.388292] [250] r8152 2-1.4:1.0: usb_probe_interface - got id
+  [ 258.830410] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): PHY not ready
+  [ 258.830460] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Invalid header when reading pass-thru MAC addr
+  [ 258.830464] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Get ether addr fail
 
-CPU: 70 PID: 12720 Comm: ssh Tainted:  5.6.0-smp-DEV #1
-Hardware name: ...
-Call Trace:
- <IRQ>
- dump_stack+0x57/0x75
- mem_cgroup_sk_alloc+0xe9/0xf0
- sk_clone_lock+0x2a7/0x420
- inet_csk_clone_lock+0x1b/0x110
- tcp_create_openreq_child+0x23/0x3b0
- tcp_v6_syn_recv_sock+0x88/0x730
- tcp_check_req+0x429/0x560
- tcp_v6_rcv+0x72d/0xa40
- ip6_protocol_deliver_rcu+0xc9/0x400
- ip6_input+0x44/0xd0
- ? ip6_protocol_deliver_rcu+0x400/0x400
- ip6_rcv_finish+0x71/0x80
- ipv6_rcv+0x5b/0xe0
- ? ip6_sublist_rcv+0x2e0/0x2e0
- process_backlog+0x108/0x1e0
- net_rx_action+0x26b/0x460
- __do_softirq+0x104/0x2a6
- do_softirq_own_stack+0x2a/0x40
- </IRQ>
- do_softirq.part.19+0x40/0x50
- __local_bh_enable_ip+0x51/0x60
- ip6_finish_output2+0x23d/0x520
- ? ip6table_mangle_hook+0x55/0x160
- __ip6_finish_output+0xa1/0x100
- ip6_finish_output+0x30/0xd0
- ip6_output+0x73/0x120
- ? __ip6_finish_output+0x100/0x100
- ip6_xmit+0x2e3/0x600
- ? ipv6_anycast_cleanup+0x50/0x50
- ? inet6_csk_route_socket+0x136/0x1e0
- ? skb_free_head+0x1e/0x30
- inet6_csk_xmit+0x95/0xf0
- __tcp_transmit_skb+0x5b4/0xb20
- __tcp_send_ack.part.60+0xa3/0x110
- tcp_send_ack+0x1d/0x20
- tcp_rcv_state_process+0xe64/0xe80
- ? tcp_v6_connect+0x5d1/0x5f0
- tcp_v6_do_rcv+0x1b1/0x3f0
- ? tcp_v6_do_rcv+0x1b1/0x3f0
- __release_sock+0x7f/0xd0
- release_sock+0x30/0xa0
- __inet_stream_connect+0x1c3/0x3b0
- ? prepare_to_wait+0xb0/0xb0
- inet_stream_connect+0x3b/0x60
- __sys_connect+0x101/0x120
- ? __sys_getsockopt+0x11b/0x140
- __x64_sys_connect+0x1a/0x20
- do_syscall_64+0x51/0x200
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+This happens in, for example, r8153_init:
 
-The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
-Fixes: 2d7580738345 ("mm: memcontrol: consolidate cgroup socket tracking")
-Fixes: d979a39d7242 ("cgroup: duplicate cgroup reference when cloning sockets")
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Roman Gushchin <guro@fb.com>
+  static int generic_ocp_read(struct r8152 *tp, u16 index, u16 size,
+			    void *data, u16 type)
+  {
+    if (test_bit(RTL8152_UNPLUG, &tp->flags))
+      return -ENODEV;
+    ...
+  }
+
+  static u16 ocp_read_word(struct r8152 *tp, u16 type, u16 index)
+  {
+    u32 data;
+    ...
+    generic_ocp_read(tp, index, sizeof(tmp), &tmp, type | byen);
+
+    data = __le32_to_cpu(tmp);
+    ...
+    return (u16)data;
+  }
+
+  static void r8153_init(struct r8152 *tp)
+  {
+    ...
+    if (test_bit(RTL8152_UNPLUG, &tp->flags))
+      return;
+
+    for (i = 0; i < 500; i++) {
+      if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+          AUTOLOAD_DONE)
+        break;
+      msleep(20);
+    }
+    ...
+  }
+
+Since ocp_read_word() doesn't check the return status of
+generic_ocp_read(), and the only exit condition for the loop is to have
+a match in the returned value, such loops will only ends after exceeding
+its maximum runs when the device has been marked as disconnected, which
+takes 500 * 20ms = 10 seconds in theory, 14 in practice.
+
+To solve this long latency another test to RTL8152_UNPLUG flag should be
+added after those 20ms sleep to skip unnecessary loops, so that the device
+probe can complete early and proceed to parent port reset/reprobe process.
+
+This can be reproduced on all kernel versions up to latest v5.6-rc2, but
+after v5.5-rc7 the reproduce rate is dramatically lowered to 1/30 or less
+while it was around 1/2.
+
+Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/cgroup.c |    4 ++++
- mm/memcontrol.c |    4 ++++
- 2 files changed, 8 insertions(+)
+ drivers/net/usb/r8152.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/kernel/cgroup.c
-+++ b/kernel/cgroup.c
-@@ -6335,6 +6335,10 @@ void cgroup_sk_alloc(struct sock_cgroup_
- 		return;
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -3423,7 +3423,10 @@ static void r8153_init(struct r8152 *tp)
+ 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
+ 		    AUTOLOAD_DONE)
+ 			break;
++
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
  	}
  
-+	/* Don't associate the sock with unrelated interrupted task's cgroup. */
-+	if (in_interrupt())
-+		return;
+ 	for (i = 0; i < 500; i++) {
+@@ -3447,7 +3450,10 @@ static void r8153_init(struct r8152 *tp)
+ 		ocp_data = ocp_reg_read(tp, OCP_PHY_STATUS) & PHY_STAT_MASK;
+ 		if (ocp_data == PHY_STAT_LAN_ON)
+ 			break;
 +
- 	rcu_read_lock();
- 
- 	while (true) {
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5726,6 +5726,10 @@ void mem_cgroup_sk_alloc(struct sock *sk
- 		return;
+ 		msleep(20);
++		if (test_bit(RTL8152_UNPLUG, &tp->flags))
++			break;
  	}
  
-+	/* Do not associate the sock with unrelated interrupted task's memcg. */
-+	if (in_interrupt())
-+		return;
-+
- 	rcu_read_lock();
- 	memcg = mem_cgroup_from_task(current);
- 	if (memcg == root_mem_cgroup)
+ 	usb_disable_lpm(tp->udev);
 
 
