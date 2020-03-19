@@ -2,95 +2,178 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33841C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851DFC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C92F20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C3020787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gv9AZwIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgCSSfF (ORCPT
+        id S1727402AbgCSSfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:35:05 -0400
-Received: from mga06.intel.com ([134.134.136.31]:62956 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSSfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:35:05 -0400
-IronPort-SDR: aGi4gm73iQn5HhSs+wQX+zY6b0Ee7GPbNotxzldgHMaY2NAF/2qv98TBVlccbvZWB1Chx3fyZF
- OZvVMTqteIOA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 11:35:04 -0700
-IronPort-SDR: 8PJ20HU+/1aAUtKkXBhL4ENr19sfOFgV1IzgPk5go10JOk0SJ1/gsJeVsaEb18kxxu80xGUxGu
- /TeOiOTXzOxA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="356117527"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.249.128.140]) ([10.249.128.140])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Mar 2020 11:35:02 -0700
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com
-References: <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
- <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
- <20200319130049.GA2244@light.dominikbrodowski.net>
- <20200319134139.GB3983@sirena.org.uk>
- <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
- <20200319165157.GA2254@light.dominikbrodowski.net>
- <a7bf2aee-78e7-f905-bcc3-cd21bf16a976@intel.com>
- <20200319182413.GA3968@light.dominikbrodowski.net>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Message-ID: <750f7841-0b95-9fa8-d858-e0bff4d834d5@intel.com>
-Date:   Thu, 19 Mar 2020 19:35:00 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 14:35:15 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35847 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCSSfP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:35:15 -0400
+Received: by mail-lf1-f68.google.com with SMTP id s1so2498390lfd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 11:35:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Kd0d7/UfgwdvzHgvQenbYu5RHBauEJYzFS+JlGbid/Y=;
+        b=gv9AZwIsp1SJvB8Uk8IYTA1I48DAvESbD2oisd+5qNE88yL+mOAz0lj+jetszcOq9l
+         1QY6yjLxg3Is4w1ijCI9nkI1KL98X/6cZlkdtbJas14J63ElMysDPGDMZ/TfguU3K3OS
+         +gfPIFY1uMS2dsPrRGKW753q6III1KbEUTB7wLZshby8ciA1zlbERhdJDVyteK81wTBe
+         R/+U5IFcRFNyj7BsfqpcSCJ7e/5ygsrBaEmTOkySWr19Tr0uj2aB03xQQPKlhKeeQNFM
+         mqeJIM2YWT9FJ5bP6/6Ff0PDYTm6o1KOfH5sqn7B8mhhIFgDYgjAzl++3BL16lTnnoBg
+         Gdbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Kd0d7/UfgwdvzHgvQenbYu5RHBauEJYzFS+JlGbid/Y=;
+        b=tnrlj6iMgpUwOA7CijYUxNZ++6aTCSDBemcRZHsBB32HKuRt3PKPb+YBYWqMfc27eH
+         /tyW4AtzziZ18upevlndVxFKNkMJDPCpkqpynXIvQD407M8MqVw/y3Xb9kKJ+WQdsY/6
+         IGlH6Z7Q0OVHd3lg41T0e6F79m5Gs7Rob1vhYoqN+VNXWFM5K+031K6P8nZDulD+OUFb
+         wmEt19kPyeFE/Bccrc1PSPQ4mQTskf8Dv+QTuHT0X529IWoNO3yrQhomEFNCtvxJtPdp
+         87FuMKOS2bTwjJI6RixdAf2bomPIPFFGXOLCsfstYmglcN/SmXT4F1Ie7enlQcl5aM7C
+         KfeA==
+X-Gm-Message-State: ANhLgQ1D8B3vg55HsdeqdIGRAAI2tzwiJC1a/eLJ/mSUZPYZALY6CYd4
+        xY3B8Po2TPbs/X3O/nrkGBttVnBXixlwhmYa4zW/Pw==
+X-Google-Smtp-Source: ADFU+vsbYsLejxTqmEHzkijtasIdRdQgtLiOSPjEqw+aZF2q8n0i4zqspGp0HuHbBHSB+MhrtBk0e+HZEyPsGRoIbMA=
+X-Received: by 2002:a05:6512:3188:: with SMTP id i8mr3048513lfe.26.1584642911614;
+ Thu, 19 Mar 2020 11:35:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200319182413.GA3968@light.dominikbrodowski.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200319123941.630731708@linuxfoundation.org>
+In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 20 Mar 2020 00:05:00 +0530
+Message-ID: <CA+G9fYvGcBzFuGFT=NsRb_uWZ_Sn04-MxKgLU9NGmrMSUNegFA@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/99] 4.14.174-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-19 19:24, Dominik Brodowski wrote:
-> On Thu, Mar 19, 2020 at 06:33:50PM +0100, Cezary Rojewski wrote:
->>
->> Could you confirm the same happens on your machine when revert of mentioned
->> patch is not applied ("stream is NULL" messages occur)? Issue may be
->> harmless but explained sequence does not look right.
-> 
-> Indeed, I still see
-> 
-> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to reset, ignore it.
-> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to free, ignore it.
-> haswell-pcm-audio haswell-pcm-audio: FW loaded, mailbox readback FW info: type 01, - version: 00.00, build 77, source commit id: 876ac6906f31a43b6772b23c7c983ce9dcb18a19
-> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to reset, ignore it.
-> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to free, ignore it.
-> 
-> though sounds continues to work.
-> 
+On Thu, 19 Mar 2020 at 18:45, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.174 release.
+> There are 99 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.174-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Thanks once again for your input and time!
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-I'll prepare patches for both issues. My guess is haswell-pcm could be 
-updated to handle 'platform' component param just fine, but it is 
-probably a change of more than few lines. I'd rather revert non-SOF 
-broadwell to its previous behavior and start a separate task from there.
+Summary
+------------------------------------------------------------------------
 
-Regards,
-Czarek
+kernel: 4.14.174-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 5510299b1b08a51cf5805bd223de3e9453900d9b
+git describe: v4.14.173-100-g5510299b1b08
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.173-100-g5510299b1b08
+
+
+No regressions (compared to build v4.14.173)
+
+No fixes (compared to build v4.14.173)
+
+Ran 22239 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* network-basic-tests
+* spectre-meltdown-checker-test
+* kvm-unit-tests
+* kselftest
+* ltp-open-posix-tests
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
