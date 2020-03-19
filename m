@@ -2,152 +2,84 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7457C43333
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03B9C43333
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2742071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E2B320754
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:43:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z+rAuET9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgCSRn0 (ORCPT
+        id S1728768AbgCSRna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:43:26 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:38713 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgCSRnY (ORCPT
+        Thu, 19 Mar 2020 13:43:30 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54267 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727561AbgCSRnZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:43:24 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MK3a4-1j0Btp0v5q-00LWgz; Thu, 19 Mar 2020 18:43:11 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 9CA6865021B;
-        Thu, 19 Mar 2020 17:43:10 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id p8hR5X3iJEyc; Thu, 19 Mar 2020 18:43:10 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 4936364FD07;
-        Thu, 19 Mar 2020 18:43:10 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.52) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 19 Mar 2020 18:43:10 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id A7F9A8051E; Thu, 19 Mar 2020 18:43:09 +0100 (CET)
-Date:   Thu, 19 Mar 2020 18:43:09 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v2 10/10] media: adv748x: allow the HDMI sub-device to accept
- EDID
-Message-ID: <f7387c96eee7f434cd5b86707b386015878ba9b7.1584639664.git.alexander.riesen@cetitec.com>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1584639664.git.alexander.riesen@cetitec.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1584639664.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.8.5.52]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7762
-X-Provags-ID: V03:K1:vr4OYoDjE9YrB9RjEXN80k6NQqQMP6ayMOLmGmMd2czOi/8NORG
- QhXwNDMbeIpUTsh/cqAfcVH0MtX10uqhqfYv0usEthLSrClXXxwHR+aCYFrK7iFxY9ruW2l
- uUyeC8j99rXpyqcCQ52/fHkY2UxVaXlZQoBCEb86BkAkAjUYmFROO0mVBjHpb2ZIkAWmyc1
- hGIstBqGANg/b7AdL6aBA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:I28fkQ/FN/M=:g6yKcXLfdT0TQAiIY/F69V
- TCD6zrM0+g8dkqtcjye84MGHpt+HuF6B9iAzayBA3QUmQNXPxAhE4CdTUK3DMRiBIrXTzoyJL
- Lyt30EXhRkOn1U+VsMYj8DR+kUNxX0C3rKl0uYMMmDttuGkBoVQkgvX4KC5ax4PKhktClS7qo
- Vknpv4q7kUPOhwlvnKlHyAlLrJoFh4XRzPvsXbGt9bWCwjE5Yg4ea655A3ZyUEbd0kfvQCcNP
- vdmfrrWVZ04iEQ9Rl5Qo951OdGm5qiHufch0UYEr1MnJ+mtu+pcTLZ4bruDd14CwDauP/cPL2
- 8fsbYrCbSYsm4YDH25ZokuJA0prJ0QuDQ0v98utyDgMAmHQADkA5DYKeq68qBUJqpzvQ1YRRv
- IDU3sTlU4ltw0F+g3guBogtpYv95AbbmZO2TeehI9WPYdAIoSm30UNUQryCZHz3LieyGo9w4W
- KU80AWvHo7vwv2pCQrqitJkEPsPla2v6Y6fTRbqSu4aeFJ/FTeN/ciVvSG0pYfLFZaGnL9VvY
- YteXeZpahCIaId2bLNg4XH8DHGGlf0fXWHkpbPGjsKx6m5g/RE4d+pObXlzvpEwbcxh+Tg6PD
- tomKb6bJVZ7HeKzwkIX1Bod2/gaXLfIOHKTDxAmTK3eW9ggPb7tGa2iPwniLrYWV+zK9C47qa
- PqLGhuMFlGUloJmyUa0UgqIolAooc7CUGow75XX9uKhzi6ObeVuUjLXnuknNAcFbK73+0ubcn
- XZcxOVmttSSKnlRDnSu3uVgDo71pvASEk/BgG9Pjo5F/lnA+MHAc/69sk4lp8z4xYZ3sQ/eTj
- 9uQYAGP8AAYBWV/3BYY5o0H0Mg59XBeYAkYKsjMJG4qtPL8o0atK3wvQe7aZTGULKuKiaLy
+        Thu, 19 Mar 2020 13:43:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584639804;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=arXREge8xmNm33ojJlI2/DsuKy1gZAPWYFzbLrZKzuE=;
+        b=Z+rAuET9tE0At9VjlQzY/uVaXDx5KpWEuGEa+9zRMeWAAyL2iqeOMWD4qPX32LATDetEAg
+        6dZl4PCpayMmtYosFUAChzLzDgAJ5sNAiTmmiFuBX5uQiB2UcfX849xcWczgXW9Frt9TkY
+        /AaqFM0i8cW3SAU+K2s8Io6Zvo26fVY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-400-xNA2rQfpPRacroWjr_yhsA-1; Thu, 19 Mar 2020 13:43:20 -0400
+X-MC-Unique: xNA2rQfpPRacroWjr_yhsA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B7DB18024EA;
+        Thu, 19 Mar 2020 17:43:19 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 02C055C545;
+        Thu, 19 Mar 2020 17:43:18 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH] KVM: x86: remove bogus user-triggerable WARN_ON
+Date:   Thu, 19 Mar 2020 13:43:18 -0400
+Message-Id: <20200319174318.20752-1-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes it possible to load a EDID reported by the device
-with v4l2-ctl utility:
+The WARN_ON is essentially comparing a user-provided value with 0.  It is
+trivial to trigger it just by passing garbage to KVM_SET_CLOCK.  Guests
+can break if you do so, but if it hurts when you do like this just do not
+do it.
 
-  vdev=/dev/$(grep -l '^adv748x.*hdmi$' /sys/class/video4linux/v4l-subdev*/name |cut -d/ -f5-5)
-  v4l2-ctl -d $vdev --set-edid=pad=0,file=/etc/adv7482.edid
-
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+Reported-by: syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com
+Fixes: 9446e6fce0ab ("KVM: x86: fix WARN_ON check of an unsigned less than zero")
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- drivers/media/i2c/adv748x/adv748x-hdmi.c | 27 ++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/x86/kvm/x86.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-index 7655d817ceb6..88e309de3d56 100644
---- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
-+++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-@@ -775,7 +775,34 @@ static int adv748x_hdmi_log_status(struct v4l2_subdev *sd)
- 	return 0;
- }
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3156e25b0774..d65ff2008cf1 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2444,7 +2444,6 @@ static int kvm_guest_time_update(struct kvm_vcpu *v)
+ 	vcpu->hv_clock.tsc_timestamp = tsc_timestamp;
+ 	vcpu->hv_clock.system_time = kernel_ns + v->kvm->arch.kvmclock_offset;
+ 	vcpu->last_guest_tsc = tsc_timestamp;
+-	WARN_ON((s64)vcpu->hv_clock.system_time < 0);
  
-+static long adv748x_hdmi_querycap(struct adv748x_hdmi *hdmi,
-+				  struct v4l2_capability *cap)
-+{
-+	struct adv748x_state *state = adv748x_hdmi_to_state(hdmi);
-+
-+	cap->version = LINUX_VERSION_CODE;
-+	strlcpy(cap->driver, state->dev->driver->name, sizeof(cap->driver));
-+	strlcpy(cap->card, "hdmi", sizeof(cap->card));
-+	snprintf(cap->bus_info, sizeof(cap->bus_info), "i2c:%d-%04x",
-+		 i2c_adapter_id(state->client->adapter),
-+		 state->client->addr);
-+	cap->device_caps = V4L2_CAP_AUDIO | V4L2_CAP_VIDEO_CAPTURE;
-+	cap->capabilities = V4L2_CAP_DEVICE_CAPS;
-+	return 0;
-+}
-+
-+static long adv748x_hdmi_ioctl(struct v4l2_subdev *sd,
-+			       unsigned int cmd, void *arg)
-+{
-+	struct adv748x_hdmi *hdmi = adv748x_sd_to_hdmi(sd);
-+
-+	if (cmd == VIDIOC_QUERYCAP)
-+		return adv748x_hdmi_querycap(hdmi, arg);
-+	return -ENOTTY;
-+}
-+
- static const struct v4l2_subdev_core_ops adv748x_core_ops_hdmi = {
-+	.ioctl = adv748x_hdmi_ioctl,
- 	.log_status = adv748x_hdmi_log_status,
- };
- 
+ 	/* If the host uses TSC clocksource, then it is stable */
+ 	pvclock_flags = 0;
 -- 
-2.25.1.25.g9ecbe7eb18
+2.18.2
 
