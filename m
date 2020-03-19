@@ -2,188 +2,94 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A537CC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6A1C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74FC520789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OtlhXdNR"
+	by mail.kernel.org (Postfix) with ESMTP id 4C30F20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584623504;
+	bh=jetwA1u3uGfwY/G0enG3r4Nr4bil0aUXmabtHYmGvfA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cMxzi6IJuM8VC+knn7Mpg+sDtCpL5tTzM0cV2ZATR/dAGG+lkair3/fj85fxij26K
+	 y5ZptxP+NWHnQqtt5wy2RQNUiQ8yRd1q72ceGyxTyKttAgfT5KuBj8iHhwLjHsptV2
+	 D8n12NkYWCKPOdo7CezTWaDiHn21NU55H7vzhkDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgCSNLk (ORCPT
+        id S1728765AbgCSNLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:11:40 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:29489 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727549AbgCSNLg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:11:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584623495;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dwfqKsawwlA7QavpNFSxuBUqzZRSHs2EJIIMOQG0ECg=;
-        b=OtlhXdNR3oZrjq9fSNVcUdcpcBu2md4OKqbm0Zvkgp8Hu97JiK52SBNd2VcHb+xoC0cIGQ
-        Go561jsUOYI85yeQuCyu4BSf0VOSkLTbyk6A3fQRZbtZ4h0TGg6KgsjwuY0TOhsVM2jXE7
-        3bYvws4kpfyNGHazjHsr9WXwiV1Nwmc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-jZHvhMY7OgWTkqmVKPZukg-1; Thu, 19 Mar 2020 09:11:29 -0400
-X-MC-Unique: jZHvhMY7OgWTkqmVKPZukg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 19 Mar 2020 09:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727985AbgCSNLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:11:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6EAD918B6383;
-        Thu, 19 Mar 2020 13:11:27 +0000 (UTC)
-Received: from x1.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 891275C1D8;
-        Thu, 19 Mar 2020 13:11:26 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 07:11:26 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dev@dpdk.org" <dev@dpdk.org>,
-        "mtosatti@redhat.com" <mtosatti@redhat.com>,
-        "thomas@monjalon.net" <thomas@monjalon.net>,
-        "bluca@debian.org" <bluca@debian.org>,
-        "jerinjacobk@gmail.com" <jerinjacobk@gmail.com>,
-        "Richardson, Bruce" <bruce.richardson@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>
-Subject: Re: [PATCH v3 0/7] vfio/pci: SR-IOV support
-Message-ID: <20200319071126.6f5e1b78@x1.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D7DAFD5@SHSMSX104.ccr.corp.intel.com>
-References: <158396044753.5601.14804870681174789709.stgit@gimli.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D7DAFD5@SHSMSX104.ccr.corp.intel.com>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E92320722;
+        Thu, 19 Mar 2020 13:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584623497;
+        bh=jetwA1u3uGfwY/G0enG3r4Nr4bil0aUXmabtHYmGvfA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OIq477Wp19hr/nVsyD/BO8QaERTkHGXrZQI4csBcDQvXIEgAqvRq1w6oH+sUfHbHT
+         EH8uCmNjAdh19vehGx+L8Gp0kICBlAvT+OBEAvp+PKDY2btz4rdL5mnpZCBGfQRhCf
+         eAcbxB/7xByyons1IsLpYXUjlsLgLNNdOqrx1htw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 4.9 47/90] iommu/vt-d: Fix the wrong printing in RHSA parsing
+Date:   Thu, 19 Mar 2020 14:00:09 +0100
+Message-Id: <20200319123943.075353407@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
+References: <20200319123928.635114118@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020 06:32:25 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
+From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Thursday, March 12, 2020 5:58 AM
-> > 
-> > Only minor tweaks since v2, GET and SET on VFIO_DEVICE_FEATURE are
-> > enforced mutually exclusive except with the PROBE option as suggested
-> > by Connie, the modinfo text has been expanded for the opt-in to enable
-> > SR-IOV support in the vfio-pci driver per discussion with Kevin.
-> > 
-> > I have not incorporated runtime warnings attempting to detect misuse
-> > of SR-IOV or imposed a session lifetime of a VF token, both of which
-> > were significant portions of the discussion of the v2 series.  Both of
-> > these also seem to impose a usage model or make assumptions about VF
-> > resource usage or configuration requirements that don't seem necessary
-> > except for the sake of generating a warning or requiring an otherwise
-> > unnecessary and implicit token reinitialization.  If there are new
-> > thoughts around these or other discussion points, please raise them.
-> > 
-> > Series overview (same as provided with v1):
-> > 
-> > The synopsis of this series is that we have an ongoing desire to drive
-> > PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
-> > for this with DPDK drivers and potentially interesting future use
-> > cases in virtualization.  We've been reluctant to add this support
-> > previously due to the dependency and trust relationship between the
-> > VF device and PF driver.  Minimally the PF driver can induce a denial
-> > of service to the VF, but depending on the specific implementation,
-> > the PF driver might also be responsible for moving data between VFs
-> > or have direct access to the state of the VF, including data or state
-> > otherwise private to the VF or VF driver.
-> > 
-> > To help resolve these concerns, we introduce a VF token into the VFIO
-> > PCI ABI, which acts as a shared secret key between drivers.  The
-> > userspace PF driver is required to set the VF token to a known value
-> > and userspace VF drivers are required to provide the token to access
-> > the VF device.  If a PF driver is restarted with VF drivers in use, it
-> > must also provide the current token in order to prevent a rogue
-> > untrusted PF driver from replacing a known driver.  The degree to
-> > which this new token is considered secret is left to the userspace
-> > drivers, the kernel intentionally provides no means to retrieve the
-> > current token.
-> > 
-> > Note that the above token is only required for this new model where
-> > both the PF and VF devices are usable through vfio-pci.  Existing
-> > models of VFIO drivers where the PF is used without SR-IOV enabled
-> > or the VF is bound to a userspace driver with an in-kernel, host PF
-> > driver are unaffected.
-> > 
-> > The latter configuration above also highlights a new inverted scenario
-> > that is now possible, a userspace PF driver with in-kernel VF drivers.
-> > I believe this is a scenario that should be allowed, but should not be
-> > enabled by default.  This series includes code to set a default
-> > driver_override for VFs sourced from a vfio-pci user owned PF, such
-> > that the VFs are also bound to vfio-pci.  This model is compatible
-> > with tools like driverctl and allows the system administrator to
-> > decide if other bindings should be enabled.  The VF token interface
-> > above exists only between vfio-pci PF and VF drivers, once a VF is
-> > bound to another driver, the administrator has effectively pronounced
-> > the device as trusted.  The vfio-pci driver will note alternate
-> > binding in dmesg for logging and debugging purposes.
-> > 
-> > Please review, comment, and test.  The example QEMU implementation
-> > provided with the RFC is still current for this version.  Thanks,
-> > 
-> > Alex  
-> 
-> The whole series looks good to me:
-> 	Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+commit b0bb0c22c4db623f2e7b1a471596fbf1c22c6dc5 upstream.
 
-Thanks!
+When base address in RHSA structure doesn't match base address in
+each DRHD structure, the base address in last DRHD is printed out.
 
-> and confirm one understanding here, since it is not discussed anywhere. For
-> VM live migration with assigned VF device, it is not necessary to migrate the
-> VF token itself and actually we don't allow userspace to retrieve it. Instead,
-> Qemu just follows whatever token requirement on the dest to open the new
-> VF: could be same or different token as/from src, or even no token if PF
-> driver runs in kernel on dest. I suppose either combination could work, correct?
+This doesn't make sense when there are multiple DRHD units, fix it
+by printing the buggy RHSA's base address.
 
-That's correct.  Thanks,
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Fixes: fd0c8894893cb ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Alex
+---
+ drivers/iommu/dmar.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > RFC:
-> > https://lore.kernel.org/lkml/158085337582.9445.17682266437583505502.stg
-> > it@gimli.home/
-> > v1:
-> > https://lore.kernel.org/lkml/158145472604.16827.15751375540102298130.st
-> > git@gimli.home/
-> > v2:
-> > https://lore.kernel.org/lkml/158213716959.17090.8399427017403507114.stg
-> > it@gimli.home/
-> > 
-> > ---
-> > 
-> > Alex Williamson (7):
-> >       vfio: Include optional device match in vfio_device_ops callbacks
-> >       vfio/pci: Implement match ops
-> >       vfio/pci: Introduce VF token
-> >       vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
-> >       vfio/pci: Add sriov_configure support
-> >       vfio/pci: Remove dev_fmt definition
-> >       vfio/pci: Cleanup .probe() exit paths
-> > 
-> > 
-> >  drivers/vfio/pci/vfio_pci.c         |  390
-> > +++++++++++++++++++++++++++++++++--
-> >  drivers/vfio/pci/vfio_pci_private.h |   10 +
-> >  drivers/vfio/vfio.c                 |   20 +-
-> >  include/linux/vfio.h                |    4
-> >  include/uapi/linux/vfio.h           |   37 +++
-> >  5 files changed, 433 insertions(+), 28 deletions(-)  
-> 
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -485,7 +485,7 @@ static int dmar_parse_one_rhsa(struct ac
+ 	pr_warn(FW_BUG
+ 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
+ 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+-		drhd->reg_base_addr,
++		rhsa->base_address,
+ 		dmi_get_system_info(DMI_BIOS_VENDOR),
+ 		dmi_get_system_info(DMI_BIOS_VERSION),
+ 		dmi_get_system_info(DMI_PRODUCT_VERSION));
+
 
