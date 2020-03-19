@@ -2,64 +2,76 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB02C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A9DC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3A220739
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2488220739
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:28:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HxxXR8a3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgCSK2v (ORCPT
+        id S1727220AbgCSK2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 19 Mar 2020 06:28:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:33004 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726802AbgCSK2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:28:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A30631B;
-        Thu, 19 Mar 2020 03:28:49 -0700 (PDT)
-Received: from [192.168.1.19] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 800C33F305;
-        Thu, 19 Mar 2020 03:28:48 -0700 (PDT)
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH v2 3/9] sched: Remove checks against SD_LOAD_BALANCE
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
-References: <20200311181601.18314-1-valentin.schneider@arm.com>
- <20200311181601.18314-4-valentin.schneider@arm.com>
-Message-ID: <c74a32d9-e40c-b976-be19-9ceea91d6fa7@arm.com>
-Date:   Thu, 19 Mar 2020 11:28:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Received: from bombadil.infradead.org ([198.137.202.133]:34510 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbgCSK2r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:28:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=gqy+zebrYjBGvhaO6SqPF4xkV6Hd+2qwfnT0NaMfqFw=; b=HxxXR8a33Mlo3LPRSF0OtzifxY
+        nZ01RbqIrsYECyTprO9a4Hg+e3YXhyA4NLOMZ4FamuSC0hPDqUWZOpIL8mW3tSr2/Z84Gd4YWpk/k
+        ik1t+Xy+FiIkf/cgwCAwlt8977GoyAnubuWtzebqXHCQepNE/v5cRD6J4eErvjnLkXVr5YW357D3A
+        v8lJ3EUL21H8uG46NCpPiE+qVvQiTWG69rtNBEkqpaEYQKD3QC7Xd6i7Ed9JiziqTzp/OL4sVtVCR
+        /WkNXcTrYw/IKBMcO36OdHXhXeM8ltAoUckM3cXppBVPB3RnbCjw0BPEuM1rVMPFef1ssjBf3R8Gi
+        RF4NTWzQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEsPT-0007Vs-O0; Thu, 19 Mar 2020 10:28:19 +0000
+Date:   Thu, 19 Mar 2020 03:28:19 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     axboe@kernel.dk, martin.petersen@oracle.com, bob.liu@oracle.com,
+        darrick.wong@oracle.com, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, song@kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, Chaitanya.Kulkarni@wdc.com,
+        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
+        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 0/6] block: Introduce REQ_ALLOCATE flag for
+ REQ_OP_WRITE_ZEROES
+Message-ID: <20200319102819.GA26418@infradead.org>
+References: <158157930219.111879.12072477040351921368.stgit@localhost.localdomain>
+ <e2b7cbab-d91f-fd7b-de6f-a671caa6f5eb@virtuozzo.com>
+ <69c0b8a4-656f-98c4-eb55-2fd1184f5fc9@virtuozzo.com>
+ <67d63190-c16f-cd26-6b67-641c8943dc3d@virtuozzo.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311181601.18314-4-valentin.schneider@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67d63190-c16f-cd26-6b67-641c8943dc3d@virtuozzo.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.03.20 19:15, Valentin Schneider wrote:
-> Potential users of that flag could have been cpusets and isolcpus.
+On Fri, Mar 13, 2020 at 04:08:58PM +0300, Kirill Tkhai wrote:
+> I just don't understand the reason nothing happens :(
+> I see newly-sent patches comes fast into block tree.
+> But there is only silence... I grepped over Documentation,
+> and there is no special rules about block tree. So,
+> it looks like standard rules should be applyable.
 > 
-> cpusets don't need it because they define exclusive (i.e. non-overlapping)
-> domain spans, see cpuset.cpu_exclusive and cpuset.sched_load_balance.
-> If such a cpuset contains a single CPU, it will have the NULL domain
-> attached to it. If it contains several CPUs, none of their domains will
-> extend beyond the span of the cpuset.
+> Some comments? Some requests for reworking? Some personal reasons to ignore my patches?
 
-There are also non-exclusive cpusets but I assume the statement is the same.
-
-CPUs which are only used in cpusets with cpuset.sched_load_balance=0 are
-attached to the NULL sched-domain.
-
-There seems to be no code which alters the SD_LOAD_BALANCE flag.
-
-[...]
+I'm still completely opposed to the magic overloading using a flag.
+That is just a bad design waiting for trouble to happen.
