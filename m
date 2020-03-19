@@ -2,129 +2,112 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152D6C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9090C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D060020870
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB73920658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:09:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584634173;
+	bh=QFuqHMWKkiEerMDTcpgGsWBChtJHP2dAeiJte+5yHtU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wKBjACzUObUf61+38c7le6YXeXiBm8Er8IwXkczwKnN6CZ+EUKy5ivTq36hYHvc+L
+	 vtBbEghgksfulXo48i1mRK6/lVYjDzA4JvTiAGYmyRqvQETzqxfMn8YTlY9aTASqUQ
+	 tafkmu/Ivk2iXvXfH9qfuq2CWshYfrAkFD91cTVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgCSQHx (ORCPT
+        id S1728079AbgCSQJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:07:53 -0400
-Received: from 8bytes.org ([81.169.241.247]:53886 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 12:09:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbgCSQHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:07:53 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 2F7C1217; Thu, 19 Mar 2020 17:07:51 +0100 (CET)
-Date:   Thu, 19 Mar 2020 17:07:49 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 70/70] x86/sev-es: Add NMI state tracking
-Message-ID: <20200319160749.GC5122@8bytes.org>
-References: <20200319091407.1481-1-joro@8bytes.org>
- <20200319091407.1481-71-joro@8bytes.org>
- <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
+        id S1727064AbgCSQJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 12:09:31 -0400
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F9DF208C3;
+        Thu, 19 Mar 2020 16:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584634170;
+        bh=QFuqHMWKkiEerMDTcpgGsWBChtJHP2dAeiJte+5yHtU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uY30D1IJVRcRBK2B9fm6ObzhPw1OcuQ6AjL1Sbl31AkMpnQyITbcQo67FqiBml04n
+         ibIaY5ScnLxTd3j3uqWZYBnmfqYfvFQNbrvf2Ku1MgINv6t9TSCaWhmGH+SljjA7zU
+         Y/UF4llCpGOqqW8nybbfwI3nev70L/DomHyFsJ0M=
+Received: by mail-yb1-f172.google.com with SMTP id s17so562687ybk.9;
+        Thu, 19 Mar 2020 09:09:30 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3pB5DuU3+sucltyszQDUEMVz4erO9PddeaLwyTLmU0xTtKcE94
+        +jGsbQShz/3WOTdGhLhvx0bUTZszLuMFM2Bu0w==
+X-Google-Smtp-Source: ADFU+vvOh/l0kOoyAZeUv7XIEUUFdmB7bmrN34m9amh/dorM5bjQaVRBAARghBCDWKGdHkkLJf9QnHfG/DHcWYa2/hI=
+X-Received: by 2002:a25:b5c3:: with SMTP id d3mr5901077ybg.358.1584634169779;
+ Thu, 19 Mar 2020 09:09:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200317093922.20785-1-lkundrak@v3.sk> <20200317093922.20785-14-lkundrak@v3.sk>
+ <20200317134805.GO24270@lunn.ch>
+In-Reply-To: <20200317134805.GO24270@lunn.ch>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 19 Mar 2020 10:09:18 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJZbk29iq5QargTK-VMBoR359dvfQ=VuBkKHFdMfJEU9w@mail.gmail.com>
+Message-ID: <CAL_JsqJZbk29iq5QargTK-VMBoR359dvfQ=VuBkKHFdMfJEU9w@mail.gmail.com>
+Subject: Re: [PATCH 13/28] dt-bindings: serial: move Marvell compatible string
+ to 8250 binding doc
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Tue, Mar 17, 2020 at 7:48 AM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Tue, Mar 17, 2020 at 10:39:07AM +0100, Lubomir Rintel wrote:
+> > These ports are compatible with NS8250 and handled by the same driver.
+> > Get rid of the extra document that fails to document the properties that
+> > are actually supported.
+>
+> Hi Lubmir
+>
+> This is needs a bit closer examination. By the PXA maintainers. It
+> appears there are two serial drivers, the 8250 and a PXA specific
+> driver.
 
-On Thu, Mar 19, 2020 at 08:35:59AM -0700, Andy Lutomirski wrote:
-> On Thu, Mar 19, 2020 at 2:14 AM Joerg Roedel <joro@8bytes.org> wrote:
-> >
-> > From: Joerg Roedel <jroedel@suse.de>
-> >
-> > Keep NMI state in SEV-ES code so the kernel can re-enable NMIs for the
-> > vCPU when it reaches IRET.
-> 
-> IIRC I suggested just re-enabling NMI in C from do_nmi().  What was
-> wrong with that approach?
+Yes, but that is independent of the binding.
 
-If I understand the code correctly a nested NMI will just reset the
-interrupted NMI handler to start executing again at 'restart_nmi'.
-The interrupted NMI handler could be in the #VC handler, and it is not
-safe to just jump back to the start of the NMI handler from somewhere
-within the #VC handler.
+The PXA driver (serial/pxa.c) is already deprecated in favor of
+8250_pxa.c. That was 3.5 years ago now, so maybe time to remove the
+old one.
 
-So I decided to not allow NMI nesting for SEV-ES and only re-enable the
-NMI window when the first NMI returns. This is not implemented in this
-patch, but I will do that once Thomas' entry-code rewrite is upstream.
-
-> This causes us to pop the NMI frame off the stack.  Assuming the NMI
-> restart logic is invoked (which is maybe impossible?), we get #DB,
-> which presumably is actually delivered.  And we end up on the #DB
-> stack, which might already have been in use, so we have a potential
-> increase in nesting.  Also, #DB may be called from an unexpected
-> context.
-
-An SEV-ES hypervisor is required to intercept #DB, which means that the
-#DB exception actually ends up being a #VC exception. So it will not end
-up on the #DB stack.
-
-> Now somehow #DB is supposed to invoke #VC, which is supposed to do the
-> magic hypercall, and all of this is supposed to be safe?  Or is #DB
-> unconditionally redirected to #VC?  What happens if we had no stack
-> (e.g. we interrupted SYSCALL) or we were already in #VC to begin with?
-
-Yeah, as I said above, the #DB is redirected to #VC, as the hypervisor
-has to intercept #DB.
-
-The stack-problem is the one that prevents the Single-step-over-iret
-approach right now, because the NMI can hit while in kernel mode and on
-entry stack, which the generic entry code (besided NMI) does not handle.
-Getting a #VC exception there (like after an IRET to that state) breaks
-things.
-
-Last, in this version of the patch-set the #VC handler became
-nesting-safe. It detects whether the per-cpu GHCB is in use and
-safes/restores its contents in this case.
-
-
-> I think there are two credible ways to approach this:
-> 
-> 1. Just put the NMI unmask in do_nmi().  The kernel *already* knows
-> how to handle running do_nmi() with NMIs unmasked.  This is much, much
-> simpler than your code.
-
-Right, and I thought about that, but the implication is that the
-complexity is moved somewhere else, namely into the #VC handler, which
-then has to be restartable.
-
-> 2. Have an entirely separate NMI path for the
-> SEV-ES-on-misdesigned-CPU case.  And have very clear documentation for
-> what prevents this code from being executed on future CPUs (Zen3?)
-> that have this issue fixed for real?
-
-That sounds like a good alternative, I will investigate this approach.
-The NMI handler should be much simpler as it doesn't need to allow NMI
-nesting. The question is, does the C code down the NMI path depend on
-the NMI handlers stack frame layout (e.g. the in-nmi flag)?
-
-Regards,
-
-	Joerg
+Rob
