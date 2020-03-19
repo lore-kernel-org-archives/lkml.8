@@ -2,98 +2,157 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471D1C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94F9C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 123B920663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624886;
-	bh=VihryuoItoXxh/VaTuC2RDkKuohmb55B2WJjP8uKwrk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AJlCU7Kyx85fHo92xZ2/zVMGrzzYyWQ2C2QeAr7R9tnyXRR2Ba4wWXmfrZJ2f8t6V
-	 2iLTYX03WDPGZKNjgXaLiIQCqlcBN4KMwpgunOLzWb/01kag8i0KPkbCz8p5EWaGlc
-	 3j5afehzvo4oT1JEDF4ikTRF/TC0I9J7WXOt1eA8=
+	by mail.kernel.org (Postfix) with ESMTP id A057E20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XyOcn8LT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgCSNeo (ORCPT
+        id S1727845AbgCSNeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:34:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728973AbgCSNMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:34:46 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:44462 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728964AbgCSNMk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 09:12:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584623559;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rx1LvEZgAQgfY3xwuj9jjkM3L7Bytnt/zhNrUnrYFaE=;
+        b=XyOcn8LTy5JO/M4XH1AFBWfIcFJZyj9hQeXmmpryScyPYfHUFMnDkMEpOqYCYF0Ot3JmRp
+        wbn9VpPsaMpKr/GAmRKNTjd8eq5rMPgItB3hStEepQmsG8WvBscSzs+paepBhx/+qvubG5
+        6zGOWJsijAe2dfJ0hws4QmgtMveM3W8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-SKMNXm6IOPioc_5ZFsWhFQ-1; Thu, 19 Mar 2020 09:12:35 -0400
+X-MC-Unique: SKMNXm6IOPioc_5ZFsWhFQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 613B12145D;
-        Thu, 19 Mar 2020 13:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623559;
-        bh=VihryuoItoXxh/VaTuC2RDkKuohmb55B2WJjP8uKwrk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vSxm7hvMeZETPNDjUvcSv3jNDViQQZmyGtJh7HiZMcUsWiMS/sPUdQhhCGcW8RQ2r
-         2Kz8dlhssb556/XvXn0N4wxpnvuZN8f1yXC3IQ+bcEd0uFvyJaqs3KqQVttJ7MHvwE
-         /XOrizqaOckRWrRhGadbSpkXnIOfWIBy6wpoL+OI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Linus=20L=FCssing?= <linus.luessing@c0d3.blue>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 68/90] batman-adv: Avoid storing non-TT-sync flags on singular entries too
-Date:   Thu, 19 Mar 2020 14:00:30 +0100
-Message-Id: <20200319123949.592169931@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
-References: <20200319123928.635114118@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36C50800D53;
+        Thu, 19 Mar 2020 13:12:33 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-114-197.ams2.redhat.com [10.36.114.197])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D50E60BF7;
+        Thu, 19 Mar 2020 13:12:30 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-hyperv@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>
+Subject: [PATCH v3 1/8] drivers/base/memory: rename MMOP_ONLINE_KEEP to MMOP_ONLINE
+Date:   Thu, 19 Mar 2020 14:12:14 +0100
+Message-Id: <20200319131221.14044-2-david@redhat.com>
+In-Reply-To: <20200319131221.14044-1-david@redhat.com>
+References: <20200319131221.14044-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Lüssing <linus.luessing@c0d3.blue>
+The name is misleading and it's not really clear what is "kept". Let's ju=
+st
+name it like the online_type name we expose to user space ("online").
 
-commit 4a519b83da16927fb98fd32b0f598e639d1f1859 upstream.
+Add some documentation to the types.
 
-Since commit 54e22f265e87 ("batman-adv: fix TT sync flag inconsistencies")
-TT sync flags and TT non-sync'd flags are supposed to be stored
-separately.
-
-The previous patch missed to apply this separation on a TT entry with
-only a single TT orig entry.
-
-This is a minor fix because with only a single TT orig entry the DDoS
-issue the former patch solves does not apply.
-
-Fixes: 54e22f265e87 ("batman-adv: fix TT sync flag inconsistencies")
-Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- net/batman-adv/translation-table.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/base/memory.c          | 9 +++++----
+ include/linux/memory_hotplug.h | 6 +++++-
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -1708,7 +1708,8 @@ static bool batadv_tt_global_add(struct
- 		ether_addr_copy(common->addr, tt_addr);
- 		common->vid = vid;
- 
--		common->flags = flags;
-+		common->flags = flags & (~BATADV_TT_SYNC_MASK);
-+
- 		tt_global_entry->roam_at = 0;
- 		/* node must store current time in case of roaming. This is
- 		 * needed to purge this entry out on timeout (if nobody claims
-
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 6448c9ece2cb..8c5ce42c0fc3 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -216,7 +216,7 @@ static int memory_subsys_online(struct device *dev)
+ 	 * attribute and need to set the online_type.
+ 	 */
+ 	if (mem->online_type < 0)
+-		mem->online_type =3D MMOP_ONLINE_KEEP;
++		mem->online_type =3D MMOP_ONLINE;
+=20
+ 	ret =3D memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
+=20
+@@ -251,7 +251,7 @@ static ssize_t state_store(struct device *dev, struct=
+ device_attribute *attr,
+ 	else if (sysfs_streq(buf, "online_movable"))
+ 		online_type =3D MMOP_ONLINE_MOVABLE;
+ 	else if (sysfs_streq(buf, "online"))
+-		online_type =3D MMOP_ONLINE_KEEP;
++		online_type =3D MMOP_ONLINE;
+ 	else if (sysfs_streq(buf, "offline"))
+ 		online_type =3D MMOP_OFFLINE;
+ 	else {
+@@ -262,7 +262,7 @@ static ssize_t state_store(struct device *dev, struct=
+ device_attribute *attr,
+ 	switch (online_type) {
+ 	case MMOP_ONLINE_KERNEL:
+ 	case MMOP_ONLINE_MOVABLE:
+-	case MMOP_ONLINE_KEEP:
++	case MMOP_ONLINE:
+ 		/* mem->online_type is protected by device_hotplug_lock */
+ 		mem->online_type =3D online_type;
+ 		ret =3D device_online(&mem->dev);
+@@ -342,7 +342,8 @@ static ssize_t valid_zones_show(struct device *dev,
+ 	}
+=20
+ 	nid =3D mem->nid;
+-	default_zone =3D zone_for_pfn_range(MMOP_ONLINE_KEEP, nid, start_pfn, n=
+r_pages);
++	default_zone =3D zone_for_pfn_range(MMOP_ONLINE, nid, start_pfn,
++					  nr_pages);
+ 	strcat(buf, default_zone->name);
+=20
+ 	print_allowed_zone(buf, nid, start_pfn, nr_pages, MMOP_ONLINE_KERNEL,
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplu=
+g.h
+index 3195d11876ea..3aaf00db224c 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -47,9 +47,13 @@ enum {
+=20
+ /* Types for control the zone type of onlined and offlined memory */
+ enum {
++	/* Offline the memory. */
+ 	MMOP_OFFLINE =3D -1,
+-	MMOP_ONLINE_KEEP,
++	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
++	MMOP_ONLINE,
++	/* Online the memory to ZONE_NORMAL. */
+ 	MMOP_ONLINE_KERNEL,
++	/* Online the memory to ZONE_MOVABLE. */
+ 	MMOP_ONLINE_MOVABLE,
+ };
+=20
+--=20
+2.24.1
 
