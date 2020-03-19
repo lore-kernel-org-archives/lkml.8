@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B80C43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F267CC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D66EC21927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D68214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624160;
-	bh=MdM4dmvB1NrI3FG6lrkvPkf35G6mA0uFNk6ScnH/2ew=;
+	s=default; t=1584624164;
+	bh=apxNGTTawxO88AhaRt5S23Z7rTLns5Lk95jgyvF3/SA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j47gjSsuroU5gxV0DhG3Gt7FB6AmgGKiJqv9YorXGHk1G85PQAumEoAYMzT/coRqW
-	 51/5pQQEu05QGsOgLzBFxb859ch0LAxinWkkVYwOF5Z7LH5AYzkGhnTad21YzKurmU
-	 oe9t31RFdnBm8H/xlXjnEuLjG/LRSJlq5mNu0fOs=
+	b=Lp7DZMthy8glRlLwTDCVtZgk2r8abGy+u9rz1MjNKPj2JyaEaHHDVRX9rzxzTfwLy
+	 1RH+R1j72SlWiGQsBJRJD1DLpPN/2GsoTlMowhza9vvcM3wViXDYbr7IhT1Z1EpnZI
+	 rLZeoQ6aYOxvCgM/JBmbY3It014ld6RSTkj+/e0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbgCSNWj (ORCPT
+        id S1730119AbgCSNWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:22:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48146 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:22:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730194AbgCSNWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:22:38 -0400
+        id S1730263AbgCSNWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:22:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF21920724;
-        Thu, 19 Mar 2020 13:22:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC383214D8;
+        Thu, 19 Mar 2020 13:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624157;
-        bh=MdM4dmvB1NrI3FG6lrkvPkf35G6mA0uFNk6ScnH/2ew=;
+        s=default; t=1584624161;
+        bh=apxNGTTawxO88AhaRt5S23Z7rTLns5Lk95jgyvF3/SA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2d00ZmmVuds7bBP5gqYJyMq0Gb61DzGqb7sROuXrxyFcGqRbCF7VujzjxAPCKQuVa
-         UW5JwePiMWT36CXIvYticD1jOnEHn5/Ycjb3Sl3EWhtDRa+CWeyzZnyva7PrCYSH8G
-         VIrhE6pGUJowDOS1q/cUlHPgIZmzZHvBxkSvMr7c=
+        b=ZDHO1qh/tATPTNXbA1JwlRnbM2AXiZKOJw1rjpVVEGgCvIWIMyCsKhiZIhm2iAKo8
+         8mjXTpreQjPQdZfBmkiXdBsenOeyQQpD+ME+/5Fn31YfUAK9qCoF9tti6jhcOEtk5I
+         vcRbxXiwjRlV333mbqUhrfaqNnaniKbal5Usa1CY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hanno Zulla <kontakt@hanno.de>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        stable@vger.kernel.org, Esben Haabendal <esben@geanix.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 19/60] HID: hid-bigbenff: fix race condition for scheduled work during removal
-Date:   Thu, 19 Mar 2020 14:03:57 +0100
-Message-Id: <20200319123925.284912326@linuxfoundation.org>
+Subject: [PATCH 5.4 28/60] net: ll_temac: Fix race condition causing TX hang
+Date:   Thu, 19 Mar 2020 14:04:06 +0100
+Message-Id: <20200319123928.418978918@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -60,59 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hanno Zulla <kontakt@hanno.de>
+From: Esben Haabendal <esben@geanix.com>
 
-[ Upstream commit 4eb1b01de5b9d8596d6c103efcf1a15cfc1bedf7 ]
+[ Upstream commit 84823ff80f7403752b59e00bb198724100dc611c ]
 
-It's possible that there is scheduled work left while the device is
-already being removed, which can cause a kernel crash. Adding a flag
-will avoid this.
+It is possible that the interrupt handler fires and frees up space in
+the TX ring in between checking for sufficient TX ring space and
+stopping the TX queue in temac_start_xmit. If this happens, the
+queue wake from the interrupt handler will occur before the queue is
+stopped, causing a lost wakeup and the adapter's transmit hanging.
 
-Signed-off-by: Hanno Zulla <kontakt@hanno.de>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To avoid this, after stopping the queue, check again whether there is
+sufficient space in the TX ring. If so, wake up the queue again.
+
+This is a port of the similar fix in axienet driver,
+commit 7de44285c1f6 ("net: axienet: Fix race condition causing TX hang").
+
+Fixes: 23ecc4bde21f ("net: ll_temac: fix checksum offload logic")
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-bigbenff.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
-index f8c552b64a899..db6da21ade063 100644
---- a/drivers/hid/hid-bigbenff.c
-+++ b/drivers/hid/hid-bigbenff.c
-@@ -174,6 +174,7 @@ static __u8 pid0902_rdesc_fixed[] = {
- struct bigben_device {
- 	struct hid_device *hid;
- 	struct hid_report *report;
-+	bool removed;
- 	u8 led_state;         /* LED1 = 1 .. LED4 = 8 */
- 	u8 right_motor_on;    /* right motor off/on 0/1 */
- 	u8 left_motor_force;  /* left motor force 0-255 */
-@@ -190,6 +191,9 @@ static void bigben_worker(struct work_struct *work)
- 		struct bigben_device, worker);
- 	struct hid_field *report_field = bigben->report->field[0];
+diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+index 21c1b4322ea78..fd578568b3bff 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac_main.c
++++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+@@ -788,6 +788,9 @@ static void temac_start_xmit_done(struct net_device *ndev)
+ 		stat = be32_to_cpu(cur_p->app0);
+ 	}
  
-+	if (bigben->removed)
-+		return;
++	/* Matches barrier in temac_start_xmit */
++	smp_mb();
 +
- 	if (bigben->work_led) {
- 		bigben->work_led = false;
- 		report_field->value[0] = 0x01; /* 1 = led message */
-@@ -304,6 +308,7 @@ static void bigben_remove(struct hid_device *hid)
- {
- 	struct bigben_device *bigben = hid_get_drvdata(hid);
- 
-+	bigben->removed = true;
- 	cancel_work_sync(&bigben->worker);
- 	hid_hw_stop(hid);
+ 	netif_wake_queue(ndev);
  }
-@@ -324,6 +329,7 @@ static int bigben_probe(struct hid_device *hid,
- 		return -ENOMEM;
- 	hid_set_drvdata(hid, bigben);
- 	bigben->hid = hid;
-+	bigben->removed = false;
  
- 	error = hid_parse(hid);
- 	if (error) {
+@@ -830,9 +833,19 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+ 
+ 	if (temac_check_tx_bd_space(lp, num_frag + 1)) {
+-		if (!netif_queue_stopped(ndev))
+-			netif_stop_queue(ndev);
+-		return NETDEV_TX_BUSY;
++		if (netif_queue_stopped(ndev))
++			return NETDEV_TX_BUSY;
++
++		netif_stop_queue(ndev);
++
++		/* Matches barrier in temac_start_xmit_done */
++		smp_mb();
++
++		/* Space might have just been freed - check again */
++		if (temac_check_tx_bd_space(lp, num_frag))
++			return NETDEV_TX_BUSY;
++
++		netif_wake_queue(ndev);
+ 	}
+ 
+ 	cur_p->app0 = 0;
 -- 
 2.20.1
 
