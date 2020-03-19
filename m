@@ -2,152 +2,162 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D185AC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12750C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA0620789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="j7x2Kgim"
+	by mail.kernel.org (Postfix) with ESMTP id EA8CE20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgCSSJR (ORCPT
+        id S1727095AbgCSSKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:09:17 -0400
-Received: from mail.efficios.com ([167.114.26.124]:38474 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSSJR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:09:17 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 6CFE627A2DF;
-        Thu, 19 Mar 2020 14:09:15 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id jmjOxRt2Bg4k; Thu, 19 Mar 2020 14:09:14 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id BC42B27A457;
-        Thu, 19 Mar 2020 14:09:14 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com BC42B27A457
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1584641354;
-        bh=QrUfFRjrLvNryzVs/34w+Qbbt1S0+IB1GOeGR35CWVA=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=j7x2KgimtwhqQsWjVREY7tOUb2YWfb8SdALWYZ9Hma7LiL8cFz72GnezhOhsdgM0F
-         YoGt1Gae8nPb7aqSDHLfWjNr2H6/FbnXoLqxI1LRG1v2KozNRzCvPIlNGjm7s/p8up
-         jUTTbZxQtUY6sFOUkOoHLLimIysp6gODwcdjshSx5lgIPgM9K61cRrggADEqv55N6Y
-         60dF6oM+1w8pJlJalrIok0I08gQv6h9bpb9KSsb/CXxsNCmzqf5RR3rmIpoDGfXfif
-         y3YUhyCxVczDigwQqyU5j9HIu9RXF98C7PMHvWqH8Bn5HfY1fnHW5wmCDx34nafW51
-         CbcO5uDrBsoxg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id EfSP2e1G3KXZ; Thu, 19 Mar 2020 14:09:14 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id A98C027A69C;
-        Thu, 19 Mar 2020 14:09:14 -0400 (EDT)
-Date:   Thu, 19 Mar 2020 14:09:14 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
+        Thu, 19 Mar 2020 14:10:12 -0400
+Received: from foss.arm.com ([217.140.110.172]:39886 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgCSSKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:10:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1FC730E;
+        Thu, 19 Mar 2020 11:10:10 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5418C3F305;
+        Thu, 19 Mar 2020 11:10:07 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 18:10:04 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-mips@vger.kernel.org, x86@kernel.org,
         Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Burton <paul.burton@mips.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Message-ID: <1302331358.3965.1584641354569.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87r1xo5o2s.fsf@mid.deneb.enyo.de>
-References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com> <20200319144110.3733-5-mathieu.desnoyers@efficios.com> <874kukpf9f.fsf@mid.deneb.enyo.de> <2147217200.3240.1584633395285.JavaMail.zimbra@efficios.com> <87r1xo5o2s.fsf@mid.deneb.enyo.de>
-Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C
- startup and thread creation (v15)
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Collingbourne <pcc@google.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@openvz.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
+ vgettimeofday
+Message-ID: <20200319181004.GA29214@mbp>
+References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
+ <20200317122220.30393-19-vincenzo.frascino@arm.com>
+ <20200317143834.GC632169@arrakis.emea.arm.com>
+ <f03a9493-c8c2-e981-f560-b2f437a208e4@arm.com>
+ <20200317155031.GD632169@arrakis.emea.arm.com>
+ <83aaf9e1-0a8f-4908-577a-23766541b2ba@arm.com>
+ <20200317174806.GE632169@arrakis.emea.arm.com>
+ <93cfe94a-c2a3-1025-bc9c-e7c3fd891100@arm.com>
+ <20200318183603.GF94111@arrakis.emea.arm.com>
+ <1bc25a53-7a59-0f60-ecf2-a3cace46b823@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v15)
-Thread-Index: Kjg1gZuOhEP58Sea3WPaGgIlKF6ZUA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1bc25a53-7a59-0f60-ecf2-a3cace46b823@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Mar 19, 2020, at 12:03 PM, Florian Weimer fw@deneb.enyo.de wrote:
+Hi Vincenzo,
 
-> * Mathieu Desnoyers:
->=20
->>> Can you use __has_include in <sys/rseq.h>, with a copy of the kernel
->>> definitions if the kernel header is not available?
->>
->> Sure. Should I pull a verbatim copy of uapi linux/rseq.h into glibc ?
->> If so, where should I put it ?
->=20
-> Probably into <sys/rseq.h>, perhaps with a construct like this
-> (untested):
->=20
-> #ifdef __has_include
-> # if __has_include ("linux/rseq.h")
-> #   define __GLIBC_HAVE_KERNEL_RSEQ
-> # endif
-> #else
-> # include <linux/version.h>
-> # if LINUX_VERSION_CODE >=3D KERNEL_VERSION (4, 18, 0)
-> #   define __GLIBC_HAVE_KERNEL_RSEQ
-> # endif
-> #endif
->=20
-> #ifdef __GLIBC_HAVE_KERNEL_RSEQ
-> # include <linux/rseq.h>
-> #else
->=20
-> =E2=80=A6 (fallback goes here)
-> #endif
+On Thu, Mar 19, 2020 at 12:38:42PM +0000, Vincenzo Frascino wrote:
+> On 3/18/20 6:36 PM, Catalin Marinas wrote:
+> > On Wed, Mar 18, 2020 at 04:14:26PM +0000, Vincenzo Frascino wrote:
+> >> On 3/17/20 5:48 PM, Catalin Marinas wrote:
+> >>> So clock_gettime() on arm32 always falls back to the syscall?
+> >>
+> >> This seems not what you asked, and I think I answered accordingly. Anyway, in
+> >> the case of arm32 the error code path is handled via syscall fallback.
+> >>
+> >> Look at the code below as an example (I am using getres because I know this
+> >> email will be already too long, and I do not want to add pointless code, but the
+> >> concept is the same for gettime and the others):
+> >>
+> >> static __maybe_unused
+> >> int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
+> >> {
+> >> 	int ret = __cvdso_clock_getres_common(clock, res);
+> >>
+> >> 	if (unlikely(ret))
+> >> 		return clock_getres_fallback(clock, res);
+> >> 	return 0;
+> >> }
+> >>
+> >> When the return code of the "vdso" internal function returns an error the system
+> >> call is triggered.
+> > 
+> > But when __cvdso_clock_getres_common() does *not* return an error, it
+> > means that it handled the clock_getres() call without a fallback to the
+> > syscall. I assume this is possible on arm32. When the clock_getres() is
+> > handled directly (not as a syscall), why doesn't arm32 need the same
+> > (res >= TASK_SIZE) check?
+> 
+> Ok, I see what you mean.
 
-OK will do.
+I'm not sure.
 
->=20
-> We have an ongoing debate whether the fallback definition should use
-> __u64 or uint64_t.
+> It does not need to differ when __cvdso_clock_getres_common() does *not* return
+> an error, we can move the checks in the fallback and leave the vdso code the
+> same. The reason why I put the checks at the beginning of vdso code is because
+> since I know such a condition it is going to fail I prefer to bailout
+> immediately when it is detected instead of going through a bus error and a
+> syscall before I can bailout.
 
-Then I'll keep including <linux/types.h> in the fallback and use
-__u{32,64} for now. If this proves to be an issue we can change it later.
-This is the minimal change from the uapi header.
+I don't dispute your choice of choosing to bail out early, that's fine
+by me. What I'm asking above, and you haven't answered, is why we don't
+need exactly the same check on arm32. I.e.:
 
->=20
-> You also need to add an assert that the compiler supports
-> __attribute__ ((aligned)) because ignoring it produces an
-> ABI-incompatible header.
+diff --git a/arch/arm/vdso/vgettimeofday.c b/arch/arm/vdso/vgettimeofday.c
+index 1976c6f325a4..17ee5d211228 100644
+--- a/arch/arm/vdso/vgettimeofday.c
++++ b/arch/arm/vdso/vgettimeofday.c
+@@ -28,6 +28,9 @@ int __vdso_gettimeofday(struct __kernel_old_timeval *tv,
+ int __vdso_clock_getres(clockid_t clock_id,
+ 			struct old_timespec32 *res)
+ {
++	if ((u32)res >= TASK_SIZE)
++		return -EFAULT;
++
+ 	return __cvdso_clock_getres_time32(clock_id, res);
+ }
+ 
 
-Are you aware of some helper macro I should use to do this, or
-is it done elsewhere in glibc ?
+(where arch/arm means arm32 ;)).
 
-> The struct rseq/struct rseq_cs definitions
-> are broken, they should not try to change the alignment.
+If the arm32 vdsotest passes, I'd like to know why.
 
-AFAIU, this means we should ideally not have used __attribute__((aligned))
-in the uapi headers in the first place. Why is it broken ? However, now
-that it is in the wild, it's a bit late to change that.
+> It is mainly a design choice based on what I explained above but I am open to
+> suggestions if you have a better way to proceed.
 
-> PS: I have Internet connection trouble.  Nobody should be worried if I
-> drop off the net for a while.  I understand this is quite a bad time
-> for that. 8-(
+I suggest just drop the TASK_SIZE_32 test altogether in this series to
+get it merged for 5.7-rc1. We'll fix the ABI issues in -rc2/-rc3 once
+you confirm that the test fully passes on arm32 when it doesn't fall
+back to the syscall handling and we understood why.
 
-Allright, thanks for the heads up! Stay safe!
+> > Furthermore, my assumption is that __cvdso_clock_getres_common() should
+> > handle this case already and we don't need it in the arch vdso code.
+> > 
+> 
+> This is not the point I was trying to make, what I was trying to analyze here
+> was the check compared to why the test verifies it, not the correctness of the
+> check itself.
 
-Thanks,
+You should implement it based on what the man page defines, not some
+specific test. Tests are rarely exhaustive (unless you do formal
+modelling).
 
-Mathieu
-
-
---=20
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+-- 
+Catalin
