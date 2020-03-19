@@ -2,97 +2,110 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C06C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540DAC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A85A2072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293722072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgCSQRC convert rfc822-to-8bit (ORCPT
+        id S1728267AbgCSQRV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:17:02 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:49206 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728157AbgCSQRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:17:01 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jExff-0006BE-FU; Thu, 19 Mar 2020 16:05:23 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jExdz-0000h9-3G; Thu, 19 Mar 2020 17:03:39 +0100
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C startup and thread creation (v15)
-References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com>
-        <20200319144110.3733-5-mathieu.desnoyers@efficios.com>
-        <874kukpf9f.fsf@mid.deneb.enyo.de>
-        <2147217200.3240.1584633395285.JavaMail.zimbra@efficios.com>
-Date:   Thu, 19 Mar 2020 17:03:39 +0100
-In-Reply-To: <2147217200.3240.1584633395285.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Thu, 19 Mar 2020 11:56:35 -0400
-        (EDT)")
-Message-ID: <87r1xo5o2s.fsf@mid.deneb.enyo.de>
+        Thu, 19 Mar 2020 12:17:21 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:43675 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727700AbgCSQRU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 12:17:20 -0400
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 0E4F81BF20C;
+        Thu, 19 Mar 2020 16:17:18 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200319160505.GE27807@lunn.ch>
+References: <20200319141958.383626-1-antoine.tenart@bootlin.com> <20200319141958.383626-3-antoine.tenart@bootlin.com> <20200319160505.GE27807@lunn.ch>
+Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+Subject: Re: [PATCH net-next v3 2/2] net: phy: mscc: RGMII skew delay configuration
+To:     Andrew Lunn <andrew@lunn.ch>
+Message-ID: <158463463741.3149.13095217659080007040@kwain>
+Date:   Thu, 19 Mar 2020 17:17:17 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+Hi Andrew,
 
->> Can you use __has_include in <sys/rseq.h>, with a copy of the kernel
->> definitions if the kernel header is not available?
->
-> Sure. Should I pull a verbatim copy of uapi linux/rseq.h into glibc ?
-> If so, where should I put it ?
+Quoting Andrew Lunn (2020-03-19 17:05:05)
+> On Thu, Mar 19, 2020 at 03:19:58PM +0100, Antoine Tenart wrote:
+> > This patch adds support for configuring the RGMII skew delays in Rx and
+> > Tx. The Rx and Tx skews are set based on the interface mode. By default
+> > their configuration is set to the default value in hardware (0.2ns);
+> > this means the driver do not rely anymore on the bootloader
+> > configuration.
+> > 
+> > Then based on the interface mode being used, a 2ns delay is added:
+> > - RGMII_ID adds it for both Rx and Tx.
+> > - RGMII_RXID adds it for Rx.
+> > - RGMII_TXID adds it for Tx.
+> > 
+> > Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> > ---
+> >  drivers/net/phy/mscc/mscc.h      | 14 ++++++++++++++
+> >  drivers/net/phy/mscc/mscc_main.c | 29 +++++++++++++++++++++++++++++
+> >  2 files changed, 43 insertions(+)
+> > 
+> > diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+> > index d1b8bbe8acca..25729302714c 100644
+> > --- a/drivers/net/phy/mscc/mscc.h
+> > +++ b/drivers/net/phy/mscc/mscc.h
+> > @@ -161,6 +161,20 @@ enum rgmii_rx_clock_delay {
+> >  /* Extended Page 2 Registers */
+> >  #define MSCC_PHY_CU_PMD_TX_CNTL                16
+> >  
+> > +#define MSCC_PHY_RGMII_SETTINGS                18
+> > +#define RGMII_SKEW_RX_POS              1
+> > +#define RGMII_SKEW_TX_POS              4
+> > +
+> > +/* RGMII skew values, in ns */
+> > +#define VSC8584_RGMII_SKEW_0_2                 0
+> > +#define VSC8584_RGMII_SKEW_0_8                 1
+> > +#define VSC8584_RGMII_SKEW_1_1                 2
+> > +#define VSC8584_RGMII_SKEW_1_7                 3
+> > +#define VSC8584_RGMII_SKEW_2_0                 4
+> > +#define VSC8584_RGMII_SKEW_2_3                 5
+> > +#define VSC8584_RGMII_SKEW_2_6                 6
+> > +#define VSC8584_RGMII_SKEW_3_4                 7
+> 
+>   
+> > +static void vsc8584_rgmii_set_skews(struct phy_device *phydev)
+> > +{
+> > +     u32 skew_rx, skew_tx;
+> > +
+> > +     /* We first set the Rx and Tx skews to their default value in h/w
+> > +      * (0.2 ns).
+> > +      */
+> > +     skew_rx = VSC8584_RGMII_SKEW_0_2;
+> > +     skew_tx = VSC8584_RGMII_SKEW_0_2;
+> 
+> Does this mean it is impossible to have a skew of 0ns?
 
-Probably into <sys/rseq.h>, perhaps with a construct like this
-(untested):
+It seems to be the case, the lowest value this register accepts is 0,
+which means a 0.2ns delay, according to the datasheet. And I'm not
+seeing any register disabling this when RGMII is used.
 
-#ifdef __has_include
-# if __has_include ("linux/rseq.h")
-#   define __GLIBC_HAVE_KERNEL_RSEQ
-# endif
-#else
-# include <linux/version.h>
-# if LINUX_VERSION_CODE >= KERNEL_VERSION (4, 18, 0)
-#   define __GLIBC_HAVE_KERNEL_RSEQ
-# endif
-#endif
+Thanks!
+Antoine
 
-#ifdef __GLIBC_HAVE_KERNEL_RSEQ
-# include <linux/rseq.h>
-#else
-
-… (fallback goes here)
-#endif
-
-We have an ongoing debate whether the fallback definition should use
-__u64 or uint64_t.
-
-You also need to add an assert that the compiler supports
-__attribute__ ((aligned)) because ignoring it produces an
-ABI-incompatible header.  The struct rseq/struct rseq_cs definitions
-are broken, they should not try to change the alignment.
-
-PS: I have Internet connection trouble.  Nobody should be worried if I
-drop off the net for a while.  I understand this is quite a bad time
-for that. 8-(
+-- 
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
