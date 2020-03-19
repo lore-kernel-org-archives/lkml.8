@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57236C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A387EC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE27208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78EE420CC7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624312;
-	bh=ZHAhe/4h00CCFGKKhXzAdAKElGT6O9nuHzOIyMEOVBA=;
+	s=default; t=1584624315;
+	bh=MdM4dmvB1NrI3FG6lrkvPkf35G6mA0uFNk6ScnH/2ew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iCL8rjN3SZEzzSFeqh4fIm2aiBzMCHpGWwads0DCTxesVT2cZCBWJrZgHTR/I4Bow
-	 eoiS7ap3p8YdAlSFB4IYDgKTsj2x0bMb33CbA10GW8T6WbKJ2AlowRDfp8Z5WMbBAs
-	 5MuZzg+8VnQk86DGtG1R8enXe9em+xPGhDrUJMCI=
+	b=qu3DmRxCr7ScdeowBmObU+8FCUft3+uUTuXBLbFmr6GvZHXgZ7YO2AHeMUhfDEenb
+	 qTjhW94RpeZNfxWJE89ueHWOaQjTmYWjAOLQ/POazaFg/Tb7WKY96eepM75KIxWeHv
+	 4ZtI43v38AhTv9+TbWyzUW2Q4rNzJfhJN6bVJ8mQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgCSNZK (ORCPT
+        id S1730142AbgCSNZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52534 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:25:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727753AbgCSNZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:08 -0400
+        id S1730592AbgCSNZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5BEF20658;
-        Thu, 19 Mar 2020 13:25:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5762620B1F;
+        Thu, 19 Mar 2020 13:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624308;
-        bh=ZHAhe/4h00CCFGKKhXzAdAKElGT6O9nuHzOIyMEOVBA=;
+        s=default; t=1584624310;
+        bh=MdM4dmvB1NrI3FG6lrkvPkf35G6mA0uFNk6ScnH/2ew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J8jxzvI5eOwExyEuMKjzjglSc2qQov2wUCm2vMb8H66uawfLwvIwAkb53T01NdW9n
-         nUTH6JMZxshtAENXJ8/wR98Al3gQZK1Of/A/NRulgbiV72hbwdtUL/XaF2q7V4QqJz
-         SeE5WclFevW1lHhuYCHGlD+BS/HWEFhUuFiNOH+8=
+        b=pqzBPi81/1+3wCS07o1wz2SsLX79VvASdikiZh+GQPBrboW1zVVVbX6hOyIs72c7c
+         W0KhQRoicgml7FelRWWg/BCS+E96zShPM+e8/H/7BMZhybbNv7JGqB34BIZfptr7VN
+         /Eob8+x6VbeHGlR+2piiLbrpBhYwddNn3n6tZgUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Hanno Zulla <kontakt@hanno.de>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 09/65] ACPI: watchdog: Allow disabling WDAT at boot
-Date:   Thu, 19 Mar 2020 14:03:51 +0100
-Message-Id: <20200319123929.175648228@linuxfoundation.org>
+Subject: [PATCH 5.5 18/65] HID: hid-bigbenff: fix race condition for scheduled work during removal
+Date:   Thu, 19 Mar 2020 14:04:00 +0100
+Message-Id: <20200319123932.165773859@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -61,72 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean Delvare <jdelvare@suse.de>
+From: Hanno Zulla <kontakt@hanno.de>
 
-[ Upstream commit 3f9e12e0df012c4a9a7fd7eb0d3ae69b459d6b2c ]
+[ Upstream commit 4eb1b01de5b9d8596d6c103efcf1a15cfc1bedf7 ]
 
-In case the WDAT interface is broken, give the user an option to
-ignore it to let a native driver bind to the watchdog device instead.
+It's possible that there is scheduled work left while the device is
+already being removed, which can cause a kernel crash. Adding a flag
+will avoid this.
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Hanno Zulla <kontakt@hanno.de>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  4 ++++
- drivers/acpi/acpi_watchdog.c                    | 12 +++++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ drivers/hid/hid-bigbenff.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ade4e6ec23e03..727a03fb26c99 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -136,6 +136,10 @@
- 			dynamic table installation which will install SSDT
- 			tables to /sys/firmware/acpi/tables/dynamic.
+diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
+index f8c552b64a899..db6da21ade063 100644
+--- a/drivers/hid/hid-bigbenff.c
++++ b/drivers/hid/hid-bigbenff.c
+@@ -174,6 +174,7 @@ static __u8 pid0902_rdesc_fixed[] = {
+ struct bigben_device {
+ 	struct hid_device *hid;
+ 	struct hid_report *report;
++	bool removed;
+ 	u8 led_state;         /* LED1 = 1 .. LED4 = 8 */
+ 	u8 right_motor_on;    /* right motor off/on 0/1 */
+ 	u8 left_motor_force;  /* left motor force 0-255 */
+@@ -190,6 +191,9 @@ static void bigben_worker(struct work_struct *work)
+ 		struct bigben_device, worker);
+ 	struct hid_field *report_field = bigben->report->field[0];
  
-+	acpi_no_watchdog	[HW,ACPI,WDT]
-+			Ignore the ACPI-based watchdog interface (WDAT) and let
-+			a native driver control the watchdog device instead.
++	if (bigben->removed)
++		return;
 +
- 	acpi_rsdp=	[ACPI,EFI,KEXEC]
- 			Pass the RSDP address to the kernel, mostly used
- 			on machines running EFI runtime service to boot the
-diff --git a/drivers/acpi/acpi_watchdog.c b/drivers/acpi/acpi_watchdog.c
-index d827a4a3e9460..6e9ec6e3fe47d 100644
---- a/drivers/acpi/acpi_watchdog.c
-+++ b/drivers/acpi/acpi_watchdog.c
-@@ -55,12 +55,14 @@ static bool acpi_watchdog_uses_rtc(const struct acpi_table_wdat *wdat)
- }
- #endif
- 
-+static bool acpi_no_watchdog;
-+
- static const struct acpi_table_wdat *acpi_watchdog_get_wdat(void)
+ 	if (bigben->work_led) {
+ 		bigben->work_led = false;
+ 		report_field->value[0] = 0x01; /* 1 = led message */
+@@ -304,6 +308,7 @@ static void bigben_remove(struct hid_device *hid)
  {
- 	const struct acpi_table_wdat *wdat = NULL;
- 	acpi_status status;
+ 	struct bigben_device *bigben = hid_get_drvdata(hid);
  
--	if (acpi_disabled)
-+	if (acpi_disabled || acpi_no_watchdog)
- 		return NULL;
- 
- 	status = acpi_get_table(ACPI_SIG_WDAT, 0,
-@@ -88,6 +90,14 @@ bool acpi_has_watchdog(void)
++	bigben->removed = true;
+ 	cancel_work_sync(&bigben->worker);
+ 	hid_hw_stop(hid);
  }
- EXPORT_SYMBOL_GPL(acpi_has_watchdog);
+@@ -324,6 +329,7 @@ static int bigben_probe(struct hid_device *hid,
+ 		return -ENOMEM;
+ 	hid_set_drvdata(hid, bigben);
+ 	bigben->hid = hid;
++	bigben->removed = false;
  
-+/* ACPI watchdog can be disabled on boot command line */
-+static int __init disable_acpi_watchdog(char *str)
-+{
-+	acpi_no_watchdog = true;
-+	return 1;
-+}
-+__setup("acpi_no_watchdog", disable_acpi_watchdog);
-+
- void __init acpi_watchdog_init(void)
- {
- 	const struct acpi_wdat_entry *entries;
+ 	error = hid_parse(hid);
+ 	if (error) {
 -- 
 2.20.1
 
