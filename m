@@ -2,101 +2,94 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DB1C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5805C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0209320775
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACDD1206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:20:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="p7O4f91g"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="N8bRM5WV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgCSUPD (ORCPT
+        id S1727095AbgCSUUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:15:03 -0400
-Received: from mail-eopbgr750082.outbound.protection.outlook.com ([40.107.75.82]:50662
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbgCSUPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 16:15:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bApFadA4K+O1nYXmaOgtBPSpL/2C5imb0680ZUYasxNY7t90jBmZ3wx5RDgPV38yRzn1eLlR1GbLn9BZ1HojY+uFM/rHh/nuKkiSkfqTKWkWPvstTWdIwretuLilnMJi5RvnZ+U52pTHLEpHtHrLhRm5MQ53edeM2ooMbMiYFr9H3rP4983PvSZP/220bGvaR3nle2X5MkHYnK37hMm7fxZZ7c8NCLk0omUYeQxFL5JtrZH57v2BtDClZxV/CAMrREPBTddersq6n4dzXdLPSxfMF1Qx1olkS/2957N4SFhf7Ld4mlDSPAm8MUR+IC6nSol0hmnf/Fr4zjI4XqyvdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VLxVfpS+rLvwjMMGVBVkoUjWGPdPfGSKHqHMDwMdPXk=;
- b=Xv4FCkQiystrUoICtVS/iTct99Zlbp/uqkud10Pd3f1OXf2cwxqplP+iQ2psyf993GvJONKFhHL1k0v/GnzcZ5EcbcX95/9fhy+SyhTp8JcuTBLoiEMPUKztr76Q4ZZ0ybcUNmsk7GfPDjSXQi0+PUz89W83v0U+SHZizvrbHivC81XFTYOR3ESVq0laOSQ/5nWV77ti0NdOwdTftEymlKutAUl6FKAw6j8UyJVFoxJgtkfzGuGSzw42tfr91sS63L+33JliYsXxjp7YYzfutcRrv/yFdmTMfySSIy8eWaWHNJDaMXz5Mpyh112LdvHCcWfdRZ/jRH+mrSPBD9LMRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VLxVfpS+rLvwjMMGVBVkoUjWGPdPfGSKHqHMDwMdPXk=;
- b=p7O4f91gkCJGrtwY65CJiSlLTQ7Eldn79qNbwDGNORhNFMpkpF6+9ZV1s0apW2k/oz77EO9YQq1gPMVtMddOud0vbxfsGMbu1P7vH7lbDHZQ7J/GPTH9BL7p7oREBzkUWb0oP5tATTWZIu7TdMY2qutsd4+QSpGQKQLlEF68b/Y=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Wei.Huang2@amd.com; 
-Received: from CY4PR12MB1352.namprd12.prod.outlook.com (2603:10b6:903:3a::13)
- by CY4PR12MB1719.namprd12.prod.outlook.com (2603:10b6:903:125::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.22; Thu, 19 Mar
- 2020 20:14:57 +0000
-Received: from CY4PR12MB1352.namprd12.prod.outlook.com
- ([fe80::5cdb:285d:f962:c2a8]) by CY4PR12MB1352.namprd12.prod.outlook.com
- ([fe80::5cdb:285d:f962:c2a8%12]) with mapi id 15.20.2814.021; Thu, 19 Mar
- 2020 20:14:57 +0000
-Subject: Re: [PATCH 1/1] x86/mce/amd: Add PPIN support for AMD MCE
-To:     Borislav Petkov <bp@alien8.de>, Wei Huang <wei.huang2@amd.com>
-Cc:     linux-kernel@vger.kernel.org, tony.luck@intel.com,
-        yazen.ghannam@amd.com, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, linux-edac@vger.kernel.org, x86@kernel.org,
-        smita.koralahallichannabasappa@amd.com
-References: <20200311044409.2717587-1-wei.huang2@amd.com>
- <20200316180829.GP26126@zn.tnic>
-From:   Wei Huang <whuang2@amd.com>
-Message-ID: <53d25b8c-dabe-1b91-4d3b-0a223075e42a@amd.com>
-Date:   Thu, 19 Mar 2020 15:14:53 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-In-Reply-To: <20200316180829.GP26126@zn.tnic>
+        Thu, 19 Mar 2020 16:20:18 -0400
+Received: from mx0b-00190b01.pphosted.com ([67.231.157.127]:64520 "EHLO
+        mx0b-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726619AbgCSUUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 16:20:18 -0400
+Received: from pps.filterd (m0122330.ppops.net [127.0.0.1])
+        by mx0b-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JJvWmY005413;
+        Thu, 19 Mar 2020 20:19:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=vcoVV5JZDKmvqtdXib7x9PtKyr3DrqbfvkgBQl4CUmM=;
+ b=N8bRM5WVj3wEi/idtGhawGcIzsKoCggIf1yI2kHnqho19Ml7q/9yskTrm/jY3Ew3obQd
+ UEcWStfXcnxnaxAoCLpWkD8VSJBjU7SAvz1ok1y0cGCEqZqMcy+4wqyUNc8e2DC2OFzq
+ H2pGl5v2lar5RRwETgYt8ZPyaDWLYA6I5lMtzxe8E6LGPNw4JZDr/DHCvh6PN6iSn5iI
+ dV4K817QtQ6jSrpBh8Oce/JINbqMFZwOghYlkkL4WZ99BBbveK3sgK47XZae6owKOab9
+ jNzLENfQQVAl5A8S+jC0wMrz3dyDcAXQEBxeNs2dRLwx5/w34HPyU7IrtjbWYxInQOtk NA== 
+Received: from prod-mail-ppoint8 (prod-mail-ppoint8.akamai.com [96.6.114.122] (may be forged))
+        by mx0b-00190b01.pphosted.com with ESMTP id 2yum0s660m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 20:19:52 +0000
+Received: from pps.filterd (prod-mail-ppoint8.akamai.com [127.0.0.1])
+        by prod-mail-ppoint8.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 02JKII94030105;
+        Thu, 19 Mar 2020 16:19:51 -0400
+Received: from prod-mail-relay15.akamai.com ([172.27.17.40])
+        by prod-mail-ppoint8.akamai.com with ESMTP id 2yrtkwmhha-1;
+        Thu, 19 Mar 2020 16:19:51 -0400
+Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
+        by prod-mail-relay15.akamai.com (Postfix) with ESMTP id F240122020;
+        Thu, 19 Mar 2020 20:19:49 +0000 (GMT)
+Subject: Re: [RFC PATCH] dynamic_debug: Add config option of
+ DYNAMIC_DEBUG_CORE
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        David Gow <davidgow@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, orsonzhai@gmail.com,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+References: <1584558186-23373-1-git-send-email-orson.unisoc@gmail.com>
+ <51568376-da8b-3265-ddb3-6ddba74207dc@akamai.com>
+ <20200319152820.GA2793@lenovo>
+From:   Jason Baron <jbaron@akamai.com>
+Message-ID: <d8474138-6f8f-8a99-351d-5e5b37999373@akamai.com>
+Date:   Thu, 19 Mar 2020 16:19:49 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200319152820.GA2793@lenovo>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR16CA0003.namprd16.prod.outlook.com
- (2603:10b6:208:134::16) To CY4PR12MB1352.namprd12.prod.outlook.com
- (2603:10b6:903:3a::13)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.15] (24.55.15.93) by MN2PR16CA0003.namprd16.prod.outlook.com (2603:10b6:208:134::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18 via Frontend Transport; Thu, 19 Mar 2020 20:14:55 +0000
-X-Originating-IP: [24.55.15.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 883cc8d5-3d2c-48e5-4ee1-08d7cc4231c7
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1719:|CY4PR12MB1719:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB17195A454CFAECCCE8F809BBCFF40@CY4PR12MB1719.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1850;
-X-Forefront-PRVS: 0347410860
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(366004)(376002)(396003)(199004)(5660300002)(110136005)(16576012)(31686004)(16526019)(53546011)(2906002)(4326008)(52116002)(316002)(186003)(26005)(478600001)(36756003)(31696002)(6636002)(66476007)(8936002)(8676002)(66556008)(956004)(81156014)(6486002)(2616005)(66946007)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1719;H:CY4PR12MB1352.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0NenC2u/GUkVIQpWyq4v9pYWWOT0B9OSdpVkWcy+ll0jx3CQ2+8nHRzaLWD2cfuMzY9be63usgWSxLhka80bRUYaeFMxarcZNFTGWX/d0SoUrGm7FHa90SK8LIk5a7t6zKPoASr0nEHUVGCc53LCy4sZVrzLBqO6whjKg5Ws4rklsitQh8A1fwKn6rDn0WHCmN9n0Rpda++Mxjb67sd65N2PZ95VaxoPn4Ad/n8NiIkdUT9KRRJ4oYQvxghW7rzyTFHVGcT/k7FSbjNZd4Uk6E9gZuAgUERlL46RyNeROJL7qOvNRcq1BwETHZUGw2zFijdLwWE1m3aLS6xDCMyCuOWkAFeTIHBJ4FlrpEMpkoNKt1BA8p+DNXdIuhRi6PAAfl00SNXlYsUJOu8pzrZGw5PkrCO7tLB64Fh9UHg0c7XP3frpKST1L4lBnDIhWo+E
-X-MS-Exchange-AntiSpam-MessageData: RygNXeh/LYauDDKHHT3DmxLV+9D0n7561ldT4ulQ6KCIdgK78hIRJQY4VVb5d9OT7Q3+pyzwBEHGse9MHZMzNHeMBTzxE0b262jgs/90D0Ix7RQ0IooJ31YNKrlVy9wGyDamlRNT/5f5ZiNSTBVhrg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 883cc8d5-3d2c-48e5-4ee1-08d7cc4231c7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2020 20:14:57.3836
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XBtPqVswOtiw+t+e5wD1h7sUu0xrREWhg9a0vIUGM++oO3UgaqyvqGo+14KqZCqO
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1719
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_08:2020-03-19,2020-03-19 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2002250000 definitions=main-2003190084
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_08:2020-03-19,2020-03-19 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 mlxscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 clxscore=1015 adultscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003190083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -104,56 +97,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 3/16/20 1:08 PM, Borislav Petkov wrote:
-> On Tue, Mar 10, 2020 at 11:44:09PM -0500, Wei Huang wrote:
->> Newer AMD CPUs support the feature of protected processor identification
->> number (PPIN). This patch detects and enables PPIN support on AMD platforms
+On 3/19/20 11:28 AM, Orson Zhai wrote:
+> Hi Jason,
 > 
-> Avoid having "This patch" or "This commit" in the commit message. It is
-> tautologically useless.
+> On Wed, Mar 18, 2020 at 05:18:43PM -0400, Jason Baron wrote:
+>>
+>>
+>> On 3/18/20 3:03 PM, Orson Zhai wrote:
+>>> There is the requirement from new Android that kernel image (GKI) and
+>>> kernel modules are supposed to be built at differnet places. Some people
+>>> want to enable dynamic debug for kernel modules only but not for kernel
+>>> image itself with the consideration of binary size increased or more
+>>> memory being used.
+>>>
+>>> By this patch, dynamic debug is divided into core part (the defination of
+>>> functions) and macro replacement part. We can only have the core part to
+>>> be built-in and do not have to activate the debug output from kenrel image.
+>>>
+>>> Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
+>>
+>> Hi Orson,
+>>
+>> I think this is a nice feature. Is the idea then that driver can do
+>> something like:
+>>
+>> #if defined(CONFIG_DRIVER_FOO_DEBUG)
+>> #define driver_foo_debug(fmt, ...) \
+>>         dynamic_pr_debug(fmt, ##__VA_ARGS__)
+>> #else
+>> 	no_printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__)
+>> #enif
+>>
+>> And then the Kconfig:
+>>
+>> config DYNAMIC_DRIVER_FOO_DEBUG
+>> 	bool "Enable dynamic driver foo printk() support"
+>> 	select DYNAMIC_DEBUG_CORE
+>>
+> I highly appreciate you for giving this good example to us.
+> To be honest I did not really think of this kind of usage. :)
+> But it makes much sense. I think dynamic debug might be a little
+> bit high for requirement of memory. Every line of pr_debug will be
+> added with a static data structure and malloc with an item in link table.
+> It might be sensitive especially in embeded system.
+> So this example shows how to avoid to turn on dynamci debug for whole
+> system but part of it when being needed.
 > 
-> Also, do
+>>
+>> Or did you have something else in mind? Do you have an example
+>> code for the drivers that you mention?
 > 
-> $ git grep 'This patch' Documentation/process
+> My motivation comes from new Andorid GKI release flow. Android kernel team will
+> be in charge of GKI release. And SoC vendors will build their device driver as
+> kernel modules which are diffrent from each vendor. End-users will get their phones
+> installed with GKI plus some modules all together.
 > 
-> for more details.
+> So at Google side, they can only set DYNAMIC_DEBUG_CORE in their defconfig to build
+> out GKI without worrying about the kernel image size increased too much. Actually
+> GKI is relatively stable as a common binary and there is no strong reason to do 
+> dynamic debugging to it.
 > 
->> and includes PPIN info in MCE records if available. Because this feature is
->> almost identical on both Intel and AMD, it re-uses X86_FEATURE_INTEL_PPIN
->> feature bit and renames it to X86_FEATURE_PPIN.
+> And at vendor side, they will use a local defconfig which is same with Google one but add 
+> CONFIG_DYNAMIC_DEBUG to build their kenrel modules. As DYNAMIC_DEBUG enables only a
+> set of macro expansion, so it has no impact to kernel ABI or the modversion.
+> All modules will be compatible with GKI and with dynamic debug enabled.
 > 
-> Strictly speaking, you can't rename it anymore because it is visible in
-> /proc/cpuinfo and thus ABI.
-> 
-> Besides, we have already a cpufeatures.h leaf for exactly that word:
-> 
-> /* AMD-defined CPU features, CPUID level 0x80000008 (EBX), word 13 */
-> 
-> which means you can call the AMD define
-> 
-> #define X86_FEATURE_AMD_PPIN               ( 13*32+23) /* AMD Protected Processor Inventory Number */
-> 
-> and /proc/cpuinfo will have "amd_ppin" and the code will use the
-> respective vendor flag to test.
+> Then the result will be that Google has his clean GKI and vendors have their dynamic-debug-powered modules.
+>
 
-BTW Intel PPIN doesn't have a respective CPUID feature bit. So it relies
-on intel_ppin_init() to turn it on. After that, mce_setup() can use
-this_cpu_has(X86_FEATURE_INTEL_PPIN) to read MSR_PPIN. This is fine.
 
-In contrast, AMD has 0x80000008_EBX[23] defined for PPIN feature. When
-this CPUID bit is set, X86_FEATURE_AMD_PPIN is ON. But there are cases
-where MSR_AMD_PPIN_CTL is locked. Under such circumstance I think
-X86_FEATURE_AMD_PPIN should be cleared.
+static int __init dynamic_debug_init(void)
+{
+        struct _ddebug *iter, *iter_start;
+        const char *modname = NULL;
+        char *cmdline;
+        int ret = 0;
+        int n = 0, entries = 0, modct = 0;
+        int verbose_bytes = 0;
 
-My proposal is to move mce_amd_ppin_init() function to
-./arch/x86/kernel/cpu/amd.c and probe X86_FEATURE_AMD_PPIN there. This
-is similar to what early_detect_mem_encrypt() does. Later, mce_setup()
-can use X86_FEATURE_AMD_PPIN directly. Is this approach acceptable?
+        if (__start___verbose == __stop___verbose) {
+                pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
+                return 1;
+        }
 
-> 
->> Signed-off-by: Wei Huang <wei.huang2@amd.com>
->> Signed-off-by: Smita Koralahalli Channabasappa <smita.koralahallichannabasappa@amd.com>
-> 
-> What does this SOB mean? Grep Documentation/ for "Co-developed-by" in
-> case this is what you're trying to express.
-> 
+...
+
+I wonder if we should just remove it now.
+
+Thanks,
+
+-Jason
+
