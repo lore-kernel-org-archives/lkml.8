@@ -2,69 +2,104 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F738C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D787CC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE492071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:06:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="SO0v9oV4"
+	by mail.kernel.org (Postfix) with ESMTP id AD75C20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgCSFF7 (ORCPT
+        id S1726947AbgCSF1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 01:05:59 -0400
-Received: from st43p00im-ztfb10063301.me.com ([17.58.63.179]:47493 "EHLO
-        st43p00im-ztfb10063301.me.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725812AbgCSFF6 (ORCPT
+        Thu, 19 Mar 2020 01:27:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43139 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgCSF1N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 01:05:58 -0400
-X-Greylist: delayed 442 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Mar 2020 01:05:58 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-        s=1a1hai; t=1584593915;
-        bh=1voWJN/czyHvqib1bVzqOXLQJutRaTddvJN9MMtGQHk=;
-        h=Content-Type:From:Date:Subject:Message-Id:To;
-        b=SO0v9oV4OMf+3cZ8IwrSnG6AI8Qk/qSH6vXySPHVxgkOChTBaGuPyUwqN8UI8bHgu
-         mv2+w19iPxZgefsKXATTXgRv2vHvJoCUX7RcYkTs4hpMoRj4pf6mixoHmuIBwpbHeD
-         iZFPIfKnAl9NuKDQ9BIZEbSuUhKge18gpAl8Soe0WVudy9pEpEBsAXf16CFM1NUcSk
-         efnB1I7g+ul3Kj22BXGvkabLbgAFaBu3k65rYLYsjUMD1rpWXp8rBcEFYOf16Fb7Tv
-         y/FNgIGq+sDVwIT5j7b/Xp0MrX80gd7/Gsg/Drxu7LhhJl6s0ZH2ZxUr1RmGzdt+hZ
-         gzJU5LxeKwjOA==
-Received: from [192.168.86.44] (cpe-107-10-57-205.neo.res.rr.com [107.10.57.205])
-        by st43p00im-ztfb10063301.me.com (Postfix) with ESMTPSA id 0B70DA4065F;
-        Thu, 19 Mar 2020 04:58:35 +0000 (UTC)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-From:   David English <ohiogeek@icloud.com>
-Mime-Version: 1.0 (1.0)
-Date:   Thu, 19 Mar 2020 00:58:34 -0400
-Subject: Re: [PATCH v8 11/12] x86/retpoline/irq32: Convert assembler indirect jumps
-Message-Id: <E76EFD74-2125-4E12-BA34-C36B69A08B8A@icloud.com>
-Cc:     ak@linux.intel.com, dave.hansen@intel.com,
-        gnomes@lxorguk.ukuu.org.uk, gregkh@linux-foundation.org,
-        jikos@kernel.org, jpoimboe@redhat.com, keescook@google.com,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        peterz@infradead.org, pjt@google.com, riel@redhat.com,
-        tglx@linutronix.de, thomas.lendacky@amd.com,
-        tim.c.chen@linux.intel.com, torvalds@linux-foundation.org,
-        x86@kernel.org
-To:     dwmw@amazon.co.uk
-X-Mailer: iPhone Mail (17D50)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2020-03-18_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0
- mlxlogscore=415 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-2003190022
+        Thu, 19 Mar 2020 01:27:13 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jEnha-00032L-70; Thu, 19 Mar 2020 05:26:42 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     jeffrey.t.kirsher@intel.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        intel-wired-lan@lists.osuosl.org (moderated list:INTEL ETHERNET DRIVERS),
+        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/1] e1000e: Disable s0ix flow for X1 Carbon 7th
+Date:   Thu, 19 Mar 2020 13:26:29 +0800
+Message-Id: <20200319052629.7282-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The s0ix flow makes X1 Carbon 7th can only run S2Idle for only once.
 
-Please delete my provate information 
-Sent from my iPhone
+Temporarily disable it until Intel found a solution.
+
+Link: https://lists.osuosl.org/pipermail/intel-wired-lan/Week-of-Mon-20200316/019222.html
+BugLink: https://bugs.launchpad.net/bugs/1865570
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/net/ethernet/intel/e1000e/netdev.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index db4ea58bac82..3e090aa993ee 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -25,6 +25,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/aer.h>
+ #include <linux/prefetch.h>
++#include <linux/dmi.h>
+ 
+ #include "e1000.h"
+ 
+@@ -6843,6 +6844,17 @@ static int __e1000_resume(struct pci_dev *pdev)
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
++static const struct dmi_system_id s0ix_blacklist[] = {
++	{
++		.ident = "LENOVO ThinkPad X1 Carbon 7th",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X1 Carbon 7th"),
++		},
++	},
++	{}
++};
++
+ static int e1000e_pm_suspend(struct device *dev)
+ {
+ 	struct net_device *netdev = pci_get_drvdata(to_pci_dev(dev));
+@@ -6860,7 +6872,7 @@ static int e1000e_pm_suspend(struct device *dev)
+ 		e1000e_pm_thaw(dev);
+ 
+ 	/* Introduce S0ix implementation */
+-	if (hw->mac.type >= e1000_pch_cnp)
++	if (hw->mac.type >= e1000_pch_cnp && !dmi_check_system(s0ix_blacklist))
+ 		e1000e_s0ix_entry_flow(adapter);
+ 
+ 	return rc;
+@@ -6875,7 +6887,7 @@ static int e1000e_pm_resume(struct device *dev)
+ 	int rc;
+ 
+ 	/* Introduce S0ix implementation */
+-	if (hw->mac.type >= e1000_pch_cnp)
++	if (hw->mac.type >= e1000_pch_cnp && !dmi_check_system(s0ix_blacklist))
+ 		e1000e_s0ix_exit_flow(adapter);
+ 
+ 	rc = __e1000_resume(pdev);
+-- 
+2.17.1
+
