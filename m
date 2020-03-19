@@ -2,58 +2,64 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D868C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83037C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 378EF21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4038E216FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623426;
-	bh=AhuTA8/MkvHmF3oFS0ibpdrzLSJVUbZlVGllr2QUfR4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SU/DEHrB4js4eSK3mm0V9phDlLvo2DgEeFI3A/nmXVzQJk/rzm4iDPW/3PtNw/A0I
-	 VHttWvA+0qXAOH9PIYqMXu9BQ79e4EKftvMTWIjBIz25efIOvfN3A0as7wNJmQBrBp
-	 F1NzWXG5ah64R8aYV+WdZ/D7VAmIT1lEFw2xLOO8=
+	s=default; t=1584623431;
+	bh=Vx2xi/DRW2kcc7cTT/7poelu4Z9hp/UMPNMvqQG5O5I=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=MiO55/ZAkY7mZyirP9KQe8dgtXHS3DbYJeEWeox6WB1SwFcfmqZA5tQWC3wZHq3Q3
+	 UBad2eMtxUrcgAv7WtmT4agdyqktIM8x2T177eBWA4FYZaF66G7kmvHa6JriWs3Hvc
+	 ewQNDfPOL8dyHZMUjtBEy0sAWDmO/ychlHoUPngM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgCSNKZ (ORCPT
+        id S1728541AbgCSNK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:10:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55030 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:10:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727866AbgCSNKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:10:18 -0400
+        id S1727345AbgCSNK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:10:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83266215A4;
-        Thu, 19 Mar 2020 13:10:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFF3F2145D;
+        Thu, 19 Mar 2020 13:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623418;
-        bh=AhuTA8/MkvHmF3oFS0ibpdrzLSJVUbZlVGllr2QUfR4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NNSaW2daC0mmlux6Humie1d4C+4yVx5OAWasTmQSHIKHK3btDpBq5O1rRuwTru4SN
-         wsu9AdD6/vwr08Rcd5j/Yj+ZVtSqFIuJci3XUJiGoidcO80r9bCNltgl6pqbaMjmTG
-         Kw/rItpU+pcdOLGSWlc3Rjbuggpb1lMiMPE7Ad2U=
+        s=default; t=1584623427;
+        bh=Vx2xi/DRW2kcc7cTT/7poelu4Z9hp/UMPNMvqQG5O5I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=hetTUdIWuz7c8DqHFhREhwc1YISAr7cOfrgMuJ263rVjJVFNOHN2QANk5YEvssleS
+         d90KRSFq/9csjcL7yIiJ7YKWb8640G+LqRWyyywpKjSmDA7TzEAVCNq4JEhlfOpigi
+         RkMLEYMtt2Botsy90HOTUtPQ1mfR9Ye8wQMr5MAI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Bogdanov <dbogdanov@marvell.com>,
-        Mark Starovoytov <mstarovoitov@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 07/90] net: macsec: update SCI upon MAC address change.
-Date:   Thu, 19 Mar 2020 13:59:29 +0100
-Message-Id: <20200319123930.988268743@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/90] 4.9.217-rc1 review
+Date:   Thu, 19 Mar 2020 13:59:22 +0100
+Message-Id: <20200319123928.635114118@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
-References: <20200319123928.635114118@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.217-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.217-rc1
+X-KernelTest-Deadline: 2020-03-21T12:39+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,55 +67,376 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Bogdanov <dbogdanov@marvell.com>
+This is the start of the stable review cycle for the 4.9.217 release.
+There are 90 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit 6fc498bc82929ee23aa2f35a828c6178dfd3f823 ]
+Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+Anything received after that time might be too late.
 
-SCI should be updated, because it contains MAC in its first 6 octets.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.217-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-Fixes: c09440f7dcb3 ("macsec: introduce IEEE 802.1AE driver")
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
-Signed-off-by: Mark Starovoytov <mstarovoitov@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/macsec.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+thanks,
 
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -2871,6 +2871,11 @@ static void macsec_dev_set_rx_mode(struc
- 	dev_uc_sync(real_dev, dev);
- }
- 
-+static sci_t dev_to_sci(struct net_device *dev, __be16 port)
-+{
-+	return make_sci(dev->dev_addr, port);
-+}
-+
- static int macsec_set_mac_address(struct net_device *dev, void *p)
- {
- 	struct macsec_dev *macsec = macsec_priv(dev);
-@@ -2892,6 +2897,7 @@ static int macsec_set_mac_address(struct
- 
- out:
- 	ether_addr_copy(dev->dev_addr, addr->sa_data);
-+	macsec->secy.sci = dev_to_sci(dev, MACSEC_PORT_ES);
- 	return 0;
- }
- 
-@@ -3160,11 +3166,6 @@ static bool sci_exists(struct net_device
- 	return false;
- }
- 
--static sci_t dev_to_sci(struct net_device *dev, __be16 port)
--{
--	return make_sci(dev->dev_addr, port);
--}
--
- static int macsec_add_dev(struct net_device *dev, sci_t sci, u8 icv_len)
- {
- 	struct macsec_dev *macsec = macsec_priv(dev);
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.217-rc1
+
+Matteo Croce <mcroce@redhat.com>
+    ipv4: ensure rcu_read_lock() in cipso_v4_error()
+
+Jann Horn <jannh@google.com>
+    mm: slub: add missing TID bump in kmem_cache_alloc_bulk()
+
+Kees Cook <keescook@chromium.org>
+    ARM: 8958/1: rename missed uaccess .fixup section
+
+Florian Fainelli <f.fainelli@gmail.com>
+    ARM: 8957/1: VDSO: Match ARMv8 timer in cntvct_functional()
+
+Qian Cai <cai@lca.pw>
+    jbd2: fix data races at struct journal_head
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    signal: avoid double atomic counter increments for user accounting
+
+Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+    mac80211: rx: avoid RCU list traversal under mutex
+
+Marek Vasut <marex@denx.de>
+    net: ks8851-ml: Fix IRQ handling and locking
+
+Johannes Berg <johannes.berg@intel.com>
+    cfg80211: check reg_rule for NULL in handle_channel_custom()
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
+
+Mansour Behabadi <mansour@oxplot.com>
+    HID: apple: Add support for recent firmware on Magic Keyboards
+
+Jean Delvare <jdelvare@suse.de>
+    ACPI: watchdog: Allow disabling WDAT at boot
+
+Kim Phillips <kim.phillips@amd.com>
+    perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Use explicit tvlv padding for ELP packets
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Avoid probe ELP information leak
+
+Matthias Schiffer <mschiffer@universe-factory.net>
+    batman-adv: update data pointers after skb_cow()
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Don't schedule OGM for disabled interface
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Avoid free/alloc race when handling OGM buffer
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Avoid free/alloc race when handling OGM2 buffer
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Fix duplicated OGMs on NETDEV_UP
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Prevent duplicated gateway_node entry
+
+Linus Lüssing <linus.luessing@c0d3.blue>
+    batman-adv: Fix multicast TT issues with bogus ROAM flags
+
+Linus Lüssing <linus.luessing@c0d3.blue>
+    batman-adv: Avoid storing non-TT-sync flags on singular entries too
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Fix debugfs path for renamed softif
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Fix debugfs path for renamed hardif
+
+Marek Lindner <mareklindner@neomailbox.ch>
+    batman-adv: prevent TT request storms by not sending inconsistent TT TLVLs
+
+Linus Lüssing <linus.luessing@c0d3.blue>
+    batman-adv: Fix TT sync flags for intermediate TT responses
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Avoid race in TT TVLV allocator helper
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Fix internal interface indices types
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Fix lock for ogm cnt access in batadv_iv_ogm_calc_tq
+
+Sven Eckelmann <sven.eckelmann@openmesh.com>
+    batman-adv: Fix check of retrieved orig_gw in batadv_v_gw_is_eligible
+
+Sven Eckelmann <sven.eckelmann@open-mesh.com>
+    batman-adv: Always initialize fragment header priority
+
+Sven Eckelmann <sven.eckelmann@openmesh.com>
+    batman-adv: Avoid spurious warnings from bat_v neigh_cmp implementation
+
+Linus Lüssing <linus.luessing@c0d3.blue>
+    batman-adv: fix TT sync flag inconsistencies
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Accept only filled wifi station info
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Use default throughput value on cfg80211 error
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Fix rx packet/bytes stats on local ARP reply
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Initialize gw sel_class via batadv_algo
+
+Linus Lüssing <linus.luessing@c0d3.blue>
+    batman-adv: Fix transmission of final, 16th fragment
+
+Sven Eckelmann <sven@narfation.org>
+    batman-adv: Fix double free during fragment merge error
+
+Vladis Dronov <vdronov@redhat.com>
+    efi: Add a sanity check to efivar_store_raw()
+
+Eric Dumazet <edumazet@google.com>
+    ipv6: restrict IPV6_ADDRFORM operation
+
+Daniel Drake <drake@endlessm.com>
+    iommu/vt-d: Ignore devices with out-of-spec domain number
+
+Zhenzhong Duan <zhenzhong.duan@gmail.com>
+    iommu/vt-d: Fix the wrong printing in RHSA parsing
+
+qize wang <wangqize888888888@gmail.com>
+    mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()
+
+Jakub Kicinski <kuba@kernel.org>
+    netfilter: cthelper: add missing attribute validation for cthelper
+
+Jakub Kicinski <kuba@kernel.org>
+    nl80211: add missing attribute validation for channel switch
+
+Jakub Kicinski <kuba@kernel.org>
+    nl80211: add missing attribute validation for beacon report scanning
+
+Jakub Kicinski <kuba@kernel.org>
+    nl80211: add missing attribute validation for critical protocol indication
+
+Yonghyun Hwang <yonghyun@google.com>
+    iommu/vt-d: Fix a bug in intel_iommu_iova_to_phys() for huge page
+
+Hans de Goede <hdegoede@redhat.com>
+    iommu/vt-d: dmar: replace WARN_TAINT with pr_warn + add_taint
+
+Vladis Dronov <vdronov@redhat.com>
+    efi: Fix a race and a buffer overflow while reading efivars via sysfs
+
+Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+    ARC: define __ALIGN_STR and __ALIGN symbols for ARC
+
+Vitaly Kuznetsov <vkuznets@redhat.com>
+    KVM: x86: clear stale x86_emulate_ctxt->intercept value
+
+Al Viro <viro@zeniv.linux.org.uk>
+    gfs2_atomic_open(): fix O_EXCL|O_CREAT handling on cold dcache
+
+Al Viro <viro@zeniv.linux.org.uk>
+    cifs_atomic_open(): fix double-put on late allocation failure
+
+Colin Ian King <colin.king@canonical.com>
+    drm/amd/display: remove duplicated assignment to grph_obj_type
+
+Hillf Danton <hdanton@sina.com>
+    workqueue: don't use wq_select_unbound_cpu() for bound works
+
+Hans de Goede <hdegoede@redhat.com>
+    iommu/vt-d: quirk_ioat_snb_local_iommu: replace WARN_TAINT with pr_warn + add_taint
+
+Halil Pasic <pasic@linux.ibm.com>
+    virtio-blk: fix hw_queue stopped on arbitrary error
+
+Heiner Kallweit <hkallweit1@gmail.com>
+    net: phy: fix MDIO bus PM PHY resuming
+
+Shakeel Butt <shakeelb@google.com>
+    cgroup: memcg: net: do not associate sock with unrelated cgroup
+
+Eric Dumazet <edumazet@google.com>
+    bonding/alb: make sure arp header is pulled before accessing it
+
+Eric Dumazet <edumazet@google.com>
+    slip: make slhc_compress() more robust against malicious packets
+
+Jakub Kicinski <kuba@kernel.org>
+    net: fec: validate the new settings in fec_enet_set_coalesce()
+
+Mahesh Bandewar <maheshb@google.com>
+    macvlan: add cond_resched() during multicast processing
+
+Mahesh Bandewar <maheshb@google.com>
+    ipvlan: don't deref eth hdr before checking it's set
+
+Eric Dumazet <edumazet@google.com>
+    ipvlan: do not use cond_resched_rcu() in ipvlan_process_multicast()
+
+Paolo Abeni <pabeni@redhat.com>
+    ipvlan: egress mcast packets are not exceptional
+
+Jiri Wiesner <jwiesner@suse.com>
+    ipvlan: do not add hardware address of master to its unicast filter list
+
+Mahesh Bandewar <maheshb@google.com>
+    ipvlan: add cond_resched_rcu() while processing muticast backlog
+
+Jakub Kicinski <kuba@kernel.org>
+    nfc: add missing attribute validation for vendor subcommand
+
+Jakub Kicinski <kuba@kernel.org>
+    nfc: add missing attribute validation for SE API
+
+Jakub Kicinski <kuba@kernel.org>
+    team: add missing attribute validation for array index
+
+Jakub Kicinski <kuba@kernel.org>
+    team: add missing attribute validation for port ifindex
+
+Jakub Kicinski <kuba@kernel.org>
+    net: fq: add missing attribute validation for orphan mask
+
+Jakub Kicinski <kuba@kernel.org>
+    macsec: add missing attribute validation for port
+
+Jakub Kicinski <kuba@kernel.org>
+    nl802154: add missing attribute validation for dev_type
+
+Jakub Kicinski <kuba@kernel.org>
+    nl802154: add missing attribute validation
+
+Jakub Kicinski <kuba@kernel.org>
+    fib: add missing attribute validation for tun_id
+
+Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+    bnxt_en: reinitialize IRQs when MTU is modified
+
+You-Sheng Yang <vicamo.yang@canonical.com>
+    r8152: check disconnect status after long sleep
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    net: nfc: fix bounds checking bugs on "pipe"
+
+Dmitry Bogdanov <dbogdanov@marvell.com>
+    net: macsec: update SCI upon MAC address change.
+
+Hangbin Liu <liuhangbin@gmail.com>
+    ipv6/addrconf: call ipv6_mc_up() for non-Ethernet interface
+
+Eric Dumazet <edumazet@google.com>
+    gre: fix uninit-value in __iptunnel_pull_header
+
+Dmitry Yakunin <zeil@yandex-team.ru>
+    cgroup, netclassid: periodically release file_lock on classid updating
+
+Florian Fainelli <f.fainelli@gmail.com>
+    net: phy: Avoid multiple suspends
+
+David S. Miller <davem@davemloft.net>
+    phy: Revert toggling reset changes.
+
+Petr Malat <oss@malat.biz>
+    NFS: Remove superfluous kmap in nfs_readdir_xdr_to_array
+
+
+-------------
+
+Diffstat:
+
+ Documentation/filesystems/porting            |   7 ++
+ Documentation/kernel-parameters.txt          |   4 +
+ Makefile                                     |   4 +-
+ arch/arc/include/asm/linkage.h               |   2 +
+ arch/arm/kernel/vdso.c                       |   2 +
+ arch/arm/lib/copy_from_user.S                |   2 +-
+ arch/x86/events/amd/uncore.c                 |  14 +--
+ arch/x86/kvm/emulate.c                       |   1 +
+ drivers/acpi/acpi_watchdog.c                 |  12 ++-
+ drivers/block/virtio_blk.c                   |   8 +-
+ drivers/firmware/efi/efivars.c               |  32 ++++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c |   3 +-
+ drivers/hid/hid-apple.c                      |   3 +-
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c     |   8 ++
+ drivers/iommu/dmar.c                         |  21 ++--
+ drivers/iommu/intel-iommu.c                  |  13 ++-
+ drivers/net/bonding/bond_alb.c               |  20 ++--
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c    |   4 +-
+ drivers/net/ethernet/freescale/fec_main.c    |   6 +-
+ drivers/net/ethernet/micrel/ks8851_mll.c     |  14 +--
+ drivers/net/ipvlan/ipvlan_core.c             |  19 ++--
+ drivers/net/ipvlan/ipvlan_main.c             |   5 +-
+ drivers/net/macsec.c                         |  12 ++-
+ drivers/net/macvlan.c                        |   2 +
+ drivers/net/phy/phy_device.c                 |  18 ++--
+ drivers/net/slip/slhc.c                      |  14 ++-
+ drivers/net/team/team.c                      |   2 +
+ drivers/net/usb/r8152.c                      |   6 ++
+ drivers/net/wireless/marvell/mwifiex/tdls.c  |  70 +++++++++++--
+ fs/cifs/dir.c                                |   1 -
+ fs/gfs2/inode.c                              |   2 +-
+ fs/jbd2/transaction.c                        |   8 +-
+ fs/nfs/dir.c                                 |   2 -
+ fs/open.c                                    |   3 -
+ include/linux/phy.h                          |   2 +
+ include/net/fib_rules.h                      |   1 +
+ kernel/cgroup.c                              |   4 +
+ kernel/signal.c                              |  23 +++--
+ kernel/workqueue.c                           |  14 +--
+ mm/memcontrol.c                              |   4 +
+ mm/slub.c                                    |   9 ++
+ net/batman-adv/bat_iv_ogm.c                  | 105 +++++++++++++++----
+ net/batman-adv/bat_v.c                       |  25 +++--
+ net/batman-adv/bat_v_elp.c                   |  22 ++--
+ net/batman-adv/bat_v_ogm.c                   |  42 ++++++--
+ net/batman-adv/debugfs.c                     |  40 +++++++
+ net/batman-adv/debugfs.h                     |  11 ++
+ net/batman-adv/distributed-arp-table.c       |   5 +-
+ net/batman-adv/fragmentation.c               |  22 ++--
+ net/batman-adv/gateway_client.c              |  11 +-
+ net/batman-adv/gateway_common.c              |   5 +
+ net/batman-adv/hard-interface.c              |  51 +++++++--
+ net/batman-adv/originator.c                  |   4 +-
+ net/batman-adv/originator.h                  |   4 +-
+ net/batman-adv/routing.c                     |  11 +-
+ net/batman-adv/soft-interface.c              |   1 -
+ net/batman-adv/translation-table.c           | 149 ++++++++++++++++++++++-----
+ net/batman-adv/types.h                       |  22 +++-
+ net/core/netclassid_cgroup.c                 |  47 +++++++--
+ net/ieee802154/nl_policy.c                   |   6 ++
+ net/ipv4/cipso_ipv4.c                        |   7 +-
+ net/ipv4/gre_demux.c                         |  12 ++-
+ net/ipv6/addrconf.c                          |   4 +
+ net/ipv6/ipv6_sockglue.c                     |  10 +-
+ net/mac80211/rx.c                            |   2 +-
+ net/netfilter/nfnetlink_cthelper.c           |   2 +
+ net/nfc/hci/core.c                           |  19 +++-
+ net/nfc/netlink.c                            |   3 +
+ net/sched/sch_fq.c                           |   1 +
+ net/wireless/nl80211.c                       |   5 +
+ net/wireless/reg.c                           |   2 +-
+ 71 files changed, 809 insertions(+), 242 deletions(-)
 
 
