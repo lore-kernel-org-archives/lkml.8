@@ -2,168 +2,205 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FBCC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA99CC43333
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB8E20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623556;
-	bh=csitL2Xpssuu+uKTP5slHz0JgrQBk3uGJtTZwvEE+dc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALU2nUijLH97DsUIOU89rzq/npjRI+dWB+dFxjxbU6q8TzEaYy/eV9Mj53jybZ7ml
-	 ynYhsbnT4Ntk12WdEdGIhqd3brj4vDeBjy5pDlCY6GQp6SRT5CWMVhlo3gZ0wYf17n
-	 Tkoq9SUbd4GWfEcmhlW+WdXWyypB8VtyiEHlZHKM=
+	by mail.kernel.org (Postfix) with ESMTP id A835C21841
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g7gey1to"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbgCSNMf (ORCPT
+        id S1728971AbgCSNMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:12:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728139AbgCSNMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:12:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D38120722;
-        Thu, 19 Mar 2020 13:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623553;
-        bh=csitL2Xpssuu+uKTP5slHz0JgrQBk3uGJtTZwvEE+dc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xMqaRr1bdfDte1xmE3KocU4EJDjl7oqvtTVfwNOPXfPD+0D6LMguE+ptpl/+2/0V5
-         yRNn+ulHB4IYYKzjonyzlIm9/5Jk8LbYHik1U1nXA0ZIMlgBYozabncYk32yZkzlY+
-         LmjTG0AygvxGTPkKQzRdLYFN/8j+KwM9Gc2iz16A=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Soros <sorosj@gmail.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 66/90] batman-adv: Fix debugfs path for renamed hardif
-Date:   Thu, 19 Mar 2020 14:00:28 +0100
-Message-Id: <20200319123948.987349971@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
-References: <20200319123928.635114118@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 19 Mar 2020 09:12:39 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:39488 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728913AbgCSNMZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:12:25 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JDCJ7H062279;
+        Thu, 19 Mar 2020 08:12:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584623539;
+        bh=V9HGJ0GpnxjQOESOUN/sLOEhLW57qIDweXOuYdH4iHk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=g7gey1toj8Azfli2+mo225NuIhZ6PEDfHwmuOjyfZulOzAsEePdkwGwzuvEhenmYs
+         PYvBqO/oFjdl6BhssnjpaovxJbmGF2QAwuUhPKEBsEmUON9NmG9PbeMQoE6pKyjg6r
+         E8LRfGh4jG+PiTOgsJNp3RpQArxsuFRE0MoPZPH8=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JDCJfA105157
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Mar 2020 08:12:19 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Mar 2020 08:12:18 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Mar 2020 08:12:18 -0500
+Received: from [10.250.86.23] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JDCIUE076374;
+        Thu, 19 Mar 2020 08:12:18 -0500
+Subject: Re: [PATCH net-next v4 00/11] net: ethernet: ti: add networking
+ support for k3 am65x/j721e soc
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
+        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200317072739.23950-1-grygorii.strashko@ti.com>
+From:   Murali Karicheri <m-karicheri2@ti.com>
+Message-ID: <42462c2f-5714-4df3-0184-7fe2b0eec609@ti.com>
+Date:   Thu, 19 Mar 2020 09:12:17 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200317072739.23950-1-grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
-
-commit 36dc621ceca1be3ec885aeade5fdafbbcc452a6d upstream.
-
-batman-adv is creating special debugfs directories in the init
-net_namespace for each valid hard-interface (net_device). But it is
-possible to rename a net_device to a completely different name then the
-original one.
-
-It can therefore happen that a user registers a new net_device which gets
-the name "wlan0" assigned by default. batman-adv is also adding a new
-directory under $debugfs/batman-adv/ with the name "wlan0".
-
-The user then decides to rename this device to "wl_pri" and registers a
-different device. The kernel may now decide to use the name "wlan0" again
-for this new device. batman-adv will detect it as a valid net_device and
-tries to create a directory with the name "wlan0" under
-$debugfs/batman-adv/. But there already exists one with this name under
-this path and thus this fails. batman-adv will detect a problem and
-rollback the registering of this device.
-
-batman-adv must therefore take care of renaming the debugfs directories
-for hard-interfaces whenever it detects such a net_device rename.
-
-Fixes: 5bc7c1eb44f2 ("batman-adv: add debugfs structure for information per interface")
-Reported-by: John Soros <sorosj@gmail.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/batman-adv/debugfs.c        |   20 ++++++++++++++++++++
- net/batman-adv/debugfs.h        |    6 ++++++
- net/batman-adv/hard-interface.c |    3 +++
- 3 files changed, 29 insertions(+)
-
---- a/net/batman-adv/debugfs.c
-+++ b/net/batman-adv/debugfs.c
-@@ -18,6 +18,7 @@
- #include "debugfs.h"
- #include "main.h"
- 
-+#include <linux/dcache.h>
- #include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/errno.h>
-@@ -340,6 +341,25 @@ out:
- }
- 
- /**
-+ * batadv_debugfs_rename_hardif() - Fix debugfs path for renamed hardif
-+ * @hard_iface: hard interface which was renamed
-+ */
-+void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface)
-+{
-+	const char *name = hard_iface->net_dev->name;
-+	struct dentry *dir;
-+	struct dentry *d;
-+
-+	dir = hard_iface->debug_dir;
-+	if (!dir)
-+		return;
-+
-+	d = debugfs_rename(dir->d_parent, dir, dir->d_parent, name);
-+	if (!d)
-+		pr_err("Can't rename debugfs dir to %s\n", name);
-+}
-+
-+/**
-  * batadv_debugfs_del_hardif - delete the base directory for a hard interface
-  *  in debugfs.
-  * @hard_iface: hard interface which is deleted.
---- a/net/batman-adv/debugfs.h
-+++ b/net/batman-adv/debugfs.h
-@@ -31,6 +31,7 @@ void batadv_debugfs_destroy(void);
- int batadv_debugfs_add_meshif(struct net_device *dev);
- void batadv_debugfs_del_meshif(struct net_device *dev);
- int batadv_debugfs_add_hardif(struct batadv_hard_iface *hard_iface);
-+void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface);
- void batadv_debugfs_del_hardif(struct batadv_hard_iface *hard_iface);
- 
- #else
-@@ -59,6 +60,11 @@ int batadv_debugfs_add_hardif(struct bat
- }
- 
- static inline
-+void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface)
-+{
-+}
-+
-+static inline
- void batadv_debugfs_del_hardif(struct batadv_hard_iface *hard_iface)
- {
- }
---- a/net/batman-adv/hard-interface.c
-+++ b/net/batman-adv/hard-interface.c
-@@ -812,6 +812,9 @@ static int batadv_hard_if_event(struct n
- 		if (hard_iface == primary_if)
- 			batadv_primary_if_update_addr(bat_priv, NULL);
- 		break;
-+	case NETDEV_CHANGENAME:
-+		batadv_debugfs_rename_hardif(hard_iface);
-+		break;
- 	default:
- 		break;
- 	}
 
 
+On 03/17/2020 03:27 AM, Grygorii Strashko wrote:
+> Hi
+> 
+> This v4 series adds basic networking support support TI K3 AM654x/J721E SoC which
+> have integrated Gigabit Ethernet MAC (Media Access Controller) into device MCU
+> domain and named MCU_CPSW0 (CPSW2G NUSS).
+> 
+> Formally TRMs refer CPSW2G NUSS as two-port Gigabit Ethernet Switch subsystem
+> with port 0 being the CPPI DMA host port and port 1 being the external Ethernet
+> port, but for 1 external port device it's just Port 0 <-> ALE <-> Port 1 and it's
+> rather device with HW filtering capabilities then actually switching device.
+> It's expected to have similar devices, but with more external ports.
+> 
+> The new Host port 0 Communications Port Programming Interface (CPPI5) is
+> operating by TI AM654x/J721E NAVSS Unified DMA Peripheral Root Complex (UDMA-P)
+> controller [1].
+> 
+> The CPSW2G contains below modules for which existing code is re-used:
+>   - MAC SL: cpsw_sl.c
+>   - Address Lookup Engine (ALE): cpsw_ale.c, basically compatible with K2 66AK2E/G
+>   - Management Data Input/Output interface (MDIO): davinci_mdio.c, fully
+>     compatible with TI AM3/4/5 devices
+> 
+> Basic features supported by CPSW2G NUSS driver:
+>   - VLAN support, 802.1Q compliant, Auto add port VLAN for untagged frames on
+>     ingress, Auto VLAN removal on egress and auto pad to minimum frame size.
+>   - multicast filtering
+>   - promisc mode
+>   - TX multiq support in Round Robin or Fixed priority modes
+>   - RX checksum offload for non-fragmented IPv4/IPv6 TCP/UDP packets
+>   - TX checksum offload support for IPv4/IPv6 TCP/UDP packets (J721E only).
+> 
+> Features under development:
+>   - Support for IEEE 1588 Clock Synchronization. The CPSW2G NUSS includes new
+>     version of Common Platform Time Sync (CPTS)
+>   - tc-mqprio: priority level Quality Of Service (QOS) support (802.1p)
+>   - tc-cbs: Support for Audio/Video Bridging (P802.1Qav/D6.0) HW shapers
+>   - tc-taprio: IEEE 802.1Qbv/D2.2 Enhancements for Scheduled Traffic
+>   - frame preemption: IEEE P902.3br/D2.0 Interspersing Express Traffic, 802.1Qbu
+>   - extended ALE features: classifier/policers, auto-aging
+> 
+> Patches 1-6 are intended for netdev, Patches 7-11 are intended for K3 Platform
+> tree and provided here for testing purposes.
+> 
+> Changes in v4:
+>   - fixed minor comments from Jakub Kicinski <kuba@kernel.org>
+>   - dependencies resolved: required phy-rmii-sel changes [2] queued for merge
+>     except one [3] which is included in this series with Kishon's ask.
+> 
+
+Tested-by: Murali Karicheri <m-karicheri2@ti.com>
+
+Logs at https://pastebin.ubuntu.com/p/rP6pcMqcw5/
+
+> Changes in v3:
+>   - add ARM64 defconfig changes for testing purposes
+>   - fixed DT yaml definition
+>   - fixed comments from Jakub Kicinski <kuba@kernel.org>
+> 
+> Changes in v2:
+>   - fixed DT yaml definition
+>   - fixed comments from David Miller
+> 
+> v3: https://patchwork.ozlabs.org/cover/1254568/
+> v2: https://patchwork.ozlabs.org/cover/1250674/
+> v1: https://lwn.net/Articles/813087/
+> 
+> TRMs:
+>   AM654: http://www.ti.com/lit/ug/spruid7e/spruid7e.pdf
+>   J721E: http://www.ti.com/lit/ug/spruil1a/spruil1a.pdf
+> 
+> Preliminary documentation can be found at:
+>   http://software-dl.ti.com/processor-sdk-linux/esd/docs/latest/linux/Foundational_Components/Kernel/Kernel_Drivers/Network/K3_CPSW2g.html
+> 
+> [1] https://lwn.net/Articles/808030/
+> [2] https://lkml.org/lkml/2020/2/22/100
+> [3] https://lkml.org/lkml/2020/3/3/724
+> 
+> Grygorii Strashko (11):
+>    phy: ti: gmii-sel: simplify config dependencies between net drivers
+>      and gmii phy
+>    net: ethernet: ti: ale: fix seeing unreg mcast packets with promisc
+>      and allmulti disabled
+>    net: ethernet: ti: ale: add support for mac-only mode
+>    net: ethernet: ti: ale: am65: add support for default thread cfg
+>    dt-binding: ti: am65x: document mcu cpsw nuss
+>    net: ethernet: ti: introduce am65x/j721e gigabit eth subsystem driver
+>    arm64: dts: ti: k3-am65-mcu: add cpsw nuss node
+>    arm64: dts: k3-am654-base-board: add mcu cpsw nuss pinmux and phy defs
+>    arm64: dts: ti: k3-j721e-mcu: add mcu cpsw nuss node
+>    arm64: dts: ti: k3-j721e-common-proc-board: add mcu cpsw nuss pinmux
+>      and phy defs
+>    arm64: defconfig: ti: k3: enable dma and networking
+> 
+>   .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |  226 ++
+>   arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |   49 +
+>   arch/arm64/boot/dts/ti/k3-am65.dtsi           |    1 +
+>   .../arm64/boot/dts/ti/k3-am654-base-board.dts |   42 +
+>   .../dts/ti/k3-j721e-common-proc-board.dts     |   43 +
+>   .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |   49 +
+>   arch/arm64/boot/dts/ti/k3-j721e.dtsi          |    1 +
+>   arch/arm64/configs/defconfig                  |    3 +
+>   drivers/net/ethernet/ti/Kconfig               |   20 +-
+>   drivers/net/ethernet/ti/Makefile              |    3 +
+>   drivers/net/ethernet/ti/am65-cpsw-ethtool.c   |  747 +++++++
+>   drivers/net/ethernet/ti/am65-cpsw-nuss.c      | 1965 +++++++++++++++++
+>   drivers/net/ethernet/ti/am65-cpsw-nuss.h      |  143 ++
+>   drivers/net/ethernet/ti/cpsw_ale.c            |   38 +
+>   drivers/net/ethernet/ti/cpsw_ale.h            |    4 +
+>   drivers/net/ethernet/ti/k3-udma-desc-pool.c   |  126 ++
+>   drivers/net/ethernet/ti/k3-udma-desc-pool.h   |   30 +
+>   drivers/phy/ti/Kconfig                        |    3 -
+>   18 files changed, 3488 insertions(+), 5 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/net/ti,k3-am654-cpsw-nuss.yaml
+>   create mode 100644 drivers/net/ethernet/ti/am65-cpsw-ethtool.c
+>   create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.c
+>   create mode 100644 drivers/net/ethernet/ti/am65-cpsw-nuss.h
+>   create mode 100644 drivers/net/ethernet/ti/k3-udma-desc-pool.c
+>   create mode 100644 drivers/net/ethernet/ti/k3-udma-desc-pool.h
+> 
+
+-- 
+Murali Karicheri
+Texas Instruments
