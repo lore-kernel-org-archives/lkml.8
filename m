@@ -2,164 +2,126 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6BFC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF4EC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D312C20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED4820732
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:02:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+5SgItM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GEVQs03g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgCSIAv (ORCPT
+        id S1726793AbgCSICC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:00:51 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42098 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgCSIAu (ORCPT
+        Thu, 19 Mar 2020 04:02:02 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40797 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgCSICC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:00:50 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a2so1416087otq.9;
-        Thu, 19 Mar 2020 01:00:49 -0700 (PDT)
+        Thu, 19 Mar 2020 04:02:02 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so721604plk.7
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 01:02:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cp6FuxyMS+1ByUBjPxoD3NwLVLlSPXMt0GftNsobXo8=;
-        b=I+5SgItMsOfL1TEOphtTmlHHUR+fYjTYMqlVvG2hDzCjF/+QTGewomWQ4s4JZ4PwYU
-         iDgen+PLOqqPh2x/L0XyjBIlfsxbIFHxe9JpxZM3oTsud3+N8WT2kXLluDnmFhEYCZym
-         bRlzaVRRHsAAgaSpnQe3T8bypNY7cYLG8PFsqoUkX3cIMWUl0h77AvFdSWB+vNcQIR4u
-         8NWMQaxpgj9W1sFa5at2oCirwlXQm1aOIteI/hncI31j5iwk9D0nkAV+OLJAeBH/4qgK
-         6uPtqggsKQRkIOzZSxsBYr5it/M9TC7QtzyfhePhlV3yYIfq95j7nxf4Yq3Rgvux0KEp
-         tdBQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=u9I0K1i6lFI4gaPnMkUskjsZvi7Mdl+pohuc3TDlzKo=;
+        b=GEVQs03gACbZupRv7CyqkNCE3CBeiq3/FPKXyXCXOH8lDEtiLQ0qdAxd01QgR1NZAh
+         lCV0cOzxIWKZVuOSoEM2W2O2bFRtpfmz7zfPKcioBYDWm5alhAVWqicfDcdpItjmK8Nn
+         H/hOGO13MskJfqDqYqv6bnsZSNbN8Gq0gJIKLazYvsFU72BSJRe+MGWAd9m7vmPcLnsf
+         PFcULofNC1OhaVZ68ZsWZVDa17G1rd5zy8tsA7pzFFtGip/ZAHnS38zGSZO2/ovH9o9S
+         1gbfKVzzTj4ETAAgsL9+MT2CckKm88qzKA8vUhJduvUM+0ITPzsv4wWsiwG8DoS+GrG5
+         sH4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cp6FuxyMS+1ByUBjPxoD3NwLVLlSPXMt0GftNsobXo8=;
-        b=nQSLXAtI0HHrxPTA+kQX50/tFksiwsWhwhoyUBvM4YcSj2V60gTIOFBXVtnqO+WzSY
-         77kMEBEEnvjdTjIhF+X9SOYk/AvbIzLtbnlHqnOaIBKetLCtjXHaVH/GbXH9SO6/d5cD
-         KF6oZBN3kVqQX83BfJeHlsv/cpOTVcl0FWFwkpdju07RotIkv5Wjv46IZ704d+Fan+nC
-         uZiP2F01uKj6ZTKZDqc0dNN+JcPzt9qv34AW24NqWZAChT5UhjFuqkQxyZKJqZKveyy/
-         88zvmRJGg2bVzRi4exnp3VQrEONEoHKVy6I6wG5YpgNxEW+iOmlORoT/IpR1ixf9y0Hh
-         vs/w==
-X-Gm-Message-State: ANhLgQ2udLmdzVUklsd9UdQpaFeF4NmBTot2anjCC7n2HIAUQdmNFSnE
-        xqoyvmuqGIW9ZWUWwJs/kfLJ5Ru61NfVUjlcJuM=
-X-Google-Smtp-Source: ADFU+vvUwftzmRRclxvvzyhLsc/9O0HFBYAoNjwm2ZtXWTEFy5i/ZJJVw6mYIkj76FgQsO8L29zPqCTxgnWSadb1+Og=
-X-Received: by 2002:a9d:64cd:: with SMTP id n13mr1286943otl.274.1584604849293;
- Thu, 19 Mar 2020 01:00:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=u9I0K1i6lFI4gaPnMkUskjsZvi7Mdl+pohuc3TDlzKo=;
+        b=jLN3ULdczALh2uxGFrmXSJHUY/GnfTB7frDTGNPV9//hVVhQoaJVnNdOdPZomuxVx2
+         2/sQyiKno+pG1LafsAuIzybbeRAoC3W++OMADa3iSBVp7F5SqAlaPZEoBzy7qYdjJ6R1
+         e9GyZtKf4UYEAGOza0eEtmHunGH/B/TWWrxzqHEmj4MnqX/Lttq9gJ3R15Kt9AAt9zRQ
+         CdNPt4gCmhWnHPuzwyeiWwAZbNSuGZ62e0TIWeF5CN+KBftvpzbYsuVPq5KnuYJfSHQL
+         tkjaZV9Jh8NUiZiHN25j8V7+0Xdv5nP92DA+i8n0ayL7/bu/m6pGbIOv2XNKdeGA0WUi
+         pazA==
+X-Gm-Message-State: ANhLgQ2bwyKzjmWrGB1M5sziGlK0/dp6Y/fEGVG1XLvX0e3ZhKkNKpol
+        UUY/s+VDwJmTL5p7EDj7ygo=
+X-Google-Smtp-Source: ADFU+vvJq5VhiLkbqqQdObaWi+FRjyyWdGunx5t0D1/8ovc39pQQMh6BZiZyvUtO37ZmI9qqWJBzHw==
+X-Received: by 2002:a17:90a:ff05:: with SMTP id ce5mr2370717pjb.83.1584604919731;
+        Thu, 19 Mar 2020 01:01:59 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id e14sm1344303pfn.196.2020.03.19.01.01.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 01:01:58 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 17:01:56 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        linux-kernel@vger.kernel.org,
+        John Ogness <john.ogness@linutronix.de>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [RFC PATCH 3/3] watchdog: Turn console verbosity on when
+ reporting softlockup
+Message-ID: <20200319080156.GC24020@google.com>
+References: <20200315170903.17393-1-erosca@de.adit-jv.com>
+ <20200315170903.17393-4-erosca@de.adit-jv.com>
+ <20200317021818.GD219881@google.com>
+ <20200318180525.GA5790@lxhi-065.adit-jv.com>
+ <20200319064836.GB24020@google.com>
+ <16373.1584603506@turing-police>
 MIME-Version: 1.0
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200313212345.GM4751@pendragon.ideasonboard.com> <OSBPR01MB359079EAA32E0DCBF63C6886AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
- <CA+V-a8t-rA-6AmZry63QeXN6pvGWVtcEEuHaDA1jsS-x+30oiQ@mail.gmail.com> <20200318232236.GJ24538@pendragon.ideasonboard.com>
-In-Reply-To: <20200318232236.GJ24538@pendragon.ideasonboard.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 19 Mar 2020 08:00:22 +0000
-Message-ID: <CA+V-a8uNLvPS2+sbtiOk2Ytegacf+yKc+GyMTZZdsY+Ovv5nkA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] media: i2c: ov5645: Set maximum leverage of
- external clock frequency to 24480000
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <16373.1584603506@turing-police>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
-
-On Wed, Mar 18, 2020 at 11:22 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, Mar 18, 2020 at 10:41:57PM +0000, Lad, Prabhakar wrote:
-> > On Fri, Mar 13, 2020 at 9:31 PM Prabhakar Mahadev Lad wrote:
-> > > On 13 March 2020 21:24, Laurent Pinchart wrote:
-> > >> On Fri, Mar 13, 2020 at 09:12:33PM +0000, Lad Prabhakar wrote:
-> > >>> While testing on Renesas RZ/G2E platform, noticed the clock frequency
-> > >>> to be 24242424 as a result the probe failed. However increasing the
-> > >>> maximum leverage of external clock frequency to 24480000 fixes this
-> > >>> issue. Since this difference is small enough and is insignificant set
-> > >>> the same in the driver.
-> > >>>
-> > >>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >>> ---
-> > >>>  drivers/media/i2c/ov5645.c | 6 ++++--
-> > >>>  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >>>
-> > >>> diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
-> > >>> index 4fbabf3..b49359b 100644
-> > >>> --- a/drivers/media/i2c/ov5645.c
-> > >>> +++ b/drivers/media/i2c/ov5645.c
-> > >>> @@ -1107,8 +1107,10 @@ static int ov5645_probe(struct i2c_client *client)
-> > >>>  }
-> > >>>
-> > >>>  xclk_freq = clk_get_rate(ov5645->xclk);
-> > >>> -/* external clock must be 24MHz, allow 1% tolerance */
-> > >>> -if (xclk_freq < 23760000 || xclk_freq > 24240000) {
-> > >>> +/* external clock must be 24MHz, allow a minimum 1% and a
-> > >> maximum of 2%
-> > >>> + * tolerance
-> > >>
-> > >> So where do these numbers come from ? I understand that 2% is what you
-> > >> need to make your clock fit in the range, but why -1%/+2% instead of -
-> > >> 2%/+2% ? And why not 2.5 or 3% ? The sensor datasheet documents the
-> > >> range of supported xvclk frequencies to be 6MHz to 54MHz. I understand
-> > >> that PLL parameters depend on the clock frequency, but could they be
-> > >> calculated instead of hardcoded, to avoid requiring an exact 24MHz input
-> > >> frequency ?
-> > >>
-> > > To be honest I don't have the datasheet for ov5645, the flyer says 6-54Mhz but the
-> > > logs/comment says 24Mhz.
-> > >
-> > Comparing to ov5640 datasheet [1] (which I am assuming might be
-> > similar to ov5645),
->
-> Let's assume this to be the case, I see no reason not to :-)
->
-> > this change should affect the driver.
->
-> How do you mean ?
->
-Oops sorry for for the typo I meant shouldn't affect the driver :)
-
-Cheers,
---Prabhakar
-
-> > [1] https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/OV5640_datasheet.pdf
+On (20/03/19 03:38), Valdis Klētnieks wrote:
+> On Thu, 19 Mar 2020 15:48:36 +0900, Sergey Senozhatsky said:
+> 
+> > So the issue is that when we bump `console_loglevel' or `ignore_loglevel'
+> > we lift restrictions globally. For all CPUs, for all contexts which call
+> > printk(). This may have negative impact. Fuzzing is one example. It
+> > usually generates a lot of printk() noise, so lifting global printk()
+> > log_level restrictions does cause problems. I recall that fuzzing people
+> > really disliked the
+> > 			old_level = console_loglevel
+> > 			console_loglevel = new_level
+> > 			....
+> > 			console_loglevel = old_level
 > >
-> > >>> + */
-> > >>> +if (xclk_freq < 23760000 || xclk_freq > 24480000) {
-> > >>>  dev_err(dev, "external clock frequency %u is not supported\n",
-> > >>>  xclk_freq);
-> > >>>  return -EINVAL;
->
-> --
-> Regards,
->
-> Laurent Pinchart
+> > approach. Because if lets all CPUs and tasks to pollute serial logs.
+> > While what we want is to print messages from a particular CPU/task.
+> 
+> Well... how does this sound for a RFC idea?  We already have CONFIG_PRINTK_TIME
+> and CONFIG_PRINTK_CALLER.  How about adding an option to allow printing the
+> calling CPU as well, or just extend CALLER to print [pid/cpu] rather than just
+> [pid]?
+
+IIRC, CONFIG_PRINTK_CALLER prints pid when printk() caller is a
+running task, and CPU-id otherwise.
+
+It was added by fuzzing people, because it's almost (or "simply")
+impossible to get through serial logs sometimes.
+
+	-ss
