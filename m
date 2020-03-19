@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73ED8C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072E6C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304D620724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC65B20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:17:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgCSJRe (ORCPT
+        id S1727841AbgCSJRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:17:34 -0400
-Received: from 8bytes.org ([81.169.241.247]:52214 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:17:44 -0400
+Received: from 8bytes.org ([81.169.241.247]:52476 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727249AbgCSJOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:38 -0400
+        id S1727364AbgCSJOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:37 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 08C9080A; Thu, 19 Mar 2020 10:14:23 +0100 (CET)
+        id 1597475B; Thu, 19 Mar 2020 10:14:22 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 41/70] x86/sev-es: Add Runtime #VC Exception Handler
-Date:   Thu, 19 Mar 2020 10:13:38 +0100
-Message-Id: <20200319091407.1481-42-joro@8bytes.org>
+Subject: [PATCH 36/70] x86/sev-es: Add SEV-ES Feature Detection
+Date:   Thu, 19 Mar 2020 10:13:33 +0100
+Message-Id: <20200319091407.1481-37-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -46,170 +46,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Add the handler for #VC exceptions invoked at runtime.
+Add the sev_es_active function for checking whether SEV-ES is enabled.
+Also cache the value of MSR_AMD64_SEV at boot to speed up the feature
+checking in the running code.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/entry/entry_64.S    |  4 ++
- arch/x86/include/asm/traps.h |  7 ++++
- arch/x86/kernel/idt.c        |  4 +-
- arch/x86/kernel/sev-es.c     | 77 +++++++++++++++++++++++++++++++++++-
- 4 files changed, 90 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/mem_encrypt.h |  3 +++
+ arch/x86/include/asm/msr-index.h   |  2 ++
+ arch/x86/mm/mem_encrypt.c          | 11 ++++++++++-
+ arch/x86/mm/mem_encrypt_identity.c |  3 +++
+ 4 files changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index f2bb91e87877..729876d368c5 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1210,6 +1210,10 @@ idtentry async_page_fault	do_async_page_fault	has_error_code=1	read_cr2=1
- idtentry machine_check		do_mce			has_error_code=0	paranoid=1
- #endif
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index 848ce43b9040..6f61bb93366a 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -19,6 +19,7 @@
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+idtentry vmm_communication     do_vmm_communication    has_error_code=1
-+#endif
-+
- /*
-  * Save all registers in pt_regs, and switch gs if needed.
-  * Use slow, but surefire "are we in kernel?" check.
-diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-index 2aa786484bb1..1be25c065698 100644
---- a/arch/x86/include/asm/traps.h
-+++ b/arch/x86/include/asm/traps.h
-@@ -35,6 +35,9 @@ asmlinkage void alignment_check(void);
- #ifdef CONFIG_X86_MCE
- asmlinkage void machine_check(void);
- #endif /* CONFIG_X86_MCE */
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+asmlinkage void vmm_communication(void);
-+#endif
- asmlinkage void simd_coprocessor_error(void);
+ extern u64 sme_me_mask;
++extern u64 sev_status;
+ extern bool sev_enabled;
  
- #if defined(CONFIG_X86_64) && defined(CONFIG_XEN_PV)
-@@ -93,6 +96,10 @@ dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code);
- dotraplinkage void do_machine_check(struct pt_regs *regs, long error_code);
- #endif
- dotraplinkage void do_simd_coprocessor_error(struct pt_regs *regs, long error_code);
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+dotraplinkage void do_vmm_communication_error(struct pt_regs *regs,
-+					      long error_code);
-+#endif
- #ifdef CONFIG_X86_32
- dotraplinkage void do_iret_error(struct pt_regs *regs, long error_code);
- #endif
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 135d208a2d38..25fa8ba70993 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -88,8 +88,10 @@ static const __initconst struct idt_data def_idts[] = {
- #ifdef CONFIG_X86_MCE
- 	INTG(X86_TRAP_MC,		&machine_check),
- #endif
--
- 	SYSG(X86_TRAP_OF,		overflow),
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	INTG(X86_TRAP_VC,               vmm_communication),
-+#endif
- #if defined(CONFIG_IA32_EMULATION)
- 	SYSG(IA32_SYSCALL_VECTOR,	entry_INT80_compat),
- #elif defined(CONFIG_X86_32)
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 4bf5286310a0..97241d2f0f70 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -20,7 +20,7 @@
- #include <asm/insn-eval.h>
- #include <asm/fpu/internal.h>
- #include <asm/processor.h>
--#include <asm/trap_defs.h>
-+#include <asm/traps.h>
- #include <asm/svm.h>
+ void sme_encrypt_execute(unsigned long encrypted_kernel_vaddr,
+@@ -49,6 +50,7 @@ void __init mem_encrypt_free_decrypted_mem(void);
  
- /* For early boot hypervisor communication in SEV-ES enabled guests */
-@@ -251,6 +251,81 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	return result;
+ bool sme_active(void);
+ bool sev_active(void);
++bool sev_es_active(void);
+ 
+ #define __bss_decrypted __attribute__((__section__(".bss..decrypted")))
+ 
+@@ -71,6 +73,7 @@ static inline void __init sme_enable(struct boot_params *bp) { }
+ 
+ static inline bool sme_active(void) { return false; }
+ static inline bool sev_active(void) { return false; }
++static inline bool sev_es_active(void) { return false; }
+ 
+ static inline int __init
+ early_set_memory_decrypted(unsigned long vaddr, unsigned long size) { return 0; }
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 9eb279927fc2..e69743be869b 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -435,7 +435,9 @@
+ #define MSR_AMD64_SEV_ES_GHCB		0xc0010130
+ #define MSR_AMD64_SEV			0xc0010131
+ #define MSR_AMD64_SEV_ENABLED_BIT	0
++#define MSR_AMD64_SEV_ES_ENABLED_BIT	1
+ #define MSR_AMD64_SEV_ENABLED		BIT_ULL(MSR_AMD64_SEV_ENABLED_BIT)
++#define MSR_AMD64_SEV_ES_ENABLED	BIT_ULL(MSR_AMD64_SEV_ES_ENABLED_BIT)
+ 
+ #define MSR_AMD64_VIRT_SPEC_CTRL	0xc001011f
+ 
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index a03614bd3e1a..a35fcba24866 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -38,7 +38,9 @@
+  * section is later cleared.
+  */
+ u64 sme_me_mask __section(.data) = 0;
++u64 sev_status __section(.data) = 0;
+ EXPORT_SYMBOL(sme_me_mask);
++EXPORT_SYMBOL(sev_status);
+ DEFINE_STATIC_KEY_FALSE(sev_enable_key);
+ EXPORT_SYMBOL_GPL(sev_enable_key);
+ 
+@@ -347,9 +349,16 @@ bool sme_active(void)
+ 
+ bool sev_active(void)
+ {
+-	return sme_me_mask && sev_enabled;
++	return !!(sev_status & MSR_AMD64_SEV_ENABLED);
  }
  
-+static void vc_forward_exception(struct es_em_ctxt *ctxt)
++bool sev_es_active(void)
 +{
-+	long error_code = ctxt->fi.error_code;
-+	int trapnr = ctxt->fi.vector;
-+
-+	ctxt->regs->orig_ax = ctxt->fi.error_code;
-+
-+	switch (trapnr) {
-+	case X86_TRAP_GP:
-+		do_general_protection(ctxt->regs, error_code);
-+		break;
-+	case X86_TRAP_UD:
-+		do_invalid_op(ctxt->regs, 0);
-+		break;
-+	default:
-+		BUG();
-+	}
++	return !!(sev_status & MSR_AMD64_SEV_ES_ENABLED);
 +}
++EXPORT_SYMBOL_GPL(sev_es_active);
 +
-+dotraplinkage void do_vmm_communication(struct pt_regs *regs, unsigned long exit_code)
-+{
-+	struct es_em_ctxt ctxt;
-+	enum es_result result;
-+	struct ghcb *ghcb;
 +
-+	/*
-+	 * This is invoked through an interrupt gate, so IRQs are disabled. The
-+	 * code below might walk page-tables for user or kernel addresses, so
-+	 * keep the IRQs disabled to protect us against concurrent TLB flushes.
-+	 */
-+
-+	ghcb = (struct ghcb *)this_cpu_ptr(ghcb_page);
-+
-+	vc_ghcb_invalidate(ghcb);
-+	result = vc_init_em_ctxt(&ctxt, regs, exit_code);
-+
-+	if (result == ES_OK)
-+		result = vc_handle_exitcode(&ctxt, ghcb, exit_code);
-+
-+	/* Done - now check the result */
-+	switch (result) {
-+	case ES_OK:
-+		vc_finish_insn(&ctxt);
-+		break;
-+	case ES_UNSUPPORTED:
-+		pr_emerg("Unsupported exit-code 0x%02lx in early #VC exception (IP: 0x%lx)\n",
-+			 exit_code, regs->ip);
-+		goto fail;
-+	case ES_VMM_ERROR:
-+		pr_emerg("PANIC: Failure in communication with VMM (exit-code 0x%02lx IP: 0x%lx)\n",
-+			 exit_code, regs->ip);
-+		goto fail;
-+	case ES_DECODE_FAILED:
-+		pr_emerg("PANIC: Failed to decode instruction (exit-code 0x%02lx IP: 0x%lx)\n",
-+			 exit_code, regs->ip);
-+		goto fail;
-+	case ES_EXCEPTION:
-+		vc_forward_exception(&ctxt);
-+		break;
-+	case ES_RETRY:
-+		/* Nothing to do */
-+		break;
-+	default:
-+		BUG();
-+	}
-+
-+	return;
-+
-+fail:
-+	show_regs(regs);
-+
-+	while (true)
-+		halt();
-+}
-+
- bool __init boot_vc_exception(struct pt_regs *regs)
+ /* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+ bool force_dma_unencrypted(struct device *dev)
  {
- 	unsigned long exit_code = regs->orig_ax;
+diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
+index e2b0e2ac07bb..68d75379e06a 100644
+--- a/arch/x86/mm/mem_encrypt_identity.c
++++ b/arch/x86/mm/mem_encrypt_identity.c
+@@ -540,6 +540,9 @@ void __init sme_enable(struct boot_params *bp)
+ 		if (!(msr & MSR_AMD64_SEV_ENABLED))
+ 			return;
+ 
++		/* Save SEV_STATUS to avoid reading MSR again */
++		sev_status = msr;
++
+ 		/* SEV state cannot be controlled by a command line option */
+ 		sme_me_mask = me_mask;
+ 		sev_enabled = true;
 -- 
 2.17.1
 
