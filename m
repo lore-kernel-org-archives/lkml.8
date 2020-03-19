@@ -6,116 +6,132 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1ACBC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C98C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952092080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5E42072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584634567;
-	bh=zx6EpVvCurtuHtjYl9daum/XLOGNhScxk2ZlhM+sgp4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zRkirrgEBpoKUjpXpaCxM//JXZCGstEkRpR0jfcEoA9UJHvriXPdkvecMmBqefuj0
-	 h3jRqP/FnfIrY8lv2yPlElyfUjJrUX4xifrICphSMb9fF6AL0lNLaQNKEdtidZET6X
-	 lBZXwq4Jdzxwwv+q1VxSZlIV686HYoSCVcFgRgAU=
+	s=default; t=1584634610;
+	bh=s4auXPFGhqXkaZ6kGgZOfjVD+IS6QTcU36WvedUF6e0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QlqOtI+ENlXTxUDrVLu+EkpisoBFn2QMRawVBoWOk1r0R5HK1m0L2ZG3OU+VV48Dq
+	 Ik83AnZ6SwPJ6z5K9bDsUFR/w+wIwbVNaal8cE45kjgxvZacg2kymhhlDIPVB1/RGD
+	 Ylwr4lCSkQCDz6X0JubX8FFsek2zqS9r1KixvNAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgCSQQG (ORCPT
+        id S1728116AbgCSQQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:16:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727212AbgCSQQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:16:06 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78BC62072C;
-        Thu, 19 Mar 2020 16:16:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584634565;
-        bh=zx6EpVvCurtuHtjYl9daum/XLOGNhScxk2ZlhM+sgp4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MVrB/l2Ov9AOX1/m6SVkK9uZGb1qcoR5fiVh4jakV9y29Z6EhwW3+EFUfqW1Emwzu
-         zxtAd/Mtwaj6SXLkaqxYnXwNkInqmq/klFiOnlihfyCuxxvpzAsElanIXBOCFH95E8
-         WHwkjglTUs6K2R+94xx/HW7BdwlTf6asizPE2Li8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jExpz-00E13G-QY; Thu, 19 Mar 2020 16:16:03 +0000
+        Thu, 19 Mar 2020 12:16:49 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50301 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727753AbgCSQQt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 12:16:49 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z13so3188934wml.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 09:16:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NPTln5B3sexFE9RG59KkUGJksK/x876CRm/hBQhYswk=;
+        b=L1YcBxWiZAGktiM9T/kVvoOaJtYEKE6rkl3mhLVRUhJUu+hVfsvff3hPIWc2FQ8p2z
+         lnOWXMl2XI9dzX1vc0Muk+mrJxsR8rrMyq+DALhHd0Jpb3hD93MO/Rp2lS0relBZYzhX
+         kmIcrSxS/lKNdgBSTY9fbqGAT9HtylTiJe5yowj2hDvobGIir0KBcBp8qdMXA6YxnDX0
+         BeCOiztFKuAsCgiUETLFQkaRDiYgNPAUZuciUczKuKZJEnXeurCmh1AKC4D369JV1oLc
+         NBwbFGVz5b40iUxRrkVNFNDaWqy142738pVuUiL8JXcFA0sooCfdCLH8n2NAdvJJ8FCn
+         r/0Q==
+X-Gm-Message-State: ANhLgQ0laO9zycbTXVuqa0i409kwIwMMKeHUS0NpibD4u0ec8WRUabOE
+        GJG3FkG8c6B9V+fPFyw+XK8=
+X-Google-Smtp-Source: ADFU+vvzMUCkCdznfIsApgN3Ujz0TAy3SkeVhx2NsB1/wICHclRQ1FeLUIegJBP7PW8hFBbOc7gfTg==
+X-Received: by 2002:a05:600c:11:: with SMTP id g17mr4542705wmc.142.1584634606754;
+        Thu, 19 Mar 2020 09:16:46 -0700 (PDT)
+Received: from localhost (ip-37-188-140-107.eurotel.cz. [37.188.140.107])
+        by smtp.gmail.com with ESMTPSA id p16sm3693176wmi.40.2020.03.19.09.16.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 09:16:45 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 17:16:44 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org,
+        Rik van Riel <riel@surriel.com>,
+        Andreas Schaufler <andreas.schaufler@gmx.de>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: Re: [PATCH] mm: hugetlb: fix hugetlb_cma_reserve() if CONFIG_NUMA
+ isn't set
+Message-ID: <20200319161644.GH20800@dhcp22.suse.cz>
+References: <20200318153424.3202304-1-guro@fb.com>
+ <20200318161625.GR21362@dhcp22.suse.cz>
+ <20200318175529.GA6263@carbon.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Mar 2020 16:16:03 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v5 23/23] KVM: arm64: GICv4.1: Expose HW-based SGIs in
- debugfs
-In-Reply-To: <33576d89-2b12-b98b-e392-3342b9b1265c@redhat.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-24-maz@kernel.org>
- <4cb4c3d4-7b02-bb77-cd7a-c185346b6a2f@redhat.com>
- <45c282bddd43420024633943c1befac3@kernel.org>
- <33576d89-2b12-b98b-e392-3342b9b1265c@redhat.com>
-Message-ID: <17921081f98a589c67b37b1d07a9cfcc@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, yuzenghui@huawei.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318175529.GA6263@carbon.dhcp.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
-
-On 2020-03-19 15:43, Auger Eric wrote:
-> Hi Marc,
+On Wed 18-03-20 10:55:29, Roman Gushchin wrote:
+> On Wed, Mar 18, 2020 at 05:16:25PM +0100, Michal Hocko wrote:
+> > On Wed 18-03-20 08:34:24, Roman Gushchin wrote:
+> > > If CONFIG_NUMA isn't set, there is no need to ensure that
+> > > the hugetlb cma area belongs to a specific numa node.
+> > > 
+> > > min/max_low_pfn can be used for limiting the maximum size
+> > > of the hugetlb_cma area.
+> > > 
+> > > Also for_each_mem_pfn_range() is defined only if
+> > > CONFIG_HAVE_MEMBLOCK_NODE_MAP is set, and on arm (unlike most
+> > > other architectures) it depends on CONFIG_NUMA. This makes the
+> > > build fail if CONFIG_NUMA isn't set.
+> > 
+> > CONFIG_HAVE_MEMBLOCK_NODE_MAP has popped out as a problem several times
+> > already. Is there any real reason we cannot make it unconditional?
+> > Essentially make the functionality always enabled and drop the config?
 > 
-> On 3/19/20 4:21 PM, Marc Zyngier wrote:
->> Hi Eric,
+> It depends on CONFIG_NUMA only on arm, and I really don't know
+> if there is a good justification for it. It not, that will be a much
+> simpler fix.
 
-[...]
+I have checked the history and the dependency is there since NUMA was
+introduced in arm64. So it would be great to double check with arch
+maintainers.
 
->>> The patch looks good to me but I am now lost about how we retrieve 
->>> the
->>> pending stat of other hw mapped interrupts. Looks we use
->>> irq->pending_latch always. Is that correct?
->> 
->> Correct. GICv4.0 doesn't give us an architectural way to look at the
->> vLPI pending state (there isn't even a guarantee about when the GIC
->> will stop writing to memory, if it ever does).
->> 
->> With GICv4.1, you can introspect the HW state for SGIs. You can also
->> look at the vLPI state by peeking at the virtual pending table, but
->> you'd need to unmap the VPE first, which I obviously don't want to do
->> for this debug interface, specially as it can be used whilst the guest
->> is up and running.
-> OK for vLPIs, what about other HW mapped IRQs (arch timer?)
+> > The code below is ugly as hell. Just look at it. You have
+> > for_each_node_state without any ifdefery but the having ifdef
+> > CONFIG_NUMA. That just doesn't make any sense.
+> 
+> I don't think it makes no sense:
+> it tries to reserve a cma area on each node (need for_each_node_state()),
+> and it uses the for_each_mem_pfn_range() to get a min and max pfn
+> for each node. With !CONFIG_NUMA the first part is reduced to one
+> iteration and the second part is not required at all.
 
-Different kind of HW. With those, the injection is still virtual, so the
-SW pending bit is still very much valid. You can actually try and make
-the timer interrupt pending, it should show up.
+Sure the resulting code logic makes sense. I meant that it doesn't make
+much sense wrt readability. There is a loop over all existing numa nodes
+to have ifdef for NUMA inside the loop. See?
 
-What the irq->hw bit means is "this virtual interrupt is somehow related
-to the host_irq". How this is interpreted is completely 
-context-dependent.
+> I agree that for_each_mem_pfn_range() here looks quite ugly, but I don't know
+> of a better way to get min/max pfns for a node so early in the boot process.
+> If somebody has any ideas here, I'll appreciate a lot.
 
-Thanks,
+The loop is ok. Maybe we have other memblock API that would be better
+but I am not really aware of it from top of my head. I would stick with
+it. It just sucks that this API depends on HAVE_MEMBLOCK_NODE_MAP and
+that it is not generally available. This is what I am complaining about.
+Just look what kind of dirty hack it made you to create ;)
 
-         M.
+> I know Rik plans some further improvements here, so the goal for now
+> is to fix the build. If you think that enabling CONFIG_HAVE_MEMBLOCK_NODE_MAP
+> unconditionally is a way to go, I'm fine with it too.
+
+This is not the first time HAVE_MEMBLOCK_NODE_MAP has been problematic.
+I might be missing something but I really do not get why do we really
+need it these days. As for !NUMA, I suspect we can make it generate the
+right thing when !NUMA.
 -- 
-Jazz is not dead. It just smells funny...
+Michal Hocko
+SUSE Labs
