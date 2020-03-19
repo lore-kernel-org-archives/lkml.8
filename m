@@ -2,73 +2,47 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEC4C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E944C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F6E2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:37:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fNwQvxRd"
+	by mail.kernel.org (Postfix) with ESMTP id 1AD3620714
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:39:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgCSFhn (ORCPT
+        id S1726979AbgCSFjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 01:37:43 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:11391 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725945AbgCSFhn (ORCPT
+        Thu, 19 Mar 2020 01:39:36 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:38494 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725812AbgCSFjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 01:37:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584596262; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=CQCEPvvCGvjhPFGRaKNikUAsx4+h7xrA2QxZN1jGhEk=; b=fNwQvxRdIV2J9eU8iEFA6q8l8GPvNO0BQrp2gkeRTsbALpwQqSPPCddfbEj1uzAYn9y0ywYJ
- 85cANRY8ZylOkrewsFhDxM9KAkIB2BIPrpZabQ9LCVQe7FvmWmzqdF2uNbUx421lZlyYEMOy
- n4bAdfjQq+h38IYKoIsKG/3GEEc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e73051e.7fd79f2ddc00-smtp-out-n03;
- Thu, 19 Mar 2020 05:37:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3F833C433BA; Thu, 19 Mar 2020 05:37:33 +0000 (UTC)
-Received: from [192.168.0.104] (unknown [183.82.140.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7DB67C433CB;
-        Thu, 19 Mar 2020 05:37:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7DB67C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v6 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh+dt@kernel.org
-References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
- <1584211798-10332-2-git-send-email-tdas@codeaurora.org>
- <20200318220443.GA16192@bogus>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <2ceccbac-b289-03d0-665b-6e9ca57b4333@codeaurora.org>
-Date:   Thu, 19 Mar 2020 11:07:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 01:39:36 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tt03i03_1584596364;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tt03i03_1584596364)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 19 Mar 2020 13:39:26 +0800
+Subject: Re: [PATCH] mm: khugepaged: fix potential page state corruption
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1584573582-116702-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200319001258.creziw6ffw4jvwl3@box>
+ <2cdc734c-c222-4b9d-9114-1762b29dafb4@linux.alibaba.com>
+Message-ID: <db660bef-c927-b793-7a79-a88df197a756@linux.alibaba.com>
+Date:   Wed, 18 Mar 2020 22:39:21 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200318220443.GA16192@bogus>
+In-Reply-To: <2cdc734c-c222-4b9d-9114-1762b29dafb4@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,41 +50,125 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 3/19/2020 3:34 AM, Rob Herring wrote:
-> On Sun, 15 Mar 2020 00:19:56 +0530, Taniya Das wrote:
->> The Modem Subsystem clock provider have a bunch of generic properties
->> that are needed in a device tree. Add a YAML schemas for those.
+On 3/18/20 5:55 PM, Yang Shi wrote:
+>
+>
+> On 3/18/20 5:12 PM, Kirill A. Shutemov wrote:
+>> On Thu, Mar 19, 2020 at 07:19:42AM +0800, Yang Shi wrote:
+>>> When khugepaged collapses anonymous pages, the base pages would be 
+>>> freed
+>>> via pagevec or free_page_and_swap_cache().  But, the anonymous page may
+>>> be added back to LRU, then it might result in the below race:
+>>>
+>>>     CPU A                CPU B
+>>> khugepaged:
+>>>    unlock page
+>>>    putback_lru_page
+>>>      add to lru
+>>>                 page reclaim:
+>>>                   isolate this page
+>>>                   try_to_unmap
+>>>    page_remove_rmap <-- corrupt _mapcount
+>>>
+>>> It looks nothing would prevent the pages from isolating by reclaimer.
+>> Hm. Why should it?
 >>
->> Add clock ids for GCC MSS and MSS clocks which are required to bring
->> the modem out of reset.
+>> try_to_unmap() doesn't exclude parallel page unmapping. _mapcount is
+>> protected by ptl. And this particular _mapcount pin is reachable for
+>> reclaim as it's not part of usual page table tree. Basically
+>> try_to_unmap() will never succeeds until we give up the _mapcount on
+>> khugepaged side.
+>
+> I don't quite get. What does "not part of usual page table tree" means?
+>
+> How's about try_to_unmap() acquires ptl before khugepaged?
+>
 >>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> ---
->>   .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
->>   include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
->>   include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
->>   3 files changed, 80 insertions(+), 1 deletion(-)
->>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
->>   create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
+>> I don't see the issue right away.
 >>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml: $id: relative path/filename doesn't match actual path or filename
-> 	expected: http://devicetree.org/schemas/clock/qcom,sc7180-mss.yaml#
-> 
-> See https://patchwork.ozlabs.org/patch/1254940
-> Please check and re-submit.
-> 
-Hi Rob,
+>>> The other problem is the page's active or unevictable flag might be
+>>> still set when freeing the page via free_page_and_swap_cache().
+>> So what?
+>
+> The flags may leak to page free path then kernel may complain if 
+> DEBUG_VM is set.
+>
+>>
+>>> The putback_lru_page() would not clear those two flags if the pages are
+>>> released via pagevec, it sounds nothing prevents from isolating active
 
-Thanks, I have fixed it in the next patch series.
+Sorry, this is a typo. If the page is freed via pagevec, active and 
+unevictable flag would get cleared before freeing by page_off_lru().
 
-Is there a way to catch these before submitting? As I do not see these 
-errors on my machine.
+But, if the page is freed by free_page_and_swap_cache(), these two flags 
+are not cleared. But, it seems this path is hit rare, the pages are 
+freed by pagevec for the most cases.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+>>> or unevictable pages.
+>> Again, why should it? vmscan is equipped to deal with this.
+>
+> I don't mean vmscan, I mean khugepaged may isolate active and 
+> unevictable pages since it just simply walks page table.
+>
+>>
+>>> However I didn't really run into these problems, just in theory by 
+>>> visual
+>>> inspection.
+>>>
+>>> And, it also seems unnecessary to have the pages add back to LRU 
+>>> again since
+>>> they are about to be freed when reaching this point.  So, clearing 
+>>> active
+>>> and unevictable flags, unlocking and dropping refcount from isolate
+>>> instead of calling putback_lru_page() as what page cache collapse does.
+>> Hm? But we do call putback_lru_page() on the way out. I do not follow.
+>
+> It just calls putback_lru_page() at error path, not success path. 
+> Putting pages back to lru on error path definitely makes sense. Here 
+> it is the success path.
+>
+>>
+>>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>>> Cc: Hugh Dickins <hughd@google.com>
+>>> Cc: Andrea Arcangeli <aarcange@redhat.com>
+>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>>> ---
+>>>   mm/khugepaged.c | 10 +++++++++-
+>>>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>> index b679908..f42fa4e 100644
+>>> --- a/mm/khugepaged.c
+>>> +++ b/mm/khugepaged.c
+>>> @@ -673,7 +673,6 @@ static void __collapse_huge_page_copy(pte_t 
+>>> *pte, struct page *page,
+>>>               src_page = pte_page(pteval);
+>>>               copy_user_highpage(page, src_page, address, vma);
+>>>               VM_BUG_ON_PAGE(page_mapcount(src_page) != 1, src_page);
+>>> -            release_pte_page(src_page);
+>>>               /*
+>>>                * ptl mostly unnecessary, but preempt has to
+>>>                * be disabled to update the per-cpu stats
+>>> @@ -687,6 +686,15 @@ static void __collapse_huge_page_copy(pte_t 
+>>> *pte, struct page *page,
+>>>               pte_clear(vma->vm_mm, address, _pte);
+>>>               page_remove_rmap(src_page, false);
+>>>               spin_unlock(ptl);
+>>> +
+>>> +            dec_node_page_state(src_page,
+>>> +                NR_ISOLATED_ANON + page_is_file_cache(src_page));
+>>> +            ClearPageActive(src_page);
+>>> +            ClearPageUnevictable(src_page);
+>>> +            unlock_page(src_page);
+>>> +            /* Drop refcount from isolate */
+>>> +            put_page(src_page);
+>>> +
+>>>               free_page_and_swap_cache(src_page);
+>>>           }
+>>>       }
+>>> -- 
+>>> 1.8.3.1
+>>>
+>>>
+>
 
---
