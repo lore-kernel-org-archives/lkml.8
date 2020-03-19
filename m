@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31CAC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01264C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE1020787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCECC20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623751;
-	bh=gvVJ5keGwcxVzT6ADFecWys5iQDyyDbvVjxB0dVH26o=;
+	s=default; t=1584623753;
+	bh=OfYbMBkupsr+l/Y1Wzrt2o7/s6MDZG7EK6hEUMeaq34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PsrrFoB82PKv8xp1LAd91zgeqQZAA0eKLaaJNnTZv3zT4qdAcykgjRK8q60fpm5Tm
-	 3gCRvp3ODZtYOJJSG30X4lkJ2hFcO2qyD+alD2LOSgY0hpwz62pU56d3qPts/9+2PO
-	 tF0jneDB8G/H83D3pW6ni8VfrCkslRBCFDBaBcFA=
+	b=PKL7DwKrEPW7qctLIZ9rrvy2+wksvGRfIf7tO4WgmyPPYK3QJaC9RTFOcxfofBjUz
+	 YQOx3RjdpWiS6H2avpIGENtB71whdVer5oHx4lCpU48SIu2dNgHBGRm2u+8elf60w2
+	 U/iUw0KmGY1cIWyUOUfRTHqvO6EeEK8WgLfow2oM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgCSNPu (ORCPT
+        id S1729452AbgCSNPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:15:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35664 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:15:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727326AbgCSNPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:15:44 -0400
+        id S1728858AbgCSNPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:15:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C062420787;
-        Thu, 19 Mar 2020 13:15:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC0FA20724;
+        Thu, 19 Mar 2020 13:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623744;
-        bh=gvVJ5keGwcxVzT6ADFecWys5iQDyyDbvVjxB0dVH26o=;
+        s=default; t=1584623748;
+        bh=OfYbMBkupsr+l/Y1Wzrt2o7/s6MDZG7EK6hEUMeaq34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cb28ZQvO7mWqhicfVtXQE86aam4abvPmUxCjQ5RM3d/JNHUiGkkIMofV5Jm2PPXHs
-         33NoHXH0zB4NClw6o/FxFYpB1DzYeQJqMSnnTEHzoqQE+ilmLUaUFbquCrE9tdbR/7
-         hGO5tlQ50lH7IFcIqjowFzY7ZDNBFW7DEk0aCjGA=
+        b=V6XV2aF88oAosIB0ZYJStweq5FQ8i/X2eqonv5rE8GKvZLdlmqTKMMWaU/18xb/TJ
+         2wiO5mtNlif8hp+PIHQ9XDXvbqsI16lUji44l0QEywgjUYSr4IZ0JKYxA31Yz2GAuQ
+         5gzBAP7pGt1hLzpscYHyo5VKfJd5EO2G3iAzg66U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Mahesh Bandewar <maheshb@google.com>,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 07/99] ipvlan: do not use cond_resched_rcu() in ipvlan_process_multicast()
-Date:   Thu, 19 Mar 2020 14:02:45 +0100
-Message-Id: <20200319123943.745019798@linuxfoundation.org>
+Subject: [PATCH 4.14 08/99] netlink: Use netlink header as base to calculate bad attribute offset
+Date:   Thu, 19 Mar 2020 14:02:46 +0100
+Message-Id: <20200319123944.011605516@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -60,43 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit afe207d80a61e4d6e7cfa0611a4af46d0ba95628 ]
+[ Upstream commit 84b3268027641401bb8ad4427a90a3cce2eb86f5 ]
 
-Commit e18b353f102e ("ipvlan: add cond_resched_rcu() while
-processing muticast backlog") added a cond_resched_rcu() in a loop
-using rcu protection to iterate over slaves.
+Userspace might send a batch that is composed of several netlink
+messages. The netlink_ack() function must use the pointer to the netlink
+header as base to calculate the bad attribute offset.
 
-This is breaking rcu rules, so lets instead use cond_resched()
-at a point we can reschedule
-
-Fixes: e18b353f102e ("ipvlan: add cond_resched_rcu() while processing muticast backlog")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Mahesh Bandewar <maheshb@google.com>
+Fixes: 2d4bc93368f5 ("netlink: extended ACK reporting")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ipvlan/ipvlan_core.c |    2 +-
+ net/netlink/af_netlink.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ipvlan/ipvlan_core.c
-+++ b/drivers/net/ipvlan/ipvlan_core.c
-@@ -240,7 +240,6 @@ void ipvlan_process_multicast(struct wor
- 			}
- 			ipvlan_count_rx(ipvlan, len, ret == NET_RX_SUCCESS, true);
- 			local_bh_enable();
--			cond_resched_rcu();
- 		}
- 		rcu_read_unlock();
- 
-@@ -257,6 +256,7 @@ void ipvlan_process_multicast(struct wor
- 		}
- 		if (dev)
- 			dev_put(dev);
-+		cond_resched();
- 	}
- }
- 
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -2389,7 +2389,7 @@ void netlink_ack(struct sk_buff *in_skb,
+ 							       in_skb->len))
+ 				WARN_ON(nla_put_u32(skb, NLMSGERR_ATTR_OFFS,
+ 						    (u8 *)extack->bad_attr -
+-						    in_skb->data));
++						    (u8 *)nlh));
+ 		} else {
+ 			if (extack->cookie_len)
+ 				WARN_ON(nla_put(skb, NLMSGERR_ATTR_COOKIE,
 
 
