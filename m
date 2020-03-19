@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A24C43333
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85013C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503DC2098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8B22166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624134;
-	bh=F1D0R/proQlgrCAIHqb84XFSvyT3s+JQd9HSM/5D7iQ=;
+	s=default; t=1584624135;
+	bh=9uebQZjFeWi3MCS3tSW9iUkH5yUcXXi5PjERCzdWf7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ukdgRLwejvmBWFj90Pjx0cI97MzPERYKw6HZYEV5jR6xvn7wBsBMJttp2MQw1SDjR
-	 uUbyliTHtW0JUZaheb4Tmtkey+z7S7Q1pMj5Ltv7DWBgW9/yjJlrfNB9AlerhxaG4M
-	 yOP/XZBWeoHknSrLlLjoZ+dyBQunwHblSrbS2Zxg=
+	b=E+FiNZvHAZQohZ7xt9jc8+t5qu45PCWxmALYdz9d6uhLTyvCOizACUvNcb9ICBNzC
+	 ZLmMKqvQLjCiKjieE7A+CKgngVPfZBagY+0CIWiwu9ALls0jtw8FVtkb48JyhZkCuc
+	 GLyRXnT8xa8EbKsWMZzo+UPRw9paM9NKOwHRDuwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730171AbgCSNWM (ORCPT
+        id S1730180AbgCSNWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:22:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47230 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:22:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727745AbgCSNWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:22:10 -0400
+        id S1730167AbgCSNWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:22:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4852720724;
-        Thu, 19 Mar 2020 13:22:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAB4E214D8;
+        Thu, 19 Mar 2020 13:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624129;
-        bh=F1D0R/proQlgrCAIHqb84XFSvyT3s+JQd9HSM/5D7iQ=;
+        s=default; t=1584624132;
+        bh=9uebQZjFeWi3MCS3tSW9iUkH5yUcXXi5PjERCzdWf7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cWqDZC0MsDYWKB0vNAlu0JrIaYXcsOCiQ96mchc/y4onNQOolQem5d3N0N2eg1agZ
-         Qjf2bgvzsxlOYkrmdnPmY8vRadSPUAzWagJzjOLJxz6nlerxzWiZ+VDFFCvQ6ZClqG
-         kd/MgOCUKmrOiPrGrlaSzo87WZjGWVdh2/P7i7es=
+        b=kDyvQllK8mQ6ljb+dwLjKTG6hyyOtlhzR8DNSXGHLAff9P0BUYCKZ6lf2zzPm2JpX
+         EvZ7Ayblwh+TpTHQP/gW7eLhF7bGbTqrZbqawSce+EmJFHGyqr/j2WDfHIkkI0T2z3
+         QIcciO1UdQKf+hsE+Y71AgZJphKvY+NniaMj6OCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hanno Zulla <kontakt@hanno.de>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 17/60] HID: hid-bigbenff: fix general protection fault caused by double kfree
-Date:   Thu, 19 Mar 2020 14:03:55 +0100
-Message-Id: <20200319123924.615069565@linuxfoundation.org>
+        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+d195fd3b9a364ddd6731@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 02/60] netfilter: xt_hashlimit: unregister proc file before releasing mutex
+Date:   Thu, 19 Mar 2020 14:03:40 +0100
+Message-Id: <20200319123920.060062051@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -60,53 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hanno Zulla <kontakt@hanno.de>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 789a2c250340666220fa74bc6c8f58497e3863b3 ]
+[ Upstream commit 99b79c3900d4627672c85d9f344b5b0f06bc2a4d ]
 
-The struct *bigben was allocated via devm_kzalloc() and then used as a
-parameter in input_ff_create_memless(). This caused a double kfree
-during removal of the device, since both the managed resource API and
-ml_ff_destroy() in drivers/input/ff-memless.c would call kfree() on it.
+Before releasing the global mutex, we only unlink the hashtable
+from the hash list, its proc file is still not unregistered at
+this point. So syzbot could trigger a race condition where a
+parallel htable_create() could register the same file immediately
+after the mutex is released.
 
-Signed-off-by: Hanno Zulla <kontakt@hanno.de>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Move htable_remove_proc_entry() back to mutex protection to
+fix this. And, fold htable_destroy() into htable_put() to make
+the code slightly easier to understand.
+
+Reported-and-tested-by: syzbot+d195fd3b9a364ddd6731@syzkaller.appspotmail.com
+Fixes: c4a3922d2d20 ("netfilter: xt_hashlimit: reduce hashlimit_mutex scope for htable_put()")
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-bigbenff.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ net/netfilter/xt_hashlimit.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
-index 3f6abd190df43..f7e85bacb6889 100644
---- a/drivers/hid/hid-bigbenff.c
-+++ b/drivers/hid/hid-bigbenff.c
-@@ -220,10 +220,16 @@ static void bigben_worker(struct work_struct *work)
- static int hid_bigben_play_effect(struct input_dev *dev, void *data,
- 			 struct ff_effect *effect)
+diff --git a/net/netfilter/xt_hashlimit.c b/net/netfilter/xt_hashlimit.c
+index 7a2c4b8408c49..8c835ad637290 100644
+--- a/net/netfilter/xt_hashlimit.c
++++ b/net/netfilter/xt_hashlimit.c
+@@ -402,15 +402,6 @@ static void htable_remove_proc_entry(struct xt_hashlimit_htable *hinfo)
+ 		remove_proc_entry(hinfo->name, parent);
+ }
+ 
+-static void htable_destroy(struct xt_hashlimit_htable *hinfo)
+-{
+-	cancel_delayed_work_sync(&hinfo->gc_work);
+-	htable_remove_proc_entry(hinfo);
+-	htable_selective_cleanup(hinfo, true);
+-	kfree(hinfo->name);
+-	vfree(hinfo);
+-}
+-
+ static struct xt_hashlimit_htable *htable_find_get(struct net *net,
+ 						   const char *name,
+ 						   u_int8_t family)
+@@ -432,8 +423,13 @@ static void htable_put(struct xt_hashlimit_htable *hinfo)
  {
--	struct bigben_device *bigben = data;
-+	struct hid_device *hid = input_get_drvdata(dev);
-+	struct bigben_device *bigben = hid_get_drvdata(hid);
- 	u8 right_motor_on;
- 	u8 left_motor_force;
- 
-+	if (!bigben) {
-+		hid_err(hid, "no device data\n");
-+		return 0;
-+	}
+ 	if (refcount_dec_and_mutex_lock(&hinfo->use, &hashlimit_mutex)) {
+ 		hlist_del(&hinfo->node);
++		htable_remove_proc_entry(hinfo);
+ 		mutex_unlock(&hashlimit_mutex);
+-		htable_destroy(hinfo);
 +
- 	if (effect->type != FF_RUMBLE)
- 		return 0;
++		cancel_delayed_work_sync(&hinfo->gc_work);
++		htable_selective_cleanup(hinfo, true);
++		kfree(hinfo->name);
++		vfree(hinfo);
+ 	}
+ }
  
-@@ -341,7 +347,7 @@ static int bigben_probe(struct hid_device *hid,
- 
- 	INIT_WORK(&bigben->worker, bigben_worker);
- 
--	error = input_ff_create_memless(hidinput->input, bigben,
-+	error = input_ff_create_memless(hidinput->input, NULL,
- 		hid_bigben_play_effect);
- 	if (error)
- 		return error;
 -- 
 2.20.1
 
