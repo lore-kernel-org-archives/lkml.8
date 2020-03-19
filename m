@@ -2,34 +2,34 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22E6C5518E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2900C5518B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C6C2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF68D2076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbgCSX1f (ORCPT
+        id S1727699AbgCSX1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:27:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36344 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 19:27:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgCSX1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:27:33 -0400
+        id S1727613AbgCSX1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 19:27:35 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1F632076C;
-        Thu, 19 Mar 2020 23:27:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F08C20775;
+        Thu, 19 Mar 2020 23:27:34 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jF4ZX-000h4k-J4; Thu, 19 Mar 2020 19:27:31 -0400
-Message-Id: <20200319232219.446480829@goodmis.org>
+        id 1jF4ZZ-000hB5-Db; Thu, 19 Mar 2020 19:27:33 -0400
+Message-Id: <20200319232733.286726349@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Thu, 19 Mar 2020 19:22:19 -0400
+Date:   Thu, 19 Mar 2020 19:22:31 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
@@ -41,73 +41,61 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Tom Zanussi <zanussi@kernel.org>,
         Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>
-Subject: [PATCH 00/12 v2] ring-buffer/tracing: Remove disabling of ring buffer while reading trace file
+Subject: [PATCH 12/12 v2] tracing: Have the document reflect that the trace file keeps tracing
+ enabled
+References: <20200319232219.446480829@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-When the ring buffer was first written for ftrace, there was two
-human readable files to read it. One was a standard "producer/consumer"
-file (trace_pipe), which would consume data from the ring buffer as
-it read it, and the other was a "static iterator" that would not
-consume the events, such that the file could be read multiple times
-and return the same output each time.
+Now that reading the trace file does not temporarly stop tracing while it is
+open, update the document to reflect this fact.
 
-The "static iterator" was never meant to be read while there was an
-active writer to the ring buffer. If writing was enabled, then it
-would disable the writer when the trace file was opened.
+Link: http://lkml.kernel.org/r/20200317213417.209675068@goodmis.org
 
-There has been some complaints about this by the BPF folks, that did
-not realize this little bit of information and it was requested that
-the "trace" file does not stop the writing to the ring buffer.
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ Documentation/trace/ftrace.rst | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-This patch series attempts to satisfy that request, by creating a
-temporary buffer in each of the per cpu iterators to place the
-read event into, such that it can be passed to users without worrying
-about a writer to corrupt the event while it was being written out.
-It also uses the fact that the ring buffer is broken up into pages,
-where each page has its own timestamp that gets updated when a
-writer crosses over to it. By copying it to the temp buffer, and
-doing a "before and after" test of the time stamp with memory barriers,
-can allow the events to be saved.
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 99a0890e20ec..86e76f2a40dc 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -125,10 +125,13 @@ of ftrace. Here is a list of some of the key files:
+   trace:
+ 
+ 	This file holds the output of the trace in a human
+-	readable format (described below). Note, tracing is temporarily
+-	disabled when the file is open for reading. Once all readers
+-	are closed, tracing is re-enabled. Opening this file for
++	readable format (described below). Opening this file for
+ 	writing with the O_TRUNC flag clears the ring buffer content.
++        Note, this file is not a consumer. If tracing is off
++        (no tracer running, or tracing_on is zero), it will produce
++        the same output each time it is read. When tracing is on,
++        it may produce inconsistent results as it tries to read
++        the entire buffer without consuming it.
+ 
+   trace_pipe:
+ 
+@@ -142,9 +145,7 @@ of ftrace. Here is a list of some of the key files:
+ 	will not be read again with a sequential read. The
+ 	"trace" file is static, and if the tracer is not
+ 	adding more data, it will display the same
+-	information every time it is read. Unlike the
+-	"trace" file, opening this file for reading will not
+-	temporarily disable tracing.
++	information every time it is read.
+ 
+   trace_options:
+ 
+-- 
+2.25.1
 
-Changes since v1:
 
- - Added fix to selftest first, where these changes wont break it
-
- - Changed comment in trace_find_next_entry() to better explain what
-   it was doing, as pointed out by Masami Hiramatsu.
-
- - Allocated the iterator temp buffer when the iterator is created,
-   as Masami pointed out, it would be better than allocating it each
-   time it was used. It is initiated as 128 bytes as most trace events
-   are less than that, but will be expanded if needed. Note that
-   function is only used when latency measurements are needed (seeing
-   two events at once).
-
-Steven Rostedt (VMware) (12):
-      selftest/ftrace: Fix function trigger test to handle trace not disabling the tracer
-      tracing: Save off entry when peeking at next entry
-      ring-buffer: Have ring_buffer_empty() not depend on tracing stopped
-      ring-buffer: Rename ring_buffer_read() to read_buffer_iter_advance()
-      ring-buffer: Add page_stamp to iterator for synchronization
-      ring-buffer: Have rb_iter_head_event() handle concurrent writer
-      ring-buffer: Do not die if rb_iter_peek() fails more than thrice
-      ring-buffer: Optimize rb_iter_head_event()
-      ring-buffer: Do not disable recording when there is an iterator
-      tracing: Do not disable tracing when reading the trace file
-      ring-buffer/tracing: Have iterator acknowledge dropped events
-      tracing: Have the document reflect that the trace file keeps tracing enabled
-
-----
- Documentation/trace/ftrace.rst                     |  13 +-
- include/linux/ring_buffer.h                        |   4 +-
- include/linux/trace_events.h                       |   2 +
- kernel/trace/ring_buffer.c                         | 196 +++++++++++++++------
- kernel/trace/trace.c                               |  68 +++++--
- kernel/trace/trace_functions_graph.c               |   2 +-
- kernel/trace/trace_output.c                        |  15 +-
- .../test.d/ftrace/func_traceonoff_triggers.tc      |   2 +-
- 8 files changed, 211 insertions(+), 91 deletions(-)
