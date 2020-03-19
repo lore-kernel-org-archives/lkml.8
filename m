@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F997C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D83C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C2B21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E6F620787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623875;
-	bh=xpF/oJrCEXUxvt+0y7Lo8jkFhhTZdOsK+QynZE3xPvI=;
+	s=default; t=1584623877;
+	bh=Thpe2pJA/fVUGwjN6EzvmqOjCbWZYLlHCcEXPtEXjV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aBaR/6dU6Mx+9Q80zPIFuUKVp8VEXA1Duth+FYBiOgZuYflKgwLQtGPxkHI8ecySF
-	 4TAO2IH5PFrZTW/zbh9ZcvrOtUWYslGIgUIyQ7FNDGxKC9+7+/LKKSIpFboqBsDD7T
-	 q0d7sy6YaaBwAz8zabKlo9kkGwsFfA3Ygmn8u61U=
+	b=ejIkYb1baDcMHWGZbKtcnUnzRQUR2TTysqbcdrB+Vz1/r2XnnHh9KIoDm4TKAJcq1
+	 PJlZ1JeR3KHHtEnSUesPW7txm94uAZOGvhqnkmxstS4MDU9123arFEblsjyTy9YL9p
+	 nhmU5HLnSGqgk9/HQf2pI2bj/dHjnyFWOLmMQGzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgCSNRy (ORCPT
+        id S1728907AbgCSNR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:17:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39448 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:17:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729669AbgCSNRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:17:51 -0400
+        id S1729711AbgCSNRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:17:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 710B8214D8;
-        Thu, 19 Mar 2020 13:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF5CB20787;
+        Thu, 19 Mar 2020 13:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623869;
-        bh=xpF/oJrCEXUxvt+0y7Lo8jkFhhTZdOsK+QynZE3xPvI=;
+        s=default; t=1584623872;
+        bh=Thpe2pJA/fVUGwjN6EzvmqOjCbWZYLlHCcEXPtEXjV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ah+uBNz1up8wfNdCT6E/NSrn03X8495ZUfwetsGiNOrzjOndaxdWrwC20+s9SC91H
-         EEauz5PKX0Q2pmzDafOF7b7OVbWMX7ZZcMMkgaIXAQcwujGpwyoopJtu4z9QImoZ8N
-         GCkrH9FrZj/QY8BY3eoE050HL5Yy6XlfVy0CqGfk=
+        b=PnUh0w+rRs/OucGNNWpU2/ciRDpPvzWrxBnx+ZTjHWMqeai7dSMa0WkMxjP942BxJ
+         M7ZUUAGtqmuFp/9cnLVJ8A7PoEvjwblSboFXVgOMfbXo/bvlFig/aEwqowkPyA5+tr
+         840lGb8f+0BKoqTA/oo7/W2OAD6g/OQN5z3q+pVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 82/99] perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
-Date:   Thu, 19 Mar 2020 14:04:00 +0100
-Message-Id: <20200319124005.115184451@linuxfoundation.org>
+Subject: [PATCH 4.14 83/99] ACPI: watchdog: Allow disabling WDAT at boot
+Date:   Thu, 19 Mar 2020 14:04:01 +0100
+Message-Id: <20200319124005.278857412@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -61,85 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Jean Delvare <jdelvare@suse.de>
 
-[ Upstream commit f967140dfb7442e2db0868b03b961f9c59418a1b ]
+[ Upstream commit 3f9e12e0df012c4a9a7fd7eb0d3ae69b459d6b2c ]
 
-Enable the sampling check in kernel/events/core.c::perf_event_open(),
-which returns the more appropriate -EOPNOTSUPP.
+In case the WDAT interface is broken, give the user an option to
+ignore it to let a native driver bind to the watchdog device instead.
 
-BEFORE:
-
-  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
-  Error:
-  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (l3_request_g1.caching_l3_cache_accesses).
-  /bin/dmesg | grep -i perf may provide additional information.
-
-With nothing relevant in dmesg.
-
-AFTER:
-
-  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
-  Error:
-  l3_request_g1.caching_l3_cache_accesses: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
-
-Fixes: c43ca5091a37 ("perf/x86/amd: Add support for AMD NB and L2I "uncore" counters")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200311191323.13124-1-kim.phillips@amd.com
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/uncore.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt |  4 ++++
+ drivers/acpi/acpi_watchdog.c                    | 12 +++++++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index baa7e36073f90..604a8558752d1 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -193,20 +193,18 @@ static int amd_uncore_event_init(struct perf_event *event)
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 7e0a4be3503d6..ae51b1b7b67fb 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -137,6 +137,10 @@
+ 			dynamic table installation which will install SSDT
+ 			tables to /sys/firmware/acpi/tables/dynamic.
  
- 	/*
- 	 * NB and Last level cache counters (MSRs) are shared across all cores
--	 * that share the same NB / Last level cache. Interrupts can be directed
--	 * to a single target core, however, event counts generated by processes
--	 * running on other cores cannot be masked out. So we do not support
--	 * sampling and per-thread events.
-+	 * that share the same NB / Last level cache.  On family 16h and below,
-+	 * Interrupts can be directed to a single target core, however, event
-+	 * counts generated by processes running on other cores cannot be masked
-+	 * out. So we do not support sampling and per-thread events via
-+	 * CAP_NO_INTERRUPT, and we do not enable counter overflow interrupts:
- 	 */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
++	acpi_no_watchdog	[HW,ACPI,WDT]
++			Ignore the ACPI-based watchdog interface (WDAT) and let
++			a native driver control the watchdog device instead.
++
+ 	acpi_rsdp=	[ACPI,EFI,KEXEC]
+ 			Pass the RSDP address to the kernel, mostly used
+ 			on machines running EFI runtime service to boot the
+diff --git a/drivers/acpi/acpi_watchdog.c b/drivers/acpi/acpi_watchdog.c
+index 23cde3d8e8fbb..0bd1899a287f3 100644
+--- a/drivers/acpi/acpi_watchdog.c
++++ b/drivers/acpi/acpi_watchdog.c
+@@ -58,12 +58,14 @@ static bool acpi_watchdog_uses_rtc(const struct acpi_table_wdat *wdat)
+ }
+ #endif
  
- 	/* NB and Last level cache counters do not have usr/os/guest/host bits */
- 	if (event->attr.exclude_user || event->attr.exclude_kernel ||
- 	    event->attr.exclude_host || event->attr.exclude_guest)
- 		return -EINVAL;
++static bool acpi_no_watchdog;
++
+ static const struct acpi_table_wdat *acpi_watchdog_get_wdat(void)
+ {
+ 	const struct acpi_table_wdat *wdat = NULL;
+ 	acpi_status status;
  
--	/* and we do not enable counter overflow interrupts */
- 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
- 	hwc->idx = -1;
+-	if (acpi_disabled)
++	if (acpi_disabled || acpi_no_watchdog)
+ 		return NULL;
  
-@@ -314,6 +312,7 @@ static struct pmu amd_nb_pmu = {
- 	.start		= amd_uncore_start,
- 	.stop		= amd_uncore_stop,
- 	.read		= amd_uncore_read,
-+	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT,
- };
+ 	status = acpi_get_table(ACPI_SIG_WDAT, 0,
+@@ -91,6 +93,14 @@ bool acpi_has_watchdog(void)
+ }
+ EXPORT_SYMBOL_GPL(acpi_has_watchdog);
  
- static struct pmu amd_llc_pmu = {
-@@ -324,6 +323,7 @@ static struct pmu amd_llc_pmu = {
- 	.start		= amd_uncore_start,
- 	.stop		= amd_uncore_stop,
- 	.read		= amd_uncore_read,
-+	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT,
- };
- 
- static struct amd_uncore *amd_uncore_alloc(unsigned int cpu)
++/* ACPI watchdog can be disabled on boot command line */
++static int __init disable_acpi_watchdog(char *str)
++{
++	acpi_no_watchdog = true;
++	return 1;
++}
++__setup("acpi_no_watchdog", disable_acpi_watchdog);
++
+ void __init acpi_watchdog_init(void)
+ {
+ 	const struct acpi_wdat_entry *entries;
 -- 
 2.20.1
 
