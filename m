@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010E6C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CCAC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A232137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E10208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624468;
-	bh=eXhIrVyJerNTUpPKVXh2U3p0Q0MPdGuQo3G1tSmSyoE=;
+	s=default; t=1584624474;
+	bh=Dxey7Q8OdyIqif19MhI4LcJl0lda+wnDI72pKg7H+PI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oDozPbrAcqFwO96K2N2wstDpQSqn9JE+t/4M5VHoL7TpTGAiYP6SETt7KnyR2cOpe
-	 hLHHDcAM074siCwy8rqjPDdcCoBX8BYEQSWHe9/lQuMI5h6e173yX47nfROG4smR3J
-	 DmkgblUhXtQJvdVACmUnHS9kCdAZ/fWhqzoQENC4=
+	b=CSuHdQ6KTaMV+5U5KM1USzUjA0hptjm8DNsrNrujxYeH/b/F0UWaIKDZg0yjYRfmH
+	 3nSP4CDThuA4Vo8lk+t0Wtt46NIEik+2aMM/hxLzY3qbwp14T/tDkqRa+Bc0tIof4y
+	 XPpTFj5DvYScQ4X4Zb/5d8G/7rYim7/DRjtz+rKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730824AbgCSN1r (ORCPT
+        id S1730954AbgCSN1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:27:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55962 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730925AbgCSN1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:27:37 -0400
+        id S1730937AbgCSN1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:27:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43BA6208C3;
-        Thu, 19 Mar 2020 13:27:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB1A520B1F;
+        Thu, 19 Mar 2020 13:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624456;
-        bh=eXhIrVyJerNTUpPKVXh2U3p0Q0MPdGuQo3G1tSmSyoE=;
+        s=default; t=1584624465;
+        bh=Dxey7Q8OdyIqif19MhI4LcJl0lda+wnDI72pKg7H+PI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m7nqggvn5sblkejp07TFgou1O/9Xl8xG3QddW6L+ECfufuSPvUedTwGsau3NbE6Da
-         i9CTq2y52YyKhrwB9UP0D2DvGM04z3Nqmg86Sqqk1itzcBzfPkT2PW/OUfZwi7uc0p
-         PIlij31314pRP/Xb9n52UxzaZ+hwtEghEQoJHf3A=
+        b=XzJ3+E33Y4nzD1tN8QB2ht6qFk1vSfCELhBmR/L7KUu6NM60kwqczBhisUKvz0qDy
+         ROL85hiLkXTN+L3u+6hfAaVtssxE8vyTJZSIql7Z1+dcqecVjVE/r6yFdPrGzT9nR1
+         lxCTlJ3lhBctpYLOUHMCeeIKWwR73NgzZs+DsB8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        stable@vger.kernel.org,
+        Alexandru-Mihai Maftei <amaftei@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 51/65] net: rmnet: use upper/lower device infrastructure
-Date:   Thu, 19 Mar 2020 14:04:33 +0100
-Message-Id: <20200319123942.415957534@linuxfoundation.org>
+Subject: [PATCH 5.5 54/65] sfc: fix timestamp reconstruction at 16-bit rollover points
+Date:   Thu, 19 Mar 2020 14:04:36 +0100
+Message-Id: <20200319123943.355676922@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -60,197 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Alex Maftei (amaftei) <amaftei@solarflare.com>
 
-[ Upstream commit 037f9cdf72fb8a7ff9ec2b5dd05336ec1492bdf1 ]
+[ Upstream commit 23797b98909f34b75fd130369bde86f760db69d0 ]
 
-netdev_upper_dev_link() is useful to manage lower/upper interfaces.
-And this function internally validates looping, maximum depth.
-All or most virtual interfaces that could have a real interface
-(e.g. macsec, macvlan, ipvlan etc.) use lower/upper infrastructure.
+We can't just use the top bits of the last sync event as they could be
+off-by-one every 65,536 seconds, giving an error in reconstruction of
+65,536 seconds.
 
-Test commands:
-    modprobe rmnet
-    ip link add dummy0 type dummy
-    ip link add rmnet1 link dummy0 type rmnet mux_id 1
-    for i in {2..100}
-    do
-        let A=$i-1
-        ip link add rmnet$i link rmnet$A type rmnet mux_id $i
-    done
-    ip link del dummy0
+This patch uses the difference in the bottom 16 bits (mod 2^16) to
+calculate an offset that needs to be applied to the last sync event to
+get to the current time.
 
-The purpose of the test commands is to make stack overflow.
-
-Splat looks like:
-[   52.411438][ T1395] BUG: KASAN: slab-out-of-bounds in find_busiest_group+0x27e/0x2c00
-[   52.413218][ T1395] Write of size 64 at addr ffff8880c774bde0 by task ip/1395
-[   52.414841][ T1395]
-[   52.430720][ T1395] CPU: 1 PID: 1395 Comm: ip Not tainted 5.6.0-rc1+ #447
-[   52.496511][ T1395] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   52.513597][ T1395] Call Trace:
-[   52.546516][ T1395]
-[   52.558773][ T1395] Allocated by task 3171537984:
-[   52.588290][ T1395] BUG: unable to handle page fault for address: ffffffffb999e260
-[   52.589311][ T1395] #PF: supervisor read access in kernel mode
-[   52.590529][ T1395] #PF: error_code(0x0000) - not-present page
-[   52.591374][ T1395] PGD d6818067 P4D d6818067 PUD d6819063 PMD 0
-[   52.592288][ T1395] Thread overran stack, or stack corrupted
-[   52.604980][ T1395] Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-[   52.605856][ T1395] CPU: 1 PID: 1395 Comm: ip Not tainted 5.6.0-rc1+ #447
-[   52.611764][ T1395] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   52.621520][ T1395] RIP: 0010:stack_depot_fetch+0x10/0x30
-[   52.622296][ T1395] Code: ff e9 f9 fe ff ff 48 89 df e8 9c 1d 91 ff e9 ca fe ff ff cc cc cc cc cc cc cc 89 f8 0
-[   52.627887][ T1395] RSP: 0018:ffff8880c774bb60 EFLAGS: 00010006
-[   52.628735][ T1395] RAX: 00000000001f8880 RBX: ffff8880c774d140 RCX: 0000000000000000
-[   52.631773][ T1395] RDX: 000000000000001d RSI: ffff8880c774bb68 RDI: 0000000000003ff0
-[   52.649584][ T1395] RBP: ffffea00031dd200 R08: ffffed101b43e403 R09: ffffed101b43e403
-[   52.674857][ T1395] R10: 0000000000000001 R11: ffffed101b43e402 R12: ffff8880d900e5c0
-[   52.678257][ T1395] R13: ffff8880c774c000 R14: 0000000000000000 R15: dffffc0000000000
-[   52.694541][ T1395] FS:  00007fe867f6e0c0(0000) GS:ffff8880da000000(0000) knlGS:0000000000000000
-[   52.764039][ T1395] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   52.815008][ T1395] CR2: ffffffffb999e260 CR3: 00000000c26aa005 CR4: 00000000000606e0
-[   52.862312][ T1395] Call Trace:
-[   52.887133][ T1395] Modules linked in: dummy rmnet veth openvswitch nsh nf_conncount nf_nat nf_conntrack nf_dex
-[   52.936749][ T1395] CR2: ffffffffb999e260
-[   52.965695][ T1395] ---[ end trace 7e32ca99482dbb31 ]---
-[   52.966556][ T1395] RIP: 0010:stack_depot_fetch+0x10/0x30
-[   52.971083][ T1395] Code: ff e9 f9 fe ff ff 48 89 df e8 9c 1d 91 ff e9 ca fe ff ff cc cc cc cc cc cc cc 89 f8 0
-[   53.003650][ T1395] RSP: 0018:ffff8880c774bb60 EFLAGS: 00010006
-[   53.043183][ T1395] RAX: 00000000001f8880 RBX: ffff8880c774d140 RCX: 0000000000000000
-[   53.076480][ T1395] RDX: 000000000000001d RSI: ffff8880c774bb68 RDI: 0000000000003ff0
-[   53.093858][ T1395] RBP: ffffea00031dd200 R08: ffffed101b43e403 R09: ffffed101b43e403
-[   53.112795][ T1395] R10: 0000000000000001 R11: ffffed101b43e402 R12: ffff8880d900e5c0
-[   53.139837][ T1395] R13: ffff8880c774c000 R14: 0000000000000000 R15: dffffc0000000000
-[   53.141500][ T1395] FS:  00007fe867f6e0c0(0000) GS:ffff8880da000000(0000) knlGS:0000000000000000
-[   53.143343][ T1395] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   53.152007][ T1395] CR2: ffffffffb999e260 CR3: 00000000c26aa005 CR4: 00000000000606e0
-[   53.156459][ T1395] Kernel panic - not syncing: Fatal exception
-[   54.213570][ T1395] Shutting down cpus with NMI
-[   54.354112][ T1395] Kernel Offset: 0x33000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0x)
-[   54.355687][ T1395] Rebooting in 5 seconds..
-
-Fixes: b37f78f234bf ("net: qualcomm: rmnet: Fix crash on real dev unregistration")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Alexandru-Mihai Maftei <amaftei@solarflare.com>
+Acked-by: Martin Habets <mhabets@solarflare.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/qualcomm/rmnet/rmnet_config.c    | 35 +++++++++----------
- 1 file changed, 16 insertions(+), 19 deletions(-)
+ drivers/net/ethernet/sfc/ptp.c | 38 +++++++++++++++++++++++++++++++---
+ 1 file changed, 35 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-index 3c0e6d24d0834..e3fbf2331b965 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -61,9 +61,6 @@ static int rmnet_unregister_real_device(struct net_device *real_dev,
+diff --git a/drivers/net/ethernet/sfc/ptp.c b/drivers/net/ethernet/sfc/ptp.c
+index af15a737c6756..59b4f16896a81 100644
+--- a/drivers/net/ethernet/sfc/ptp.c
++++ b/drivers/net/ethernet/sfc/ptp.c
+@@ -560,13 +560,45 @@ efx_ptp_mac_nic_to_ktime_correction(struct efx_nic *efx,
+ 				    u32 nic_major, u32 nic_minor,
+ 				    s32 correction)
+ {
++	u32 sync_timestamp;
+ 	ktime_t kt = { 0 };
++	s16 delta;
  
- 	kfree(port);
- 
--	/* release reference on real_dev */
--	dev_put(real_dev);
--
- 	netdev_dbg(real_dev, "Removed from rmnet\n");
- 	return 0;
- }
-@@ -89,9 +86,6 @@ static int rmnet_register_real_device(struct net_device *real_dev)
- 		return -EBUSY;
- 	}
- 
--	/* hold on to real dev for MAP data */
--	dev_hold(real_dev);
--
- 	for (entry = 0; entry < RMNET_MAX_LOGICAL_EP; entry++)
- 		INIT_HLIST_HEAD(&port->muxed_ep[entry]);
- 
-@@ -162,6 +156,10 @@ static int rmnet_newlink(struct net *src_net, struct net_device *dev,
- 	if (err)
- 		goto err1;
- 
-+	err = netdev_upper_dev_link(real_dev, dev, extack);
-+	if (err < 0)
-+		goto err2;
+ 	if (!(nic_major & 0x80000000)) {
+ 		WARN_ON_ONCE(nic_major >> 16);
+-		/* Use the top bits from the latest sync event. */
+-		nic_major &= 0xffff;
+-		nic_major |= (last_sync_timestamp_major(efx) & 0xffff0000);
 +
- 	port->rmnet_mode = mode;
++		/* Medford provides 48 bits of timestamp, so we must get the top
++		 * 16 bits from the timesync event state.
++		 *
++		 * We only have the lower 16 bits of the time now, but we do
++		 * have a full resolution timestamp at some point in past. As
++		 * long as the difference between the (real) now and the sync
++		 * is less than 2^15, then we can reconstruct the difference
++		 * between those two numbers using only the lower 16 bits of
++		 * each.
++		 *
++		 * Put another way
++		 *
++		 * a - b = ((a mod k) - b) mod k
++		 *
++		 * when -k/2 < (a-b) < k/2. In our case k is 2^16. We know
++		 * (a mod k) and b, so can calculate the delta, a - b.
++		 *
++		 */
++		sync_timestamp = last_sync_timestamp_major(efx);
++
++		/* Because delta is s16 this does an implicit mask down to
++		 * 16 bits which is what we need, assuming
++		 * MEDFORD_TX_SECS_EVENT_BITS is 16. delta is signed so that
++		 * we can deal with the (unlikely) case of sync timestamps
++		 * arriving from the future.
++		 */
++		delta = nic_major - sync_timestamp;
++
++		/* Recover the fully specified time now, by applying the offset
++		 * to the (fully specified) sync time.
++		 */
++		nic_major = sync_timestamp + delta;
  
- 	hlist_add_head_rcu(&ep->hlnode, &port->muxed_ep[mux_id]);
-@@ -178,6 +176,8 @@ static int rmnet_newlink(struct net *src_net, struct net_device *dev,
- 
- 	return 0;
- 
-+err2:
-+	unregister_netdevice(dev);
- err1:
- 	rmnet_unregister_real_device(real_dev, port);
- err0:
-@@ -209,33 +209,30 @@ static void rmnet_dellink(struct net_device *dev, struct list_head *head)
- 		rmnet_vnd_dellink(mux_id, port, ep);
- 		kfree(ep);
- 	}
-+	netdev_upper_dev_unlink(real_dev, dev);
- 	rmnet_unregister_real_device(real_dev, port);
- 
- 	unregister_netdevice_queue(dev, head);
- }
- 
--static void rmnet_force_unassociate_device(struct net_device *dev)
-+static void rmnet_force_unassociate_device(struct net_device *real_dev)
- {
--	struct net_device *real_dev = dev;
- 	struct hlist_node *tmp_ep;
- 	struct rmnet_endpoint *ep;
- 	struct rmnet_port *port;
- 	unsigned long bkt_ep;
- 	LIST_HEAD(list);
- 
--	if (!rmnet_is_real_dev_registered(real_dev))
--		return;
--
- 	ASSERT_RTNL();
- 
--	port = rmnet_get_port_rtnl(dev);
-+	port = rmnet_get_port_rtnl(real_dev);
- 
--	rmnet_unregister_bridge(dev, port);
-+	rmnet_unregister_bridge(real_dev, port);
- 
- 	hash_for_each_safe(port->muxed_ep, bkt_ep, tmp_ep, ep, hlnode) {
-+		netdev_upper_dev_unlink(real_dev, ep->egress_dev);
- 		unregister_netdevice_queue(ep->egress_dev, &list);
- 		rmnet_vnd_dellink(ep->mux_id, port, ep);
--
- 		hlist_del_init_rcu(&ep->hlnode);
- 		kfree(ep);
- 	}
-@@ -248,15 +245,15 @@ static void rmnet_force_unassociate_device(struct net_device *dev)
- static int rmnet_config_notify_cb(struct notifier_block *nb,
- 				  unsigned long event, void *data)
- {
--	struct net_device *dev = netdev_notifier_info_to_dev(data);
-+	struct net_device *real_dev = netdev_notifier_info_to_dev(data);
- 
--	if (!dev)
-+	if (!rmnet_is_real_dev_registered(real_dev))
- 		return NOTIFY_DONE;
- 
- 	switch (event) {
- 	case NETDEV_UNREGISTER:
--		netdev_dbg(dev, "Kernel unregister\n");
--		rmnet_force_unassociate_device(dev);
-+		netdev_dbg(real_dev, "Kernel unregister\n");
-+		rmnet_force_unassociate_device(real_dev);
- 		break;
- 
- 	default:
-@@ -477,8 +474,8 @@ static int __init rmnet_init(void)
- 
- static void __exit rmnet_exit(void)
- {
--	unregister_netdevice_notifier(&rmnet_dev_notifier);
- 	rtnl_link_unregister(&rmnet_link_ops);
-+	unregister_netdevice_notifier(&rmnet_dev_notifier);
- }
- 
- module_init(rmnet_init)
+ 		kt = ptp->nic_to_kernel_time(nic_major, nic_minor,
+ 					     correction);
 -- 
 2.20.1
 
