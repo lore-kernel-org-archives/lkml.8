@@ -2,125 +2,87 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1255C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79179C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993FE20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584612249;
-	bh=+goVqRbZc/x72YFYtm/vQYIyeZrE8cv3tu6hC/wj+7Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i/pAlWhv1g2DRtVZsbjjfI81NF9Se0vF+aE8x/yf6XsykMGWID7QcewqCCKWnrbIN
-	 wvfD5w3TSty5T94voZ6oYbwIH3ZUFstT3RquQnTlm28YXPOnCmI5uvkn4KwktdCFVV
-	 H7h7Hcc1sEu1Z6PbcG0q+BWyHoLmbSaKPegZ/Opg=
+	by mail.kernel.org (Postfix) with ESMTP id 56CF22071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgCSKEI (ORCPT
+        id S1727091AbgCSKEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:04:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36724 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 06:04:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40638 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgCSKEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:04:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 963AA20732;
-        Thu, 19 Mar 2020 10:04:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584612248;
-        bh=+goVqRbZc/x72YFYtm/vQYIyeZrE8cv3tu6hC/wj+7Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JOktONSwAEwD1JkYbHyBBeO6ef114Ck6PsJtSfgagysSsm56x566xk37mID+w4oLE
-         8iSdkcZIti4dNKrrstbu/xmC7YpLSXIEB8bsGL9vlGB67CgkeVaGrGN1rVp5SLLz41
-         mebVQmzAo/CEyReAq13Rk49lOvE6vynSrlitLe6Q=
-Date:   Thu, 19 Mar 2020 11:04:05 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Caspar Zhang <caspar@linux.alibaba.com>
-Subject: Re: [PATCH 4.19 64/89] efi: Make efi_rts_work accessible to efi page
- fault handler
-Message-ID: <20200319100405.GB3514624@kroah.com>
-References: <20200317103259.744774526@linuxfoundation.org>
- <20200317103307.316400146@linuxfoundation.org>
- <158461093093.6873.1396457313254708957@build.alporthouse.com>
+        id S1725768AbgCSKEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:04:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 391C8ACD6;
+        Thu, 19 Mar 2020 10:04:22 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     kraxel@redhat.com
+Cc:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
+        Gurchetan Singh <gurchetansingh@chromium.org>
+Subject: [PATCH] drm/virtio: fix OOB in virtio_gpu_object_create
+Date:   Thu, 19 Mar 2020 11:04:21 +0100
+Message-Id: <20200319100421.16267-1-jslaby@suse.cz>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <158461093093.6873.1396457313254708957@build.alporthouse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 09:42:10AM +0000, Chris Wilson wrote:
-> Quoting Greg Kroah-Hartman (2020-03-17 10:55:13)
-> > From: Sai Praneeth <sai.praneeth.prakhya@intel.com>
-> > 
-> > commit 9dbbedaa6171247c4c7c40b83f05b200a117c2e0 upstream.
-> > 
-> > After the kernel has booted, if any accesses by firmware causes a page
-> > fault, the efi page fault handler would freeze efi_rts_wq and schedules
-> > a new process. To do this, the efi page fault handler needs
-> > efi_rts_work. Hence, make it accessible.
-> > 
-> > There will be no race conditions in accessing this structure, because
-> > all the calls to efi runtime services are already serialized.
-> > 
-> > Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
-> > Suggested-by: Matt Fleming <matt@codeblueprint.co.uk>
-> > Based-on-code-from: Ricardo Neri <ricardo.neri@intel.com>
-> > Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-> > Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > Fixes: 3eb420e70d87 (“efi: Use a work queue to invoke EFI Runtime Services”)
-> > Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-> > Cc: Caspar Zhang <caspar@linux.alibaba.com>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> This requires the fix from
-> 
-> commit ef1491e791308317bb9851a0ad380c4a68b58d54
-> Author: Waiman Long <longman@redhat.com>
-> Date:   Wed Nov 14 09:55:40 2018 -0800
-> 
->     efi: Fix debugobjects warning on 'efi_rts_work'
-> 
->     The following commit:
-> 
->       9dbbedaa6171 ("efi: Make efi_rts_work accessible to efi page fault handler")
-> 
->     converted 'efi_rts_work' from an auto variable to a global variable.
->     However, when submitting the work, INIT_WORK_ONSTACK() was still used,
->     causing the following complaint from debugobjects:
-> 
->       ODEBUG: object 00000000ed27b500 is NOT on stack 00000000c7d38760, but annotated.
-> 
->     Change the macro to just INIT_WORK() to eliminate the warning.
-> 
->     Signed-off-by: Waiman Long <longman@redhat.com>
->     Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->     Acked-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
->     Cc: Linus Torvalds <torvalds@linux-foundation.org>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Thomas Gleixner <tglx@linutronix.de>
->     Cc: linux-efi@vger.kernel.org
->     Fixes: 9dbbedaa6171 ("efi: Make efi_rts_work accessible to efi page fault handler")
->     Link: http://lkml.kernel.org/r/20181114175544.12860-2-ard.biesheuvel@linaro.org
->     Signed-off-by: Ingo Molnar <mingo@kernel.org>
+After commit f651c8b05542, virtio_gpu_create_object allocates too small
+space to fit everything in. It is because it allocates struct
+virtio_gpu_object, but should allocate a newly added struct
+virtio_gpu_object_shmem which has 2 more members.
 
-Thanks for this, now queued up.
+So fix that by using correct type in virtio_gpu_create_object.
 
-greg k-h
-> 
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Fixes: f651c8b05542 ("drm/virtio: factor out the sg_table from virtio_gpu_object")
+Cc: Gurchetan Singh <gurchetansingh@chromium.org>
+Cc: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_object.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+index 2bfb13d1932e..d9039bb7c5e3 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_object.c
++++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+@@ -123,15 +123,17 @@ bool virtio_gpu_is_shmem(struct virtio_gpu_object *bo)
+ struct drm_gem_object *virtio_gpu_create_object(struct drm_device *dev,
+ 						size_t size)
+ {
+-	struct virtio_gpu_object *bo;
++	struct virtio_gpu_object_shmem *shmem;
++	struct drm_gem_shmem_object *dshmem;
+ 
+-	bo = kzalloc(sizeof(*bo), GFP_KERNEL);
+-	if (!bo)
++	shmem = kzalloc(sizeof(*shmem), GFP_KERNEL);
++	if (!shmem)
+ 		return NULL;
+ 
+-	bo->base.base.funcs = &virtio_gpu_shmem_funcs;
+-	bo->base.map_cached = true;
+-	return &bo->base.base;
++	dshmem = &shmem->base.base;
++	dshmem->base.funcs = &virtio_gpu_shmem_funcs;
++	dshmem->map_cached = true;
++	return &dshmem->base;
+ }
+ 
+ static int virtio_gpu_object_shmem_init(struct virtio_gpu_device *vgdev,
+-- 
+2.25.1
+
