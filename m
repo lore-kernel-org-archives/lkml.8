@@ -2,53 +2,52 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335A6C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC43C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E503B20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4139D20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624668;
-	bh=TrcHvj+t0zhknyADv/MVGhq72AnAb4DxejAlu6KPi50=;
+	s=default; t=1584624674;
+	bh=UVIq3kfmmMt4OxRi/iwoPRHANQQVObbhqUMTpEQTYOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gWAgy32PPY6qm/GQ+X6Gm6O8ipsXo08D3LgqKiRtPFZYzYhFu1EXrbMM2gqJRI2vc
-	 kpN38T99RRNpREIWZknafVBnfOlxn0KN4yo26cmwCuhEQ3rAVTJjmweqsiPIiSD7Kx
-	 0l4EeGmY+zMtQZGZlch/EF+c84cZBBWZonAfdNYY=
+	b=Va2U7Y/gxOEUbeUIIo8Wmx4TsuitMu45q0YXCINmKDv7t1k4fdfLoFqVPN8DcbX7o
+	 l1PcYhk7/7dDOBahqSNfrc+i7/dSP9aPzLfcErl9X3mVkuKdfxdepH12QS1Neiiriq
+	 I/F8kecP+5I61IbJvh1L0xXinl9m+yHvRHubQmu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbgCSNbG (ORCPT
+        id S1728650AbgCSNS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:31:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42170 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:18:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729842AbgCSNTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:19:09 -0400
+        id S1728696AbgCSNSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:18:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82EB621556;
-        Thu, 19 Mar 2020 13:19:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19D2C214D8;
+        Thu, 19 Mar 2020 13:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623949;
-        bh=TrcHvj+t0zhknyADv/MVGhq72AnAb4DxejAlu6KPi50=;
+        s=default; t=1584623931;
+        bh=UVIq3kfmmMt4OxRi/iwoPRHANQQVObbhqUMTpEQTYOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ROSsNHA7MN7fn012yc+M+ZCrVYg4wTRpm4k4UVPpSzxQNkGj4hAcOFxbgJeYv2ap3
-         nMbqILPc/VjNc92ypAuxw9BmNCqyPSu5KtrdbBAaCGnn/BPXoYat9hdp7K3QOYV/0B
-         DbLpYn8qWxS3dhnTtJBcKMU6eCi2XpRk1X8EVBWA=
+        b=qduhFeHIhiUHTwo1frGI8+IRuQM/eBYQaiW2bNUUMLRKi0jl9UCaKo/EI8jYsOv7k
+         +xvOq1iENFlIkyE6TDNr7pZbQiM6zuREMh76WI1ZYPYExPYyoQmgZ8PsqQ7yEYpgnE
+         Oqz1XIrChCfrJvd1oTa3V9eUm8v2jxwetXeFvvsw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 4.14 97/99] ARM: 8958/1: rename missed uaccess .fixup section
-Date:   Thu, 19 Mar 2020 14:04:15 +0100
-Message-Id: <20200319124007.995068803@linuxfoundation.org>
+        Marek Lindner <mareklindner@neomailbox.ch>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.14 75/99] batman-adv: prevent TT request storms by not sending inconsistent TT TLVLs
+Date:   Thu, 19 Mar 2020 14:03:53 +0100
+Message-Id: <20200319124003.828460399@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -61,43 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Marek Lindner <mareklindner@neomailbox.ch>
 
-commit f87b1c49bc675da30d8e1e8f4b60b800312c7b90 upstream.
+commit 16116dac23396e73c01eeee97b102e4833a4b205 upstream.
 
-When the uaccess .fixup section was renamed to .text.fixup, one case was
-missed. Under ld.bfd, the orphaned section was moved close to .text
-(since they share the "ax" bits), so things would work normally on
-uaccess faults. Under ld.lld, the orphaned section was placed outside
-the .text section, making it unreachable.
+A translation table TVLV changset sent with an OGM consists
+of a number of headers (one per VLAN) plus the changeset
+itself (addition and/or deletion of entries).
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/282
-Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1020633#c44
-Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.1912032147340.17114@knanqh.ubzr
-Link: https://lore.kernel.org/lkml/202002071754.F5F073F1D@keescook/
+The per-VLAN headers are used by OGM recipients for consistency
+checks. Said consistency check might determine that a full
+translation table request is needed to restore consistency. If
+the TT sender adds per-VLAN headers of empty VLANs into the OGM,
+recipients are led to believe to have reached an inconsistent
+state and thus request a full table update. The full table does
+not contain empty VLANs (due to missing entries) the cycle
+restarts when the next OGM is issued.
 
-Fixes: c4a84ae39b4a5 ("ARM: 8322/1: keep .text and .fixup regions closer together")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Consequently, when the translation table TVLV headers are
+composed, empty VLANs are to be excluded.
+
+Fixes: 21a57f6e7a3b ("batman-adv: make the TT CRC logic VLAN specific")
+Signed-off-by: Marek Lindner <mareklindner@neomailbox.ch>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm/lib/copy_from_user.S |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/batman-adv/translation-table.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
---- a/arch/arm/lib/copy_from_user.S
-+++ b/arch/arm/lib/copy_from_user.S
-@@ -100,7 +100,7 @@ ENTRY(arm_copy_from_user)
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -941,15 +941,20 @@ batadv_tt_prepare_tvlv_local_data(struct
+ 	struct batadv_tvlv_tt_vlan_data *tt_vlan;
+ 	struct batadv_softif_vlan *vlan;
+ 	u16 num_vlan = 0;
+-	u16 num_entries = 0;
++	u16 vlan_entries = 0;
++	u16 total_entries = 0;
+ 	u16 tvlv_len;
+ 	u8 *tt_change_ptr;
+ 	int change_offset;
  
- ENDPROC(arm_copy_from_user)
+ 	spin_lock_bh(&bat_priv->softif_vlan_list_lock);
+ 	hlist_for_each_entry_rcu(vlan, &bat_priv->softif_vlan_list, list) {
++		vlan_entries = atomic_read(&vlan->tt.num_entries);
++		if (vlan_entries < 1)
++			continue;
++
+ 		num_vlan++;
+-		num_entries += atomic_read(&vlan->tt.num_entries);
++		total_entries += vlan_entries;
+ 	}
  
--	.pushsection .fixup,"ax"
-+	.pushsection .text.fixup,"ax"
- 	.align 0
- 	copy_abort_preamble
- 	ldmfd	sp!, {r1, r2, r3}
+ 	change_offset = sizeof(**tt_data);
+@@ -957,7 +962,7 @@ batadv_tt_prepare_tvlv_local_data(struct
+ 
+ 	/* if tt_len is negative, allocate the space needed by the full table */
+ 	if (*tt_len < 0)
+-		*tt_len = batadv_tt_len(num_entries);
++		*tt_len = batadv_tt_len(total_entries);
+ 
+ 	tvlv_len = *tt_len;
+ 	tvlv_len += change_offset;
+@@ -974,6 +979,10 @@ batadv_tt_prepare_tvlv_local_data(struct
+ 
+ 	tt_vlan = (struct batadv_tvlv_tt_vlan_data *)(*tt_data + 1);
+ 	hlist_for_each_entry_rcu(vlan, &bat_priv->softif_vlan_list, list) {
++		vlan_entries = atomic_read(&vlan->tt.num_entries);
++		if (vlan_entries < 1)
++			continue;
++
+ 		tt_vlan->vid = htons(vlan->vid);
+ 		tt_vlan->crc = htonl(vlan->tt.crc);
+ 
 
 
