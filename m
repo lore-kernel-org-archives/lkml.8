@@ -2,383 +2,164 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252B7C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A53C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E479720409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 458732072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:21:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584631307;
+	bh=F6q5btvbklLUG07V2Lwbtfvpc+8jDG0/MxA3HQ9VDtM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=NqPkL5x9tefe46YR2IILKJB3unWxFr83+ehks/MtjZIvqeh2NV/rUXP56xIHnoSYF
+	 QaPr6k3RLWjPNEgN+Q+pVzsSsedFvAPPXz6Pwm507bcIUnOGAsUKPZRmscsUQbwaSl
+	 vsKuEjN7EFSWAMyUSx5l0tgpNYxBwaGQsDV7a5q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgCSPQv (ORCPT
+        id S1727828AbgCSPVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:16:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:37610 "EHLO foss.arm.com"
+        Thu, 19 Mar 2020 11:21:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726795AbgCSPQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:16:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D57BE30E;
-        Thu, 19 Mar 2020 08:16:49 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 157663F52E;
-        Thu, 19 Mar 2020 08:16:48 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 15:16:47 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Tuan Phan <tuanphan@os.amperecomputing.com>
-Cc:     paches@amperecomputing.com, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] driver/perf: Add PMU driver for the ARM DMC-620 memory
- controller.
-Message-ID: <20200319151646.GC4876@lakrids.cambridge.arm.com>
-References: <1584491381-31492-1-git-send-email-tuanphan@os.amperecomputing.com>
+        id S1727540AbgCSPVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:21:45 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A324B20658;
+        Thu, 19 Mar 2020 15:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584631304;
+        bh=F6q5btvbklLUG07V2Lwbtfvpc+8jDG0/MxA3HQ9VDtM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JPA1J07If5eZNL6QR32IQDwuMxW4CIFSKTHedniqtt3qhjXMQhUB0dICE2zwCdK9P
+         nGKPdsozIqPbRjniOwNbVCEGMzJgiYD4vsaMD870QC6D5Dy5d4Zif2wVhbSZOrHljp
+         Z+KtwSGLZYHEmw+7UEHx938eVIzH5NvTBxnGMKsg=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jEwzO-00E0De-PQ; Thu, 19 Mar 2020 15:21:42 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584491381-31492-1-git-send-email-tuanphan@os.amperecomputing.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 19 Mar 2020 15:21:42 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v5 23/23] KVM: arm64: GICv4.1: Expose HW-based SGIs in
+ debugfs
+In-Reply-To: <4cb4c3d4-7b02-bb77-cd7a-c185346b6a2f@redhat.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-24-maz@kernel.org>
+ <4cb4c3d4-7b02-bb77-cd7a-c185346b6a2f@redhat.com>
+Message-ID: <45c282bddd43420024633943c1befac3@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: eric.auger@redhat.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, yuzenghui@huawei.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tuan,
+Hi Eric,
 
-On Tue, Mar 17, 2020 at 05:29:38PM -0700, Tuan Phan wrote:
-> DMC-620 PMU supports total 10 counters which each is
-> independently programmable to different events and can
-> be started and stopped individually.
-
-Looking at the TRM for DMC-620, the PMU registers are not in a separate
-frame from the other DMC control registers, and start at offset 0xA00
-(AKA 2560). I would generally expect that access to the DMC control
-registers was restricted to the secure world; is that not the case on
-your platform?
-
-I ask because if those are not restricted, the Normal world could
-potentially undermine the Secure world through this (e.g. playing with
-training settings, messing with the physical memory map, injecting RAS
-errors). Have you considered this?
-
-> DMC-620 PMU devices are named as arm_dmc620_<uid> where
-> <uid> is the UID of DMC-620 PMU ACPI node. Currently, it only
-> supports ACPI. Other platforms feel free to test and add
-> support for device tree.
+On 2020-03-19 15:05, Auger Eric wrote:
+> Hi Marc,
 > 
-> Usage example:
->   #perf stat -e arm_dmc620_0/clk_cycle_count/ -C 0
->   Get perf event for clk_cycle_count counter.
-> 
->   #perf stat -e arm_dmc620_0/clkdiv2_allocate,mask=0x1f,match=0x2f,
->   incr=2,invert=1/ -C 0
->   The above example shows how to specify mask, match, incr,
->   invert parameters for clkdiv2_allocate event.
+> On 3/4/20 9:33 PM, Marc Zyngier wrote:
+>> The vgic-state debugfs file could do with showing the pending state
+>> of the HW-backed SGIs. Plug it into the low-level code.
+>> 
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  virt/kvm/arm/vgic/vgic-debug.c | 14 +++++++++++++-
+>>  1 file changed, 13 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/virt/kvm/arm/vgic/vgic-debug.c 
+>> b/virt/kvm/arm/vgic/vgic-debug.c
+>> index cc12fe9b2df3..b13a9e3f99dd 100644
+>> --- a/virt/kvm/arm/vgic/vgic-debug.c
+>> +++ b/virt/kvm/arm/vgic/vgic-debug.c
+>> @@ -178,6 +178,8 @@ static void print_irq_state(struct seq_file *s, 
+>> struct vgic_irq *irq,
+>>  			    struct kvm_vcpu *vcpu)
+>>  {
+>>  	char *type;
+>> +	bool pending;
+> nit: can be directly initialized to irq->pending_latch
+>> +
+>>  	if (irq->intid < VGIC_NR_SGIS)
+>>  		type = "SGI";
+>>  	else if (irq->intid < VGIC_NR_PRIVATE_IRQS)
+>> @@ -190,6 +192,16 @@ static void print_irq_state(struct seq_file *s, 
+>> struct vgic_irq *irq,
+>>  	if (irq->intid ==0 || irq->intid == VGIC_NR_PRIVATE_IRQS)
+>>  		print_header(s, irq, vcpu);
+>> 
+>> +	pending = irq->pending_latch;
+>> +	if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+>> +		int err;
+>> +
+>> +		err = irq_get_irqchip_state(irq->host_irq,
+>> +					    IRQCHIP_STATE_PENDING,
+>> +					    &pending);
+>> +		WARN_ON_ONCE(err);
+>> +	}
+>> +
+>>  	seq_printf(s, "       %s %4d "
+>>  		      "    %2d "
+>>  		      "%d%d%d%d%d%d%d "
+>> @@ -201,7 +213,7 @@ static void print_irq_state(struct seq_file *s, 
+>> struct vgic_irq *irq,
+>>  		      "\n",
+>>  			type, irq->intid,
+>>  			(irq->target_vcpu) ? irq->target_vcpu->vcpu_id : -1,
+>> -			irq->pending_latch,
+>> +			pending,
+>>  			irq->line_level,
+>>  			irq->active,
+>>  			irq->enabled,
+>> 
+> The patch looks good to me but I am now lost about how we retrieve the
+> pending stat of other hw mapped interrupts. Looks we use
+> irq->pending_latch always. Is that correct?
 
-[...]
+Correct. GICv4.0 doesn't give us an architectural way to look at the
+vLPI pending state (there isn't even a guarantee about when the GIC
+will stop writing to memory, if it ever does).
 
-> +#define DMC620_CNT_MAX_PERIOD				0xffffffff
-> +#define DMC620_PMU_CLKDIV2_MAX_COUNTERS			8
-> +#define DMC620_PMU_CLK_MAX_COUNTERS			2
-> +#define DMC620_PMU_MAX_COUNTERS				\
-> +	(DMC620_PMU_CLKDIV2_MAX_COUNTERS + DMC620_PMU_CLK_MAX_COUNTERS)
-> +
-> +#define DMC620_PMU_OVERFLOW_STATUS_CLKDIV2_OFFSET	8
+With GICv4.1, you can introspect the HW state for SGIs. You can also
+look at the vLPI state by peeking at the virtual pending table, but
+you'd need to unmap the VPE first, which I obviously don't want to do
+for this debug interface, specially as it can be used whilst the guest
+is up and running.
 
-This appears to be relative to 0xA00. What exactly does your ACPI
-description provide? The whole set of DMC registers, or just the PMU
-registers?
+In the future, we'll have to implement that in order to support guest
+save/restore from a GICv4.1 system. I haven't given much thought to it
+though.
 
-[...]
-
-> +struct arm_dmc620_pmu {
-> +	struct pmu		pmu;
-> +	struct platform_device	*pdev;
-> +
-> +	void __iomem		*pmu_csr;
-
-Please call this `base` for consistency with other Arm Ltd PMU drivers.
-
-[...]
-
-> +static void arm_dmc620_pmu_enable_counter(struct perf_event *event)
-> +{
-> +	struct arm_dmc620_pmu *dmc620_pmu = to_dmc620_pmu(event->pmu);
-> +	unsigned int reg;
-> +
-> +	reg = arm_dmc620_pmu_counter_read32(dmc620_pmu,
-> +			  event->hw.idx, DMC620_PMU_COUNTER_CONTROL_OFFSET);
-> +	reg |= DMC620_PMU_COUNTER_CONTROL_ENABLE_MASK;
-> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
-> +			  event->hw.idx, DMC620_PMU_COUNTER_CONTROL_OFFSET,
-> +			  reg);
-> +}
-> +
-> +static void arm_dmc620_pmu_disable_counter(struct perf_event *event)
-> +{
-> +	struct arm_dmc620_pmu *dmc620_pmu = to_dmc620_pmu(event->pmu);
-> +	unsigned int reg;
-> +
-> +	reg = arm_dmc620_pmu_counter_read32(dmc620_pmu,
-> +			  event->hw.idx, DMC620_PMU_COUNTER_CONTROL_OFFSET);
-> +	reg &= ~DMC620_PMU_COUNTER_CONTROL_ENABLE_MASK;
-> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
-> +			  event->hw.idx, DMC620_PMU_COUNTER_CONTROL_OFFSET,
-> +			  reg);
-> +}
-> +
-> +static irqreturn_t arm_dmc620_pmu_handle_irq(int irq_num, void *dev)
-> +{
-> +	struct arm_dmc620_pmu *dmc620_pmu = dev;
-> +	struct perf_event *event;
-> +	bool handled = false;
-> +	unsigned long overflow_clkdiv2, overflow_clk;
-> +	int i;
-> +
-> +	overflow_clkdiv2 = readl(dmc620_pmu->pmu_csr +
-> +				DMC620_PMU_OVERFLOW_STATUS_CLKDIV2_OFFSET);
-> +	overflow_clk = readl(dmc620_pmu->pmu_csr +
-> +				DMC620_PMU_OVERFLOW_STATUS_CLK_OFFSET);
-> +	if (!overflow_clkdiv2 && !overflow_clk)
-> +		return IRQ_NONE;
-> +
-> +	for_each_set_bit(i, &overflow_clkdiv2,
-> +				DMC620_PMU_CLKDIV2_MAX_COUNTERS) {
-> +		/* clkdiv2 event overflow */
-> +		event = dmc620_pmu->act_counter[i];
-> +		if (!event)
-> +			continue;
-> +		arm_dmc620_pmu_disable_counter(event);
-> +		arm_dmc620_pmu_event_update(event);
-> +		arm_dmc620_pmu_event_set_period(event);
-> +		arm_dmc620_pmu_enable_counter(event);
-> +		handled = true;
-> +	}
-> +
-> +	for_each_set_bit(i, &overflow_clk,
-> +				DMC620_PMU_CLK_MAX_COUNTERS) {
-> +		/* clk event overflow */
-> +		event = dmc620_pmu->act_counter[i +
-> +			DMC620_PMU_CLKDIV2_MAX_COUNTERS];
-> +		if (!event)
-> +			continue;
-> +		arm_dmc620_pmu_disable_counter(event);
-> +		arm_dmc620_pmu_event_update(event);
-> +		arm_dmc620_pmu_event_set_period(event);
-> +		arm_dmc620_pmu_enable_counter(event);
-> +		handled = true;
-> +	}
-
-This isn't right for event groups, which need to start/stop all
-associated events atomically. Do we have PMU-wide start/stop controls
-that we can wrap the entire loop with, instead?
-
-
-
-> +
-> +	if (overflow_clkdiv2)
-> +		writel(0, dmc620_pmu->pmu_csr +
-> +			DMC620_PMU_OVERFLOW_STATUS_CLKDIV2_OFFSET);
-> +	if (overflow_clk)
-> +		writel(0, dmc620_pmu->pmu_csr +
-> +			DMC620_PMU_OVERFLOW_STATUS_CLK_OFFSET);
-
-IIUC we can race and miss an overflow here. If we don't have separate
-clear registers, we definitely need to stop all events in the handler,
-then check/clear their overflow bits, then re-enable all events.
-
-> +
-> +	return IRQ_RETVAL(handled);
-> +}
-> +
-> +static int arm_dmc620_pmu_event_init(struct perf_event *event)
-> +{
-> +	struct arm_dmc620_pmu *dmc620_pmu = to_dmc620_pmu(event->pmu);
-> +	struct hw_perf_event *hwc = &event->hw;
-> +	struct perf_event *sibling;
-> +
-> +	if (event->attr.type != event->pmu->type)
-> +		return -ENOENT;
-> +
-> +	/*
-> +	 * DMC 620 PMUs are shared across all cpus and cannot
-> +	 * support task bound and sampling events.
-> +	 */
-> +	if (is_sampling_event(event) ||
-> +		event->attach_state & PERF_ATTACH_TASK) {
-> +		dev_dbg(dmc620_pmu->pmu.dev,
-> +			"Can't support per-task counters\n");
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	if (event->cpu < 0) {
-> +		dev_dbg(dmc620_pmu->pmu.dev,
-> +			"Per-task mode not supported\n");
-> +		return -EOPNOTSUPP;
-> +	}
-> +	/*
-> +	 * Many perf core operations (eg. events rotation) operate on a
-> +	 * single CPU context. This is obvious for CPU PMUs, where one
-> +	 * expects the same sets of events being observed on all CPUs,
-> +	 * but can lead to issues for off-core PMUs, where each
-> +	 * event could be theoretically assigned to a different CPU. To
-> +	 * mitigate this, we enforce CPU assignment to one, selected
-> +	 * processor.
-> +	 */
-> +	event->cpu = cpumask_first(&dmc620_pmu->cpu);
-> +
-> +	/*
-> +	 * We must NOT create groups containing mixed PMUs, although software
-> +	 * events are acceptable
-> +	 */
-> +	if (event->group_leader->pmu != event->pmu &&
-> +			!is_software_event(event->group_leader))
-> +		return -EINVAL;
-> +
-> +	for_each_sibling_event(sibling, event->group_leader) {
-> +		if (sibling->pmu != event->pmu &&
-> +				!is_software_event(sibling))
-> +			return -EINVAL;
-> +	}
-
-The IRQ handler doesn't respect group semantics at the moment. If we
-don't have global start/stop controls, we must disallow groups.
-
-[...]
-
-> +static int arm_dmc620_pmu_add(struct perf_event *event, int flags)
-> +{
-> +	struct arm_dmc620_pmu *dmc620_pmu = to_dmc620_pmu(event->pmu);
-> +	struct hw_perf_event *hwc = &event->hw;
-> +	struct perf_event_attr *attr = &event->attr;
-> +	unsigned long reg;
-> +	int idx = 0;
-> +
-> +	idx = arm_dmc620_get_event_idx(event);
-> +	if (idx < 0)
-> +		return idx;
-> +
-> +	hwc->idx = idx;
-> +	dmc620_pmu->act_counter[idx] = event;
-> +	hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
-> +
-> +	/* Write to mask 31-00 register */
-> +	reg = ATTR_CFG_GET_FLD(attr, mask);
-> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
-> +			  event->hw.idx, DMC620_PMU_COUNTER_MASK_31_00_OFFSET,
-> +			  (unsigned int)(reg & 0xffffffff));
-> +	/* Write to mask 63-32 register */
-> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
-> +			  event->hw.idx, DMC620_PMU_COUNTER_MASK_63_32_OFFSET,
-> +			  (unsigned int)(reg >> 32));
-
-Please use the upper_32_bits() and lower_32_bits() helpers.
-
-> +
-> +	/* Write to match 31-00 register */
-> +	reg = ATTR_CFG_GET_FLD(attr, match);
-> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
-> +			  event->hw.idx, DMC620_PMU_COUNTER_MATCH_31_00_OFFSET,
-> +			  (unsigned int)(reg & 0xffffffff));
-> +	/* Write to match 63-32 register */
-> +	arm_dmc620_pmu_counter_write32(dmc620_pmu,
-> +			  event->hw.idx, DMC620_PMU_COUNTER_MATCH_63_32_OFFSET,
-> +			  (unsigned int)(reg >> 32));
-
-Likewise.
-
-[...]
-
-> +static int arm_dmc620_pmu_perf_init(struct arm_dmc620_pmu *dmc620_pmu)
-> +{
-> +	struct device *dev = &dmc620_pmu->pdev->dev;
-> +	unsigned long long value;
-> +	char *name;
-> +	acpi_handle handle;
-> +	acpi_status status;
-> +
-> +	dmc620_pmu->pmu = (struct pmu) {
-> +		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-> +		.task_ctx_nr	= perf_invalid_context,
-> +		.event_init	= arm_dmc620_pmu_event_init,
-> +		.add		= arm_dmc620_pmu_add,
-> +		.del		= arm_dmc620_pmu_del,
-> +		.start		= arm_dmc620_pmu_start,
-> +		.stop		= arm_dmc620_pmu_stop,
-> +		.read		= arm_dmc620_pmu_read,
-> +		.attr_groups	= arm_dmc620_pmu_attr_groups,
-> +	};
-> +
-> +	handle = ACPI_HANDLE(dev);
-> +	if (!handle)
-> +		return -ENODEV;
-> +
-> +	status = acpi_evaluate_integer(handle, METHOD_NAME__UID, NULL,
-> +					&value);
-> +	if (ACPI_FAILURE(status)) {
-> +		dev_err(dev, "Failed to evaluate _UID (0x%x)\n", status);
-> +		return -ENODEV;
-> +	}
-> +
-> +	name = devm_kasprintf(dev, GFP_KERNEL, "%s_%d", PMUNAME,
-> +				(unsigned int)value);
-
-Is there any guarantee `value` is unique?
-
-> +
-> +	return perf_pmu_register(&dmc620_pmu->pmu, name, -1);
-> +}
-
-> +static void arm_dmc620_pmu_perf_destroy(struct arm_dmc620_pmu *dmc620_pmu)
-> +{
-> +	perf_pmu_unregister(&dmc620_pmu->pmu);
-> +}
-> +
-> +static int arm_dmc620_pmu_cpu_startup(unsigned int cpu,
-> +				   struct hlist_node *node)
-> +{
-> +	struct arm_dmc620_pmu *dmc620_pmu = hlist_entry_safe(node,
-> +						struct arm_dmc620_pmu,
-> +						hotplug_node);
-> +
-> +	dmc620_pmu = hlist_entry_safe(node, struct arm_dmc620_pmu,
-> +					hotplug_node);
-> +	if (cpumask_empty(&dmc620_pmu->cpu))
-> +		cpumask_set_cpu(cpu, &dmc620_pmu->cpu);
-> +
-> +	/* Overflow interrupt also should use the same CPU */
-> +	WARN_ON(irq_set_affinity(dmc620_pmu->irq, &dmc620_pmu->cpu));
-
-We should only have to set the affinity if that changes, so above we can
-do:
-
-	if (!cpumask_empty(&dmc620_pmu->cpu))
-		return 0;
-
-[...]
-
-> +static int arm_dmc620_pmu_dev_init(struct arm_dmc620_pmu *dmc620_pmu)
-> +{
-> +	struct platform_device *pdev = dmc620_pmu->pdev;
-> +	int ret;
-> +
-> +	ret = devm_request_irq(&pdev->dev, dmc620_pmu->irq,
-> +				arm_dmc620_pmu_handle_irq,
-> +				IRQF_SHARED,
-> +				dev_name(&pdev->dev), dmc620_pmu);
-
-This should have IRQF_NOBALANCING | IRQF_NO_THREAD. I don't think we
-should have IRQF_SHARED.
-
-[...]
-
-> +static const struct acpi_device_id arm_dmc620_acpi_match[] = {
-> +	{ "ARMHD620", 0},
-> +	{},
-> +};
-
-Just to check, was this ID allocated by Arm, or have you allocated it?
+> For the patch:
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
 Thanks,
-Mark.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
