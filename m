@@ -2,318 +2,128 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EAAC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400D6C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B069620739
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0967F20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:18:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OdJZDRE3"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="aL/kN99q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgCSKQy (ORCPT
+        id S1727006AbgCSKSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:16:54 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55732 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgCSKQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:16:54 -0400
-Received: from zn.tnic (p200300EC2F0A850035180F69CBC86220.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:8500:3518:f69:cbc8:6220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 57D8D1EC0CF9;
-        Thu, 19 Mar 2020 11:16:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584613012;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=kyXB3LhXMlYk05dewzUxEywSSYigUP22lYt3Q49KHmI=;
-        b=OdJZDRE3k65QjZ/LHJJwYG2FZVA1/4CS3YUasQdlMaNOaQxumloXOafvMddSta9Lmp9mYT
-        vOHhz35eEaodYgWkBSGWw9zSLIay3NIjKQV0Ktorq9kwlDXEOdBM9dV+vFpCkOr++q0LUJ
-        TjuwZ8g+LaouH+iQR0GtJkZ76x8bYfA=
-Date:   Thu, 19 Mar 2020 11:16:57 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Borislav Petkov <bp@suse.de>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH -v2] treewide: Rename "unencrypted" to "decrypted"
-Message-ID: <20200319101657.GB13073@zn.tnic>
-References: <20200317111822.GA15609@zn.tnic>
+        Thu, 19 Mar 2020 06:18:16 -0400
+Received: from mail-mw2nam12on2060.outbound.protection.outlook.com ([40.107.244.60]:26209
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725767AbgCSKSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:18:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H1tkatth7CVsiYa97rHxPe6DLDeBKavCWicnLBhbNnNa6EOSbMnYlyjwLcafGmGnj5OEUISVo6lEyTCebtmqyHGWqCWZ/aL/m6LbyIWfc69hv/157TLxjVdJ6CM93vbrBi+KLK7aYDAea1A9GlKeIGjqC8n2++Zvsl+R1DhYHrUO1dDjoneVvC6r3u4pxkqtDpvitXT+zT92k9bXVP5nVerMqRWhpcduKVd6MfXFijKdmSQZiadIxHkI05/3RTAGdblJoUlp2DwsEy4/JI8J2LMi1rfi2p/3s6c08rdt4BoVQnd0Gi4bJtHiPoTHQh59IGWI6icnkJhmwqRVUrfjyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mo8e0pXhkGwPQEZRTSw0aOdffc0ir1EEXwgAoYdFxcA=;
+ b=jLSG179RhSQqdJDSWyMX/rtaxuAM0qTSbqkFYnZKsuDY1qrWSXFsH5zHuHsshKj2QuoEj0SbjReN4ABqwUO1I79HnSny3GQ7p+1DgUH8w3XcECaJg6evDpwSjRJKMZSmOru6DIjo5sqo0o9xeOWW6KBxfE8FQKfUv/R7drgyyT+AUFNOrVbZZjR9zpVfPujEC6hbwBvh94nLlbszvQ6hQOcxCKCW/QrD3fwS5az3zFTx2qDbXJcsRQgoh5aFMXw7/5rpFAhVMcZ6OLndRpkYJemXNmN2w8HbeKK17vPhPQ5dGRgcyS+aHUdoOadeKplkhT3d+Zs3ZG+EmvAP8txRFw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mo8e0pXhkGwPQEZRTSw0aOdffc0ir1EEXwgAoYdFxcA=;
+ b=aL/kN99qUGitTqWObhgqhfPe98f0Sl2IiL/rrDWEYE5m7vzidFJZwERh5DLxPYYXoKS50Boc4Qh5oZmW8Czr2DvsOIZam7R3ZpG4og3KYDWjrMg9L+Pu3i6jJWS9Ob0KKSi0B5fsfLL6FR8c6uWiuHgvJaxcQANhE5eaeltPjsQ=
+Received: from MN2PR05MB6141.namprd05.prod.outlook.com (2603:10b6:208:c7::25)
+ by MN2PR05MB6430.namprd05.prod.outlook.com (2603:10b6:208:da::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15; Thu, 19 Mar
+ 2020 10:18:09 +0000
+Received: from MN2PR05MB6141.namprd05.prod.outlook.com
+ ([fe80::d811:e1e3:563c:b15c]) by MN2PR05MB6141.namprd05.prod.outlook.com
+ ([fe80::d811:e1e3:563c:b15c%5]) with mapi id 15.20.2835.017; Thu, 19 Mar 2020
+ 10:18:08 +0000
+From:   Thomas Hellstrom <thellstrom@vmware.com>
+To:     "joro@8bytes.org" <joro@8bytes.org>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        Doug Covelli <dcovelli@vmware.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "jroedel@suse.de" <jroedel@suse.de>,
+        "jslaby@suse.cz" <jslaby@suse.cz>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>
+Subject: Re: [PATCH 63/70] x86/vmware: Add VMware specific handling for
+ VMMCALL under SEV-ES
+Thread-Topic: [PATCH 63/70] x86/vmware: Add VMware specific handling for
+ VMMCALL under SEV-ES
+Thread-Index: AQHV/c7ZOteOIAWN8UyHhBoVBotVIqhPs7+A
+Date:   Thu, 19 Mar 2020 10:18:08 +0000
+Message-ID: <5abc70ce42e1445b8ae097a38951b0aa6f67bac8.camel@vmware.com>
+References: <20200319091407.1481-1-joro@8bytes.org>
+         <20200319091407.1481-64-joro@8bytes.org>
+In-Reply-To: <20200319091407.1481-64-joro@8bytes.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=thellstrom@vmware.com; 
+x-originating-ip: [155.4.205.35]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9b707c62-5402-460e-4e63-08d7cbeed264
+x-ms-traffictypediagnostic: MN2PR05MB6430:|MN2PR05MB6430:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR05MB6430931CC0072E0121F26722A1F40@MN2PR05MB6430.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 0347410860
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(396003)(39860400002)(376002)(136003)(199004)(36756003)(81166006)(8676002)(81156014)(8936002)(66446008)(91956017)(76116006)(66476007)(6512007)(66556008)(66946007)(4744005)(2906002)(64756008)(2616005)(4326008)(6486002)(110136005)(6506007)(71200400001)(478600001)(26005)(186003)(5660300002)(54906003)(86362001)(7416002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6430;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tCCzaZjQ87474xfvc8a7iF8QljXkWir31FB1ldl1y33ZF4yTmnaSTO3r56xrZ+QDDLbo+c/vQqyJM0zBto9qNdP5CGXTJQhGdV4Nq6YlZo+wOy+sdZICfsZa0HTWBPKn4zv7ENpPKyJodsQuiGqcjcQZPwQHFBcDDl2q7N8jAeef2dMv2ERuDryDStFWQ4UjRz5ZMi1YOggyP2whnvYnHNYAwm6SZgEs/MpNq4KvHV69g5zqHvIqHOCBkzCsXonlNhq38iEP0W15z59HiGZbNCJiJvpX9brpsa7VrfXwWlKotPyIZTNRN4zNTg+Kc4e12DSaQ5bguaaFFHNOhRl/WPUO4qvof5F4Brbf5RT6C3pw7BwpdMY8v27Z3L4aPP5k7EUq/In7eUrTyP7F5hwU4YtRxgmsD9TrLF5tfrMw4Qq/3xpNcwCJiAA5QNai+sOg
+x-ms-exchange-antispam-messagedata: nEc/RJF+4teV1+NBaqg2KQikDnco/cHkELcTJKqVlQvnZOYdr/6wj06u4yVo62eOQX3gMazeBCfHu54Y2rlUXo/3JS+kSSQNGMkYtwuaFMjkkkllSlbXpASlNXEP8TYhTlhq+IK6IXi2cPf5AnexZg==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AD4E5ECE942544418011A3A4E96E3198@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200317111822.GA15609@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b707c62-5402-460e-4e63-08d7cbeed264
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2020 10:18:08.6509
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: F9ucOi0ghDSiwEzRa5tPWsYL+W3xeKqBM8PrcQriWFR3uPxaok127lLcB+GgupNAVp/dgOqZEkHXuND53Lbb2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6430
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-here's v2 with build breakage fixed on ppc and s390 (obviously I can't
-grep :-\) and commit message extended to explain more why.
-
-Thx.
-
----
-From: Borislav Petkov <bp@suse.de>
-Date: Tue, 17 Mar 2020 12:03:05 +0100
-
-Back then when the whole SME machinery started getting mainlined, it
-was agreed that for simplicity, clarity and sanity's sake, the terms
-denoting encrypted and not-encrypted memory should be "encrypted" and
-"decrypted". And the majority of the code sticks to that convention
-except those two. So rename them.
-
-The intent of "encrypted" and "decrypted" is to represent the binary
-concept of memory which is encrypted and of memory which is not.
-
-The further differentiation between decrypted and unencrypted memory is
-not needed in the code (for now) and therefore keep things simple by
-using solely the two terms.
-
-No functional changes.
-
-[ Convert forgotten s390 and ppc function variants. ]
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/powerpc/include/asm/mem_encrypt.h |  2 +-
- arch/powerpc/platforms/pseries/Kconfig |  2 +-
- arch/s390/Kconfig                      |  2 +-
- arch/s390/mm/init.c                    |  2 +-
- arch/x86/Kconfig                       |  2 +-
- arch/x86/mm/mem_encrypt.c              |  4 ++--
- include/linux/dma-direct.h             |  8 ++++----
- kernel/dma/Kconfig                     |  2 +-
- kernel/dma/direct.c                    | 14 +++++++-------
- kernel/dma/mapping.c                   |  2 +-
- 10 files changed, 20 insertions(+), 20 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/mem_encrypt.h b/arch/powerpc/include/asm/mem_encrypt.h
-index ba9dab07c1be..f0705cd3b079 100644
---- a/arch/powerpc/include/asm/mem_encrypt.h
-+++ b/arch/powerpc/include/asm/mem_encrypt.h
-@@ -15,7 +15,7 @@ static inline bool mem_encrypt_active(void)
- 	return is_secure_guest();
- }
- 
--static inline bool force_dma_unencrypted(struct device *dev)
-+static inline bool force_dma_decrypted(struct device *dev)
- {
- 	return is_secure_guest();
- }
-diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
-index 24c18362e5ea..a78e2c3e1d92 100644
---- a/arch/powerpc/platforms/pseries/Kconfig
-+++ b/arch/powerpc/platforms/pseries/Kconfig
-@@ -151,7 +151,7 @@ config PPC_SVM
- 	depends on PPC_PSERIES
- 	select SWIOTLB
- 	select ARCH_HAS_MEM_ENCRYPT
--	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+	select ARCH_HAS_FORCE_DMA_DECRYPTED
- 	help
- 	 There are certain POWER platforms which support secure guests using
- 	 the Protected Execution Facility, with the help of an Ultravisor
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 8abe77536d9d..ab1dbb7415b4 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -192,7 +192,7 @@ config S390
- 	select VIRT_CPU_ACCOUNTING
- 	select ARCH_HAS_SCALED_CPUTIME
- 	select HAVE_NMI
--	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+	select ARCH_HAS_FORCE_DMA_DECRYPTED
- 	select SWIOTLB
- 	select GENERIC_ALLOCATOR
- 
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index ac44bd76db4b..5fed85f9fea6 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -157,7 +157,7 @@ int set_memory_decrypted(unsigned long addr, int numpages)
- }
- 
- /* are we a protected virtualization guest? */
--bool force_dma_unencrypted(struct device *dev)
-+bool force_dma_decrypted(struct device *dev)
- {
- 	return is_prot_virt_guest();
- }
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index beea77046f9b..2ae904f505e1 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1525,7 +1525,7 @@ config AMD_MEM_ENCRYPT
- 	depends on X86_64 && CPU_SUP_AMD
- 	select DYNAMIC_PHYSICAL_MASK
- 	select ARCH_USE_MEMREMAP_PROT
--	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+	select ARCH_HAS_FORCE_DMA_DECRYPTED
- 	---help---
- 	  Say yes to enable support for the encryption of system memory.
- 	  This requires an AMD processor that supports Secure Memory
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index a03614bd3e1a..66d09f269e6d 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -350,8 +350,8 @@ bool sev_active(void)
- 	return sme_me_mask && sev_enabled;
- }
- 
--/* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
--bool force_dma_unencrypted(struct device *dev)
-+/* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_DECRYPTED */
-+bool force_dma_decrypted(struct device *dev)
- {
- 	/*
- 	 * For SEV, all DMA must be to unencrypted addresses.
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index 24b8684aa21d..9f955844e9c7 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -26,14 +26,14 @@ static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
- }
- #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
- 
--#ifdef CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED
--bool force_dma_unencrypted(struct device *dev);
-+#ifdef CONFIG_ARCH_HAS_FORCE_DMA_DECRYPTED
-+bool force_dma_decrypted(struct device *dev);
- #else
--static inline bool force_dma_unencrypted(struct device *dev)
-+static inline bool force_dma_decrypted(struct device *dev)
- {
- 	return false;
- }
--#endif /* CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED */
-+#endif /* CONFIG_ARCH_HAS_FORCE_DMA_DECRYPTED */
- 
- /*
-  * If memory encryption is supported, phys_to_dma will set the memory encryption
-diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-index 4c103a24e380..55c4147bb2b1 100644
---- a/kernel/dma/Kconfig
-+++ b/kernel/dma/Kconfig
-@@ -51,7 +51,7 @@ config ARCH_HAS_SYNC_DMA_FOR_CPU_ALL
- config ARCH_HAS_DMA_PREP_COHERENT
- 	bool
- 
--config ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+config ARCH_HAS_FORCE_DMA_DECRYPTED
- 	bool
- 
- config DMA_NONCOHERENT_CACHE_SYNC
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index ac7956c38f69..a0576c0ccacd 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -26,7 +26,7 @@ unsigned int zone_dma_bits __ro_after_init = 24;
- static inline dma_addr_t phys_to_dma_direct(struct device *dev,
- 		phys_addr_t phys)
- {
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		return __phys_to_dma(dev, phys);
- 	return phys_to_dma(dev, phys);
- }
-@@ -49,7 +49,7 @@ static gfp_t __dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- {
- 	u64 dma_limit = min_not_zero(dma_mask, dev->bus_dma_limit);
- 
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		*phys_limit = __dma_to_phys(dev, dma_limit);
- 	else
- 		*phys_limit = dma_to_phys(dev, dma_limit);
-@@ -138,7 +138,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 		return NULL;
- 
- 	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
--	    !force_dma_unencrypted(dev)) {
-+	    !force_dma_decrypted(dev)) {
- 		/* remove any dirty cache lines on the kernel alias */
- 		if (!PageHighMem(page))
- 			arch_dma_prep_coherent(page, size);
-@@ -179,7 +179,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 	}
- 
- 	ret = page_address(page);
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		set_memory_decrypted((unsigned long)ret, 1 << get_order(size));
- 
- 	memset(ret, 0, size);
-@@ -190,7 +190,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 		ret = uncached_kernel_address(ret);
- 	}
- done:
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		*dma_handle = __phys_to_dma(dev, page_to_phys(page));
- 	else
- 		*dma_handle = phys_to_dma(dev, page_to_phys(page));
-@@ -203,7 +203,7 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
- 	unsigned int page_order = get_order(size);
- 
- 	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
--	    !force_dma_unencrypted(dev)) {
-+	    !force_dma_decrypted(dev)) {
- 		/* cpu_addr is a struct page cookie, not a kernel address */
- 		dma_free_contiguous(dev, cpu_addr, size);
- 		return;
-@@ -213,7 +213,7 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
- 	    dma_free_from_pool(cpu_addr, PAGE_ALIGN(size)))
- 		return;
- 
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		set_memory_encrypted((unsigned long)cpu_addr, 1 << page_order);
- 
- 	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr))
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 98e3d873792e..dbd0605a39c5 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -154,7 +154,7 @@ EXPORT_SYMBOL(dma_get_sgtable_attrs);
-  */
- pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
- {
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		prot = pgprot_decrypted(prot);
- 	if (dev_is_dma_coherent(dev) ||
- 	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
--- 
-2.21.0
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+T24gVGh1LCAyMDIwLTAzLTE5IGF0IDEwOjE0ICswMTAwLCBKb2VyZyBSb2VkZWwgd3JvdGU6DQo+
+IEZyb206IERvdWcgQ292ZWxsaSA8ZGNvdmVsbGlAdm13YXJlLmNvbT4NCj4gDQo+IFRoaXMgY2hh
+bmdlIGFkZHMgVk13YXJlIHNwZWNpZmljIGhhbmRsaW5nIGZvciAjVkMgZmF1bHRzIGNhdXNlZCBi
+eQ0KPiBWTU1DQUxMIGluc3RydWN0aW9ucy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IERvdWcgQ292
+ZWxsaSA8ZGNvdmVsbGlAdm13YXJlLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogVG9tIExlbmRhY2t5
+IDx0aG9tYXMubGVuZGFja3lAYW1kLmNvbT4NCj4gWyBqcm9lZGVsQHN1c2UuZGU6IC0gQWRhcHQg
+dG8gZGlmZmVyZW50IHBhcmF2aXJ0IGludGVyZmFjZSBdDQo+IENvLWRldmVsb3BlZC1ieTogSm9l
+cmcgUm9lZGVsIDxqcm9lZGVsQHN1c2UuZGU+DQo+IFNpZ25lZC1vZmYtYnk6IEpvZXJnIFJvZWRl
+bCA8anJvZWRlbEBzdXNlLmRlPg0KPiAtLS0NCj4gIGFyY2gveDg2L2tlcm5lbC9jcHUvdm13YXJl
+LmMgfCA1MCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAtLS0tDQo+ICAxIGZp
+bGUgY2hhbmdlZCwgNDUgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gDQoNCkFja2Vk
+LWJ5OiBUaG9tYXMgSGVsbHN0cm9tIDx0aGVsbHN0cm9tQHZtd2FyZS5jb20+DQoNCg==
