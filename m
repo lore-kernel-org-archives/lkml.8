@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D93C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA76C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8E020781
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF8F20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623216;
-	bh=gyq2qv5W8EFBR/5uvjB7BlKDFoFR5pmtfN9IX40b4pU=;
+	s=default; t=1584623219;
+	bh=ybMxabZn+LAHW5r0IG3LlRQP9yHidLzv795RMLLHfhA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EEW3QtHXLgXUsNuA+mcilpsldXpLYDDkk8g46o5bpuHTiUn50INVknKhEOZkE3x1p
-	 W7nkbD9bUEB2pa7CJtchUOLz8MMuptxOjs70Y5fQh4ml/E8bFCEwSPDAKsPpwmtH8U
-	 QB1EJOV6cWH1ZMm288S+zIS4cxnVM3FVOkGCxUN0=
+	b=Oh7sCDtcqPymsh7YV0hubCz/4e1nJJ2c55zeaAEPf/Y3BMCBXKL3dUQJhmf/ZDWAc
+	 OHHkPekHroxpA/ZxCrL/hovNYxqZgJCfV4yLKXdevDLTd6ZBsfgkfajO9A5NpcDbaG
+	 sNu3jTKYEBaYfCsc7cLggiPY2JuJcG+isa11wRNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgCSNGy (ORCPT
+        id S1727785AbgCSNGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 19 Mar 2020 09:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50330 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:50260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbgCSNGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:06:53 -0400
+        id S1727770AbgCSNGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:06:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3D9B20776;
-        Thu, 19 Mar 2020 13:06:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DB8C20732;
+        Thu, 19 Mar 2020 13:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623213;
-        bh=gyq2qv5W8EFBR/5uvjB7BlKDFoFR5pmtfN9IX40b4pU=;
+        s=default; t=1584623210;
+        bh=ybMxabZn+LAHW5r0IG3LlRQP9yHidLzv795RMLLHfhA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1LIV9EWd91X1cEYe4NvA9RRpu+Mmfv8fusgfxL7zBsOVq+kdzMR0Z0PLf/GloF81A
-         fc0AO40NAYAVw5qUVa/2I+T+DVskgQnURHNeeZddU0tgv4oPtbGhx+zsaahSjqbQSc
-         LAumKi2dEQh8Ic/MexkW+B9pmXzsfmHNQZN706sM=
+        b=KeEY22qDnh/DdvSoqftFCFkoMbtpdmZwWlRgf3o29WN/TnF25oJF4DbaU7JkzPYjj
+         OnGzRSU5maN7eY41HcfFzAXOjVLAJ+UoDZU2FwwHsbIyLLmyJr1+7b4xX8P0HgobER
+         g2eq7JkctGlxBqWwWhJrXvrJ7X7leodKVCl/6ZgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Schiffer <mschiffer@universe-factory.net>,
         Sven Eckelmann <sven@narfation.org>,
         Marek Lindner <mareklindner@neomailbox.ch>,
         Antonio Quartulli <a@unstable.cc>
-Subject: [PATCH 4.4 46/93] batman-adv: Drop reference to netdevice on last reference
-Date:   Thu, 19 Mar 2020 13:59:50 +0100
-Message-Id: <20200319123939.625583196@linuxfoundation.org>
+Subject: [PATCH 4.4 45/93] batman-adv: Deactivate TO_BE_ACTIVATED hardif on shutdown
+Date:   Thu, 19 Mar 2020 13:59:49 +0100
+Message-Id: <20200319123939.275764946@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -62,68 +63,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sven Eckelmann <sven@narfation.org>
 
-commit 140ed8e87ca8f4875c2b146cdb2cdbf0c9ac6080 upstream.
+commit f2d23861b818d08bcd15cc1612ae94aa33b3931c upstream.
 
-The references to the network device should be dropped inside the release
-function for batadv_hard_iface similar to what is done with the batman-adv
-internal datastructures.
+The shutdown of an batman-adv interface can happen with one of its slave
+interfaces still being in the BATADV_IF_TO_BE_ACTIVATED state. A possible
+reason for it is that the routing algorithm BATMAN_V was selected and
+batadv_schedule_bat_ogm was not yet called for this interface. This slave
+interface still has to be set to BATADV_IF_INACTIVE or the batman-adv
+interface will never reduce its usage counter and thus never gets shutdown.
 
+This problem can be simulated via:
+
+    $ modprobe dummy
+    $ modprobe batman-adv routing_algo=BATMAN_V
+    $ ip link add bat0 type batadv
+    $ ip link set dummy0 master bat0
+    $ ip link set dummy0 up
+    $ ip link del bat0
+    unregister_netdevice: waiting for bat0 to become free. Usage count = 3
+
+Reported-by: Matthias Schiffer <mschiffer@universe-factory.net>
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Marek Lindner <mareklindner@neomailbox.ch>
 Signed-off-by: Antonio Quartulli <a@unstable.cc>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/hard-interface.c |   13 ++++++++-----
- net/batman-adv/hard-interface.h |    6 +++---
- 2 files changed, 11 insertions(+), 8 deletions(-)
+ net/batman-adv/hard-interface.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 --- a/net/batman-adv/hard-interface.c
 +++ b/net/batman-adv/hard-interface.c
-@@ -45,13 +45,16 @@
- #include "sysfs.h"
- #include "translation-table.h"
+@@ -562,8 +562,7 @@ void batadv_hardif_disable_interface(str
+ 	struct batadv_priv *bat_priv = netdev_priv(hard_iface->soft_iface);
+ 	struct batadv_hard_iface *primary_if = NULL;
  
--void batadv_hardif_free_rcu(struct rcu_head *rcu)
-+/**
-+ * batadv_hardif_release - release hard interface from lists and queue for
-+ *  free after rcu grace period
-+ * @hard_iface: the hard interface to free
-+ */
-+void batadv_hardif_release(struct batadv_hard_iface *hard_iface)
- {
--	struct batadv_hard_iface *hard_iface;
--
--	hard_iface = container_of(rcu, struct batadv_hard_iface, rcu);
- 	dev_put(hard_iface->net_dev);
--	kfree(hard_iface);
-+
-+	kfree_rcu(hard_iface, rcu);
- }
+-	if (hard_iface->if_status == BATADV_IF_ACTIVE)
+-		batadv_hardif_deactivate_interface(hard_iface);
++	batadv_hardif_deactivate_interface(hard_iface);
  
- struct batadv_hard_iface *
---- a/net/batman-adv/hard-interface.h
-+++ b/net/batman-adv/hard-interface.h
-@@ -61,18 +61,18 @@ void batadv_hardif_disable_interface(str
- void batadv_hardif_remove_interfaces(void);
- int batadv_hardif_min_mtu(struct net_device *soft_iface);
- void batadv_update_min_mtu(struct net_device *soft_iface);
--void batadv_hardif_free_rcu(struct rcu_head *rcu);
-+void batadv_hardif_release(struct batadv_hard_iface *hard_iface);
- 
- /**
-  * batadv_hardif_free_ref - decrement the hard interface refcounter and
-- *  possibly free it
-+ *  possibly release it
-  * @hard_iface: the hard interface to free
-  */
- static inline void
- batadv_hardif_free_ref(struct batadv_hard_iface *hard_iface)
- {
- 	if (atomic_dec_and_test(&hard_iface->refcount))
--		call_rcu(&hard_iface->rcu, batadv_hardif_free_rcu);
-+		batadv_hardif_release(hard_iface);
- }
- 
- static inline struct batadv_hard_iface *
+ 	if (hard_iface->if_status != BATADV_IF_INACTIVE)
+ 		goto out;
 
 
