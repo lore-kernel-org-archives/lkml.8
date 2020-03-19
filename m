@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C597DC43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FABC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F10208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3802080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624371;
-	bh=pedXLTfJpQVGrJP7cjM0hvFmyCL6sf5H6VR6PRA7Ru4=;
+	s=default; t=1584624374;
+	bh=wgmoLWEcseM6n7d6+U/LOI7cmzjZ0l1QeI4r/EulqzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i013EG/7l1DXYKSkiu0tsknBPCPoyU49vYyQIvQK2+yN1kLWbmjwGF1d8WgeTOOPT
-	 JZKd/YufwgDsJSK5gDWTeFMOnPbnNgTeXnMx0EZsAQbqlqJvjvDRXuGBG7YCzod0d1
-	 s8SwsACt7rnOM/JqJ5Q5aDvu4T6N9tos+fWPKBfc=
+	b=pV3cf5VKaAuMCt+jMncsLw8CAok5h0uRjxEiGHU8kz3LpqYaSiCjgeswhxeSs7uRZ
+	 MtokkkmDrVi6vyA0DvevVP1Okj30rNE5aWZRxVgj1qE1k1Jc98pR5TcTykwJRKg9u0
+	 sGWCvBFuTqpQtl5K38JI/lHuQfvGhUJj1zkRA7yQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730750AbgCSN0K (ORCPT
+        id S1730137AbgCSN0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:26:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53952 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:26:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730738AbgCSN0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:26:05 -0400
+        id S1730748AbgCSN0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:26:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1A4C20CC7;
-        Thu, 19 Mar 2020 13:26:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87879207FC;
+        Thu, 19 Mar 2020 13:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624365;
-        bh=pedXLTfJpQVGrJP7cjM0hvFmyCL6sf5H6VR6PRA7Ru4=;
+        s=default; t=1584624369;
+        bh=wgmoLWEcseM6n7d6+U/LOI7cmzjZ0l1QeI4r/EulqzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mFXmW0vrkNQknJrum9j/+ZG88wQ8RErHW6y9V1Y8ddJzyj4eJIIr+aW53/r/xNapU
-         lqxH7EcNvOlI8hG/LiGXZWL54xsPN423WmjZ2gPFcPq3Swoq84Vhf4J6iRM1z0eQRL
-         83RMssfWjosq/BormVF3LhEwJWTTvkDQZxuM3+Sc=
+        b=E4zEvVKVD8Xs1wzKC2X8X4sOLnSe9JPLvt7XREje0rxm3jftEukS/ETUdcZOvXleT
+         A9jZWdoOO4q6DUt/oMoHkLo+4zK+DcHOJZaVM26k2ta4EVhIKS9WxgHqiLJ6kfgf9C
+         rhBgA1EWdkJZjSneJsKhxsBUatcKz4uMthRk4Mo4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Esben Haabendal <esben@geanix.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 08/65] mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for erase/trim/discard
-Date:   Thu, 19 Mar 2020 14:03:50 +0100
-Message-Id: <20200319123928.860588815@linuxfoundation.org>
+Subject: [PATCH 5.5 30/65] net: ll_temac: Add more error handling of dma_map_single() calls
+Date:   Thu, 19 Mar 2020 14:04:12 +0100
+Message-Id: <20200319123935.928919642@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -64,49 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Esben Haabendal <esben@geanix.com>
 
-[ Upstream commit 43cc64e5221cc6741252b64bc4531dd1eefb733d ]
+[ Upstream commit d07c849cd2b97d6809430dfb7e738ad31088037a ]
 
-The busy timeout that is computed for each erase/trim/discard operation,
-can become quite long and may thus exceed the host->max_busy_timeout. If
-that becomes the case, mmc_do_erase() converts from using an R1B response
-to an R1 response, as to prevent the host from doing HW busy detection.
+This adds error handling to the remaining dma_map_single() calls, so that
+behavior is well defined if/when we run out of DMA memory.
 
-However, it has turned out that some hosts requires an R1B response no
-matter what, so let's respect that via checking MMC_CAP_NEED_RSP_BUSY. Note
-that, if the R1B gets enforced, the host becomes fully responsible of
-managing the needed busy timeout, in one way or the other.
-
-Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Tested-by: Anders Roxell <anders.roxell@linaro.org>
-Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Tested-by: Faiz Abbas <faiz_abbas@ti.com>
-Tested-By: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 92744989533c ("net: add Xilinx ll_temac device driver")
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 26 +++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index abf8f5eb0a1c8..26644b7ec13e3 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -1732,8 +1732,11 @@ static int mmc_do_erase(struct mmc_card *card, unsigned int from,
- 	 * the erase operation does not exceed the max_busy_timeout, we should
- 	 * use R1B response. Or we need to prevent the host from doing hw busy
- 	 * detection, which is done by converting to a R1 response instead.
-+	 * Note, some hosts requires R1B, which also means they are on their own
-+	 * when it comes to deal with the busy timeout.
- 	 */
--	if (card->host->max_busy_timeout &&
-+	if (!(card->host->caps & MMC_CAP_NEED_RSP_BUSY) &&
-+	    card->host->max_busy_timeout &&
- 	    busy_timeout > card->host->max_busy_timeout) {
- 		cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_AC;
- 	} else {
+diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+index fd578568b3bff..fd4231493449b 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac_main.c
++++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+@@ -367,6 +367,8 @@ static int temac_dma_bd_init(struct net_device *ndev)
+ 		skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
+ 					      XTE_MAX_JUMBO_FRAME_SIZE,
+ 					      DMA_FROM_DEVICE);
++		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr))
++			goto out;
+ 		lp->rx_bd_v[i].phys = cpu_to_be32(skb_dma_addr);
+ 		lp->rx_bd_v[i].len = cpu_to_be32(XTE_MAX_JUMBO_FRAME_SIZE);
+ 		lp->rx_bd_v[i].app0 = cpu_to_be32(STS_CTRL_APP0_IRQONEND);
+@@ -863,12 +865,13 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
+ 				      skb_headlen(skb), DMA_TO_DEVICE);
+ 	cur_p->len = cpu_to_be32(skb_headlen(skb));
++	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr)))
++		return NETDEV_TX_BUSY;
+ 	cur_p->phys = cpu_to_be32(skb_dma_addr);
+ 	ptr_to_txbd((void *)skb, cur_p);
+ 
+ 	for (ii = 0; ii < num_frag; ii++) {
+-		lp->tx_bd_tail++;
+-		if (lp->tx_bd_tail >= TX_BD_NUM)
++		if (++lp->tx_bd_tail >= TX_BD_NUM)
+ 			lp->tx_bd_tail = 0;
+ 
+ 		cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+@@ -876,6 +879,25 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 					      skb_frag_address(frag),
+ 					      skb_frag_size(frag),
+ 					      DMA_TO_DEVICE);
++		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr)) {
++			if (--lp->tx_bd_tail < 0)
++				lp->tx_bd_tail = TX_BD_NUM - 1;
++			cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
++			while (--ii >= 0) {
++				--frag;
++				dma_unmap_single(ndev->dev.parent,
++						 be32_to_cpu(cur_p->phys),
++						 skb_frag_size(frag),
++						 DMA_TO_DEVICE);
++				if (--lp->tx_bd_tail < 0)
++					lp->tx_bd_tail = TX_BD_NUM - 1;
++				cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
++			}
++			dma_unmap_single(ndev->dev.parent,
++					 be32_to_cpu(cur_p->phys),
++					 skb_headlen(skb), DMA_TO_DEVICE);
++			return NETDEV_TX_BUSY;
++		}
+ 		cur_p->phys = cpu_to_be32(skb_dma_addr);
+ 		cur_p->len = cpu_to_be32(skb_frag_size(frag));
+ 		cur_p->app0 = 0;
 -- 
 2.20.1
 
