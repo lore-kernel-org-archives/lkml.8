@@ -2,100 +2,117 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EA2C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C60EC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734DC2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0C020775
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584632038;
-	bh=jd+G1ZXXV6Rkt+GeOtGC574lN8RiNuBcxcec4Go/w9Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xM57w0aaRuFaEc29hP3NwoJAVtpIerZ6KFIEd9QfjCIto4aat8j/GgaPf+fROMBej
-	 5frtcPVDqJ81JoZSm4MYyWecnykofDBHpc5BVP6YPNGCS0so3+W5OEu27wSBpTpNmT
-	 5qP+bcBo5CE31tJOhepvYqhHiqBQJBQhYvlg/Ns0=
+	s=default; t=1584632111;
+	bh=U0zvkTyO6XZ+r+32D+94F9PaRMQWUIdlGZPDD9JteaM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BbLnJwd8j9eM/4Lbm45uu50+6hvBikI+y9Zm7fv+tC5XVGSUR4dCPkGqajh4XHhUr
+	 GqHgmHZlhVgR6Re36cUEGEZOx6Pq2NLrgDoNzAPJ538RoTn8ulpAhhOJBjv5wwC8vk
+	 S2wB6SbVtjcq13UzZhpFN3tJqhfFbr8CJ9/zpCUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgCSPd5 (ORCPT
+        id S1727907AbgCSPfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:33:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbgCSPd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:33:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 452032071C;
-        Thu, 19 Mar 2020 15:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584632036;
-        bh=jd+G1ZXXV6Rkt+GeOtGC574lN8RiNuBcxcec4Go/w9Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RYBhvYmU0QMgqTdV3Y5Uze1eZpOjJ4fx0clF9xAlLu2XJH8gT4s9DSb7EJ7RWJ1WB
-         DVjZSmcvVbl/Kpp7n3wR8SDL3OWWZ2gi0QJzj1yalGvvKQjMU4YATVzlHXVSOIe4Tr
-         PASt4nDgbvk4f1tACPVNsn4VnjRLskPnJ2DnsS5Q=
-Date:   Thu, 19 Mar 2020 16:33:54 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>
-Subject: Re: [PATCH 5.5 00/65] 5.5.11-rc1 review
-Message-ID: <20200319153354.GA133412@kroah.com>
-References: <20200319123926.466988514@linuxfoundation.org>
- <fcf6db4c-cebe-9ad3-9f19-00d49a7b1043@roeck-us.net>
- <20200319145900.GC92193@kroah.com>
- <32c627bf-0e6b-8bc4-88d3-032a69484aa6@roeck-us.net>
+        Thu, 19 Mar 2020 11:35:09 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:21122 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbgCSPfJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:35:09 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02JFYfKx010180;
+        Fri, 20 Mar 2020 00:34:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02JFYfKx010180
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1584632082;
+        bh=ZudRjw8d2mmE6Qh0MNmRmyStzy23KZnPj7KGn+JhVk4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IO+hiNmLXYruFLdzoVMQNC5p4AT+C+SS2aDSDJHXJIZ1CW5COBIZshODKxYi69o6R
+         0m3CilCMjWrrxZOSBWkP6xZDUasCG2dmf1hxxVLDVFenfqTHZ8hxelBswxUb7uPZCJ
+         XZTjCrjZFlAfhJFwsoVUJe4g9VTbh0ckEijjPDL6joVoqv1hceqQocA/l0fvGxIsbw
+         lUPH7TFYsi+ZGUYt3uUD0bVXPnVetljYdIKLoKCSLOILuMxxmJZw9S8rBBdJ0vxy3l
+         2dv1776bkZ+3CudusR6j167fNy7+xF7h1iXlpbK0UNSOhcmNlJNG6fBmzFJHPv6Jqz
+         M2tqRv44NILXQ==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id j2so945647uak.9;
+        Thu, 19 Mar 2020 08:34:42 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3a6wlyeR3U1iBJMiz165v55xVGGe5Qhy98Akqz/3loRFQYS4Mr
+        SsfTjSjuf9pHnf/4R7xzCAuT9o/l+dFhbGMxf3c=
+X-Google-Smtp-Source: ADFU+vt3y1uz57wFaSIYffv4+/U5DMz8PYOgRl8m+08bn6AZbd9wh2PcZ8DWrvfAGgwXzg7GPW0S09jfOPg8WVuy0kw=
+X-Received: by 2002:ab0:3485:: with SMTP id c5mr2220678uar.109.1584632080969;
+ Thu, 19 Mar 2020 08:34:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <32c627bf-0e6b-8bc4-88d3-032a69484aa6@roeck-us.net>
+References: <20200317000718.177637-1-slyfox@gentoo.org> <nycvar.YFH.7.76.2003170154580.19500@cbobk.fhfr.pm>
+ <nycvar.YFH.7.76.2003170240410.19500@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.2003170240410.19500@cbobk.fhfr.pm>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 20 Mar 2020 00:34:05 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARKBjfYsqvaksDhSwhDHxLv0o6c8cLx=eWuVYGHCGZ_Sw@mail.gmail.com>
+Message-ID: <CAK7LNARKBjfYsqvaksDhSwhDHxLv0o6c8cLx=eWuVYGHCGZ_Sw@mail.gmail.com>
+Subject: Re: [PATCH] Makefile: disallow data races on gcc-10 as well
+To:     Jiri Kosina <jikos@kernel.org>,
+        Sergei Trofimovich <slyfox@gentoo.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 08:15:40AM -0700, Guenter Roeck wrote:
-> On 3/19/20 7:59 AM, Greg Kroah-Hartman wrote:
-> > On Thu, Mar 19, 2020 at 07:44:33AM -0700, Guenter Roeck wrote:
-> >> On 3/19/20 6:03 AM, Greg Kroah-Hartman wrote:
-> >>> This is the start of the stable review cycle for the 5.5.11 release.
-> >>> There are 65 patches in this series, all will be posted as a response
-> >>> to this one.  If anyone has any issues with these being applied, please
-> >>> let me know.
-> >>>
-> >>> Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
-> >>> Anything received after that time might be too late.
-> >>>
-> >>
-> >> arm:davinci_all_defconfig fails to build.
-> >>
-> >> include/linux/gpio/driver.h: In function 'gpiochip_populate_parent_fwspec_twocell':
-> >> include/linux/gpio/driver.h:552:1: error: no return statement in function returning non-void [-Werror=return-type]
-> >>   552 | }
-> >>
-> >> The problem is caused by commit 8db6a5905e98 ("gpiolib: Add support for the
-> >> irqdomain which doesn't use irq_fwspec as arg") which is missing its fix,
-> >> commit 9c6722d85e922 ("gpio: Fix the no return statement warning"). That one
-> >> is missing a Fixes: tag, providing a good example why such tags are desirable.
-> > 
-> > Thanks for letting me know, I've now dropped that patch (others
-> > complained about it for other reasons) and will push out a -rc2 with
-> > that fix.
-> > 
-> 
-> I did wonder why the offending patch was included, but then I figured that
-> I lost the "we apply too many patches to stable releases" battle, and I didn't
-> want to re-litigate it.
+On Tue, Mar 17, 2020 at 10:41 AM Jiri Kosina <jikos@kernel.org> wrote:
+>
+> On Tue, 17 Mar 2020, Jiri Kosina wrote:
+>
+> > > The flag change happened at https://gcc.gnu.org/PR92046.
+> > >
+> > > CC: Jiri Kosina <jkosina@suse.cz>
+> > > CC: Masahiro Yamada <masahiroy@kernel.org>
+> > > CC: Michal Marek <michal.lkml@markovi.net>
+> > > CC: linux-kbuild@vger.kernel.org
+> > > Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
+> > > ---
+> > >  Makefile | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/Makefile b/Makefile
+> > > index 171f2b004c8a..9696eb2cd5a1 100644
+> > > --- a/Makefile
+> > > +++ b/Makefile
+> > > @@ -714,6 +714,7 @@ endif
+> > >
+> > >  # Tell gcc to never replace conditional load with a non-conditional one
+> > >  KBUILD_CFLAGS      += $(call cc-option,--param=allow-store-data-races=0)
+> > > +KBUILD_CFLAGS      += $(call cc-option,-fno-allow-store-data-races)
+> >
+> > I have to say I can't really read gcc sources without major cerebral pain,
+> > so let me me dense here: what happens to gcc<10 if you pass
+> > -fno-allow-store-data-races to it?
+>
+> Sorry, brainfart on my side, your patch is good :)
+>
+>         Acked-by: Jiri Kosina <jkosina@suse.cz>
+>
+> Thanks,
+>
+> --
+> Jiri Kosina
+> SUSE Labs
+>
 
-It wasn't that, it was a pre-requisite for patch #2.  patch #2 was
-reworked so we could drop this one.
+Applied to linux-kbuild with Jiri's Ack.
 
-thanks,
+Thanks.
 
-greg k-h
+-- 
+Best Regards
+Masahiro Yamada
