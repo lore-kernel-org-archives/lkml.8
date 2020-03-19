@@ -2,72 +2,117 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B52AC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 055B2C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C74220767
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D136720767
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:22:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbgCSXUc (ORCPT
+        id S1727520AbgCSXWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:20:32 -0400
-Received: from mga02.intel.com ([134.134.136.20]:52795 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727258AbgCSXUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:20:31 -0400
-IronPort-SDR: 8xhBghOgH8dLeI7AKPAzEDl8892xTKWJAOZDPDrQNWznVg3xFhXpD2fR5TmvxxDgp/LtPZ7rnL
- hShL0uTgfuTA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 16:20:30 -0700
-IronPort-SDR: HadMi20uLVxGJHG83LdM8Njh7ZI/TT88bere7YVaDRqKjeXLCDNzL6hBB8Cujxa/7djijHK2GA
- 9elU9z1ZdyFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,573,1574150400"; 
-   d="scan'208";a="245314583"
-Received: from samirson-mobl1.amr.corp.intel.com (HELO [10.255.231.67]) ([10.255.231.67])
-  by orsmga003.jf.intel.com with ESMTP; 19 Mar 2020 16:20:30 -0700
-Subject: Re: [PATCH v17 09/12] PCI/AER: Allow clearing Error Status Register
- in FF mode
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Austin.Bolen@dell.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ashok.raj@intel.com,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>
-References: <20200319230303.GA26334@google.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <6ae88659-7c15-900a-c56d-c08c1f40f3c6@linux.intel.com>
-Date:   Thu, 19 Mar 2020 16:20:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 19 Mar 2020 19:22:32 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:43782 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727258AbgCSXWc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 19:22:32 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 1910A1C0320; Fri, 20 Mar 2020 00:22:30 +0100 (CET)
+Date:   Fri, 20 Mar 2020 00:22:25 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        ben.hutchings@codethink.co.uk, Chris.Paterson2@renesas.com,
+        bigeasy@linutronix.de
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Julia Cartwright <julia@ni.com>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: 4.19.106-rt44 -- boot problems with irqwork: push most work into
+ softirq context
+Message-ID: <20200319232225.GA7878@duo.ucw.cz>
+References: <20200228170837.3fe8bb57@gandalf.local.home>
+ <20200319214835.GA29781@duo.ucw.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200319230303.GA26334@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Content-Disposition: inline
+In-Reply-To: <20200319214835.GA29781@duo.ucw.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
 
-On 3/19/20 4:03 PM, Bjorn Helgaas wrote:
-> I made a few of the updates Christoph suggested and updated the
-> review/edr branch.  Do you want to start with that as the basis for a
-> v18 posting?
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Do you want to merge your version of patch set first? or wait till we
-address all of the following open issues.
 
-1. Move reset_link callback to pcie_do_recovery().
-2. If recovery issue exist in non-hotplug case, investigate
-    and fix it ( this needs more testing and review).
-3. synchronize EDR handler with hot-plug DLLSC state change handler.
+On Thu 2020-03-19 22:48:35, Pavel Machek wrote:
+> Hi!
+>=20
+> > I'm pleased to announce the 4.19.106-rt44 stable release.
+> >=20
+> >=20
+> > This release is just an update to the new stable 4.19.106 version
+> > and no RT specific changes have been made.
+> >=20
+> >=20
+> > You can get this release via the git tree at:
+> >=20
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+> >=20
+> >   branch: v4.19-rt
+> >   Head SHA1: 0f2960c75dd68d339f0aff2935f51652b5625fbf
+>=20
+> This brought some problems for me. de0-nano board now fails to boot in
+> cca 50% of cases if I move these patches on top of -cip tree.
+>=20
+> This is example of failed job:
+>=20
+> https://lava.ciplatform.org/scheduler/job/13037
+>=20
+> de0-nano is 32-bit arm, should be based on Altera SoCFPGA if I understand
+> things correctly.
+>=20
+> "fc9f4631a290 irqwork: push most work into softirq context" touches
+> area of the panic above. I tried to revert it on top of the full
+> series, and tests passed twice so far...
+
+Test passed 7 times now. So yes, reverting this fixes de0-nano
+boot. Any ideas what might be wrong?
+
+I'll be running it few more times.
+
+https://gitlab.com/cip-project/cip-kernel/linux-cip/pipelines/127953471
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnP+sQAKCRAw5/Bqldv6
+8o9IAJ9jvIADInaCXP9F/avhH2UBquZc1wCZAZUJP58ybTLpilfer1ebbkOX5Qg=
+=mlYB
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
