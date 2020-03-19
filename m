@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1513CC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E35C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19B520752
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250B320752
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623202;
-	bh=rsOWAzkzs6JQ9c5lYp5MDkBJ+aQDIqWSJysq3FgoU/c=;
+	s=default; t=1584623206;
+	bh=oOC8Ymnc6YKQ2B+eBNzX4Uos9Cmc2jemtlGN5gKljJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K7QL7Llvjcc3K7LaiGmLJlE9u0S5wqh+i9Pfm2uAQd0TmrsiGrolKbdXk0xs6LHUG
-	 m4auifWJWWCteLQruVXijF66dr5EwIQ8a0cBlFHGAOnDJZP8ey3Cq+BdxgqnG1nLOV
-	 usNnEaJGVGcp9qKrsbiLc3ACNuquQ1pTC+Vxu+d0=
+	b=xZPUHpl8IdgAsctRVpF4p6AqP4lCN1XZR0EPeEYuZ8YbNd7jzL3qfbe6xVvyRzDl7
+	 Awzb4BqldYh34BfSBP4gHiaYY+9GX53BaBwdH0JA+5KdvoSker84yyX1fyJrDA8JDD
+	 +xru9ta/2qB6lBVuSStWoD5yhPHz/TS3u7M/P2mI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbgCSNGk (ORCPT
+        id S1727740AbgCSNGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:06:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49992 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:06:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727711AbgCSNGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:06:39 -0400
+        id S1727711AbgCSNGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:06:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CF7F20752;
-        Thu, 19 Mar 2020 13:06:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD49820739;
+        Thu, 19 Mar 2020 13:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623198;
-        bh=rsOWAzkzs6JQ9c5lYp5MDkBJ+aQDIqWSJysq3FgoU/c=;
+        s=default; t=1584623201;
+        bh=oOC8Ymnc6YKQ2B+eBNzX4Uos9Cmc2jemtlGN5gKljJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h54rN88e+6sR4ZUyEwwH0XDfbz7xpdLjZhBsAyoH/R9X3XCpK5EhWmIC/dEYKMeDa
-         BGZ9SwNVOcyy5lMeLXcFRAiIRpToqjvYpvkHrZ4TR53n4JsWQbsYxE8k3sjhiSOdq/
-         MzWEzPbZVOm4yo0Z3wljeLIlgp7/oRtKWyc1/QUY=
+        b=igZVXy5wTlXTwPLz6hJ0b1KVydjG3jSAME0jn5P4pMTabNe1T29Lq6BCiDjEsgral
+         tJ5bBm/kkWUCaXRuQmFYyX4g6jUI7Y/CkTl9aXlDpzUDPEwsO2NbRwu0I42h2Nxv3/
+         db8LN8ILyUMqKC6yHFifoOeS/gITvs09Us4UYxVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 14/93] ipvlan: egress mcast packets are not exceptional
-Date:   Thu, 19 Mar 2020 13:59:18 +0100
-Message-Id: <20200319123929.405636412@linuxfoundation.org>
+        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 4.4 34/93] iommu/vt-d: Ignore devices with out-of-spec domain number
+Date:   Thu, 19 Mar 2020 13:59:38 +0100
+Message-Id: <20200319123935.719587257@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -59,39 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Daniel Drake <drake@endlessm.com>
 
-commit cccc200fcaf04cff4342036a72e51d6adf6c98c1 upstream.
+commit da72a379b2ec0bad3eb265787f7008bead0b040c upstream.
 
-Currently, if IPv6 is enabled on top of an ipvlan device in l3
-mode, the following warning message:
+VMD subdevices are created with a PCI domain ID of 0x10000 or
+higher.
 
- Dropped {multi|broad}cast of type= [86dd]
+These subdevices are also handled like all other PCI devices by
+dmar_pci_bus_notifier().
 
-is emitted every time that a RS is generated and dmseg is soon
-filled with irrelevant messages. Replace pr_warn with pr_debug,
-to preserve debuggability, without scaring the sysadmin.
+However, when dmar_alloc_pci_notify_info() take records of such devices,
+it will truncate the domain ID to a u16 value (in info->seg).
+The device at (e.g.) 10000:00:02.0 is then treated by the DMAR code as if
+it is 0000:00:02.0.
 
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+In the unlucky event that a real device also exists at 0000:00:02.0 and
+also has a device-specific entry in the DMAR table,
+dmar_insert_dev_scope() will crash on:
+   BUG_ON(i >= devices_cnt);
+
+That's basically a sanity check that only one PCI device matches a
+single DMAR entry; in this case we seem to have two matching devices.
+
+Fix this by ignoring devices that have a domain number higher than
+what can be looked up in the DMAR table.
+
+This problem was carefully diagnosed by Jian-Hong Pan.
+
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Fixes: 59ce0515cdaf3 ("iommu/vt-d: Update DRHD/RMRR/ATSR device scope caches when PCI hotplug happens")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ipvlan/ipvlan_core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/dmar.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/net/ipvlan/ipvlan_core.c
-+++ b/drivers/net/ipvlan/ipvlan_core.c
-@@ -432,8 +432,8 @@ static int ipvlan_process_outbound(struc
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -39,6 +39,7 @@
+ #include <linux/dmi.h>
+ #include <linux/slab.h>
+ #include <linux/iommu.h>
++#include <linux/limits.h>
+ #include <asm/irq_remapping.h>
+ #include <asm/iommu_table.h>
  
- 	/* In this mode we dont care about multicast and broadcast traffic */
- 	if (is_multicast_ether_addr(ethh->h_dest)) {
--		pr_warn_ratelimited("Dropped {multi|broad}cast of type= [%x]\n",
--				    ntohs(skb->protocol));
-+		pr_debug_ratelimited("Dropped {multi|broad}cast of type=[%x]\n",
-+				     ntohs(skb->protocol));
- 		kfree_skb(skb);
- 		goto out;
- 	}
+@@ -138,6 +139,13 @@ dmar_alloc_pci_notify_info(struct pci_de
+ 
+ 	BUG_ON(dev->is_virtfn);
+ 
++	/*
++	 * Ignore devices that have a domain number higher than what can
++	 * be looked up in DMAR, e.g. VMD subdevices with domain 0x10000
++	 */
++	if (pci_domain_nr(dev->bus) > U16_MAX)
++		return NULL;
++
+ 	/* Only generate path[] for device addition event */
+ 	if (event == BUS_NOTIFY_ADD_DEVICE)
+ 		for (tmp = dev; tmp; tmp = tmp->bus->self)
 
 
