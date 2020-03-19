@@ -2,52 +2,54 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97310C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23133C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C3D20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8DD20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624644;
-	bh=tgVYRqV6JMuZm7TIS7KcxNGTdY3e2roGcCe/+kmzE0Y=;
+	s=default; t=1584624659;
+	bh=+aPVeQ9DXXL+NeBXpPp44nt1j9JJrYKhO7gvx1soYkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VGJ6GuLw3CQBV7+NSPo6DT9Nr1jmY2uOonYQXTgQmUB39i9MDvMIJMPGzuvuU4LnI
-	 lvlfYTpiZwcYGc6luG50RC7fwyVlP1DMOs+lFQtbvoF8oUl02IEbs/99vmGHc/b4Z7
-	 fR3ZtZJIAeqK27REW7GzuBGDto/nfMM7iF1l+nPo=
+	b=ZZG5dOFuh7oa8yVRRSaAUmwQT6lwJGenYj7Qngx2J0hRC3f+WB2Rdq8l+IYNqlIHo
+	 Z3/ih0L2pczBAs4GpFqwaNC0zWAKb1D4s8lsCezrh6kfbOV7TpAPMDqMziIk0EwRzs
+	 7OPE0tFxkdI6RqEV5K4jNgdZDOuK89B7cIHl5SHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730011AbgCSNan (ORCPT
+        id S1729891AbgCSNa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44848 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:30:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729711AbgCSNUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:20:40 -0400
+        id S1728475AbgCSNTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:19:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25C3121655;
-        Thu, 19 Mar 2020 13:20:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A37F216FD;
+        Thu, 19 Mar 2020 13:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624039;
-        bh=tgVYRqV6JMuZm7TIS7KcxNGTdY3e2roGcCe/+kmzE0Y=;
+        s=default; t=1584623972;
+        bh=+aPVeQ9DXXL+NeBXpPp44nt1j9JJrYKhO7gvx1soYkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=njzfsKMGvuHlpV1BQRaPhxavMlucBWHY2A7dlAuudd2t+8Gby7+Eawky5hx+fUNus
-         bOkLQWtmGhjOvmNdK29D6PLjHknWtjFajVOLpHwn7oU+A3hTjRRq7mQaOSJtfyYIUn
-         1NAEaqDOh26r9euuJcvGQUwhrNN40fgIQ3KhmmgI=
+        b=BZG98O9Num8508sWdiqKM2Q1pKTeyi8j2CfSEA2fCW6pLys9yApR+pk4PQarp70ys
+         EyX45OLTchm3V9fIsF/roKDgzBT62qwuacoHStDNRkgZDarOVma/SGe5qUT/x0+lgW
+         6am0KBZnfhJNNnjbbBV8cHxoRiOuWtMKelhCeXR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Saravana Kannan <saravanak@google.com>
-Subject: [PATCH 4.19 37/48] driver core: Fix adding device links to probing suppliers
-Date:   Thu, 19 Mar 2020 14:04:19 +0100
-Message-Id: <20200319123914.596712114@linuxfoundation.org>
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 16/48] net: ks8851-ml: Fix IRQ handling and locking
+Date:   Thu, 19 Mar 2020 14:03:58 +0100
+Message-Id: <20200319123908.160054078@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
 References: <20200319123902.941451241@linuxfoundation.org>
@@ -60,197 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Marek Vasut <marex@denx.de>
 
-commit 15cfb094160385cc0b303c4cda483caa102af654 upstream.
+[ Upstream commit 44343418d0f2f623cb9da6f5000df793131cbe3b ]
 
-Currently, it is not valid to add a device link from a consumer
-driver ->probe callback to a supplier that is still probing too, but
-generally this is a valid use case.  For example, if the consumer has
-just acquired a resource that can only be available if the supplier
-is functional, adding a device link to that supplier right away
-should be safe (and even desirable arguably), but device_link_add()
-doesn't handle that case correctly and the initial state of the link
-created by it is wrong then.
+The KS8851 requires that packet RX and TX are mutually exclusive.
+Currently, the driver hopes to achieve this by disabling interrupt
+from the card by writing the card registers and by disabling the
+interrupt on the interrupt controller. This however is racy on SMP.
 
-To address this problem, change the initial state of device links
-added between a probing supplier and a probing consumer to
-DL_STATE_CONSUMER_PROBE and update device_links_driver_bound() to
-skip such links on the supplier side.
+Replace this approach by expanding the spinlock used around the
+ks_start_xmit() TX path to ks_irq() RX path to assure true mutual
+exclusion and remove the interrupt enabling/disabling, which is
+now not needed anymore. Furthermore, disable interrupts also in
+ks_net_stop(), which was missing before.
 
-With this change, if the supplier probe completes first,
-device_links_driver_bound() called for it will skip the link state
-update and when it is called for the consumer, the link state will
-be updated to "active".  In turn, if the consumer probe completes
-first, device_links_driver_bound() called for it will change the
-state of the link to "active" and when it is called for the
-supplier, the link status update will be skipped.
+Note that a massive improvement here would be to re-use the KS8851
+driver approach, which is to move the TX path into a worker thread,
+interrupt handling to threaded interrupt, and synchronize everything
+with mutexes, but that would be a much bigger rework, for a separate
+patch.
 
-However, in principle the supplier or consumer probe may still fail
-after the link has been added, so modify device_links_no_driver() to
-change device links in the "active" or "consumer probe" state to
-"dormant" on the supplier side and update __device_links_no_driver()
-to change the link state to "available" only if it is "consumer
-probe" or "active".
-
-Then, if the supplier probe fails first, the leftover link to the
-probing consumer will become "dormant" and device_links_no_driver()
-called for the consumer (when its probe fails) will clean it up.
-In turn, if the consumer probe fails first, it will either drop the
-link, or change its state to "available" and, in the latter case,
-when device_links_no_driver() is called for the supplier, it will
-update the link state to "dormant".  [If the supplier probe fails,
-but the consumer probe succeeds, which should not happen as long as
-the consumer driver is correct, the link still will be around, but
-it will be "dormant" until the supplier is probed again.]
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/driver-api/device_link.rst |   10 ++--
- drivers/base/core.c                      |   74 +++++++++++++++++++++++++++----
- 2 files changed, 73 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/Documentation/driver-api/device_link.rst
-+++ b/Documentation/driver-api/device_link.rst
-@@ -59,11 +59,15 @@ device ``->probe`` callback or a boot-ti
- 
- Another example for an inconsistent state would be a device link that
- represents a driver presence dependency, yet is added from the consumer's
--``->probe`` callback while the supplier hasn't probed yet:  Had the driver
--core known about the device link earlier, it wouldn't have probed the
-+``->probe`` callback while the supplier hasn't started to probe yet:  Had the
-+driver core known about the device link earlier, it wouldn't have probed the
- consumer in the first place.  The onus is thus on the consumer to check
- presence of the supplier after adding the link, and defer probing on
--non-presence.
-+non-presence.  [Note that it is valid to create a link from the consumer's
-+``->probe`` callback while the supplier is still probing, but the consumer must
-+know that the supplier is functional already at the link creation time (that is
-+the case, for instance, if the consumer has just acquired some resources that
-+would not have been available had the supplier not been functional then).]
- 
- If a device link is added in the ``->probe`` callback of the supplier or
- consumer driver, it is typically deleted in its ``->remove`` callback for
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -287,17 +287,26 @@ struct device_link *device_link_add(stru
- 		link->status = DL_STATE_NONE;
- 	} else {
- 		switch (supplier->links.status) {
--		case DL_DEV_DRIVER_BOUND:
-+		case DL_DEV_PROBING:
- 			switch (consumer->links.status) {
- 			case DL_DEV_PROBING:
- 				/*
--				 * Some callers expect the link creation during
--				 * consumer driver probe to resume the supplier
--				 * even without DL_FLAG_RPM_ACTIVE.
-+				 * A consumer driver can create a link to a
-+				 * supplier that has not completed its probing
-+				 * yet as long as it knows that the supplier is
-+				 * already functional (for example, it has just
-+				 * acquired some resources from the supplier).
- 				 */
--				if (flags & DL_FLAG_PM_RUNTIME)
--					pm_runtime_resume(supplier);
--
-+				link->status = DL_STATE_CONSUMER_PROBE;
-+				break;
-+			default:
-+				link->status = DL_STATE_DORMANT;
-+				break;
-+			}
-+			break;
-+		case DL_DEV_DRIVER_BOUND:
-+			switch (consumer->links.status) {
-+			case DL_DEV_PROBING:
- 				link->status = DL_STATE_CONSUMER_PROBE;
- 				break;
- 			case DL_DEV_DRIVER_BOUND:
-@@ -318,6 +327,14 @@ struct device_link *device_link_add(stru
- 	}
- 
- 	/*
-+	 * Some callers expect the link creation during consumer driver probe to
-+	 * resume the supplier even without DL_FLAG_RPM_ACTIVE.
-+	 */
-+	if (link->status == DL_STATE_CONSUMER_PROBE &&
-+	    flags & DL_FLAG_PM_RUNTIME)
-+		pm_runtime_resume(supplier);
-+
-+	/*
- 	 * Move the consumer and all of the devices depending on it to the end
- 	 * of dpm_list and the devices_kset list.
- 	 *
-@@ -508,6 +525,16 @@ void device_links_driver_bound(struct de
- 		if (link->flags & DL_FLAG_STATELESS)
- 			continue;
- 
-+		/*
-+		 * Links created during consumer probe may be in the "consumer
-+		 * probe" state to start with if the supplier is still probing
-+		 * when they are created and they may become "active" if the
-+		 * consumer probe returns first.  Skip them here.
-+		 */
-+		if (link->status == DL_STATE_CONSUMER_PROBE ||
-+		    link->status == DL_STATE_ACTIVE)
-+			continue;
-+
- 		WARN_ON(link->status != DL_STATE_DORMANT);
- 		WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
- 	}
-@@ -547,17 +574,48 @@ static void __device_links_no_driver(str
- 
- 		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
- 			__device_link_del(&link->kref);
--		else if (link->status != DL_STATE_SUPPLIER_UNBIND)
-+		else if (link->status == DL_STATE_CONSUMER_PROBE ||
-+			 link->status == DL_STATE_ACTIVE)
- 			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
- 	}
- 
- 	dev->links.status = DL_DEV_NO_DRIVER;
- }
- 
-+/**
-+ * device_links_no_driver - Update links after failing driver probe.
-+ * @dev: Device whose driver has just failed to probe.
-+ *
-+ * Clean up leftover links to consumers for @dev and invoke
-+ * %__device_links_no_driver() to update links to suppliers for it as
-+ * appropriate.
-+ *
-+ * Links with the DL_FLAG_STATELESS flag set are ignored.
-+ */
- void device_links_no_driver(struct device *dev)
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index 9de59facec218..a5525bf977e2c 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -832,14 +832,17 @@ static irqreturn_t ks_irq(int irq, void *pw)
  {
-+	struct device_link *link;
-+
- 	device_links_write_lock();
-+
-+	list_for_each_entry(link, &dev->links.consumers, s_node) {
-+		if (link->flags & DL_FLAG_STATELESS)
-+			continue;
-+
-+		/*
-+		 * The probe has failed, so if the status of the link is
-+		 * "consumer probe" or "active", it must have been added by
-+		 * a probing consumer while this device was still probing.
-+		 * Change its state to "dormant", as it represents a valid
-+		 * relationship, but it is not functionally meaningful.
-+		 */
-+		if (link->status == DL_STATE_CONSUMER_PROBE ||
-+		    link->status == DL_STATE_ACTIVE)
-+			WRITE_ONCE(link->status, DL_STATE_DORMANT);
-+	}
-+
- 	__device_links_no_driver(dev);
-+
- 	device_links_write_unlock();
+ 	struct net_device *netdev = pw;
+ 	struct ks_net *ks = netdev_priv(netdev);
++	unsigned long flags;
+ 	u16 status;
+ 
++	spin_lock_irqsave(&ks->statelock, flags);
+ 	/*this should be the first in IRQ handler */
+ 	ks_save_cmd_reg(ks);
+ 
+ 	status = ks_rdreg16(ks, KS_ISR);
+ 	if (unlikely(!status)) {
+ 		ks_restore_cmd_reg(ks);
++		spin_unlock_irqrestore(&ks->statelock, flags);
+ 		return IRQ_NONE;
+ 	}
+ 
+@@ -865,6 +868,7 @@ static irqreturn_t ks_irq(int irq, void *pw)
+ 		ks->netdev->stats.rx_over_errors++;
+ 	/* this should be the last in IRQ handler*/
+ 	ks_restore_cmd_reg(ks);
++	spin_unlock_irqrestore(&ks->statelock, flags);
+ 	return IRQ_HANDLED;
  }
  
+@@ -934,6 +938,7 @@ static int ks_net_stop(struct net_device *netdev)
+ 
+ 	/* shutdown RX/TX QMU */
+ 	ks_disable_qmu(ks);
++	ks_disable_int(ks);
+ 
+ 	/* set powermode to soft power down to save power */
+ 	ks_set_powermode(ks, PMECR_PM_SOFTDOWN);
+@@ -990,10 +995,9 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	netdev_tx_t retv = NETDEV_TX_OK;
+ 	struct ks_net *ks = netdev_priv(netdev);
++	unsigned long flags;
+ 
+-	disable_irq(netdev->irq);
+-	ks_disable_int(ks);
+-	spin_lock(&ks->statelock);
++	spin_lock_irqsave(&ks->statelock, flags);
+ 
+ 	/* Extra space are required:
+ 	*  4 byte for alignment, 4 for status/length, 4 for CRC
+@@ -1007,9 +1011,7 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 		dev_kfree_skb(skb);
+ 	} else
+ 		retv = NETDEV_TX_BUSY;
+-	spin_unlock(&ks->statelock);
+-	ks_enable_int(ks);
+-	enable_irq(netdev->irq);
++	spin_unlock_irqrestore(&ks->statelock, flags);
+ 	return retv;
+ }
+ 
+-- 
+2.20.1
+
 
 
