@@ -2,104 +2,106 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D787CC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A695C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD75C20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D24AA20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7ZATe69"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgCSF1N (ORCPT
+        id S1726994AbgCSF1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 01:27:13 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43139 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgCSF1N (ORCPT
+        Thu, 19 Mar 2020 01:27:43 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33195 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgCSF1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 01:27:13 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jEnha-00032L-70; Thu, 19 Mar 2020 05:26:42 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     jeffrey.t.kirsher@intel.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        intel-wired-lan@lists.osuosl.org (moderated list:INTEL ETHERNET DRIVERS),
-        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/1] e1000e: Disable s0ix flow for X1 Carbon 7th
-Date:   Thu, 19 Mar 2020 13:26:29 +0800
-Message-Id: <20200319052629.7282-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 19 Mar 2020 01:27:42 -0400
+Received: by mail-lf1-f67.google.com with SMTP id c20so592517lfb.0;
+        Wed, 18 Mar 2020 22:27:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v/iKqoxWaZ+Tkks580ZgQreSF47JyquklZOAbcKvE+0=;
+        b=i7ZATe696JfpmC5Se4TMQM5EfN1jCMLVKl9zKk/30WYniXfC/KjodFDUq4WNeg4E3I
+         5ApAl57gYYf+Tqrc/A2ElSw1b+YLcSIzEHuwNtEu7lmtYyeeT0iKT2Sw25ZhLq2yfuZJ
+         XoF5ytnrY2QWiX+zgt49nMrgX1Uf5WDpYWUCQSpwBA7mugiWawYiHko2c3MvPmyGVJi2
+         ZRRep1J+TfbP/Vp6kLiqK4IDwyTS7gNiH+ooh0g9q7QqiSVkAKBbM4Bdxve1jbc5ZQm2
+         5mLI6WMBHzmMYNhWCImOlCQf/aK35whjkvoazbcDRMvfYqt7ULeCUJ6jNTIlzO/snUS3
+         61Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v/iKqoxWaZ+Tkks580ZgQreSF47JyquklZOAbcKvE+0=;
+        b=Oi01KOtf/Ntc8lMQrpaNzL4EQOKMwN8wD5eaRYfRzAu/YS5KEiKAVSOMrMjGAygDIl
+         4LERexM3SqLyoppuERoD90Skcg2goCsHnaZwgWJ73oIpj3nL5rlfBOmNsFHVJ4/JhOYc
+         RcKv9dP0y4JVKuSPv/v2zJK8EsOss5Ka6+q4m9D77mdKkUlbdXZYlEFvQOoPgih3iXa8
+         LJPqPC/gnkjB04+HYi0pSbQFPdBxP/8wX0SQHO9KFqfPE6RVyZsf2mOCJlAQX0NxiypU
+         m28rQn/o5q+zuckAriJd3FbNsgbVNB1iccZsuw69uAc6RVlqHjgG4xoq6rFidGh+nwB9
+         1ibA==
+X-Gm-Message-State: ANhLgQ0ULB3/MCovAmskolguh5NnEYCJ7HuO0CX9VPmcA9g6iSvmFxXv
+        he9IZWlUg7OmBwgnebYVq1bBFZksVvgRhNhsXw8=
+X-Google-Smtp-Source: ADFU+vvhVCDWyEVnXCmwPD4XzhHK3C5uf8Wgv8zRkF0h382PkmGGmgSe+R198UtCb8XR6Pq6Hy9a+L5QPBOQ2GBvNWY=
+X-Received: by 2002:ac2:46d9:: with SMTP id p25mr982593lfo.174.1584595659830;
+ Wed, 18 Mar 2020 22:27:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200317213222.421100128@goodmis.org>
+In-Reply-To: <20200317213222.421100128@goodmis.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 18 Mar 2020 19:27:28 -1000
+Message-ID: <CAADnVQ+hpVnsfKUNNeJWs8X0ogvsR8uNKrEzz5CK2XRdqn+80A@mail.gmail.com>
+Subject: Re: [RFC][PATCH 00/11] ring-buffer/tracing: Remove disabling of ring
+ buffer while reading trace file
+To:     Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Wu <peter@lekensteyn.nl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Tom Zanussi <zanussi@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The s0ix flow makes X1 Carbon 7th can only run S2Idle for only once.
+On Tue, Mar 17, 2020 at 11:34 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> When the ring buffer was first written for ftrace, there was two
+> human readable files to read it. One was a standard "producer/consumer"
+> file (trace_pipe), which would consume data from the ring buffer as
+> it read it, and the other was a "static iterator" that would not
+> consume the events, such that the file could be read multiple times
+> and return the same output each time.
+>
+> The "static iterator" was never meant to be read while there was an
+> active writer to the ring buffer. If writing was enabled, then it
+> would disable the writer when the trace file was opened.
+>
+> There has been some complaints about this by the BPF folks, that did
+> not realize this little bit of information and it was requested that
+> the "trace" file does not stop the writing to the ring buffer.
+>
+> This patch series attempts to satisfy that request, by creating a
+> temporary buffer in each of the per cpu iterators to place the
+> read event into, such that it can be passed to users without worrying
+> about a writer to corrupt the event while it was being written out.
+> It also uses the fact that the ring buffer is broken up into pages,
+> where each page has its own timestamp that gets updated when a
+> writer crosses over to it. By copying it to the temp buffer, and
+> doing a "before and after" test of the time stamp with memory barriers,
+> can allow the events to be saved.
 
-Temporarily disable it until Intel found a solution.
-
-Link: https://lists.osuosl.org/pipermail/intel-wired-lan/Week-of-Mon-20200316/019222.html
-BugLink: https://bugs.launchpad.net/bugs/1865570
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/net/ethernet/intel/e1000e/netdev.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index db4ea58bac82..3e090aa993ee 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -25,6 +25,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/aer.h>
- #include <linux/prefetch.h>
-+#include <linux/dmi.h>
- 
- #include "e1000.h"
- 
-@@ -6843,6 +6844,17 @@ static int __e1000_resume(struct pci_dev *pdev)
- }
- 
- #ifdef CONFIG_PM_SLEEP
-+static const struct dmi_system_id s0ix_blacklist[] = {
-+	{
-+		.ident = "LENOVO ThinkPad X1 Carbon 7th",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_VERSION, "ThinkPad X1 Carbon 7th"),
-+		},
-+	},
-+	{}
-+};
-+
- static int e1000e_pm_suspend(struct device *dev)
- {
- 	struct net_device *netdev = pci_get_drvdata(to_pci_dev(dev));
-@@ -6860,7 +6872,7 @@ static int e1000e_pm_suspend(struct device *dev)
- 		e1000e_pm_thaw(dev);
- 
- 	/* Introduce S0ix implementation */
--	if (hw->mac.type >= e1000_pch_cnp)
-+	if (hw->mac.type >= e1000_pch_cnp && !dmi_check_system(s0ix_blacklist))
- 		e1000e_s0ix_entry_flow(adapter);
- 
- 	return rc;
-@@ -6875,7 +6887,7 @@ static int e1000e_pm_resume(struct device *dev)
- 	int rc;
- 
- 	/* Introduce S0ix implementation */
--	if (hw->mac.type >= e1000_pch_cnp)
-+	if (hw->mac.type >= e1000_pch_cnp && !dmi_check_system(s0ix_blacklist))
- 		e1000e_s0ix_exit_flow(adapter);
- 
- 	rc = __e1000_resume(pdev);
--- 
-2.17.1
-
+Awesome. Thank you so much for working on it.
+Looks like it addresses all the issues bpf folks reported.
+cc-ing bpf list for visibility.
