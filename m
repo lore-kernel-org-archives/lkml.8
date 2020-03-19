@@ -2,114 +2,142 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6C8C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88D1C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 537EF2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94EFE2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:44:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="j8G9K+B+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g01y/QG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgCSXjb (ORCPT
+        id S1727138AbgCSXoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:39:31 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37063 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgCSXjb (ORCPT
+        Thu, 19 Mar 2020 19:44:10 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:35382 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgCSXoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:39:31 -0400
-Received: by mail-ed1-f65.google.com with SMTP id b23so4967395edx.4;
-        Thu, 19 Mar 2020 16:39:29 -0700 (PDT)
+        Thu, 19 Mar 2020 19:44:10 -0400
+Received: by mail-pj1-f68.google.com with SMTP id j20so1694887pjz.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:44:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=T/mfJWmxNQuzD0dp6KizZYLJ7CLCpefixytllKpkTzc=;
-        b=j8G9K+B+n/Ojbh81OEur+lMEXOYshUECgbkp9tY2M6biLvzxuXxFN6lSXsbzkFslae
-         jc9HBRJfL/ELl9ivB2zl+RB7BwJBWe6Fe3cJUqDS3BvY8Ew3qTlSEHLOlAxL28+8zSzI
-         K5mjzp5BIPEOKCjcxnOZcDUWvMDfzyFwri/UuDoqUNbN7Qbjb/4+tlqa9mer6w8iaXHu
-         eWkmtlPpdTgLysTFsSzvDEb9VUTf7QQ61jEIzK6nEAYhOoZRP38YT3+XgmgwbWUc83Mm
-         gE+Xe2D0Vbn9fvK4gxEZ/0IYCMKCgwcybXlA0udklqhacor6tDl6DYRYOk6EVgM544Zt
-         dSDg==
+        bh=R0+TGEcl33aqQZuHdJpZvB8paDQF2GsWepjBb7GJLN0=;
+        b=g01y/QG6zB8hIiuj4wDvdx12dB7i4g2oOiN2aFecZXwj8QAY5tVLL5iH3uhtkQGtIN
+         jqOlFcSJx7THcCtImBOQp1HaO+lNQ+y4mrfz+L5YbFg1WV7xn/VHwnxKtcCyGnPAI4bQ
+         QoFNLnT5RQOyW5H2iDh8lvr24e7GmW0icEfczV6Zm/Y3OHI1HS+67AZVEl3sVe2+9o8G
+         WZqBAoaIyte3bSpt/ez2IaL5dP6H0eBBqL0SyclRJw5tJzQ14gmaCmbRp2u5Y+YSbZs1
+         xq1BRnFqNQxqpvsjMirdME/B+it8upp2FMVE2cmR091yQWxNavqNHwWL+gVz4ovunboZ
+         lCiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=T/mfJWmxNQuzD0dp6KizZYLJ7CLCpefixytllKpkTzc=;
-        b=GncQZth+nlvs++c2VJZ0NAM/l5AFnCyjqtO7c8jn+Mnzbc0RDxuST/b8VbhMglk9Hm
-         ynA4ns4GrepRKaloPNuCtMwwq9Cfhqs4lOnCZYcWPAHrjAZzvY2WQ8zFmxF+HkzhpGcT
-         M1cuPDGV9CUJk/qNO1OM/DpwuZoWAxC+NWUfN+LdoB413aS6K60Ibiheb+bT5Zrso2I4
-         XR5enLnfg91Cs2dcwlVmJgYzCGNeUaxM/EUmXpTuzw9oWdYSBPCj32GIsPIhtKam7d67
-         xQP735ypVFpYGzbS+Yd5ZWhtAT2TDUVQpVVY++BQEt55TRYQ3odEz04Jc9iCf+WUV6Cz
-         j53w==
-X-Gm-Message-State: ANhLgQ3l9e/ap/emrSOEN7ctCRlr8ECFgOR5NaNa5Gvm4zsuNd+Jjfp/
-        USS+zrG2U/JAUe/LEDvrSpVirm2Af3dE95+Q5vI=
-X-Google-Smtp-Source: ADFU+vsBYF3lmb/S9MivVj1ar9fEgyHh9mNe7PH/to4h3/J9OWLSH5rf3wC8erfomQYZyINKFfGztDXrzBfrtovFz/I=
-X-Received: by 2002:a17:906:6d0:: with SMTP id v16mr5698516ejb.90.1584661168372;
- Thu, 19 Mar 2020 16:39:28 -0700 (PDT)
+        bh=R0+TGEcl33aqQZuHdJpZvB8paDQF2GsWepjBb7GJLN0=;
+        b=D4uULQZIKlYnGR+YkiJUS7GcWMmO8oYx+ajQEA/WaZTK2YvZRsAulI7xrnvRYYDhF3
+         +2AmKgUBMVa77iBMMiYIkjWQ8iOUGTt5N/mjxBJhGPM03eMDkYtSAaxTkYREB8/BRdo3
+         1cFDahMFV5dRBp7t/Cv54WCv30629/IBDEwkMZDQoMdnuwAtC84CfXN7CmNY/I83oWax
+         mooaOih3AgmnIvQar4SiyQd0XevMwKHfZ+ViZ3IhYkXtbbUq2j/LQTk0pA4ZooNSiNEs
+         qNB7j0aqVdYxymu1aiiI+8kd3Eu3yh3gfaw+sW5wMIvARJBuhLwnE0+uZ9tJAHfx8IEm
+         cCBQ==
+X-Gm-Message-State: ANhLgQ3sHNIpu1pj85W5T1uG+4kQROSWpTaatQueuWpymdpku2t4yLw+
+        fYz5jVEPwVI+nCgrwp72iciwKQYFdthdCEUQL5JlSA==
+X-Google-Smtp-Source: ADFU+vtliPn0Z54RcDzNcvaqRpfR5R9aZU+uGpjGhHuUBhqLn7elEClsTACLZUjB8MWlbn/itDALZ2t4CjWaipi5Fng=
+X-Received: by 2002:a17:902:820a:: with SMTP id x10mr2291998pln.179.1584661448715;
+ Thu, 19 Mar 2020 16:44:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200302125310.742-1-linux.amoon@gmail.com> <20200302125310.742-3-linux.amoon@gmail.com>
- <7hlfoir8rj.fsf@baylibre.com>
-In-Reply-To: <7hlfoir8rj.fsf@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 20 Mar 2020 00:39:17 +0100
-Message-ID: <CAFBinCB2WXZNRg4wdFD0RJ5k4hHqcfAOCHemvHzZE42-Mo5vzA@mail.gmail.com>
-Subject: Re: [PATCHv2 2/2] clk: meson: g12a: set cpub_clk flags to CLK_IS_CRITICAL
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Anand Moon <linux.amoon@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
+References: <20200319214530.2046-1-ilie.halip@gmail.com>
+In-Reply-To: <20200319214530.2046-1-ilie.halip@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 19 Mar 2020 16:43:56 -0700
+Message-ID: <CAKwvOdneL8F_ZHBAzyb+VoJ+Z1FZp0VW8asGTu=g39TrouqAgA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: alternative: fix build with clang integrated assembler
+To:     Ilie Halip <ilie.halip@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
-
-On Mon, Mar 2, 2020 at 6:01 PM Kevin Hilman <khilman@baylibre.com> wrote:
-[...]
-> > updating flags to CLK_IS_CRITICAL which help enable all the parent for
-> > cpub_clk.
+On Thu, Mar 19, 2020 at 2:45 PM Ilie Halip <ilie.halip@gmail.com> wrote:
 >
-> With current mainline, I've tested DVFS using CPUfreq on both clusters
-> on odroid-n2, and both clusters are booting, so I don't understand the
-> need for this patch.
-I *think* there is a race condition at kernel boot between cpufreq and
-disabling orphaned clocks
-I'm not sure I fully understand it though and I don't have any G12B
-board to verify it
+> Building an arm64 defconfig with clang's integrated assembler, this error
+> occurs:
+>     <instantiation>:2:2: error: unrecognized instruction mnemonic
+>      _ASM_EXTABLE 9999b, 9f
+>      ^
+>     arch/arm64/mm/cache.S:50:1: note: while in macro instantiation
+>     user_alt 9f, "dc cvau, x4", "dc civac, x4", 0
+>     ^
+>
+> While GNU as seems fine with case-sensitive macro instantiations, clang
+> doesn't, so use the actual macro name (_asm_extable) as in the rest of
+> the file.
+>
+> Also checked that the generated assembly matches the GCC output.
+>
+> Fixes: 290622efc76e ("arm64: fix "dc cvau" cache operation on errata-affected core")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/924
+> Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+> ---
+>  arch/arm64/include/asm/alternative.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
+> index 324e7d5ab37e..5e5dc05d63a0 100644
+> --- a/arch/arm64/include/asm/alternative.h
+> +++ b/arch/arm64/include/asm/alternative.h
+> @@ -221,7 +221,7 @@ alternative_endif
+>
+>  .macro user_alt, label, oldinstr, newinstr, cond
+>  9999:  alternative_insn "\oldinstr", "\newinstr", \cond
+> -       _ASM_EXTABLE 9999b, \label
+> +       _asm_extable 9999b, \label
+>  .endm
 
-my understanding is that u-boot runs Linux off CPU0 which is clocked by cpub_clk
-this means we need to keep cpub_clk enabled as long as Linux wants the
-CPU0 processor to be enabled (on 32-bit ARM platforms that would be
-smp_operations.cpu_{kill,die})
-cpufreq does not call clk_prepare_enable on the CPU clocks so this
-means that the orphaned clock cleanup mechanism can disable it "at any
-time", killing everything running on CPU0 and CPU1 (which are both
-clocked by cpub_clk)
+Testing a -next defconfig build, if I apply this, apply fixes for
+https://github.com/ClangBuiltLinux/linux/issues/913, then disable
+CONFIG_KVM, I can assemble (with Clang's integrated assembler) and
+boot an aarch64 kernel.  I think that's a first for Clang.  Wow.
 
-I have no explanation why this depends on booting from SD or eMMC.
+For CONFIG_KVM, I see:
+arch/arm64/kvm/hyp/entry.S:112:87: error: too many positional arguments
+ alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) |
+((!!1) << 8)), 4, 1
 
-for the 32-bit SoCs we have CLK_IS_CRITICAL on the CPU clock as well
-since commit 0dad1ec65bc30a
-on G12A we have CLK_IS_CRITICAL on the sys_pll clocks, however my
-understanding is that cpub_clk could also be fed by one of the
-fixed_pll derived clocks (which have a gate as well, which may or may
-not be turned off by the orphaned clock cleanup - that is pure
-speculation from my side though).
+               ^
+which also uses `alternative_insn`, but not `user_alt`, so another bug
+for us to look into, filed:
+https://github.com/ClangBuiltLinux/linux/issues/939
 
+Looks like `_asm_extable` itself is a macro, defined in
+arch/arm64/include/asm/assembler.h on line 125.  It's probably easy to
+fix this in clang, but from a consistency with the rest of the file
+(arch/arm64/include/asm/alternative.h) this patch should be accepted.
 
-Martin
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+
+Should be easy to fix in Clang, too. Filed:
+https://bugs.llvm.org/show_bug.cgi?id=45257
+Thanks for the patch!
+
+-- 
+Thanks,
+~Nick Desaulniers
