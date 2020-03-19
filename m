@@ -2,105 +2,88 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252BFC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7074DC43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9442072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38443208E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rMIndAv4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HEgsRj/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgCSRKb (ORCPT
+        id S1728488AbgCSRMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:10:31 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:45678 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727235AbgCSRKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:10:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=97QUluO/9z2nRz1LUzTzwjEEpdtKGGADgdrtcJm2fOA=; b=rMIndAv4X0iMvZD54MRmU04cL9
-        wigGi4hw8VKxK79UiAvPzUG36qw6+8iJqWdy2A4J1EHH/w4iRt2r1IjxGpuXKZdzkVqyLQn1c4PAF
-        FjjmDNkrmn83p2tyiVYaTzWNLYOOPKKOiXvttuCjz4ApHuebPULjbbmMM8A5rUvgbYn4=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jEygV-000893-QN; Thu, 19 Mar 2020 18:10:19 +0100
-Date:   Thu, 19 Mar 2020 18:10:19 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Dejin Zheng <zhengdejin5@gmail.com>, f.fainelli@gmail.com,
-        linux@armlinux.org.uk, davem@davemloft.net, tglx@linutronix.de,
-        broonie@kernel.org, corbet@lwn.net, mchehab+samsung@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 3/7] net: phy: introduce
- phy_read_mmd_poll_timeout macro
-Message-ID: <20200319171019.GJ27807@lunn.ch>
-References: <20200319163910.14733-1-zhengdejin5@gmail.com>
- <20200319163910.14733-4-zhengdejin5@gmail.com>
- <c88c0ce1-af42-db67-22bc-92e82bd9efbf@gmail.com>
+        Thu, 19 Mar 2020 13:12:03 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55219 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbgCSRMC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:12:02 -0400
+Received: by mail-pj1-f68.google.com with SMTP id np9so1292149pjb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 10:12:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=R4q81Z5QMrL601yBvgvZ22H1vsVZ7jxrfvWspKctl9U=;
+        b=HEgsRj/Umjt3bDRKeyBagbKVsAB5hqkobxm9VhitVyUU/tOxY/yi2I9xOVa5jDM4mP
+         KQQmIGax4s9s0EA7W0QEw15/AQtqsSSJ0rBRbQj9xQhBOCLgI9mBfgT9owq+wcVo79pE
+         EF8SuLXIFxhyevmOnwReXAKSICSdLSTi4pOKY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=R4q81Z5QMrL601yBvgvZ22H1vsVZ7jxrfvWspKctl9U=;
+        b=DgQgeZoGav22LVZaIDzsubWG0hQn24kil6HLpZyZbGCBL4iZdUBwM02IpYyp0BreRj
+         Xz4YoIO9kCquqX4/aT1FXa8FXuWSdDiONit4M/yFqMmZjz2sIiYzrYSztNybIbQ1VYlB
+         4O+2ONXidtWVPHnngaYijyGjW11Edjkm3WEXC0o1du8sR8Lroo9l+jo3f4txx40F2oMb
+         CQ5WokpPJsmOZdeil1dWTajkgr5eVLzZ/W/XrBpYV60H72R4OxDusdSNYSQdWEKasZlV
+         SFkjh0qMffLawSxwnVjGLgSmMpCHeFQ8Z9MfY/r/Sl5nQKdHzXrKbtu446SEcd9cVY9p
+         66Jw==
+X-Gm-Message-State: ANhLgQ1Gv2PtDeLle8NiIrBo/fcLEia+MJrXED8DKGy29Dh08WK4EH7/
+        N1SFOoeHzWlkphy3/caRHStMvOJch5M=
+X-Google-Smtp-Source: ADFU+vuyfRZyn7taxdoEfLj5z8q4S5lLtS97ZUBbW0A013dELnoxNGfgzDf6CXVedEadWpaeBu+AwQ==
+X-Received: by 2002:a17:902:e905:: with SMTP id k5mr4192422pld.274.1584637921149;
+        Thu, 19 Mar 2020 10:12:01 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x16sm2938956pfn.42.2020.03.19.10.12.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 10:12:00 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c88c0ce1-af42-db67-22bc-92e82bd9efbf@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200319121418.5180-1-srinivas.kandagatla@linaro.org>
+References: <20200319121418.5180-1-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2] soc: qcom: socinfo: add missing soc_id sysfs entry
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        agross@kernel.org, bjorn.andersson@linaro.org
+Date:   Thu, 19 Mar 2020 10:11:59 -0700
+Message-ID: <158463791978.152100.11401578350608469889@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 05:56:39PM +0100, Heiner Kallweit wrote:
-> On 19.03.2020 17:39, Dejin Zheng wrote:
-> > it is sometimes necessary to poll a phy register by phy_read_mmd()
-> > function until its value satisfies some condition. introduce
-> > phy_read_mmd_poll_timeout() macros that do this.
-> > 
-> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-> > ---
-> >  include/linux/phy.h | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/include/linux/phy.h b/include/linux/phy.h
-> > index 36d9dea04016..a30e9008647f 100644
-> > --- a/include/linux/phy.h
-> > +++ b/include/linux/phy.h
-> > @@ -24,6 +24,7 @@
-> >  #include <linux/mod_devicetable.h>
-> >  #include <linux/u64_stats_sync.h>
-> >  #include <linux/irqreturn.h>
-> > +#include <linux/iopoll.h>
-> >  
-> >  #include <linux/atomic.h>
-> >  
-> > @@ -784,6 +785,9 @@ static inline int __phy_modify_changed(struct phy_device *phydev, u32 regnum,
-> >   */
-> >  int phy_read_mmd(struct phy_device *phydev, int devad, u32 regnum);
-> >  
-> > +#define phy_read_mmd_poll_timeout(val, cond, sleep_us, timeout_us, args...) \
-> > +	read_poll_timeout(phy_read_mmd, val, cond, sleep_us, timeout_us, args)
-> > +
-> >  /**
-> >   * __phy_read_mmd - Convenience function for reading a register
-> >   * from an MMD on a given PHY.
-> > 
-> I'm not fully convinced. Usage of the new macro with its lots of
-> parameters makes the code quite hard to read. Therefore I'm also
-> not a big fan of readx_poll_timeout.
+Quoting Srinivas Kandagatla (2020-03-19 05:14:18)
+> Looks like SoC ID is not exported to sysfs for some reason.
+> This patch adds it!
+>=20
+> This is mostly used by userspace libraries like Snapdragon
+> Neural Processing Engine (SNPE) SDK for checking supported SoC info.
+>=20
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
 
-One issue is that people often implement polling wrong. They don't
-take into account where extra delays can happen, and return -ETIMEOUT
-when in fact the operation was successful. readx_poll_timeout gives us
-a core which is known to be good.
+Maybe add a Fixes tag?
 
-What i don't like here is phy_read_mmd_poll_timeout() takes args... We
-know it should be passed a phydev, and device address and a reg. I
-would prefer these to be explicit parameters. We can then get the
-compiler to check the correct number of parameters are passed.
-
-      Andrew
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
