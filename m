@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C42C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1024AC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04705206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A53206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624018;
-	bh=CrmheWRDfPW8CivWTD6cUxP9E3g51rF62ri8xwzFQ0Y=;
+	s=default; t=1584624020;
+	bh=tYvsypGV+UX3w5mfR+9EKdJVP9kjPgrchcygUqtHAF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xm5mofqd1NUyinV2Fb6Q/sFhYfaEtma/PPnz7aaMQqjWY68HZ2J5VzgUcHeQeCgpj
-	 zl5NgaCkLahtpoJvqB94gPyVA1PX3qTIWJqH22X1/F/xRRpoj2OySNPdVT40u+0JCp
-	 6qepTiV3KJNwTcHXjmGvwH4qsiFk76f4BvBNeLQY=
+	b=kex0DsfMbHuA2y5o+4YUZGOT9ytcqY+A9qPe8MeJYS2kexnUbpMx/11V8yZpb1z9Q
+	 eahQRhsjpqVLPaGRMl2OhPKcUUQXne3KchWTOkZKIEhRpXkPbx2uTi5aKdrpS2Xc6h
+	 uILL9hND2HlqGpaXLa8GsLO9m/JOue6XjpODWuZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgCSNUR (ORCPT
+        id S1729960AbgCSNUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:20:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbgCSNUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 09:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727954AbgCSNUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:20:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3B83206D7;
-        Thu, 19 Mar 2020 13:20:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40906206D7;
+        Thu, 19 Mar 2020 13:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624015;
-        bh=CrmheWRDfPW8CivWTD6cUxP9E3g51rF62ri8xwzFQ0Y=;
+        s=default; t=1584624012;
+        bh=tYvsypGV+UX3w5mfR+9EKdJVP9kjPgrchcygUqtHAF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BDu39oQ5j+WTA/uOY2lCP+/FgSTA+kbnsnhI8eTbx9SxxkmixXcpKNOoNJ8+1ZvnD
-         nICyIrl9pboCK7Zc6S48FIXdY1zZGwQdovoA25461/o1gNUgO4HayedehUK2PnHUtS
-         5pVb48qLtoFERVIJq0DTlLY6a3RIAkDhBA6lOeoo=
+        b=EGiFKwjOuG6Fs8M2wG417JkiW1V1LjvEIJRtV6AyO7ut0Y8eN2w6HZuibP7DFBelK
+         nZ6KscVyNyLsq1lmxm+eeZ+0RmDdvzEYIiQOWmSDg8jnUF8JcoeBD6ERhr6k9jeMvR
+         MrXUqTL5C731cQU7SJVvVAf8V6Snh+hUgtZObVyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Faiz Abbas <faiz_abbas@ti.com>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 04/48] mmc: sdhci-omap: Workaround errata regarding SDR104/HS200 tuning failures (i929)
-Date:   Thu, 19 Mar 2020 14:03:46 +0100
-Message-Id: <20200319123904.478355165@linuxfoundation.org>
+Subject: [PATCH 4.19 03/48] mmc: sdhci-omap: Add platform specific reset callback
+Date:   Thu, 19 Mar 2020 14:03:45 +0100
+Message-Id: <20200319123904.177477126@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
 References: <20200319123902.941451241@linuxfoundation.org>
@@ -63,201 +64,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Faiz Abbas <faiz_abbas@ti.com>
 
-[ Upstream commit 961de0a856e3a30c0238d1269c0b17f9b179b6c3 ]
+[ Upstream commit 5b0d62108b468b13410533c0ceea3821942bf592 ]
 
-Errata i929 in certain OMAP5/DRA7XX/AM57XX silicon revisions
-(SPRZ426D - November 2014 - Revised February 2018 [1]) mentions
-unexpected tuning pattern errors. A small failure band may be present
-in the tuning range which may be missed by the current algorithm.
-Furthermore, the failure bands vary with temperature leading to
-different optimum tuning values for different temperatures.
+The TRM (SPRUIC2C - January 2017 - Revised May 2018 [1]) forbids
+assertion of data reset while tuning is happening. Implement a
+platform specific callback that takes care of this condition.
 
-As suggested in the related Application Report (SPRACA9B - October 2017
-- Revised July 2018 [2]), tuning should be done in two stages.
-In stage 1, assign the optimum ratio in the maximum pass window for the
-current temperature. In stage 2, if the chosen value is close to the
-small failure band, move away from it in the appropriate direction.
+[1] http://www.ti.com/lit/pdf/spruic2 Section 25.5.1.2.4
 
-[1] http://www.ti.com/lit/pdf/sprz426
-[2] http://www.ti.com/lit/pdf/SPRACA9
-
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/Kconfig      |  2 +
- drivers/mmc/host/sdhci-omap.c | 90 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 91 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-omap.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index 694d0828215d2..79b8ac9cdc744 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -935,6 +935,8 @@ config MMC_SDHCI_XENON
- config MMC_SDHCI_OMAP
- 	tristate "TI SDHCI Controller Support"
- 	depends on MMC_SDHCI_PLTFM && OF
-+	select THERMAL
-+	select TI_SOC_THERMAL
- 	help
- 	  This selects the Secure Digital Host Controller Interface (SDHCI)
- 	  support present in TI's DRA7 SOCs. The controller supports
 diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 8a172575bb64f..5698af25caef6 100644
+index d02f5cf76b3d1..8a172575bb64f 100644
 --- a/drivers/mmc/host/sdhci-omap.c
 +++ b/drivers/mmc/host/sdhci-omap.c
-@@ -27,6 +27,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/sys_soc.h>
-+#include <linux/thermal.h>
+@@ -115,6 +115,7 @@ struct sdhci_omap_host {
  
- #include "sdhci-pltfm.h"
+ 	struct pinctrl		*pinctrl;
+ 	struct pinctrl_state	**pinctrl_state;
++	bool			is_tuning;
+ };
  
-@@ -290,15 +291,19 @@ static int sdhci_omap_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 	struct sdhci_host *host = mmc_priv(mmc);
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
-+	struct thermal_zone_device *thermal_dev;
- 	struct device *dev = omap_host->dev;
- 	struct mmc_ios *ios = &mmc->ios;
- 	u32 start_window = 0, max_window = 0;
-+	bool single_point_failure = false;
- 	bool dcrc_was_enabled = false;
- 	u8 cur_match, prev_match = 0;
- 	u32 length = 0, max_len = 0;
- 	u32 phase_delay = 0;
-+	int temperature;
- 	int ret = 0;
- 	u32 reg;
-+	int i;
+ static void sdhci_omap_start_clock(struct sdhci_omap_host *omap_host);
+@@ -326,6 +327,8 @@ static int sdhci_omap_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 		dcrc_was_enabled = true;
+ 	}
  
- 	pltfm_host = sdhci_priv(host);
- 	omap_host = sdhci_pltfm_priv(pltfm_host);
-@@ -312,6 +317,16 @@ static int sdhci_omap_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 	if (ios->timing == MMC_TIMING_UHS_SDR50 && !(reg & CAPA2_TSDR50))
- 		return 0;
- 
-+	thermal_dev = thermal_zone_get_zone_by_name("cpu_thermal");
-+	if (IS_ERR(thermal_dev)) {
-+		dev_err(dev, "Unable to get thermal zone for tuning\n");
-+		return PTR_ERR(thermal_dev);
-+	}
++	omap_host->is_tuning = true;
 +
-+	ret = thermal_zone_get_temp(thermal_dev, &temperature);
-+	if (ret)
-+		return ret;
-+
- 	reg = sdhci_omap_readl(omap_host, SDHCI_OMAP_DLL);
- 	reg |= DLL_SWT;
- 	sdhci_omap_writel(omap_host, SDHCI_OMAP_DLL, reg);
-@@ -329,6 +344,11 @@ static int sdhci_omap_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 
- 	omap_host->is_tuning = true;
- 
-+	/*
-+	 * Stage 1: Search for a maximum pass window ignoring any
-+	 * any single point failures. If the tuning value ends up
-+	 * near it, move away from it in stage 2 below
-+	 */
  	while (phase_delay <= MAX_PHASE_DELAY) {
  		sdhci_omap_set_dll(omap_host, phase_delay);
  
-@@ -336,10 +356,15 @@ static int sdhci_omap_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 		if (cur_match) {
- 			if (prev_match) {
- 				length++;
-+			} else if (single_point_failure) {
-+				/* ignore single point failure */
-+				length++;
- 			} else {
- 				start_window = phase_delay;
- 				length = 1;
- 			}
-+		} else {
-+			single_point_failure = prev_match;
- 		}
- 
- 		if (length > max_len) {
-@@ -357,13 +382,76 @@ static int sdhci_omap_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 		goto tuning_error;
- 	}
- 
-+	/*
-+	 * Assign tuning value as a ratio of maximum pass window based
-+	 * on temperature
-+	 */
-+	if (temperature < -20000)
-+		phase_delay = min(max_window + 4 * max_len - 24,
-+				  max_window +
-+				  DIV_ROUND_UP(13 * max_len, 16) * 4);
-+	else if (temperature < 20000)
-+		phase_delay = max_window + DIV_ROUND_UP(9 * max_len, 16) * 4;
-+	else if (temperature < 40000)
-+		phase_delay = max_window + DIV_ROUND_UP(8 * max_len, 16) * 4;
-+	else if (temperature < 70000)
-+		phase_delay = max_window + DIV_ROUND_UP(7 * max_len, 16) * 4;
-+	else if (temperature < 90000)
-+		phase_delay = max_window + DIV_ROUND_UP(5 * max_len, 16) * 4;
-+	else if (temperature < 120000)
-+		phase_delay = max_window + DIV_ROUND_UP(4 * max_len, 16) * 4;
-+	else
-+		phase_delay = max_window + DIV_ROUND_UP(3 * max_len, 16) * 4;
-+
-+	/*
-+	 * Stage 2: Search for a single point failure near the chosen tuning
-+	 * value in two steps. First in the +3 to +10 range and then in the
-+	 * +2 to -10 range. If found, move away from it in the appropriate
-+	 * direction by the appropriate amount depending on the temperature.
-+	 */
-+	for (i = 3; i <= 10; i++) {
-+		sdhci_omap_set_dll(omap_host, phase_delay + i);
-+
-+		if (mmc_send_tuning(mmc, opcode, NULL)) {
-+			if (temperature < 10000)
-+				phase_delay += i + 6;
-+			else if (temperature < 20000)
-+				phase_delay += i - 12;
-+			else if (temperature < 70000)
-+				phase_delay += i - 8;
-+			else
-+				phase_delay += i - 6;
-+
-+			goto single_failure_found;
-+		}
-+	}
-+
-+	for (i = 2; i >= -10; i--) {
-+		sdhci_omap_set_dll(omap_host, phase_delay + i);
-+
-+		if (mmc_send_tuning(mmc, opcode, NULL)) {
-+			if (temperature < 10000)
-+				phase_delay += i + 12;
-+			else if (temperature < 20000)
-+				phase_delay += i + 8;
-+			else if (temperature < 70000)
-+				phase_delay += i + 8;
-+			else if (temperature < 90000)
-+				phase_delay += i + 10;
-+			else
-+				phase_delay += i + 12;
-+
-+			goto single_failure_found;
-+		}
-+	}
-+
-+single_failure_found:
- 	reg = sdhci_omap_readl(omap_host, SDHCI_OMAP_AC12);
- 	if (!(reg & AC12_SCLK_SEL)) {
- 		ret = -EIO;
- 		goto tuning_error;
- 	}
- 
--	phase_delay = max_window + 4 * (max_len >> 1);
+@@ -363,9 +366,12 @@ static int sdhci_omap_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 	phase_delay = max_window + 4 * (max_len >> 1);
  	sdhci_omap_set_dll(omap_host, phase_delay);
  
- 	omap_host->is_tuning = false;
++	omap_host->is_tuning = false;
++
+ 	goto ret;
+ 
+ tuning_error:
++	omap_host->is_tuning = false;
+ 	dev_err(dev, "Tuning failed\n");
+ 	sdhci_omap_disable_tuning(omap_host);
+ 
+@@ -695,6 +701,18 @@ static void sdhci_omap_set_uhs_signaling(struct sdhci_host *host,
+ 	sdhci_omap_start_clock(omap_host);
+ }
+ 
++void sdhci_omap_reset(struct sdhci_host *host, u8 mask)
++{
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
++
++	/* Don't reset data lines during tuning operation */
++	if (omap_host->is_tuning)
++		mask &= ~SDHCI_RESET_DATA;
++
++	sdhci_reset(host, mask);
++}
++
+ static struct sdhci_ops sdhci_omap_ops = {
+ 	.set_clock = sdhci_omap_set_clock,
+ 	.set_power = sdhci_omap_set_power,
+@@ -703,7 +721,7 @@ static struct sdhci_ops sdhci_omap_ops = {
+ 	.get_min_clock = sdhci_omap_get_min_clock,
+ 	.set_bus_width = sdhci_omap_set_bus_width,
+ 	.platform_send_init_74_clocks = sdhci_omap_init_74_clocks,
+-	.reset = sdhci_reset,
++	.reset = sdhci_omap_reset,
+ 	.set_uhs_signaling = sdhci_omap_set_uhs_signaling,
+ };
+ 
 -- 
 2.20.1
 
