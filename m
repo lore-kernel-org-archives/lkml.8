@@ -2,134 +2,113 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EC4C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1C7C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABB42080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0642071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:31:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ejd+tsKo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vs+JhSeb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbgCSR1p (ORCPT
+        id S1727312AbgCSRbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:27:45 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:56327 "EHLO
+        Thu, 19 Mar 2020 13:31:10 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:41467 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728269AbgCSR1o (ORCPT
+        by vger.kernel.org with ESMTP id S1726934AbgCSRbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:27:44 -0400
+        Thu, 19 Mar 2020 13:31:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584638864;
+        s=mimecast20190719; t=1584639068;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nLOauL8M9FVaEJHiI8vrCSN5L9Q/vL8MaYK0pNPq4Zs=;
-        b=Ejd+tsKoJc9OjJaj+kI/D/9WpQbQ/meFzFafI22/nH6DEy4yaV9RQek6VOEDJH7doiikhd
-        PZisdEGKpjr8st0YBpDd7wxXDuSSNm+IodxRV8EXEgZh1+Mce3vPNx5PaunMbQvBLSOWt1
-        gY6dY2I2s1c7lM7uEn0vcehX8B/vVKA=
+        bh=U1szoS1OFDclXKw5QldI0d7jkBPpWZukPaBQk/KVC9s=;
+        b=Vs+JhSebnBPmB56sBJNNV7nq8o1803UOd2hZx2aevmhW5Fywi4mtafAYYet9/HKEUhgXrY
+        gEPXYUrvACE+NmipLUy6edLaV2eY3F6HANiTWV3KhFBJr2Vtbjl+j425p+INzSMjSjL944
+        V0FmY0Ckk2lyHSyYvIoCK6XXZbnY5Mc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-Ykp0k2vZNi68gU2utY-ppQ-1; Thu, 19 Mar 2020 13:27:40 -0400
-X-MC-Unique: Ykp0k2vZNi68gU2utY-ppQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-34-vtn1rn9YOOaetgHXFS6tFg-1; Thu, 19 Mar 2020 13:31:07 -0400
+X-MC-Unique: vtn1rn9YOOaetgHXFS6tFg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7DED41857BE0;
-        Thu, 19 Mar 2020 17:27:38 +0000 (UTC)
-Received: from gondolin (ovpn-113-188.ams2.redhat.com [10.36.113.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F5D760BF1;
-        Thu, 19 Mar 2020 17:27:33 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 18:27:30 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
-        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
-        bruce.richardson@intel.com, kevin.tian@intel.com
-Subject: Re: [PATCH v3 3/7] vfio/pci: Introduce VF token
-Message-ID: <20200319182730.16f4c476.cohuck@redhat.com>
-In-Reply-To: <158396393244.5601.10297430724964025753.stgit@gimli.home>
-References: <158396044753.5601.14804870681174789709.stgit@gimli.home>
-        <158396393244.5601.10297430724964025753.stgit@gimli.home>
-Organization: Red Hat GmbH
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80E24149C0;
+        Thu, 19 Mar 2020 17:31:05 +0000 (UTC)
+Received: from treble (unknown [10.10.110.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5391210027AB;
+        Thu, 19 Mar 2020 17:31:04 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 12:31:01 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: linux-next: Tree for Mar 18 (objtool)
+Message-ID: <20200319173101.wufpymi7obhqgoqd@treble>
+References: <20200318220920.48df2e76@canb.auug.org.au>
+ <d7dc5b4a-9a7e-ccf7-e00e-2e7f0e79a9bc@infradead.org>
+ <20200318182352.2dgwwl4ugbwndi4x@treble>
+ <20200318200542.GK20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200318200542.GK20730@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 15:58:52 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+On Wed, Mar 18, 2020 at 09:05:42PM +0100, Peter Zijlstra wrote:
+> "Built-in Function: void __builtin_trap (void)
+> 
+>     This function causes the program to exit abnormally. GCC implements
+>     this function by using a target-dependent mechanism (such as
+>     intentionally executing an illegal instruction) or by calling abort.
+>     The mechanism used may vary from release to release so you should
+>     not rely on any particular implementation."
+> 
+> Sounds encouraging :-(
+> 
+> Clearly it now emits UD2, but who knows what it'll do next week.
+> 
+> I think what happens is that we have code that does:
+> 
+> 	if (cond)
+> 		BUG()/WARN()
+> 
+> And ubsan figures that @cond is something undefined, and then we get
+> transformed into:
+> 
+> 	if (cond) {
+> 		__builtin_trap();
+> 		BUG()/WARN()
+> 	}
+> 
+> And presto, double UD2.
+>
+> Since x86 has GENERIC_BUG unconditionally, we should actually have
+> __bug_table entries for each BUG()/WARN() instance, which should allow
+> us to distinguish between a proper BUG()/WARN() and this
+> __builtin_trap() nonsense.
 
-> If we enable SR-IOV on a vfio-pci owned PF, the resulting VFs are not
-> fully isolated from the PF.  The PF can always cause a denial of service
-> to the VF, even if by simply resetting itself.  The degree to which a PF
-> can access the data passed through a VF or interfere with its operation
-> is dependent on a given SR-IOV implementation.  Therefore we want to
-> avoid a scenario where an existing vfio-pci based userspace driver might
-> assume the PF driver is trusted, for example assigning a PF to one VM
-> and VF to another with some expectation of isolation.  IOMMU grouping
-> could be a solution to this, but imposes an unnecessarily strong
-> relationship between PF and VF drivers if they need to operate with the
-> same IOMMU context.  Instead we introduce a "VF token", which is
-> essentially just a shared secret between PF and VF drivers, implemented
-> as a UUID.
-> 
-> The VF token can be set by a vfio-pci based PF driver and must be known
-> by the vfio-pci based VF driver in order to gain access to the device.
-> This allows the degree to which this VF token is considered secret to be
-> determined by the applications and environment.  For example a VM might
-> generate a random UUID known only internally to the hypervisor while a
-> userspace networking appliance might use a shared, or even well know,
-> UUID among the application drivers.
-> 
-> To incorporate this VF token, the VFIO_GROUP_GET_DEVICE_FD interface is
-> extended to accept key=value pairs in addition to the device name.  This
-> allows us to most easily deny user access to the device without risk
-> that existing userspace drivers assume region offsets, IRQs, and other
-> device features, leading to more elaborate error paths.  The format of
-> these options are expected to take the form:
-> 
-> "$DEVICE_NAME $OPTION1=$VALUE1 $OPTION2=$VALUE2"
-> 
-> Where the device name is always provided first for compatibility and
-> additional options are specified in a space separated list.  The
-> relation between and requirements for the additional options will be
-> vfio bus driver dependent, however unknown or unused option within this
-> schema should return error.  This allow for future use of unknown
-> options as well as a positive indication to the user that an option is
-> used.
-> 
-> An example VF token option would take this form:
-> 
-> "0000:03:00.0 vf_token=2ab74924-c335-45f4-9b16-8569e5b08258"
-> 
-> When accessing a VF where the PF is making use of vfio-pci, the user
-> MUST provide the current vf_token.  When accessing a PF, the user MUST
-> provide the current vf_token IF there are active VF users or MAY provide
-> a vf_token in order to set the current VF token when no VF users are
-> active.  The former requirement assures VF users that an unassociated
-> driver cannot usurp the PF device.  These semantics also imply that a
-> VF token MUST be set by a PF driver before VF drivers can access their
-> device, the default token is random and mechanisms to read the token are
-> not provided in order to protect the VF token of previous users.  Use of
-> the vf_token option outside of these cases will return an error, as
-> discussed above.
-> 
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c         |  198 +++++++++++++++++++++++++++++++++++
->  drivers/vfio/pci/vfio_pci_private.h |    8 +
->  2 files changed, 205 insertions(+), 1 deletion(-)
+... except the __builtin_trap() UD2 seems to be coming *after* the BUG
+UD2.  Could it be the BUG UD2 itself which is convincing UBSAN to add
+the __builtin_trap()?
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+If the BUG() macro were to use __builtin_trap() instead of the inline
+asm UD2, GCC might be able to merge the two UD2's into one, and all
+would be well.  But that could be tricky because of the __bug_table
+stuff which needs to reference the UD2.
+
+-- 
+Josh
 
