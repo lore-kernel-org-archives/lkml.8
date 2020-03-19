@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACF1C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CD5C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FA321556
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1072166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623809;
-	bh=FToC9cMDq2DhrQCn6uGwwt8MCwpRq/S+8cs+gVtc8D8=;
+	s=default; t=1584623810;
+	bh=uA9dNGFTVjm5hMfIoQVOhtwQWGQP4pc0yF2ftu6yNqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cfR/pZDQwONkSodk3qT+5ULtA2/UjcjHTjiXrl2qUb1uKlfDJBp7M193iHPEJUA3j
-	 CsGhsDJgWPL2oFhUSe+ElHvl/WzuLMFbrhFta3+nbbQpydfHGwcBEvLGESW6EXoji4
-	 n1xqxAEhVvznWqYAcEPA86yTtXjD9NoaWiFSlMVE=
+	b=X9RaCZQUePPop6JSY5jImF9UjwtcK76o4uoaixD8XwTZretSFzAhhIoHaIqbIGYGu
+	 YqR8OrauMCLDJme0r8blF95zYdWeHbG4If0qkVlHAEoEUCIw04f16Nwtck4zrxMfPl
+	 Rvdrg2/NfowLjtlblmPv0H3XQNNoZPOJAP8LB0Eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbgCSNQs (ORCPT
+        id S1729564AbgCSNQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729577AbgCSNQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 09:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728442AbgCSNQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:16:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BF2A21556;
-        Thu, 19 Mar 2020 13:16:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B1E520724;
+        Thu, 19 Mar 2020 13:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623805;
-        bh=FToC9cMDq2DhrQCn6uGwwt8MCwpRq/S+8cs+gVtc8D8=;
+        s=default; t=1584623802;
+        bh=uA9dNGFTVjm5hMfIoQVOhtwQWGQP4pc0yF2ftu6yNqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upf0CnAFss10VDYjCfMy8URkRxLKSTbcUdvtwqwdQHGg8+WYPqS1CLknquDAlmPxv
-         2CWjq32XMhwbOFhs1yCS1u6IKh+lnqFlPtaHlMc7NOpZjlUDxcj7MPW7sTLPWugm7Z
-         TKChOWi8hyHQvNdzywZkQSgF/W/tZwTpS0ET7lT4=
+        b=v6RcRUZaXoSxXf8V79Uzc0eSkeugzRHBHBuzf9rXoH7wNKfH0Dq5hdAOXqK4E5uWg
+         F1tTKXQsy1h5W3pJ/K2gaNGxe2+KtTXGmEhcw3o61QinOMrtj6uK9HozDfkcwgfdMu
+         ebIw8fyxgkGJoDFYSMqMTfKNCk3Bqh7nDR2Ixb68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.14 59/99] netfilter: cthelper: add missing attribute validation for cthelper
-Date:   Thu, 19 Mar 2020 14:03:37 +0100
-Message-Id: <20200319123959.593006327@linuxfoundation.org>
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.14 58/99] nl80211: add missing attribute validation for channel switch
+Date:   Thu, 19 Mar 2020 14:03:36 +0100
+Message-Id: <20200319123959.358836226@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -61,30 +61,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-commit c049b3450072b8e3998053490e025839fecfef31 upstream.
+commit 5cde05c61cbe13cbb3fa66d52b9ae84f7975e5e6 upstream.
 
-Add missing attribute validation for cthelper
+Add missing attribute validation for NL80211_ATTR_OPER_CLASS
 to the netlink policy.
 
-Fixes: 12f7a505331e ("netfilter: add user-space connection tracking helper infrastructure")
+Fixes: 1057d35ede5d ("cfg80211: introduce TDLS channel switch commands")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Link: https://lore.kernel.org/r/20200303051058.4089398-4-kuba@kernel.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nfnetlink_cthelper.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/wireless/nl80211.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/netfilter/nfnetlink_cthelper.c
-+++ b/net/netfilter/nfnetlink_cthelper.c
-@@ -733,6 +733,8 @@ static const struct nla_policy nfnl_cthe
- 	[NFCTH_NAME] = { .type = NLA_NUL_STRING,
- 			 .len = NF_CT_HELPER_NAME_LEN-1 },
- 	[NFCTH_QUEUE_NUM] = { .type = NLA_U32, },
-+	[NFCTH_PRIV_DATA_LEN] = { .type = NLA_U32, },
-+	[NFCTH_STATUS] = { .type = NLA_U32, },
- };
- 
- static const struct nfnl_callback nfnl_cthelper_cb[NFNL_MSG_CTHELPER_MAX] = {
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -424,6 +424,7 @@ static const struct nla_policy nl80211_p
+ 	[NL80211_ATTR_USER_PRIO] = { .type = NLA_U8 },
+ 	[NL80211_ATTR_ADMITTED_TIME] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_SMPS_MODE] = { .type = NLA_U8 },
++	[NL80211_ATTR_OPER_CLASS] = { .type = NLA_U8 },
+ 	[NL80211_ATTR_MAC_MASK] = { .len = ETH_ALEN },
+ 	[NL80211_ATTR_WIPHY_SELF_MANAGED_REG] = { .type = NLA_FLAG },
+ 	[NL80211_ATTR_NETNS_FD] = { .type = NLA_U32 },
 
 
