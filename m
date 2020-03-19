@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2398CC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF40C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08E420409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA1C20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624723;
-	bh=l+SslzW3aQwnBAb6lpZwBPLpDvnhkZu8HaV802HbA1M=;
+	s=default; t=1584624729;
+	bh=N/kmiG6KBAOmtJ7wU3x/0toCaw9RCRADRZ2syxHQ07k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e5qQPFhDCWisrDFWSwd2TvIOChbgR1VT3+cJUwVVhsymYWO1DgrSbATfQ3TqhLOQI
-	 qwcDwmhKTUJ2NsO7qlEjPCsIUE+X8Y6SUnruAx6d9u4F5kIxlVqVnsqcY+cehkn7wR
-	 OxQMjrkt6PCCLRJ4qi9XuBXC5Pmu28hKCkDzk/28=
+	b=O7Vt6PZgNHErjbgEGzi2ZmM0HbDYvJgF4QpNB6tFFkVAiBfL1hyHtluNXe3m53FG/
+	 fMHjnQexy8XePf11LLrfyK4fSI102HiiZugAoPJ8+C/546Sob/czvbOXgoDcQWCak3
+	 uYRzzl4Pe6JpAZ88G9eQdPEYFHXqbqrWeL5t6MD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgCSNcB (ORCPT
+        id S1729501AbgCSNcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:32:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727556AbgCSNQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:16:49 -0400
+        id S1728037AbgCSNQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:16:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98815206D7;
-        Thu, 19 Mar 2020 13:16:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75F1A20724;
+        Thu, 19 Mar 2020 13:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623809;
-        bh=l+SslzW3aQwnBAb6lpZwBPLpDvnhkZu8HaV802HbA1M=;
+        s=default; t=1584623798;
+        bh=N/kmiG6KBAOmtJ7wU3x/0toCaw9RCRADRZ2syxHQ07k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IYPGSFcyhB0ZO+OPihtN+/Gn91CFf/CYmspp5qkvT9+zzViuJROEXd0QPxpXgaFnA
-         DKo3lPuSYHvFNGQc9nCTCc38L2g6zZFe0mQ0km/4RfM7ziMEa5CHziltA7hYsXzPsY
-         dpRwoNdvWSJL3zAqiZ0xbMggzaxDWTq9P9TIvoA0=
+        b=Vlvz9ZVWLom9bVGlSrQTiHX0+0aaEBpe/qAyzZ6qen5LSrBjVs0dsky6WSz25tL9R
+         onlAJg+rZLaKSwo+HOMBqdef709JUaXfdDhOhqOoOd64zWhTnZ08fCWLrMhQiXxSN7
+         aVqde+4TbvuYhwwitcyVgL+c73+nQc8XtZTVBXsU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.14 60/99] netfilter: nft_payload: add missing attribute validation for payload csum flags
-Date:   Thu, 19 Mar 2020 14:03:38 +0100
-Message-Id: <20200319123959.844990842@linuxfoundation.org>
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.14 57/99] nl80211: add missing attribute validation for beacon report scanning
+Date:   Thu, 19 Mar 2020 14:03:35 +0100
+Message-Id: <20200319123959.097578454@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -61,29 +61,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-commit 9d6effb2f1523eb84516e44213c00f2fd9e6afff upstream.
+commit 056e9375e1f3c4bf2fd49b70258c7daf788ecd9d upstream.
 
-Add missing attribute validation for NFTA_PAYLOAD_CSUM_FLAGS
+Add missing attribute validation for beacon report scanning
 to the netlink policy.
 
-Fixes: 1814096980bb ("netfilter: nft_payload: layer 4 checksum adjustment for pseudoheader fields")
+Fixes: 1d76250bd34a ("nl80211: support beacon report scanning")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Link: https://lore.kernel.org/r/20200303051058.4089398-3-kuba@kernel.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nft_payload.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/wireless/nl80211.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/netfilter/nft_payload.c
-+++ b/net/netfilter/nft_payload.c
-@@ -121,6 +121,7 @@ static const struct nla_policy nft_paylo
- 	[NFTA_PAYLOAD_LEN]		= { .type = NLA_U32 },
- 	[NFTA_PAYLOAD_CSUM_TYPE]	= { .type = NLA_U32 },
- 	[NFTA_PAYLOAD_CSUM_OFFSET]	= { .type = NLA_U32 },
-+	[NFTA_PAYLOAD_CSUM_FLAGS]	= { .type = NLA_U32 },
- };
- 
- static int nft_payload_init(const struct nft_ctx *ctx,
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -347,6 +347,8 @@ static const struct nla_policy nl80211_p
+ 	[NL80211_ATTR_KEY_DEFAULT_TYPES] = { .type = NLA_NESTED },
+ 	[NL80211_ATTR_WOWLAN_TRIGGERS] = { .type = NLA_NESTED },
+ 	[NL80211_ATTR_STA_PLINK_STATE] = { .type = NLA_U8 },
++	[NL80211_ATTR_MEASUREMENT_DURATION] = { .type = NLA_U16 },
++	[NL80211_ATTR_MEASUREMENT_DURATION_MANDATORY] = { .type = NLA_FLAG },
+ 	[NL80211_ATTR_SCHED_SCAN_INTERVAL] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_REKEY_DATA] = { .type = NLA_NESTED },
+ 	[NL80211_ATTR_SCAN_SUPP_RATES] = { .type = NLA_NESTED },
 
 
