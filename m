@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EC9C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9ABC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85C2216FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D02F208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624047;
-	bh=5nLrWCES3KQ6aDOHOe8Z7mxo2FpvMmVEDBf2SpwIX+A=;
+	s=default; t=1584624054;
+	bh=nzhtWCu/2h7sB1zXt+T3d4x6BLsqP1SsZCbbcIGoedg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VEUp6y6coUdJqHts/mS7J80NneEJUKNvRGDmpH4F/IZ4GWJ8rsQ7Gs/g4XaxMFRgA
-	 F89m6XRBIsm78ybhFRnBT4TzNFONp0IZ8LmpgP1cTnEy2CoCjidQLRmDpqvdARr+jH
-	 OeeM7PQbvCcqvHlNw8rhnTF+Z6EaWzn7GOyBge24=
+	b=x7iNS1jJQcraPjVlVZLL/nZjymmBlC3YXH86olHHQ4XHf/snKn04MWnIxFJQi7tmG
+	 k/nJ5hkp9L1jcm2Gg8hW9GwZeS+UWD+s2iL+PBs/2mhI76KzO6PQ8hdQP8N7SkO26c
+	 hsB6S9FDYtpO0MCJTW/mdUocxFGbHnfnnnN9oz/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729558AbgCSNUp (ORCPT
+        id S1730022AbgCSNUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:20:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44944 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:20:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728786AbgCSNUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:20:43 -0400
+        id S1729643AbgCSNUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:20:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 970272166E;
-        Thu, 19 Mar 2020 13:20:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A949E21556;
+        Thu, 19 Mar 2020 13:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624042;
-        bh=5nLrWCES3KQ6aDOHOe8Z7mxo2FpvMmVEDBf2SpwIX+A=;
+        s=default; t=1584624046;
+        bh=nzhtWCu/2h7sB1zXt+T3d4x6BLsqP1SsZCbbcIGoedg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PV0UjRsnMzg/lrgLW6Ig4pgkV9m30VtYZYakvlnZF3ttKsD2ngHNzs7hikWbLTH4g
-         WiRHJtqr9sxQfOS4zokHlc7HDEFDCl1V89wr/ea+lgqPcGtb8ZYjSftkjDXo/Tcub7
-         OnI7LY+FP99Mzc0TXHH+6XfiCa+EDJ+9HJvW5Ihs=
+        b=vlUVHfipJCIv6C6yNR5g40Fecq4LOI2MMmynervAjBqqArETGqcm5jwg0yeC+3nD2
+         vhof2Ml7yWB0q4hXeCqQ9XHhIy+zM0arSV5NCEi/96Ekplr5+yKMvvYJ30ag5N0HjC
+         jCftXsULDRb9fkr8SmvB/GAwLbEph0Au+MCW2pdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Saravana Kannan <saravanak@google.com>
-Subject: [PATCH 4.19 38/48] driver core: Make driver core own stateful device links
-Date:   Thu, 19 Mar 2020 14:04:20 +0100
-Message-Id: <20200319123914.936500139@linuxfoundation.org>
+Subject: [PATCH 4.19 39/48] driver core: Add device link flag DL_FLAG_AUTOPROBE_CONSUMER
+Date:   Thu, 19 Mar 2020 14:04:21 +0100
+Message-Id: <20200319123915.213596195@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
 References: <20200319123902.941451241@linuxfoundation.org>
@@ -62,263 +62,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 72175d4ea4c442d95cf690c3e968eeee90fd43ca upstream.
+commit e7dd40105aac9ba051e44ad711123bc53a5e4c71 upstream.
 
-Even though stateful device links are managed by the driver core in
-principle, their creators are allowed and sometimes even expected
-to drop references to them via device_link_del() or
-device_link_remove(), but that doesn't really play well with the
-"persistent" link concept.
+Add a new device link flag, DL_FLAG_AUTOPROBE_CONSUMER, to request the
+driver core to probe for a consumer driver automatically after binding
+a driver to the supplier device on a persistent managed device link.
 
-If "persistent" managed device links are created from driver
-probe callbacks, device_link_add() called to do that will take a
-new reference on the link each time the callback runs and those
-references will never be dropped, which kind of isn't nice.
-
-This issues arises because of the link reference counting carried
-out by device_link_add() for existing links, but that is only done to
-avoid deleting device links that may still be necessary, which
-shouldn't be a concern for managed (stateful) links.  These device
-links are managed by the driver core and whoever creates one of them
-will need it at least as long as until the consumer driver is detached
-from its device and deleting it may be left to the driver core just
-fine.
-
-For this reason, rework device_link_add() to apply the reference
-counting to stateless links only and make device_link_del() and
-device_link_remove() drop references to stateless links only too.
-After this change, if called to add a stateful device link for
-a consumer-supplier pair for which a stateful device link is
-present already, device_link_add() will return the existing link
-without incrementing its reference counter.  Accordingly,
-device_link_del() and device_link_remove() will WARN() and do
-nothing when called to drop a reference to a stateful link.  Thus,
-effectively, all stateful device links will be owned by the driver
-core.
-
-In addition, clean up the handling of the link management flags,
-DL_FLAG_AUTOREMOVE_CONSUMER and DL_FLAG_AUTOREMOVE_SUPPLIER, so that
-(a) they are never set at the same time and (b) if device_link_add()
-is called for a consumer-supplier pair with an existing stateful link
-between them, the flags of that link will be combined with the flags
-passed to device_link_add() to ensure that the life time of the link
-is sufficient for all of the callers of device_link_add() for the
-same consumer-supplier pair.
-
-Update the device_link_add() kerneldoc comment to reflect the
-above changes.
+As unbinding the supplier driver on a managed device link causes the
+consumer driver to be detached from its device automatically, this
+flag provides a complementary mechanism which is needed to address
+some "composite device" use cases.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/driver-api/device_link.rst |   42 +++++++++++-------
- drivers/base/core.c                      |   69 ++++++++++++++++++++++++-------
- 2 files changed, 79 insertions(+), 32 deletions(-)
+ Documentation/driver-api/device_link.rst |    9 +++++++++
+ drivers/base/core.c                      |   16 +++++++++++++++-
+ drivers/base/dd.c                        |    2 +-
+ include/linux/device.h                   |    3 +++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
 
 --- a/Documentation/driver-api/device_link.rst
 +++ b/Documentation/driver-api/device_link.rst
-@@ -25,8 +25,8 @@ suspend/resume and shutdown ordering.
- 
- Device links allow representation of such dependencies in the driver core.
- 
--In its standard form, a device link combines *both* dependency types:
--It guarantees correct suspend/resume and shutdown ordering between a
-+In its standard or *managed* form, a device link combines *both* dependency
-+types:  It guarantees correct suspend/resume and shutdown ordering between a
- "supplier" device and its "consumer" devices, and it guarantees driver
- presence on the supplier.  The consumer devices are not probed before the
- supplier is bound to a driver, and they're unbound before the supplier
-@@ -69,12 +69,14 @@ know that the supplier is functional alr
- the case, for instance, if the consumer has just acquired some resources that
- would not have been available had the supplier not been functional then).]
- 
--If a device link is added in the ``->probe`` callback of the supplier or
--consumer driver, it is typically deleted in its ``->remove`` callback for
--symmetry.  That way, if the driver is compiled as a module, the device
--link is added on module load and orderly deleted on unload.  The same
--restrictions that apply to device link addition (e.g. exclusion of a
--parallel suspend/resume transition) apply equally to deletion.
-+If a device link with ``DL_FLAG_STATELESS`` set (i.e. a stateless device link)
-+is added in the ``->probe`` callback of the supplier or consumer driver, it is
-+typically deleted in its ``->remove`` callback for symmetry.  That way, if the
-+driver is compiled as a module, the device link is added on module load and
-+orderly deleted on unload.  The same restrictions that apply to device link
-+addition (e.g. exclusion of a parallel suspend/resume transition) apply equally
-+to deletion.  Device links with ``DL_FLAG_STATELESS`` unset (i.e. managed
-+device links) are deleted automatically by the driver core.
- 
- Several flags may be specified on device link addition, two of which
- have already been mentioned above:  ``DL_FLAG_STATELESS`` to express that no
-@@ -87,8 +89,6 @@ link is added from the consumer's ``->pr
- can be specified to runtime resume the supplier upon addition of the
- device link.  ``DL_FLAG_AUTOREMOVE_CONSUMER`` causes the device link to be
- automatically purged when the consumer fails to probe or later unbinds.
--This obviates the need to explicitly delete the link in the ``->remove``
--callback or in the error path of the ``->probe`` callback.
- 
- Similarly, when the device link is added from supplier's ``->probe`` callback,
+@@ -94,6 +94,15 @@ Similarly, when the device link is added
  ``DL_FLAG_AUTOREMOVE_SUPPLIER`` causes the device link to be automatically
-@@ -97,12 +97,20 @@ purged when the supplier fails to probe
+ purged when the supplier fails to probe or later unbinds.
+ 
++If neither ``DL_FLAG_AUTOREMOVE_CONSUMER`` nor ``DL_FLAG_AUTOREMOVE_SUPPLIER``
++is set, ``DL_FLAG_AUTOPROBE_CONSUMER`` can be used to request the driver core
++to probe for a driver for the consumer driver on the link automatically after
++a driver has been bound to the supplier device.
++
++Note, however, that any combinations of ``DL_FLAG_AUTOREMOVE_CONSUMER``,
++``DL_FLAG_AUTOREMOVE_SUPPLIER`` or ``DL_FLAG_AUTOPROBE_CONSUMER`` with
++``DL_FLAG_STATELESS`` are invalid and cannot be used.
++
  Limitations
  ===========
  
--Driver authors should be aware that a driver presence dependency (i.e. when
--``DL_FLAG_STATELESS`` is not specified on link addition) may cause probing of
--the consumer to be deferred indefinitely.  This can become a problem if the
--consumer is required to probe before a certain initcall level is reached.
--Worse, if the supplier driver is blacklisted or missing, the consumer will
--never be probed.
-+Driver authors should be aware that a driver presence dependency for managed
-+device links (i.e. when ``DL_FLAG_STATELESS`` is not specified on link addition)
-+may cause probing of the consumer to be deferred indefinitely.  This can become
-+a problem if the consumer is required to probe before a certain initcall level
-+is reached.  Worse, if the supplier driver is blacklisted or missing, the
-+consumer will never be probed.
-+
-+Moreover, managed device links cannot be deleted directly.  They are deleted
-+by the driver core when they are not necessary any more in accordance with the
-+``DL_FLAG_AUTOREMOVE_CONSUMER`` and ``DL_FLAG_AUTOREMOVE_SUPPLIER`` flags.
-+However, stateless device links (i.e. device links with ``DL_FLAG_STATELESS``
-+set) are expected to be removed by whoever called :c:func:`device_link_add()`
-+to add them with the help of either :c:func:`device_link_del()` or
-+:c:func:`device_link_remove()`.
- 
- Sometimes drivers depend on optional resources.  They are able to operate
- in a degraded mode (reduced feature set or performance) when those resources
-@@ -286,4 +294,4 @@ API
- ===
- 
- .. kernel-doc:: drivers/base/core.c
--   :functions: device_link_add device_link_del
-+   :functions: device_link_add device_link_del device_link_remove
 --- a/drivers/base/core.c
 +++ b/drivers/base/core.c
-@@ -179,10 +179,21 @@ void device_pm_move_to_tail(struct devic
-  * of the link.  If DL_FLAG_PM_RUNTIME is not set, DL_FLAG_RPM_ACTIVE will be
-  * ignored.
+@@ -195,6 +195,12 @@ void device_pm_move_to_tail(struct devic
+  * the link will be maintained until one of the devices pointed to by it (either
+  * the consumer or the supplier) is unregistered.
   *
-- * If the DL_FLAG_AUTOREMOVE_CONSUMER flag is set, the link will be removed
-- * automatically when the consumer device driver unbinds from it.  Analogously,
-- * if DL_FLAG_AUTOREMOVE_SUPPLIER is set in @flags, the link will be removed
-- * automatically when the supplier device driver unbinds from it.
-+ * If DL_FLAG_STATELESS is set in @flags, the link is not going to be managed by
-+ * the driver core and, in particular, the caller of this function is expected
-+ * to drop the reference to the link acquired by it directly.
++ * Also, if DL_FLAG_STATELESS, DL_FLAG_AUTOREMOVE_CONSUMER and
++ * DL_FLAG_AUTOREMOVE_SUPPLIER are not set in @flags (that is, a persistent
++ * managed device link is being added), the DL_FLAG_AUTOPROBE_CONSUMER flag can
++ * be used to request the driver core to automaticall probe for a consmer
++ * driver after successfully binding a driver to the supplier device.
 + *
-+ * If that flag is not set, however, the caller of this function is handing the
-+ * management of the link over to the driver core entirely and its return value
-+ * can only be used to check whether or not the link is present.  In that case,
-+ * the DL_FLAG_AUTOREMOVE_CONSUMER and DL_FLAG_AUTOREMOVE_SUPPLIER device link
-+ * flags can be used to indicate to the driver core when the link can be safely
-+ * deleted.  Namely, setting one of them in @flags indicates to the driver core
-+ * that the link is not going to be used (by the given caller of this function)
-+ * after unbinding the consumer or supplier driver, respectively, from its
-+ * device, so the link can be deleted at that point.  If none of them is set,
-+ * the link will be maintained until one of the devices pointed to by it (either
-+ * the consumer or the supplier) is unregistered.
-  *
   * The combination of DL_FLAG_STATELESS and either DL_FLAG_AUTOREMOVE_CONSUMER
   * or DL_FLAG_AUTOREMOVE_SUPPLIER set in @flags at the same time is invalid and
-@@ -228,6 +239,14 @@ struct device_link *device_link_add(stru
- 		goto out;
+  * will cause NULL to be returned upfront.
+@@ -215,7 +221,12 @@ struct device_link *device_link_add(stru
+ 
+ 	if (!consumer || !supplier ||
+ 	    (flags & DL_FLAG_STATELESS &&
+-	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER | DL_FLAG_AUTOREMOVE_SUPPLIER)))
++	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
++		      DL_FLAG_AUTOREMOVE_SUPPLIER |
++		      DL_FLAG_AUTOPROBE_CONSUMER)) ||
++	    (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
++	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
++		      DL_FLAG_AUTOREMOVE_SUPPLIER)))
+ 		return NULL;
+ 
+ 	if (flags & DL_FLAG_PM_RUNTIME && flags & DL_FLAG_RPM_ACTIVE) {
+@@ -576,6 +587,9 @@ void device_links_driver_bound(struct de
+ 
+ 		WARN_ON(link->status != DL_STATE_DORMANT);
+ 		WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
++
++		if (link->flags & DL_FLAG_AUTOPROBE_CONSUMER)
++			driver_deferred_probe_add(link->consumer);
  	}
  
-+	/*
-+	 * DL_FLAG_AUTOREMOVE_SUPPLIER indicates that the link will be needed
-+	 * longer than for DL_FLAG_AUTOREMOVE_CONSUMER and setting them both
-+	 * together doesn't make sense, so prefer DL_FLAG_AUTOREMOVE_SUPPLIER.
-+	 */
-+	if (flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
-+		flags &= ~DL_FLAG_AUTOREMOVE_CONSUMER;
-+
- 	list_for_each_entry(link, &supplier->links.consumers, s_node) {
- 		if (link->consumer != consumer)
- 			continue;
-@@ -241,12 +260,6 @@ struct device_link *device_link_add(stru
- 			goto out;
- 		}
- 
--		if (flags & DL_FLAG_AUTOREMOVE_CONSUMER)
--			link->flags |= DL_FLAG_AUTOREMOVE_CONSUMER;
--
--		if (flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
--			link->flags |= DL_FLAG_AUTOREMOVE_SUPPLIER;
--
- 		if (flags & DL_FLAG_PM_RUNTIME) {
- 			if (!(link->flags & DL_FLAG_PM_RUNTIME)) {
- 				pm_runtime_new_link(consumer);
-@@ -256,7 +269,25 @@ struct device_link *device_link_add(stru
- 				refcount_inc(&link->rpm_active);
- 		}
- 
--		kref_get(&link->kref);
-+		if (flags & DL_FLAG_STATELESS) {
-+			kref_get(&link->kref);
-+			goto out;
-+		}
-+
-+		/*
-+		 * If the life time of the link following from the new flags is
-+		 * longer than indicated by the flags of the existing link,
-+		 * update the existing link to stay around longer.
-+		 */
-+		if (flags & DL_FLAG_AUTOREMOVE_SUPPLIER) {
-+			if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER) {
-+				link->flags &= ~DL_FLAG_AUTOREMOVE_CONSUMER;
-+				link->flags |= DL_FLAG_AUTOREMOVE_SUPPLIER;
-+			}
-+		} else if (!(flags & DL_FLAG_AUTOREMOVE_CONSUMER)) {
-+			link->flags &= ~(DL_FLAG_AUTOREMOVE_CONSUMER |
-+					 DL_FLAG_AUTOREMOVE_SUPPLIER);
-+		}
- 		goto out;
- 	}
- 
-@@ -406,8 +437,16 @@ static void __device_link_del(struct kre
+ 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -116,7 +116,7 @@ static void deferred_probe_work_func(str
  }
- #endif /* !CONFIG_SRCU */
+ static DECLARE_WORK(deferred_probe_work, deferred_probe_work_func);
  
-+static void device_link_put_kref(struct device_link *link)
-+{
-+	if (link->flags & DL_FLAG_STATELESS)
-+		kref_put(&link->kref, __device_link_del);
-+	else
-+		WARN(1, "Unable to drop a managed device link reference\n");
-+}
-+
- /**
-- * device_link_del - Delete a link between two devices.
-+ * device_link_del - Delete a stateless link between two devices.
-  * @link: Device link to delete.
-  *
-  * The caller must ensure proper synchronization of this function with runtime
-@@ -419,14 +458,14 @@ void device_link_del(struct device_link
+-static void driver_deferred_probe_add(struct device *dev)
++void driver_deferred_probe_add(struct device *dev)
  {
- 	device_links_write_lock();
- 	device_pm_lock();
--	kref_put(&link->kref, __device_link_del);
-+	device_link_put_kref(link);
- 	device_pm_unlock();
- 	device_links_write_unlock();
- }
- EXPORT_SYMBOL_GPL(device_link_del);
+ 	mutex_lock(&deferred_probe_mutex);
+ 	if (list_empty(&dev->p->deferred_probe)) {
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -339,6 +339,7 @@ struct device *driver_find_device(struct
+ 				  struct device *start, void *data,
+ 				  int (*match)(struct device *dev, void *data));
+ 
++void driver_deferred_probe_add(struct device *dev);
+ int driver_deferred_probe_check_state(struct device *dev);
  
  /**
-- * device_link_remove - remove a link between two devices.
-+ * device_link_remove - Delete a stateless link between two devices.
-  * @consumer: Consumer end of the link.
-  * @supplier: Supplier end of the link.
-  *
-@@ -445,7 +484,7 @@ void device_link_remove(void *consumer,
+@@ -824,12 +825,14 @@ enum device_link_state {
+  * PM_RUNTIME: If set, the runtime PM framework will use this link.
+  * RPM_ACTIVE: Run pm_runtime_get_sync() on the supplier during link creation.
+  * AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driver unbind.
++ * AUTOPROBE_CONSUMER: Probe consumer driver automatically after supplier binds.
+  */
+ #define DL_FLAG_STATELESS		BIT(0)
+ #define DL_FLAG_AUTOREMOVE_CONSUMER	BIT(1)
+ #define DL_FLAG_PM_RUNTIME		BIT(2)
+ #define DL_FLAG_RPM_ACTIVE		BIT(3)
+ #define DL_FLAG_AUTOREMOVE_SUPPLIER	BIT(4)
++#define DL_FLAG_AUTOPROBE_CONSUMER	BIT(5)
  
- 	list_for_each_entry(link, &supplier->links.consumers, s_node) {
- 		if (link->consumer == consumer) {
--			kref_put(&link->kref, __device_link_del);
-+			device_link_put_kref(link);
- 			break;
- 		}
- 	}
+ /**
+  * struct device_link - Device link representation.
 
 
