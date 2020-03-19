@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 471F5C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6755BC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C83520409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBC320787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624839;
-	bh=qNV2gSQakub7A4LNhA7z2CS3u5sKa8dwxIGnhIQIJx0=;
+	s=default; t=1584624841;
+	bh=FbcZCwOBpIKtkGwLCBFpBHjyL2yg+SCnL9LA0x74+K0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=scJfDHKKgYOReZ/mSS83BFk7US4O45v/3dXkk14KvSF86/Slaft4kMRsP5XRUxezM
-	 EacXlH7gpwB4OZVYvPqUUY5Rko0iuy62pY8RsMOK1fjAdIXWtLvTdtU76gNAviUBh7
-	 jWVymsEda9WVV2Cn2/+FdR99YqjmIjJqg2g5G33c=
+	b=o4+5rMt+QjbyBh5uNwnbMAFneSeeJI5XwraRijrV3yuiuhoiKg2IYliK+XIXH+PPH
+	 4DszRblzWM1N7LGhUuedwC9qhvqa3pMfDWSAICMCqi4xtu1sfPHRJM1U7mxMoEF/+E
+	 jjoLiC8IHI3jKUdX33/anbRp5YnowXT0D0OyNDoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgCSNNN (ORCPT
+        id S1729106AbgCSNNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:13:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60106 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:13:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729090AbgCSNNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:13:10 -0400
+        id S1729080AbgCSNNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:13:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4359620722;
-        Thu, 19 Mar 2020 13:13:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C83902145D;
+        Thu, 19 Mar 2020 13:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623589;
-        bh=qNV2gSQakub7A4LNhA7z2CS3u5sKa8dwxIGnhIQIJx0=;
+        s=default; t=1584623587;
+        bh=FbcZCwOBpIKtkGwLCBFpBHjyL2yg+SCnL9LA0x74+K0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eL/tcKCeuq35P6+IQGUWZLdmMWHtsD5BCGWAc+A0nI3ScvT/7fw3luUoe1UMYXbuM
-         peUVxYFYktyIlDev9udUzus4nlfaIi7NZHxmwskF9Vdyibh9x9eR1ZQ+r6oNwwTsw7
-         sX4JInm9K6drzVWcUI5vFvljk9yAuqg0UAlwU0nE=
+        b=bQxVryhxiGZeRmnIFFWoaH8q73VoQ3x8ngtgPpNn3tjm5XwdPO3LTnKAEelulBS2C
+         dFN90+u4Ks/LqAfTH7a7KgT5FUHy/J0cqtxjUWt7DxJfr5ulP2DR5YRp3s8aoR5yxD
+         TKSsX5msF0MgSGTMvpBVdTlArXoo9dk8btpGdFT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sven Eckelmann <sven@narfation.org>,
+        Sven Eckelmann <sven.eckelmann@openmesh.com>,
+        Antonio Quartulli <a@unstable.cc>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 61/90] batman-adv: Fix lock for ogm cnt access in batadv_iv_ogm_calc_tq
-Date:   Thu, 19 Mar 2020 14:00:23 +0100
-Message-Id: <20200319123947.388897418@linuxfoundation.org>
+Subject: [PATCH 4.9 60/90] batman-adv: Fix check of retrieved orig_gw in batadv_v_gw_is_eligible
+Date:   Thu, 19 Mar 2020 14:00:22 +0100
+Message-Id: <20200319123947.111657586@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -59,44 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Sven Eckelmann <sven.eckelmann@openmesh.com>
 
-commit 5ba7dcfe77037b67016263ea597a8b431692ecab upstream.
+commit 198a62ddffa4a4ffaeb741f642b7b52f2d91ae9b upstream.
 
-The originator node object orig_neigh_node is used to when accessing the
-bcast_own(_sum) and real_packet_count information. The access to them has
-to be protected with the spinlock in orig_neigh_node.
+The batadv_v_gw_is_eligible function already assumes that orig_node is not
+NULL. But batadv_gw_node_get may have failed to find the originator. It
+must therefore be checked whether the batadv_gw_node_get failed and not
+whether orig_node is NULL to detect this error.
 
-But the function uses the lock in orig_node instead. This is incorrect
-because they could be two different originator node objects.
-
-Fixes: 0ede9f41b217 ("batman-adv: protect bit operations to count OGMs with spinlock")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Fixes: 50164d8f500f ("batman-adv: B.A.T.M.A.N. V - implement GW selection logic")
+Signed-off-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
+Acked-by: Antonio Quartulli <a@unstable.cc>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/bat_iv_ogm.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/batman-adv/bat_v.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -1227,7 +1227,7 @@ static bool batadv_iv_ogm_calc_tq(struct
- 	orig_node->last_seen = jiffies;
- 
- 	/* find packet count of corresponding one hop neighbor */
--	spin_lock_bh(&orig_node->bat_iv.ogm_cnt_lock);
-+	spin_lock_bh(&orig_neigh_node->bat_iv.ogm_cnt_lock);
- 	if_num = if_incoming->if_num;
- 	orig_eq_count = orig_neigh_node->bat_iv.bcast_own_sum[if_num];
- 	neigh_ifinfo = batadv_neigh_ifinfo_new(neigh_node, if_outgoing);
-@@ -1237,7 +1237,7 @@ static bool batadv_iv_ogm_calc_tq(struct
- 	} else {
- 		neigh_rq_count = 0;
+--- a/net/batman-adv/bat_v.c
++++ b/net/batman-adv/bat_v.c
+@@ -814,7 +814,7 @@ static bool batadv_v_gw_is_eligible(stru
  	}
--	spin_unlock_bh(&orig_node->bat_iv.ogm_cnt_lock);
-+	spin_unlock_bh(&orig_neigh_node->bat_iv.ogm_cnt_lock);
  
- 	/* pay attention to not get a value bigger than 100 % */
- 	if (orig_eq_count > neigh_rq_count)
+ 	orig_gw = batadv_gw_node_get(bat_priv, orig_node);
+-	if (!orig_node)
++	if (!orig_gw)
+ 		goto out;
+ 
+ 	if (batadv_v_gw_throughput_get(orig_gw, &orig_throughput) < 0)
 
 
