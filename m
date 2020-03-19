@@ -5,113 +5,133 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763A4C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CF2C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF6520663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2A3D20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:12:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqKQF2NS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAfJ6Cb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgCSQMK (ORCPT
+        id S1728202AbgCSQMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:12:10 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50994 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727577AbgCSQMK (ORCPT
+        Thu, 19 Mar 2020 12:12:12 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38033 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbgCSQMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 12:12:10 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z13so3163589wml.0;
+Received: by mail-wm1-f65.google.com with SMTP id l20so2984961wmi.3;
         Thu, 19 Mar 2020 09:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KrbGWoGHrNAkN/7yoRVhGOKa+eWQ1UuA90EUgfCOQho=;
-        b=JqKQF2NSbWpkaB2YQgRtXi4pRnvqxVXmxEgbnq8qDBmDopCObaDOAnMTXtkDT0oNU5
-         cpvIF2wxDxKAj4elpcd6dfsDzZbAuKrT43BAPG1Jqa8ten4zIMVGeoOg/n+6miEMbmaB
-         ZBuaerwrjc1U/nDIL23r8oouA0huCJJndVhe2FNfSxsGzsbvc86yZKm3cHMMu1XpFsvn
-         bZVyC8ug9BqSrbIHzKlxBxwqs/QljYkfVWQLmPt1gS8WqFmCB+fKSLSrW6E448fWLMfx
-         HHcmiofaLLNdeWPJscgY4LsFVR13MCTf23SaGz6OUcs0rLggP81rdpWr0w50nyvmU3Fb
-         EHIg==
+        h=from:to:cc:subject:date:message-id;
+        bh=kcI9L10AVu3IFfDLlq7fYdN8ePr2Q+2h97GxsvZx3J0=;
+        b=OAfJ6Cb3Q7fO4i8JHLbUWXZbGL9oGZ25fAszYa+CqeczsxwpIpylMDlEaAE3/6thJw
+         KDRToGk8bkf4r6chrw1GbZXwv1UPYsxCBC+WIDQhNV4VNFn6bWcI0joUFSxwznheJPCg
+         lxP0P/PWJiwSO2nMZL6FVLSU9KUopelr5zs871Yi9UHdL5tlvPnYh7KgRnh3EM+2SkVn
+         itx45pb22aoykPkRDFoX1u728LHpvSdtwnjYuY2Zf0+IEe+xE+Nym0hoy0weKmpxdtLX
+         KSooY/ODYEwZSNZQl24hdoaGVkigEYOPDppGJv2vGS3gNqp1WJ2az5SO3s7y1pUkXnVo
+         y/tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=KrbGWoGHrNAkN/7yoRVhGOKa+eWQ1UuA90EUgfCOQho=;
-        b=EBEvymiFSM6Ix6Tw/U+sXePad9F4W8dh5pEFYqL8aUlUV4UINyEZDXW1lw+2ViGDi+
-         EdsNPzerdQ24ZBElgGAyCOSMcIl9GMmS1FEv+Pjb8/RNT0zXat/nBpjTwMdceNzaVMi+
-         EQRrkNUXNG16lOYeFpO2MURqlQgxkpt9s1IgS/DcJM0J9SnOH0fXE94qhzF+aqaciO1O
-         0lRR+dYSkJYItUC6tFBPEhlIS5VPv8IP+69oDUnST3g2LJ7cX5iwWayo67/8e4E8R680
-         vdcf2J6gjDdK8svVIhIlLjhezxJpcGx8agGTabo8IqiaNto3ZGBo24+9TQgD5JlHX+fB
-         r2SQ==
-X-Gm-Message-State: ANhLgQ3gflIWJ+xe9qWaey2k5S6rdBIW1s3N0ryCMgsGs/fD16fTAJk5
-        4NnIgdDm+7me7OKCjYqbRvM=
-X-Google-Smtp-Source: ADFU+vui/AhR7WL50TXv0XoVgoj9U4tQmO2VTlUOWhnKa9HAfhIMLkPJTm7GaGae0ATpMTrjXS2SRQ==
-X-Received: by 2002:a7b:c0cf:: with SMTP id s15mr4793754wmh.106.1584634328020;
-        Thu, 19 Mar 2020 09:12:08 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id w204sm3973485wma.1.2020.03.19.09.12.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kcI9L10AVu3IFfDLlq7fYdN8ePr2Q+2h97GxsvZx3J0=;
+        b=a3S7L5jQBHtXNUnH2rE2oZ6HkxzuJG8xOv84najdp0QzM4TX59eH49mAXZ/vflvzl9
+         +ZMBrY3humE02/EsBM2yrZv+mjCZRLf5HldRACI/UoQtPTchVzcKlN34RdvdiBk2tHzq
+         9xqslHUqAFVeecJzIJkTZe7V4XOvSfls8LUM4GL6y6R5i8iLo53JfuO0aljJY+zVLgbZ
+         VRpW6xfpy5eHWi7NZzpLlHq9UMoxAxMLsXgV9esUBqM2Af4bkZlkbm5DGJrH//WvG1T+
+         g6YuJeF5ykymoB174OC0tx4yjjdUrgZpwaeLOgSQwMi6zSF46t2uHaxOaHV5Hzsjk+o8
+         WmmQ==
+X-Gm-Message-State: ANhLgQ3Bk6BPrZjX/dy0hKmjS6ghJqWtQae2pC0eMaNoFpEkWj2RFdFI
+        kwUZXcw7wnnTz9/tE/V0eWg=
+X-Google-Smtp-Source: ADFU+vv7RkcNf6iJ+zQ/ULJBSRGSg9vNsaWp0WejEfo/Y0gYZuPRr4L3BhyGJyqw2V3klwYvuQYG2g==
+X-Received: by 2002:a05:600c:210d:: with SMTP id u13mr4718627wml.92.1584634327036;
         Thu, 19 Mar 2020 09:12:07 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id w204sm3973485wma.1.2020.03.19.09.12.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Mar 2020 09:12:06 -0700 (PDT)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     heiko@sntech.de
 Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 2/2] ARM: dts: rockchip: fix yaml warnings for rk3288-pmu-sram compatible nodes
-Date:   Thu, 19 Mar 2020 17:11:59 +0100
-Message-Id: <20200319161159.24548-2-jbx6244@gmail.com>
+Subject: [RFC PATCH v2 1/2] dt-bindings: sram: convert rockchip-pmu-sram bindings to yaml
+Date:   Thu, 19 Mar 2020 17:11:58 +0100
+Message-Id: <20200319161159.24548-1-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200319161159.24548-1-jbx6244@gmail.com>
-References: <20200319161159.24548-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A test with the command below gives for example these warnings:
-
-arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-'#address-cells' is a required property
-arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-'#size-cells' is a required property
-arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
-'ranges' is a required property
-
-Fix this error by adding '#address-cells', '#size-cells' and
-'ranges' to the 'rockchip,rk3288-pmu-sram' compatible node
-in rk3288.dtsi.
-
-make ARCH=arm dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/sram/sram.yaml
+Current dts files with 'rockchip-pmu-sram' compatible nodes
+are now verified with sram.yaml, although the original
+text document still exists. Merge rockchip-pmu-sram.txt
+with sram.yaml by adding it as description with an example.
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
 Not tested with hardware.
 
 Changed v2:
-  Fix dtsi.
+  Merge with sram.yaml
 ---
- arch/arm/boot/dts/rk3288.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/sram/rockchip-pmu-sram.txt       | 16 ----------------
+ Documentation/devicetree/bindings/sram/sram.yaml         | 13 +++++++++++++
+ 2 files changed, 13 insertions(+), 16 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 07681f1f0..e72368a7a 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -731,6 +731,9 @@
- 	pmu_sram: sram@ff720000 {
- 		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
- 		reg = <0x0 0xff720000 0x0 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x0 0xff720000 0x1000>;
- 	};
+diff --git a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt b/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
+deleted file mode 100644
+index 6b42fda30..000000000
+--- a/Documentation/devicetree/bindings/sram/rockchip-pmu-sram.txt
++++ /dev/null
+@@ -1,16 +0,0 @@
+-Rockchip SRAM for pmu:
+-------------------------------
+-
+-The sram of pmu is used to store the function of resume from maskrom(the 1st
+-level loader). This is a common use of the "pmu-sram" because it keeps power
+-even in low power states in the system.
+-
+-Required node properties:
+-- compatible : should be "rockchip,rk3288-pmu-sram"
+-- reg : physical base address and the size of the registers window
+-
+-Example:
+-	sram@ff720000 {
+-		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
+-		reg = <0xff720000 0x1000>;
+-	};
+diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
+index 7b83cc6c9..a9b1c2b74 100644
+--- a/Documentation/devicetree/bindings/sram/sram.yaml
++++ b/Documentation/devicetree/bindings/sram/sram.yaml
+@@ -224,6 +224,19 @@ examples:
+     };
  
- 	pmu: power-management@ff730000 {
+   - |
++    // Rockchip's rk3288 SoC uses the sram of pmu to store the function of
++    // resume from maskrom(the 1st level loader). This is a common use of
++    // the "pmu-sram" because it keeps power even in low power states
++    // in the system.
++    sram@ff720000 {
++      compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
++      reg = <0xff720000 0x1000>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges = <0 0xff720000 0x1000>;
++    };
++
++  - |
+     // Allwinner's A80 SoC uses part of the secure sram for hotplugging of the
+     // primary core (cpu0). Once the core gets powered up it checks if a magic
+     // value is set at a specific location. If it is then the BROM will jump
 -- 
 2.11.0
 
