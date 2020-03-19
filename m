@@ -2,52 +2,52 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0480C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D01D7C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BA120663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A355420663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625001;
-	bh=KyDaPgIrcno7Ub4ubXBjE5mtig/Dz5pedBum38+A9RA=;
+	s=default; t=1584625007;
+	bh=C62zeUMbfr938Xn64S3p3R2EoMm1I5CvPHqj4vLMxY8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dyINgrZRi+l91tzIVjy5XCQOSW/K3tBtErvE2IrAGQMVYfWDo6WLwKRbrdViAww+W
-	 vOPRyMMB4vf6H0KI6pQkZfap18JZqmH4SXEHM+bWZgs4jHY93/Jem+O+FO7kPTfi4/
-	 iVBOl8N3YAOiIT4/tHR7Jg1eg0WrvAjMqzr4vLAM=
+	b=XOclvQ+duWShDVXITfHctkpRat1ay138H5mT5ZSSrUg8BLusylKpm8SQ3iCManNdv
+	 kRdLkAPLP/+WUfIyqiIIsvB3j7P/NHH9XWJp5xLHk0S68bedeQwe2fAD3W8uPkU0fU
+	 HQk6EnkSzg434eTz1wC3YCLzUzZOOfESkGlXUwAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728309AbgCSNJV (ORCPT
+        id S1728256AbgCSNJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:09:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53730 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:09:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728292AbgCSNJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:09:18 -0400
+        id S1727585AbgCSNJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:09:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49F9C208D6;
-        Thu, 19 Mar 2020 13:09:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CE97208D6;
+        Thu, 19 Mar 2020 13:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623357;
-        bh=KyDaPgIrcno7Ub4ubXBjE5mtig/Dz5pedBum38+A9RA=;
+        s=default; t=1584623344;
+        bh=C62zeUMbfr938Xn64S3p3R2EoMm1I5CvPHqj4vLMxY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g5PqKzCsPY6IW6lgVTinRsE0vr0ETraOjPRiqHJ0zMV5HXlPHQFaa/NEBGMm8gMLr
-         gMs4tJ+dKo7+v5tY+OrkA0p2a0xTMYs+1HNiXorYqv1g3xdV7VtkK+4D6lDBzWjcQC
-         XzUNbCDP/pzvacp1ZRiJrwu+Zl51CgWi33m+CdqM=
+        b=pSPCkXXIyb4+ttw0qkAWWsdYA/ngxXrOnC8B8hVwaG/yeq+JRVkedt1+068nWLrO+
+         SJNFpDWXXosSiBVyO0ZBKZxlxJW5+vtFfhvaWg9Snys618B1I3SFhDjS4GBjfRl4Dv
+         sAimvAnLyt210kvNlcB2BjsmJI+ijmBn3Yt35AcA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Marek Lindner <mareklindner@neomailbox.ch>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 76/93] batman-adv: Prevent duplicated gateway_node entry
-Date:   Thu, 19 Mar 2020 14:00:20 +0100
-Message-Id: <20200319123948.963727160@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Qian Cai <cai@lca.pw>, Theodore Tso <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 89/93] jbd2: fix data races at struct journal_head
+Date:   Thu, 19 Mar 2020 14:00:33 +0100
+Message-Id: <20200319123952.641109255@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -60,83 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Qian Cai <cai@lca.pw>
 
-commit dff9bc42ab0b2d38c5e90ddd79b238fed5b4c7ad upstream.
+[ Upstream commit 6c5d911249290f41f7b50b43344a7520605b1acb ]
 
-The function batadv_gw_node_add is responsible for adding new gw_node to
-the gateway_list. It is expecting that the caller already checked that
-there is not already an entry with the same key or not.
+journal_head::b_transaction and journal_head::b_next_transaction could
+be accessed concurrently as noticed by KCSAN,
 
-But the lock for the list is only held when the list is really modified.
-This could lead to duplicated entries because another context could create
-an entry with the same key between the check and the list manipulation.
+ LTP: starting fsync04
+ /dev/zero: Can't open blockdev
+ EXT4-fs (loop0): mounting ext3 file system using the ext4 subsystem
+ EXT4-fs (loop0): mounted filesystem with ordered data mode. Opts: (null)
+ ==================================================================
+ BUG: KCSAN: data-race in __jbd2_journal_refile_buffer [jbd2] / jbd2_write_access_granted [jbd2]
 
-The check and the manipulation of the list must therefore be in the same
-locked code section.
+ write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on cpu 70:
+  __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
+  __jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
+  jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
+  (inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1034
+  kjournald2+0x13b/0x450 [jbd2]
+  kthread+0x1cd/0x1f0
+  ret_from_fork+0x27/0x50
 
-Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Marek Lindner <mareklindner@neomailbox.ch>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on cpu 68:
+  jbd2_write_access_granted+0x1b2/0x250 [jbd2]
+  jbd2_write_access_granted at fs/jbd2/transaction.c:1155
+  jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
+  __ext4_journal_get_write_access+0x50/0x90 [ext4]
+  ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
+  ext4_mb_new_blocks+0x54f/0xca0 [ext4]
+  ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
+  ext4_map_blocks+0x3b4/0x950 [ext4]
+  _ext4_get_block+0xfc/0x270 [ext4]
+  ext4_get_block+0x3b/0x50 [ext4]
+  __block_write_begin_int+0x22e/0xae0
+  __block_write_begin+0x39/0x50
+  ext4_write_begin+0x388/0xb50 [ext4]
+  generic_perform_write+0x15d/0x290
+  ext4_buffered_write_iter+0x11f/0x210 [ext4]
+  ext4_file_write_iter+0xce/0x9e0 [ext4]
+  new_sync_write+0x29c/0x3b0
+  __vfs_write+0x92/0xa0
+  vfs_write+0x103/0x260
+  ksys_write+0x9d/0x130
+  __x64_sys_write+0x4c/0x60
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ 5 locks held by fsync04/25724:
+  #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at: vfs_write+0x21c/0x260
+  #1: ffff99f9db4c0348 (&sb->s_type->i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
+  #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
+  #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at: ext4_map_blocks+0x176/0x950 [ext4]
+  #4: ffffffff99086b40 (rcu_read_lock){....}, at: jbd2_write_access_granted+0x4e/0x250 [jbd2]
+ irq event stamp: 1407125
+ hardirqs last  enabled at (1407125): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
+ hardirqs last disabled at (1407124): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
+ softirqs last  enabled at (1405528): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
+ softirqs last disabled at (1405521): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
+
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 68 PID: 25724 Comm: fsync04 Tainted: G L 5.6.0-rc2-next-20200221+ #7
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+
+The plain reads are outside of jh->b_state_lock critical section which result
+in data races. Fix them by adding pairs of READ|WRITE_ONCE().
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/20200222043111.2227-1-cai@lca.pw
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/gateway_client.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ fs/jbd2/transaction.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/batman-adv/gateway_client.c
-+++ b/net/batman-adv/gateway_client.c
-@@ -29,6 +29,7 @@
- #include <linux/ipv6.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
-+#include <linux/lockdep.h>
- #include <linux/netdevice.h>
- #include <linux/rculist.h>
- #include <linux/rcupdate.h>
-@@ -413,6 +414,9 @@ out:
-  * @bat_priv: the bat priv with all the soft interface information
-  * @orig_node: originator announcing gateway capabilities
-  * @gateway: announced bandwidth information
-+ *
-+ * Has to be called with the appropriate locks being acquired
-+ * (gw.list_lock).
-  */
- static void batadv_gw_node_add(struct batadv_priv *bat_priv,
- 			       struct batadv_orig_node *orig_node,
-@@ -420,6 +424,8 @@ static void batadv_gw_node_add(struct ba
- {
- 	struct batadv_gw_node *gw_node;
- 
-+	lockdep_assert_held(&bat_priv->gw.list_lock);
-+
- 	if (gateway->bandwidth_down == 0)
- 		return;
- 
-@@ -438,9 +444,7 @@ static void batadv_gw_node_add(struct ba
- 	gw_node->bandwidth_up = ntohl(gateway->bandwidth_up);
- 	atomic_set(&gw_node->refcount, 1);
- 
--	spin_lock_bh(&bat_priv->gw.list_lock);
- 	hlist_add_head_rcu(&gw_node->list, &bat_priv->gw.list);
--	spin_unlock_bh(&bat_priv->gw.list_lock);
- 
- 	batadv_dbg(BATADV_DBG_BATMAN, bat_priv,
- 		   "Found new gateway %pM -> gw bandwidth: %u.%u/%u.%u MBit\n",
-@@ -493,11 +497,14 @@ void batadv_gw_node_update(struct batadv
- {
- 	struct batadv_gw_node *gw_node, *curr_gw = NULL;
- 
-+	spin_lock_bh(&bat_priv->gw.list_lock);
- 	gw_node = batadv_gw_node_get(bat_priv, orig_node);
- 	if (!gw_node) {
- 		batadv_gw_node_add(bat_priv, orig_node, gateway);
-+		spin_unlock_bh(&bat_priv->gw.list_lock);
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 6457023d8fac1..3233e5ac9774f 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1041,8 +1041,8 @@ static bool jbd2_write_access_granted(handle_t *handle, struct buffer_head *bh,
+ 	/* For undo access buffer must have data copied */
+ 	if (undo && !jh->b_committed_data)
  		goto out;
- 	}
-+	spin_unlock_bh(&bat_priv->gw.list_lock);
- 
- 	if ((gw_node->bandwidth_down == ntohl(gateway->bandwidth_down)) &&
- 	    (gw_node->bandwidth_up == ntohl(gateway->bandwidth_up)))
+-	if (jh->b_transaction != handle->h_transaction &&
+-	    jh->b_next_transaction != handle->h_transaction)
++	if (READ_ONCE(jh->b_transaction) != handle->h_transaction &&
++	    READ_ONCE(jh->b_next_transaction) != handle->h_transaction)
+ 		goto out;
+ 	/*
+ 	 * There are two reasons for the barrier here:
+@@ -2458,8 +2458,8 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
+ 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
+ 	 * take a new one.
+ 	 */
+-	jh->b_transaction = jh->b_next_transaction;
+-	jh->b_next_transaction = NULL;
++	WRITE_ONCE(jh->b_transaction, jh->b_next_transaction);
++	WRITE_ONCE(jh->b_next_transaction, NULL);
+ 	if (buffer_freed(bh))
+ 		jlist = BJ_Forget;
+ 	else if (jh->b_modified)
+-- 
+2.20.1
+
 
 
