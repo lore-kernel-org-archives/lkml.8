@@ -2,133 +2,94 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 678C8C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB631C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4A52070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:17:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="INK5FY4J"
+	by mail.kernel.org (Postfix) with ESMTP id 9D0352070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbgCSRRM (ORCPT
+        id S1728567AbgCSRRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:17:12 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41472 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbgCSRRM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:17:12 -0400
-Received: by mail-il1-f194.google.com with SMTP id l14so2955559ilj.8;
-        Thu, 19 Mar 2020 10:17:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g2puVLEy6afSLzUcb87vcVA5fc3TX3nJUf9e0Okyxfw=;
-        b=INK5FY4JU9WZQN7v0WeMyVSF0VrQk4T1gnKH7Z7eZE/CF5pIMmhnuF5ojjvw0l/4DI
-         /sE+czy0eVQGHT4WtOqHFcQkqMevU0FM5PUQitLidNvtV6KAnM9NiWKLo010JYNQU5Qh
-         epaszkvezxUIi/XfSxWz0hyv40PCy/UNB4hPTLNLFVSqSLU7K65FLrU68coL0Mno9Srn
-         79hv5y77/B0YdwIuxFdTZk8/OwkjTI8EfFwPl4ErBh9rY9C34BuyXgq77K79d+Lszgtb
-         LWg0NM/Q2iz0yTSCpn7zo8VNiAJ7HNPuz/CXSzK+9b70ExbetZWf+JWrzYfJKgYjFFmq
-         Y5aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g2puVLEy6afSLzUcb87vcVA5fc3TX3nJUf9e0Okyxfw=;
-        b=mccjPG3eSncwAUaDRC/gF1A7k0QmTNRjktaP8iMIufoKHWQQo21cFPMdizlLbjy98O
-         ZhduN5/kLZvE8+AA0px4+AaF9uLZ74aSz7JxPU6dugWPC57wHka70BFWpey+sm6xXn6k
-         7yCwrxdynZ0ux8kg5lPqe8Z1kt2P8SpO+WVcqi9nnbUaTw0S1RS4MbcmC+DZQmg7rjwy
-         Pzr8lWATXMnAgQQ77US8O4No6sLf4VgCOGfmIg07nZ2VAZs/I9KtVjVVRXdz+9z6YIZn
-         t02erKqQrgp+7pF54Kxo7WfjijLIawIE/KfmCsrbnMiWYNP0rEHrYCKCOtoS2XdbY2Sb
-         yutQ==
-X-Gm-Message-State: ANhLgQ3I95a9ITGNJCq7FAvuuzYAHrDyBVpxEybMJjwj1AUK6wRESkeD
-        FNTh1i6swYV5trhX6KKW9/6bWSVJPToerWuAC1W8NU57
-X-Google-Smtp-Source: ADFU+vsFrtCl3nw/cH8PE23Zz0zaNQwxsOKGrtz5qBN+qCE1goDUCx0XmoX0cDrtI52kS3KiPy/h3nANlAzO8mJsV0s=
-X-Received: by 2002:a92:8f53:: with SMTP id j80mr4322003ild.171.1584638230705;
- Thu, 19 Mar 2020 10:17:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAGWqDJ7AccvoxjKfQJ3GytJ-+u56Bk3rEn0sSYv-zCuBe1brAg@mail.gmail.com>
- <CAL_JsqLz-0myc-PSSaCQWDFXQx+=X9nBSXWsJaGCVqTFn0d5kw@mail.gmail.com>
- <CAGWqDJ4yA4ikz5MwQQwW8CAvE_dt16iuvN6cKRL2DdAuw8QWww@mail.gmail.com> <CAL_JsqLU4kEmRnXhQ5+gP-ZisS2Za+s6mNFg4RnMdpDtDRQB3g@mail.gmail.com>
-In-Reply-To: <CAL_JsqLU4kEmRnXhQ5+gP-ZisS2Za+s6mNFg4RnMdpDtDRQB3g@mail.gmail.com>
-From:   Vinay Simha B N <simhavcs@gmail.com>
-Date:   Thu, 19 Mar 2020 22:46:59 +0530
-Message-ID: <CAGWqDJ5O2Lw-=5gHMja0SWVG1ttc_+7ieo-aEf7BRq+W8DGOnA@mail.gmail.com>
-Subject: Re: graph connection to node is not bidirectional kernel-5.6.0-rc6
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 19 Mar 2020 13:17:17 -0400
+Received: from wind.enjellic.com ([76.10.64.91]:60660 "EHLO wind.enjellic.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727556AbgCSRRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:17:16 -0400
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 02JHGiFm023297;
+        Thu, 19 Mar 2020 12:16:44 -0500
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 02JHGhMO023296;
+        Thu, 19 Mar 2020 12:16:43 -0500
+Date:   Thu, 19 Mar 2020 12:16:43 -0500
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Jordan Hand <jorhand@linux.microsoft.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, sean.j.christopherson@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com
+Subject: Re: [PATCH v28 00/22] Intel SGX foundations
+Message-ID: <20200319171643.GA22995@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <8832f446-fbf1-f480-8cfa-848cc5101cb5@linux.microsoft.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8832f446-fbf1-f480-8cfa-848cc5101cb5@linux.microsoft.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 19 Mar 2020 12:16:44 -0500 (CDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 10:36 PM Rob Herring <robh@kernel.org> wrote:
+On Tue, Mar 17, 2020 at 09:00:15AM -0700, Jordan Hand wrote:
+
+Hi, I hope the week is going well for everyone.
+
+> I tested with the Open Enclave SDK test suite (~200 test and sample
+> enclaves), no issues. Used Intel PSW version 2.8.
 >
-> On Thu, Mar 19, 2020 at 9:56 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
-> >
-> > On Thu, Mar 19, 2020 at 9:16 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Thu, Mar 19, 2020 at 1:31 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
-> > > >
-> > > > hi,
-> > > >
-> > > > I am getting the endpoint' is not bidirectional(d2l_in, dsi0_out)
-> > > > warning in compilation, built boot image works on qcom apq8016-ifc6309
-> > > > board with the dsi->bridge->lvds panel.
-> > > > Because of this warning i cannot create a .yaml documentation examples.
-> > > > Please suggest.
-> > > >
-> > > > tc_bridge: bridge@f {
-> > >
-> > >              ^^^^^^^^
-> > >
-> > > > arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:253.28-255.9: Warning
-> > > > (graph_endpoint): /soc/i2c@78b8000/bridge@39/ports/port@0/endpoint:
-> > >
-> > >                                      ^^^^^^^^^
-> > >
-> > > Looks like you have 2 different bridges.
-> > >
-> > i had two bridges, if we disable one bridge also we get the warning
-> >
-> > arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:333.53-335.35: Warning
-> > (graph_endpoint): /soc/auo,b101xtn01/port/endpoint: graph connection
-> > to node '/soc/i2c@78b8000/bridge@f/ports/port@1/endpoint' is not
-> > bidirectional
->
-> You can't just disable nodes. To switch which bridge is enabled, you
-> already have to modify remote-endpoint at the other end. So the
-> requirement is you have to modify both 'remote-endpoint' properties
-> (or really all 3).
->
-> The other options is if you want both connections described, then you
-> need 2 'endpoint' nodes to connect both bridges.
-even after removing one bridge(dsi2hdmi) in the device tree, currently
-using only one bridge(dsi2lvds), i do still get the compilation warning.
+> Tested-by: Jordan Hand <jorhand@linux.microsoft.com>
 
- graph connection
- to node '/soc/i2c@78b8000/bridge@f/ports/port@1/endpoint' is not
-bidirectional
+Which effectively translates into a second test of the Intel PSW,
+since it appears from Haitao's comments they are unit testing against
+the new driver.
 
-This compilation warning does not cause any problem with the boot image created
-dsi -> dsi2lvds bridge-> lvds panel . Able to get the display properly.
+Unless of course you wired up the OpenEnclave infrastructure to use
+the new VDSO and exception handling, as that would be a significant
+test, is that the case?
 
-https://github.com/vinaysimhabn/kernel-msm/blob/08e4821646b5c128559c506a5777d8782f1ff79e/Documentation/devicetree/bindings/display/bridge/toshiba%2Ctc358775.yaml
+Getting a real live enclave loaded and initialized in memory is
+essentially a contract with the enclave ELF parser and metadata
+interpreter that the runtime implements.  There is nothing subtle
+about whether or not that is working correctly.  The acid test after
+that is the enclave entry and exit handling which is ultimately a
+function of the exception handling.
 
-But while creating documentation yaml, it is not allowing to add this examples.
--- 
-regards,
-vinaysimha
+> Thanks,
+> Jordan
+
+Have a good remainder of the week.
+
+Dr. Greg
+
+As always,
+Dr. Greg Wettstein, Ph.D, Worker      SGX secured infrastructure and
+Enjellic Systems Development, LLC     autonomously self-defensive
+4206 N. 19th Ave.                     platforms.
+Fargo, ND  58102
+PH: 701-281-1686                      EMAIL: greg@enjellic.com
+------------------------------------------------------------------------------
+"God made man, the appendix was the result of a committee."
+                                -- Dr. G.W. Wettstein
+                                   Guerrilla Tactics for Corporate Survival
