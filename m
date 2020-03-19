@@ -7,167 +7,309 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B9EC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBDFC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 519C52080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3988B20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="m00v60jz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NRa2TH1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgCSQKF (ORCPT
+        id S1728107AbgCSQLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:10:05 -0400
-Received: from vps.xff.cz ([195.181.215.36]:59430 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbgCSQKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:10:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1584634202; bh=JE6As6CIZS8cuj7+7+rzHQMv4MweXNHp5Nj8F2f/1sA=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=m00v60jzWPKSy4jXWtAUn2BxQ5ECTDL76y74ZABR/+zsxyxNzOa9abxC1yecgnHjx
-         KyWqFQ4mWOj4PlpaJGOWIf7n5O1LgS0Mx1dDT4j3JRi//FLpLhUvc7wcVlo8MsbAN0
-         kGfArbhAbc0qZa9JaF5PXOh0PrQ1KuPwEaZS+Odk=
-Date:   Thu, 19 Mar 2020 17:10:02 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
-Subject: Re: [linux-sunxi] [PATCH v2 5/5] arm64: allwinner: dts: a64: add
- LCD-related device nodes for PinePhone
-Message-ID: <20200319161002.kmivhr3ouhoyn4bt@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com
-References: <20200316133503.144650-1-icenowy@aosc.io>
- <20200316133503.144650-6-icenowy@aosc.io>
- <d32e59aeb8395af1ae7ac2daa1ce985c56c14acc.camel@aosc.io>
+        Thu, 19 Mar 2020 12:11:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54140 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727867AbgCSQLG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 12:11:06 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 25so3140127wmk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 09:11:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=sWuJdiN77I0SRgdziu/ANQCfcDyI2dyQpD0oHzx05RE=;
+        b=NRa2TH1KNI20HKrUdaB3mq5Pgdr1fkTVBjHkK/j6Qbqy8i//ZRT2cAze9k5sXg0Zvy
+         eLOhkWXlswuuJ0k0yrX7QAekZqGfRoUNh2t3ivM7JMntHXaj+GSk6Wqh1f8mLrEJX2Rp
+         8QBQkqWD4HnIkigqg+eHV3l87n8x29UMh95ytehJ/c+BJq2YaHf8LONa/5gcM325uWTk
+         MRqJgDV6n+mZfEVeNmeq0nzd+QCfmn4C0rudw87mHF8HlL+lDqjdcQYIFsSixSU6DsMq
+         3ouPozXhOEHsKRIBd6sbq6qV7bly3FFsohcvjPWp637TEUerlgV3/7R1l8pbZH3d/ZkE
+         vVTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=sWuJdiN77I0SRgdziu/ANQCfcDyI2dyQpD0oHzx05RE=;
+        b=EMh+gKS04EuO/QcqjX4dnYWWnxRVEi9CTa4obUjimZqUpn6l3xds4M+uvDuUJLoUun
+         SqaAKI4fRIfNCj78C40ajqTafrTUndMBB/dl4yVxk5jAST0PIK7ug4FHN84/cgfEzBA5
+         ++rXXV6wJ6s0gCHlP6a7shyOz/T5YU4GL4M/Y6G1Q61hDe63nPzHY2O7sfgeMTGi2jwV
+         E3hv9OtEwmT504qzecLl2VmA9ECwSG05ipmfVCJYN7jyr3Z1e76PHbkkOHuXYVzczKRj
+         2ALirG73n6Cd8fGh9iDebrIRdTDjI6MT0KGkY2xN3r3WlcyvqjrqXN7qOGS9EP4J0/8N
+         s1ZQ==
+X-Gm-Message-State: ANhLgQ0p60CKanPyHIkYKxV/8aZ64Kt7B7eHD87t5OgTkYxQ+FxjSxoe
+        cshCPS8dMHgMxGhq9E2yI7n24A==
+X-Google-Smtp-Source: ADFU+vtOE3VlyG9v+RM4DJhmHiqbPcL3RRCD1IQqEyTkro7G/tSGEAywOgeiEyqGnDiLbv1bZbTwsg==
+X-Received: by 2002:a1c:4e14:: with SMTP id g20mr4309223wmh.143.1584634263756;
+        Thu, 19 Mar 2020 09:11:03 -0700 (PDT)
+Received: from dell ([2.27.35.213])
+        by smtp.gmail.com with ESMTPSA id l13sm4046033wrm.57.2020.03.19.09.11.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 09:11:03 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 16:11:49 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, jic23@kernel.org
+Subject: Re: [PATCH RESEND v6 2/7] mfd: rn5t618: add IRQ support
+Message-ID: <20200319161149.GB5477@dell>
+References: <20200313064535.31503-1-andreas@kemnade.info>
+ <20200313064535.31503-3-andreas@kemnade.info>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d32e59aeb8395af1ae7ac2daa1ce985c56c14acc.camel@aosc.io>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <20200313064535.31503-3-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 10:51:36PM +0800, Icenowy Zheng wrote:
-> 在 2020-03-16星期一的 21:35 +0800，Icenowy Zheng写道：
-> > PinePhone uses PWM backlight and a XBD599 LCD panel over DSI for
-> > display.
-> > 
-> > Add its device nodes.
-> > 
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > ---
-> > No changes in v2.
-> > 
-> >  .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 37
-> > +++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> > b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> > index cefda145c3c9..96d9150423e0 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-> > @@ -16,6 +16,15 @@ aliases {
-> >  		serial0 = &uart0;
-> >  	};
-> >  
-> > +	backlight: backlight {
-> > +		compatible = "pwm-backlight";
-> > +		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-> > +		brightness-levels = <0 16 18 20 22 24 26 29 32 35 38 42
-> > 46 51 56 62 68 75 83 91 100>;
+On Fri, 13 Mar 2020, Andreas Kemnade wrote:
+
+> This adds support for IRQ handling in the RC5T619 which is required
+> for properly implementing subdevices like RTC.
+> For now only definitions for the variant RC5T619 are included.
 > 
-> Should I drop the 0 here and replace it with 14?
-
-Almost all boards in arm/boot/dts start at 0.
-
-> I have heard community complaining about setting 0 to brightness make
-> the screen black.
-
-Level 0 (first value in the list) is special, and turns off the backlight:
-
-123         if (brightness > 0) {
-124                 pwm_get_state(pb->pwm, &state);
-125                 state.duty_cycle = compute_duty_cycle(pb, brightness);
-126                 pwm_apply_state(pb->pwm, &state);
-127                 pwm_backlight_power_on(pb);
-128         } else {
-129                 pwm_backlight_power_off(pb);
-130         }
-
-	o.
-
-> (I think in this situation bl_power or blank the DSI panel can still
-> totally shut down the backlight).
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Changes in v5:
+> rn5t618_irq_init static
 > 
-> > +		default-brightness-level = <15>;
-> > +		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-> > +		power-supply = <&reg_ldo_io0>;
-> > +	};
-> > +
-> >  	chosen {
-> >  		stdout-path = "serial0:115200n8";
-> >  	};
-> > @@ -84,6 +93,30 @@ &dai {
-> >  	status = "okay";
-> >  };
-> >  
-> > +&de {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&dphy {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&dsi {
-> > +	vcc-dsi-supply = <&reg_dldo1>;
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
-> > +	status = "okay";
-> > +
-> > +	panel@0 {
-> > +		compatible = "xingbangda,xbd599";
-> > +		reg = <0>;
-> > +		reset-gpios = <&pio 3 23 GPIO_ACTIVE_LOW>; /* PD23 */
-> > +		iovcc-supply = <&reg_dldo2>;
-> > +		vcc-supply = <&reg_ldo_io0>;
-> > +		backlight = <&backlight>;
-> > +	};
-> > +};
-> > +
-> >  &ehci0 {
-> >  	status = "okay";
-> >  };
-> > @@ -188,6 +221,10 @@ &r_pio {
-> >  	 */
-> >  };
-> >  
-> > +&r_pwm {
-> > +	status = "okay";
-> > +};
-> > +
-> >  &r_rsb {
-> >  	status = "okay";
-> >  
-> > -- 
-> > 2.24.1
-> > 
+> Changes in v4:
+> merge rn5t618-irq.c into rn5t618.c
+> use macros for IRQ table
 > 
+> Changes in v3:
+> alignment cleanup
+> 
+> Changes in v2:
+> - no dead code, did some more testing and thinking for that
+> - remove extra empty lines
+>  drivers/mfd/Kconfig         |  1 +
+>  drivers/mfd/rn5t618.c       | 88 +++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/rn5t618.h | 15 +++++++
+>  3 files changed, 104 insertions(+)
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 2b203290e7b9..a7067888a41e 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1058,6 +1058,7 @@ config MFD_RN5T618
+>  	depends on OF
+>  	select MFD_CORE
+>  	select REGMAP_I2C
+> +	select REGMAP_IRQ
+>  	help
+>  	  Say yes here to add support for the Ricoh RN5T567,
+>  	  RN5T618, RC5T619 PMIC.
+> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+> index ead2e79036a9..849a33d64860 100644
+> --- a/drivers/mfd/rn5t618.c
+> +++ b/drivers/mfd/rn5t618.c
+> @@ -8,6 +8,8 @@
+>  
+>  #include <linux/delay.h>
+>  #include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/rn5t618.h>
+>  #include <linux/module.h>
+> @@ -46,9 +48,63 @@ static const struct regmap_config rn5t618_regmap_config = {
+>  	.cache_type	= REGCACHE_RBTREE,
+>  };
+>  
+> +static const struct regmap_irq rc5t619_irqs[] = {
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_RTC, 0, BIT(2)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_ADC, 0, BIT(3)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_GPIO, 0, BIT(4)),
+> +	REGMAP_IRQ_REG(RN5T618_IRQ_CHG, 0, BIT(6)),
+> +};
+> +
+> +static const struct regmap_irq_chip rc5t619_irq_chip = {
+> +	.name = "rc5t619",
+> +	.irqs = rc5t619_irqs,
+> +	.num_irqs = ARRAY_SIZE(rc5t619_irqs),
+> +	.num_regs = 1,
+> +	.status_base = RN5T618_INTMON,
+> +	.mask_base = RN5T618_INTEN,
+> +	.mask_invert = true,
+> +};
+> +
+>  static struct rn5t618 *rn5t618_pm_power_off;
+>  static struct notifier_block rn5t618_restart_handler;
+>  
+> +static int rn5t618_irq_init(struct rn5t618 *rn5t618)
+> +{
+> +	const struct regmap_irq_chip *irq_chip;
+> +	int ret;
+> +
+> +	if (!rn5t618->irq)
+> +		return 0;
+> +
+> +	switch (rn5t618->variant) {
+> +	case RC5T619:
+> +		irq_chip = &rc5t619_irq_chip;
+> +		break;
+> +	default:
+> +		irq_chip = NULL;
+
+If you initialised this at the top, you can rid this line.
+
+Don't you want to put a message in here about an unsupported device?
+
+> +		break;
+> +	}
+> +
+> +	if (!irq_chip) {
+> +		dev_err(rn5t618->dev, "Currently no IRQ support for variant %d\n",
+> +			(int)rn5t618->variant);
+> +		return -ENOENT;
+> +	}
+
+Ah yes.  Put this in 'default' instead.
+
+> +	ret = devm_regmap_add_irq_chip(rn5t618->dev, rn5t618->regmap,
+> +				       rn5t618->irq,
+> +				       IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +				       0, irq_chip, &rn5t618->irq_data);
+> +	if (ret) {
+> +		dev_err(rn5t618->dev, "Failed to register IRQ chip\n");
+> +		return ret;
+
+Make this a one line if.
+
+> +	}
+> +
+> +	return 0;
+
+... and return ret.
+
+> +}
+> +
+>  static void rn5t618_trigger_poweroff_sequence(bool repower)
+>  {
+>  	/* disable automatic repower-on */
+> @@ -106,6 +162,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
+>  
+>  	i2c_set_clientdata(i2c, priv);
+>  	priv->variant = (long)of_id->data;
+> +	priv->irq = i2c->irq;
+> +	priv->dev = &i2c->dev;
+>  
+>  	priv->regmap = devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
+>  	if (IS_ERR(priv->regmap)) {
+> @@ -138,6 +196,11 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
+>  		return ret;
+>  	}
+>  
+> +	if (priv->irq > 0) {
+
+There are already have checks in rn5t618_irq_init().
+
+Just call it regardless.
+
+> +		if (rn5t618_irq_init(priv))
+
+If this returns an error, you should return that error from .probe().
+
+> +			priv->irq = 0;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -155,15 +218,40 @@ static int rn5t618_i2c_remove(struct i2c_client *i2c)
+>  	return 0;
+>  }
+>  
+> +static int __maybe_unused rn5t618_i2c_suspend(struct device *dev)
+> +{
+> +	struct rn5t618 *priv = dev_get_drvdata(dev);
+> +
+> +	if (priv->irq)
+> +		disable_irq(priv->irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
+> +{
+> +	struct rn5t618 *priv = dev_get_drvdata(dev);
+> +
+> +	if (priv->irq)
+> +		enable_irq(priv->irq);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct i2c_device_id rn5t618_i2c_id[] = {
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
+>  
+> +static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
+> +			rn5t618_i2c_suspend,
+> +			rn5t618_i2c_resume);
+> +
+>  static struct i2c_driver rn5t618_i2c_driver = {
+>  	.driver = {
+>  		.name = "rn5t618",
+>  		.of_match_table = of_match_ptr(rn5t618_of_match),
+> +		.pm = &rn5t618_i2c_dev_pm_ops,
+>  	},
+>  	.probe = rn5t618_i2c_probe,
+>  	.remove = rn5t618_i2c_remove,
+> diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
+> index d62ef48060b5..739571656f2b 100644
+> --- a/include/linux/mfd/rn5t618.h
+> +++ b/include/linux/mfd/rn5t618.h
+> @@ -242,9 +242,24 @@ enum {
+>  	RC5T619,
+>  };
+>  
+> +/* RN5T618 IRQ definitions */
+> +enum {
+> +	RN5T618_IRQ_SYS = 0,
+> +	RN5T618_IRQ_DCDC,
+> +	RN5T618_IRQ_RTC,
+> +	RN5T618_IRQ_ADC,
+> +	RN5T618_IRQ_GPIO,
+> +	RN5T618_IRQ_CHG,
+> +	RN5T618_NR_IRQS,
+> +};
+> +
+>  struct rn5t618 {
+>  	struct regmap *regmap;
+> +	struct device *dev;
+>  	long variant;
+> +
+> +	int irq;
+> +	struct regmap_irq_chip_data *irq_data;
+>  };
+>  
+>  #endif /* __LINUX_MFD_RN5T618_H */
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
