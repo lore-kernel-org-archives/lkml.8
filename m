@@ -2,149 +2,140 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB15C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF17BC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14372072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DCA2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:06:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C33tuJOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgCSPFm (ORCPT
+        id S1727834AbgCSPGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:05:42 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:5760 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgCSPFl (ORCPT
+        Thu, 19 Mar 2020 11:06:23 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:55139 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727103AbgCSPGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:05:41 -0400
-X-Greylist: delayed 313 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Mar 2020 11:05:41 EDT
-IronPort-SDR: ND40/2p0SCXA/bySmETgeF6jIFcWrUTKkrAcDrAnZ0B/AiTwcT8fTBeqfIx/EZ9xLBNSsWYhl/
- Y03vtotzMxhHHJEd4iwCjeJh4zPGNnlnV1vaKwai89jj3iXcn5rn009H5TsDgdZLFpV/exuW+n
- SVcAufhSGV3WKJNP+LSLiZGiDHa4ZsaesIMaWSj4Gq7YeDm4RZwJkndwAT28b4YBaRxiWi4h6a
- gNFCmRB1iRFo15yu+WFG2mfeLSn5sNb/QkjdEAOHaIepGAzvW/3rsXtq01b7hRZmb733KAt03e
- ZWc=
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="46926983"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa4.mentor.iphmx.com with ESMTP; 19 Mar 2020 07:02:35 -0800
-IronPort-SDR: CaWIPBwHH287pTnKem2ZSIHPHoj54oZByP8YSmChTvdIeJxt6D+KJW4dWptW45Iqjx4mOuVgJY
- jmHXqUN9KHyTJsGE1VfanK1SbPr5G1LQtJbCLohuUg2tnP3FUt/aV60n4HtXMNMQ4D5UZSx0hb
- Z811byonBPDyw7HVFo2tKCfXzQ61oqkUNq5EzxO8PDEt3LucIwoYEwSwtN2Ns6MmlGgOJd1OIf
- 5Bm/gKW7rF+pNkL3RMkWwFcfex/WK7aSVXctpu7iBhEF7kuLxCzhQkvdz7MCgRC9NvMxCRdS9t
- 9GM=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <bsz@semihalf.com>, <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v8 34/52] Input: atmel_mxt_ts - Change call-points of mxt_free_* functions
-Date:   Thu, 19 Mar 2020 07:59:58 -0700
-Message-ID: <20200319150016.61398-35-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200319150016.61398-1-jiada_wang@mentor.com>
-References: <20200319150016.61398-1-jiada_wang@mentor.com>
+        Thu, 19 Mar 2020 11:06:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584630382;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=74WKfLExhu1TCeh0PZbO5Glf65zWrT+Fd+frCpLn2rU=;
+        b=C33tuJOEj8Hlasjv69LeiytjxO7tpBAglDwSwHffEaq0xgep7yocdVPEMZOyFKekCcgBUO
+        BMvP4zrm3JZ1oJB8rRDiznKqUwBT5ElmW8IFOsv98XJrUmGbVs6yrQVtYk4F48vVJG62Hx
+        02OKW4QXxy0LFguL6Xk5MI5XTLNgw6g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-jfJBNrxdPtCgGuFEhYASkA-1; Thu, 19 Mar 2020 11:06:06 -0400
+X-MC-Unique: jfJBNrxdPtCgGuFEhYASkA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5FA3100550E;
+        Thu, 19 Mar 2020 15:06:03 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 906618D55E;
+        Thu, 19 Mar 2020 15:06:00 +0000 (UTC)
+Subject: Re: [PATCH v5 23/23] KVM: arm64: GICv4.1: Expose HW-based SGIs in
+ debugfs
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-24-maz@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <4cb4c3d4-7b02-bb77-cd7a-c185346b6a2f@redhat.com>
+Date:   Thu, 19 Mar 2020 16:05:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200304203330.4967-24-maz@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kautuk Consul <kautuk_consul@mentor.com>
+Hi Marc,
 
-Revamping the code to call mxt_free_object_table and mxt_free_input_device
-functions only in the following scenarios and code paths:
-1) The error path of the mxt_probe() entry point
-2) The mxt_remove de-init path entry point
-3) All paths which definitely expect to populate the object table
-   like:
-   - the mxt_update_fw_store path which first calls
-     mxt_load_fw and then resorts to calling mxt_initialize itself.
-   - the mxt_read_info_block function which attempts to fill in the
-     object table itself as the main non-error part of the logic.
-4) All paths in the code expected to definitely allocate and register
-   the input device such as:
-   - the mxt_update_fw_store path which first calls
-     mxt_load_fw and then resorts to calling mxt_initialize itself.
-   - the mxt_update_cfg_store function which will call
-     mxt_configure_objects.
+On 3/4/20 9:33 PM, Marc Zyngier wrote:
+> The vgic-state debugfs file could do with showing the pending state
+> of the HW-backed SGIs. Plug it into the low-level code.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  virt/kvm/arm/vgic/vgic-debug.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-debug.c b/virt/kvm/arm/vgic/vgic-debug.c
+> index cc12fe9b2df3..b13a9e3f99dd 100644
+> --- a/virt/kvm/arm/vgic/vgic-debug.c
+> +++ b/virt/kvm/arm/vgic/vgic-debug.c
+> @@ -178,6 +178,8 @@ static void print_irq_state(struct seq_file *s, struct vgic_irq *irq,
+>  			    struct kvm_vcpu *vcpu)
+>  {
+>  	char *type;
+> +	bool pending;
+nit: can be directly initialized to irq->pending_latch
+> +
+>  	if (irq->intid < VGIC_NR_SGIS)
+>  		type = "SGI";
+>  	else if (irq->intid < VGIC_NR_PRIVATE_IRQS)
+> @@ -190,6 +192,16 @@ static void print_irq_state(struct seq_file *s, struct vgic_irq *irq,
+>  	if (irq->intid ==0 || irq->intid == VGIC_NR_PRIVATE_IRQS)
+>  		print_header(s, irq, vcpu);
+>  
+> +	pending = irq->pending_latch;
+> +	if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +		int err;
+> +
+> +		err = irq_get_irqchip_state(irq->host_irq,
+> +					    IRQCHIP_STATE_PENDING,
+> +					    &pending);
+> +		WARN_ON_ONCE(err);
+> +	}
+> +
+>  	seq_printf(s, "       %s %4d "
+>  		      "    %2d "
+>  		      "%d%d%d%d%d%d%d "
+> @@ -201,7 +213,7 @@ static void print_irq_state(struct seq_file *s, struct vgic_irq *irq,
+>  		      "\n",
+>  			type, irq->intid,
+>  			(irq->target_vcpu) ? irq->target_vcpu->vcpu_id : -1,
+> -			irq->pending_latch,
+> +			pending,
+>  			irq->line_level,
+>  			irq->active,
+>  			irq->enabled,
+> 
+The patch looks good to me but I am now lost about how we retrieve the
+pending stat of other hw mapped interrupts. Looks we use
+irq->pending_latch always. Is that correct?
 
-Signed-off-by: Kautuk Consul <kautuk_consul@mentor.com>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+For the patch:
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 48ec60be26db..de8cafb76712 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -3336,21 +3336,21 @@ static int mxt_configure_objects(struct mxt_data *data,
- 	error = mxt_init_t7_power_cfg(data);
- 	if (error) {
- 		dev_err(dev, "Failed to initialize power cfg\n");
--		goto err_free_object_table;
-+		return error;
- 	}
- 
- 	if (cfg) {
- 		error = mxt_update_cfg(data, cfg);
- 		if (error) {
- 			dev_warn(dev, "Error %d updating config\n", error);
--			goto err_free_object_table;
-+			return error;
- 		}
- 	}
- 
- 	if (data->multitouch) {
- 		error = mxt_initialize_input_device(data);
- 		if (error)
--			goto err_free_object_table;
-+			return error;
- 	} else {
- 		dev_warn(dev, "No touch object detected\n");
- 	}
-@@ -3358,10 +3358,6 @@ static int mxt_configure_objects(struct mxt_data *data,
- 	mxt_debug_init(data);
- 
- 	return 0;
--
--err_free_object_table:
--	mxt_free_object_table(data);
--	return error;
- }
- 
- /* Configuration crc check sum is returned as hex xxxxxx */
-@@ -4098,16 +4094,21 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 
- 	error = mxt_initialize(data);
- 	if (error)
--		return error;
-+		goto err_free_object;
- 
- 	error = sysfs_create_group(&client->dev.kobj, &mxt_fw_attr_group);
- 	if (error) {
- 		dev_err(&client->dev, "Failure %d creating fw sysfs group\n",
- 			error);
--		return error;
-+		goto err_free_object;
- 	}
- 
- 	return 0;
-+
-+err_free_object:
-+	mxt_free_input_device(data);
-+	mxt_free_object_table(data);
-+	return error;
- }
- 
- static int mxt_remove(struct i2c_client *client)
--- 
-2.17.1
+Thanks
+
+Eric
 
