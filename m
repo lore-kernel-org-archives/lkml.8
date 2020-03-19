@@ -7,90 +7,91 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FDEC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5001DC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9952072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2830F2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584637938;
-	bh=fxN4CnnOD6y03mHmAA5C+hhbqj2uKF+4bj47hgkFoVY=;
+	s=default; t=1584637957;
+	bh=8G/WFTM8dpK/cCU29yjQyyKC9fzLzwmcKpBv3JM0LD8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Equ4fFVOFTtQltC1G5/9+GA1YJyL9zjWS3eMUCAfFUSsgYbyoK7de4+X06z0pU3gV
-	 +BwRiqcf1uaT2n2TjhKn6ZGJDywcZePFiwbIn8Q1mQK+ymQi3hYTyFMmfiTfqRplU/
-	 JoO2Z8nID1qxqGI07itWYLy3CQarPCcOCCHIJIU4=
+	b=YBnFBLWSNQ+sojDQzwxsRQ7iDmtSwHTc2zknoX0Up4IXU6aMt5JDNBEAeGXKwSH70
+	 m12DywDdLWPVTBu1nn6XWJjXs8Nt6ezz9/cMfSBgDGgu0btN0H5pcGd714QfLqP3tU
+	 yCCnluo/YqYtxa8RbQa027mUUjAlD+l6JLATMZt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgCSRMR (ORCPT
+        id S1728598AbgCSRMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:12:17 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41727 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbgCSRMR (ORCPT
+        Thu, 19 Mar 2020 13:12:36 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37388 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbgCSRMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:12:17 -0400
-Received: by mail-il1-f196.google.com with SMTP id l14so2938868ilj.8;
-        Thu, 19 Mar 2020 10:12:14 -0700 (PDT)
+        Thu, 19 Mar 2020 13:12:35 -0400
+Received: by mail-io1-f67.google.com with SMTP id q9so3074785iod.4;
+        Thu, 19 Mar 2020 10:12:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FuFy53dKsb2fck0JMwy1FXmxdDEmegXgO4r2caNX4Qo=;
-        b=OLXIkvGw3tJqvUSlP6ONTJRWwZsrZTNqk6ywd2Tc1yN0IxBF7yPsMAPHoxyxnikmlD
-         k6HUvjjsy+ZkZLJD/b/5D/ZzNc2TvhBMIqPGkum6U+N2BpqJaYO2YWCiIXX8t2quYGOZ
-         B9l6Ooq3OXIT5mWeiBFzXRAZvXlNl4duwAsxPjXtlWE+mcTA9u9K7PHudhoHCPNWUvQk
-         Uofse2osD0WeUNHdtFcNgXl3faKzC/zItp01dVoSzU8RozIq7eZagGJxGRSYoxCIVztg
-         cqZyoJ1C9aPVJhzITLFfDlk64GzLy/eosDZ+tufTTuO0+bveW6C9TH7gDlPeFlOMdsMw
-         X/Yw==
-X-Gm-Message-State: ANhLgQ2pOWvmbDrF3UeMe3/SuzDmSDS2L73F8j6RUvKLw0eKEwhOaF96
-        aPj8YMdX62qvCUId6tzDgw==
-X-Google-Smtp-Source: ADFU+vs/qjBgZCguu4PgrA7kda0SwMTPsdT6I/2Mcj/b7bYNjpINO1LuIXtpzuRHB/7LUhmdIByVUQ==
-X-Received: by 2002:a92:35db:: with SMTP id c88mr4010676ilf.187.1584637934049;
-        Thu, 19 Mar 2020 10:12:14 -0700 (PDT)
+        bh=1uRh6l5+Das1Y3n6fQwU4j/xxpeTRicxLD15NbO6tg0=;
+        b=lO9NN2l2qQtPjw3nmqKvOrit4Pp4XqcXzo+hIBDYOk7gqX3C9kDy/N6hB9ZUw3L9rK
+         zc6R12Wo1hJt7+W5EzJx5Z1Ojm20YVA0fmYtSKamqhiSMB+CmeSYhq2zs80yAsoxjmuC
+         KH0xZNyc+sO/3ofh2ku43799H3IMLIJlw9Gi0dneGGMryXv3iuZdXn1NYuRt1QnK9rU6
+         +Ruw4GpHV8WZCKuMioL6uGFGY1aFyDgGyP67JfQpE38TCKCJjotWOSqzsAJ3Tt7DmwXA
+         717FXY6I+6WCHcnZGuBK9kCCq4dRbSfIqBgGWqoDxJjWrA/ZMTRGDtU2uI6dRcNOrZ4V
+         yFog==
+X-Gm-Message-State: ANhLgQ3pzlbyUmr8FdYMiiXjcGN32MG9rNjohN0d21vvPBAVfNEBt/0o
+        VgLVRL8bdpYePhAgOBkuqA==
+X-Google-Smtp-Source: ADFU+vuKqzfgjxCKo37tHMP37T6SVQAWNqhv2cJ1n9k92m0g5Fa3b4S8sTBFsnX2NLnRpxQf1jtqMg==
+X-Received: by 2002:a02:bb09:: with SMTP id y9mr4239389jan.33.1584637954714;
+        Thu, 19 Mar 2020 10:12:34 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id y8sm937166iot.14.2020.03.19.10.12.11
+        by smtp.gmail.com with ESMTPSA id h29sm1064995ili.19.2020.03.19.10.12.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 10:12:13 -0700 (PDT)
-Received: (nullmailer pid 16694 invoked by uid 1000);
-        Thu, 19 Mar 2020 17:12:10 -0000
-Date:   Thu, 19 Mar 2020 11:12:10 -0600
+        Thu, 19 Mar 2020 10:12:34 -0700 (PDT)
+Received: (nullmailer pid 17676 invoked by uid 1000);
+        Thu, 19 Mar 2020 17:12:31 -0000
+Date:   Thu, 19 Mar 2020 11:12:31 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alim Akhtar <alim.akhtar@samsung.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-scsi@vger.kernel.org, krzk@kernel.org, avri.altman@wdc.com,
-        martin.petersen@oracle.com, kwmad.kim@samsung.com,
-        stanley.chu@mediatek.com, cang@codeaurora.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: phy: Document Samsung UFS PHY
- bindings
-Message-ID: <20200319171210.GA14990@bogus>
-References: <20200318111144.39525-1-alim.akhtar@samsung.com>
- <CGME20200318111805epcas5p3e68724d923a07ddd80a45e3316292940@epcas5p3.samsung.com>
- <20200318111144.39525-2-alim.akhtar@samsung.com>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, alexandre.torgue@st.com,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de,
+        knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com,
+        olivier.moysan@st.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: iio: dac: stm32-dac: convert bindings to
+ json-schema
+Message-ID: <20200319171231.GA17071@bogus>
+References: <1584543037-32095-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200318111144.39525-2-alim.akhtar@samsung.com>
+In-Reply-To: <1584543037-32095-1-git-send-email-fabrice.gasnier@st.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020 16:41:40 +0530, Alim Akhtar wrote:
-> This patch documents Samsung UFS PHY device tree bindings
+On Wed, 18 Mar 2020 15:50:37 +0100, Fabrice Gasnier wrote:
+> Convert the STM32 DAC binding to DT schema format using json-schema
 > 
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > ---
->  .../bindings/phy/samsung,ufs-phy.yaml         | 62 +++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+>  .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
+>  .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
+>  2 files changed, 110 insertions(+), 63 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/samsung,ufs-phy.example.dt.yaml: example-0: 'ufs-phy@0x15571800' does not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
+Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/iio/dac/st,stm32-dac.yaml#
 
-See https://patchwork.ozlabs.org/patch/1257427
+See https://patchwork.ozlabs.org/patch/1257568
 Please check and re-submit.
