@@ -2,99 +2,130 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF0BC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B38AC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D022072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8A2206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:15:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dsZjBy+y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CwG+gh5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgCSENx (ORCPT
+        id S1726666AbgCSEPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 00:13:53 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39077 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgCSENx (ORCPT
+        Thu, 19 Mar 2020 00:15:32 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46860 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbgCSEPa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 00:13:53 -0400
-Received: by mail-qk1-f194.google.com with SMTP id t17so1184571qkm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 21:13:52 -0700 (PDT)
+        Thu, 19 Mar 2020 00:15:30 -0400
+Received: by mail-qk1-f193.google.com with SMTP id f28so1129425qkk.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 21:15:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FR3/VUTQEwbV3Equ08fX7Xd6LvL5oS+tn1Zktb/fbUM=;
-        b=dsZjBy+yV/MHGyz5H4PXiu2ITsQozof48sMccRt03te8oW+/WZdYJE2okHubS7KJIY
-         LTUJ4itx6koLcFyNFyC910MaxSCCzqRpvQlj4AkYPh2mvLpst/DjrNAHmjHDcXJ++LJ+
-         f6b5rU3X6IRNW/gnIe214uP371XyrYeu5srAsz0LUq0VYY6Pd+WJjNBPlDF+bvi9wYGe
-         1d5p3rPRr9pQuvzC2DY+TKjY0SgomF2uc8u2C54xj+ZBINdCaHPzyiU5LkzRr+Os7MRN
-         nxOCARkUZYFo1Iz7ksDQfNC2bTlwXEnMlHY7XydfnXzkzM4rO1ExvEJowN2DuZrb32FT
-         zepA==
+         :cc;
+        bh=ACBUKYFz56rYSMbOM+EDRADHwdlHl87he6dVYm6MK9o=;
+        b=CwG+gh5sXV9wy+tdYlPTnwWLm7qgqOCz3P6COc+q7457NMW2P3ILqA9s/+6QWv+8vy
+         8poFHRcQ2iyu2WQoT18uwC8irch5rPRHfJfOodCtaENVCtj6wEn968TulTeVlJv+TbHa
+         lSCnkp95AKtM8YcmZIgPfhV9Ao1mY69toKjri1Jvi/ZmATilfCNSDhkj4YI5/KwutmEx
+         RqV0jUabNY0F8wmHlO0NXWuLke34ieFdeKAnbh5MQqOM67EM1lw8qUc5GpJ0NEEICGhy
+         o2slQW9GqFNFy49gCEo1pT+d3GSIbd1sz30KuWJzFArsch87jxN8L7VJ0JIh/rAjUCU1
+         CO1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FR3/VUTQEwbV3Equ08fX7Xd6LvL5oS+tn1Zktb/fbUM=;
-        b=bChHaAgb8rxyyPz/aKPVH5LRjGPzkKDDN9jZ5nu34frq9FJ1QmBsKNtcgLeqdoKD+F
-         bAPV4jEQnTQExqr3OOGaepL9AT7ZrtFrlqNg99m9RL+WO1Q8owu+3F9ENvqylcsJ0Mnv
-         hgiPWM5lRXEKPRxnvcWf/AoqF4qqelrq4aIeViOqw/tLX8MSN1sW2JyRg32+l1nsLuG0
-         lk+RsQP8MpxE0AYTU1L955D9GQ7Zfom+pg+FbKNhQEKkSGQ6p8yQb/AYtzA4fv5T0qvi
-         HVJ9Wcjf8I5nTuAZNajPqUVl9v6a2uJDIt57V0Su4IW/HOLhb+a0Kg7h7DmPCOzDgcrr
-         M7Cg==
-X-Gm-Message-State: ANhLgQ2Fsnf1hhO92mKhyt86ezz4o9p5jlN4EuiEf8bsrTpzOEV1rnqs
-        aPKJLxW2JDkTuX3FZAGAlhGTgc3c2DiYk2ShuE8=
-X-Google-Smtp-Source: ADFU+vsM5/749PP9gpl4I9DsMBvFPjATXrkV93kwzjUUmBi7jv9rppEgiNKx0AvqXBQmLRhWkSOx1cZCtntSY54pU8Q=
-X-Received: by 2002:a37:546:: with SMTP id 67mr1136238qkf.272.1584591232221;
- Wed, 18 Mar 2020 21:13:52 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=ACBUKYFz56rYSMbOM+EDRADHwdlHl87he6dVYm6MK9o=;
+        b=J/MJ8ZhaiYQfDLzB4fm53aBeMkxOrg82C2smqSosl2FepB6ttgv+jv8OQjj1nWTQy8
+         n6FHGHQoKFOEAEZ2VFWNhcYll2gaP3O4uf9w0SLfTnlgatB5riMF1WKazI0QpF7QlsLj
+         O/5e1jCgKqLgxtJIlkSbEkv3bKbr2mRWpIf3Bh2myDO1PnZYPAH8SjEYLjkpIJaZBZJ/
+         H8yQSLRtVoUvmtXjb780JzI0+PDpPFQAehZNYOdZiPfBuN7A2VhEZGJRIL48s8P5VC5X
+         EnEKg22or+a0XKWKSp7SZKI/mJmGd+BUD8fC2HTjQzuCW5tUAtyoPBRUGnlm+GIHgFK4
+         UCIg==
+X-Gm-Message-State: ANhLgQ082iwVmyz/s4ViJDVafkE50BYLj1STE3J4ARNqAGtiqSqc7za5
+        VkFb1KrDF97iFAycwzW7fgonV7L7T/7FXEs5GRzZGg==
+X-Google-Smtp-Source: ADFU+vudYeq0nk20DXy4ZGbabaOUyEUw0/1aXSBXmC1cJBFh0dfvNlUlDrZx/nKddUUhI80erV587MhYrbNlUcW6c2Q=
+X-Received: by 2002:a25:bb89:: with SMTP id y9mr1675045ybg.324.1584591327469;
+ Wed, 18 Mar 2020 21:15:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584423717-3440-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1584423717-3440-4-git-send-email-iamjoonsoo.kim@lge.com> <20200318180638.GC154135@cmpxchg.org>
-In-Reply-To: <20200318180638.GC154135@cmpxchg.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Thu, 19 Mar 2020 13:13:41 +0900
-Message-ID: <CAAmzW4NHqKfWcx3BKBthLeiKmx8f1R7sTzza3+O+6sjivBxh6A@mail.gmail.com>
-Subject: Re: [PATCH v3 3/9] mm/workingset: extend the workingset detection for
- anon LRU
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <20200311213613.210749-1-irogers@google.com> <20200318102254.GC821557@krava>
+In-Reply-To: <20200318102254.GC821557@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 18 Mar 2020 21:15:16 -0700
+Message-ID: <CAP-5=fU0AAmW7B5Qw+mmA9PhLYgMxKtiuxo3UcPbbowKJPhg8A@mail.gmail.com>
+Subject: Re: [PATCH v3] perf tools: add support for libpfm4
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 3=EC=9B=94 19=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 3:06, J=
-ohannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+On Wed, Mar 18, 2020 at 3:23 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> On Tue, Mar 17, 2020 at 02:41:51PM +0900, js1304@gmail.com wrote:
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> On Wed, Mar 11, 2020 at 02:36:13PM -0700, Ian Rogers wrote:
+> > This patch links perf with the libpfm4 library if it is available and
+> > NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
+> > event tables for all processors supported by perf_events. It is a helper
+> > library that helps convert from a symbolic event name to the event
+> > encoding required by the underlying kernel interface. This
+> > library is open-source and available from: http://perfmon2.sf.net.
 > >
-> > In the following patch, workingset detection will be applied to
-> > anonymous LRU. To prepare it, this patch adds some code to
-> > distinguish/handle the both LRUs.
+> > With this patch, it is possible to specify full hardware events
+> > by name. Hardware filters are also supported. Events must be
+> > specified via the --pfm-events and not -e option. Both options
+> > are active at the same time and it is possible to mix and match:
 > >
-> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> >
+> > v3 is against acme/perf/core removes a diagnostic warning
+> > v2 of this patch makes the --pfm-events man page documentation
+> > conditional on libpfm4 behing configured. It tidies some of the
+> > documentation and adds the feature test missed in the v1 patch.
+> >
+> > Author: Stephane Eranian <eranian@google.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
 >
-> This looks all correct to me, but I would ask for some style
-> fixes. With those applied, please feel free to add
+> hi,
+> is this the latest version? I can't apply it on Arnaldo's perf/core
 >
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> jirka
 
-Thanks! I will apply all you commented at v4.
 
-Thanks.
+Sorry, I'd failed to re-add the feature test when I shifted branches.
+The complete patch should be here:
+https://lkml.org/lkml/2020/3/19/4
+
+Thanks,
+Ian
