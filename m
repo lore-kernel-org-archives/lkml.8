@@ -2,127 +2,132 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40270C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754CEC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1812E2076F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584653286;
-	bh=wDHKIdt3Y3vhWUMG3wIbeCs2/G5gOP3qUw5RVSybfDM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OXFCHrQEtMjS2mwIjjr+VJ03AkuYsvHhg2oeLqGgOkb7jxAWoez9DxWN6qvUEoIjZ
-	 1EXkaD7BkWOkHP91a4f7sdHcvpUOi+4ZFiYu0I+Dhwd116/t4mzasgVJrAMXUTLCP0
-	 61tM+FgkPiVPHqLeMpW231K7gDtLbeop3X3hzIM4=
+	by mail.kernel.org (Postfix) with ESMTP id 41BAD2076F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:29:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JviXO3L7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbgCSV2F (ORCPT
+        id S1727091AbgCSV3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 17:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbgCSV2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:28:04 -0400
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4774A20772
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 21:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584653283;
-        bh=wDHKIdt3Y3vhWUMG3wIbeCs2/G5gOP3qUw5RVSybfDM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=C1zjTJmhscb/kf6Gr/fLaWAmP4m/XMANCnSraK8P22tZ6JgeDtk3jsSDi3+5i3oM3
-         3WJXtWqGhmvVH1YYl8ntlKGNCat6JnlIwaR+8D+lFJ2u+MNgBOIBFv3BGQfc+CFBNG
-         E/Trc2xBeKw4sqF1qJ75dnXSuaEg/zoAPhUQVf+g=
-Received: by mail-wm1-f54.google.com with SMTP id g62so4154103wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 14:28:03 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0YZPG56Nzx3Pbv2olobcO0GNlam7vUtOolx0ck0sSfD93CiG6A
-        XUVvFoDAU9y7B9VDO1PcsiQqlftYv3Sdqis+hpgWnw==
-X-Google-Smtp-Source: ADFU+vsvB9VoJIoDZzFOfVxuD7/rCPKU+f9sriFcY/X3u9oBR64jUTo/lMsKf9lnZUULp+cTivEl1BA/XJfEY/2Kd9c=
-X-Received: by 2002:a1c:b0c3:: with SMTP id z186mr5806142wme.36.1584653281734;
- Thu, 19 Mar 2020 14:28:01 -0700 (PDT)
+        Thu, 19 Mar 2020 17:29:54 -0400
+Received: from gateway22.websitewelcome.com ([192.185.47.144]:38288 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726680AbgCSV3x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 17:29:53 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id CC13FE46B
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:29:52 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id F2jgjjcAcAGTXF2jgj9Yih; Thu, 19 Mar 2020 16:29:52 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=clKI7nARFTFO5GFD0Ih3lvAENgeNhLrB6NvEoRgvUuk=; b=JviXO3L7PfFv8CDg2Dp7utxg+D
+        B18IncsSGyIoi0uznb7dFep0uW5P2LsgTsPKW6GX64Fx42NbG7E3d2YI/MKU5txg0y+u3QRAmKKsv
+        lJOe4o8TBduUkmHqKQYbNp9Mbq/jSLroljBO1P7DfdwjTPLIyDHWnnuVAPOLdzxtThxejHOJOcNGk
+        PqKoO+8SfCkb8EYYB0yLqUPvDqrFjaPQVZdRMGx/+Ar2QDRpAzfuQRdBSi0ntYLQHS/KYY4wIukAF
+        tP54Qi28yh4oiCLaB6nGi/Cpkjyl8vJUpQt9PidZZeYZHtW/4VoxMqRujdiGv/wpGdo5j1em+rk2g
+        G+QDSBcg==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53318 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jF2je-001cPg-UB; Thu, 19 Mar 2020 16:29:51 -0500
+Date:   Thu, 19 Mar 2020 16:29:50 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] intel-ish-hid: ishtp: hbm.h: Replace zero-length array
+ with flexible-array member
+Message-ID: <20200319212950.GA9155@embeddedor.com>
 MIME-Version: 1.0
-References: <20200319091407.1481-1-joro@8bytes.org> <20200319091407.1481-71-joro@8bytes.org>
- <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
- <20200319160749.GC5122@8bytes.org> <CALCETrXY5M87C1Fc3QvTkc6MdbQ_3gAuOPUeWJktAzK4T60QNQ@mail.gmail.com>
- <20200319192654.GD611@suse.de>
-In-Reply-To: <20200319192654.GD611@suse.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 19 Mar 2020 14:27:49 -0700
-X-Gmail-Original-Message-ID: <CALCETrXzyUGjPYBR_NDSvTG8TqLuQP2Q+v_mwXPne4O0U-18NA@mail.gmail.com>
-Message-ID: <CALCETrXzyUGjPYBR_NDSvTG8TqLuQP2Q+v_mwXPne4O0U-18NA@mail.gmail.com>
-Subject: Re: [PATCH 70/70] x86/sev-es: Add NMI state tracking
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jF2je-001cPg-UB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53318
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 20
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 12:26 PM Joerg Roedel <jroedel@suse.de> wrote:
->
-> On Thu, Mar 19, 2020 at 11:40:39AM -0700, Andy Lutomirski wrote:
->
-> > Nope.  A nested NMI will reset the interrupted NMI's return frame to
-> > cause it to run again when it's done.  I don't think this will have
-> > any real interaction with #VC.  There's no longjmp() here.
->
-> Ahh, so I misunderstood that part, in this case your proposal of sending
-> the NMI-complete message right at the beginning of do_nmi() should work
-> just fine. I will test this and see how it works out.
->
-> > I certainly *like* preventing nesting, but I don't think we really
-> > want a whole alternate NMI path just for a couple of messed-up AMD
-> > generations.  And the TF trick is not so pretty either.
->
-> Indeed, if it could be avoided, it should.
->
-> >
-> > > > This causes us to pop the NMI frame off the stack.  Assuming the NMI
-> > > > restart logic is invoked (which is maybe impossible?), we get #DB,
-> > > > which presumably is actually delivered.  And we end up on the #DB
-> > > > stack, which might already have been in use, so we have a potential
-> > > > increase in nesting.  Also, #DB may be called from an unexpected
-> > > > context.
-> > >
-> > > An SEV-ES hypervisor is required to intercept #DB, which means that the
-> > > #DB exception actually ends up being a #VC exception. So it will not end
-> > > up on the #DB stack.
-> >
-> > With your patch set, #DB doesn't seem to end up on the #DB stack either.
->
-> Right, it does not use the #DB stack or shift-ist stuff. Maybe it
-> should, is this needed for anything else than making entry code
-> debugable by kgdb?
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-AIUI the shift-ist stuff is because we aren't very good about the way
-that we handle tracing right now, and that can cause a limited degree
-of recursion.  #DB uses IST for historical reasons that don't
-necessarily make sense.  Right now, we need it for only one reason:
-the MOV SS issue.  IIRC this isn't actually triggerable without
-debugging enabled -- MOV SS with no breakpoint but TF on doesn't seem
-to malfunction quite as badly.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
---Andy
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
->
-> Regards,
->
->         Joerg
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
+
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/hid/intel-ish-hid/ishtp/hbm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hid/intel-ish-hid/ishtp/hbm.h b/drivers/hid/intel-ish-hid/ishtp/hbm.h
+index bb85985b1620..7c445b203f2a 100644
+--- a/drivers/hid/intel-ish-hid/ishtp/hbm.h
++++ b/drivers/hid/intel-ish-hid/ishtp/hbm.h
+@@ -82,7 +82,7 @@ struct ishtp_msg_hdr {
+ 
+ struct ishtp_bus_message {
+ 	uint8_t hbm_cmd;
+-	uint8_t data[0];
++	uint8_t data[];
+ } __packed;
+ 
+ /**
+-- 
+2.23.0
+
