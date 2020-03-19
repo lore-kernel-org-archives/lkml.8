@@ -2,190 +2,199 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D14C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA919C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3029920724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D45720724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cYgYsAEX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KdpEOokF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbgCSTnC (ORCPT
+        id S1727628AbgCSTnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:43:02 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46902 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbgCSTnB (ORCPT
+        Thu, 19 Mar 2020 15:43:15 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38070 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgCSTnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:43:01 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JJgs3x071693;
-        Thu, 19 Mar 2020 14:42:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584646974;
-        bh=wB4aZvW9cG3UKECKMl7jglc4EJ+CkeQjjqMGcNaKs8E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cYgYsAEXcTynDy2ctOINxf0KdzYzEfwRGOOSiUAROBymEjlk0s9lI6Kroqhuo3wRY
-         mInuJnT9RUzUImvo0wDsBIHbm/m0Rc74C5iDzNQmcx3lXZ7mWJRst3h0vFPTL5CqN+
-         q/j7vkvBB0JJnZDizwxYYKJFE7cyBhm1CQR/im/s=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JJgsoh124146
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Mar 2020 14:42:54 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Mar 2020 14:42:54 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Mar 2020 14:42:53 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JJgpIs004780;
-        Thu, 19 Mar 2020 14:42:52 -0500
-Subject: Re: [PATCH V2] dmaengine: ti: k3-udma-glue: Fix an error handling
- path in 'k3_udma_glue_cfg_rx_flow()'
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        <vkoul@kernel.org>, <dan.j.williams@intel.com>,
-        <grygorii.strashko@ti.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20200318191209.1267-1-christophe.jaillet@wanadoo.fr>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <6dbe8b04-a64b-f9c7-e620-a6002045ccb6@ti.com>
-Date:   Thu, 19 Mar 2020 21:43:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 19 Mar 2020 15:43:15 -0400
+Received: by mail-lf1-f65.google.com with SMTP id n13so2670617lfh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 12:43:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hEyvsVPado7F0WDhXMyM74K/P3yaowt2+RSX42jlfiE=;
+        b=KdpEOokF+jp3VWlzdvlnt1vtlRtlQ0kD3tO5T2dWEBANHPs/omObqJEymHhPgg6wOY
+         HiRtFOwyQdHGobb/whEjsl53iRJ5yzvAOYE7UFzfUGHGJ9umdccv6VHwoJExljv43BWp
+         D5QEhtNhwf8TfB7U64usKlG+urtHujrUJ3KpJlPwrVT12s9z2nmu1I2kLvH+CCqDsZ7/
+         DRRrFTio7t+0hfTJJCCXGUsCA1x+9+FKAE9buti4S6ikx9CrPSDDS3Po+etFROlbAXpU
+         igS6t8l4wLXrwFiKjNlqnO6xlq55Si49tz6qUPRj8Arnqg3YTn4fvuuVjZHh0wPk3G9X
+         w8ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hEyvsVPado7F0WDhXMyM74K/P3yaowt2+RSX42jlfiE=;
+        b=VMXSKU//bJdaI1Gp10O00YHaMI+1ysxkm3k/9MIWE3PhTRVkuDgQ7TB6q3qnkQWRqt
+         KCZjUnuSSVtCoWPD670ORmhkesBvtZ7NgmGQf2chINTMgGFIKOvT2p0UGSJBphVVOJml
+         +wLO85JomYIzDbSxETpVcZHVbOQVK/Xf9v5T5zMt+t940FSYhfcysTaVgf+/OHfug1Vx
+         Zo0/OIvnl2M43jnFjE4hxEwXnmg36iBwBt0D3VK2IuCkUw0onqSuO2q5/vb0kfsvc9dI
+         obSkjq2lGoC+Jtd7+tlC8i5/hmqddxAwTqdZL1b7XCAItijmOrNAFIucGvYKwQgm6gLF
+         UiqA==
+X-Gm-Message-State: ANhLgQ26oIOAaElHXUb4SPKRusN3AzVi9UzqYoONDt6/zemjoFkI5RsL
+        6hXfaWHPvL1I5gvnLKViylO/yaLbAAt9r7+EM3l6Hw==
+X-Google-Smtp-Source: ADFU+vuR1vbgAfaEOXIaj6t7Eg3XiOILIOF3cfNxnHalXSH2d3L615MBo1VcBUcRB8Z1FTKfpWKb79jNTP51gIQRzjk=
+X-Received: by 2002:ac2:43a8:: with SMTP id t8mr3074856lfl.82.1584646985521;
+ Thu, 19 Mar 2020 12:43:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200318191209.1267-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200319123902.941451241@linuxfoundation.org>
+In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 20 Mar 2020 01:12:54 +0530
+Message-ID: <CA+G9fYsDw6JEznSHm2X=Wvq1dysGbGa4-VpXJyzKWZQxLMdagw@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/48] 4.19.112-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Faiz Abbas <faiz_abbas@ti.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
+On Thu, 19 Mar 2020 at 18:50, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.112 release.
+> There are 48 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.112-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+> Faiz Abbas <faiz_abbas@ti.com>
+>     mmc: sdhci-omap: Fix Tuning procedure for temperatures < -20C
+>
+> Faiz Abbas <faiz_abbas@ti.com>
+>     mmc: sdhci-omap: Don't finish_mrq() on a command error during tuning
 
-On 18/03/2020 21.12, Christophe JAILLET wrote:
-> All but one error handling paths in the 'k3_udma_glue_cfg_rx_flow()'
-> function 'goto err' and call 'k3_udma_glue_release_rx_flow()'.
-> 
-> This not correct because this function has a 'channel->flows_ready--;' at
-> the end, but 'flows_ready' has not been incremented here, when we branch to
-> the error handling path.
-> 
-> In order to keep a correct value in 'flows_ready', un-roll
-> 'k3_udma_glue_release_rx_flow()', simplify it, add some labels and branch
-> at the correct places when an error is detected.
-> 
-> Doing so, we also NULLify 'flow->udma_rflow' in a path that was lacking it.
-> 
-> Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine user")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> V2: adjust subject
->     direct return in the first error handling path
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Thank you!
+NOTE:
+The arm beagleboard x15 device running stable rc 4.19.112-rc1, 5.4.27-rc1
+and 5.5.11-rc2 kernel pops up the following messages on console log,
+Is this a problem ?
 
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+[   15.737765] mmc1: unspecified timeout for CMD6 - use generic
+[   16.754248] mmc1: unspecified timeout for CMD6 - use generic
+[   16.842071] mmc1: unspecified timeout for CMD6 - use generic
+...
+[  977.126652] mmc1: unspecified timeout for CMD6 - use generic
+[  985.449798] mmc1: unspecified timeout for CMD6 - use generic
 
-> ---
->  drivers/dma/ti/k3-udma-glue.c | 30 ++++++++++++++++++++----------
->  1 file changed, 20 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-> index dbccdc7c0ed5..890573eb1625 100644
-> --- a/drivers/dma/ti/k3-udma-glue.c
-> +++ b/drivers/dma/ti/k3-udma-glue.c
-> @@ -578,12 +578,12 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
->  	if (IS_ERR(flow->udma_rflow)) {
->  		ret = PTR_ERR(flow->udma_rflow);
->  		dev_err(dev, "UDMAX rflow get err %d\n", ret);
-> -		goto err;
-> +		return ret;
->  	}
->  
->  	if (flow->udma_rflow_id != xudma_rflow_get_id(flow->udma_rflow)) {
-> -		xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
-> -		return -ENODEV;
-> +		ret = -ENODEV;
-> +		goto err_rflow_put;
->  	}
->  
->  	/* request and cfg rings */
-> @@ -592,7 +592,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
->  	if (!flow->ringrx) {
->  		ret = -ENODEV;
->  		dev_err(dev, "Failed to get RX ring\n");
-> -		goto err;
-> +		goto err_rflow_put;
->  	}
->  
->  	flow->ringrxfdq = k3_ringacc_request_ring(rx_chn->common.ringacc,
-> @@ -600,19 +600,19 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
->  	if (!flow->ringrxfdq) {
->  		ret = -ENODEV;
->  		dev_err(dev, "Failed to get RXFDQ ring\n");
-> -		goto err;
-> +		goto err_ringrx_free;
->  	}
->  
->  	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
->  	if (ret) {
->  		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
-> -		goto err;
-> +		goto err_ringrxfdq_free;
->  	}
->  
->  	ret = k3_ringacc_ring_cfg(flow->ringrxfdq, &flow_cfg->rxfdq_cfg);
->  	if (ret) {
->  		dev_err(dev, "Failed to cfg ringrxfdq %d\n", ret);
-> -		goto err;
-> +		goto err_ringrxfdq_free;
->  	}
->  
->  	if (rx_chn->remote) {
-> @@ -662,7 +662,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
->  	if (ret) {
->  		dev_err(dev, "flow%d config failed: %d\n", flow->udma_rflow_id,
->  			ret);
-> -		goto err;
-> +		goto err_ringrxfdq_free;
->  	}
->  
->  	rx_chn->flows_ready++;
-> @@ -670,8 +670,17 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
->  		flow->udma_rflow_id, rx_chn->flows_ready);
->  
->  	return 0;
-> -err:
-> -	k3_udma_glue_release_rx_flow(rx_chn, flow_idx);
-> +
-> +err_ringrxfdq_free:
-> +	k3_ringacc_ring_free(flow->ringrxfdq);
-> +
-> +err_ringrx_free:
-> +	k3_ringacc_ring_free(flow->ringrx);
-> +
-> +err_rflow_put:
-> +	xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
-> +	flow->udma_rflow = NULL;
-> +
->  	return ret;
->  }
->  
-> 
+Summary
+------------------------------------------------------------------------
 
-- Péter
+kernel: 4.19.112-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 8977fd00fd705a4e9273d09171ee66344cdc879e
+git describe: v4.19.111-49-g8977fd00fd70
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.111-49-g8977fd00fd70
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+No regressions (compared to build v4.19.110-90-gad35ac79caef)
+
+No fixes (compared to build v4.19.110-90-gad35ac79caef)
+
+Ran 18421 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- nxp-ls2088- arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* linux-log-parser
+* perf
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* v4l2-compliance
+* ltp-cve-tests
+* spectre-meltdown-checker-test
+* ltp-open-posix-tests
+
+ref:
+https://lkft.validation.linaro.org/scheduler/job/1298207#L4037
+https://lkft.validation.linaro.org/scheduler/job/1298945#L4132
+https://lkft.validation.linaro.org/scheduler/job/1299973#L4232
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
