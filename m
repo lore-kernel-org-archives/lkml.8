@@ -2,95 +2,138 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D4CC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2530C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C3A20782
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:57:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=omicronenergy.com header.i=@omicronenergy.com header.b="NRI7ALR0"
+	by mail.kernel.org (Postfix) with ESMTP id BA94620782
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:58:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584629903;
+	bh=GVAeBATJZYQy0Z3DzA7NxDsKvZ9QS5yhnTeI6RUEkoI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uTYV48ifo0YMapnIMxwHv35kB5CqWxirQWP5N1N6ZeAKmbX0hr1r/ihSQF5tR3kJc
+	 uG2PnyxhAJmKC9mTObSIhnYMydoHh8oNi6NVZ9oB5mla+AiCLgCFAt3OehCbhU2Uqn
+	 SLl5N4WufVSCtAMJiKIh4PSKBYv5DEGQrAj2Cc7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbgCSO5o (ORCPT
+        id S1727563AbgCSO6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:57:44 -0400
-Received: from ns.omicron.at ([212.183.10.25]:51274 "EHLO ns.omicron.at"
+        Thu, 19 Mar 2020 10:58:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgCSO5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:57:44 -0400
-X-Greylist: delayed 751 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Mar 2020 10:57:43 EDT
-Received: from MGW02-ATKLA.omicron.at ([172.25.62.35])
-        by ns.omicron.at (8.15.2/8.15.2) with ESMTPS id 02JEjAxM014683
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Mar 2020 15:45:10 +0100
-DKIM-Filter: OpenDKIM Filter v2.11.0 ns.omicron.at 02JEjAxM014683
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=omicronenergy.com;
-        s=default; t=1584629110;
-        bh=Z0xImGUqUPyOsNfsdDjs9a2xI4J8OEnVnOO6mlpwpCU=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=NRI7ALR0E9zB9/dAt+1bHuh/ci8UGNMVsCrDelzHDHlnYNggoiSzc3nBLEjgzJYvf
-         b0Ye+FjJkyOAbOFOYRU5BEmpTLHEuqb3t8PRDlui60+2oeLO42zbcOPOd9IrB1+bKC
-         lzV3db8AiQQ4kHG950NWO+ElHfsGyN/YFYlfTkY4=
-Received: from MGW02-ATKLA.omicron.at (localhost [127.0.0.1])
-        by MGW02-ATKLA.omicron.at (Postfix) with ESMTP id 7C3C8A01EF;
-        Thu, 19 Mar 2020 15:45:10 +0100 (CET)
-Received: from MGW01-ATKLA.omicron.at (unknown [172.25.62.34])
+        id S1727347AbgCSO6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 10:58:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by MGW02-ATKLA.omicron.at (Postfix) with ESMTPS id 77ECDA01ED;
-        Thu, 19 Mar 2020 15:45:10 +0100 (CET)
-Received: from EXC04-ATKLA.omicron.at ([172.22.100.189])
-        by MGW01-ATKLA.omicron.at  with ESMTP id 02JEjAST007633-02JEjASV007633
-        (version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=CAFAIL);
-        Thu, 19 Mar 2020 15:45:10 +0100
-Received: from EXC03-ATKLA.omicron.at (172.22.100.188) by
- EXC04-ATKLA.omicron.at (172.22.100.189) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 19 Mar 2020 15:45:09 +0100
-Received: from EXC03-ATKLA.omicron.at ([fe80::1c82:5ed6:8fbc:82bc]) by
- EXC03-ATKLA.omicron.at ([fe80::1c82:5ed6:8fbc:82bc%5]) with mapi id
- 15.01.1713.004; Thu, 19 Mar 2020 15:45:09 +0100
-From:   Thomas Graziadei <thomas.graziadei@omicronenergy.com>
-To:     "'Sebastian Andrzej Siewior'" <bigeasy@linutronix.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>
-Subject: RE: [PATCH] powerpc: Fix lazy preemption for powerpc 32bit
-Thread-Topic: [PATCH] powerpc: Fix lazy preemption for powerpc 32bit
-Thread-Index: AQHV/WVyTn4Lvv+Gzk2MsIjQn8mCsKhP6MAAgAAUoAA=
-Date:   Thu, 19 Mar 2020 14:45:09 +0000
-Message-ID: <95ef76b973f947fea9044b685e835de2@omicronenergy.com>
-References: <0c91d808-b077-408c-b120-99e806efaeb5@EXC03-ATKLA.omicron.at>
- <20200319142452.dqmkuruts3i6wjyt@linutronix.de>
-In-Reply-To: <20200319142452.dqmkuruts3i6wjyt@linutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.95.180]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DEA320782;
+        Thu, 19 Mar 2020 14:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584629900;
+        bh=GVAeBATJZYQy0Z3DzA7NxDsKvZ9QS5yhnTeI6RUEkoI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ee4MGhmh3l69lT8NUU8vy664Kex9uVFBhqXVcOHHtQsAIZhrZbzJHc4KmcL2je0A6
+         Ur/SsMX3GzWnrw8IY13bu/9d37EBJ1AtAg3E9+8B+B+2IJBQHrOMJRN3LUhcQyHhW0
+         X8MXQLWDu6omcvdHQhYbhvIS36GiG4uY8Zq3bAb0=
+Date:   Thu, 19 Mar 2020 15:58:16 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kevin Hao <haokexin@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.5 01/65] gpiolib: Add support for the irqdomain which
+ doesnt use irq_fwspec as arg
+Message-ID: <20200319145816.GB92193@kroah.com>
+References: <20200319123926.466988514@linuxfoundation.org>
+ <20200319123926.902914624@linuxfoundation.org>
+ <20200319133355.GB711692@pek-khao-d2.corp.ad.wrs.com>
+ <20200319134710.GA4092809@kroah.com>
+ <20200319144753.GD711692@pek-khao-d2.corp.ad.wrs.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319144753.GD711692@pek-khao-d2.corp.ad.wrs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBTZWJhc3RpYW4gQW5kcnplaiBTaWV3aW9yIFttYWlsdG86YmlnZWFzeUBsaW51dHJv
-bml4LmRlXSANCj4gT24gMjAyMC0wMy0xOCAyMToyNjo0MCBbKzAxMDBdLCBUaG9tYXMgR3Jhemlh
-ZGVpIHdyb3RlOg0KPj4gRnJvbTogVGhvbWFzIEdyYXppYWRlaSA8dGhvbWFzLmdyYXppYWRlaUBv
-bWljcm9uZW5lcmd5LmNvbT4NCj4+IA0KPj4gVGhlIDMyYml0IHBvd2VycGMgYXNzZW1ibGVyIGlt
-cGxlbWVudGF0aW9uIG9mIHRoZSBsYXp5IHByZWVtcHRpb24gc2V0IA0KPj4gdGhlIF9USUZfUEVS
-U1lTQ0FMTF9NQVNLIG9uIHRoZSBsb3cgd29yZC4gVGhpcyBjb3VsZCBsZWFkIHRvIG1vZHByb2Jl
-IA0KPj4gc2VnZmF1bHRzIGFuZCBhIGtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBBdHRlbXB0
-IHRvIGtpbGwgaW5pdCEgDQo+PiBpc3N1ZS4NCj4+IA0KPj4gRml4ZWQgYnkgc2hpZnRpbmcgdGhl
-IG1hc2sgYnkgMTYgYml0IHVzaW5nIGFuZGlzIGFuZCBsaXMuDQo+DQo+IGJhaC4gVGhhbmsgeW91
-IGZvciBjYXRjaGluZyB0aGlzLg0KPiBTdGlsbCBlNTAwIGJhc2VkIHBvd2VycGMgSSBhc3N1bWU/
-DQoNCldlbGwgdGhhbmtzIGZvciB0aGUgZ3JlYXQgd29yayBhbmQgeWVzIHN0aWxsIGU1MDAgcG93
-ZXJwYyBiYXNlZC4NCg0KPg0KPj4gU2lnbmVkLW9mZi1ieTogVGhvbWFzIEdyYXppYWRlaSA8dGhv
-bWFzLmdyYXppYWRlaUBvbWljcm9uZW5lcmd5LmNvbT4NCj4NCj4gU2ViYXN0aWFuDQoNClRob21h
-cw0K
+On Thu, Mar 19, 2020 at 10:47:53PM +0800, Kevin Hao wrote:
+> On Thu, Mar 19, 2020 at 02:47:10PM +0100, Greg Kroah-Hartman wrote:
+> > On Thu, Mar 19, 2020 at 09:33:55PM +0800, Kevin Hao wrote:
+> > > On Thu, Mar 19, 2020 at 02:03:43PM +0100, Greg Kroah-Hartman wrote:
+> > > > From: Kevin Hao <haokexin@gmail.com>
+> > > > 
+> > > > [ Upstream commit 242587616710576808dc8d7cdf18cfe0d7bf9831 ]
+> > > > 
+> > > > Some gpio's parent irqdomain may not use the struct irq_fwspec as
+> > > > argument, such as msi irqdomain. So rename the callback
+> > > > populate_parent_fwspec() to populate_parent_alloc_arg() and make it
+> > > > allocate and populate the specific struct which is needed by the
+> > > > parent irqdomain.
+> > > 
+> > > Hi Greg,
+> > > 
+> > > This commit shouldn't go to stable because it is not a bug fix. It is just a
+> > > prerequisite of switching to general GPIOLIB_IRQCHIP for thunderx gpio driver
+> > > (commit 7a9f4460f74d "gpio: thunderx: Switch to GPIOLIB_IRQCHIP").
+> > 
+> > This seems to be a prerequisite for f98371476f36 ("pinctrl: qcom:
+> > ssbi-gpio: Fix fwspec parsing bug") to apply properly.  With that
+> > information, is it ok to keep?
+> 
+> Yes, this commit does change the context of commit f98371476f36 ("pinctrl: qcom:
+> ssbi-gpio: Fix fwspec parsing bug"). So I am fine to keep this in order to apply
+> f98371476f36 cleanly. But there is no really logical dependency between these two
+> commits, so another option is that we can adjust the commit f98371476f36 a bit in order
+> to apply to v5.5.x cleanly without this commit, something like below. IMHO, it is more
+> suitable for the stable kernel.
+> 
+> From 2678327511f77edd8692634e81ef04cd9ca4b249 Mon Sep 17 00:00:00 2001
+> From: Linus Walleij <linus.walleij@linaro.org>
+> Date: Fri, 6 Mar 2020 15:34:15 +0100
+> Subject: [PATCH] pinctrl: qcom: ssbi-gpio: Fix fwspec parsing bug
+> 
+> [ Upstream commit f98371476f36359da2285d1807b43e5b17fd18de ]
+> 
+> We are parsing SSBI gpios as fourcell fwspecs but they are
+> twocell. Probably a simple copy-and-paste bug.
+> 
+> Tested on the APQ8060 DragonBoard and after this ethernet
+> and MMC card detection works again.
+> 
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Brian Masney <masneyb@onstation.org>
+> Fixes: ae436fe81053 ("pinctrl: ssbi-gpio: convert to hierarchical IRQ helpers in gpio core")
+> Link: https://lore.kernel.org/r/20200306143416.1476250-1-linus.walleij@linaro.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> [Kevin: Replace .populate_parent_alloc_arg with .populate_parent_fwspec]
+> Signed-off-by: Kevin Hao <haokexin@gmail.com>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+> index dca86886b1f9..6b7f0d56a532 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+> @@ -794,7 +794,7 @@ static int pm8xxx_gpio_probe(struct platform_device *pdev)
+>  	girq->fwnode = of_node_to_fwnode(pctrl->dev->of_node);
+>  	girq->parent_domain = parent_domain;
+>  	girq->child_to_parent_hwirq = pm8xxx_child_to_parent_hwirq;
+> -	girq->populate_parent_fwspec = gpiochip_populate_parent_fwspec_fourcell;
+> +	girq->populate_parent_fwspec = gpiochip_populate_parent_fwspec_twocell;
+>  	girq->child_offset_to_irq = pm8xxx_child_offset_to_irq;
+>  	girq->child_irq_domain_ops.translate = pm8xxx_domain_translate;
+>  
+
+Thank you, that worked, and I've dropped the other patch now.
+
+Turns out it also broke the build :)
+
+greg k-h
