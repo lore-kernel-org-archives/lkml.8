@@ -2,93 +2,80 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1E2C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1527C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16EA52072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5CD20754
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:47:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cDKBQqPY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aXvs6D1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgCSRp7 (ORCPT
+        id S1727867AbgCSRrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:45:59 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:46339 "EHLO
+        Thu, 19 Mar 2020 13:47:07 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:26502 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727212AbgCSRp6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726934AbgCSRrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:45:58 -0400
+        Thu, 19 Mar 2020 13:47:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584639957;
+        s=mimecast20190719; t=1584640026;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2qmYUYBn0oNBTimXYQKRYpTD4KGsYm/rG15XCQh8C2U=;
-        b=cDKBQqPYF97poGLFiJzUe2864qFWMMJdTh+CbljQSnBRS0COAcmkEwlM6pgZIcE+pgNlAt
-        y+epT4kmJV/6tQnqC4APV1EYZVVPD+yC/cSbaPILGiNjVwSa11tH+AhRELYk5YKbi5rqsU
-        +zcdUaVJy0kGPXhCVwkX3yzh2fn7pYg=
+        bh=aA76ES7e43xggaYU1fSodrMujaNKIwSE//1w1Lnn+qQ=;
+        b=aXvs6D1S6Nn91J8ZS2dTipJ/2sQXY0u/wosYRX/KdbWtfp1q9GWZJDnrqt8gRUjvKtE2EQ
+        7Z1BdDbh9QjNvewwDIyf1rlw3RdD8Z6IIWtenO796lVWAyMYRPkwR6+GUmlzGVdgHnRNpj
+        xiHTJBdLVSMIhIxiSWC+mzsGBuucoFQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-192-ljtr03pCN96pm7sB_D4Qcw-1; Thu, 19 Mar 2020 13:45:56 -0400
-X-MC-Unique: ljtr03pCN96pm7sB_D4Qcw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-309-YbKSdRvnMb-H-gKH__LWFQ-1; Thu, 19 Mar 2020 13:47:02 -0400
+X-MC-Unique: YbKSdRvnMb-H-gKH__LWFQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A9448017CC;
-        Thu, 19 Mar 2020 17:45:54 +0000 (UTC)
-Received: from treble (unknown [10.10.110.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 50971BBBF6;
-        Thu, 19 Mar 2020 17:45:53 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 12:45:50 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: linux-next: Tree for Mar 18 (objtool)
-Message-ID: <20200319174550.4wpx4j357nw67nzz@treble>
-References: <20200318220920.48df2e76@canb.auug.org.au>
- <d7dc5b4a-9a7e-ccf7-e00e-2e7f0e79a9bc@infradead.org>
- <20200318182352.2dgwwl4ugbwndi4x@treble>
- <20200318200542.GK20730@hirez.programming.kicks-ass.net>
- <20200319173101.wufpymi7obhqgoqd@treble>
- <20200319173326.oj4qs24x4ly5lrgt@treble>
- <20200319174028.azzaisoj5gbss7zk@treble>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D88AF85EE74;
+        Thu, 19 Mar 2020 17:47:00 +0000 (UTC)
+Received: from gondolin (ovpn-113-188.ams2.redhat.com [10.36.113.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 71F6B1001B28;
+        Thu, 19 Mar 2020 17:46:55 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 18:46:53 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
+        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com, kevin.tian@intel.com
+Subject: Re: [PATCH v3 7/7] vfio/pci: Cleanup .probe() exit paths
+Message-ID: <20200319184653.6c10638b.cohuck@redhat.com>
+In-Reply-To: <158396396706.5601.17691989521568973524.stgit@gimli.home>
+References: <158396044753.5601.14804870681174789709.stgit@gimli.home>
+        <158396396706.5601.17691989521568973524.stgit@gimli.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200319174028.azzaisoj5gbss7zk@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 12:40:32PM -0500, Josh Poimboeuf wrote:
-> On Thu, Mar 19, 2020 at 12:33:31PM -0500, Josh Poimboeuf wrote:
-> > On Thu, Mar 19, 2020 at 12:31:05PM -0500, Josh Poimboeuf wrote:
-> > > ... except the __builtin_trap() UD2 seems to be coming *after* the BUG
-> > > UD2.  Could it be the BUG UD2 itself which is convincing UBSAN to add
-> > > the __builtin_trap()?
-> > 
-> > Actually I suspect it's the __builtin_unreachable() annotation which is
-> > making UBSAN add the __builtin_trap()...  because I don't see any double
-> > UD2s for WARNs.
+On Wed, 11 Mar 2020 15:59:27 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
+
+> The cleanup is getting a tad long.
 > 
-> Scratch that theory, removing the __builtin_unreachable() from
-> unreachable() doesn't make the double UD2 go away.
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c |   54 ++++++++++++++++++++-----------------------
+>  1 file changed, 25 insertions(+), 29 deletions(-)
 
-Actually, removing __builtin_unreachable() *does* make the extra UD2 go
-away -- I forgot I had some silly debug code.
-
-Not sure what the "fix" should be though.
-
--- 
-Josh
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
