@@ -2,305 +2,110 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232E0C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810A8C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDAFD2072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A6B020714
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:01:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="kSCCxuWg"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="tTwgtpyc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgCSHBK (ORCPT
+        id S1727187AbgCSHBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:01:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:38932 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSHBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:01:09 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48jd9D5Wspz9v1Md;
-        Thu, 19 Mar 2020 08:01:04 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=kSCCxuWg; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id a91KdXxJSw9z; Thu, 19 Mar 2020 08:01:04 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48jd9D4MMFz9v1Mc;
-        Thu, 19 Mar 2020 08:01:04 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584601264; bh=f1YwOhdxX26Y+wBuzZ6KcmY62u5y/+8Hvgm0wH6ueYs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=kSCCxuWg89EGpfCGJFvQQEKaoHe/kCd5TGb/eJd9YNW4o9nMza+I2DetAh60y0OYl
-         jNWoevB3fgK3oMJ2kFYnvfR61+Z0w2UWeOnoIyGuiPFaUDv3CG1pmdSv9t5BVLTXov
-         N7ub0KXLdsT/u4I32YAoSgYf0fhvDN90dndC0kTk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 784F58B769;
-        Thu, 19 Mar 2020 08:01:05 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id MWrtuWx18n7g; Thu, 19 Mar 2020 08:01:05 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DFB5B8B798;
-        Thu, 19 Mar 2020 08:01:03 +0100 (CET)
-Subject: Re: [PATCH 1/4] hugetlbfs: add arch_hugetlb_valid_size
-To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Longpeng <longpeng2@huawei.com>, Will Deacon <will@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-References: <20200318220634.32100-1-mike.kravetz@oracle.com>
- <20200318220634.32100-2-mike.kravetz@oracle.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <c3071359-c5d3-4247-7f16-6f61b2fa0756@c-s.fr>
-Date:   Thu, 19 Mar 2020 08:00:59 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 03:01:32 -0400
+Received: from mail-eopbgr40080.outbound.protection.outlook.com ([40.107.4.80]:58375
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725787AbgCSHBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:01:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k3onsb5ZtcRkkIewYtty9YNI2YG/Q2TwuY5ZWoKEJMzZcJA7XlJJNRdK+E6a0kgWu2nkn9RUFxve8HJlAEGPje4FVGAJi1k6PcryIJ9NL4EzRQrwFNNfwnMUg7Ke3Mrd65uQQ84aU96ivHGYCKYUCVvEG6VvJB0LF3xBMJvrRCxWiCYxeu0Fk6G063cY8uzMaKO51QRRKanubvjq6PyezTIDHkDGJuVf0jlE5K6El2PJYyO98icDH3J84fOl6+7dsXOoPccfmRAhOxvqCaCF2C4hfqWtd0e1fd4oXht/6BVt8xZYtasSE0UzqFhfHfVndjo4/eKvHamQKYW1FWt05w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3vGa26LuFfY+iHgMfUtU1vFcXCpGi56ULIn1q2psfjM=;
+ b=dd3EoDX8LmmMmjaUIkRZk3/4BdOryTChlnOcZQYxnL7oznW0fP8eppftl6ChfZYTsnAZbATo5BDtntlXCywIQAfiV83ywvpJzkUHUeaqAUK4Je0ow67sB4/iwxQHi61JiqID/YCjIy6YamkO9E2lOy6QduQxCcnFUKg12x6JZCebNJ3R5NubfwK7OL2hc3m9fYMEHaH24r3ptMpdQZ5gZnntbbNaxF37EdvDLfKVbPDneHAUO/wdxrpRiyCzXD4+KG6cucmlJxKmmfCL1fCSxsn4YfUNvqg7QFq6cAYR7egbxkrgW6QsF2n0oVgEMdy1ergnqu1fnMFCQrp86kG5xg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3vGa26LuFfY+iHgMfUtU1vFcXCpGi56ULIn1q2psfjM=;
+ b=tTwgtpyccWfPiSAOQIoUDmSbySZjknN7eLRYhi7X/I13q4DCyK0F4WJ525QE7NHPfj93LEisAlo2lNS7tLBNrcKNJvJT8ass7xVRNLRv75mj5HXk0YA3XhmPHBS7BfhBCVLL9wgCUiMn7Xp+yyxkvWWcUaDjx3x2Lg/l2qLnWNY=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=leonro@mellanox.com; 
+Received: from AM6PR05MB6408.eurprd05.prod.outlook.com (20.179.5.215) by
+ AM6PR05MB6405.eurprd05.prod.outlook.com (20.179.7.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.22; Thu, 19 Mar 2020 07:01:28 +0000
+Received: from AM6PR05MB6408.eurprd05.prod.outlook.com
+ ([fe80::c99f:9130:561f:dea0]) by AM6PR05MB6408.eurprd05.prod.outlook.com
+ ([fe80::c99f:9130:561f:dea0%3]) with mapi id 15.20.2814.021; Thu, 19 Mar 2020
+ 07:01:28 +0000
+Date:   Thu, 19 Mar 2020 09:01:25 +0200
+From:   Leon Romanovsky <leonro@mellanox.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     claudiu.manoil@nxp.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] enetc: Remove unused variable 'enetc_drv_name'
+Message-ID: <20200319070125.GM126814@unreal>
+References: <20200319064637.45048-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319064637.45048-1-yuehaibing@huawei.com>
+X-ClientProxiedBy: PR0P264CA0225.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1e::21) To AM6PR05MB6408.eurprd05.prod.outlook.com
+ (2603:10a6:20b:b8::23)
 MIME-Version: 1.0
-In-Reply-To: <20200318220634.32100-2-mike.kravetz@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (2a00:a040:183:2d::393) by PR0P264CA0225.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1e::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Thu, 19 Mar 2020 07:01:27 +0000
+X-Originating-IP: [2a00:a040:183:2d::393]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d5263be1-b355-45f1-228e-08d7cbd35884
+X-MS-TrafficTypeDiagnostic: AM6PR05MB6405:
+X-Microsoft-Antispam-PRVS: <AM6PR05MB64053FEB44D6F0A21FCB0F3DB0F40@AM6PR05MB6405.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:161;
+X-Forefront-PRVS: 0347410860
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(39860400002)(346002)(396003)(136003)(376002)(366004)(199004)(8936002)(9686003)(66946007)(66556008)(66476007)(81166006)(81156014)(2906002)(33656002)(8676002)(316002)(1076003)(6486002)(33716001)(478600001)(16526019)(186003)(4744005)(6496006)(6916009)(5660300002)(4326008)(52116002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB6405;H:AM6PR05MB6408.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HbDCpxmwt5c60oBl1uU6yb0ePGLUml7joFtPXnamVOvaDIZFCv7TdNCyEvIIcd8qi5WgjrtUXTuqwsFuLF0sKTuHGKwF+gDmeNmCDl7TGftYNJOHD2QG/MifSyVXRl2L7CEU5c0zsXIBfTuHiEP0sHp7IZd+wPgq8YPZesUHW4dLLi8XVcLkT5K+rL1EBsqUilLq6jOxsZqquQYw0H3wx4cA6etr1OkqS+hzJxWentD8hv1pfTSXKqlcUgIUsjPOhbDjr14medWfblKjZl369mneayXd1GrAI+RljTNITwu+NZYmfbRu3hiRm6NyILa4lwNvcxEnV2DIZjbFs5JGH40UuL4ygqvqknGDFLaPu/EXyW/DNq1M8k9fn4VK3TqqmJzbkaq7miL4BK8frVAw1egBXJ3GfiuMOUJqAlr1MUYOupX6E1UXoA/Gu8OEFSm9
+X-MS-Exchange-AntiSpam-MessageData: XkVC7g6MVxrFmrHCvHceXYbo1uG6uBbqC8g1srAWWL6EQ9QDbqrCkMLIOuMMrwYy4R77A28juPspoJVtI0qT8c+7IjYR7Sdmtt4UZfNOhTKGKwWVzabn4NBJbrU6Tkq1EBCjhVN/q9LRlLxsgMbZiT3tjirqsagGEdS2l9MZtTA=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5263be1-b355-45f1-228e-08d7cbd35884
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2020 07:01:28.1825
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J5h9Rp0gpdFJMVHcL41kQsxUQPI9U2vB3kfBwvb5zQvcwRc+1EpGq8ek5idmsAeCMREO7tkD1dS0Q3GP85qD1Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6405
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 18/03/2020 à 23:06, Mike Kravetz a écrit :
-> The architecture independent routine hugetlb_default_setup sets up
-> the default huge pages size.  It has no way to verify if the passed
-> value is valid, so it accepts it and attempts to validate at a later
-> time.  This requires undocumented cooperation between the arch specific
-> and arch independent code.
-> 
-> For architectures that support more than one huge page size, provide
-> a routine arch_hugetlb_valid_size to validate a huge page size.
-> hugetlb_default_setup can use this to validate passed values.
-> 
-> arch_hugetlb_valid_size will also be used in a subsequent patch to
-> move processing of the "hugepagesz=" in arch specific code to a common
-> routine in arch independent code.
-> 
-> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+On Thu, Mar 19, 2020 at 02:46:37PM +0800, YueHaibing wrote:
+> commit ed0a72e0de16 ("net/freescale: Clean drivers from static versions")
+> leave behind this, remove it .
+>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->   arch/arm64/include/asm/hugetlb.h   |  2 ++
->   arch/arm64/mm/hugetlbpage.c        | 19 ++++++++++++++-----
->   arch/powerpc/include/asm/hugetlb.h |  3 +++
->   arch/powerpc/mm/hugetlbpage.c      | 20 +++++++++++++-------
->   arch/riscv/include/asm/hugetlb.h   |  3 +++
->   arch/riscv/mm/hugetlbpage.c        | 28 ++++++++++++++++++----------
->   arch/s390/include/asm/hugetlb.h    |  3 +++
->   arch/s390/mm/hugetlbpage.c         | 18 +++++++++++++-----
->   arch/sparc/include/asm/hugetlb.h   |  3 +++
->   arch/sparc/mm/init_64.c            | 23 ++++++++++++++++-------
->   arch/x86/include/asm/hugetlb.h     |  3 +++
->   arch/x86/mm/hugetlbpage.c          | 21 +++++++++++++++------
->   include/linux/hugetlb.h            |  7 +++++++
->   mm/hugetlb.c                       | 16 +++++++++++++---
->   14 files changed, 126 insertions(+), 43 deletions(-)
-> 
+>  drivers/net/ethernet/freescale/enetc/enetc_pf.c | 1 -
+>  drivers/net/ethernet/freescale/enetc/enetc_vf.c | 1 -
+>  2 files changed, 2 deletions(-)
+>
 
-[snip]
+Fixes: ed0a72e0de16 ("net/freescale: Clean drivers from static versions")
 
-> diff --git a/arch/powerpc/include/asm/hugetlb.h b/arch/powerpc/include/asm/hugetlb.h
-> index bd6504c28c2f..3b5939016955 100644
-> --- a/arch/powerpc/include/asm/hugetlb.h
-> +++ b/arch/powerpc/include/asm/hugetlb.h
-> @@ -64,6 +64,9 @@ static inline void arch_clear_hugepage_flags(struct page *page)
->   {
->   }
->   
-> +#define arch_hugetlb_valid_size arch_hugetlb_valid_size
-> +extern bool __init arch_hugetlb_valid_size(unsigned long long size);
-
-Don't add 'extern' keyword, it is irrelevant for a function declaration.
-
-checkpatch --strict doesn't like it either 
-(https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/12318//artifact/linux/checkpatch.log)
-
-> +
->   #include <asm-generic/hugetlb.h>
->   
->   #else /* ! CONFIG_HUGETLB_PAGE */
-> diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-> index 33b3461d91e8..b78f660252f3 100644
-> --- a/arch/powerpc/mm/hugetlbpage.c
-> +++ b/arch/powerpc/mm/hugetlbpage.c
-> @@ -558,7 +558,7 @@ unsigned long vma_mmu_pagesize(struct vm_area_struct *vma)
->   	return vma_kernel_pagesize(vma);
->   }
->   
-> -static int __init add_huge_page_size(unsigned long long size)
-> +bool __init arch_hugetlb_valid_size(unsigned long long size)
->   {
->   	int shift = __ffs(size);
->   	int mmu_psize;
-> @@ -566,20 +566,26 @@ static int __init add_huge_page_size(unsigned long long size)
->   	/* Check that it is a page size supported by the hardware and
->   	 * that it fits within pagetable and slice limits. */
->   	if (size <= PAGE_SIZE || !is_power_of_2(size))
-> -		return -EINVAL;
-> +		return false;
->   
->   	mmu_psize = check_and_get_huge_psize(shift);
->   	if (mmu_psize < 0)
-> -		return -EINVAL;
-> +		return false;
->   
->   	BUG_ON(mmu_psize_defs[mmu_psize].shift != shift);
->   
-> -	/* Return if huge page size has already been setup */
-> -	if (size_to_hstate(size))
-> -		return 0;
-> +	return true;
-> +}
->   
-> -	hugetlb_add_hstate(shift - PAGE_SHIFT);
-> +static int __init add_huge_page_size(unsigned long long size)
-> +{
-> +	int shift = __ffs(size);
-> +
-> +	if (!arch_hugetlb_valid_size(size))
-> +		return -EINVAL;
->   
-> +	if (!size_to_hstate(size))
-> +		hugetlb_add_hstate(shift - PAGE_SHIFT);
->   	return 0;
->   }
->   
-
-[snip]
-
-> diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
-> index 5bfd5aef5378..51e6208fdeec 100644
-> --- a/arch/x86/mm/hugetlbpage.c
-> +++ b/arch/x86/mm/hugetlbpage.c
-> @@ -181,16 +181,25 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
->   #endif /* CONFIG_HUGETLB_PAGE */
->   
->   #ifdef CONFIG_X86_64
-> +bool __init arch_hugetlb_valid_size(unsigned long long size)
-> +{
-> +	if (size == PMD_SIZE)
-> +		return true;
-> +	else if (size == PUD_SIZE && boot_cpu_has(X86_FEATURE_GBPAGES))
-> +		return true;
-> +	else
-> +		return false;
-> +}
-> +
->   static __init int setup_hugepagesz(char *opt)
->   {
-> -	unsigned long ps = memparse(opt, &opt);
-> -	if (ps == PMD_SIZE) {
-> -		hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
-> -	} else if (ps == PUD_SIZE && boot_cpu_has(X86_FEATURE_GBPAGES)) {
-> -		hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
-> +	unsigned long long ps = memparse(opt, &opt);
-> +
-> +	if (arch_hugetlb_valid_size(ps)) {
-> +		hugetlb_add_hstate(ilog2(ps) - PAGE_SHIFT);
->   	} else {
->   		hugetlb_bad_size();
-> -		printk(KERN_ERR "hugepagesz: Unsupported page size %lu M\n",
-> +		printk(KERN_ERR "hugepagesz: Unsupported page size %llu M\n",
->   			ps >> 20);
-
-Nowadays we use pr_err() instead of printk.
-
-It would also likely allow you to have everything fit on a single line.
-
->   		return 0;
->   	}
-> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> index b831e9fa1a26..33343eb980d0 100644
-> --- a/include/linux/hugetlb.h
-> +++ b/include/linux/hugetlb.h
-> @@ -678,6 +678,13 @@ static inline spinlock_t *huge_pte_lockptr(struct hstate *h,
->   	return &mm->page_table_lock;
->   }
->   
-> +#ifndef arch_hugetlb_valid_size
-> +static inline bool arch_hugetlb_valid_size(unsigned long long size)
-> +{
-> +	return (size == HPAGE_SIZE);
-
-Not sure the ( ) are necessary.
-
-> +}
-> +#endif
-> +
->   #ifndef hugepages_supported
->   /*
->    * Some platform decide whether they support huge pages at boot
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index d8ebd876871d..2f99359b93af 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -3224,12 +3224,22 @@ static int __init hugetlb_nrpages_setup(char *s)
->   }
->   __setup("hugepages=", hugetlb_nrpages_setup);
->   
-> -static int __init hugetlb_default_setup(char *s)
-> +static int __init default_hugepagesz_setup(char *s)
->   {
-> -	default_hstate_size = memparse(s, &s);
-> +	unsigned long long size;
-
-Why unsigned long long ?
-
-default_hstate_size is long.
-
-I can't imagine 32 bits platforms having a hugepage with a 64 bits size.
-
-> +	char *saved_s = s;
-> +
-> +	size = memparse(s, &s);
-
-The updated s is not reused after that so you can pass NULL instead of 
-&s and then you don't need the saved_s.
-
-> +
-> +	if (!arch_hugetlb_valid_size(size)) {
-> +		pr_err("HugeTLB: unsupported default_hugepagesz %s\n", saved_s);
-> +		return 0;
-> +	}
-> +
-> +	default_hstate_size = size;
->   	return 1;
->   }
-> -__setup("default_hugepagesz=", hugetlb_default_setup);
-> +__setup("default_hugepagesz=", default_hugepagesz_setup);
->   
->   static unsigned int cpuset_mems_nr(unsigned int *array)
->   {
-> 
-
-
-Christophe
+Thanks a lot.
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
