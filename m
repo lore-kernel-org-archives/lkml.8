@@ -2,167 +2,293 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F99DC4332D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B063AC4332B
 	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D347F20789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623247;
-	bh=NtVO8LRWjvuQqw8jJnihBjciJWVRxF+cJQoyoevWB6A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b7ovF8ug8M+R9c0bwCnQDWyFZxumjfdZzyn8+GWLuUAxcfX4163oodLFV4r3BLqlY
-	 URJYH9Ert7Bh3WGgn7nBqC70SEPQAVk5QPBhNUZgDM9+LCM482a2CalocDk8JvMMbB
-	 BTKMsEaIUeqe47strA4/tPxIVoCHMTsmk9MXAqfc=
+	by mail.kernel.org (Postfix) with ESMTP id 8820020789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgCSNH0 (ORCPT
+        id S1727938AbgCSNH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:07:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50984 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:07:27 -0400
+Received: from mga04.intel.com ([192.55.52.120]:29654 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727283AbgCSNHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:07:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727926AbgCSNH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:07:26 -0400
+IronPort-SDR: qDNmv7lKxR3fZXLFbnr5Fa5EofHsdILpvDPBQ7b6fFBxof8+9zCALOrmrQ8MHzgESmit3HTHXY
+ ASO7t9hePf8w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 06:07:25 -0700
+IronPort-SDR: pIVV4Lrxcb5QjZyzfPIkMoT9fDonZN6BNjZHylQRMDbxruHnWRmx4ojY22s8zfqXCb/dtqktZ3
+ 4t6WopGZ+rhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,571,1574150400"; 
+   d="scan'208";a="291621939"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 19 Mar 2020 06:07:25 -0700
+Received: from [10.251.14.105] (kliang2-mobl.ccr.corp.intel.com [10.251.14.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E6182078C;
-        Thu, 19 Mar 2020 13:07:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623241;
-        bh=NtVO8LRWjvuQqw8jJnihBjciJWVRxF+cJQoyoevWB6A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iNVupYYUc8lmSjG2I1RB1/qgES9LcYvJIFtv+sp1QOM4ETMkzgOmkyfYfECrfMoPI
-         +LgXb19AHgdW+YIr9pMg74D0ISaosBHvv3vHlTJcG+YqwsAGAd/8ran9wEWIXQS6CA
-         CCPTELyKM3F9pC86SxhyJXGBKbjOdIAq7eBAPvp8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 36/93] ipv6: restrict IPV6_ADDRFORM operation
-Date:   Thu, 19 Mar 2020 13:59:40 +0100
-Message-Id: <20200319123936.278975402@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
-References: <20200319123924.795019515@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by linux.intel.com (Postfix) with ESMTPS id 826DC58058B;
+        Thu, 19 Mar 2020 06:07:23 -0700 (PDT)
+Subject: Re: [PATCH V3 01/17] perf pmu: Add support for PMU capabilities
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        adrian.hunter@intel.com, mathieu.poirier@linaro.org,
+        ravi.bangoria@linux.ibm.com, alexey.budankov@linux.intel.com,
+        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
+        mpe@ellerman.id.au, eranian@google.com, ak@linux.intel.com
+References: <20200313183319.17739-1-kan.liang@linux.intel.com>
+ <20200313183319.17739-2-kan.liang@linux.intel.com>
+ <20200318194722.GR11531@kernel.org>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <f7b3a4af-0c74-b032-bc44-b05fff1f7db5@linux.intel.com>
+Date:   Thu, 19 Mar 2020 09:07:21 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200318194722.GR11531@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
-
-commit b6f6118901d1e867ac9177bbff3b00b185bd4fdc upstream.
-
-IPV6_ADDRFORM is able to transform IPv6 socket to IPv4 one.
-While this operation sounds illogical, we have to support it.
-
-One of the things it does for TCP socket is to switch sk->sk_prot
-to tcp_prot.
-
-We now have other layers playing with sk->sk_prot, so we should make
-sure to not interfere with them.
-
-This patch makes sure sk_prot is the default pointer for TCP IPv6 socket.
-
-syzbot reported :
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-PGD a0113067 P4D a0113067 PUD a8771067 PMD 0
-Oops: 0010 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 10686 Comm: syz-executor.0 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:0x0
-Code: Bad RIP value.
-RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
-RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
-RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
-R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
-R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
-FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- inet_release+0x165/0x1c0 net/ipv4/af_inet.c:427
- __sock_release net/socket.c:605 [inline]
- sock_close+0xe1/0x260 net/socket.c:1283
- __fput+0x2e4/0x740 fs/file_table.c:280
- ____fput+0x15/0x20 fs/file_table.c:313
- task_work_run+0x176/0x1b0 kernel/task_work.c:113
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
- prepare_exit_to_usermode+0x480/0x5b0 arch/x86/entry/common.c:195
- syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:278
- do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c429
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2ae75dac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
-RAX: 0000000000000000 RBX: 00007f2ae75db6d4 RCX: 000000000045c429
-RDX: 0000000000000001 RSI: 000000000000011a RDI: 0000000000000004
-RBP: 000000000076bf20 R08: 0000000000000038 R09: 0000000000000000
-R10: 0000000020000180 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000a9d R14: 00000000004ccfb4 R15: 000000000076bf2c
-Modules linked in:
-CR2: 0000000000000000
----[ end trace 82567b5207e87bae ]---
-RIP: 0010:0x0
-Code: Bad RIP value.
-RSP: 0018:ffffc9000281fce0 EFLAGS: 00010246
-RAX: 1ffffffff15f48ac RBX: ffffffff8afa4560 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a69a8f40
-RBP: ffffc9000281fd10 R08: ffffffff86ed9b0c R09: ffffed1014d351f5
-R10: ffffed1014d351f5 R11: 0000000000000000 R12: ffff8880920d3098
-R13: 1ffff1101241a613 R14: ffff8880a69a8f40 R15: 0000000000000000
-FS:  00007f2ae75db700(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd6 CR3: 00000000a3b85000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot+1938db17e275e85dc328@syzkaller.appspotmail.com
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- net/ipv6/ipv6_sockglue.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
---- a/net/ipv6/ipv6_sockglue.c
-+++ b/net/ipv6/ipv6_sockglue.c
-@@ -185,9 +185,15 @@ static int do_ipv6_setsockopt(struct soc
- 					retv = -EBUSY;
- 					break;
- 				}
--			} else if (sk->sk_protocol != IPPROTO_TCP)
-+			} else if (sk->sk_protocol == IPPROTO_TCP) {
-+				if (sk->sk_prot != &tcpv6_prot) {
-+					retv = -EBUSY;
-+					break;
-+				}
-+				break;
-+			} else {
- 				break;
--
-+			}
- 			if (sk->sk_state != TCP_ESTABLISHED) {
- 				retv = -ENOTCONN;
- 				break;
 
 
+On 3/18/2020 3:47 PM, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Mar 13, 2020 at 11:33:03AM -0700, kan.liang@linux.intel.com escreveu:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The PMU capabilities information, which is located at
+>> /sys/bus/event_source/devices/<dev>/caps, is required by perf tool.
+>> For example, the max LBR information is required to stitch LBR call
+>> stack.
+>>
+>> Add perf_pmu__caps_parse() to parse the PMU capabilities information.
+>> The information is stored in a list.
+>>
+>> Add perf_pmu__scan_caps() to scan the capabilities one by one.
+>>
+>> The following patch will store the capabilities information in perf
+>> header.
+>>
+>> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>   tools/perf/util/pmu.c | 98 +++++++++++++++++++++++++++++++++++++++++++
+>>   tools/perf/util/pmu.h | 12 ++++++
+>>   2 files changed, 110 insertions(+)
+>>
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index 8b99fd312aae..4cdfbb669567 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -844,6 +844,7 @@ static struct perf_pmu *pmu_lookup(const char *name)
+>>   
+>>   	INIT_LIST_HEAD(&pmu->format);
+>>   	INIT_LIST_HEAD(&pmu->aliases);
+>> +	INIT_LIST_HEAD(&pmu->caps);
+>>   	list_splice(&format, &pmu->format);
+>>   	list_splice(&aliases, &pmu->aliases);
+>>   	list_add_tail(&pmu->list, &pmus);
+>> @@ -1565,3 +1566,100 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
+>>   	va_end(args);
+>>   	return ret;
+>>   }
+>> +
+>> +static int perf_pmu__new_caps(struct list_head *list, char *name, char *value)
+>> +{
+>> +	struct perf_pmu_caps *caps;
+>> +
+>> +	caps = zalloc(sizeof(*caps));
+>> +	if (!caps)
+>> +		return -ENOMEM;
+> 
+> Since there will be a v4 for other reasons, please combine the
+> declaration plus assignment when possible, like above, i.e. make it:
+> 
+
+Sure.
+
+> +	struct perf_pmu_caps *caps = zalloc(sizeof(*caps));
+> +
+> +	if (!caps)
+> +		return -ENOMEM;
+> 
+>> +
+>> +	caps->name = strdup(name);
+>> +	if (!caps->name)
+>> +		goto free_caps;
+>> +	caps->value = strndup(value, strlen(value) - 1);
+>> +	if (!caps->value)
+>> +		goto free_name;
+>> +	list_add_tail(&caps->list, list);
+>> +	return 0;
+>> +
+>> +free_name:
+>> +	free(caps->name);
+> 
+> In these cases I think this is preferred:
+> 
+> 	zfree(&caps->name);
+
+Sure.
+
+> 
+>> +free_caps:
+>> +	free(caps);
+>> +
+>> +	return -ENOMEM;
+>> +}
+>> +
+>> +/*
+>> + * Reading/parsing the given pmu capabilities, which should be located at:
+>> + * /sys/bus/event_source/devices/<dev>/caps as sysfs group attributes.
+>> + * Return the number of capabilities
+>> + */
+>> +int perf_pmu__caps_parse(struct perf_pmu *pmu)
+>> +{
+>> +	struct stat st;
+>> +	char caps_path[PATH_MAX];
+>> +	const char *sysfs = sysfs__mountpoint();
+>> +	DIR *caps_dir;
+>> +	struct dirent *evt_ent;
+>> +	int nr_caps = 0;
+>> +
+>> +	if (!sysfs)
+>> +		return -1;
+>> +
+>> +	snprintf(caps_path, PATH_MAX,
+>> +		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/caps", sysfs, pmu->name);
+>> +
+>> +	if (stat(caps_path, &st) < 0)
+>> +		return 0;	/* no error if caps does not exist */
+>> +
+>> +	caps_dir = opendir(caps_path);
+>> +	if (!caps_dir)
+>> +		return -EINVAL;
+>> +
+>> +	while ((evt_ent = readdir(caps_dir)) != NULL) {
+>> +		char path[PATH_MAX + NAME_MAX + 1];
+>> +		char *name = evt_ent->d_name;
+>> +		char value[128];
+>> +		FILE *file;
+>> +
+>> +		if (!strcmp(name, ".") || !strcmp(name, ".."))
+>> +			continue;
+>> +
+>> +		snprintf(path, sizeof(path), "%s/%s", caps_path, name);
+>> +
+>> +		file = fopen(path, "r");
+>> +		if (!file)
+>> +			break;
+> 
+> I haven't looked at what is in such directories that would justify still
+> returning whatever was read so far when failing to read one of its
+> files, is this sensible? Care to explain a bit why you think so? Looks
+> fishy :-\
+
+There is no dependency among the 'capabilities'. If perf fails to read 
+one, it should not impact others.
+Yes, 'continue' looks better here.
+
+
+> 
+>> +
+>> +		if (!fgets(value, sizeof(value), file) ||
+>> +		    (perf_pmu__new_caps(&pmu->caps, name, value) < 0)) {
+>> +			fclose(file);
+>> +			break;
+>> +		}
+>> +
+>> +		nr_caps++;
+>> +		fclose(file);
+>> +	}
+>> +
+>> +	closedir(caps_dir);
+>> +
+>> +	return nr_caps;
+>> +}
+>> +
+>> +struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
+>> +					  struct perf_pmu_caps *caps)
+>> +{
+>> +	if (!pmu)
+>> +		return NULL;
+>> +
+>> +	if (!caps)
+>> +		caps = list_prepare_entry(caps, &pmu->caps, list);
+>> +
+>> +	list_for_each_entry_continue(caps, &pmu->caps, list)
+>> +		return caps;
+> 
+> Why not:
+> 
+> 	return caps ? list_next_entry(caps) : list_first_entry(&pmu->caps, struct perf_pmu_caps, list);
+> 
+> Nah, it'll return the head after the last entry, not NULL, argh.
+> 
+> Anyway, looks like a confusing API :-\
+> 
+> I'll see how it is used in the following patches...
+
+
+As suggested in other thread, I will use list_for_each_entry() to 
+replace in v4.
+
+Thanks,
+Kan
+
+> 
+>> +
+>> +	return NULL;
+>> +}
+>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+>> index 6737e3d5d568..a228e27ae462 100644
+>> --- a/tools/perf/util/pmu.h
+>> +++ b/tools/perf/util/pmu.h
+>> @@ -21,6 +21,12 @@ enum {
+>>   
+>>   struct perf_event_attr;
+>>   
+>> +struct perf_pmu_caps {
+>> +	char *name;
+>> +	char *value;
+>> +	struct list_head list;
+>> +};
+>> +
+>>   struct perf_pmu {
+>>   	char *name;
+>>   	__u32 type;
+>> @@ -32,6 +38,7 @@ struct perf_pmu {
+>>   	struct perf_cpu_map *cpus;
+>>   	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+>>   	struct list_head aliases; /* HEAD struct perf_pmu_alias -> list */
+>> +	struct list_head caps;    /* HEAD struct perf_pmu_caps -> list */
+>>   	struct list_head list;    /* ELEM */
+>>   };
+>>   
+>> @@ -102,4 +109,9 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
+>>   
+>>   int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+>>   
+>> +int perf_pmu__caps_parse(struct perf_pmu *pmu);
+>> +
+>> +struct perf_pmu_caps *perf_pmu__scan_caps(struct perf_pmu *pmu,
+>> +					  struct perf_pmu_caps *caps);
+>> +
+>>   #endif /* __PMU_H */
+>> -- 
+>> 2.17.1
+>>
+> 
