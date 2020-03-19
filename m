@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883FAC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0BBC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FBB42173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703F12173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623691;
-	bh=DqO9/iv8SausIf0ErNujnvWT67yrgKL8xbrVoJGk0T4=;
+	s=default; t=1584623693;
+	bh=tIDuFIuCHpKAC0CNL2sqNH/zangInW0CyT/NEaHTTQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kfqu0UNveW6BPAwwXq4+e/EqDImLNzoZAucLvEUWrwh2Sjtyo3jaPl59y415PPQtR
-	 1sTGhjGHv6imWx4ImyF5DP4l6UgXkT933uZbO1RIOL/0wrAafvFb9yYL1MUjsvJLoq
-	 3q2FVJq2lsN5cZYAdQaVxOo/puF60NwWwTvcZl6c=
+	b=lX91sipdP6KGf2tAh45WidfFK8+D2FhhlDgyoBzJepZVePKo0ieYcx0M6B8UTT10f
+	 O90KFn75ijoPLEziW/zeA1tLed6haqxw/TZzz48WHCLVrWuOhNrvJOzy2rQq0Yq8Ht
+	 uUcqSvmTREEfAdd610W2fL7xZjRAjsgJOZq0ZoPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbgCSNOs (ORCPT
+        id S1728682AbgCSNOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:14:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34278 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:14:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728650AbgCSNOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:14:46 -0400
+        id S1728930AbgCSNOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:14:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9362221556;
-        Thu, 19 Mar 2020 13:14:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A5CC206D7;
+        Thu, 19 Mar 2020 13:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623686;
-        bh=DqO9/iv8SausIf0ErNujnvWT67yrgKL8xbrVoJGk0T4=;
+        s=default; t=1584623688;
+        bh=tIDuFIuCHpKAC0CNL2sqNH/zangInW0CyT/NEaHTTQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V0NHZrkqyWc6tuhnhGHvD6VcoYczQ/eM9kkSXbFm3h6xDeX34KiK/CWTQIIyPUN9S
-         OmyLvtJiUYrghkx/NZdqvYn1cSGEKv1717B0ogGUtv8JldF3f633FAlmE9KfgWOPK6
-         TBNXwMzJnPmQ5Ru7brIXQwHemcmp9MNzkKQnVtIc=
+        b=pScTbuZos+RjzTGIWCRPPPmAVYsjdkgZd7u2A0KOcZd2/gCsBY55+zzD7AgAEnyuw
+         YH69A97x98SEjOYM+Tr5YeM8tyjgVd0IJ+IX5yWn96PesIp5e+u9uuaScOeti5rWWw
+         xTGVYM9zFr8j60iFggKWeM/usIIpVF5ax8z3fuyE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 02/99] net: phy: Avoid multiple suspends
-Date:   Thu, 19 Mar 2020 14:02:40 +0100
-Message-Id: <20200319123942.261617076@linuxfoundation.org>
+Subject: [PATCH 4.14 20/99] nl802154: add missing attribute validation for dev_type
+Date:   Thu, 19 Mar 2020 14:02:58 +0100
+Message-Id: <20200319123947.806114300@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -59,50 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit 503ba7c6961034ff0047707685644cad9287c226 upstream.
+[ Upstream commit b60673c4c418bef7550d02faf53c34fbfeb366bf ]
 
-It is currently possible for a PHY device to be suspended as part of a
-network device driver's suspend call while it is still being attached to
-that net_device, either via phy_suspend() or implicitly via phy_stop().
+Add missing attribute type validation for IEEE802154_ATTR_DEV_TYPE
+to the netlink policy.
 
-Later on, when the MDIO bus controller get suspended, we would attempt
-to suspend again the PHY because it is still attached to a network
-device.
-
-This is both a waste of time and creates an opportunity for improper
-clock/power management bugs to creep in.
-
-Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 90c049b2c6ae ("ieee802154: interface type to be added")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/phy/phy_device.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/ieee802154/nl_policy.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -91,7 +91,7 @@ static bool mdio_bus_phy_may_suspend(str
- 	 * MDIO bus driver and clock gated at this point.
- 	 */
- 	if (!netdev)
--		return !phydev->suspended;
-+		goto out;
- 
- 	/* Don't suspend PHY if the attached netdev parent may wakeup.
- 	 * The parent may point to a PCI device, as in tg3 driver.
-@@ -106,7 +106,8 @@ static bool mdio_bus_phy_may_suspend(str
- 	if (device_may_wakeup(&netdev->dev))
- 		return false;
- 
--	return true;
-+out:
-+	return !phydev->suspended;
- }
- 
- static int mdio_bus_phy_suspend(struct device *dev)
+--- a/net/ieee802154/nl_policy.c
++++ b/net/ieee802154/nl_policy.c
+@@ -36,6 +36,7 @@ const struct nla_policy ieee802154_polic
+ 	[IEEE802154_ATTR_BAT_EXT] = { .type = NLA_U8, },
+ 	[IEEE802154_ATTR_COORD_REALIGN] = { .type = NLA_U8, },
+ 	[IEEE802154_ATTR_PAGE] = { .type = NLA_U8, },
++	[IEEE802154_ATTR_DEV_TYPE] = { .type = NLA_U8, },
+ 	[IEEE802154_ATTR_COORD_SHORT_ADDR] = { .type = NLA_U16, },
+ 	[IEEE802154_ATTR_COORD_HW_ADDR] = { .type = NLA_HW_ADDR, },
+ 	[IEEE802154_ATTR_COORD_PAN_ID] = { .type = NLA_U16, },
 
 
