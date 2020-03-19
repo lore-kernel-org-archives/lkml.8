@@ -2,108 +2,82 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C93C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA1AC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF0A20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:43:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JGyPSjhJ"
+	by mail.kernel.org (Postfix) with ESMTP id 667A42072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgCSFnG (ORCPT
+        id S1726998AbgCSF4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 01:43:06 -0400
-Received: from ozlabs.org ([203.11.71.1]:46601 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbgCSFnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 01:43:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48jbRC4tDWz9sPk;
-        Thu, 19 Mar 2020 16:43:03 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584596584;
-        bh=y84bblK27nWKwmaC9KF1aLCcYU/Cn/0VfU66+sQZemo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JGyPSjhJjcMZ5dcpgAmSThijGM/bjpPdOLdQOsFrBIQcl/Rexay7OY6ocIhtdIQct
-         MPoqauXaHFo1R+DSUf0NBVXX7+19GcH5TkW18cHuQ8HSWkJjVNN6kf1xr4ioo8vAl7
-         dWNeoLmDIOmO0LhWH/3SKthgVmVMIxebp7TlN4Ojeh4nkDTL605pkxUh2PljGGQWA0
-         9gn/owPz1YRVj8maFpaAZVO434rguC5iYVqFdwrJr5xJwj4mKj/u9LgaR8ZcBMbg/u
-         ogqSzMlLezNa2oBAe7aAiAP8ywheJToDNUrTLezQEzzksgHmbHHwuETBYRwarVMLES
-         29S9+d3ZyharA==
-Date:   Thu, 19 Mar 2020 16:42:59 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the pm tree
-Message-ID: <20200319164259.34a3df52@canb.auug.org.au>
-In-Reply-To: <20200318231837.4041cd8f@canb.auug.org.au>
-References: <20200317185252.3cfeecde@canb.auug.org.au>
-        <20200318224458.1980e10c@canb.auug.org.au>
-        <ddc7ae33-1b82-ae48-5a7e-e78144fb2a8b@canonical.com>
-        <20200318231837.4041cd8f@canb.auug.org.au>
+        Thu, 19 Mar 2020 01:56:53 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39063 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgCSF4x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 01:56:53 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jEoAh-0000dw-ED; Thu, 19 Mar 2020 06:56:47 +0100
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jEoAZ-0001zC-P2; Thu, 19 Mar 2020 06:56:39 +0100
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: [PATCH v2 0/5] mainline Protonic boards
+Date:   Thu, 19 Mar 2020 06:56:31 +0100
+Message-Id: <20200319055636.7573-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Pgc07lYg4LlrlRQi0UWj2DK";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Pgc07lYg4LlrlRQi0UWj2DK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+changes v2:
+- squash PRTI6Q patches
 
-Hi Stephen,
+Oleksij Rempel (5):
+  dt-bindings: vendor-prefixes: Add an entry for Protonic Holland
+  ARM: dts: add Protonic PRTI6Q board
+  ARM: dts: add Protonic WD2 board
+  ARM: dts: add Protonic VT7 board
+  ARM: dts: add Protonic RVT board
 
-On Wed, 18 Mar 2020 23:18:37 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi Colin,
->=20
-> On Wed, 18 Mar 2020 11:52:00 +0000 Colin Ian King <colin.king@canonical.c=
-om> wrote:
-> > =20
-> > > This was fixed today (by including linux/ioh), but the latest update =
-to
-> > > the pm tree has removed that include again.
-> > >    =20
-> > Hopefully it won't be reverted from linux-next? =20
->=20
-> Linux-next just contains what its constituent trees contain each day ...
+ .../devicetree/bindings/arm/fsl.yaml          |   4 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm/boot/dts/Makefile                    |   4 +
+ arch/arm/boot/dts/imx6dl-prtrvt.dts           | 108 ++++
+ arch/arm/boot/dts/imx6dl-prtvt7.dts           | 390 ++++++++++++++
+ arch/arm/boot/dts/imx6q-prti6q.dts            | 286 ++++++++++
+ arch/arm/boot/dts/imx6q-prtwd2.dts            | 242 +++++++++
+ arch/arm/boot/dts/imx6qdl-prti6q.dtsi         | 489 ++++++++++++++++++
+ 8 files changed, 1525 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-prtrvt.dts
+ create mode 100644 arch/arm/boot/dts/imx6dl-prtvt7.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-prti6q.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-prtwd2.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-prti6q.dtsi
 
-I have had to revert commit
+-- 
+2.25.1
 
-  08c07cefb304 ("ACPI: sysfs: copy ACPI data using io memory copying")
-
-again.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Pgc07lYg4LlrlRQi0UWj2DK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5zBmMACgkQAVBC80lX
-0GzN8wgAoInnlFPbWqojFwNMHvNURO+rmiw6bWgvKSq4l0b9FtcWI6ZgT/tNXKnc
-CHGaVkNlkkNckJ1O/ebarikuuBSm80gFH8K7Z4tZX65MD8EI+Vn/yFTguT++eeFC
-WWVx8DVB8vOfawqAdoTI9d5Ytv0F5vrk1KUFgNLwD24F3DTzOpxNMakeCMiSlaJS
-XcbdelrLnN8W9pWEQqGmG92EXaSSSB9l36L46Glrvu9ktcI4Yw/nY98Ms6ifMd/2
-ciM/3n5yCHoKMYVY5oFldg++hBqqnQaclHgh/N8MIYjuOy7ri6JM9YrGSTsdHSFV
-OEKEc4ZSp1IFK8J1br5EwrjEZrNnHg==
-=oXci
------END PGP SIGNATURE-----
-
---Sig_/Pgc07lYg4LlrlRQi0UWj2DK--
