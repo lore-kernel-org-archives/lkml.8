@@ -2,219 +2,93 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E1EC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0C8C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A2520739
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE27206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:55:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbgCSTxZ (ORCPT
+        id S1727178AbgCSTzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35264 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 15:55:09 -0400
+Received: from mga01.intel.com ([192.55.52.88]:56449 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSTxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:53:25 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBFAB206D7;
-        Thu, 19 Mar 2020 19:53:22 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 15:53:21 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [RFC][PATCH 01/11] tracing: Save off entry when peeking at next
- entry
-Message-ID: <20200319155321.6d636b3f@gandalf.local.home>
-In-Reply-To: <20200319224144.cc16357a3476506fd64ad448@kernel.org>
-References: <20200317213222.421100128@goodmis.org>
-        <20200317213415.722539921@goodmis.org>
-        <20200319224144.cc16357a3476506fd64ad448@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725747AbgCSTzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:55:09 -0400
+IronPort-SDR: HR7R7w28ssEecq4MNt8MIttR/pXL5nuxMO8CWOaGj2Umt1CrhNGeiVutvODeyRUhexLvTQe0jP
+ AKLr22AUe9TQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 12:55:08 -0700
+IronPort-SDR: chqlSejf0He0yBvfkA797q9TyWNMoteUr35AZKINcoOwAURNnbKVUEAndL+KYA5p0K6uo46lB3
+ 6g2kMYb/ZZ/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="418467825"
+Received: from oamor-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.182.181])
+  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2020 12:55:05 -0700
+Date:   Thu, 19 Mar 2020 21:55:03 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     George Wilson <gcwilson@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Nayna Jain <nayna@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        Linh Pham <phaml@us.ibm.com>
+Subject: Re: [PATCH v3] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
+Message-ID: <20200319195503.GC24804@linux.intel.com>
+References: <20200318234927.206075-1-gcwilson@linux.ibm.com>
+ <20200319195011.GB24804@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200319195011.GB24804@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020 22:41:44 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Hi,
-
-Hi Masami,
-
-> 
-> On Tue, 17 Mar 2020 17:32:23 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On Thu, Mar 19, 2020 at 09:50:16PM +0200, Jarkko Sakkinen wrote:
+> On Wed, Mar 18, 2020 at 07:49:27PM -0400, George Wilson wrote:
+> > tpm_ibmvtpm_send() can fail during PowerVM Live Partition Mobility resume
+> > with an H_CLOSED return from ibmvtpm_send_crq().  The PAPR says, 'The
+> > “partner partition suspended” transport event disables the associated CRQ
+> > such that any H_SEND_CRQ hcall() to the associated CRQ returns H_Closed
+> > until the CRQ has been explicitly enabled using the H_ENABLE_CRQ hcall.'
+> > This patch adds a check in tpm_ibmvtpm_send() for an H_CLOSED return from
+> > ibmvtpm_send_crq() and in that case calls tpm_ibmvtpm_resume() and
+> > retries the ibmvtpm_send_crq() once.
 > > 
-> > In order to have the iterator read the buffer even when it's still updating,
-> > it requires that the ring buffer iterator saves each event in a separate
-> > location outside the ring buffer such that its use is immutable.
-> > 
-> > There's one use case that saves off the event returned from the ring buffer
-> > interator and calls it again to look at the next event, before going back to
-> > use the first event. As the ring buffer iterator will only have a single
-> > copy, this use case will no longer be supported.
-> > 
-> > Instead, have the one use case create its own buffer to store the first
-> > event when looking at the next event. This way, when looking at the first
-> > event again, it wont be corrupted by the second read.
-> > 
-> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> > ---
-> >  include/linux/trace_events.h |  2 ++
-> >  kernel/trace/trace.c         | 27 ++++++++++++++++++++++++++-
-> >  kernel/trace/trace_output.c  | 15 ++++++---------
-> >  3 files changed, 34 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> > index 6c7a10a6d71e..5c6943354049 100644
-> > --- a/include/linux/trace_events.h
-> > +++ b/include/linux/trace_events.h
-> > @@ -85,6 +85,8 @@ struct trace_iterator {
-> >  	struct mutex		mutex;
-> >  	struct ring_buffer_iter	**buffer_iter;
-> >  	unsigned long		iter_flags;
-> > +	void			*temp;	/* temp holder */
-> > +	unsigned int		temp_size;
-> >  
-> >  	/* trace_seq for __print_flags() and __print_symbolic() etc. */
-> >  	struct trace_seq	tmp_seq;
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index 6b11e4e2150c..52425aaf26c2 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -3466,7 +3466,31 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
-> >  struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
-> >  					  int *ent_cpu, u64 *ent_ts)
-> >  {
-> > -	return __find_next_entry(iter, ent_cpu, NULL, ent_ts);
-> > +	/* __find_next_entry will reset ent_size */
-> > +	int ent_size = iter->ent_size;
-> > +	struct trace_entry *entry;
-> > +
-> > +	/*
-> > +	 * The __find_next_entry() may update iter->ent, making
-> > +	 * the current iter->ent pointing to stale data.
-> > +	 * Need to copy it over.
-> > +	 */  
+> > Reported-by: Linh Pham <phaml@us.ibm.com>
+> > Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> > Signed-off-by: George Wilson <gcwilson@linux.ibm.com>
+> > Tested-by: Linh Pham <phaml@us.ibm.com>
+> > Fixes: 132f76294744 ("Add new device driver to support IBM vTPM")
 > 
-> Is this comment correct? I can not find the code which update
-> iter->ent in __find_next_entry() and peek_next_entry().
-> Maybe writer updates the "*iter->ent"?
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-Ah, that comment doesn't explain the situation well. I'll update it.
-Something like this should work:
+Unfortunately have to take that back because it has checkpatch
+errors:
 
-	/*
-	 * The __find_next_entry() may call peek_next_entry(), which may
-	 * call ring_buffer_peek() that may make the contents of iter->ent
-	 * undefined. Need to copy iter->ent now.
-	 */
+$ scripts/checkpatch.pl 0001-tpm-ibmvtpm-retry-on-H_CLOSED-in-tpm_ibmvtpm_send.patch
+WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)
+#11:
+“partner partition suspended” transport event disables the associated CRQ
 
+WARNING: Prefer using '"%s...", __func__' to using 'ibmvtpm_crq_send_init', this function's name, in a string
+#61: FILE: drivers/char/tpm/tpm_ibmvtpm.c:152:
++			"ibmvtpm_crq_send_init failed rc=%d\n", rc);
 
-> 
-> > +	if (iter->ent && iter->ent != iter->temp) {
-> > +		if (!iter->temp || iter->temp_size < iter->ent_size) {
-> > +			kfree(iter->temp);
-> > +			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);  
-> 
-> This can be alloc/free several times on one iteration. Should we
-> be so careful about memory consumption for this small piece?
-> 
-> Since the reader will not run in parallel (or very rare case),
-> iter->temp can allocate the max entry size at the beginning.
+Also the fixes tag is incorrect. Should be:
 
-I thought about this, but then I need to pass over the ring buffer max
-entry size, which currently lives in the ring_buffer.c code, and there's a
-todo list to change even this. Thus, I don't want to export that max size.
+Fixes: 132f76294744 ("drivers/char/tpm: Add new device driver to support IBM vTPM")
 
-In testing, this doesn't appear to be an issue, as it is done in the slow
-path (the iterator is only used for ASCII output for human consumption).
-
-Thanks for having a look!
-
--- Steve
-
-> 
-> Thank you,
-> 
-> > +			if (!iter->temp)
-> > +				return NULL;
-> > +		}
-> > +		memcpy(iter->temp, iter->ent, iter->ent_size);
-> > +		iter->temp_size = iter->ent_size;
-> > +		iter->ent = iter->temp;
-> > +	}
-> > +	entry = __find_next_entry(iter, ent_cpu, NULL, ent_ts);
-> > +	/* Put back the original ent_size */
-> > +	iter->ent_size = ent_size;
-> > +
-> > +	return entry;
-> >  }
-> >  
-> >  /* Find the next real entry, and increment the iterator to the next entry */
-> > @@ -4344,6 +4368,7 @@ static int tracing_release(struct inode *inode, struct file *file)
-> >  
-> >  	mutex_destroy(&iter->mutex);
-> >  	free_cpumask_var(iter->started);
-> > +	kfree(iter->temp);
-> >  	kfree(iter->trace);
-> >  	kfree(iter->buffer_iter);
-> >  	seq_release_private(inode, file);
-> > diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-> > index e25a7da79c6b..9a121e147102 100644
-> > --- a/kernel/trace/trace_output.c
-> > +++ b/kernel/trace/trace_output.c
-> > @@ -617,22 +617,19 @@ int trace_print_context(struct trace_iterator *iter)
-> >  
-> >  int trace_print_lat_context(struct trace_iterator *iter)
-> >  {
-> > +	struct trace_entry *entry, *next_entry;
-> >  	struct trace_array *tr = iter->tr;
-> > -	/* trace_find_next_entry will reset ent_size */
-> > -	int ent_size = iter->ent_size;
-> >  	struct trace_seq *s = &iter->seq;
-> > -	u64 next_ts;
-> > -	struct trace_entry *entry = iter->ent,
-> > -			   *next_entry = trace_find_next_entry(iter, NULL,
-> > -							       &next_ts);
-> >  	unsigned long verbose = (tr->trace_flags & TRACE_ITER_VERBOSE);
-> > +	u64 next_ts;
-> >  
-> > -	/* Restore the original ent_size */
-> > -	iter->ent_size = ent_size;
-> > -
-> > +	next_entry = trace_find_next_entry(iter, NULL, &next_ts);
-> >  	if (!next_entry)
-> >  		next_ts = iter->ts;
-> >  
-> > +	/* trace_find_next_entry() may change iter->ent */
-> > +	entry = iter->ent;
-> > +
-> >  	if (verbose) {
-> >  		char comm[TASK_COMM_LEN];
-> >  
-> > -- 
-> > 2.25.1
-> > 
-> >   
-> 
-> 
-
+/Jarkko
