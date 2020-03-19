@@ -2,177 +2,112 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDACC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A26C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712F7214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D6E2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623729;
-	bh=xC0mdHOCYtkpDML66PqbVkK4GBA6heR93um/WyEakBk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WpDVRK77yGSSnYD+CjP8hXC8y++q7WFjpsoSi2TmZk4/uUAG0/PfCazlwN+nDcG8F
-	 NOcJ0aq5fmifLk0x90minU34D3oQl/egFTzND12q1fGUd66cnXVwnf3yH87hK4rl25
-	 JfWRdwccXYDSwdM1c8JYuQB/jDvj420UQi5IoMvY=
+	s=default; t=1584623737;
+	bh=wvqD7rgwFusMJIqaPtOnYUgUIANAKYUee6Yxt4ifw9A=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=m9Qsx4Cm86ckocGq7bZ2Y++UTkkLbRfK3/PY6A9dBgKHVjKb7tLnDUQC9UWPNrbpa
+	 owMw6pXPExufZ3dNYz7uEaw1jXCDl+t33iO95rWoONiUuRgIttJ/aUke1b4DZWWLbP
+	 p7jjfd02MIpMh/9cDSyJYTTaIw1TI1rpyXowzAnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgCSNP2 (ORCPT
+        id S1728879AbgCSNPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35220 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:15:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729412AbgCSNPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:15:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728905AbgCSNPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:15:33 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7B7E20724;
-        Thu, 19 Mar 2020 13:15:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6AF420724;
+        Thu, 19 Mar 2020 13:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623724;
-        bh=xC0mdHOCYtkpDML66PqbVkK4GBA6heR93um/WyEakBk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Guk8ZuJvfZzQ3/gChUKcoqJAtQo3lfTbtCKrRKkQgB4bATYyQHT1m+r3SQixy+U4C
-         ofabuqf1G0Hs3rwm+El3lenK0T657jyG1vKxzL8uI9v9NL+Ebrid9NLEBzf6w6iRVa
-         FBEM0uwYirvlUwW/uXCdZYk3v99cnhWAkPZ2a+xw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 30/99] slip: make slhc_compress() more robust against malicious packets
-Date:   Thu, 19 Mar 2020 14:03:08 +0100
-Message-Id: <20200319123950.885739952@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
-References: <20200319123941.630731708@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1584623732;
+        bh=wvqD7rgwFusMJIqaPtOnYUgUIANAKYUee6Yxt4ifw9A=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=HVixYOylJ1qJ3Wi428rgaPC1XwRb2R/HIRyQwvaDFDTtm/teRklxVedSMVdKz9P5t
+         gdmH4L6a5vk2ryS6eXLCQYcHw4G35H6hi6MLzL9jiLU1JmGUqWorFtz6LY8yk2YxV/
+         sTriOXNIFULtVstfX/DrM8Cz8Xkst55e+/zI2Buk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id C147A35227C6; Thu, 19 Mar 2020 06:15:32 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 06:15:32 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2020.03.17a 61/80] kernel/rcu/tasks.h:1000:37: error:
+ 'rcu_tasks_rude' undeclared; did you mean 'rcu_tasks_qs'?
+Message-ID: <20200319131532.GC3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <202003191926.FloXO0MA%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003191926.FloXO0MA%lkp@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+On Thu, Mar 19, 2020 at 07:01:29PM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.03.17a
+> head:   0b42559abf67253005cca061233987ae9a2849a4
+> commit: 589081348a37ec02d9b067aa08d4a771ae590e1e [61/80] rcu-tasks: Add RCU tasks to rcutorture writer stall output
+> config: nds32-defconfig (attached as .config)
+> compiler: nds32le-linux-gcc (GCC) 9.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 589081348a37ec02d9b067aa08d4a771ae590e1e
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=9.2.0 make.cross ARCH=nds32 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> Note: the rcu/dev.2020.03.17a HEAD 0b42559abf67253005cca061233987ae9a2849a4 builds fine.
+>       It only hurts bisectibility.
 
-[ Upstream commit 110a40dfb708fe940a3f3704d470e431c368d256 ]
+FYI, fixed by c6ef38e4d595 ("rcu-tasks: Add RCU tasks to rcutorture writer
+stall output").
 
-Before accessing various fields in IPV4 network header
-and TCP header, make sure the packet :
+							Thanx, Paul
 
-- Has IP version 4 (ip->version == 4)
-- Has not a silly network length (ip->ihl >= 5)
-- Is big enough to hold network and transport headers
-- Has not a silly TCP header size (th->doff >= sizeof(struct tcphdr) / 4)
-
-syzbot reported :
-
-BUG: KMSAN: uninit-value in slhc_compress+0x5b9/0x2e60 drivers/net/slip/slhc.c:270
-CPU: 0 PID: 11728 Comm: syz-executor231 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- slhc_compress+0x5b9/0x2e60 drivers/net/slip/slhc.c:270
- ppp_send_frame drivers/net/ppp/ppp_generic.c:1637 [inline]
- __ppp_xmit_process+0x1902/0x2970 drivers/net/ppp/ppp_generic.c:1495
- ppp_xmit_process+0x147/0x2f0 drivers/net/ppp/ppp_generic.c:1516
- ppp_write+0x6bb/0x790 drivers/net/ppp/ppp_generic.c:512
- do_loop_readv_writev fs/read_write.c:717 [inline]
- do_iter_write+0x812/0xdc0 fs/read_write.c:1000
- compat_writev+0x2df/0x5a0 fs/read_write.c:1351
- do_compat_pwritev64 fs/read_write.c:1400 [inline]
- __do_compat_sys_pwritev fs/read_write.c:1420 [inline]
- __se_compat_sys_pwritev fs/read_write.c:1414 [inline]
- __ia32_compat_sys_pwritev+0x349/0x3f0 fs/read_write.c:1414
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f7cd99
-Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000ffdb84ac EFLAGS: 00000217 ORIG_RAX: 000000000000014e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000200001c0
-RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 0000000040047459 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
- slab_alloc_node mm/slub.c:2793 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1051 [inline]
- ppp_write+0x115/0x790 drivers/net/ppp/ppp_generic.c:500
- do_loop_readv_writev fs/read_write.c:717 [inline]
- do_iter_write+0x812/0xdc0 fs/read_write.c:1000
- compat_writev+0x2df/0x5a0 fs/read_write.c:1351
- do_compat_pwritev64 fs/read_write.c:1400 [inline]
- __do_compat_sys_pwritev fs/read_write.c:1420 [inline]
- __se_compat_sys_pwritev fs/read_write.c:1414 [inline]
- __ia32_compat_sys_pwritev+0x349/0x3f0 fs/read_write.c:1414
- do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
- do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
- entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
-
-Fixes: b5451d783ade ("slip: Move the SLIP drivers")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/slip/slhc.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
---- a/drivers/net/slip/slhc.c
-+++ b/drivers/net/slip/slhc.c
-@@ -232,7 +232,7 @@ slhc_compress(struct slcompress *comp, u
- 	register struct cstate *cs = lcs->next;
- 	register unsigned long deltaS, deltaA;
- 	register short changes = 0;
--	int hlen;
-+	int nlen, hlen;
- 	unsigned char new_seq[16];
- 	register unsigned char *cp = new_seq;
- 	struct iphdr *ip;
-@@ -248,6 +248,8 @@ slhc_compress(struct slcompress *comp, u
- 		return isize;
- 
- 	ip = (struct iphdr *) icp;
-+	if (ip->version != 4 || ip->ihl < 5)
-+		return isize;
- 
- 	/* Bail if this packet isn't TCP, or is an IP fragment */
- 	if (ip->protocol != IPPROTO_TCP || (ntohs(ip->frag_off) & 0x3fff)) {
-@@ -258,10 +260,14 @@ slhc_compress(struct slcompress *comp, u
- 			comp->sls_o_tcp++;
- 		return isize;
- 	}
--	/* Extract TCP header */
-+	nlen = ip->ihl * 4;
-+	if (isize < nlen + sizeof(*th))
-+		return isize;
- 
--	th = (struct tcphdr *)(((unsigned char *)ip) + ip->ihl*4);
--	hlen = ip->ihl*4 + th->doff*4;
-+	th = (struct tcphdr *)(icp + nlen);
-+	if (th->doff < sizeof(struct tcphdr) / 4)
-+		return isize;
-+	hlen = nlen + th->doff * 4;
- 
- 	/*  Bail if the TCP packet isn't `compressible' (i.e., ACK isn't set or
- 	 *  some other control bit is set). Also uncompressible if
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from kernel/rcu/update.c:562:
+>    kernel/rcu/tasks.h: In function 'show_rcu_tasks_gp_kthreads':
+> >> kernel/rcu/tasks.h:1000:37: error: 'rcu_tasks_rude' undeclared (first use in this function); did you mean 'rcu_tasks_qs'?
+>     1000 |  show_rcu_tasks_generic_gp_kthread(&rcu_tasks_rude, "");
+>          |                                     ^~~~~~~~~~~~~~
+>          |                                     rcu_tasks_qs
+>    kernel/rcu/tasks.h:1000:37: note: each undeclared identifier is reported only once for each function it appears in
+> 
+> vim +1000 kernel/rcu/tasks.h
+> 
+>    996	
+>    997	void show_rcu_tasks_gp_kthreads(void)
+>    998	{
+>    999		show_rcu_tasks_generic_gp_kthread(&rcu_tasks, "");
+> > 1000		show_rcu_tasks_generic_gp_kthread(&rcu_tasks_rude, "");
+>   1001		show_rcu_tasks_trace_gp_kthread();
+>   1002	}
+>   1003	
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
 
