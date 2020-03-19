@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742AEC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93747C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4237820789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD6520789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625386;
-	bh=Bz0YxYbHmWLWVD8SNeHP5gI+dLOiUyOyCCCY14UUzLc=;
+	s=default; t=1584625387;
+	bh=C00m90Jdij6F1HqEzf8L4EgeNwUufQvJHwqJ/rsXnFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XqK0FaAiYdghJZh27h5wn+IplF0AUpsjAUY3jHDy8dR/I+9TTvt9GGji/tMRwE48V
-	 fsVhUURgUPF55xsKybo8ox35qD/YdawwgUzXBWVtVIQwAkwFKoCJRZ1+DU5O2rDoP7
-	 7oK64ei/gqi2J5Ny5lYDnR4eGQ74yheZX/GkjiTc=
+	b=QvzOxDUYwCH6/mIvTcoGVhajjKmWz4FPLZ4XMe/rp0bOPIWIy42i2zK0znFZTrP2o
+	 9OAAamJbXv031sZxH+Tx5vOh4DU3fM02koMJpuhtmay+61QZnpcsqv8Pzx4Kcc4QWL
+	 7peqhsO2XMRHtuWFAZZ0tePYFNU/nj/cGYlSkblM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgCSNnB (ORCPT
+        id S1727653AbgCSNm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:43:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38978 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:42:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727576AbgCSNm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:42:56 -0400
+        id S1727137AbgCSNm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:42:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32A5E208C3;
-        Thu, 19 Mar 2020 13:42:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 900B420B1F;
+        Thu, 19 Mar 2020 13:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584625374;
-        bh=Bz0YxYbHmWLWVD8SNeHP5gI+dLOiUyOyCCCY14UUzLc=;
+        s=default; t=1584625377;
+        bh=C00m90Jdij6F1HqEzf8L4EgeNwUufQvJHwqJ/rsXnFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uwx39YifvjSmtGvzCaQ3Y/x9xxsJJ/iW8dsGkqmyMjeFDxi4yAr1eCw74EpDmMSlG
-         FFnjqUz56gCBZxfCd28yeP4e1wm8TiBVGnzN4aLLT58D9gL6Sa2hzc2lBeGAxoq4he
-         MM5LgUmBxayvrd9RfXnDqpZLw9xtf1JKCk49+M9M=
+        b=NsPLpzOoVFfSTr1EFDHg3MaHV7EbYHmcf9YrKjKTOYL+vs+VK7/knaHHvuOWw7jLz
+         gJy4o9LX9sLWt/I6fuNQJsRaptYy+p38CxCaTAzAo8p5HI8bMwvstBpaxDfkD6SsiK
+         +g9xmzgT6Gl5dgpDWVHo/6GpVZcGihebn8sLOAyQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -52,12 +52,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>,
         Feng Tang <feng.tang@intel.com>
-Subject: [PATCH 4.19 18/48] signal: avoid double atomic counter increments for user accounting
-Date:   Thu, 19 Mar 2020 14:04:00 +0100
-Message-Id: <20200319123908.898223901@linuxfoundation.org>
+Subject: [PATCH 5.4 36/60] signal: avoid double atomic counter increments for user accounting
+Date:   Thu, 19 Mar 2020 14:04:14 +0100
+Message-Id: <20200319123931.207979837@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
-References: <20200319123902.941451241@linuxfoundation.org>
+In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
+References: <20200319123919.441695203@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -130,10 +130,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/kernel/signal.c b/kernel/signal.c
-index 08911bb6fe9ab..c42eaf39b5729 100644
+index bcd46f547db39..eea748174ade9 100644
 --- a/kernel/signal.c
 +++ b/kernel/signal.c
-@@ -407,27 +407,32 @@ __sigqueue_alloc(int sig, struct task_struct *t, gfp_t flags, int override_rlimi
+@@ -413,27 +413,32 @@ __sigqueue_alloc(int sig, struct task_struct *t, gfp_t flags, int override_rlimi
  {
  	struct sigqueue *q = NULL;
  	struct user_struct *user;
@@ -173,7 +173,7 @@ index 08911bb6fe9ab..c42eaf39b5729 100644
  	} else {
  		INIT_LIST_HEAD(&q->list);
  		q->flags = 0;
-@@ -441,8 +446,8 @@ static void __sigqueue_free(struct sigqueue *q)
+@@ -447,8 +452,8 @@ static void __sigqueue_free(struct sigqueue *q)
  {
  	if (q->flags & SIGQUEUE_PREALLOC)
  		return;
