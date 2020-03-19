@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6292C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7B1C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A0A2076F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA182076F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Rp9p2gPA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="Te9Rcnks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgCSVvP (ORCPT
+        id S1727297AbgCSVvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 17:51:15 -0400
-Received: from gateway30.websitewelcome.com ([192.185.197.25]:25518 "EHLO
-        gateway30.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726785AbgCSVvP (ORCPT
+        Thu, 19 Mar 2020 17:51:50 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.95]:41345 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726785AbgCSVvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:51:15 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway30.websitewelcome.com (Postfix) with ESMTP id 69F84BF8
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:51:14 -0500 (CDT)
+        Thu, 19 Mar 2020 17:51:50 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 2A8B860775
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:51:49 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id F34MjjxnzAGTXF34Mj9uCW; Thu, 19 Mar 2020 16:51:14 -0500
+        id F34vjCQ7DEfyqF34vjCStw; Thu, 19 Mar 2020 16:51:49 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +36,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=r1OkkVLKJe2+AiskQxxbFjMMb5GWePgr3r6Djtjenbk=; b=Rp9p2gPASRhgQiAw88td9Kyu6v
-        o3If2CjXo0l/GIMOq6ywCBvmQWikt/MVDcjNB6CMbpjFaJKcGTffpKXJil/YATEXIHU1Zb/p9I36l
-        PW4xUPfLPtJdrcLlOI3/+T9H31fuON3b4ElJeBsEzL9B+TyhIM5VVN6IOmQmHBKkyhpX29MWLwXhR
-        BQ6PyK8P3CCgPEjs4uKGFbkEl2HDSCvU0kFSjhC74/olcMHRp2YqgbRCXSRZnkapL48YsNW1kO3Zl
-        ZxLgvLf2kD32nW0zI1jUqvgSOGpvHwveQiXbHZYZYtN/lsJiRePknl/TMRmNY+6gPYXsBM0FR5v44
-        wQPC4LUg==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53538 helo=embeddedor)
+        bh=JEikPqF6NxVfkvZjVP+cGq3DgK8l2GBx5Tnc9nIqPVg=; b=Te9RcnksN6yMkoH3gzTZsI6FL5
+        lrC4AYhR9cB28XuBX4opT8qJPThImwhGDa83tJ/WdSiA1IKTYXtxwNQR/xhHY9BvT2a8aJKaCrg8k
+        V0XCdiIE+1OJU+NsQwnPb+Or2Mw4gBQSIvn4fdcjpvk+V/Pc67TCILpiS4VKeQjNIsVFvuJ0kv5rv
+        FoDBj3i810Ug1Eefcv6d2i4RNJDU4pTnmBDezNEf14buSaWaSCmL13s01irthevxWHMXP8fHwDkEG
+        96QB35O0EqW3U4yShNQ35bO/YfkOgMUoRX2dQgNOvgMBZzKoBeds1Gi22D5T2a+hyOjKhqCGDg2NT
+        Ws9VYm3Q==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53540 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jF34K-001nXP-LA; Thu, 19 Mar 2020 16:51:12 -0500
-Date:   Thu, 19 Mar 2020 16:51:12 -0500
+        id 1jF34s-001noC-VK; Thu, 19 Mar 2020 16:51:47 -0500
+Date:   Thu, 19 Mar 2020 16:51:46 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
 Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] leds: leds-is31fl32xx: Replace zero-length array with
+Subject: [PATCH][next] leds: leds-pwm: Replace zero-length array with
  flexible-array member
-Message-ID: <20200319215112.GA23858@embeddedor.com>
+Message-ID: <20200319215146.GA24054@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,13 +67,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.218.116.241
 X-Source-L: No
-X-Exim-ID: 1jF34K-001nXP-LA
+X-Exim-ID: 1jF34s-001noC-VK
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53538
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53540
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 69
+X-Email-Count: 74
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -111,22 +111,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/leds/leds-is31fl32xx.c | 2 +-
+ drivers/leds/leds-pwm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-is31fl32xx.c b/drivers/leds/leds-is31fl32xx.c
-index 6f29b8943913..cd768f991da1 100644
---- a/drivers/leds/leds-is31fl32xx.c
-+++ b/drivers/leds/leds-is31fl32xx.c
-@@ -44,7 +44,7 @@ struct is31fl32xx_priv {
- 	const struct is31fl32xx_chipdef *cdef;
- 	struct i2c_client *client;
- 	unsigned int num_leds;
--	struct is31fl32xx_led_data leds[0];
-+	struct is31fl32xx_led_data leds[];
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index 9111cdede0ee..31ac44dfb926 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -28,7 +28,7 @@ struct led_pwm_data {
+ 
+ struct led_pwm_priv {
+ 	int num_leds;
+-	struct led_pwm_data leds[0];
++	struct led_pwm_data leds[];
  };
  
- /**
+ static int led_pwm_set(struct led_classdev *led_cdev,
 -- 
 2.23.0
 
