@@ -2,127 +2,147 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A11C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43CFC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5396220714
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9615920714
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:24:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SC7aMPeV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbgCSIUv (ORCPT
+        id S1726589AbgCSIYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:20:51 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59617 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgCSIUu (ORCPT
+        Thu, 19 Mar 2020 04:24:21 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42188 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgCSIYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:20:50 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1jEqPm-0002Oo-Vy; Thu, 19 Mar 2020 09:20:31 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        <linux-kernel@vger.kernel.org>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [RFC PATCH 3/3] watchdog: Turn console verbosity on when reporting softlockup
-References: <20200315170903.17393-1-erosca@de.adit-jv.com>
-        <20200315170903.17393-4-erosca@de.adit-jv.com>
-        <20200317021818.GD219881@google.com>
-        <20200318180525.GA5790@lxhi-065.adit-jv.com>
-Date:   Thu, 19 Mar 2020 09:20:27 +0100
-In-Reply-To: <20200318180525.GA5790@lxhi-065.adit-jv.com> (Eugeniu Rosca's
-        message of "Wed, 18 Mar 2020 19:05:25 +0100")
-Message-ID: <87r1xog3hw.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Thu, 19 Mar 2020 04:24:21 -0400
+Received: by mail-pg1-f195.google.com with SMTP id h8so862500pgs.9;
+        Thu, 19 Mar 2020 01:24:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XvsrEbF8xrvFrxkOmbaObXzMDRIRtTUFbRE8kMKL+mc=;
+        b=SC7aMPeVpiaTGPI8CivsJotSRGwHhkm8so60m8Zguy01Of7Lz84x2/CPJOtgWGG5Ak
+         r+TEqhmvyHHAEFbguxLx9eCWiiW3d0eLgCZSDZCGVK2UzZvidaM0laEG+n+AeYRmS9/8
+         dQPVQwWlVuDbjWTldq3HIoWCcWjecUTFij8mszqKXzPm7nbBTaUIBAzmthZGkbbo3O47
+         mLuL8Mbx/w9pY4aXYlm+9yNsUO85/N7DxYQHBTvemaF3FnnmlPhJZihHGAKfUbSefUfX
+         SmtVW5sFKF976LzyXwOXdAImy6DSu1AWqHpRGSB+co9b4ZXXaT5PvGgur2DlakIohbqg
+         eEvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XvsrEbF8xrvFrxkOmbaObXzMDRIRtTUFbRE8kMKL+mc=;
+        b=FsqpCVwgA6SpyDd2RFFJEsci+K0Rg/vxzmKcu6WEm6d7yDhtW/9qJaAzv0Ft8oPWl6
+         JjiSRuVFzaa0SifIKJpw3lfKEIJ09tluhABAVj/GNbuOVG5jWQUnP+rbsSHW5pJGDM39
+         7yjuOh5oxfJ9UMz3xqjW1VJ3jbGTcpD3sW1qOaBZ5rB54HbSRBXGrLdTKSfDtG/pYK4a
+         uvIC2imJ/7cwfcQ7zMCMKoFalLWEmkS3N20MoJ6r2H1sd+Nwyg5j992l+ArF1JQinbcQ
+         kCW4ioO166dr+fsQowCgBbJJGpEvTMatTs70jGOJ8X692d37PxvRcsT6oQ6CqD6WrndR
+         seYA==
+X-Gm-Message-State: ANhLgQ2X5ap2kEugdFjiFIR6jLNgMFwbQiYOpG3YkwS6Wl0shgKsgo9G
+        U47h8jxS/H73XrG7ASApkuIZ3pYv
+X-Google-Smtp-Source: ADFU+vscUUIkItJKYr8NScV0txk2GFY9ez92M0zablKilI0FdURxoMHyq00OdzpdoKDegWe3eax8Zg==
+X-Received: by 2002:aa7:91c7:: with SMTP id z7mr2767320pfa.237.1584606259683;
+        Thu, 19 Mar 2020 01:24:19 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
+        by smtp.gmail.com with ESMTPSA id l6sm1366180pff.173.2020.03.19.01.24.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 01:24:19 -0700 (PDT)
+Subject: Re: [PATCH 0/4] x86/Hyper-V: Unload vmbus channel in hv panic
+ callback
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com
+References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
+ <20200317132523.1508-2-Tianyu.Lan@microsoft.com>
+ <20200317173553.jerf6gjtaotqjbac@debian>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <d00f5535-d498-058e-d529-11dfec976454@gmail.com>
+Date:   Thu, 19 Mar 2020 16:24:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20200317173553.jerf6gjtaotqjbac@debian>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-18, Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> On Tue, Mar 17, 2020 at 11:18:18AM +0900, Sergey Senozhatsky wrote:
->> On (20/03/15 18:09), Eugeniu Rosca wrote:
->>> @@ -428,6 +428,8 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
->>>  			}
->>>  		}
->>>  
->>> +		console_verbose_start();
->>> +
->>>  		pr_emerg("BUG: soft lockup - CPU#%d stuck for %us! [%s:%d]\n",
->>>  			smp_processor_id(), duration,
->>>  			current->comm, task_pid_nr(current));
->>> @@ -453,6 +455,8 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
->>>  		if (softlockup_panic)
->>>  			panic("softlockup: hung tasks");
->>>  		__this_cpu_write(soft_watchdog_warn, true);
->>> +
->>> +		console_verbose_end();
->>>  	} else
->>>  		__this_cpu_write(soft_watchdog_warn, false);
->> 
->> I'm afraid, as of now, this approach is not going to work the way it's
->> supposed to work in 100% of cases. Because the only thing that printk()
->> call sort of guarantees is that the message will be stored somewhere.
->> Either in the main kernel log buffer, on in one of auxiliary per-CPU
->> log buffers. It does not guarantee, generally speaking, that the message
->> will be printed on the console immediately.
->
-> I take this passage as an acknowledgement of the problem being _real_,
-> in spite of the fix being not perfect.
->
-> One aspect I would like to emphasize is that (please, NAK this
-> statement if it's not accurate) the problem reported in this patch is
-> not specific to the existing printk mechanism, but also applies to the
-> upcoming kthread-based printk. If that's true, then IMHO this is a
-> compelling argument to join forces and try to find a working, safe and
-> future-proof solution.
+On 3/18/2020 1:35 AM, Wei Liu wrote:
+> On Tue, Mar 17, 2020 at 06:25:20AM -0700, ltykernel@gmail.com wrote:
+>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>>
+>> Customer reported Hyper-V VM still responded network traffic
+>> ack packets after kernel panic with kernel parameter "panic=0”.
+>> This becauses vmbus driver interrupt handler still works
+>> on the panic cpu after kernel panic. Panic cpu falls into
+>> infinite loop of panic() with interrupt enabled at that point.
+>> Vmbus driver can still handle network traffic.
+>>
+>> This confuses remote service that the panic system is still
+>> alive when it gets ack packets. Unload vmbus channel in hv panic
+>> callback and fix it.
+>>
+>> vmbus_initiate_unload() maybe double called during panic process
+>> (e.g, hyperv_panic_event() and hv_crash_handler()). So check
+>> and set connection state in vmbus_initiate_unload() to resolve
+>> reenter issue.
+>>
+>> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>> ---
+>>   drivers/hv/channel_mgmt.c |  5 +++++
+>>   drivers/hv/vmbus_drv.c    | 17 +++++++++--------
+>>   2 files changed, 14 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+>> index 0370364169c4..893493f2b420 100644
+>> --- a/drivers/hv/channel_mgmt.c
+>> +++ b/drivers/hv/channel_mgmt.c
+>> @@ -839,6 +839,9 @@ void vmbus_initiate_unload(bool crash)
+>>   {
+>>   	struct vmbus_channel_message_header hdr;
+>>   
+>> +	if (vmbus_connection.conn_state == DISCONNECTED)
+>> +		return;
+>> +
+>>   	/* Pre-Win2012R2 hosts don't support reconnect */
+>>   	if (vmbus_proto_version < VERSION_WIN8_1)
+>>   		return;
+>> @@ -857,6 +860,8 @@ void vmbus_initiate_unload(bool crash)
+>>   		wait_for_completion(&vmbus_connection.unload_event);
+>>   	else
+>>   		vmbus_wait_for_unload();
+>> +
+>> +	vmbus_connection.conn_state = DISCONNECTED;
+> 
+> This is only set at the end of the function.  I don't see how this solve
+> the re-entrant issue with the check at the beginning. Do I miss anything
+> here?
+> 
 
-Let me clarify that the upcoming rework is _not_ simply to make a
-kthread-based printk. There upcoming rework addresses several issues
-(kthreads being only a piece):
+For this issue, vmbus_initiate_unload() maybe called on the panic vcpu
+twice and so just split check and set conn_state.
 
-1. allow printk-callers to get their messages immediately and locklessly
-   into the log buffer from any context
-
-2. during normal operation, printk-callers are completely decoupled from
-   console printing
-
-3. in the case of an emergency, every printk-caller will directly and
-   synchronously perform console printing of its messages on consoles
-   that support atomic writing
-
-For the rework we decided that triggering an oops is what irreversibly
-transitions the system from "normal operation" to "emergency".
-
-One could interpret the current "console_verbose()" to be some sort of
-equivalent to irreversibly transitioning the system to "emergency". But
-that is not how it was decided to be interpreted. For the rework,
-printk-callers do not have any influence on forcing immediate console
-printing (unless they trigger an oops). console_verbose() is still
-relevant in the rework. console_verbose() is affecting _what_ is printed
-to consoles and _not when_.
-
-Once the printk rework is complete, the mechanisms for atomic and
-synchronous console printing will be in place. It would be possible that
-these mechanisms could also be used in non-oops scenarios. But that
-would need to be discussed in depth and clearly defined with caution for
-abuse.
-
-John Ogness
+> Maybe this function should check and set the state to
+> DISCONNECTING/DISCONNECTED at the beginning of this function?
+> 
+Yes, Vitaly also gave suggestion to use "xchg" to check and set
+conn_state. Will update in the next version.
