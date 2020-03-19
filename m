@@ -2,170 +2,124 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66778C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F274C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E00A20789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fSS2rSdj"
+	by mail.kernel.org (Postfix) with ESMTP id D64A7207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584624975;
+	bh=6NYbwMXoJ+wlGSNvLLs16uAuTFfZ4lyBAET+75s50H8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EUvzM8yhuDqDF3VzQx/Ytv5zvrPhTis8/dY8UjBScTQiATFAU88Xl+KTk0B9sOChT
+	 SGtVKJk9lavHFNv0vPd26ddcQHsCI/P3KwOT/pMOfo5PIHhtbJ3vti6wybeqfCNU3M
+	 aWw5rdnQkbp5HKD0Xn0EQobZJ1+ooJRtdqD4bAb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgCSNgK (ORCPT
+        id S1728513AbgCSNKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:36:10 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:26866 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727471AbgCSNgH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:36:07 -0400
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200319133605epoutp03035693fa01ad52d33ad6a2e13cf8d146~9uAKSrzCA3266532665epoutp03M
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 13:36:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200319133605epoutp03035693fa01ad52d33ad6a2e13cf8d146~9uAKSrzCA3266532665epoutp03M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1584624965;
-        bh=4FL33iP/jwSsQW96+6AWrtYIL4nfSj8zvnMw8LCMztg=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=fSS2rSdjXhxn6oNDINfpNeqFPOv54i7eXTlabPA9wFEWUeYjpMCDrE/xOL5Ka4F0c
-         2Ofbp0cNVzjWgzBUJwQWn5/sxBt4HxwEa6gVyVgeTkj57F9AqS+203/amPEIAobaiq
-         EqQ+7vR2Lj0VOiygkPQWo0bIWyi5JMJijmeOenxs=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200319133604epcas5p3dbbb7941cdd45bee37c4c1caa320016b~9uAJzbOTa1621316213epcas5p3E;
-        Thu, 19 Mar 2020 13:36:04 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        83.AF.04778.445737E5; Thu, 19 Mar 2020 22:36:04 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200319133603epcas5p294d8a6f404e5d168d75cfa6861e393e3~9uAJGi74l1782517825epcas5p2p;
-        Thu, 19 Mar 2020 13:36:03 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200319133603epsmtrp20dd7c56c4edec8817d0b58191b050767~9uAJFqWh63159731597epsmtrp2N;
-        Thu, 19 Mar 2020 13:36:03 +0000 (GMT)
-X-AuditID: b6c32a4a-353ff700000012aa-b1-5e73754435e2
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        13.C4.04024.345737E5; Thu, 19 Mar 2020 22:36:03 +0900 (KST)
-Received: from sriramdash03 (unknown [107.111.85.15]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200319133602epsmtip10df7c703058970433bc7f58b98daa829~9uAIAvU692963729637epsmtip1Y;
-        Thu, 19 Mar 2020 13:36:02 +0000 (GMT)
-From:   "Sriram Dash" <sriram.dash@samsung.com>
-To:     "'Shradha Todi'" <shradha.t@samsung.com>, <kishon@ti.com>
-Cc:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <pankaj.dubey@samsung.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200311102852.5207-1-shradha.t@samsung.com>
-Subject: RE: [PATCH] PCI: endpoint: Fix NULL pointer dereference for
- ->get_features()
-Date:   Thu, 19 Mar 2020 19:06:01 +0530
-Message-ID: <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
+        Thu, 19 Mar 2020 09:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726988AbgCSNKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:10:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01D0521556;
+        Thu, 19 Mar 2020 13:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584623420;
+        bh=6NYbwMXoJ+wlGSNvLLs16uAuTFfZ4lyBAET+75s50H8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vmFdvcUHKBVuGaU7VWFxIoS8OUy8hRRLp3IpSUNccF26bykM7T9v1EGA/PPu4KS6O
+         Rm8BZJjUXSkzLvE2Qi3LvNUl+29M65jAIwNqYke3Zk5S0+RzgcuTJxSQm6Srn1t8ti
+         XHsD43AE4UT6ZphPPkfxMcUe/bclftutT7/OJp44=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 08/90] net: nfc: fix bounds checking bugs on "pipe"
+Date:   Thu, 19 Mar 2020 13:59:30 +0100
+Message-Id: <20200319123931.252651797@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
+References: <20200319123928.635114118@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIRa+BXjMtyeVOz/ELce4dgT57WJwIqUA0mp8e8EHA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7bCmhq5LaXGcwdVHihZLmjIsLjztYbO4
-        vGsOm8XZecfZLN78fsFusWjrF3aL3sO1Duwea+atYfRYsKnUo2/LKkaP4ze2M3l83iQXwBrF
-        ZZOSmpNZllqkb5fAldGz+wJbwTKBio/LfrE1ML7m7WLk5JAQMJF4OusPUxcjF4eQwG5Gie6n
-        t9ghnE+MEvduPWOBcL4xSjT/esUK0/JpZQdUYi+jxNQVG1ghnFeMEuu75jGDVLEJ6EqcvdHE
-        BmKLCNhKLN84H2wus8BkRokby3+xgyQ4BawkOvqngTUIC4RLrJh/kxHEZhFQlfh/4jYLiM0r
-        YCkxb/tRVghbUOLkzCdgcWYBbYllC18zQ5ykIPHz6TJWiGVWEhOX3GWDqBGXOPqzhxlksYTA
-        czaJ32+/M0E0uEhsbzwBZQtLvDq+hR3ClpL4/G4vG4SdLXG57znUghKJGa8WskDY9hIHrswB
-        sjmAFmhKrN+lD7GLT6L39xMmkLCEAK9ER5sQRLWqxKvbm6GmS0scWHsaaquHxNcJF5gmMCrO
-        QvLZLCSfzULywSyEZQsYWVYxSqYWFOempxabFhjlpZbrFSfmFpfmpesl5+duYgQnIS2vHYzL
-        zvkcYhTgYFTi4V2wpihOiDWxrLgy9xCjBAezkgivbnpxnBBvSmJlVWpRfnxRaU5q8SFGaQ4W
-        JXHeSaxXY4QE0hNLUrNTUwtSi2CyTBycUg2M+gHPp+5aecx8QZtgcMeuJ2zPG2c/6O5l9Td6
-        8Mj9dXK+VqPvm0libD1SKrI5Oxd4rBfbuUJuQqdZ79ot86xu17zY2r46t36V98o6qfK9/oks
-        Gf+n9v+JO9iyxaT2yI0PDzLEK1/6blxyK8ika9eZOO+iqAuRrTPMNylOjuD6zGpdkSDONqVH
-        iaU4I9FQi7moOBEACSYjbz4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjkeLIzCtJLcpLzFFi42LZdlhJTte5tDjOYE6LnsWSpgyLC0972Cwu
-        75rDZnF23nE2ize/X7BbLNr6hd2i93CtA7vHmnlrGD0WbCr16NuyitHj+I3tTB6fN8kFsEZx
-        2aSk5mSWpRbp2yVwZWzf0cte0CRQ8ebkN6YGxuO8XYycHBICJhKfVnawdDFycQgJ7GaUeLGj
-        n7GLkQMoIS3x864uRI2wxMp/z9khal4wSszq+sAGkmAT0JU4e6MJzBYRsJd4MWMjK0gRs8B0
-        Rom2LbOhOroZJXYsWQ9WxSlgJdHRP40ZxBYWCJX42DaVFcRmEVCV+H/iNguIzStgKTFv+1FW
-        CFtQ4uTMJ2BxZgFtid6HrYww9rKFr5khzlOQ+Pl0GSvEFVYSE5fcZYOoEZc4+rOHeQKj8Cwk
-        o2YhGTULyahZSFoWMLKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIjiUtzR2Ml5fE
-        H2IU4GBU4uH1WFUUJ8SaWFZcmXuIUYKDWUmEVze9OE6INyWxsiq1KD++qDQntfgQozQHi5I4
-        79O8Y5FCAumJJanZqakFqUUwWSYOTqkGxtD++Ueudz1imOohe1Bi0suO+5Y9DEp3P5ry54ap
-        7/8X15/VvUm4gLX0vU35kcSQVwzZ05izpUVYeVXXuBgqJ2pznbW7urZN4I5bxLdXZhr8EkpF
-        u49Fcp1cudp0U8Ijpbw0VnmzjufCm3U37G09fDLtHe+axJvxUnoHUq+dXLd7cfaBJ/VTlViK
-        MxINtZiLihMB8/g/J6ECAAA=
-X-CMS-MailID: 20200319133603epcas5p294d8a6f404e5d168d75cfa6861e393e3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132
-References: <CGME20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132@epcas5p2.samsung.com>
-        <20200311102852.5207-1-shradha.t@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Shradha Todi <shradha.t=40samsung.com>
-> Subject: =5BPATCH=5D PCI: endpoint: Fix NULL pointer dereference for -
-> >get_features()
->=20
-> get_features ops of pci_epc_ops may return NULL, causing NULL pointer
-> dereference in pci_epf_test_bind function. Let us add a check for
-> pci_epc_feature pointer in pci_epf_test_bind before we access it to avoid=
- any
-> such NULL pointer dereference and return -ENOTSUPP in case pci_epc_featur=
-e
-> is not found.
->=20
-> Reviewed-by: Pankaj Dubey <pankaj.dubey=40samsung.com>
-> Signed-off-by: Sriram Dash <sriram.dash=40samsung.com>
-> Signed-off-by: Shradha Todi <shradha.t=40samsung.com>
-> ---
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-Hi Kishon,
+[ Upstream commit a3aefbfe45751bf7b338c181b97608e276b5bb73 ]
 
-Any update on this?
+This is similar to commit 674d9de02aa7 ("NFC: Fix possible memory
+corruption when handling SHDLC I-Frame commands") and commit d7ee81ad09f0
+("NFC: nci: Add some bounds checking in nci_hci_cmd_received()") which
+added range checks on "pipe".
 
+The "pipe" variable comes skb->data[0] in nfc_hci_msg_rx_work().
+It's in the 0-255 range.  We're using it as the array index into the
+hdev->pipes[] array which has NFC_HCI_MAX_PIPES (128) members.
 
->  drivers/pci/endpoint/functions/pci-epf-test.c =7C 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
-> b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index c9121b1b9fa9..af4537a487bf 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> =40=40 -510,14 +510,17 =40=40 static int pci_epf_test_bind(struct pci_epf=
- *epf)
->  		return -EINVAL;
->=20
->  	epc_features =3D pci_epc_get_features(epc, epf->func_no);
-> -	if (epc_features) =7B
-> -		linkup_notifier =3D epc_features->linkup_notifier;
-> -		msix_capable =3D epc_features->msix_capable;
-> -		msi_capable =3D epc_features->msi_capable;
-> -		test_reg_bar =3D pci_epc_get_first_free_bar(epc_features);
-> -		pci_epf_configure_bar(epf, epc_features);
-> +	if (=21epc_features) =7B
-> +		dev_err(dev, =22epc_features not implemented=5Cn=22);
-> +		return -ENOTSUPP;
->  	=7D
->=20
-> +	linkup_notifier =3D epc_features->linkup_notifier;
-> +	msix_capable =3D epc_features->msix_capable;
-> +	msi_capable =3D epc_features->msi_capable;
-> +	test_reg_bar =3D pci_epc_get_first_free_bar(epc_features);
-> +	pci_epf_configure_bar(epf, epc_features);
-> +
->  	epf_test->test_reg_bar =3D test_reg_bar;
->  	epf_test->epc_features =3D epc_features;
->=20
-> --
-> 2.17.1
+Fixes: 118278f20aa8 ("NFC: hci: Add pipes table to reference them with a tuple {gate, host}")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/nfc/hci/core.c |   19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
+
+--- a/net/nfc/hci/core.c
++++ b/net/nfc/hci/core.c
+@@ -193,13 +193,20 @@ exit:
+ void nfc_hci_cmd_received(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
+ 			  struct sk_buff *skb)
+ {
+-	u8 gate = hdev->pipes[pipe].gate;
+ 	u8 status = NFC_HCI_ANY_OK;
+ 	struct hci_create_pipe_resp *create_info;
+ 	struct hci_delete_pipe_noti *delete_info;
+ 	struct hci_all_pipe_cleared_noti *cleared_info;
++	u8 gate;
+ 
+-	pr_debug("from gate %x pipe %x cmd %x\n", gate, pipe, cmd);
++	pr_debug("from pipe %x cmd %x\n", pipe, cmd);
++
++	if (pipe >= NFC_HCI_MAX_PIPES) {
++		status = NFC_HCI_ANY_E_NOK;
++		goto exit;
++	}
++
++	gate = hdev->pipes[pipe].gate;
+ 
+ 	switch (cmd) {
+ 	case NFC_HCI_ADM_NOTIFY_PIPE_CREATED:
+@@ -387,8 +394,14 @@ void nfc_hci_event_received(struct nfc_h
+ 			    struct sk_buff *skb)
+ {
+ 	int r = 0;
+-	u8 gate = hdev->pipes[pipe].gate;
++	u8 gate;
++
++	if (pipe >= NFC_HCI_MAX_PIPES) {
++		pr_err("Discarded event %x to invalid pipe %x\n", event, pipe);
++		goto exit;
++	}
+ 
++	gate = hdev->pipes[pipe].gate;
+ 	if (gate == NFC_HCI_INVALID_GATE) {
+ 		pr_err("Discarded event %x to unopened pipe %x\n", event, pipe);
+ 		goto exit;
 
 
