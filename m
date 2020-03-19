@@ -2,94 +2,98 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798AEC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B88FC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 505A42071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C619A2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:27:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kvsm+3Yh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbgCST07 (ORCPT
+        id S1727507AbgCST1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:26:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47832 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgCST07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:26:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B4686AD03;
-        Thu, 19 Mar 2020 19:26:56 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 20:26:54 +0100
-From:   Joerg Roedel <jroedel@suse.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Joerg Roedel <joro@8bytes.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH 70/70] x86/sev-es: Add NMI state tracking
-Message-ID: <20200319192654.GD611@suse.de>
-References: <20200319091407.1481-1-joro@8bytes.org>
- <20200319091407.1481-71-joro@8bytes.org>
- <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
- <20200319160749.GC5122@8bytes.org>
- <CALCETrXY5M87C1Fc3QvTkc6MdbQ_3gAuOPUeWJktAzK4T60QNQ@mail.gmail.com>
+        Thu, 19 Mar 2020 15:27:05 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:53023 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726785AbgCST1F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:27:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584646024;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kFMdMW6Y0NTb1UiLeQfhS+IknCZrq0Eca3UovxCSJQw=;
+        b=Kvsm+3YhC/fyED7oLSVQm5zODj1FAry9rUdHjqhZf5rCOb/1NNJz92Of2pEG+m1yQszDyL
+        2RPDvpRRm/e494h5GWwcsJ3tZWId45FabjMMbaM5+P3D9mRdQdsVaV6eBMVu0qixc77Brh
+        1lNg18kWNwThl3vCEXe1sFa/Uc2qChU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-342-iUNoR811N_G_WbmuXuK0bA-1; Thu, 19 Mar 2020 15:27:02 -0400
+X-MC-Unique: iUNoR811N_G_WbmuXuK0bA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2DEF1005514;
+        Thu, 19 Mar 2020 19:27:00 +0000 (UTC)
+Received: from krava (unknown [10.40.194.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2D7355D9CA;
+        Thu, 19 Mar 2020 19:26:57 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 20:26:53 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH] perf tools: Unify a bit the build directory output
+Message-ID: <20200319192653.GA1200613@krava>
+References: <20200318204522.1200981-1-jolsa@kernel.org>
+ <20200319182514.GC14841@kernel.org>
+ <20200319185750.GE14841@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrXY5M87C1Fc3QvTkc6MdbQ_3gAuOPUeWJktAzK4T60QNQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200319185750.GE14841@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 11:40:39AM -0700, Andy Lutomirski wrote:
- 
-> Nope.  A nested NMI will reset the interrupted NMI's return frame to
-> cause it to run again when it's done.  I don't think this will have
-> any real interaction with #VC.  There's no longjmp() here.
-
-Ahh, so I misunderstood that part, in this case your proposal of sending
-the NMI-complete message right at the beginning of do_nmi() should work
-just fine. I will test this and see how it works out.
-
-> I certainly *like* preventing nesting, but I don't think we really
-> want a whole alternate NMI path just for a couple of messed-up AMD
-> generations.  And the TF trick is not so pretty either.
-
-Indeed, if it could be avoided, it should.
-
+On Thu, Mar 19, 2020 at 03:57:50PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Mar 19, 2020 at 03:25:14PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Wed, Mar 18, 2020 at 09:45:22PM +0100, Jiri Olsa escreveu:
+> > > Removing the extra 'SUBDIR' line from clean and doc build
+> > > output. Because it's annoying.. ;-)
+> > > 
+> > > Before:
+> > >   $ make clean
+> > >   ...
+> > >   SUBDIR   Documentation
+> > >   CLEAN    Documentation
+> > > 
+> > > After:
+> > >   $ make clean
+> > >   ...
+> > >   CLEAN    Documentation
+> > 
+> > Thanks, applied to perf/core.
 > 
-> > > This causes us to pop the NMI frame off the stack.  Assuming the NMI
-> > > restart logic is invoked (which is maybe impossible?), we get #DB,
-> > > which presumably is actually delivered.  And we end up on the #DB
-> > > stack, which might already have been in use, so we have a potential
-> > > increase in nesting.  Also, #DB may be called from an unexpected
-> > > context.
-> >
-> > An SEV-ES hypervisor is required to intercept #DB, which means that the
-> > #DB exception actually ends up being a #VC exception. So it will not end
-> > up on the #DB stack.
+> Hey, since you're annoyed, how about sending a patch to ditch this one:
 > 
-> With your patch set, #DB doesn't seem to end up on the #DB stack either.
+> make[3]: Nothing to be done for '/tmp/build/perf/plugins/libtraceevent-dynamic-list'.
+> 
+> ? ;-)
 
-Right, it does not use the #DB stack or shift-ist stuff. Maybe it
-should, is this needed for anything else than making entry code
-debugable by kgdb?
+I'll add it to my 'when annoyed todo list' .. which is getting
+more and more attention in this lock down time ;-)
 
-Regards,
+jirka
 
-	Joerg
