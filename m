@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E743C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B7DC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2096A206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8DD20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624149;
-	bh=OOrvL+hxe4tsrCV6JNg9MTvSFyZDghtmI19y3UsQ144=;
+	s=default; t=1584624151;
+	bh=tofIbnmadnKlW1E9aujzGi22xYXbLQFA4YGG/fxn2lA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bak2ZWYJ4hQIk0Gopzm4kA/lXKECC9sO67U7VRmE1ouBuNSyliEb2cyWgXKoyyeH1
-	 iTENPiDAdX4622fH93Pzf8RdViYhbZFP6WCHSX/WoM/6R0yL6fbDV9OjrC0PTAM9hB
-	 OKnn5nFeXQffTDWc41i8pQ2OBHbPsTZeHKutoJAE=
+	b=OTxWyJ3rZ4Gh9rnhvmIENoxVtAl6GICn2pV2KsA01xBWgVs918BfZ+tp4qutsDBr+
+	 dbDxVnZgpAPpQIMJWc6GLlcyAQUQJC6ifA6WJAqtHpQWwuMwkq5xGW9Xdok43+QUOs
+	 uuPkz0PUH47xRwdtIBOKR9GbvUNtuWkd1Lchf4+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbgCSNW1 (ORCPT
+        id S1730223AbgCSNWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:22:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:22:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730194AbgCSNWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:22:24 -0400
+        id S1730209AbgCSNW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:22:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0092820724;
-        Thu, 19 Mar 2020 13:22:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77749206D7;
+        Thu, 19 Mar 2020 13:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624143;
-        bh=OOrvL+hxe4tsrCV6JNg9MTvSFyZDghtmI19y3UsQ144=;
+        s=default; t=1584624145;
+        bh=tofIbnmadnKlW1E9aujzGi22xYXbLQFA4YGG/fxn2lA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FDvimmlTfD+7X1GBJwXtou+KoHnp/nlIhGVJP3C21pTTBIMaK8Pmfd0fEOvDnCBRw
-         1kESXg93iq5lOUnamN3xLyJqZSHouxPKSMOquhFbbazzk/MZTrqzOYll+4n1hmikuh
-         Gin3NWq44UHowOK2hx1ggtE81HTlWMGUxRnACq98=
+        b=wgUeaboqWoVlwHquUmawDJ1JCCWaecAo8HemlHWfGYyCgErkJq4jElGiTOdGbx5rh
+         DU1eY9EXbG69nUyNDclpl3XdglbS6UW9uffWfQkN3IOS8bEEXM8QVLfhAmOyo2QGro
+         pO4zOAFfRkvEPXYZb85kLMnbs3ORM2SVv5EX05q4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bitan Biswas <bbiswas@nvidia.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 06/60] mmc: sdhci-tegra: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
-Date:   Thu, 19 Mar 2020 14:03:44 +0100
-Message-Id: <20200319123921.203229255@linuxfoundation.org>
+Subject: [PATCH 5.4 07/60] mmc: sdhci-omap: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
+Date:   Thu, 19 Mar 2020 14:03:45 +0100
+Message-Id: <20200319123921.556308239@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -64,9 +64,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit d2f8bfa4bff5028bc40ed56b4497c32e05b0178f ]
+[ Upstream commit 055e04830d4544c57f2a5192a26c9e25915c29c0 ]
 
-It has turned out that the sdhci-tegra controller requires the R1B response,
+It has turned out that the sdhci-omap controller requires the R1B response,
 for commands that has this response associated with them. So, converting
 from an R1B to an R1 response for a CMD6 for example, leads to problems
 with the HW busy detection support.
@@ -74,32 +74,32 @@ with the HW busy detection support.
 Fix this by informing the mmc core about the requirement, via setting the
 host cap, MMC_CAP_NEED_RSP_BUSY.
 
-Reported-by: Bitan Biswas <bbiswas@nvidia.com>
-Reported-by: Peter Geis <pgwipeout@gmail.com>
-Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Reported-by: Faiz Abbas <faiz_abbas@ti.com>
 Cc: <stable@vger.kernel.org>
-Tested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Tested-By: Peter Geis <pgwipeout@gmail.com>
+Tested-by: Anders Roxell <anders.roxell@linaro.org>
+Tested-by: Faiz Abbas <faiz_abbas@ti.com>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-tegra.c | 3 +++
+ drivers/mmc/host/sdhci-omap.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 403ac44a73782..a25c3a4d3f6cb 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -1552,6 +1552,9 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
- 	if (tegra_host->soc_data->nvquirks & NVQUIRK_ENABLE_DDR50)
- 		host->mmc->caps |= MMC_CAP_1_8V_DDR;
+diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+index 083e7e053c954..d3135249b2e40 100644
+--- a/drivers/mmc/host/sdhci-omap.c
++++ b/drivers/mmc/host/sdhci-omap.c
+@@ -1134,6 +1134,9 @@ static int sdhci_omap_probe(struct platform_device *pdev)
+ 	host->mmc_host_ops.execute_tuning = sdhci_omap_execute_tuning;
+ 	host->mmc_host_ops.enable_sdio_irq = sdhci_omap_enable_sdio_irq;
  
 +	/* R1B responses is required to properly manage HW busy detection. */
-+	host->mmc->caps |= MMC_CAP_NEED_RSP_BUSY;
++	mmc->caps |= MMC_CAP_NEED_RSP_BUSY;
 +
- 	tegra_sdhci_parse_dt(host);
- 
- 	tegra_host->power_gpio = devm_gpiod_get_optional(&pdev->dev, "power",
+ 	ret = sdhci_setup_host(host);
+ 	if (ret)
+ 		goto err_put_sync;
 -- 
 2.20.1
 
