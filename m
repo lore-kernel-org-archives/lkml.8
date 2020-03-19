@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF50C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6080AC43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A46B20789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEFA20773
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgCSJT5 (ORCPT
+        id S1727219AbgCSJOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:19:57 -0400
-Received: from 8bytes.org ([81.169.241.247]:52110 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:14:25 -0400
+Received: from 8bytes.org ([81.169.241.247]:51922 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727229AbgCSJO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:26 -0400
+        id S1727060AbgCSJOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:22 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 0B3E32AA; Thu, 19 Mar 2020 10:14:17 +0100 (CET)
+        id E409320A; Thu, 19 Mar 2020 10:14:16 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 11/70] x86/boot/compressed/64: Disable red-zone usage
-Date:   Thu, 19 Mar 2020 10:13:08 +0100
-Message-Id: <20200319091407.1481-12-joro@8bytes.org>
+Subject: [PATCH 06/70] x86/umip: Factor out instruction fetch
+Date:   Thu, 19 Mar 2020 10:13:03 +0100
+Message-Id: <20200319091407.1481-7-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -48,60 +48,123 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The x86-64 ABI defines a red-zone on the stack:
-
-  The 128-byte area beyond the location pointed to by %rsp is
-  considered to be reserved and shall not be modified by signal or
-  interrupt handlers. 10 Therefore, functions may use this area for
-  temporary data that is not needed across function calls. In
-  particular, leaf functions may use this area for their entire stack
-  frame, rather than adjusting the stack pointer in the prologue and
-  epilogue. This area is known as the red zone.
-
-This is not compatible with exception handling, so disable it for the
-pre-decompression boot code.
+Factor out the code to fetch the instruction from user-space to a helper
+function.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/Makefile            | 2 +-
- arch/x86/boot/compressed/Makefile | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/insn-eval.h |  2 ++
+ arch/x86/kernel/umip.c           | 26 +++++-----------------
+ arch/x86/lib/insn-eval.c         | 38 ++++++++++++++++++++++++++++++++
+ 3 files changed, 46 insertions(+), 20 deletions(-)
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 012b82fc8617..8f55e4ce1ccc 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -65,7 +65,7 @@ clean-files += cpustr.h
+diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
+index 2b6ccf2c49f1..b8b9ef1bbd06 100644
+--- a/arch/x86/include/asm/insn-eval.h
++++ b/arch/x86/include/asm/insn-eval.h
+@@ -19,5 +19,7 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
+ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
+ int insn_get_code_seg_params(struct pt_regs *regs);
++int insn_fetch_from_user(struct pt_regs *regs,
++			 unsigned char buf[MAX_INSN_SIZE]);
  
- # ---------------------------------------------------------------------------
+ #endif /* _ASM_X86_INSN_EVAL_H */
+diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+index 4d732a444711..00cb157673b1 100644
+--- a/arch/x86/kernel/umip.c
++++ b/arch/x86/kernel/umip.c
+@@ -317,11 +317,11 @@ static void force_sig_info_umip_fault(void __user *addr, struct pt_regs *regs)
+  */
+ bool fixup_umip_exception(struct pt_regs *regs)
+ {
+-	int not_copied, nr_copied, reg_offset, dummy_data_size, umip_inst;
+-	unsigned long seg_base = 0, *reg_addr;
++	int nr_copied, reg_offset, dummy_data_size, umip_inst;
+ 	/* 10 bytes is the maximum size of the result of UMIP instructions */
+ 	unsigned char dummy_data[10] = { 0 };
+ 	unsigned char buf[MAX_INSN_SIZE];
++	unsigned long *reg_addr;
+ 	void __user *uaddr;
+ 	struct insn insn;
+ 	int seg_defs;
+@@ -329,26 +329,12 @@ bool fixup_umip_exception(struct pt_regs *regs)
+ 	if (!regs)
+ 		return false;
  
--KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP
-+KBUILD_CFLAGS	:= $(REALMODE_CFLAGS) -D_SETUP -mno-red-zone
- KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
- KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
- GCOV_PROFILE := n
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 26050ae0b27e..e186cc0b628d 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -30,7 +30,7 @@ KBUILD_CFLAGS := -m$(BITS) -O2
- KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
- KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
- cflags-$(CONFIG_X86_32) := -march=i386
--cflags-$(CONFIG_X86_64) := -mcmodel=small
-+cflags-$(CONFIG_X86_64) := -mcmodel=small -mno-red-zone
- KBUILD_CFLAGS += $(cflags-y)
- KBUILD_CFLAGS += -mno-mmx -mno-sse
- KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
-@@ -87,7 +87,7 @@ endif
+-	/*
+-	 * If not in user-space long mode, a custom code segment could be in
+-	 * use. This is true in protected mode (if the process defined a local
+-	 * descriptor table), or virtual-8086 mode. In most of the cases
+-	 * seg_base will be zero as in USER_CS.
+-	 */
+-	if (!user_64bit_mode(regs))
+-		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
+-
+-	if (seg_base == -1L)
+-		return false;
+-
+-	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
+-				    sizeof(buf));
+-	nr_copied = sizeof(buf) - not_copied;
++	nr_copied = insn_fetch_from_user(regs, buf);
  
- vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
- 
--$(obj)/eboot.o: KBUILD_CFLAGS += -fshort-wchar -mno-red-zone
-+$(obj)/eboot.o: KBUILD_CFLAGS += -fshort-wchar
- 
- vmlinux-objs-$(CONFIG_EFI_STUB) += $(obj)/eboot.o \
- 	$(objtree)/drivers/firmware/efi/libstub/lib.a
+ 	/*
+-	 * The copy_from_user above could have failed if user code is protected
+-	 * by a memory protection key. Give up on emulation in such a case.
+-	 * Should we issue a page fault?
++	 * The insn_fetch_from_user above could have failed if user code
++	 * is protected by a memory protection key. Give up on emulation
++	 * in such a case.  Should we issue a page fault?
+ 	 */
+ 	if (!nr_copied)
+ 		return false;
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index 31600d851fd8..95ae3953e2a2 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -1369,3 +1369,41 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs)
+ 		return (void __user *)-1L;
+ 	}
+ }
++
++/**
++ * insn_fetch_from_user() - Copy instruction bytes from user-space memory
++ * @regs:	Structure with register values as seen when entering kernel mode
++ * @buf:	Array to store the fetched instruction
++ *
++ * Gets the linear address of the instruction and copies the instruction bytes
++ * to the buf.
++ *
++ * Returns:
++ *
++ * Number of instruction bytes copied.
++ *
++ * 0 if nothing was copied.
++ */
++int insn_fetch_from_user(struct pt_regs *regs,
++			 unsigned char buf[MAX_INSN_SIZE])
++{
++	unsigned long seg_base = 0;
++	int not_copied;
++
++	/*
++	 * If not in user-space long mode, a custom code segment could be in
++	 * use. This is true in protected mode (if the process defined a local
++	 * descriptor table), or virtual-8086 mode. In most of the cases
++	 * seg_base will be zero as in USER_CS.
++	 */
++	if (!user_64bit_mode(regs))
++		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
++
++	if (seg_base == -1L)
++		return 0;
++
++	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
++				    MAX_INSN_SIZE);
++
++	return MAX_INSN_SIZE - not_copied;
++}
 -- 
 2.17.1
 
