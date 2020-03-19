@@ -2,154 +2,119 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D8DC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28003C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD2220754
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1122072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:48:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cDHAcd1C"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T5wSGnt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgCSRsK (ORCPT
+        id S1728421AbgCSRsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:48:10 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:50242 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgCSRsK (ORCPT
+        Thu, 19 Mar 2020 13:48:14 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34875 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbgCSRsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:48:10 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 18F68DC4;
-        Thu, 19 Mar 2020 18:48:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584640088;
-        bh=muRfNh5vu7uoti9IKGxoYTDOSnB1SG2YiU3akIX1p/0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cDHAcd1CttFh1TV6F8AOFaQM8f/vHXwI08QWjwTnH1LKoh4ajd0MNenKWprm45YMj
-         ZKY8mCezz94b7mV0DOtsNC9tYj63WmdxfLlEEtGDCY0/UUbaA+cY0vWguUYAzRdc7u
-         2+MDgK7xO3tQUNYW0YrS32+Q13zWmyxsyNOMuTLg=
-Date:   Thu, 19 Mar 2020 19:48:02 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Alex Riesen <alexander.riesen@cetitec.com>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] media: adv748x: include everything adv748x.h
- needs into the file
-Message-ID: <20200319174802.GH14585@pendragon.ideasonboard.com>
-References: <cover.1584639664.git.alexander.riesen@cetitec.com>
- <fe109d58eaa34d68cad0f34bb048f827b336e024.1584639664.git.alexander.riesen@cetitec.com>
+        Thu, 19 Mar 2020 13:48:13 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u68so1816049pfb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 10:48:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=iWUSd6tNelA3B2gV8L14dd3S0Goj3iWlFgAqgwk5kPw=;
+        b=T5wSGnt2PrWmaej5pxTQjA5iZ75Iq5B8ryc8SsC0GZUqDnlwetsWMpCtffoLmhaty7
+         MEpRGQOi8ly0/vnWHX7gn8Je3y5VDnIUpNcgALh6uSrWPV9q0Ly1fiQ5RC4Xi02iZE6W
+         JyMt029uRbZPrTBbpHeGtn40yI63DT1zUUIhk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=iWUSd6tNelA3B2gV8L14dd3S0Goj3iWlFgAqgwk5kPw=;
+        b=cH+pCYk4xbRLm+gL33MLyYNiZp80pZRV88MxUsX3IJPWpGP1qeDoSVSIm6ZINnX1F1
+         Ox42iQCnGCIuWwt0GOvnchbXora3eMA2H8rhQBnxgO23cYVLI/sms/yqA7lp69eNoDjw
+         J9wzXMvjFfSeN1g60oXdNrzB81/QZ7FsI8LmeW/PPbyGTixWAjHVBoQYTk1bsidkZ4GI
+         CKNL3g9Gux7fZk7LYsj3D1uYNgzhqWKFC91WOTH8RBP5oPG9C/ea66KIb8L7CaJOY0K4
+         Rjdk1miffLhFgkU/P2pNngxnfqToM0GpOCEcdmiTCpyajHI9Ohp6zsBDZz+aegfIS9kh
+         icbw==
+X-Gm-Message-State: ANhLgQ1A65hg99g70OTOuAav6GY3QhAdSiZiI/XK6AUq7kO+Z3HS9fhD
+        tjlqjgQ1vTp5MNKmzqFN4xmtgg==
+X-Google-Smtp-Source: ADFU+vut6Lso223EbxYK+y4BZyU7C3AfV3mD375ioWsMfGKfgEhQlPlHMn0XJNEJoyfTIpfVnP8PYA==
+X-Received: by 2002:a63:c811:: with SMTP id z17mr4386751pgg.41.1584640092091;
+        Thu, 19 Mar 2020 10:48:12 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id h11sm2990799pfq.56.2020.03.19.10.48.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 10:48:11 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <fe109d58eaa34d68cad0f34bb048f827b336e024.1584639664.git.alexander.riesen@cetitec.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1584356562-13181-1-git-send-email-mkrishn@codeaurora.org>
+References: <1584356562-13181-1-git-send-email-mkrishn@codeaurora.org>
+Subject: Re: [v2] arm64: dts: sc7180: modify assigned clocks for sc7180 target
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+To:     Krishna Manikandan <mkrishn@codeaurora.org>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
+Date:   Thu, 19 Mar 2020 10:48:10 -0700
+Message-ID: <158464009041.152100.18425074316530931981@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
+Subject could be "sc7180: update DPU assigned clocks"
 
-Thank you for the patch.
+Quoting Krishna Manikandan (2020-03-16 04:02:42)
+> Add DISP_CC_MDSS_ROT_CLK and DISP_CC_MDSS_AHB_CLK
+> in the assigned clocks list for sc7180 target.
 
-On Thu, Mar 19, 2020 at 06:41:48PM +0100, Alex Riesen wrote:
-> To follow the established practice of not depending on others to
-> pull everything in.
-> 
-> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+Why?
 
-Good idea. While at it, could you include "adv748x.h" as the very first
-header in at least one of the C files ? That will help ensuring the
-header stays self-contained in the future.
+>=20
+> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+
+Does this need a Fixes: tag?
 
 > ---
->  drivers/media/i2c/adv748x/adv748x-afe.c  | 2 --
->  drivers/media/i2c/adv748x/adv748x-core.c | 2 --
->  drivers/media/i2c/adv748x/adv748x-csi2.c | 2 --
->  drivers/media/i2c/adv748x/adv748x-hdmi.c | 2 --
->  drivers/media/i2c/adv748x/adv748x.h      | 2 ++
->  5 files changed, 2 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/adv748x/adv748x-afe.c b/drivers/media/i2c/adv748x/adv748x-afe.c
-> index dbbb1e4d6363..ab0479641c10 100644
-> --- a/drivers/media/i2c/adv748x/adv748x-afe.c
-> +++ b/drivers/media/i2c/adv748x/adv748x-afe.c
-> @@ -11,8 +11,6 @@
->  #include <linux/mutex.h>
->  #include <linux/v4l2-dv-timings.h>
->  
-> -#include <media/v4l2-ctrls.h>
-> -#include <media/v4l2-device.h>
->  #include <media/v4l2-dv-timings.h>
->  #include <media/v4l2-ioctl.h>
->  
-> diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-> index c3fb113cef62..345f009de121 100644
-> --- a/drivers/media/i2c/adv748x/adv748x-core.c
-> +++ b/drivers/media/i2c/adv748x/adv748x-core.c
-> @@ -20,8 +20,6 @@
->  #include <linux/slab.h>
->  #include <linux/v4l2-dv-timings.h>
->  
-> -#include <media/v4l2-ctrls.h>
-> -#include <media/v4l2-device.h>
->  #include <media/v4l2-dv-timings.h>
->  #include <media/v4l2-fwnode.h>
->  #include <media/v4l2-ioctl.h>
-> diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
-> index c43ce5d78723..78d391009b5a 100644
-> --- a/drivers/media/i2c/adv748x/adv748x-csi2.c
-> +++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
-> @@ -8,8 +8,6 @@
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  
-> -#include <media/v4l2-ctrls.h>
-> -#include <media/v4l2-device.h>
->  #include <media/v4l2-ioctl.h>
->  
->  #include "adv748x.h"
-> diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-> index c557f8fdf11a..0dffcdf79ff2 100644
-> --- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
-> +++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-> @@ -8,8 +8,6 @@
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  
-> -#include <media/v4l2-ctrls.h>
-> -#include <media/v4l2-device.h>
->  #include <media/v4l2-dv-timings.h>
->  #include <media/v4l2-ioctl.h>
->  
-> diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
-> index fccb388ce179..09aab4138c3f 100644
-> --- a/drivers/media/i2c/adv748x/adv748x.h
-> +++ b/drivers/media/i2c/adv748x/adv748x.h
-> @@ -19,6 +19,8 @@
->   */
->  
->  #include <linux/i2c.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-device.h>
->  
->  #ifndef _ADV748X_H_
->  #define _ADV748X_H_
-
--- 
-Regards,
-
-Laurent Pinchart
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
+com/sc7180.dtsi
+> index 998f101..e3b60f1 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1544,8 +1544,12 @@
+>                                 clock-names =3D "iface", "rot", "lut", "c=
+ore",
+>                                               "vsync";
+>                                 assigned-clocks =3D <&dispcc DISP_CC_MDSS=
+_MDP_CLK>,
+> -                                                 <&dispcc DISP_CC_MDSS_V=
+SYNC_CLK>;
+> +                                                 <&dispcc DISP_CC_MDSS_V=
+SYNC_CLK>,
+> +                                                 <&dispcc DISP_CC_MDSS_R=
+OT_CLK>,
+> +                                                 <&dispcc DISP_CC_MDSS_A=
+HB_CLK>;
+>                                 assigned-clock-rates =3D <300000000>,
+> +                                                      <19200000>,
+> +                                                      <19200000>,
+>                                                        <19200000>;
+> =20
+>                                 interrupt-parent =3D <&mdss>;
