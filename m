@@ -2,117 +2,140 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F01C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E59C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4F920663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB39A2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lWmsiQ6L"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="H3mDhUz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbgCSUaG (ORCPT
+        id S1727256AbgCSUbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:30:06 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39237 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727383AbgCSUaG (ORCPT
+        Thu, 19 Mar 2020 16:31:02 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:65002 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727023AbgCSUbB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 16:30:06 -0400
-Received: by mail-pg1-f194.google.com with SMTP id b22so1874798pgb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 13:30:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=jWRRL5fJU84goaEEMPwzMKuUagdNByNPY2GPzz3BqUo=;
-        b=lWmsiQ6Lb12qslAwJviWPgtxxPbMSrg+pf/z7L753FhqBwUjeQBLJhoTf8/lddF/he
-         xOvVxA7tlABxLQiOJrogLhHZqlWH9NMdQK6z4QFWYrq0WhNVbIDT1NPcMDNKDlbpBIGY
-         esQgYzmhVXZOC2O6GW91aUxmqMwf/hxeKNtH4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=jWRRL5fJU84goaEEMPwzMKuUagdNByNPY2GPzz3BqUo=;
-        b=Xaqa0E3xFzc/uogxaMtRikbIZA0oURHcg0g3WlLsfJ4OUBgKb6uartYxRqu6ms88u2
-         V5rylFOKLFQ/NvtLnYNIdxMVOiwVLbJVzqeAVJcOH6CoEMixIRCMwsIf2uNkHmM2ZPgu
-         zHz8lW8Pzda/8usqoC7dGZ4LR7exsUSkbw50HYfl/86CbqCWuds+Oqa8+/ry3zhF0BOM
-         g6QLD8tIrE572sYJOG0IO/lYEjm4j2P36REbEb9I5xculRkHPSVs25UJ81FBk4/pOP3Y
-         Saj9JWfY+fLs9L8iVlfvDe+8jRz9f9dPGE0YTE+UHD0nQ7o0VIC9NNR891LmxPzBv/CR
-         AUZA==
-X-Gm-Message-State: ANhLgQ3rmI3La6drbvKQC6ff7FpFjQosUvTK2TkWPikSYlVLzhNO896F
-        mrxfXVcSIIAZJESmsAIZThulsA==
-X-Google-Smtp-Source: ADFU+vvXN5rPoEsslES8Yzt/IbFnT4RPQKMhfYMmFrcParmX/mJcnSp+G095zu6wuQaOYpmLGqW8Lw==
-X-Received: by 2002:a62:7a88:: with SMTP id v130mr5681312pfc.129.1584649804565;
-        Thu, 19 Mar 2020 13:30:04 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id z16sm3343326pfr.138.2020.03.19.13.30.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 13:30:03 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 19 Mar 2020 16:31:01 -0400
+X-Greylist: delayed 1631 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Mar 2020 16:31:00 EDT
+Received: from pps.filterd (m0050093.ppops.net [127.0.0.1])
+        by m0050093.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 02JJxfgF004755;
+        Thu, 19 Mar 2020 20:03:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=jan2016.eng;
+ bh=mUn3O9VmAsOwEKC1EoFw6DJt4hCpb0XLTybtGwOerzo=;
+ b=H3mDhUz8fe+A9e9ktPUSPTDtcrbu+SEidGulMs4udhqLWYBaJFOd/ezi5WXrygFqyZ8t
+ 2QnYbAM+u5wT1rVqSJcpNPW1JKeduQ9oGfdY5bMpZUAX4MMrFgzYp/7/k8c1KZCKillL
+ HxbY+ao8DdqhU4bSYmlhhSr+FjrelLEjjuF1PjgrslCiIN7mA+tXRkTVaxBn7s9hwtlH
+ zF6kFSn0tsQS8is/VKSMpuZb4cvTQFEwvUzo7A6MBNc1Pr/xdvEV6K0bQ4HcmTZxDxn2
+ lUgAeXm8hnf6lwHG1WlFUy5q5Ip2HXUJNrB1WBeAUJBQUPoJuWqFD7ePLQcBcPA5WMsj SQ== 
+Received: from prod-mail-ppoint3 (prod-mail-ppoint3.akamai.com [96.6.114.86] (may be forged))
+        by m0050093.ppops.net-00190b01. with ESMTP id 2yrqduruqg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 20:03:45 +0000
+Received: from pps.filterd (prod-mail-ppoint3.akamai.com [127.0.0.1])
+        by prod-mail-ppoint3.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 02JK3Z4Y001211;
+        Thu, 19 Mar 2020 16:03:44 -0400
+Received: from prod-mail-relay14.akamai.com ([172.27.17.39])
+        by prod-mail-ppoint3.akamai.com with ESMTP id 2yrtm0f8u2-1;
+        Thu, 19 Mar 2020 16:03:42 -0400
+Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
+        by prod-mail-relay14.akamai.com (Postfix) with ESMTP id C2BDF85C23;
+        Thu, 19 Mar 2020 20:03:39 +0000 (GMT)
+Subject: Re: [PATCH v2] dynamic_debug: Use address-of operator on section
+ symbols
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200220051320.10739-1-natechancellor@gmail.com>
+ <20200319015909.GA8292@ubuntu-m2-xlarge-x86>
+From:   Jason Baron <jbaron@akamai.com>
+Message-ID: <4b766edb-73e2-c295-22eb-b501405baa9f@akamai.com>
+Date:   Thu, 19 Mar 2020 16:03:39 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <f6e948cb-7d3f-72b6-b153-58afb1304c49@linaro.org>
-References: <20200311191501.8165-1-bryan.odonoghue@linaro.org> <20200311191501.8165-3-bryan.odonoghue@linaro.org> <158458013177.152100.17920784952083533825@swboyd.mtv.corp.google.com> <aa6aa234-e2d1-bdcd-0f0e-64b2a7e497d3@linaro.org> <158463604559.152100.9219030962819234620@swboyd.mtv.corp.google.com> <f6e948cb-7d3f-72b6-b153-58afb1304c49@linaro.org>
-Subject: Re: [PATCH 2/7] dt-bindings: usb: dwc3: Add a gpio-usb-connector example
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, jackp@codeaurora.org, robh@kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, balbi@kernel.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
-Date:   Thu, 19 Mar 2020 13:30:02 -0700
-Message-ID: <158464980279.152100.13680630167113607572@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <20200319015909.GA8292@ubuntu-m2-xlarge-x86>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_08:2020-03-19,2020-03-19 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2002250000 definitions=main-2003190083
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_07:2020-03-19,2020-03-19 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 phishscore=0
+ clxscore=1011 impostorscore=0 priorityscore=1501 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 adultscore=0 mlxlogscore=999 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003190083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bryan O'Donoghue (2020-03-19 11:03:58)
-> On 19/03/2020 16:40, Stephen Boyd wrote:
-> > the gpio for the connector?
->=20
-> Previous version of the PHY from 2019 had extcon toggling vbus.
->=20
-> Since extcon is going away, we moved go usb-gpio
->=20
-> https://lwn.net/ml/devicetree/20190905175802.GA19599@jackp-linux.qualcomm=
-.com/
->=20
-> https://lwn.net/ml/devicetree/5d71edf5.1c69fb81.1f307.fdd6@mx.google.com/
->=20
-> usb-gpio-conn handle VBUS and notifies via the USB role switch API.
->=20
-> Which if the connector is a child of the controller "just works" but,=20
-> maybe with a little bit of work DT <port> references could do the same=20
-> thing and the connector wouldn't need to be declared as a child.
->=20
-> > We (ChromeOS) need to integrate the type-c connector class, etc. on
-> > sc7180 with the dwc3 driver and the current thinking has the type-c
-> > connectors underneath the cros_ec node because the EC is the type-c
-> > manager. The EC will have a type-c driver associated with it.
->=20
-> right and you don't want, doesn't work or doesn't make sense, to declare =
 
-> cros_ec as a child of DWC3, fair enough.
->=20
-> I guess a DT remote-endpoint{} will do the job.
->=20
-> Something like:
-> arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
->=20
 
-Yes something like that, but it looks like that dtsi file has the usb
-host controller connected through a remote-endpoint to the type-c
-connector. I was under the impression that it would only be the phy that
-is connected this way because it's possible for there to be multiple
-different phys that drive data out through one connector. For example,
-in type-c the DP phy can be different from the USB2 phy or USB3 phy and
-there could even be other things like an HDMI phy too that all go to the
-same connector.
+On 3/18/20 9:59 PM, Nathan Chancellor wrote:
+> On Wed, Feb 19, 2020 at 10:13:20PM -0700, Nathan Chancellor wrote:
+>> Clang warns:
+>>
+>> ../lib/dynamic_debug.c:1034:24: warning: array comparison always
+>> evaluates to false [-Wtautological-compare]
+>>         if (__start___verbose == __stop___verbose) {
+>>                               ^
+>> 1 warning generated.
+>>
+>> These are not true arrays, they are linker defined symbols, which are
+>> just addresses. Using the address of operator silences the warning and
+>> does not change the resulting assembly with either clang/ld.lld or
+>> gcc/ld (tested with diff + objdump -Dr).
+>>
+>> Link: https://github.com/ClangBuiltLinux/linux/issues/894
+>> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+>> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+>> ---
+>> v1 -> v2: https://lore.kernel.org/lkml/20200219045423.54190-5-natechancellor@gmail.com/
+>>
+>> * No longer a series because there is no prerequisite patch.
+>> * Use address-of operator instead of casting to unsigned long.
+>>
+>>  lib/dynamic_debug.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+>> index aae17d9522e5..8f199f403ab5 100644
+>> --- a/lib/dynamic_debug.c
+>> +++ b/lib/dynamic_debug.c
+>> @@ -1031,7 +1031,7 @@ static int __init dynamic_debug_init(void)
+>>  	int n = 0, entries = 0, modct = 0;
+>>  	int verbose_bytes = 0;
+>>  
+>> -	if (__start___verbose == __stop___verbose) {
+>> +	if (&__start___verbose == &__stop___verbose) {
+>>  		pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
+>>  		return 1;
+>>  	}
+>> -- 
+>> 2.25.1
+>>
+> 
+> Gentle ping for review/acceptance.
+> 
+> Cheers,
+> Nathan
+
+Works for me.
+
+Acked-by: Jason Baron <jbaron@akamai.com>
