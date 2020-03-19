@@ -2,142 +2,102 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D26C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0917EC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98DA620663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:15:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OQZKXqXx"
+	by mail.kernel.org (Postfix) with ESMTP id DF24620663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgCSIPx (ORCPT
+        id S1726879AbgCSIRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:15:53 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:58063 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725768AbgCSIPx (ORCPT
+        Thu, 19 Mar 2020 04:17:02 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:44423 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgCSIRC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:15:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584605751;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TgtDtG3cRVj31mITgFClFTokcEIBD9CXpdML9H7Wb8k=;
-        b=OQZKXqXxdyRhU92rEGhd7sJG3gAi4j5gU6xdxv8iZ4VD99LArR56QY+N/pCIwGQBAxx4Z6
-        1iTx6grokSq+CHArLU/s2fLFzfO5gWvroP+U3t5RoS6zvvMIHlOdo4tC4Z/h1AflHFP8nH
-        GJzY3y1BvqHfAEoVWCg+kMqcG7pa3HI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-270-1bCvthWzPxO0ZFGWraD_bQ-1; Thu, 19 Mar 2020 04:15:50 -0400
-X-MC-Unique: 1bCvthWzPxO0ZFGWraD_bQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 49FA9189D6C3;
-        Thu, 19 Mar 2020 08:15:47 +0000 (UTC)
-Received: from [10.72.12.119] (ovpn-12-119.pek2.redhat.com [10.72.12.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A67B19756;
-        Thu, 19 Mar 2020 08:14:40 +0000 (UTC)
-Subject: Re: [PATCH V6 8/8] virtio: Intel IFC VF driver for VDPA
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, lingshan.zhu@intel.com, eperezma@redhat.com,
-        lulu@redhat.com, parav@mellanox.com, kevin.tian@intel.com,
-        stefanha@redhat.com, rdunlap@infradead.org, hch@infradead.org,
-        aadam@redhat.com, jiri@mellanox.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        Bie Tiwei <tiwei.bie@intel.com>
-References: <20200318080327.21958-1-jasowang@redhat.com>
- <20200318080327.21958-9-jasowang@redhat.com>
- <20200318122255.GG13183@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <30359bae-d66a-0311-0028-d7d33b8295f2@redhat.com>
-Date:   Thu, 19 Mar 2020 16:14:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 19 Mar 2020 04:17:02 -0400
+Received: from mail-qv1-f51.google.com ([209.85.219.51]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1McYTD-1jrCVt0zEr-00d1a5; Thu, 19 Mar 2020 09:17:00 +0100
+Received: by mail-qv1-f51.google.com with SMTP id m2so521131qvu.13;
+        Thu, 19 Mar 2020 01:16:59 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0MVelGgW9A3MfvnGDpwvgy/q3TmjsMOevt+oecnwlxFWjRnB42
+        S2dt40Ltn611sWKE3JcZ0xOBrnCpl0YPQKwj11E=
+X-Google-Smtp-Source: ADFU+vuvKhUMl9cghqMNKDgltUnhMBNGvVioHmVN2q91+1Ohn7tJEKoVYrbxquHMp8plMgeR0wZ5Qdf0EE9j967FD70=
+X-Received: by 2002:a0c:f647:: with SMTP id s7mr1832971qvm.4.1584605819082;
+ Thu, 19 Mar 2020 01:16:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200318122255.GG13183@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+References: <20200317083043.226593-1-areber@redhat.com> <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
+ <20200319081137.GC223854@dcbz.redhat.com>
+In-Reply-To: <20200319081137.GC223854@dcbz.redhat.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 19 Mar 2020 09:16:43 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
+Message-ID: <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
+Subject: Re: clone3: allow creation of time namespace with offset
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:+GajmnIHBBfa+wnucP62mdW4D0KSk3X5HuJXrapNIX2Pm0HqAVy
+ T87l3rzDqMJGdaKHogrdbdIQt1FedsI0goItnZky84ZVHXfyVgIRphy0cvutrqaJdHwR2Lq
+ J4nGDaDDzHubPhv3M+tkbunOd9knDvrVo17G0WDWm0R6olNu1fvJoGtoupP72UZrT7x6kmx
+ z0jDx9T6khcAMNV4uYXrA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7gdf/FqWgSE=:+/s7qhnV4QaCD2FzAuaFxm
+ AAzFdbtxiGhn3PfwVUkXVqErzqPBt1nCWXxLC6/dG/HEhlIuclDxnKBnp90P0T83YXEskcShF
+ xpnA4cdNCerXyT0XinKAAUYpNdgSjToQMLGyBC6n2zSskwFXIFepnWv3PsjrFagkY/Ku92A/d
+ +voIvYfG8V48sV2dhpz1iwB8iIq3ionPsb9BcHbE/1af/0mB2WiBrWVhZH1gCUVvACMdqTQjA
+ FA3UIfh8Bw0ml98bjDzOB8YW1jdsTnNEdq+aAlTpjWywDBWpIQqovpxlUBb0P4KEJ3wc4B1Bv
+ h3LafyAGrgVem/ZX/Dhhvlfdk83uWEvfwG2dhudSaPgeZDQSc2WSNTXwc25zQOg/f9V9bHUIO
+ JAMwJFtfTJCOJ5plvCpvZEJ4On1+xo2JHXDI2E8dX2zkhzJ5IwVLxQtvGPw3FRvwXCxBrh8G+
+ nBBj1oExdaVCZpbOtsnc/vlIxLCi+ItpPvlkggYqEh80pnSvSbK3ZltUWH7oCKEDo6/hdt4Lc
+ 0yzDyt963QBwJiSD1P8aEwCELs4zbX0/D9/ptpKTS2TkcBuI7bZPxMAYxdbpSWm2+9IMZrTTc
+ Qhgi+iQIDXEGi+GzuJtjKrqtttldpL9dJUsno4OWjWqBNu9JKk3uKI51OCDCzM55KWwuLsWTc
+ 9PIiLkjxAUgt3OGefT4G/mQFcsKTiGQuTNBEDtosEdmTxQlSR+B4NcCs9fw0v04B32RZKF7+Z
+ sZAC9iDdc+snPBf0IZH+s9VhxEP3OBbWT9yYvPr5PAXbotkWQwGqCqtBhTlgyHzrLmOWYcr1N
+ TjyeKOjT2HmzRG82yScyt/oAeT70A0+PgRnh4VsSlj7mAj4Yks=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
 
-On 2020/3/18 =E4=B8=8B=E5=8D=888:22, Jason Gunthorpe wrote:
-> On Wed, Mar 18, 2020 at 04:03:27PM +0800, Jason Wang wrote:
->> From: Zhu Lingshan <lingshan.zhu@intel.com>
->> +
->> +static int ifcvf_vdpa_attach(struct ifcvf_adapter *adapter)
->> +{
->> +	int ret;
->> +
->> +	adapter->vdpa_dev  =3D vdpa_alloc_device(adapter->dev, adapter->dev,
->> +					       &ifc_vdpa_ops);
->> +	if (IS_ERR(adapter->vdpa_dev)) {
->> +		IFCVF_ERR(adapter->dev, "Failed to init ifcvf on vdpa bus");
->> +		put_device(&adapter->vdpa_dev->dev);
->> +		return -ENODEV;
->> +	}
-> The point of having an alloc call is so that the drivers
-> ifcvf_adaptor memory could be placed in the same struct - eg use
-> container_of to flip between them, and have a kref for both memories.
+> With Arnd's idea of only using nanoseconds, timens_offset would then
+> contain something like this:
 >
-> It seem really weird to have an alloc followed immediately by
-> register.
-
-
-I admit the ifcvf_adapter is not correctly ref-counted. What you suggest=20
-should work. But it looks to me the following is more cleaner since the=20
-members of ifcvf_adapter are all related to PCI device not vDPA itself.
-
-- keep the current layout of ifcvf_adapter
-- merge vdpa_alloc_device() and vdpa_register_device()
-- use devres to bind ifcvf_adapter refcnt/lifcycle to the under PCI devic=
-e
-
-If we go for the container_of method, we probably need
-
-- accept a size of parent parent structure in vdpa_alloc_device() and=20
-mandate vdpa_device to be the first member of ifcvf_adapter
-- we need provide a way to free resources of parent structure when we=20
-destroy vDPA device
-
-What's your thought?
-
-
->> diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa=
-.c
->> index c30eb55030be..de64b88ee7e4 100644
->> +++ b/drivers/virtio/virtio_vdpa.c
->> @@ -362,6 +362,7 @@ static int virtio_vdpa_probe(struct vdpa_device *v=
-dpa)
->>   		goto err;
->>  =20
->>   	vdpa_set_drvdata(vdpa, vd_dev);
->> +	dev_info(vd_dev->vdev.dev.parent, "device attached to VDPA bus\n");
->>  =20
->>   	return 0;
-> This hunk seems out of place
+> struct timens_offset {
+>         __aligned_s64 monotonic_offset_ns;
+>         __aligned_s64 boottime_offset_ns;
+> };
 >
-> Jason
+> I kind of prefer adding boottime and monotonic directly to struct clone_args
+>
+>         __aligned_u64 tls;
+>         __aligned_u64 set_tid;
+>         __aligned_u64 set_tid_size;
+> +       __aligned_s64 monotonic_offset_ns;
+> +       __aligned_s64 boottime_offset_ns;
+>  };
 
+I would also prefer the second approach using two 64-bit integers
+instead of a pointer, as it keeps the interface simpler to implement
+and simpler to interpret by other tools.
 
-Right, will fix.
-
-Thanks
-
+      Arnd
