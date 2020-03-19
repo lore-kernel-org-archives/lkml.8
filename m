@@ -2,108 +2,101 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B3FC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F85C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3420E2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE6B2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:45:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iEg1va88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgCSRpG (ORCPT
+        id S1728659AbgCSRpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:45:06 -0400
-Received: from mga03.intel.com ([134.134.136.65]:59183 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbgCSRpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:45:05 -0400
-IronPort-SDR: Amx9KGKhWu3dJ0GgiHCU4EYyJ9W5kLCiwOfxwC28HVuw5kagrbJrNxYY9LTzb4pQQfjc/Fe7U5
- LWkZH9ZMUMPQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 10:45:04 -0700
-IronPort-SDR: nyg3Ka5QrvO3iYtSgsFbqxfqHGG7+n8+Zf6c65Hz/36CO+GdLR3Ez0v3k5pfe+8G9I643vtJNa
- 10W4HYXOFQkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="245232828"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.249.128.140]) ([10.249.128.140])
-  by orsmga003.jf.intel.com with ESMTP; 19 Mar 2020 10:45:01 -0700
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com
-References: <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
- <20200318162029.GA3999@light.dominikbrodowski.net>
- <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
- <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
- <20200319130049.GA2244@light.dominikbrodowski.net>
- <20200319134139.GB3983@sirena.org.uk>
- <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
- <20200319165157.GA2254@light.dominikbrodowski.net>
- <a7bf2aee-78e7-f905-bcc3-cd21bf16a976@intel.com>
-Message-ID: <2346211f-4639-75c3-513a-b765a0ba88d2@intel.com>
-Date:   Thu, 19 Mar 2020 18:45:00 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 13:45:10 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:22337 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728606AbgCSRpI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:45:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584639907;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aLqi3G1ZNiVSz9AxSij/CsrdtEjTvKCYJQbBAfaLPXI=;
+        b=iEg1va88zu+bOeshirTQwrUlQoUgAdTHZcXOAkZVmpKGErfXlmnQLC6mHxpV+r0Ki51UIR
+        edVzLDDHtpxi5rxYikGKdMlN7qAnzTzSA5/XmwdKncnLLyrZR2LKJotB9Bni0dOAUgB7t3
+        Ic6XYtD15EEdanjL3fll1AaGnC9GRfU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-472-83yFdhWHOJS1GmZTPPDHxg-1; Thu, 19 Mar 2020 13:45:03 -0400
+X-MC-Unique: 83yFdhWHOJS1GmZTPPDHxg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7BB6C800D53;
+        Thu, 19 Mar 2020 17:45:01 +0000 (UTC)
+Received: from gondolin (ovpn-113-188.ams2.redhat.com [10.36.113.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1022A5C21B;
+        Thu, 19 Mar 2020 17:44:56 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 18:44:53 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
+        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com, kevin.tian@intel.com
+Subject: Re: [PATCH v3 5/7] vfio/pci: Add sriov_configure support
+Message-ID: <20200319184453.39713aab.cohuck@redhat.com>
+In-Reply-To: <158396395214.5601.11207416598267070486.stgit@gimli.home>
+References: <158396044753.5601.14804870681174789709.stgit@gimli.home>
+        <158396395214.5601.11207416598267070486.stgit@gimli.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <a7bf2aee-78e7-f905-bcc3-cd21bf16a976@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-19 18:33, Cezary Rojewski wrote:
+On Wed, 11 Mar 2020 15:59:12 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
+
+> With the VF Token interface we can now expect that a vfio userspace
+> driver must be in collaboration with the PF driver, an unwitting
+> userspace driver will not be able to get past the GET_DEVICE_FD step
+> in accessing the device.  We can now move on to actually allowing
+> SR-IOV to be enabled by vfio-pci on the PF.  Support for this is not
+> enabled by default in this commit, but it does provide a module option
+> for this to be enabled (enable_sriov=1).  Enabling VFs is rather
+> straightforward, except we don't want to risk that a VF might get
+> autoprobed and bound to other drivers, so a bus notifier is used to
+> "capture" VFs to vfio-pci using the driver_override support.  We
+> assume any later action to bind the device to other drivers is
+> condoned by the system admin and allow it with a log warning.
 > 
-> Thank you for being so cooperative during this 2day debug session.
+> vfio-pci will disable SR-IOV on a PF before releasing the device,
+> allowing a VF driver to be assured other drivers cannot take over the
+> PF and that any other userspace driver must know the shared VF token.
+> This support also does not provide a mechanism for the PF userspace
+> driver itself to manipulate SR-IOV through the vfio API.  With this
+> patch SR-IOV can only be enabled via the host sysfs interface and the
+> PF driver user cannot create or remove VFs.
 > 
-> The patch I mentioned earlier unintentionally (?) changed 'platform' 
-> component param for ssp0_port from 'dummy' to 'platform' for non-SOF 
-> solution:
-> 
-> diff --git a/sound/soc/intel/boards/broadwell.c 
-> b/sound/soc/intel/boards/broadwell.c
-> index b9c12e24c70b..db7e1e87156d 100644
-> --- a/sound/soc/intel/boards/broadwell.c
-> +++ b/sound/soc/intel/boards/broadwell.c
-> @@ -164,14 +164,6 @@ SND_SOC_DAILINK_DEF(platform,
->   SND_SOC_DAILINK_DEF(codec,
->          DAILINK_COMP_ARRAY(COMP_CODEC("i2c-INT343A:00", "rt286-aif1")));
-> 
-> -#if IS_ENABLED(CONFIG_SND_SOC_SOF_BROADWELL)
-> -SND_SOC_DAILINK_DEF(ssp0_port,
-> -           DAILINK_COMP_ARRAY(COMP_CPU("ssp0-port")));
-> -#else
-> -SND_SOC_DAILINK_DEF(ssp0_port,
-> -           DAILINK_COMP_ARRAY(COMP_DUMMY()));
-> -#endif
-> -
->   /* broadwell digital audio interface glue - connects codec <--> CPU */
->   static struct snd_soc_dai_link broadwell_rt286_dais[] = {
->          /* Front End DAI links */
-> @@ -226,7 +218,7 @@ static struct snd_soc_dai_link 
-> broadwell_rt286_dais[] = {
->                  .ops = &broadwell_rt286_ops,
->                  .dpcm_playback = 1,
->                  .dpcm_capture = 1,
-> -               SND_SOC_DAILINK_REG(ssp0_port, codec, platform),
-> +               SND_SOC_DAILINK_REG(dummy, codec, dummy),
->          },
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c         |  106 +++++++++++++++++++++++++++++++----
+>  drivers/vfio/pci/vfio_pci_private.h |    2 +
+>  2 files changed, 97 insertions(+), 11 deletions(-)
 > 
 
-Of course I messed up the mail - above is a revert of said change.
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
