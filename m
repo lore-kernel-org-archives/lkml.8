@@ -2,135 +2,100 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DEFC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEFDC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18EB207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41DB2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:06:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HrfUN9on"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgCSRFF (ORCPT
+        id S1728361AbgCSRGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:05:05 -0400
-Received: from smtprelay0191.hostedemail.com ([216.40.44.191]:58540 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727880AbgCSRFF (ORCPT
+        Thu, 19 Mar 2020 13:06:03 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41914 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727252AbgCSRGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:05:05 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id B4C02100E7B42;
-        Thu, 19 Mar 2020 17:05:03 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: nail76_487c79fbbf85c
-X-Filterd-Recvd-Size: 3720
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 19 Mar 2020 17:04:57 +0000 (UTC)
-Message-ID: <9f8c9555e0c2a863b111654b4239c7ef0db06866.camel@perches.com>
-Subject: Re: [PATCH v11 8/8] MAINTAINERS: perf: Add pattern that matches ppc
- perf to the perf entry.
-From:   Joe Perches <joe@perches.com>
-To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Date:   Thu, 19 Mar 2020 10:03:07 -0700
-In-Reply-To: <5cd926191175c4a4a85dc2246adc84bcfac21b1a.1584620202.git.msuchanek@suse.de>
-References: <20200225173541.1549955-1-npiggin@gmail.com>
-         <cover.1584620202.git.msuchanek@suse.de>
-         <5cd926191175c4a4a85dc2246adc84bcfac21b1a.1584620202.git.msuchanek@suse.de>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 19 Mar 2020 13:06:02 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t16so1311861plr.8;
+        Thu, 19 Mar 2020 10:06:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mx5DvKRxxyY0wOXhg3EMG7KO1PdJZR/OsFUrUGU4uMU=;
+        b=HrfUN9onw2GKU3By5XzeMxV4A2DkIlcAaScCEhbKccaRCA+OW2V6qh8AoUDCoWha7V
+         0HEXobtHm3m0bXeWOXK3tU17wqzevx+HMwNLAIzJVVHXnHwR40Vpa4XqWCLPAV/+FA84
+         5S2bV9Zi4iQ2gzOr7yr029PN17Fafm1cf2xFuHRC1N6vfWUz6MXjKkqq50cwmZPJd6H1
+         9gA04W9nJUkkwJ1edEpeoDffEQOH+c9S+5XBuazlP6dOff1OIcDXGjUH9geKiyqZARKg
+         c5u0dxMjrqthNWNbdR325ouwMVdvQcDTs1WPP6c5KHagiz8xHyFKC09UpQgPiGjmZB+s
+         8ZhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mx5DvKRxxyY0wOXhg3EMG7KO1PdJZR/OsFUrUGU4uMU=;
+        b=mkjMNWNHwZPAmeon0OpLhHD4hQXjxJhJyUI7/XZoBditaSEUXIVHiSLs7zmwvHnN77
+         yX52cPm+kNd6XVW5Wew4BMhl2eu7M+toKDZ8HUs8veVEw4z6kF+WA5YtGpo4VBMJgLIH
+         AX7iRHX1B0V8qLOLTJW03UtGzctDPQn1Le6CkDqOYsOPyMcTWlQpWrLDjDk1IcP28eM2
+         rSudGZQQMDVKZ3k3S8eGGaUmk0S7xnV11AxxSKddna2qK3zy8084/a6TJ5MHj0J0UBXO
+         B9XPR0DQ9BG8O3NxHhLW8GgoSKIfE8eurADC95+OaHNXF5VFdtQtLGpMYWUe5KM4JloA
+         wyzQ==
+X-Gm-Message-State: ANhLgQ05HCV3Ctiny3b7/QQ+bieeK4O14UKnvuoBDXTj8z5WI5PkPdOt
+        FQQtkl4+oNKGjWj1RWubLuhGAFlV
+X-Google-Smtp-Source: ADFU+vtTjX6mFt5mDmZhoMIKgm6kXf7ZrUipcu5gC03ub9yW3xvkOkQXcMFAYEeZimyXVTqa8FPxKg==
+X-Received: by 2002:a17:90b:1911:: with SMTP id mp17mr4866372pjb.196.1584637560067;
+        Thu, 19 Mar 2020 10:06:00 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id a3sm2957980pfg.172.2020.03.19.10.05.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 10:05:59 -0700 (PDT)
+Subject: Re: [PATCH net] ipv6: don't auto-add link-local address to lag ports
+To:     Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Moshe Levi <moshele@mellanox.com>,
+        Marcelo Ricardo Leitner <mleitner@redhat.com>,
+        Netdev <netdev@vger.kernel.org>
+References: <20200318140605.45273-1-jarod@redhat.com>
+ <8a88d1c8-c6b1-ad85-7971-e6ae8c6fa0e4@gmail.com>
+ <CAKfmpSc0yea5-OfE1rnVdErDTeOza=owbL00QQEaH-M-A6Za7g@mail.gmail.com>
+ <25629.1584564113@famine>
+ <CAKfmpScbzEZAEw=zOEwguQJvr6L2fQiGmAY60SqSBQ_g-+B4tw@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <3dbabf42-90e6-4c82-0b84-d1b1a9e8fadf@gmail.com>
+Date:   Thu, 19 Mar 2020 10:05:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <CAKfmpScbzEZAEw=zOEwguQJvr6L2fQiGmAY60SqSBQ_g-+B4tw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-03-19 at 13:19 +0100, Michal Suchanek wrote:
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
-> v10: new patch
-> ---
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
+
+
+On 3/19/20 9:42 AM, Jarod Wilson wrote:
+
+
+> Interesting. We'll keep digging over here, but that's definitely not
+> working for this particular use case with OVS for whatever reason.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index bc8dbe4fe4c9..329bf4a31412 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13088,6 +13088,8 @@ F:	arch/*/kernel/*/perf_event*.c
->  F:	arch/*/kernel/*/*/perf_event*.c
->  F:	arch/*/include/asm/perf_event.h
->  F:	arch/*/kernel/perf_callchain.c
-> +F:	arch/*/perf/*
-> +F:	arch/*/perf/*/*
 
-While I understand the desire, I believe that
-repetitive listings like this don't really
-help much.
+I did a quick test and confirmed that my bonding slaves do not have link-local addresses,
+without anything done to prevent them to appear.
 
-Having a single entry of:
-
-F:	arch/*/perf/
-
-would serve the same purpose.
-
-Nominally, the difference between the 2 entries
-vs the 1 entry is this:
-
-F:	arch/*/perf/*
-
-Only the specific files in any directory that matches
-this pattern but not any files in their subdirectories
-are maintained.
-
-F:	arch/*/perf/*/*
-
-Only the files in any top level subdirectory of any
-directory that matches this pattern are maintained
-but not files in any directory of those subdirectories.
-
-F:	arch/*/perf/
-
-Any file or any file in any subdirectory of any
-directory that matches this pattern is maintained.
+You might add a selftest, if you ever find what is the trigger :)
 
 
