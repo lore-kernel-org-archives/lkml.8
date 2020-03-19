@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8EDC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33E3C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73501207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC8F20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624793;
-	bh=vV01+2S7qPyedViSZzQlN5nnOmIOcHvFFGZq5R3HxyQ=;
+	s=default; t=1584624801;
+	bh=h++JHvlq0URUaxWR2YFil30omclmOjygV8exSEpksy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cs+78hgT7W+PY307JCN5d8A0BgJWunuTSoyq2UnPOTWzab7LNtPPaAhATbzMgvPIn
-	 jZPL6JfdJCxJidxAXbMZPuwdPiW+psbJ75oDMQhj+rG22Z9YXCZffgFO6rAVMSyFcg
-	 biWcHTKRIKRjh51gnXZWAK1QX/iEYRRd5k3bQlHg=
+	b=LThkZyssTktcbRWCc2rpKLK8p6c+7hGR9YsTSALS8u2toOodlQlsybCysDSjPYsKY
+	 kJ89ah4X7166cztxw/n3Qe5QGqdAUSosoo+LbKSA2WoNYb1Q1dPxM0D08KoNax8ckJ
+	 Fgqap4yN/Jnk57BZmjRsMbQjZFj5NdzRGSMQo84U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgCSNOR (ORCPT
+        id S1727850AbgCSNNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:14:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33494 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:13:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727641AbgCSNOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:14:12 -0400
+        id S1727549AbgCSNNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:13:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9741820722;
-        Thu, 19 Mar 2020 13:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B460120722;
+        Thu, 19 Mar 2020 13:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623652;
-        bh=vV01+2S7qPyedViSZzQlN5nnOmIOcHvFFGZq5R3HxyQ=;
+        s=default; t=1584623623;
+        bh=h++JHvlq0URUaxWR2YFil30omclmOjygV8exSEpksy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mCdiFTrz4NfWUWCSSQ8mouHfJOxs9o6Y4/3tOj+IqGMNA7GuaZoJMR4iuzU4t+M6F
-         EfmyNTSMzrXuj4E2bu6hAjfUiW2RLtoWmWc7GTTWccmQzscp1QUoSASMo1xUc+8LA0
-         0LfvFF/71/Jj2MQV2QPhdp6d4h24lVnviGOchf/4=
+        b=jnOTQXdwSSC+cxp/EYKcDGM009C4h7jcsq3rjr8N8RgpjF8Y6YT2U36QT70Nb/ABc
+         ACd8Gs5cLMsb0QxRBATA76VnaQdN/u489V5VNmXE3E6busUroEPoxIhwyNozv00AuF
+         wcc1kJe7D1C9BYL4d84ANopcGGoGZoeXmgT37xC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Schiffer <mschiffer@universe-factory.net>,
-        Sven Eckelmann <sven@narfation.org>
-Subject: [PATCH 4.9 75/90] batman-adv: update data pointers after skb_cow()
-Date:   Thu, 19 Mar 2020 14:00:37 +0100
-Message-Id: <20200319123951.602545138@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 90/90] ipv4: ensure rcu_read_lock() in cipso_v4_error()
+Date:   Thu, 19 Mar 2020 14:00:52 +0100
+Message-Id: <20200319123955.953025598@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -59,45 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Schiffer <mschiffer@universe-factory.net>
+From: Matteo Croce <mcroce@redhat.com>
 
-commit bc44b78157f621ff2a2618fe287a827bcb094ac4 upstream.
+commit 3e72dfdf8227b052393f71d820ec7599909dddc2 upstream.
 
-batadv_check_unicast_ttvn() calls skb_cow(), so pointers into the SKB data
-must be (re)set after calling it. The ethhdr variable is dropped
-altogether.
+Similarly to commit c543cb4a5f07 ("ipv4: ensure rcu_read_lock() in
+ipv4_link_failure()"), __ip_options_compile() must be called under rcu
+protection.
 
-Fixes: 78fc6bbe0aca ("batman-adv: add UNICAST_4ADDR packet type")
-Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Fixes: 3da1ed7ac398 ("net: avoid use IPCB in cipso_v4_error")
+Suggested-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Acked-by: Paul Moore <paul@paul-moore.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/batman-adv/routing.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/batman-adv/routing.c
-+++ b/net/batman-adv/routing.c
-@@ -930,7 +930,6 @@ int batadv_recv_unicast_packet(struct sk
- 	bool is4addr;
+---
+ net/ipv4/cipso_ipv4.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+--- a/net/ipv4/cipso_ipv4.c
++++ b/net/ipv4/cipso_ipv4.c
+@@ -1738,6 +1738,7 @@ void cipso_v4_error(struct sk_buff *skb,
+ {
+ 	unsigned char optbuf[sizeof(struct ip_options) + 40];
+ 	struct ip_options *opt = (struct ip_options *)optbuf;
++	int res;
  
- 	unicast_packet = (struct batadv_unicast_packet *)skb->data;
--	unicast_4addr_packet = (struct batadv_unicast_4addr_packet *)skb->data;
+ 	if (ip_hdr(skb)->protocol == IPPROTO_ICMP || error != -EACCES)
+ 		return;
+@@ -1749,7 +1750,11 @@ void cipso_v4_error(struct sk_buff *skb,
  
- 	is4addr = unicast_packet->packet_type == BATADV_UNICAST_4ADDR;
- 	/* the caller function should have already pulled 2 bytes */
-@@ -951,9 +950,13 @@ int batadv_recv_unicast_packet(struct sk
- 	if (!batadv_check_unicast_ttvn(bat_priv, skb, hdr_size))
- 		return NET_RX_DROP;
- 
-+	unicast_packet = (struct batadv_unicast_packet *)skb->data;
+ 	memset(opt, 0, sizeof(struct ip_options));
+ 	opt->optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
+-	if (__ip_options_compile(dev_net(skb->dev), opt, skb, NULL))
++	rcu_read_lock();
++	res = __ip_options_compile(dev_net(skb->dev), opt, skb, NULL);
++	rcu_read_unlock();
 +
- 	/* packet for me */
- 	if (batadv_is_my_mac(bat_priv, unicast_packet->dest)) {
- 		if (is4addr) {
-+			unicast_4addr_packet =
-+				(struct batadv_unicast_4addr_packet *)skb->data;
- 			subtype = unicast_4addr_packet->subtype;
- 			batadv_dat_inc_counter(bat_priv, subtype);
++	if (res)
+ 		return;
  
+ 	if (gateway)
 
 
