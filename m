@@ -2,80 +2,117 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A41BC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F01C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E67C220663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4F920663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:30:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lWmsiQ6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgCSU3l (ORCPT
+        id S1727521AbgCSUaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:29:41 -0400
-Received: from mga09.intel.com ([134.134.136.24]:60493 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727136AbgCSU2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 16:28:50 -0400
-IronPort-SDR: aWGnAvOI2fQW3wnmtdG4ad6J/a0WtmLyhTFbpLuZZi/ifnJjWiO0YHeg2vjGTgVuolgATru7xn
- g2vb5d7/fdAg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 13:28:50 -0700
-IronPort-SDR: dzFNyXVbbAekjMNcaRdfDFx7wVg2eyBRB4eXxbtcXkCFdbguxnJGOOvFqqfcvJzflR2lYT/o2g
- xtivoN73BSAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="239031214"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.65])
-  by orsmga008.jf.intel.com with ESMTP; 19 Mar 2020 13:28:49 -0700
-From:   kan.liang@linux.intel.com
-To:     acme@kernel.org, jolsa@redhat.com, peterz@infradead.org,
-        mingo@redhat.com, linux-kernel@vger.kernel.org
-Cc:     namhyung@kernel.org, adrian.hunter@intel.com,
-        mathieu.poirier@linaro.org, ravi.bangoria@linux.ibm.com,
-        alexey.budankov@linux.intel.com, vitaly.slobodskoy@intel.com,
-        pavel.gerasimov@intel.com, mpe@ellerman.id.au, eranian@google.com,
-        ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V4 03/17] perf record: Clear HEADER_CPU_PMU_CAPS for non LBR call stack mode
-Date:   Thu, 19 Mar 2020 13:25:03 -0700
-Message-Id: <20200319202517.23423-4-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200319202517.23423-1-kan.liang@linux.intel.com>
-References: <20200319202517.23423-1-kan.liang@linux.intel.com>
+        Thu, 19 Mar 2020 16:30:06 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39237 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727383AbgCSUaG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 16:30:06 -0400
+Received: by mail-pg1-f194.google.com with SMTP id b22so1874798pgb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 13:30:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=jWRRL5fJU84goaEEMPwzMKuUagdNByNPY2GPzz3BqUo=;
+        b=lWmsiQ6Lb12qslAwJviWPgtxxPbMSrg+pf/z7L753FhqBwUjeQBLJhoTf8/lddF/he
+         xOvVxA7tlABxLQiOJrogLhHZqlWH9NMdQK6z4QFWYrq0WhNVbIDT1NPcMDNKDlbpBIGY
+         esQgYzmhVXZOC2O6GW91aUxmqMwf/hxeKNtH4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=jWRRL5fJU84goaEEMPwzMKuUagdNByNPY2GPzz3BqUo=;
+        b=Xaqa0E3xFzc/uogxaMtRikbIZA0oURHcg0g3WlLsfJ4OUBgKb6uartYxRqu6ms88u2
+         V5rylFOKLFQ/NvtLnYNIdxMVOiwVLbJVzqeAVJcOH6CoEMixIRCMwsIf2uNkHmM2ZPgu
+         zHz8lW8Pzda/8usqoC7dGZ4LR7exsUSkbw50HYfl/86CbqCWuds+Oqa8+/ry3zhF0BOM
+         g6QLD8tIrE572sYJOG0IO/lYEjm4j2P36REbEb9I5xculRkHPSVs25UJ81FBk4/pOP3Y
+         Saj9JWfY+fLs9L8iVlfvDe+8jRz9f9dPGE0YTE+UHD0nQ7o0VIC9NNR891LmxPzBv/CR
+         AUZA==
+X-Gm-Message-State: ANhLgQ3rmI3La6drbvKQC6ff7FpFjQosUvTK2TkWPikSYlVLzhNO896F
+        mrxfXVcSIIAZJESmsAIZThulsA==
+X-Google-Smtp-Source: ADFU+vvXN5rPoEsslES8Yzt/IbFnT4RPQKMhfYMmFrcParmX/mJcnSp+G095zu6wuQaOYpmLGqW8Lw==
+X-Received: by 2002:a62:7a88:: with SMTP id v130mr5681312pfc.129.1584649804565;
+        Thu, 19 Mar 2020 13:30:04 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id z16sm3343326pfr.138.2020.03.19.13.30.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 13:30:03 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <f6e948cb-7d3f-72b6-b153-58afb1304c49@linaro.org>
+References: <20200311191501.8165-1-bryan.odonoghue@linaro.org> <20200311191501.8165-3-bryan.odonoghue@linaro.org> <158458013177.152100.17920784952083533825@swboyd.mtv.corp.google.com> <aa6aa234-e2d1-bdcd-0f0e-64b2a7e497d3@linaro.org> <158463604559.152100.9219030962819234620@swboyd.mtv.corp.google.com> <f6e948cb-7d3f-72b6-b153-58afb1304c49@linaro.org>
+Subject: Re: [PATCH 2/7] dt-bindings: usb: dwc3: Add a gpio-usb-connector example
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bjorn.andersson@linaro.org, jackp@codeaurora.org, robh@kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, balbi@kernel.org,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
+Date:   Thu, 19 Mar 2020 13:30:02 -0700
+Message-ID: <158464980279.152100.13680630167113607572@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Quoting Bryan O'Donoghue (2020-03-19 11:03:58)
+> On 19/03/2020 16:40, Stephen Boyd wrote:
+> > the gpio for the connector?
+>=20
+> Previous version of the PHY from 2019 had extcon toggling vbus.
+>=20
+> Since extcon is going away, we moved go usb-gpio
+>=20
+> https://lwn.net/ml/devicetree/20190905175802.GA19599@jackp-linux.qualcomm=
+.com/
+>=20
+> https://lwn.net/ml/devicetree/5d71edf5.1c69fb81.1f307.fdd6@mx.google.com/
+>=20
+> usb-gpio-conn handle VBUS and notifies via the USB role switch API.
+>=20
+> Which if the connector is a child of the controller "just works" but,=20
+> maybe with a little bit of work DT <port> references could do the same=20
+> thing and the connector wouldn't need to be declared as a child.
+>=20
+> > We (ChromeOS) need to integrate the type-c connector class, etc. on
+> > sc7180 with the dwc3 driver and the current thinking has the type-c
+> > connectors underneath the cros_ec node because the EC is the type-c
+> > manager. The EC will have a type-c driver associated with it.
+>=20
+> right and you don't want, doesn't work or doesn't make sense, to declare =
 
-The CPU PMU capabilities information is only useful for LBR call stack.
-Clear the feature for other perf record mode.
+> cros_ec as a child of DWC3, fair enough.
+>=20
+> I guess a DT remote-endpoint{} will do the job.
+>=20
+> Something like:
+> arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
+>=20
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/builtin-record.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 4c301466101b..428f7f5b8e48 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1120,6 +1120,9 @@ static void record__init_features(struct record *rec)
- 	if (!record__comp_enabled(rec))
- 		perf_header__clear_feat(&session->header, HEADER_COMPRESSED);
- 
-+	if (!callchain_param.enabled || (callchain_param.record_mode != CALLCHAIN_LBR))
-+		perf_header__clear_feat(&session->header, HEADER_CPU_PMU_CAPS);
-+
- 	perf_header__clear_feat(&session->header, HEADER_STAT);
- }
- 
--- 
-2.17.1
-
+Yes something like that, but it looks like that dtsi file has the usb
+host controller connected through a remote-endpoint to the type-c
+connector. I was under the impression that it would only be the phy that
+is connected this way because it's possible for there to be multiple
+different phys that drive data out through one connector. For example,
+in type-c the DP phy can be different from the USB2 phy or USB3 phy and
+there could even be other things like an HDMI phy too that all go to the
+same connector.
