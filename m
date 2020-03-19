@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17B5C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45DDC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A112076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987A520740
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgCSIrz (ORCPT
+        id S1727026AbgCSIr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:47:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59704 "EHLO
+        Thu, 19 Mar 2020 04:47:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59715 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgCSIrx (ORCPT
+        with ESMTP id S1725887AbgCSIry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:47:53 -0400
+        Thu, 19 Mar 2020 04:47:54 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEqqD-0002y5-1X; Thu, 19 Mar 2020 09:47:49 +0100
+        id 1jEqqE-000307-U8; Thu, 19 Mar 2020 09:47:51 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A81E91C2297;
-        Thu, 19 Mar 2020 09:47:48 +0100 (CET)
-Date:   Thu, 19 Mar 2020 08:47:48 -0000
-From:   "tip-bot2 for Lokesh Vutla" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 946381C2298;
+        Thu, 19 Mar 2020 09:47:50 +0100 (CET)
+Date:   Thu, 19 Mar 2020 08:47:50 -0000
+From:   "tip-bot2 for afzal mohammed" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/timer-ti-dm: Do not update
- counter on updating the period
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
+Subject: [tip: timers/core] clocksource/drivers/timer-cs5535: Request irq with
+ non-NULL dev_id
+Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200305082715.15861-5-lokeshvutla@ti.com>
-References: <20200305082715.15861-5-lokeshvutla@ti.com>
+In-Reply-To: <20200312064817.19000-1-afzal.mohd.ma@gmail.com>
+References: <20200312064817.19000-1-afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
-Message-ID: <158460766838.28353.11047398143668281075.tip-bot2@tip-bot2>
+Message-ID: <158460767029.28353.2138334938469821354.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,42 +57,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     aff7665dc64b60c1f93d6e52fde297ae6b8999ae
-Gitweb:        https://git.kernel.org/tip/aff7665dc64b60c1f93d6e52fde297ae6b8999ae
-Author:        Lokesh Vutla <lokeshvutla@ti.com>
-AuthorDate:    Thu, 05 Mar 2020 13:57:13 +05:30
+Commit-ID:     470cf1c28d2f601ea666a96d676c10b09b2321ab
+Gitweb:        https://git.kernel.org/tip/470cf1c28d2f601ea666a96d676c10b09b2321ab
+Author:        afzal mohammed <afzal.mohd.ma@gmail.com>
+AuthorDate:    Thu, 12 Mar 2020 12:18:17 +05:30
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Mon, 16 Mar 2020 12:40:36 +01:00
+CommitterDate: Thu, 12 Mar 2020 19:23:06 +01:00
 
-clocksource/drivers/timer-ti-dm: Do not update counter on updating the period
+clocksource/drivers/timer-cs5535: Request irq with non-NULL dev_id
 
-Write to trigger register(OMAP_TIMER_TRIGGER_REG) will load the value
-in Load register(OMAP_TIMER_LOAD_REG) into Counter register
-(OMAP_TIMER_COUNTER_REG).
+Recently all usages of setup_irq() was replaced by request_irq().
+request_irq() does a few sanity checks that were not done in
+setup_irq(), if they fail irq registration will fail. One of the check
+is to ensure that non-NULL dev_id is passed in the case of shared irq.
 
-omap_dm_timer_set_load() writes into trigger register every time load
-register is updated. When timer is configured in pwm mode, this causes
-disruption in current pwm cycle, which is not expected especially when
-pwm is used as PPS signal for synchronized PTP clocks. So do not write
-into trigger register on updating the period.
+Fix it by passing non-NULL dev_id while registering the shared irq.
 
-Tested-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Fixes: cc2550b421aa ("clocksource: Replace setup_irq() by request_irq()")
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200305082715.15861-5-lokeshvutla@ti.com
+Link: https://lore.kernel.org/r/20200312064817.19000-1-afzal.mohd.ma@gmail.com
 ---
- drivers/clocksource/timer-ti-dm.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/clocksource/timer-cs5535.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 1d1bea7..b565b84 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -579,7 +579,6 @@ static int omap_dm_timer_set_load(struct omap_dm_timer *timer, int autoreload,
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_CTRL_REG, l);
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_LOAD_REG, load);
+diff --git a/drivers/clocksource/timer-cs5535.c b/drivers/clocksource/timer-cs5535.c
+index 51ea050..d47acfe 100644
+--- a/drivers/clocksource/timer-cs5535.c
++++ b/drivers/clocksource/timer-cs5535.c
+@@ -133,6 +133,7 @@ static irqreturn_t mfgpt_tick(int irq, void *dev_id)
  
--	omap_dm_timer_write_reg(timer, OMAP_TIMER_TRIGGER_REG, 0);
- 	omap_dm_timer_disable(timer);
- 	return 0;
- }
+ static int __init cs5535_mfgpt_init(void)
+ {
++	unsigned long flags = IRQF_NOBALANCING | IRQF_TIMER | IRQF_SHARED;
+ 	struct cs5535_mfgpt_timer *timer;
+ 	int ret;
+ 	uint16_t val;
+@@ -152,9 +153,7 @@ static int __init cs5535_mfgpt_init(void)
+ 	}
+ 
+ 	/* And register it with the kernel */
+-	ret = request_irq(timer_irq, mfgpt_tick,
+-			  IRQF_NOBALANCING | IRQF_TIMER | IRQF_SHARED,
+-			  DRV_NAME, NULL);
++	ret = request_irq(timer_irq, mfgpt_tick, flags, DRV_NAME, timer);
+ 	if (ret) {
+ 		printk(KERN_ERR DRV_NAME ": Unable to set up the interrupt.\n");
+ 		goto err_irq;
