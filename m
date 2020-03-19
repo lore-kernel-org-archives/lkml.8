@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2373AC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757EDC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE9F20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404EE20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625120;
-	bh=Q5wpVU1xu8wGACPp+m7pI66Up6viVKtEFbyPFoD1gG0=;
+	s=default; t=1584625128;
+	bh=2Gkdd/83heQnFmGLEu+8gXq0kDGZx5JzMLIxTKv7kno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CHs51dRZQuJCS3PRM9SJ1QFQJ49jQ0Bd1WfjzO0YsWLHAqbP4W/end2g69sqcMDOQ
-	 WbYabyHaNLgbm4a+iMcNt1GL5JizvWsBi4UTGwDgdO2beyg0dbrPkXAzuu2MUZFqEj
-	 //w/9jFzNjpFkfq3D4Mr3Es8jv5Mdxq5coiGp6gI=
+	b=VrbrvyXj3ekZvXRg0wqgNcpVeHMHjONqZWn4QSFQL9W8g87PWwRwq9ivG3w10Bmme
+	 OYocC9YBgCilOSErzCdRO+ViZcoP1ElDw2M8XE3vidyijVi1T9/sYUYI07lz4iT7Fy
+	 7rNdKQpCk3oKXZMRtTmdBX4tfd/Ze1/nDQUaBveo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbgCSNii (ORCPT
+        id S1727394AbgCSNF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:38:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48878 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727534AbgCSNF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:05:58 -0400
+        id S1727367AbgCSNF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:05:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F60920722;
-        Thu, 19 Mar 2020 13:05:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32ABA20732;
+        Thu, 19 Mar 2020 13:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623157;
-        bh=Q5wpVU1xu8wGACPp+m7pI66Up6viVKtEFbyPFoD1gG0=;
+        s=default; t=1584623125;
+        bh=2Gkdd/83heQnFmGLEu+8gXq0kDGZx5JzMLIxTKv7kno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gLeUP2ODuUAPelhkbQrnyMa+6VtKEZYPbKdXvaE0VNIF1Z1ennZ7gJZE8LT+4oVvr
-         vfvr0xQqX2XLdPCEugFpNoc3FcFg19/W/BDckDRXyuekKhKVfxfpKmcPw+7HZGdsC8
-         tz/XYEiX8r0TbIsHTtXf1boz/uo5JLyLshtHMUlk=
+        b=lSP5oSTntzSPcNA6r5CJXpyaDlVU9UkAVPiRnItJVljkIeNp+zLOoLcbx5CutVJ4T
+         9EcDK8nl+SUxrSGCU6lpPaCY9ykX+am7FivxyC7BOTytQjtKCs7zPBcP4iOPNVpcPT
+         A9Waw7J7lgb2X6lMmdO6w9LcFvXe0YlNMDj4Cbs8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladis Dronov <vdronov@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Bob Sanders <bob.sanders@hpe.com>
-Subject: [PATCH 4.4 27/93] efi: Fix a race and a buffer overflow while reading efivars via sysfs
-Date:   Thu, 19 Mar 2020 13:59:31 +0100
-Message-Id: <20200319123933.679048599@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 04/93] bnxt_en: reinitialize IRQs when MTU is modified
+Date:   Thu, 19 Mar 2020 13:59:08 +0100
+Message-Id: <20200319123926.260437977@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -61,138 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-commit 286d3250c9d6437340203fb64938bea344729a0e upstream.
+[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
 
-There is a race and a buffer overflow corrupting a kernel memory while
-reading an EFI variable with a size more than 1024 bytes via the older
-sysfs method. This happens because accessing struct efi_variable in
-efivar_{attr,size,data}_read() and friends is not protected from
-a concurrent access leading to a kernel memory corruption and, at best,
-to a crash. The race scenario is the following:
+MTU changes may affect the number of IRQs so we must call
+bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
+set to true.  The reason is that a larger MTU may require
+aggregation rings not needed with smaller MTU.  We may not be
+able to allocate the required number of aggregation rings and
+so we reduce the number of channels which will change the number
+of IRQs.  Without this patch, it may crash eventually in
+pci_disable_msix() when the IRQs are not properly unwound.
 
-CPU0:                                CPU1:
-efivar_attr_read()
-  var->DataSize = 1024;
-  efivar_entry_get(... &var->DataSize)
-    down_interruptible(&efivars_lock)
-                                     efivar_attr_read() // same EFI var
-                                       var->DataSize = 1024;
-                                       efivar_entry_get(... &var->DataSize)
-                                         down_interruptible(&efivars_lock)
-    virt_efi_get_variable()
-    // returns EFI_BUFFER_TOO_SMALL but
-    // var->DataSize is set to a real
-    // var size more than 1024 bytes
-    up(&efivars_lock)
-                                         virt_efi_get_variable()
-                                         // called with var->DataSize set
-                                         // to a real var size, returns
-                                         // successfully and overwrites
-                                         // a 1024-bytes kernel buffer
-                                         up(&efivars_lock)
-
-This can be reproduced by concurrent reading of an EFI variable which size
-is more than 1024 bytes:
-
-  ts# for cpu in $(seq 0 $(nproc --ignore=1)); do ( taskset -c $cpu \
-  cat /sys/firmware/efi/vars/KEKDefault*/size & ) ; done
-
-Fix this by using a local variable for a var's data buffer size so it
-does not get overwritten.
-
-Fixes: e14ab23dde12b80d ("efivars: efivar_entry API")
-Reported-by: Bob Sanders <bob.sanders@hpe.com> and the LTP testsuite
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200305084041.24053-2-vdronov@redhat.com
-Link: https://lore.kernel.org/r/20200308080859.21568-24-ardb@kernel.org
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/firmware/efi/efivars.c |   29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -139,13 +139,16 @@ static ssize_t
- efivar_attr_read(struct efivar_entry *entry, char *buf)
- {
- 	struct efi_variable *var = &entry->var;
-+	unsigned long size = sizeof(var->Data);
- 	char *str = buf;
-+	int ret;
- 
- 	if (!entry || !buf)
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -5310,13 +5310,13 @@ static int bnxt_change_mtu(struct net_de
  		return -EINVAL;
  
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-+	var->DataSize = size;
-+	if (ret)
- 		return -EIO;
+ 	if (netif_running(dev))
+-		bnxt_close_nic(bp, false, false);
++		bnxt_close_nic(bp, true, false);
  
- 	if (var->Attributes & EFI_VARIABLE_NON_VOLATILE)
-@@ -172,13 +175,16 @@ static ssize_t
- efivar_size_read(struct efivar_entry *entry, char *buf)
- {
- 	struct efi_variable *var = &entry->var;
-+	unsigned long size = sizeof(var->Data);
- 	char *str = buf;
-+	int ret;
+ 	dev->mtu = new_mtu;
+ 	bnxt_set_ring_params(bp);
  
- 	if (!entry || !buf)
- 		return -EINVAL;
+ 	if (netif_running(dev))
+-		return bnxt_open_nic(bp, false, false);
++		return bnxt_open_nic(bp, true, false);
  
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-+	var->DataSize = size;
-+	if (ret)
- 		return -EIO;
- 
- 	str += sprintf(str, "0x%lx\n", var->DataSize);
-@@ -189,12 +195,15 @@ static ssize_t
- efivar_data_read(struct efivar_entry *entry, char *buf)
- {
- 	struct efi_variable *var = &entry->var;
-+	unsigned long size = sizeof(var->Data);
-+	int ret;
- 
- 	if (!entry || !buf)
- 		return -EINVAL;
- 
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-+	var->DataSize = size;
-+	if (ret)
- 		return -EIO;
- 
- 	memcpy(buf, var->Data, var->DataSize);
-@@ -314,14 +323,16 @@ efivar_show_raw(struct efivar_entry *ent
- {
- 	struct efi_variable *var = &entry->var;
- 	struct compat_efi_variable *compat;
-+	unsigned long datasize = sizeof(var->Data);
- 	size_t size;
-+	int ret;
- 
- 	if (!entry || !buf)
- 		return 0;
- 
--	var->DataSize = 1024;
--	if (efivar_entry_get(entry, &entry->var.Attributes,
--			     &entry->var.DataSize, entry->var.Data))
-+	ret = efivar_entry_get(entry, &var->Attributes, &datasize, var->Data);
-+	var->DataSize = datasize;
-+	if (ret)
- 		return -EIO;
- 
- 	if (is_compat()) {
+ 	return 0;
+ }
 
 
