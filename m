@@ -2,169 +2,122 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E148FC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17209C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAFEA20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:28:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BhlJPQ/p"
+	by mail.kernel.org (Postfix) with ESMTP id E39A720724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584642573;
+	bh=rxgqISc6H/nWdoqhLpBm0M5HKY7xHBQ6EF93lmfO7Y0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zLordtJ8M/YACCQxy7wLEjc1wioE67ByLgI3ASi0/dq9R92k6V1nRGtIjt9UTQSLD
+	 Fzbx2BQqkl0y42YcS+H2ZNQMqmW67ZzCLMr6HoHaoWFfz9f7kxZPMSHNGKwerygry0
+	 zeM7VCf+QCizLYzpBSTO8IYQly1FSjT/BWEI4LcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbgCSS2y (ORCPT
+        id S1727321AbgCSS3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:28:54 -0400
-Received: from mail.efficios.com ([167.114.26.124]:47602 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgCSS2x (ORCPT
+        Thu, 19 Mar 2020 14:29:32 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46972 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCSS3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:28:53 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id D943527A988;
-        Thu, 19 Mar 2020 14:28:51 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id zK-eYda64nWU; Thu, 19 Mar 2020 14:28:51 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 6013C27AA00;
-        Thu, 19 Mar 2020 14:28:51 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 6013C27AA00
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1584642531;
-        bh=cwjFHwy6Pt+K09h3Ht6pRaRBe2P+DnAvJM52kHJYHuE=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=BhlJPQ/pBiXeTRCJrJVkk/ZGNc9e0A1elzgM7ZlQmTaKC8jvLdvV2MIEImS/zwYCs
-         8twJnGagGaQ/8VEO0IzlmrPvSwwOHiAwvIhGcR1VGXl338NFKAkNRJ0J+dlOHGcL2b
-         l3NlLdK7Ma75QqScPkgf1lSZQP3xt/ajyrlLJO7YRHwOYUHnAbVLYwoByjH+ycy2M0
-         pDjQcHOVBWBTlEVF1CORzjbBAPKGq1G0vYaYFkonSGP2ijzd/H5bnIomgrDakUVdQx
-         Qs/CnUvynNw+3vpaHN7ai3ZeVlvouS6JzyiM/RgZhES0Osy4q2RjOuRi2Xlbszbeah
-         zNFw75zu0B/Hw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id fKFzVRXvLoGh; Thu, 19 Mar 2020 14:28:51 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 4EC0027A57F;
-        Thu, 19 Mar 2020 14:28:51 -0400 (EDT)
-Date:   Thu, 19 Mar 2020 14:28:51 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Message-ID: <1103782439.4046.1584642531222.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87sgi4gqhf.fsf@mid.deneb.enyo.de>
-References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com> <20200319144110.3733-5-mathieu.desnoyers@efficios.com> <874kukpf9f.fsf@mid.deneb.enyo.de> <2147217200.3240.1584633395285.JavaMail.zimbra@efficios.com> <87r1xo5o2s.fsf@mid.deneb.enyo.de> <1302331358.3965.1584641354569.JavaMail.zimbra@efficios.com> <87sgi4gqhf.fsf@mid.deneb.enyo.de>
-Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C
- startup and thread creation (v15)
+        Thu, 19 Mar 2020 14:29:31 -0400
+Received: by mail-il1-f193.google.com with SMTP id e8so3156376ilc.13;
+        Thu, 19 Mar 2020 11:29:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nuVG9R1fl5aV0113Wkqeyi+DwSUJE/i7o0mHYMU/pW0=;
+        b=fNzyUo82gZ+XixyRoW4+PIO+KGthnbHdll9BhAZxsbFe6vKCVrpvXo/VAdPJ+zGqGb
+         VkblMNViqBYhYf5FhR+N0TE3SrZa6p728jb5Qb8SgZoqflOtXqzICAQREbydE4ASE9tt
+         kpQUVbn6qUDyNoYXbxmmdCdcN21O+Rn8rzLKp/pbRRtB7OeNTKAjiz1BEV3QAISRi5WP
+         eDq9N/YjPDwpI0fdLUSP0OYSIDjda6LdKonZUK/lnizR+1gBk4LHCoahPCDzSJyW+l1v
+         s+35X46HulciEUuZky0WiX/+PJ1g/zKpMT0BbMyho+jH3g0ScV43d2tRv8kIDjY1rJkR
+         cl2g==
+X-Gm-Message-State: ANhLgQ3K0djvg4y/+BU0J0+E4CsIVs6dH2yMeieECi7uDarwr3kAw5tV
+        PHyRtnX4uZZLSEn44Yg9rA==
+X-Google-Smtp-Source: ADFU+vuYRWENnnjTGXdM/3tIX9NPpmnsPCMZgoJW/FYaAg8G19QayHs3ZHRHOhNCbt+PxUpH9dpgjA==
+X-Received: by 2002:a92:9c54:: with SMTP id h81mr4599212ili.109.1584642569415;
+        Thu, 19 Mar 2020 11:29:29 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id c28sm1144757ilf.26.2020.03.19.11.29.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 11:29:28 -0700 (PDT)
+Received: (nullmailer pid 16853 invoked by uid 1000);
+        Thu, 19 Mar 2020 18:29:25 -0000
+Date:   Thu, 19 Mar 2020 12:29:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com
+Subject: Re: [PATCH v13 2/6] dt-bindings: display: mediatek: control dpi pins
+ mode to avoid leakage
+Message-ID: <20200319182925.GA13920@bogus>
+References: <20200311071823.117899-1-jitao.shi@mediatek.com>
+ <20200311071823.117899-3-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v15)
-Thread-Index: /2TWQZCOgCKTJ1+DDkj4nFJ4gTkEvg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311071823.117899-3-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Mar 19, 2020, at 2:16 PM, Florian Weimer fw@deneb.enyo.de wrote:
+On Wed, Mar 11, 2020 at 03:18:19PM +0800, Jitao Shi wrote:
+> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. Set
+> the dpi pins to gpio mode and output-low to avoid leakage current when dpi
+> disabled.
+> 
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt  | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> index 58914cf681b8..260ae75ac640 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> @@ -17,6 +17,10 @@ Required properties:
+>    Documentation/devicetree/bindings/graph.txt. This port should be connected
+>    to the input port of an attached HDMI or LVDS encoder chip.
+>  
+> +Optional properties:
+> +- pinctrl-names: Contain "default" and "sleep".
 
-> * Mathieu Desnoyers:
->=20
->>> You also need to add an assert that the compiler supports
->>> __attribute__ ((aligned)) because ignoring it produces an
->>> ABI-incompatible header.
->>
->> Are you aware of some helper macro I should use to do this, or
->> is it done elsewhere in glibc ?
->=20
-> I don't think we have any such GCC-only types yet.  max_align_t is
-> provided by GCC itself.
+> +  pinctrl-names see Documentation/devicetree/bindings/pinctrlpinctrl-bindings.txt
 
-I was thinking of adding the following to
+Drop this line.
 
-sysdeps/unix/sysv/linux/rseq-internal.h: rseq_register_current_thread()
-
-+  /* Ensure the compiler supports __attribute__ ((aligned)).  */
-+  _Static_assert (__alignof__ (struct rseq_cs) >=3D 4 * sizeof(uint64_t),
-+                 "alignment");
-+  _Static_assert (__alignof__ (struct rseq) >=3D 4 * sizeof(uint64_t),
-+                 "alignment");
-+
-
->>> The struct rseq/struct rseq_cs definitions
->>> are broken, they should not try to change the alignment.
->>
->> AFAIU, this means we should ideally not have used __attribute__((aligned=
-))
->> in the uapi headers in the first place. Why is it broken ?
->=20
-> Compilers which are not sufficiently GCC-compatible define
-> __attribute__(X) as the empty expansion, so you silently get a
-> different ABI.
-
-It is worth noting that rseq.h is not the only Linux uapi header
-which uses __attribute__ ((aligned)), so this ABI problem exists today
-anyway for those compilers.
-
->=20
-> There is really no need to specify 32-byte alignment here.  Is not
-> even the size of a standard cache line.  It can result in crashes if
-> these structs are heap-allocated using malloc, when optimizing for
-> AVX2.
-
-Why would it be valid to allocate those with malloc ? Isn't it the
-purpose of posix_memalign() ?
-
->=20
-> For example, clang turns
->=20
-> void
-> clear (struct rseq *p)
-> {
->  memset (p, 0, sizeof (*p));
-> }
->=20
-> into:
->=20
->=09vxorps=09%xmm0, %xmm0, %xmm0
->=09vmovaps=09%ymm0, (%rdi)
->=09vzeroupper
->=09retq
->=20
-> My understanding is that vmovaps will trap if the pointer is
-> misaligned (=E2=80=9CWhen the source or destination operand is a memory
-> operand, the operand must be aligned on a 32-byte boundary or a
-> general-protection exception (#GP) will be generated.=E2=80=9D).
->=20
->> However, now that it is in the wild, it's a bit late to change that.
->=20
-> I had forgotten about the alignment crashes.  I think we should
-> seriously consider changing the types. 8-(
-
-I don't think this is an option at this stage given that it is part
-of the Linux kernel UAPI. I am not convinced that it is valid at all
-to allocate struct rseq or struct rseq_cs with malloc(), because it
-does not guarantee any alignment.
-
-Thanks,
-
-Mathieu
-
---=20
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+> +
+>  Example:
+>  
+>  dpi0: dpi@1401d000 {
+> @@ -27,6 +31,9 @@ dpi0: dpi@1401d000 {
+>  		 <&mmsys CLK_MM_DPI_ENGINE>,
+>  		 <&apmixedsys CLK_APMIXED_TVDPLL>;
+>  	clock-names = "pixel", "engine", "pll";
+> +	pinctrl-names = "default", "sleep";
+> +	pinctrl-0 = <&dpi_pin_func>;
+> +	pinctrl-1 = <&dpi_pin_idle>;
+>  
+>  	port {
+>  		dpi0_out: endpoint {
+> -- 
+> 2.21.0
