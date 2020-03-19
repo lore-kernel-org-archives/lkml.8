@@ -2,93 +2,263 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C91AC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E51C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36EC820719
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B454320754
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584576626;
+	bh=vkH/uBpyOPFdlnW8XBVDmFvXyn1F4pEchT6CoAHsPZA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=SJNGIjyMrv78xMYeuk6dPintnf5rqM4QZ7Onz2qyn5Hz/6MKR7em1n+NDV4tkKrtb
+	 GVzWfsiry2mhEXZJXN0HhPiQRE0J6Rogx0Dz0AX2SGKQgZE4W+9kqMuTKGIm3pYKSa
+	 UCNeCNl5PjWJqiD16Uxtya3zpDCHIEl4ywK8mqrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbgCSAFN (ORCPT
+        id S1727168AbgCSAKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 20:05:13 -0400
-Received: from mailfilter06-out30.webhostingserver.nl ([195.211.73.76]:39955
-        "EHLO mailfilter06-out30.webhostingserver.nl" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726596AbgCSAFN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 20:05:13 -0400
-X-Greylist: delayed 962 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Mar 2020 20:05:13 EDT
-X-Halon-ID: 1000f29b-6973-11ea-8bfb-001a4a4cb958
-Received: from s198.webhostingserver.nl (unknown [195.211.72.171])
-        by mailfilter06.webhostingserver.nl (Halon) with ESMTPSA
-        id 1000f29b-6973-11ea-8bfb-001a4a4cb958;
-        Thu, 19 Mar 2020 00:49:09 +0100 (CET)
-Received: from cust-178-250-146-69.breedbanddelft.nl ([178.250.146.69] helo=[10.8.0.6])
-        by s198.webhostingserver.nl with esmtpa (Exim 4.92.3)
-        (envelope-from <fntoth@gmail.com>)
-        id 1jEiQv-003Org-PS; Thu, 19 Mar 2020 00:49:09 +0100
-Subject: Re: [PATCH v1 2/3] driver core: Read atomic counter once in
- driver_probe_done()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200309141111.40576-1-andriy.shevchenko@linux.intel.com>
- <20200309141111.40576-2-andriy.shevchenko@linux.intel.com>
-From:   Ferry Toth <fntoth@gmail.com>
-Message-ID: <80e2fbb3-c69d-c2a8-f177-25c304062b29@gmail.com>
-Date:   Thu, 19 Mar 2020 00:49:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 18 Mar 2020 20:10:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbgCSAKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 20:10:24 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51D2F20752;
+        Thu, 19 Mar 2020 00:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584576624;
+        bh=vkH/uBpyOPFdlnW8XBVDmFvXyn1F4pEchT6CoAHsPZA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=a89rhbLZYXZc4gAS+g9S4e4UmbbAZHGSicjcCqUEPqd88+ZYN2se/P9kMBeMMvqdB
+         5gvs+G0xtRBan9YOFcrMczJ6PCVu/Z4ZrcthBrg6swL1b/H9W6ZI3/b/8E1pgMdHuP
+         ATt6hObTN9FvLnT4aQ8aVnF72O/gOcg7DXphpKVc=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 16852352275A; Wed, 18 Mar 2020 17:10:24 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 17:10:24 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH RFC v2 tip/core/rcu 0/22] Prototype RCU usable from idle,
+ exception, offline
+Message-ID: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200312181618.GA21271@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <20200309141111.40576-2-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SendingUser: hidden
-X-SendingServer: hidden
-X-Antivirus-Scanner: Clean mail though you should still use an Antivirus
-X-Authenticated-Id: hidden
-X-SendingUser: hidden
-X-SendingServer: hidden
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200312181618.GA21271@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Op 09-03-2020 om 15:11 schreef Andy Shevchenko:
-> Between printing the debug message and actual check atomic counter can be
-> altered. For better debugging experience read atomic counter value only once.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hello!
 
-Tested-by: Ferry Toth <fntoth@gmail.com>
+This series provides two variants of Tasks RCU, a rude variant inspired
+by Steven Rostedt's use of schedule_on_each_cpu(), and a tracing variant
+requested by the BPF folks and perhaps also of use for other tracing
+use cases.
 
-> ---
->   drivers/base/dd.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 43720beb5300..efd0e4c16ba5 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -669,9 +669,10 @@ static int really_probe_debug(struct device *dev, struct device_driver *drv)
->    */
->   int driver_probe_done(void)
->   {
-> -	pr_debug("%s: probe_count = %d\n", __func__,
-> -		 atomic_read(&probe_count));
-> -	if (atomic_read(&probe_count))
-> +	int local_probe_count = atomic_read(&probe_count);
-> +
-> +	pr_debug("%s: probe_count = %d\n", __func__, local_probe_count);
-> +	if (local_probe_count)
->   		return -EBUSY;
->   	return 0;
->   }
-> 
+The rude variant uses context switches and offline as its quiescent
+states, so that preempt-disabled regions of code executing on online
+CPUs form the tasks rude RCU readers.
 
+The tracing variant has explicit read-side markers to permit finite grace
+periods even given in-kernel loops in PREEMPT=n builds.  These markers
+are rcu_read_lock_trace() and rcu_read_unlock_trace(), so that any code
+not under rcu_read_lock_trace() is a quiescent state.  This variant
+also protects marked code in the idle loop, on exception entry/exit
+paths, and on the various CPU-hotplug online/offline code paths, thus
+having protection properties similar to SRCU.  However, unlike SRCU,
+this variant avoids expensive instructions in the read-side primitives,
+thus having read-side overhead similar to that of preemptible RCU.
+
+There are of course downsides.  The grace-period code can send IPIs to
+CPUs, even when those CPUs are in the idle loop or in nohz_full userspace.
+However, this version enlists the aid of the context-switch hooks,
+which eliminates the need for IPIs in context-switch-heavy workloads.
+It also prohibits sending of IPIs early in the grace period, which
+provides additional opportunity for the hooks to do their job.  Additional
+IPI-reduction mechanisms are under development.
+
+It is also necessary to scan the full tasklist, much as for Tasks RCU.
+There is a single callback queue guarded by a single lock, again, much
+as for Tasks RCU.  If needed, these downsides can be at least partially
+remedied.
+
+Perhaps most important, this variant of RCU does not affect the vanilla
+flavors, rcu_preempt and rcu_sched.  The fact that RCU Tasks Trace
+readers can operate from idle, offline, and exception entry/exit in no
+way allows rcu_preempt and rcu_sched readers to also do so.
+
+The RCU tasks trace mechanism is based off of RCU tasks rather than
+SRCU because the latter is more complex and also because the latter
+uses a CPU-by-CPU approach to tracking quiescent states instead of the
+task-by-task approach that is needed.  It is in theory possible to
+mash RCU tasks trace into the Tree SRCU implementation, but there
+will need to be extremely good reasons for doing so.
+
+This effort benefited greatly from off-list discussions of BPF
+requirements with Alexei Starovoitov and Andrii Nakryiko, as well as from
+numerous on-list discussions, at least some of which are captured in the
+"Link:" tags on the patches themselves.
+
+The patches in this series are as follows, with asterisks indicating
+significant change from v1:
+
+1*.	Add function to sample state of a locked-down task.  I would
+	still guess that the API is still subject to change.  ;-)
+
+2*.	Use the above function to add per-task state to RCU CPU stall
+	warnings.  This commit was adapted to the new API.
+
+3.	Add rcutorture module parameter to produce non-busy-wait task
+	stalls, thus allowing the above RCU CPU stall change to be
+	exercised.
+
+4.	Move Tasks RCU to its own file.
+
+5.	Create struct to hold RCU-tasks state information.
+
+6.	Reinstate synchronize_rcu_mult(), as there will likely once
+	again be a need to wait on multiple flavors of RCU.
+
+7.	Add an rcutorture test for synchronize_rcu_mult().
+
+8.	Refactor RCU-tasks to allow variants to be added.
+
+9.	Add an RCU-tasks rude variant, based on Steven Rostedt's
+	use of schedule_on_each_cpu().
+
+10.	Add torture tests for RCU Tasks Rude.
+
+11.	Use unique names for RCU-Tasks kthreads and messages.
+
+12.	Further refactor RCU-tasks to allow adding even more variants.
+
+13.	Code movement to allow even more Tasks RCU variants.
+
+14*.	Add an RCU Tasks Trace to simplify protection of tracing hooks,
+	including BPF.  This version fixes a number of bugs and adapts
+	to the new lockdown-task API.
+
+15.	Add torture tests for RCU Tasks Trace.
+
+16.	Add stall warnings for RCU Tasks Trace.
+
+17*.	Move #ifdef into tasks.h to ease addition of Kconfig-dependent APIs.
+
+18*.	Add RCU-tasks-specific information to rcutorture writer stall
+	output, easing debugging of these RCU variants.
+
+19*.	Make the above rcutorture writer stall output include
+	grace-period state.
+
+20*.	Cause RCU tasks trace to take advantage of RCU scheduler hooks,
+	thus reducing the number of IPIs.
+
+21*.	Record grace-period start time for RCU tasks variants for
+	IPI throttling and for debugging.
+
+22*.	Provide a kernel boot parameter to delay IPIs until a given grace
+	period reaches the specified age, with this age defaulting to
+	half a second, further reducing the number of IPIs.  To zero on
+	context-switch-heavy workloads.
+
+These new versions of Tasks RCU now pass heavy rcutorture testing,
+and should thus be fine for experimental use.
+
+Changes since v1:
+
+o	Updated this cover letter to provide more detail, including
+	on roads not taken.
+
+o	Updated commit logs based on feedback from v1.
+
+o	Updated the function providing a consistent view of the
+	specified non-running task's state to invoke the specified
+	function even if the task is currently running.  This will
+	be necessary to safely eliminate IPIs for long-term idle and
+	userspace execution.  The function may also now return false
+	to transmit a failure indication to the caller, for example,
+	if the function cannot handle being invoked on a running CPU.
+	The function is now passed the relevant task_struct pointer as
+	well as the specified argument.
+
+	Changes were of course made to use the new API.
+
+o	Leveraged context-switch hooks to avoid unnecessary IPIs.
+
+o	Held off IPIs for the first half second (by default) of each
+	grace period to give the context-switch hooks a better chance
+	to do their job.
+
+o	Lots of testing.
+
+o	Fixed a number of bugs.
+
+Todo:
+
+o	Leverage idle entry/exit hooks to reduce IPIing of idle tasks.
+
+o	Switch to read-side memory barriers during idle and userspace
+	execution in kernels built for real-time or battery-powered use.
+	As currently planned, nohz_full CPUs would be IPIed only during
+	long-running loops in the kernel (as in more than half a second
+	of such execution by default).
+
+	Although this does add a branch to rcu_read_lock_trace() in
+	kernels built to take this approach, the check involves only
+	a cache-hot byte.  However, rcu_read_unlock_trace() executes
+	the same sequence of instructions as before in the case where
+	no memory barrier is required even in kernels built to take
+	this approach.
+
+o	Context-switch hooks and delayed IPIs could potentially also be
+	applied to reduce the IPI intensity of RCU-tasks rude, but I do
+	not yet know of any reason to do this.  If you believe that this
+	is needed, please let me know.
+
+o	Lots more testing.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+ Documentation/admin-guide/kernel-parameters.txt             |   12 
+ include/linux/rcupdate.h                                    |   48 
+ include/linux/rcupdate_trace.h                              |   84 
+ include/linux/rcupdate_wait.h                               |   19 
+ include/linux/rcutiny.h                                     |    2 
+ include/linux/sched.h                                       |    8 
+ include/linux/wait.h                                        |    2 
+ init/init_task.c                                            |    4 
+ kernel/fork.c                                               |    4 
+ kernel/rcu/Kconfig                                          |   34 
+ kernel/rcu/Kconfig.debug                                    |    4 
+ kernel/rcu/rcu.h                                            |    3 
+ kernel/rcu/rcutorture.c                                     |   99 
+ kernel/rcu/tasks.h                                          | 1925 +++++++++---
+ kernel/rcu/tree_plugin.h                                    |    6 
+ kernel/rcu/tree_stall.h                                     |   40 
+ kernel/rcu/update.c                                         |  374 --
+ kernel/sched/core.c                                         |   48 
+ tools/testing/selftests/rcutorture/configs/rcu/CFLIST       |    2 
+ tools/testing/selftests/rcutorture/configs/rcu/RUDE01       |   10 
+ tools/testing/selftests/rcutorture/configs/rcu/RUDE01.boot  |    1 
+ tools/testing/selftests/rcutorture/configs/rcu/TRACE01      |   10 
+ tools/testing/selftests/rcutorture/configs/rcu/TRACE01.boot |    1 
+ 23 files changed, 1926 insertions(+), 814 deletions(-)
