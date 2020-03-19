@@ -2,114 +2,94 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C724C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54733C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F340B206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C934206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHuJKeA/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EoZIsUgz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbgCSUMo (ORCPT
+        id S1727231AbgCSUNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:12:44 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35518 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgCSUMl (ORCPT
+        Thu, 19 Mar 2020 16:13:44 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:48492 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725747AbgCSUNn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 16:12:41 -0400
-Received: by mail-lf1-f68.google.com with SMTP id m15so2747872lfp.2;
-        Thu, 19 Mar 2020 13:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8rWnveVVUhV0jZP6qk2JekF9mt/8mR18XOrixvtwDns=;
-        b=MHuJKeA/kZXo70Js7a1TtN19e8hJGw2o6tgp5HbLKe0ifRtReSjepyflK0E44eItgL
-         V2NeNarC+m60rA8i2OBWS+EB6+Lat0Yz5X5/yMAj8avWI0E6tB2PAujmdIjRvJzHcbJG
-         MzkZd9RXwnGn3Y/6OCE38pkpuIl6oQhChMczStjw1ylz7OqFwnF5xnV1u/mXellR71AL
-         LMPIRLYKnV+TiMYrlP8vmqI9hbA1O5aor9XQ62p+OzPRfkN18b9gPX8WO1sih6s6kSgv
-         q3u5qwF1TgS+22vNUVUeBbyKfW1RRdvdxKs6mKbk0ndIsi6GvBGZVwq3R6Y9ovC95If8
-         B7Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8rWnveVVUhV0jZP6qk2JekF9mt/8mR18XOrixvtwDns=;
-        b=fgwVlIurcpd31V4xVY5OOpUL69IdE4hNeoS08kbZCHkGd0iAnNKk0KSM7SDurIfJo1
-         lxzt0flj+DJehiQKp7mUDwS0Jt8ROk1etJ2KTpaL6XKxm1h5bRODzxUe8BsQKrbCw39I
-         sEYw5o3DdpaR6TXQmn2AASTP+rpaFiF7y2OXi0pMWU/0GyqU0LAAMAy7eRSth86/ChEY
-         X27KuZWI0k3NO8hPFrvFEOxpVuqJibHtfDE3p0DJOd4U5YHUzR/4YwFTsv88lKkenid7
-         zIaawcRdP3xSH2MiPRdSvlNObFhK7J7U2nKia7h+3vnSmyTV7/kV+TX1epnL4MALMRUq
-         VoEg==
-X-Gm-Message-State: ANhLgQ07DAWSEOJZ1bIaVMdw7RVLhkcAW2vRccFuaKP729DoYcekhFrp
-        a3uT2V36WUeyWZzJJX2kVb8=
-X-Google-Smtp-Source: ADFU+vtSQAmtsDiVKncNEieuoVMXJL3wofav79o9W9WxOvss1hAc05X546TLUW07at33Bn8DfcG8OQ==
-X-Received: by 2002:a19:7907:: with SMTP id u7mr3123765lfc.18.1584648757441;
-        Thu, 19 Mar 2020 13:12:37 -0700 (PDT)
-Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.gmail.com with ESMTPSA id z21sm2059317ljz.49.2020.03.19.13.12.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 13:12:37 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] i2c: tegra: Synchronize DMA before termination
-Date:   Thu, 19 Mar 2020 23:11:40 +0300
-Message-Id: <20200319201140.17451-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200319201140.17451-1-digetx@gmail.com>
-References: <20200319201140.17451-1-digetx@gmail.com>
+        Thu, 19 Mar 2020 16:13:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584648822;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pz2meSx8kaekzriSFaRshTQDd/5d8cqR1w2EnkHzmmU=;
+        b=EoZIsUgzFmxt1C0WYQIon7NNc9+jhNvu8Xv9LGOLNPuCI7brionPplu8POghwonlrxV36X
+        eF6yYv5moRcloiOtxT+5mv5d+aFz5DwtUEGLGT5x22DIyVpkeOcvhggZMXRq2fKct/YKHi
+        U/Vr+0z1lQvI1RLnh+6RwBz1nQIdyoQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-272-NAifi9mdM5O2JzklWPrenA-1; Thu, 19 Mar 2020 16:13:37 -0400
+X-MC-Unique: NAifi9mdM5O2JzklWPrenA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30392801E5C;
+        Thu, 19 Mar 2020 20:13:35 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4BD1B60BF1;
+        Thu, 19 Mar 2020 20:13:31 +0000 (UTC)
+Subject: Re: [PATCH v5 19/23] KVM: arm64: GICv4.1: Allow SGIs to switch
+ between HW and SW interrupts
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>, kvm@vger.kernel.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Robert Richter <rrichter@marvell.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-20-maz@kernel.org>
+ <8a6cf87a-7eee-5502-3b54-093ea0ab5e2d@redhat.com>
+ <877ba4711c6b9456314ea580b9c4718c@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <9fb8c267-5483-f260-6e37-5e8734b38928@redhat.com>
+Date:   Thu, 19 Mar 2020 21:13:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <877ba4711c6b9456314ea580b9c4718c@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DMA transfer could be completed, but CPU (which handles DMA interrupt)
-may get too busy and can't handle the interrupt in a timely manner,
-despite of DMA IRQ being raised. In this case the DMA state needs to
-synchronized before terminating DMA transfer in order not to miss the
-DMA transfer completion.
+Hi Marc,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/i2c/busses/i2c-tegra.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 3/19/20 8:52 PM, Marc Zyngier wrote:
+> The assumption here is that we're coming vgic_v4_configure_vsgis(),
+> which starts
+> by stopping the whole guest. My guess is that it should be safe enough, but
+> maybe you are thinking of something else?
+I don't have a specific case in mind. Just preferred asking to make
+sure. Usually when touching those fields we take the lock (that's also
+the case in vgic_debug_show for instance).
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index dabb9223990c..b69a10497cd5 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1224,6 +1224,15 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 		time_left = tegra_i2c_wait_completion_timeout(
- 				i2c_dev, &i2c_dev->dma_complete, xfer_time);
- 
-+		/*
-+		 * Synchronize DMA first, since dmaengine_terminate_sync()
-+		 * performs synchronization after the transfer's termination
-+		 * and we want to get a completion if transfer succeeded.
-+		 */
-+		dmaengine_synchronize(i2c_dev->msg_read ?
-+				      i2c_dev->rx_dma_chan :
-+				      i2c_dev->tx_dma_chan);
-+
- 		dmaengine_terminate_sync(i2c_dev->msg_read ?
- 					 i2c_dev->rx_dma_chan :
- 					 i2c_dev->tx_dma_chan);
--- 
-2.25.1
+Thanks
+
+Eric
 
