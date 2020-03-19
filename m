@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8031C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47021C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFEAC214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E08208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623389;
-	bh=QnLz3/BkTibGRELwWVCE0MtGduZJ0AkQOLxS6ziDWMo=;
+	s=default; t=1584623394;
+	bh=3S/jIxAI27CH0YWuMRaXG5pmwYxMSxN84q6DcMOIarc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HYVIeE9q6sIZR11ofkNIc/lFeEYMIXv0dEgm5Fu1Y/DRvmgwX+4/1mtbxkVekydod
-	 nBIWrM36dBlMeL6Rhk+BaCmvjWV5t9Y7AQ7YOBQgFh08FnAiNBVa0jzNbYu8zZ5jYg
-	 3/jlcxhjJn+pu7j/TWNjefjnzOJ1DtPrGQ5bgvZc=
+	b=tV1sSX3czQXbEvBC+9XTq0YtZt9iMdPpq0ct/IpMRwUIWURn/uwNyf0j8Up1QSnVv
+	 kdDtupXxa8d5LzyvkwJYmG2IMNSPw9837p7yslekEhBGBvkme6FifrB2pzrv/Ffabv
+	 wNL6SOkYci3698eREw1baRP5JbuAbbHyTEpWZqNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgCSNJs (ORCPT
+        id S1728397AbgCSNJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:09:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54246 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:09:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbgCSNJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:09:42 -0400
+        id S1727751AbgCSNJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:09:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41210208D6;
-        Thu, 19 Mar 2020 13:09:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DC9220789;
+        Thu, 19 Mar 2020 13:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623381;
-        bh=QnLz3/BkTibGRELwWVCE0MtGduZJ0AkQOLxS6ziDWMo=;
+        s=default; t=1584623387;
+        bh=3S/jIxAI27CH0YWuMRaXG5pmwYxMSxN84q6DcMOIarc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YhM/RNVGV/euH7nZ3F6CIkkbTSwODCb+SIwIq1gjiPhsaHVYXYE8ReNEMrAsiWQlV
-         JJXnlbdndMVCoAIL6l9DrwI7jG8AEBfAC9LrgqDY6RG8fJhNNr3lZi+djnjjT/eYZd
-         Eop7c1XNH5HuJyLsQ9Ca421VnzUUe5cIyquLaybw=
+        b=0PieLSE81SJj1ajePJRJeQD3LWAPfv3T9yQIWn/kShUSVbrEaojSIunqcmgYZfVXQ
+         ic7v2Y4CN3rjh+pI6HUXmYgRocRn9f1L2EzrM86tRt/iVVyc1wvDewI9U1U6sy16oo
+         kjBnGVVELbNITGwNuBIFll+Cp9It1HCUbF6/a+4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 92/93] mm: slub: add missing TID bump in kmem_cache_alloc_bulk()
-Date:   Thu, 19 Mar 2020 14:00:36 +0100
-Message-Id: <20200319123953.547695284@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 10/90] bnxt_en: reinitialize IRQs when MTU is modified
+Date:   Thu, 19 Mar 2020 13:59:32 +0100
+Message-Id: <20200319123931.888290293@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
-References: <20200319123924.795019515@linuxfoundation.org>
+In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
+References: <20200319123928.635114118@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,46 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-commit fd4d9c7d0c71866ec0c2825189ebd2ce35bd95b8 upstream.
+[ Upstream commit a9b952d267e59a3b405e644930f46d252cea7122 ]
 
-When kmem_cache_alloc_bulk() attempts to allocate N objects from a percpu
-freelist of length M, and N > M > 0, it will first remove the M elements
-from the percpu freelist, then call ___slab_alloc() to allocate the next
-element and repopulate the percpu freelist. ___slab_alloc() can re-enable
-IRQs via allocate_slab(), so the TID must be bumped before ___slab_alloc()
-to properly commit the freelist head change.
+MTU changes may affect the number of IRQs so we must call
+bnxt_close_nic()/bnxt_open_nic() with the irq_re_init parameter
+set to true.  The reason is that a larger MTU may require
+aggregation rings not needed with smaller MTU.  We may not be
+able to allocate the required number of aggregation rings and
+so we reduce the number of channels which will change the number
+of IRQs.  Without this patch, it may crash eventually in
+pci_disable_msix() when the IRQs are not properly unwound.
 
-Fix it by unconditionally bumping c->tid when entering the slowpath.
-
-Cc: stable@vger.kernel.org
-Fixes: ebe909e0fdb3 ("slub: improve bulk alloc strategy")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/slub.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -2932,6 +2932,15 @@ int kmem_cache_alloc_bulk(struct kmem_ca
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -6439,13 +6439,13 @@ static int bnxt_change_mtu(struct net_de
+ 		return -EINVAL;
  
- 		if (unlikely(!object)) {
- 			/*
-+			 * We may have removed an object from c->freelist using
-+			 * the fastpath in the previous iteration; in that case,
-+			 * c->tid has not been bumped yet.
-+			 * Since ___slab_alloc() may reenable interrupts while
-+			 * allocating memory, we should bump c->tid now.
-+			 */
-+			c->tid = next_tid(c->tid);
-+
-+			/*
- 			 * Invoking slow path likely have side-effect
- 			 * of re-populating per CPU c->freelist
- 			 */
+ 	if (netif_running(dev))
+-		bnxt_close_nic(bp, false, false);
++		bnxt_close_nic(bp, true, false);
+ 
+ 	dev->mtu = new_mtu;
+ 	bnxt_set_ring_params(bp);
+ 
+ 	if (netif_running(dev))
+-		return bnxt_open_nic(bp, false, false);
++		return bnxt_open_nic(bp, true, false);
+ 
+ 	return 0;
+ }
 
 
