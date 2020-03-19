@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D42C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1C6C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A31320658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A6C52080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624429;
-	bh=gAdyxCZ+yxxTQGLWhGNzle5A/ZiLR73gT3huUdst+pA=;
+	s=default; t=1584624432;
+	bh=OuDtSoNcule+00UeYjBaiEv6kX/1ADTjAIh3YAtvMNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZuGu+WpFNkL0buUKqqlajQ/BmWmvhIkusS3Z6XwF0nPzfGt6LyhSedmKBqwEwuCTI
-	 CD6t1ruX8jkAjgGrHb5E2gnDQRN0BoTpDNWhUU5jHwvum7zbiJ5BhLsHK5UGW+nZwz
-	 kTUgWRRcG+CA6IgVbgdcIEzghMAVZB2yCWDIsNuE=
+	b=WBaH+rakmBh8fFSac/81UIoOQ8FyMxx1hqKoq6AOjAjnIxPLbkk9Do2aC3pVrFt1A
+	 zyk6XifRum/oaty3EiPXomSdhRbZ/Q2aVFNCGc9WmiZHS+c0818uJZhh5LGBaEgPtV
+	 /hdv2BBM8F04Omj/NUKpaVAj8JQ7h+gnqXoDdSQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730362AbgCSN1H (ORCPT
+        id S1730857AbgCSN1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:27:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55154 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:27:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729983AbgCSN1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:27:04 -0400
+        id S1730831AbgCSN1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:27:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22A7820658;
-        Thu, 19 Mar 2020 13:27:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EE9E207FC;
+        Thu, 19 Mar 2020 13:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624423;
-        bh=gAdyxCZ+yxxTQGLWhGNzle5A/ZiLR73gT3huUdst+pA=;
+        s=default; t=1584624426;
+        bh=OuDtSoNcule+00UeYjBaiEv6kX/1ADTjAIh3YAtvMNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qNA9pL/Bel/s/Iw3sy7d+B32FN+XcyzJtGrHUBd8646MYhcSflKwlW5wcKuadgxuz
-         5z7fs5Ork6Ctu0eUH9cDktRJJ/V8zx3toPM1EsSq0huOfaACsp70A8Pivjz7cAMgCN
-         oFIgQOQkE3pEd48D131C1X/OQY/yKCDeAIeE4yFI=
+        b=ycM+ph7TnpTg9rfVfLPkuvDeV2tU4T+LcGSumN7/NUn53ri05Y9wBm4EdUfvkOL00
+         k3cWvvqHVuh1b54CU/DwvuFMfT3SDIhGIP6uWFa/saau0tdcjoonSQzOpLaaSG8ose
+         FLvOIKHShzgEWZRRrt3l7HDCuOU0NEARkv7PWn90=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
         Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 37/65] kbuild: add dtbs_check to PHONY
-Date:   Thu, 19 Mar 2020 14:04:19 +0100
-Message-Id: <20200319123938.172053501@linuxfoundation.org>
+Subject: [PATCH 5.5 38/65] kbuild: add dt_binding_check to PHONY in a correct place
+Date:   Thu, 19 Mar 2020 14:04:20 +0100
+Message-Id: <20200319123938.502337938@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -61,36 +61,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 964a596db8db8c77c9903dd05655696696e6b3ad ]
+[ Upstream commit c473a8d03ea8e03ca9d649b0b6d72fbcf6212c05 ]
 
-The dtbs_check should be a phony target, but currently it is not
-specified so.
+The dt_binding_check is added to PHONY, but it is invisible when
+$(dtstree) is empty. So, it is not specified as phony for
+ARCH=x86 etc.
 
-'make dtbs_check' works even if a file named 'dtbs_check' exists
-because it depends on another phony target, scripts_dtc, but we
-should not rely on it.
-
-Add dtbs_check to PHONY.
+Add it to PHONY outside the ifneq ... endif block.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/Makefile b/Makefile
-index 5d0fdaf900e9d..362f1e2ca63ff 100644
+index 362f1e2ca63ff..dcc0053ed18ad 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1239,7 +1239,7 @@ ifneq ($(dtstree),)
  %.dtb: include/config/kernel.release scripts_dtc
  	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
  
--PHONY += dtbs dtbs_install dt_binding_check
-+PHONY += dtbs dtbs_install dtbs_check dt_binding_check
+-PHONY += dtbs dtbs_install dtbs_check dt_binding_check
++PHONY += dtbs dtbs_install dtbs_check
  dtbs dtbs_check: include/config/kernel.release scripts_dtc
  	$(Q)$(MAKE) $(build)=$(dtstree)
+ 
+@@ -1259,6 +1259,7 @@ PHONY += scripts_dtc
+ scripts_dtc: scripts_basic
+ 	$(Q)$(MAKE) $(build)=scripts/dtc
+ 
++PHONY += dt_binding_check
+ dt_binding_check: scripts_dtc
+ 	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
  
 -- 
 2.20.1
