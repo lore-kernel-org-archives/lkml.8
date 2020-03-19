@@ -2,172 +2,125 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891A4C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C59C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D3220714
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:04:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="miVDWU3+"
+	by mail.kernel.org (Postfix) with ESMTP id E84D720714
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbgCSHEc (ORCPT
+        id S1727212AbgCSHFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:04:32 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:14423 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSHEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:04:32 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48jdF71sjtz9v1Md;
-        Thu, 19 Mar 2020 08:04:27 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=miVDWU3+; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id LNpYefN951gJ; Thu, 19 Mar 2020 08:04:27 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48jdF70XNZz9v1Mc;
-        Thu, 19 Mar 2020 08:04:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1584601467; bh=5ZZ9JpRLP71PK+VNpemb+Gegi8ltDnpAruGHqikdnkM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=miVDWU3+a2y0u275N9hD/wlPdJIb1qmEFxnWhWbDAcuzzhQKA62bOJRlcQS+0FgpJ
-         1oDaIjZur3d9lpK8mGIRkzkhqA4W3uvhQ9x7BDYfoczEr1ShtNesHCpCKh7CmjNR3c
-         w9QIjLFWO20jXxv/VZmy7eFG3M/ZUt7wHjFbPowk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E903D8B772;
-        Thu, 19 Mar 2020 08:04:27 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id NWMcTA98PEcE; Thu, 19 Mar 2020 08:04:27 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8F89E8B769;
-        Thu, 19 Mar 2020 08:04:26 +0100 (CET)
-Subject: Re: [PATCH 2/4] hugetlbfs: move hugepagesz= parsing to arch
- independent code
-To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Longpeng <longpeng2@huawei.com>, Will Deacon <will@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-References: <20200318220634.32100-1-mike.kravetz@oracle.com>
- <20200318220634.32100-3-mike.kravetz@oracle.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <2ca058dc-47e6-1d08-154b-77d2cbe98e34@c-s.fr>
-Date:   Thu, 19 Mar 2020 08:04:21 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 03:05:19 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36913 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCSHFT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:05:19 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEpEt-0006xW-F2; Thu, 19 Mar 2020 08:05:11 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEpEs-0003lY-Ej; Thu, 19 Mar 2020 08:05:10 +0100
+Date:   Thu, 19 Mar 2020 08:05:10 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/7] dt-bindings: pwm: document the PWM polarity flag
+Message-ID: <20200319070510.gc6hr53gn7n2osvb@pengutronix.de>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-3-oleksandr.suvorov@toradex.com>
+ <20200317174344.GB1464607@ulmo>
+ <20200317213056.futfiwn4qgr2njye@pengutronix.de>
+ <20200318230539.GB2874972@ulmo>
 MIME-Version: 1.0
-In-Reply-To: <20200318220634.32100-3-mike.kravetz@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200318230539.GB2874972@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 18/03/2020 Ã  23:06, Mike Kravetz a Ã©critÂ :
-> Now that architectures provide arch_hugetlb_valid_size(), parsing
-> of "hugepagesz=" can be done in architecture independent code.
-> Create a single routine to handle hugepagesz= parsing and remove
-> all arch specific routines.  We can also remove the interface
-> hugetlb_bad_size() as this is no longer used outside arch independent
-> code.
+On Thu, Mar 19, 2020 at 12:05:39AM +0100, Thierry Reding wrote:
+> On Tue, Mar 17, 2020 at 10:30:56PM +0100, Uwe Kleine-König wrote:
+> > Hello Thierry,
+> > 
+> > On Tue, Mar 17, 2020 at 06:43:44PM +0100, Thierry Reding wrote:
+> > > On Tue, Mar 17, 2020 at 02:32:26PM +0200, Oleksandr Suvorov wrote:
+> > > > Add the description of PWM_POLARITY_NORMAL flag.
+> > > > 
+> > > > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> > > > ---
+> > > > 
+> > > >  Documentation/devicetree/bindings/pwm/pwm.txt | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
+> > > > index 084886bd721e..440c6b9a6a4e 100644
+> > > > --- a/Documentation/devicetree/bindings/pwm/pwm.txt
+> > > > +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+> > > > @@ -46,6 +46,7 @@ period in nanoseconds.
+> > > >  Optionally, the pwm-specifier can encode a number of flags (defined in
+> > > >  <dt-bindings/pwm/pwm.h>) in a third cell:
+> > > >  - PWM_POLARITY_INVERTED: invert the PWM signal polarity
+> > > > +- PWM_POLARITY_NORMAL: don't invert the PWM signal polarity
+> > > 
+> > > This doesn't make sense. PWM_POLARITY_NORMAL is not part of the DT ABI.
+> > 
+> > "is not part of the DT ABI" is hardly a good reason. If it's sensible to
+> > be used, it is sensible to define it.
 > 
-> This also provides consistent behavior of hugetlbfs command line
-> options.  The hugepagesz= option should only be specified once for
-> a specific size, but some architectures allow multiple instances.
-> This appears to be more of an oversight when code was added by some
-> architectures to set up ALL huge pages sizes.
+> That's exactly it. It's not sensible at all to use it.
+
+If you think the argument is "It is not sensible to be used." then please
+say so and don't add "PWM_POLARITY_NORMAL is not part of the DT ABI."
+which seems to be irrelevant now.
+
+> If you define it here it means people are allowed to do stuff like
+> this:
 > 
-> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-> ---
->   arch/arm64/mm/hugetlbpage.c   | 15 ---------------
->   arch/powerpc/mm/hugetlbpage.c | 15 ---------------
->   arch/riscv/mm/hugetlbpage.c   | 16 ----------------
->   arch/s390/mm/hugetlbpage.c    | 18 ------------------
->   arch/sparc/mm/init_64.c       | 22 ----------------------
->   arch/x86/mm/hugetlbpage.c     | 16 ----------------
->   include/linux/hugetlb.h       |  1 -
->   mm/hugetlb.c                  | 24 ++++++++++++++++++------
->   8 files changed, 18 insertions(+), 109 deletions(-)
+> 	pwms = <&pwm 1234 PWM_POLARITY_INVERTED | PWM_POLARITY_NORMAL>;
 > 
+> which doesn't make sense.
 
-[snip]
+I would hope that a human reader would catch this.
 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 2f99359b93af..cd4ec07080fb 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -3149,12 +3149,6 @@ static int __init hugetlb_init(void)
->   }
->   subsys_initcall(hugetlb_init);
->   
-> -/* Should be called on processing a hugepagesz=... option */
-> -void __init hugetlb_bad_size(void)
-> -{
-> -	parsed_valid_hugepagesz = false;
-> -}
-> -
->   void __init hugetlb_add_hstate(unsigned int order)
->   {
->   	struct hstate *h;
-> @@ -3224,6 +3218,24 @@ static int __init hugetlb_nrpages_setup(char *s)
->   }
->   __setup("hugepages=", hugetlb_nrpages_setup);
->   
-> +static int __init hugepagesz_setup(char *s)
-> +{
-> +	unsigned long long size;
-> +	char *saved_s = s;
-> +
-> +	size = memparse(s, &s);
+> What's more, it impossible for the code to even notice that you're
+> being silly because | PWM_POLARITY_NORMAL is just | 0 and that's just
+> a nop.
 
-You don't use s after that, so you can pass NULL instead of &s and avoid 
-the saved_s
+I think this argument is a bad one. Whenever you introduce a
+function or symbol you can use it in a wrong way. With this argument you
+can also say GPIO_ACTIVE_LOW doesn't make sense because
 
-> +
-> +	if (!arch_hugetlb_valid_size(size)) {
-> +		parsed_valid_hugepagesz = false;
-> +		pr_err("HugeTLB: unsupported hugepagesz %s\n", saved_s);
-> +		return 0;
-> +	}
-> +
-> +	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
-> +	return 1;
-> +}
-> +__setup("hugepagesz=", hugepagesz_setup);
-> +
->   static int __init default_hugepagesz_setup(char *s)
->   {
->   	unsigned long long size;
-> 
+	pwms = <&pwm 1234 GPIO_ACTIVE_LOW>;
 
-Christophe
+is silly.
+
+Keep well and fit,
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
