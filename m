@@ -2,130 +2,97 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA48C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8263BC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C652072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584632815;
-	bh=Cn1m0nZsjDiV+FYhoJLlELXGkyDw2CZ03wWFmubUPo8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wQBsW0Lk9V/O4h1ZFPSEmVpNbT5eKFqTk+Eb4hVChEg/EL1Q6bIDd8tjh3hmXBHcT
-	 VhfYn+aLfmWkQA7KFfj9OT9EVVUi+3VEKU7oQ4Y+DqezV0yrKQtyaoLDMvlpo/n5ru
-	 fOpjsAEO2dNlWE6JtVVpqwkEdtIWizW4l0Bt/Ebg=
+	by mail.kernel.org (Postfix) with ESMTP id 5798520724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:48:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgCSPqx (ORCPT
+        id S1727690AbgCSPsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:46:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 11:48:08 -0400
+Received: from mga01.intel.com ([192.55.52.88]:31964 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727593AbgCSPqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:46:50 -0400
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B886721775
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 15:46:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584632810;
-        bh=Cn1m0nZsjDiV+FYhoJLlELXGkyDw2CZ03wWFmubUPo8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Bqc/DvIBMhIobrqKeilGyFQQIGQMPqcwCCmTWlk+w71Tr24MgghLknOseCQr2FkPP
-         pBg3C82P5fhtl5jsxpscyX3d4WPB7JCK7LxSpLZV3ERaPIqyv15Lp22fOEAUXOW1FA
-         bO74bLqN3aP8k/9PYSX+u66n4JNxAqhw2T2P1Sww=
-Received: by mail-wr1-f53.google.com with SMTP id o12so3118689wrh.11
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 08:46:49 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2sGBa03C04xGkiWdDNvZFzkMQeBRzkhjPXWlzRWgIu7dMsewVg
-        2AfoaeKeNxya3L+xBeDa7Sy8kw+Yw6SHboh5U9GBtg==
-X-Google-Smtp-Source: ADFU+vtRWY7b1vbCxAUKKJKmAYVxdIrYpSMuMiWvH4H8RWo6SRJpLSPLzDmmHbdXmaoFC1CnppEqPqcDFxLdoNnM7Rk=
-X-Received: by 2002:adf:e883:: with SMTP id d3mr4992846wrm.75.1584632808043;
- Thu, 19 Mar 2020 08:46:48 -0700 (PDT)
+        id S1726912AbgCSPsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:48:08 -0400
+IronPort-SDR: 9gdBxmL9hnnQaMcQAJLjxnEhTQjbCA/dfCnqYRqXjgIAfQ5Muud0MD6wnxkWtXR8BsqX5DbR/7
+ Jjk79lqYzyMw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 08:48:07 -0700
+IronPort-SDR: CGTdcGF3z7TQ09hhIoa4PjIUsXi6Tbq+unUG7nuDe2of5JawDCFCSTssDwLvkPSjQcKLQgravP
+ imxwFtrF77Pg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="245198430"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.249.128.140]) ([10.249.128.140])
+  by orsmga003.jf.intel.com with ESMTP; 19 Mar 2020 08:48:04 -0700
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+To:     Mark Brown <broonie@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     kuninori.morimoto.gx@renesas.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, curtis@malainey.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        liam.r.girdwood@linux.intel.com
+References: <41d0b2b5-6014-6fab-b6a2-7a7dbc4fe020@linux.intel.com>
+ <20200318123930.GA2433@light.dominikbrodowski.net>
+ <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
+ <20200318162029.GA3999@light.dominikbrodowski.net>
+ <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+ <20200318215218.GA2439@light.dominikbrodowski.net>
+ <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+ <20200319130049.GA2244@light.dominikbrodowski.net>
+ <20200319134139.GB3983@sirena.org.uk>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
+Date:   Thu, 19 Mar 2020 16:48:03 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200319091407.1481-1-joro@8bytes.org> <20200319091407.1481-43-joro@8bytes.org>
-In-Reply-To: <20200319091407.1481-43-joro@8bytes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 19 Mar 2020 08:46:36 -0700
-X-Gmail-Original-Message-ID: <CALCETrXiWjALMTcG=92DmMn_H=yR88e0-3cj8CjTAjtjTvBR8w@mail.gmail.com>
-Message-ID: <CALCETrXiWjALMTcG=92DmMn_H=yR88e0-3cj8CjTAjtjTvBR8w@mail.gmail.com>
-Subject: Re: [PATCH 42/70] x86/sev-es: Support nested #VC exceptions
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200319134139.GB3983@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 2:14 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> From: Joerg Roedel <jroedel@suse.de>
->
-> Handle #VC exceptions that happen while the GHCB is in use. This can
-> happen when an NMI happens in the #VC exception handler and the NMI
-> handler causes a #VC exception itself. Save the contents of the GHCB
-> when nesting is detected and restore it when the GHCB is no longer
-> used.
->
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/kernel/sev-es.c | 63 +++++++++++++++++++++++++++++++++++++---
->  1 file changed, 59 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index 97241d2f0f70..3b7bbc8d841e 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -32,9 +32,57 @@ struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
->   */
->  struct ghcb __initdata *boot_ghcb;
->
-> +struct ghcb_state {
-> +       struct ghcb *ghcb;
-> +};
-> +
->  /* Runtime GHCB pointers */
->  static struct ghcb __percpu *ghcb_page;
->
-> +/*
-> + * Mark the per-cpu GHCB as in-use to detect nested #VC exceptions.
-> + * There is no need for it to be atomic, because nothing is written to the GHCB
-> + * between the read and the write of ghcb_active. So it is safe to use it when a
-> + * nested #VC exception happens before the write.
-> + */
-> +static DEFINE_PER_CPU(bool, ghcb_active);
-> +
-> +static struct ghcb *sev_es_get_ghcb(struct ghcb_state *state)
-> +{
-> +       struct ghcb *ghcb = (struct ghcb *)this_cpu_ptr(ghcb_page);
-> +       bool *active = this_cpu_ptr(&ghcb_active);
-> +
-> +       if (unlikely(*active)) {
-> +               /* GHCB is already in use - save its contents */
-> +
-> +               state->ghcb = kzalloc(sizeof(struct ghcb), GFP_ATOMIC);
-> +               if (!state->ghcb)
-> +                       return NULL;
+On 2020-03-19 14:41, Mark Brown wrote:
+> On Thu, Mar 19, 2020 at 02:00:49PM +0100, Dominik Brodowski wrote:
+> 
+>> Have some good news now, namely that a bisect is complete: That pointed to
+>> 1272063a7ee4 ("ASoC: soc-core: care .ignore_suspend for Component suspend");
+>> therefore I've added Kuninori Morimoto to this e-mail thread.
+> 
+> If that's an issue it feels more like a driver bug in that if the driver
+> asked for ignore_suspend then it should expect not to have the suspend
+> callback called.
+> 
 
-This can't possibly end well.  Maybe have a little percpu list of
-GHCBs and make sure there are enough for any possible nesting?
+Requested for tests with following diff applied:
 
-Also, I admit confusion.  Isn't the GHCB required to be unencrypted?
-How does that work with kzalloc()?
+diff --git a/sound/soc/intel/boards/broadwell.c 
+b/sound/soc/intel/boards/broadwell.c
+index db7e1e87156d..6ed4c1b0a515 100644
+--- a/sound/soc/intel/boards/broadwell.c
++++ b/sound/soc/intel/boards/broadwell.c
+@@ -212,7 +212,6 @@ static struct snd_soc_dai_link 
+broadwell_rt286_dais[] = {
+                 .init = broadwell_rt286_codec_init,
+                 .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
+                         SND_SOC_DAIFMT_CBS_CFS,
+-               .ignore_suspend = 1,
+                 .ignore_pmdown_time = 1,
+                 .be_hw_params_fixup = broadwell_ssp0_fixup,
+                 .ops = &broadwell_rt286_ops,
