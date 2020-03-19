@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61C4C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B0FC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAFE208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685AD20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624542;
-	bh=Gkbskkt5Gyu5DT0af7NouvEBc3hpmFpLfbbZiBpS7EM=;
+	s=default; t=1584624567;
+	bh=YfELyYJzd1K5P7efxBdZLYz/DlVgZcx+B6C6B3GHy+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bfzlA+5Gbs1bv9+VyfL2QZGPIbogUY9zIJmIHBLnQUeLpbHNy2tWBuXjHz/zA+Lwm
-	 bRQoP/omln+ODuoUq6xaJTEPHVbmlFpDlmsoUMmRdxNjfU9SyPFmPW4IFeUVmHsVh9
-	 /qUbu1j/jOn52I1PnslvuUrKUKsKCy5HaAyH15VM=
+	b=iuWSycMcFzE8aavGhDSvM3/rNFDVsRKnv3DByceL0c2vI9YoG6Q4Ze27gBGo6/OQD
+	 zi/WEnqqF0S8xPpl5bBTyGanDa8y9ba3uaKWmy2vPQvsPHA1CIr5NWz1Xu62uKHoDl
+	 zXbvBNAydCq5j7g5gaLbA1IIdLttsMB2MU/UVvE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbgCSNZ1 (ORCPT
+        id S1729471AbgCSN30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:29:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727684AbgCSNZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:25 -0400
+        id S1730442AbgCSNYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:24:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21AC52080C;
-        Thu, 19 Mar 2020 13:25:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B88CD207FC;
+        Thu, 19 Mar 2020 13:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624324;
-        bh=Gkbskkt5Gyu5DT0af7NouvEBc3hpmFpLfbbZiBpS7EM=;
+        s=default; t=1584624262;
+        bh=YfELyYJzd1K5P7efxBdZLYz/DlVgZcx+B6C6B3GHy+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2hUp7Z/c+CCQIfTqV35RAlgXTxyMjMzBNtD7QfaZUCYUfZWtkl1A4o67d73oXH//J
-         D819vAoT458s8aPKvKIob6u6HfHhToBYBCBF6uO3APw30SzKAqxySZT8kCH9FhQDNe
-         qf486G9nODbdmFuQOlkaTle8PM1JJV0M5PPzGkpI=
+        b=tq0Ub354AXfHAx5ngfAADCavxA7A+RT1uHzg7+wnMKfRb3RfS0odgcsAcL0YsMDfN
+         Cz3oeZpNx9sHOKQvIY02k16OCGECYHP1OxvjQzH1WMOgROeaXgLwy7lDsz20blSOQy
+         xF9Y9Cc0tDWpwVUo6yOF7Iv0VCnZOJzVmP46q6mw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tom Zanussi <zanussi@kernel.org>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Qian Cai <cai@lca.pw>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 23/65] tracing: Fix number printing bug in print_synth_event()
-Date:   Thu, 19 Mar 2020 14:04:05 +0100
-Message-Id: <20200319123933.689001532@linuxfoundation.org>
+Subject: [PATCH 5.4 51/60] jbd2: fix data races at struct journal_head
+Date:   Thu, 19 Mar 2020 14:04:29 +0100
+Message-Id: <20200319123935.594896439@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
-References: <20200319123926.466988514@linuxfoundation.org>
+In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
+References: <20200319123919.441695203@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,89 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 784bd0847eda032ed2f3522f87250655a18c0190 ]
+[ Upstream commit 6c5d911249290f41f7b50b43344a7520605b1acb ]
 
-Fix a varargs-related bug in print_synth_event() which resulted in
-strange output and oopses on 32-bit x86 systems. The problem is that
-trace_seq_printf() expects the varargs to match the format string, but
-print_synth_event() was always passing u64 values regardless.  This
-results in unspecified behavior when unpacking with va_arg() in
-trace_seq_printf().
+journal_head::b_transaction and journal_head::b_next_transaction could
+be accessed concurrently as noticed by KCSAN,
 
-Add a function that takes the size into account when calling
-trace_seq_printf().
+ LTP: starting fsync04
+ /dev/zero: Can't open blockdev
+ EXT4-fs (loop0): mounting ext3 file system using the ext4 subsystem
+ EXT4-fs (loop0): mounted filesystem with ordered data mode. Opts: (null)
+ ==================================================================
+ BUG: KCSAN: data-race in __jbd2_journal_refile_buffer [jbd2] / jbd2_write_access_granted [jbd2]
 
-Before:
+ write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on cpu 70:
+  __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
+  __jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
+  jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
+  (inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1034
+  kjournald2+0x13b/0x450 [jbd2]
+  kthread+0x1cd/0x1f0
+  ret_from_fork+0x27/0x50
 
-  modprobe-1731  [003] ....   919.039758: gen_synth_test: next_pid_field=777(null)next_comm_field=hula hoops ts_ns=1000000 ts_ms=1000 cpu=3(null)my_string_field=thneed my_int_field=598(null)
+ read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on cpu 68:
+  jbd2_write_access_granted+0x1b2/0x250 [jbd2]
+  jbd2_write_access_granted at fs/jbd2/transaction.c:1155
+  jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
+  __ext4_journal_get_write_access+0x50/0x90 [ext4]
+  ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
+  ext4_mb_new_blocks+0x54f/0xca0 [ext4]
+  ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
+  ext4_map_blocks+0x3b4/0x950 [ext4]
+  _ext4_get_block+0xfc/0x270 [ext4]
+  ext4_get_block+0x3b/0x50 [ext4]
+  __block_write_begin_int+0x22e/0xae0
+  __block_write_begin+0x39/0x50
+  ext4_write_begin+0x388/0xb50 [ext4]
+  generic_perform_write+0x15d/0x290
+  ext4_buffered_write_iter+0x11f/0x210 [ext4]
+  ext4_file_write_iter+0xce/0x9e0 [ext4]
+  new_sync_write+0x29c/0x3b0
+  __vfs_write+0x92/0xa0
+  vfs_write+0x103/0x260
+  ksys_write+0x9d/0x130
+  __x64_sys_write+0x4c/0x60
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-After:
+ 5 locks held by fsync04/25724:
+  #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at: vfs_write+0x21c/0x260
+  #1: ffff99f9db4c0348 (&sb->s_type->i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
+  #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
+  #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at: ext4_map_blocks+0x176/0x950 [ext4]
+  #4: ffffffff99086b40 (rcu_read_lock){....}, at: jbd2_write_access_granted+0x4e/0x250 [jbd2]
+ irq event stamp: 1407125
+ hardirqs last  enabled at (1407125): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
+ hardirqs last disabled at (1407124): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
+ softirqs last  enabled at (1405528): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
+ softirqs last disabled at (1405521): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
 
- insmod-1136  [001] ....    36.634590: gen_synth_test: next_pid_field=777 next_comm_field=hula hoops ts_ns=1000000 ts_ms=1000 cpu=1 my_string_field=thneed my_int_field=598
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 68 PID: 25724 Comm: fsync04 Tainted: G L 5.6.0-rc2-next-20200221+ #7
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
 
-Link: http://lkml.kernel.org/r/a9b59eb515dbbd7d4abe53b347dccf7a8e285657.1581720155.git.zanussi@kernel.org
+The plain reads are outside of jh->b_state_lock critical section which result
+in data races. Fix them by adding pairs of READ|WRITE_ONCE().
 
-Reported-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/20200222043111.2227-1-cai@lca.pw
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_hist.c | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
+ fs/jbd2/transaction.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index e10585ef00e15..862fb6d16edb8 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -811,6 +811,29 @@ static const char *synth_field_fmt(char *type)
- 	return fmt;
- }
- 
-+static void print_synth_event_num_val(struct trace_seq *s,
-+				      char *print_fmt, char *name,
-+				      int size, u64 val, char *space)
-+{
-+	switch (size) {
-+	case 1:
-+		trace_seq_printf(s, print_fmt, name, (u8)val, space);
-+		break;
-+
-+	case 2:
-+		trace_seq_printf(s, print_fmt, name, (u16)val, space);
-+		break;
-+
-+	case 4:
-+		trace_seq_printf(s, print_fmt, name, (u32)val, space);
-+		break;
-+
-+	default:
-+		trace_seq_printf(s, print_fmt, name, val, space);
-+		break;
-+	}
-+}
-+
- static enum print_line_t print_synth_event(struct trace_iterator *iter,
- 					   int flags,
- 					   struct trace_event *event)
-@@ -849,10 +872,13 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
- 		} else {
- 			struct trace_print_flags __flags[] = {
- 			    __def_gfpflag_names, {-1, NULL} };
-+			char *space = (i == se->n_fields - 1 ? "" : " ");
- 
--			trace_seq_printf(s, print_fmt, se->fields[i]->name,
--					 entry->fields[n_u64],
--					 i == se->n_fields - 1 ? "" : " ");
-+			print_synth_event_num_val(s, print_fmt,
-+						  se->fields[i]->name,
-+						  se->fields[i]->size,
-+						  entry->fields[n_u64],
-+						  space);
- 
- 			if (strcmp(se->fields[i]->type, "gfp_t") == 0) {
- 				trace_seq_puts(s, " (");
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index b17f05ae6011c..de992a70ddfef 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1079,8 +1079,8 @@ static bool jbd2_write_access_granted(handle_t *handle, struct buffer_head *bh,
+ 	/* For undo access buffer must have data copied */
+ 	if (undo && !jh->b_committed_data)
+ 		goto out;
+-	if (jh->b_transaction != handle->h_transaction &&
+-	    jh->b_next_transaction != handle->h_transaction)
++	if (READ_ONCE(jh->b_transaction) != handle->h_transaction &&
++	    READ_ONCE(jh->b_next_transaction) != handle->h_transaction)
+ 		goto out;
+ 	/*
+ 	 * There are two reasons for the barrier here:
+@@ -2535,8 +2535,8 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
+ 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
+ 	 * take a new one.
+ 	 */
+-	jh->b_transaction = jh->b_next_transaction;
+-	jh->b_next_transaction = NULL;
++	WRITE_ONCE(jh->b_transaction, jh->b_next_transaction);
++	WRITE_ONCE(jh->b_next_transaction, NULL);
+ 	if (buffer_freed(bh))
+ 		jlist = BJ_Forget;
+ 	else if (jh->b_modified)
 -- 
 2.20.1
 
