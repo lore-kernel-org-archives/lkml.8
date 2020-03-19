@@ -2,109 +2,359 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CDBC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43372C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A979F214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033E2208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624305;
-	bh=+ZWBgP1H1PJaYmkcqqo0h/4VC5fxqrnCIWwQ5MstPNY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJdWaV0XPvkJ4a0m6HrOW5PNcT0hKv7vhby4rSZtDVjAMIdT7cZ4il+rjT0hGMEb2
-	 FQnB59gOWPbfNEM+/u1AGz7C75xA7yJEgujYzy46ZY475QCo3FW8++lDpw2qaf1cA0
-	 gHuI/ihlW4Tnw+uyrIRIQRBFghGJY2Fn4Az9Fpj4=
+	s=default; t=1584624308;
+	bh=NwC5I7y0p1zdPWyopYK74A7LZk+yXHlpxuCm8yO1cTo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=EpJHignYW+kFnZQcyf0/VtdhiQO3PZixDe8oq2ePyd57APbyaIQ2Jj/nrlDbJDpnA
+	 1kLLUh75bBXoIqH6WiUvN1Q/DAcvp08F7qeyVcGmPqMUl/GNOXpK2bNk8sP+E0NzgM
+	 fXUrsvlDm0ldc3GPpBGIPBcOxhpzyH/Sz9xAeh6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbgCSNZE (ORCPT
+        id S1728032AbgCSNZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52328 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730572AbgCSNZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:02 -0400
+        id S1727213AbgCSNZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72C262080C;
-        Thu, 19 Mar 2020 13:25:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E80652080C;
+        Thu, 19 Mar 2020 13:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624301;
-        bh=+ZWBgP1H1PJaYmkcqqo0h/4VC5fxqrnCIWwQ5MstPNY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VjL0HK8WSQxIJSuGunH9wxmcwAX/V+C07rSnXjyWrBFrGADJ7AfNmBjPAr463hQ+y
-         ws2mefF/5lEK/nx1TO8aD2vzbkXiNh8M2RZNyjALoB9ctPzm10JaJ+e87l1bdySpKl
-         1tPxa5ZY20qUwMTgMIcdbBswR+/ZdREqvjvOAgv8=
+        s=default; t=1584624304;
+        bh=NwC5I7y0p1zdPWyopYK74A7LZk+yXHlpxuCm8yO1cTo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IHdnjloMNX3CFJbxhx/zD0/dQ8Qnggt3bZopF9uhjzSsjN1KTM6rLtdqAiWgH1qXR
+         SsAOj2z9iiMPWTPui6AK7cyYtpo8wWNRdajh7wGUlW9uZW/5xEve8nd5A2fjcjiX2u
+         lP1+er+J74WRFCdiqhzRQH2R51zGTqgf4VWGMXIo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 07/65] mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for eMMC sleep command
-Date:   Thu, 19 Mar 2020 14:03:49 +0100
-Message-Id: <20200319123928.582537483@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.5 00/65] 5.5.11-rc1 review
+Date:   Thu, 19 Mar 2020 14:03:42 +0100
+Message-Id: <20200319123926.466988514@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
-References: <20200319123926.466988514@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.5.11-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.5.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.5.11-rc1
+X-KernelTest-Deadline: 2020-03-21T12:39+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+This is the start of the stable review cycle for the 5.5.11 release.
+There are 65 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit 18d200460cd73636d4f20674085c39e32b4e0097 ]
+Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+Anything received after that time might be too late.
 
-The busy timeout for the CMD5 to put the eMMC into sleep state, is specific
-to the card. Potentially the timeout may exceed the host->max_busy_timeout.
-If that becomes the case, mmc_sleep() converts from using an R1B response
-to an R1 response, as to prevent the host from doing HW busy detection.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.11-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+and the diffstat can be found below.
 
-However, it has turned out that some hosts requires an R1B response no
-matter what, so let's respect that via checking MMC_CAP_NEED_RSP_BUSY. Note
-that, if the R1B gets enforced, the host becomes fully responsible of
-managing the needed busy timeout, in one way or the other.
+thanks,
 
-Suggested-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200311092036.16084-1-ulf.hansson@linaro.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/mmc/core/mmc.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+greg k-h
 
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index f6912ded652dc..de14b5845f525 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -1910,9 +1910,12 @@ static int mmc_sleep(struct mmc_host *host)
- 	 * If the max_busy_timeout of the host is specified, validate it against
- 	 * the sleep cmd timeout. A failure means we need to prevent the host
- 	 * from doing hw busy detection, which is done by converting to a R1
--	 * response instead of a R1B.
-+	 * response instead of a R1B. Note, some hosts requires R1B, which also
-+	 * means they are on their own when it comes to deal with the busy
-+	 * timeout.
- 	 */
--	if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout)) {
-+	if (!(host->caps & MMC_CAP_NEED_RSP_BUSY) && host->max_busy_timeout &&
-+	    (timeout_ms > host->max_busy_timeout)) {
- 		cmd.flags = MMC_RSP_R1 | MMC_CMD_AC;
- 	} else {
- 		cmd.flags = MMC_RSP_R1B | MMC_CMD_AC;
--- 
-2.20.1
+-------------
+Pseudo-Shortlog of commits:
 
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.5.11-rc1
+
+Matteo Croce <mcroce@redhat.com>
+    ipv4: ensure rcu_read_lock() in cipso_v4_error()
+
+Ard Biesheuvel <ardb@kernel.org>
+    ARM: 8961/2: Fix Kbuild issue caused by per-task stack protector GCC plugin
+
+Tony Fischetti <tony.fischetti@gmail.com>
+    HID: add ALWAYS_POLL quirk to lenovo pixart mouse
+
+Chen-Tsung Hsieh <chentsung@chromium.org>
+    HID: google: add moonball USB id
+
+Jann Horn <jannh@google.com>
+    mm: slub: add missing TID bump in kmem_cache_alloc_bulk()
+
+Kees Cook <keescook@chromium.org>
+    ARM: 8958/1: rename missed uaccess .fixup section
+
+Florian Fainelli <f.fainelli@gmail.com>
+    ARM: 8957/1: VDSO: Match ARMv8 timer in cntvct_functional()
+
+Ming Lei <ming.lei@redhat.com>
+    blk-mq: insert flush request to the front of dispatch queue
+
+Qian Cai <cai@lca.pw>
+    jbd2: fix data races at struct journal_head
+
+Andrew Lunn <andrew@lunn.ch>
+    net: dsa: mv88e6xxx: Fix masking of egress port
+
+Amit Cohen <amitc@mellanox.com>
+    mlxsw: pci: Wait longer before accessing the device after reset
+
+Alex Maftei (amaftei) <amaftei@solarflare.com>
+    sfc: fix timestamp reconstruction at 16-bit rollover points
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix packet forwarding in rmnet bridge mode
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix bridge mode bugs
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: use upper/lower device infrastructure
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: do not allow to change mux id if mux id is duplicated
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: remove rcu_read_lock in rmnet_force_unassociate_device()
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix suspicious RCU usage
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix NULL pointer dereference in rmnet_changelink()
+
+Taehee Yoo <ap420073@gmail.com>
+    net: rmnet: fix NULL pointer dereference in rmnet_newlink()
+
+Luo bin <luobin9@huawei.com>
+    hinic: fix a bug of rss configuration
+
+Luo bin <luobin9@huawei.com>
+    hinic: fix a bug of setting hw_ioctxt
+
+Luo bin <luobin9@huawei.com>
+    hinic: fix a irq affinity bug
+
+Antoine Tenart <antoine.tenart@bootlin.com>
+    net: phy: mscc: fix firmware paths
+
+yangerkun <yangerkun@huawei.com>
+    slip: not call free_netdev before rtnl_unlock in slip_open
+
+Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+    net: bcmgenet: Clear ID_MODE_DIS in EXT_RGMII_OOB_CTRL when not needed
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    signal: avoid double atomic counter increments for user accounting
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kbuild: add dt_binding_check to PHONY in a correct place
+
+Masahiro Yamada <masahiroy@kernel.org>
+    kbuild: add dtbs_check to PHONY
+
+Jens Axboe <axboe@kernel.dk>
+    io_uring: pick up link work on submit reference drop
+
+Monk Liu <Monk.Liu@amd.com>
+    drm/amdgpu: fix memory leak during TDR test(v2)
+
+Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
+    io_uring: fix poll_list race for SETUP_IOPOLL|SETUP_SQPOLL
+
+Ming Lei <ming.lei@redhat.com>
+    blk-mq: insert passthrough request into hctx->dispatch directly
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Handle DMA halt condition caused by buffer underrun
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Fix RX buffer descriptor handling on GFP_ATOMIC pressure
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Add more error handling of dma_map_single() calls
+
+Esben Haabendal <esben@geanix.com>
+    net: ll_temac: Fix race condition causing TX hang
+
+Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+    mac80211: rx: avoid RCU list traversal under mutex
+
+Marek Vasut <marex@denx.de>
+    net: ks8851-ml: Fix IRQ handling and locking
+
+Daniele Palmas <dnlplm@gmail.com>
+    net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
+
+Igor Druzhinin <igor.druzhinin@citrix.com>
+    scsi: libfc: free response frame from GPN_ID
+
+Johannes Berg <johannes.berg@intel.com>
+    cfg80211: check reg_rule for NULL in handle_channel_custom()
+
+Tom Zanussi <zanussi@kernel.org>
+    tracing: Fix number printing bug in print_synth_event()
+
+Michael Ellerman <mpe@ellerman.id.au>
+    selftests/rseq: Fix out-of-tree compilation
+
+Heidi Fahim <heidifahim@google.com>
+    kunit: run kunit_tool from any directory
+
+Nathan Chancellor <natechancellor@gmail.com>
+    MIPS: vdso: Wrap -mexplicit-relocs in cc-option
+
+Greentime Hu <greentime.hu@sifive.com>
+    riscv: set pmp configuration if kernel is running in M-mode
+
+Hanno Zulla <kontakt@hanno.de>
+    HID: hid-bigbenff: fix race condition for scheduled work during removal
+
+Hanno Zulla <kontakt@hanno.de>
+    HID: hid-bigbenff: call hid_hw_stop() in case of error
+
+Hanno Zulla <kontakt@hanno.de>
+    HID: hid-bigbenff: fix general protection fault caused by double kfree
+
+Victor Kamensky <kamensky@cisco.com>
+    mips: vdso: add build time check that no 'jalr t9' calls left
+
+Paul Burton <paulburton@kernel.org>
+    MIPS: Disable VDSO time functionality on microMIPS
+
+Victor Kamensky <kamensky@cisco.com>
+    mips: vdso: fix 'jalr t9' crash in vdso code
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
+
+Mika Westerberg <mika.westerberg@linux.intel.com>
+    ACPI: watchdog: Set default timeout in probe
+
+Mansour Behabadi <mansour@oxplot.com>
+    HID: apple: Add support for recent firmware on Magic Keyboards
+
+Jean Delvare <jdelvare@suse.de>
+    ACPI: watchdog: Allow disabling WDAT at boot
+
+Ulf Hansson <ulf.hansson@linaro.org>
+    mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for erase/trim/discard
+
+Ulf Hansson <ulf.hansson@linaro.org>
+    mmc: core: Respect MMC_CAP_NEED_RSP_BUSY for eMMC sleep command
+
+Ulf Hansson <ulf.hansson@linaro.org>
+    mmc: sdhci-omap: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
+
+Ulf Hansson <ulf.hansson@linaro.org>
+    mmc: sdhci-tegra: Fix busy detection by enabling MMC_CAP_NEED_RSP_BUSY
+
+Ulf Hansson <ulf.hansson@linaro.org>
+    mmc: core: Allow host controllers to require R1B for CMD6
+
+Ulf Hansson <ulf.hansson@linaro.org>
+    mmc: core: Default to generic_cmd6_time as timeout in __mmc_switch()
+
+Linus Walleij <linus.walleij@linaro.org>
+    pinctrl: qcom: ssbi-gpio: Fix fwspec parsing bug
+
+Kevin Hao <haokexin@gmail.com>
+    gpiolib: Add support for the irqdomain which doesn't use irq_fwspec as arg
+
+
+-------------
+
+Diffstat:
+
+ Documentation/admin-guide/kernel-parameters.txt    |   4 +
+ Makefile                                           |   7 +-
+ arch/arm/Makefile                                  |   4 +-
+ arch/arm/boot/compressed/Makefile                  |   4 +-
+ arch/arm/kernel/vdso.c                             |   2 +
+ arch/arm/lib/copy_from_user.S                      |   2 +-
+ arch/mips/vdso/Makefile                            |  28 ++-
+ arch/riscv/include/asm/csr.h                       |  12 ++
+ arch/riscv/kernel/head.S                           |   6 +
+ block/blk-flush.c                                  |   2 +-
+ block/blk-mq-sched.c                               |  44 ++++-
+ block/blk-mq.c                                     |  18 +-
+ block/blk-mq.h                                     |   3 +-
+ drivers/acpi/acpi_watchdog.c                       |  12 +-
+ drivers/gpio/gpio-tegra186.c                       |  13 +-
+ drivers/gpio/gpiolib.c                             |  45 +++--
+ drivers/gpu/drm/amd/powerplay/smu_v11_0.c          |   6 +-
+ drivers/hid/hid-apple.c                            |   3 +-
+ drivers/hid/hid-bigbenff.c                         |  31 ++-
+ drivers/hid/hid-google-hammer.c                    |   2 +
+ drivers/hid/hid-ids.h                              |   2 +
+ drivers/hid/hid-quirks.c                           |   1 +
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c           |   8 +
+ drivers/mmc/core/core.c                            |   5 +-
+ drivers/mmc/core/mmc.c                             |   7 +-
+ drivers/mmc/core/mmc_ops.c                         |  27 ++-
+ drivers/mmc/host/sdhci-omap.c                      |   3 +
+ drivers/mmc/host/sdhci-tegra.c                     |   3 +
+ drivers/net/dsa/mv88e6xxx/global1.c                |   4 +-
+ drivers/net/ethernet/broadcom/genet/bcmmii.c       |   1 +
+ drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c   |   1 +
+ drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h   |   2 +-
+ drivers/net/ethernet/huawei/hinic/hinic_hw_if.h    |   1 +
+ drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h    |   1 +
+ drivers/net/ethernet/huawei/hinic/hinic_main.c     |   3 +-
+ drivers/net/ethernet/huawei/hinic/hinic_rx.c       |   5 +-
+ drivers/net/ethernet/mellanox/mlxsw/pci_hw.h       |   2 +-
+ drivers/net/ethernet/micrel/ks8851_mll.c           |  14 +-
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c | 186 +++++++++---------
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h |   3 +-
+ .../net/ethernet/qualcomm/rmnet/rmnet_handlers.c   |   7 +-
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c    |   8 -
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h    |   1 -
+ drivers/net/ethernet/sfc/ptp.c                     |  38 +++-
+ drivers/net/ethernet/xilinx/ll_temac.h             |   4 +
+ drivers/net/ethernet/xilinx/ll_temac_main.c        | 209 +++++++++++++++++----
+ drivers/net/phy/mscc.c                             |   4 +-
+ drivers/net/slip/slip.c                            |   3 +
+ drivers/net/usb/qmi_wwan.c                         |   3 +
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |   2 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c           |   2 +-
+ drivers/scsi/libfc/fc_disc.c                       |   2 +
+ drivers/watchdog/wdat_wdt.c                        |  23 +++
+ fs/io_uring.c                                      |  67 +++----
+ fs/jbd2/transaction.c                              |   8 +-
+ include/linux/gpio/driver.h                        |  21 +--
+ include/linux/mmc/host.h                           |   1 +
+ kernel/signal.c                                    |  23 ++-
+ kernel/trace/trace_events_hist.c                   |  32 +++-
+ mm/slub.c                                          |   9 +
+ net/ipv4/cipso_ipv4.c                              |   7 +-
+ net/mac80211/rx.c                                  |   2 +-
+ net/wireless/reg.c                                 |   2 +-
+ tools/testing/kunit/kunit.py                       |  12 ++
+ tools/testing/selftests/rseq/Makefile              |   2 +-
+ 65 files changed, 712 insertions(+), 307 deletions(-)
 
 
