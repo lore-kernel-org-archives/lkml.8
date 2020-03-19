@@ -2,142 +2,125 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88D1C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83476C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94EFE2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:44:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g01y/QG6"
+	by mail.kernel.org (Postfix) with ESMTP id 5A4D720740
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbgCSXoK (ORCPT
+        id S1727207AbgCSXrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:44:10 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35382 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgCSXoK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:44:10 -0400
-Received: by mail-pj1-f68.google.com with SMTP id j20so1694887pjz.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:44:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R0+TGEcl33aqQZuHdJpZvB8paDQF2GsWepjBb7GJLN0=;
-        b=g01y/QG6zB8hIiuj4wDvdx12dB7i4g2oOiN2aFecZXwj8QAY5tVLL5iH3uhtkQGtIN
-         jqOlFcSJx7THcCtImBOQp1HaO+lNQ+y4mrfz+L5YbFg1WV7xn/VHwnxKtcCyGnPAI4bQ
-         QoFNLnT5RQOyW5H2iDh8lvr24e7GmW0icEfczV6Zm/Y3OHI1HS+67AZVEl3sVe2+9o8G
-         WZqBAoaIyte3bSpt/ez2IaL5dP6H0eBBqL0SyclRJw5tJzQ14gmaCmbRp2u5Y+YSbZs1
-         xq1BRnFqNQxqpvsjMirdME/B+it8upp2FMVE2cmR091yQWxNavqNHwWL+gVz4ovunboZ
-         lCiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R0+TGEcl33aqQZuHdJpZvB8paDQF2GsWepjBb7GJLN0=;
-        b=D4uULQZIKlYnGR+YkiJUS7GcWMmO8oYx+ajQEA/WaZTK2YvZRsAulI7xrnvRYYDhF3
-         +2AmKgUBMVa77iBMMiYIkjWQ8iOUGTt5N/mjxBJhGPM03eMDkYtSAaxTkYREB8/BRdo3
-         1cFDahMFV5dRBp7t/Cv54WCv30629/IBDEwkMZDQoMdnuwAtC84CfXN7CmNY/I83oWax
-         mooaOih3AgmnIvQar4SiyQd0XevMwKHfZ+ViZ3IhYkXtbbUq2j/LQTk0pA4ZooNSiNEs
-         qNB7j0aqVdYxymu1aiiI+8kd3Eu3yh3gfaw+sW5wMIvARJBuhLwnE0+uZ9tJAHfx8IEm
-         cCBQ==
-X-Gm-Message-State: ANhLgQ3sHNIpu1pj85W5T1uG+4kQROSWpTaatQueuWpymdpku2t4yLw+
-        fYz5jVEPwVI+nCgrwp72iciwKQYFdthdCEUQL5JlSA==
-X-Google-Smtp-Source: ADFU+vtliPn0Z54RcDzNcvaqRpfR5R9aZU+uGpjGhHuUBhqLn7elEClsTACLZUjB8MWlbn/itDALZ2t4CjWaipi5Fng=
-X-Received: by 2002:a17:902:820a:: with SMTP id x10mr2291998pln.179.1584661448715;
- Thu, 19 Mar 2020 16:44:08 -0700 (PDT)
+        Thu, 19 Mar 2020 19:47:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:23507 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726663AbgCSXrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 19:47:46 -0400
+IronPort-SDR: 9dD2uojPZvTES1JeE4uKY8crjQ//qthW79N8IbYrDZjW2g2W3rv7VzHHTqZIBeGdTrcjYmQx7F
+ c3DYXtX0jLog==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 16:47:45 -0700
+IronPort-SDR: bHiYt5HDMIE9YwlgXNYceQMPMy1leuD0nyfCae+QpsBK3aDPbY2OM/ttnZi/gQiGEcEYRWqsQy
+ /wmgw4ygKKLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,573,1574150400"; 
+   d="scan'208";a="263895304"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga002.jf.intel.com with ESMTP; 19 Mar 2020 16:47:45 -0700
+Date:   Thu, 19 Mar 2020 16:47:44 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] nvdimm: nd.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200319234744.GA1688758@iweiny-DESK2.sc.intel.com>
+References: <20200319230937.GA16648@embeddedor.com>
 MIME-Version: 1.0
-References: <20200319214530.2046-1-ilie.halip@gmail.com>
-In-Reply-To: <20200319214530.2046-1-ilie.halip@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 19 Mar 2020 16:43:56 -0700
-Message-ID: <CAKwvOdneL8F_ZHBAzyb+VoJ+Z1FZp0VW8asGTu=g39TrouqAgA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: alternative: fix build with clang integrated assembler
-To:     Ilie Halip <ilie.halip@gmail.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319230937.GA16648@embeddedor.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 2:45 PM Ilie Halip <ilie.halip@gmail.com> wrote:
->
-> Building an arm64 defconfig with clang's integrated assembler, this error
-> occurs:
->     <instantiation>:2:2: error: unrecognized instruction mnemonic
->      _ASM_EXTABLE 9999b, 9f
->      ^
->     arch/arm64/mm/cache.S:50:1: note: while in macro instantiation
->     user_alt 9f, "dc cvau, x4", "dc civac, x4", 0
->     ^
->
-> While GNU as seems fine with case-sensitive macro instantiations, clang
-> doesn't, so use the actual macro name (_asm_extable) as in the rest of
-> the file.
->
-> Also checked that the generated assembly matches the GCC output.
->
-> Fixes: 290622efc76e ("arm64: fix "dc cvau" cache operation on errata-affected core")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/924
-> Signed-off-by: Ilie Halip <ilie.halip@gmail.com>
+On Thu, Mar 19, 2020 at 06:09:37PM -0500, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+
+"won't" be affected?
+
+My reading of [1] indicates that this change will break the allocation in
+nd_region_activate() because sizeof() can no longer be used on the base
+structure?
+
+What am I missing?
+
+Ira
+
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  arch/arm64/include/asm/alternative.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
-> index 324e7d5ab37e..5e5dc05d63a0 100644
-> --- a/arch/arm64/include/asm/alternative.h
-> +++ b/arch/arm64/include/asm/alternative.h
-> @@ -221,7 +221,7 @@ alternative_endif
->
->  .macro user_alt, label, oldinstr, newinstr, cond
->  9999:  alternative_insn "\oldinstr", "\newinstr", \cond
-> -       _ASM_EXTABLE 9999b, \label
-> +       _asm_extable 9999b, \label
->  .endm
-
-Testing a -next defconfig build, if I apply this, apply fixes for
-https://github.com/ClangBuiltLinux/linux/issues/913, then disable
-CONFIG_KVM, I can assemble (with Clang's integrated assembler) and
-boot an aarch64 kernel.  I think that's a first for Clang.  Wow.
-
-For CONFIG_KVM, I see:
-arch/arm64/kvm/hyp/entry.S:112:87: error: too many positional arguments
- alternative_insn nop, .inst (0xd500401f | ((0) << 16 | (4) << 5) |
-((!!1) << 8)), 4, 1
-
-               ^
-which also uses `alternative_insn`, but not `user_alt`, so another bug
-for us to look into, filed:
-https://github.com/ClangBuiltLinux/linux/issues/939
-
-Looks like `_asm_extable` itself is a macro, defined in
-arch/arm64/include/asm/assembler.h on line 125.  It's probably easy to
-fix this in clang, but from a consistency with the rest of the file
-(arch/arm64/include/asm/alternative.h) this patch should be accepted.
-
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Should be easy to fix in Clang, too. Filed:
-https://bugs.llvm.org/show_bug.cgi?id=45257
-Thanks for the patch!
-
--- 
-Thanks,
-~Nick Desaulniers
+>  drivers/nvdimm/nd.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+> index c4d69c1cce55..85dbb2a322b9 100644
+> --- a/drivers/nvdimm/nd.h
+> +++ b/drivers/nvdimm/nd.h
+> @@ -39,7 +39,7 @@ struct nd_region_data {
+>  	int ns_count;
+>  	int ns_active;
+>  	unsigned int hints_shift;
+> -	void __iomem *flush_wpq[0];
+> +	void __iomem *flush_wpq[];
+>  };
+>  
+>  static inline void __iomem *ndrd_get_flush_wpq(struct nd_region_data *ndrd,
+> @@ -157,7 +157,7 @@ struct nd_region {
+>  	struct nd_interleave_set *nd_set;
+>  	struct nd_percpu_lane __percpu *lane;
+>  	int (*flush)(struct nd_region *nd_region, struct bio *bio);
+> -	struct nd_mapping mapping[0];
+> +	struct nd_mapping mapping[];
+>  };
+>  
+>  struct nd_blk_region {
+> -- 
+> 2.23.0
+> 
