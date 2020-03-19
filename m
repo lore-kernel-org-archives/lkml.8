@@ -2,125 +2,103 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACC4C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9BCC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3365A20752
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 969D420753
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:55:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iCmxtCja"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njLUMSwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbgCSKyC (ORCPT
+        id S1727078AbgCSKzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:54:02 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:50472 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727083AbgCSKyB (ORCPT
+        Thu, 19 Mar 2020 06:55:16 -0400
+Received: from mail-pj1-f50.google.com ([209.85.216.50]:35431 "EHLO
+        mail-pj1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCSKzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:54:01 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584615241; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=G1xcrA3VxHhne2SYFlZHYK1yCSX3CDOuVGju3yHGiP4=; b=iCmxtCjaznOZG8y57jBUQ6xJc5OLmUemGpYAKV4K9HZmqmzpvXZAwI+2UfDpudy5x1oqA5Aa
- vYiPCL8ifRop7JNObEZjVVR8MX9eGRUq9rkVuTR5v5ZAPA6ftBlO6WH3tBhYoV299m2f6KwG
- ATu68fMD2xFAZQPOXvMS0rv970E=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e734f3f.7f655465e7a0-smtp-out-n01;
- Thu, 19 Mar 2020 10:53:51 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9DBD8C44791; Thu, 19 Mar 2020 10:53:51 +0000 (UTC)
-Received: from [192.168.0.103] (unknown [106.51.30.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 00C85C433CB;
-        Thu, 19 Mar 2020 10:53:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 00C85C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
-        nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org, linux-kernel-owner@vger.kernel.org
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
- <20200318034243.o2metmggzuah6cqw@vireshk-i7>
- <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
- <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
- <20200319102411.oivesngrk7gy7vtw@vireshk-i7>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <78d92969-0219-d140-d788-d1b14e643e90@codeaurora.org>
-Date:   Thu, 19 Mar 2020 16:23:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200319102411.oivesngrk7gy7vtw@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 19 Mar 2020 06:55:16 -0400
+Received: by mail-pj1-f50.google.com with SMTP id j20so857944pjz.0;
+        Thu, 19 Mar 2020 03:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=idRUqg+TF0Cur/3wE1siUm3zMjSmlyYypSnAlFECMBE=;
+        b=njLUMSwPbKU5el0tYMf9MdU7NECJlPA3Z7A66ayMJMZOTygvQt4wodbz1fKUlCz5LY
+         9AjLUEyswf7Q4DDjyuybJ4Jyot9yTg44iNz8TxQZ0jgTLiwpfQzS9oidc1ClZLPWsd3Y
+         lvpYW+71MReTk9uX4YnppqFf2MHze5tAiWGvDSe+KkzVtnLIBctuPliVmXy2i6omehb4
+         jpCKIHQr853N0c3nrOaQBMq/H/WSjJGzdMeg70gMUkXVdf5F7Xeu/PUyMiP55VzgIgKR
+         qNJULNYon0v93u0aR4sKhhVQTWxStVO3H9wVW/aQ0Jy06FS/KG16N/4mPcPQx6Prw2yE
+         lfWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=idRUqg+TF0Cur/3wE1siUm3zMjSmlyYypSnAlFECMBE=;
+        b=q7xVH94xPoupqRnwj1wrGcIvoQxCsh3piQfSatfcxsOXsdMxGwsE8/thsRnxZqfy2j
+         62HICHwh8F1Ozk/7pV92xOJyv+jALD7qJFiL1vsbkoH6IZEwl+SADr/kBdrdo2pExxZF
+         2CQ7JpZEqpzNuJSXh4qKBqsXyBjHYtk0gyf6/RMBHyBLSzgixm3d7uh01l+BmjLvUOvu
+         xMm1OtiAZAPKSjbIcv3JeZ4phawN++gpBfCbCwgvTOgtvGsR6McRpRu1mEs/qvPZN7Sz
+         0nWZZD6bwqM8FTo7/0IQUKkQF31pfJet6MA/1Qn9aDDRJ1tx2kfR4RSc2y6/9y9JwG6t
+         xJSA==
+X-Gm-Message-State: ANhLgQ0K/nlhv33g4LQJMF064b2/zbY07ZIHRhfWQcCA5JrHd7Xaqbvr
+        9cYCPspTz9iEnT/orKBY920=
+X-Google-Smtp-Source: ADFU+vvojvcpDQejdb0HKnVxM5v3mWwqOWZV0xDT9UXG3HjJ6HhWcINLR/4jNvq9iTPjpVgnBY7LZg==
+X-Received: by 2002:a17:902:4b:: with SMTP id 69mr2656300pla.97.1584615313490;
+        Thu, 19 Mar 2020 03:55:13 -0700 (PDT)
+Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id f6sm2209949pfk.99.2020.03.19.03.55.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 19 Mar 2020 03:55:12 -0700 (PDT)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
+        arnd@arndb.de, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/4] Introduce the request_atomic() for the host
+Date:   Thu, 19 Mar 2020 18:54:18 +0800
+Message-Id: <cover.1584615043.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch set introduces a new request_atomic() interface for the
+MMC host controller, which is used to submit a request to host in
+the atomic context, such as in the irq hard handler, to reduce the
+request latency.
 
+Any comments are welcome. Thanks.
 
-On 3/19/2020 3:54 PM, Viresh Kumar wrote:
-> On 19-03-20, 15:41, Sibi Sankar wrote:
->> Viresh,
->> Saravana's example does show a device
->> with multiple opp tables but doesn't
->> need multiple opp table support to
->> land though (since it works fine with
->> the current implementation). I am more
->> interested  in understanding your/
->> Stephen's/Saravana's stance on adding
->> multiple opp-table support. Personally
->> I feel its inevitable, since multiple
->> qc drivers using interconnect opp-tables,
->> routinely need vote on multiple paths in
->> a non-trivial manner.
-> 
-> The OPP core doesn't support multiple OPP tables for a device and I
-> don't understand how it will. And so I have been waiting for a reply.
+Changes from v2:
+ - Return busy flag if encountering unusual card busy state
+ instead of polling in interrupt context.
+ - Add a work for HSQ to try again in non-atomic context if the host
+ returns busy flag.
 
-I thought this series indeed is proposing to add that support in OPP core?
-a.k.a "[RFC v3 06/10] opp: Allow multiple opp_tables to be mapped to a single device"
+Changes from v1:
+ - Re-split the changes to make them more clear suggested by Ulf.
+ - Factor out the auto CMD23 checking into a separate function.
 
-> 
->>>
->>> Could you please post a link to the discussion that you are referring to
->>> here?
->>> I looked at a few links posted in the cover letter as dependencies and
->>> it seems
->>> like the discussions are pending for *months* and not weeks but I
->>> might have looked
->>> at the wrong ones.
->>
->> https://lore.kernel.org/lkml/20200114103448.odnvqawnqb3twst5@vireshk-i7/
->>
->> Rajendra,
->> Viresh is referring to ^^ one
-> 
-> Right, thanks.
+Baolin Wang (4):
+  mmc: host: Introduce the request_atomic() for the host
+  mmc: host: sdhci: Implement the request_atomic() API
+  mmc: host: hsq: Handle an unusual case of returing busy
+  mmc: host: sdhci-sprd: Implement the request_atomic() API
 
-These discussions are stalled for over 2 months now waiting on a response from Saravana.
-Viresh, whats the way forward here and how long do we plan on waiting for Saravanas response?
-
+ drivers/mmc/host/mmc_hsq.c    | 40 +++++++++++++++++++++++++-
+ drivers/mmc/host/mmc_hsq.h    |  1 +
+ drivers/mmc/host/sdhci-sprd.c | 23 +++++++++++++--
+ drivers/mmc/host/sdhci.c      | 65 ++++++++++++++++++++++++++++++++-----------
+ drivers/mmc/host/sdhci.h      |  4 ++-
+ include/linux/mmc/host.h      |  3 ++
+ 6 files changed, 114 insertions(+), 22 deletions(-)
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+1.9.1
+
