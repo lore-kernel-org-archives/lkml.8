@@ -2,92 +2,70 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBAEC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FFDC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B07912070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 391772070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgCSTfx (ORCPT
+        id S1727389AbgCSTiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:35:53 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:51104 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726974AbgCSTfx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:35:53 -0400
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 19 Mar 2020 12:35:52 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 19 Mar 2020 12:35:52 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 267874BBA; Thu, 19 Mar 2020 12:35:52 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 12:35:52 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Subject: Re: [PATCH v9 01/11] drm/i915: Use 64-bit division macro
-Message-ID: <20200319193551.GA23396@codeaurora.org>
-References: <cover.1584473399.git.gurus@codeaurora.org>
- <19661821c8eb32291e72ec091c267f915c365c52.1584473399.git.gurus@codeaurora.org>
- <87h7yleb0i.fsf@intel.com>
+        Thu, 19 Mar 2020 15:38:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53414 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727111AbgCSTiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:38:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 38891AFC6;
+        Thu, 19 Mar 2020 19:38:15 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 20:38:13 +0100
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH 41/70] x86/sev-es: Add Runtime #VC Exception Handler
+Message-ID: <20200319193813.GE611@suse.de>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-42-joro@8bytes.org>
+ <CALCETrW9EYi5dzCKNtKkxM18CC4n5BZxTp1=qQ5qZccwstXjzg@mail.gmail.com>
+ <20200319162439.GE5122@8bytes.org>
+ <CALCETrW6LOwEfjJz-S7fFJvPqgr9BoCkRG2MA-Pk6K_y_rmGHg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87h7yleb0i.fsf@intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CALCETrW6LOwEfjJz-S7fFJvPqgr9BoCkRG2MA-Pk6K_y_rmGHg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 09:08:45PM +0200, Jani Nikula wrote:
-> On Tue, 17 Mar 2020, Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-> > Since the PWM framework is switching struct pwm_state.duty_cycle's
-> > datatype to u64, prepare for this transition by using DIV_ROUND_UP_ULL
-> > to handle a 64-bit dividend.
-> >
-> > Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> > Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> > Cc: David Airlie <airlied@linux.ie>
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: "Ville Syrjälä" <ville.syrjala@linux.intel.com>
-> > Cc: intel-gfx@lists.freedesktop.org
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> >
-> > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> 
-> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+On Thu, Mar 19, 2020 at 11:43:20AM -0700, Andy Lutomirski wrote:
+> Or future generations could have enough hardware support for debugging
+> that #DB doesn't need to be intercepted or can be re-injected
+> correctly with the #DB vector.
 
-Thanks!
+Yeah, the problem is, the GHCB spec suggests the single-step-over-iret
+way to re-enable the NMI window and requires intercepting #DB for it. So
+the hypervisor probably still has to intercept it, even when debug
+support is added some day. I need to think more about this.
 
-> Also ack for merging this via whichever tree you prefer; please let me
-> know if you want me to take this via drm-intel.
+Regards,
 
-I'm not sure if this patch can be taken via drm-intel in isolation as it
-is part of a series... Will let you know if I need to make such a
-request.
-
-Thank you.
-
-Guru Das.
+	Joerg
