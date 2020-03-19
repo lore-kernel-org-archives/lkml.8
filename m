@@ -2,396 +2,99 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A1CC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75613C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0103E20752
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568FA20752
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgCSMTs (ORCPT
+        id S1726936AbgCSMTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:19:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34172 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgCSMTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:19:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1A898B1F6;
-        Thu, 19 Mar 2020 12:19:43 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thu, 19 Mar 2020 08:19:50 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:30118 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727112AbgCSMTr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:19:47 -0400
+X-IronPort-AV: E=Sophos;i="5.70,571,1574089200"; 
+   d="scan'208";a="42339692"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 19 Mar 2020 21:19:45 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8488342BCBC0;
+        Thu, 19 Mar 2020 21:19:41 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v11 2/8] powerpc: move common register copy functions from signal_32.c to signal.c
-Date:   Thu, 19 Mar 2020 13:19:30 +0100
-Message-Id: <52d53402f3f72114dde86654ad048dadac5d7cb0.1584620202.git.msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1584620202.git.msuchanek@suse.de>
-References: <20200225173541.1549955-1-npiggin@gmail.com> <cover.1584620202.git.msuchanek@suse.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v4 0/5] ov5645: Deprecate usage of the clock-frequency
+Date:   Thu, 19 Mar 2020 12:19:18 +0000
+Message-Id: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These functions are required for 64bit as well.
+Hi All,
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/signal.c    | 141 ++++++++++++++++++++++++++++++++
- arch/powerpc/kernel/signal_32.c | 140 -------------------------------
- 2 files changed, 141 insertions(+), 140 deletions(-)
+This patch series does the following:
+1: Deprecate usage of the clock-frequency property.
+2: Increases tolerance level to 5% for external clock frequency
+3: Converts bindings to json-schema
 
-diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-index d215f9554553..4b0152108f61 100644
---- a/arch/powerpc/kernel/signal.c
-+++ b/arch/powerpc/kernel/signal.c
-@@ -18,12 +18,153 @@
- #include <linux/syscalls.h>
- #include <asm/hw_breakpoint.h>
- #include <linux/uaccess.h>
-+#include <asm/switch_to.h>
- #include <asm/unistd.h>
- #include <asm/debug.h>
- #include <asm/tm.h>
- 
- #include "signal.h"
- 
-+#ifdef CONFIG_VSX
-+unsigned long copy_fpr_to_user(void __user *to,
-+			       struct task_struct *task)
-+{
-+	u64 buf[ELF_NFPREG];
-+	int i;
-+
-+	/* save FPR copy to local buffer then write to the thread_struct */
-+	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
-+		buf[i] = task->thread.TS_FPR(i);
-+	buf[i] = task->thread.fp_state.fpscr;
-+	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
-+}
-+
-+unsigned long copy_fpr_from_user(struct task_struct *task,
-+				 void __user *from)
-+{
-+	u64 buf[ELF_NFPREG];
-+	int i;
-+
-+	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
-+		return 1;
-+	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
-+		task->thread.TS_FPR(i) = buf[i];
-+	task->thread.fp_state.fpscr = buf[i];
-+
-+	return 0;
-+}
-+
-+unsigned long copy_vsx_to_user(void __user *to,
-+			       struct task_struct *task)
-+{
-+	u64 buf[ELF_NVSRHALFREG];
-+	int i;
-+
-+	/* save FPR copy to local buffer then write to the thread_struct */
-+	for (i = 0; i < ELF_NVSRHALFREG; i++)
-+		buf[i] = task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET];
-+	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
-+}
-+
-+unsigned long copy_vsx_from_user(struct task_struct *task,
-+				 void __user *from)
-+{
-+	u64 buf[ELF_NVSRHALFREG];
-+	int i;
-+
-+	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
-+		return 1;
-+	for (i = 0; i < ELF_NVSRHALFREG ; i++)
-+		task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
-+unsigned long copy_ckfpr_to_user(void __user *to,
-+				  struct task_struct *task)
-+{
-+	u64 buf[ELF_NFPREG];
-+	int i;
-+
-+	/* save FPR copy to local buffer then write to the thread_struct */
-+	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
-+		buf[i] = task->thread.TS_CKFPR(i);
-+	buf[i] = task->thread.ckfp_state.fpscr;
-+	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
-+}
-+
-+unsigned long copy_ckfpr_from_user(struct task_struct *task,
-+					  void __user *from)
-+{
-+	u64 buf[ELF_NFPREG];
-+	int i;
-+
-+	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
-+		return 1;
-+	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
-+		task->thread.TS_CKFPR(i) = buf[i];
-+	task->thread.ckfp_state.fpscr = buf[i];
-+
-+	return 0;
-+}
-+
-+unsigned long copy_ckvsx_to_user(void __user *to,
-+				  struct task_struct *task)
-+{
-+	u64 buf[ELF_NVSRHALFREG];
-+	int i;
-+
-+	/* save FPR copy to local buffer then write to the thread_struct */
-+	for (i = 0; i < ELF_NVSRHALFREG; i++)
-+		buf[i] = task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET];
-+	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
-+}
-+
-+unsigned long copy_ckvsx_from_user(struct task_struct *task,
-+					  void __user *from)
-+{
-+	u64 buf[ELF_NVSRHALFREG];
-+	int i;
-+
-+	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
-+		return 1;
-+	for (i = 0; i < ELF_NVSRHALFREG ; i++)
-+		task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
-+	return 0;
-+}
-+#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
-+#else
-+inline unsigned long copy_fpr_to_user(void __user *to,
-+				      struct task_struct *task)
-+{
-+	return __copy_to_user(to, task->thread.fp_state.fpr,
-+			      ELF_NFPREG * sizeof(double));
-+}
-+
-+inline unsigned long copy_fpr_from_user(struct task_struct *task,
-+					void __user *from)
-+{
-+	return __copy_from_user(task->thread.fp_state.fpr, from,
-+			      ELF_NFPREG * sizeof(double));
-+}
-+
-+#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
-+inline unsigned long copy_ckfpr_to_user(void __user *to,
-+					 struct task_struct *task)
-+{
-+	return __copy_to_user(to, task->thread.ckfp_state.fpr,
-+			      ELF_NFPREG * sizeof(double));
-+}
-+
-+inline unsigned long copy_ckfpr_from_user(struct task_struct *task,
-+						 void __user *from)
-+{
-+	return __copy_from_user(task->thread.ckfp_state.fpr, from,
-+				ELF_NFPREG * sizeof(double));
-+}
-+#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
-+#endif
-+
- /* Log an error when sending an unhandled signal to a process. Controlled
-  * through debug.exception-trace sysctl.
-  */
-diff --git a/arch/powerpc/kernel/signal_32.c b/arch/powerpc/kernel/signal_32.c
-index 1b090a76b444..4f96d29a22bf 100644
---- a/arch/powerpc/kernel/signal_32.c
-+++ b/arch/powerpc/kernel/signal_32.c
-@@ -235,146 +235,6 @@ struct rt_sigframe {
- 	int			abigap[56];
- };
- 
--#ifdef CONFIG_VSX
--unsigned long copy_fpr_to_user(void __user *to,
--			       struct task_struct *task)
--{
--	u64 buf[ELF_NFPREG];
--	int i;
--
--	/* save FPR copy to local buffer then write to the thread_struct */
--	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
--		buf[i] = task->thread.TS_FPR(i);
--	buf[i] = task->thread.fp_state.fpscr;
--	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
--}
--
--unsigned long copy_fpr_from_user(struct task_struct *task,
--				 void __user *from)
--{
--	u64 buf[ELF_NFPREG];
--	int i;
--
--	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
--		return 1;
--	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
--		task->thread.TS_FPR(i) = buf[i];
--	task->thread.fp_state.fpscr = buf[i];
--
--	return 0;
--}
--
--unsigned long copy_vsx_to_user(void __user *to,
--			       struct task_struct *task)
--{
--	u64 buf[ELF_NVSRHALFREG];
--	int i;
--
--	/* save FPR copy to local buffer then write to the thread_struct */
--	for (i = 0; i < ELF_NVSRHALFREG; i++)
--		buf[i] = task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET];
--	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
--}
--
--unsigned long copy_vsx_from_user(struct task_struct *task,
--				 void __user *from)
--{
--	u64 buf[ELF_NVSRHALFREG];
--	int i;
--
--	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
--		return 1;
--	for (i = 0; i < ELF_NVSRHALFREG ; i++)
--		task->thread.fp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
--	return 0;
--}
--
--#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
--unsigned long copy_ckfpr_to_user(void __user *to,
--				  struct task_struct *task)
--{
--	u64 buf[ELF_NFPREG];
--	int i;
--
--	/* save FPR copy to local buffer then write to the thread_struct */
--	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
--		buf[i] = task->thread.TS_CKFPR(i);
--	buf[i] = task->thread.ckfp_state.fpscr;
--	return __copy_to_user(to, buf, ELF_NFPREG * sizeof(double));
--}
--
--unsigned long copy_ckfpr_from_user(struct task_struct *task,
--					  void __user *from)
--{
--	u64 buf[ELF_NFPREG];
--	int i;
--
--	if (__copy_from_user(buf, from, ELF_NFPREG * sizeof(double)))
--		return 1;
--	for (i = 0; i < (ELF_NFPREG - 1) ; i++)
--		task->thread.TS_CKFPR(i) = buf[i];
--	task->thread.ckfp_state.fpscr = buf[i];
--
--	return 0;
--}
--
--unsigned long copy_ckvsx_to_user(void __user *to,
--				  struct task_struct *task)
--{
--	u64 buf[ELF_NVSRHALFREG];
--	int i;
--
--	/* save FPR copy to local buffer then write to the thread_struct */
--	for (i = 0; i < ELF_NVSRHALFREG; i++)
--		buf[i] = task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET];
--	return __copy_to_user(to, buf, ELF_NVSRHALFREG * sizeof(double));
--}
--
--unsigned long copy_ckvsx_from_user(struct task_struct *task,
--					  void __user *from)
--{
--	u64 buf[ELF_NVSRHALFREG];
--	int i;
--
--	if (__copy_from_user(buf, from, ELF_NVSRHALFREG * sizeof(double)))
--		return 1;
--	for (i = 0; i < ELF_NVSRHALFREG ; i++)
--		task->thread.ckfp_state.fpr[i][TS_VSRLOWOFFSET] = buf[i];
--	return 0;
--}
--#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
--#else
--inline unsigned long copy_fpr_to_user(void __user *to,
--				      struct task_struct *task)
--{
--	return __copy_to_user(to, task->thread.fp_state.fpr,
--			      ELF_NFPREG * sizeof(double));
--}
--
--inline unsigned long copy_fpr_from_user(struct task_struct *task,
--					void __user *from)
--{
--	return __copy_from_user(task->thread.fp_state.fpr, from,
--			      ELF_NFPREG * sizeof(double));
--}
--
--#ifdef CONFIG_PPC_TRANSACTIONAL_MEM
--inline unsigned long copy_ckfpr_to_user(void __user *to,
--					 struct task_struct *task)
--{
--	return __copy_to_user(to, task->thread.ckfp_state.fpr,
--			      ELF_NFPREG * sizeof(double));
--}
--
--inline unsigned long copy_ckfpr_from_user(struct task_struct *task,
--						 void __user *from)
--{
--	return __copy_from_user(task->thread.ckfp_state.fpr, from,
--				ELF_NFPREG * sizeof(double));
--}
--#endif /* CONFIG_PPC_TRANSACTIONAL_MEM */
--#endif
--
- /*
-  * Save the current user registers on the user stack.
-  * We only save the altivec/spe registers if the process has used
+Thanks,
+Prabhakar
+
+Changes for v4:
+* Addressed to comments from Laurent updated patch description for
+  patch 1/5, 4/5.
+* Included Reviewed-by tags from Laurent.
+* Increased tolerance level to 5% for external clock frequency.
+* Patch 5/5 is new patch which converts bindings to json-schema.
+
+Changed for v3:
+* Dropped reading assigned-clock-rates
+* Increased the maximum clock frequency to 24480000
+
+Changes for v2:
+* Instead of completely dropping clock-frequency property marked it as
+  deprecated.
+* Split up imx6qdl-wandboard.dtsi changes as separate patch.
+
+Lad Prabhakar (5):
+  media: dt-bindings: media: i2c: Deprecate usage of the clock-frequency
+    property
+  media: i2c: ov5645: Switch to assigned-clock-rates
+  media: i2c: ov5645: Increase tolerance of external clock frequency
+  ARM: dts: imx6qdl-wandboard: Switch to assigned-clock-rates for ov5645
+    node
+  media: dt-bindings: media: i2c: convert ov5645 bindings to json-schema
+
+ .../devicetree/bindings/media/i2c/ov5645.txt  |  54 -------
+ .../devicetree/bindings/media/i2c/ov5645.yaml | 140 ++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-wandboard.dtsi      |   3 +-
+ drivers/media/i2c/ov5645.c                    |  30 ++--
+ 4 files changed, 156 insertions(+), 71 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+
 -- 
-2.23.0
+2.20.1
 
