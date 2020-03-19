@@ -2,52 +2,51 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B98C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6F9C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD34820658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E8320658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624437;
-	bh=apxNGTTawxO88AhaRt5S23Z7rTLns5Lk95jgyvF3/SA=;
+	s=default; t=1584624439;
+	bh=Ga1wbWDQiSyIK3IRl0E8Lde9WoZlLk82AH/T4G6Jpn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c24Mo+E46k2afAtX9RN2aSkgH0BwuLUNC1qxH/6a/jsGc0c7nLcTtg/2Dn0+9NZDg
-	 WvkULzAoQgi/TISUsYvMjWTiaK/63+4Jda5fH+DISnURIvN+gzVuXlohkYcf706emC
-	 WtBUYgcif1nLgun8QIa8WLPP8kKY25KkvZuknLzg=
+	b=aESok9Olz3Eh0gxQgo4OOr84qsOn0fE78MNFGF1JAavxNDFqUG8perOQK/F/muvJg
+	 M9Vno3SZ4Q82EM3gHWDcbT0D4hW4tWI0OiVOU/7X6AM4mQIlc23zHiNGLLkZywKyS6
+	 rkxUk/2AvHqnXkS6hjKizAF4HeExH6NSoYm0KGDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730864AbgCSN1P (ORCPT
+        id S1730865AbgCSN1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:27:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55332 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:27:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730725AbgCSN1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:27:10 -0400
+        id S1730737AbgCSN1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:27:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FBD021835;
-        Thu, 19 Mar 2020 13:27:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 738AB207FC;
+        Thu, 19 Mar 2020 13:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624429;
-        bh=apxNGTTawxO88AhaRt5S23Z7rTLns5Lk95jgyvF3/SA=;
+        s=default; t=1584624434;
+        bh=Ga1wbWDQiSyIK3IRl0E8Lde9WoZlLk82AH/T4G6Jpn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NnSO92M/k1uoCXnFEJMV8TTq01OPstxiHUsyIw8ZOLKeL4WlhdIxgD1fgZZ4y2TZg
-         axWQYQwiKd8Cyj6bERX6BqmIWdOEDYwlHeSsF3P4h5Xda+4yXVONqQvlVncpQ7KYuF
-         wJMwainYXJ5yd9rU69YfzDLJTTqRwzx8o/KAKcoI=
+        b=LcBnD+ieuP1H31iRH+xJKBr0FPt6P0tVuUddTUJo1DV0f6MHmsgQyk9J8bKbxJOJ+
+         OZsyy1ub0F8kL+S2AewITPzcUdvm8KFqm/djnnPOBMtH6UTSdlSWulv2ABdyOTzaYe
+         /Qu5hYu5eDI3uDv6JLG7Eu9t2+2FDHFgEMLfVkro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Esben Haabendal <esben@geanix.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 29/65] net: ll_temac: Fix race condition causing TX hang
-Date:   Thu, 19 Mar 2020 14:04:11 +0100
-Message-Id: <20200319123935.546705776@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 5.5 59/65] ARM: 8957/1: VDSO: Match ARMv8 timer in cntvct_functional()
+Date:   Thu, 19 Mar 2020 14:04:41 +0100
+Message-Id: <20200319123944.904257080@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -60,69 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Esben Haabendal <esben@geanix.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 84823ff80f7403752b59e00bb198724100dc611c ]
+commit 45939ce292b4b11159719faaf60aba7d58d5fe33 upstream.
 
-It is possible that the interrupt handler fires and frees up space in
-the TX ring in between checking for sufficient TX ring space and
-stopping the TX queue in temac_start_xmit. If this happens, the
-queue wake from the interrupt handler will occur before the queue is
-stopped, causing a lost wakeup and the adapter's transmit hanging.
+It is possible for a system with an ARMv8 timer to run a 32-bit kernel.
+When this happens we will unconditionally have the vDSO code remove the
+__vdso_gettimeofday and __vdso_clock_gettime symbols because
+cntvct_functional() returns false since it does not match that
+compatibility string.
 
-To avoid this, after stopping the queue, check again whether there is
-sufficient space in the TX ring. If so, wake up the queue again.
+Fixes: ecf99a439105 ("ARM: 8331/1: VDSO initialization, mapping, and synchronization")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This is a port of the similar fix in axienet driver,
-commit 7de44285c1f6 ("net: axienet: Fix race condition causing TX hang").
-
-Fixes: 23ecc4bde21f ("net: ll_temac: fix checksum offload logic")
-Signed-off-by: Esben Haabendal <esben@geanix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/xilinx/ll_temac_main.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ arch/arm/kernel/vdso.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 21c1b4322ea78..fd578568b3bff 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -788,6 +788,9 @@ static void temac_start_xmit_done(struct net_device *ndev)
- 		stat = be32_to_cpu(cur_p->app0);
- 	}
+--- a/arch/arm/kernel/vdso.c
++++ b/arch/arm/kernel/vdso.c
+@@ -95,6 +95,8 @@ static bool __init cntvct_functional(voi
+ 	 */
+ 	np = of_find_compatible_node(NULL, NULL, "arm,armv7-timer");
+ 	if (!np)
++		np = of_find_compatible_node(NULL, NULL, "arm,armv8-timer");
++	if (!np)
+ 		goto out_put;
  
-+	/* Matches barrier in temac_start_xmit */
-+	smp_mb();
-+
- 	netif_wake_queue(ndev);
- }
- 
-@@ -830,9 +833,19 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
- 
- 	if (temac_check_tx_bd_space(lp, num_frag + 1)) {
--		if (!netif_queue_stopped(ndev))
--			netif_stop_queue(ndev);
--		return NETDEV_TX_BUSY;
-+		if (netif_queue_stopped(ndev))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_stop_queue(ndev);
-+
-+		/* Matches barrier in temac_start_xmit_done */
-+		smp_mb();
-+
-+		/* Space might have just been freed - check again */
-+		if (temac_check_tx_bd_space(lp, num_frag))
-+			return NETDEV_TX_BUSY;
-+
-+		netif_wake_queue(ndev);
- 	}
- 
- 	cur_p->app0 = 0;
--- 
-2.20.1
-
+ 	if (of_property_read_bool(np, "arm,cpu-registers-not-fw-configured"))
 
 
