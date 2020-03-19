@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481BCC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0DEC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 149B821473
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A442137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgCSOMr (ORCPT
+        id S1728456AbgCSOM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:12:47 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60926 "EHLO
+        Thu, 19 Mar 2020 10:12:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60921 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727755AbgCSOK7 (ORCPT
+        with ESMTP id S1727751AbgCSOK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:10:59 -0400
+        Thu, 19 Mar 2020 10:10:58 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEvsn-00025y-Jt; Thu, 19 Mar 2020 15:10:49 +0100
+        id 1jEvsn-00022l-3I; Thu, 19 Mar 2020 15:10:49 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 72E0F1C22AA;
-        Thu, 19 Mar 2020 15:10:46 +0100 (CET)
-Date:   Thu, 19 Mar 2020 14:10:46 -0000
-From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B403C1C22A5;
+        Thu, 19 Mar 2020 15:10:43 +0100 (CET)
+Date:   Thu, 19 Mar 2020 14:10:43 -0000
+From:   "tip-bot2 for Leo Yan" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf vendor events intel: Add NO_NMI_WATCHDOG metric
- constraint
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
+Subject: [tip: perf/core] perf cs-etm: Fix unsigned variable comparison to zero
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Robert Walker <robert.walker@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        coresight ml <coresight@lists.linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1582581564-184429-6-git-send-email-kan.liang@linux.intel.com>
-References: <1582581564-184429-6-git-send-email-kan.liang@linux.intel.com>
+In-Reply-To: <20200219021811.20067-6-leo.yan@linaro.org>
+References: <20200219021811.20067-6-leo.yan@linaro.org>
 MIME-Version: 1.0
-Message-ID: <158462704613.28353.4328251690443058213.tip-bot2@tip-bot2>
+Message-ID: <158462704338.28353.16418800886208337652.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -64,179 +67,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     b95fcd2c1c25bd14f55d5d6ab268b3ab00b8a774
-Gitweb:        https://git.kernel.org/tip/b95fcd2c1c25bd14f55d5d6ab268b3ab00b8a774
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Mon, 24 Feb 2020 13:59:24 -08:00
+Commit-ID:     bc010dd657ee0309276c88ab828b9ad156f75b31
+Gitweb:        https://git.kernel.org/tip/bc010dd657ee0309276c88ab828b9ad156f75b31
+Author:        Leo Yan <leo.yan@linaro.org>
+AuthorDate:    Wed, 19 Feb 2020 10:18:11 +08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 10 Mar 2020 14:56:46 -03:00
+CommitterDate: Wed, 11 Mar 2020 10:48:44 -03:00
 
-perf vendor events intel: Add NO_NMI_WATCHDOG metric constraint
+perf cs-etm: Fix unsigned variable comparison to zero
 
-Add NO_NMI_WATCHDOG metric constraint to Page_Walks_Utilization for Sky Lake
-and Cascade Lake.
+The variable 'offset' in function cs_etm__sample() is u64 type, it's not
+appropriate to check it with 'while (offset > 0)'; this patch changes to
+'while (offset)'.
 
-Committer testing:
-
-On a Lenovo T480S, Intel(R) Core(TM) i7-8650U Kaby Lake, that looking at x86's
-mapfile.csv file is a:
-
-  $ grep -w skylake tools/perf/pmu-events/arch/x86/mapfile.csv
-  GenuineIntel-6-[4589]E,v24,skylake,core
-  $
-
-So uses the constraint added in this patch in this file:
-
-  tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-
-Before:
-
-  # perf stat -a -M Page_Walks_Utilization sleep 2
-
-   Performance counter stats for 'system wide':
-
-       <not counted>      itlb_misses.walk_pending                                      (0.00%)
-       <not counted>      dtlb_load_misses.walk_pending                                     (0.00%)
-       <not counted>      dtlb_store_misses.walk_pending                                     (0.00%)
-       <not counted>      ept.walk_pending                                              (0.00%)
-       <not counted>      cycles                                                        (0.00%)
-
-         2.001750514 seconds time elapsed
-
-  Some events weren't counted. Try disabling the NMI watchdog:
-  	echo 0 > /proc/sys/kernel/nmi_watchdog
-  	perf stat ...
-  	echo 1 > /proc/sys/kernel/nmi_watchdog
-  The events in group usually have to be from the same PMU. Try reorganizing the group.
-  #
-
-After:
-
-  # perf stat -a -M Page_Walks_Utilization sleep 2
-  Splitting metric group Page_Walks_Utilization into standalone metrics.
-  Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:
-      echo 0 > /proc/sys/kernel/nmi_watchdog
-      perf stat ...
-      echo 1 > /proc/sys/kernel/nmi_watchdog
-  ,
-   Performance counter stats for 'system wide':
-
-          36,883,102      itlb_misses.walk_pending  #      0.1 Page_Walks_Utilization   (79.99%)
-         123,104,146      dtlb_load_misses.walk_pending                                     (80.02%)
-          13,720,795      dtlb_store_misses.walk_pending                                     (79.99%)
-                   0      ept.walk_pending                                              (79.99%)
-       1,519,948,400      cycles                                                        (80.01%)
-
-         2.002170780 seconds time elapsed
-
-  #
-
-Before and after, if we disable the nmi_watchdog we get:
-
-  # echo 0 > /proc/sys/kernel/nmi_watchdog
-  # perf stat -a -M Page_Walks_Utilization sleep 2
-
-   Performance counter stats for 'system wide':
-
-          33,721,658      itlb_misses.walk_pending  #      0.1 Page_Walks_Utilization
-          84,070,996      dtlb_load_misses.walk_pending
-           9,816,071      dtlb_store_misses.walk_pending
-                   0      ept.walk_pending
-         704,920,899      cycles
-
-         2.002331670 seconds time elapsed
-
-  #
-
-  More information about the metric expressions:
-
-  # perf stat -v -a -M Page_Walks_Utilization sleep 2
-  Using CPUID GenuineIntel-6-8E-A
-  metric expr ( itlb_misses.walk_pending + dtlb_load_misses.walk_pending + dtlb_store_misses.walk_pending + ept.walk_pending ) / ( 2 * cycles ) for Page_Walks_Utilization
-  found event itlb_misses.walk_pending
-  found event dtlb_load_misses.walk_pending
-  found event dtlb_store_misses.walk_pending
-  found event ept.walk_pending
-  found event cycles
-  adding {itlb_misses.walk_pending,dtlb_load_misses.walk_pending,dtlb_store_misses.walk_pending,ept.walk_pending,cycles}:W
-   -> cpu/umask=0x10,(null)=0x186a3,event=0x85/
-   -> cpu/umask=0x10,(null)=0x1e8483,event=0x8/
-   -> cpu/umask=0x10,(null)=0x1e8483,event=0x49/
-   -> cpu/umask=0x10,(null)=0x1e8483,event=0x4f/
-  itlb_misses.walk_pending: 8085772 16010162799 16010162799
-  dtlb_load_misses.walk_pending: 28134579 16010162799 16010162799
-  dtlb_store_misses.walk_pending: 7276535 16010162799 16010162799
-  ept.walk_pending: 2 16010162799 16010162799
-  cycles: 315140605 16010162799 16010162799
-
-   Performance counter stats for 'system wide':
-
-           8,085,772      itlb_misses.walk_pending  #      0.1 Page_Walks_Utilization
-          28,134,579      dtlb_load_misses.walk_pending
-           7,276,535      dtlb_store_misses.walk_pending
-                   2      ept.walk_pending
-         315,140,605      cycles
-
-         2.002333181 seconds time elapsed
-
-  #
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/1582581564-184429-6-git-send-email-kan.liang@linux.intel.com
+Cc: Robert Walker <robert.walker@arm.com>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: coresight ml <coresight@lists.linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lore.kernel.org/lkml/20200219021811.20067-6-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json | 3 ++-
- tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json      | 3 ++-
- tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json     | 3 ++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/util/cs-etm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-index f946532..a728c6e 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-@@ -215,7 +215,8 @@
-         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
-         "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
-         "MetricGroup": "TLB",
--        "MetricName": "Page_Walks_Utilization"
-+        "MetricName": "Page_Walks_Utilization",
-+        "MetricConstraint": "NO_NMI_WATCHDOG"
-     },
-     {
-         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-index e7feb60..f97e831 100644
---- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
-@@ -215,7 +215,8 @@
-         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
-         "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
-         "MetricGroup": "TLB",
--        "MetricName": "Page_Walks_Utilization"
-+        "MetricName": "Page_Walks_Utilization",
-+        "MetricConstraint": "NO_NMI_WATCHDOG"
-     },
-     {
-         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
-diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-index 21d7a0c..35f5db1 100644
---- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-@@ -215,7 +215,8 @@
-         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
-         "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
-         "MetricGroup": "TLB",
--        "MetricName": "Page_Walks_Utilization"
-+        "MetricName": "Page_Walks_Utilization",
-+        "MetricConstraint": "NO_NMI_WATCHDOG"
-     },
-     {
-         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 87d9943..62d2f9b 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -962,7 +962,7 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
+ 	if (packet->isa == CS_ETM_ISA_T32) {
+ 		u64 addr = packet->start_addr;
+ 
+-		while (offset > 0) {
++		while (offset) {
+ 			addr += cs_etm__t32_instr_size(etmq,
+ 						       trace_chan_id, addr);
+ 			offset--;
