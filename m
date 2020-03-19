@@ -2,156 +2,101 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F248C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A73C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308C120740
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0578A20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DaICgVai"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zy7A3gLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgCSKFX (ORCPT
+        id S1727006AbgCSKJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:05:23 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:29782 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725768AbgCSKFW (ORCPT
+        Thu, 19 Mar 2020 06:09:30 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54115 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgCSKJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:05:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584612320;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=biS3cShpXl2Aq0UEQn21ymKBE/YmvTY+/p2BtT5ta1k=;
-        b=DaICgVaiolpt7aK7OUJmCWpBw3hPXvtHqKOOiCaau+8ifb0SftcxPfT52aDmk+xVgQayI5
-        on5gxiVfrBrYISHGgRMeUTDMDzMGD5ZREagHeCaf6AXMuP7Tc/BID0X1MtisXs+HExp7nd
-        9s6V4wIl4es47lRP7Yvd4USX+vXqqf8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-AOLXX8Z2MS-jwdbrLnTWvg-1; Thu, 19 Mar 2020 06:05:18 -0400
-X-MC-Unique: AOLXX8Z2MS-jwdbrLnTWvg-1
-Received: by mail-wm1-f69.google.com with SMTP id i24so499139wml.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 03:05:18 -0700 (PDT)
+        Thu, 19 Mar 2020 06:09:30 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 25so1397715wmk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 03:09:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=RUn9UxzNYqDlVvjBdc02JsbNjG/1HKK11KHzgN8DpHk=;
+        b=Zy7A3gLvgvG/ej7PLOBuw+h4UHQ5YbbbobNUkbeATbvkfuxaQMOb0vCCzKzXulEcjw
+         Bflohb+c02EaGzLqe2kK0BuFaN6SiD4Vh3o5Z5DsCwi/hTTnjafJiooBLOzlmiLonQfq
+         VErW8XaIC6T6pTsNu7/AX+kP031rgbcXZ6HgannJPJPKd2wqBCXPu006yPFmo21RUGiN
+         L+Uzh/7ygSs1dOedYs1gEKqoqeQMW7ydWG1eRuOmfe3pM3dwE2yYYcQzmxvI3QcPe2f3
+         XzwNrVNlGh2T8ZCEksGYeFItDSMGoRFJuF3kAKSgBT79fR1850m+Cy0qSAYAGwYgneQl
+         Pkuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=biS3cShpXl2Aq0UEQn21ymKBE/YmvTY+/p2BtT5ta1k=;
-        b=LPtwhcoyKJ1IHyIz2bQ7OCiCuQXYzpHGGs5AMkCAXBPCqpJG2esrIvIR0/mo8sqnQl
-         cZDR5yYZw4A/BxAB7nycZVfs9Sh5B2Hpejz0Y+XEzVHWaRDzKTsp0WxRq1jixtMuKKZM
-         5zNnevmss1Oa5O5NvciTg8lwNA0WnE0l+r+p6taPjKaOUgvVhEyMdW7aZ045T+dKJERv
-         8NKwQK+ytgopZIkPvePj3aoDk3ylPmgjuhuHP2y9w/AzeBYtNvNit9PihDb/I53h2tnn
-         u98fehIG/mN9Jc4DjS/aiVgAnA7xWRcpjuNPQfYSBVQx98YVQNaPr3rMlXwCkb8M4iY0
-         KONw==
-X-Gm-Message-State: ANhLgQ1yShq4WEeCEZpnFpWxoo2H9t0xS64YGMXP3xsE/BUdDA2Yb141
-        tu4/W0KsEYJFStpgiJTWfVzrRODOrab4u6wBrf8uPmqVlTBSqFvlKdP22xIHhCZCLGqflpCP8eW
-        Oig0jLg1bonDfN/I9VQ9Q5JUP
-X-Received: by 2002:a05:600c:2c0f:: with SMTP id q15mr2657228wmg.64.1584612317513;
-        Thu, 19 Mar 2020 03:05:17 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vteptDrM0Sa4MuQRsMwkR4OkaNbZvD0oN0fqzKGp8th+KLIwNuYkrMPUb6mOK28WU/CULOflA==
-X-Received: by 2002:a05:600c:2c0f:: with SMTP id q15mr2657206wmg.64.1584612317270;
-        Thu, 19 Mar 2020 03:05:17 -0700 (PDT)
-Received: from [192.168.178.58] ([151.21.15.43])
-        by smtp.gmail.com with ESMTPSA id t126sm2628652wmb.27.2020.03.19.03.05.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 03:05:16 -0700 (PDT)
-Subject: Re: [PATCH] KVM: nSVM: check for EFER.SVME=1 before entering guest
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <1584535300-6571-1-git-send-email-pbonzini@redhat.com>
- <b5cb03b1-9840-f8f5-843a-1eab680d5e8e@oracle.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <6426c98d-d206-aeb7-93fa-da62b77df21a@redhat.com>
-Date:   Thu, 19 Mar 2020 11:05:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=RUn9UxzNYqDlVvjBdc02JsbNjG/1HKK11KHzgN8DpHk=;
+        b=bCVtoLu1+9T+qomcNAc/K+ZGztv9eX9eYIEZjB1iH3d+Jby/yH+7FdJ00wF/W1AaZi
+         6BcpzcdQJnjFkJ65/17MGKo7mAGRch9mFV4yCP+y1/dkULom8udLzoi3rHgMto05kfiB
+         aialQRTMG0WJIIDLkbFy3+GYnPOek9agzw2xCxS+s3HP3OjEsBDRVuuTgml01TIjbECE
+         +3BY1YeDUCy38LQh2BEb10cCxhRm0ZWzAenv0mMFEFBwbyASIVpKTagf5PDckb1nVu1/
+         7KOkM4XbIU2ycDoBzKe6u2Te5oGsRbGkAOqTYwB4Wp8YM7GR44AXF37yk3Fhctb1Ugm0
+         0omA==
+X-Gm-Message-State: ANhLgQ3gK+eC6cjWbZm/5DpOfYBhEUEoeWjzMGqm1wed2xUFcdZQJIlf
+        6IC1cZFtQACZS6txmYNQ0mTF+Q==
+X-Google-Smtp-Source: ADFU+vvPWW5ImdZ2pav4UsRH9+6PgZUguig9OJgjiIdwzr6ph+GkNIPoA4BMw5D7ED82x6qxdypSqw==
+X-Received: by 2002:a05:600c:2319:: with SMTP id 25mr2829698wmo.106.1584612568933;
+        Thu, 19 Mar 2020 03:09:28 -0700 (PDT)
+Received: from dell ([2.27.35.213])
+        by smtp.gmail.com with ESMTPSA id h16sm2730355wrr.48.2020.03.19.03.09.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 03:09:28 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 10:10:14 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, tglx@linutronix.de,
+        fabrice.gasnier@st.com, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] mfd: stm32: Add defines to be used for clkevent
+ purpose
+Message-ID: <20200319101014.GA5477@dell>
+References: <20200217134546.14562-1-benjamin.gaignard@st.com>
+ <20200217134546.14562-3-benjamin.gaignard@st.com>
+ <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <b5cb03b1-9840-f8f5-843a-1eab680d5e8e@oracle.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <e9f7eaac-5b61-1662-2ae1-924d126e6a97@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/03/20 19:40, Krish Sadhukhan wrote:
+On Thu, 20 Feb 2020, Daniel Lezcano wrote:
+> On 17/02/2020 14:45, Benjamin Gaignard wrote:
+> > Add defines to be able to enable/clear irq and configure one shot mode.
+> > 
+> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 > 
-> On 3/18/20 5:41 AM, Paolo Bonzini wrote:
->> EFER is set for L2 using svm_set_efer, which hardcodes EFER_SVME to 1
->> and hides
->> an incorrect value for EFER.SVME in the L1 VMCB.  Perform the check
->> manually
->> to detect invalid guest state.
->>
->> Reported-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
->> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
->> ---
->>   arch/x86/kvm/svm.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
->> index 08568ae9f7a1..2125c6ae5951 100644
->> --- a/arch/x86/kvm/svm.c
->> +++ b/arch/x86/kvm/svm.c
->> @@ -3558,6 +3558,9 @@ static bool nested_svm_vmrun_msrpm(struct
->> vcpu_svm *svm)
->>     static bool nested_vmcb_checks(struct vmcb *vmcb)
->>   {
->> +    if ((vmcb->save.efer & EFER_SVME) == 0)
->> +        return false;
->> +
->>       if ((vmcb->control.intercept & (1ULL << INTERCEPT_VMRUN)) == 0)
->>           return false;
->>   
-> 
-> Ah! This now tells me that I forgot the KVM fix that was supposed to
-> accompany my patchset.
+> Are you fine if I pick this patch with the series?
 
-Heh, indeed.  I was puzzled for a second after applying it, then decided
-I would just fix it myself. :)
+Nothing heard from you since I Acked this.
 
-> Do we need this check in software ? I wasn't checking the bit in KVM and
-> instead I was just making sure that L0 sets that bit based on the
-> setting in nested vmcb:
+Are you still planning on taking this patch?
 
-The only effect of the function below over svm_set_efer is to guarantee
-a vmrun error to happen.  Doing the test in nested_vmcb_checks is more
-consistent with other must-be-one bits such as the VMRUN intercept, and
-it's also a smaller patch.
+If so, can you also take patch 1 please?
 
-Paolo
-
-> 
-> +static void nested_svm_set_efer(struct kvm_vcpu *vcpu, u64
-> nested_vmcb_efer)
-> +{
-> +       svm_set_efer(vcpu, nested_vmcb_efer);
-> +
-> +       if (!(nested_vmcb_efer & EFER_SVME))
-> +               to_svm(vcpu)->vmcb->save.efer &= ~EFER_SVME;
-> +}
-> +
->  static int is_external_interrupt(u32 info)
->  {
->         info &= SVM_EVTINJ_TYPE_MASK | SVM_EVTINJ_VALID;
-> @@ -3554,7 +3562,7 @@ static void enter_svm_guest_mode(struct vcpu_svm
-> *svm, u64
->         svm->vmcb->save.gdtr = nested_vmcb->save.gdtr;
->         svm->vmcb->save.idtr = nested_vmcb->save.idtr;
->         kvm_set_rflags(&svm->vcpu, nested_vmcb->save.rflags);
-> -       svm_set_efer(&svm->vcpu, nested_vmcb->save.efer);
-> +       nested_svm_set_efer(&svm->vcpu, nested_vmcb->save.efer);
->         svm_set_cr0(&svm->vcpu, nested_vmcb->save.cr0);
->         svm_set_cr4(&svm->vcpu, nested_vmcb->save.cr4);
->         if (npt_enabled) {
-> 
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
