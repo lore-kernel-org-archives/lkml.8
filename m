@@ -2,89 +2,116 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CD5C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D62C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1072166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623810;
-	bh=uA9dNGFTVjm5hMfIoQVOhtwQWGQP4pc0yF2ftu6yNqY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X9RaCZQUePPop6JSY5jImF9UjwtcK76o4uoaixD8XwTZretSFzAhhIoHaIqbIGYGu
-	 YqR8OrauMCLDJme0r8blF95zYdWeHbG4If0qkVlHAEoEUCIw04f16Nwtck4zrxMfPl
-	 Rvdrg2/NfowLjtlblmPv0H3XQNNoZPOJAP8LB0Eo=
+	by mail.kernel.org (Postfix) with ESMTP id AFCEA2098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+cYXbZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbgCSNQp (ORCPT
+        id S1729602AbgCSNQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:16:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728442AbgCSNQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:16:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B1E520724;
-        Thu, 19 Mar 2020 13:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623802;
-        bh=uA9dNGFTVjm5hMfIoQVOhtwQWGQP4pc0yF2ftu6yNqY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v6RcRUZaXoSxXf8V79Uzc0eSkeugzRHBHBuzf9rXoH7wNKfH0Dq5hdAOXqK4E5uWg
-         F1tTKXQsy1h5W3pJ/K2gaNGxe2+KtTXGmEhcw3o61QinOMrtj6uK9HozDfkcwgfdMu
-         ebIw8fyxgkGJoDFYSMqMTfKNCk3Bqh7nDR2Ixb68=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.14 58/99] nl80211: add missing attribute validation for channel switch
-Date:   Thu, 19 Mar 2020 14:03:36 +0100
-Message-Id: <20200319123959.358836226@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
-References: <20200319123941.630731708@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 19 Mar 2020 09:16:52 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45390 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729584AbgCSNQr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:16:47 -0400
+Received: by mail-pg1-f195.google.com with SMTP id m15so1244582pgv.12;
+        Thu, 19 Mar 2020 06:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nqJw5vg4Nil/Y9pZjcpy6DTelU/teueaanPhC3c5U58=;
+        b=T+cYXbZAHaDkG0GNHDjApa0wSTlshXtBKTVMP29hon48mbyn2rSVvYi8nKMBRhYv9j
+         MaKesS8Pu3GoCeHrmfoHRCXKVwIARQ+N1VF8r9mMjrHKehag+deLDFwHqy1/FTUkY05S
+         sVFv9NZdiGYRSgp05pOjM0JIVbyLu+ZxdRZxdviw9Je8WpmC/i2tyZNZz+Te2KvU9QW8
+         kdwYoB2a2CEZcw/nAJpp1R7rHtdDIZKpe9p5irMpWk6Wzn/6LtM5AysvML1Dnh/9sa3O
+         Kr6n9MBkKJjOY7RyLAJSwa7bpppLJSIOzc7Ly3KI+uiKWassksQrMsoh1gxvZTIgRr/o
+         pY3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nqJw5vg4Nil/Y9pZjcpy6DTelU/teueaanPhC3c5U58=;
+        b=mRFmk+aj2hWGaRIfsxl1SlHTG7xILVvQOW1MX56m29lCcG1f2BSjYjBhZJaKC6Dbm6
+         n+pJKY6vx9p2FqpzOHTJJkNxnS3aeQvsoNm6kLqCEvXMdeFGuV0BaRsd2bbAfVd5VpW8
+         j7qEzC3g0LP3ST3JgFf83F69+C22i6tkSdCg/ylp6rP+BuSpyYVxZAbeWeBmolGA7LNo
+         jxfkqAs5yiPhoA3iKlQb4weVMFzf2XBtiTZe/qUUoyLFr2l1mFSxnjgSmW9CbmvQCxY4
+         8JDuQbvjuINghO5aoo3ePmHCqLxACwHR1X5XMjs79c+ffwDgE7rvA7YGj06l+2OYniZ/
+         t63A==
+X-Gm-Message-State: ANhLgQ0dnfrclRn8/Q46u7sETT+fXd8VC5eug8eICwYBxoozTsS/sjUQ
+        sqtPCM5Q1573bVL19JcKVRRk1FOg
+X-Google-Smtp-Source: ADFU+vsVUcop1IJD5Y5GJDWMkZo9mIv9UFBUlK2kkpeO2PwWiaR6FToo9iw+OWXW3qnKj5G8oMYMrA==
+X-Received: by 2002:a63:fd0d:: with SMTP id d13mr2905382pgh.302.1584623806046;
+        Thu, 19 Mar 2020 06:16:46 -0700 (PDT)
+Received: from localhost ([216.24.188.11])
+        by smtp.gmail.com with ESMTPSA id j38sm2383940pgi.51.2020.03.19.06.16.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Mar 2020 06:16:45 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, davem@davemloft.net,
+        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org
+Cc:     linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH net-next v2] net: stmmac: dwmac_lib: remove unnecessary checks in dwmac_dma_reset()
+Date:   Thu, 19 Mar 2020 21:16:38 +0800
+Message-Id: <20200319131638.12936-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+it will check the return value of dwmac_dma_reset() in the
+stmmac_init_dma_engine() function and report an error if the
+return value is not zero. so don't need check here.
 
-commit 5cde05c61cbe13cbb3fa66d52b9ae84f7975e5e6 upstream.
-
-Add missing attribute validation for NL80211_ATTR_OPER_CLASS
-to the netlink policy.
-
-Fixes: 1057d35ede5d ("cfg80211: introduce TDLS channel switch commands")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Link: https://lore.kernel.org/r/20200303051058.4089398-4-kuba@kernel.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
 ---
- net/wireless/nl80211.c |    1 +
- 1 file changed, 1 insertion(+)
+v1 -> v2:
+	changed subject-prefix to [PATCH net-next v2] from [PATCH]
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -424,6 +424,7 @@ static const struct nla_policy nl80211_p
- 	[NL80211_ATTR_USER_PRIO] = { .type = NLA_U8 },
- 	[NL80211_ATTR_ADMITTED_TIME] = { .type = NLA_U16 },
- 	[NL80211_ATTR_SMPS_MODE] = { .type = NLA_U8 },
-+	[NL80211_ATTR_OPER_CLASS] = { .type = NLA_U8 },
- 	[NL80211_ATTR_MAC_MASK] = { .len = ETH_ALEN },
- 	[NL80211_ATTR_WIPHY_SELF_MANAGED_REG] = { .type = NLA_FLAG },
- 	[NL80211_ATTR_NETNS_FD] = { .type = NLA_U32 },
+ drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c b/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
+index 688d36095333..cb87d31a99df 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
+@@ -16,19 +16,14 @@
+ int dwmac_dma_reset(void __iomem *ioaddr)
+ {
+ 	u32 value = readl(ioaddr + DMA_BUS_MODE);
+-	int err;
+ 
+ 	/* DMA SW reset */
+ 	value |= DMA_BUS_MODE_SFT_RESET;
+ 	writel(value, ioaddr + DMA_BUS_MODE);
+ 
+-	err = readl_poll_timeout(ioaddr + DMA_BUS_MODE, value,
++	return readl_poll_timeout(ioaddr + DMA_BUS_MODE, value,
+ 				 !(value & DMA_BUS_MODE_SFT_RESET),
+ 				 10000, 100000);
+-	if (err)
+-		return -EBUSY;
+-
+-	return 0;
+ }
+ 
+ /* CSR1 enables the transmit DMA to check for new descriptor */
+-- 
+2.25.0
 
