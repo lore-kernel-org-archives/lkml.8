@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 846E3C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FFDC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52C602098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 695A32098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623910;
-	bh=ip0Zp0+YNOXcVYAm9P+nrD0aOp6Hxhhd2Oa4CbV0I1A=;
+	s=default; t=1584623913;
+	bh=0kxq0BJjqASj1v92/2XvVAjaj22dPauRFuuHXWbmc9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dFopnXlZA/37fbeHqdWs1sQYX1g6j8AEw5w6DKjaVTxfo1oRDrioS3SWaLsY9/h6k
-	 77UDOZw2HXSiwS/H8B2IokxgLDQ/RVDvsWFfkundNW2g11oCk2CEvohmHPtFCZBqJW
-	 KKgZnZ8FdOMRybTxOxxtuO+pZ2PRJ1ayBSZd9zYA=
+	b=H8Q61+J30Th/dKGsTWNPe9nNxzeskuKMm8mp901fAmXJ4/EmUfM1XE6W8xvU3bFlN
+	 A2BpU/gcvfij+PDE73/VKmSHd07f5kPy12xblTHt2gZnwpMsRDpsztc6NZEY1CcFKc
+	 VZLKC8hbra2tWpM3o6YAD23T8p/YCCQslrjvdiOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbgCSNS3 (ORCPT
+        id S1727979AbgCSNSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40604 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729785AbgCSNSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:18:23 -0400
+        id S1729786AbgCSNS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:18:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8F1921556;
-        Thu, 19 Mar 2020 13:18:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51D5E2173E;
+        Thu, 19 Mar 2020 13:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623903;
-        bh=ip0Zp0+YNOXcVYAm9P+nrD0aOp6Hxhhd2Oa4CbV0I1A=;
+        s=default; t=1584623905;
+        bh=0kxq0BJjqASj1v92/2XvVAjaj22dPauRFuuHXWbmc9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZWRlDMMwZh0owGtMJnkR0Wp4uQ5Jxqwro/OtAO3G18IlppARjRGYGaUs5YXGC2Fru
-         gr8xdKZPHfuM94AwYYQkdY8lA5mt+GG7o9FTgoVwwI0VMppkcfePUTes70Eg9JAIq8
-         cWqFAQM8gPPoAK8d4vqJpnVPJzM3fJYIxfKzEZZs=
+        b=rOzJCzPghIvpx00pcikdfnobNHqyyx/FmygtULuBadfHboRbrKDbR671uXv39wGzR
+         BocsD5vmi1XkhevfcbhU+GLws2z+8FqX5tPvxazqWaYnEVgYsvv3VmVjWX5iU5C4gZ
+         57ADOsk8ETRKpRTtfD1vb24gyKX/BIIXqdBAor+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
+        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 92/99] slip: not call free_netdev before rtnl_unlock in slip_open
-Date:   Thu, 19 Mar 2020 14:04:10 +0100
-Message-Id: <20200319124007.093433693@linuxfoundation.org>
+Subject: [PATCH 4.14 93/99] hinic: fix a bug of setting hw_ioctxt
+Date:   Thu, 19 Mar 2020 14:04:11 +0100
+Message-Id: <20200319124007.255188924@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -61,36 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit f596c87005f7b1baeb7d62d9a9e25d68c3dfae10 ]
+[ Upstream commit d2ed69ce9ed3477e2a9527e6b89fe4689d99510e ]
 
-As the description before netdev_run_todo, we cannot call free_netdev
-before rtnl_unlock, fix it by reorder the code.
+a reserved field is used to signify prime physical function index
+in the latest firmware version, so we must assign a value to it
+correctly
 
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Reviewed-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Signed-off-by: Luo bin <luobin9@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/slip/slip.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c | 1 +
+ drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h | 2 +-
+ drivers/net/ethernet/huawei/hinic/hinic_hw_if.h  | 1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
-index b07f367abd915..d7882b548b79a 100644
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -867,7 +867,10 @@ static int slip_open(struct tty_struct *tty)
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
- 	sl_free_netdev(sl->dev);
-+	/* do not call free_netdev before rtnl_unlock */
-+	rtnl_unlock();
- 	free_netdev(sl->dev);
-+	return err;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+index 79b5674470842..46aba02b8672b 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+@@ -312,6 +312,7 @@ static int set_hw_ioctxt(struct hinic_hwdev *hwdev, unsigned int rq_depth,
+ 	}
  
- err_exit:
- 	rtnl_unlock();
+ 	hw_ioctxt.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
++	hw_ioctxt.ppf_idx = HINIC_HWIF_PPF_IDX(hwif);
+ 
+ 	hw_ioctxt.set_cmdq_depth = HW_IOCTXT_SET_CMDQ_DEPTH_DEFAULT;
+ 	hw_ioctxt.cmdq_depth = 0;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
+index 0f5563f3b7798..a011fd2d26270 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
+@@ -104,8 +104,8 @@ struct hinic_cmd_hw_ioctxt {
+ 
+ 	u8      rsvd2;
+ 	u8      rsvd3;
++	u8      ppf_idx;
+ 	u8      rsvd4;
+-	u8      rsvd5;
+ 
+ 	u16     rq_depth;
+ 	u16     rx_buf_sz_idx;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
+index 5b4760c0e9f53..f683ccbdfca02 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
+@@ -146,6 +146,7 @@
+ #define HINIC_HWIF_FUNC_IDX(hwif)       ((hwif)->attr.func_idx)
+ #define HINIC_HWIF_PCI_INTF(hwif)       ((hwif)->attr.pci_intf_idx)
+ #define HINIC_HWIF_PF_IDX(hwif)         ((hwif)->attr.pf_idx)
++#define HINIC_HWIF_PPF_IDX(hwif)        ((hwif)->attr.ppf_idx)
+ 
+ #define HINIC_FUNC_TYPE(hwif)           ((hwif)->attr.func_type)
+ #define HINIC_IS_PF(hwif)               (HINIC_FUNC_TYPE(hwif) == HINIC_PF)
 -- 
 2.20.1
 
