@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD75BC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D00C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BAA20789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C8020789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623311;
-	bh=CsQT18CPjTjTSx68+Br9l53FvcOFAGgFl8ji2Gx8FMI=;
+	s=default; t=1584623316;
+	bh=ED8I+F82MzV8WjOsG+NjX3J8mODwxBnxQmNMv+YhSFM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VmBpLeFmg+iITIXp6J4iCEBrDjerFo7WZ5sKGBmEDEfhjRntkIlCJWyJ6wOqLJHh4
-	 CIcsJaGe0+G4KsiWsivSSeCndGUat5bT7Ydc0qFshynjN84rpMMCXw3Xk9XzAJ8U2N
-	 cwyeSUGm2cfiFAuQS5JCo4CuuvSZ8fs8KjKQ7nUA=
+	b=d7XvpJag3fwdxvl9/plh1z2+pXwBFcgKMWDBU7MIqgG0EP9g4yPWWhw4THP4GQjyg
+	 RQrYipUNASN90c2I7PyLbMy/RDAnn0nJelHUDmZrUgKX0kNpWenhcbtc/0Oy8EjGFD
+	 f6aW9Nx2esj3haDvpVvfqrvP6c59r0g+fVjv7Ugk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbgCSNIa (ORCPT
+        id S1727517AbgCSNIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:08:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52550 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:08:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgCSNIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:08:24 -0400
+        id S1727103AbgCSNIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:08:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FC05208D5;
-        Thu, 19 Mar 2020 13:08:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0233214D8;
+        Thu, 19 Mar 2020 13:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623303;
-        bh=CsQT18CPjTjTSx68+Br9l53FvcOFAGgFl8ji2Gx8FMI=;
+        s=default; t=1584623311;
+        bh=ED8I+F82MzV8WjOsG+NjX3J8mODwxBnxQmNMv+YhSFM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TzrI35XuZsmEumHF7docExG3onYQfYwJLOO8Km6DWEGntn8DOk8payA71RKf16Yq3
-         o8XDG0s3On+OQK2JDyVM+Qjrzqdc+Wtr/5OAQh8BYLI7kaDMuUKhAimzgsAm8BSpEO
-         Wi8zzcRQk0+SyV/5mRJAWZjryoSD9MmOJdunTJh4=
+        b=QldzL3hUQP0sjF54iZAXhIKAfS9FoFQI8AYvPAh0XwdnmaXEmF1rMw94MK3xZNl8C
+         0Hsk9fIlrzUQKENgB+Nzq6zr1PBGg29IXnUn0TlDIj0uHFq7rznco45sCijouOxfnc
+         tg+nscrotcA+k72sk2ANg/uYZZ/lUnmCMj/aS8nE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?q?Linus=20L=FCssing?= <linus.luessing@c0d3.blue>,
         Sven Eckelmann <sven@narfation.org>,
-        Antonio Quartulli <a@unstable.cc>,
-        Marek Lindner <mareklindner@neomailbox.ch>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 60/93] batman-adv: Fix speedy join in gateway client mode
-Date:   Thu, 19 Mar 2020 14:00:04 +0100
-Message-Id: <20200319123943.958803953@linuxfoundation.org>
+Subject: [PATCH 4.4 63/93] batman-adv: Fix transmission of final, 16th fragment
+Date:   Thu, 19 Mar 2020 14:00:07 +0100
+Message-Id: <20200319123944.858061121@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -61,42 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Linus Lüssing <linus.luessing@c0d3.blue>
 
-commit d1fe176ca51fa3cb35f70c1d876d9a090e9befce upstream.
+commit 51c6b429c0c95e67edd1cb0b548c5cf6a6604763 upstream.
 
-Speedy join only works when the received packet is either broadcast or an
-4addr unicast packet. Thus packets converted from broadcast to unicast via
-the gateway handling code have to be converted to 4addr packets to allow
-the receiving gateway server to add the sender address as temporary entry
-to the translation table.
+Trying to split and transmit a unicast packet in 16 parts will fail for
+the final fragment: After having sent the 15th one with a frag_packet.no
+index of 14, we will increase the the index to 15 - and return with an
+error code immediately, even though one more fragment is due for
+transmission and allowed.
 
-Not doing it will make the batman-adv gateway server drop the DHCP response
-in many situations because it doesn't yet have the TT entry for the
-destination of the DHCP response.
+Fixing this issue by moving the check before incrementing the index.
 
-Fixes: 371351731e9c ("batman-adv: change interface_rx to get orig node")
+While at it, adding an unlikely(), because the check is actually more of
+an assertion.
+
+Fixes: ee75ed88879a ("batman-adv: Fragment and send skbs larger than mtu")
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Marek Lindner <mareklindner@neomailbox.ch>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/send.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/batman-adv/fragmentation.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/batman-adv/send.c
-+++ b/net/batman-adv/send.c
-@@ -381,8 +381,8 @@ int batadv_send_skb_via_gw(struct batadv
- 	struct batadv_orig_node *orig_node;
+--- a/net/batman-adv/fragmentation.c
++++ b/net/batman-adv/fragmentation.c
+@@ -480,6 +480,10 @@ bool batadv_frag_send_packet(struct sk_b
  
- 	orig_node = batadv_gw_get_selected_orig(bat_priv);
--	return batadv_send_skb_unicast(bat_priv, skb, BATADV_UNICAST, 0,
--				       orig_node, vid);
-+	return batadv_send_skb_unicast(bat_priv, skb, BATADV_UNICAST_4ADDR,
-+				       BATADV_P_DATA, orig_node, vid);
- }
+ 	/* Eat and send fragments from the tail of skb */
+ 	while (skb->len > max_fragment_size) {
++		/* The initial check in this function should cover this case */
++		if (frag_header.no == BATADV_FRAG_MAX_FRAGMENTS - 1)
++			goto out_err;
++
+ 		skb_fragment = batadv_frag_create(skb, &frag_header, mtu);
+ 		if (!skb_fragment)
+ 			goto out_err;
+@@ -490,10 +494,6 @@ bool batadv_frag_send_packet(struct sk_b
+ 		batadv_send_skb_packet(skb_fragment, neigh_node->if_incoming,
+ 				       neigh_node->addr);
+ 		frag_header.no++;
+-
+-		/* The initial check in this function should cover this case */
+-		if (frag_header.no == BATADV_FRAG_MAX_FRAGMENTS - 1)
+-			goto out_err;
+ 	}
  
- void batadv_schedule_bat_ogm(struct batadv_hard_iface *hard_iface)
+ 	/* Make room for the fragment header. */
 
 
