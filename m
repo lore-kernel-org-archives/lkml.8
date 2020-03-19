@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC59EC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BD8C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E3020658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C2620658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624340;
-	bh=x/7Mj1IVLKhB1GyaA358yPJMXxDjNwkvTdsrP80kqqM=;
+	s=default; t=1584624343;
+	bh=YAFvu5ij+AyAowyPL31UII9ZhMcFpurD7oRq4jnXm+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I4PDaHfxGhbM5Orb24UQeKkmIaiAnDamcNEl5S2yaenjtYQndvYlkp7AxNbgWnrzM
-	 rMI+9yend3gjSIql5JdUXdN3Yqn4CEZHeBQeNQWFYjext/Q+KwroN6pUD91c+BC1L4
-	 1QdGYT+rHgsXHWxzVb/ZZsi5DMTXCku+zAJnDook=
+	b=ZAuVmLv3EKGzRpFy1pIMcW39YEkvUpLYFfeRXFsP+I0ManpGXaBJKlP7xQQQ00YK7
+	 bN5I8AyGYyUCGcB+okejr9O/uXISrQ6z0dq6Cqw0mAa/EMey8kXpX9cHGvNy8CDFxi
+	 594DNYWQ8Im17QRFLqUT1SVM2zpiVEkDRjUvyEf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbgCSNZj (ORCPT
+        id S1730353AbgCSNZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53254 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730655AbgCSNZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:37 -0400
+        id S1730655AbgCSNZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D45EF2098B;
-        Thu, 19 Mar 2020 13:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AE1C214D8;
+        Thu, 19 Mar 2020 13:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624336;
-        bh=x/7Mj1IVLKhB1GyaA358yPJMXxDjNwkvTdsrP80kqqM=;
+        s=default; t=1584624338;
+        bh=YAFvu5ij+AyAowyPL31UII9ZhMcFpurD7oRq4jnXm+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F5KVKQpupb1nxQCcXN/0PFX/RcayhjdKUrxRZJnSKNdBehJcUUbuQ6lq+n091ilna
-         fIG6jSqruW7X1jqA3TgLHEmxmIssu/jQfU3LkMv5Dz7pqaD57oU80R6x9BNRD/Pi1A
-         JhDHTZCER2IR1hrbxEdUVkrICmb/werMUwtgWBTs=
+        b=C7wV8bA28ZfK9Is1qsSJB3/gz230DlFzCUSSDPnAoUQ8HL+Qh0gurZx95qYbqc7Ml
+         0NQ57kGkspNmXVVFiKI3zLL2MunNUDZMVGBMB632gFPSyLT0ImP5X3DBnJJnfr/G04
+         wbPlnvZDnBU8eVBXzY1An7WXeU60irhOZKU3BqGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 27/65] net: ks8851-ml: Fix IRQ handling and locking
-Date:   Thu, 19 Mar 2020 14:04:09 +0100
-Message-Id: <20200319123934.961487440@linuxfoundation.org>
+        stable@vger.kernel.org, Mansour Behabadi <mansour@oxplot.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 10/65] HID: apple: Add support for recent firmware on Magic Keyboards
+Date:   Thu, 19 Mar 2020 14:03:52 +0100
+Message-Id: <20200319123929.495355777@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -62,100 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Mansour Behabadi <mansour@oxplot.com>
 
-[ Upstream commit 44343418d0f2f623cb9da6f5000df793131cbe3b ]
+[ Upstream commit e433be929e63265b7412478eb7ff271467aee2d7 ]
 
-The KS8851 requires that packet RX and TX are mutually exclusive.
-Currently, the driver hopes to achieve this by disabling interrupt
-from the card by writing the card registers and by disabling the
-interrupt on the interrupt controller. This however is racy on SMP.
+Magic Keyboards with more recent firmware (0x0100) report Fn key differently.
+Without this patch, Fn key may not behave as expected and may not be
+configurable via hid_apple fnmode module parameter.
 
-Replace this approach by expanding the spinlock used around the
-ks_start_xmit() TX path to ks_irq() RX path to assure true mutual
-exclusion and remove the interrupt enabling/disabling, which is
-now not needed anymore. Furthermore, disable interrupts also in
-ks_net_stop(), which was missing before.
-
-Note that a massive improvement here would be to re-use the KS8851
-driver approach, which is to move the TX path into a worker thread,
-interrupt handling to threaded interrupt, and synchronize everything
-with mutexes, but that would be a much bigger rework, for a separate
-patch.
-
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Mansour Behabadi <mansour@oxplot.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/hid/hid-apple.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index 1c9e70c8cc30f..58579baf3f7a0 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -513,14 +513,17 @@ static irqreturn_t ks_irq(int irq, void *pw)
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 6ac8becc2372e..d732d1d10cafb 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -340,7 +340,8 @@ static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
+ 		unsigned long **bit, int *max)
  {
- 	struct net_device *netdev = pw;
- 	struct ks_net *ks = netdev_priv(netdev);
-+	unsigned long flags;
- 	u16 status;
- 
-+	spin_lock_irqsave(&ks->statelock, flags);
- 	/*this should be the first in IRQ handler */
- 	ks_save_cmd_reg(ks);
- 
- 	status = ks_rdreg16(ks, KS_ISR);
- 	if (unlikely(!status)) {
- 		ks_restore_cmd_reg(ks);
-+		spin_unlock_irqrestore(&ks->statelock, flags);
- 		return IRQ_NONE;
- 	}
- 
-@@ -546,6 +549,7 @@ static irqreturn_t ks_irq(int irq, void *pw)
- 		ks->netdev->stats.rx_over_errors++;
- 	/* this should be the last in IRQ handler*/
- 	ks_restore_cmd_reg(ks);
-+	spin_unlock_irqrestore(&ks->statelock, flags);
- 	return IRQ_HANDLED;
- }
- 
-@@ -615,6 +619,7 @@ static int ks_net_stop(struct net_device *netdev)
- 
- 	/* shutdown RX/TX QMU */
- 	ks_disable_qmu(ks);
-+	ks_disable_int(ks);
- 
- 	/* set powermode to soft power down to save power */
- 	ks_set_powermode(ks, PMECR_PM_SOFTDOWN);
-@@ -671,10 +676,9 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	netdev_tx_t retv = NETDEV_TX_OK;
- 	struct ks_net *ks = netdev_priv(netdev);
-+	unsigned long flags;
- 
--	disable_irq(netdev->irq);
--	ks_disable_int(ks);
--	spin_lock(&ks->statelock);
-+	spin_lock_irqsave(&ks->statelock, flags);
- 
- 	/* Extra space are required:
- 	*  4 byte for alignment, 4 for status/length, 4 for CRC
-@@ -688,9 +692,7 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
- 		dev_kfree_skb(skb);
- 	} else
- 		retv = NETDEV_TX_BUSY;
--	spin_unlock(&ks->statelock);
--	ks_enable_int(ks);
--	enable_irq(netdev->irq);
-+	spin_unlock_irqrestore(&ks->statelock, flags);
- 	return retv;
- }
- 
+ 	if (usage->hid == (HID_UP_CUSTOM | 0x0003) ||
+-			usage->hid == (HID_UP_MSVENDOR | 0x0003)) {
++			usage->hid == (HID_UP_MSVENDOR | 0x0003) ||
++			usage->hid == (HID_UP_HPVENDOR2 | 0x0003)) {
+ 		/* The fn key on Apple USB keyboards */
+ 		set_bit(EV_REP, hi->input->evbit);
+ 		hid_map_usage_clear(hi, usage, bit, max, EV_KEY, KEY_FN);
 -- 
 2.20.1
 
