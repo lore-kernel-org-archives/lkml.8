@@ -2,166 +2,211 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1CFC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E43C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B267B20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59CF20739
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="LrhUCrty"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CK6NauoX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgCSKgm (ORCPT
+        id S1727088AbgCSKhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:36:42 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:43180 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgCSKgm (ORCPT
+        Thu, 19 Mar 2020 06:37:50 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:23672 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727016AbgCSKht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:36:42 -0400
-Received: by mail-il1-f196.google.com with SMTP id d14so1706550ilq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 03:36:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jByhry3gs2H5qXvZC0UkGfNm9a2QynZUOXNZT5iWXPU=;
-        b=LrhUCrty6VTjteyrFkLT7oftaJdH0uJD6Q0eFmNpFZhLmrcMUjPIENPiH/VahRSJWE
-         gyY7COYRnuM+V0sVs2XAi7UpAOkwh7RI/2fzxeAfteP2aK4lKMp/PBGmtEIuaBwy67n7
-         2ko6h3Owylut1BfFwiR+NmZB+QvKBGExgfATY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jByhry3gs2H5qXvZC0UkGfNm9a2QynZUOXNZT5iWXPU=;
-        b=gT0/UXbZS9DKpWHcXf3VrDazhhxVX3VEo1euvonCRQMs0Xp/bA2bi/gBuK8Y+Zp2aQ
-         5+RKalp4MQOIzlTMBmBKOq7tQ1hl02HcO6y2HJAkC/Jeiw7dpjpiPNQXtRvvNAviz8mS
-         kkRip4vorIsrISmJiD54E7fkn+d50oS0RmSjI2oijrSqDAL9knGnKTpVhLlL1cnFtvon
-         gP6MFuBUIXqYlpOySRqf+0fHvH7zqBsJ461nkBM962yNhnCm1AourSD3vu13kFHMlu9s
-         bZ0ONbRlo4HgQPty6JFJk0SJqWp1x7wh6herbXw53bsFDYsputy7yFpuycLChDgJWazD
-         lHUw==
-X-Gm-Message-State: ANhLgQ1MKFuDNgXFiUF2MMo76M5s5D74ySbv0jb78cPcXTlEE+WgPvoR
-        D5V/lnONt2v7Kpqeqeic6SYOXz6S37lNCkSihSBiMQ==
-X-Google-Smtp-Source: ADFU+vtUIa7Up2vK9a1UDtKtiFK1yVGwE7V/lc6dlLy2fPPUu+x6KfsLr3DI3JqtxeKHg9FokDpkfS2gY2/i2Lc5+pk=
-X-Received: by 2002:a92:77c2:: with SMTP id s185mr1238038ilc.297.1584614201515;
- Thu, 19 Mar 2020 03:36:41 -0700 (PDT)
+        Thu, 19 Mar 2020 06:37:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584614267;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CiofkCH/sv7+7rpU6YsJXFWeq/w+9dcTqMLo0EbVExc=;
+        b=CK6NauoXI0Z63pckSz1EJg+hyCd+MygVolTHycTgOZr35DfTpEoCbe8AGdOOrgW6BAw9CK
+        h3qfyyWJcHeT23ccKfmGyCAUSJYSSY6cci5KgryR4fpDcIKlgx+EcDRYwhB2QewLVzBe0V
+        se9+mHy+sPggjiyAje65N7HtEB3cMes=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-285-cUdAiS5ZN1Sq4KuQlxE-7w-1; Thu, 19 Mar 2020 06:37:44 -0400
+X-MC-Unique: cUdAiS5ZN1Sq4KuQlxE-7w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BBCD5107ACC4;
+        Thu, 19 Mar 2020 10:37:41 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C3A2117B91;
+        Thu, 19 Mar 2020 10:37:37 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com>
+References: <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com> <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Ian Kent <raven@themaw.net>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
 MIME-Version: 1.0
-References: <20200318171003.5179-1-jagan@amarulasolutions.com> <20200318185713.GA28092@ravnborg.org>
-In-Reply-To: <20200318185713.GA28092@ravnborg.org>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 19 Mar 2020 16:06:30 +0530
-Message-ID: <CAMty3ZAjmu+h7XTyTUfge3kXFE=a=1iFm7MjR6DYnQnZ615fOg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: display: panel: Convert feiyang,
- fy07024di26a30d to DT schema
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3085879.1584614257.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Thu, 19 Mar 2020 10:37:37 +0000
+Message-ID: <3085880.1584614257@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-On Thu, Mar 19, 2020 at 12:27 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Jagan.
->
-> On Wed, Mar 18, 2020 at 10:40:01PM +0530, Jagan Teki wrote:
-> > Convert the feiyang,fy07024di26a30d panel bindings to DT schema.
+> >  (2) It's more efficient as we can return specific binary data rather =
+than
+> >      making huge text dumps.  Granted, sysfs and procfs could present =
+the
+> >      same data, though as lots of little files which have to be
+> >      individually opened, read, closed and parsed.
+> =
+
+> Asked this a number of times, but you haven't answered yet:  what
+> application would require such a high efficiency?
+
+Low efficiency means more time doing this when that time could be spent do=
+ing
+other things - or even putting the CPU in a powersaving state.  Using an
+open/read/close render-to-text-and-parse interface *will* be slower and le=
+ss
+efficient as there are more things you have to do to use it.
+
+Then consider doing a walk over all the mounts in the case where there are
+10000 of them - we have issues with /proc/mounts for such.  fsinfo() will =
+end
+up doing a lot less work.
+
+> I strongly feel that mount info belongs in the latter category
+
+I feel strongly that a lot of stuff done through /proc or /sys shouldn't b=
+e.
+
+Yes, it's nice that you can explore it with cat and poke it with echo, but=
+ it
+has a number of problems: security, atomiticity, efficiency and providing =
+an
+round-the-back way to pin stuff if not done right.
+
+> >  (3) We wouldn't have the overhead of open and close (even adding a
+> >      self-contained readfile() syscall has to do that internally
+> =
+
+> Busted: add f_op->readfile() and be done with all that.   For example
+> DEFINE_SHOW_ATTRIBUTE() could be trivially moved to that interface.
+
+Look at your example.  "f_op->".  That's "file->f_op->" I presume.
+
+You would have to make it "i_op->" to avoid the open and the close - and f=
+or
+things like procfs and sysfs, that's probably entirely reasonable - but be=
+ar
+in mind that you still have to apply all the LSM file security controls, j=
+ust
+in case the backing filesystem is, say, ext4 rather than procfs.
+
+> We could optimize existing proc, sys, etc. interfaces, but it's not
+> been an issue, apparently.
+
+You can't get rid of or change many of the existing interfaces.  A lot of =
+them
+are effectively indirect system calls and are, as such, part of the fixed
+UAPI.  You'd have to add a parallel optimised set.
+
+> >  (6) Don't have to create/delete a bunch of sysfs/procfs nodes each ti=
+me a
+> >      mount happens or is removed - and since systemd makes much use of
+> >      mount namespaces and mount propagation, this will create a lot of
+> >      nodes.
+> =
+
+> Not true.
+
+This may not be true if you roll your own special filesystem.  It *is* tru=
+e if
+you do it in procfs or sysfs.  The files don't exist if you don't create n=
+odes
+or attribute tables for them.
+
+> > The argument for doing this through procfs/sysfs/somemagicfs is that
+> > someone using a shell can just query the magic files using ordinary te=
+xt
+> > tools, such as cat - and that has merit - but it doesn't solve the
+> > query-by-pathname problem.
 > >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
->
-> Thanks for the resend.
->
-> Please fix so the two bindings uses panel-common.yaml.
+> > The suggested way around the query-by-pathname problem is to open the
+> > target file O_PATH and then look in a magic directory under procfs
+> > corresponding to the fd number to see a set of attribute files[*] laid=
+ out.
+> > Bash, however, can't open by O_PATH or O_NOFOLLOW as things stand...
+> =
 
-Is is because few of the bindings in this panel are similar to
-panel-common.yaml?
+> Bash doesn't have fsinfo(2) either, so that's not really a good argument=
+.
 
->
-> And then only properties specific for this binding shall have a
-> description.
->
-> See below - please fix both bindings and resend.
->
->         Sam
->
-> > ---
-> > Changes for v2:
-> > - fix dt_binding_check
-> >
-> >  .../display/panel/feiyang,fy07024di26a30d.txt | 20 -------
-> >  .../panel/feiyang,fy07024di26a30d.yaml        | 57 +++++++++++++++++++
-> >  2 files changed, 57 insertions(+), 20 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
-> > deleted file mode 100644
-> > index 82caa7b65ae8..000000000000
-> > --- a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
-> > +++ /dev/null
-> > @@ -1,20 +0,0 @@
-> > -Feiyang FY07024DI26A30-D 7" MIPI-DSI LCD Panel
-> > -
-> > -Required properties:
-> > -- compatible: must be "feiyang,fy07024di26a30d"
-> > -- reg: DSI virtual channel used by that screen
-> > -- avdd-supply: analog regulator dc1 switch
-> > -- dvdd-supply: 3v3 digital regulator
-> > -- reset-gpios: a GPIO phandle for the reset pin
-> > -
-> > -Optional properties:
-> > -- backlight: phandle for the backlight control.
-> > -
-> > -panel@0 {
-> > -     compatible = "feiyang,fy07024di26a30d";
-> > -     reg = <0>;
-> > -     avdd-supply = <&reg_dc1sw>;
-> > -     dvdd-supply = <&reg_dldo2>;
-> > -     reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
-> > -     backlight = <&backlight>;
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
-> > new file mode 100644
-> > index 000000000000..f292c57a5bd6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
-> > @@ -0,0 +1,57 @@
-> > +# SPDX-License-Identifier: (GPL-2.0+ OR X11)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/feiyang,fy07024di26a30d.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Feiyang FY07024DI26A30-D 7" MIPI-DSI LCD Panel
-> > +
-> > +maintainers:
-> > +  - Jagan Teki <jagan@amarulasolutions.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: feiyang,fy07024di26a30d
-> > +
-> > +  reg:
-> > +    description: DSI virtual channel used by that screen
-> reg is already described elsewhere so no description.
-> Thus is becomes:
->
->     reg: true
+I never claimed that fsinfo() could be accessed directly from the shell.  =
+For
+you proposal, you claimed "immediately usable from all programming languag=
+es,
+including scripts".
 
-Look like reg didn't describe in panel-common.yaml
+> Implementing a utility to show mount attribute(s) by path is trivial
+> for the file based interface, while it would need to be updated for
+> each extension of fsinfo(2).   Same goes for libc, language bindings,
+> etc.
 
-Jagan.
+That's not precisely true.  If you aren't using an extension to an fsinfo(=
+)
+attribute, you wouldn't need to change anything[*].
+
+If you want to use an extension - *even* through a file based interface - =
+you
+*would* have to change your code and your parser.
+
+And, no, extending an fsinfo() attribute would not require any changes to =
+libc
+unless libc is using that attribute[*] and wants to access the extension.
+
+[*] I assume that in C/C++ at least, you'd use linux/fsinfo.h rather than =
+some
+    libc version.
+
+[*] statfs() could be emulated this way, but I'm not sure what else libc
+    specifically is going to look at.  This is more aimed at libmount amon=
+gst
+    other things.
+
+David
+
