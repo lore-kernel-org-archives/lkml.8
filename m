@@ -2,105 +2,122 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C21C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AEEC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCD5A20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3714B20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbgCSNtW (ORCPT
+        id S1727324AbgCSNu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:49:22 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39822 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727141AbgCSNtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:49:22 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 47DB16AAA082909C29D6;
-        Thu, 19 Mar 2020 21:49:16 +0800 (CST)
-Received: from [127.0.0.1] (10.133.217.205) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 19 Mar 2020
- 21:49:05 +0800
-From:   "chengjian (D)" <cj.chengjian@huawei.com>
-Subject: Why is text_mutex used in jump_label_transform for x86_64
-To:     <andrew.murray@arm.com>, <bristot@redhat.com>,
-        <jakub.kicinski@netronome.com>, Kees Cook <keescook@chromium.org>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
-        Li Bin <huawei.libin@huawei.com>, <bobo.shaobowang@huawei.com>,
-        "chengjian (D)" <cj.chengjian@huawei.com>
-Message-ID: <f7f686f2-4f28-1763-dd19-43eff6a5a8f2@huawei.com>
-Date:   Thu, 19 Mar 2020 21:49:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 19 Mar 2020 09:50:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:36370 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726936AbgCSNu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:50:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5937101E;
+        Thu, 19 Mar 2020 06:50:57 -0700 (PDT)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 971113F52E;
+        Thu, 19 Mar 2020 06:50:56 -0700 (PDT)
+Subject: Re: [PATCH] dma: Fix max PFN arithmetic overflow on 32 bit systems
+To:     Alexander Dahl <post@lespocky.de>, x86@kernel.org
+Cc:     Alan Jenkins <alan.christopher.jenkins@gmail.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200302181612.20597-1-post@lespocky.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <b6f6c1de-13bc-79b4-ad0a-fdfb5cb33cec@arm.com>
+Date:   Thu, 19 Mar 2020 13:50:56 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+In-Reply-To: <20200302181612.20597-1-post@lespocky.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.133.217.205]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi，everyone
+On 2020-03-02 6:16 pm, Alexander Dahl wrote:
+> For ARCH=x86 (32 bit) when you set CONFIG_IOMMU_INTEL since c5a5dc4cbbf4
+> ("iommu/vt-d: Don't switch off swiotlb if bounce page is used") there's
+> a dependency on CONFIG_SWIOTLB, which was not necessarily active before.
+> 
+> The init code for swiotlb in 'pci_swiotlb_detect_4gb()' compares
+> something against MAX_DMA32_PFN to decide if it should be active.
+> However that define suffers from an arithmetic overflow since
+> 1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too") when it was
+> first made visible to x86_32.
+> 
+> The effect is at boot time 64 MiB (default size) were allocated for
+> bounce buffers now, which is a noticeable amount of memory on small
+> systems. We noticed this effect on the fli4l Linux distribution when
+> migrating from kernel v4.19 (LTS) to v5.4 (LTS) on boards like pcengines
+> ALIX 2D3 with 256 MiB memory for example:
+> 
+>    Linux version 5.4.22 (buildroot@buildroot) (gcc version 7.3.0 (Buildroot 2018.02.8)) #1 SMP Mon Nov 26 23:40:00 CET 2018
+>    …
+>    Memory: 183484K/261756K available (4594K kernel code, 393K rwdata, 1660K rodata, 536K init, 456K bss , 78272K reserved, 0K cma-reserved, 0K highmem)
+>    …
+>    PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+>    software IO TLB: mapped [mem 0x0bb78000-0x0fb78000] (64MB)
+> 
+> The initial analysis and the suggested fix was done by user 'sourcejedi'
+> at stackoverflow and explicitly marked as GPLv2 for inclusion in the
+> Linux kernel:
+> 
+>    https://unix.stackexchange.com/a/520525/50007
+> 
+> Fixes: https://web.nettworks.org/bugs/browse/FFL-2560
+> Fixes: https://unix.stackexchange.com/q/520065/50007
+> Suggested-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
+> Signed-off-by: Alexander Dahl <post@lespocky.de>
+> ---
+> We tested this in qemu and on real hardware with fli4l on top of v5.4,
+> v5.5, and v5.6-rc kernels, but only as far as the reserved memory goes.
+> The patch itself is based on v5.6-rc3 (IIRC).
+> 
+> A quick grep over the kernel code showed me this define MAX_DMA32_PFN is
+> used in other places as well. I would appreciate feedback on this,
+> because I can not oversee all side effects this might have?!
+> 
+> Thanks again to Alan who proposed the fix, and for his permission to
+> send it upstream.
+> 
+> Greets
+> Alex
+> ---
+>   arch/x86/include/asm/dma.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/dma.h b/arch/x86/include/asm/dma.h
+> index 00f7cf45e699..e25514eca8d6 100644
+> --- a/arch/x86/include/asm/dma.h
+> +++ b/arch/x86/include/asm/dma.h
+> @@ -74,7 +74,7 @@
+>   #define MAX_DMA_PFN   ((16UL * 1024 * 1024) >> PAGE_SHIFT)
+>   
+>   /* 4GB broken PCI/AGP hardware bus master zone */
+> -#define MAX_DMA32_PFN ((4UL * 1024 * 1024 * 1024) >> PAGE_SHIFT)
+> +#define MAX_DMA32_PFN (4UL * ((1024 * 1024 * 1024) >> PAGE_SHIFT))
 
-I'm sorry to disturb you. I have a problem about jump_label, and a bit 
-confused about the code
+FWIW, wouldn't s/UL/ULL/ in the original expression suffice? Failing 
+that, rather than awkward parenthesis trickery it might be clearer to 
+just copy the one from arch/mips/include/asm/dma.h.
 
-I noticed that text_mutex is used in this function under x86_64 
-architecture,
-but other architectures do not.
+Robin.
 
-in arch/x86/kernel/jump_label.c
-         static void __ref jump_label_transform(struct jump_entry *entry,
-              enum jump_label_type type,
-              int init)
-         {
-          mutex_lock(&text_mutex);
-          __jump_label_transform(entry, type, init);
-          mutex_unlock(&text_mutex);
-
-in arch/arm64/kernel/jump_label.c
-
-         void arch_jump_label_transform(struct jump_entry *entry,
-                                        enum jump_label_type type)
-         {
-                 void *addr = (void *)jump_entry_code(entry);
-                 u32 insn;
-
-                 if (type == JUMP_LABEL_JMP) {
-                         insn = 
-aarch64_insn_gen_branch_imm(jump_entry_code(entry),
-jump_entry_target(entry),
-AARCH64_INSN_BRANCH_NOLINK);
-                 } else {
-                         insn = aarch64_insn_gen_nop();
-                 }
-
-                 aarch64_insn_patch_text_nosync(addr, insn);
-         }
-
-
-Is there anything wrong with x86
-
-or
-
-is this missing for other architectures?
-
-
-Thanks
-
----- Cheng Jian
-
-
-
-
-
+>   
+>   #ifdef CONFIG_X86_32
+>   /* The maximum address that we can perform a DMA transfer to on this platform */
+> 
