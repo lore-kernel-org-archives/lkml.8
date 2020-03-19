@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5D8C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E111C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 845BC20732
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2A02072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:48:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgCSIsC (ORCPT
+        id S1727401AbgCSIs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:48:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59709 "EHLO
+        Thu, 19 Mar 2020 04:48:58 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59783 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgCSIry (ORCPT
+        with ESMTP id S1727050AbgCSIsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:47:54 -0400
+        Thu, 19 Mar 2020 04:48:01 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEqqC-0002xM-Bz; Thu, 19 Mar 2020 09:47:48 +0100
+        id 1jEqqJ-000334-Vo; Thu, 19 Mar 2020 09:47:56 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CC4511C229D;
-        Thu, 19 Mar 2020 09:47:47 +0100 (CET)
-Date:   Thu, 19 Mar 2020 08:47:47 -0000
-From:   "tip-bot2 for Lokesh Vutla" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CFB871C229F;
+        Thu, 19 Mar 2020 09:47:52 +0100 (CET)
+Date:   Thu, 19 Mar 2020 08:47:52 -0000
+From:   "tip-bot2 for Matheus Castello" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/timer-ti-dm: Enable autoreload
- in set_pwm
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+Subject: [tip: timers/core] clocksource/drivers/owl: Improve owl_timer_init
+ fail messages
+Cc:     Matheus Castello <matheus@castello.eng.br>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200305082715.15861-7-lokeshvutla@ti.com>
-References: <20200305082715.15861-7-lokeshvutla@ti.com>
+In-Reply-To: <20200219004810.411190-1-matheus@castello.eng.br>
+References: <20200219004810.411190-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-Message-ID: <158460766750.28353.289651065403133840.tip-bot2@tip-bot2>
+Message-ID: <158460767257.28353.6675261030088110845.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,133 +57,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     02e6d546e3bdc1a8a764343cd1ba354da07e8623
-Gitweb:        https://git.kernel.org/tip/02e6d546e3bdc1a8a764343cd1ba354da07e8623
-Author:        Lokesh Vutla <lokeshvutla@ti.com>
-AuthorDate:    Thu, 05 Mar 2020 13:57:15 +05:30
+Commit-ID:     ad1ded9d2e3d1eb452ff58d325aadf237e187bd9
+Gitweb:        https://git.kernel.org/tip/ad1ded9d2e3d1eb452ff58d325aadf237e187bd9
+Author:        Matheus Castello <matheus@castello.eng.br>
+AuthorDate:    Tue, 18 Feb 2020 21:48:10 -03:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Mon, 16 Mar 2020 12:40:51 +01:00
+CommitterDate: Thu, 27 Feb 2020 09:42:00 +01:00
 
-clocksource/drivers/timer-ti-dm: Enable autoreload in set_pwm
+clocksource/drivers/owl: Improve owl_timer_init fail messages
 
-dm timer ops set_load() api allows to configure the load value and to
-set the auto reload feature. But auto reload feature is independent of
-load value and should be part of configuring pwm. This way pwm can be
-disabled by disabling auto reload feature using set_pwm() so that the
-current pwm cycle will be completed. Else pwm disabling causes the
-cycle to be stopped abruptly.
+Check the return from clocksource_mmio_init, add messages in case of
+an error and in case of not having a defined clock property.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200305082715.15861-7-lokeshvutla@ti.com
+Link: https://lore.kernel.org/r/20200219004810.411190-1-matheus@castello.eng.br
 ---
- drivers/clocksource/timer-ti-dm.c          | 16 +++++-----------
- drivers/pwm/pwm-omap-dmtimer.c             |  8 +++++---
- include/linux/platform_data/dmtimer-omap.h |  5 ++---
- 3 files changed, 12 insertions(+), 17 deletions(-)
+ drivers/clocksource/timer-owl.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 73ac73e..f5c73eb 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -562,21 +562,13 @@ static int omap_dm_timer_stop(struct omap_dm_timer *timer)
- 	return 0;
- }
+diff --git a/drivers/clocksource/timer-owl.c b/drivers/clocksource/timer-owl.c
+index 900fe73..ac97420 100644
+--- a/drivers/clocksource/timer-owl.c
++++ b/drivers/clocksource/timer-owl.c
+@@ -135,8 +135,11 @@ static int __init owl_timer_init(struct device_node *node)
+ 	}
  
--static int omap_dm_timer_set_load(struct omap_dm_timer *timer, int autoreload,
-+static int omap_dm_timer_set_load(struct omap_dm_timer *timer,
- 				  unsigned int load)
- {
--	u32 l;
--
- 	if (unlikely(!timer))
- 		return -EINVAL;
+ 	clk = of_clk_get(node, 0);
+-	if (IS_ERR(clk))
+-		return PTR_ERR(clk);
++	if (IS_ERR(clk)) {
++		ret = PTR_ERR(clk);
++		pr_err("Failed to get clock for clocksource (%d)\n", ret);
++		return ret;
++	}
  
- 	omap_dm_timer_enable(timer);
--	l = omap_dm_timer_read_reg(timer, OMAP_TIMER_CTRL_REG);
--	if (autoreload)
--		l |= OMAP_TIMER_CTRL_AR;
--	else
--		l &= ~OMAP_TIMER_CTRL_AR;
--	omap_dm_timer_write_reg(timer, OMAP_TIMER_CTRL_REG, l);
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_LOAD_REG, load);
+ 	rate = clk_get_rate(clk);
  
- 	omap_dm_timer_disable(timer);
-@@ -605,7 +597,7 @@ static int omap_dm_timer_set_match(struct omap_dm_timer *timer, int enable,
- }
+@@ -144,8 +147,12 @@ static int __init owl_timer_init(struct device_node *node)
+ 	owl_timer_set_enabled(owl_clksrc_base, true);
  
- static int omap_dm_timer_set_pwm(struct omap_dm_timer *timer, int def_on,
--				 int toggle, int trigger)
-+				 int toggle, int trigger, int autoreload)
- {
- 	u32 l;
+ 	sched_clock_register(owl_timer_sched_read, 32, rate);
+-	clocksource_mmio_init(owl_clksrc_base + OWL_Tx_VAL, node->name,
+-			      rate, 200, 32, clocksource_mmio_readl_up);
++	ret = clocksource_mmio_init(owl_clksrc_base + OWL_Tx_VAL, node->name,
++				    rate, 200, 32, clocksource_mmio_readl_up);
++	if (ret) {
++		pr_err("Failed to register clocksource (%d)\n", ret);
++		return ret;
++	}
  
-@@ -615,12 +607,14 @@ static int omap_dm_timer_set_pwm(struct omap_dm_timer *timer, int def_on,
- 	omap_dm_timer_enable(timer);
- 	l = omap_dm_timer_read_reg(timer, OMAP_TIMER_CTRL_REG);
- 	l &= ~(OMAP_TIMER_CTRL_GPOCFG | OMAP_TIMER_CTRL_SCPWM |
--	       OMAP_TIMER_CTRL_PT | (0x03 << 10));
-+	       OMAP_TIMER_CTRL_PT | (0x03 << 10) | OMAP_TIMER_CTRL_AR);
- 	if (def_on)
- 		l |= OMAP_TIMER_CTRL_SCPWM;
- 	if (toggle)
- 		l |= OMAP_TIMER_CTRL_PT;
- 	l |= trigger << 10;
-+	if (autoreload)
-+		l |= OMAP_TIMER_CTRL_AR;
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_CTRL_REG, l);
- 
- 	omap_dm_timer_disable(timer);
-diff --git a/drivers/pwm/pwm-omap-dmtimer.c b/drivers/pwm/pwm-omap-dmtimer.c
-index 88a3c56..9e4378d 100644
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -183,7 +183,7 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 	if (timer_active)
- 		omap->pdata->stop(omap->dm_timer);
- 
--	omap->pdata->set_load(omap->dm_timer, true, load_value);
-+	omap->pdata->set_load(omap->dm_timer, load_value);
- 	omap->pdata->set_match(omap->dm_timer, true, match_value);
- 
- 	dev_dbg(chip->dev, "load value: %#08x (%d), match value: %#08x (%d)\n",
-@@ -192,7 +192,8 @@ static int pwm_omap_dmtimer_config(struct pwm_chip *chip,
- 	omap->pdata->set_pwm(omap->dm_timer,
- 			      pwm_get_polarity(pwm) == PWM_POLARITY_INVERSED,
- 			      true,
--			      PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-+			      PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE,
-+			      true);
- 
- 	/* If config was called while timer was running it must be reenabled. */
- 	if (timer_active)
-@@ -222,7 +223,8 @@ static int pwm_omap_dmtimer_set_polarity(struct pwm_chip *chip,
- 	omap->pdata->set_pwm(omap->dm_timer,
- 			      polarity == PWM_POLARITY_INVERSED,
- 			      true,
--			      PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-+			      PWM_OMAP_DMTIMER_TRIGGER_OVERFLOW_AND_COMPARE,
-+			      true);
- 	mutex_unlock(&omap->mutex);
- 
- 	return 0;
-diff --git a/include/linux/platform_data/dmtimer-omap.h b/include/linux/platform_data/dmtimer-omap.h
-index 3173b7b..95d852a 100644
---- a/include/linux/platform_data/dmtimer-omap.h
-+++ b/include/linux/platform_data/dmtimer-omap.h
-@@ -30,12 +30,11 @@ struct omap_dm_timer_ops {
- 	int	(*stop)(struct omap_dm_timer *timer);
- 	int	(*set_source)(struct omap_dm_timer *timer, int source);
- 
--	int	(*set_load)(struct omap_dm_timer *timer, int autoreload,
--			    unsigned int value);
-+	int	(*set_load)(struct omap_dm_timer *timer, unsigned int value);
- 	int	(*set_match)(struct omap_dm_timer *timer, int enable,
- 			     unsigned int match);
- 	int	(*set_pwm)(struct omap_dm_timer *timer, int def_on,
--			   int toggle, int trigger);
-+			   int toggle, int trigger, int autoreload);
- 	int	(*get_pwm_status)(struct omap_dm_timer *timer);
- 	int	(*set_prescaler)(struct omap_dm_timer *timer, int prescaler);
+ 	owl_timer_reset(owl_clkevt_base);
  
