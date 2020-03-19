@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6402DC43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C574C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DA82076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7522076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:57:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbgCSD5A (ORCPT
+        id S1727189AbgCSD5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 23:57:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51524 "EHLO
+        Wed, 18 Mar 2020 23:57:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9027 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726596AbgCSD46 (ORCPT
+        by vger.kernel.org with ESMTP id S1726596AbgCSD5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 23:56:58 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02J3XhBh061937;
-        Wed, 18 Mar 2020 23:56:47 -0400
+        Wed, 18 Mar 2020 23:57:03 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02J3XY6I073047;
+        Wed, 18 Mar 2020 23:56:52 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8hwa1u1-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu7wdkaqg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 23:56:47 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02J3XnFE062380;
-        Wed, 18 Mar 2020 23:56:46 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8hwa1th-1
+        Wed, 18 Mar 2020 23:56:52 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02J3Y9gF074816;
+        Wed, 18 Mar 2020 23:56:52 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu7wdkaq5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 23:56:46 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02J3n2JH031043;
-        Thu, 19 Mar 2020 03:56:45 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma04wdc.us.ibm.com with ESMTP id 2yrpw6wnsu-1
+        Wed, 18 Mar 2020 23:56:52 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02J3ttvL028862;
+        Thu, 19 Mar 2020 03:56:50 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01wdc.us.ibm.com with ESMTP id 2yrpw6nmty-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Mar 2020 03:56:45 +0000
+        Thu, 19 Mar 2020 03:56:50 +0000
 Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02J3ug0O45285652
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02J3uohY16188302
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Mar 2020 03:56:42 GMT
+        Thu, 19 Mar 2020 03:56:50 GMT
 Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45A32112066;
-        Thu, 19 Mar 2020 03:56:42 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 63D6D112065;
+        Thu, 19 Mar 2020 03:56:50 +0000 (GMT)
 Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D9C28112062;
-        Thu, 19 Mar 2020 03:56:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id A1196112064;
+        Thu, 19 Mar 2020 03:56:46 +0000 (GMT)
 Received: from skywalker.ibmuc.com (unknown [9.199.34.213])
         by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 19 Mar 2020 03:56:38 +0000 (GMT)
+        Thu, 19 Mar 2020 03:56:46 +0000 (GMT)
 From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
@@ -61,10 +61,10 @@ To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
 Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
         kirill@shutemov.name,
         "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Subject: [PATCH v2 06/22] powerpc/mce: Don't reload pte val in addr_to_pfn
-Date:   Thu, 19 Mar 2020 09:25:53 +0530
-Message-Id: <20200319035609.158654-7-aneesh.kumar@linux.ibm.com>
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Subject: [PATCH v2 08/22] powerpc/kvm/book3s: switch from raw_spin_*lock to arch_spin_lock.
+Date:   Thu, 19 Mar 2020 09:25:55 +0530
+Message-Id: <20200319035609.158654-9-aneesh.kumar@linux.ibm.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200319035609.158654-1-aneesh.kumar@linux.ibm.com>
 References: <20200319035609.158654-1-aneesh.kumar@linux.ibm.com>
@@ -73,74 +73,65 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
  definitions=2020-03-18_10:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- suspectscore=0 mlxlogscore=794 priorityscore=1501 impostorscore=0
- phishscore=0 clxscore=1015 adultscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003190013
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ clxscore=1015 priorityscore=1501 phishscore=0 suspectscore=0
+ lowpriorityscore=0 mlxlogscore=999 impostorscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003190015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A lockless page table walk should be safe against parallel THP collapse, THP
-split and madvise(MADV_DONTNEED)/parallel fault. This patch makes sure kernel
-won't reload the pteval when checking for different conditions. The patch also added
-a check for pte_present to make sure the kernel is indeed operating
-on a PTE and not a pointer to level 0 table page.
+These functions can get called in realmode. Hence use low level
+arch_spin_lock which is safe to be called in realmode.
 
-The pfn value we find here can be different from the actual pfn on which
-machine check happened. This can happen if we raced with a parallel update
-of the page table. In such a scenario we end up isolating a wrong pfn. But that
-doesn't have any other side effect.
-
-Cc: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
 Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
- arch/powerpc/kernel/mce_power.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ arch/powerpc/kvm/book3s_hv_rm_mmu.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
-index 1cbf7f1a4e3d..c1580fcf95ea 100644
---- a/arch/powerpc/kernel/mce_power.c
-+++ b/arch/powerpc/kernel/mce_power.c
-@@ -27,7 +27,7 @@
-  */
- unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
- {
--	pte_t *ptep;
-+	pte_t *ptep, pte;
- 	unsigned int shift;
- 	unsigned long pfn, flags;
- 	struct mm_struct *mm;
-@@ -39,19 +39,23 @@ unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
+diff --git a/arch/powerpc/kvm/book3s_hv_rm_mmu.c b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
+index 220305454c23..03f8347de48b 100644
+--- a/arch/powerpc/kvm/book3s_hv_rm_mmu.c
++++ b/arch/powerpc/kvm/book3s_hv_rm_mmu.c
+@@ -948,7 +948,7 @@ static long kvmppc_do_h_page_init_zero(struct kvm_vcpu *vcpu,
+ 		return ret;
  
- 	local_irq_save(flags);
- 	ptep = __find_linux_pte(mm->pgd, addr, NULL, &shift);
-+	if (!ptep) {
-+		pfn = ULONG_MAX;
-+		goto out;
-+	}
-+	pte = READ_ONCE(*ptep);
+ 	/* Check if we've been invalidated */
+-	raw_spin_lock(&kvm->mmu_lock.rlock);
++	arch_spin_lock(&kvm->mmu_lock.rlock.raw_lock);
+ 	if (mmu_notifier_retry(kvm, mmu_seq)) {
+ 		ret = H_TOO_HARD;
+ 		goto out_unlock;
+@@ -960,7 +960,7 @@ static long kvmppc_do_h_page_init_zero(struct kvm_vcpu *vcpu,
+ 	kvmppc_update_dirty_map(memslot, dest >> PAGE_SHIFT, PAGE_SIZE);
  
--	if (!ptep || pte_special(*ptep)) {
-+	if (!pte_present(pte) || pte_special(pte)) {
- 		pfn = ULONG_MAX;
- 		goto out;
- 	}
+ out_unlock:
+-	raw_spin_unlock(&kvm->mmu_lock.rlock);
++	arch_spin_unlock(&kvm->mmu_lock.rlock.raw_lock);
+ 	return ret;
+ }
  
- 	if (shift <= PAGE_SHIFT)
--		pfn = pte_pfn(*ptep);
-+		pfn = pte_pfn(pte);
- 	else {
- 		unsigned long rpnmask = (1ul << shift) - PAGE_SIZE;
--		pfn = pte_pfn(__pte(pte_val(*ptep) | (addr & rpnmask)));
-+		pfn = pte_pfn(__pte(pte_val(pte) | (addr & rpnmask)));
- 	}
--
- out:
- 	local_irq_restore(flags);
- 	return pfn;
+@@ -984,7 +984,7 @@ static long kvmppc_do_h_page_init_copy(struct kvm_vcpu *vcpu,
+ 		return ret;
+ 
+ 	/* Check if we've been invalidated */
+-	raw_spin_lock(&kvm->mmu_lock.rlock);
++	arch_spin_lock(&kvm->mmu_lock.rlock.raw_lock);
+ 	if (mmu_notifier_retry(kvm, mmu_seq)) {
+ 		ret = H_TOO_HARD;
+ 		goto out_unlock;
+@@ -996,7 +996,7 @@ static long kvmppc_do_h_page_init_copy(struct kvm_vcpu *vcpu,
+ 	kvmppc_update_dirty_map(dest_memslot, dest >> PAGE_SHIFT, PAGE_SIZE);
+ 
+ out_unlock:
+-	raw_spin_unlock(&kvm->mmu_lock.rlock);
++	arch_spin_unlock(&kvm->mmu_lock.rlock.raw_lock);
+ 	return ret;
+ }
+ 
 -- 
 2.24.1
 
