@@ -2,390 +2,143 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F9FC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6712AC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536472070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:05:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjY3eVRH"
+	by mail.kernel.org (Postfix) with ESMTP id 421072072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgCSTFL (ORCPT
+        id S1727211AbgCSTHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:05:11 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44884 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbgCSTFJ (ORCPT
+        Thu, 19 Mar 2020 15:07:16 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:53667 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCSTHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:05:09 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y24so2811048qtv.11;
-        Thu, 19 Mar 2020 12:05:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6vwHbNJGYUqnSYgAQsNv2iSkZHMRpiWsfpYk2YRWu8E=;
-        b=QjY3eVRH1pJhrIt5lIIJa2vVfaib9ZkNGxKLz2k8ty2GH5e40BxK/WYqsE8sI1jwgD
-         vUqypD1wFsukrzfkwcdEYO7uDIhEqq+HgPbXfP/yYg29iJl53E3tRl81lRvb4pFew8dg
-         PmLqe8tRuJz/cmVvSFaqBKuyY98/7gEi/rMPg4XJss546Xm60d4yAh9c4Z2XeOyj9s2x
-         u/Y9febGffXhIeBHgAVV96ahJshGQLpwbBbRsirEXG7rgvGHjHtH8Zp1x+Zv2hRqvJh8
-         3GGbHFcYyAZkC6vGQp4o6DTZI2B5Pmz7YCmuoX+0/H7/OYzrk5pjJfNd89e4aGr0RD5n
-         V1vw==
+        Thu, 19 Mar 2020 15:07:15 -0400
+Received: by mail-il1-f198.google.com with SMTP id z19so2867310ils.20
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 12:07:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6vwHbNJGYUqnSYgAQsNv2iSkZHMRpiWsfpYk2YRWu8E=;
-        b=FsqUzx259DARylc84D6ZTMyKUwIVM5qHQH01u/Hoa+bZUBZsN3wotNzjSBoQVWZvEG
-         uIQqQjljfkQd8D88gABEqtfTH7RRn7TdQdtyCHW7sCFbdxh4JfcRbhZFaV56NCE64Lol
-         WF/LF4zQB0jeSj0kS2W5navNN7x8YnWrHOrvQRi7aDySRkCDz+K5KzAEEZNLIiB49IIf
-         J+yPcWhJI4OmPVBfPdVHCBzOq7HRWWdzAhS8foFMgJ7motlvz5TdGjaXRtTkZLuOBRRN
-         KpEU/NbHS4BWbyJ36h0OS0vc98nIh3e/ptEVU+uSvrRlmXSFdHKmYn+isuUlEEyQoVp3
-         H8IQ==
-X-Gm-Message-State: ANhLgQ3JJcqrPlnKCc89ZKhkKg3M+R/2M5flP/GHSopW3zud5TKaAaZg
-        0U4OL10pX4Lyrmei/WEyxEJqkO84XLs=
-X-Google-Smtp-Source: ADFU+vtSPJsHEIzhjUJRhNzjDNGQzllL3aQYqQYpxvOngOHRk0gm/6qahP5rKaR4A2bsVE+xaFPDCQ==
-X-Received: by 2002:ac8:7a96:: with SMTP id x22mr4784422qtr.0.1584644707237;
-        Thu, 19 Mar 2020 12:05:07 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id r6sm2114900qkf.71.2020.03.19.12.05.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 12:05:06 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 65D4940F77; Thu, 19 Mar 2020 16:05:04 -0300 (-03)
-Date:   Thu, 19 Mar 2020 16:05:04 -0300
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH v1] perf tool: make Perf tool aware of SELinux access
- control
-Message-ID: <20200319190504.GG14841@kernel.org>
-References: <b8a0669e-36e4-a0e8-fd35-3dbd890d2170@linux.intel.com>
- <f5ed60b2-4a61-dc72-bfd5-6d0af74bc152@linux.intel.com>
- <20200319190126.GF14841@kernel.org>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=JK4j91aQp8xu0adgIRNWGetww6zGg0DWJPZzVkz/f5s=;
+        b=lJpfy6UF4R9+Kh6U5Rbov7lpuV/mkkegwx2I9U6hC9xbW8wpROncO9xE6hkG+TzNGn
+         DV8RmCqKetTU5fIoAPi7+gulI7+s3py/VZKI8ipBRfYT4+XcduMqPnreTucZH6xJsUbr
+         Xj5PFT33+XQZt4qOVtJZNLmjyj80NTsKK34G5EpLIhKO2wvtSCIAhtLL34O/02O80OUN
+         Klr6s7FwYprDDyhwQ9rJjNsBcM4EK6vfkwAIzRa3WiURV9q/p3uInCb8TyYPgcjb/qTw
+         miyeyYvWK1+U8pE4RZusL9E3WeEiesgRl18RST3ulpi3iBwur2GKB+Wxq3N0fxuxNhe1
+         LyhQ==
+X-Gm-Message-State: ANhLgQ0g1fZvjVUo32V5VP0UeEmSVqoiIKI829gbVeNd4lrPIzG+MlJD
+        VcIiW/BQmczWH6syGWQMF7vHWn12hodmzpHniZDeVJy1hhS/
+X-Google-Smtp-Source: ADFU+vtvBsH7etlrl1Zx74wee00IqMfrHha6pAhzcBYU4nKxhFmdO8EF/gSiaAdL5UWYDiwqoAN6Zej/knvSVfttizzdrh8HPPpU
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319190126.GF14841@kernel.org>
-X-Url:  http://acmel.wordpress.com
+X-Received: by 2002:a92:358b:: with SMTP id c11mr4415053ilf.64.1584644834463;
+ Thu, 19 Mar 2020 12:07:14 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 12:07:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000074219d05a139e082@google.com>
+Subject: general protection fault in sctp_ulpevent_nofity_peer_addr_change
+From:   syzbot <syzbot+3950016bd95c2ca0377b@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
+        netdev@vger.kernel.org, nhorman@tuxdriver.com,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 19, 2020 at 04:01:26PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Mar 19, 2020 at 09:23:30AM +0300, Alexey Budankov escreveu:
-> > Is there any thougts, comments or questions so far?
-> > Please share you mind.
- 
-> From a quick look, seems ok, I'll do some testing now,
+Hello,
 
-> > On 13.03.2020 20:27, Alexey Budankov wrote:
-> > > Extend Perf tool with the check of /sys/fs/selinux/enforce value and notify 
-> > > in case access to perf_event_open() syscall is restricted by the enforced 
-> > > SELinux policy settings.
-> > > 
-> > > Testing and evaluation (Fedora 31 x86_64 with enforced Targeted policy extended
-> > > by perf_event class (see refpolicy [1] master branch)):
+syzbot found the following crash on:
 
-So I'll try the steps below with/without your patch, and then... what
-are the steps that a tester needs to go thru to have that refpolicy in?
-Install some new SELinux package or library, spelling out in detail the
-steps one needs to go thru helps reviewing/testing,
+HEAD commit:    5076190d mm: slub: be more careful about the double cmpxch..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d2a61de00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
+dashboard link: https://syzkaller.appspot.com/bug?extid=3950016bd95c2ca0377b
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1162bbe3e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13c93b45e00000
 
-- Arnaldo
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+3950016bd95c2ca0377b@syzkaller.appspotmail.com
 
-> > > [root@host ~]# ps -Z
-> > > LABEL                               PID TTY          TIME CMD
-> > > unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 3960 pts/1 00:00:00 bash
-> > > unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4167 pts/1 00:00:00 ps
-> > > 
-> > > [root@host ~]# ls -alhZ /usr/local/bin/
-> > > total 56M
-> > > drwxr-xr-x.  2 root root       system_u:object_r:bin_t:s0     4.0K Mar  4 12:27 .
-> > > drwxr-xr-x. 12 root root       system_u:object_r:usr_t:s0     4.0K Jul 25  2019 ..
-> > > -rwxr-xr-x.  1 root root       system_u:object_r:bin_t:s0     4.1M Jan 23  2017 bash
-> > > -rwxr-xr-x.  1 root root       system_u:object_r:bin_t:s0     4.1M Jan 23  2017 bash.before_shellshock_patch
-> > > ...
-> > > -rwxr-xr-x.  1 root root       system_u:object_r:bin_t:s0      372 May 14  2019 flask
-> > > -rwxr-xr-x.  1 root root       unconfined_u:object_r:bin_t:s0  24M Mar  4 12:15 perf     <== unprivileged users (perf_event_paranoid)
-> > > -rwxr-x---.  1 root perf_users unconfined_u:object_r:bin_t:s0  24M Mar  4 12:19 perf.cap <== perf_users (CAP_SYS_ADMIN)
-> > > -rwxr-xr-x.  1 root root       system_u:object_r:bin_t:s0      44K Dec  8  2016 spiff
-> > > ...
-> > > lrwxrwxrwx.  1 root root       system_u:object_r:bin_t:s0        4 Aug 21  2018 zstdmt -> zstd
-> > > 
-> > > [root@host ~]# getenforce
-> > > Enforcing
-> > > 
-> > > === Access by unprivileged user ===
-> > > 
-> > > [user@host ~]$ ps -Z
-> > > LABEL                               PID TTY          TIME CMD
-> > > unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4043 pts/2 00:00:00 bash
-> > > unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4168 pts/2 00:00:00 ps
-> > > 
-> > > [user@host ~]$ /usr/local/bin/perf stat -- ls
-> > > Error:
-> > > Access to performance monitoring and observability operations is limited.
-> > > SELinux Enforcing mode is enabled and can limit access to performance
-> > > monitoring and observability operations. Inspect system audit records
-> > > for more perf_event access control information and adjusting the policy.
-> > > Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-> > > access to performance monitoring and observability operations for users
-> > > without CAP_SYS_ADMIN capability. perf_event_paranoid setting is -1:
-> > >   -1: Allow use of (almost) all events by all users
-> > >       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-> > >> = 0: Disallow raw and ftrace function tracepoint access
-> > >> = 1: Disallow CPU event access
-> > >> = 2: Disallow kernel profiling
-> > > To make the adjusted perf_event_paranoid setting permanent preserve it
-> > > in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-> > > 
-> > > [root@host ~]# journalctl --follow
-> > > ... audit[4186]: AVC avc:  denied  { open } for  pid=4186 comm="perf" scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tclass=perf_event permissive=0
-> > > ... audit[4186]: AVC avc:  denied  { open } for  pid=4186 comm="perf" scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tclass=perf_event permissive=0
-> > > ... setroubleshoot[4194]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t. For complete SELinux messages run: sealert -l 9a6f3db2-3d8f-461e-afad-0b5c3a9c3b9d
-> > > ... python3[4194]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t.
-> > >                                           
-> > >                                           *****  Plugin catchall (100. confidence) suggests   **************************
-> > >                                           
-> > >                                           If you believe that perf should be allowed open access on perf_event labeled unconfined_t by default.
-> > >                                           Then you should report this as a bug.
-> > >                                           You can generate a local policy module to allow this access.
-> > >                                           Do
-> > >                                           allow this access for now by executing:
-> > >                                           # ausearch -c 'perf' --raw | audit2allow -M my-perf
-> > >                                           # semodule -X 300 -i my-perf.pp
-> > >                                           
-> > > === Access by perf privileged user ===
-> > > 
-> > > [user@host ~]$ ps -Z
-> > > LABEL                               PID TTY          TIME CMD
-> > > unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4043 pts/2 00:00:00 bash
-> > > unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4168 pts/2 00:00:00 ps
-> > > 
-> > > [user@host ~]$ libcap/progs/getcap /usr/local/bin/perf.cap
-> > > /usr/local/bin/perf.cap = cap_sys_ptrace,cap_syslog,cap_sys_admin+ep
-> > > 
-> > > [user@host ~]$ /usr/local/bin/perf.cap stat -- ls
-> > > Error:
-> > > Access to performance monitoring and observability operations is limited.
-> > > SELinux Enforcing mode is enabled and can limit access to performance
-> > > monitoring and observability operations. Inspect system audit records
-> > > for more perf_event access control information and adjusting the policy.
-> > > Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-> > > access to performance monitoring and observability operations for users
-> > > without CAP_SYS_ADMIN capability. perf_event_paranoid setting is -1:
-> > >   -1: Allow use of (almost) all events by all users
-> > >       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-> > >> = 0: Disallow raw and ftrace function tracepoint access
-> > >> = 1: Disallow CPU event access
-> > >> = 2: Disallow kernel profiling
-> > > To make the adjusted perf_event_paranoid setting permanent preserve it
-> > > in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-> > > 
-> > > [root@host ~]# journalctl --follow
-> > > 
-> > > ... audit[3926]: AVC avc:  denied  { open } for  pid=3926 comm="perf.cap" scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tclass=perf_event permissive=0
-> > > ... audit[3926]: AVC avc:  denied  { open } for  pid=3926 comm="perf.cap" scontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tcontext=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 tclass=perf_event permissive=0
-> > > 
-> > > ... setroubleshoot[3934]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t. For complete SELinux messages run: sealert -l 9a6f3db2-3d8f-461e-afad-0b5c3a9c3b9d
-> > > ... python3[3934]: SELinux is preventing perf from open access on the perf_event labeled unconfined_t.
-> > >                                           
-> > >                                           *****  Plugin catchall (100. confidence) suggests   **************************
-> > >                                           
-> > >                                           If you believe that perf should be allowed open access on perf_event labeled unconfined_t by default.
-> > >                                           Then you should report this as a bug.
-> > >                                           You can generate a local policy module to allow this access.
-> > >                                           Do
-> > >                                           allow this access for now by executing:
-> > >                                           # ausearch -c 'perf' --raw | audit2allow -M my-perf
-> > >                                           # semodule -X 300 -i my-perf.pp
-> > >                                           
-> > > === Open access to performance monitoring and observability operations in unconfined_t domain ===
-> > > 
-> > > [root@host ~]# ausearch -c 'perf' --raw | audit2allow -M my-perf && cat my-perf.te
-> > > 
-> > > module my-perf 1.0;
-> > > 
-> > > require {
-> > > 	type unconfined_t;
-> > > 	class perf_event { cpu kernel open read tracepoint write };
-> > > }
-> > > 
-> > > #============= unconfined_t ==============
-> > > allow unconfined_t self:perf_event { cpu kernel open read tracepoint write };
-> > > 
-> > > [root@host ~]# semodule -X 300 -i my-perf.pp
-> > > 
-> > > [user@host ~]$ ps -Z
-> > > LABEL                               PID TTY          TIME CMD
-> > > unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4043 pts/2 00:00:00 bash
-> > > unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 4168 pts/2 00:00:00 ps
-> > > 
-> > > [user@host ~]$ /usr/local/bin/perf stat -- ls
-> > > Desktop  Documents  Downloads  intel  Music  perf.data	perf.data.old  Pictures  Public  Templates  Videos
-> > > 
-> > >  Performance counter stats for 'ls':
-> > > 
-> > >               0.72 msec task-clock:u              #    0.655 CPUs utilized          
-> > >                  0      context-switches:u        #    0.000 K/sec                  
-> > >                  0      cpu-migrations:u          #    0.000 K/sec                  
-> > >                 98      page-faults:u             #    0.137 M/sec                  
-> > >            908,356      cycles:u                  #    1.266 GHz                    
-> > >            729,984      instructions:u            #    0.80  insn per cycle         
-> > >            142,774      branches:u                #  198.968 M/sec                  
-> > >              8,238      branch-misses:u           #    5.77% of all branches        
-> > > 
-> > >        0.001095239 seconds time elapsed
-> > > 
-> > >        0.001147000 seconds user
-> > >        0.000000000 seconds sys
-> > > 
-> > > [user@host ~]$ /usr/local/bin/perf stat -a
-> > > Error:
-> > > Access to performance monitoring and observability operations is limited.
-> > > SELinux Enforcing mode is enabled and can limit access to performance
-> > > monitoring and observability operations. Inspect system audit records
-> > > for more perf_event access control information and adjusting the policy.
-> > > Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-> > > access to performance monitoring and observability operations for users
-> > > without CAP_SYS_ADMIN capability. perf_event_paranoid setting is -1:
-> > >   -1: Allow use of (almost) all events by all users
-> > >       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-> > >> = 0: Disallow raw and ftrace function tracepoint access
-> > >> = 1: Disallow CPU event access
-> > >> = 2: Disallow kernel profiling
-> > > To make the adjusted perf_event_paranoid setting permanent preserve it
-> > > in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-> > > 
-> > > [user@host ~]$ /usr/local/bin/perf.cap stat -a
-> > > ^C
-> > >  Performance counter stats for 'system wide':
-> > > 
-> > >          13,427.05 msec cpu-clock                 #    7.997 CPUs utilized          
-> > >                783      context-switches          #    0.058 K/sec                  
-> > >                 29      cpu-migrations            #    0.002 K/sec                  
-> > >                  6      page-faults               #    0.000 K/sec                  
-> > >        161,084,874      cycles                    #    0.012 GHz                    
-> > >        146,823,131      instructions              #    0.91  insn per cycle         
-> > >         12,164,802      branches                  #    0.906 M/sec                  
-> > >            380,350      branch-misses             #    3.13% of all branches        
-> > > 
-> > >        1.678938906 seconds time elapsed
-> > > 
-> > > [1] https://github.com/SELinuxProject/refpolicy
-> > > 
-> > > Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> > > ---
-> > >  tools/perf/util/cloexec.c |  4 ++--
-> > >  tools/perf/util/evsel.c   | 40 +++++++++++++++++++++++----------------
-> > >  2 files changed, 26 insertions(+), 18 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/util/cloexec.c b/tools/perf/util/cloexec.c
-> > > index a12872f2856a..9c8ec816261b 100644
-> > > --- a/tools/perf/util/cloexec.c
-> > > +++ b/tools/perf/util/cloexec.c
-> > > @@ -65,7 +65,7 @@ static int perf_flag_probe(void)
-> > >  		return 1;
-> > >  	}
-> > >  
-> > > -	WARN_ONCE(err != EINVAL && err != EBUSY,
-> > > +	WARN_ONCE(err != EINVAL && err != EBUSY && err != EACCES,
-> > >  		  "perf_event_open(..., PERF_FLAG_FD_CLOEXEC) failed with unexpected error %d (%s)\n",
-> > >  		  err, str_error_r(err, sbuf, sizeof(sbuf)));
-> > >  
-> > > @@ -83,7 +83,7 @@ static int perf_flag_probe(void)
-> > >  	if (fd >= 0)
-> > >  		close(fd);
-> > >  
-> > > -	if (WARN_ONCE(fd < 0 && err != EBUSY,
-> > > +	if (WARN_ONCE(fd < 0 && err != EBUSY && err != EACCES,
-> > >  		      "perf_event_open(..., 0) failed unexpectedly with error %d (%s)\n",
-> > >  		      err, str_error_r(err, sbuf, sizeof(sbuf))))
-> > >  		return -1;
-> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > index 816d930d774e..f03ce1d362d3 100644
-> > > --- a/tools/perf/util/evsel.c
-> > > +++ b/tools/perf/util/evsel.c
-> > > @@ -2493,32 +2493,40 @@ int perf_evsel__open_strerror(struct evsel *evsel, struct target *target,
-> > >  			      int err, char *msg, size_t size)
-> > >  {
-> > >  	char sbuf[STRERR_BUFSIZE];
-> > > -	int printed = 0;
-> > > +	int printed = 0, enforced = 0;
-> > >  
-> > >  	switch (err) {
-> > >  	case EPERM:
-> > >  	case EACCES:
-> > > +		printed += scnprintf(msg + printed, size - printed,
-> > > +			"Access to performance monitoring and observability operations is limited.\n");
-> > > +
-> > > +		if (!sysfs__read_int("fs/selinux/enforce", &enforced)) {
-> > > +			if (enforced) {
-> > > +				printed += scnprintf(msg + printed, size - printed,
-> > > +					"SELinux Enforcing mode is enabled and can limit access to performance\n"
-> > > +					"monitoring and observability operations. Inspect system audit records\n"
-> > > +					"for more perf_event access control information and adjusting the policy.\n");
-> > > +			}
-> > > +		}
-> > > +
-> > >  		if (err == EPERM)
-> > > -			printed = scnprintf(msg, size,
-> > > -				"No permission to enable %s event.\n\n",
-> > > +			printed += scnprintf(msg, size,
-> > > +				"No permission to enable %s event.\n",
-> > >  				perf_evsel__name(evsel));
-> > >  
-> > >  		return scnprintf(msg + printed, size - printed,
-> > > -		 "You may not have permission to collect %sstats.\n\n"
-> > > -		 "Consider tweaking /proc/sys/kernel/perf_event_paranoid,\n"
-> > > -		 "which controls use of the performance events system by\n"
-> > > -		 "unprivileged users (without CAP_SYS_ADMIN).\n\n"
-> > > -		 "The current value is %d:\n\n"
-> > > +		 "Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open\n"
-> > > +		 "access to performance monitoring and observability operations for users\n"
-> > > +		 "without CAP_SYS_ADMIN capability. perf_event_paranoid setting is %d:\n"
-> > >  		 "  -1: Allow use of (almost) all events by all users\n"
-> > >  		 "      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK\n"
-> > > -		 ">= 0: Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN\n"
-> > > -		 "      Disallow raw tracepoint access by users without CAP_SYS_ADMIN\n"
-> > > -		 ">= 1: Disallow CPU event access by users without CAP_SYS_ADMIN\n"
-> > > -		 ">= 2: Disallow kernel profiling by users without CAP_SYS_ADMIN\n\n"
-> > > -		 "To make this setting permanent, edit /etc/sysctl.conf too, e.g.:\n\n"
-> > > -		 "	kernel.perf_event_paranoid = -1\n" ,
-> > > -				 target->system_wide ? "system-wide " : "",
-> > > -				 perf_event_paranoid());
-> > > +		 ">= 0: Disallow raw and ftrace function tracepoint access\n"
-> > > +		 ">= 1: Disallow CPU event access\n"
-> > > +		 ">= 2: Disallow kernel profiling\n"
-> > > +		 "To make the adjusted perf_event_paranoid setting permanent preserve it\n"
-> > > +		 "in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)",
-> > > +		 perf_event_paranoid());
-> > >  	case ENOENT:
-> > >  		return scnprintf(msg, size, "The %s event is not supported.",
-> > >  				 perf_evsel__name(evsel));
-> > > 
-> 
-> -- 
-> 
-> - Arnaldo
+general protection fault, probably for non-canonical address 0xdffffc0000000017: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x00000000000000b8-0x00000000000000bf]
+CPU: 0 PID: 10161 Comm: syz-executor044 Not tainted 5.6.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:sctp_ulpevent_nofity_peer_addr_change+0xed/0xa30 net/sctp/ulpevent.c:347
+Code: 03 80 3c 02 00 0f 85 19 08 00 00 48 8b ab a8 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d bd bc 00 00 00 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 70
+RSP: 0018:ffffc900022a7308 EFLAGS: 00010207
+RAX: dffffc0000000000 RBX: ffff888096004150 RCX: 0000000000000000
+RDX: 0000000000000017 RSI: 0000000000000000 RDI: 00000000000000bc
+RBP: 0000000000000000 R08: ffff88809419a500 R09: ffffc900022a7358
+R10: fffff52000454e7a R11: ffffc900022a73d7 R12: 0000000000000000
+R13: 0000000000000004 R14: 0000000000000000 R15: ffff888096004150
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0063) knlGS:000000000935d840
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000020000180 CR3: 0000000093589000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ sctp_assoc_set_primary+0x6c/0x300 net/sctp/associola.c:435
+ sctp_assoc_rm_peer+0x77c/0xa40 net/sctp/associola.c:508
+ sctp_assoc_update+0x50a/0xe30 net/sctp/associola.c:1116
+ sctp_cmd_assoc_update net/sctp/sm_sideeffect.c:836 [inline]
+ sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1305 [inline]
+ sctp_side_effects net/sctp/sm_sideeffect.c:1185 [inline]
+ sctp_do_sm+0x1c57/0x4ed0 net/sctp/sm_sideeffect.c:1156
+ sctp_assoc_bh_rcv+0x386/0x6d0 net/sctp/associola.c:1044
+ sctp_inq_push+0x1da/0x270 net/sctp/inqueue.c:80
+ sctp_backlog_rcv+0x1f3/0x1290 net/sctp/input.c:344
+ sk_backlog_rcv include/net/sock.h:963 [inline]
+ __release_sock+0x134/0x3a0 net/core/sock.c:2440
+ release_sock+0x54/0x1b0 net/core/sock.c:2956
+ sctp_wait_for_connect+0x308/0x530 net/sctp/socket.c:9280
+ __sctp_connect+0x9d2/0xc70 net/sctp/socket.c:1225
+ __sctp_setsockopt_connectx+0x127/0x180 net/sctp/socket.c:1321
+ sctp_setsockopt_connectx net/sctp/socket.c:1353 [inline]
+ sctp_setsockopt net/sctp/socket.c:4698 [inline]
+ sctp_setsockopt+0x15a1/0x7090 net/sctp/socket.c:4655
+ compat_sock_common_setsockopt+0xf6/0x120 net/core/sock.c:3165
+ __compat_sys_setsockopt+0x15d/0x310 net/compat.c:384
+ __do_compat_sys_setsockopt net/compat.c:397 [inline]
+ __se_compat_sys_setsockopt net/compat.c:394 [inline]
+ __ia32_compat_sys_setsockopt+0xb9/0x150 net/compat.c:394
+ do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+ do_fast_syscall_32+0x270/0xe8f arch/x86/entry/common.c:408
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+Modules linked in:
+---[ end trace a970df05c462f077 ]---
+RIP: 0010:sctp_ulpevent_nofity_peer_addr_change+0xed/0xa30 net/sctp/ulpevent.c:347
+Code: 03 80 3c 02 00 0f 85 19 08 00 00 48 8b ab a8 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 8d bd bc 00 00 00 48 89 fa 48 c1 ea 03 <0f> b6 14 02 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 70
+RSP: 0018:ffffc900022a7308 EFLAGS: 00010207
+RAX: dffffc0000000000 RBX: ffff888096004150 RCX: 0000000000000000
+RDX: 0000000000000017 RSI: 0000000000000000 RDI: 00000000000000bc
+RBP: 0000000000000000 R08: ffff88809419a500 R09: ffffc900022a7358
+R10: fffff52000454e7a R11: ffffc900022a73d7 R12: 0000000000000000
+R13: 0000000000000004 R14: 0000000000000000 R15: ffff888096004150
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0063) knlGS:000000000935d840
+CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+CR2: 0000000020000180 CR3: 0000000093589000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
--- 
 
-- Arnaldo
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
