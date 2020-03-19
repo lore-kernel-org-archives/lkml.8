@@ -2,53 +2,55 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D892C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3BDC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01EA2098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C44207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624322;
-	bh=n60fiqQit++r2dt9ETpVJeF3WsCOgv/ioz+JBtX7UoA=;
+	s=default; t=1584624325;
+	bh=Tkr/6mrr1glEaInkhIb3wjUGtu3WF0DzZoe3urzNmhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f9gbm9u4mub+eAX0CS8O1iP7madAlg5ydyXN0+ZV2LxpZES1XwQ1x8UZcfS5bAcVS
-	 GyTVJlFccDtqQ5xOPN1epY2/LsyYQXhBAWx065gOWg8yq1f2L4p1qvxD6gkqPFh/kP
-	 WArA+cNa9PdJIPPNk7oArQNVASbNUf/3Y5D/Yick=
+	b=mOhsGvRBmUo6ujLCKEDV4qnHLa9yWpqabXLOzl/Tpn3XERWSnssHKtpJ6tyDcCd6n
+	 1nmYE+NZQRwlWakrhzLueOuw+rEvId0ULQ825wlj3J+fYHBTP5YsCwdXkYirXl33uE
+	 aJIl4A7AmyglrhULAQ9lBE5V2ONv+SA5rsZjuuYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730624AbgCSNZU (ORCPT
+        id S1730616AbgCSNZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730615AbgCSNZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 09:25:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730605AbgCSNZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5255A214D8;
-        Thu, 19 Mar 2020 13:25:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64AB12098B;
+        Thu, 19 Mar 2020 13:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624318;
-        bh=n60fiqQit++r2dt9ETpVJeF3WsCOgv/ioz+JBtX7UoA=;
+        s=default; t=1584624315;
+        bh=Tkr/6mrr1glEaInkhIb3wjUGtu3WF0DzZoe3urzNmhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UuzJuoAxfvyZpvKokQiERcdZC/nB3dp/POBI3vWA5tFGIQ5/+tFV8fxK3ZYCXYyhu
-         Fvh63/JpjsZckXZvqTNk5lJR5Q4sBLPUE0SB+jASCFSKErvSHEVcIPBHxkM/Zhh6ZP
-         OSPK3vKCM7q0TV4lA9BS5p9GvKGi8yrLv4tmVNx0=
+        b=ubelOgWI6SWwRNjFJKr8nhVUyc4t+U6IYPyk8yfFEsm+mUczZO6GHkKuONfuArz8+
+         1Etx39qGUSVCj7cjzmUXqv6f1QV3Jos77cZIHiWQABSarXIAZZfH1yHT/djw9D3uki
+         AG83i1kRk/57C6OH71U/yNmbGKRHhlA1k8tHpmIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heidi Fahim <heidifahim@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 21/65] kunit: run kunit_tool from any directory
-Date:   Thu, 19 Mar 2020 14:04:03 +0100
-Message-Id: <20200319123933.067141799@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>, linux-mips@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 20/65] MIPS: vdso: Wrap -mexplicit-relocs in cc-option
+Date:   Thu, 19 Mar 2020 14:04:02 +0100
+Message-Id: <20200319123932.742469978@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -61,62 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heidi Fahim <heidifahim@google.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit be886ba90cce2fb2f5a4dbcda8f3be3fd1b2f484 ]
+[ Upstream commit 72cf3b3df423c1bbd8fa1056fed009d3a260f8a9 ]
 
-Implemented small fix so that the script changes work directories to the
-root of the linux kernel source tree from which kunit.py is run. This
-enables the user to run kunit from any working directory. Originally
-considered using os.path.join but this is more error prone as we would
-have to find all file path usages and modify them accordingly. Using
-os.chdir ensures that the entire script is run within /linux.
+Clang does not support this option and errors out:
 
-Signed-off-by: Heidi Fahim <heidifahim@google.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+clang-11: error: unknown argument: '-mexplicit-relocs'
+
+Clang does not appear to need this flag like GCC does because the jalr
+check that was added in commit 976c23af3ee5 ("mips: vdso: add build
+time check that no 'jalr t9' calls left") passes just fine with
+
+$ make ARCH=mips CC=clang CROSS_COMPILE=mipsel-linux-gnu- malta_defconfig arch/mips/vdso/
+
+even before commit d3f703c4359f ("mips: vdso: fix 'jalr t9' crash in
+vdso code").
+
+-mrelax-pic-calls has been supported since clang 9, which is the
+earliest version that could build a working MIPS kernel, and it is the
+default for clang so just leave it be.
+
+Fixes: d3f703c4359f ("mips: vdso: fix 'jalr t9' crash in vdso code")
+Link: https://github.com/ClangBuiltLinux/linux/issues/890
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: clang-built-linux@googlegroups.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/kunit/kunit.py | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/mips/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index e59eb9e7f9236..180ad1e1b04f9 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -24,6 +24,8 @@ KunitResult = namedtuple('KunitResult', ['status','result'])
- 
- KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir', 'defconfig'])
- 
-+KernelDirectoryPath = sys.argv[0].split('tools/testing/kunit/')[0]
-+
- class KunitStatus(Enum):
- 	SUCCESS = auto()
- 	CONFIG_FAILURE = auto()
-@@ -35,6 +37,13 @@ def create_default_kunitconfig():
- 		shutil.copyfile('arch/um/configs/kunit_defconfig',
- 				kunit_kernel.kunitconfig_path)
- 
-+def get_kernel_root_path():
-+	parts = sys.argv[0] if not __file__ else __file__
-+	parts = os.path.realpath(parts).split('tools/testing/kunit')
-+	if len(parts) != 2:
-+		sys.exit(1)
-+	return parts[0]
-+
- def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 	      request: KunitRequest) -> KunitResult:
- 	config_start = time.time()
-@@ -114,6 +123,9 @@ def main(argv, linux=None):
- 	cli_args = parser.parse_args(argv)
- 
- 	if cli_args.subcommand == 'run':
-+		if get_kernel_root_path():
-+			os.chdir(get_kernel_root_path())
-+
- 		if cli_args.build_dir:
- 			if not os.path.exists(cli_args.build_dir):
- 				os.mkdir(cli_args.build_dir)
+diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+index bfb65b2d57c7f..2cf4b6131d88d 100644
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -29,7 +29,7 @@ endif
+ cflags-vdso := $(ccflags-vdso) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+ 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
+-	-mrelax-pic-calls -mexplicit-relocs \
++	-mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
+ 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+ 	$(call cc-option, -fno-asynchronous-unwind-tables) \
+ 	$(call cc-option, -fno-stack-protector)
 -- 
 2.20.1
 
