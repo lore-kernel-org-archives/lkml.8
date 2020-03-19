@@ -2,151 +2,157 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C4CC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0DEC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4D020768
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81C412076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:20:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUTLFIND"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="s+c8gZbn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgCSDRd (ORCPT
+        id S1726855AbgCSDUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 23:17:33 -0400
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:42662 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCSDRd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 23:17:33 -0400
-Received: by mail-wr1-f44.google.com with SMTP id v11so895841wrm.9;
-        Wed, 18 Mar 2020 20:17:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Lxbpdb/zHX34RAGKQr0FlEpIyzFdli6m2UUnuAUxQDY=;
-        b=XUTLFINDSRQHwZWmu8wzz+tq6somhCq9OkURijfnUStRuDmZjtG6qmgCU5yE6NOQCG
-         /OASdUgIZBJaL975A+yJGrLQNkGp1dpXb+gjZYAf8g8LvFQd9IRMDpl+hfe5RKwIT4Yw
-         UKGToP7vm/usFR3tZ2Tn+h15it/OJh6ma57w65Cq64+TVPDLv6xQ8ipk4yhHJgKBnZQK
-         z7pi66eBgkwc80zfgkbMJAMzOfuxNxS5DY3Q6bw+2b9Jo4qwatEXnFbZVMZEwappc5hZ
-         X0iaffo7Wmi7ybUTsfDdQmC5Xj0+BX1r37gJXFq4HJWuIaAenRUOEARlvBPB2vqQ1/A2
-         A3eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lxbpdb/zHX34RAGKQr0FlEpIyzFdli6m2UUnuAUxQDY=;
-        b=j31LOKdVGg3S5S7gKQCrVwWsQbsfbYVvrSjXlAhp0h489cguHqjlj0wwpFDWiYMWHx
-         8IdKswkGI8BgS3uwfA/6rd03y5vfeSHvIRiXB/PQygu8abYFMhtSvlegwfDvGL4CYge6
-         E7iy0YjlSApjcJ0q5rpyR3JEfOqJ37gXVaA30fpppWAfqquhXy2FoZHbGKjgqiPbPO1z
-         MH5PJ2qinlGXtgBeJMrCZ1WG9RYWvi/bHLkfRG3lXMu7Aloqdqduo0e0EU1qyOemxnIv
-         8bxxYE9Cx480eZiAovG4wYL8Y+WXyCqVKDcKgYluP/ZGpNKAeisZGiBkE+FOgKys4i3k
-         XJbA==
-X-Gm-Message-State: ANhLgQ1PmAbvEmXq5YRqlK7Lml+cuR9b4ZphdT63068bYyJFk/oLm4/w
-        cWQz15akfJ5lNSRhsfQ70pepfEFDQ7G+Mpgde3M=
-X-Google-Smtp-Source: ADFU+vutC3ZCjbJI/gjisXmnRkhteTf44mLqpO5IMSlmp67BHMdFQBf68wH3gJOGERG4sXcRZyas/tvdVLyOEPSgMUc=
-X-Received: by 2002:adf:b35e:: with SMTP id k30mr1227716wrd.362.1584587851267;
- Wed, 18 Mar 2020 20:17:31 -0700 (PDT)
+        Wed, 18 Mar 2020 23:20:15 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41651 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbgCSDUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 23:20:15 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48jXGK5lGkz9sPF;
+        Thu, 19 Mar 2020 14:20:09 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584588011;
+        bh=Ai9OhofFDo+Kuv8/Q1oIJL9PA57GRqNhOuVclO2kkAQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=s+c8gZbnoR5P6CdeA8jyGK9OfV1C3G7SUDQ7Nas7JVbCu+DqEBYmrEDotfFuTR5H/
+         J4ND90uHfyIyRgUygj2rR9q/zPgXuk7hg9JY/wPf2s7QQWtQpOvu7t9CohWybgd/T7
+         AIEX+YN3astnwwL4hmok5SGbKEHdx/BQ6I5KbNxst7Uai3hVNM9vaeVBvtx3DLNBm7
+         iTisZ82te70xQFnole+4mgCg48iJXRU/CcEVODRUDx8+6UQvW90kAZ0uDhyEURIra8
+         06cWKyldIT1cccLPRjZT1zk5tPGasgfNYYO00YWNutYavRkU1CY5Yu5aFrFvdcX786
+         d+tMcdQAZcGTw==
+Date:   Thu, 19 Mar 2020 14:20:02 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: linux-next: Tree for Mar 18 (drivers/base/power/sysfs.c)
+Message-ID: <20200319142002.7382ed70@canb.auug.org.au>
+In-Reply-To: <1c7d78ba-55ae-6f8c-9a4f-13aca32f59de@infradead.org>
+References: <20200318220920.48df2e76@canb.auug.org.au>
+        <1c7d78ba-55ae-6f8c-9a4f-13aca32f59de@infradead.org>
 MIME-Version: 1.0
-References: <20200317114748.388420-1-colin.king@canonical.com> <CADnq5_NbdBhz+TQ0Ldng8fLjnRmDiuKDhTrqsC0WDt8-0Vq41g@mail.gmail.com>
-In-Reply-To: <CADnq5_NbdBhz+TQ0Ldng8fLjnRmDiuKDhTrqsC0WDt8-0Vq41g@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 18 Mar 2020 23:17:20 -0400
-Message-ID: <CADnq5_MNOCRxe=S2kp7c3miGJ11L35qFhz4S5PDPVX2NoODv9A@mail.gmail.com>
-Subject: Re: [PATCH][next] drm: amd: fix spelling mistake "shoudn't" -> "shouldn't"
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/OzymEXv09uqzpaSswDv9a8x";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 11:10 PM Alex Deucher <alexdeucher@gmail.com> wrote:
->
-> On Tue, Mar 17, 2020 at 7:47 AM Colin King <colin.king@canonical.com> wrote:
-> >
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > There are spelling mistakes in pr_err messages and a comment. Fix these.
-> >
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
->
-> The relevant code was recently dropped so no longer applies.
+--Sig_/OzymEXv09uqzpaSswDv9a8x
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Sorry.  was looking at the wrong branch.  Applied.
+Hi Randy,
 
-Thanks!
+On Wed, 18 Mar 2020 09:14:29 -0700 Randy Dunlap <rdunlap@infradead.org> wro=
+te:
+>
+> on i386:
+>=20
+> ../drivers/base/power/sysfs.c: In function =E2=80=98dpm_sysfs_change_owne=
+r=E2=80=99:
+> ../drivers/base/power/sysfs.c:708:44: error: passing argument 2 of =E2=80=
+=98sysfs_group_change_owner=E2=80=99 from incompatible pointer type [-Werro=
+r=3Dincompatible-pointer-types]
+>   rc =3D sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
+>                                             ^
+> In file included from ../include/linux/kobject.h:20:0,
+>                  from ../include/linux/device.h:17,
+>                  from ../drivers/base/power/sysfs.c:3:
+> ../include/linux/sysfs.h:576:19: note: expected =E2=80=98const struct att=
+ribute_group **=E2=80=99 but argument is of type =E2=80=98const struct attr=
+ibute_group *=E2=80=99
+>  static inline int sysfs_group_change_owner(struct kobject *kobj,
+>                    ^~~~~~~~~~~~~~~~~~~~~~~~
+> ../drivers/base/power/sysfs.c:714:16: error: passing argument 2 of =E2=80=
+=98sysfs_group_change_owner=E2=80=99 from incompatible pointer type [-Werro=
+r=3Dincompatible-pointer-types]
+>     &dev->kobj, &pm_runtime_attr_group, kuid, kgid);
+>                 ^
+> In file included from ../include/linux/kobject.h:20:0,
+>                  from ../include/linux/device.h:17,
+>                  from ../drivers/base/power/sysfs.c:3:
+> ../include/linux/sysfs.h:576:19: note: expected =E2=80=98const struct att=
+ribute_group **=E2=80=99 but argument is of type =E2=80=98const struct attr=
+ibute_group *=E2=80=99
+>  static inline int sysfs_group_change_owner(struct kobject *kobj,
+>                    ^~~~~~~~~~~~~~~~~~~~~~~~
+> ../drivers/base/power/sysfs.c:720:45: error: passing argument 2 of =E2=80=
+=98sysfs_group_change_owner=E2=80=99 from incompatible pointer type [-Werro=
+r=3Dincompatible-pointer-types]
+>    rc =3D sysfs_group_change_owner(&dev->kobj, &pm_wakeup_attr_group,
+>                                              ^
+> In file included from ../include/linux/kobject.h:20:0,
+>                  from ../include/linux/device.h:17,
+>                  from ../drivers/base/power/sysfs.c:3:
+> ../include/linux/sysfs.h:576:19: note: expected =E2=80=98const struct att=
+ribute_group **=E2=80=99 but argument is of type =E2=80=98const struct attr=
+ibute_group *=E2=80=99
+>  static inline int sysfs_group_change_owner(struct kobject *kobj,
+>                    ^~~~~~~~~~~~~~~~~~~~~~~~
+> ../drivers/base/power/sysfs.c:732:16: error: passing argument 2 of =E2=80=
+=98sysfs_group_change_owner=E2=80=99 from incompatible pointer type [-Werro=
+r=3Dincompatible-pointer-types]
+>     &dev->kobj, &pm_qos_latency_tolerance_attr_group, kuid,
+>                 ^
+> In file included from ../include/linux/kobject.h:20:0,
+>                  from ../include/linux/device.h:17,
+>                  from ../drivers/base/power/sysfs.c:3:
+> ../include/linux/sysfs.h:576:19: note: expected =E2=80=98const struct att=
+ribute_group **=E2=80=99 but argument is of type =E2=80=98const struct attr=
+ibute_group *=E2=80=99
+>  static inline int sysfs_group_change_owner(struct kobject *kobj,
+>                    ^~~~~~~~~~~~~~~~~~~~~~~~
 
-Alex
+Caused by commitCONFIG_SYSFS
 
->
-> Thanks!
->
-> Alex
->
-> > ---
-> >  drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c       | 2 +-
-> >  drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c        | 2 +-
-> >  drivers/gpu/drm/amd/amdkfd/kfd_flat_memory.c | 2 +-
-> >  3 files changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-> > index d1cdcb404f7c..4bdf425ca6d8 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-> > @@ -246,7 +246,7 @@ static void gfx_v10_rlcg_wreg(struct amdgpu_device *adev, u32 offset, u32 v)
-> >         grbm_idx = adev->reg_offset[GC_HWIP][0][mmGRBM_GFX_INDEX_BASE_IDX] + mmGRBM_GFX_INDEX;
-> >
-> >         if (amdgpu_sriov_runtime(adev)) {
-> > -               pr_err("shoudn't call rlcg write register during runtime\n");
-> > +               pr_err("shouldn't call rlcg write register during runtime\n");
-> >                 return;
-> >         }
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-> > index 7bc2486167e7..2dd40f23ce83 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-> > @@ -747,7 +747,7 @@ void gfx_v9_0_rlcg_wreg(struct amdgpu_device *adev, u32 offset, u32 v)
-> >         grbm_idx = adev->reg_offset[GC_HWIP][0][mmGRBM_GFX_INDEX_BASE_IDX] + mmGRBM_GFX_INDEX;
-> >
-> >         if (amdgpu_sriov_runtime(adev)) {
-> > -               pr_err("shoudn't call rlcg write register during runtime\n");
-> > +               pr_err("shouldn't call rlcg write register during runtime\n");
-> >                 return;
-> >         }
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_flat_memory.c b/drivers/gpu/drm/amd/amdkfd/kfd_flat_memory.c
-> > index bb77b8890e77..78714f9a8b11 100644
-> > --- a/drivers/gpu/drm/amd/amdkfd/kfd_flat_memory.c
-> > +++ b/drivers/gpu/drm/amd/amdkfd/kfd_flat_memory.c
-> > @@ -316,7 +316,7 @@ static void kfd_init_apertures_vi(struct kfd_process_device *pdd, uint8_t id)
-> >  {
-> >         /*
-> >          * node id couldn't be 0 - the three MSB bits of
-> > -        * aperture shoudn't be 0
-> > +        * aperture shouldn't be 0
-> >          */
-> >         pdd->lds_base = MAKE_LDS_APP_BASE_VI();
-> >         pdd->lds_limit = MAKE_LDS_APP_LIMIT(pdd->lds_base);
-> > --
-> > 2.25.1
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+  303a42769c4c ("sysfs: add sysfs_group{s}_change_owner()")
+
+from the net-next tree.
+
+The CONFIG_SYSFS declaration of sysfs_group_change_owner() is different
+from the !CONFIG_SYSFS version.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/OzymEXv09uqzpaSswDv9a8x
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5y5OIACgkQAVBC80lX
+0GxRxwf/bZRlfZbDsOLE5GMYUz6Wd9HdJhOP8f3ZeuKS/Q3m+rYVHI6bc83jwgA2
+8oqocs60tkJ1XwIrDQ7ue77QnTJZGYxL/8kiPavtszwZYB+SrmVhH5bHKmkKssks
+aSmz4NpNNo00yhU9TE7pXs4VdXN0ejc59lkDgD0gGS6YBUHAjgQJBkODUak1mjV1
+VboVQb/HPIp1LCx2+r0vriZOUqxtxBTcxMZeIeFIWzQNsx4wSh6SX+hoITNcbwIz
+855QOgv6ebOYNlSTFxHNrGPziHz/W9xDltsicKy3PcEBizn7uHkJgBNN/Yd8QZWt
+KOa02FeHTmuBvecjJ7rzpnF0afaxNQ==
+=Xfd+
+-----END PGP SIGNATURE-----
+
+--Sig_/OzymEXv09uqzpaSswDv9a8x--
