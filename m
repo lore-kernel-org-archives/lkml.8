@@ -2,285 +2,154 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA369C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E682CC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F70B20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:55:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="MZhw1Fbn";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="GdROO43z"
+	by mail.kernel.org (Postfix) with ESMTP id C4D9420767
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgCSAzU (ORCPT
+        id S1726971AbgCSAzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 20:55:20 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58704 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726596AbgCSAzT (ORCPT
+        Wed, 18 Mar 2020 20:55:42 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:53443 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726623AbgCSAzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 20:55:19 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02J0rPeM022514;
-        Wed, 18 Mar 2020 17:55:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=691qmdkWO2cqKeM01BWnEZRmn+2bJWgpNbfZpwCVeC0=;
- b=MZhw1FbnUzAxl1qVk0ycWqQkOuKkiiY4KaUTDUAAcaVJQRxS1zMqkdXX6ZOQudMtaevH
- HF9qsbfkt/5q+9DtfHvGrDDl/RbJ7S65B/m02xuea/YUzS+/sSSQRWVIpxMPyoNP7koN
- WqbqyahtlUZBquELU46NFUQefkR4yBhVUtA= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 2yua0wwh3c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 18 Mar 2020 17:55:06 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Wed, 18 Mar 2020 17:55:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=naeWQ3143+DlC1ofEGxW9LyhGPcWG0Tu7MXmrbZ1n4QaqmT7hTRhQ3q1bAk/uBNrOJQfdXTBJ+C4J8fr1ad1Rd12mIh0sPysQg9tjPOzMwyN5BTTV2kqVTEbq9asP7p8etilw9T+EG643sjsco2M2kaJsSqHZHTtAm90mkkdaQr8uKHFM3erXLmqXYDvJyRIVOHbmj3XJDWMeRBlNGOzqNAnPCw82pFhdpm2awK8jhplsHDQ8vGDppFHwoyGN5M7RLojGhyjvxEjCAOc09Ng3uQT1QTP49ZYTISc9AD+/05hQZxIhXssdvpnK1/S7gYLNEGVl+7pFxrQBr0Xcnk49g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=691qmdkWO2cqKeM01BWnEZRmn+2bJWgpNbfZpwCVeC0=;
- b=jZPDRSofu6+1ZTTmaUbNQA1LdX3ks9pKWCoMUliJQycCZAi3t3uSJJmc3K8QmEnxwZ/lkCwlhgiUID8OM3xMfS9cBrprn0kQynU4hhT6NHbB5hCoW2NWmgIUOHAR3rIs0bOmiR4sPRULCgVN3Ta9iQ9YVfSdBKTavgyyAHX2c9Wu74+Llc52zy59aZPUtfeuCbywqHFnb8imwBu5e3znuhq9+quYvr9Gdq625aB0Cjy/gwxGXSXiSsS3b11D69fBOrBHhg7DEk4Mim428rr/rGq9LU+hSF39i/V2ZVdyJM9L1D40PbryGAZJ7vfTkb8Shh/7UbE8+DATezJVQoR6qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=691qmdkWO2cqKeM01BWnEZRmn+2bJWgpNbfZpwCVeC0=;
- b=GdROO43zl5eLfg/19VSjFL8ra5sAeN7UDRQlLpAZhgzskU8q4e2ZiZM2h5kGA91+Km02fYJmA/MjhGA703FL4GetLUQnNeVv5oSXzXgfsFA5dVgG2ZvpTfXXzSFh7EXduqO5I713GumK5BfV9P7lCk/8UAD3Kd9crocHOrfdRVI=
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com (2603:10b6:303:50::17)
- by MW3PR15MB4057.namprd15.prod.outlook.com (2603:10b6:303:47::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.18; Thu, 19 Mar
- 2020 00:54:45 +0000
-Received: from MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::5956:e4d6:26a3:343e]) by MW3PR15MB3753.namprd15.prod.outlook.com
- ([fe80::5956:e4d6:26a3:343e%7]) with mapi id 15.20.2814.021; Thu, 19 Mar 2020
- 00:54:45 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     Kees Cook <keescook@chromium.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Petr Malat <oss@malat.biz>, Kernel Team <Kernel-team@fb.com>,
-        Nick Terrell <nickrterrell@gmail.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>,
-        "Michael van der Westhuizen" <rmikey@fb.com>,
-        "mingo@kernel.org" <mingo@kernel.org>
-Subject: Re: [PATCH v2 2/7] lib: prepare xxhash for preboot environment
-Thread-Topic: [PATCH v2 2/7] lib: prepare xxhash for preboot environment
-Thread-Index: AQHV/L7J3b58/AJhHkqx8p/CYi37fahO9HWAgAAkA4A=
-Date:   Thu, 19 Mar 2020 00:54:45 +0000
-Message-ID: <CE7DA1F7-651B-4ADF-859E-2AB1E7E4F5FB@fb.com>
-References: <20200318002303.977158-1-terrelln@fb.com>
- <20200318002303.977158-3-terrelln@fb.com> <202003181545.B6CBE5FD@keescook>
-In-Reply-To: <202003181545.B6CBE5FD@keescook>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [67.188.225.242]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bd47cfec-8594-4b7e-ad6d-08d7cba01e36
-x-ms-traffictypediagnostic: MW3PR15MB4057:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MW3PR15MB4057F6400E8D43BC905E2BE2ABF40@MW3PR15MB4057.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0347410860
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(136003)(396003)(39860400002)(366004)(199004)(71200400001)(6512007)(66946007)(76116006)(33656002)(186003)(26005)(91956017)(66446008)(4326008)(64756008)(54906003)(2906002)(66556008)(66476007)(316002)(6486002)(6506007)(478600001)(53546011)(5660300002)(81156014)(8676002)(81166006)(6916009)(2616005)(36756003)(8936002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:MW3PR15MB4057;H:MW3PR15MB3753.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 11IpS4ecb0dwjkEsJFcMg2/87Y3m24D2uqd12c2JtUdCN8jGDAPkX9lExhrVPDfxk1z/7o38pA+eOLifQfDPXrNS+8H83LLT2Y4RTkvxoQSI7N4KuUbwMR18Rn+Hba/RPPWpAQdajeOsIXokRTtSnCUzvgjMcvvVub+xg6YlzuV36jNf26wMzbY+5XmJQ2lkvk+sBPg7+BiDxILnxjEYqtOs/j8wU8E42ResQoijp19yOxe1S3+qrBm1f8TtlU/Cmu5X/Q2z3AUykpRjO5cIyLMrZ8efVDqyANmyY5LpeZXxpYf9nQ0sN4XGnWHebK8f9/C7WJeKui5IWJXHZuYvLV+XvCORrLf9RcP5NXNQI51/9gPfaDh5Dm2VoGQ4rOQDwd40Wx5yJFgQgJUINlwT18d/xkhrbU/wXVvY2txhYn9ZhnssFWVUX6q7vrIbPe6n
-x-ms-exchange-antispam-messagedata: 7HCP0cnX3ocJli4o0/LPF6S/5I+40ha3iUVnzi0dQOJzxNo3TSLXrgDFGKMSdDXqo6ctU3LKc74152+8fvWMEmyfuv5nDFTzFagoDFL8BH+h7FHmFVBYWC+zjRlmlZZ70jNhESmlZKc7Bq1QspKLSg==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B073666D29D665498C7F109DE5C51AC6@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Mar 2020 20:55:42 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R451e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tt-aiy1_1584579330;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tt-aiy1_1584579330)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 19 Mar 2020 08:55:36 +0800
+Subject: Re: [PATCH] mm: khugepaged: fix potential page state corruption
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
+        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1584573582-116702-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20200319001258.creziw6ffw4jvwl3@box>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <2cdc734c-c222-4b9d-9114-1762b29dafb4@linux.alibaba.com>
+Date:   Wed, 18 Mar 2020 17:55:29 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd47cfec-8594-4b7e-ad6d-08d7cba01e36
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2020 00:54:45.6478
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lhw+qBaYrAa+yCHaA/xH9R4SmKM8xyB5ayryUtJIeovaCHULLSvX6BUHKropT14q
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB4057
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-18_07:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- priorityscore=1501 impostorscore=0 bulkscore=0 adultscore=0
- lowpriorityscore=0 phishscore=0 malwarescore=0 spamscore=0 clxscore=1011
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003190003
-X-FB-Internal: deliver
+In-Reply-To: <20200319001258.creziw6ffw4jvwl3@box>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Mar 18, 2020, at 3:45 PM, Kees Cook <keescook@chromium.org> wrote:
->=20
-> On Tue, Mar 17, 2020 at 05:22:58PM -0700, Nick Terrell wrote:
->> Don't export symbols if PREBOOT is defined.
->>=20
->> This change is necessary to get xxhash to work in a preboot environment,
->> which is needed to support zstd-compressed kernels.
->=20
-> Hmm, I thought using this:
->=20
-> #define __DISABLE_EXPORTS
->=20
-> before the #include of the .c files solved this?
 
-I was able to get __DISABLE_EXPORTS to work. However, that still leaves the
-MODULE_LICENSE() and MODULE_DESCRIPTION() in. I would prefer to use
-the same method other decompressors use, because it is a well tested route =
-and
-debugging is hard in the preboot environment. If you feel strongly about it=
- I will
-change it.
 
-I will plan on submitting a v3 tomorrow morning that fixes the style nits, =
-and
-splits PREBOOT into XXH_PREBOOT and ZSTD_PREBOOT.
+On 3/18/20 5:12 PM, Kirill A. Shutemov wrote:
+> On Thu, Mar 19, 2020 at 07:19:42AM +0800, Yang Shi wrote:
+>> When khugepaged collapses anonymous pages, the base pages would be freed
+>> via pagevec or free_page_and_swap_cache().  But, the anonymous page may
+>> be added back to LRU, then it might result in the below race:
+>>
+>> 	CPU A				CPU B
+>> khugepaged:
+>>    unlock page
+>>    putback_lru_page
+>>      add to lru
+>> 				page reclaim:
+>> 				  isolate this page
+>> 				  try_to_unmap
+>>    page_remove_rmap <-- corrupt _mapcount
+>>
+>> It looks nothing would prevent the pages from isolating by reclaimer.
+> Hm. Why should it?
+>
+> try_to_unmap() doesn't exclude parallel page unmapping. _mapcount is
+> protected by ptl. And this particular _mapcount pin is reachable for
+> reclaim as it's not part of usual page table tree. Basically
+> try_to_unmap() will never succeeds until we give up the _mapcount on
+> khugepaged side.
 
-Thanks for reviewing the patches!
+I don't quite get. What does "not part of usual page table tree" means?
 
--Nick
+How's about try_to_unmap() acquires ptl before khugepaged?
 
-> -Kees
->=20
->>=20
->> Signed-off-by: Nick Terrell <terrelln@fb.com>
+>
+> I don't see the issue right away.
+>
+>> The other problem is the page's active or unevictable flag might be
+>> still set when freeing the page via free_page_and_swap_cache().
+> So what?
+
+The flags may leak to page free path then kernel may complain if 
+DEBUG_VM is set.
+
+>
+>> The putback_lru_page() would not clear those two flags if the pages are
+>> released via pagevec, it sounds nothing prevents from isolating active
+>> or unevictable pages.
+> Again, why should it? vmscan is equipped to deal with this.
+
+I don't mean vmscan, I mean khugepaged may isolate active and 
+unevictable pages since it just simply walks page table.
+
+>
+>> However I didn't really run into these problems, just in theory by visual
+>> inspection.
+>>
+>> And, it also seems unnecessary to have the pages add back to LRU again since
+>> they are about to be freed when reaching this point.  So, clearing active
+>> and unevictable flags, unlocking and dropping refcount from isolate
+>> instead of calling putback_lru_page() as what page cache collapse does.
+> Hm? But we do call putback_lru_page() on the way out. I do not follow.
+
+It just calls putback_lru_page() at error path, not success path. 
+Putting pages back to lru on error path definitely makes sense. Here it 
+is the success path.
+
+>
+>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> Cc: Andrea Arcangeli <aarcange@redhat.com>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 >> ---
->> lib/xxhash.c | 21 ++++++++++++---------
->> 1 file changed, 12 insertions(+), 9 deletions(-)
->>=20
->> diff --git a/lib/xxhash.c b/lib/xxhash.c
->> index aa61e2a3802f..7f1d3cb01729 100644
->> --- a/lib/xxhash.c
->> +++ b/lib/xxhash.c
->> @@ -80,13 +80,11 @@ void xxh32_copy_state(struct xxh32_state *dst, const=
- struct xxh32_state *src)
->> {
->> 	memcpy(dst, src, sizeof(*dst));
->> }
->> -EXPORT_SYMBOL(xxh32_copy_state);
->>=20
->> void xxh64_copy_state(struct xxh64_state *dst, const struct xxh64_state =
-*src)
->> {
->> 	memcpy(dst, src, sizeof(*dst));
->> }
->> -EXPORT_SYMBOL(xxh64_copy_state);
->>=20
->> /*-***************************
->>  * Simple Hash Functions
->> @@ -151,7 +149,6 @@ uint32_t xxh32(const void *input, const size_t len, =
-const uint32_t seed)
->>=20
->> 	return h32;
->> }
->> -EXPORT_SYMBOL(xxh32);
->>=20
->> static uint64_t xxh64_round(uint64_t acc, const uint64_t input)
->> {
->> @@ -234,7 +231,6 @@ uint64_t xxh64(const void *input, const size_t len, =
-const uint64_t seed)
->>=20
->> 	return h64;
->> }
->> -EXPORT_SYMBOL(xxh64);
->>=20
->> /*-**************************************************
->>  * Advanced Hash Functions
->> @@ -251,7 +247,6 @@ void xxh32_reset(struct xxh32_state *statePtr, const=
- uint32_t seed)
->> 	state.v4 =3D seed - PRIME32_1;
->> 	memcpy(statePtr, &state, sizeof(state));
->> }
->> -EXPORT_SYMBOL(xxh32_reset);
->>=20
->> void xxh64_reset(struct xxh64_state *statePtr, const uint64_t seed)
->> {
->> @@ -265,7 +260,6 @@ void xxh64_reset(struct xxh64_state *statePtr, const=
- uint64_t seed)
->> 	state.v4 =3D seed - PRIME64_1;
->> 	memcpy(statePtr, &state, sizeof(state));
->> }
->> -EXPORT_SYMBOL(xxh64_reset);
->>=20
->> int xxh32_update(struct xxh32_state *state, const void *input, const siz=
-e_t len)
->> {
->> @@ -334,7 +328,6 @@ int xxh32_update(struct xxh32_state *state, const vo=
-id *input, const size_t len)
->>=20
->> 	return 0;
->> }
->> -EXPORT_SYMBOL(xxh32_update);
->>=20
->> uint32_t xxh32_digest(const struct xxh32_state *state)
->> {
->> @@ -372,7 +365,6 @@ uint32_t xxh32_digest(const struct xxh32_state *stat=
-e)
->>=20
->> 	return h32;
->> }
->> -EXPORT_SYMBOL(xxh32_digest);
->>=20
->> int xxh64_update(struct xxh64_state *state, const void *input, const siz=
-e_t len)
->> {
->> @@ -439,7 +431,6 @@ int xxh64_update(struct xxh64_state *state, const vo=
-id *input, const size_t len)
->>=20
->> 	return 0;
->> }
->> -EXPORT_SYMBOL(xxh64_update);
->>=20
->> uint64_t xxh64_digest(const struct xxh64_state *state)
->> {
->> @@ -494,7 +485,19 @@ uint64_t xxh64_digest(const struct xxh64_state *sta=
-te)
->>=20
->> 	return h64;
->> }
+>>   mm/khugepaged.c | 10 +++++++++-
+>>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> index b679908..f42fa4e 100644
+>> --- a/mm/khugepaged.c
+>> +++ b/mm/khugepaged.c
+>> @@ -673,7 +673,6 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+>>   			src_page = pte_page(pteval);
+>>   			copy_user_highpage(page, src_page, address, vma);
+>>   			VM_BUG_ON_PAGE(page_mapcount(src_page) != 1, src_page);
+>> -			release_pte_page(src_page);
+>>   			/*
+>>   			 * ptl mostly unnecessary, but preempt has to
+>>   			 * be disabled to update the per-cpu stats
+>> @@ -687,6 +686,15 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+>>   			pte_clear(vma->vm_mm, address, _pte);
+>>   			page_remove_rmap(src_page, false);
+>>   			spin_unlock(ptl);
 >> +
->> +#ifndef PREBOOT
->> +EXPORT_SYMBOL(xxh32_copy_state);
->> +EXPORT_SYMBOL(xxh64_copy_state);
->> +EXPORT_SYMBOL(xxh32);
->> +EXPORT_SYMBOL(xxh64);
->> +EXPORT_SYMBOL(xxh32_reset);
->> +EXPORT_SYMBOL(xxh64_reset);
->> +EXPORT_SYMBOL(xxh32_update);
->> +EXPORT_SYMBOL(xxh32_digest);
->> +EXPORT_SYMBOL(xxh64_update);
->> EXPORT_SYMBOL(xxh64_digest);
->>=20
->> MODULE_LICENSE("Dual BSD/GPL");
->> MODULE_DESCRIPTION("xxHash");
->> +#endif
->> --=20
->> 2.25.1
->>=20
->=20
-> --=20
-> Kees Cook
+>> +			dec_node_page_state(src_page,
+>> +				NR_ISOLATED_ANON + page_is_file_cache(src_page));
+>> +			ClearPageActive(src_page);
+>> +			ClearPageUnevictable(src_page);
+>> +			unlock_page(src_page);
+>> +			/* Drop refcount from isolate */
+>> +			put_page(src_page);
+>> +
+>>   			free_page_and_swap_cache(src_page);
+>>   		}
+>>   	}
+>> -- 
+>> 1.8.3.1
+>>
+>>
 
