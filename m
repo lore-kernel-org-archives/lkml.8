@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F09EC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD5AC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EBB20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DCC206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623670;
-	bh=0/s9hVKRjxrzwrUyyZI3xMqSbNNcp/5rTgGGmXNj35I=;
+	s=default; t=1584623674;
+	bh=sXsU8nVyTHd55cyr2sFbDZRNE2723/nNd1iI+UL6SyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Ok9J/4LnCE/14E1e+SplGJlSky3SSd9eD20NCZ62tyu8EIe5mcWk0DC5XmT+5VE7
-	 Pq/w3/p5N1/YtxR3/4RqFICoXii4rPzxPClRQorQRt2MvVQk97jCvYkJ5wZb0sjJ7N
-	 Fxjv9n0aNOZCyX2O2tr021VPoQrDebB61dGvveWI=
+	b=JL2cN0tdb+F20x3x8goDn+FQ1osTsMLWI3miuKbPsnZTjcjqG+nDxN1DH1V7vP0RN
+	 aaC7i5Aex5xlYQ9s7VPXIx4GVt2HrWA/HObbWsb+jBxcwTM2VH1i7wJH1gKRjYMWVT
+	 DLoK3nKt2GKgwUqk32Qb0sDzMqlH4tq9HMP8quAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgCSNO3 (ORCPT
+        id S1729311AbgCSNOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:14:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33778 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:14:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728668AbgCSNOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:14:23 -0400
+        id S1729307AbgCSNOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:14:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCF1F20724;
-        Thu, 19 Mar 2020 13:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E6BE21556;
+        Thu, 19 Mar 2020 13:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623663;
-        bh=0/s9hVKRjxrzwrUyyZI3xMqSbNNcp/5rTgGGmXNj35I=;
+        s=default; t=1584623670;
+        bh=sXsU8nVyTHd55cyr2sFbDZRNE2723/nNd1iI+UL6SyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kLlwkmzBMABhan0wJ0cHLfhCWiCJHMFBqeTSRyvJBtX8UkELZ/9RMFcBdVNZjRThZ
-         Qz4ZOo0dNAwIjwl9thROn5VoLA71cs5AFr3rfcMzG2FcigxSsCn6Q+kfv6frEtKm80
-         NVLV+1JbHZwfzJA4abFB1txMsjhHW59AiX4bFphU=
+        b=IQ8Kaf0eJ0u0yXJRebINAsmw++3lWAOMye878bBX6TwPhheretti8M7p79dNTlZ+2
+         KOCw7+KElHw8P7L5Aoxt4JuzpUjo6ZmgCfomgEwVjCey6DldZHnLR7LkOvIyFHpO8p
+         XnvElVTQwW3Q6hfsg0ZQhrIkCcQ6rJYFAy5nyXq4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, You-Sheng Yang <vicamo.yang@canonical.com>,
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 12/99] r8152: check disconnect status after long sleep
-Date:   Thu, 19 Mar 2020 14:02:50 +0100
-Message-Id: <20200319123945.203440046@linuxfoundation.org>
+Subject: [PATCH 4.14 15/99] cgroup: memcg: net: do not associate sock with unrelated cgroup
+Date:   Thu, 19 Mar 2020 14:02:53 +0100
+Message-Id: <20200319123946.295542354@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -59,124 +60,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: You-Sheng Yang <vicamo.yang@canonical.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-[ Upstream commit d64c7a08034b32c285e576208ae44fc3ba3fa7df ]
+[ Upstream commit e876ecc67db80dfdb8e237f71e5b43bb88ae549c ]
 
-Dell USB Type C docking WD19/WD19DC attaches additional peripherals as:
+We are testing network memory accounting in our setup and noticed
+inconsistent network memory usage and often unrelated cgroups network
+usage correlates with testing workload. On further inspection, it
+seems like mem_cgroup_sk_alloc() and cgroup_sk_alloc() are broken in
+irq context specially for cgroup v1.
 
-  /: Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
-      |__ Port 1: Dev 11, If 0, Class=Hub, Driver=hub/4p, 5000M
-          |__ Port 3: Dev 12, If 0, Class=Hub, Driver=hub/4p, 5000M
-          |__ Port 4: Dev 13, If 0, Class=Vendor Specific Class,
-              Driver=r8152, 5000M
+mem_cgroup_sk_alloc() and cgroup_sk_alloc() can be called in irq context
+and kind of assumes that this can only happen from sk_clone_lock()
+and the source sock object has already associated cgroup. However in
+cgroup v1, where network memory accounting is opt-in, the source sock
+can be unassociated with any cgroup and the new cloned sock can get
+associated with unrelated interrupted cgroup.
 
-where usb 2-1-3 is a hub connecting all USB Type-A/C ports on the dock.
+Cgroup v2 can also suffer if the source sock object was created by
+process in the root cgroup or if sk_alloc() is called in irq context.
+The fix is to just do nothing in interrupt.
 
-When hotplugging such dock with additional usb devices already attached on
-it, the probing process may reset usb 2.1 port, therefore r8152 ethernet
-device is also reset. However, during r8152 device init there are several
-for-loops that, when it's unable to retrieve hardware registers due to
-being disconnected from USB, may take up to 14 seconds each in practice,
-and that has to be completed before USB may re-enumerate devices on the
-bus. As a result, devices attached to the dock will only be available
-after nearly 1 minute after the dock was plugged in:
+WARNING: Please note that about half of the TCP sockets are allocated
+from the IRQ context, so, memory used by such sockets will not be
+accouted by the memcg.
 
-  [ 216.388290] [250] r8152 2-1.4:1.0: usb_probe_interface
-  [ 216.388292] [250] r8152 2-1.4:1.0: usb_probe_interface - got id
-  [ 258.830410] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): PHY not ready
-  [ 258.830460] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Invalid header when reading pass-thru MAC addr
-  [ 258.830464] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Get ether addr fail
+The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
 
-This happens in, for example, r8153_init:
+CPU: 70 PID: 12720 Comm: ssh Tainted:  5.6.0-smp-DEV #1
+Hardware name: ...
+Call Trace:
+ <IRQ>
+ dump_stack+0x57/0x75
+ mem_cgroup_sk_alloc+0xe9/0xf0
+ sk_clone_lock+0x2a7/0x420
+ inet_csk_clone_lock+0x1b/0x110
+ tcp_create_openreq_child+0x23/0x3b0
+ tcp_v6_syn_recv_sock+0x88/0x730
+ tcp_check_req+0x429/0x560
+ tcp_v6_rcv+0x72d/0xa40
+ ip6_protocol_deliver_rcu+0xc9/0x400
+ ip6_input+0x44/0xd0
+ ? ip6_protocol_deliver_rcu+0x400/0x400
+ ip6_rcv_finish+0x71/0x80
+ ipv6_rcv+0x5b/0xe0
+ ? ip6_sublist_rcv+0x2e0/0x2e0
+ process_backlog+0x108/0x1e0
+ net_rx_action+0x26b/0x460
+ __do_softirq+0x104/0x2a6
+ do_softirq_own_stack+0x2a/0x40
+ </IRQ>
+ do_softirq.part.19+0x40/0x50
+ __local_bh_enable_ip+0x51/0x60
+ ip6_finish_output2+0x23d/0x520
+ ? ip6table_mangle_hook+0x55/0x160
+ __ip6_finish_output+0xa1/0x100
+ ip6_finish_output+0x30/0xd0
+ ip6_output+0x73/0x120
+ ? __ip6_finish_output+0x100/0x100
+ ip6_xmit+0x2e3/0x600
+ ? ipv6_anycast_cleanup+0x50/0x50
+ ? inet6_csk_route_socket+0x136/0x1e0
+ ? skb_free_head+0x1e/0x30
+ inet6_csk_xmit+0x95/0xf0
+ __tcp_transmit_skb+0x5b4/0xb20
+ __tcp_send_ack.part.60+0xa3/0x110
+ tcp_send_ack+0x1d/0x20
+ tcp_rcv_state_process+0xe64/0xe80
+ ? tcp_v6_connect+0x5d1/0x5f0
+ tcp_v6_do_rcv+0x1b1/0x3f0
+ ? tcp_v6_do_rcv+0x1b1/0x3f0
+ __release_sock+0x7f/0xd0
+ release_sock+0x30/0xa0
+ __inet_stream_connect+0x1c3/0x3b0
+ ? prepare_to_wait+0xb0/0xb0
+ inet_stream_connect+0x3b/0x60
+ __sys_connect+0x101/0x120
+ ? __sys_getsockopt+0x11b/0x140
+ __x64_sys_connect+0x1a/0x20
+ do_syscall_64+0x51/0x200
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-  static int generic_ocp_read(struct r8152 *tp, u16 index, u16 size,
-			    void *data, u16 type)
-  {
-    if (test_bit(RTL8152_UNPLUG, &tp->flags))
-      return -ENODEV;
-    ...
-  }
-
-  static u16 ocp_read_word(struct r8152 *tp, u16 type, u16 index)
-  {
-    u32 data;
-    ...
-    generic_ocp_read(tp, index, sizeof(tmp), &tmp, type | byen);
-
-    data = __le32_to_cpu(tmp);
-    ...
-    return (u16)data;
-  }
-
-  static void r8153_init(struct r8152 *tp)
-  {
-    ...
-    if (test_bit(RTL8152_UNPLUG, &tp->flags))
-      return;
-
-    for (i = 0; i < 500; i++) {
-      if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
-          AUTOLOAD_DONE)
-        break;
-      msleep(20);
-    }
-    ...
-  }
-
-Since ocp_read_word() doesn't check the return status of
-generic_ocp_read(), and the only exit condition for the loop is to have
-a match in the returned value, such loops will only ends after exceeding
-its maximum runs when the device has been marked as disconnected, which
-takes 500 * 20ms = 10 seconds in theory, 14 in practice.
-
-To solve this long latency another test to RTL8152_UNPLUG flag should be
-added after those 20ms sleep to skip unnecessary loops, so that the device
-probe can complete early and proceed to parent port reset/reprobe process.
-
-This can be reproduced on all kernel versions up to latest v5.6-rc2, but
-after v5.5-rc7 the reproduce rate is dramatically lowered to 1/30 or less
-while it was around 1/2.
-
-Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+The stack trace of mem_cgroup_sk_alloc() from IRQ-context:
+Fixes: 2d7580738345 ("mm: memcontrol: consolidate cgroup socket tracking")
+Fixes: d979a39d7242 ("cgroup: duplicate cgroup reference when cloning sockets")
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Roman Gushchin <guro@fb.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/r8152.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ kernel/cgroup/cgroup.c |    4 ++++
+ mm/memcontrol.c        |    4 ++++
+ 2 files changed, 8 insertions(+)
 
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -2696,6 +2696,8 @@ static u16 r8153_phy_status(struct r8152
- 		}
- 
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -5799,6 +5799,10 @@ void cgroup_sk_alloc(struct sock_cgroup_
+ 		return;
  	}
  
- 	return data;
-@@ -4055,7 +4057,10 @@ static void r8153_init(struct r8152 *tp)
- 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
- 		    AUTOLOAD_DONE)
- 			break;
++	/* Don't associate the sock with unrelated interrupted task's cgroup. */
++	if (in_interrupt())
++		return;
 +
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
+ 	rcu_read_lock();
+ 
+ 	while (true) {
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5881,6 +5881,10 @@ void mem_cgroup_sk_alloc(struct sock *sk
+ 		return;
  	}
  
- 	data = r8153_phy_status(tp, 0);
-@@ -4170,7 +4175,10 @@ static void r8153b_init(struct r8152 *tp
- 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
- 		    AUTOLOAD_DONE)
- 			break;
++	/* Do not associate the sock with unrelated interrupted task's memcg. */
++	if (in_interrupt())
++		return;
 +
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
- 	}
- 
- 	data = r8153_phy_status(tp, 0);
+ 	rcu_read_lock();
+ 	memcg = mem_cgroup_from_task(current);
+ 	if (memcg == root_mem_cgroup)
 
 
