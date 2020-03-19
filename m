@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E45C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8A6C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20427208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC87214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623521;
-	bh=unkrvO4LOiWvJsZQ2ffLT8LxcF/fJ6iGHShaWYNEAYY=;
+	s=default; t=1584623525;
+	bh=BHl61XVaYiiLrL3vc3daOyenv1prkPnf9dqKV9w6+nc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HMi+mUJKPG0zxlyn1NG89MuuCOxijdhT1Xq9eyAkYmK4crijarQ5O59eTBoSi8wZd
-	 I6+H/GO6zXTbd5sKF55zYHBEy4Ucj9tskC/iokRIlyicDY4hxSGLYtx5HMnPR9x/HX
-	 22ZPu40TvARFcrIQe8gD6olZeFLufVlRMOuseZvQ=
+	b=PvH8HVDED0UukSwP/f5WQgRk6x2l3aEnTS3nVjn70sE4tI4JglSc2rmNKPeitZkPp
+	 t12fgdBGLhiXvNPRJUyYEq5Q4bnuski1rqRp+YLFWZgvmw48oqqCwbICMrriP1GjWP
+	 KxcDVO5UBKpbm5L+KPw8YglOkmED7ajsfYmYv5cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbgCSNMA (ORCPT
+        id S1728845AbgCSNMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:12:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57496 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:12:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbgCSNL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:11:57 -0400
+        id S1728825AbgCSNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:12:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88BF520789;
-        Thu, 19 Mar 2020 13:11:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EA6620789;
+        Thu, 19 Mar 2020 13:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623517;
-        bh=unkrvO4LOiWvJsZQ2ffLT8LxcF/fJ6iGHShaWYNEAYY=;
+        s=default; t=1584623520;
+        bh=BHl61XVaYiiLrL3vc3daOyenv1prkPnf9dqKV9w6+nc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r7PbvXs97OdTa2gaaEel7S61B5igPP95ahefyxgLV9TYemDMxyj0ZzS3KZxIXm9LG
-         toBabc6/+tZAFwgFEdkjxMe8kI/vSHcrBGZEc0WVYpHMILF8O9VDpp5vAHWGojn7so
-         aqNjPj2Kwtsto7pKGbNw+fDVpBaa4D8IxMIfWRl4=
+        b=WcRW9yCoOI05Aq+U00ode9xt+GkV4Q/ZhztJCbpDqSmdjprZ+6V/eMCcozN86k41H
+         fo3MN++JMBkaW9GvLcIpEay5nQofET28yJa2v6O9X20/R/vO2AgtLba2QMHNSEQWPq
+         VVnVzmLIVoql/dOyQQzqRMmq8RidoK3GMtoIvaok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 54/90] batman-adv: Fix rx packet/bytes stats on local ARP reply
-Date:   Thu, 19 Mar 2020 14:00:16 +0100
-Message-Id: <20200319123945.020105146@linuxfoundation.org>
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 4.9 38/90] ARC: define __ALIGN_STR and __ALIGN symbols for ARC
+Date:   Thu, 19 Mar 2020 14:00:00 +0100
+Message-Id: <20200319123940.448243687@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -59,39 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-commit 36d4d68cd658d914ef73ac845705c4a89e7d9e2f upstream.
+commit 8d92e992a785f35d23f845206cf8c6cafbc264e0 upstream.
 
-The stats are generated by batadv_interface_stats and must not be stored
-directly in the net_device stats member variable. The batadv_priv
-bat_counters information is assembled when ndo_get_stats is called. The
-stats previously stored in net_device::stats is then overwritten.
+The default defintions use fill pattern 0x90 for padding which for ARC
+generates unintended "ldh_s r12,[r0,0x20]" corresponding to opcode 0x9090
 
-The batman-adv counters must therefore be increased when an ARP packet is
-answered locally via the distributed arp table.
+So use ".align 4" which insert a "nop_s" instruction instead.
 
-Fixes: c384ea3ec930 ("batman-adv: Distributed ARP Table - add snooping functions for ARP messages")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Cc: stable@vger.kernel.org
+Acked-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/batman-adv/distributed-arp-table.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/batman-adv/distributed-arp-table.c
-+++ b/net/batman-adv/distributed-arp-table.c
-@@ -1025,8 +1025,9 @@ bool batadv_dat_snoop_outgoing_arp_reque
- 		skb_reset_mac_header(skb_new);
- 		skb_new->protocol = eth_type_trans(skb_new,
- 						   bat_priv->soft_iface);
--		bat_priv->stats.rx_packets++;
--		bat_priv->stats.rx_bytes += skb->len + ETH_HLEN + hdr_size;
-+		batadv_inc_counter(bat_priv, BATADV_CNT_RX);
-+		batadv_add_counter(bat_priv, BATADV_CNT_RX_BYTES,
-+				   skb->len + ETH_HLEN + hdr_size);
- 		bat_priv->soft_iface->last_rx = jiffies;
+---
+ arch/arc/include/asm/linkage.h |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/arch/arc/include/asm/linkage.h
++++ b/arch/arc/include/asm/linkage.h
+@@ -14,6 +14,8 @@
+ #ifdef __ASSEMBLY__
  
- 		netif_rx(skb_new);
+ #define ASM_NL		 `	/* use '`' to mark new line in macro */
++#define __ALIGN		.align 4
++#define __ALIGN_STR	__stringify(__ALIGN)
+ 
+ /* annotation for data we want in DCCM - if enabled in .config */
+ .macro ARCFP_DATA nm
 
 
