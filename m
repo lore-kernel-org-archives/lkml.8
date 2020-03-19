@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C232C43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D4BC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7375A207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF892080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624491;
-	bh=vwFQSTRGBXIuEHRlKDxDsMBN5Lx7bJ4941rvcPOxF5M=;
+	s=default; t=1584624495;
+	bh=GBW4HS3rcU46yI/YSEUk0+2oIxX7o1ouHTysQw84VJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QwQxSBoWldf00fCZyKYj6j4t6ftjQJqBFovjYGjdlv9M74RQbrtcyJ4RcQQpq/zIl
-	 EKTRb6wIa1QPtrwFSFW2uc8AMlU6FmQiUxye29QYTPMnCP8xEF82aGmMqP2pgozk5k
-	 fHZKcuXfyHQJ0D9e8tMAHiorQyFx9CDinUfMSzRI=
+	b=ol+mb1lTFWUSnV77WBfLQzeFuDwCXfyLy5tg0TvJyB/liM67W7c/03DCgZGKmvIPh
+	 Q1kWQEGSRbVMf+abniBxzNiqpqcyazESvW9bTOuUzONFfd2J7DYUT9fttFgw2dOkMQ
+	 v8vyrRtIE++BYhvpzbMqbH5L5jjiorvmf+UoTEAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730945AbgCSN1u (ORCPT
+        id S1730537AbgCSN2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56122 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730331AbgCSN1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:27:43 -0400
+        id S1730939AbgCSN1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:27:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51B49208C3;
-        Thu, 19 Mar 2020 13:27:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B3CA20B80;
+        Thu, 19 Mar 2020 13:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624462;
-        bh=vwFQSTRGBXIuEHRlKDxDsMBN5Lx7bJ4941rvcPOxF5M=;
+        s=default; t=1584624467;
+        bh=GBW4HS3rcU46yI/YSEUk0+2oIxX7o1ouHTysQw84VJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zIsSJplxxEd0ZIRVJ1E0NqmkAz5NtRoOrqXJQyACZ05qKTjL/VtYmtmCgLmLXIWXK
-         5AWFA8f+ZaVWWCJtsZSPboKzAm/rfS8wTpPCCC84LTN1l7zsoJZl949G5Q8TNIJIs2
-         gz4yp5FLbn441xpgf6+BgJstMvJoYqWtKXQYgq00=
+        b=pJE8zY3zFiHu1G9GgaeObnTvoqvho2FamydIMZ/2me2qdommr6cVvo9fza2KFu8mb
+         sk995LTuFBHpQg0E9S3Ve6S0Li8I8g0onqIXgfRU0IIGYPJl7DFVqshrYMipIuRB6M
+         62fZ7mxNC5Bx+/kPDFr7nj5IqRcAtHnBB1EFsH2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        stable@vger.kernel.org, Amit Cohen <amitc@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 53/65] net: rmnet: fix packet forwarding in rmnet bridge mode
-Date:   Thu, 19 Mar 2020 14:04:35 +0100
-Message-Id: <20200319123943.072434015@linuxfoundation.org>
+Subject: [PATCH 5.5 55/65] mlxsw: pci: Wait longer before accessing the device after reset
+Date:   Thu, 19 Mar 2020 14:04:37 +0100
+Message-Id: <20200319123943.593234706@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -60,59 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Amit Cohen <amitc@mellanox.com>
 
-[ Upstream commit ad3cc31b599ea80f06b29ebdc18b3a39878a48d6 ]
+[ Upstream commit ac004e84164e27d69017731a97b11402a69d854b ]
 
-Packet forwarding is not working in rmnet bridge mode.
-Because when a packet is forwarded, skb_push() for an ethernet header
-is needed. But it doesn't call skb_push().
-So, the ethernet header will be lost.
+During initialization the driver issues a reset to the device and waits
+for 100ms before checking if the firmware is ready. The waiting is
+necessary because before that the device is irresponsive and the first
+read can result in a completion timeout.
 
-Test commands:
-    modprobe rmnet
-    ip netns add nst
-    ip netns add nst2
-    ip link add veth0 type veth peer name veth1
-    ip link add veth2 type veth peer name veth3
-    ip link set veth1 netns nst
-    ip link set veth3 netns nst2
+While 100ms is sufficient for Spectrum-1 and Spectrum-2, it is
+insufficient for Spectrum-3.
 
-    ip link add rmnet0 link veth0 type rmnet mux_id 1
-    ip link set veth2 master rmnet0
-    ip link set veth0 up
-    ip link set veth2 up
-    ip link set rmnet0 up
-    ip a a 192.168.100.1/24 dev rmnet0
+Fix this by increasing the timeout to 200ms.
 
-    ip netns exec nst ip link set veth1 up
-    ip netns exec nst ip a a 192.168.100.2/24 dev veth1
-    ip netns exec nst2 ip link set veth3 up
-    ip netns exec nst2 ip a a 192.168.100.3/24 dev veth3
-    ip netns exec nst2 ping 192.168.100.2
-
-Fixes: 60d58f971c10 ("net: qualcomm: rmnet: Implement bridge mode")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Fixes: da382875c616 ("mlxsw: spectrum: Extend to support Spectrum-3 ASIC")
+Signed-off-by: Amit Cohen <amitc@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/mellanox/mlxsw/pci_hw.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-index 074a8b326c304..29a7bfa2584dc 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-@@ -159,6 +159,9 @@ static int rmnet_map_egress_handler(struct sk_buff *skb,
- static void
- rmnet_bridge_handler(struct sk_buff *skb, struct net_device *bridge_dev)
- {
-+	if (skb_mac_header_was_set(skb))
-+		skb_push(skb, skb->mac_len);
-+
- 	if (bridge_dev) {
- 		skb->dev = bridge_dev;
- 		dev_queue_xmit(skb);
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/pci_hw.h b/drivers/net/ethernet/mellanox/mlxsw/pci_hw.h
+index e0d7d2d9a0c81..43fa8c85b5d9f 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/pci_hw.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/pci_hw.h
+@@ -28,7 +28,7 @@
+ #define MLXSW_PCI_SW_RESET			0xF0010
+ #define MLXSW_PCI_SW_RESET_RST_BIT		BIT(0)
+ #define MLXSW_PCI_SW_RESET_TIMEOUT_MSECS	900000
+-#define MLXSW_PCI_SW_RESET_WAIT_MSECS		100
++#define MLXSW_PCI_SW_RESET_WAIT_MSECS		200
+ #define MLXSW_PCI_FW_READY			0xA1844
+ #define MLXSW_PCI_FW_READY_MASK			0xFFFF
+ #define MLXSW_PCI_FW_READY_MAGIC		0x5E
 -- 
 2.20.1
 
