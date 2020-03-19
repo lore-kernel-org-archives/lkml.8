@@ -2,267 +2,181 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F68C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4215C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747EF21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623586;
-	bh=JuW9RWEn+7NdyIv+I+mV1pt2r3wYlQSP1gc80Cfe0Yc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHLCic7eCtMREhzBaqTBtH8w8+58g7g8CeLsfQLcZQ3lSyjOZncQkI/HmRUu8+biw
-	 YPhLIKqLl0mT5s5qKRPGcxFCpUExNcp18jIToVKi4AydkeLDIGnOQqM6q0FC1my4nr
-	 E9Y6w1mgbb3dHiI0iKYCeJUTSvCRSc/Zp+aTkgNA=
+	by mail.kernel.org (Postfix) with ESMTP id 8BAAE214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JwSi1ypq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgCSNNE (ORCPT
+        id S1729127AbgCSNNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:13:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729021AbgCSNM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:12:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 19 Mar 2020 09:13:14 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:31415 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729093AbgCSNNM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:13:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584623590;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aB+Y80kj2DmkC4n/sS+MBsl3w+H0UjquEf2pZ3ZsG2g=;
+        b=JwSi1ypqNqmfo7GkKQr1ifGZ/IaZCQTO8JE2O6eh5xodu0fLLbCuir6zV+WpSbB0t69eul
+        PpyeFHoQ00Os7UisNwzzDFAkaeuWNs2vcaXoKdh3mFxbbdYHCApj705+u02Xe3j0fzHpma
+        NjKaC3cz+hbh2Z7Wc+K6G5gWWggqPS4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-ZsPPbzZHN2eQW0KwgD2BNQ-1; Thu, 19 Mar 2020 09:13:06 -0400
+X-MC-Unique: ZsPPbzZHN2eQW0KwgD2BNQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B920215A4;
-        Thu, 19 Mar 2020 13:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623578;
-        bh=JuW9RWEn+7NdyIv+I+mV1pt2r3wYlQSP1gc80Cfe0Yc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uT2ettCYfopRQ7tq7EPljvNCrhI5bVwEcwBJ7DdsD2OdGpGnYaYskoZekozpq2lOE
-         eclDulLtK9+DuT/u1xvFblNbDIa+h9c4SSzv7uBBTqMjkY0OETTo+HdaDVa7Vntcrn
-         rntvld3qJIyTJPYEcgtOB99aT0TQrCEpPpJPOr4g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Linus=20L=FCssing?= <linus.luessing@c0d3.blue>,
-        Antonio Quartulli <a@unstable.cc>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 57/90] batman-adv: fix TT sync flag inconsistencies
-Date:   Thu, 19 Mar 2020 14:00:19 +0100
-Message-Id: <20200319123945.984996412@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
-References: <20200319123928.635114118@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 696D88010D9;
+        Thu, 19 Mar 2020 13:13:03 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-114-197.ams2.redhat.com [10.36.114.197])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB87460BF7;
+        Thu, 19 Mar 2020 13:13:00 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-hyperv@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>
+Subject: [PATCH v3 8/8] mm/memory_hotplug: allow to specify a default online_type
+Date:   Thu, 19 Mar 2020 14:12:21 +0100
+Message-Id: <20200319131221.14044-9-david@redhat.com>
+In-Reply-To: <20200319131221.14044-1-david@redhat.com>
+References: <20200319131221.14044-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Lüssing <linus.luessing@c0d3.blue>
+For now, distributions implement advanced udev rules to essentially
+- Don't online any hotplugged memory (s390x)
+- Online all memory to ZONE_NORMAL (e.g., most virt environments like
+  hyperv)
+- Online all memory to ZONE_MOVABLE in case the zone imbalance is taken
+  care of (e.g., bare metal, special virt environments)
 
-commit 54e22f265e872ae140755b3318521d400a094605 upstream.
+In summary: All memory is usually onlined the same way, however, the
+kernel always has to ask user space to come up with the same answer.
+E.g., Hyper-V always waits for a memory block to get onlined before
+continuing, otherwise it might end up adding memory faster than
+onlining it, which can result in strange OOM situations. This waiting
+slows down adding of a bigger amount of memory.
 
-This patch fixes an issue in the translation table code potentially
-leading to a TT Request + Response storm. The issue may occur for nodes
-involving BLA and an inconsistent configuration of the batman-adv AP
-isolation feature. However, since the new multicast optimizations, a
-single, malformed packet may lead to a mesh-wide, persistent
-Denial-of-Service, too.
+Let's allow to specify a default online_type, not just "online" and
+"offline". This allows distributions to configure the default online_type
+when booting up and be done with it.
 
-The issue occurs because nodes are currently OR-ing the TT sync flags of
-all originators announcing a specific MAC address via the
-translation table. When an intermediate node now receives a TT Request
-and wants to answer this on behalf of the destination node, then this
-intermediate node now responds with an altered flag field and broken
-CRC. The next OGM of the real destination will lead to a CRC mismatch
-and triggering a TT Request and Response again.
+We can now specify "offline", "online", "online_movable" and
+"online_kernel" via
+- "memhp_default_state=3D" on the kernel cmdline
+- /sys/devices/system/memory/auto_online_blocks
+just like we are able to specify for a single memory block via
+/sys/devices/system/memory/memoryX/state
 
-Furthermore, the OR-ing is currently never undone as long as at least
-one originator announcing the according MAC address remains, leading to
-the potential persistency of this issue.
-
-This patch fixes this issue by storing the flags used in the CRC
-calculation on a a per TT orig entry basis to be able to respond with
-the correct, original flags in an intermediate TT Response for one
-thing. And to be able to correctly unset sync flags once all nodes
-announcing a sync flag vanish for another.
-
-Fixes: e9c00136a475 ("batman-adv: fix tt_global_entries flags update")
-Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-[sw: typo in commit message]
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- net/batman-adv/translation-table.c |   60 +++++++++++++++++++++++++++++++------
- net/batman-adv/types.h             |    2 +
- 2 files changed, 53 insertions(+), 9 deletions(-)
+ drivers/base/memory.c          | 11 +++++------
+ include/linux/memory_hotplug.h |  2 ++
+ mm/memory_hotplug.c            |  8 ++++----
+ 3 files changed, 11 insertions(+), 10 deletions(-)
 
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -1560,9 +1560,41 @@ batadv_tt_global_entry_has_orig(const st
- 	return found;
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 8d3e16dab69f..2b09b68b9f78 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -35,7 +35,7 @@ static const char *const online_type_to_str[] =3D {
+ 	[MMOP_ONLINE_MOVABLE] =3D "online_movable",
+ };
+=20
+-static int memhp_online_type_from_str(const char *str)
++int memhp_online_type_from_str(const char *str)
+ {
+ 	int i;
+=20
+@@ -394,13 +394,12 @@ static ssize_t auto_online_blocks_store(struct devi=
+ce *dev,
+ 					struct device_attribute *attr,
+ 					const char *buf, size_t count)
+ {
+-	if (sysfs_streq(buf, "online"))
+-		memhp_default_online_type =3D MMOP_ONLINE;
+-	else if (sysfs_streq(buf, "offline"))
+-		memhp_default_online_type =3D MMOP_OFFLINE;
+-	else
++	const int online_type =3D memhp_online_type_from_str(buf);
++
++	if (online_type < 0)
+ 		return -EINVAL;
+=20
++	memhp_default_online_type =3D online_type;
+ 	return count;
  }
- 
-+/**
-+ * batadv_tt_global_sync_flags - update TT sync flags
-+ * @tt_global: the TT global entry to update sync flags in
-+ *
-+ * Updates the sync flag bits in the tt_global flag attribute with a logical
-+ * OR of all sync flags from any of its TT orig entries.
-+ */
-+static void
-+batadv_tt_global_sync_flags(struct batadv_tt_global_entry *tt_global)
-+{
-+	struct batadv_tt_orig_list_entry *orig_entry;
-+	const struct hlist_head *head;
-+	u16 flags = BATADV_NO_FLAGS;
+=20
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplu=
+g.h
+index 6d6f85bb66e9..93d9ada74ddd 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -118,6 +118,8 @@ extern int arch_add_memory(int nid, u64 start, u64 si=
+ze,
+ 			   struct mhp_params *params);
+ extern u64 max_mem_size;
+=20
++extern int memhp_online_type_from_str(const char *str);
 +
-+	rcu_read_lock();
-+	head = &tt_global->orig_list;
-+	hlist_for_each_entry_rcu(orig_entry, head, list)
-+		flags |= orig_entry->flags;
-+	rcu_read_unlock();
-+
-+	flags |= tt_global->common.flags & (~BATADV_TT_SYNC_MASK);
-+	tt_global->common.flags = flags;
-+}
-+
-+/**
-+ * batadv_tt_global_orig_entry_add - add or update a TT orig entry
-+ * @tt_global: the TT global entry to add an orig entry in
-+ * @orig_node: the originator to add an orig entry for
-+ * @ttvn: translation table version number of this changeset
-+ * @flags: TT sync flags
-+ */
- static void
- batadv_tt_global_orig_entry_add(struct batadv_tt_global_entry *tt_global,
--				struct batadv_orig_node *orig_node, int ttvn)
-+				struct batadv_orig_node *orig_node, int ttvn,
-+				u8 flags)
+ /* Default online_type (MMOP_*) when new memory blocks are added. */
+ extern int memhp_default_online_type;
+ /* If movable_node boot option specified */
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 4efcf8cb9ac5..89197163d138 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -74,10 +74,10 @@ int memhp_default_online_type =3D MMOP_ONLINE;
+=20
+ static int __init setup_memhp_default_state(char *str)
  {
- 	struct batadv_tt_orig_list_entry *orig_entry;
- 
-@@ -1574,7 +1606,8 @@ batadv_tt_global_orig_entry_add(struct b
- 		 * was added during a "temporary client detection"
- 		 */
- 		orig_entry->ttvn = ttvn;
--		goto out;
-+		orig_entry->flags = flags;
-+		goto sync_flags;
- 	}
- 
- 	orig_entry = kmem_cache_zalloc(batadv_tt_orig_cache, GFP_ATOMIC);
-@@ -1586,6 +1619,7 @@ batadv_tt_global_orig_entry_add(struct b
- 	batadv_tt_global_size_inc(orig_node, tt_global->common.vid);
- 	orig_entry->orig_node = orig_node;
- 	orig_entry->ttvn = ttvn;
-+	orig_entry->flags = flags;
- 	kref_init(&orig_entry->refcount);
- 
- 	kref_get(&orig_entry->refcount);
-@@ -1593,6 +1627,8 @@ batadv_tt_global_orig_entry_add(struct b
- 			   &tt_global->orig_list);
- 	atomic_inc(&tt_global->orig_list_count);
- 
-+sync_flags:
-+	batadv_tt_global_sync_flags(tt_global);
- out:
- 	if (orig_entry)
- 		batadv_tt_orig_list_entry_put(orig_entry);
-@@ -1716,10 +1752,10 @@ static bool batadv_tt_global_add(struct
- 		}
- 
- 		/* the change can carry possible "attribute" flags like the
--		 * TT_CLIENT_WIFI, therefore they have to be copied in the
-+		 * TT_CLIENT_TEMP, therefore they have to be copied in the
- 		 * client entry
- 		 */
--		common->flags |= flags;
-+		common->flags |= flags & (~BATADV_TT_SYNC_MASK);
- 
- 		/* If there is the BATADV_TT_CLIENT_ROAM flag set, there is only
- 		 * one originator left in the list and we previously received a
-@@ -1736,7 +1772,8 @@ static bool batadv_tt_global_add(struct
- 	}
- add_orig_entry:
- 	/* add the new orig_entry (if needed) or update it */
--	batadv_tt_global_orig_entry_add(tt_global_entry, orig_node, ttvn);
-+	batadv_tt_global_orig_entry_add(tt_global_entry, orig_node, ttvn,
-+					flags & BATADV_TT_SYNC_MASK);
- 
- 	batadv_dbg(BATADV_DBG_TT, bat_priv,
- 		   "Creating new global tt entry: %pM (vid: %d, via %pM)\n",
-@@ -1959,6 +1996,7 @@ batadv_tt_global_dump_subentry(struct sk
- 			       struct batadv_tt_orig_list_entry *orig,
- 			       bool best)
- {
-+	u16 flags = (common->flags & (~BATADV_TT_SYNC_MASK)) | orig->flags;
- 	void *hdr;
- 	struct batadv_orig_node_vlan *vlan;
- 	u8 last_ttvn;
-@@ -1988,7 +2026,7 @@ batadv_tt_global_dump_subentry(struct sk
- 	    nla_put_u8(msg, BATADV_ATTR_TT_LAST_TTVN, last_ttvn) ||
- 	    nla_put_u32(msg, BATADV_ATTR_TT_CRC32, crc) ||
- 	    nla_put_u16(msg, BATADV_ATTR_TT_VID, common->vid) ||
--	    nla_put_u32(msg, BATADV_ATTR_TT_FLAGS, common->flags))
-+	    nla_put_u32(msg, BATADV_ATTR_TT_FLAGS, flags))
- 		goto nla_put_failure;
- 
- 	if (best && nla_put_flag(msg, BATADV_ATTR_FLAG_BEST))
-@@ -2602,6 +2640,7 @@ static u32 batadv_tt_global_crc(struct b
- 				unsigned short vid)
- {
- 	struct batadv_hashtable *hash = bat_priv->tt.global_hash;
-+	struct batadv_tt_orig_list_entry *tt_orig;
- 	struct batadv_tt_common_entry *tt_common;
- 	struct batadv_tt_global_entry *tt_global;
- 	struct hlist_head *head;
-@@ -2640,8 +2679,9 @@ static u32 batadv_tt_global_crc(struct b
- 			/* find out if this global entry is announced by this
- 			 * originator
- 			 */
--			if (!batadv_tt_global_entry_has_orig(tt_global,
--							     orig_node))
-+			tt_orig = batadv_tt_global_orig_entry_find(tt_global,
-+								   orig_node);
-+			if (!tt_orig)
- 				continue;
- 
- 			/* use network order to read the VID: this ensures that
-@@ -2653,10 +2693,12 @@ static u32 batadv_tt_global_crc(struct b
- 			/* compute the CRC on flags that have to be kept in sync
- 			 * among nodes
- 			 */
--			flags = tt_common->flags & BATADV_TT_SYNC_MASK;
-+			flags = tt_orig->flags;
- 			crc_tmp = crc32c(crc_tmp, &flags, sizeof(flags));
- 
- 			crc ^= crc32c(crc_tmp, tt_common->addr, ETH_ALEN);
+-	if (!strcmp(str, "online"))
+-		memhp_default_online_type =3D MMOP_ONLINE;
+-	else if (!strcmp(str, "offline"))
+-		memhp_default_online_type =3D MMOP_OFFLINE;
++	const int online_type =3D memhp_online_type_from_str(str);
 +
-+			batadv_tt_orig_list_entry_put(tt_orig);
- 		}
- 		rcu_read_unlock();
- 	}
---- a/net/batman-adv/types.h
-+++ b/net/batman-adv/types.h
-@@ -1241,6 +1241,7 @@ struct batadv_tt_global_entry {
-  * struct batadv_tt_orig_list_entry - orig node announcing a non-mesh client
-  * @orig_node: pointer to orig node announcing this non-mesh client
-  * @ttvn: translation table version number which added the non-mesh client
-+ * @flags: per orig entry TT sync flags
-  * @list: list node for batadv_tt_global_entry::orig_list
-  * @refcount: number of contexts the object is used
-  * @rcu: struct used for freeing in an RCU-safe manner
-@@ -1248,6 +1249,7 @@ struct batadv_tt_global_entry {
- struct batadv_tt_orig_list_entry {
- 	struct batadv_orig_node *orig_node;
- 	u8 ttvn;
-+	u8 flags;
- 	struct hlist_node list;
- 	struct kref refcount;
- 	struct rcu_head rcu;
-
++	if (online_type >=3D 0)
++		memhp_default_online_type =3D online_type;
+=20
+ 	return 1;
+ }
+--=20
+2.24.1
 
