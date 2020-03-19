@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63784C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7DAC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A2020663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9113720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624896;
-	bh=wiALrJhg3TcaKsIRiM/YULV3e4/UuFySxyrqjKCWbrY=;
+	s=default; t=1584624904;
+	bh=Q5wpVU1xu8wGACPp+m7pI66Up6viVKtEFbyPFoD1gG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gWtLDTmCxy4eIo+Ejjtg1X6Ib//5JkW73p7zzTkm+HYUNi3DQBmZ456JOJFiapRM7
-	 ruHqD1XVBMhUTH+8YDnyL7iS7Tt97JS8Jtkfj2Q2yRc2F+Lu7tKJvsPUnwtCtu9cyk
-	 +T0UC8DjZ5ihxcuqFihrH8+2NzYdLyM88/PLHq3g=
+	b=K0vUiToS3Ui3F7YkKVTjBlSt4b7yoGILEve7YDHY/PCDQ7F3fEGw7P7FxLJCC4+Wn
+	 MRmIv9UIHUeD4N4zGV+0yUeM3dhkykJd0hfXsrrE89CPuw9CdcrlZ//p1TY/rRrHfb
+	 0WImcRNStMGcTAb/4Xu/2b4GgoHnnSwhuF3onFCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgCSNez (ORCPT
+        id S1728863AbgCSNMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:34:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:12:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728139AbgCSNMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:12:37 -0400
+        id S1728842AbgCSNMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:12:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B70C0208D6;
-        Thu, 19 Mar 2020 13:12:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D31E20789;
+        Thu, 19 Mar 2020 13:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623556;
-        bh=wiALrJhg3TcaKsIRiM/YULV3e4/UuFySxyrqjKCWbrY=;
+        s=default; t=1584623522;
+        bh=Q5wpVU1xu8wGACPp+m7pI66Up6viVKtEFbyPFoD1gG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QLcdCAo87EnRf+zSy5TqVHF8al8Vx33XXj4XTb94rVeDrpAkk17sbnBqVq1ODaOrl
-         CAR59+IOouLlRSkwie93OOA7b29m0TatwUcyUDqTnq6KQrrLm65p+pT4tKjTOVV9Z1
-         HdO+pqZPyFfNqW3IflmmhsMcGKRVUBBQV1XTWI2g=
+        b=ktuievN5GgboBsoOxW7UGEAOXJQa0fe4BRG/A3M5vfNlMdoiIdXr4kLFNj6BZq8qf
+         MFRciP3B3GjlKwy/EIgX8AKCERbUKOjo2aDH2dU6fzY/YjvkWba5axgApg9C8TMrwz
+         vmF7rZZQpEnQkoQCbUKjVJw+1EJLLLLxpVe9ppJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 67/90] batman-adv: Fix debugfs path for renamed softif
-Date:   Thu, 19 Mar 2020 14:00:29 +0100
-Message-Id: <20200319123949.308277150@linuxfoundation.org>
+        stable@vger.kernel.org, Vladis Dronov <vdronov@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Bob Sanders <bob.sanders@hpe.com>
+Subject: [PATCH 4.9 39/90] efi: Fix a race and a buffer overflow while reading efivars via sysfs
+Date:   Thu, 19 Mar 2020 14:00:01 +0100
+Message-Id: <20200319123940.746548126@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -59,138 +61,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Vladis Dronov <vdronov@redhat.com>
 
-commit 6da7be7d24b2921f8215473ba7552796dff05fe1 upstream.
+commit 286d3250c9d6437340203fb64938bea344729a0e upstream.
 
-batman-adv is creating special debugfs directories in the init
-net_namespace for each created soft-interface (batadv net_device). But it
-is possible to rename a net_device to a completely different name then the
-original one.
+There is a race and a buffer overflow corrupting a kernel memory while
+reading an EFI variable with a size more than 1024 bytes via the older
+sysfs method. This happens because accessing struct efi_variable in
+efivar_{attr,size,data}_read() and friends is not protected from
+a concurrent access leading to a kernel memory corruption and, at best,
+to a crash. The race scenario is the following:
 
-It can therefore happen that a user registers a new batadv net_device with
-the name "bat0". batman-adv is then also adding a new directory under
-$debugfs/batman-adv/ with the name "wlan0".
+CPU0:                                CPU1:
+efivar_attr_read()
+  var->DataSize = 1024;
+  efivar_entry_get(... &var->DataSize)
+    down_interruptible(&efivars_lock)
+                                     efivar_attr_read() // same EFI var
+                                       var->DataSize = 1024;
+                                       efivar_entry_get(... &var->DataSize)
+                                         down_interruptible(&efivars_lock)
+    virt_efi_get_variable()
+    // returns EFI_BUFFER_TOO_SMALL but
+    // var->DataSize is set to a real
+    // var size more than 1024 bytes
+    up(&efivars_lock)
+                                         virt_efi_get_variable()
+                                         // called with var->DataSize set
+                                         // to a real var size, returns
+                                         // successfully and overwrites
+                                         // a 1024-bytes kernel buffer
+                                         up(&efivars_lock)
 
-The user then decides to rename this device to "bat1" and registers a
-different batadv device with the name "bat0". batman-adv will then try to
-create a directory with the name "bat0" under $debugfs/batman-adv/ again.
-But there already exists one with this name under this path and thus this
-fails. batman-adv will detect a problem and rollback the registering of
-this device.
+This can be reproduced by concurrent reading of an EFI variable which size
+is more than 1024 bytes:
 
-batman-adv must therefore take care of renaming the debugfs directories for
-soft-interfaces whenever it detects such a net_device rename.
+  ts# for cpu in $(seq 0 $(nproc --ignore=1)); do ( taskset -c $cpu \
+  cat /sys/firmware/efi/vars/KEKDefault*/size & ) ; done
 
-Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fix this by using a local variable for a var's data buffer size so it
+does not get overwritten.
+
+Fixes: e14ab23dde12b80d ("efivars: efivar_entry API")
+Reported-by: Bob Sanders <bob.sanders@hpe.com> and the LTP testsuite
+Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200305084041.24053-2-vdronov@redhat.com
+Link: https://lore.kernel.org/r/20200308080859.21568-24-ardb@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/batman-adv/debugfs.c        |   20 ++++++++++++++++++++
- net/batman-adv/debugfs.h        |    5 +++++
- net/batman-adv/hard-interface.c |   34 ++++++++++++++++++++++++++++------
- 3 files changed, 53 insertions(+), 6 deletions(-)
 
---- a/net/batman-adv/debugfs.c
-+++ b/net/batman-adv/debugfs.c
-@@ -423,6 +423,26 @@ out:
- 	return -ENOMEM;
- }
- 
-+/**
-+ * batadv_debugfs_rename_meshif() - Fix debugfs path for renamed softif
-+ * @dev: net_device which was renamed
-+ */
-+void batadv_debugfs_rename_meshif(struct net_device *dev)
-+{
-+	struct batadv_priv *bat_priv = netdev_priv(dev);
-+	const char *name = dev->name;
-+	struct dentry *dir;
-+	struct dentry *d;
-+
-+	dir = bat_priv->debug_dir;
-+	if (!dir)
-+		return;
-+
-+	d = debugfs_rename(dir->d_parent, dir, dir->d_parent, name);
-+	if (!d)
-+		pr_err("Can't rename debugfs dir to %s\n", name);
-+}
-+
- void batadv_debugfs_del_meshif(struct net_device *dev)
+---
+ drivers/firmware/efi/efivars.c |   29 ++++++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
+
+--- a/drivers/firmware/efi/efivars.c
++++ b/drivers/firmware/efi/efivars.c
+@@ -139,13 +139,16 @@ static ssize_t
+ efivar_attr_read(struct efivar_entry *entry, char *buf)
  {
- 	struct batadv_priv *bat_priv = netdev_priv(dev);
---- a/net/batman-adv/debugfs.h
-+++ b/net/batman-adv/debugfs.h
-@@ -29,6 +29,7 @@ struct net_device;
- void batadv_debugfs_init(void);
- void batadv_debugfs_destroy(void);
- int batadv_debugfs_add_meshif(struct net_device *dev);
-+void batadv_debugfs_rename_meshif(struct net_device *dev);
- void batadv_debugfs_del_meshif(struct net_device *dev);
- int batadv_debugfs_add_hardif(struct batadv_hard_iface *hard_iface);
- void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface);
-@@ -49,6 +50,10 @@ static inline int batadv_debugfs_add_mes
- 	return 0;
- }
+ 	struct efi_variable *var = &entry->var;
++	unsigned long size = sizeof(var->Data);
+ 	char *str = buf;
++	int ret;
  
-+static inline void batadv_debugfs_rename_meshif(struct net_device *dev)
-+{
-+}
-+
- static inline void batadv_debugfs_del_meshif(struct net_device *dev)
+ 	if (!entry || !buf)
+ 		return -EINVAL;
+ 
+-	var->DataSize = 1024;
+-	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
++	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
++	var->DataSize = size;
++	if (ret)
+ 		return -EIO;
+ 
+ 	if (var->Attributes & EFI_VARIABLE_NON_VOLATILE)
+@@ -172,13 +175,16 @@ static ssize_t
+ efivar_size_read(struct efivar_entry *entry, char *buf)
  {
- }
---- a/net/batman-adv/hard-interface.c
-+++ b/net/batman-adv/hard-interface.c
-@@ -755,6 +755,32 @@ void batadv_hardif_remove_interfaces(voi
- 	rtnl_unlock();
- }
+ 	struct efi_variable *var = &entry->var;
++	unsigned long size = sizeof(var->Data);
+ 	char *str = buf;
++	int ret;
  
-+/**
-+ * batadv_hard_if_event_softif() - Handle events for soft interfaces
-+ * @event: NETDEV_* event to handle
-+ * @net_dev: net_device which generated an event
-+ *
-+ * Return: NOTIFY_* result
-+ */
-+static int batadv_hard_if_event_softif(unsigned long event,
-+				       struct net_device *net_dev)
-+{
-+	struct batadv_priv *bat_priv;
-+
-+	switch (event) {
-+	case NETDEV_REGISTER:
-+		batadv_sysfs_add_meshif(net_dev);
-+		bat_priv = netdev_priv(net_dev);
-+		batadv_softif_create_vlan(bat_priv, BATADV_NO_FLAGS);
-+		break;
-+	case NETDEV_CHANGENAME:
-+		batadv_debugfs_rename_meshif(net_dev);
-+		break;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
- static int batadv_hard_if_event(struct notifier_block *this,
- 				unsigned long event, void *ptr)
+ 	if (!entry || !buf)
+ 		return -EINVAL;
+ 
+-	var->DataSize = 1024;
+-	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
++	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
++	var->DataSize = size;
++	if (ret)
+ 		return -EIO;
+ 
+ 	str += sprintf(str, "0x%lx\n", var->DataSize);
+@@ -189,12 +195,15 @@ static ssize_t
+ efivar_data_read(struct efivar_entry *entry, char *buf)
  {
-@@ -763,12 +789,8 @@ static int batadv_hard_if_event(struct n
- 	struct batadv_hard_iface *primary_if = NULL;
- 	struct batadv_priv *bat_priv;
+ 	struct efi_variable *var = &entry->var;
++	unsigned long size = sizeof(var->Data);
++	int ret;
  
--	if (batadv_softif_is_valid(net_dev) && event == NETDEV_REGISTER) {
--		batadv_sysfs_add_meshif(net_dev);
--		bat_priv = netdev_priv(net_dev);
--		batadv_softif_create_vlan(bat_priv, BATADV_NO_FLAGS);
--		return NOTIFY_DONE;
--	}
-+	if (batadv_softif_is_valid(net_dev))
-+		return batadv_hard_if_event_softif(event, net_dev);
+ 	if (!entry || !buf)
+ 		return -EINVAL;
  
- 	hard_iface = batadv_hardif_get_by_netdev(net_dev);
- 	if (!hard_iface && (event == NETDEV_REGISTER ||
+-	var->DataSize = 1024;
+-	if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
++	ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
++	var->DataSize = size;
++	if (ret)
+ 		return -EIO;
+ 
+ 	memcpy(buf, var->Data, var->DataSize);
+@@ -314,14 +323,16 @@ efivar_show_raw(struct efivar_entry *ent
+ {
+ 	struct efi_variable *var = &entry->var;
+ 	struct compat_efi_variable *compat;
++	unsigned long datasize = sizeof(var->Data);
+ 	size_t size;
++	int ret;
+ 
+ 	if (!entry || !buf)
+ 		return 0;
+ 
+-	var->DataSize = 1024;
+-	if (efivar_entry_get(entry, &entry->var.Attributes,
+-			     &entry->var.DataSize, entry->var.Data))
++	ret = efivar_entry_get(entry, &var->Attributes, &datasize, var->Data);
++	var->DataSize = datasize;
++	if (ret)
+ 		return -EIO;
+ 
+ 	if (is_compat()) {
 
 
