@@ -2,93 +2,131 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD4DC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCD3C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157392078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF00A20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584643386;
-	bh=+vgcHdLhhtb+ajyUNxQekv1ON55TgPbVwgX7E6jDLgU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C2XKYNh3OJIXtfARSxuFq9aaPibUooLJd0FMHPzcAfgUPeFGOQBE7lxl9w0+FxqWJ
-	 V++yOhPmRcTABbC9JeK+0Efv8Qa2HvWx88P8EWNNOheI1HovYwy7razTRna2LKHYbC
-	 35VQbZV/pThmpsZbPpbjA5sVuTPYeHGOn3J32O1U=
+	s=default; t=1584643416;
+	bh=16Mv0Bki/NfvJX5iwDxd/8tDdJeb33292LnGanZEgHk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jgPILBBakyWYIiHydVX/eXL3U3ouh+qGEAGt04REbwEhYPdLfnrlhCYHfNK27jawm
+	 qe6ZJsYU7KmSh5pXzxh4CqONVD1iTxWPdhLfKOlq/vwBAI8FgtsdMa23kYF1LwRpVP
+	 pY6iJsc14ALvMa8YSm1BqDzntu+BWCCh+otq8JVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbgCSSnF (ORCPT
+        id S1727393AbgCSSnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33542 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 14:43:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbgCSSnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:43:05 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725787AbgCSSnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:43:35 -0400
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A3D820787;
-        Thu, 19 Mar 2020 18:43:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E3FE208E4
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584643384;
-        bh=+vgcHdLhhtb+ajyUNxQekv1ON55TgPbVwgX7E6jDLgU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sUxpqcgD6Y93HTuHXg5h0Qz3nt+L3A2TfD5OrDS6vZ8dvWZqSV0Ki0TnxUUiJZY6Q
-         dmxl/GTcRwlUaw07dL8J++h7uq24D+3hFk7zw4A3UrD2mm33dnZnboHUQD/mDwb2A8
-         j03xPtn5geOFe+RB9aX1Wv2ZMxGhr7rDHuARE9K0=
-Date:   Thu, 19 Mar 2020 18:42:59 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] arm64: compat: Fix syscall number of compat_clock_getres
-Message-ID: <20200319184258.GC27141@willie-the-truck>
-References: <20200319141138.19343-1-vincenzo.frascino@arm.com>
+        s=default; t=1584643414;
+        bh=16Mv0Bki/NfvJX5iwDxd/8tDdJeb33292LnGanZEgHk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gZnE0N1zX3N4hrpdEBg3hayONMFggbn4LZXMYyZpsRN0k2dZjof1Jfd1Qmvhdh93+
+         sGF9hoGmQ3D9O6lCKLVt/Fn4A0XRLnor5uOC07hgnzJMuGptsX7jsAEzADkZqINynv
+         dtZbN5mYI74zyy3gDrcqFJNyDt6bH15ZmZzbPenY=
+Received: by mail-wm1-f50.google.com with SMTP id d1so3578708wmb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 11:43:34 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3dKMJNm/28MNKF/IBrU5UTL0BRmVihKwSyKSapWPFHbhIL5nyT
+        SXltR5CLByjlzj+oVsoPbKBi3qwTqOTA1zhVvjl+vw==
+X-Google-Smtp-Source: ADFU+vv10cBd6Yipt9Fp30VfQsiUak847hkVmmyNfiLI7ndWg3gIIQhdPQtda5z9gYC13rmpADmNaW86Fu4VfLkwdyA=
+X-Received: by 2002:a1c:1904:: with SMTP id 4mr765861wmz.21.1584643412632;
+ Thu, 19 Mar 2020 11:43:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319141138.19343-1-vincenzo.frascino@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200319091407.1481-1-joro@8bytes.org> <20200319091407.1481-42-joro@8bytes.org>
+ <CALCETrW9EYi5dzCKNtKkxM18CC4n5BZxTp1=qQ5qZccwstXjzg@mail.gmail.com> <20200319162439.GE5122@8bytes.org>
+In-Reply-To: <20200319162439.GE5122@8bytes.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 19 Mar 2020 11:43:20 -0700
+X-Gmail-Original-Message-ID: <CALCETrW6LOwEfjJz-S7fFJvPqgr9BoCkRG2MA-Pk6K_y_rmGHg@mail.gmail.com>
+Message-ID: <CALCETrW6LOwEfjJz-S7fFJvPqgr9BoCkRG2MA-Pk6K_y_rmGHg@mail.gmail.com>
+Subject: Re: [PATCH 41/70] x86/sev-es: Add Runtime #VC Exception Handler
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 02:11:38PM +0000, Vincenzo Frascino wrote:
-> The syscall number of compat_clock_getres was erroneously set to 247
-> instead of 264. This causes the vDSO fallback of clock_getres to land
-> on the wrong syscall.
-> 
-> Address the issue fixing the syscall number of compat_clock_getres.
-> 
-> Fixes: 53c489e1dfeb6 ("arm64: compat: Add missing syscall numbers")
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> ---
->  arch/arm64/include/asm/unistd.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-> index 1dd22da1c3a9..803039d504de 100644
-> --- a/arch/arm64/include/asm/unistd.h
-> +++ b/arch/arm64/include/asm/unistd.h
-> @@ -25,8 +25,8 @@
->  #define __NR_compat_gettimeofday	78
->  #define __NR_compat_sigreturn		119
->  #define __NR_compat_rt_sigreturn	173
-> -#define __NR_compat_clock_getres	247
->  #define __NR_compat_clock_gettime	263
-> +#define __NR_compat_clock_getres	264
->  #define __NR_compat_clock_gettime64	403
->  #define __NR_compat_clock_getres_time64	406
+On Thu, Mar 19, 2020 at 9:24 AM Joerg Roedel <joro@8bytes.org> wrote:
+>
+> On Thu, Mar 19, 2020 at 08:44:03AM -0700, Andy Lutomirski wrote:
+> > On Thu, Mar 19, 2020 at 2:14 AM Joerg Roedel <joro@8bytes.org> wrote:
+> > >
+> > > From: Tom Lendacky <thomas.lendacky@amd.com>
+> > >
+> > > Add the handler for #VC exceptions invoked at runtime.
+> >
+> > If I read this correctly, this does not use IST.  If that's true, I
+> > don't see how this can possibly work.  There at least two nasty cases
+> > that come to mind:
+> >
+> > 1. SYSCALL followed by NMI.  The NMI IRET hack gets to #VC and we
+> > explode.  This is fixable by getting rid of the NMI EFLAGS.TF hack.
+>
+> Not an issue in this patch-set, the confusion comes from the fact that I
+> left some parts of the single-step-over-iret code in the patch. But it
+> is not used. The NMI handling in this patch-set sends the NMI-complete
+> message before the IRET, when the kernel is still in a safe environment
+> (kernel stack, kernel cr3).
 
-Ha, what a howler. I'll queue this one as a fix.
+Got it!
 
-Will
+>
+> > 2. tools/testing/selftests/x86/mov_ss_trap_64.  User code does MOV
+> > (addr), SS; SYSCALL, where addr has a data breakpoint.  We get #DB
+> > promoted to #VC with no stack.
+>
+> Also not an issue, as debugging is not supported at the moment in SEV-ES
+> guests (hardware has no way yet to save/restore the debug registers
+> across #VMEXITs). But this will change with future hardware. If you look
+> at the implementation for dr7 read/write events, you see that the dr7
+> value is cached and returned, but does not make it to the hardware dr7.
+
+Eek.  This would probably benefit from some ptrace / perf logic to
+prevent the kernel or userspace from thinking that debugging works.
+
+I guess this means that #DB only happens due to TF or INT01.  I
+suppose this is probably okay.
+
+>
+> I though about using IST for the #VC handler, but the implications for
+> nesting #VC handlers made me decide against it. But for future hardware
+> that supports debugging inside SEV-ES guests it will be an issue. I'll
+> think about how to fix the problem, it probably has to be IST :(
+
+Or future generations could have enough hardware support for debugging
+that #DB doesn't need to be intercepted or can be re-injected
+correctly with the #DB vector.
+
+>
+> Regards,
+>
+>         Joerg
