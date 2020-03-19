@@ -2,218 +2,110 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AB4C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99F8C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 240B720722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EC4B20770
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584609553;
+	bh=4ELwAs4r++m0CrqR7Z3cbvZffSziVHNOV9Nhno1MLfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U6tIyX10Jts05i3vdbr/lv9zZAy186wW1g7cCyZZZYi80bcmLCODPXIvgCeUdA5w2
+	 oPZU1uruDHaTHeDpl3me1mbfZ0UMDMqSqV9quA5XhjK16jISYuYnrA79N+17mzUQWj
+	 66azLwdMQl5S82dKSxNSpfrf8RGI2EpmZe6XpMC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgCSJTB (ORCPT
+        id S1727621AbgCSJTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:19:01 -0400
-Received: from 8bytes.org ([81.169.241.247]:52110 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:19:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727299AbgCSJOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:32 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 072A046A; Thu, 19 Mar 2020 10:14:19 +0100 (CET)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
+        id S1727399AbgCSJTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:19:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC9CD20722;
+        Thu, 19 Mar 2020 09:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584609549;
+        bh=4ELwAs4r++m0CrqR7Z3cbvZffSziVHNOV9Nhno1MLfI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F3E4jwytvaGrRTPAf4qrnrm/mg2eNuHO4eBbywNXHTMGWB7NxPJCwfM56vTbUifxK
+         e2qf3Io0STy6LvAB50RtzUHRynYxJGvdUTpD3cSFW2FBYKSXcAuD9ETBKKZNw1k6nI
+         QEWGK3MroGnEypvUw009yBQRQ4ibVOlcu2m8WGKc=
+Date:   Thu, 19 Mar 2020 10:19:07 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
         Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 21/70] x86/boot/compressed/64: Add function to map a page unencrypted
-Date:   Thu, 19 Mar 2020 10:13:18 +0100
-Message-Id: <20200319091407.1481-22-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
-References: <20200319091407.1481-1-joro@8bytes.org>
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v4 3/5] exec: Add a exec_update_mutex to replace
+ cred_guard_mutex
+Message-ID: <20200319091907.GC3495501@kroah.com>
+References: <AM6PR03MB5170E9E71B9F84330B098BADE4FA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <6002ac56-025a-d50f-e89d-1bf42a072323@virtuozzo.com>
+ <AM6PR03MB5170353DF3575FF7742BB155E4FB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <532ce6a3-f0df-e3e4-6966-473c608246e1@virtuozzo.com>
+ <AM6PR03MB51705D8A5631B53844CE447CE4F60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <13c4d333-9c33-8036-3142-dac22c392c60@virtuozzo.com>
+ <AM6PR03MB5170110A5D332DD0C1AC929FE4F70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <f7c1508a-a456-6ae4-a81e-8e8aa41d8d39@virtuozzo.com>
+ <AM6PR03MB5170946BCC61F5D6CA233390E4F40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703082215BDFE074E9D735E4F40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR03MB51703082215BDFE074E9D735E4F40@AM6PR03MB5170.eurprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Thu, Mar 19, 2020 at 10:13:20AM +0100, Bernd Edlinger wrote:
+> Ah, sorry this is actuall v4 5/5.
+> Should I send a new version or can you handle it?
 
-This function is needed to map the GHCB for SEV-ES guests. The GHCB is
-used for communication with the hypervisor, so its content must not be
-encrypted.
+This thread is a total crazy mess of different versions.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/boot/compressed/ident_map_64.c | 125 ++++++++++++++++++++++++
- arch/x86/boot/compressed/misc.h         |   1 +
- 2 files changed, 126 insertions(+)
+I know I can't unwind any of this, so I _STRONGLY_ suggest resending the
+whole series, properly versioned, as a new thread.
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index feb180cced28..04a5ff4bda66 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -26,6 +26,7 @@
- #include <asm/init.h>
- #include <asm/pgtable.h>
- #include <asm/trap_defs.h>
-+#include <asm/cmpxchg.h>
- /* Use the static base for this part of the boot process */
- #undef __PAGE_OFFSET
- #define __PAGE_OFFSET __PAGE_OFFSET_BASE
-@@ -157,6 +158,130 @@ void initialize_identity_maps(void)
- 	write_cr3(top_level_pgt);
- }
- 
-+static pte_t *split_large_pmd(struct x86_mapping_info *info,
-+			      pmd_t *pmdp, unsigned long __address)
-+{
-+	unsigned long page_flags;
-+	unsigned long address;
-+	pte_t *pte;
-+	pmd_t pmd;
-+	int i;
-+
-+	pte = (pte_t *)info->alloc_pgt_page(info->context);
-+	if (!pte)
-+		return NULL;
-+
-+	address     = __address & PMD_MASK;
-+	/* No large page - clear PSE flag */
-+	page_flags  = info->page_flag & ~_PAGE_PSE;
-+
-+	/* Populate the PTEs */
-+	for (i = 0; i < PTRS_PER_PMD; i++) {
-+		set_pte(&pte[i], __pte(address | page_flags));
-+		address += PAGE_SIZE;
-+	}
-+
-+	/*
-+	 * Ideally we need to clear the large PMD first and do a TLB
-+	 * flush before we write the new PMD. But the 2M range of the
-+	 * PMD might contain the code we execute and/or the stack
-+	 * we are on, so we can't do that. But that should be safe here
-+	 * because we are going from large to small mappings and we are
-+	 * also the only user of the page-table, so there is no chance
-+	 * of a TLB multihit.
-+	 */
-+	pmd = __pmd((unsigned long)pte | info->kernpg_flag);
-+	set_pmd(pmdp, pmd);
-+	/* Flush TLB to establish the new PMD */
-+	write_cr3(top_level_pgt);
-+
-+	return pte + pte_index(__address);
-+}
-+
-+static void clflush_page(unsigned long address)
-+{
-+	unsigned int flush_size;
-+	char *cl, *start, *end;
-+
-+	/*
-+	 * Hardcode cl-size to 64 - CPUID can't be used here because that might
-+	 * cause another #VC exception and the GHCB is not ready to use yet.
-+	 */
-+	flush_size = 64;
-+	start      = (char *)(address & PAGE_MASK);
-+	end        = start + PAGE_SIZE;
-+
-+	/*
-+	 * First make sure there are no pending writes on the cache-lines to
-+	 * flush.
-+	 */
-+	asm volatile("mfence" : : : "memory");
-+
-+	for (cl = start; cl != end; cl += flush_size)
-+		clflush(cl);
-+}
-+
-+static int __set_page_decrypted(struct x86_mapping_info *info,
-+				unsigned long address)
-+{
-+	unsigned long scratch, *target;
-+	pgd_t *pgdp = (pgd_t *)top_level_pgt;
-+	p4d_t *p4dp;
-+	pud_t *pudp;
-+	pmd_t *pmdp;
-+	pte_t *ptep, pte;
-+
-+	/*
-+	 * First make sure there is a PMD mapping for 'address'.
-+	 * It should already exist, but keep things generic.
-+	 *
-+	 * To map the page just read from it and fault it in if there is no
-+	 * mapping yet. add_identity_map() can't be called here because that
-+	 * would unconditionally map the address on PMD level, destroying any
-+	 * PTE-level mappings that might already exist.  Also do something
-+	 * useless with 'scratch' so the access won't be optimized away.
-+	 */
-+	target = (unsigned long *)address;
-+	scratch = *target;
-+	arch_cmpxchg(target, scratch, scratch);
-+
-+	/*
-+	 * The page is mapped at least with PMD size - so skip checks and walk
-+	 * directly to the PMD.
-+	 */
-+	p4dp = p4d_offset(pgdp, address);
-+	pudp = pud_offset(p4dp, address);
-+	pmdp = pmd_offset(pudp, address);
-+
-+	if (pmd_large(*pmdp))
-+		ptep = split_large_pmd(info, pmdp, address);
-+	else
-+		ptep = pte_offset_kernel(pmdp, address);
-+
-+	if (!ptep)
-+		return -ENOMEM;
-+
-+	/* Clear encryption flag and write new pte */
-+	pte = pte_clear_flags(*ptep, _PAGE_ENC);
-+	set_pte(ptep, pte);
-+
-+	/* Flush TLB to map the page unencrypted */
-+	write_cr3(top_level_pgt);
-+
-+	/*
-+	 * Changing encryption attributes of a page requires to flush it from
-+	 * the caches.
-+	 */
-+	clflush_page(address);
-+
-+	return 0;
-+}
-+
-+int set_page_decrypted(unsigned long address)
-+{
-+	return __set_page_decrypted(&mapping_info, address);
-+}
-+
- static void pf_error(unsigned long error_code, unsigned long address,
- 		     struct pt_regs *regs)
- {
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 0e3508c5c15c..42f68a858a35 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -98,6 +98,7 @@ static inline void choose_random_location(unsigned long input,
- #endif
- 
- #ifdef CONFIG_X86_64
-+extern int set_page_decrypted(unsigned long address);
- extern unsigned char _pgtable[];
- #endif
- 
--- 
-2.17.1
+Would you want to try to pick out the proper patches from this pile?
 
+thanks,
+
+greg k-h
