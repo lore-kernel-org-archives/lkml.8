@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FD2C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54311C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E6921556
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7DD216FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623801;
-	bh=P1Cv3fel8WKmU0E8OLq16QVgX3hV8+DnzSpL2TRqCKQ=;
+	s=default; t=1584623803;
+	bh=NuZaD2OuIySL8fHPuu7u5C8XbMt13oZ4IUfsqPxulMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B28Nt82566S4F194MbpQ7doOBtg7dvLDrPnrxEsJ8rxHX81hKCl/KSu4Awr0JSxZd
-	 bZ4AzJ2tLXFoBPWfi3ggBiEb8SZ9pjworxrBR/CylP9NeJ2Ikuw2LqhTtQWh4UANg1
-	 tinyYiIgzhEYD20wb6wvcewsg5Vzpp0SI50PKmDw=
+	b=MQLZPYWYgPt9mQb4Q/d35gvHndlzljkB3fuXzUBQ/91d/vhdzCLx7zH+dW6MLRGaz
+	 cY7RRI0qYa0KRajDarHMbsH7Sr8pmahRghGn/vNUcQBBNO4UBPK3I7MAeNylUgOZna
+	 m4H8Z6HQiO2rsWvvJkt7sh3FqesTHaU9OdcoVKzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbgCSNQj (ORCPT
+        id S1729570AbgCSNQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:16:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37084 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:16:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728859AbgCSNQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:16:34 -0400
+        id S1728442AbgCSNQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:16:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75E55216FD;
-        Thu, 19 Mar 2020 13:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB42920724;
+        Thu, 19 Mar 2020 13:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623793;
-        bh=P1Cv3fel8WKmU0E8OLq16QVgX3hV8+DnzSpL2TRqCKQ=;
+        s=default; t=1584623796;
+        bh=NuZaD2OuIySL8fHPuu7u5C8XbMt13oZ4IUfsqPxulMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BeXw0M0J9yXUmjE/998M9E01PIYpntC+r9V8G7JWouEccWLiWYCRXp/wyakTOEcn1
-         BWlMb85XE9wsbooIQ9kyh3yfs7HFe/qJj3YEOKcDj+RwwsjHR32XjDs3P9ziOeLeNN
-         xKtuoJvCHiKL1wyzZf0SHslC9qFYlo6u8ymyWZRQ=
+        b=zT/Uc8D7XXpg2lKGMmyWRZmzQEZZDacliNPK89zhjYOYeZixdP+DQcHf6m87q84F4
+         toJ0kyWBoW6+d44VSyjlt4L3ShE4AavWKBnkaSZezyuhu5HhCqdB5RsOHCRyLzYPhY
+         sJuNrT1/k5sq5hZHlTm5r1pao0DLcRf2Mtqmtduk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.14 55/99] pinctrl: core: Remove extra kref_get which blocks hogs being freed
-Date:   Thu, 19 Mar 2020 14:03:33 +0100
-Message-Id: <20200319123958.564985744@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.14 56/99] nl80211: add missing attribute validation for critical protocol indication
+Date:   Thu, 19 Mar 2020 14:03:34 +0100
+Message-Id: <20200319123958.841725604@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -60,34 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit aafd56fc79041bf36f97712d4b35208cbe07db90 upstream.
+commit 0e1a1d853ecedc99da9d27f9f5c376935547a0e2 upstream.
 
-kref_init starts with the reference count at 1, which will be balanced
-by the pinctrl_put in pinctrl_unregister. The additional kref_get in
-pinctrl_claim_hogs will increase this count to 2 and cause the hogs to
-not get freed when pinctrl_unregister is called.
+Add missing attribute validation for critical protocol fields
+to the netlink policy.
 
-Fixes: 6118714275f0 ("pinctrl: core: Fix pinctrl_register_and_init() with pinctrl_enable()")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200228154142.13860-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 5de17984898c ("cfg80211: introduce critical protocol indication from user-space")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Link: https://lore.kernel.org/r/20200303051058.4089398-2-kuba@kernel.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pinctrl/core.c |    1 -
- 1 file changed, 1 deletion(-)
+ net/wireless/nl80211.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -2031,7 +2031,6 @@ static int pinctrl_claim_hogs(struct pin
- 		return PTR_ERR(pctldev->p);
- 	}
- 
--	kref_get(&pctldev->p->users);
- 	pctldev->hog_default =
- 		pinctrl_lookup_state(pctldev->p, PINCTRL_STATE_DEFAULT);
- 	if (IS_ERR(pctldev->hog_default)) {
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -395,6 +395,8 @@ static const struct nla_policy nl80211_p
+ 	[NL80211_ATTR_MDID] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_IE_RIC] = { .type = NLA_BINARY,
+ 				  .len = IEEE80211_MAX_DATA_LEN },
++	[NL80211_ATTR_CRIT_PROT_ID] = { .type = NLA_U16 },
++	[NL80211_ATTR_MAX_CRIT_PROT_DURATION] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_PEER_AID] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_CH_SWITCH_COUNT] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_CH_SWITCH_BLOCK_TX] = { .type = NLA_FLAG },
 
 
