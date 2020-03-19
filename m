@@ -2,53 +2,52 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3EBC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C232C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24FB5207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7375A207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624488;
-	bh=bUaOVor2yx1FOOgO8uJd78Y2jDFUGYryKlGVpqN3LX0=;
+	s=default; t=1584624491;
+	bh=vwFQSTRGBXIuEHRlKDxDsMBN5Lx7bJ4941rvcPOxF5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P4uFqm4l+D+Bh5RFeBiU3tk999mNzYeKtEhLt3ItY4bfdcDTJ5M6PCklbrOglEfnD
-	 duyBetnVQr3gQGOUuFRVhlbj0L+arerYmOOvKYvYphnj3rriU4KDpRUv7HWesWA78G
-	 F0g/atBzJznQTYvrZyNmSM4E8BGk8lVXTB6NGtM4=
+	b=QwQxSBoWldf00fCZyKYj6j4t6ftjQJqBFovjYGjdlv9M74RQbrtcyJ4RcQQpq/zIl
+	 EKTRb6wIa1QPtrwFSFW2uc8AMlU6FmQiUxye29QYTPMnCP8xEF82aGmMqP2pgozk5k
+	 fHZKcuXfyHQJ0D9e8tMAHiorQyFx9CDinUfMSzRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbgCSN2D (ORCPT
+        id S1730945AbgCSN1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:28:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56444 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:27:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730963AbgCSN15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:27:57 -0400
+        id S1730331AbgCSN1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:27:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD414208D6;
-        Thu, 19 Mar 2020 13:27:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51B49208C3;
+        Thu, 19 Mar 2020 13:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624476;
-        bh=bUaOVor2yx1FOOgO8uJd78Y2jDFUGYryKlGVpqN3LX0=;
+        s=default; t=1584624462;
+        bh=vwFQSTRGBXIuEHRlKDxDsMBN5Lx7bJ4941rvcPOxF5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ixnl/9SDfI+udjt2Ulumf7qRzQlvWI1EB1MVIAVi02kj6VHcE3AzjSOVBsVVRQPso
-         YE4r8/Ig4idFWnlLohbDeQQSivV6+yMwF9CHUn/uF//Ow3JkvB3PKYO5dD8MZP7RGv
-         g689/b8UKh3Z//TiVCQFHuZdsJZA2DmHgLrmWC7I=
+        b=zIsSJplxxEd0ZIRVJ1E0NqmkAz5NtRoOrqXJQyACZ05qKTjL/VtYmtmCgLmLXIWXK
+         5AWFA8f+ZaVWWCJtsZSPboKzAm/rfS8wTpPCCC84LTN1l7zsoJZl949G5Q8TNIJIs2
+         gz4yp5FLbn441xpgf6+BgJstMvJoYqWtKXQYgq00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 58/65] blk-mq: insert flush request to the front of dispatch queue
-Date:   Thu, 19 Mar 2020 14:04:40 +0100
-Message-Id: <20200319123944.552521031@linuxfoundation.org>
+Subject: [PATCH 5.5 53/65] net: rmnet: fix packet forwarding in rmnet bridge mode
+Date:   Thu, 19 Mar 2020 14:04:35 +0100
+Message-Id: <20200319123943.072434015@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -61,68 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit cc3200eac4c5eb11c3f34848a014d1f286316310 ]
+[ Upstream commit ad3cc31b599ea80f06b29ebdc18b3a39878a48d6 ]
 
-commit 01e99aeca397 ("blk-mq: insert passthrough request into
-hctx->dispatch directly") may change to add flush request to the tail
-of dispatch by applying the 'add_head' parameter of
-blk_mq_sched_insert_request.
+Packet forwarding is not working in rmnet bridge mode.
+Because when a packet is forwarded, skb_push() for an ethernet header
+is needed. But it doesn't call skb_push().
+So, the ethernet header will be lost.
 
-Turns out this way causes performance regression on NCQ controller because
-flush is non-NCQ command, which can't be queued when there is any in-flight
-NCQ command. When adding flush rq to the front of hctx->dispatch, it is
-easier to introduce extra time to flush rq's latency compared with adding
-to the tail of dispatch queue because of S_SCHED_RESTART, then chance of
-flush merge is increased, and less flush requests may be issued to
-controller.
+Test commands:
+    modprobe rmnet
+    ip netns add nst
+    ip netns add nst2
+    ip link add veth0 type veth peer name veth1
+    ip link add veth2 type veth peer name veth3
+    ip link set veth1 netns nst
+    ip link set veth3 netns nst2
 
-So always insert flush request to the front of dispatch queue just like
-before applying commit 01e99aeca397 ("blk-mq: insert passthrough request
-into hctx->dispatch directly").
+    ip link add rmnet0 link veth0 type rmnet mux_id 1
+    ip link set veth2 master rmnet0
+    ip link set veth0 up
+    ip link set veth2 up
+    ip link set rmnet0 up
+    ip a a 192.168.100.1/24 dev rmnet0
 
-Cc: Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Reported-by: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Fixes: 01e99aeca397 ("blk-mq: insert passthrough request into hctx->dispatch directly")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+    ip netns exec nst ip link set veth1 up
+    ip netns exec nst ip a a 192.168.100.2/24 dev veth1
+    ip netns exec nst2 ip link set veth3 up
+    ip netns exec nst2 ip a a 192.168.100.3/24 dev veth3
+    ip netns exec nst2 ping 192.168.100.2
+
+Fixes: 60d58f971c10 ("net: qualcomm: rmnet: Implement bridge mode")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq-sched.c |   22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -398,6 +398,28 @@ void blk_mq_sched_insert_request(struct
- 	WARN_ON(e && (rq->tag != -1));
- 
- 	if (blk_mq_sched_bypass_insert(hctx, !!e, rq)) {
-+		/*
-+		 * Firstly normal IO request is inserted to scheduler queue or
-+		 * sw queue, meantime we add flush request to dispatch queue(
-+		 * hctx->dispatch) directly and there is at most one in-flight
-+		 * flush request for each hw queue, so it doesn't matter to add
-+		 * flush request to tail or front of the dispatch queue.
-+		 *
-+		 * Secondly in case of NCQ, flush request belongs to non-NCQ
-+		 * command, and queueing it will fail when there is any
-+		 * in-flight normal IO request(NCQ command). When adding flush
-+		 * rq to the front of hctx->dispatch, it is easier to introduce
-+		 * extra time to flush rq's latency because of S_SCHED_RESTART
-+		 * compared with adding to the tail of dispatch queue, then
-+		 * chance of flush merge is increased, and less flush requests
-+		 * will be issued to controller. It is observed that ~10% time
-+		 * is saved in blktests block/004 on disk attached to AHCI/NCQ
-+		 * drive when adding flush rq to the front of hctx->dispatch.
-+		 *
-+		 * Simply queue flush rq to the front of hctx->dispatch so that
-+		 * intensive flush workloads can benefit in case of NCQ HW.
-+		 */
-+		at_head = (rq->rq_flags & RQF_FLUSH_SEQ) ? true : at_head;
- 		blk_mq_request_bypass_insert(rq, at_head, false);
- 		goto run;
- 	}
+diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
+index 074a8b326c304..29a7bfa2584dc 100644
+--- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
++++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
+@@ -159,6 +159,9 @@ static int rmnet_map_egress_handler(struct sk_buff *skb,
+ static void
+ rmnet_bridge_handler(struct sk_buff *skb, struct net_device *bridge_dev)
+ {
++	if (skb_mac_header_was_set(skb))
++		skb_push(skb, skb->mac_len);
++
+ 	if (bridge_dev) {
+ 		skb->dev = bridge_dev;
+ 		dev_queue_xmit(skb);
+-- 
+2.20.1
+
 
 
