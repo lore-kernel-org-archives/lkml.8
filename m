@@ -2,187 +2,181 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E692C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D09C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2621D2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QuAr0rCw"
+	by mail.kernel.org (Postfix) with ESMTP id 4414B2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgCSR0z (ORCPT
+        id S1728374AbgCSR1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:26:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37097 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbgCSR0z (ORCPT
+        Thu, 19 Mar 2020 13:27:14 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:39117 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbgCSR1N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:26:55 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w10so4147877wrm.4;
-        Thu, 19 Mar 2020 10:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3F6p9VA0cVyFpp1otJBkETuyS8iU0ECrOYMDdRLVRxI=;
-        b=QuAr0rCwgtiF82xHBWqQ4lSffZ977W564JnS7kFkj4jk+O1B4hwEtwYTvDMJd0KPzC
-         W7UMfVthKh74N0igpoKyyZvB59aca9fYgTGHWI0wxqZpebWmfrzwomuaPhyu2VJEO56g
-         p8dYe7vIpKa4hy2K1oGI5SvuFhZUuFjqaQ5nCVNmmA+eKRhwn1dzNTMdTUiPfQVqqylK
-         /qunIobrNuRJE4LBBm/nxChANZ1J+lczwkjXC9am2snUc9QdDh9lM9vvgy4mt1gKjnpW
-         XeCTdXi13mIw6cdMmEAXO9RJzB/RauIdkXZbliOpFv5hr2B7Il01mhJLYeyZ4YNCat++
-         sZ8g==
+        Thu, 19 Mar 2020 13:27:13 -0400
+Received: by mail-io1-f71.google.com with SMTP id v13so22436iox.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 10:27:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3F6p9VA0cVyFpp1otJBkETuyS8iU0ECrOYMDdRLVRxI=;
-        b=lIfsDiusw09b4ZRQw5u7Be9F5J2jhKUzKMQDrwSBsD4UvFg6M6i5NTRFZewU099JNk
-         99pP+lDT6lBXMi9IZh7L/Ry5FnUfpGRneAQbPVoGzv2OdR6oqVER2Sx/nMr8FUp+d1JT
-         K02doUFRzxo3h4we8Maw8vldCJ/57XynCyqxuTzCt/9iULyYDokU6ktNy1IsegGP73Dj
-         j3XfoqjPPRb/ermHFu4b5iD4hXz6PmnS6Z2hPXXji4kQqeLOHHj0KYirhsO+sdDB0nIf
-         /m9gX1yyyGDUw16sfbONd4r4iNjFHljGSqNzhpKs6FOOayfH8NlbeJTj0n6dP92zgJaV
-         XyYw==
-X-Gm-Message-State: ANhLgQ24D7Uv7Whb8lmAE6csKuRIl2CAao6gNBL9h3HDk2WvqlVs8AGT
-        w0w4+2mnAyVPDiUZiahCMxM+xdTIRAPHPVqXbDg=
-X-Google-Smtp-Source: ADFU+vuGxJnVkZr1vtGIyeQ2LhE/Qgr1xykJ1BEWBBmT3lH5VpBqrgI47O6jQXgHrf2qVsBwT9UGn19a4U3S1q5tmWg=
-X-Received: by 2002:a5d:56c9:: with SMTP id m9mr5376031wrw.289.1584638812775;
- Thu, 19 Mar 2020 10:26:52 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=kZsDp4x4c6PvNfWtdDThiADDEhsyb7AvXm9IBnKdaVo=;
+        b=ArMDf2O+w/76YJ4EBP425kA/+VPQ/wCrqxZGpeRWhUSuQazYPy7yZ72JZO0/PkGfrV
+         3Kwwd9O/fuOj2NVruZsUSQztyrV/7uhe7G1mc9M5XPJNujU8vmVOupQRmbzee27q91tp
+         gMdS/GRxyoWcQ7RFhzZo3PIVXwPY+bXyRCONkrON+GTHUU6ZvDa1zftHbwxwqLpsCcGO
+         +5BSLPkDmbJQH4WXs4hjzNHjRqvIZU8cL5ZUERm1HDMP9DSkGXMZW4UlNpDNZPeV8Qr1
+         YCCjeT6o2mSrrzLRN/GEyGxYA6YNkpZqJVTvDl8qil+rczivCQtbE4r2Gnnq+5O/AXCK
+         RStw==
+X-Gm-Message-State: ANhLgQ1fVOCe02XyQejMSxB0+2thTBMLlOMu1acmRyUdYDgGvowxD3Xc
+        iA/GV2oAbU0XfHOA6ntdV4WAZwD3LrvKnG++ljvvpxWp1Ee+
+X-Google-Smtp-Source: ADFU+vsR0izIiTdX6Py/Gn5z7ouRhf0Dz2jtP3lTPqEmsnzFGfZClCTFOyXDb/kLPBmwyJjAGbOi3tbJWcmoJ45YJCJs2VRlU3g+
 MIME-Version: 1.0
-References: <20200319131221.14044-1-david@redhat.com> <20200319131221.14044-9-david@redhat.com>
-In-Reply-To: <20200319131221.14044-9-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 19 Mar 2020 18:26:41 +0100
-Message-ID: <CAM9Jb+iUrSf_KixRwj9M9FP=zSzvxn_E17Bxb0ZUiKpncThSAg@mail.gmail.com>
-Subject: Re: [PATCH v3 8/8] mm/memory_hotplug: allow to specify a default online_type
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>
+X-Received: by 2002:a92:91d0:: with SMTP id e77mr4266826ill.225.1584638831308;
+ Thu, 19 Mar 2020 10:27:11 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 10:27:11 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a3346f05a1387a04@google.com>
+Subject: INFO: trying to register non-static key in prepare_to_wait_event
+From:   syzbot <syzbot+08c9aea900cea24d398d@syzkaller.appspotmail.com>
+To:     benjamin.tissoires@redhat.com, dh.herrmann@googlemail.com,
+        jikos@kernel.org, jkorsnes@cisco.com, jkosina@suse.cz,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> For now, distributions implement advanced udev rules to essentially
-> - Don't online any hotplugged memory (s390x)
-> - Online all memory to ZONE_NORMAL (e.g., most virt environments like
->   hyperv)
-> - Online all memory to ZONE_MOVABLE in case the zone imbalance is taken
->   care of (e.g., bare metal, special virt environments)
->
-> In summary: All memory is usually onlined the same way, however, the
-> kernel always has to ask user space to come up with the same answer.
-> E.g., Hyper-V always waits for a memory block to get onlined before
-> continuing, otherwise it might end up adding memory faster than
-> onlining it, which can result in strange OOM situations. This waiting
-> slows down adding of a bigger amount of memory.
->
-> Let's allow to specify a default online_type, not just "online" and
-> "offline". This allows distributions to configure the default online_type
-> when booting up and be done with it.
->
-> We can now specify "offline", "online", "online_movable" and
-> "online_kernel" via
-> - "memhp_default_state=" on the kernel cmdline
-> - /sys/devices/system/memory/auto_online_blocks
-> just like we are able to specify for a single memory block via
-> /sys/devices/system/memory/memoryX/state
->
-> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/base/memory.c          | 11 +++++------
->  include/linux/memory_hotplug.h |  2 ++
->  mm/memory_hotplug.c            |  8 ++++----
->  3 files changed, 11 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 8d3e16dab69f..2b09b68b9f78 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -35,7 +35,7 @@ static const char *const online_type_to_str[] = {
->         [MMOP_ONLINE_MOVABLE] = "online_movable",
->  };
->
-> -static int memhp_online_type_from_str(const char *str)
-> +int memhp_online_type_from_str(const char *str)
->  {
->         int i;
->
-> @@ -394,13 +394,12 @@ static ssize_t auto_online_blocks_store(struct device *dev,
->                                         struct device_attribute *attr,
->                                         const char *buf, size_t count)
->  {
-> -       if (sysfs_streq(buf, "online"))
-> -               memhp_default_online_type = MMOP_ONLINE;
-> -       else if (sysfs_streq(buf, "offline"))
-> -               memhp_default_online_type = MMOP_OFFLINE;
-> -       else
-> +       const int online_type = memhp_online_type_from_str(buf);
-> +
-> +       if (online_type < 0)
->                 return -EINVAL;
->
-> +       memhp_default_online_type = online_type;
->         return count;
->  }
->
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 6d6f85bb66e9..93d9ada74ddd 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -118,6 +118,8 @@ extern int arch_add_memory(int nid, u64 start, u64 size,
->                            struct mhp_params *params);
->  extern u64 max_mem_size;
->
-> +extern int memhp_online_type_from_str(const char *str);
-> +
->  /* Default online_type (MMOP_*) when new memory blocks are added. */
->  extern int memhp_default_online_type;
->  /* If movable_node boot option specified */
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 4efcf8cb9ac5..89197163d138 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -74,10 +74,10 @@ int memhp_default_online_type = MMOP_ONLINE;
->
->  static int __init setup_memhp_default_state(char *str)
->  {
-> -       if (!strcmp(str, "online"))
-> -               memhp_default_online_type = MMOP_ONLINE;
-> -       else if (!strcmp(str, "offline"))
-> -               memhp_default_online_type = MMOP_OFFLINE;
-> +       const int online_type = memhp_online_type_from_str(str);
-> +
-> +       if (online_type >= 0)
-> +               memhp_default_online_type = online_type;
->
->         return 1;
->  }
-> --
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Hello,
 
-> 2.24.1
->
->
+syzbot found the following crash on:
+
+HEAD commit:    5076190d mm: slub: be more careful about the double cmpxch..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=178ca61de00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
+dashboard link: https://syzkaller.appspot.com/bug?extid=08c9aea900cea24d398d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=131fbfc3e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1186cbe3e00000
+
+The bug was bisected to:
+
+commit 84a4062632462c4320704fcdf8e99e89e94c0aba
+Author: Johan Korsnes <jkorsnes@cisco.com>
+Date:   Fri Jan 17 12:08:36 2020 +0000
+
+    HID: core: increase HID report buffer size to 8KiB
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13aecbe3e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=106ecbe3e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17aecbe3e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+08c9aea900cea24d398d@syzkaller.appspotmail.com
+Fixes: 84a406263246 ("HID: core: increase HID report buffer size to 8KiB")
+
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 9392 Comm: syz-executor302 Not tainted 5.6.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ assign_lock_key kernel/locking/lockdep.c:880 [inline]
+ register_lock_class+0x14c4/0x1540 kernel/locking/lockdep.c:1189
+ __lock_acquire+0xfc/0x3ca0 kernel/locking/lockdep.c:3836
+ lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
+ prepare_to_wait_event+0x5b/0x650 kernel/sched/wait.c:280
+ uhid_char_read+0x31b/0x6c0 drivers/hid/uhid.c:669
+ do_loop_readv_writev fs/read_write.c:714 [inline]
+ do_loop_readv_writev fs/read_write.c:701 [inline]
+ do_iter_read+0x47f/0x650 fs/read_write.c:935
+ vfs_readv+0xf0/0x160 fs/read_write.c:1053
+ do_readv+0x279/0x2f0 fs/read_write.c:1090
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4458d9
+Code: e8 bc b7 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f0082936da8 EFLAGS: 00000246 ORIG_RAX: 0000000000000013
+RAX: ffffffffffffffda RBX: 00000000006dac28 RCX: 00000000004458d9
+RDX: 0000000000000002 RSI: 0000000020001680 RDI: 0000000000000003
+RBP: 00000000006dac20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac2c
+R13: 0000000020000b40 R14: 00000000004adda8 R15: 20c49ba5e353f7cf
+list_del corruption. prev->next should be ffffc90002197bc0, but was 0000000000000000
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:51!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 9392 Comm: syz-executor302 Not tainted 5.6.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__list_del_entry_valid.cold+0xf/0x55 lib/list_debug.c:51
+Code: e8 44 93 c9 fd 0f 0b 48 89 f1 48 c7 c7 c0 e6 51 88 4c 89 e6 e8 30 93 c9 fd 0f 0b 48 89 ee 48 c7 c7 60 e8 51 88 e8 1f 93 c9 fd <0f> 0b 4c 89 ea 48 89 ee 48 c7 c7 a0 e7 51 88 e8 0b 93 c9 fd 0f 0b
+RSP: 0018:ffffc90002197a60 EFLAGS: 00010082
+RAX: 0000000000000054 RBX: ffffc90002197ba8 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815c06c1 RDI: fffff52000432f3e
+RBP: ffffc90002197bc0 R08: 0000000000000054 R09: ffffed1015cc45c9
+R10: ffffed1015cc45c8 R11: ffff8880ae622e43 R12: ffff88808d4e11f8
+R13: ffff88808d4e11f8 R14: 0000000000000286 R15: ffffc90002197bc0
+FS:  00007f0082937700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fc99cd1c000 CR3: 000000009f435000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __list_del_entry include/linux/list.h:132 [inline]
+ list_del_init include/linux/list.h:204 [inline]
+ prepare_to_wait_event+0x19c/0x650 kernel/sched/wait.c:294
+ uhid_char_read+0x31b/0x6c0 drivers/hid/uhid.c:669
+ do_loop_readv_writev fs/read_write.c:714 [inline]
+ do_loop_readv_writev fs/read_write.c:701 [inline]
+ do_iter_read+0x47f/0x650 fs/read_write.c:935
+ vfs_readv+0xf0/0x160 fs/read_write.c:1053
+ do_readv+0x279/0x2f0 fs/read_write.c:1090
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4458d9
+Code: e8 bc b7 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f0082936da8 EFLAGS: 00000246 ORIG_RAX: 0000000000000013
+RAX: ffffffffffffffda RBX: 00000000006dac28 RCX: 00000000004458d9
+RDX: 0000000000000002 RSI: 0000000020001680 RDI: 0000000000000003
+RBP: 00000000006dac20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac2c
+R13: 0000000020000b40 R14: 00000000004adda8 R15: 20c49ba5e353f7cf
+Modules linked in:
+---[ end trace d2f12cae324b95c6 ]---
+RIP: 0010:__list_del_entry_valid.cold+0xf/0x55 lib/list_debug.c:51
+Code: e8 44 93 c9 fd 0f 0b 48 89 f1 48 c7 c7 c0 e6 51 88 4c 89 e6 e8 30 93 c9 fd 0f 0b 48 89 ee 48 c7 c7 60 e8 51 88 e8 1f 93 c9 fd <0f> 0b 4c 89 ea 48 89 ee 48 c7 c7 a0 e7 51 88 e8 0b 93 c9 fd 0f 0b
+RSP: 0018:ffffc90002197a60 EFLAGS: 00010082
+RAX: 0000000000000054 RBX: ffffc90002197ba8 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815c06c1 RDI: fffff52000432f3e
+RBP: ffffc90002197bc0 R08: 0000000000000054 R09: ffffed1015cc45c9
+R10: ffffed1015cc45c8 R11: ffff8880ae622e43 R12: ffff88808d4e11f8
+R13: ffff88808d4e11f8 R14: 0000000000000286 R15: ffffc90002197bc0
+FS:  00007f0082937700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fc99cd1c000 CR3: 000000009f435000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
