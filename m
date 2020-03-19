@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD05C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15509C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B76372076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD972076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgCSIrw (ORCPT
+        id S1726933AbgCSIrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:47:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59688 "EHLO
+        Thu, 19 Mar 2020 04:47:53 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59687 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgCSIrw (ORCPT
+        with ESMTP id S1725787AbgCSIrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 04:47:52 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEqqB-0002xH-PM; Thu, 19 Mar 2020 09:47:47 +0100
+        id 1jEqqC-0002xG-5J; Thu, 19 Mar 2020 09:47:48 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 127671C2298;
-        Thu, 19 Mar 2020 09:47:47 +0100 (CET)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A07521C2297;
+        Thu, 19 Mar 2020 09:47:46 +0100 (CET)
 Date:   Thu, 19 Mar 2020 08:47:46 -0000
-From:   "tip-bot2 for Anson Huang" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Saravana Kannan" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/imx-sysctr: Remove unused includes
-Cc:     Anson Huang <Anson.Huang@nxp.com>,
+Subject: [tip: timers/core] clocksource/drivers/timer-probe: Avoid creating
+ dead devices
+Cc:     Saravana Kannan <saravanak@google.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1584413713-7376-1-git-send-email-Anson.Huang@nxp.com>
-References: <1584413713-7376-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200111052125.238212-1-saravanak@google.com>
+References: <20200111052125.238212-1-saravanak@google.com>
 MIME-Version: 1.0
-Message-ID: <158460766676.28353.3104579017864968564.tip-bot2@tip-bot2>
+Message-ID: <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,34 +57,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     3d17cee291e8a4bc4c8b29b1c8a1b79e12f95473
-Gitweb:        https://git.kernel.org/tip/3d17cee291e8a4bc4c8b29b1c8a1b79e12f95473
-Author:        Anson Huang <Anson.Huang@nxp.com>
-AuthorDate:    Tue, 17 Mar 2020 10:55:13 +08:00
+Commit-ID:     4f41fe386a94639cd9a1831298d4f85db5662f1e
+Gitweb:        https://git.kernel.org/tip/4f41fe386a94639cd9a1831298d4f85db5662f1e
+Author:        Saravana Kannan <saravanak@google.com>
+AuthorDate:    Fri, 10 Jan 2020 21:21:25 -08:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Tue, 17 Mar 2020 10:11:45 +01:00
+CommitterDate: Tue, 17 Mar 2020 13:10:07 +01:00
 
-clocksource/drivers/imx-sysctr: Remove unused includes
+clocksource/drivers/timer-probe: Avoid creating dead devices
 
-There is nothing in use from of_address.h/of_irq.h, remove them.
+Timer initialization is done during early boot way before the driver
+core starts processing devices and drivers. Timers initialized during
+this early boot period don't really need or use a struct device.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+However, for timers represented as device tree nodes, the struct devices
+are still created and sit around unused and wasting memory. This change
+avoid this by marking the device tree nodes as "populated" if the
+corresponding timer is successfully initialized.
+
+Signed-off-by: Saravana Kannan <saravanak@google.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/1584413713-7376-1-git-send-email-Anson.Huang@nxp.com
+Link: https://lore.kernel.org/r/20200111052125.238212-1-saravanak@google.com
 ---
- drivers/clocksource/timer-imx-sysctr.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/clocksource/timer-probe.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
-index b7c80a3..18b90fc 100644
---- a/drivers/clocksource/timer-imx-sysctr.c
-+++ b/drivers/clocksource/timer-imx-sysctr.c
-@@ -4,8 +4,6 @@
+diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
+index ee9574d..a10f28d 100644
+--- a/drivers/clocksource/timer-probe.c
++++ b/drivers/clocksource/timer-probe.c
+@@ -27,8 +27,10 @@ void __init timer_probe(void)
  
- #include <linux/interrupt.h>
- #include <linux/clockchips.h>
--#include <linux/of_address.h>
--#include <linux/of_irq.h>
+ 		init_func_ret = match->data;
  
- #include "timer-of.h"
- 
++		of_node_set_flag(np, OF_POPULATED);
+ 		ret = init_func_ret(np);
+ 		if (ret) {
++			of_node_clear_flag(np, OF_POPULATED);
+ 			if (ret != -EPROBE_DEFER)
+ 				pr_err("Failed to initialize '%pOF': %d\n", np,
+ 				       ret);
