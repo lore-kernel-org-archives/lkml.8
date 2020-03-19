@@ -2,53 +2,54 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4EFC43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22725C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF74E20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB1320658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624263;
-	bh=KHwXrlKcbaKW5OTF2R6Sp4xIzaqTtcNI8e891CLiBoo=;
+	s=default; t=1584624266;
+	bh=Dxey7Q8OdyIqif19MhI4LcJl0lda+wnDI72pKg7H+PI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H1cj4/sS1Jr5Bwl3g4XLvFBK0OAaDX7xfCses9RJdcE9cCS+XrNbcUFzEUUr78LaV
-	 65hnT7KP3oqEvDiFyvH39pjx636YIH9iIhRtQw8mChwsRYQcouMZprnRScoz/fWBAS
-	 71TtUZRu3GbFmsunF/UOhbp4gVgD04QsRlCY5meg=
+	b=vg6+VneSJ4pr0zVObzjt7DJyqB8nFki/vTOD4iVZ512WlNDc4faSiBFfJymPLI5Xq
+	 Yv1P8yIT6uOaObAHuxiHGKz3UP+cMdrjU10vNe23+ErmdvtKLxkv36/eTI868rgjD3
+	 plqnk786lzXRFYvO0BR8RiN4QbkU5odkvzElDPm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbgCSNYW (ORCPT
+        id S1730466AbgCSNYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:24:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50914 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:24:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730442AbgCSNYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:24:17 -0400
+        id S1729892AbgCSNYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:24:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A79A420724;
-        Thu, 19 Mar 2020 13:24:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40E5120658;
+        Thu, 19 Mar 2020 13:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624257;
-        bh=KHwXrlKcbaKW5OTF2R6Sp4xIzaqTtcNI8e891CLiBoo=;
+        s=default; t=1584624259;
+        bh=Dxey7Q8OdyIqif19MhI4LcJl0lda+wnDI72pKg7H+PI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OcZuTJIaNnayyTZR/6xH3ZFegckG4G2d6rrv/mlb0Vu1B3v3wOoKFCcMReoNOIgVo
-         ObVJ5PyxkJVkSL9rVle5UDcbZxra6+rjqL1KCSj6+dBVD26iiSVZnMgIlzWAD5bkA/
-         UAjXoLSBN1EahW0i7Z7YStDWDxpChcAeTjGNHzrk=
+        b=x+QHZhEI0Gtu6O5RZJgwcfwZXC25rqSWa996FewyH/xfVuZHHzzjbBhDBfLQp0K8J
+         exsh5PVa9Loauf9RhYwcfauEcMWuBQjJyxXl5KFbguZQC7kQ/+yHACCsWApjVNXnpd
+         mi04AZyfXESzx52M6CCWuU+2s61eZRFEqhED8yYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 60/60] ipv4: ensure rcu_read_lock() in cipso_v4_error()
-Date:   Thu, 19 Mar 2020 14:04:38 +0100
-Message-Id: <20200319123938.305603077@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexandru-Mihai Maftei <amaftei@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 50/60] sfc: fix timestamp reconstruction at 16-bit rollover points
+Date:   Thu, 19 Mar 2020 14:04:28 +0100
+Message-Id: <20200319123935.284186646@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -61,47 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Alex Maftei (amaftei) <amaftei@solarflare.com>
 
-commit 3e72dfdf8227b052393f71d820ec7599909dddc2 upstream.
+[ Upstream commit 23797b98909f34b75fd130369bde86f760db69d0 ]
 
-Similarly to commit c543cb4a5f07 ("ipv4: ensure rcu_read_lock() in
-ipv4_link_failure()"), __ip_options_compile() must be called under rcu
-protection.
+We can't just use the top bits of the last sync event as they could be
+off-by-one every 65,536 seconds, giving an error in reconstruction of
+65,536 seconds.
 
-Fixes: 3da1ed7ac398 ("net: avoid use IPCB in cipso_v4_error")
-Suggested-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
+This patch uses the difference in the bottom 16 bits (mod 2^16) to
+calculate an offset that needs to be applied to the last sync event to
+get to the current time.
+
+Signed-off-by: Alexandru-Mihai Maftei <amaftei@solarflare.com>
+Acked-by: Martin Habets <mhabets@solarflare.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/cipso_ipv4.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/sfc/ptp.c | 38 +++++++++++++++++++++++++++++++---
+ 1 file changed, 35 insertions(+), 3 deletions(-)
 
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -1724,6 +1724,7 @@ void cipso_v4_error(struct sk_buff *skb,
+diff --git a/drivers/net/ethernet/sfc/ptp.c b/drivers/net/ethernet/sfc/ptp.c
+index af15a737c6756..59b4f16896a81 100644
+--- a/drivers/net/ethernet/sfc/ptp.c
++++ b/drivers/net/ethernet/sfc/ptp.c
+@@ -560,13 +560,45 @@ efx_ptp_mac_nic_to_ktime_correction(struct efx_nic *efx,
+ 				    u32 nic_major, u32 nic_minor,
+ 				    s32 correction)
  {
- 	unsigned char optbuf[sizeof(struct ip_options) + 40];
- 	struct ip_options *opt = (struct ip_options *)optbuf;
-+	int res;
++	u32 sync_timestamp;
+ 	ktime_t kt = { 0 };
++	s16 delta;
  
- 	if (ip_hdr(skb)->protocol == IPPROTO_ICMP || error != -EACCES)
- 		return;
-@@ -1735,7 +1736,11 @@ void cipso_v4_error(struct sk_buff *skb,
- 
- 	memset(opt, 0, sizeof(struct ip_options));
- 	opt->optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
--	if (__ip_options_compile(dev_net(skb->dev), opt, skb, NULL))
-+	rcu_read_lock();
-+	res = __ip_options_compile(dev_net(skb->dev), opt, skb, NULL);
-+	rcu_read_unlock();
+ 	if (!(nic_major & 0x80000000)) {
+ 		WARN_ON_ONCE(nic_major >> 16);
+-		/* Use the top bits from the latest sync event. */
+-		nic_major &= 0xffff;
+-		nic_major |= (last_sync_timestamp_major(efx) & 0xffff0000);
 +
-+	if (res)
- 		return;
++		/* Medford provides 48 bits of timestamp, so we must get the top
++		 * 16 bits from the timesync event state.
++		 *
++		 * We only have the lower 16 bits of the time now, but we do
++		 * have a full resolution timestamp at some point in past. As
++		 * long as the difference between the (real) now and the sync
++		 * is less than 2^15, then we can reconstruct the difference
++		 * between those two numbers using only the lower 16 bits of
++		 * each.
++		 *
++		 * Put another way
++		 *
++		 * a - b = ((a mod k) - b) mod k
++		 *
++		 * when -k/2 < (a-b) < k/2. In our case k is 2^16. We know
++		 * (a mod k) and b, so can calculate the delta, a - b.
++		 *
++		 */
++		sync_timestamp = last_sync_timestamp_major(efx);
++
++		/* Because delta is s16 this does an implicit mask down to
++		 * 16 bits which is what we need, assuming
++		 * MEDFORD_TX_SECS_EVENT_BITS is 16. delta is signed so that
++		 * we can deal with the (unlikely) case of sync timestamps
++		 * arriving from the future.
++		 */
++		delta = nic_major - sync_timestamp;
++
++		/* Recover the fully specified time now, by applying the offset
++		 * to the (fully specified) sync time.
++		 */
++		nic_major = sync_timestamp + delta;
  
- 	if (gateway)
+ 		kt = ptp->nic_to_kernel_time(nic_major, nic_minor,
+ 					     correction);
+-- 
+2.20.1
+
 
 
