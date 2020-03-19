@@ -2,248 +2,190 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E511C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D14C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4609520936
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3029920724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:43:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cYgYsAEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbgCSTmo (ORCPT
+        id S1727565AbgCSTnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:42:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725817AbgCSTmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:42:43 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C57820724;
-        Thu, 19 Mar 2020 19:42:40 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 15:42:39 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: Re: [PATCH RFC v2 tip/core/rcu 14/22] rcu-tasks: Add an RCU Tasks
- Trace to simplify protection of tracing hooks
-Message-ID: <20200319154239.6d67877d@gandalf.local.home>
-In-Reply-To: <20200319001100.24917-14-paulmck@kernel.org>
-References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
-        <20200319001100.24917-14-paulmck@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 19 Mar 2020 15:43:02 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46902 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgCSTnB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:43:01 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JJgs3x071693;
+        Thu, 19 Mar 2020 14:42:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584646974;
+        bh=wB4aZvW9cG3UKECKMl7jglc4EJ+CkeQjjqMGcNaKs8E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cYgYsAEXcTynDy2ctOINxf0KdzYzEfwRGOOSiUAROBymEjlk0s9lI6Kroqhuo3wRY
+         mInuJnT9RUzUImvo0wDsBIHbm/m0Rc74C5iDzNQmcx3lXZ7mWJRst3h0vFPTL5CqN+
+         q/j7vkvBB0JJnZDizwxYYKJFE7cyBhm1CQR/im/s=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JJgsoh124146
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Mar 2020 14:42:54 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Mar 2020 14:42:54 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Mar 2020 14:42:53 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JJgpIs004780;
+        Thu, 19 Mar 2020 14:42:52 -0500
+Subject: Re: [PATCH V2] dmaengine: ti: k3-udma-glue: Fix an error handling
+ path in 'k3_udma_glue_cfg_rx_flow()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        <vkoul@kernel.org>, <dan.j.williams@intel.com>,
+        <grygorii.strashko@ti.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20200318191209.1267-1-christophe.jaillet@wanadoo.fr>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <6dbe8b04-a64b-f9c7-e620-a6002045ccb6@ti.com>
+Date:   Thu, 19 Mar 2020 21:43:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200318191209.1267-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020 17:10:52 -0700
-paulmck@kernel.org wrote:
+Hi Christophe,
 
-> From: "Paul E. McKenney" <paulmck@kernel.org>
+On 18/03/2020 21.12, Christophe JAILLET wrote:
+> All but one error handling paths in the 'k3_udma_glue_cfg_rx_flow()'
+> function 'goto err' and call 'k3_udma_glue_release_rx_flow()'.
 > 
-> Because RCU does not watch exception early-entry/late-exit, idle-loop,
-> or CPU-hotplug execution, protection of tracing and BPF operations is
-> needlessly complicated.  This commit therefore adds a variant of
-> Tasks RCU that:
+> This not correct because this function has a 'channel->flows_ready--;' at
+> the end, but 'flows_ready' has not been incremented here, when we branch to
+> the error handling path.
 > 
-> o	Has explicit read-side markers to allow finite grace periods in
-> 	the face of in-kernel loops for PREEMPT=n builds.  These markers
-> 	are rcu_read_lock_trace() and rcu_read_unlock_trace().
+> In order to keep a correct value in 'flows_ready', un-roll
+> 'k3_udma_glue_release_rx_flow()', simplify it, add some labels and branch
+> at the correct places when an error is detected.
 > 
-> o	Protects code in the idle loop, exception entry/exit, and
-> 	CPU-hotplug code paths.  In this respect, RCU-tasks trace is
-> 	similar to SRCU, but with lighter-weight readers.
+> Doing so, we also NULLify 'flow->udma_rflow' in a path that was lacking it.
 > 
-> o	Avoids expensive read-side instruction, having overhead similar
-> 	to that of Preemptible RCU.
-> 
-> There are of course downsides:
-> 
-> o	The grace-period code can send IPIs to CPUs, even when those CPUs
-> 	are in the idle loop or in nohz_full userspace.  This will be
-> 	addressed by later commits.
-> 
-> o	It is necessary to scan the full tasklist, much as for Tasks RCU.
-> 
-> o	There is a single callback queue guarded by a single lock,
-> 	again, much as for Tasks RCU.  However, those early use cases
-> 	that request multiple grace periods in quick succession are
-> 	expected to do so from a single task, which makes the single
-> 	lock almost irrelevant.  If needed, multiple callback queues
-> 	can be provided using any number of schemes.
-> 
-> Perhaps most important, this variant of RCU does not affect the vanilla
-> flavors, rcu_preempt and rcu_sched.  The fact that RCU Tasks Trace
-> readers can operate from idle, offline, and exception entry/exit in no
-> way enables rcu_preempt and rcu_sched readers to do so.
-> 
-> This effort benefited greatly from off-list discussions of BPF
-> requirements with Alexei Starovoitov and Andrii Nakryiko.  At least
-> some of the on-list discussions are captured in the Link: tags below.
-> In addition, KCSAN was quite helpful in finding some early bugs.
-
-If we have this, do we still need to have RCU Tasks Rude flavor?
-
-> 
-> Link: https://lore.kernel.org/lkml/20200219150744.428764577@infradead.org/
-> Link: https://lore.kernel.org/lkml/87mu8p797b.fsf@nanos.tec.linutronix.de/
-> Link: https://lore.kernel.org/lkml/20200225221305.605144982@linutronix.de/
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Cc: Andrii Nakryiko <andriin@fb.com>
+> Fixes: d70241913413 ("dmaengine: ti: k3-udma: Add glue layer for non DMAengine user")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > ---
->  include/linux/rcupdate_trace.h |  84 ++++++++++
->  include/linux/sched.h          |   8 +
->  init/init_task.c               |   4 +
->  kernel/fork.c                  |   4 +
->  kernel/rcu/Kconfig             |  12 +-
->  kernel/rcu/tasks.h             | 359 ++++++++++++++++++++++++++++++++++++++++-
->  6 files changed, 462 insertions(+), 9 deletions(-)
->  create mode 100644 include/linux/rcupdate_trace.h
+> V2: adjust subject
+>     direct return in the first error handling path
+
+Thank you!
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+> ---
+>  drivers/dma/ti/k3-udma-glue.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
+> index dbccdc7c0ed5..890573eb1625 100644
+> --- a/drivers/dma/ti/k3-udma-glue.c
+> +++ b/drivers/dma/ti/k3-udma-glue.c
+> @@ -578,12 +578,12 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (IS_ERR(flow->udma_rflow)) {
+>  		ret = PTR_ERR(flow->udma_rflow);
+>  		dev_err(dev, "UDMAX rflow get err %d\n", ret);
+> -		goto err;
+> +		return ret;
+>  	}
+>  
+>  	if (flow->udma_rflow_id != xudma_rflow_get_id(flow->udma_rflow)) {
+> -		xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto err_rflow_put;
+>  	}
+>  
+>  	/* request and cfg rings */
+> @@ -592,7 +592,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (!flow->ringrx) {
+>  		ret = -ENODEV;
+>  		dev_err(dev, "Failed to get RX ring\n");
+> -		goto err;
+> +		goto err_rflow_put;
+>  	}
+>  
+>  	flow->ringrxfdq = k3_ringacc_request_ring(rx_chn->common.ringacc,
+> @@ -600,19 +600,19 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (!flow->ringrxfdq) {
+>  		ret = -ENODEV;
+>  		dev_err(dev, "Failed to get RXFDQ ring\n");
+> -		goto err;
+> +		goto err_ringrx_free;
+>  	}
+>  
+>  	ret = k3_ringacc_ring_cfg(flow->ringrx, &flow_cfg->rx_cfg);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to cfg ringrx %d\n", ret);
+> -		goto err;
+> +		goto err_ringrxfdq_free;
+>  	}
+>  
+>  	ret = k3_ringacc_ring_cfg(flow->ringrxfdq, &flow_cfg->rxfdq_cfg);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to cfg ringrxfdq %d\n", ret);
+> -		goto err;
+> +		goto err_ringrxfdq_free;
+>  	}
+>  
+>  	if (rx_chn->remote) {
+> @@ -662,7 +662,7 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  	if (ret) {
+>  		dev_err(dev, "flow%d config failed: %d\n", flow->udma_rflow_id,
+>  			ret);
+> -		goto err;
+> +		goto err_ringrxfdq_free;
+>  	}
+>  
+>  	rx_chn->flows_ready++;
+> @@ -670,8 +670,17 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+>  		flow->udma_rflow_id, rx_chn->flows_ready);
+>  
+>  	return 0;
+> -err:
+> -	k3_udma_glue_release_rx_flow(rx_chn, flow_idx);
+> +
+> +err_ringrxfdq_free:
+> +	k3_ringacc_ring_free(flow->ringrxfdq);
+> +
+> +err_ringrx_free:
+> +	k3_ringacc_ring_free(flow->ringrx);
+> +
+> +err_rflow_put:
+> +	xudma_rflow_put(rx_chn->common.udmax, flow->udma_rflow);
+> +	flow->udma_rflow = NULL;
+> +
+>  	return ret;
+>  }
+>  
 > 
 
+- Péter
 
-> diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
-> index 0d43ec1..187226b 100644
-> --- a/kernel/rcu/Kconfig
-> +++ b/kernel/rcu/Kconfig
-> @@ -71,7 +71,7 @@ config TREE_SRCU
->  	  This option selects the full-fledged version of SRCU.
->  
->  config TASKS_RCU_GENERIC
-> -	def_bool TASKS_RCU || TASKS_RUDE_RCU
-> +	def_bool TASKS_RCU || TASKS_RUDE_RCU || TASKS_TRACE_RCU
->  	select SRCU
->  	help
->  	  This option enables generic infrastructure code supporting
-> @@ -94,6 +94,16 @@ config TASKS_RUDE_RCU
->  	  switches on all online CPUs, including idle ones, so use
->  	  with caution.  Not for manual selection.
->  
-> +config TASKS_TRACE_RCU
-> +	def_bool 0
-> +	default n
-
-Again, no need for "default n"
-
-> +	help
-> +	  This option enables a task-based RCU implementation that uses
-> +	  explicit rcu_read_lock_trace() read-side markers, and allows
-> +	  these readers to appear in the idle loop as well as on the CPU
-> +	  hotplug code paths.  It can force IPIs on online CPUs, including
-> +	  idle ones, so use with caution.  Not for manual selection.
-
-And no real need for "Not for manual selection".
-
-> +
->  config RCU_STALL_COMMON
->  	def_bool TREE_RCU
->  	help
-
-
-
-> @@ -480,10 +489,10 @@ core_initcall(rcu_spawn_tasks_kthread);
->  //
->  // "Rude" variant of Tasks RCU, inspired by Steve Rostedt's trick of
->  // passing an empty function to schedule_on_each_cpu().  This approach
-> -// provides an asynchronous call_rcu_rude() API and batching of concurrent
-> -// calls to the synchronous synchronize_rcu_rude() API.  This sends IPIs
-> -// far and wide and induces otherwise unnecessary context switches on all
-> -// online CPUs, whether online or not.
-> +// provides an asynchronous call_rcu_tasks_rude() API and batching
-> +// of concurrent calls to the synchronous synchronize_rcu_rude() API.
-> +// This sends IPIs far and wide and induces otherwise unnecessary context
-> +// switches on all online CPUs, whether online or not.
-
-This looks out of place for this patch. Perhaps you fixed this code and
-applied it to the wrong patch?
-
->  
->  // Empty function to allow workqueues to force a context switch.
->  static void rcu_tasks_be_rude(struct work_struct *work)
-> @@ -569,3 +578,337 @@ static int __init rcu_spawn_tasks_rude_kthread(void)
->  core_initcall(rcu_spawn_tasks_rude_kthread);
->  
->  #endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
-> +
-> +////////////////////////////////////////////////////////////////////////
-> +//
-> +// Tracing variant of Tasks RCU.  This variant is designed to be used
-> +// to protect tracing hooks, including those of BPF.  This variant
-> +// therefore:
-> +//
-> +// 1.	Has explicit read-side markers to allow finite grace periods
-> +//	in the face of in-kernel loops for PREEMPT=n builds.
-> +//
-> +// 2.	Protects code in the idle loop, exception entry/exit, and
-> +//	CPU-hotplug code paths, similar to the capabilities of SRCU.
-> +//
-> +// 3.	Avoids expensive read-side instruction, having overhead similar
-> +//	to that of Preemptible RCU.
-> +//
-> +// There are of course downsides.  The grace-period code can send IPIs to
-> +// CPUs, even when those CPUs are in the idle loop or in nohz_full userspace.
-> +// It is necessary to scan the full tasklist, much as for Tasks RCU.  There
-> +// is a single callback queue guarded by a single lock, again, much as for
-> +// Tasks RCU.  If needed, these downsides can be at least partially remedied.
-> +//
-> +// Perhaps most important, this variant of RCU does not affect the vanilla
-> +// flavors, rcu_preempt and rcu_sched.  The fact that RCU Tasks Trace
-> +// readers can operate from idle, offline, and exception entry/exit in no
-> +// way allows rcu_preempt and rcu_sched readers to also do so.
-> +
-> +// The lockdep state must be outside of #ifdef to be useful.
-> +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> +static struct lock_class_key rcu_lock_trace_key;
-> +struct lockdep_map rcu_trace_lock_map =
-> +	STATIC_LOCKDEP_MAP_INIT("rcu_read_lock_trace", &rcu_lock_trace_key);
-> +EXPORT_SYMBOL_GPL(rcu_trace_lock_map);
-> +#endif /* #ifdef CONFIG_DEBUG_LOCK_ALLOC */
-> +
-> +#ifdef CONFIG_TASKS_TRACE_RCU
-> +
-> +atomic_t trc_n_readers_need_end;	// Number of waited-for readers.
-> +DECLARE_WAIT_QUEUE_HEAD(trc_wait);	// List of holdout tasks.
-> +
-> +// Record outstanding IPIs to each CPU.  No point in sending two...
-> +static DEFINE_PER_CPU(bool, trc_ipi_to_cpu);
-> +
-> +/* If we are the last reader, wake up the grace-period kthread. */
-> +void rcu_read_unlock_trace_special(struct task_struct *t)
-> +{
-> +	WRITE_ONCE(t->trc_reader_need_end, false);
-> +	if (atomic_dec_and_test(&trc_n_readers_need_end))
-> +		wake_up(&trc_wait);
-
-Hmm, this can't be called in places that hold the rq->lock can it?
-
--- Steve
-
-> +}
-> +EXPORT_SYMBOL_GPL(rcu_read_unlock_trace_special);
-> +
-> +/* Add a task to the holdout list, if it is not already on the list. */
-> +static void trc_add_holdout(struct task_struct *t, struct list_head *bhp)
-> +{
-> +	if (list_empty(&t->trc_holdout_list)) {
-> +		get_task_struct(t);
-> +		list_add(&t->trc_holdout_list, bhp);
-> +	}
-> +}
-> +ndif /* #else #ifdef CONFIG_TASKS_TRACE_RCU */
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
