@@ -2,141 +2,258 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D640AC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B882AC43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A836D208E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DC92078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584642781;
-	bh=vWC53xuIwbcvlZtUjvLtXkAFlLvKIaP8Wi2Wi740fjk=;
+	s=default; t=1584642845;
+	bh=aSzeNKA/8TX/Y7EejyLEcmemd9UmM1Kf2QqLAC4wcGM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=U379wrMSUA34xlsLKpre3r9ZO+0v6W2dQCRahCdAgSXYMjP3tAUoEdZ3Xv4mhVoMw
-	 GB58GpphQihkfc8XOupd+rhOqzGaRNDZ9b7NpMGSTKME3loT6w3PN7qIPVazqqmXrW
-	 /UIkXY9lpXl//5CCf26AhzLj62wr+3nSTW810c5Q=
+	b=D3ww5RBPy5j7p83S8lvdiXRPggpvzr8lp31AG5D1ksA0MKZ6jB7jriE6O3Kl4tXVE
+	 Furv78/ANxhSr6C92oCX3wB+Y0OS7FsdbIKRgkznNJiJgkhs59bxhgq2VX8j6W40vD
+	 4h/TN7AKlnhZLU3seExvczWTwg2nMDC433ruOg8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgCSSdA (ORCPT
+        id S1727384AbgCSSeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:33:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSSdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:33:00 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D66020787;
-        Thu, 19 Mar 2020 18:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584642779;
-        bh=vWC53xuIwbcvlZtUjvLtXkAFlLvKIaP8Wi2Wi740fjk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sEmiPLH8nJ/EiqLkDJJok7EXoTzk4Hbjcn4KHPM4rD/IjInM0z0WlYNhLDgYF8a0l
-         gM3dC3mrKg9Z8S/KQ4+wB0n5zHHA0TB70S3WmQMS+bHF+SntJgBQxlIse07gKfzYDi
-         nMTNWWhWpYOF1oZG7xFkI7Bi//YMYz15t7NPGEPA=
-Date:   Thu, 19 Mar 2020 18:32:52 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Collingbourne <pcc@google.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>
-Subject: Re: [PATCH v4 18/26] arm64: vdso32: Replace TASK_SIZE_32 check in
- vgettimeofday
-Message-ID: <20200319183251.GA27141@willie-the-truck>
-References: <20200317122220.30393-1-vincenzo.frascino@arm.com>
- <20200317122220.30393-19-vincenzo.frascino@arm.com>
- <20200317143834.GC632169@arrakis.emea.arm.com>
- <CALCETrVWPNaJMbYoXbnWsALXKrhHMaePOUvY0DmXpvte8Zz9Zw@mail.gmail.com>
- <78109f4e-c9c7-57b6-079b-c911b6090aa0@arm.com>
+        Thu, 19 Mar 2020 14:34:04 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45206 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCSSeE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:34:04 -0400
+Received: by mail-il1-f195.google.com with SMTP id m9so3182739ilq.12;
+        Thu, 19 Mar 2020 11:34:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uPWry8RY6+hi4eAi0Y1bb3DGJuUvwAMEt6jfhx00FwM=;
+        b=K9und+luTVy4/G+VrvPCn7W/giNS7QujmIs4i6w64rJBMAM1i9Khxem4WanFrG/bRd
+         5Rctr0ea0zrn9sZAWlcWhlNlODrT86xCfjp3k9WJsbFl7VqUajLzw7sKau2H8e7KbF+h
+         XETUey7Cnmd4vfHFAKZEKpYEskwok9nWZPMKQvPYYQydNQLRWbHq+KzwjgHp6Uu/ZiYF
+         w30qQFzZdrYiRR+spKr63DEJ2m9QUts8XzT4xogTdLaXXJDzlIYUHzx2ECj3KLoX/mbo
+         pT4BwVXENACa5FqO7UjZ/H1cnbC9neYBFExZ5P1uu4PfzaaK2j/hKr6T8LXsiAZBSueK
+         XPkA==
+X-Gm-Message-State: ANhLgQ0/j8jgc7ENBmLVUAUgGHmyuatKlNhok7P7V2fSuH7gd5KMHRCH
+        BShCOG1X5XAYnOC8eNIuLDW/KrY=
+X-Google-Smtp-Source: ADFU+vs1k4gpcdfKiMfAtAb7CaNrV8yNwy8ti//ggPn+OEJyJsCKN0w4f4f/ANYejiLSsUVzM5ackg==
+X-Received: by 2002:a92:9149:: with SMTP id t70mr4864882ild.114.1584642842382;
+        Thu, 19 Mar 2020 11:34:02 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id z1sm1124712ilq.83.2020.03.19.11.34.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 11:34:01 -0700 (PDT)
+Received: (nullmailer pid 24310 invoked by uid 1000);
+        Thu, 19 Mar 2020 18:33:58 -0000
+Date:   Thu, 19 Mar 2020 12:33:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com
+Subject: Re: [PATCH v13 4/6] dt-bindings: display: mediatek: convert the
+ document format from txt to yaml
+Message-ID: <20200319183358.GA17237@bogus>
+References: <20200311071823.117899-1-jitao.shi@mediatek.com>
+ <20200311071823.117899-5-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <78109f4e-c9c7-57b6-079b-c911b6090aa0@arm.com>
+In-Reply-To: <20200311071823.117899-5-jitao.shi@mediatek.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 04:58:00PM +0000, Vincenzo Frascino wrote:
-> On 3/19/20 3:49 PM, Andy Lutomirski wrote:
-> > On Tue, Mar 17, 2020 at 7:38 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> >>
-> >> On Tue, Mar 17, 2020 at 12:22:12PM +0000, Vincenzo Frascino wrote:
-> >>> diff --git a/arch/arm64/kernel/vdso32/vgettimeofday.c b/arch/arm64/kernel/vdso32/vgettimeofday.c
-> >>> index 54fc1c2ce93f..91138077b073 100644
-> >>> --- a/arch/arm64/kernel/vdso32/vgettimeofday.c
-> >>> +++ b/arch/arm64/kernel/vdso32/vgettimeofday.c
-> >>> @@ -8,11 +8,14 @@
-> >>>  #include <linux/time.h>
-> >>>  #include <linux/types.h>
-> >>>
-> >>> +#define VALID_CLOCK_ID(x) \
-> >>> +     ((x >= 0) && (x < VDSO_BASES))
-> >>> +
-> >>>  int __vdso_clock_gettime(clockid_t clock,
-> >>>                        struct old_timespec32 *ts)
-> >>>  {
-> >>>       /* The checks below are required for ABI consistency with arm */
-> >>> -     if ((u32)ts >= TASK_SIZE_32)
-> >>> +     if ((u32)ts > UINTPTR_MAX - sizeof(*ts) + 1)
-> >>>               return -EFAULT;
-> >>>
-> >>>       return __cvdso_clock_gettime32(clock, ts);
-> >>
-> >> I probably miss something but I can't find the TASK_SIZE check in the
-> >> arch/arm/vdso/vgettimeofday.c code. Is this done elsewhere?
-> >>
-> > 
-> > Can you not just remove the TASK_SIZE_32 check entirely?  If you pass
-> > a garbage address to the vDSO, you are quite likely to get SIGSEGV.
-> > Why does this particular type of error need special handling?
-> > 
+On Wed, Mar 11, 2020 at 03:18:21PM +0800, Jitao Shi wrote:
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../display/mediatek/mediatek,dpi.txt         |  45 --------
+>  .../display/mediatek/mediatek,dpi.yaml        | 103 ++++++++++++++++++
+>  2 files changed, 103 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
 > 
-> In this particular case the system call and the vDSO library as it stands
-> returns -EFAULT on all the architectures that support the vdso library except on
-> arm64 compat. The reason why it does not return the correct error code, as I was
-> discussing with Catalin, it is because arm64 uses USER_DS (addr_limit set
-> happens in arch/arm64/kernel/entry.S), which is defined as (1 << VA_BITS), as
-> access_ok() validation even on compat tasks and since arm64 supports up to 52bit
-> VA, this does not detect the end of the user address space for a 32 bit task.
-> Hence when we fall back on the system call we get the wrong error code out of it.
-> 
-> According to me to have ABI consistency we need this check, but if we say that
-> we can make an ABI exception in this case, I am fine with that either if it has
-> enough consensus.
-> 
-> Please let me know your thoughts.
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> deleted file mode 100644
+> index 2dfb50a7321e..000000000000
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> +++ /dev/null
+> @@ -1,45 +0,0 @@
+> -Mediatek DPI Device
+> -===================
+> -
+> -The Mediatek DPI function block is a sink of the display subsystem and
+> -provides 8-bit RGB/YUV444 or 8/10/10-bit YUV422 pixel data on a parallel
+> -output bus.
+> -
+> -Required properties:
+> -- compatible: "mediatek,<chip>-dpi"
+> -  the supported chips are mt2701 , mt8173 and mt8183.
+> -- reg: Physical base address and length of the controller's registers
+> -- interrupts: The interrupt signal from the function block.
+> -- clocks: device clocks
+> -  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+> -- clock-names: must contain "pixel", "engine", and "pll"
+> -- port: Output port node with endpoint definitions as described in
+> -  Documentation/devicetree/bindings/graph.txt. This port should be connected
+> -  to the input port of an attached HDMI or LVDS encoder chip.
+> -
+> -Optional properties:
+> -- pinctrl-names: Contain "default" and "sleep".
+> -  pinctrl-names see Documentation/devicetree/bindings/pinctrlpinctrl-bindings.txt
+> -- pclk-sample: refer Documentation/devicetree/bindings/media/video-interfaces.txt.
+> -
+> -Example:
+> -
+> -dpi0: dpi@1401d000 {
+> -	compatible = "mediatek,mt8173-dpi";
+> -	reg = <0 0x1401d000 0 0x1000>;
+> -	interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
+> -	clocks = <&mmsys CLK_MM_DPI_PIXEL>,
+> -		 <&mmsys CLK_MM_DPI_ENGINE>,
+> -		 <&apmixedsys CLK_APMIXED_TVDPLL>;
+> -	clock-names = "pixel", "engine", "pll";
+> -	pinctrl-names = "default", "sleep";
+> -	pinctrl-0 = <&dpi_pin_func>;
+> -	pinctrl-1 = <&dpi_pin_idle>;
+> -
+> -	port {
+> -		dpi0_out: endpoint {
+> -			pclk-sample = <0>;
+> -			remote-endpoint = <&hdmi0_in>;
+> -		};
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+> new file mode 100644
+> index 000000000000..d65543e3bf8c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+> @@ -0,0 +1,103 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/mediatek/mediatek,dpi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: mediatek DPI Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - CK Hu <ck.hu@mediatek.com>
+> +  - Jitao shi <jitao.shi@mediatek.com>
+> +
+> +description: |
+> +  The Mediatek DPI function block is a sink of the display subsystem and
+> +  provides 8-bit RGB/YUV444 or 8/10/10-bit YUV422 pixel data on a parallel
+> +  output bus.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mediatek,mt2701-dpi
+> +      - mediatek,mt8173-dpi
+> +      - mediatek,mt8183-dpi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Pixel Clock
+> +      - description: Engine Clock
+> +      - description: DPI PLL
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pixel
+> +      - const: engine
+> +      - const: pll
+> +
+> +  pinctrl-0: true
+> +  pinctrl-1: true
+> +
+> +  pinctrl-names:
+> +    items:
+> +      - const: default
+> +      - const: sleep
+> +
+> +  port@0:
+> +    type: object
+> +    description:
+> +      Output port node with endpoint definitions as described in
+> +      Documentation/devicetree/bindings/graph.txt. This port should be connected
+> +      to the input port of an attached HDMI or LVDS encoder chip.
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +
+> +        properties:
+> +          pclk-sample:
+> +            items:
+> +            - description: refer Documentation/devicetree/bindings/media/video-interfaces.txt.
 
-I don't agree with your reasoning -- letting the thing SEGV is perfectly
-fine and we don't need to perform additional checking in userspace here.
-If you treat the vDSO more as being part of libc then part of the kernel
-then I think it makes perfect sense.
+This is not an array.
 
-There are other system calls that will SEGV in libc if they are passed dodgy
-pointers before the kernel has a chance to return -EFAULT.
+Just 'pclk-sample: true' if both values are allowed or 'const: 0|1' if 
+only one value is allowed.
 
-Will
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - port@0
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/mt8173-clk.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    dpi0: dpi@1401d000 {
+> +        compatible = "mediatek,mt8173-dpi";
+> +        reg = <0 0x1401d000 0 0x1000>;
+> +        interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
+> +        clocks = <&mmsys CLK_MM_DPI_PIXEL>,
+> +             <&mmsys CLK_MM_DPI_ENGINE>,
+> +             <&apmixedsys CLK_APMIXED_TVDPLL>;
+> +        clock-names = "pixel", "engine", "pll";
+> +        pinctrl-names = "default", "sleep";
+> +        pinctrl-0 = <&dpi_pin_func>;
+> +        pinctrl-1 = <&dpi_pin_idle>;
+> +
+> +        port@0 {
+> +            dpi0_out: endpoint {
+> +                pclk-sample = <0>;
+> +                remote-endpoint = <&hdmi0_in>;
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.21.0
