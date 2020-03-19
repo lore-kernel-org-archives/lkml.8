@@ -2,132 +2,133 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754CEC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93332C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41BAD2076F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:29:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JviXO3L7"
+	by mail.kernel.org (Postfix) with ESMTP id 665292076F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584653463;
+	bh=XoNLI3PZ0pNJq+KUOpGKAABFZ3n79TrsPWdFjxnE3vk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dMeE9SxW3Tq7ByeN73a9wE7QcJFNy2G2R2TJtwJnHz4yt3t4b/yesOMxpd7oFxK7f
+	 lMLT4AhM+nl4HraoNsLVcMEnam7IwxGBjoRI0ULFofQdoGw+EizcVZh0C9x0wmRFgF
+	 4vYBJO3+kKupkDmf+PilBlDBPydFMffxuC3SOagk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgCSV3y (ORCPT
+        id S1727162AbgCSVbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 17:29:54 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.144]:38288 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726680AbgCSV3x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:29:53 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id CC13FE46B
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:29:52 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id F2jgjjcAcAGTXF2jgj9Yih; Thu, 19 Mar 2020 16:29:52 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=clKI7nARFTFO5GFD0Ih3lvAENgeNhLrB6NvEoRgvUuk=; b=JviXO3L7PfFv8CDg2Dp7utxg+D
-        B18IncsSGyIoi0uznb7dFep0uW5P2LsgTsPKW6GX64Fx42NbG7E3d2YI/MKU5txg0y+u3QRAmKKsv
-        lJOe4o8TBduUkmHqKQYbNp9Mbq/jSLroljBO1P7DfdwjTPLIyDHWnnuVAPOLdzxtThxejHOJOcNGk
-        PqKoO+8SfCkb8EYYB0yLqUPvDqrFjaPQVZdRMGx/+Ar2QDRpAzfuQRdBSi0ntYLQHS/KYY4wIukAF
-        tP54Qi28yh4oiCLaB6nGi/Cpkjyl8vJUpQt9PidZZeYZHtW/4VoxMqRujdiGv/wpGdo5j1em+rk2g
-        G+QDSBcg==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53318 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jF2je-001cPg-UB; Thu, 19 Mar 2020 16:29:51 -0500
-Date:   Thu, 19 Mar 2020 16:29:50 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] intel-ish-hid: ishtp: hbm.h: Replace zero-length array
- with flexible-array member
-Message-ID: <20200319212950.GA9155@embeddedor.com>
+        Thu, 19 Mar 2020 17:31:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbgCSVbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 17:31:01 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE0822076F;
+        Thu, 19 Mar 2020 21:31:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584653461;
+        bh=XoNLI3PZ0pNJq+KUOpGKAABFZ3n79TrsPWdFjxnE3vk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ieHRyfHq7pL92q7bL87ooCp5uvBMPeROvuZBodBy2m/WO4kbpdL5x+/VlN7n/suOM
+         E66vN1E62PYp1uFPgh13qyrA0hqlroNFCY2QOZHc/cbpM9gLYRSnBkGIBmuPdlDUGh
+         mVvXvy2eEumWDBBwkBs2RtztQkXiX8BBVf3gB9ZA=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH] selftests/x86/test_vdso, vdso_restorer: Fix no-vDSO segfaults
+Date:   Thu, 19 Mar 2020 14:30:56 -0700
+Message-Id: <618ea7b8c55b10d08b1cb139e9a3a957934b8647.1584653439.git.luto@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.218.116.241
-X-Source-L: No
-X-Exim-ID: 1jF2je-001cPg-UB
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53318
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 20
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+test_vdso would try to call a NULL pointer if the vDSO was missing.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+vdso_restorer_32 hit a genuine failure: trying to use the
+kernel-provided signal restorer doesn't work if the vDSO is missing.
+Skip the test if the vDSO is missing, since the test adds no
+particular value in that case.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- drivers/hid/intel-ish-hid/ishtp/hbm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/x86/test_vdso.c     |  5 +++++
+ tools/testing/selftests/x86/vdso_restorer.c | 15 +++++++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/drivers/hid/intel-ish-hid/ishtp/hbm.h b/drivers/hid/intel-ish-hid/ishtp/hbm.h
-index bb85985b1620..7c445b203f2a 100644
---- a/drivers/hid/intel-ish-hid/ishtp/hbm.h
-+++ b/drivers/hid/intel-ish-hid/ishtp/hbm.h
-@@ -82,7 +82,7 @@ struct ishtp_msg_hdr {
+diff --git a/tools/testing/selftests/x86/test_vdso.c b/tools/testing/selftests/x86/test_vdso.c
+index 35edd61d1663..42052db0f870 100644
+--- a/tools/testing/selftests/x86/test_vdso.c
++++ b/tools/testing/selftests/x86/test_vdso.c
+@@ -259,6 +259,11 @@ static void test_one_clock_gettime(int clock, const char *name)
  
- struct ishtp_bus_message {
- 	uint8_t hbm_cmd;
--	uint8_t data[0];
-+	uint8_t data[];
- } __packed;
+ static void test_clock_gettime(void)
+ {
++	if (!vdso_clock_gettime) {
++		printf("[SKIP]\tNo vDSO, so skipping clock_gettime() tests\n");
++		return;
++	}
++
+ 	for (int clock = 0; clock < sizeof(clocknames) / sizeof(clocknames[0]);
+ 	     clock++) {
+ 		test_one_clock_gettime(clock, clocknames[clock]);
+diff --git a/tools/testing/selftests/x86/vdso_restorer.c b/tools/testing/selftests/x86/vdso_restorer.c
+index 29a5c94c4b50..fe99f2434155 100644
+--- a/tools/testing/selftests/x86/vdso_restorer.c
++++ b/tools/testing/selftests/x86/vdso_restorer.c
+@@ -15,6 +15,7 @@
  
- /**
+ #include <err.h>
+ #include <stdio.h>
++#include <dlfcn.h>
+ #include <string.h>
+ #include <signal.h>
+ #include <unistd.h>
+@@ -46,11 +47,23 @@ int main()
+ 	int nerrs = 0;
+ 	struct real_sigaction sa;
+ 
++	void *vdso = dlopen("linux-vdso.so.1",
++			    RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
++	if (!vdso)
++		vdso = dlopen("linux-gate.so.1",
++			      RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
++	if (!vdso) {
++		printf("[SKIP]\tFailed to find vDSO.  Tests are not expected to work.\n");
++		return 0;
++	}
++
+ 	memset(&sa, 0, sizeof(sa));
+ 	sa.handler = handler_with_siginfo;
+ 	sa.flags = SA_SIGINFO;
+ 	sa.restorer = NULL;	/* request kernel-provided restorer */
+ 
++	printf("[RUN]\tRaise a signal, SA_SIGINFO, sa.restorer == NULL\n");
++
+ 	if (syscall(SYS_rt_sigaction, SIGUSR1, &sa, NULL, 8) != 0)
+ 		err(1, "raw rt_sigaction syscall");
+ 
+@@ -63,6 +76,8 @@ int main()
+ 		nerrs++;
+ 	}
+ 
++	printf("[RUN]\tRaise a signal, !SA_SIGINFO, sa.restorer == NULL\n");
++
+ 	sa.flags = 0;
+ 	sa.handler = handler_without_siginfo;
+ 	if (syscall(SYS_sigaction, SIGUSR1, &sa, 0) != 0)
 -- 
-2.23.0
+2.24.1
 
