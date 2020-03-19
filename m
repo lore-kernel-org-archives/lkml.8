@@ -2,131 +2,72 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E30FAC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8239C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C392820722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C056520722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgCSJVC (ORCPT
+        id S1727082AbgCSJWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:21:02 -0400
-Received: from 8bytes.org ([81.169.241.247]:51884 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:22:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50068 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgCSJOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:18 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id F0D17189; Thu, 19 Mar 2020 10:14:15 +0100 (CET)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        id S1726968AbgCSJWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:22:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2697EAE59;
+        Thu, 19 Mar 2020 09:22:15 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 02:21:07 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 02/70] KVM: SVM: Add GHCB Accessor functions
-Date:   Thu, 19 Mar 2020 10:12:59 +0100
-Message-Id: <20200319091407.1481-3-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
-References: <20200319091407.1481-1-joro@8bytes.org>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [patch V2 07/15] powerpc/ps3: Convert half completion to rcuwait
+Message-ID: <20200319092107.6brm26peh3h2n4sk@linux-p48b>
+References: <20200318204302.693307984@linutronix.de>
+ <20200318204408.102694393@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200318204408.102694393@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Wed, 18 Mar 2020, Thomas Gleixner wrote:
+>AFAICT the kthread uses TASK_INTERRUPTIBLE to not increase loadavg, kthreads
+>cannot receive signals by default and this one doesn't look different. Use
+>TASK_IDLE instead.
 
-Building a correct GHCB for the hypervisor requires setting valid bits
-in the GHCB. Simplify that process by providing accessor functions to
-set values and to update the valid bitmap.
+Hmm it seems in general this needs to be done kernel-wide. This kthread abuse of
+TASK_INTERRUPTIBLE seems to be a common thing. There's also the users doing
+schedule_timeout_interruptible()...
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/svm.h | 61 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
-
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index f36288c659b5..e4e9f6bacfaa 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -333,4 +333,65 @@ struct __attribute__ ((__packed__)) vmcb {
- 
- #define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
- 
-+/* GHCB Accessor functions */
-+
-+#define DEFINE_GHCB_INDICES(field)					\
-+	u16 idx = offsetof(struct vmcb_save_area, field) / 8;		\
-+	u16 byte_idx  = idx / 8;					\
-+	u16 bit_idx   = idx % 8;					\
-+	BUILD_BUG_ON(byte_idx > ARRAY_SIZE(ghcb->save.valid_bitmap));
-+
-+#define GHCB_SET_VALID(ghcb, field)					\
-+	{								\
-+		DEFINE_GHCB_INDICES(field)				\
-+		(ghcb)->save.valid_bitmap[byte_idx] |= BIT(bit_idx);	\
-+	}
-+
-+#define DEFINE_GHCB_SETTER(field)					\
-+	static inline void						\
-+	ghcb_set_##field(struct ghcb *ghcb, u64 value)			\
-+	{								\
-+		GHCB_SET_VALID(ghcb, field)				\
-+		(ghcb)->save.field = value;				\
-+	}
-+
-+#define DEFINE_GHCB_ACCESSORS(field)					\
-+	static inline bool ghcb_is_valid_##field(const struct ghcb *ghcb)	\
-+	{								\
-+		DEFINE_GHCB_INDICES(field)				\
-+		return !!((ghcb)->save.valid_bitmap[byte_idx]		\
-+						& BIT(bit_idx));	\
-+	}								\
-+									\
-+	static inline void						\
-+	ghcb_set_##field(struct ghcb *ghcb, u64 value)			\
-+	{								\
-+		GHCB_SET_VALID(ghcb, field)				\
-+		(ghcb)->save.field = value;				\
-+	}
-+
-+DEFINE_GHCB_ACCESSORS(cpl)
-+DEFINE_GHCB_ACCESSORS(rip)
-+DEFINE_GHCB_ACCESSORS(rsp)
-+DEFINE_GHCB_ACCESSORS(rax)
-+DEFINE_GHCB_ACCESSORS(rcx)
-+DEFINE_GHCB_ACCESSORS(rdx)
-+DEFINE_GHCB_ACCESSORS(rbx)
-+DEFINE_GHCB_ACCESSORS(rbp)
-+DEFINE_GHCB_ACCESSORS(rsi)
-+DEFINE_GHCB_ACCESSORS(rdi)
-+DEFINE_GHCB_ACCESSORS(r8)
-+DEFINE_GHCB_ACCESSORS(r9)
-+DEFINE_GHCB_ACCESSORS(r10)
-+DEFINE_GHCB_ACCESSORS(r11)
-+DEFINE_GHCB_ACCESSORS(r12)
-+DEFINE_GHCB_ACCESSORS(r13)
-+DEFINE_GHCB_ACCESSORS(r14)
-+DEFINE_GHCB_ACCESSORS(r15)
-+DEFINE_GHCB_ACCESSORS(sw_exit_code)
-+DEFINE_GHCB_ACCESSORS(sw_exit_info_1)
-+DEFINE_GHCB_ACCESSORS(sw_exit_info_2)
-+DEFINE_GHCB_ACCESSORS(sw_scratch)
-+DEFINE_GHCB_ACCESSORS(xcr0)
-+
- #endif
--- 
-2.17.1
-
+Thanks,
+Davidlohr
