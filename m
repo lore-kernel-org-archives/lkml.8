@@ -2,176 +2,325 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0C6C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B23C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 802FC2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:56:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HLqJ5V/9"
+	by mail.kernel.org (Postfix) with ESMTP id 0FEE12076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgCSD4k (ORCPT
+        id S1727015AbgCSD4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 23:56:40 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36277 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCSD4j (ORCPT
+        Wed, 18 Mar 2020 23:56:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10242 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726596AbgCSD4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 23:56:39 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d11so1165280qko.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 20:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OL5W/cXAcaO5++QZJaWBgs8McWwwSxdm+ZdDM1yl8To=;
-        b=HLqJ5V/99EmI9c1QpuWro6BvQeXa3sXgHXMp6UHqO8bf1kE2ciOQxvhgojY9LTcRih
-         On6HWoRo0zYxLLawU9zNURkL48jhgLITm0b9ut781uxGSIafauaMiOq81Ugro9n0zGux
-         AWF2StH00lgs7LHsRjvAaA5nolggOe8jXLd3FPxpSlCRh0dEBR/PQzaJcbbrkJAqFQBK
-         L351nT925WTEDLHVqvZjIURdJWxwfxxPAYR0ldZfzPyGwUkss6Qy2gCWokxyKcewavbJ
-         QmFDatE0Qe7qpzWNf66L82Zsmlvo41RrT5ax5uaIPSdrpfZ7NADgcRlhbKAmIWoo/dAY
-         nSeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OL5W/cXAcaO5++QZJaWBgs8McWwwSxdm+ZdDM1yl8To=;
-        b=LhQoPqr/Y4u2QcwgDH8Fo6LLvk+gCvhgIH0OP9hnnWkz89ifxj248EIti3lAkwl4hI
-         6sthVlbcM67sC2BBZ/ff4faT0ZWNBauIuUEiM55mjAPwa7XhjIKC348rLrLDEDSWai9Y
-         etvRn0T22ozOh4QmaJOUt3kYcu2bxEHWyf3kxOfPbBeISDU85BzYYz2nHZcduibEO1J2
-         4+mTup9mG7rwpUxk3vHZZ+SC1j6wNI2SO/Cj9BKgwiawPTVLdl5Croa2/0BCYrydfpH4
-         SM6L46meDnQuDt4Hn7pxMS5QsU6f80A+WMFOhaPp5tqYN7va8aoqIIu4fE3/V6hi+gx4
-         DF+w==
-X-Gm-Message-State: ANhLgQ0dXyLNRK8qq3HQ/ia7gyP4SdAVSxqzTMwwox/elq5l1Z1X7dq8
-        sBRh2cj4py+zclezWzeV/szkwj3F16lFhh+/90VHeg==
-X-Google-Smtp-Source: ADFU+vtWuMfbBkluyYlSkgrzZn6ofaN7osU/iy+ACcP2SEbdBQHxCB1T5qtpRBhN51rasqDRYjEEWh81ofMZAR+u6ow=
-X-Received: by 2002:a25:c482:: with SMTP id u124mr1628208ybf.286.1584590198061;
- Wed, 18 Mar 2020 20:56:38 -0700 (PDT)
+        Wed, 18 Mar 2020 23:56:45 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02J3XwF4074125;
+        Wed, 18 Mar 2020 23:56:28 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yu7fsjtmk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Mar 2020 23:56:28 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02J3Y8Vj074895;
+        Wed, 18 Mar 2020 23:56:27 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yu7fsjtme-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Mar 2020 23:56:27 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02J3rPhG029121;
+        Thu, 19 Mar 2020 03:56:27 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma02dal.us.ibm.com with ESMTP id 2yrpw6y0d4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 03:56:27 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02J3uQvA40174004
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Mar 2020 03:56:26 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2243A112064;
+        Thu, 19 Mar 2020 03:56:26 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 23565112063;
+        Thu, 19 Mar 2020 03:56:22 +0000 (GMT)
+Received: from skywalker.ibmuc.com (unknown [9.199.34.213])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Mar 2020 03:56:21 +0000 (GMT)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
+        kirill@shutemov.name,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ram Pai <linuxram@linux.ibm.com>,
+        Sandipan Das <sandipan@linux.ibm.com>
+Subject: [PATCH v2 02/22] powerpc/pkeys: Check vma before returning key fault error to the user
+Date:   Thu, 19 Mar 2020 09:25:49 +0530
+Message-Id: <20200319035609.158654-3-aneesh.kumar@linux.ibm.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200319035609.158654-1-aneesh.kumar@linux.ibm.com>
+References: <20200319035609.158654-1-aneesh.kumar@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200316041431.19607-1-irogers@google.com> <20200318104011.GF821557@krava>
-In-Reply-To: <20200318104011.GF821557@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 18 Mar 2020 20:56:26 -0700
-Message-ID: <CAP-5=fXQzLMuv-6EWGdFY1p5oLjV9301k1tkYL+R7qYHQR6wXA@mail.gmail.com>
-Subject: Re: [PATCH] perf parse-events: fix memory leaks found on parse_events
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_10:2020-03-18,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=2 bulkscore=0 phishscore=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003190013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 3:40 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Sun, Mar 15, 2020 at 09:14:31PM -0700, Ian Rogers wrote:
-> > Memory leaks found by applying LLVM's libfuzzer on the parse_events
-> > function.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/perf/evlist.c        | 2 ++
-> >  tools/perf/util/parse-events.c | 2 ++
-> >  tools/perf/util/parse-events.y | 3 ++-
-> >  3 files changed, 6 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> > index 5b9f2ca50591..6485d1438f75 100644
-> > --- a/tools/lib/perf/evlist.c
-> > +++ b/tools/lib/perf/evlist.c
-> > @@ -125,8 +125,10 @@ static void perf_evlist__purge(struct perf_evlist *evlist)
-> >  void perf_evlist__exit(struct perf_evlist *evlist)
-> >  {
-> >       perf_cpu_map__put(evlist->cpus);
-> > +     perf_cpu_map__put(evlist->all_cpus);
->
-> ugh, yes, could you please put it to separate libperf patch?
+If multiple threads in userspace keep changing the protection keys
+mapping a range, there can be a scenario where kernel takes a key fault
+but the pkey value found in the siginfo struct is a permissive one.
 
-Done. https://lkml.org/lkml/2020/3/18/1318
+This can confuse the userspace as shown in the below test case.
 
-> >       perf_thread_map__put(evlist->threads);
-> >       evlist->cpus = NULL;
-> > +     evlist->all_cpus = NULL;
->
-> there's already change adding this waiting on the list:
->   https://lore.kernel.org/lkml/1583665157-349023-1-git-send-email-zhe.he@windriver.com/
+/* use this to control the number of test iterations */
 
-I'm not seeing this in perf/core on
-git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-The previous thread mentions Arnaldo porting it. It is only 1
-statement so I've left it in.
+static void pkeyreg_set(int pkey, unsigned long rights)
+{
+	unsigned long reg, shift;
 
-> >       evlist->threads = NULL;
-> >       fdarray__exit(&evlist->pollfd);
-> >  }
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-> > index a14995835d85..997862224292 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -1482,6 +1482,8 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
-> >
-> >               list_for_each_entry_safe(pos, tmp, &config_terms, list) {
-> >                       list_del_init(&pos->list);
-> > +                     if (pos->free_str)
-> > +                             free(pos->val.str);
->
-> ack, would be nice to have  perf_evsel__free_config_terms generalized
-> to work directly over config terms list, so we'd have only single
-> cleanup function
->
-> >                       free(pos);
-> >               }
-> >               return -EINVAL;
-> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> > index 94f8bcd83582..8212cc771667 100644
-> > --- a/tools/perf/util/parse-events.y
-> > +++ b/tools/perf/util/parse-events.y
-> > @@ -44,7 +44,7 @@ static void free_list_evsel(struct list_head* list_evsel)
-> >
-> >       list_for_each_entry_safe(evsel, tmp, list_evsel, core.node) {
-> >               list_del_init(&evsel->core.node);
-> > -             perf_evsel__delete(evsel);
-> > +             evsel__delete(evsel);
->
-> ack
->
-> >       }
-> >       free(list_evsel);
-> >  }
-> > @@ -326,6 +326,7 @@ PE_NAME opt_pmu_config
-> >       }
-> >       parse_events_terms__delete($2);
-> >       parse_events_terms__delete(orig_terms);
-> > +     free(pattern);
->
-> ack
->
-> could you please send the separate change for libperf?
-> and synchronize with that other patch mentioned above
+	shift = (NR_PKEYS - pkey - 1) * PKEY_BITS_PER_PKEY;
+	asm volatile("mfspr	%0, 0xd" : "=r"(reg));
+	reg &= ~(((unsigned long) PKEY_BITS_MASK) << shift);
+	reg |= (rights & PKEY_BITS_MASK) << shift;
+	asm volatile("mtspr	0xd, %0" : : "r"(reg));
+}
 
-Done-ish. Thanks,
-Ian
+static unsigned long pkeyreg_get(void)
+{
+	unsigned long reg;
 
-> thanks,
-> jirka
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200318104011.GF821557%40krava.
+	asm volatile("mfspr	%0, 0xd" : "=r"(reg));
+	return reg;
+}
+
+static int sys_pkey_mprotect(void *addr, size_t len, int prot, int pkey)
+{
+	return syscall(SYS_pkey_mprotect, addr, len, prot, pkey);
+}
+
+static int sys_pkey_alloc(unsigned long flags, unsigned long access_rights)
+{
+	return syscall(SYS_pkey_alloc, flags, access_rights);
+}
+
+static int sys_pkey_free(int pkey)
+{
+	return syscall(SYS_pkey_free, pkey);
+}
+
+static int faulting_pkey;
+static int permissive_pkey;
+static pthread_barrier_t pkey_set_barrier;
+static pthread_barrier_t mprotect_barrier;
+
+static void pkey_handle_fault(int signum, siginfo_t *sinfo, void *ctx)
+{
+	unsigned long pkeyreg;
+
+	/* FIXME: printf is not signal-safe but for the current purpose,
+	          it gets the job done. */
+	printf("pkey: exp = %d, got = %d\n", faulting_pkey, sinfo->si_pkey);
+	fflush(stdout);
+
+	assert(sinfo->si_code == SEGV_PKUERR);
+	assert(sinfo->si_pkey == faulting_pkey);
+
+	/* clear pkey permissions to let the faulting instruction continue */
+	pkeyreg_set(faulting_pkey, 0x0);
+}
+
+static void *do_mprotect_fault(void *p)
+{
+	unsigned long rights, pkeyreg, pgsize;
+	unsigned int i;
+	void *region;
+	int pkey;
+
+	srand(time(NULL));
+	pgsize = sysconf(_SC_PAGESIZE);
+	rights = PKEY_DISABLE_WRITE;
+	region = p;
+
+	/* allocate key, no permissions */
+	assert((pkey = sys_pkey_alloc(0, PKEY_DISABLE_ACCESS)) > 0);
+	pkeyreg_set(4, 0x0);
+
+	/* cache the pkey here as the faulting pkey for future reference
+	   in the signal handler */
+	faulting_pkey = pkey;
+	printf("%s: faulting pkey = %d\n", __func__, faulting_pkey);
+
+	/* try to allocate, mprotect and free pkeys repeatedly */
+	for (i = 0; i < NUM_ITERATIONS; i++) {
+		/* sync up with the other thread here */
+		pthread_barrier_wait(&pkey_set_barrier);
+
+		/* make sure that the pkey used by the non-faulting thread
+		   is made permissive for this thread's context too so that
+		   no faults are triggered because it still might have been
+		   set to a restrictive value */
+//		pkeyreg_set(permissive_pkey, 0x0);
+
+		/* sync up with the other thread here */
+		pthread_barrier_wait(&mprotect_barrier);
+
+		/* perform mprotect */
+		assert(!sys_pkey_mprotect(region, pgsize, PROT_READ | PROT_WRITE, pkey));
+
+		/* choose a random byte from the protected region and
+		   attempt to write to it, this will generate a fault */
+		*((char *) region + (rand() % pgsize)) = rand();
+
+		/* restore pkey permissions as the signal handler may have
+		   cleared the bit out for the sake of continuing */
+		pkeyreg_set(pkey, PKEY_DISABLE_WRITE);
+	}
+
+	/* free pkey */
+	sys_pkey_free(pkey);
+
+	return NULL;
+}
+
+static void *do_mprotect_nofault(void *p)
+{
+	unsigned long pgsize;
+	unsigned int i, j;
+	void *region;
+	int pkey;
+
+	pgsize = sysconf(_SC_PAGESIZE);
+	region = p;
+
+	/* try to allocate, mprotect and free pkeys repeatedly */
+	for (i = 0; i < NUM_ITERATIONS; i++) {
+		/* allocate pkey, all permissions */
+		assert((pkey = sys_pkey_alloc(0, 0)) > 0);
+		permissive_pkey = pkey;
+
+		/* sync up with the other thread here */
+		pthread_barrier_wait(&pkey_set_barrier);
+		pthread_barrier_wait(&mprotect_barrier);
+
+		/* perform mprotect on the common page, no faults will
+		   be triggered as this is most permissive */
+		assert(!sys_pkey_mprotect(region, pgsize, PROT_READ | PROT_WRITE, pkey));
+
+		/* free pkey */
+		assert(!sys_pkey_free(pkey));
+	}
+
+	return NULL;
+}
+
+int main(int argc, char **argv)
+{
+	pthread_t fault_thread, nofault_thread;
+	unsigned long pgsize;
+	struct sigaction act;
+	pthread_attr_t attr;
+	cpu_set_t fault_cpuset, nofault_cpuset;
+	unsigned int i;
+	void *region;
+
+	/* allocate memory region to protect */
+	pgsize = sysconf(_SC_PAGESIZE);
+	assert(region = memalign(pgsize, pgsize));
+
+	CPU_ZERO(&fault_cpuset);
+	CPU_SET(0, &fault_cpuset);
+	CPU_ZERO(&nofault_cpuset);
+	CPU_SET(8, &nofault_cpuset);
+	assert(!pthread_attr_init(&attr));
+
+	/* setup sigsegv signal handler */
+	act.sa_handler = 0;
+	act.sa_sigaction = pkey_handle_fault;
+	assert(!sigprocmask(SIG_SETMASK, 0, &act.sa_mask));
+	act.sa_flags = SA_SIGINFO;
+	act.sa_restorer = 0;
+	assert(!sigaction(SIGSEGV, &act, NULL));
+
+	/* setup barrier for the two threads */
+	pthread_barrier_init(&pkey_set_barrier, NULL, 2);
+	pthread_barrier_init(&mprotect_barrier, NULL, 2);
+
+	/* setup and start threads */
+	assert(!pthread_create(&fault_thread, &attr, &do_mprotect_fault, region));
+	assert(!pthread_setaffinity_np(fault_thread, sizeof(cpu_set_t), &fault_cpuset));
+	assert(!pthread_create(&nofault_thread, &attr, &do_mprotect_nofault, region));
+	assert(!pthread_setaffinity_np(nofault_thread, sizeof(cpu_set_t), &nofault_cpuset));
+
+	/* cleanup */
+	assert(!pthread_attr_destroy(&attr));
+	assert(!pthread_join(fault_thread, NULL));
+	assert(!pthread_join(nofault_thread, NULL));
+	assert(!pthread_barrier_destroy(&pkey_set_barrier));
+	assert(!pthread_barrier_destroy(&mprotect_barrier));
+	free(region);
+
+	puts("PASS");
+
+	return EXIT_SUCCESS;
+}
+
+The above test can result the below failure without this patch.
+
+pkey: exp = 3, got = 3
+pkey: exp = 3, got = 4
+a.out: pkey-siginfo-race.c:100: pkey_handle_fault: Assertion `sinfo->si_pkey == faulting_pkey' failed.
+Aborted
+
+Check for vma access before considering this a key fault. If vma pkey allow
+access retry the acess again.
+
+Test case is written by Sandipan Das <sandipan@linux.ibm.com> hence added SOB
+from him.
+
+Cc: Ram Pai <linuxram@linux.ibm.com>
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+---
+ arch/powerpc/mm/fault.c | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index ab99ffa7d946..2515430ae515 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -319,14 +319,6 @@ static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
+ static bool access_pkey_error(bool is_write, bool is_exec, bool is_pkey,
+ 			      struct vm_area_struct *vma)
+ {
+-	/*
+-	 * Read or write was blocked by protection keys.  This is
+-	 * always an unconditional error and can never result in
+-	 * a follow-up action to resolve the fault, like a COW.
+-	 */
+-	if (is_pkey)
+-		return true;
+-
+ 	/*
+ 	 * Make sure to check the VMA so that we do not perform
+ 	 * faults just to hit a pkey fault as soon as we fill in a
+-- 
+2.24.1
+
