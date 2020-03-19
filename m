@@ -4,32 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2B7C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BDFC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D44820658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB0520658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ESdCTYZb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="rVAHQaU8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbgCSXEN (ORCPT
+        id S1727680AbgCSXF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:04:13 -0400
-Received: from gateway20.websitewelcome.com ([192.185.67.41]:42757 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726867AbgCSXEN (ORCPT
+        Thu, 19 Mar 2020 19:05:29 -0400
+Received: from gateway23.websitewelcome.com ([192.185.50.129]:14920 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727258AbgCSXF2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:04:13 -0400
-X-Greylist: delayed 1239 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Mar 2020 19:04:12 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 7E184400CD892
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:28:04 -0500 (CDT)
+        Thu, 19 Mar 2020 19:05:28 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id C297457B3
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:05:27 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id F3szjGuR7Sl8qF3szjpYBx; Thu, 19 Mar 2020 17:43:33 -0500
+        id F4EBj0sLd1s2xF4EBjjFFS; Thu, 19 Mar 2020 18:05:27 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -37,30 +36,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AqMKlBtj27bhMrXNl4aQ/MWbKit8Mi+6SXoNTh+6hQk=; b=ESdCTYZbc+FAdhkMv5khiQQera
-        21mCzk1qPKl8qVKMRV4E1lsipWGqAfOAvV5yvoqtcrKbPe2y8+X5kxpZSVdO5f0aZsqwF7fHaV9/m
-        FqIXuTQiqh9Ov7rK2DA2wHWHdq1q8ZkGGlZrA4/DhDd1FFQV2MVDaX1bFyUbznxa4yZZoB13xjJ4/
-        OagCnoiWffyruJiPpIdDS2tRh1aTpjA6KAPNNs0Cndh891Kkg/D23E5SFk2bvNT6k31NxXm5/ZxI5
-        di2q33GWJCK7kjbxsZV9IPjPSpYpHay6QP/znAOCK/tppSmhHqB4cImyRpcFmTGybONkz3PwICMNo
-        Tjj6GVcQ==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53958 helo=embeddedor)
+        bh=PkyvVLMHBHqMPWT31a0jBtqErXjcZ8hF5wABACYJtDM=; b=rVAHQaU8O0rqha3dDwUExIF5P+
+        YHNt1ee8au7BJy8b/vQPARN3rqyTeHU/oJv9suW4Kd9VrqPgR/vb3ELT3qKguvPPQpQdyuFxlSfEs
+        AzZ1jjkhl4OEaQ+mGawBLkbrDpDtyrFPfVmnxCodEF26ZbMzlrc2UlXnEKpicFvprcu3ifTvQhX3H
+        osGVUxH5poFvNBUx9b3kVmG60ibKmiEfddJK7gF8VJ3UIX9ruHaPAnoQ/uVKW/EkZkh/yAu0m4cgw
+        UntGMEAGmWruA2qlv5IC0Kf/gyFJoxQqGf4hLW/hZcexxdPKysKbLQqhtVEJNEHcZ8ZmVjtEY2B4t
+        eH88wXRA==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:54028 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jF3sw-002DJd-HZ; Thu, 19 Mar 2020 17:43:31 -0500
-Date:   Thu, 19 Mar 2020 17:43:26 -0500
+        id 1jF4EA-002OZf-7O; Thu, 19 Mar 2020 18:05:26 -0500
+Date:   Thu, 19 Mar 2020 18:05:25 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Cc:     linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] mtd: spi-nor: controllers: aspeed-smc: Replace
- zero-length array with flexible-array member
-Message-ID: <20200319224326.GA25390@embeddedor.com>
+Subject: [PATCH][next] net: wireless: rayctl.h: Replace zero-length array
+ with flexible-array member
+Message-ID: <20200319230525.GA14835@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -73,13 +68,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.218.116.241
 X-Source-L: No
-X-Exim-ID: 1jF3sw-002DJd-HZ
+X-Exim-ID: 1jF4EA-002OZf-7O
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53958
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:54028
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 39
+X-Email-Count: 5
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -117,22 +112,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/mtd/spi-nor/controllers/aspeed-smc.c | 2 +-
+ drivers/net/wireless/rayctl.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/spi-nor/controllers/aspeed-smc.c b/drivers/mtd/spi-nor/controllers/aspeed-smc.c
-index 395127349aa8..e26a1897db0e 100644
---- a/drivers/mtd/spi-nor/controllers/aspeed-smc.c
-+++ b/drivers/mtd/spi-nor/controllers/aspeed-smc.c
-@@ -109,7 +109,7 @@ struct aspeed_smc_controller {
- 	void __iomem *ahb_base;			/* per-chip windows resource */
- 	u32 ahb_window_size;			/* full mapping window size */
- 
--	struct aspeed_smc_chip *chips[0];	/* pointers to attached chips */
-+	struct aspeed_smc_chip *chips[];	/* pointers to attached chips */
+diff --git a/drivers/net/wireless/rayctl.h b/drivers/net/wireless/rayctl.h
+index 668444f6bf07..e89e58a5850d 100644
+--- a/drivers/net/wireless/rayctl.h
++++ b/drivers/net/wireless/rayctl.h
+@@ -570,7 +570,7 @@ struct phy_header {
+ };
+ struct ray_rx_msg {
+     struct mac_header mac;
+-    UCHAR  var[0];
++	UCHAR	var[];
  };
  
- /*
+ struct tx_msg {
 -- 
 2.23.0
 
