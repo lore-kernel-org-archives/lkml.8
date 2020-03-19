@@ -2,204 +2,231 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C04BC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BEFC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 483C62076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:03:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X5UIMxMt"
+	by mail.kernel.org (Postfix) with ESMTP id 36DD92076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:08:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgCSWDS (ORCPT
+        id S1727399AbgCSWIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 18:03:18 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:59626 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726975AbgCSWDR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 18:03:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584655396;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/mdxk2khEaDoWIwtVFmt93rKTZk2xKfiNva34Q7ynLE=;
-        b=X5UIMxMtQPRa+jb20jtL+71wesqkkLISuomHPSOjRnbNceamlxKzBPaCIntGYSdmhkEYrV
-        ep6S+PnUbUNF0TpEDUFZuW2kuxakQaTV+pQeCTv/iV8aK+bnmyF5clEb0XTcf/Ny80cBTS
-        6eEjZx30yCzD384wlWcyOiR4TcBIG6k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-234-arOU1dVhPROw7mgYVI1lzA-1; Thu, 19 Mar 2020 18:03:14 -0400
-X-MC-Unique: arOU1dVhPROw7mgYVI1lzA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 988B5107ACC9;
-        Thu, 19 Mar 2020 22:03:12 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.36.110.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A1BF5BBBEB;
-        Thu, 19 Mar 2020 22:02:53 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 18:02:49 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
-        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-Message-ID: <20200319220249.jyr6xmwvflya5mks@madcap2.tricolour.ca>
-References: <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
- <CAHC9VhS09b_fM19tn7pHZzxfyxcHnK+PJx80Z9Z1hn8-==4oLA@mail.gmail.com>
- <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca>
- <CAHC9VhQoVOzy_b9W6h+kmizKr1rPkC4cy5aYoKT2i0ZgsceNDg@mail.gmail.com>
- <20200313185900.y44yvrfm4zxa5lfk@madcap2.tricolour.ca>
- <CAHC9VhR2zCCE5bjH75rSwfLC7TJGFj4RBnrtcOoUiqVp9q5TaA@mail.gmail.com>
- <20200318212630.mw2geg4ykhnbtr3k@madcap2.tricolour.ca>
- <CAHC9VhRYvGAru3aOMwWKCCWDktS+2pGr+=vV4SjHW_0yewD98A@mail.gmail.com>
- <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca>
- <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
+        Thu, 19 Mar 2020 18:08:07 -0400
+Received: from mga18.intel.com ([134.134.136.126]:62688 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbgCSWIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 18:08:06 -0400
+IronPort-SDR: n70nsZVUn99SuX6ZLTuKnMvtZd4F+X04gu+FbwCBFA2ebeoE80AXcwB8EwarJYV7oS7AdtMcRK
+ Fg7T/MzRszsg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 15:08:06 -0700
+IronPort-SDR: /K4UFAeyFQq8RdMRyqYH63nBs9EihkCCvfJNxqtQQ7B5c569im80Ly+GeNgj79uLYq34MYsWtr
+ 7BJKYJz7d12g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,573,1574150400"; 
+   d="scan'208";a="418507365"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2020 15:08:04 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jF3Kd-0005oQ-RJ; Fri, 20 Mar 2020 06:08:03 +0800
+Date:   Fri, 20 Mar 2020 06:07:25 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:perf/urgent] BUILD SUCCESS
+ db5d85ce82487331b06ec0e076b85b5a3968bf53
+Message-ID: <5e73ed1d.kVFmO2ZjeGdWnDc2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-18 18:06, Paul Moore wrote:
-> On Wed, Mar 18, 2020 at 5:56 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > On 2020-03-18 17:42, Paul Moore wrote:
-> > > On Wed, Mar 18, 2020 at 5:27 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > On 2020-03-18 16:56, Paul Moore wrote:
-> > > > > On Fri, Mar 13, 2020 at 2:59 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > > On 2020-03-13 12:29, Paul Moore wrote:
-> > > > > > > On Thu, Mar 12, 2020 at 3:30 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > > > > > > On 2020-02-13 16:44, Paul Moore wrote:
-> > > > > > > > > This is a bit of a thread-hijack, and for that I apologize, but
-> > > > > > > > > another thought crossed my mind while thinking about this issue
-> > > > > > > > > further ... Once we support multiple auditd instances, including the
-> > > > > > > > > necessary record routing and duplication/multiple-sends (the host
-> > > > > > > > > always sees *everything*), we will likely need to find a way to "trim"
-> > > > > > > > > the audit container ID (ACID) lists we send in the records.  The
-> > > > > > > > > auditd instance running on the host/initns will always see everything,
-> > > > > > > > > so it will want the full container ACID list; however an auditd
-> > > > > > > > > instance running inside a container really should only see the ACIDs
-> > > > > > > > > of any child containers.
-> > > > > > > >
-> > > > > > > > Agreed.  This should be easy to check and limit, preventing an auditd
-> > > > > > > > from seeing any contid that is a parent of its own contid.
-> > > > > > > >
-> > > > > > > > > For example, imagine a system where the host has containers 1 and 2,
-> > > > > > > > > each running an auditd instance.  Inside container 1 there are
-> > > > > > > > > containers A and B.  Inside container 2 there are containers Y and Z.
-> > > > > > > > > If an audit event is generated in container Z, I would expect the
-> > > > > > > > > host's auditd to see a ACID list of "1,Z" but container 1's auditd
-> > > > > > > > > should only see an ACID list of "Z".  The auditd running in container
-> > > > > > > > > 2 should not see the record at all (that will be relatively
-> > > > > > > > > straightforward).  Does that make sense?  Do we have the record
-> > > > > > > > > formats properly designed to handle this without too much problem (I'm
-> > > > > > > > > not entirely sure we do)?
-> > > > > > > >
-> > > > > > > > I completely agree and I believe we have record formats that are able to
-> > > > > > > > handle this already.
-> > > > > > >
-> > > > > > > I'm not convinced we do.  What about the cases where we have a field
-> > > > > > > with a list of audit container IDs?  How do we handle that?
-> > > > > >
-> > > > > > I don't understand the problem.  (I think you crossed your 1/2 vs
-> > > > > > A/B/Y/Z in your example.) ...
-> > > > >
-> > > > > It looks like I did, sorry about that.
-> > > > >
-> > > > > > ... Clarifying the example above, if as you
-> > > > > > suggest an event happens in container Z, the hosts's auditd would report
-> > > > > >         Z,^2
-> > > > > > and the auditd in container 2 would report
-> > > > > >         Z,^2
-> > > > > > but if there were another auditd running in container Z it would report
-> > > > > >         Z
-> > > > > > while the auditd in container 1 or A/B would see nothing.
-> > > > >
-> > > > > Yes.  My concern is how do we handle this to minimize duplicating and
-> > > > > rewriting the records?  It isn't so much about the format, although
-> > > > > the format is a side effect.
-> > > >
-> > > > Are you talking about caching, or about divulging more information than
-> > > > necessary or even information leaks?  Or even noticing that records that
-> > > > need to be generated to two audit daemons share the same contid field
-> > > > values and should be generated at the same time or information shared
-> > > > between them?  I'd see any of these as optimizations that don't affect
-> > > > the api.
-> > >
-> > > Imagine a record is generated in a container which has more than one
-> > > auditd in it's ancestry that should receive this record, how do we
-> > > handle that without completely killing performance?  That's my
-> > > concern.  If you've already thought up a plan for this - excellent,
-> > > please share :)
-> >
-> > No, I haven't given that much thought other than the correctness and
-> > security issues of making sure that each audit daemon is sufficiently
-> > isolated to do its job but not jeopardize another audit domain.  Audit
-> > already kills performance, according to some...
-> >
-> > We currently won't have that problem since there can only be one so far.
-> > Fixing and optimizing this is part of the next phase of the challenge of
-> > adding a second audit daemon.
-> >
-> > Let's work on correctness and reasonable efficiency for this phase and
-> > not focus on a problem we don't yet have.  I wouldn't consider this
-> > incurring technical debt at this point.
-> 
-> I agree, one stage at a time, but the choice we make here is going to
-> have a significant impact on what we can do later.  We need to get
-> this as "right" as possible; this isn't something we should dismiss
-> with a hand-wave as a problem for the next stage.  We don't need an
-> implementation, but I would like to see a rough design of how we would
-> address this problem.
-> 
-> > I could see cacheing a contid string from one starting point, but it may
-> > be more work to search that cached string to truncate it or add to it
-> > when another audit daemon requests a copy of a similar string.  I
-> > suppose every full contid string could be generated the first time it is
-> > used and parts of it used (start/finish) as needed but that
-> > search/indexing may not be worth it.
-> 
-> I hope we can do better than string manipulations in the kernel.  I'd
-> much rather defer generating the ACID list (if possible), than
-> generating a list only to keep copying and editing it as the record is
-> sent.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/urgent
+branch HEAD: db5d85ce82487331b06ec0e076b85b5a3968bf53  Merge tag 'perf-urgent-for-mingo-5.6-20200309' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent
 
-At the moment we are stuck with a string-only format.  The contid list
-only exists in the kernel.  When do you suggest generating the contid
-list?  It sounds like you are hinting at userspace generating that list
-from multiple records over the span of audit logs since boot of the
-machine.
+elapsed time: 485m
 
-Even if we had a binary format, the current design would require
-generating that list at the time of record generation since it could be
-any contiguous subset of a full nested contid list.
+configs tested: 164
+configs skipped: 14
 
-> paul moore
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-- RGB
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+arc                              allyesconfig
+nds32                               defconfig
+s390                              allnoconfig
+c6x                              allyesconfig
+sparc64                           allnoconfig
+ia64                                defconfig
+powerpc                             defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+x86_64               randconfig-a001-20200319
+x86_64               randconfig-a002-20200319
+x86_64               randconfig-a003-20200319
+i386                 randconfig-a001-20200319
+i386                 randconfig-a002-20200319
+i386                 randconfig-a003-20200319
+alpha                randconfig-a001-20200319
+m68k                 randconfig-a001-20200319
+mips                 randconfig-a001-20200319
+nds32                randconfig-a001-20200319
+parisc               randconfig-a001-20200319
+riscv                randconfig-a001-20200319
+c6x                  randconfig-a001-20200319
+h8300                randconfig-a001-20200319
+microblaze           randconfig-a001-20200319
+nios2                randconfig-a001-20200319
+sparc64              randconfig-a001-20200319
+csky                 randconfig-a001-20200319
+openrisc             randconfig-a001-20200319
+s390                 randconfig-a001-20200319
+sh                   randconfig-a001-20200319
+xtensa               randconfig-a001-20200319
+x86_64               randconfig-b001-20200319
+x86_64               randconfig-b002-20200319
+x86_64               randconfig-b003-20200319
+i386                 randconfig-b001-20200319
+i386                 randconfig-b002-20200319
+i386                 randconfig-b003-20200319
+x86_64               randconfig-c001-20200319
+x86_64               randconfig-c002-20200319
+x86_64               randconfig-c003-20200319
+i386                 randconfig-c001-20200319
+i386                 randconfig-c002-20200319
+i386                 randconfig-c003-20200319
+x86_64               randconfig-d001-20200319
+x86_64               randconfig-d002-20200319
+x86_64               randconfig-d003-20200319
+i386                 randconfig-d001-20200319
+i386                 randconfig-d002-20200319
+i386                 randconfig-d003-20200319
+x86_64               randconfig-e001-20200319
+x86_64               randconfig-e002-20200319
+x86_64               randconfig-e003-20200319
+i386                 randconfig-e001-20200319
+i386                 randconfig-e002-20200319
+i386                 randconfig-e003-20200319
+x86_64               randconfig-f001-20200319
+x86_64               randconfig-f002-20200319
+x86_64               randconfig-f003-20200319
+i386                 randconfig-f001-20200319
+i386                 randconfig-f002-20200319
+i386                 randconfig-f003-20200319
+x86_64               randconfig-g001-20200319
+x86_64               randconfig-g002-20200319
+x86_64               randconfig-g003-20200319
+i386                 randconfig-g001-20200319
+i386                 randconfig-g002-20200319
+i386                 randconfig-g003-20200319
+x86_64               randconfig-h001-20200319
+x86_64               randconfig-h002-20200319
+x86_64               randconfig-h003-20200319
+i386                 randconfig-h001-20200319
+i386                 randconfig-h002-20200319
+i386                 randconfig-h003-20200319
+arc                  randconfig-a001-20200319
+ia64                 randconfig-a001-20200319
+arm                  randconfig-a001-20200319
+arm64                randconfig-a001-20200319
+powerpc              randconfig-a001-20200319
+sparc                randconfig-a001-20200319
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                             allyesconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
