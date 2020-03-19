@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29A4C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEF1C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D9920722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE4420722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbgCSJS2 (ORCPT
+        id S1727518AbgCSJSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:18:28 -0400
-Received: from 8bytes.org ([81.169.241.247]:51930 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:18:36 -0400
+Received: from 8bytes.org ([81.169.241.247]:52420 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgCSJOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727324AbgCSJOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 05:14:34 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id CBEAB63F; Thu, 19 Mar 2020 10:14:21 +0100 (CET)
+        id F1A6B4F1; Thu, 19 Mar 2020 10:14:20 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 30/70] x86/head/64: Reload GDT after switch to virtual addresses
-Date:   Thu, 19 Mar 2020 10:13:27 +0100
-Message-Id: <20200319091407.1481-31-joro@8bytes.org>
+Subject: [PATCH 26/70] x86/idt: Move IDT to data segment
+Date:   Thu, 19 Mar 2020 10:13:23 +0100
+Message-Id: <20200319091407.1481-27-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -48,30 +48,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Reload the GDT after switching to virtual addresses to make sure it will
-not go away when the lower mappings are removed.
+With SEV-ES, exception handling is needed very early, even before the
+kernel has cleared the bss segment. In order to prevent clearing the
+currently used IDT, move the IDT to the data segment.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/head_64.S | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kernel/idt.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 5219a70b3fb4..ebb7d512c9d3 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -163,6 +163,11 @@ SYM_CODE_START(secondary_startup_64)
- 1:
- 	UNWIND_HINT_EMPTY
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 87ef69a72c52..a8fc01ea602a 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -165,8 +165,12 @@ static const __initconst struct idt_data dbg_idts[] = {
+ };
+ #endif
  
-+	/* Setup boot GDT descriptor and load boot GDT */
-+	leaq	boot_gdt(%rip), %rax
-+	movq	%rax, boot_gdt_base(%rip)
-+	lgdt	boot_gdt_descr(%rip)
-+
- 	/* Check if nx is implemented */
- 	movl	$0x80000001, %eax
- 	cpuid
+-/* Must be page-aligned because the real IDT is used in a fixmap. */
+-gate_desc idt_table[IDT_ENTRIES] __page_aligned_bss;
++/*
++ * Must be page-aligned because the real IDT is used in a fixmap.
++ * Also needs to be in the .data segment, because the idt_table is
++ * needed before the kernel clears the .bss segment.
++ */
++gate_desc idt_table[IDT_ENTRIES] __page_aligned_data;
+ 
+ struct desc_ptr idt_descr __ro_after_init = {
+ 	.size		= (IDT_ENTRIES * 2 * sizeof(unsigned long)) - 1,
 -- 
 2.17.1
 
