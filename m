@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11BFC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97028C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C263D216FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64079208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623980;
-	bh=9nAbje9iOp4zeC5CKqiOjMhWdsB1A/TcFuuEYuwgMPI=;
+	s=default; t=1584623984;
+	bh=Ivt/kjl4lNrIHJf9pGA7RmIvQ4c/cPTiqqOzvl/Ea2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uXBKKF04HF6pcQfsqOtGhUeQhsXuchkt3EGp66RTzd7CzfUODP3JNDSei+OVNuhgB
-	 RheV8J1Ovd1D4BfCvmvcr1lO5XF+DuKdHBjC/r+KiPeWl4cfAeXtwu0TjDhEluxoLE
-	 Iprjm1U68Qpknjn24HYnoQ5TUd4BZTxIHGM9OiOw=
+	b=Kp8X92XwTSM+bRGxe8Nwvljr61G0hZ7rK2HqF6pyKOzI9Fqw60ME8x8IHgvfmqqx0
+	 9/AWvmXihpKlR2xeRqgsuqu/n8i0POWixv6ie4BNmwXx4NPbg0cnjX7JbncqO9uKsA
+	 7KXlKd/iYnydhihfH2XJhn7UPIe4ua3iEvtj7UGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbgCSNTj (ORCPT
+        id S1729921AbgCSNTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:19:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42976 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:19:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbgCSNTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:19:35 -0400
+        id S1729910AbgCSNTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:19:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9663F21775;
-        Thu, 19 Mar 2020 13:19:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF4CF208D6;
+        Thu, 19 Mar 2020 13:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623975;
-        bh=9nAbje9iOp4zeC5CKqiOjMhWdsB1A/TcFuuEYuwgMPI=;
+        s=default; t=1584623980;
+        bh=Ivt/kjl4lNrIHJf9pGA7RmIvQ4c/cPTiqqOzvl/Ea2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AaoQS8C90axGoa9g3NWggUsnQj4jHXkIv2vQpE2YgYoIM0pjynYMJv3oMvgWmAxVU
-         CXIEB03DSJ0+WRbN7qQKZ16+AiQSMqnB22VxcxrnTZPwpzjdOOUwK+ewE5v0yA6ajK
-         DdYRlfugL0O25jjf5JR4mWK0z0rwpud2bifqzMgI=
+        b=C6lJuBbn4wKYDCpCoOLdAIenIMQY2XSjZYmvw0bXMrwvGteOlF1ar5K6roYbUTgOb
+         bC8uMGev9ERGVtmynm2e+Dtsmk6bIx0nRp6Z0tqXVz793eGJc6JUOgE1BlmLrvhL5j
+         RrPgoDWDMPx+aAu/E7NVvNOay3hpr6kd/FL+Os7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 17/48] mac80211: rx: avoid RCU list traversal under mutex
-Date:   Thu, 19 Mar 2020 14:03:59 +0100
-Message-Id: <20200319123908.557931607@linuxfoundation.org>
+Subject: [PATCH 4.19 19/48] slip: not call free_netdev before rtnl_unlock in slip_open
+Date:   Thu, 19 Mar 2020 14:04:01 +0100
+Message-Id: <20200319123909.159890961@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
 References: <20200319123902.941451241@linuxfoundation.org>
@@ -61,37 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: yangerkun <yangerkun@huawei.com>
 
-[ Upstream commit 253216ffb2a002a682c6f68bd3adff5b98b71de8 ]
+[ Upstream commit f596c87005f7b1baeb7d62d9a9e25d68c3dfae10 ]
 
-local->sta_mtx is held in __ieee80211_check_fast_rx_iface().
-No need to use list_for_each_entry_rcu() as it also requires
-a cond argument to avoid false lockdep warnings when not used in
-RCU read-side section (with CONFIG_PROVE_RCU_LIST).
-Therefore use list_for_each_entry();
+As the description before netdev_run_todo, we cannot call free_netdev
+before rtnl_unlock, fix it by reorder the code.
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Link: https://lore.kernel.org/r/20200223143302.15390-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+Reviewed-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/rx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/slip/slip.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 02d0b22d01141..c7c456c86b0d3 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -4042,7 +4042,7 @@ void __ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
+diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
+index 93f303ec17e21..5d864f8129556 100644
+--- a/drivers/net/slip/slip.c
++++ b/drivers/net/slip/slip.c
+@@ -863,7 +863,10 @@ static int slip_open(struct tty_struct *tty)
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
+ 	sl_free_netdev(sl->dev);
++	/* do not call free_netdev before rtnl_unlock */
++	rtnl_unlock();
+ 	free_netdev(sl->dev);
++	return err;
  
- 	lockdep_assert_held(&local->sta_mtx);
- 
--	list_for_each_entry_rcu(sta, &local->sta_list, list) {
-+	list_for_each_entry(sta, &local->sta_list, list) {
- 		if (sdata != sta->sdata &&
- 		    (!sta->sdata->bss || sta->sdata->bss != sdata->bss))
- 			continue;
+ err_exit:
+ 	rtnl_unlock();
 -- 
 2.20.1
 
