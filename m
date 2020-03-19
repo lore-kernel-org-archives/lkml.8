@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31ABFC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23726C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D9F20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54CD206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623713;
-	bh=HoeQ4lDKHXj6lw1McrN/AYs92QY7yOxv7D8eaxGfLmc=;
+	s=default; t=1584623717;
+	bh=g4N6libNPpBEVVYAsslQki2XBh+u0Xx98ZwpV4Q+6Xc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JU+Xp9AuMMHaLeVCPBgpxjxCzxrvnv4xm3KwRRf+tZfTonKZBP6hMViA/ava5gWND
-	 bvGzuS7eBEgc/njUNKpVFdWNmCoj58ZkkYV13Fj9kb8c9apnG3hqc8t1RwdSdvOo1/
-	 8h1+a+3H1jat174l9WTF0Sjmap1Ii8Nsj6VthuqE=
+	b=z4zwUHT+WyP9ByZ61Bw9HB9RV7oAn+sL4D906AJMxcSUW32d7wS0/uUCnIJuBRWbx
+	 c2g1uhrqslGf75crJx5HHrFEoGOg6J0RjPHdM3a0FTphk9BAvn1VRoCaqGcVP8qUlN
+	 3IeeGjWpNgK5/fxsDvdAdLLQZUveBV4WScRrinXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgCSNPL (ORCPT
+        id S1729380AbgCSNPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34888 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:15:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729380AbgCSNPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:15:08 -0400
+        id S1728981AbgCSNPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:15:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 219C621556;
-        Thu, 19 Mar 2020 13:15:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9966720724;
+        Thu, 19 Mar 2020 13:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623708;
-        bh=HoeQ4lDKHXj6lw1McrN/AYs92QY7yOxv7D8eaxGfLmc=;
+        s=default; t=1584623711;
+        bh=g4N6libNPpBEVVYAsslQki2XBh+u0Xx98ZwpV4Q+6Xc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1q+KWQvQlDU/oGHJz0TnyPjcbpULkDr39WGlj5kStEntC+7Ii92kmxo3XhyPbg401
-         qhJnKvjycWW0ozna3p/RrATdg+EGQupZLlBsoVAEw+0umjbiciHaP21GyyGVt0WyLh
-         BqmUfCSPne2qBaKv0g9eIJxbatHUFDo8hsr8/P5M=
+        b=AynsI1TuN85pe08/m2ADecX/KrD9uHq5dznaaDJq1C7b6hWwv4awzkviu3FReuYCR
+         Ph+Hp5KD4AtulgHEuJA6RR36Sx+rEywbKTlSIGaEmzLMIDgfe0OmldnedIXuwcFv2b
+         3aPjBPAv1JosOArfwN4zAX+3iXcchWBISTsSdDJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 26/99] nfc: add missing attribute validation for SE API
-Date:   Thu, 19 Mar 2020 14:03:04 +0100
-Message-Id: <20200319123949.668326452@linuxfoundation.org>
+Subject: [PATCH 4.14 27/99] nfc: add missing attribute validation for vendor subcommand
+Date:   Thu, 19 Mar 2020 14:03:05 +0100
+Message-Id: <20200319123949.999040284@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -61,28 +61,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-[ Upstream commit 361d23e41ca6e504033f7e66a03b95788377caae ]
+[ Upstream commit 6ba3da446551f2150fadbf8c7788edcb977683d3 ]
 
-Add missing attribute validation for NFC_ATTR_SE_INDEX
+Add missing attribute validation for vendor subcommand attributes
 to the netlink policy.
 
-Fixes: 5ce3f32b5264 ("NFC: netlink: SE API implementation")
+Fixes: 9e58095f9660 ("NFC: netlink: Implement vendor command support")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/nfc/netlink.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/nfc/netlink.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
 --- a/net/nfc/netlink.c
 +++ b/net/nfc/netlink.c
-@@ -55,6 +55,7 @@ static const struct nla_policy nfc_genl_
- 	[NFC_ATTR_LLC_SDP] = { .type = NLA_NESTED },
- 	[NFC_ATTR_FIRMWARE_NAME] = { .type = NLA_STRING,
+@@ -57,6 +57,8 @@ static const struct nla_policy nfc_genl_
  				     .len = NFC_FIRMWARE_NAME_MAXSIZE },
-+	[NFC_ATTR_SE_INDEX] = { .type = NLA_U32 },
+ 	[NFC_ATTR_SE_INDEX] = { .type = NLA_U32 },
  	[NFC_ATTR_SE_APDU] = { .type = NLA_BINARY },
++	[NFC_ATTR_VENDOR_ID] = { .type = NLA_U32 },
++	[NFC_ATTR_VENDOR_SUBCMD] = { .type = NLA_U32 },
  	[NFC_ATTR_VENDOR_DATA] = { .type = NLA_BINARY },
  
+ };
 
 
