@@ -2,174 +2,172 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0855EC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B419C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CADC420768
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:44:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I5fGQ+bE"
+	by mail.kernel.org (Postfix) with ESMTP id 5D8E320768
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:50:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgCSCor (ORCPT
+        id S1726783AbgCSCud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 22:44:47 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40704 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgCSCor (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 22:44:47 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02J2duCG113507;
-        Thu, 19 Mar 2020 02:43:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=tlqfao3WTOxafP9NKrqfKjCr04ddDS0BAqDBioqzffk=;
- b=I5fGQ+bEY2D3HVUudZ4/cDB4EEwcd2o9NKNR1UF4QIwVKWdBAZgPj+wnjERJSsRy81be
- tTTOj7iGi5qRqBMNMQxiS4tudZ+1HaR0tZpM5YE8oqJScneRTxGCzlZ2xA7kPdLxKIWq
- XbBG+LwRIsF/R7LNoYId30itp4AUw52DKO0s4jXM2xmmwkVe856Akxflb6cdtyBv+RAA
- 085koBJCgMMiAI27kGTCaf7D5TiF+RLsCuqb2ZAlXG0TV60GMmTGgYSNMxU3o3dPh/Hs
- sWSoMqSgz4xk3/1mVzxxdyfnaE6HRMYoWp3PBoEy9SxxuaCjnTY/ahE3XevjnACVfiMj Qw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2yub275qgu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Mar 2020 02:43:13 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02J2hAZH071118;
-        Thu, 19 Mar 2020 02:43:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2ys8tv4qbk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Mar 2020 02:43:12 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02J2gwkB031582;
-        Thu, 19 Mar 2020 02:42:59 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Mar 2020 19:42:58 -0700
-Subject: Re: [PATCH 4/4] hugetlbfs: clean up command line processing
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Longpeng <longpeng2@huawei.com>, Will Deacon <will@kernel.org>,
-        "David S.Miller" <davem@davemloft.net>
-References: <20200318220634.32100-1-mike.kravetz@oracle.com>
- <20200318220634.32100-5-mike.kravetz@oracle.com>
- <1820045d-0bf2-9a86-226d-e9c4d5928749@infradead.org>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <7196b6b5-53df-9898-471a-ae481395e97c@oracle.com>
-Date:   Wed, 18 Mar 2020 19:42:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 22:50:33 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12095 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726623AbgCSCud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 22:50:33 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 16C7F1CEF2A32EFF00FD;
+        Thu, 19 Mar 2020 10:50:27 +0800 (CST)
+Received: from [127.0.0.1] (10.173.223.48) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 19 Mar 2020
+ 10:50:17 +0800
+Subject: Re: [PATCH] CIFS: Fix bug which the return value by asynchronous read
+ is error
+To:     ronnie sahlberg <ronniesahlberg@gmail.com>
+CC:     linux-cifs <linux-cifs@vger.kernel.org>,
+        Steve French <sfrench@samba.org>,
+        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>, <alex.chen@huawei.com>
+References: <ef49e240-fc8f-9eb4-af98-26bfd39104aa@huawei.com>
+ <CAN05THQYxPcsgiHTqMcsTgB6ZDYaBMamu-sOe428H7EwSRU2HQ@mail.gmail.com>
+From:   Yilu Lin <linyilu@huawei.com>
+Message-ID: <90d04a37-2d4b-dcac-4b48-c6bb4200db20@huawei.com>
+Date:   Thu, 19 Mar 2020 10:50:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1820045d-0bf2-9a86-226d-e9c4d5928749@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003190011
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003190010
+In-Reply-To: <CAN05THQYxPcsgiHTqMcsTgB6ZDYaBMamu-sOe428H7EwSRU2HQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.223.48]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/18/20 5:20 PM, Randy Dunlap wrote:
-> Hi Mike,
+Hi,
+The bug is trigerred by the following test program.
+First, run the command to create one file on the share directory。COMMAND：dd if=/dev/zero of=/home/temp/cifs/sys.zero bs=512 count=1000 oflag=direct
+And then run the c program by the command: ./pread /home/temp/cifs/sys.zero
+The program will return "pread -22 bytes".However, the expected result is "pread -1 bytes".
+
+C program code is showed below:
+
+    #include<stdio.h>
+    #include<stdlib.h>
+    #include<unistd.h>
+    #include <sys/types.h>
+    #include <sys/stat.h>
+    #define __USE_GNU 1
+    #include <fcntl.h>
+    int main(int argc, char *argv[])
+    {
+            int fd;
+            ssize_t len;
+            int ret;
+            int size = 512;
+            char *file=argv[1];
+
+            unsigned char *buf2;
+            ret = posix_memalign((void **)&buf2, 512, size);
+            if (ret) {
+                    printf("malloc err!\n");
+                    return 0;
+            }
+
+            fd = open(file, O_RDWR | O_DIRECT);
+            if(fd == -1) {
+                    printf("open error!\n");
+                    free(buf2);
+                    return 0;
+            }
+
+            len = pread(fd, buf2, 504, 511992);
+            printf("pread %d bytes\n", len);
+            free(buf2);
+            close(fd);
+            return 0;
+    }
+
+regards
+Yilu Lin
+
+在 2020/3/18 12:47, ronnie sahlberg 写道:
+> Hi Yilu,
 > 
-> On 3/18/20 3:06 PM, Mike Kravetz wrote:
->> With all hugetlb page processing done in a single file clean up code.
->> - Make code match desired semantics
->>   - Update documentation with semantics
->> - Make all warnings and errors messages start with 'HugeTLB:'.
->> - Consistently name command line parsing routines.
->> - Add comments to code
->>   - Describe some of the subtle interactions
->>   - Describe semantics of command line arguments
+> I think your reasoning makes sense.
+> Do you have a small reproducer for this? A small C program that triggers this?
+> 
+> I am asking because if you do we would like to add it to our buildbot
+> to make  sure we don't get regressions.
+> 
+> 
+> regards
+> ronnie sahlberg
+> 
+> On Wed, Mar 18, 2020 at 1:59 PM Yilu Lin <linyilu@huawei.com> wrote:
 >>
->> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+>> This patch is used to fix the bug in collect_uncached_read_data()
+>> that rc is automatically converted from a signed number to an
+>> unsigned number when the CIFS asynchronous read fails.
+>> It will cause ctx->rc is error.
+>>
+>> Example:
+>> Share a directory and create a file on the Windows OS.
+>> Mount the directory to the Linux OS using CIFS.
+>> On the CIFS client of the Linux OS, invoke the pread interface to
+>> deliver the read request.
+>>
+>> The size of the read length plus offset of the read request is greater
+>> than the maximum file size.
+>>
+>> In this case, the CIFS server on the Windows OS returns a failure
+>> message (for example, the return value of
+>> smb2.nt_status is STATUS_INVALID_PARAMETER).
+>>
+>> After receiving the response message, the CIFS client parses
+>> smb2.nt_status to STATUS_INVALID_PARAMETER
+>> and converts it to the Linux error code (rdata->result=-22).
+>>
+>> Then the CIFS client invokes the collect_uncached_read_data function to
+>> assign the value of rdata->result to rc, that is, rc=rdata->result=-22.
+>>
+>> The type of the ctx->total_len variable is unsigned integer,
+>> the type of the rc variable is integer, and the type of
+>> the ctx->rc variable is ssize_t.
+>>
+>> Therefore, during the ternary operation, the value of rc is
+>> automatically converted to an unsigned number. The final result is
+>> ctx->rc=4294967274. However, the expected result is ctx->rc=-22.
+>>
+>> Signed-off-by: Yilu Lin <linyilu@huawei.com>
 >> ---
->>  Documentation/admin-guide/mm/hugetlbpage.rst | 26 +++++++
->>  mm/hugetlb.c                                 | 78 +++++++++++++++-----
->>  2 files changed, 87 insertions(+), 17 deletions(-)
+>>  fs/cifs/file.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+>> index 022029a5d..ff4ac244c 100644
+>> --- a/fs/cifs/file.c
+>> +++ b/fs/cifs/file.c
+>> @@ -3323,7 +3323,7 @@ again:
+>>         if (rc == -ENODATA)
+>>                 rc = 0;
+>>
+>> -       ctx->rc = (rc == 0) ? ctx->total_len : rc;
+>> +       ctx->rc = (rc == 0) ? (ssize_t)ctx->total_len : rc;
+>>
+>>         mutex_unlock(&ctx->aio_mutex);
+>>
+>> --
+>> 2.19.1
+>>
+>>
 > 
-> 
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index cc85b4f156ca..2b9bf01db2b6 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
-> 
->> @@ -3214,8 +3238,15 @@ static int __init hugetlb_nrpages_setup(char *s)
->>  
->>  	return 1;
->>  }
->> -__setup("hugepages=", hugetlb_nrpages_setup);
->> +__setup("hugepages=", hugepages_setup);
->>  
->> +/*
->> + * hugepagesz command line processing
->> + * A specific huge page size can only be specified once with hugepagesz.
->> + * hugepagesz is followed by hugepages on the commnad line.  The global
-> 
-> typo:                                            command
-
-Thanks
-
-> 
->> + * variable 'parsed_valid_hugepagesz' is used to determine if prior
->> + * hugepagesz argument was valid.
->> + */
->>  static int __init hugepagesz_setup(char *s)
->>  {
->>  	unsigned long long size;
-> 
-> 
-> Does any of this need to be updated?  (from Documentation/admin-guide/kernel-parameters.txt)
-> 
-> 	hugepagesz=	[HW,IA-64,PPC,X86-64] The size of the HugeTLB pages.
-> 			On x86-64 and powerpc, this option can be specified
-> 			multiple times interleaved with hugepages= to reserve
-> 			huge pages of different sizes. Valid pages sizes on
-> 			x86-64 are 2M (when the CPU supports "pse") and 1G
-> 			(when the CPU supports the "pdpe1gb" cpuinfo flag).
+> .
 > 
 
-No functional changes should be expected/seen as a result of these patches.
-So the documentation here is basically OK.  However, it is out of date as
-more architectures are supported.  In addition, the statement "this option
-can be specified multiple times interleaved with hugepages= to reserve
-huge pages of different sizes." may need a little clarification.  As mentioned
-elsewhere,  hugepagesz= can only be specified once per huge page size.
-
-I'll make some updates in v2.
--- 
-Mike Kravetz
