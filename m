@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056EBC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8CDC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D228821556
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BCC208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623412;
-	bh=KCjhFg6t71SENc/TOglfUchirlI2hWjadK+FAxg2NuA=;
+	s=default; t=1584623416;
+	bh=Bd4LuLkIGy2XNy8gstEztAsL+G5OowlZfoXSxGZLlwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lSPrlL9pCYgvll0BhMQPoqzRPt27q30cPR5pSRZ5MHZ+MpHIeDA1P/gtnD9A3i/Hy
-	 3KNbFLImbKzHMIgrBep+wDkxv9Y2NJccwHA620wLswAVDsFZt3oJkC8KTBrYVefeCA
-	 Y25xTrXX/WcXMfJRo1y1kmgnFXe/RZt82ZalHa78=
+	b=JkWlByAJLTZlcKKVfoNicReT31G9VzZMt2wy8qAv5V5+CWdZKu37xAPPDGQxUnlPS
+	 wXBdVdmwud7CzfgegAb7AK6nxQLr7gV76jmLez7cr9+EGiEGY50iy/v6yqno+obQdF
+	 /NE01wYZl6ckaAwRCmnfr5F+82RvrpqbiRnvbym4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgCSNKL (ORCPT
+        id S1728462AbgCSNKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:10:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54816 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:10:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728472AbgCSNKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:10:09 -0400
+        id S1728448AbgCSNKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:10:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6D91208D6;
-        Thu, 19 Mar 2020 13:10:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4EC820789;
+        Thu, 19 Mar 2020 13:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623408;
-        bh=KCjhFg6t71SENc/TOglfUchirlI2hWjadK+FAxg2NuA=;
+        s=default; t=1584623403;
+        bh=Bd4LuLkIGy2XNy8gstEztAsL+G5OowlZfoXSxGZLlwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCFJF76YnbD/5Rk5YDC4YvO18X7Aw2b4RFquXDivvMM52Trvhn7cRgwQbPmnzBC3f
-         DSBd/Es2CnZu2EdG4xOu/0b1aBk+/5nEw2dlC627VDPAp6P4NLSQeMk5E3roH6uJ6s
-         7LJeWDUh/rE34ODk8m2U6+YaZY1syCawenWeGUAk=
+        b=sUcrRS2/kIzXBFZugHFZXgg65WLUwvuMzaZa/eh+ob0a/hyaaKH6kzpd5VcHV6cE+
+         B7iAOo4XzUSqKIPjwHvm8H1ub7NKATDiaY1fk3gqcIk9zwOmjKPalgnh4+dui9v1d4
+         4d9x5FEZ7k05GhJl9pzYIhXTmAcxV3KT+g2PA9Ms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Yakunin <zeil@yandex-team.ru>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 04/90] cgroup, netclassid: periodically release file_lock on classid updating
-Date:   Thu, 19 Mar 2020 13:59:26 +0100
-Message-Id: <20200319123929.922845068@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 02/90] phy: Revert toggling reset changes.
+Date:   Thu, 19 Mar 2020 13:59:24 +0100
+Message-Id: <20200319123929.291632867@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -60,121 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Yakunin <zeil@yandex-team.ru>
+From: David S. Miller <davem@davemloft.net>
 
-[ Upstream commit 018d26fcd12a75fb9b5fe233762aa3f2f0854b88 ]
+commit 7b566f70e1bf65b189b66eb3de6f431c30f7dff2 upstream.
 
-In our production environment we have faced with problem that updating
-classid in cgroup with heavy tasks cause long freeze of the file tables
-in this tasks. By heavy tasks we understand tasks with many threads and
-opened sockets (e.g. balancers). This freeze leads to an increase number
-of client timeouts.
+This reverts:
 
-This patch implements following logic to fix this issue:
-аfter iterating 1000 file descriptors file table lock will be released
-thus providing a time gap for socket creation/deletion.
+ef1b5bf506b1 ("net: phy: Fix not to call phy_resume() if PHY is not attached")
+8c85f4b81296 ("net: phy: micrel: add toggling phy reset if PHY is not  attached")
 
-Now update is non atomic and socket may be skipped using calls:
+Andrew Lunn informs me that there are alternative efforts
+underway to fix this more properly.
 
-dup2(oldfd, newfd);
-close(oldfd);
-
-But this case is not typical. Moreover before this patch skip is possible
-too by hiding socket fd in unix socket buffer.
-
-New sockets will be allocated with updated classid because cgroup state
-is updated before start of the file descriptors iteration.
-
-So in common cases this patch has no side effects.
-
-Signed-off-by: Dmitry Yakunin <zeil@yandex-team.ru>
-Reviewed-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+[just take the ef1b5bf506b1 revert - gregkh]
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/netclassid_cgroup.c |   47 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 10 deletions(-)
 
---- a/net/core/netclassid_cgroup.c
-+++ b/net/core/netclassid_cgroup.c
-@@ -55,30 +55,60 @@ static void cgrp_css_free(struct cgroup_
- 	kfree(css_cls_state(css));
- }
+---
+ drivers/net/phy/phy_device.c |   11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -80,7 +80,7 @@ static LIST_HEAD(phy_fixup_list);
+ static DEFINE_MUTEX(phy_fixup_lock);
  
-+/*
-+ * To avoid freezing of sockets creation for tasks with big number of threads
-+ * and opened sockets lets release file_lock every 1000 iterated descriptors.
-+ * New sockets will already have been created with new classid.
-+ */
-+
-+struct update_classid_context {
-+	u32 classid;
-+	unsigned int batch;
-+};
-+
-+#define UPDATE_CLASSID_BATCH 1000
-+
- static int update_classid_sock(const void *v, struct file *file, unsigned n)
+ #ifdef CONFIG_PM
+-static bool mdio_bus_phy_may_suspend(struct phy_device *phydev, bool suspend)
++static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
  {
- 	int err;
-+	struct update_classid_context *ctx = (void *)v;
- 	struct socket *sock = sock_from_file(file, &err);
+ 	struct device_driver *drv = phydev->mdio.dev.driver;
+ 	struct phy_driver *phydrv = to_phy_driver(drv);
+@@ -92,11 +92,10 @@ static bool mdio_bus_phy_may_suspend(str
+ 	/* PHY not attached? May suspend if the PHY has not already been
+ 	 * suspended as part of a prior call to phy_disconnect() ->
+ 	 * phy_detach() -> phy_suspend() because the parent netdev might be the
+-	 * MDIO bus driver and clock gated at this point. Also may resume if
+-	 * PHY is not attached.
++	 * MDIO bus driver and clock gated at this point.
+ 	 */
+ 	if (!netdev)
+-		return suspend ? !phydev->suspended : phydev->suspended;
++		return !phydev->suspended;
  
- 	if (sock) {
- 		spin_lock(&cgroup_sk_update_lock);
--		sock_cgroup_set_classid(&sock->sk->sk_cgrp_data,
--					(unsigned long)v);
-+		sock_cgroup_set_classid(&sock->sk->sk_cgrp_data, ctx->classid);
- 		spin_unlock(&cgroup_sk_update_lock);
- 	}
-+	if (--ctx->batch == 0) {
-+		ctx->batch = UPDATE_CLASSID_BATCH;
-+		return n + 1;
-+	}
- 	return 0;
- }
+ 	/* Don't suspend PHY if the attached netdev parent may wakeup.
+ 	 * The parent may point to a PCI device, as in tg3 driver.
+@@ -126,7 +125,7 @@ static int mdio_bus_phy_suspend(struct d
+ 	if (phydev->attached_dev && phydev->adjust_link)
+ 		phy_stop_machine(phydev);
  
-+static void update_classid_task(struct task_struct *p, u32 classid)
-+{
-+	struct update_classid_context ctx = {
-+		.classid = classid,
-+		.batch = UPDATE_CLASSID_BATCH
-+	};
-+	unsigned int fd = 0;
-+
-+	do {
-+		task_lock(p);
-+		fd = iterate_fd(p->files, fd, update_classid_sock, &ctx);
-+		task_unlock(p);
-+		cond_resched();
-+	} while (fd);
-+}
-+
- static void cgrp_attach(struct cgroup_taskset *tset)
- {
- 	struct cgroup_subsys_state *css;
- 	struct task_struct *p;
+-	if (!mdio_bus_phy_may_suspend(phydev, true))
++	if (!mdio_bus_phy_may_suspend(phydev))
+ 		return 0;
  
- 	cgroup_taskset_for_each(p, css, tset) {
--		task_lock(p);
--		iterate_fd(p->files, 0, update_classid_sock,
--			   (void *)(unsigned long)css_cls_state(css)->classid);
--		task_unlock(p);
-+		update_classid_task(p, css_cls_state(css)->classid);
- 	}
- }
+ 	return phy_suspend(phydev);
+@@ -137,7 +136,7 @@ static int mdio_bus_phy_resume(struct de
+ 	struct phy_device *phydev = to_phy_device(dev);
+ 	int ret;
  
-@@ -100,10 +130,7 @@ static int write_classid(struct cgroup_s
+-	if (!mdio_bus_phy_may_suspend(phydev, false))
++	if (!mdio_bus_phy_may_suspend(phydev))
+ 		goto no_resume;
  
- 	css_task_iter_start(css, &it);
- 	while ((p = css_task_iter_next(&it))) {
--		task_lock(p);
--		iterate_fd(p->files, 0, update_classid_sock,
--			   (void *)(unsigned long)cs->classid);
--		task_unlock(p);
-+		update_classid_task(p, cs->classid);
- 		cond_resched();
- 	}
- 	css_task_iter_end(&it);
+ 	ret = phy_resume(phydev);
 
 
