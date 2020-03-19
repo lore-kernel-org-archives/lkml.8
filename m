@@ -2,114 +2,127 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445FCC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40270C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9862076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:27:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hz6uZZpR"
+	by mail.kernel.org (Postfix) with ESMTP id 1812E2076F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:28:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584653286;
+	bh=wDHKIdt3Y3vhWUMG3wIbeCs2/G5gOP3qUw5RVSybfDM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OXFCHrQEtMjS2mwIjjr+VJ03AkuYsvHhg2oeLqGgOkb7jxAWoez9DxWN6qvUEoIjZ
+	 1EXkaD7BkWOkHP91a4f7sdHcvpUOi+4ZFiYu0I+Dhwd116/t4mzasgVJrAMXUTLCP0
+	 61tM+FgkPiVPHqLeMpW231K7gDtLbeop3X3hzIM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbgCSV1H (ORCPT
+        id S1727138AbgCSV2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 17:27:07 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44300 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgCSV1G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:27:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id h11so1593831plr.11
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 14:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=THkvoVhG3wRH5Rf7Wp+NLGPc1Ncq257BuilCW5dt4i4=;
-        b=hz6uZZpRfTVGX8DfGFDVdm31XWrm9xr3K8m5qSo5BlZxmetMgvaWuGSp9CgEX9GWvE
-         GRaQRyNmtGGoteYs0Ydo0fxGlNqlpu1EOQ/Zdj1FQ8xLSykfA1nVbezHr62VG9RF1Gj2
-         e3w7vVqidC8S/r9gvZiJMNy9lDyog9OPDXJmUElHhx6Dtifn0N2OXGvwuq2xPbdJ2vXU
-         4EMtGQhkodb2L0SiCD8K9Ij+7dlfa9gFqbBmmSdEjNkiTTqNkC64qqx1+VwzObhfrLp3
-         HBlTRGznVF8zrGDsCZeaZVWNv46FTT+kLKXmUSQsxXozlUs/RNwjP2s2HZmOfdnMPjbj
-         wRIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=THkvoVhG3wRH5Rf7Wp+NLGPc1Ncq257BuilCW5dt4i4=;
-        b=WIxiBAGjwwi1y5UR08VAnoiVfmvn6RhN0ylsyt6w8o3jBe5a6a5df8FOZP47GQYQ8A
-         BhMlpL0siVDf1zxtW6dgYql3QYrylg8uChC+Wu1pe4fX1Q+pWm1pQLK/3aMknrWLe0To
-         6zY/Xdj6Nk8OGXAqOcEK/hhQWq9Pkf2XPYXczzX2baCT7X4LXsOtONpw/wDQyFnm3TJ9
-         mjQU/27I+EtekoGbZ2WcHd1Iu5cAcervRctwygHM/vNEtvRuie4+hmur2cFhCeuUkLJg
-         Ena9Z0oSapcjqOoZEgPzczQkaqNIOAkli+rbc6pc2DcVViTb77DhVP/FzQ9C6kUVnT29
-         cCMg==
-X-Gm-Message-State: ANhLgQ3JHgx9tVk5WAPs5Pnq6m9GU6+0cO+84uCR8wWRjFMKMQDuyc/w
-        YEPJzIGG7whlme0kIol7wSYKjingiAQrhA==
-X-Google-Smtp-Source: ADFU+vuapxu3N3BXVbZTrztGZTquP5PU+VMr3dwFAObPJklDp8y3LH9oth1K+gS3kFd/DMsdkGef3Q==
-X-Received: by 2002:a17:902:444:: with SMTP id 62mr5264448ple.301.1584653223773;
-        Thu, 19 Mar 2020 14:27:03 -0700 (PDT)
-Received: from ?IPv6:2600:380:7458:e065:880c:d56e:ca2:e7c4? ([2600:380:7458:e065:880c:d56e:ca2:e7c4])
-        by smtp.gmail.com with ESMTPSA id j9sm2819739pjz.7.2020.03.19.14.27.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 14:27:02 -0700 (PDT)
-Subject: Re: [PATCH] rsxx: Replace zero-length array with flexible-array
- member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joshua Morris <josh.h.morris@us.ibm.com>,
-        Philip Kelleher <pjk1939@linux.ibm.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200212194602.GA31712@embeddedor>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <555096e4-4ce7-3769-f998-6e429d20cadf@kernel.dk>
-Date:   Thu, 19 Mar 2020 15:27:00 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 19 Mar 2020 17:28:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbgCSV2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 17:28:04 -0400
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4774A20772
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 21:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584653283;
+        bh=wDHKIdt3Y3vhWUMG3wIbeCs2/G5gOP3qUw5RVSybfDM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=C1zjTJmhscb/kf6Gr/fLaWAmP4m/XMANCnSraK8P22tZ6JgeDtk3jsSDi3+5i3oM3
+         3WJXtWqGhmvVH1YYl8ntlKGNCat6JnlIwaR+8D+lFJ2u+MNgBOIBFv3BGQfc+CFBNG
+         E/Trc2xBeKw4sqF1qJ75dnXSuaEg/zoAPhUQVf+g=
+Received: by mail-wm1-f54.google.com with SMTP id g62so4154103wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 14:28:03 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0YZPG56Nzx3Pbv2olobcO0GNlam7vUtOolx0ck0sSfD93CiG6A
+        XUVvFoDAU9y7B9VDO1PcsiQqlftYv3Sdqis+hpgWnw==
+X-Google-Smtp-Source: ADFU+vsvB9VoJIoDZzFOfVxuD7/rCPKU+f9sriFcY/X3u9oBR64jUTo/lMsKf9lnZUULp+cTivEl1BA/XJfEY/2Kd9c=
+X-Received: by 2002:a1c:b0c3:: with SMTP id z186mr5806142wme.36.1584653281734;
+ Thu, 19 Mar 2020 14:28:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200212194602.GA31712@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200319091407.1481-1-joro@8bytes.org> <20200319091407.1481-71-joro@8bytes.org>
+ <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
+ <20200319160749.GC5122@8bytes.org> <CALCETrXY5M87C1Fc3QvTkc6MdbQ_3gAuOPUeWJktAzK4T60QNQ@mail.gmail.com>
+ <20200319192654.GD611@suse.de>
+In-Reply-To: <20200319192654.GD611@suse.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 19 Mar 2020 14:27:49 -0700
+X-Gmail-Original-Message-ID: <CALCETrXzyUGjPYBR_NDSvTG8TqLuQP2Q+v_mwXPne4O0U-18NA@mail.gmail.com>
+Message-ID: <CALCETrXzyUGjPYBR_NDSvTG8TqLuQP2Q+v_mwXPne4O0U-18NA@mail.gmail.com>
+Subject: Re: [PATCH 70/70] x86/sev-es: Add NMI state tracking
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/12/20 12:46 PM, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertenly introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+On Thu, Mar 19, 2020 at 12:26 PM Joerg Roedel <jroedel@suse.de> wrote:
+>
+> On Thu, Mar 19, 2020 at 11:40:39AM -0700, Andy Lutomirski wrote:
+>
+> > Nope.  A nested NMI will reset the interrupted NMI's return frame to
+> > cause it to run again when it's done.  I don't think this will have
+> > any real interaction with #VC.  There's no longjmp() here.
+>
+> Ahh, so I misunderstood that part, in this case your proposal of sending
+> the NMI-complete message right at the beginning of do_nmi() should work
+> just fine. I will test this and see how it works out.
+>
+> > I certainly *like* preventing nesting, but I don't think we really
+> > want a whole alternate NMI path just for a couple of messed-up AMD
+> > generations.  And the TF trick is not so pretty either.
+>
+> Indeed, if it could be avoided, it should.
+>
+> >
+> > > > This causes us to pop the NMI frame off the stack.  Assuming the NMI
+> > > > restart logic is invoked (which is maybe impossible?), we get #DB,
+> > > > which presumably is actually delivered.  And we end up on the #DB
+> > > > stack, which might already have been in use, so we have a potential
+> > > > increase in nesting.  Also, #DB may be called from an unexpected
+> > > > context.
+> > >
+> > > An SEV-ES hypervisor is required to intercept #DB, which means that the
+> > > #DB exception actually ends up being a #VC exception. So it will not end
+> > > up on the #DB stack.
+> >
+> > With your patch set, #DB doesn't seem to end up on the #DB stack either.
+>
+> Right, it does not use the #DB stack or shift-ist stuff. Maybe it
+> should, is this needed for anything else than making entry code
+> debugable by kgdb?
 
-Applied for 5.7, thanks.
+AIUI the shift-ist stuff is because we aren't very good about the way
+that we handle tracing right now, and that can cause a limited degree
+of recursion.  #DB uses IST for historical reasons that don't
+necessarily make sense.  Right now, we need it for only one reason:
+the MOV SS issue.  IIRC this isn't actually triggerable without
+debugging enabled -- MOV SS with no breakpoint but TF on doesn't seem
+to malfunction quite as badly.
 
--- 
-Jens Axboe
+--Andy
 
+>
+> Regards,
+>
+>         Joerg
