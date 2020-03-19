@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83008C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4E4C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B4020724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8B720409
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgCSGf4 (ORCPT
+        id S1727265AbgCSGgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 02:35:56 -0400
-Received: from mga12.intel.com ([192.55.52.136]:25738 "EHLO mga12.intel.com"
+        Thu, 19 Mar 2020 02:36:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:40709 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgCSGfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 02:35:55 -0400
-IronPort-SDR: iUfOJtqCGhrX6WU2c0IoTQgWKl2CFcub+QriIdOzOplYNYJVX1oMWhFfllN1COMExF+Jza1HXF
- sE/gzZ/3CVkA==
+        id S1727083AbgCSGgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 02:36:00 -0400
+IronPort-SDR: vHcRuA/crpwybQlb6pd/p2d8rrqtGJQUtZchW05LofPHFwojgcYn6Y/bSpK7//JywnxrUPa4UR
+ 0CqNKm0l9C8g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 23:35:46 -0700
-IronPort-SDR: XcYWylahaQaFSFIOqNeh8si3MqUvyp0HdDYnjxb+ALKukoSYI1ma1h8nyJbO7YjrmBMzDPby0J
- yE/1NYK+RagA==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 23:35:59 -0700
+IronPort-SDR: aqfRlXMl7BfV0TrZSGL0h+Np3nnWYK+kZZlIfPgIHOgvY9tH/ly4gXv6YGKflKuAY0D0gFQSB9
+ j2JTxImSDSxQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,570,1574150400"; 
-   d="scan'208";a="248439124"
+   d="scan'208";a="248439193"
 Received: from snr.bj.intel.com ([10.240.193.90])
-  by orsmga006.jf.intel.com with ESMTP; 18 Mar 2020 23:35:40 -0700
+  by orsmga006.jf.intel.com with ESMTP; 18 Mar 2020 23:35:53 -0700
 From:   Luwei Kang <luwei.kang@intel.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
@@ -44,9 +44,9 @@ Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
         thomas.lendacky@amd.com, fenghua.yu@intel.com,
         kan.liang@linux.intel.com, Luwei Kang <luwei.kang@intel.com>
-Subject: [PATCH v2 2/5] KVM: x86/pmu: Expose PDCM feature when PEBS output to PT
-Date:   Thu, 19 Mar 2020 22:33:47 +0800
-Message-Id: <1584628430-23220-3-git-send-email-luwei.kang@intel.com>
+Subject: [PATCH v2 4/5] KVM: x86/pmu: Add counter reload register to MSR list
+Date:   Thu, 19 Mar 2020 22:33:49 +0800
+Message-Id: <1584628430-23220-5-git-send-email-luwei.kang@intel.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1584628430-23220-1-git-send-email-luwei.kang@intel.com>
 References: <1584628430-23220-1-git-send-email-luwei.kang@intel.com>
@@ -55,97 +55,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PDCM(Perfmon and Debug Capability) indicates the processor supports
-the performance and debug feature indication IA32_PERF_CAPABILITIES.
+The guest counter reload registers need to be loaded to real
+HW before VM-entry. This patch add the counter reload registers to
+MSR-load list when the corresponding counter is enabled, and remove
+them when the counter is disabled.
 
-Expose PDCM feature when PEBS virtualization via Intel PT is supported
-in KVM guest.
+Following the description in SDM, there are 3 fixed counters per
+core and 4 general-purpose counters per core in Tremont
+Microarchitecture. This patch extended the value of NR_LOADSTORE_MSRS
+from 8 to 16 because there are 7 counter reload registers need to be
+added into the MSR-load list when all the counters are enabled.
 
 Signed-off-by: Luwei Kang <luwei.kang@intel.com>
 ---
- arch/x86/include/asm/msr-index.h |  1 +
- arch/x86/kvm/pmu.h               |  1 +
- arch/x86/kvm/vmx/capabilities.h  |  9 +++++++--
- arch/x86/kvm/vmx/pmu_intel.c     | 13 +++++++++++++
- 4 files changed, 22 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/pmu_intel.c | 41 ++++++++++++++++++++++++++++++++++++++++-
+ arch/x86/kvm/vmx/vmx.h       |  2 +-
+ 2 files changed, 41 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index d3d6e48..750a2d5 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -155,6 +155,7 @@
- #define PERF_CAP_ARCH_REG		BIT_ULL(7)
- #define PERF_CAP_PEBS_FORMAT		0xf00
- #define PERF_CAP_PEBS_BASELINE		BIT_ULL(14)
-+#define PERF_CAP_PEBS_OUTPUT_PT		BIT_ULL(16)
- #define MSR_PEBS_LD_LAT_THRESHOLD	0x000003f6
- 
- #define MSR_IA32_RTIT_CTL		0x00000570
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index d640628..ba8c68d 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -33,6 +33,7 @@ struct kvm_pmu_ops {
- 	int (*is_valid_rdpmc_ecx)(struct kvm_vcpu *vcpu, unsigned int idx);
- 	bool (*is_valid_msr)(struct kvm_vcpu *vcpu, u32 msr);
- 	bool (*is_pebs_via_ds_supported)(void);
-+	bool (*is_pebs_via_pt_supported)(void);
- 	bool (*is_pebs_baseline_supported)(void);
- 	int (*get_msr)(struct kvm_vcpu *vcpu, u32 msr, u64 *data);
- 	int (*set_msr)(struct kvm_vcpu *vcpu, struct msr_data *msr_info);
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index 9e352b5..dc480c9 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -154,10 +154,15 @@ static inline bool vmx_pku_supported(void)
- 
- static inline bool vmx_pdcm_supported(void)
- {
-+	bool ret = 0;
-+
- 	if (kvm_x86_ops->pmu_ops->is_pebs_via_ds_supported)
--		return kvm_x86_ops->pmu_ops->is_pebs_via_ds_supported();
-+		ret |= kvm_x86_ops->pmu_ops->is_pebs_via_ds_supported();
- 
--	return false;
-+	if (kvm_x86_ops->pmu_ops->is_pebs_via_pt_supported)
-+		ret |= kvm_x86_ops->pmu_ops->is_pebs_via_pt_supported();
-+
-+	return ret;
- }
- 
- static inline bool vmx_dtes64_supported(void)
 diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 2db9b9e..f04e5eb 100644
+index a8b0a8d..75e1d2c 100644
 --- a/arch/x86/kvm/vmx/pmu_intel.c
 +++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -221,6 +221,18 @@ static bool intel_is_pebs_via_ds_supported(void)
- 	return true;
+@@ -68,12 +68,42 @@ static void global_ctrl_changed(struct kvm_pmu *pmu, u64 data)
+ 		reprogram_counter(pmu, bit);
  }
  
-+static bool intel_is_pebs_via_pt_supported(void)
++static void intel_pmu_set_reload_counter(struct kvm_vcpu *vcpu, u64 data,
++								bool add)
 +{
-+	u64 misc, perf_cap;
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
++	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
++	struct kvm_pmc *pmc;
++	unsigned long bit;
++	u64 set, host_reload_ctr;
++	u32 msr;
 +
-+	rdmsrl(MSR_IA32_MISC_ENABLE, misc);
-+	rdmsrl(MSR_IA32_PERF_CAPABILITIES, perf_cap);
++	set = data & ~pmu->global_ctrl_mask;
 +
-+	return (!(misc & MSR_IA32_MISC_ENABLE_PEBS_UNAVAIL) &&
-+		(perf_cap & PERF_CAP_PEBS_OUTPUT_PT) &&
-+		(pt_mode == PT_MODE_HOST_GUEST));
++	for_each_set_bit(bit, (unsigned long *)&set, X86_PMC_IDX_MAX) {
++		if (bit < INTEL_PMC_IDX_FIXED) {
++			msr = MSR_RELOAD_PMC0 + bit;
++			pmc = &pmu->gp_counters[bit];
++		} else {
++			msr = MSR_RELOAD_PMC0 + bit - INTEL_PMC_IDX_FIXED;
++			pmc = &pmu->gp_counters[bit - INTEL_PMC_IDX_FIXED];
++		}
++
++		rdmsrl_safe(msr, &host_reload_ctr);
++		if (add)
++			add_atomic_switch_msr(vmx, msr,
++				pmc->reload_cnt, host_reload_ctr, false);
++		else
++			clear_atomic_switch_msr(vmx, msr);
++	}
 +}
 +
- static bool intel_is_pebs_baseline_supported(void)
+ static void pebs_enable_changed(struct kvm_pmu *pmu, u64 data)
  {
- 	u64 perf_cap;
-@@ -529,6 +541,7 @@ struct kvm_pmu_ops intel_pmu_ops = {
- 	.is_valid_rdpmc_ecx = intel_is_valid_rdpmc_ecx,
- 	.is_valid_msr = intel_is_valid_msr,
- 	.is_pebs_via_ds_supported = intel_is_pebs_via_ds_supported,
-+	.is_pebs_via_pt_supported = intel_is_pebs_via_pt_supported,
- 	.is_pebs_baseline_supported = intel_is_pebs_baseline_supported,
- 	.get_msr = intel_pmu_get_msr,
- 	.set_msr = intel_pmu_set_msr,
+ 	struct vcpu_vmx *vmx = to_vmx(pmu_to_vcpu(pmu));
+ 	u64 host_ds_area, host_pebs_data_cfg;
+ 
+-	if (data) {
++	if (data && ((data & PEBS_OUTPUT_MASK) == 0)) {
+ 		rdmsrl_safe(MSR_IA32_DS_AREA, &host_ds_area);
+ 		add_atomic_switch_msr(vmx, MSR_IA32_DS_AREA,
+ 			pmu->ds_area, host_ds_area, false);
+@@ -81,10 +111,19 @@ static void pebs_enable_changed(struct kvm_pmu *pmu, u64 data)
+ 		rdmsrl_safe(MSR_PEBS_DATA_CFG, &host_pebs_data_cfg);
+ 		add_atomic_switch_msr(vmx, MSR_PEBS_DATA_CFG,
+ 			pmu->pebs_data_cfg, host_pebs_data_cfg, false);
++	} else if (data && ((data & PEBS_OUTPUT_MASK) == PEBS_OUTPUT_PT)) {
++		intel_pmu_set_reload_counter(pmu_to_vcpu(pmu), data, true);
+ 
++		rdmsrl_safe(MSR_PEBS_DATA_CFG, &host_pebs_data_cfg);
++		add_atomic_switch_msr(vmx, MSR_PEBS_DATA_CFG,
++			pmu->pebs_data_cfg, host_pebs_data_cfg, false);
+ 	} else {
+ 		clear_atomic_switch_msr(vmx, MSR_IA32_DS_AREA);
+ 		clear_atomic_switch_msr(vmx, MSR_PEBS_DATA_CFG);
++
++		if (pmu->has_pebs_via_pt)
++			intel_pmu_set_reload_counter(pmu_to_vcpu(pmu),
++							data, false);
+ 	}
+ 
+ 	pmu->pebs_enable = data;
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index ea899e7..f185144 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -28,7 +28,7 @@
+ #define NR_SHARED_MSRS	4
+ #endif
+ 
+-#define NR_LOADSTORE_MSRS 8
++#define NR_LOADSTORE_MSRS 16
+ 
+ struct vmx_msrs {
+ 	unsigned int		nr;
 -- 
 1.8.3.1
 
