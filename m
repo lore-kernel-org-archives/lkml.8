@@ -2,105 +2,102 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B5B8C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA09BC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3167E206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B044E206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TLdH5plR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OuLtf1Cv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgCSKYF (ORCPT
+        id S1727014AbgCSKYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:24:05 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:10392 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726765AbgCSKYE (ORCPT
+        Thu, 19 Mar 2020 06:24:13 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37868 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgCSKYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:24:04 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JA96qx009222;
-        Thu, 19 Mar 2020 11:23:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=0i3Sdh24LF/JSNqKrvnGwYKgN+U3apMBSXs+axEaS7M=;
- b=TLdH5plR4dXwafQLYljCjP5R4IfeYNHDhiFw1TpKpqIEfezCfjhs7rJ0Nvf+awI2ihUn
- ydYtodjGCY3uqk7ceGLdQ+HkMp71WQXgNaqlkjUHbtV0wGcI0tVspwj94TV50V2CZvrn
- Yz7Nw95OcnGCZ8akPBemVkchFCBzBOCZujhoOCNBMGElYjcCRxa+RXsbrST54cUkV0kP
- LyoxtYLw1n/e+CL4veyJ4kdsL87teNNOAHZzNh8lQaJtIEfUK8SiQ6hSWHF+8UJDfTfq
- 5PvMS/yrdLkEGY8vg/33qv92a9R4R7OgLMlAJ7dW3+1fFdN0Nxz0P8WS4ymoRkjKHP6F bQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yu6xdhj5p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Mar 2020 11:23:53 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0CB1F10002A;
-        Thu, 19 Mar 2020 11:23:52 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CDC202A581A;
-        Thu, 19 Mar 2020 11:23:52 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar 2020 11:23:52
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <alexandre.torgue@st.com>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <fabrice.gasnier@st.com>
-Subject: [PATCH] ARM: dts: stm32: fix a typo for DAC io-channel-cells on stm32f429
-Date:   Thu, 19 Mar 2020 11:23:31 +0100
-Message-ID: <1584613411-10218-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 19 Mar 2020 06:24:13 -0400
+Received: by mail-pl1-f195.google.com with SMTP id f16so878914plj.4;
+        Thu, 19 Mar 2020 03:24:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p3r+VAHql+NP8pG7ZRzCI1tKv/6Ke1R8Od0R0hVXCz4=;
+        b=OuLtf1CvxjTW12d4iEIOBP4cT+yNyQ4jW6U1i1yAILpZN2xtuL445eKHtrwDy9o0Fg
+         Ck3rGRt1jNxV5Mj1Ligt1lBm6TY+4O4Dzehr7sAStYtFzmAz0pDzJH4CDZfVGoXguJ+z
+         BkMXwOlqvpohkTuI3hmL8O9nACqQP7pPqY9BwWZtDHrcLX+T3/mMAe0ODmsDXTYYgcHv
+         g4t2ShsrJp3OBJegNBZmCSIwc/kq/qgfx0lu7gPFY9L/HFDM7cIDzmxseg4iMN75dsgL
+         Z6w90VKsNG68UliJ8yefBdtcMSyKYjsezaNiOaZAs5P3Ohj6Ym1A/f7cmmjAo6V5yMWk
+         O5gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p3r+VAHql+NP8pG7ZRzCI1tKv/6Ke1R8Od0R0hVXCz4=;
+        b=B8ay17Os8l9v0l2Ad5Ps45wStrSg+meMGwxYhEzs0cvn7OWTZgQR27BwAjGV6xBWVJ
+         ozZW6oiqI4gaCfziav9KMgJoYugWo/54z+DHVFzhaFYD+iFFibaS6Ss7P8jEC7WeVZwG
+         a3/Xc+X9+gFGRLrn5cPMn/RL78nrkFUiQk6CkAR+2zqlOccyji81dm00Vxd1Qxz4nnWT
+         sYR5QZywWkPKKQ4YV2GMqi7NCPnVQ4T4uLq8vzgCDi1baWrUnsrMCcUE5lgBflUbd1OL
+         gnDO51g274opxRkABgXPZHReAsO/+WYyFiDcZqWgjGcEnjs9wWZn+89q6ytuU/Q9AzsW
+         TsGw==
+X-Gm-Message-State: ANhLgQ34rHiyeWB84M9eBFkQcWNtSju63yOmn0rj47WHy0zCyqt+LFGU
+        pM/GI7jNkormnZ4nNH41MffdsdhnvL3vhPqt1Bk=
+X-Google-Smtp-Source: ADFU+vtSQwZTCu2Njzsv2xzB4wNSocYdn1ZQQiF6gB56AeE27bNJyfK+qypfWdy4jN5YrJnS52/hcob4sWOz7z575Ws=
+X-Received: by 2002:a17:90a:a48b:: with SMTP id z11mr3147372pjp.1.1584613451888;
+ Thu, 19 Mar 2020 03:24:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-19_02:2020-03-18,2020-03-19 signatures=0
+References: <5e730c2f.1c69fb81.9eda3.5c70@mx.google.com>
+In-Reply-To: <5e730c2f.1c69fb81.9eda3.5c70@mx.google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 19 Mar 2020 12:24:00 +0200
+Message-ID: <CAHp75Vf+SA7ptRQRxvMtVfN0MzQeQ_AgzAP7fc3eaT5nmsxo_g@mail.gmail.com>
+Subject: Re: [PATCH] iio: imu: inv_mpu6050: add debugfs register r/w interface
+To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a typo on STM32F429 DAC, e.g. s/channels/channel
+On Thu, Mar 19, 2020 at 8:10 AM Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
+>
+> The iio debugfs interface provides direct access to read and write device
+> registers if debugfs is enabled.
 
-Fixes: 25329b23fae9 ("ARM: dts: stm32: Add DAC support on stm32f429")
+But regmap API provides at least reading facility. Isn't it enough?
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32f429.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+...
 
-diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-index d777069..393f43c 100644
---- a/arch/arm/boot/dts/stm32f429.dtsi
-+++ b/arch/arm/boot/dts/stm32f429.dtsi
-@@ -414,14 +414,14 @@
- 
- 			dac1: dac@1 {
- 				compatible = "st,stm32-dac";
--				#io-channels-cells = <1>;
-+				#io-channel-cells = <1>;
- 				reg = <1>;
- 				status = "disabled";
- 			};
- 
- 			dac2: dac@2 {
- 				compatible = "st,stm32-dac";
--				#io-channels-cells = <1>;
-+				#io-channel-cells = <1>;
- 				reg = <2>;
- 				status = "disabled";
- 			};
+>  static const struct iio_info mpu_info = {
+>         .read_raw = &inv_mpu6050_read_raw,
+>         .write_raw = &inv_mpu6050_write_raw,
+>         .write_raw_get_fmt = &inv_write_raw_get_fmt,
+>         .attrs = &inv_attribute_group,
+>         .validate_trigger = inv_mpu6050_validate_trigger,
+
+> +       .debugfs_reg_access = &inv_mpu6050_reg_access
+
+Leaving comma is helpful for future development.
+
+>  };
+
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
