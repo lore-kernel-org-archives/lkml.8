@@ -2,153 +2,278 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F988C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B172C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D0220658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:23:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="u9hXHaaN"
+	by mail.kernel.org (Postfix) with ESMTP id 02EB32072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgCSPXe (ORCPT
+        id S1727782AbgCSPZp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:23:34 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55924 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727701AbgCSPXd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:23:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584631413; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=+h/aH/tnk8MqVRqSLVDvUiUIVZnrq7v6U7JA2ycdYoE=; b=u9hXHaaNBS5dlfiWMOhxuwXMFKUCUP2BRqrLxMShtDHCQe6rIb3Qt5nlj1k2jcZ3TjQLetZC
- 3VcCFYoxjtjsAQZZ0LbPhcFYTTuQ23dttu6CL2W0513nxulNKXHSCTPW65iSoyQIr/zZTKTZ
- G3X2/7i2Sy61wFpXlFID0xLmwEA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e738e6e.7fed6ca99538-smtp-out-n04;
- Thu, 19 Mar 2020 15:23:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D9812C43637; Thu, 19 Mar 2020 15:23:25 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67016C433D2;
-        Thu, 19 Mar 2020 15:23:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 67016C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Thu, 19 Mar 2020 09:23:22 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Will Deacon <will@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v1 2/6] arm/smmu: Add auxiliary domain support for
- arm-smmuv2
-Message-ID: <20200319152322.GA25898@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
-References: <1580249770-1088-1-git-send-email-jcrouse@codeaurora.org>
- <1580249770-1088-3-git-send-email-jcrouse@codeaurora.org>
- <20200318224840.GA10796@willie-the-truck>
- <CAF6AEGu-hj6=3rsCe5XeBq_ffoq9VFmL+ycrQ8N=iv89DZf=8Q@mail.gmail.com>
+        Thu, 19 Mar 2020 11:25:45 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:45924 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727483AbgCSPZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:25:45 -0400
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jEx39-0001eF-PI; Thu, 19 Mar 2020 16:25:35 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Cc:     linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: rockchip: move uart2 pinctrl settings to each dts for rk3288
+Date:   Thu, 19 Mar 2020 16:25:35 +0100
+Message-ID: <4307911.4IBKxFWOMT@diego>
+In-Reply-To: <20200319151339.17909-1-katsuhiro@katsuster.net>
+References: <20200319151339.17909-1-katsuhiro@katsuster.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGu-hj6=3rsCe5XeBq_ffoq9VFmL+ycrQ8N=iv89DZf=8Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 04:43:07PM -0700, Rob Clark wrote:
-> On Wed, Mar 18, 2020 at 3:48 PM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Tue, Jan 28, 2020 at 03:16:06PM -0700, Jordan Crouse wrote:
-> > > Support auxiliary domains for arm-smmu-v2 to initialize and support
-> > > multiple pagetables for a single SMMU context bank. Since the smmu-v2
-> > > hardware doesn't have any built in support for switching the pagetable
-> > > base it is left as an exercise to the caller to actually use the pagetable.
-> > >
-> > > Aux domains are supported if split pagetable (TTBR1) support has been
-> > > enabled on the master domain.  Each auxiliary domain will reuse the
-> > > configuration of the master domain. By default the a domain with TTBR1
-> > > support will have the TTBR0 region disabled so the first attached aux
-> > > domain will enable the TTBR0 region in the hardware and conversely the
-> > > last domain to be detached will disable TTBR0 translations.  All subsequent
-> > > auxiliary domains create a pagetable but not touch the hardware.
-> > >
-> > > The leaf driver will be able to query the physical address of the
-> > > pagetable with the DOMAIN_ATTR_PTBASE attribute so that it can use the
-> > > address with whatever means it has to switch the pagetable base.
-> > >
-> > > Following is a pseudo code example of how a domain can be created
-> > >
-> > >  /* Check to see if aux domains are supported */
-> > >  if (iommu_dev_has_feature(dev, IOMMU_DEV_FEAT_AUX)) {
-> > >        iommu = iommu_domain_alloc(...);
-> > >
-> > >        if (iommu_aux_attach_device(domain, dev))
-> > >                return FAIL;
-> > >
-> > >       /* Save the base address of the pagetable for use by the driver
-> > >       iommu_domain_get_attr(domain, DOMAIN_ATTR_PTBASE, &ptbase);
-> > >  }
-> >
-> > I'm not really understanding what the pagetable base gets used for here and,
-> > to be honest with you, the whole thing feels like a huge layering violation
-> > with the way things are structured today. Why doesn't the caller just
-> > interface with io-pgtable directly?
-> >
-> > Finally, if we need to support context-switching TTBR0 for a live domain
-> > then that code really needs to live inside the SMMU driver because the
-> > ASID and TLB management necessary to do that safely doesn't belong anywhere
-> > else.
+Hi,
+
+Am Donnerstag, 19. März 2020, 16:13:39 CET schrieb Katsuhiro Suzuki:
+> This patch removes conflicted pinctrl settings uart2 and pwm 2/3
+> from common rk3288.dtsi and moves exist uart2 pinctrl settings
+> into each rk3288*.dts files.
 > 
-> Hi Will,
+>   - pwm2_pin  : use GPIO7_C6
+>   - pwm3_pin  : use GPIO7_C7
+>   - uart2_xfer: use GPIO7_C6, GPIO7_C7
+
+Board files only ever get to enable either pwm2/3 or uart2,
+not both at once - so I'm not sure where you see conflicts.
+
+And of course there are alternative pins to use, if you need uart2
+you need both pins in uart-pinmux and if you need either as pwm, then
+the board by design just can't use them as uart2.
+
+So pin setting should stay where they are, as there really is no conflict.
+
+
+Heiko
+
+
+
+> Currently uart2 rk3288 user is the following:
 > 
-> We do in fact need live domain switching, that is really the whole
-> point.  The GPU CP (command processor/parser) is directly updating
-> TTBR0 and triggering TLB flush, asynchronously from the CPU.
+>   - rk3288-evb.dtsi:&uart2 {
+>   - rk3288-firefly-reload.dts:&uart2 {
+>   - rk3288-firefly.dtsi:&uart2 {
+>   - rk3288-miqi.dts:&uart2 {
+>   - rk3288-phycore-rdk.dts:&uart2 {
+>   - rk3288-popmetal.dts:&uart2 {
+>   - rk3288-r89.dts:&uart2 {
+>   - rk3288-rock2-square.dts:&uart2 {
+>   - rk3288-tinker.dtsi:&uart2 {
+>   - rk3288-veyron.dtsi:&uart2 {
+>   - rk3288-vyasa.dts:&uart2 {
+> 
+> And no one is using pwm2 nor pwm3.
+> 
+> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+> ---
+>  arch/arm/boot/dts/rk3288-evb.dtsi           | 2 ++
+>  arch/arm/boot/dts/rk3288-firefly-reload.dts | 2 ++
+>  arch/arm/boot/dts/rk3288-firefly.dtsi       | 2 ++
+>  arch/arm/boot/dts/rk3288-miqi.dts           | 2 ++
+>  arch/arm/boot/dts/rk3288-phycore-rdk.dts    | 2 ++
+>  arch/arm/boot/dts/rk3288-popmetal.dts       | 2 ++
+>  arch/arm/boot/dts/rk3288-r89.dts            | 2 ++
+>  arch/arm/boot/dts/rk3288-rock2-square.dts   | 2 ++
+>  arch/arm/boot/dts/rk3288-tinker.dtsi        | 2 ++
+>  arch/arm/boot/dts/rk3288-veyron.dtsi        | 2 ++
+>  arch/arm/boot/dts/rk3288-vyasa.dts          | 2 ++
+>  arch/arm/boot/dts/rk3288.dtsi               | 6 ------
+>  12 files changed, 22 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+> index 018802df4c0e..74091f831ecf 100644
+> --- a/arch/arm/boot/dts/rk3288-evb.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+> @@ -285,6 +285,8 @@ &uart1 {
+>  };
+>  
+>  &uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_xfer>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/rk3288-firefly-reload.dts b/arch/arm/boot/dts/rk3288-firefly-reload.dts
+> index 8c38bda21a7c..b0c976c8e35b 100644
+> --- a/arch/arm/boot/dts/rk3288-firefly-reload.dts
+> +++ b/arch/arm/boot/dts/rk3288-firefly-reload.dts
+> @@ -283,6 +283,8 @@ &uart1 {
+>  };
+>  
+>  &uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_xfer>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
+> index 5e0a19004e46..1632cc083c12 100644
+> --- a/arch/arm/boot/dts/rk3288-firefly.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+> @@ -532,6 +532,8 @@ &uart1 {
+>  };
+>  
+>  &uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_xfer>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/rk3288-miqi.dts b/arch/arm/boot/dts/rk3288-miqi.dts
+> index c41d012c8850..2c0ed37fde80 100644
+> --- a/arch/arm/boot/dts/rk3288-miqi.dts
+> +++ b/arch/arm/boot/dts/rk3288-miqi.dts
+> @@ -379,6 +379,8 @@ &tsadc {
+>  };
+>  
+>  &uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_xfer>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/rk3288-phycore-rdk.dts b/arch/arm/boot/dts/rk3288-phycore-rdk.dts
+> index 1e33859de484..6532c1ac43cd 100644
+> --- a/arch/arm/boot/dts/rk3288-phycore-rdk.dts
+> +++ b/arch/arm/boot/dts/rk3288-phycore-rdk.dts
+> @@ -244,6 +244,8 @@ &uart0 {
+>  };
+>  
+>  &uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_xfer>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts b/arch/arm/boot/dts/rk3288-popmetal.dts
+> index 6a51940398b5..f18306bd9e6e 100644
+> --- a/arch/arm/boot/dts/rk3288-popmetal.dts
+> +++ b/arch/arm/boot/dts/rk3288-popmetal.dts
+> @@ -481,6 +481,8 @@ &uart1 {
+>  };
+>  
+>  &uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_xfer>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/rk3288-r89.dts b/arch/arm/boot/dts/rk3288-r89.dts
+> index a258c7ae5329..02d2f5cfe201 100644
+> --- a/arch/arm/boot/dts/rk3288-r89.dts
+> +++ b/arch/arm/boot/dts/rk3288-r89.dts
+> @@ -340,6 +340,8 @@ &uart1 {
+>  };
+>  
+>  &uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_xfer>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
+> index cdcdc921ee09..a44290e882be 100644
+> --- a/arch/arm/boot/dts/rk3288-rock2-square.dts
+> +++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+> @@ -264,6 +264,8 @@ &spdif {
+>  };
+>  
+>  &uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_xfer>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> index acfaa12ec239..0327119f71b4 100644
+> --- a/arch/arm/boot/dts/rk3288-tinker.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+> @@ -500,6 +500,8 @@ &uart1 {
+>  };
+>  
+>  &uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_xfer>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> index 54a6838d73f5..baa44d00e49a 100644
+> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+> @@ -412,6 +412,8 @@ &uart1 {
+>  };
+>  
+>  &uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_xfer>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/rk3288-vyasa.dts b/arch/arm/boot/dts/rk3288-vyasa.dts
+> index 385dd59393e1..aa50cdc7f839 100644
+> --- a/arch/arm/boot/dts/rk3288-vyasa.dts
+> +++ b/arch/arm/boot/dts/rk3288-vyasa.dts
+> @@ -398,6 +398,8 @@ &tsadc {
+>  };
+>  
+>  &uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_xfer>;
+>  	status = "okay";
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 0cd88774db95..4c1f8cabb5eb 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -450,8 +450,6 @@ uart2: serial@ff690000 {
+>  		reg-io-width = <4>;
+>  		clocks = <&cru SCLK_UART2>, <&cru PCLK_UART2>;
+>  		clock-names = "baudclk", "apb_pclk";
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&uart2_xfer>;
+>  		status = "disabled";
+>  	};
+>  
+> @@ -706,8 +704,6 @@ pwm2: pwm@ff680020 {
+>  		compatible = "rockchip,rk3288-pwm";
+>  		reg = <0x0 0xff680020 0x0 0x10>;
+>  		#pwm-cells = <3>;
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&pwm2_pin>;
+>  		clocks = <&cru PCLK_RKPWM>;
+>  		clock-names = "pwm";
+>  		status = "disabled";
+> @@ -717,8 +713,6 @@ pwm3: pwm@ff680030 {
+>  		compatible = "rockchip,rk3288-pwm";
+>  		reg = <0x0 0xff680030 0x0 0x10>;
+>  		#pwm-cells = <3>;
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&pwm3_pin>;
+>  		clocks = <&cru PCLK_RKPWM>;
+>  		clock-names = "pwm";
+>  		status = "disabled";
+> 
 
-Right. This is entirely done in hardware with a GPU that has complete access to
-the context bank registers. All the driver does is send the PTBASE to the
-command stream see [1] and especially [2] (look for CP_SMMU_TABLE_UPDATE).
 
-As for interacting with the io-pgtable directly I would love to do that but it
-would need some new infrastructure to either pull the io-pgtable from the aux
-domain or to create an io-pgtable ourselves and pass it for use by the aux
-domain. I'm not sure if that is better for the layering violation.
 
-> And I think the answer about ASID is easy (on current hw).. it must be zero[*].
 
-Right now the GPU microcode still uses TLBIALL. I want to assign each new aux
-domain its own ASID in the hopes that we could some day change that but for now
-having a uinque ASID doesn't help.
-
-Jordan
-
-[1] https://patchwork.freedesktop.org/patch/351089/
-[2] https://patchwork.freedesktop.org/patch/351090/
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
