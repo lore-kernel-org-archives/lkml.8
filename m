@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDC9C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A7BC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC221208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA9852098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624121;
-	bh=zgySPb/E5gCYbNyNWaUW3DElJALVpsCE/f+L4by2fjE=;
+	s=default; t=1584624126;
+	bh=57I+7quQKDQmsEDDJITB3L2NMIr5sFzOXq0CxdhIvnc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PNWV+Lw5hG6jDes/VL32aOiAEM2SzJSjNpRxIImu0+Mcjdptczv3dNnV1ys4rqoGq
-	 yvQYOdMrWuEhdYNtKscQ7sQ0u1hV+hWo0iaW0jyD6ybRwGdh6LmwmW5a2nXEs3mgKn
-	 lmpShodCP/w0rWSjpPjFs9rmhrx/lPl26j/PMmzc=
+	b=Qb7Zr4VcVruMbBAvujB8BphVDkTixkii6vEjAlFgqhtouSt4YIGRyFyv5HILe0bE3
+	 vsfrfx6yQeXzBUdvL8YoKMpbcRh0BFrd53DjBw1XKuuDtgDvNKX77UAbieHR0skDUP
+	 Uz8m2t0OXQF6kRbzTdRRunFNIvU8rqhvQwIGSWJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730148AbgCSNWA (ORCPT
+        id S1730164AbgCSNWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:22:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46844 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:22:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729693AbgCSNV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:21:56 -0400
+        id S1730154AbgCSNWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:22:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E917520724;
-        Thu, 19 Mar 2020 13:21:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6B332098B;
+        Thu, 19 Mar 2020 13:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624115;
-        bh=zgySPb/E5gCYbNyNWaUW3DElJALVpsCE/f+L4by2fjE=;
+        s=default; t=1584624123;
+        bh=57I+7quQKDQmsEDDJITB3L2NMIr5sFzOXq0CxdhIvnc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMOQsCxYlNmwNt6IyfJpzPN3Pe5lCMIGLJQjZr2YkWnFitmK8frfRAPOv8dXRwxxl
-         75K9KHyNFgeq744b+iyCbpB9sg/m8+umZiSDgKOdWoHCqCm3HwtTntm8eo81LHxOWH
-         t6jn5PW2gslE0x7sc5ZXN+Xnppvo43r9wRhN1bR4=
+        b=qwmz3Dvlk2UxSJyEQXtu26x9aKYGqbNNJGhObaAa4ZOinaqJ4+SMFvtq0sREk6EYY
+         qugoG/AhhqhszXKLZSEKNJEl6dZzHQEdqBnQFwWUf+spbpN14wVYeEgfGO2z9vPupc
+         CNv9Yi+PhEKpQ1g1370+EmMcwpV9c3CxG5XLeBw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 12/60] ACPI: watchdog: Set default timeout in probe
-Date:   Thu, 19 Mar 2020 14:03:50 +0100
-Message-Id: <20200319123922.971713751@linuxfoundation.org>
+Subject: [PATCH 5.4 15/60] MIPS: Disable VDSO time functionality on microMIPS
+Date:   Thu, 19 Mar 2020 14:03:53 +0100
+Message-Id: <20200319123923.868277570@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -61,66 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Paul Burton <paulburton@kernel.org>
 
-[ Upstream commit cabe17d0173ab04bd3f87b8199ae75f43f1ea473 ]
+[ Upstream commit 07015d7a103c4420b69a287b8ef4d2535c0f4106 ]
 
-If the BIOS default timeout for the watchdog is too small userspace may
-not have enough time to configure new timeout after opening the device
-before the system is already reset. For this reason program default
-timeout of 30 seconds in the driver probe and allow userspace to change
-this from command line or through module parameter (wdat_wdt.timeout).
+A check we're about to add to pick up on function calls that depend on
+bogus use of the GOT in the VDSO picked up on instances of such function
+calls in microMIPS builds. Since the code appears genuinely problematic,
+and given the relatively small amount of use & testing that microMIPS
+sees, go ahead & disable the VDSO for microMIPS builds.
 
-Reported-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/wdat_wdt.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/mips/vdso/Makefile | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/watchdog/wdat_wdt.c b/drivers/watchdog/wdat_wdt.c
-index 1ce39de917f0e..88c5e6361aa05 100644
---- a/drivers/watchdog/wdat_wdt.c
-+++ b/drivers/watchdog/wdat_wdt.c
-@@ -54,6 +54,13 @@ module_param(nowayout, bool, 0);
- MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
- 		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+index 3fa4bbe1bae53..b6b1eb638fb14 100644
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -48,6 +48,8 @@ endif
  
-+#define WDAT_DEFAULT_TIMEOUT	30
-+
-+static int timeout = WDAT_DEFAULT_TIMEOUT;
-+module_param(timeout, int, 0);
-+MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default="
-+		 __MODULE_STRING(WDAT_DEFAULT_TIMEOUT) ")");
-+
- static int wdat_wdt_read(struct wdat_wdt *wdat,
- 	 const struct wdat_instruction *instr, u32 *value)
- {
-@@ -438,6 +445,22 @@ static int wdat_wdt_probe(struct platform_device *pdev)
+ CFLAGS_REMOVE_vgettimeofday.o = -pg
  
- 	platform_set_drvdata(pdev, wdat);
++DISABLE_VDSO := n
++
+ #
+ # For the pre-R6 code in arch/mips/vdso/vdso.h for locating
+ # the base address of VDSO, the linker will emit a R_MIPS_PC32
+@@ -61,11 +63,24 @@ CFLAGS_REMOVE_vgettimeofday.o = -pg
+ ifndef CONFIG_CPU_MIPSR6
+   ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
+     $(warning MIPS VDSO requires binutils >= 2.25)
+-    obj-vdso-y := $(filter-out vgettimeofday.o, $(obj-vdso-y))
+-    ccflags-vdso += -DDISABLE_MIPS_VDSO
++    DISABLE_VDSO := y
+   endif
+ endif
  
-+	/*
-+	 * Set initial timeout so that userspace has time to configure the
-+	 * watchdog properly after it has opened the device. In some cases
-+	 * the BIOS default is too short and causes immediate reboot.
-+	 */
-+	if (timeout * 1000 < wdat->wdd.min_hw_heartbeat_ms ||
-+	    timeout * 1000 > wdat->wdd.max_hw_heartbeat_ms) {
-+		dev_warn(dev, "Invalid timeout %d given, using %d\n",
-+			 timeout, WDAT_DEFAULT_TIMEOUT);
-+		timeout = WDAT_DEFAULT_TIMEOUT;
-+	}
++#
++# GCC (at least up to version 9.2) appears to emit function calls that make use
++# of the GOT when targeting microMIPS, which we can't use in the VDSO due to
++# the lack of relocations. As such, we disable the VDSO for microMIPS builds.
++#
++ifdef CONFIG_CPU_MICROMIPS
++  DISABLE_VDSO := y
++endif
 +
-+	ret = wdat_wdt_set_timeout(&wdat->wdd, timeout);
-+	if (ret)
-+		return ret;
++ifeq ($(DISABLE_VDSO),y)
++  obj-vdso-y := $(filter-out vgettimeofday.o, $(obj-vdso-y))
++  ccflags-vdso += -DDISABLE_MIPS_VDSO
++endif
 +
- 	watchdog_set_nowayout(&wdat->wdd, nowayout);
- 	return devm_watchdog_register_device(dev, &wdat->wdd);
- }
+ # VDSO linker flags.
+ VDSO_LDFLAGS := \
+ 	-Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1 \
 -- 
 2.20.1
 
