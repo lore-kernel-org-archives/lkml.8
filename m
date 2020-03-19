@@ -2,176 +2,114 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C21EC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445FCC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422CD2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9862076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:27:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCr4LtsX"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hz6uZZpR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbgCSV0F (ORCPT
+        id S1727220AbgCSV1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 17:26:05 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37935 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgCSV0D (ORCPT
+        Thu, 19 Mar 2020 17:27:07 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44300 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgCSV1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:26:03 -0400
-Received: by mail-lj1-f193.google.com with SMTP id w1so4224891ljh.5;
-        Thu, 19 Mar 2020 14:26:02 -0700 (PDT)
+        Thu, 19 Mar 2020 17:27:06 -0400
+Received: by mail-pl1-f193.google.com with SMTP id h11so1593831plr.11
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 14:27:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=W81z2712/lsE16oa/wUCtdkr9O7SpuC8HdK7sVnpBuA=;
-        b=YCr4LtsXbY+j9Mu+UKGLAVyheYWc4A9sf4TyM+53RvhgsOefh2kAWLATvFt2Qs5DJC
-         E9eDCxi6ePlc6W6wmzqwgUnUtK9XMzVcsZvuen46kWIre39h29FqmzOj2lzoQPPVciVM
-         TE5Nv4sw/ZA6CltouBy29rOPWYqHnWk3Bx5R1UYko9a1HUxM6sek084H8L12iyRqJo22
-         bRuwkzttpgwBcO83lPBJnhFf/Ru76LdQBwgldsdyCtfvDorHKAIHp7csPhLutxaLiTOE
-         JCKO4a+QFM21qSVyacJ+nctMYM5tgI0iMHQIW3qoknkQVYazbO3/Thf9uF6H6N1KLZDg
-         0Usg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=THkvoVhG3wRH5Rf7Wp+NLGPc1Ncq257BuilCW5dt4i4=;
+        b=hz6uZZpRfTVGX8DfGFDVdm31XWrm9xr3K8m5qSo5BlZxmetMgvaWuGSp9CgEX9GWvE
+         GRaQRyNmtGGoteYs0Ydo0fxGlNqlpu1EOQ/Zdj1FQ8xLSykfA1nVbezHr62VG9RF1Gj2
+         e3w7vVqidC8S/r9gvZiJMNy9lDyog9OPDXJmUElHhx6Dtifn0N2OXGvwuq2xPbdJ2vXU
+         4EMtGQhkodb2L0SiCD8K9Ij+7dlfa9gFqbBmmSdEjNkiTTqNkC64qqx1+VwzObhfrLp3
+         HBlTRGznVF8zrGDsCZeaZVWNv46FTT+kLKXmUSQsxXozlUs/RNwjP2s2HZmOfdnMPjbj
+         wRIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=W81z2712/lsE16oa/wUCtdkr9O7SpuC8HdK7sVnpBuA=;
-        b=jP9t0707TG6dj+iNdC5atFAjAKZRqoTnuwalI/Z+YwqG4hGyvIJfbnqt1cglYGKQdW
-         O8My2s4kt2g0JcrupmI8gHK1JoWFAUr6elaPfpLRMhcBp6nNpSX9gaKm13meGSGYEhzq
-         qa/QKb6AtkJgzdLOSM0Ma0SKEY/aRPf7GDEID0sUDJ7X3tqEr79tuL/5H6j94WYRX8MR
-         nvkvWFsWDZwois9sELhglMtSb55geLSpMu95nj867e/gaEOccGYScNFthSHLpupXgJqa
-         ZWcQx+gSkjV89ERfzplpXLXXLI4rPTRq0MAZ/wjJ/CaB1uOPUfuxlaFYfc3Z1QU8WjWv
-         1vTQ==
-X-Gm-Message-State: ANhLgQ3lHqrsej747mWdEbpErd77F4/1VGG/fkVYdlYyelnDzq4LUqSa
-        /bAqKeWrLpxOgLjI8I+F898=
-X-Google-Smtp-Source: ADFU+vvuZ11n+CSlzYp2aiIGYP25euKNdsnajGEsOijGFD2PWVpYzI0izyM9RuLR1ARTBSOg3MsC1Q==
-X-Received: by 2002:a05:651c:10e:: with SMTP id a14mr3385178ljb.134.1584653161240;
-        Thu, 19 Mar 2020 14:26:01 -0700 (PDT)
-Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.gmail.com with ESMTPSA id c20sm2284868lfb.60.2020.03.19.14.26.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 14:26:00 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] dmaengine: tegra-apb: Improve DMA synchronization
-Date:   Fri, 20 Mar 2020 00:23:21 +0300
-Message-Id: <20200319212321.3297-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200319212321.3297-1-digetx@gmail.com>
-References: <20200319212321.3297-1-digetx@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=THkvoVhG3wRH5Rf7Wp+NLGPc1Ncq257BuilCW5dt4i4=;
+        b=WIxiBAGjwwi1y5UR08VAnoiVfmvn6RhN0ylsyt6w8o3jBe5a6a5df8FOZP47GQYQ8A
+         BhMlpL0siVDf1zxtW6dgYql3QYrylg8uChC+Wu1pe4fX1Q+pWm1pQLK/3aMknrWLe0To
+         6zY/Xdj6Nk8OGXAqOcEK/hhQWq9Pkf2XPYXczzX2baCT7X4LXsOtONpw/wDQyFnm3TJ9
+         mjQU/27I+EtekoGbZ2WcHd1Iu5cAcervRctwygHM/vNEtvRuie4+hmur2cFhCeuUkLJg
+         Ena9Z0oSapcjqOoZEgPzczQkaqNIOAkli+rbc6pc2DcVViTb77DhVP/FzQ9C6kUVnT29
+         cCMg==
+X-Gm-Message-State: ANhLgQ3JHgx9tVk5WAPs5Pnq6m9GU6+0cO+84uCR8wWRjFMKMQDuyc/w
+        YEPJzIGG7whlme0kIol7wSYKjingiAQrhA==
+X-Google-Smtp-Source: ADFU+vuapxu3N3BXVbZTrztGZTquP5PU+VMr3dwFAObPJklDp8y3LH9oth1K+gS3kFd/DMsdkGef3Q==
+X-Received: by 2002:a17:902:444:: with SMTP id 62mr5264448ple.301.1584653223773;
+        Thu, 19 Mar 2020 14:27:03 -0700 (PDT)
+Received: from ?IPv6:2600:380:7458:e065:880c:d56e:ca2:e7c4? ([2600:380:7458:e065:880c:d56e:ca2:e7c4])
+        by smtp.gmail.com with ESMTPSA id j9sm2819739pjz.7.2020.03.19.14.27.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 14:27:02 -0700 (PDT)
+Subject: Re: [PATCH] rsxx: Replace zero-length array with flexible-array
+ member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212194602.GA31712@embeddedor>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <555096e4-4ce7-3769-f998-6e429d20cadf@kernel.dk>
+Date:   Thu, 19 Mar 2020 15:27:00 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200212194602.GA31712@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Boot CPU0 always handles DMA interrupts and under some rare circumstances
-it could stuck in uninterruptible state for a significant time (like in a
-case of KASAN + NFS root). In this case sibling CPU, which waits for DMA
-transfer completion, will get a DMA transfer timeout. In order to handle
-this rare condition, interrupt status needs to be polled until interrupt
-is handled.
+On 2/12/20 12:46 PM, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertenly introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
+Applied for 5.7, thanks.
 
-Changelog:
-
-v2: Added forgotten wake_up_all() to tegra_dma_terminate_all(), which
-    will wake up waiting threads after transfer's abortion.
-
- drivers/dma/tegra20-apb-dma.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 26f427e02369..733fda4e7e45 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -24,6 +24,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/reset.h>
- #include <linux/slab.h>
-+#include <linux/wait.h>
- 
- #include "dmaengine.h"
- 
-@@ -202,6 +203,8 @@ struct tegra_dma_channel {
- 	unsigned int slave_id;
- 	struct dma_slave_config dma_sconfig;
- 	struct tegra_dma_channel_regs channel_reg;
-+
-+	struct wait_queue_head wq;
- };
- 
- /* tegra_dma: Tegra DMA specific information */
-@@ -682,6 +685,7 @@ static irqreturn_t tegra_dma_isr(int irq, void *dev_id)
- 		tdc_write(tdc, TEGRA_APBDMA_CHAN_STATUS, status);
- 		tdc->isr_handler(tdc, false);
- 		tasklet_schedule(&tdc->tasklet);
-+		wake_up_all(&tdc->wq);
- 		spin_unlock(&tdc->lock);
- 		return IRQ_HANDLED;
- 	}
-@@ -783,6 +787,7 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
- 	tegra_dma_resume(tdc);
- 
- 	pm_runtime_put(tdc->tdma->dev);
-+	wake_up_all(&tdc->wq);
- 
- skip_dma_stop:
- 	tegra_dma_abort_all(tdc);
-@@ -798,10 +803,29 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
- 	return 0;
- }
- 
-+static bool tegra_dma_eoc_interrupt_deasserted(struct tegra_dma_channel *tdc)
-+{
-+	unsigned long flags;
-+	u32 status;
-+
-+	spin_lock_irqsave(&tdc->lock, flags);
-+	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
-+	spin_unlock_irqrestore(&tdc->lock, flags);
-+
-+	return !(status & TEGRA_APBDMA_STATUS_ISE_EOC);
-+}
-+
- static void tegra_dma_synchronize(struct dma_chan *dc)
- {
- 	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
- 
-+	/*
-+	 * CPU, which handles interrupt, could be busy in
-+	 * uninterruptible state, in this case sibling CPU
-+	 * should wait until interrupt is handled.
-+	 */
-+	wait_event(tdc->wq, tegra_dma_eoc_interrupt_deasserted(tdc));
-+
- 	tasklet_kill(&tdc->tasklet);
- }
- 
-@@ -1495,6 +1519,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 		tasklet_init(&tdc->tasklet, tegra_dma_tasklet,
- 			     (unsigned long)tdc);
- 		spin_lock_init(&tdc->lock);
-+		init_waitqueue_head(&tdc->wq);
- 
- 		INIT_LIST_HEAD(&tdc->pending_sg_req);
- 		INIT_LIST_HEAD(&tdc->free_sg_req);
 -- 
-2.25.1
+Jens Axboe
 
