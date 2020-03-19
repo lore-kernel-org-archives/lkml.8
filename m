@@ -2,182 +2,95 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096D1C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE6CC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6ECF2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:37:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="cMtY3qUc"
+	by mail.kernel.org (Postfix) with ESMTP id 4B4922071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbgCSMhN (ORCPT
+        id S1727189AbgCSMhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:37:13 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40462 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbgCSMhL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:37:11 -0400
-Received: by mail-il1-f194.google.com with SMTP id p12so2040882ilm.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 05:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2tuVxH0JdqTpL/q4Mhu8Jwtx1AVVUn0AWeX5OBSt298=;
-        b=cMtY3qUcEmiCWPAEeCd5lhB7x3Biy4/6Het2lKK01B7wcpZG2RZMmWE3LV0gVxGIei
-         UuMBMRql9WM+pRx9p4acPSg0mo4kZ7BHmdSm48TJO0cwwlRT82C+TUnt1Ixfd5tAZfQB
-         qGlXYFxfI9xkqU5Rq8m22vi2BvEMfsNiNnE2E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2tuVxH0JdqTpL/q4Mhu8Jwtx1AVVUn0AWeX5OBSt298=;
-        b=ngbAEf4xWw6sRBrrlva192alMXxfsffiAkZHJGVKRxxOxcQdmuGR2EYaUryN+5XIef
-         XzK+F2s3ZOHBs+/ykyJh8ofwBJcHBvQ7/E23mj9RASIt/XskT3RhBxCWgAqXyiIyH+WY
-         BDl42Xf01E8n8c4iPlp4Yn+uQO+yzxIU7nF7resI5o9pv4CXggM0m5fv7Q2WKBtAcsjG
-         8k/snOiHjQLRvVo1Q6FbjblfYd7kH+L5DxUA4Hp6BTK6ccOvtwq2leJcADyiA1cWjIo5
-         ADnFLcHpCcRx+6PznXlXv6i/7dvF+wCgaHmbQM5uwZhHDEOmPfALHrCuKzPGwfzMBryq
-         vC9A==
-X-Gm-Message-State: ANhLgQ3KNya8GZwKTRq/op9SVkoF9mTfsRGKJE5wkVN18diwZWhu42Dc
-        qe8UuiHwaOYP+ptwuy8sQdOzjg/eds3OTtcOZyQ64A==
-X-Google-Smtp-Source: ADFU+vsTsJqo2m1ETEsSuJlFNylEmftzB1ulJzyZd8sss8uJZS7aWDqz3pxVA9Gv6H7ICK0JOZMAndoK/X55keC9JJI=
-X-Received: by 2002:a92:3b8c:: with SMTP id n12mr2899150ilh.186.1584621429946;
- Thu, 19 Mar 2020 05:37:09 -0700 (PDT)
+        Thu, 19 Mar 2020 08:37:54 -0400
+Received: from elvis.franken.de ([193.175.24.41]:51030 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727023AbgCSMhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:37:54 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jEuQl-0004K1-03; Thu, 19 Mar 2020 13:37:47 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id D7B79C026A; Thu, 19 Mar 2020 13:37:15 +0100 (CET)
+Date:   Thu, 19 Mar 2020 13:37:15 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     bibo mao <maobibo@loongson.cn>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        James Hartley <james.hartley@sondrel.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] MIPS: Add header files reference with path prefix
+Message-ID: <20200319123715.GC10783@alpha.franken.de>
+References: <1584424994-21922-1-git-send-email-maobibo@loongson.cn>
 MIME-Version: 1.0
-References: <158454408854.2864823.5910520544515668590.stgit@warthog.procyon.org.uk>
- <CAJfpeguaiicjS2StY5m=8H7BCjq6PLxMsWE3Mx_jYR1foDWVTg@mail.gmail.com> <3085880.1584614257@warthog.procyon.org.uk>
-In-Reply-To: <3085880.1584614257@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Thu, 19 Mar 2020 13:36:58 +0100
-Message-ID: <CAJfpegv-_ai1LiW6=D+AnkozzmmXbB8=g8QDCS15bh==Wn3yoA@mail.gmail.com>
-Subject: Re: [PATCH 00/13] VFS: Filesystem information [ver #19]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux NFS list <linux-nfs@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Ian Kent <raven@themaw.net>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584424994-21922-1-git-send-email-maobibo@loongson.cn>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 11:37 AM David Howells <dhowells@redhat.com> wrote:
->
-> Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> > >  (2) It's more efficient as we can return specific binary data rather than
-> > >      making huge text dumps.  Granted, sysfs and procfs could present the
-> > >      same data, though as lots of little files which have to be
-> > >      individually opened, read, closed and parsed.
-> >
-> > Asked this a number of times, but you haven't answered yet:  what
-> > application would require such a high efficiency?
->
-> Low efficiency means more time doing this when that time could be spent doing
-> other things - or even putting the CPU in a powersaving state.  Using an
-> open/read/close render-to-text-and-parse interface *will* be slower and less
-> efficient as there are more things you have to do to use it.
->
-> Then consider doing a walk over all the mounts in the case where there are
-> 10000 of them - we have issues with /proc/mounts for such.  fsinfo() will end
-> up doing a lot less work.
+On Tue, Mar 17, 2020 at 02:03:14AM -0400, bibo mao wrote:
+> There are some common header files which are referenced locally
+> with #includenext method, includenext is tricky method and only
+> used on mips platform.
+> 
+> This patech removes includenext method, replace it with defailed
+> pathname prefix for header files.
+> 
+> This patch passes to compile on all mips platform with defconfig,
+> and is verified on my loongson64 box.
+> 
+> Changes:
+> --------
+> v2:
+>   - Fix compiling issue on malta platform
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: bibo mao <maobibo@loongson.cn>
+> ---
+>  arch/mips/include/asm/mach-ar7/irq.h           | 2 +-
+>  arch/mips/include/asm/mach-ath79/irq.h         | 2 +-
+>  arch/mips/include/asm/mach-emma2rh/irq.h       | 2 +-
+>  arch/mips/include/asm/mach-ip27/irq.h          | 2 +-
+>  arch/mips/include/asm/mach-ip30/irq.h          | 2 +-
+>  arch/mips/include/asm/mach-lantiq/falcon/irq.h | 2 +-
+>  arch/mips/include/asm/mach-lantiq/xway/irq.h   | 2 +-
+>  arch/mips/include/asm/mach-lasat/irq.h         | 2 +-
+>  arch/mips/include/asm/mach-loongson64/irq.h    | 2 +-
+>  arch/mips/include/asm/mach-malta/irq.h         | 2 +-
+>  arch/mips/include/asm/mach-pic32/irq.h         | 2 +-
+>  arch/mips/include/asm/mach-pistachio/irq.h     | 2 +-
+>  arch/mips/include/asm/mach-ralink/irq.h        | 2 +-
+>  arch/mips/include/asm/mach-rm/mc146818rtc.h    | 2 +-
+>  arch/mips/include/asm/mach-vr41xx/irq.h        | 2 +-
+>  arch/mips/include/asm/mach-xilfpga/irq.h       | 2 +-
+>  16 files changed, 16 insertions(+), 16 deletions(-)
 
-Current /proc/mounts problems arise from the fact that mount info can
-only be queried for the whole namespace, and hence changes related to
-a single mount will require rescanning the complete mount list.  If
-mount info can be queried for individual mounts, then the need to scan
-the complete list will be rare.  That's *the* point of this change.
+Applied to mips-next.
 
-> > >  (3) We wouldn't have the overhead of open and close (even adding a
-> > >      self-contained readfile() syscall has to do that internally
-> >
-> > Busted: add f_op->readfile() and be done with all that.   For example
-> > DEFINE_SHOW_ATTRIBUTE() could be trivially moved to that interface.
->
-> Look at your example.  "f_op->".  That's "file->f_op->" I presume.
->
-> You would have to make it "i_op->" to avoid the open and the close - and for
-> things like procfs and sysfs, that's probably entirely reasonable - but bear
-> in mind that you still have to apply all the LSM file security controls, just
-> in case the backing filesystem is, say, ext4 rather than procfs.
->
-> > We could optimize existing proc, sys, etc. interfaces, but it's not
-> > been an issue, apparently.
->
-> You can't get rid of or change many of the existing interfaces.  A lot of them
-> are effectively indirect system calls and are, as such, part of the fixed
-> UAPI.  You'd have to add a parallel optimised set.
+Thomas.
 
-Sure.
-
-We already have the single_open() internal API that is basically a
-->readfile() wrapper.   Moving this up to the f_op level (no, it's not
-an i_op, and yes, we do need struct file, but it can be simply
-allocated on the stack) is a trivial optimization that would let a
-readfile(2) syscall access that level.  No new complexity in that
-case.    Same generally goes for seq_file: seq_readfile() is trivial
-to implement without messing with current implementation or any
-existing APIs.
-
->
-> > >  (6) Don't have to create/delete a bunch of sysfs/procfs nodes each time a
-> > >      mount happens or is removed - and since systemd makes much use of
-> > >      mount namespaces and mount propagation, this will create a lot of
-> > >      nodes.
-> >
-> > Not true.
->
-> This may not be true if you roll your own special filesystem.  It *is* true if
-> you do it in procfs or sysfs.  The files don't exist if you don't create nodes
-> or attribute tables for them.
-
-That's one of the reasons why I opted to roll my own.  But the ideas
-therein could be applied to kernfs, if found to be generally useful.
-Nothing magic about that.
-
->
-> > > The argument for doing this through procfs/sysfs/somemagicfs is that
-> > > someone using a shell can just query the magic files using ordinary text
-> > > tools, such as cat - and that has merit - but it doesn't solve the
-> > > query-by-pathname problem.
-> > >
-> > > The suggested way around the query-by-pathname problem is to open the
-> > > target file O_PATH and then look in a magic directory under procfs
-> > > corresponding to the fd number to see a set of attribute files[*] laid out.
-> > > Bash, however, can't open by O_PATH or O_NOFOLLOW as things stand...
-> >
-> > Bash doesn't have fsinfo(2) either, so that's not really a good argument.
->
-> I never claimed that fsinfo() could be accessed directly from the shell.  For
-> you proposal, you claimed "immediately usable from all programming languages,
-> including scripts".
-
-You are right.  Note however: only special files need the O_PATH
-handling, regular files are directories can be opened by the shell
-without side effects.
-
-In any case, I think neither of us can be convinced of the other's
-right, so I guess It's up to Al and Linus to make a decision.
-
-Thanks,
-Miklos
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
