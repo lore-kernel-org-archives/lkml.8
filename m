@@ -2,150 +2,116 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD40C4332E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91F4C4332D
 	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82CDF20740
+	by mail.kernel.org (Postfix) with ESMTP id AC7C420732
 	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:01:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdY2l/TV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgCSNA0 (ORCPT
+        id S1727023AbgCSNAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:00:26 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40045 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSNA0 (ORCPT
+        Thu, 19 Mar 2020 09:00:55 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:57546 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCSNAy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:00:26 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z12so2149166wmf.5;
-        Thu, 19 Mar 2020 06:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=89ymcr/0CQ8G/h/07WdAPH8+H6QLZMiQMSSP5qcJ8x8=;
-        b=QdY2l/TVmUpe3UueK+In/PS5VMXf9wcunGIIMHs+MdR1r4wVlT4Wp6fv+ZwFnPYO6x
-         VomZXtrw08LH38j/JnK8Rt6XpkC+39OBlGnFxwlBK2NlmEvh/903jAi6KBCnCuZ8cZDt
-         p4glf+a+iy4YzZLInjxELMN8U6u68h9GLnzRm0IIyTOOUCSv+9u6HKACeQQCLsk7aiWL
-         EV5PbpIltBHM57/iMu9pbYbHYAjqARY5gn9jyqiJqGErpZJOUgtSVAx/5TPR0idPadnf
-         5WtCqvknyR+B9p07jcqcnq346iV8eeeE8Xi2pCJpxT25NXfXka+SuC9vgd7mdCiFquFl
-         u03Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=89ymcr/0CQ8G/h/07WdAPH8+H6QLZMiQMSSP5qcJ8x8=;
-        b=JETF1qi2H8mW1IPL8kQxoa5clr7/97nwhcKfuuP+D78Ejf/Kmf0xDKxT8wN9+WlR56
-         Sr3eExlA+NCvbbxgU+rjbPmZ9WDW9MpKO78G9tk1EAz8JymXzL7o4EFKunIleKn144w/
-         sSv+SCCOMGdCMeT5azVByY9yotXedU9qVHnDfbE5eYLmDbe7eojXwCYQfVrFWMPYDLsX
-         f3Y6JHwSFAvN27KTlHsZfZl0PVO0wLRJwD4uXqsO+/EAFrf3JolXxau3J/zi/CPmKvr/
-         oNCYiS5v1YU5BECpNPxs49VDWwW9CI+TsmSNPUsyEiX8BaTNDvGbrmPqdPpVsbKEzKmm
-         6F1A==
-X-Gm-Message-State: ANhLgQ0WjlWZUqdOUA7f9IVqgZEdwbfflq2w3Pb0NhFDPZCqTdBJ4MmO
-        EYrQHpEYk7eVP8Wr1E5TLYmA6bFNHQmB8EB/f76ekQ==
-X-Google-Smtp-Source: ADFU+vvc7E1zOMM7lFKAo7l9c1uKku2++H9whPC3pZbk9Khxamid9dTyneWiwofdtMbT4z5fXm7n0otdDQpDL7zdphI=
-X-Received: by 2002:a7b:c456:: with SMTP id l22mr3445690wmi.184.1584622823530;
- Thu, 19 Mar 2020 06:00:23 -0700 (PDT)
+        Thu, 19 Mar 2020 09:00:54 -0400
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 5E6E12009CA;
+        Thu, 19 Mar 2020 13:00:53 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 172B020B1E; Thu, 19 Mar 2020 14:00:49 +0100 (CET)
+Date:   Thu, 19 Mar 2020 14:00:49 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        kuninori.morimoto.gx@renesas.com
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, curtis@malainey.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        liam.r.girdwood@linux.intel.com, broonie@kernel.org
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+Message-ID: <20200319130049.GA2244@light.dominikbrodowski.net>
+References: <20200318063022.GA116342@light.dominikbrodowski.net>
+ <41d0b2b5-6014-6fab-b6a2-7a7dbc4fe020@linux.intel.com>
+ <20200318123930.GA2433@light.dominikbrodowski.net>
+ <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
+ <20200318162029.GA3999@light.dominikbrodowski.net>
+ <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+ <20200318215218.GA2439@light.dominikbrodowski.net>
+ <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
 MIME-Version: 1.0
-References: <20200316150047.30828-1-andrew.smirnov@gmail.com>
- <20200316150047.30828-4-andrew.smirnov@gmail.com> <49971beb-0681-de92-95f5-b18e1be05ce3@nxp.com>
-In-Reply-To: <49971beb-0681-de92-95f5-b18e1be05ce3@nxp.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Thu, 19 Mar 2020 06:00:10 -0700
-Message-ID: <CAHQ1cqGcR=u8QPeD7PQtsZYEQL=5VQWv4r=LPC=VFET2X1VOHw@mail.gmail.com>
-Subject: Re: [PATCH v8 3/8] crypto: caam - drop global context pointer and init_done
-To:     =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 9:45 AM Horia Geant=C4=83 <horia.geanta@nxp.com> wr=
-ote:
->
-> On 3/16/2020 5:01 PM, Andrey Smirnov wrote:
-> > diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrn=
-g.c
-> > index 69a02ac5de54..753625f2b2c0 100644
-> > --- a/drivers/crypto/caam/caamrng.c
-> > +++ b/drivers/crypto/caam/caamrng.c
-> > @@ -70,6 +70,7 @@ struct buf_data {
-> >
-> >  /* rng per-device context */
-> >  struct caam_rng_ctx {
-> > +     struct hwrng rng;
-> >       struct device *jrdev;
-> >       dma_addr_t sh_desc_dma;
-> >       u32 sh_desc[DESC_RNG_LEN];
-> > @@ -78,13 +79,10 @@ struct caam_rng_ctx {
-> >       struct buf_data bufs[2];
-> >  };
-> [...]
-> > +static struct caam_rng_ctx *to_caam_rng_ctx(struct hwrng *r)
-> > +{
-> > +     return (struct caam_rng_ctx *)r->priv;
-> > +}
-> [...]
-> > -static struct hwrng caam_rng =3D {
-> > -     .name           =3D "rng-caam",
-> > -     .init           =3D caam_init,
-> > -     .cleanup        =3D caam_cleanup,
-> > -     .read           =3D caam_read,
-> > -};
-> I would keep this statically allocated, see below.
->
-> > @@ -342,18 +332,27 @@ int caam_rng_init(struct device *ctrldev)
-> >       if (!rng_inst)
-> >               return 0;
-> >
-> > -     rng_ctx =3D kmalloc(sizeof(*rng_ctx), GFP_DMA | GFP_KERNEL);
-> > -     if (!rng_ctx)
-> > +     if (!devres_open_group(ctrldev, caam_rng_init, GFP_KERNEL))
-> > +             return -ENOMEM;
-> > +
-> > +     ctx =3D devm_kzalloc(ctrldev, sizeof(*ctx), GFP_DMA | GFP_KERNEL)=
-;
-> > +     if (!ctx)
-> >               return -ENOMEM;
-> >
-> > +     ctx->rng.name    =3D "rng-caam";
-> > +     ctx->rng.init    =3D caam_init;
-> > +     ctx->rng.cleanup =3D caam_cleanup;
-> > +     ctx->rng.read    =3D caam_read;
-> > +     ctx->rng.priv    =3D (unsigned long)ctx;
-> > +
-> >       dev_info(ctrldev, "registering rng-caam\n");
-> >
-> > -     err =3D hwrng_register(&caam_rng);
-> > -     if (!err) {
-> > -             init_done =3D true;
-> > -             return err;
-> > +     ret =3D devm_hwrng_register(ctrldev, &ctx->rng);
-> Now that hwrng.priv is used to keep driver's private data / caam_rng_ctx,
-> and thus container_of() is no longer needed to get from hwrng struct
-> to caam_rng_ctx, it's no longer needed to embed struct hwrng
-> into caam_rng_ctx.
->
+On Wed, Mar 18, 2020 at 11:20:55PM +0100, Cezary Rojewski wrote:
+> On 2020-03-18 22:52, Dominik Brodowski wrote:
+> > On Wed, Mar 18, 2020 at 09:43:54PM +0100, Cezary Rojewski wrote:
+> > > On 2020-03-18 20:22, Dominik Brodowski wrote:
+> > > > On Wed, Mar 18, 2020 at 07:27:58PM +0100, Cezary Rojewski wrote:
+> > > 
+> > > > > 
+> > > > > Due to pandemic I'm working remotely and right now won't be able to test
+> > > > > audio quality so focusing on the stream==NULL issue. And thus we got to help
+> > > > > each other out : )
+> > > > 
+> > > > Sure, and thanks for taking a look at this!
+> > > > 
+> > > > > Could you verify issue reproduces on 5.6.0-rc1 on your machine?
+> > > > 
+> > > > It reproduces on 5.6.0-rc1 + i915-bugfix. I'm trying to bisect it further in
+> > > > the background, but that may take quite some time.
+> > > > 
+> > > 
+> > > Could you checkout v5.6-rc1 with following commit reverted:
+> > > 	ASoC: Intel: broadwell: change cpu_dai and platform components for SOF
+> > > 
+> > > For my working v5.6-rc1 commit id is:
+> > > 64df6afa0dab5eda95cc4cc2269e3d4e83b6b6ce.
+> > 
+> > Hm, no joy -- after suspend/resume, no sound at first, and if I twiggle some
+> > options with pulseaudio, I get garbled output (even when using
+> > 
+> > 	aplay -f S16_LE -r 44100 -c 2 --device="sysdefault:CARD=broadwellrt286"
+> > 
+> > ). Will try to bisect further the next days.
+> > 
+> 
+> Thanks for quick reply. Revert of said commit fixes stream==NULL issue for
+> me. See if there were any changes in dmesg.
+> Will ask technicians to assist me on site tomorrow.
 
-Why do we want this change though? It doesn't allow us to constify
-"struct hwrng", don't seem to give any other benefits (maybe I am
-missing something?) at the same time creating a new implicit global
-variable. I'd rather not do this.
+Have some good news now, namely that a bisect is complete: That pointed to
+1272063a7ee4 ("ASoC: soc-core: care .ignore_suspend for Component suspend");
+therefore I've added Kuninori Morimoto to this e-mail thread.
+
+Additionally, I have tested mainline (v5.6-rc6+ as of 5076190daded) with
+*both* 64df6afa0dab (which you suggested yesterday) and 1272063a7ee4
+reverted. And that works like a charm as well.
+
+Hope this helps!
 
 Thanks,
-Andrey Smirnov
+	Dominik
