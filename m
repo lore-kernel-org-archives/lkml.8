@@ -2,104 +2,160 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D9AC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4C5C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C47F720767
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C5C20768
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgCSBCa (ORCPT
+        id S1727056AbgCSBDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 21:02:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17522 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726596AbgCSBCa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 21:02:30 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02J0X0sF017985;
-        Wed, 18 Mar 2020 21:00:20 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu932gr91-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 21:00:20 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02J0tiV9017885;
-        Thu, 19 Mar 2020 01:00:19 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma01wdc.us.ibm.com with ESMTP id 2yrpw6mp6k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Mar 2020 01:00:19 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02J10IBq48759194
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Mar 2020 01:00:18 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8CEE6112075;
-        Thu, 19 Mar 2020 01:00:18 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7225B112070;
-        Thu, 19 Mar 2020 01:00:18 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 19 Mar 2020 01:00:18 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sachinp@linux.vnet.ibm.com,
-        mpe@ellerman.id.au, Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v2] qtpm2: Export tpm2_get_cc_attrs_tbl for ibmvtpm driver as module
-Date:   Wed, 18 Mar 2020 21:00:17 -0400
-Message-Id: <20200319010017.738677-1-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 18 Mar 2020 21:03:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:15997 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbgCSBDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 21:03:08 -0400
+IronPort-SDR: UDarT0/D/mTUCwecBuFy32V5q6u2OVguKKwZO/R5comHwo7QHJFjRJzkXUgig5dXe+4XWRoNTG
+ 4AT+xjx+B/Dw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 18:03:07 -0700
+IronPort-SDR: CGUYWfkphOuI4TIm7YiOkLmPVqj85z7yp25k0oamOOD/R+j1F8nhSgN8bm9EUnvY4ZnaYA4Y3C
+ 1ot4B9TZezhQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,569,1574150400"; 
+   d="scan'208";a="238348272"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Mar 2020 18:03:06 -0700
+Date:   Wed, 18 Mar 2020 18:03:06 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Nathaniel McCallum <npmccallum@redhat.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Connor Kuehl <ckuehl@redhat.com>,
+        Harald Hoyer <harald@redhat.com>,
+        Lily Sturmann <lsturman@redhat.com>
+Subject: Re: [PATCH v28 21/22] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+Message-ID: <20200319010306.GA8347@linux.intel.com>
+References: <254f1e35-4302-e55f-c00d-0f91d9503498@fortanix.com>
+ <CAOASepOm8-2UCdEnVMopEprMGWjkYUbUTX++dHaqCafi2ju8mA@mail.gmail.com>
+ <20200313164622.GC5181@linux.intel.com>
+ <CAOASepN1hxSgxVJAJiAbSmuCTCHd=95Mnvh6BKNSPJs=EpAmbQ@mail.gmail.com>
+ <20200313184452.GD5181@linux.intel.com>
+ <CAOASepP_oGOenjCvAvLg+e+=fz4H0X=cyD+v5ywD0peeXEEmYg@mail.gmail.com>
+ <20200313220820.GE5181@linux.intel.com>
+ <CAOASepMicT6CrYyDkoYizh4nAZ+1Zn4rGQh7QjfzSK72Fj6u_g@mail.gmail.com>
+ <20200318234057.GE26164@linux.intel.com>
+ <858d19ed-868b-b4be-cbac-6cb92349d8fb@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-18_07:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
- clxscore=1015 spamscore=0 bulkscore=0 phishscore=0 mlxlogscore=999
- mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003190001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <858d19ed-868b-b4be-cbac-6cb92349d8fb@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+On Wed, Mar 18, 2020 at 05:38:29PM -0700, Xing, Cedric wrote:
+> On 3/18/2020 4:40 PM, Sean Christopherson wrote:
+> %rbx can always be restored as long as it is saved at a fixed offset from
+> %rbp. For example, given the standard prolog below:
+> 
+> 	push	%rbp
+> 	mov	%rsp, %rbp
+> 	push	%rbx
+> 
+> It can be paired with the following standard epilog:
+> 
+> 	mov	-8(%rbp), %rbx
+> 	leave
+> 	ret
+> 
+> Alternatively, given "red zone" of 128 bytes, the following epilog will also
+> work:
+> 
+> 	leave
+> 	mov	-0x10(%rsp), %rbx
+> 	ret
+> 
+> In no cases do we have to worry about enclave mucking the stack as long as
+> %rbp is preserved.
+> 
+> >>>>While this is more work, it is standard calling convention work that
+> >>>>doesn't require internal knowledge of __vdso..(). Alternatively, if we
+> >>>>don't like the extra work, we can document the %rbx hack explicitly
+> >>>>into the handler documentation and make it part of the interface. But
+> >>>>we need some explicit way for the handler to pop enclave output stack
+> >>>>params that doesn't depend on internal knowledge of the __vdso...()
+> >>>>invariants.
+> >>>
+> >>>IIUC, this is what you're suggesting?  Having to align the stack makes this
+> >>>a bit annoying, but it's not bad by any means.
+> >>>
+> >>>diff --git a/arch/x86/entry/vdso/vsgx_enter_enclave.S b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> >>>index 94a8e5f99961..05d54f79b557 100644
+> >>>--- a/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> >>>+++ b/arch/x86/entry/vdso/vsgx_enter_enclave.S
+> >>>@@ -139,8 +139,9 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+> >>>         /* Pass the untrusted RSP (at exit) to the callback via %rcx. */
+> >>>         mov     %rsp, %rcx
+> >>>
+> >>>-       /* Save the untrusted RSP in %rbx (non-volatile register). */
+> >>>+       /* Save the untrusted RSP offset in %rbx (non-volatile register). */
+> >>>         mov     %rsp, %rbx
+> >>>+       and     $0xf, %rbx
+> >>>
+> >>>         /*
+> >>>          * Align stack per x86_64 ABI. Note, %rsp needs to be 16-byte aligned
+> >>>@@ -161,8 +162,8 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+> >>>         mov     0x20(%rbp), %rax
+> >>>         call    .Lretpoline
+> >>>
+> >>>-       /* Restore %rsp to its post-exit value. */
+> >>>-       mov     %rbx, %rsp
+> >>>+       /* Undo the post-exit %rsp adjustment. */
+> >>>+       lea     0x20(%rsp,%rbx), %rsp
+> >>>
+> 
+> Per discussion above, this is useful only if the enclave has problem
+> cleaning up its own mess left on the untrusted stack, and the exit handler
+> wants to EENTER the enclave again by returning to __vdso...(). It sounds
+> very uncommon to me, and more like a bug than an expected behavior. Are
+> there any existing code doing this or any particular application that needs
+> this. If no, I'd say not to do it.
 
-This patch fixes the following problem when the ibmvtpm driver
-is built as a module:
+Ya, I'm on the fence as well.  The only counter-argument is that doing:
 
-ERROR: modpost: "tpm2_get_cc_attrs_tbl" [drivers/char/tpm/tpm_ibmvtpm.ko] undefined!
-make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
-make: *** [Makefile:1298: modules] Error 2
+	push	%rbp
+	mov	%rsp, %rbp
+	push	%rbx
 
-Fixes: 18b3670d79ae ("tpm: ibmvtpm: Add support for TPM2")
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
----
- drivers/char/tpm/tpm2-cmd.c | 1 +
- 1 file changed, 1 insertion(+)
+	...
 
-diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
-index 76f67b155bd5..eff1f12d981a 100644
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -681,6 +681,7 @@ int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip)
- 		rc = -ENODEV;
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(tpm2_get_cc_attrs_tbl);
- 
- /**
-  * tpm2_startup - turn on the TPM
--- 
-2.23.0
+	pop	%rbx
+	leave
+	ret
 
+with the relative adjustment would allow the exit handler (or enclave) to
+change %rbx.  I'm not saying that is remote sane, but if we're going for
+maximum flexibility...
+
+Anyways, patches incoming, let's discuss there.
