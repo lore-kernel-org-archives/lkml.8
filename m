@@ -2,107 +2,109 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84611C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD814C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C14C206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9331D206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:52:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4xc6fED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgCSQwK (ORCPT
+        id S1728429AbgCSQwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:52:10 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:48426 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbgCSQwK (ORCPT
+        Thu, 19 Mar 2020 12:52:17 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35796 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbgCSQwQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:52:10 -0400
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 98A67200B24;
-        Thu, 19 Mar 2020 16:52:08 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 094F520B21; Thu, 19 Mar 2020 17:51:57 +0100 (CET)
-Date:   Thu, 19 Mar 2020 17:51:57 +0100
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-Message-ID: <20200319165157.GA2254@light.dominikbrodowski.net>
-References: <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
- <20200318162029.GA3999@light.dominikbrodowski.net>
- <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
- <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
- <20200319130049.GA2244@light.dominikbrodowski.net>
- <20200319134139.GB3983@sirena.org.uk>
- <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
+        Thu, 19 Mar 2020 12:52:16 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m3so3175474wmi.0;
+        Thu, 19 Mar 2020 09:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hB9EOmeEoQOPuImvB9jQhgdyqLRUd97IR5tYRMN/KRg=;
+        b=Y4xc6fEDR9ZHOybEP5BSWaD2bCPXt0bWNVHUYEZEoiO95Tr1osrH5Jg+ukA+i2z9Ui
+         8736XBhtjQpD23VoNl2wnLTxw7vrkSpl4aRfQH9IlWPeTp5zvZ+U8x4yrhdcaNZXo5e4
+         9Gq9vqwItg4qNpX2rl4QntOkZcN/mPIoowB3YasVy5lknqPdaWhmmIKjvHsbTW8leN3u
+         95GD69hDivtRX2YaRauGxLAAMBOiLXlYhZYAptC84AAB3U+edwC07k7IGUDAU32IoeEA
+         rkttdRg5/vN0IIDtzGg9TNzJMsegxA7CBENS/LuzyaKZfMDg73to4nj9d6CtbP+kl/Tp
+         Z8JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hB9EOmeEoQOPuImvB9jQhgdyqLRUd97IR5tYRMN/KRg=;
+        b=Kuuvk2/9GgTPS+zdkgWWLLl+BrX3Q6ERbYwEv/JeZHdHclWB1iC26SNKkmOnWviCsy
+         mcceZ8O0cjJVs8b04zI6pLPACJn1fpdCjSLey8CY8seLwtsS9j6w1fWiEksUNy2EoHlL
+         AD84gUPPr1vofGVz6FwJV+xUEPzo6Avoo34xhAwVOXNdynr5/13HAdh5lVEsD0RoxU5n
+         tpgyLkIxFBbN4/KcoAoK53oX8/e5MdRzRmABnHTal59EzWTsxugKQru7Ort2fHLHmfk7
+         p5+eVkJEUo6BU6XKYNu2Gy+fCL4zWFwp9klP1WtEu1fLEFwsNfPNdoAjRfeKxvN+8ISC
+         Fw6A==
+X-Gm-Message-State: ANhLgQ2FTvbp1/kLTuW4JHqDaHR/Pi9etQE10CEirYylY/WJCm88l20p
+        RNaoCQU9wndoBgo2NJPWGYFJUKIbLh8BRF2y0Dc=
+X-Google-Smtp-Source: ADFU+vv1zSb3f06esRnDQl+NjMCVPD282wJZ/FHh2w2P8kdQDmilSBiF4CcKHzLjYAQ03eTB5GFF5fFsJ6f1/h7dKu8=
+X-Received: by 2002:a05:600c:2709:: with SMTP id 9mr4778011wmm.30.1584636735093;
+ Thu, 19 Mar 2020 09:52:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
+References: <20200319131221.14044-1-david@redhat.com> <20200319131221.14044-7-david@redhat.com>
+In-Reply-To: <20200319131221.14044-7-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 19 Mar 2020 17:52:04 +0100
+Message-ID: <CAM9Jb+jaia-AxpvxsTOVxYg_S=xZy2UY5srARA2J2_DkXPgZ7g@mail.gmail.com>
+Subject: Re: [PATCH v3 6/8] mm/memory_hotplug: unexport memhp_auto_online
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 04:48:03PM +0100, Cezary Rojewski wrote:
-> On 2020-03-19 14:41, Mark Brown wrote:
-> > On Thu, Mar 19, 2020 at 02:00:49PM +0100, Dominik Brodowski wrote:
-> > 
-> > > Have some good news now, namely that a bisect is complete: That pointed to
-> > > 1272063a7ee4 ("ASoC: soc-core: care .ignore_suspend for Component suspend");
-> > > therefore I've added Kuninori Morimoto to this e-mail thread.
-> > 
-> > If that's an issue it feels more like a driver bug in that if the driver
-> > asked for ignore_suspend then it should expect not to have the suspend
-> > callback called.
-> > 
-> 
-> Requested for tests with following diff applied:
-> 
-> diff --git a/sound/soc/intel/boards/broadwell.c
-> b/sound/soc/intel/boards/broadwell.c
-> index db7e1e87156d..6ed4c1b0a515 100644
-> --- a/sound/soc/intel/boards/broadwell.c
-> +++ b/sound/soc/intel/boards/broadwell.c
-> @@ -212,7 +212,6 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] =
-> {
->                 .init = broadwell_rt286_codec_init,
->                 .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
->                         SND_SOC_DAIFMT_CBS_CFS,
-> -               .ignore_suspend = 1,
->                 .ignore_pmdown_time = 1,
->                 .be_hw_params_fixup = broadwell_ssp0_fixup,
->                 .ops = &broadwell_rt286_ops,
+> All in-tree users except the mm-core are gone. Let's drop the export.
+>
+> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/memory_hotplug.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index da6aab272c9b..e21a7d53ade5 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -71,7 +71,6 @@ bool memhp_auto_online;
+>  #else
+>  bool memhp_auto_online = true;
+>  #endif
+> -EXPORT_SYMBOL_GPL(memhp_auto_online);
+>
+>  static int __init setup_memhp_default_state(char *str)
+>  {
+> --
+> 2.24.1
 
-That patch fixes the issue(s). I didn't even need to revert 64df6afa0dab
-("ASoC: Intel: broadwell: change cpu_dai and platform components for SOF")
-on top of that. But you can assess better whether that patch needs care for
-other reasons; for me, this one-liner you have suggested is perfect.
-
-Many thanks -- it's been a pleasure to work with you on tracking this issue
-down.
-
-	Dominik
-
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+>
+>
