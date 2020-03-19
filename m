@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F18C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A4BC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4B8208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD23C208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624364;
-	bh=F1D0R/proQlgrCAIHqb84XFSvyT3s+JQd9HSM/5D7iQ=;
+	s=default; t=1584624367;
+	bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zKIEVKmX0dRctF4v4jOzB/OsBmyBomrH8D9+ymZkFSMm7RMag9ee2dbEOkX222oam
-	 JCGjMtcnacLEbBXybleKN4e/F8IySfU206fhUW6MVBN6un+zSM3kpiSLlUBvg+fw67
-	 3WhZkgBC+Tkv9HvSPyek/hdqwhVxBlFZLgXc1npM=
+	b=C0zyrTjWgyVdnNPGHjkm6CWLKNAMvkWgu/0rIFVlkgDrkQhztse9RTOAC+JTv2yQr
+	 l7Tnv2GDfjlJyfVDYw8UVnuySjN1lo12PHYFVjmjDTOT5kHUJLMCUSXVG7peGobrmU
+	 j4584JAnAxQnvPhPZQd7MHXqGyezVE/ouaNQmhOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730733AbgCSN0D (ORCPT
+        id S1730742AbgCSN0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:26:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53834 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:26:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730089AbgCSNZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:58 -0400
+        id S1730730AbgCSN0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:26:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4B8E207FC;
-        Thu, 19 Mar 2020 13:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F34F2080C;
+        Thu, 19 Mar 2020 13:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624358;
-        bh=F1D0R/proQlgrCAIHqb84XFSvyT3s+JQd9HSM/5D7iQ=;
+        s=default; t=1584624362;
+        bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DV8xkNBBivCo33I+gAyq3FG3vmUPGwXn3Zmqkc/IeIBwbsgr/JklR6juNrY7uYxiE
-         R1KqOznCyOZSF0qlZSrKDQqdGufQfXBobrUndAL3/ue2x3nad9Hcl7YIEcqgMtqWcx
-         dxb7g1ZNTqCb2S3oEZVQdo2UnVDQfQydolIrlpS8=
+        b=cvabnR8kLKs0WhcLy3NIEY6BWwNE6p6PVC9yro1yQpd8ZdbwMJuv6gsQOpvBX7yOw
+         uXJTf04GiI8autt0Xf8pPXlYGFzVRAGDSXgmXSOf/YJmhXP+l7jpBVuT7S2YKlsc5A
+         LV0qnOsfBpsDsQE8grLWHGtujIcBSHSmfgJzCzVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hanno Zulla <kontakt@hanno.de>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 16/65] HID: hid-bigbenff: fix general protection fault caused by double kfree
-Date:   Thu, 19 Mar 2020 14:03:58 +0100
-Message-Id: <20200319123931.506586350@linuxfoundation.org>
+Subject: [PATCH 5.5 17/65] HID: hid-bigbenff: call hid_hw_stop() in case of error
+Date:   Thu, 19 Mar 2020 14:03:59 +0100
+Message-Id: <20200319123931.809784295@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -62,51 +62,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hanno Zulla <kontakt@hanno.de>
 
-[ Upstream commit 789a2c250340666220fa74bc6c8f58497e3863b3 ]
+[ Upstream commit 976a54d0f4202cb412a3b1fc7f117e1d97db35f3 ]
 
-The struct *bigben was allocated via devm_kzalloc() and then used as a
-parameter in input_ff_create_memless(). This caused a double kfree
-during removal of the device, since both the managed resource API and
-ml_ff_destroy() in drivers/input/ff-memless.c would call kfree() on it.
+It's required to call hid_hw_stop() once hid_hw_start() was called
+previously, so error cases need to handle this. Also, hid_hw_close() is
+not necessary during removal.
 
 Signed-off-by: Hanno Zulla <kontakt@hanno.de>
 Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-bigbenff.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/hid/hid-bigbenff.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
-index 3f6abd190df43..f7e85bacb6889 100644
+index f7e85bacb6889..f8c552b64a899 100644
 --- a/drivers/hid/hid-bigbenff.c
 +++ b/drivers/hid/hid-bigbenff.c
-@@ -220,10 +220,16 @@ static void bigben_worker(struct work_struct *work)
- static int hid_bigben_play_effect(struct input_dev *dev, void *data,
- 			 struct ff_effect *effect)
- {
--	struct bigben_device *bigben = data;
-+	struct hid_device *hid = input_get_drvdata(dev);
-+	struct bigben_device *bigben = hid_get_drvdata(hid);
- 	u8 right_motor_on;
- 	u8 left_motor_force;
+@@ -305,7 +305,6 @@ static void bigben_remove(struct hid_device *hid)
+ 	struct bigben_device *bigben = hid_get_drvdata(hid);
  
-+	if (!bigben) {
-+		hid_err(hid, "no device data\n");
-+		return 0;
-+	}
-+
- 	if (effect->type != FF_RUMBLE)
- 		return 0;
+ 	cancel_work_sync(&bigben->worker);
+-	hid_hw_close(hid);
+ 	hid_hw_stop(hid);
+ }
  
-@@ -341,7 +347,7 @@ static int bigben_probe(struct hid_device *hid,
- 
- 	INIT_WORK(&bigben->worker, bigben_worker);
- 
--	error = input_ff_create_memless(hidinput->input, bigben,
-+	error = input_ff_create_memless(hidinput->input, NULL,
+@@ -350,7 +349,7 @@ static int bigben_probe(struct hid_device *hid,
+ 	error = input_ff_create_memless(hidinput->input, NULL,
  		hid_bigben_play_effect);
  	if (error)
- 		return error;
+-		return error;
++		goto error_hw_stop;
+ 
+ 	name_sz = strlen(dev_name(&hid->dev)) + strlen(":red:bigben#") + 1;
+ 
+@@ -360,8 +359,10 @@ static int bigben_probe(struct hid_device *hid,
+ 			sizeof(struct led_classdev) + name_sz,
+ 			GFP_KERNEL
+ 		);
+-		if (!led)
+-			return -ENOMEM;
++		if (!led) {
++			error = -ENOMEM;
++			goto error_hw_stop;
++		}
+ 		name = (void *)(&led[1]);
+ 		snprintf(name, name_sz,
+ 			"%s:red:bigben%d",
+@@ -375,7 +376,7 @@ static int bigben_probe(struct hid_device *hid,
+ 		bigben->leds[n] = led;
+ 		error = devm_led_classdev_register(&hid->dev, led);
+ 		if (error)
+-			return error;
++			goto error_hw_stop;
+ 	}
+ 
+ 	/* initial state: LED1 is on, no rumble effect */
+@@ -389,6 +390,10 @@ static int bigben_probe(struct hid_device *hid,
+ 	hid_info(hid, "LED and force feedback support for BigBen gamepad\n");
+ 
+ 	return 0;
++
++error_hw_stop:
++	hid_hw_stop(hid);
++	return error;
+ }
+ 
+ static __u8 *bigben_report_fixup(struct hid_device *hid, __u8 *rdesc,
 -- 
 2.20.1
 
