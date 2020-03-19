@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F139C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F053C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F2B20789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A7121556
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623326;
-	bh=Jv/pAzjV1xIWQxuAPgYiZeoaguZnMeopW7aTS4b2zfg=;
+	s=default; t=1584623330;
+	bh=EYQOWPY8vAXWHUB6f4RQwDkcB1H0VABO48Stohkc0fA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MyDzdEGBzyVjPhG9P9bfGOhqRLpJyde4BUtxmZ5g1LE1EaqudYQFPRN5sPpmyUJ2X
-	 qduNr7DGlpSXsYHcViSREKJw6VdpUki7Mz7BJeQC9t7DSVwMQhGGW1j/cYIf6AwTfe
-	 vCX571foW3l/eXgudCE0FJMHJzeKUUMTcKxEJnm8=
+	b=OSWHkakTD6zhsLjdIo7Lx9ZftiyZrievKJs4hps/qfR0SubWFSLRl5BFcy2mi5TWU
+	 XaEwIHxkqhjQRod7T9DfEG22xVAuE9y2J91XP+Moc2pomHIxEE9QwW/tDEFFpY+jXs
+	 OQI0YdtSyGoRutKgkHqYXLcfugs20+KPdxdLxTMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbgCSNIo (ORCPT
+        id S1728202AbgCSNIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:08:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52938 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:08:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728189AbgCSNIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:08:40 -0400
+        id S1728197AbgCSNIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:08:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0E5421556;
-        Thu, 19 Mar 2020 13:08:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C54172098B;
+        Thu, 19 Mar 2020 13:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623320;
-        bh=Jv/pAzjV1xIWQxuAPgYiZeoaguZnMeopW7aTS4b2zfg=;
+        s=default; t=1584623324;
+        bh=EYQOWPY8vAXWHUB6f4RQwDkcB1H0VABO48Stohkc0fA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eZkDiYaPTk9qCJTpGZklJYeRNtbuMNgBKU9ufbSLvrK4f0Zm72bXpvGLVoe4XusLX
-         B6jIWOjYXY8rdFtJTqO1Yzq4wJBvlaVIMhTwjbJkSBw7Dp0Y73IvygvzBzUz/ImLNy
-         pwBgfYhpLc9lW00kMlmeDBDQMP9Hz7hFlL22+vxI=
+        b=YjbLH5e3xWKVmvxIzxNSysyDUQ7KhY/XNDENQohTpk9PJUq5M8L7odTiZEtAy1IJq
+         cbkPwLqcHW5l3W70uz+eoAUsx69sLaAMPqyqnoo1EQqMH3/8MfJA778y7f5LbJKfCu
+         7w0qo5FZD2LsvpoQbg2cJPVkyXRoQ8a2DrgKdhX8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Soros <sorosj@gmail.com>,
+        Martin Weinelt <martin@linuxlounge.net>,
         Sven Eckelmann <sven@narfation.org>,
+        Antonio Quartulli <a@unstable.cc>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 73/93] batman-adv: Fix debugfs path for renamed hardif
-Date:   Thu, 19 Mar 2020 14:00:17 +0100
-Message-Id: <20200319123948.022107972@linuxfoundation.org>
+Subject: [PATCH 4.4 82/93] batman-adv: Reduce tt_global hash refcnt only for removed entry
+Date:   Thu, 19 Mar 2020 14:00:26 +0100
+Message-Id: <20200319123950.489055929@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -62,109 +63,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sven Eckelmann <sven@narfation.org>
 
-commit 36dc621ceca1be3ec885aeade5fdafbbcc452a6d upstream.
+commit f131a56880d10932931e74773fb8702894a94a75 upstream.
 
-batman-adv is creating special debugfs directories in the init
-net_namespace for each valid hard-interface (net_device). But it is
-possible to rename a net_device to a completely different name then the
-original one.
+The batadv_hash_remove is a function which searches the hashtable for an
+entry using a needle, a hashtable bucket selection function and a compare
+function. It will lock the bucket list and delete an entry when the compare
+function matches it with the needle. It returns the pointer to the
+hlist_node which matches or NULL when no entry matches the needle.
 
-It can therefore happen that a user registers a new net_device which gets
-the name "wlan0" assigned by default. batman-adv is also adding a new
-directory under $debugfs/batman-adv/ with the name "wlan0".
+The batadv_tt_global_free is not itself protected in anyway to avoid that
+any other function is modifying the hashtable between the search for the
+entry and the call to batadv_hash_remove. It can therefore happen that the
+entry either doesn't exist anymore or an entry was deleted which is not the
+same object as the needle. In such an situation, the reference counter (for
+the reference stored in the hashtable) must not be reduced for the needle.
+Instead the reference counter of the actually removed entry has to be
+reduced.
 
-The user then decides to rename this device to "wl_pri" and registers a
-different device. The kernel may now decide to use the name "wlan0" again
-for this new device. batman-adv will detect it as a valid net_device and
-tries to create a directory with the name "wlan0" under
-$debugfs/batman-adv/. But there already exists one with this name under
-this path and thus this fails. batman-adv will detect a problem and
-rollback the registering of this device.
+Otherwise the reference counter will underflow and the object might be
+freed before all its references were dropped. The kref helpers reported
+this problem as:
 
-batman-adv must therefore take care of renaming the debugfs directories
-for hard-interfaces whenever it detects such a net_device rename.
+  refcount_t: underflow; use-after-free.
 
-Fixes: 5bc7c1eb44f2 ("batman-adv: add debugfs structure for information per interface")
-Reported-by: John Soros <sorosj@gmail.com>
+Fixes: 7683fdc1e886 ("batman-adv: protect the local and the global trans-tables with rcu")
+Reported-by: Martin Weinelt <martin@linuxlounge.net>
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Antonio Quartulli <a@unstable.cc>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/debugfs.c        |   20 ++++++++++++++++++++
- net/batman-adv/debugfs.h        |    6 ++++++
- net/batman-adv/hard-interface.c |    3 +++
- 3 files changed, 29 insertions(+)
+ net/batman-adv/translation-table.c |   18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
---- a/net/batman-adv/debugfs.c
-+++ b/net/batman-adv/debugfs.c
-@@ -19,6 +19,7 @@
- #include "main.h"
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -508,14 +508,26 @@ static void batadv_tt_global_free(struct
+ 				  struct batadv_tt_global_entry *tt_global,
+ 				  const char *message)
+ {
++	struct batadv_tt_global_entry *tt_removed_entry;
++	struct hlist_node *tt_removed_node;
++
+ 	batadv_dbg(BATADV_DBG_TT, bat_priv,
+ 		   "Deleting global tt entry %pM (vid: %d): %s\n",
+ 		   tt_global->common.addr,
+ 		   BATADV_PRINT_VID(tt_global->common.vid), message);
  
- #include <linux/compiler.h>
-+#include <linux/dcache.h>
- #include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/errno.h>
-@@ -507,6 +508,25 @@ out:
+-	batadv_hash_remove(bat_priv->tt.global_hash, batadv_compare_tt,
+-			   batadv_choose_tt, &tt_global->common);
+-	batadv_tt_global_entry_free_ref(tt_global);
++	tt_removed_node = batadv_hash_remove(bat_priv->tt.global_hash,
++					     batadv_compare_tt,
++					     batadv_choose_tt,
++					     &tt_global->common);
++	if (!tt_removed_node)
++		return;
++
++	/* drop reference of remove hash entry */
++	tt_removed_entry = hlist_entry(tt_removed_node,
++				       struct batadv_tt_global_entry,
++				       common.hash_entry);
++	batadv_tt_global_entry_free_ref(tt_removed_entry);
  }
  
  /**
-+ * batadv_debugfs_rename_hardif() - Fix debugfs path for renamed hardif
-+ * @hard_iface: hard interface which was renamed
-+ */
-+void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface)
-+{
-+	const char *name = hard_iface->net_dev->name;
-+	struct dentry *dir;
-+	struct dentry *d;
-+
-+	dir = hard_iface->debug_dir;
-+	if (!dir)
-+		return;
-+
-+	d = debugfs_rename(dir->d_parent, dir, dir->d_parent, name);
-+	if (!d)
-+		pr_err("Can't rename debugfs dir to %s\n", name);
-+}
-+
-+/**
-  * batadv_debugfs_del_hardif - delete the base directory for a hard interface
-  *  in debugfs.
-  * @hard_iface: hard interface which is deleted.
---- a/net/batman-adv/debugfs.h
-+++ b/net/batman-adv/debugfs.h
-@@ -33,6 +33,7 @@ void batadv_debugfs_destroy(void);
- int batadv_debugfs_add_meshif(struct net_device *dev);
- void batadv_debugfs_del_meshif(struct net_device *dev);
- int batadv_debugfs_add_hardif(struct batadv_hard_iface *hard_iface);
-+void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface);
- void batadv_debugfs_del_hardif(struct batadv_hard_iface *hard_iface);
- 
- #else
-@@ -61,6 +62,11 @@ int batadv_debugfs_add_hardif(struct bat
- }
- 
- static inline
-+void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface)
-+{
-+}
-+
-+static inline
- void batadv_debugfs_del_hardif(struct batadv_hard_iface *hard_iface)
- {
- }
---- a/net/batman-adv/hard-interface.c
-+++ b/net/batman-adv/hard-interface.c
-@@ -780,6 +780,9 @@ static int batadv_hard_if_event(struct n
- 		if (hard_iface == primary_if)
- 			batadv_primary_if_update_addr(bat_priv, NULL);
- 		break;
-+	case NETDEV_CHANGENAME:
-+		batadv_debugfs_rename_hardif(hard_iface);
-+		break;
- 	default:
- 		break;
- 	}
 
 
