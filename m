@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD169C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A7FC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6C62071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78ED2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbgCSLxS (ORCPT
+        id S1726936AbgCSLw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 07:53:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45248 "EHLO mx2.suse.de"
+        Thu, 19 Mar 2020 07:52:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45050 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbgCSLw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 07:52:59 -0400
+        id S1725787AbgCSLw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 07:52:56 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4C96CAF62;
-        Thu, 19 Mar 2020 11:52:56 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 41949ACEF;
+        Thu, 19 Mar 2020 11:52:52 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -63,9 +63,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         linux-kernel@vger.kernel.org,
         "linux-fsdevel @ vger . kernel . org --in-reply-to=" 
         <20200225173541.1549955-1-npiggin@gmail.com>
-Subject: [PATCH v11 4/8] powerpc/perf: consolidate valid_user_sp
-Date:   Thu, 19 Mar 2020 12:52:24 +0100
-Message-Id: <1b612025371bb9f2bcce72c700c809ae29e57392.1584613649.git.msuchanek@suse.de>
+Subject: [PATCH v11 1/8] powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
+Date:   Thu, 19 Mar 2020 12:52:21 +0100
+Message-Id: <9c35e5b04213a0fcd55458271d58e203e5bc3486.1584613649.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1584613649.git.msuchanek@suse.de>
 References: <cover.1584613649.git.msuchanek@suse.de>
@@ -76,94 +76,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge the 32bit and 64bit version.
+This partially reverts commit caf6f9c8a326 ("asm-generic: Remove
+unneeded __ARCH_WANT_SYS_LLSEEK macro")
 
-Halve the check constants on 32bit.
+When CONFIG_COMPAT is disabled on ppc64 the kernel does not build.
 
-Use STACK_TOP since it is defined.
+There is resistance to both removing the llseek syscall from the 64bit
+syscall tables and building the llseek interface unconditionally.
 
-Passing is_64 is now redundant since is_32bit_task() is used to
-determine which callchain variant should be used. Use STACK_TOP and
-is_32bit_task() directly.
-
-This removes a page from the valid 32bit area on 64bit:
- #define TASK_SIZE_USER32 (0x0000000100000000UL - (1 * PAGE_SIZE))
- #define STACK_TOP_USER32 TASK_SIZE_USER32
+Link: https://lore.kernel.org/lkml/20190828151552.GA16855@infradead.org/
+Link: https://lore.kernel.org/lkml/20190829214319.498c7de2@naga/
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 ---
-v8: new patch
-v11: simplify by using is_32bit_task()
+v7: new patch
 ---
- arch/powerpc/perf/callchain.c | 27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
+ arch/powerpc/include/asm/unistd.h | 1 +
+ fs/read_write.c                   | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index c9a78c6e4361..194c7fd933e6 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -102,6 +102,15 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
- 	}
+diff --git a/arch/powerpc/include/asm/unistd.h b/arch/powerpc/include/asm/unistd.h
+index b0720c7c3fcf..700fcdac2e3c 100644
+--- a/arch/powerpc/include/asm/unistd.h
++++ b/arch/powerpc/include/asm/unistd.h
+@@ -31,6 +31,7 @@
+ #define __ARCH_WANT_SYS_SOCKETCALL
+ #define __ARCH_WANT_SYS_FADVISE64
+ #define __ARCH_WANT_SYS_GETPGRP
++#define __ARCH_WANT_SYS_LLSEEK
+ #define __ARCH_WANT_SYS_NICE
+ #define __ARCH_WANT_SYS_OLD_GETRLIMIT
+ #define __ARCH_WANT_SYS_OLD_UNAME
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 59d819c5b92e..bbfa9b12b15e 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -331,7 +331,8 @@ COMPAT_SYSCALL_DEFINE3(lseek, unsigned int, fd, compat_off_t, offset, unsigned i
  }
+ #endif
  
-+static inline int valid_user_sp(unsigned long sp)
-+{
-+	bool is_64 = !is_32bit_task();
-+
-+	if (!sp || (sp & (is_64 ? 7 : 3)) || sp > STACK_TOP - (is_64 ? 32 : 16))
-+		return 0;
-+	return 1;
-+}
-+
- #ifdef CONFIG_PPC64
- /*
-  * On 64-bit we don't want to invoke hash_page on user addresses from
-@@ -161,13 +170,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
- 	return read_user_stack_slow(ptr, ret, 8);
- }
- 
--static inline int valid_user_sp(unsigned long sp, int is_64)
--{
--	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
--		return 0;
--	return 1;
--}
--
- /*
-  * 64-bit user processes use the same stack frame for RT and non-RT signals.
-  */
-@@ -226,7 +228,7 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
- 
- 	while (entry->nr < entry->max_stack) {
- 		fp = (unsigned long __user *) sp;
--		if (!valid_user_sp(sp, 1) || read_user_stack_64(fp, &next_sp))
-+		if (!valid_user_sp(sp) || read_user_stack_64(fp, &next_sp))
- 			return;
- 		if (level > 0 && read_user_stack_64(&fp[2], &next_ip))
- 			return;
-@@ -275,13 +277,6 @@ static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry
- {
- }
- 
--static inline int valid_user_sp(unsigned long sp, int is_64)
--{
--	if (!sp || (sp & 7) || sp > TASK_SIZE - 32)
--		return 0;
--	return 1;
--}
--
- #define __SIGNAL_FRAMESIZE32	__SIGNAL_FRAMESIZE
- #define sigcontext32		sigcontext
- #define mcontext32		mcontext
-@@ -423,7 +418,7 @@ static void perf_callchain_user_32(struct perf_callchain_entry_ctx *entry,
- 
- 	while (entry->nr < entry->max_stack) {
- 		fp = (unsigned int __user *) (unsigned long) sp;
--		if (!valid_user_sp(sp, 0) || read_user_stack_32(fp, &next_sp))
-+		if (!valid_user_sp(sp) || read_user_stack_32(fp, &next_sp))
- 			return;
- 		if (level > 0 && read_user_stack_32(&fp[1], &next_ip))
- 			return;
+-#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT)
++#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT) || \
++	defined(__ARCH_WANT_SYS_LLSEEK)
+ SYSCALL_DEFINE5(llseek, unsigned int, fd, unsigned long, offset_high,
+ 		unsigned long, offset_low, loff_t __user *, result,
+ 		unsigned int, whence)
 -- 
 2.23.0
 
