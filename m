@@ -2,211 +2,78 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9D6C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CEDC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4897A2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:46:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="oAHmm+nJ"
+	by mail.kernel.org (Postfix) with ESMTP id 05788206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:47:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgCSTqG (ORCPT
+        id S1727360AbgCSTrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:46:06 -0400
-Received: from mail.efficios.com ([167.114.26.124]:55566 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgCSTqG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:46:06 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id C2FB327AEB7;
-        Thu, 19 Mar 2020 15:46:04 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id N2Sgnom2LQQB; Thu, 19 Mar 2020 15:46:04 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id F13CB27ACEB;
-        Thu, 19 Mar 2020 15:46:03 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com F13CB27ACEB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1584647164;
-        bh=mPayiUoTJ4CXFxP07c55XGHAyo6rbWCRF8IfmBCmuac=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=oAHmm+nJ7bNdAcBo63xyq7h3/sR+93guwx0RGjIl37TheaCNn4bGtv6FM/ZjLXFFP
-         AhsE59Sp1+SnVXfQDelS3SU1Ja2c7u/L+bmz0c7hrdFg8eqsaF97IZRhsuKhPoTMP8
-         KHKfP5EO7MzF467pCek3A61se0nuLZurAwKOzB5oYc8VGEIx/SmD1q66uGer2vKZMs
-         FIjgd7rMe9n+C8FvYlu/FFOe/FcxOuav4Bi+glgwPFaCASsE/dWLpYFeKxvAzAz/Vk
-         tjEJcDH3p1GiFP7BIpBmiY1Iz/s7RCGTgeP6fszTzJ/3sTdKfgDtUsHSHgzmY5qat5
-         nYnvj50hIQvDw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id Qy-7PsmrF1sc; Thu, 19 Mar 2020 15:46:03 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id DA19527B0A9;
-        Thu, 19 Mar 2020 15:46:03 -0400 (EDT)
-Date:   Thu, 19 Mar 2020 15:46:03 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fw@deneb.enyo.de>
-Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Message-ID: <624584479.4115.1584647163775.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87fte4go6w.fsf@mid.deneb.enyo.de>
-References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com> <87r1xo5o2s.fsf@mid.deneb.enyo.de> <1302331358.3965.1584641354569.JavaMail.zimbra@efficios.com> <87sgi4gqhf.fsf@mid.deneb.enyo.de> <1103782439.4046.1584642531222.JavaMail.zimbra@efficios.com> <87k13ggpmf.fsf@mid.deneb.enyo.de> <900536577.4062.1584644126425.JavaMail.zimbra@efficios.com> <87fte4go6w.fsf@mid.deneb.enyo.de>
-Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C
- startup and thread creation (v15)
+        Thu, 19 Mar 2020 15:47:02 -0400
+Received: from mga09.intel.com ([134.134.136.24]:56401 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbgCSTrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:47:01 -0400
+IronPort-SDR: Po8Z/pzT4ZyzATKERnc1WJgjSBvnAiGgTZcOVGdH2Sbi5IJn62f1jnNywVcCqPEXMi+J7xo/x9
+ wwy0XEFxe94Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 12:46:58 -0700
+IronPort-SDR: a6SaYj/xeKftbSen3LWYA6qWR9ApLeeTa+v5cjiVyF9UB9Q7xyMMQqIfWGC7lVjo5Zg0E1J0nu
+ 0ljRFqFI0wdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="391910291"
+Received: from oamor-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.182.181])
+  by orsmga004.jf.intel.com with ESMTP; 19 Mar 2020 12:46:51 -0700
+Date:   Thu, 19 Mar 2020 21:46:50 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Waiman Long <longman@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, Sumit Garg <sumit.garg@linaro.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: [PATCH v5 2/2] KEYS: Avoid false positive ENOMEM error on key
+ read
+Message-ID: <20200319194650.GA24804@linux.intel.com>
+References: <20200318221457.1330-1-longman@redhat.com>
+ <20200318221457.1330-3-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v15)
-Thread-Index: poZ7JQ5/Qt1CQs9uPvdRib/AmVGsDg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318221457.1330-3-longman@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Mar 19, 2020, at 3:05 PM, Florian Weimer fw@deneb.enyo.de wrote:
+On Wed, Mar 18, 2020 at 06:14:57PM -0400, Waiman Long wrote:
+> +			 * It is possible, though unlikely, that the key
+> +			 * changes in between the up_read->down_read period.
+> +			 * If the key becomes longer, we will have to
+> +			 * allocate a larger buffer and redo the key read
+> +			 * again.
+> +			 */
+> +			if (!tmpbuf || unlikely(ret > tmpbuflen)) {
 
-> * Mathieu Desnoyers:
-> 
->>> Inside glibc, you can assume __attribute__ support.
->>
->> OK, so the _Static_assert () could sit in sys/rseq.h
-> 
-> It requires a C11 compiler.  In this case, you could use _Alignas.
+Shouldn't you check that tmpbuflen stays below buflen (why else
+you had made copy of buflen otherwise)?
 
-How would _Alignas replace:
-
-+_Static_assert (__alignof__ (struct rseq_cs) >= 4 * sizeof(uint64_t),
-+                "alignment");
-+_Static_assert (__alignof__ (struct rseq) >= 4 * sizeof(uint64_t),
-+                "alignment");
-
-?
-
-Moreover, I notice that sys/cdefs.h implements a fallback for _Static_assert
-for cases where it is not supported by the compiler. So I do not think it
-strictly depends on C11 if I include sys/cdefs.h from sys/rseq.h.
-
->>>>>>> The struct rseq/struct rseq_cs definitions
->>>>>>> are broken, they should not try to change the alignment.
->>>>>>
->>>>>> AFAIU, this means we should ideally not have used __attribute__((aligned))
->>>>>> in the uapi headers in the first place. Why is it broken ?
->>>>> 
->>>>> Compilers which are not sufficiently GCC-compatible define
->>>>> __attribute__(X) as the empty expansion, so you silently get a
->>>>> different ABI.
->>>>
-
-[...]
-
->>>>> There is really no need to specify 32-byte alignment here.  Is not
->>>>> even the size of a standard cache line.  It can result in crashes if
->>>>> these structs are heap-allocated using malloc, when optimizing for
->>>>> AVX2.
->>>>
->>>> Why would it be valid to allocate those with malloc ? Isn't it the
->>>> purpose of posix_memalign() ?
->>> 
->>> It would not be valid, but I don't think we have diagnostics for C
->>> like we have them for C++'s operator new.
->>
->> We could at least make an effort to let people know that alignment is
->> required here when allocating struct rseq and struct rseq_cs on the
->> heap by adding some comments to that effect in linux/rseq.h ?
-> 
-> We could use different types on the glibc side, then no special
-> programmer action will be needed.
-
-Can't this lead to problems when mixing up compile units which have
-been compiled with linux/rseq.h with compile units compiled against
-sys/rseq.h ?
-
-Let me take a step back and try to understand.
-
-So far, there appears to be two scenarios where having a 64-byte
-alignment attribute on struct rseq and struct rseq_cs can cause
-problems:
-
-1) A user-space programmer uses malloc() to dynamically allocate
-   struct rseq or struct rseq_cs, which does not satisfy any of
-   the alignment requirement of the structure. Combining this with
-   compiler expectations that the structure needs to be aligned
-   on 64-byte (e.g. -mavx2) breaks things.
-
-   For this first scenario, I am proposing that we document that
-   the programmer should have used posix_memalign(), which provides
-   the required alignment guarantees.
-
-2) A user-space programmer mixes code compiled with compilers
-   honouring the aligned attribute with other compile units compiled
-   with compilers which discard those GCC extension attributes silently,
-   embeds those into a structure, and get different struct layouts.
-
-   The _Static_assert in sys/rseq.h should detect the case where a
-   compiler is not honouring the aligned attribute, right ?
-
-> 
->>>>>> However, now that it is in the wild, it's a bit late to change that.
->>>>> 
->>>>> I had forgotten about the alignment crashes.  I think we should
->>>>> seriously consider changing the types. 8-(
->>>>
->>>> I don't think this is an option at this stage given that it is part
->>>> of the Linux kernel UAPI. I am not convinced that it is valid at all
->>>> to allocate struct rseq or struct rseq_cs with malloc(), because it
->>>> does not guarantee any alignment.
->>> 
->>> The kernel ABI doesn't change.  The kernel cannot use the alignment
->>> information anyway.  Userspace struct layout may change in subtle
->>> ways, though.
->>
->> Considering the amount of pain this can cause in user-space, and because
->> it can break userspace, this is not a UAPI change I am willing to consider.
->> I'm not sure why we are even discussing the possibility of breaking a Linux
->> UAPI considering that those are set in stone.
-> 
-> Again, the kernel interface is NOT affected.  Only if the struct is
-> used in a non-top-level fashion across an ABI boundary in userspace.
-> I think making the change now is better than dealing with the breakage
-> in rseq users when they are built with -mavx2.
-
-What I am missing is what are the issues that persist once we add proper
-documentation of alignment requirements for heap allocation and a static
-assert to fail early when compiled with a compiler dismissing the
-aligned attribute ?
-
-As you point out, changing the currently public linux/rseq.h UAPI header
-to remove those attributes ends up breaking user-space in scenarios of
-non-top-level use across ABI boundary. This is not kernel-vs-userspace
-ABI, but an ABI exposed by the kernel which ends up being used to
-coordinate user-space objects within a program. Breaking that does not
-appear to be any more acceptable. As I recall, the hard requirement for
-Linux ABIs is to do not break userspace, period. There is not mention
-of kernel-vs-userspace or userspace-vs-userspace. So if the end result
-of this change is to break user-space, it should not be changed.
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+/Jarkko
