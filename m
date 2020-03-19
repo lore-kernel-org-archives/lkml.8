@@ -2,151 +2,254 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 014BAC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D5FC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3CF82145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54CA02137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:09:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRl6HA2/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RpJpNILV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgCSOIQ (ORCPT
+        id S1727487AbgCSOJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:08:16 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:33852 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbgCSOIQ (ORCPT
+        Thu, 19 Mar 2020 10:09:03 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:35275 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbgCSOJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:08:16 -0400
-Received: by mail-pj1-f67.google.com with SMTP id q16so2355121pje.1;
-        Thu, 19 Mar 2020 07:08:15 -0700 (PDT)
+        Thu, 19 Mar 2020 10:09:02 -0400
+Received: by mail-lf1-f65.google.com with SMTP id m15so1756344lfp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 07:09:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=O7Q51zmRS7g4gxwj7MQtP4qiQBx0T9QoIdivgK4vLVI=;
-        b=JRl6HA2/zf7Vvf60cE21OWI9S0qRbhP70JRWPmuedNCx8LrcCrszbNh4+ftzFYTmiI
-         u5qM7hDwCykZmR4fwobtn0fOIN13LN3lBb71h9cICv3eUixaJFZwhjXjuomMhppv6Woz
-         ddR4Gmd3UmY9wg2zTq+PrcuF64C2ZP/51WzGe/413gChPM7GHzC4AtOYQ6kCXzHOabex
-         Sh+4TbPDJTkEWkgU30FR4mDdy05ZN6Us0fokChT6CY0ZqbzJWH9fXgAMtT6yvynQkiMF
-         EsFbg4yrkS+sxTYH6J+zydRLLb4/Lfs+Jj1yCmEwgjbhH9UoXdBzuSznM8L3Rm0a/MRc
-         tQaQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gEcY8z6wwpaaAzNCe8Z6QFn2FupyzXJqJUFsyjFrfJ0=;
+        b=RpJpNILV8tOQM22m6W5PBUdt+ZfhFSgvIxHC1TiiRYjzVLusOipyaoJsKDY1qBn9tC
+         8TB8eQ+UdlHWSUBZx7YYfAkczhVm0iUNa4fZsCrSV6lW6L4gBoR4IzGSsM10bzU/XxJk
+         xt2BWzjPc+zveX2UXnxkEsU0gXu0N+pJbv9gLrJgekGQdHkzMVBIMBtNcQO6VcI/yeJs
+         jN6CSCeVLAsyHSKmknd300Oww6sGsSrfzPrYw038eJW/WOkqTtPBoIFpHMF0JQtaQnkJ
+         bMQwUCeKH2KWlz/35dQkMLjM6eF+HheLW7BwEqBfn1hW1KIolmS7Lroy5Krr2USWV14a
+         Ib9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=O7Q51zmRS7g4gxwj7MQtP4qiQBx0T9QoIdivgK4vLVI=;
-        b=igbPDBvUn6MeGTIiKTy+waY4/6MGdILJeJCI5LqfuQiXnblbZ3J6Zgv4z1HeivXlCg
-         qD+xXhAbDveGjsKKgGuVcltg+zyGS9Ee+O8GZmuWrkFrf1lgdQ4xTMNq8xyTg1v8TkFR
-         LUT/sDKpk8Rkne238GZuBN1+hqS6UIS7zUPPbD9vCaj/fS1Ptk5Dhxc3lk949ch5Yjnz
-         pyMCdrtd1E5jgUKTwdBKOcPV4mimHm2AojcdcdsNQiU9vNpYSGhYV0Hmed+K3Lf8smot
-         BHgHX4ur73lvOLLAFs5L0g8jysn+sxGoh/8gulH9mVEvcWf0q3Jo3Yk2mbFcUdM31omZ
-         Ea2A==
-X-Gm-Message-State: ANhLgQ0hDLH8Q4PYMsdp+A2QRLwiRbPnpBSCD6utSugtv34+sCuEicOn
-        0eFbPvxB+KAOkLVu6Aq3XD0=
-X-Google-Smtp-Source: ADFU+vt3Uom3z61eXimWi6EYH31AV5srNGn4SND8daBCtBbNg5Si/yyHZbXUD35dwdCBvZjiBbe1KQ==
-X-Received: by 2002:a17:902:82c2:: with SMTP id u2mr3682951plz.125.1584626894899;
-        Thu, 19 Mar 2020 07:08:14 -0700 (PDT)
-Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
-        by smtp.gmail.com with ESMTPSA id l11sm2434715pjy.44.2020.03.19.07.08.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 07:08:14 -0700 (PDT)
-Subject: Re: [PATCH 0/4] x86/Hyper-V: Panic code path fixes
-To:     Michael Kelley <mikelley@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
- <MW2PR2101MB1052F185AF4134EB2BB9ECBFD7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <1d1bc90c-7fbe-6123-eeea-5f9a5aad77e4@gmail.com>
-Date:   Thu, 19 Mar 2020 22:08:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gEcY8z6wwpaaAzNCe8Z6QFn2FupyzXJqJUFsyjFrfJ0=;
+        b=EwsjcifINKaz/0YUnBL133pmXWkA9cmH2aH9DLNeGs2R+kMXfWFuL3vFMsOkJaPL8q
+         laiMFGlevtPRm0IwcXy0QCzcN4IwtYRXFE8bekzG6m3cHFIbBMDuE9vsqWtiwPJ06oqk
+         nYBl9SqT75oHp/1LooOQixHKSuF49mY88nh+NyiexOipqjXYukfIZ6IruRJP6qTsaPQt
+         bMD0nKYZflXWylzggWmsAuGo9uQAgQjvAYI3/Lafq/h/bkgcCw7nXCv4aXK/ltr7r6nh
+         3sCVJAulCiabyhqXn7Ri9pmSxhJH8cYTDc9dquGgZv+19aHYxvNWcrvELbwXcoPxnSek
+         WT8A==
+X-Gm-Message-State: ANhLgQ2ITJwdswz/co2oqG39E4RNnMT4UBK3ehMaRXWjmMM76US4k+2C
+        aN2D6J3qJlivkUpSTQ3UVQfVSQTQaB7boRRK1XRBpw==
+X-Google-Smtp-Source: ADFU+vtL2a5EH4HAtULGcGOjAWCmsAowQ2bEo2SZGc7cGuYj69Mom1zEbkHAkEi23SJQ7tUhsLzeUDsfPICmoRNYDiM=
+X-Received: by 2002:a19:4b53:: with SMTP id y80mr2235185lfa.77.1584626939845;
+ Thu, 19 Mar 2020 07:08:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <MW2PR2101MB1052F185AF4134EB2BB9ECBFD7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200316133503.144650-1-icenowy@aosc.io> <20200316133503.144650-4-icenowy@aosc.io>
+In-Reply-To: <20200316133503.144650-4-icenowy@aosc.io>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 19 Mar 2020 15:08:48 +0100
+Message-ID: <CACRpkdahrHmXWpdqoApFEq6cW2gatMfds9SMZGwsUnNHt+J0aQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] drm: panel: add Xingbangda XBD599 panel
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Ondrej Jirman <megous@megous.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael:
-      Thanks for your review.
+Hi Icenowy!
 
-On 3/19/2020 8:57 AM, Michael Kelley wrote:
-> From: ltykernel@gmail.com <ltykernel@gmail.com> Sent: Tuesday, March 17, 2020 6:25 AM
->>
->> This patchset fixes some issues in the Hyper-V panic code path.
->> Patch 1 resolves issue that panic system still responses network
->> packets.
->> Patch 2-3 resolves crash enlightenment issues.
->> Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
->> VM in order to report crash data or kmsg to host before running
->> kdump kernel.
-> 
-> I still see an issue that isn't addressed by these patches.  The VMbus
-> driver registers a "die notifier" and a "panic notifier".   But die() will
-> eventually call panic() if panic_on_oops is set (which I think it typically
-> is).  If the CRASH_NOTIFY_MSG option is *not* enabled, then
-> hyperv_report_panic() could get called by the die notifier, and then
-> again by the panic notifier.
-> 
-> Do we even need the "die notifier"?  If it was removed, there would
-> not be any notification to Hyper-V via the die() path unless panic_on_oops
-> is set, which I think is actually the correct behavior.  I'm not
-> completely clear on what is supposed to happen in general to the
-> Linux kernel if panic_on_oops is not set. Does it try to continue to run?
-> If so, then we should not be notifying Hyper-V if panic_on_oops is not
-> set, and removing the die notifier is the right thing to do.
-> 
+Thanks for your patch.
 
-hyperv_report_panic() has re-enter check inside and so kernel only 
-reports crash register data once during die(). From comment in the
-hyperv_report_panic(), register value reported in die chain is more
-exact than value in panic chain. The register value in die chain is
-passed by die() caller. Register value reported in panic chain
-is collected in the hyperv_panic_event().
+On Mon, Mar 16, 2020 at 2:37 PM Icenowy Zheng <icenowy@aosc.io> wrote:
 
+> Xingbangda XBD599 is a 5.99" 720x1440 MIPI-DSI IPS LCD panel made by
+> Xingbangda, which is used on PinePhone final assembled phones.
+>
+> Add support for it.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+(...)
 
-If panic_on_oops is not set, the task should be killed and kernel
-still runs. In this case, we may not trigger crash enlightenment.
+> +/* Manufacturer specific Commands send via DSI */
+> +#define ST7703_CMD_ALL_PIXEL_OFF 0x22
+> +#define ST7703_CMD_ALL_PIXEL_ON         0x23
+> +#define ST7703_CMD_SETDISP      0xB2
+> +#define ST7703_CMD_SETRGBIF     0xB3
+> +#define ST7703_CMD_SETCYC       0xB4
+> +#define ST7703_CMD_SETBGP       0xB5
+> +#define ST7703_CMD_SETVCOM      0xB6
+> +#define ST7703_CMD_SETOTP       0xB7
+> +#define ST7703_CMD_SETPOWER_EXT         0xB8
+> +#define ST7703_CMD_SETEXTC      0xB9
+> +#define ST7703_CMD_SETMIPI      0xBA
+> +#define ST7703_CMD_SETVDC       0xBC
+> +#define ST7703_CMD_SETSCR       0xC0
+> +#define ST7703_CMD_SETPOWER     0xC1
+> +#define ST7703_CMD_UNK_C6       0xC6
+> +#define ST7703_CMD_SETPANEL     0xCC
+> +#define ST7703_CMD_SETGAMMA     0xE0
+> +#define ST7703_CMD_SETEQ        0xE3
+> +#define ST7703_CMD_SETGIP1      0xE9
+> +#define ST7703_CMD_SETGIP2      0xEA
 
+It appears that the Himax HX8363 is using the same display controller
+if you look at the datasheet:
+http://www.datasheet-pdf.com/PDF/HX8369-A-Datasheet-Himax-729024
+There you find an explanation to some of the commands.
 
+People are trying to add support for this panel too:
+https://discuss.96boards.org/t/adding-support-to-himax-hx8363-panel/9068
 
-> Michael
-> 
->>
->> Tianyu Lan (4):
->>    x86/Hyper-V: Unload vmbus channel in hv panic callback
->>    x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
->>    x86/Hyper-V: Trigger crash enlightenment only once during  system
->>      crash.
->>    x86/Hyper-V: Report crash register data or ksmg before running crash
->>      kernel
->>
->>   arch/x86/kernel/cpu/mshyperv.c | 10 ++++++++++
->>   drivers/hv/channel_mgmt.c      |  5 +++++
->>   drivers/hv/vmbus_drv.c         | 35 +++++++++++++++++++++++++----------
->>   3 files changed, 40 insertions(+), 10 deletions(-)
->>
->> --
->> 2.14.5
-> 
+The set-up values etc for the Himax display will be widely
+different because it is using the same display controller
+for a display of 480x800(854) pixels.
+
+You should definately insert code to read the MTP bytes:
+0xDA manufacturer
+0xDB driver version
+0xDC LCD module/driver
+And print these, se e.g. my newly added NT35510 driver or
+the Sony ACX424AKP driver.
+
+Nobody seems to have any documentation of these MTP
+ID bytes but they are certainly consistent among
+e.g Ilitek or Novatek display drivers.
+
+I do not think that either Xingbangda or Himax have made
+this display controller. The number of advanced display
+controller vendors in the world is actually pretty limited.
+Ilitek, Novatek or TPO make most of them.
+
+It is a bit of a problem for the development world that
+display manufacturers hide the details of which display
+controller they actually use, because we can't have
+2 different drivers for the same display controller just
+because Himax and Xingbada package it up with
+their own branding.
+
+This actually looks very much like an Ilitek display controller.
+Some commands are clearly identical to Ilitek ILI9342:
+http://www.ampdisplay.com/documents/pdf/ILI9342_DS_V008_20100331.pdf
+
+I would:
+
+1. Try to determine what the actual display controller
+  is. I think it is some Ilitek.
+
+2. Write a panel-ilitek-ili9342.c (if that is the actual controller)
+  and parameterize it for this display controller the same
+  way we do in e.g. panel-novatek-nt35510.c or
+  panel-ilitek-ili9322.c, so you use the compatible string
+  to set up the actual per-display settings for this display
+  controller.
+
+> +       /*
+> +        * Init sequence was supplied by the panel vendor.
+> +        */
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETEXTC,
+> +                         0xF1, 0x12, 0x83);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETMIPI,
+> +                         0x33, 0x81, 0x05, 0xF9, 0x0E, 0x0E, 0x20, 0x00,
+> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x25,
+> +                         0x00, 0x91, 0x0a, 0x00, 0x00, 0x02, 0x4F, 0x11,
+> +                         0x00, 0x00, 0x37);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER_EXT,
+> +                         0x25, 0x22, 0x20, 0x03);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETRGBIF,
+> +                         0x10, 0x10, 0x05, 0x05, 0x03, 0xFF, 0x00, 0x00,
+> +                         0x00, 0x00);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETSCR,
+> +                         0x73, 0x73, 0x50, 0x50, 0x00, 0xC0, 0x08, 0x70,
+> +                         0x00);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETVDC, 0x4E);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETPANEL, 0x0B);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETCYC, 0x80);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETDISP, 0xF0, 0x12, 0xF0);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETEQ,
+> +                         0x00, 0x00, 0x0B, 0x0B, 0x10, 0x10, 0x00, 0x00,
+> +                         0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10);
+> +       dsi_dcs_write_seq(dsi, 0xC6, 0x01, 0x00, 0xFF, 0xFF, 0x00);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETPOWER,
+> +                         0x74, 0x00, 0x32, 0x32, 0x77, 0xF1, 0xFF, 0xFF,
+> +                         0xCC, 0xCC, 0x77, 0x77);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETBGP, 0x07, 0x07);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETVCOM, 0x2C, 0x2C);
+> +       dsi_dcs_write_seq(dsi, 0xBF, 0x02, 0x11, 0x00);
+> +
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP1,
+> +                         0x82, 0x10, 0x06, 0x05, 0xA2, 0x0A, 0xA5, 0x12,
+> +                         0x31, 0x23, 0x37, 0x83, 0x04, 0xBC, 0x27, 0x38,
+> +                         0x0C, 0x00, 0x03, 0x00, 0x00, 0x00, 0x0C, 0x00,
+> +                         0x03, 0x00, 0x00, 0x00, 0x75, 0x75, 0x31, 0x88,
+> +                         0x88, 0x88, 0x88, 0x88, 0x88, 0x13, 0x88, 0x64,
+> +                         0x64, 0x20, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> +                         0x02, 0x88, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETGIP2,
+> +                         0x02, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +                         0x00, 0x00, 0x00, 0x00, 0x02, 0x46, 0x02, 0x88,
+> +                         0x88, 0x88, 0x88, 0x88, 0x88, 0x64, 0x88, 0x13,
+> +                         0x57, 0x13, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+> +                         0x75, 0x88, 0x23, 0x14, 0x00, 0x00, 0x02, 0x00,
+> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x0A,
+> +                         0xA5, 0x00, 0x00, 0x00, 0x00);
+> +       dsi_dcs_write_seq(dsi, ST7703_CMD_SETGAMMA,
+> +                         0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41, 0x35,
+> +                         0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12, 0x12,
+> +                         0x18, 0x00, 0x09, 0x0D, 0x23, 0x27, 0x3C, 0x41,
+> +                         0x35, 0x07, 0x0D, 0x0E, 0x12, 0x13, 0x10, 0x12,
+> +                         0x12, 0x18);
+
+Already just using the HX8363 datasheet you can turn this into
+something much more readable akin to how the NT35510 driver
+is done.
+
+> +static const struct drm_display_mode xbd599_default_mode = {
+> +       .hdisplay    = 720,
+> +       .hsync_start = 720 + 40,
+> +       .hsync_end   = 720 + 40 + 40,
+> +       .htotal      = 720 + 40 + 40 + 40,
+> +       .vdisplay    = 1440,
+> +       .vsync_start = 1440 + 18,
+> +       .vsync_end   = 1440 + 18 + 10,
+> +       .vtotal      = 1440 + 18 + 10 + 17,
+> +       .vrefresh    = 60,
+
+I think this vrefresh is going away soon.
+
+> +       .clock       = 69000,
+> +       .flags       = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> +
+> +       .width_mm    = 68,
+> +       .height_mm   = 136,
+> +       .type        = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
+> +};
+
+All of this as well as some of the initialization
+sequences should be per-variant data. (Switched by
+the compatible).
+
+Yours,
+Linus Walleij
