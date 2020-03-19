@@ -2,275 +2,154 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F801C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D8DC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC092072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD2220754
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="joiRPfWQ"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cDHAcd1C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgCSRrQ (ORCPT
+        id S1728321AbgCSRsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:47:16 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37700 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728114AbgCSRrQ (ORCPT
+        Thu, 19 Mar 2020 13:48:10 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:50242 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbgCSRsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:47:16 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JHd8Pr016532;
-        Thu, 19 Mar 2020 18:46:46 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=oXNrCInOKbWks9uJELVsod6DJLx4EuXuc92666BUHsg=;
- b=joiRPfWQ3YTPizPjgewsnfWMlRMJgf9xM2g+O10bOzXQkut+CiKD/ghpy0SX4W/0hFNs
- 6SPcYpUfV6hTd1HC1Jh585SCZafcNzTqjGqgAvHy0K4ZcxWsGgwPK06ScXR0WZiLkgWh
- P8asSmh/YZ+6RVlKkE9DSTW2XVUEw48aLNeO/Mmxtvqd3mAHaN1/ssSpjgBu/LhfbIW2
- a+vlC5d/y9jeXCp5AuwaCIR7DTRsxbzDNz1MsDeWaiNixgkicUIssL4HcL+l6SYDW52G
- PndouZu3/uGfmA4ROdoSrP7D23gbdWeI1VodeKkKxrkVYyzr/hXwtFMAYLiwXNnI+q6f bA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yu95uu1ay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Mar 2020 18:46:46 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0D2E010002A;
-        Thu, 19 Mar 2020 18:46:40 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C88F42B4D56;
-        Thu, 19 Mar 2020 18:46:40 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar 2020 18:46:40
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <robh+dt@kernel.org>, <jic23@kernel.org>
-CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
-        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <fabrice.gasnier@st.com>,
-        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] dt-bindings: iio: dac: stm32-dac: convert bindings to json-schema
-Date:   Thu, 19 Mar 2020 18:46:23 +0100
-Message-ID: <1584639983-31098-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 19 Mar 2020 13:48:10 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 18F68DC4;
+        Thu, 19 Mar 2020 18:48:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584640088;
+        bh=muRfNh5vu7uoti9IKGxoYTDOSnB1SG2YiU3akIX1p/0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cDHAcd1CttFh1TV6F8AOFaQM8f/vHXwI08QWjwTnH1LKoh4ajd0MNenKWprm45YMj
+         ZKY8mCezz94b7mV0DOtsNC9tYj63WmdxfLlEEtGDCY0/UUbaA+cY0vWguUYAzRdc7u
+         2+MDgK7xO3tQUNYW0YrS32+Q13zWmyxsyNOMuTLg=
+Date:   Thu, 19 Mar 2020 19:48:02 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Alex Riesen <alexander.riesen@cetitec.com>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 02/10] media: adv748x: include everything adv748x.h
+ needs into the file
+Message-ID: <20200319174802.GH14585@pendragon.ideasonboard.com>
+References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+ <fe109d58eaa34d68cad0f34bb048f827b336e024.1584639664.git.alexander.riesen@cetitec.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-19_06:2020-03-19,2020-03-19 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <fe109d58eaa34d68cad0f34bb048f827b336e024.1584639664.git.alexander.riesen@cetitec.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 DAC binding to DT schema format using json-schema
+Hi Alexander,
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
-Changes in v2:
-- Fix id relative path/filename as detected by Rob's bot
----
- .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
- .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
- 2 files changed, 110 insertions(+), 63 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
- create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
+Thank you for the patch.
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
-deleted file mode 100644
-index bf2925c..00000000
---- a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
-+++ /dev/null
-@@ -1,63 +0,0 @@
--STMicroelectronics STM32 DAC
--
--The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
--may be configured in 8 or 12-bit mode. It has two output channels, each with
--its own converter.
--It has built-in noise and triangle waveform generator and supports external
--triggers for conversions. The DAC's output buffer allows a high drive output
--current.
--
--Contents of a stm32 dac root node:
-------------------------------------
--Required properties:
--- compatible: Should be one of:
--  "st,stm32f4-dac-core"
--  "st,stm32h7-dac-core"
--- reg: Offset and length of the device's register set.
--- clocks: Must contain an entry for pclk (which feeds the peripheral bus
--  interface)
--- clock-names: Must be "pclk".
--- vref-supply: Phandle to the vref+ input analog reference supply.
--- #address-cells = <1>;
--- #size-cells = <0>;
--
--Optional properties:
--- resets: Must contain the phandle to the reset controller.
--- A pinctrl state named "default" for each DAC channel may be defined to set
--  DAC_OUTx pin in mode of operation for analog output on external pin.
--
--Contents of a stm32 dac child node:
-------------------------------------
--DAC core node should contain at least one subnode, representing a
--DAC instance/channel available on the machine.
--
--Required properties:
--- compatible: Must be "st,stm32-dac".
--- reg: Must be either 1 or 2, to define (single) channel in use
--- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers" in
--  Documentation/devicetree/bindings/iio/iio-bindings.txt
--
--Example:
--	dac: dac@40007400 {
--		compatible = "st,stm32h7-dac-core";
--		reg = <0x40007400 0x400>;
--		clocks = <&clk>;
--		clock-names = "pclk";
--		vref-supply = <&reg_vref>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&dac_out1 &dac_out2>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		dac1: dac@1 {
--			compatible = "st,stm32-dac";
--			#io-channels-cells = <1>;
--			reg = <1>;
--		};
--
--		dac2: dac@2 {
--			compatible = "st,stm32-dac";
--			#io-channels-cells = <1>;
--			reg = <2>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
-new file mode 100644
-index 00000000..393f700
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
-@@ -0,0 +1,110 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/iio/dac/st,stm32-dac.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: STMicroelectronics STM32 DAC bindings
-+
-+description: |
-+  The STM32 DAC is a 12-bit voltage output digital-to-analog converter. The DAC
-+  may be configured in 8 or 12-bit mode. It has two output channels, each with
-+  its own converter.
-+  It has built-in noise and triangle waveform generator and supports external
-+  triggers for conversions. The DAC's output buffer allows a high drive output
-+  current.
-+
-+maintainers:
-+  - Fabrice Gasnier <fabrice.gasnier@st.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32f4-dac-core
-+      - st,stm32h7-dac-core
-+
-+  reg:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+
-+  vref-supply:
-+    description: Phandle to the vref input analog reference voltage.
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - vref-supply
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+patternProperties:
-+  "^dac@[1-2]+$":
-+    type: object
-+    description:
-+      A DAC block node should contain at least one subnode, representing an
-+      DAC instance/channel available on the machine.
-+
-+    properties:
-+      compatible:
-+        const: st,stm32-dac
-+
-+      reg:
-+        description: Must be either 1 or 2, to define (single) channel in use
-+        enum: [1, 2]
-+
-+      '#io-channel-cells':
-+        const: 1
-+
-+    additionalProperties: false
-+
-+    required:
-+      - compatible
-+      - reg
-+      - '#io-channel-cells'
-+
-+examples:
-+  - |
-+    // Example on stm32mp157c
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    dac: dac@40017000 {
-+      compatible = "st,stm32h7-dac-core";
-+      reg = <0x40017000 0x400>;
-+      clocks = <&rcc DAC12>;
-+      clock-names = "pclk";
-+      vref-supply = <&vref>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      dac@1 {
-+        compatible = "st,stm32-dac";
-+        #io-channel-cells = <1>;
-+        reg = <1>;
-+      };
-+
-+      dac@2 {
-+        compatible = "st,stm32-dac";
-+        #io-channel-cells = <1>;
-+        reg = <2>;
-+      };
-+    };
-+
-+...
+On Thu, Mar 19, 2020 at 06:41:48PM +0100, Alex Riesen wrote:
+> To follow the established practice of not depending on others to
+> pull everything in.
+> 
+> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+
+Good idea. While at it, could you include "adv748x.h" as the very first
+header in at least one of the C files ? That will help ensuring the
+header stays self-contained in the future.
+
+> ---
+>  drivers/media/i2c/adv748x/adv748x-afe.c  | 2 --
+>  drivers/media/i2c/adv748x/adv748x-core.c | 2 --
+>  drivers/media/i2c/adv748x/adv748x-csi2.c | 2 --
+>  drivers/media/i2c/adv748x/adv748x-hdmi.c | 2 --
+>  drivers/media/i2c/adv748x/adv748x.h      | 2 ++
+>  5 files changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/adv748x/adv748x-afe.c b/drivers/media/i2c/adv748x/adv748x-afe.c
+> index dbbb1e4d6363..ab0479641c10 100644
+> --- a/drivers/media/i2c/adv748x/adv748x-afe.c
+> +++ b/drivers/media/i2c/adv748x/adv748x-afe.c
+> @@ -11,8 +11,6 @@
+>  #include <linux/mutex.h>
+>  #include <linux/v4l2-dv-timings.h>
+>  
+> -#include <media/v4l2-ctrls.h>
+> -#include <media/v4l2-device.h>
+>  #include <media/v4l2-dv-timings.h>
+>  #include <media/v4l2-ioctl.h>
+>  
+> diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+> index c3fb113cef62..345f009de121 100644
+> --- a/drivers/media/i2c/adv748x/adv748x-core.c
+> +++ b/drivers/media/i2c/adv748x/adv748x-core.c
+> @@ -20,8 +20,6 @@
+>  #include <linux/slab.h>
+>  #include <linux/v4l2-dv-timings.h>
+>  
+> -#include <media/v4l2-ctrls.h>
+> -#include <media/v4l2-device.h>
+>  #include <media/v4l2-dv-timings.h>
+>  #include <media/v4l2-fwnode.h>
+>  #include <media/v4l2-ioctl.h>
+> diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
+> index c43ce5d78723..78d391009b5a 100644
+> --- a/drivers/media/i2c/adv748x/adv748x-csi2.c
+> +++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
+> @@ -8,8 +8,6 @@
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  
+> -#include <media/v4l2-ctrls.h>
+> -#include <media/v4l2-device.h>
+>  #include <media/v4l2-ioctl.h>
+>  
+>  #include "adv748x.h"
+> diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+> index c557f8fdf11a..0dffcdf79ff2 100644
+> --- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
+> +++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+> @@ -8,8 +8,6 @@
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  
+> -#include <media/v4l2-ctrls.h>
+> -#include <media/v4l2-device.h>
+>  #include <media/v4l2-dv-timings.h>
+>  #include <media/v4l2-ioctl.h>
+>  
+> diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+> index fccb388ce179..09aab4138c3f 100644
+> --- a/drivers/media/i2c/adv748x/adv748x.h
+> +++ b/drivers/media/i2c/adv748x/adv748x.h
+> @@ -19,6 +19,8 @@
+>   */
+>  
+>  #include <linux/i2c.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-device.h>
+>  
+>  #ifndef _ADV748X_H_
+>  #define _ADV748X_H_
+
 -- 
-2.7.4
+Regards,
 
+Laurent Pinchart
