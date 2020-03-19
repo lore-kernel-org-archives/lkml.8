@@ -2,107 +2,125 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E1DC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACC4C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8809520753
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3365A20752
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:54:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="SP1ghtcx"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iCmxtCja"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgCSKxh (ORCPT
+        id S1727127AbgCSKyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:53:37 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43977 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgCSKxh (ORCPT
+        Thu, 19 Mar 2020 06:54:02 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:50472 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727083AbgCSKyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:53:37 -0400
-Received: by mail-il1-f194.google.com with SMTP id d14so1748346ilq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 03:53:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mGv6o90nBAkHN8tZGMFBnMPu1+vfJLDuM2IfjimqHmY=;
-        b=SP1ghtcxKDm86Nrinun/aUTKmLh8YvxfNs09WDEPx7kOtKCkXKDhc4YR8iqRTOp/gS
-         8P5efpzV/FxasWeGMas6yKVOjmZHlN/U7Vcs0aJQgCFwJkVeQ69oXJHMx4/FdNA71uX6
-         wqH9xxtU1P3ClcNJRgAKlGJ0idpOlYBjlQ2nM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mGv6o90nBAkHN8tZGMFBnMPu1+vfJLDuM2IfjimqHmY=;
-        b=TbFG2bVqjF5ga2WvWTZg8vUBKewwI0Li2kb4mXNeAVEaVFRtlnF1+nWXEpx8b9u8ew
-         5LkOyXxKgdrLtk/ajuO1cwmP/msMPCO6d4/nR5Eojcg5Up8hRFdVqpFqofvI5NHKtg0k
-         53sUFeoxwSx5F3CaxVNaptuXPIauYP7PHr5ueGapLAwnCP/19BqYeYdD1UGwL0LKQedQ
-         S0Dvgy4DuH0m2+/gW30ekW4CvpEiGHhORADxEPu4R+V7VWWyG0wjetld00B4Vjsxy5TY
-         E4dbtxyy/EI5eCr8j86dtEnJYLDVZJFWxF7qAGUX1vC4BKoEJpeZvGCJBOnNuQFTFiD2
-         xVPA==
-X-Gm-Message-State: ANhLgQ35HBm+qojlqtwruURT+uB7Io/VKoHGAzOS8af6zqFIoiNVUmF+
-        /pKOo1Ccs/ZoeTeSQbUS6KIhxQtsSqJ25gDMrkk8Uanu
-X-Google-Smtp-Source: ADFU+vsvDXUclE/dotigec15em503ixvkYRgAZl9akg13dIVS4KGv/OyL1NGUG/SO0ckE6T2Lmn93e+sS5SELs6oRrU=
-X-Received: by 2002:a92:77c2:: with SMTP id s185mr1287803ilc.297.1584615215203;
- Thu, 19 Mar 2020 03:53:35 -0700 (PDT)
+        Thu, 19 Mar 2020 06:54:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584615241; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=G1xcrA3VxHhne2SYFlZHYK1yCSX3CDOuVGju3yHGiP4=; b=iCmxtCjaznOZG8y57jBUQ6xJc5OLmUemGpYAKV4K9HZmqmzpvXZAwI+2UfDpudy5x1oqA5Aa
+ vYiPCL8ifRop7JNObEZjVVR8MX9eGRUq9rkVuTR5v5ZAPA6ftBlO6WH3tBhYoV299m2f6KwG
+ ATu68fMD2xFAZQPOXvMS0rv970E=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e734f3f.7f655465e7a0-smtp-out-n01;
+ Thu, 19 Mar 2020 10:53:51 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9DBD8C44791; Thu, 19 Mar 2020 10:53:51 +0000 (UTC)
+Received: from [192.168.0.103] (unknown [106.51.30.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 00C85C433CB;
+        Thu, 19 Mar 2020 10:53:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 00C85C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
+        nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org, linux-kernel-owner@vger.kernel.org
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
+ <20200318034243.o2metmggzuah6cqw@vireshk-i7>
+ <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
+ <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
+ <20200319102411.oivesngrk7gy7vtw@vireshk-i7>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <78d92969-0219-d140-d788-d1b14e643e90@codeaurora.org>
+Date:   Thu, 19 Mar 2020 16:23:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200318171003.5179-1-jagan@amarulasolutions.com>
- <20200318171003.5179-3-jagan@amarulasolutions.com> <20200318185814.GB28092@ravnborg.org>
- <CAMty3ZDhVfvYXV7OO+NT+d_2YHbsJXebzjdtYkqtdD+X=Ch0yQ@mail.gmail.com> <20200319103159.GA18744@ravnborg.org>
-In-Reply-To: <20200319103159.GA18744@ravnborg.org>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 19 Mar 2020 16:23:24 +0530
-Message-ID: <CAMty3ZCjHALfw3Hws5A1M3jbjtkGgeerUZb-wnrppFtQ0dvpTg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: Update feiyang, st7701 panel bindings
- converted as YAML
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200319102411.oivesngrk7gy7vtw@vireshk-i7>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
 
-On Thu, Mar 19, 2020 at 4:02 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Jagan.
-> On Thu, Mar 19, 2020 at 03:50:44PM +0530, Jagan Teki wrote:
-> > On Thu, Mar 19, 2020 at 12:28 AM Sam Ravnborg <sam@ravnborg.org> wrote:
-> > >
-> > > On Wed, Mar 18, 2020 at 10:40:03PM +0530, Jagan Teki wrote:
-> > > > The feiyang,fy07024di26a30d.txt and sitronix,st7701.txt has been
-> > > > converted to YAML schemas, update MAINTAINERS to match them again.
-> > > >
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > >
-> > > The patch is fine.
-> > > I just dislike we repeat the maintainer info in two places..
-> >
-> > Since these are two different panels. and entry similar like other
-> > panels.do you look for single entry for both the panels?
-> My comment was related to the fact that we have maintainer entry in the
-> .yaml file, and in MAINTAINERS.
->
-> Seems a waste to have a distributed and a centralized place for this.
-> So patches are fine in this respect.
-> And merging the two bindings would be very bad, they are not alike.
 
-Seems to be a valid point considering the redundant entry in two
-places, but the idea of maintainer entry in binding vs MAINTAINER file
-may be different in terms of usage, and knowing to public. the later
-part is pretty generic for people to know, and checkpatch to find. I
-may not be sure, but some experts can help here.
+On 3/19/2020 3:54 PM, Viresh Kumar wrote:
+> On 19-03-20, 15:41, Sibi Sankar wrote:
+>> Viresh,
+>> Saravana's example does show a device
+>> with multiple opp tables but doesn't
+>> need multiple opp table support to
+>> land though (since it works fine with
+>> the current implementation). I am more
+>> interested  in understanding your/
+>> Stephen's/Saravana's stance on adding
+>> multiple opp-table support. Personally
+>> I feel its inevitable, since multiple
+>> qc drivers using interconnect opp-tables,
+>> routinely need vote on multiple paths in
+>> a non-trivial manner.
+> 
+> The OPP core doesn't support multiple OPP tables for a device and I
+> don't understand how it will. And so I have been waiting for a reply.
 
-Jagan.
+I thought this series indeed is proposing to add that support in OPP core?
+a.k.a "[RFC v3 06/10] opp: Allow multiple opp_tables to be mapped to a single device"
+
+> 
+>>>
+>>> Could you please post a link to the discussion that you are referring to
+>>> here?
+>>> I looked at a few links posted in the cover letter as dependencies and
+>>> it seems
+>>> like the discussions are pending for *months* and not weeks but I
+>>> might have looked
+>>> at the wrong ones.
+>>
+>> https://lore.kernel.org/lkml/20200114103448.odnvqawnqb3twst5@vireshk-i7/
+>>
+>> Rajendra,
+>> Viresh is referring to ^^ one
+> 
+> Right, thanks.
+
+These discussions are stalled for over 2 months now waiting on a response from Saravana.
+Viresh, whats the way forward here and how long do we plan on waiting for Saravanas response?
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
