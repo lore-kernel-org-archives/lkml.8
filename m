@@ -2,138 +2,88 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2530C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D14C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA94620782
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0821820B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584629903;
-	bh=GVAeBATJZYQy0Z3DzA7NxDsKvZ9QS5yhnTeI6RUEkoI=;
+	s=default; t=1584629945;
+	bh=QYecqSd02Nj2TlGYTfbNFSxRHUgkqUMuykRd9RA3qJY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uTYV48ifo0YMapnIMxwHv35kB5CqWxirQWP5N1N6ZeAKmbX0hr1r/ihSQF5tR3kJc
-	 uG2PnyxhAJmKC9mTObSIhnYMydoHh8oNi6NVZ9oB5mla+AiCLgCFAt3OehCbhU2Uqn
-	 SLl5N4WufVSCtAMJiKIh4PSKBYv5DEGQrAj2Cc7E=
+	b=GBFmWG3VnQo6gGTNuolkQFGuC6UuC3zdVqU5Ra0O4GlBIGojC8tmFI61V+dLHciyy
+	 1R3pLkcNb+P4HWBQUEa7XfLiXeqlbpuFWX48nl1z2xstbbUlI2/x8iMkLNqBVvmRhd
+	 s3UpA44mLIEsKO/IF1aM5z/IhK4gQbzZpGveBYc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbgCSO6W (ORCPT
+        id S1727677AbgCSO7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:58:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 10:59:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727347AbgCSO6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:58:22 -0400
+        id S1726785AbgCSO7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 10:59:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DEA320782;
-        Thu, 19 Mar 2020 14:58:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FFAE20782;
+        Thu, 19 Mar 2020 14:59:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584629900;
-        bh=GVAeBATJZYQy0Z3DzA7NxDsKvZ9QS5yhnTeI6RUEkoI=;
+        s=default; t=1584629943;
+        bh=QYecqSd02Nj2TlGYTfbNFSxRHUgkqUMuykRd9RA3qJY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ee4MGhmh3l69lT8NUU8vy664Kex9uVFBhqXVcOHHtQsAIZhrZbzJHc4KmcL2je0A6
-         Ur/SsMX3GzWnrw8IY13bu/9d37EBJ1AtAg3E9+8B+B+2IJBQHrOMJRN3LUhcQyHhW0
-         X8MXQLWDu6omcvdHQhYbhvIS36GiG4uY8Zq3bAb0=
-Date:   Thu, 19 Mar 2020 15:58:16 +0100
+        b=wN3pajYOYJ0vop6SHhK4Cg+Ngfw8xwyeqKEN8QJ8tq9chfcp1xuocXdx9sttuGRfD
+         WmD3rYQxkyDugxVLuNn32yN1syAZDxZ2ox8Mh5xP6Vo/BujCORKQOPfgRwq/jbJ/8I
+         QCm8RTepMq+SpVqvOSrXEToXUpipsl51o1tEYRUw=
+Date:   Thu, 19 Mar 2020 15:59:00 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kevin Hao <haokexin@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.5 01/65] gpiolib: Add support for the irqdomain which
- doesnt use irq_fwspec as arg
-Message-ID: <20200319145816.GB92193@kroah.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>
+Subject: Re: [PATCH 5.5 00/65] 5.5.11-rc1 review
+Message-ID: <20200319145900.GC92193@kroah.com>
 References: <20200319123926.466988514@linuxfoundation.org>
- <20200319123926.902914624@linuxfoundation.org>
- <20200319133355.GB711692@pek-khao-d2.corp.ad.wrs.com>
- <20200319134710.GA4092809@kroah.com>
- <20200319144753.GD711692@pek-khao-d2.corp.ad.wrs.com>
+ <fcf6db4c-cebe-9ad3-9f19-00d49a7b1043@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200319144753.GD711692@pek-khao-d2.corp.ad.wrs.com>
+In-Reply-To: <fcf6db4c-cebe-9ad3-9f19-00d49a7b1043@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 10:47:53PM +0800, Kevin Hao wrote:
-> On Thu, Mar 19, 2020 at 02:47:10PM +0100, Greg Kroah-Hartman wrote:
-> > On Thu, Mar 19, 2020 at 09:33:55PM +0800, Kevin Hao wrote:
-> > > On Thu, Mar 19, 2020 at 02:03:43PM +0100, Greg Kroah-Hartman wrote:
-> > > > From: Kevin Hao <haokexin@gmail.com>
-> > > > 
-> > > > [ Upstream commit 242587616710576808dc8d7cdf18cfe0d7bf9831 ]
-> > > > 
-> > > > Some gpio's parent irqdomain may not use the struct irq_fwspec as
-> > > > argument, such as msi irqdomain. So rename the callback
-> > > > populate_parent_fwspec() to populate_parent_alloc_arg() and make it
-> > > > allocate and populate the specific struct which is needed by the
-> > > > parent irqdomain.
-> > > 
-> > > Hi Greg,
-> > > 
-> > > This commit shouldn't go to stable because it is not a bug fix. It is just a
-> > > prerequisite of switching to general GPIOLIB_IRQCHIP for thunderx gpio driver
-> > > (commit 7a9f4460f74d "gpio: thunderx: Switch to GPIOLIB_IRQCHIP").
+On Thu, Mar 19, 2020 at 07:44:33AM -0700, Guenter Roeck wrote:
+> On 3/19/20 6:03 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.5.11 release.
+> > There are 65 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > > 
-> > This seems to be a prerequisite for f98371476f36 ("pinctrl: qcom:
-> > ssbi-gpio: Fix fwspec parsing bug") to apply properly.  With that
-> > information, is it ok to keep?
+> > Responses should be made by Sat, 21 Mar 2020 12:37:04 +0000.
+> > Anything received after that time might be too late.
+> > 
 > 
-> Yes, this commit does change the context of commit f98371476f36 ("pinctrl: qcom:
-> ssbi-gpio: Fix fwspec parsing bug"). So I am fine to keep this in order to apply
-> f98371476f36 cleanly. But there is no really logical dependency between these two
-> commits, so another option is that we can adjust the commit f98371476f36 a bit in order
-> to apply to v5.5.x cleanly without this commit, something like below. IMHO, it is more
-> suitable for the stable kernel.
+> arm:davinci_all_defconfig fails to build.
 > 
-> From 2678327511f77edd8692634e81ef04cd9ca4b249 Mon Sep 17 00:00:00 2001
-> From: Linus Walleij <linus.walleij@linaro.org>
-> Date: Fri, 6 Mar 2020 15:34:15 +0100
-> Subject: [PATCH] pinctrl: qcom: ssbi-gpio: Fix fwspec parsing bug
+> include/linux/gpio/driver.h: In function 'gpiochip_populate_parent_fwspec_twocell':
+> include/linux/gpio/driver.h:552:1: error: no return statement in function returning non-void [-Werror=return-type]
+>   552 | }
 > 
-> [ Upstream commit f98371476f36359da2285d1807b43e5b17fd18de ]
-> 
-> We are parsing SSBI gpios as fourcell fwspecs but they are
-> twocell. Probably a simple copy-and-paste bug.
-> 
-> Tested on the APQ8060 DragonBoard and after this ethernet
-> and MMC card detection works again.
-> 
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Brian Masney <masneyb@onstation.org>
-> Fixes: ae436fe81053 ("pinctrl: ssbi-gpio: convert to hierarchical IRQ helpers in gpio core")
-> Link: https://lore.kernel.org/r/20200306143416.1476250-1-linus.walleij@linaro.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> [Kevin: Replace .populate_parent_alloc_arg with .populate_parent_fwspec]
-> Signed-off-by: Kevin Hao <haokexin@gmail.com>
-> ---
->  drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-> index dca86886b1f9..6b7f0d56a532 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-> @@ -794,7 +794,7 @@ static int pm8xxx_gpio_probe(struct platform_device *pdev)
->  	girq->fwnode = of_node_to_fwnode(pctrl->dev->of_node);
->  	girq->parent_domain = parent_domain;
->  	girq->child_to_parent_hwirq = pm8xxx_child_to_parent_hwirq;
-> -	girq->populate_parent_fwspec = gpiochip_populate_parent_fwspec_fourcell;
-> +	girq->populate_parent_fwspec = gpiochip_populate_parent_fwspec_twocell;
->  	girq->child_offset_to_irq = pm8xxx_child_offset_to_irq;
->  	girq->child_irq_domain_ops.translate = pm8xxx_domain_translate;
->  
+> The problem is caused by commit 8db6a5905e98 ("gpiolib: Add support for the
+> irqdomain which doesn't use irq_fwspec as arg") which is missing its fix,
+> commit 9c6722d85e922 ("gpio: Fix the no return statement warning"). That one
+> is missing a Fixes: tag, providing a good example why such tags are desirable.
 
-Thank you, that worked, and I've dropped the other patch now.
+Thanks for letting me know, I've now dropped that patch (others
+complained about it for other reasons) and will push out a -rc2 with
+that fix.
 
-Turns out it also broke the build :)
+thanks,
 
 greg k-h
