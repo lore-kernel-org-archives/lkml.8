@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4A4C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB32C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4B122071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD95B2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgCSLxA (ORCPT
+        id S1727127AbgCSLxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 07:53:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45226 "EHLO mx2.suse.de"
+        Thu, 19 Mar 2020 07:53:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45248 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbgCSLw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 07:52:57 -0400
+        id S1727091AbgCSLxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 07:53:00 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E6CF6AF33;
-        Thu, 19 Mar 2020 11:52:54 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 0A4A6AF7E;
+        Thu, 19 Mar 2020 11:52:59 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -63,9 +63,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         linux-kernel@vger.kernel.org,
         "linux-fsdevel @ vger . kernel . org --in-reply-to=" 
         <20200225173541.1549955-1-npiggin@gmail.com>
-Subject: [PATCH v11 3/8] powerpc/perf: consolidate read_user_stack_32
-Date:   Thu, 19 Mar 2020 12:52:23 +0100
-Message-Id: <184347595442b4ca664613008a09e8cea7188c36.1584613649.git.msuchanek@suse.de>
+Subject: [PATCH v11 6/8] powerpc/64: Make COMPAT user-selectable disabled on littleendian by default.
+Date:   Thu, 19 Mar 2020 12:52:26 +0100
+Message-Id: <4ebc213bc09013531c852c0e083f286f55cb69ad.1584613649.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1584613649.git.msuchanek@suse.de>
 References: <cover.1584613649.git.msuchanek@suse.de>
@@ -76,95 +76,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two almost identical copies for 32bit and 64bit.
-
-The function is used only in 32bit code which will be split out in next
-patch so consolidate to one function.
+On bigendian ppc64 it is common to have 32bit legacy binaries but much
+less so on littleendian.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
-v6:  new patch
-v8:  move the consolidated function out of the ifdef block.
-v11: rebase on top of def0bfdbd603
+v3: make configurable
 ---
- arch/powerpc/perf/callchain.c | 48 +++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+ arch/powerpc/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index cbc251981209..c9a78c6e4361 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -161,18 +161,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
- 	return read_user_stack_slow(ptr, ret, 8);
- }
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 497b7d0b2d7e..29d00b3959b9 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -264,8 +264,9 @@ config PANIC_TIMEOUT
+ 	default 180
  
--static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
--{
--	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
--	    ((unsigned long)ptr & 3))
--		return -EFAULT;
--
--	if (!probe_user_read(ret, ptr, sizeof(*ret)))
--		return 0;
--
--	return read_user_stack_slow(ptr, ret, 4);
--}
--
- static inline int valid_user_sp(unsigned long sp, int is_64)
- {
- 	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
-@@ -277,19 +265,9 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
- }
- 
- #else  /* CONFIG_PPC64 */
--/*
-- * On 32-bit we just access the address and let hash_page create a
-- * HPTE if necessary, so there is no need to fall back to reading
-- * the page tables.  Since this is called at interrupt level,
-- * do_page_fault() won't treat a DSI as a page fault.
-- */
--static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-+static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
- {
--	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
--	    ((unsigned long)ptr & 3))
--		return -EFAULT;
--
--	return probe_user_read(ret, ptr, sizeof(*ret));
-+	return 0;
- }
- 
- static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-@@ -312,6 +290,28 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
- 
- #endif /* CONFIG_PPC64 */
- 
-+/*
-+ * On 32-bit we just access the address and let hash_page create a
-+ * HPTE if necessary, so there is no need to fall back to reading
-+ * the page tables.  Since this is called at interrupt level,
-+ * do_page_fault() won't treat a DSI as a page fault.
-+ */
-+static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-+{
-+	int rc;
-+
-+	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-+	    ((unsigned long)ptr & 3))
-+		return -EFAULT;
-+
-+	rc = probe_user_read(ret, ptr, sizeof(*ret));
-+
-+	if (IS_ENABLED(CONFIG_PPC64) && rc)
-+		return read_user_stack_slow(ptr, ret, 4);
-+
-+	return rc;
-+}
-+
- /*
-  * Layout for non-RT signal frames
-  */
+ config COMPAT
+-	bool
+-	default y if PPC64
++	bool "Enable support for 32bit binaries"
++	depends on PPC64
++	default y if !CPU_LITTLE_ENDIAN
+ 	select COMPAT_BINFMT_ELF
+ 	select ARCH_WANT_OLD_COMPAT_IPC
+ 	select COMPAT_OLD_SIGACTION
 -- 
 2.23.0
 
