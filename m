@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A397C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1430C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395CF2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4BF9216FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623649;
-	bh=L0JnuaTB60PR88JIXOZ7LLqFNSyYGED8y7o/iOHkEWs=;
+	s=default; t=1584623652;
+	bh=qtcfD6FTjBWYW6gIAT7Wx9leaZlkgDsnGRHNqIN1es8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xBtMhGlsnAl4NS0ALYqL+6tWTizxZtFahjLhnOdnLvnAADHf6bMyOTQHR2CKDJriR
-	 uGyihwvyF+TjJw/WQqs8M75DCEG+VaXFGlVt+wFaY8HP/9NBjEv/HB/yjMCghEOEbX
-	 eMextweuycsJinP5gSrau06zHbAonlkwftQ8F4PI=
+	b=LCptg6Lg90sUD1FtVE4Lkgaw6kAFH0zgVRZoIIYd3/FDAsC92vy786IMf/NcbsVXc
+	 8fRm26uunvJJoUfjhkaS/vEvu5p3HRiPnv6ZV94gOBtWEdy9Nm03983XgYFQDYdOMo
+	 knCDyk2S1HExddqNF0j2P4tdmrXPDD/ILHJbS2OA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgCSNOI (ORCPT
+        id S1728484AbgCSNOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:14:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33298 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:14:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729235AbgCSNOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:14:03 -0400
+        id S1729245AbgCSNOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:14:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E01132166E;
-        Thu, 19 Mar 2020 13:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D75721556;
+        Thu, 19 Mar 2020 13:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623643;
-        bh=L0JnuaTB60PR88JIXOZ7LLqFNSyYGED8y7o/iOHkEWs=;
+        s=default; t=1584623647;
+        bh=qtcfD6FTjBWYW6gIAT7Wx9leaZlkgDsnGRHNqIN1es8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jJAwmr0Ojiza1S5bBFKUR4fY2WO3rx5IFiQOTS4rVUdy+W5a1OFwUlnst2igDA/sm
-         I/YsGyjKK3UCIQ/kTdNV6dsGLkaDu6chnfwdA+wb20hbibzkldwAG63EtSRw7U7JH0
-         kepGowYmWWHMIDhS4g0AeHzYBbjCp0oA5Td0xWd0=
+        b=hUtSRv6Ddm+w4GQTIeOR9SY34aM4iVWwK9kSSOmo4LJNyg6ofRRa8cCUrfGjHW/ST
+         ZcgAb7wC4S5N0YXvo9pZ9Izc0eMandMw0A4mBoyW/4/2QJK2NlrwpprNJzgx+iLn77
+         k3dZ+PKlsxvob92xaF72rPyPXFTMaJVqcRg6L7Mg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 82/90] cfg80211: check reg_rule for NULL in handle_channel_custom()
-Date:   Thu, 19 Mar 2020 14:00:44 +0100
-Message-Id: <20200319123953.692242904@linuxfoundation.org>
+Subject: [PATCH 4.9 83/90] net: ks8851-ml: Fix IRQ handling and locking
+Date:   Thu, 19 Mar 2020 14:00:45 +0100
+Message-Id: <20200319123953.979377330@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -59,35 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit a7ee7d44b57c9ae174088e53a668852b7f4f452d ]
+[ Upstream commit 44343418d0f2f623cb9da6f5000df793131cbe3b ]
 
-We may end up with a NULL reg_rule after the loop in
-handle_channel_custom() if the bandwidth didn't fit,
-check if this is the case and bail out if so.
+The KS8851 requires that packet RX and TX are mutually exclusive.
+Currently, the driver hopes to achieve this by disabling interrupt
+from the card by writing the card registers and by disabling the
+interrupt on the interrupt controller. This however is racy on SMP.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Link: https://lore.kernel.org/r/20200221104449.3b558a50201c.I4ad3725c4dacaefd2d18d3cc65ba6d18acd5dbfe@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Replace this approach by expanding the spinlock used around the
+ks_start_xmit() TX path to ks_irq() RX path to assure true mutual
+exclusion and remove the interrupt enabling/disabling, which is
+now not needed anymore. Furthermore, disable interrupts also in
+ks_net_stop(), which was missing before.
+
+Note that a massive improvement here would be to re-use the KS8851
+driver approach, which is to move the TX path into a worker thread,
+interrupt handling to threaded interrupt, and synchronize everything
+with mutexes, but that would be a much bigger rework, for a separate
+patch.
+
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/reg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index 0e66768427ba7..6d5f3f737207d 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -1730,7 +1730,7 @@ static void handle_channel_custom(struct wiphy *wiphy,
- 			break;
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index d94e151cff12b..d4747caf1e7cc 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -831,14 +831,17 @@ static irqreturn_t ks_irq(int irq, void *pw)
+ {
+ 	struct net_device *netdev = pw;
+ 	struct ks_net *ks = netdev_priv(netdev);
++	unsigned long flags;
+ 	u16 status;
+ 
++	spin_lock_irqsave(&ks->statelock, flags);
+ 	/*this should be the first in IRQ handler */
+ 	ks_save_cmd_reg(ks);
+ 
+ 	status = ks_rdreg16(ks, KS_ISR);
+ 	if (unlikely(!status)) {
+ 		ks_restore_cmd_reg(ks);
++		spin_unlock_irqrestore(&ks->statelock, flags);
+ 		return IRQ_NONE;
  	}
  
--	if (IS_ERR(reg_rule)) {
-+	if (IS_ERR_OR_NULL(reg_rule)) {
- 		pr_debug("Disabling freq %d MHz as custom regd has no rule that fits it\n",
- 			 chan->center_freq);
- 		if (wiphy->regulatory_flags & REGULATORY_WIPHY_SELF_MANAGED) {
+@@ -864,6 +867,7 @@ static irqreturn_t ks_irq(int irq, void *pw)
+ 		ks->netdev->stats.rx_over_errors++;
+ 	/* this should be the last in IRQ handler*/
+ 	ks_restore_cmd_reg(ks);
++	spin_unlock_irqrestore(&ks->statelock, flags);
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -933,6 +937,7 @@ static int ks_net_stop(struct net_device *netdev)
+ 
+ 	/* shutdown RX/TX QMU */
+ 	ks_disable_qmu(ks);
++	ks_disable_int(ks);
+ 
+ 	/* set powermode to soft power down to save power */
+ 	ks_set_powermode(ks, PMECR_PM_SOFTDOWN);
+@@ -989,10 +994,9 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	netdev_tx_t retv = NETDEV_TX_OK;
+ 	struct ks_net *ks = netdev_priv(netdev);
++	unsigned long flags;
+ 
+-	disable_irq(netdev->irq);
+-	ks_disable_int(ks);
+-	spin_lock(&ks->statelock);
++	spin_lock_irqsave(&ks->statelock, flags);
+ 
+ 	/* Extra space are required:
+ 	*  4 byte for alignment, 4 for status/length, 4 for CRC
+@@ -1006,9 +1010,7 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 		dev_kfree_skb(skb);
+ 	} else
+ 		retv = NETDEV_TX_BUSY;
+-	spin_unlock(&ks->statelock);
+-	ks_enable_int(ks);
+-	enable_irq(netdev->irq);
++	spin_unlock_irqrestore(&ks->statelock, flags);
+ 	return retv;
+ }
+ 
 -- 
 2.20.1
 
