@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E91FC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AB7C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72E1E208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2831207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624530;
-	bh=qeSR8s+xjYKgRtoXDhAo+RN2PMmTP5CX+CKt41Yu3xQ=;
+	s=default; t=1584624539;
+	bh=GK0txNaAhC1Tj3gLksvBxH5YZiIIZrSnVTFV8FXTM/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h6wuIqnyzLQldRHnWNjNbrnrwvFL8O1kT1W0jBYbJpGN3a6vqtc5uPCKyGj3nPDwU
-	 rN/01zqU7rCRGt3BsNcWsnt6Tx8A6veJ4D6zuUlQl6Mv4EeNxaYzujm6DVv3Lbxi6D
-	 2EfT1bBHRPUa/eG5Vm1mxRNOvz16nr8SQy5sp5R0=
+	b=x3n3bE/xywiVoUq64/js5+zlTrdtUUP0YnbZxS+YF0iB8JPR3w81UfBKpPJ3NYb3a
+	 F5G5q/8waJz1i/yXv0mHiS9kWqazUx+ML/Scf/4kZCDcdi4AvqPl+v9qg3GDYT/nY2
+	 mxSqqv7IXk1KODFVFE2qz2vp/BbeApyi5yzMWxRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbgCSNZ7 (ORCPT
+        id S1730630AbgCSNZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53688 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:25:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730701AbgCSNZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:54 -0400
+        id S1730445AbgCSNZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 095912080C;
-        Thu, 19 Mar 2020 13:25:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4F7A208D6;
+        Thu, 19 Mar 2020 13:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624353;
-        bh=qeSR8s+xjYKgRtoXDhAo+RN2PMmTP5CX+CKt41Yu3xQ=;
+        s=default; t=1584624322;
+        bh=GK0txNaAhC1Tj3gLksvBxH5YZiIIZrSnVTFV8FXTM/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oVVEtO/oWhL0+3XAd7G8LjHxZPicOF1Q5smcJGMq1tlf6WFmq4CnBj0tq+W1cTpB+
-         g6vE1egu07fCd8/EFmIDu0bQ6ikc4BURaaQ8Xe1DfRuNR1fJP1eNSd9RbO+4MNiQT9
-         fMiZwnXpfBFJaALTen1H46U98MV84bBtMxA/a2L8=
+        b=sMvWE8K9ePGbR/2WArP7iKwYZbixJiflDFITuLDN3IN4ec5y3K31nO4a+wCt1Ywav
+         gw/rJeoMMB89mr/sLrd0fbQsCj2jgs2W/bfbXnAjJbRmUpo6GiiH/f/JkeVlISAtde
+         p/+CFSd5L3ncbnYlYjZq+3smMv9nPRtMvTKBGY8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 14/65] MIPS: Disable VDSO time functionality on microMIPS
-Date:   Thu, 19 Mar 2020 14:03:56 +0100
-Message-Id: <20200319123930.951581514@linuxfoundation.org>
+Subject: [PATCH 5.5 22/65] selftests/rseq: Fix out-of-tree compilation
+Date:   Thu, 19 Mar 2020 14:04:04 +0100
+Message-Id: <20200319123933.387989829@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -59,62 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paulburton@kernel.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 07015d7a103c4420b69a287b8ef4d2535c0f4106 ]
+[ Upstream commit ef89d0545132d685f73da6f58b7e7fe002536f91 ]
 
-A check we're about to add to pick up on function calls that depend on
-bogus use of the GOT in the VDSO picked up on instances of such function
-calls in microMIPS builds. Since the code appears genuinely problematic,
-and given the relatively small amount of use & testing that microMIPS
-sees, go ahead & disable the VDSO for microMIPS builds.
+Currently if you build with O=... the rseq tests don't build:
 
-Signed-off-by: Paul Burton <paulburton@kernel.org>
+  $ make O=$PWD/output -C tools/testing/selftests/ TARGETS=rseq
+  make: Entering directory '/linux/tools/testing/selftests'
+  ...
+  make[1]: Entering directory '/linux/tools/testing/selftests/rseq'
+  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./  -shared -fPIC rseq.c -lpthread -o /linux/output/rseq/librseq.so
+  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./  basic_test.c -lpthread -lrseq -o /linux/output/rseq/basic_test
+  /usr/bin/ld: cannot find -lrseq
+  collect2: error: ld returned 1 exit status
+
+This is because the library search path points to the source
+directory, not the output.
+
+We can fix it by changing the library search path to $(OUTPUT).
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/vdso/Makefile | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ tools/testing/selftests/rseq/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
-index 96afd73c94e8a..e8585a22b925c 100644
---- a/arch/mips/vdso/Makefile
-+++ b/arch/mips/vdso/Makefile
-@@ -48,6 +48,8 @@ endif
- 
- CFLAGS_REMOVE_vgettimeofday.o = -pg
- 
-+DISABLE_VDSO := n
-+
- #
- # For the pre-R6 code in arch/mips/vdso/vdso.h for locating
- # the base address of VDSO, the linker will emit a R_MIPS_PC32
-@@ -61,11 +63,24 @@ CFLAGS_REMOVE_vgettimeofday.o = -pg
- ifndef CONFIG_CPU_MIPSR6
-   ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
-     $(warning MIPS VDSO requires binutils >= 2.25)
--    obj-vdso-y := $(filter-out vgettimeofday.o, $(obj-vdso-y))
--    ccflags-vdso += -DDISABLE_MIPS_VDSO
-+    DISABLE_VDSO := y
-   endif
+diff --git a/tools/testing/selftests/rseq/Makefile b/tools/testing/selftests/rseq/Makefile
+index f1053630bb6f5..2af9d39a97168 100644
+--- a/tools/testing/selftests/rseq/Makefile
++++ b/tools/testing/selftests/rseq/Makefile
+@@ -4,7 +4,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+ CLANG_FLAGS += -no-integrated-as
  endif
  
-+#
-+# GCC (at least up to version 9.2) appears to emit function calls that make use
-+# of the GOT when targeting microMIPS, which we can't use in the VDSO due to
-+# the lack of relocations. As such, we disable the VDSO for microMIPS builds.
-+#
-+ifdef CONFIG_CPU_MICROMIPS
-+  DISABLE_VDSO := y
-+endif
-+
-+ifeq ($(DISABLE_VDSO),y)
-+  obj-vdso-y := $(filter-out vgettimeofday.o, $(obj-vdso-y))
-+  ccflags-vdso += -DDISABLE_MIPS_VDSO
-+endif
-+
- # VDSO linker flags.
- VDSO_LDFLAGS := \
- 	-Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1 \
+-CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ \
++CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L$(OUTPUT) -Wl,-rpath=./ \
+ 	  $(CLANG_FLAGS)
+ LDLIBS += -lpthread
+ 
 -- 
 2.20.1
 
