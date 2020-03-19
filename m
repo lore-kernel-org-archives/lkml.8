@@ -2,101 +2,107 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244BEC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84611C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE94A206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584636716;
-	bh=2ze8n/wWhmgGRIbVHJ5udG/S1t4TMsDq+0bbeXYtPok=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MOCo4Kpy+6DRNWL7JopybAxslKmN1jRPu6S0isb6F2Fy0xjMP38smeOImh6EsqBKG
-	 fv7UvsyaLIFx7inQWaqgkoim75xGgjc5jFegTIFRmh6C01qW8GWAG3GHC/oFT93Mbc
-	 LC5HrD2RKpcyY8A7TWngioG/uazECiHPUw4ydWTo=
+	by mail.kernel.org (Postfix) with ESMTP id 5C14C206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgCSQvy (ORCPT
+        id S1728358AbgCSQwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:51:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727146AbgCSQvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:51:53 -0400
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CEEA208D6;
-        Thu, 19 Mar 2020 16:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584636712;
-        bh=2ze8n/wWhmgGRIbVHJ5udG/S1t4TMsDq+0bbeXYtPok=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QyKov4bFHWG3H4hqZq/lODVKCwb4/xh/+2s+wxcX/FYj+zjf13+HhN7+F6mOULrBB
-         vmZMrFP/4fhhqc/NBLvzJF3B7n4gPr2AM+J7JrT/cEV9I4gCg0kQxBKbTnjmTJlCeg
-         FutoxiHKgH9se4LVod9K+eTPSF/xdCCBH2IwvFms=
-Received: by mail-qk1-f170.google.com with SMTP id d11so3815434qko.3;
-        Thu, 19 Mar 2020 09:51:52 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3sI98XCdliM+lwcqbN3kpkqfwrS002EuDto4BH875pyfycAn+9
-        iBAPvg/lZRa7XLf61TZRptPu3D0XOgMCq+IsUA==
-X-Google-Smtp-Source: ADFU+vsvey+cEo1Zx1LSphcQZh7dQXaoi8CO+gHGsvltymHnmg94ayjCcsPJFezmZufjX/oGzMXW4LGH8CCJv+tB70E=
-X-Received: by 2002:a37:aa92:: with SMTP id t140mr3544418qke.119.1584636711194;
- Thu, 19 Mar 2020 09:51:51 -0700 (PDT)
+        Thu, 19 Mar 2020 12:52:10 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:48426 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbgCSQwK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 12:52:10 -0400
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 98A67200B24;
+        Thu, 19 Mar 2020 16:52:08 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 094F520B21; Thu, 19 Mar 2020 17:51:57 +0100 (CET)
+Date:   Thu, 19 Mar 2020 17:51:57 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     Cezary Rojewski <cezary.rojewski@intel.com>
+Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, curtis@malainey.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        liam.r.girdwood@linux.intel.com
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+Message-ID: <20200319165157.GA2254@light.dominikbrodowski.net>
+References: <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
+ <20200318162029.GA3999@light.dominikbrodowski.net>
+ <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+ <20200318215218.GA2439@light.dominikbrodowski.net>
+ <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+ <20200319130049.GA2244@light.dominikbrodowski.net>
+ <20200319134139.GB3983@sirena.org.uk>
+ <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
 MIME-Version: 1.0
-References: <20200317093922.20785-1-lkundrak@v3.sk> <20200317093922.20785-13-lkundrak@v3.sk>
-In-Reply-To: <20200317093922.20785-13-lkundrak@v3.sk>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 19 Mar 2020 10:51:39 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKMHyDeToZfHpkXEQySoUk=pM+B3+VrpkY4WO2hrJP6SQ@mail.gmail.com>
-Message-ID: <CAL_JsqKMHyDeToZfHpkXEQySoUk=pM+B3+VrpkY4WO2hrJP6SQ@mail.gmail.com>
-Subject: Re: [PATCH 12/28] spi: dt-bindings: spi-controller: Slaves have no
- address cells
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 3:40 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> SPI controllers in slave mode have a single child node that has no
-> address. Enforce #address-cells of zero instead of one.
+On Thu, Mar 19, 2020 at 04:48:03PM +0100, Cezary Rojewski wrote:
+> On 2020-03-19 14:41, Mark Brown wrote:
+> > On Thu, Mar 19, 2020 at 02:00:49PM +0100, Dominik Brodowski wrote:
+> > 
+> > > Have some good news now, namely that a bisect is complete: That pointed to
+> > > 1272063a7ee4 ("ASoC: soc-core: care .ignore_suspend for Component suspend");
+> > > therefore I've added Kuninori Morimoto to this e-mail thread.
+> > 
+> > If that's an issue it feels more like a driver bug in that if the driver
+> > asked for ignore_suspend then it should expect not to have the suspend
+> > callback called.
+> > 
+> 
+> Requested for tests with following diff applied:
+> 
+> diff --git a/sound/soc/intel/boards/broadwell.c
+> b/sound/soc/intel/boards/broadwell.c
+> index db7e1e87156d..6ed4c1b0a515 100644
+> --- a/sound/soc/intel/boards/broadwell.c
+> +++ b/sound/soc/intel/boards/broadwell.c
+> @@ -212,7 +212,6 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] =
+> {
+>                 .init = broadwell_rt286_codec_init,
+>                 .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
+>                         SND_SOC_DAIFMT_CBS_CFS,
+> -               .ignore_suspend = 1,
+>                 .ignore_pmdown_time = 1,
+>                 .be_hw_params_fixup = broadwell_ssp0_fixup,
+>                 .ops = &broadwell_rt286_ops,
 
-Geert has fixed this making 'spi-slave' and '#address-cells' mutually exclusive.
+That patch fixes the issue(s). I didn't even need to revert 64df6afa0dab
+("ASoC: Intel: broadwell: change cpu_dai and platform components for SOF")
+on top of that. But you can assess better whether that patch needs care for
+other reasons; for me, this one-liner you have suggested is perfect.
 
-https://lore.kernel.org/linux-devicetree/20200306085038.8111-2-geert+renesas@glider.be/
+Many thanks -- it's been a pleasure to work with you on tracking this issue
+down.
 
-Rob
+	Dominik
+
