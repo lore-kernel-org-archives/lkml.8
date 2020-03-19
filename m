@@ -2,116 +2,80 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B50EC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F752C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716CC20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A902071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584602312;
+	bh=njT/OnNfe0hqlk7i4Z67Q/AZfyprWBxsfE/qvmU7tm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E1SC3yKBm8sJp2altOBHJiom5v5DOZ9ntuOWbVqdMK3ij1j+VLnN9O4J9QOhi5TKd
+	 JEVR0czudSlbB3Pa0IQEDU3FReE9VRHZmf1rTY2rs2wswyDjIXXpKO891X2mA+BDsc
+	 jpBK/KaBJejaMN6svRacbhPOCxdDyaXLq9S9bMvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbgCSHOi (ORCPT
+        id S1727060AbgCSHSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:14:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52010 "EHLO mx2.suse.de"
+        Thu, 19 Mar 2020 03:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSHOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:14:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 01FE1ABDC;
-        Thu, 19 Mar 2020 07:14:35 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>, stable@vger.kernel.org
-Subject: [PATCH] xen/events: avoid NULL pointer dereference in evtchn_from_irq()
-Date:   Thu, 19 Mar 2020 08:14:28 +0100
-Message-Id: <20200319071428.12115-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        id S1725767AbgCSHSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:18:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4DCB20409;
+        Thu, 19 Mar 2020 07:18:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584602310;
+        bh=njT/OnNfe0hqlk7i4Z67Q/AZfyprWBxsfE/qvmU7tm4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bAG0T4JhI9Z9toM0BU4pyf8HXrA0RYlHwrQ5z3Q0W7rz/+yqwU3qoMxPh4N1OMs2t
+         Kc/PUxGfDdfKKuwFKlA/lR/IK/ZZS5QRRB1T23iPQ9uevZAalDAU/ADbIU0QVwvTDy
+         pOpJRZkIFRZV/+remq1Ntwi1hM09T8TwdsWEZXwg=
+Date:   Thu, 19 Mar 2020 08:18:27 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "suqiang (C)" <suqiang4@huawei.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Liyou (leeyou, RTOS)" <leeyou.li@huawei.com>
+Subject: Re: [PATCH V2] UIO: make maximum memory and port regions configurable
+Message-ID: <20200319071827.GA3365217@kroah.com>
+References: <20200307081008.26848-1-suqiang4@huawei.com>
+ <20200318113352.GA2365557@kroah.com>
+ <7AF579E0012A4E4FA1B0EC683F4B7F591F96D204@dggeml525-mbx.china.huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7AF579E0012A4E4FA1B0EC683F4B7F591F96D204@dggeml525-mbx.china.huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There have been reports of races in evtchn_from_irq() where the info
-pointer has been NULL.
+A: http://en.wikipedia.org/wiki/Top_post
+Q: Were do I find info about this thing called top-posting?
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
 
-Avoid that case by testing info before dereferencing it.
+http://daringfireball.net/2007/07/on_top
 
-In order to avoid accessing a just freed info structure do the kfree()
-via kfree_rcu().
+On Thu, Mar 19, 2020 at 03:11:20AM +0000, suqiang (C) wrote:
+> Dear Greg,
+> Thanks a lot for suggestion. I will add more information in these help texts and send PATCH V3 soon.
+> Furthermore, of cause it is better to make these values dynamic and grow as needed by the system. A possible way is to manage memory and port resource by a dynamic list instead of a static array.
+> But it costs more time to design and implement a better scheme. I will try it later and push patchs when it's finished.
+> This patch is a temporary way better than nothing, and I hope it could be accept.
 
-Cc: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Cc: stable@vger.kernel.org
-Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- drivers/xen/events/events_base.c     | 10 ++++++++--
- drivers/xen/events/events_internal.h |  3 +++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+No, please do it correctly, there is no rush here.  Moving from an array
+to a list should not be that difficult.
 
-diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
-index 499eff7d3f65..838762fe3d6e 100644
---- a/drivers/xen/events/events_base.c
-+++ b/drivers/xen/events/events_base.c
-@@ -247,10 +247,16 @@ static void xen_irq_info_cleanup(struct irq_info *info)
-  */
- unsigned int evtchn_from_irq(unsigned irq)
- {
-+	struct irq_info *info;
-+
- 	if (WARN(irq >= nr_irqs, "Invalid irq %d!\n", irq))
- 		return 0;
- 
--	return info_for_irq(irq)->evtchn;
-+	info = info_for_irq(irq);
-+	if (info == NULL)
-+		return 0;
-+
-+	return info->evtchn;
- }
- 
- unsigned irq_from_evtchn(unsigned int evtchn)
-@@ -436,7 +442,7 @@ static void xen_free_irq(unsigned irq)
- 
- 	WARN_ON(info->refcnt > 0);
- 
--	kfree(info);
-+	kfree_rcu(info, rcu);
- 
- 	/* Legacy IRQ descriptors are managed by the arch. */
- 	if (irq < nr_legacy_irqs())
-diff --git a/drivers/xen/events/events_internal.h b/drivers/xen/events/events_internal.h
-index 82938cff6c7a..c421055843c8 100644
---- a/drivers/xen/events/events_internal.h
-+++ b/drivers/xen/events/events_internal.h
-@@ -7,6 +7,8 @@
- #ifndef __EVENTS_INTERNAL_H__
- #define __EVENTS_INTERNAL_H__
- 
-+#include <linux/rcupdate.h>
-+
- /* Interrupt types. */
- enum xen_irq_type {
- 	IRQT_UNBOUND = 0,
-@@ -30,6 +32,7 @@ enum xen_irq_type {
-  */
- struct irq_info {
- 	struct list_head list;
-+	struct rcu_head rcu;
- 	int refcnt;
- 	enum xen_irq_type type;	/* type */
- 	unsigned irq;
--- 
-2.16.4
+thanks,
 
+greg k-h
