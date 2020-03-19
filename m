@@ -2,88 +2,188 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1018FC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474B7C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D831E206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 105062071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:11:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BmY4+PFy"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pQN4U8dm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgCSUKZ (ORCPT
+        id S1727162AbgCSULX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:10:25 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:32962 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgCSUKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 16:10:25 -0400
-Received: from zn.tnic (p200300EC2F0A85001D12B79F4268FE9A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:8500:1d12:b79f:4268:fe9a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 25F441EC0C89;
-        Thu, 19 Mar 2020 21:10:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1584648623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=+HS0izfSYQQOnipoPaapcyspiM739Lng58jOQDsrp1s=;
-        b=BmY4+PFyddycgep4N1QRA69Ah/4jgqcJGG8qR5Z1zqJ3e14DF8mf95hySlRL7G7UWNtz41
-        EJiDhpHGju+qM+gSbrECSngmwzKiahVMnzGBQAzH2w9x8ci0lnmpzj+CA3c+ERzAacVC+j
-        T5+HWwgbmeA84FVXdZVuQ/gztW5jy80=
-Date:   Thu, 19 Mar 2020 21:10:28 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-tip-commits@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Waiman Long <longman@redhat.com>, x86 <x86@kernel.org>
-Subject: Re: [tip: timers/core] Revert "tick/common: Make tick_periodic()
- check for missing ticks"
-Message-ID: <20200319201028.GF13073@zn.tnic>
-References: <158464406295.28353.3230662958771714087.tip-bot2@tip-bot2>
+        Thu, 19 Mar 2020 16:11:23 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:36560 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgCSULX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 16:11:23 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02JK9AFZ113610;
+        Thu, 19 Mar 2020 20:11:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=crgG96nAJeU59nO4ZUu6PGmEfdz+veKrExSouQv8J/o=;
+ b=pQN4U8dmY9qDkwm7viNZ/u4sXdeTrxTM/+lka8bINYOsmhcQqHwod0D7vYOjwOOW+1I/
+ 3xzaEpUmOngCW6KXLyLRaOJKgXl+aHRSZlhMlAGrsLcnlWWUgWsSUreRhuhJd9QCb9IX
+ NrRjkjPSzqu8wKceJOi6VoSRm79JCTnCLkOqerYTwBRWAOv3FrkBFpD+phQdVgsEBsye
+ ne9+0KTsSm9R4YX+YxOrijlR2zSzBwSZNGilhxN2COAYNuicVF09yrXh74YRUdYPs2qt
+ TaqFKd7HC6OD47gm4uxyRwr0ZSOcYRgwWiPxI66BokGgqSR+A8gYkS5wBwa544sRiITz Yw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2yrpprjhbb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Mar 2020 20:11:18 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02JJwZOY094548;
+        Thu, 19 Mar 2020 20:11:18 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2ys904vuu1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Mar 2020 20:11:18 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02JKBHu2024184;
+        Thu, 19 Mar 2020 20:11:17 GMT
+Received: from localhost.localdomain (/10.65.178.104)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 19 Mar 2020 13:11:17 -0700
+Subject: Re: [PATCH] KVM: nVMX: remove side effects from
+ nested_vmx_exit_reflected
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     vkuznets@redhat.com, sean.j.christopherson@intel.com
+References: <1584468059-3585-1-git-send-email-pbonzini@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <4aa41614-51f0-7e4f-57b6-0e15329036a5@oracle.com>
+Date:   Thu, 19 Mar 2020 13:11:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <158464406295.28353.3230662958771714087.tip-bot2@tip-bot2>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1584468059-3585-1-git-send-email-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9565 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 bulkscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003190083
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9565 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 clxscore=1015
+ impostorscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003190083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 06:54:22PM -0000, tip-bot2 for Thomas Gleixner wrote:
-> The following commit has been merged into the timers/core branch of tip:
-> 
-> Commit-ID:     52da479a9aee630d2cdf37d05edfe5bcfff3e17f
-> Gitweb:        https://git.kernel.org/tip/52da479a9aee630d2cdf37d05edfe5bcfff3e17f
-> Author:        Thomas Gleixner <tglx@linutronix.de>
-> AuthorDate:    Thu, 19 Mar 2020 19:47:06 +01:00
-> Committer:     Thomas Gleixner <tglx@linutronix.de>
-> CommitterDate: Thu, 19 Mar 2020 19:47:48 +01:00
-> 
-> Revert "tick/common: Make tick_periodic() check for missing ticks"
-> 
-> This reverts commit d441dceb5dce71150f28add80d36d91bbfccba99 due to
-> boot failures.
-> 
-> Reported-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Waiman Long <longman@redhat.com>
+
+On 3/17/20 11:00 AM, Paolo Bonzini wrote:
+> The name of nested_vmx_exit_reflected suggests that it's purely
+> a test, but it actually marks VMCS12 pages as dirty.  Move this to
+> vmx_handle_exit, observing that the initial nested_run_pending check in
+> nested_vmx_exit_reflected is pointless---nested_run_pending has just
+> been cleared in vmx_vcpu_run and won't be set until handle_vmlaunch
+> or handle_vmresume.
+>
+> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
->  kernel/time/tick-common.c | 36 +++---------------------------------
->  1 file changed, 3 insertions(+), 33 deletions(-)
-
-ACK, this fixes an early boot freeze on one of my boxes too.
-
-Tested-by: Borislav Petkov <bp@suse.de>
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+>   arch/x86/kvm/vmx/nested.c | 18 ++----------------
+>   arch/x86/kvm/vmx/nested.h |  1 +
+>   arch/x86/kvm/vmx/vmx.c    | 19 +++++++++++++++++--
+>   3 files changed, 20 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 8578513907d7..4ff859c99946 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -3527,7 +3527,7 @@ static void vmcs12_save_pending_event(struct kvm_vcpu *vcpu,
+>   }
+>   
+>   
+> -static void nested_mark_vmcs12_pages_dirty(struct kvm_vcpu *vcpu)
+> +void nested_mark_vmcs12_pages_dirty(struct kvm_vcpu *vcpu)
+>   {
+>   	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+>   	gfn_t gfn;
+> @@ -5543,8 +5543,7 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
+>   	struct vcpu_vmx *vmx = to_vmx(vcpu);
+>   	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+>   
+> -	if (vmx->nested.nested_run_pending)
+> -		return false;
+> +	WARN_ON_ONCE(vmx->nested.nested_run_pending);
+>   
+>   	if (unlikely(vmx->fail)) {
+>   		trace_kvm_nested_vmenter_failed(
+> @@ -5553,19 +5552,6 @@ bool nested_vmx_exit_reflected(struct kvm_vcpu *vcpu, u32 exit_reason)
+>   		return true;
+>   	}
+>   
+> -	/*
+> -	 * The host physical addresses of some pages of guest memory
+> -	 * are loaded into the vmcs02 (e.g. vmcs12's Virtual APIC
+> -	 * Page). The CPU may write to these pages via their host
+> -	 * physical address while L2 is running, bypassing any
+> -	 * address-translation-based dirty tracking (e.g. EPT write
+> -	 * protection).
+> -	 *
+> -	 * Mark them dirty on every exit from L2 to prevent them from
+> -	 * getting out of sync with dirty tracking.
+> -	 */
+> -	nested_mark_vmcs12_pages_dirty(vcpu);
+> -
+>   	trace_kvm_nested_vmexit(kvm_rip_read(vcpu), exit_reason,
+>   				vmcs_readl(EXIT_QUALIFICATION),
+>   				vmx->idt_vectoring_info,
+> diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+> index 21d36652f213..f70968b76d33 100644
+> --- a/arch/x86/kvm/vmx/nested.h
+> +++ b/arch/x86/kvm/vmx/nested.h
+> @@ -33,6 +33,7 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
+>   int get_vmx_mem_address(struct kvm_vcpu *vcpu, unsigned long exit_qualification,
+>   			u32 vmx_instruction_info, bool wr, int len, gva_t *ret);
+>   void nested_vmx_pmu_entry_exit_ctls_update(struct kvm_vcpu *vcpu);
+> +void nested_mark_vmcs12_pages_dirty(struct kvm_vcpu *vcpu);
+>   bool nested_vmx_check_io_bitmaps(struct kvm_vcpu *vcpu, unsigned int port,
+>   				 int size);
+>   
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index b447d66f44e6..07299a957d4a 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -5851,8 +5851,23 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+>   	if (vmx->emulation_required)
+>   		return handle_invalid_guest_state(vcpu);
+>   
+> -	if (is_guest_mode(vcpu) && nested_vmx_exit_reflected(vcpu, exit_reason))
+> -		return nested_vmx_reflect_vmexit(vcpu, exit_reason);
+> +	if (is_guest_mode(vcpu)) {
+> +		/*
+> +		 * The host physical addresses of some pages of guest memory
+> +		 * are loaded into the vmcs02 (e.g. vmcs12's Virtual APIC
+> +		 * Page). The CPU may write to these pages via their host
+> +		 * physical address while L2 is running, bypassing any
+> +		 * address-translation-based dirty tracking (e.g. EPT write
+> +		 * protection).
+> +		 *
+> +		 * Mark them dirty on every exit from L2 to prevent them from
+> +		 * getting out of sync with dirty tracking.
+> +		 */
+> +		nested_mark_vmcs12_pages_dirty(vcpu);
+> +
+> +		if (nested_vmx_exit_reflected(vcpu, exit_reason))
+> +			return nested_vmx_reflect_vmexit(vcpu, exit_reason);
+> +	}
+>   
+>   	if (exit_reason & VMX_EXIT_REASONS_FAILED_VMENTRY) {
+>   		dump_vmcs();
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
