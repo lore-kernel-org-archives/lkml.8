@@ -2,133 +2,94 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E95CC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9F5C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271122072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:02:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hiJ7j2KJ"
+	by mail.kernel.org (Postfix) with ESMTP id 109E42072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:02:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgCSRCO (ORCPT
+        id S1728454AbgCSRCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:02:14 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:48909 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727235AbgCSRCN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:02:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584637331;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IcptVRAiRJzuVIh/GlEcDrXPm4fcrg5LC9wzz8mwMkA=;
-        b=hiJ7j2KJXY9hxirrKyCt/EeQ4eyVSP3JYZHSqHYUDkzJBYImEimsX3T7dARHo2UFf62B57
-        7lpM9npNJ6/rkg4yroV3iOdVHG2UkvK0W21V2/fuOzwIzWuxf/vlrCETp0c7ztYx2Z5E4z
-        /M8RM16VlluAVlJH+VeVjy+4YbrCI2w=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-419-Oaog_YhOMhK9VeFzz-7how-1; Thu, 19 Mar 2020 13:02:10 -0400
-X-MC-Unique: Oaog_YhOMhK9VeFzz-7how-1
-Received: by mail-wr1-f69.google.com with SMTP id o9so1306567wrw.14
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 10:02:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IcptVRAiRJzuVIh/GlEcDrXPm4fcrg5LC9wzz8mwMkA=;
-        b=Oe5kyqd9Uz0GyUX+4BL6Xct+8WmtJ2wiBa4OVem9HVEyUcqLBm/IwSGR88aho1WtIk
-         4U/s9rb2TLUw/H6cT31eY8IhwYfnF1eFySZPsv45qczWrTJXgriqISW5/eIAWjjMf3xB
-         YkiZ8FsRpXR6UOaWlIbPD7QDNeXMrt9Sqyo2XAwZpiCDyMdKNqz2ux1xD62kXZEiM/+B
-         CPkrFKqJg3N0uN15xXfMGGrc2iujHjcVk7yVtMN6uJ+aNc2B2SYCyVXGEPbK/tNSp37n
-         AoPSJ4kLMNN0ybJImJWkDzrGYcvn/bDI5lrb46DTe7NcEZ8P92VQrcefMeR5h7MSotIg
-         ZPaQ==
-X-Gm-Message-State: ANhLgQ0zJI7DXw5+HrI7PMqEIAs4sGlSTY2Zy3OtU65hkLuEmz20G4Vg
-        kfQMziV0hsILbScv8wBC5TAdj7cxi42rOofVTHGodZs63lPabHNYnY0/bc9SityPcyn2bV2/vNy
-        vY85/EmCarAolUB0QHztKjtmr
-X-Received: by 2002:a1c:41d6:: with SMTP id o205mr4782574wma.122.1584637327683;
-        Thu, 19 Mar 2020 10:02:07 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsi9VPiZWxLt0oHTo1rX4JelGxRAWlaC5KYb5zXFBMD8y3tgBSoJTkpKrPnAHuKniGG0Q9H/w==
-X-Received: by 2002:a1c:41d6:: with SMTP id o205mr4782450wma.122.1584637326515;
-        Thu, 19 Mar 2020 10:02:06 -0700 (PDT)
-Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
-        by smtp.gmail.com with ESMTPSA id e9sm4186074wrw.30.2020.03.19.10.02.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 10:02:05 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 13:02:01 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v7 12/14] KVM: selftests: Add dirty ring buffer test
-Message-ID: <20200319170201.GC127076@xz-x1>
-References: <20200318163720.93929-1-peterx@redhat.com>
- <20200318163720.93929-13-peterx@redhat.com>
+        Thu, 19 Mar 2020 13:02:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:39122 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727877AbgCSRCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:02:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F32130E;
+        Thu, 19 Mar 2020 10:02:35 -0700 (PDT)
+Received: from [10.37.12.142] (unknown [10.37.12.142])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71AD33F305;
+        Thu, 19 Mar 2020 10:02:33 -0700 (PDT)
+Subject: Re: [PATCH] arm64: compat: Fix syscall number of compat_clock_getres
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "# 3.4.x" <stable@vger.kernel.org>
+References: <20200319141138.19343-1-vincenzo.frascino@arm.com>
+ <CAKwvOdnnsE2FyqajP4_FrwpgekptfLJsr3J9EgB3Ac37NgZszQ@mail.gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <9b8a7e8f-57e6-3a81-a8c6-10ca59267ea8@arm.com>
+Date:   Thu, 19 Mar 2020 17:03:02 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <CAKwvOdnnsE2FyqajP4_FrwpgekptfLJsr3J9EgB3Ac37NgZszQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200318163720.93929-13-peterx@redhat.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 12:37:18PM -0400, Peter Xu wrote:
-> +static void dirty_ring_collect_dirty_pages(struct kvm_vm *vm, int slot,
-> +					   void *bitmap, uint32_t num_pages)
-> +{
-> +	/* We only have one vcpu */
-> +	static uint32_t fetch_index = 0;
-> +	uint32_t count = 0, cleared;
-> +
-> +	/*
-> +	 * Before fetching the dirty pages, we need a vmexit of the
-> +	 * worker vcpu to make sure the hardware dirty buffers were
-> +	 * flushed.  This is not needed for dirty-log/clear-log tests
-> +	 * because get dirty log will natually do so.
-> +	 *
-> +	 * For now we do it in the simple way - we simply wait until
-> +	 * the vcpu uses up the soft dirty ring, then it'll always
-> +	 * do a vmexit to make sure that PML buffers will be flushed.
-> +	 * In real hypervisors, we probably need a vcpu kick or to
-> +	 * stop the vcpus (before the final sync) to make sure we'll
-> +	 * get all the existing dirty PFNs even cached in hardware.
-> +	 */
-> +	sem_wait(&dirty_ring_vcpu_stop);
-> +
-> +	/* Only have one vcpu */
-> +	count = dirty_ring_collect_one(vcpu_map_dirty_ring(vm, VCPU_ID),
-> +				       slot, bitmap, num_pages, &fetch_index);
-> +
-> +	cleared = kvm_vm_reset_dirty_ring(vm);
-> +
-> +	/* Cleared pages should be the same as collected */
-> +	TEST_ASSERT(cleared == count, "Reset dirty pages (%u) mismatch "
-> +		    "with collected (%u)", cleared, count);
-> +
-> +	DEBUG("Notifying vcpu to continue\n");
+Hi Nick,
 
-This line is removed later so hidden from my eyes too... but it'll
-also break the bisection.  Fixed now.
+On 3/19/20 3:39 PM, Nick Desaulniers wrote:
+> On Thu, Mar 19, 2020 at 7:11 AM Vincenzo Frascino
+> <vincenzo.frascino@arm.com> wrote:
+[...]
 
-> +	sem_post(&dirty_ring_vcpu_cont);
-> +
-> +	pr_info("Iteration %ld collected %u pages\n", iteration, count);
-> +}
+> 
+> This seems to match up with the glibc sources:
+> https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/unix/sysv/linux/arm/arch-syscall.h;h=c6554a8a6a6e7fe3359f1272f619c3da7c90629b;hb=HEAD#l27
+> Here's bionic's headers for good measure:
+> https://android.googlesource.com/platform/bionic/+/refs/heads/master/libc/kernel/uapi/asm-arm/asm/unistd-common.h#240
+> 
+> I assume the _compat_ prefixes are the aarch32 syscall numbers?
+> Otherwise here's the list for aarch64:
+> https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/unix/sysv/linux/aarch64/arch-syscall.h;h=c8471947b9c209be6add1e528f892f1a6c54f966;hb=HEAD
+> 
+> Looks like 247 was __NR_io_cancel; that's a subtle bug I'm glad was noticed!
+> 
+
+Yes, very subtle, I agree!
+
+Thank you for the information provided.
+
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> 
+>>  #define __NR_compat_clock_gettime64    403
+>>  #define __NR_compat_clock_getres_time64        406
+>>
+>> --
+>> 2.25.1
+>>
+>> --
+>> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+>> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+>> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200319141138.19343-1-vincenzo.frascino%40arm.com.
+> 
+> 
+> 
 
 -- 
-Peter Xu
-
+Regards,
+Vincenzo
