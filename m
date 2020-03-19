@@ -2,185 +2,128 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C39FC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D61C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1DF220753
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584615364;
-	bh=FgL+vAAVjsz7UBPASMA+6v+M3lCJAwKJ3E3l89+r2xk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AAFxqyfuQvfIBabBiHf56BGyjRgEPkKFa8axw/X/ZQIWmR+joZvn+5IUSqYnBiijM
-	 jTlCQosQuAuKMVaB2Wdoc3nrOrHokaawabRmiDEY7uo3La5meOqeakvcSuKX7OdaI7
-	 GCd7aDW9PWFTQv0Vu1/URZGKe291Ds3cpY3kq+Fo=
+	by mail.kernel.org (Postfix) with ESMTP id F189720752
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:57:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="S6LNdeiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbgCSK4D (ORCPT
+        id S1727136AbgCSK5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgCSK4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:56:02 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 19 Mar 2020 06:57:20 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:55514 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727002AbgCSK5T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:57:19 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584615439; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=USCY7tIkJjVPsdtXWG2SypaDeqfF1YJU6a6I4ETYJgU=;
+ b=S6LNdeiUpVAp9zsTbi6qWhfXjnxQoYRwgrKoRhouEBDrWNQC1Nkbq/faw12TtWepcVm5GaZp
+ j/0WKmTSaDrUxZMwAxzmecIWJ6eo8gu34P3IPWx2JM6o4AUzBox0T2whSexMxzmJhwHEoFBB
+ Fj/pA5PSgjen0AECxx27sXjx+iM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e73500b.7f03fa77da78-smtp-out-n03;
+ Thu, 19 Mar 2020 10:57:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 18619C4478C; Thu, 19 Mar 2020 10:57:14 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37C3A20752;
-        Thu, 19 Mar 2020 10:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584615361;
-        bh=FgL+vAAVjsz7UBPASMA+6v+M3lCJAwKJ3E3l89+r2xk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xEgMD21+sF/isioXATJ90/m2wi0y1eRKeruTMs8rk9CD1Q9iumXQAdXmWUS4B/RRd
-         2Pg+TkmzhNP7c2ra6Akbn061od5ZXeDR2Wk54YMhNqPJefcJMb2XGDcsB2JHpKbS6w
-         qxW/nfnI4iwDHFmUPTI+FYcBjJkfVWLyVAQM+xHQ=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jEsqF-00Duty-9Q; Thu, 19 Mar 2020 10:55:59 +0000
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2F549C433D2;
+        Thu, 19 Mar 2020 10:57:13 +0000 (UTC)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Mar 2020 10:55:59 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v5 16/23] irqchip/gic-v4.1: Eagerly vmap vPEs
-In-Reply-To: <2817cb89-4cc2-549f-6e40-91d941aa8a5f@huawei.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-17-maz@kernel.org>
- <2817cb89-4cc2-549f-6e40-91d941aa8a5f@huawei.com>
-Message-ID: <d45e7ddfd51d4d8229e02efc42c8da04@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Date:   Thu, 19 Mar 2020 16:27:13 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
+        bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
+        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
+        ulf.hansson@linaro.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+In-Reply-To: <20200319102411.oivesngrk7gy7vtw@vireshk-i7>
+References: <20200127200350.24465-1-sibis@codeaurora.org>
+ <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
+ <20200318034243.o2metmggzuah6cqw@vireshk-i7>
+ <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
+ <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
+ <20200319102411.oivesngrk7gy7vtw@vireshk-i7>
+Message-ID: <e2cab5f55b9d26849e45d3df951ad7b9@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-17 02:49, Zenghui Yu wrote:
-> Hi Marc,
+On 2020-03-19 15:54, Viresh Kumar wrote:
+> On 19-03-20, 15:41, Sibi Sankar wrote:
+>> Viresh,
+>> Saravana's example does show a device
+>> with multiple opp tables but doesn't
+>> need multiple opp table support to
+>> land though (since it works fine with
+>> the current implementation). I am more
+>> interested  in understanding your/
+>> Stephen's/Saravana's stance on adding
+>> multiple opp-table support. Personally
+>> I feel its inevitable, since multiple
+>> qc drivers using interconnect opp-tables,
+>> routinely need vote on multiple paths in
+>> a non-trivial manner.
 > 
-> On 2020/3/5 4:33, Marc Zyngier wrote:
->> Now that we have HW-accelerated SGIs being delivered to VPEs, it
->> becomes required to map the VPEs on all ITSs instead of relying
->> on the lazy approach that we would use when using the ITS-list
->> mechanism.
+> The OPP core doesn't support multiple OPP tables for a device and I
+> don't understand how it will. And so I have been waiting for a reply.
+
+This series tries to add minimal support
+for multiple opp-tables per device and
+can be tested on db845c/sdm845mtp/sc7180.
+Debugfs still needs to be fixed though and
+fixing it did feel non-trivial (I can get
+to it if we reach a consensus). Perhaps we
+can fork out icc oppp-tables from regular
+opp-tables and allow only multiple instances
+of icc opp-tables per device(though Rob
+didn't like the bindings associated with it)
+that way all the current users wont be
+affected but from what I've tested the
+series shouldn't cause any regression.
+
+> 
+>> >
+>> > Could you please post a link to the discussion that you are referring to
+>> > here?
+>> > I looked at a few links posted in the cover letter as dependencies and
+>> > it seems
+>> > like the discussions are pending for *months* and not weeks but I
+>> > might have looked
+>> > at the wrong ones.
 >> 
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> https://lore.kernel.org/lkml/20200114103448.odnvqawnqb3twst5@vireshk-i7/
+>> 
+>> Rajendra,
+>> Viresh is referring to ^^ one
 > 
-> Before GICv4.1, we use vlpi_count to evaluate whether the vPE has been
-> mapped on the specified ITS, and use this refcount to only issue VMOVP
-> to those involved ITSes. It's broken after this patch.
-> 
-> We may need to re-evaluate "whether the vPE is mapped" now that we're 
-> at
-> GICv4.1, otherwise *no* VMOVP will be issued on the v4.1 capable 
-> machine
-> (I mean those without single VMOVP support).
-> 
-> What I'm saying is something like below (only an idea, it even can't
-> compile), any thoughts?
-> 
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-> b/drivers/irqchip/irq-gic-v3-its.c
-> index 2e12bc52e3a2..3450b5e847ca 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -198,7 +198,8 @@ static u16 get_its_list(struct its_vm *vm)
->  		if (!is_v4(its))
->  			continue;
-> 
-> -		if (vm->vlpi_count[its->list_nr])
-> +		if (vm->vlpi_count[its->list_nr] ||
-> +		    gic_requires_eager_mapping())
->  			__set_bit(its->list_nr, &its_list);
->  	}
-> 
-> @@ -1295,7 +1296,8 @@ static void its_send_vmovp(struct its_vpe *vpe)
->  		if (!is_v4(its))
->  			continue;
-> 
-> -		if (!vpe->its_vm->vlpi_count[its->list_nr])
-> +		if (!vpe->its_vm->vlpi_count[its->list_nr] &&
-> +		    !gic_requires_eager_mapping())
->  			continue;
-> 
->  		desc.its_vmovp_cmd.col = &its->collections[col_id];
+> Right, thanks.
 
-It took me a while to wrap my head around that one, but you're as usual 
-spot on.
-
-The use of gic_requires_eager_mapping() is a bit confusing here, as it 
-isn't
-so much that the VPE is eagerly mapped, but the predicate on which we 
-evaluate
-the need for a VMOVP. How about this:
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-b/drivers/irqchip/irq-gic-v3-its.c
-index cd6451e190c9..348f7a909a69 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -189,6 +189,15 @@ static DEFINE_IDA(its_vpeid_ida);
-  #define gic_data_rdist_rd_base()	(gic_data_rdist()->rd_base)
-  #define gic_data_rdist_vlpi_base()	(gic_data_rdist_rd_base() + SZ_128K)
-
-+/*
-+ * Skip ITSs that have no vLPIs mapped, unless we're on GICv4.1, as we
-+ * always have vSGIs mapped.
-+ */
-+static bool require_its_list_vmovp(struct its_vm *vm, struct its_node 
-*its)
-+{
-+	return (gic_rdists->has_rvpeid || vm->vlpi_count[its->list_nr]);
-+}
-+
-  static u16 get_its_list(struct its_vm *vm)
-  {
-  	struct its_node *its;
-@@ -198,7 +207,7 @@ static u16 get_its_list(struct its_vm *vm)
-  		if (!is_v4(its))
-  			continue;
-
--		if (vm->vlpi_count[its->list_nr])
-+		if (require_its_list_vmovp(vm, its))
-  			__set_bit(its->list_nr, &its_list);
-  	}
-
-@@ -1295,7 +1304,7 @@ static void its_send_vmovp(struct its_vpe *vpe)
-  		if (!is_v4(its))
-  			continue;
-
--		if (!vpe->its_vm->vlpi_count[its->list_nr])
-+		if (!require_its_list_vmovp(vpe->its_vm, its))
-  			continue;
-
-  		desc.its_vmovp_cmd.col = &its->collections[col_id];
-
-
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
