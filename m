@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840ADC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DC5C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E722076F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFDEC2076F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:43:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="JRnvCmww"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="f6XQ7p3E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgCSVkM (ORCPT
+        id S1726867AbgCSVnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 17:40:12 -0400
-Received: from gateway22.websitewelcome.com ([192.185.47.144]:45364 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725768AbgCSVkL (ORCPT
+        Thu, 19 Mar 2020 17:43:07 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.196]:28026 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725787AbgCSVnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:40:11 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 956339BE8
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:40:10 -0500 (CDT)
+        Thu, 19 Mar 2020 17:43:07 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 37D302920
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:43:06 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id F2tejzJ6n1s2xF2tejhgeO; Thu, 19 Mar 2020 16:40:10 -0500
+        id F2wUjLG4mXVkQF2wUjcMrL; Thu, 19 Mar 2020 16:43:06 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,27 +36,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oA/NJzx0KXN+QumtJADitL2cYB/VD8HJ14U8VnEp9zA=; b=JRnvCmww/9bMYZ7+kD7HHrRpyB
-        7dyWttXY5Z7XmETXNeoPM/TgZfMh9kdhfJVaOqwtO6SSkCy0FWCN7trwktbppOe5YOow9ubVoFZP8
-        H5MjhsO10o/N4CwXVNd1mCbABooStdUjOfZtt8ekPF3Jg/9MTCu1qfnSe2uTMNr6kHsMou6xiaGqt
-        zPOatNuxUDVRgh48lxdGpF9M+TnTCtcSDHdo74KI3dpJPRolopCgmfRtVO2e9X1XhPIcOQd32b9cz
-        yzkk50vpQl20IZtHA1NwK6q2FUxoZws9qhB+gYEo2HsAFfp0z2euLWZeq592hCu6rAmTJ/0FwV/+I
-        ETThXjBQ==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53372 helo=embeddedor)
+        bh=FvguBj7rVJCiKrPfcdD/dDqw8uFuJmmKDVRcEBgRUyQ=; b=f6XQ7p3EhpbYzqwn7v3WGBqjBS
+        WPEkJQXYP0/V26HS5TeRAt3Ht0fR9dGJNjP7DwBsRtunv1DpzGc8PlkfSrqZw74U6TEyeUyBv9nku
+        Ji3gwdAM7t6sFV7EvB5IcrsLtnJErsUs3N3JmAZn4jjs11aT3bv2MKDuX3xodoXhGTSuEc5LOsEPu
+        u4C4mvm7SVbiP/27SLETZzups77Q2Qd4nAuTGxosgeNWHdo4vyzXrdUCf1Lv1DAv4FViqzyWyInml
+        QOWtQO4ACTqA96NEasMctOlc3R22IModA653LsuvUg5LPXQ5Evu7mfNpfcJ6QiyETzdbhrWXPYZbM
+        O/JZez4g==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53376 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jF2tc-001i0U-04; Thu, 19 Mar 2020 16:40:08 -0500
-Date:   Thu, 19 Mar 2020 16:40:07 -0500
+        id 1jF2wS-001jjo-Ms; Thu, 19 Mar 2020 16:43:04 -0500
+Date:   Thu, 19 Mar 2020 16:43:04 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] hwtracing: stm: stm.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200319214007.GA13640@embeddedor.com>
+Subject: [PATCH][next] input: keyboard: applespi: Replace zero-length array
+ with flexible-array member
+Message-ID: <20200319214304.GA19987@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -69,13 +66,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.218.116.241
 X-Source-L: No
-X-Exim-ID: 1jF2tc-001i0U-04
+X-Exim-ID: 1jF2wS-001jjo-Ms
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53372
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53376
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 47
+X-Email-Count: 50
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -113,31 +110,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/hwtracing/stm/stm.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/keyboard/applespi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwtracing/stm/stm.h b/drivers/hwtracing/stm/stm.h
-index 3569439d53bb..a9be49fc7a6b 100644
---- a/drivers/hwtracing/stm/stm.h
-+++ b/drivers/hwtracing/stm/stm.h
-@@ -23,7 +23,7 @@ void *stp_policy_node_priv(struct stp_policy_node *pn);
- 
- struct stp_master {
- 	unsigned int	nr_free;
--	unsigned long	chan_map[0];
-+	unsigned long	chan_map[];
+diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
+index d38398526965..14362ebab9a9 100644
+--- a/drivers/input/keyboard/applespi.c
++++ b/drivers/input/keyboard/applespi.c
+@@ -186,7 +186,7 @@ struct touchpad_protocol {
+ 	u8			number_of_fingers;
+ 	u8			clicked2;
+ 	u8			unknown3[16];
+-	struct tp_finger	fingers[0];
++	struct tp_finger	fingers[];
  };
  
- struct stm_device {
-@@ -42,7 +42,7 @@ struct stm_device {
- 	const struct config_item_type		*pdrv_node_type;
- 	/* master allocation */
- 	spinlock_t		mc_lock;
--	struct stp_master	*masters[0];
-+	struct stp_master	*masters[];
- };
- 
- #define to_stm_device(_d)				\
+ /**
 -- 
 2.23.0
 
