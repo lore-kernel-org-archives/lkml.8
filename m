@@ -2,121 +2,193 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13EEC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79C6C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D652070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816FA2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:03:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bLh0NBaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgCSSD1 (ORCPT
+        id S1728278AbgCSSDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:03:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33793 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727383AbgCSSD1 (ORCPT
+        Thu, 19 Mar 2020 14:03:39 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:50372 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbgCSSDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:03:27 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEzVo-0006wd-Nw; Thu, 19 Mar 2020 19:03:20 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C943C1C22B5;
-        Thu, 19 Mar 2020 19:03:19 +0100 (CET)
-Date:   Thu, 19 Mar 2020 18:03:19 -0000
-From:   "tip-bot2 for Randy Dunlap" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/configs: Slightly reduce defconfigs
-Cc:     Randy Dunlap <rdunlap@infradead.org>, Borislav Petkov <bp@suse.de>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <433f203e-4e00-f317-2e6b-81518b72843c@infradead.org>
-References: <433f203e-4e00-f317-2e6b-81518b72843c@infradead.org>
+        Thu, 19 Mar 2020 14:03:39 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 62F70A53;
+        Thu, 19 Mar 2020 19:03:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584641017;
+        bh=HOUY95IFrKZRKfGjSsw5sMRF6MP3fYQPa1epjOauYxc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bLh0NBazFtysSiu+BJPR6fz6MWHFcZR2o8u4zE9vDkPwTVmMO43hTlNOyGXql5p46
+         34EPnvnwtuOFc0/5U/0U5lQM07k0buTa0E1aKTA4q0la/oEy4tDjuArHbAEkSJXwM2
+         hnWsc+pls1DSNxhrkqjTgE3a0M3QfQCIXRuT+xzQ=
+Date:   Thu, 19 Mar 2020 20:03:31 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Alex Riesen <alexander.riesen@cetitec.com>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 01/10] media: adv748x: fix end-of-line terminators in
+ diagnostic statements
+Message-ID: <20200319180331.GK14585@pendragon.ideasonboard.com>
+References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+ <5272d873b4daf8b0bdb8aff81b08ab3508da9567.1584639664.git.alexander.riesen@cetitec.com>
 MIME-Version: 1.0
-Message-ID: <158464099943.28353.10943155317127048693.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5272d873b4daf8b0bdb8aff81b08ab3508da9567.1584639664.git.alexander.riesen@cetitec.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+Hi Alex,
 
-Commit-ID:     e2bdafc1070f5db0bc1bc40116955f54188771cb
-Gitweb:        https://git.kernel.org/tip/e2bdafc1070f5db0bc1bc40116955f54188771cb
-Author:        Randy Dunlap <rdunlap@infradead.org>
-AuthorDate:    Tue, 25 Feb 2020 21:14:05 -08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Thu, 19 Mar 2020 18:48:52 +01:00
+Thank you for the patch.
 
-x86/configs: Slightly reduce defconfigs
+On Thu, Mar 19, 2020 at 06:41:43PM +0100, Alex Riesen wrote:
+> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
 
-Eliminate 2 config symbols from both x86 defconfig files:
-HAMRADIO and FDDI.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-The FDDI Kconfig file even says (for the FDDI config symbol):
-  Most people will say N.
+> ---
+>  drivers/media/i2c/adv748x/adv748x-core.c | 24 ++++++++++++------------
+>  drivers/media/i2c/adv748x/adv748x-csi2.c |  2 +-
+>  2 files changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+> index 23e02ff27b17..c3fb113cef62 100644
+> --- a/drivers/media/i2c/adv748x/adv748x-core.c
+> +++ b/drivers/media/i2c/adv748x/adv748x-core.c
+> @@ -623,11 +623,11 @@ static int adv748x_parse_dt(struct adv748x_state *state)
+>  
+>  	for_each_endpoint_of_node(state->dev->of_node, ep_np) {
+>  		of_graph_parse_endpoint(ep_np, &ep);
+> -		adv_info(state, "Endpoint %pOF on port %d", ep.local_node,
+> +		adv_info(state, "Endpoint %pOF on port %d\n", ep.local_node,
+>  			 ep.port);
+>  
+>  		if (ep.port >= ADV748X_PORT_MAX) {
+> -			adv_err(state, "Invalid endpoint %pOF on port %d",
+> +			adv_err(state, "Invalid endpoint %pOF on port %d\n",
+>  				ep.local_node, ep.port);
+>  
+>  			continue;
+> @@ -635,7 +635,7 @@ static int adv748x_parse_dt(struct adv748x_state *state)
+>  
+>  		if (state->endpoints[ep.port]) {
+>  			adv_err(state,
+> -				"Multiple port endpoints are not supported");
+> +				"Multiple port endpoints are not supported\n");
+>  			continue;
+>  		}
+>  
+> @@ -702,62 +702,62 @@ static int adv748x_probe(struct i2c_client *client)
+>  	/* Discover and process ports declared by the Device tree endpoints */
+>  	ret = adv748x_parse_dt(state);
+>  	if (ret) {
+> -		adv_err(state, "Failed to parse device tree");
+> +		adv_err(state, "Failed to parse device tree\n");
+>  		goto err_free_mutex;
+>  	}
+>  
+>  	/* Configure IO Regmap region */
+>  	ret = adv748x_configure_regmap(state, ADV748X_PAGE_IO);
+>  	if (ret) {
+> -		adv_err(state, "Error configuring IO regmap region");
+> +		adv_err(state, "Error configuring IO regmap region\n");
+>  		goto err_cleanup_dt;
+>  	}
+>  
+>  	ret = adv748x_identify_chip(state);
+>  	if (ret) {
+> -		adv_err(state, "Failed to identify chip");
+> +		adv_err(state, "Failed to identify chip\n");
+>  		goto err_cleanup_dt;
+>  	}
+>  
+>  	/* Configure remaining pages as I2C clients with regmap access */
+>  	ret = adv748x_initialise_clients(state);
+>  	if (ret) {
+> -		adv_err(state, "Failed to setup client regmap pages");
+> +		adv_err(state, "Failed to setup client regmap pages\n");
+>  		goto err_cleanup_clients;
+>  	}
+>  
+>  	/* SW reset ADV748X to its default values */
+>  	ret = adv748x_reset(state);
+>  	if (ret) {
+> -		adv_err(state, "Failed to reset hardware");
+> +		adv_err(state, "Failed to reset hardware\n");
+>  		goto err_cleanup_clients;
+>  	}
+>  
+>  	/* Initialise HDMI */
+>  	ret = adv748x_hdmi_init(&state->hdmi);
+>  	if (ret) {
+> -		adv_err(state, "Failed to probe HDMI");
+> +		adv_err(state, "Failed to probe HDMI\n");
+>  		goto err_cleanup_clients;
+>  	}
+>  
+>  	/* Initialise AFE */
+>  	ret = adv748x_afe_init(&state->afe);
+>  	if (ret) {
+> -		adv_err(state, "Failed to probe AFE");
+> +		adv_err(state, "Failed to probe AFE\n");
+>  		goto err_cleanup_hdmi;
+>  	}
+>  
+>  	/* Initialise TXA */
+>  	ret = adv748x_csi2_init(state, &state->txa);
+>  	if (ret) {
+> -		adv_err(state, "Failed to probe TXA");
+> +		adv_err(state, "Failed to probe TXA\n");
+>  		goto err_cleanup_afe;
+>  	}
+>  
+>  	/* Initialise TXB */
+>  	ret = adv748x_csi2_init(state, &state->txb);
+>  	if (ret) {
+> -		adv_err(state, "Failed to probe TXB");
+> +		adv_err(state, "Failed to probe TXB\n");
+>  		goto err_cleanup_txa;
+>  	}
+>  
+> diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
+> index 2091cda50935..c43ce5d78723 100644
+> --- a/drivers/media/i2c/adv748x/adv748x-csi2.c
+> +++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
+> @@ -72,7 +72,7 @@ static int adv748x_csi2_registered(struct v4l2_subdev *sd)
+>  	struct adv748x_state *state = tx->state;
+>  	int ret;
+>  
+> -	adv_dbg(state, "Registered %s (%s)", is_txa(tx) ? "TXA":"TXB",
+> +	adv_dbg(state, "Registered %s (%s)\n", is_txa(tx) ? "TXA":"TXB",
+>  			sd->name);
+>  
+>  	/*
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Maciej W. Rozycki <macro@linux-mips.org> # CONFIG_FDDI
-Link: https://lkml.kernel.org/r/433f203e-4e00-f317-2e6b-81518b72843c@infradead.org
----
- arch/x86/configs/i386_defconfig   | 2 --
- arch/x86/configs/x86_64_defconfig | 2 --
- 2 files changed, 4 deletions(-)
+-- 
+Regards,
 
-diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
-index 59ce9ed..5b602be 100644
---- a/arch/x86/configs/i386_defconfig
-+++ b/arch/x86/configs/i386_defconfig
-@@ -125,7 +125,6 @@ CONFIG_IP6_NF_MANGLE=y
- CONFIG_NET_SCHED=y
- CONFIG_NET_EMATCH=y
- CONFIG_NET_CLS_ACT=y
--CONFIG_HAMRADIO=y
- CONFIG_CFG80211=y
- CONFIG_MAC80211=y
- CONFIG_MAC80211_LEDS=y
-@@ -171,7 +170,6 @@ CONFIG_FORCEDETH=y
- CONFIG_8139TOO=y
- # CONFIG_8139TOO_PIO is not set
- CONFIG_R8169=y
--CONFIG_FDDI=y
- CONFIG_INPUT_POLLDEV=y
- # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
- CONFIG_INPUT_EVDEV=y
-diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
-index 0b9654c..f3d1f36 100644
---- a/arch/x86/configs/x86_64_defconfig
-+++ b/arch/x86/configs/x86_64_defconfig
-@@ -123,7 +123,6 @@ CONFIG_IP6_NF_MANGLE=y
- CONFIG_NET_SCHED=y
- CONFIG_NET_EMATCH=y
- CONFIG_NET_CLS_ACT=y
--CONFIG_HAMRADIO=y
- CONFIG_CFG80211=y
- CONFIG_MAC80211=y
- CONFIG_MAC80211_LEDS=y
-@@ -164,7 +163,6 @@ CONFIG_SKY2=y
- CONFIG_FORCEDETH=y
- CONFIG_8139TOO=y
- CONFIG_R8169=y
--CONFIG_FDDI=y
- CONFIG_INPUT_POLLDEV=y
- # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
- CONFIG_INPUT_EVDEV=y
+Laurent Pinchart
