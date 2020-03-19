@@ -2,92 +2,136 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4FAC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D250C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C1620722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3479F20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FR9k72Z5"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Y9WmBzCw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RBV6nW+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgCSHot (ORCPT
+        id S1726796AbgCSHqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:44:49 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:59961 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725767AbgCSHot (ORCPT
+        Thu, 19 Mar 2020 03:46:39 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:59709 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725768AbgCSHqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:44:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584603888;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LqosX0I8MemyviAwLJfehcZri3xdX1d3AgPwhagy1LI=;
-        b=FR9k72Z5Bn8NrKsgVbFgdvRI6hxNGVyQMiZLmESJji2AXB8iJlpFgSHqwsODvC7r2beILM
-        xZaQsC1gM9oFUxTRMFbVX70FDvVbYCjg8bWvlFxRfpailMPDfbpmvKqhaklz53HCqtWYDz
-        EzNrlbMcoqK5hmlcArw9zucUHePPk8w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-62-cLj4inWeOQaIr1hq7jNBww-1; Thu, 19 Mar 2020 03:44:46 -0400
-X-MC-Unique: cLj4inWeOQaIr1hq7jNBww-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35B58149C2;
-        Thu, 19 Mar 2020 07:44:45 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.40.192.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6A98162673;
-        Thu, 19 Mar 2020 07:44:29 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 08:44:26 +0100
-From:   Andrew Jones <drjones@redhat.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v7 10/14] KVM: selftests: Use a single binary for
- dirty/clear log test
-Message-ID: <20200319074426.4gzvslbxvkngnkcc@kamzik.brq.redhat.com>
-References: <20200318163720.93929-1-peterx@redhat.com>
- <20200318163720.93929-11-peterx@redhat.com>
+        Thu, 19 Mar 2020 03:46:39 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id B74C15C01EA;
+        Thu, 19 Mar 2020 03:46:37 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Thu, 19 Mar 2020 03:46:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=f5rFjbDiH3kcnIpvJKnrExFwLrT
+        thw0CoS09zAxpBd8=; b=Y9WmBzCwdRvXXIZC03nlFw+7z+iDs5rr8un9cqk1i2Q
+        1Phkpc1ApRbSu4gQew0s4cwQ0ASuIJRqWodxUyqNWvaQTEmepSijmH5i1IjZUga1
+        ICj/YMG4IL7qh4BKBkHY+RRpbzkLS75myixaaTeTuZfrFwuDMDD7u8YaxH+SZvmC
+        TCwhDlaT76HtB7Bkm/xLzmO+euzw37YOGOwr4hvHEvLGGtI+Ag1k7ZAqXq++K9OT
+        WPmluPXLcL5HFFtMmYBjJ2s+h4LtdDtLirguxZouzmCJ5Vz9zQyz+vmgOx/7s6DH
+        +cqzUuj/93zrtSqJoQQja5idr7+Jr+nU1xhGtQinDww==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=f5rFjb
+        DiH3kcnIpvJKnrExFwLrTthw0CoS09zAxpBd8=; b=RBV6nW+f++25Letgc5eNXV
+        xmhajnZQUnMaTeXrDR1WDLsvGjxeVNcmbHwkD2VSHzQXavHFgriWD+7y88TuM/K4
+        +NXKuUpBh4v7G483Cu0LPv3F13CmnDPmiYfLFbh1lXz/aP9VXVFBg+R6/c/u6EZv
+        y6yDd2YNQ53ulFTTpizlcGLcQPmWYCXnfi3MmqPrEkfjkqkNaOwywJAf0SlfxA+V
+        EKuKsntMbNtErydIBuORz3px5NARhnTzYgg2uktzFelugRZcYzl1SSiLHhVFg9J+
+        pkpKDVHHFVjGE8OxWYh+mEvEP5FkgA2oGo5xvBZDv6U1iMKIRp6O8xAswzlToKWA
+        ==
+X-ME-Sender: <xms:XSNzXneTT4lzd-_-iRKmo-USFBdB9L1BA1C0Af2fAzjWUocs_3qA-A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudefkedguddugecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
+    dtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehg
+    rhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:XSNzXskKR9qQy0jCaKOaJ7x-0EdmIzk8ohyQZXwQiRIp0WQoKE60lg>
+    <xmx:XSNzXjGaFcVzSxHgJTYpP1sgM34-T6uRIdhfY03HcB8qOKQ6K8oNPg>
+    <xmx:XSNzXqJxRiJs2Dd_2_eXIrNflwpcL69eU-wopSo_3Kj-61w4VAk1PA>
+    <xmx:XSNzXgqBf8pOo_7Ic_wGYK0s6AkQUzZJKaLYZCdKdvOUg8ZqiZIGiQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B4B76328005E;
+        Thu, 19 Mar 2020 03:46:36 -0400 (EDT)
+Date:   Thu, 19 Mar 2020 08:46:34 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Wen Gong <wgong@codeaurora.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, ath11k@lists.infradead.org,
+        David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2] net: qrtr: fix len of skb_put_padto in
+ qrtr_node_enqueue
+Message-ID: <20200319074634.GA3421780@kroah.com>
+References: <20200103045016.12459-1-wgong@codeaurora.org>
+ <20200105.144704.221506192255563950.davem@davemloft.net>
+ <CAD=FV=WiceRwLUS1sdL_W=ELKYZ9zKE13e8vx9SO0+tRvX74QQ@mail.gmail.com>
+ <20200317102604.GD1130294@kroah.com>
+ <CAD=FV=XXPACnPt=5=7gH3L6DufZ4tLSPTN-AtTAmvi5KAJuP6A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200318163720.93929-11-peterx@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <CAD=FV=XXPACnPt=5=7gH3L6DufZ4tLSPTN-AtTAmvi5KAJuP6A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 12:37:16PM -0400, Peter Xu wrote:
-> Remove the clear_dirty_log test, instead merge it into the existing
-> dirty_log_test.  It should be cleaner to use this single binary to do
-> both tests, also it's a preparation for the upcoming dirty ring test.
+On Tue, Mar 17, 2020 at 08:45:09AM -0700, Doug Anderson wrote:
+> Hi,
 > 
-> The default behavior will run all the modes in sequence.
+> On Tue, Mar 17, 2020 at 3:26 AM Greg KH <greg@kroah.com> wrote:
+> >
+> > On Tue, Feb 25, 2020 at 02:52:24PM -0800, Doug Anderson wrote:
+> > > Hi,
+> > >
+> > >
+> > > On Sun, Jan 5, 2020 at 2:47 PM David Miller <davem@davemloft.net> wrote:
+> > > >
+> > > > From: Wen Gong <wgong@codeaurora.org>
+> > > > Date: Fri,  3 Jan 2020 12:50:16 +0800
+> > > >
+> > > > > The len used for skb_put_padto is wrong, it need to add len of hdr.
+> > > >
+> > > > Thanks, applied.
+> > >
+> > > I noticed this patch is in mainline now as:
+> > >
+> > > ce57785bf91b net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
+> > >
+> > > Though I'm not an expert on the code, it feels like a stable candidate
+> > > unless someone objects.
+> >
+> > Stable candidate for what tree(s)?
 > 
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  tools/testing/selftests/kvm/Makefile          |   2 -
->  .../selftests/kvm/clear_dirty_log_test.c      |   6 -
->  tools/testing/selftests/kvm/dirty_log_test.c  | 187 +++++++++++++++---
->  3 files changed, 156 insertions(+), 39 deletions(-)
->  delete mode 100644 tools/testing/selftests/kvm/clear_dirty_log_test.c
->
+> I noticed that it was lacking and applied cleanly on 5.4.  As of
+> 5.4.25 it's still not stable there.  I only noticed it because I was
+> comparing all the patches in mainline in "net/qrtr" with what we had
+> in our tree and stumbled upon this one.
+> 
+> Looking at it a little more carefully, I guess you could say:
+> 
+> Fixes: e7044482c8ac ("net: qrtr: Pass source and destination to
+> enqueue functions")
+> 
+> ...though it will be trickier to apply past commit 194ccc88297a ("net:
+> qrtr: Support decoding incoming v2 packets") just because the math
+> changed.
 
-Reviewed-by: Andrew Jones <drjones@redhat.com>
+Given that both of those commits showed up in 4.15, it doesn't matter
+much :)
 
+I've queued this up for 5.4.y and 4.19.y now, thanks.
+
+greg k-h
