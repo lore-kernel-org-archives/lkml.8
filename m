@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFC1C43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA31C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09D12145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508902145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:05:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgCSOFC (ORCPT
+        id S1727823AbgCSOFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:05:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60739 "EHLO
+        Thu, 19 Mar 2020 10:05:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60747 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbgCSOE7 (ORCPT
+        with ESMTP id S1726998AbgCSOFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:04:59 -0400
+        Thu, 19 Mar 2020 10:05:11 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEvmv-0001p5-DP; Thu, 19 Mar 2020 15:04:45 +0100
+        id 1jEvmv-0001p8-N1; Thu, 19 Mar 2020 15:04:46 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 017361C22A3;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5505B1C22A1;
         Thu, 19 Mar 2020 15:04:45 +0100 (CET)
-Date:   Thu, 19 Mar 2020 14:04:44 -0000
-From:   "tip-bot2 for disconnect3d" <tip-bot2@linutronix.de>
+Date:   Thu, 19 Mar 2020 14:04:45 -0000
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf map: Fix off by one in strncpy() size argument
-Cc:     disconnect3d <dominik.b.czarnota@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, John Keeping <john@metanate.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Lentine <mlentine@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+Subject: [tip: perf/urgent] tools: Let O= makes handle a relative path with -C option
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
         Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200309104855.3775-1-dominik.b.czarnota@gmail.com>
-References: <20200309104855.3775-1-dominik.b.czarnota@gmail.com>
+In-Reply-To: <158351957799.3363.15269768530697526765.stgit@devnote2>
+References: <158351957799.3363.15269768530697526765.stgit@devnote2>
 MIME-Version: 1.0
-Message-ID: <158462668472.28353.474189407864039668.tip-bot2@tip-bot2>
+Message-ID: <158462668507.28353.5229256080954046835.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -65,58 +66,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/urgent branch of tip:
 
-Commit-ID:     db2c549407d4a76563c579e4768f7d6d32afefba
-Gitweb:        https://git.kernel.org/tip/db2c549407d4a76563c579e4768f7d6d32afefba
-Author:        disconnect3d <dominik.b.czarnota@gmail.com>
-AuthorDate:    Mon, 09 Mar 2020 11:48:53 +01:00
+Commit-ID:     be40920fbf1003c38ccdc02b571e01a75d890c82
+Gitweb:        https://git.kernel.org/tip/be40920fbf1003c38ccdc02b571e01a75d890c82
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Sat, 07 Mar 2020 03:32:58 +09:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 09 Mar 2020 09:34:45 -03:00
+CommitterDate: Fri, 06 Mar 2020 17:08:28 -03:00
 
-perf map: Fix off by one in strncpy() size argument
+tools: Let O= makes handle a relative path with -C option
 
-This patch fixes an off-by-one error in strncpy size argument in
-tools/perf/util/map.c. The issue is that in:
+When I tried to compile tools/perf from the top directory with the -C
+option, the O= option didn't work correctly if I passed a relative path:
 
-        strncmp(filename, "/system/lib/", 11)
+  $ make O=BUILD -C tools/perf/
+  make: Entering directory '/home/mhiramat/ksrc/linux/tools/perf'
+    BUILD:   Doing 'make -j8' parallel build
+  ../scripts/Makefile.include:4: *** O=/home/mhiramat/ksrc/linux/tools/perf/BUILD does not exist.  Stop.
+  make: *** [Makefile:70: all] Error 2
+  make: Leaving directory '/home/mhiramat/ksrc/linux/tools/perf'
 
-the passed string literal: "/system/lib/" has 12 bytes (without the NULL
-byte) and the passed size argument is 11. As a result, the logic won't
-match the ending "/" byte and will pass filepaths that are stored in
-other directories e.g. "/system/libmalicious/bin" or just
-"/system/libmalicious".
+The O= directory existence check failed because the check script ran in
+the build target directory instead of the directory where I ran the make
+command.
 
-This functionality seems to be present only on Android. I assume the
-/system/ directory is only writable by the root user, so I don't think
-this bug has much (or any) security impact.
+To fix that, once change directory to $(PWD) and check O= directory,
+since the PWD is set to where the make command runs.
 
-Fixes: eca818369996 ("perf tools: Add automatic remapping of Android libraries")
-Signed-off-by: disconnect3d <dominik.b.czarnota@gmail.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
+Fixes: c883122acc0d ("perf tools: Let O= makes handle relative paths")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Keeping <john@metanate.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Lentine <mlentine@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Michal Marek <michal.lkml@markovi.net>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20200309104855.3775-1-dominik.b.czarnota@gmail.com
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/158351957799.3363.15269768530697526765.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Makefile            | 2 +-
+ tools/scripts/Makefile.include | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 9542851..b342f74 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -89,7 +89,7 @@ static inline bool replace_android_lib(const char *filename, char *newfilename)
- 		return true;
- 	}
+diff --git a/tools/perf/Makefile b/tools/perf/Makefile
+index 7902a56..b8fc7d9 100644
+--- a/tools/perf/Makefile
++++ b/tools/perf/Makefile
+@@ -35,7 +35,7 @@ endif
+ # Only pass canonical directory names as the output directory:
+ #
+ ifneq ($(O),)
+-  FULL_O := $(shell readlink -f $(O) || echo $(O))
++  FULL_O := $(shell cd $(PWD); readlink -f $(O) || echo $(O))
+ endif
  
--	if (!strncmp(filename, "/system/lib/", 11)) {
-+	if (!strncmp(filename, "/system/lib/", 12)) {
- 		char *ndk, *app;
- 		const char *arch;
- 		size_t ndk_length;
+ #
+diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+index ded7a95..6d2f3a1 100644
+--- a/tools/scripts/Makefile.include
++++ b/tools/scripts/Makefile.include
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ ifneq ($(O),)
+ ifeq ($(origin O), command line)
+-	dummy := $(if $(shell test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
+-	ABSOLUTE_O := $(shell cd $(O) ; pwd)
++	dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
++	ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
+ 	OUTPUT := $(ABSOLUTE_O)/$(if $(subdir),$(subdir)/)
+ 	COMMAND_O := O=$(ABSOLUTE_O)
+ ifeq ($(objtree),)
