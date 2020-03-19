@@ -2,88 +2,121 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7317C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB97DC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79F1020409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBB02072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbgCSGgI (ORCPT
+        id S1727090AbgCSGih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 02:36:08 -0400
-Received: from mga12.intel.com ([192.55.52.136]:25753 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727026AbgCSGgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 02:36:07 -0400
-IronPort-SDR: ZAQ6D+KT8gR5YRxuhiw0noZBPrjy0r5uNa4S2WQ6jgYEY84oMjs0g55cXW7EHO6FjMjk/zaaB+
- peP1mrucmlrg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 23:36:06 -0700
-IronPort-SDR: F6KwX0Atn4KHwoE0e6DWfKBmMZKeFiBSHNbcsydGQRTVJZ1TI4l4JFOF7eOdCDmqeXo1b9LSlc
- BEhoesRzxsFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,570,1574150400"; 
-   d="scan'208";a="248439246"
-Received: from snr.bj.intel.com ([10.240.193.90])
-  by orsmga006.jf.intel.com with ESMTP; 18 Mar 2020 23:36:00 -0700
-From:   Luwei Kang <luwei.kang@intel.com>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, hpa@zytor.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
-        thomas.lendacky@amd.com, fenghua.yu@intel.com,
-        kan.liang@linux.intel.com, Luwei Kang <luwei.kang@intel.com>
-Subject: [PATCH v2 5/5] KVM: VMX: Switch PEBS records output to Intel PT buffer
-Date:   Thu, 19 Mar 2020 22:33:50 +0800
-Message-Id: <1584628430-23220-6-git-send-email-luwei.kang@intel.com>
+        Thu, 19 Mar 2020 02:38:37 -0400
+Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:61321 "HELO
+        aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with SMTP id S1726714AbgCSGih (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 02:38:37 -0400
+Received: from 137.localdomain (unknown [218.107.205.216])
+        by app2 (Coremail) with SMTP id 4zNnewCnrxcNEnNeD5MUAA--.301S2;
+        Thu, 19 Mar 2020 14:32:46 +0800 (CST)
+From:   Pengcheng Yang <yangpc@wangsu.com>
+To:     edumazet@google.com, davem@davemloft.net, ncardwell@google.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pengcheng Yang <yangpc@wangsu.com>
+Subject: [PATCH RFC net-next] tcp: make cwnd-limited not affected by tcp internal pacing
+Date:   Thu, 19 Mar 2020 14:32:29 +0800
+Message-Id: <1584599549-6793-1-git-send-email-yangpc@wangsu.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1584628430-23220-1-git-send-email-luwei.kang@intel.com>
-References: <1584628430-23220-1-git-send-email-luwei.kang@intel.com>
+X-CM-TRANSID: 4zNnewCnrxcNEnNeD5MUAA--.301S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxZryDGr47WFyftrW7Kw15Arb_yoW5Wr43pF
+        WFkw40qw1kXry3Crn7Ar1rZF1UurZYkFyUW3y5Z34qy39rXw1Y9F47Kr4F9Fy7GF4fXw43
+        Xr4j934rCryDZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyG1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
+        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
+        x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28E
+        F7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F4
+        0EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_Gr4lYx0Ec7CjxVAajcxG14v26r1j
+        6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI
+        8I648v4I1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_
+        Gr4l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+        xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+        cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+        AvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
+        xVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VU8J3ktUUUUU==
+X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch PEBS records output to Intel PT buffer when PEBS is enabled
-in KVM guest by Intel PT.
+The current cwnd-limited is set when cwnd is fully used
+(inflight >= cwnd), which allows the congestion algorithm
+to accurately determine whether cwnd needs to be added.
 
-Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+However, there may be a problem when using tcp internal pacing:
+In congestion avoidance phase, when a burst of packets are
+acked by a stretched ACK or a burst of ACKs, this makes a large
+reduction in inflight in a short time. At this time, the sender
+sends data according to the pacing rate cannot fill CWND and
+cwnd-limited is not set. The worst case is that cwnd-limited
+is set only after the last packet in a window is sent. This causes
+the congestion algorithm to be too conservative to increase CWND.
+
+The idea is that once cwnd-limited is set, it maintains a window period.
+In this period, it is considered that the CWND is limited. This makes
+the congestion algorithm unaffected by tcp internal pacing.
+
+Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
 ---
- arch/x86/kvm/vmx/vmx.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/tcp.h   |  2 +-
+ net/ipv4/tcp_output.c | 14 ++++++++------
+ 2 files changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c6d9a87..ec74656 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -921,6 +921,7 @@ void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
- {
- 	int i, j = 0;
- 	struct msr_autoload *m = &vmx->msr_autoload;
-+	struct kvm_pmu *pmu = vcpu_to_pmu(&vmx->vcpu);
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 3dc9640..3b3329f 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -286,7 +286,7 @@ struct tcp_sock {
+ 	u32	packets_out;	/* Packets which are "in flight"	*/
+ 	u32	retrans_out;	/* Retransmitted packets out		*/
+ 	u32	max_packets_out;  /* max packets_out in last window */
+-	u32	max_packets_seq;  /* right edge of max_packets_out flight */
++	u32	cwnd_limited_seq; /* snd_nxt at cwnd limited */
  
- 	switch (msr) {
- 	case MSR_EFER:
-@@ -952,6 +953,8 @@ void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
- 		 * guest's memory.
- 		 */
- 		wrmsrl(MSR_IA32_PEBS_ENABLE, 0);
-+		if ((pmu->pebs_enable & PEBS_OUTPUT_MASK) == PEBS_OUTPUT_PT)
-+			guest_val |= PEBS_OUTPUT_PT;
+ 	u16	urg_data;	/* Saved octet of OOB data and control flags */
+ 	u8	ecn_flags;	/* ECN status bits.			*/
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 306e25d..31dd6dc 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1705,14 +1705,16 @@ static void tcp_cwnd_validate(struct sock *sk, bool is_cwnd_limited)
+ 	const struct tcp_congestion_ops *ca_ops = inet_csk(sk)->icsk_ca_ops;
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 
+-	/* Track the maximum number of outstanding packets in each
+-	 * window, and remember whether we were cwnd-limited then.
++	/* Remember whether we were cwnd-limited in last window,
++	 * and track the maximum number of outstanding packets in each window.
+ 	 */
+-	if (!before(tp->snd_una, tp->max_packets_seq) ||
+-	    tp->packets_out > tp->max_packets_out) {
+-		tp->max_packets_out = tp->packets_out;
+-		tp->max_packets_seq = tp->snd_nxt;
++	if (is_cwnd_limited ||
++	    !before(tp->snd_una, tp->cwnd_limited_seq)) {
+ 		tp->is_cwnd_limited = is_cwnd_limited;
++		tp->cwnd_limited_seq = tp->snd_nxt;
++		tp->max_packets_out = tp->packets_out;
++	} else if (tp->packets_out > tp->max_packets_out) {
++		tp->max_packets_out = tp->packets_out;
  	}
  
- 	i = vmx_find_msr_index(&m->guest, msr);
+ 	if (tcp_is_cwnd_limited(sk)) {
 -- 
 1.8.3.1
 
