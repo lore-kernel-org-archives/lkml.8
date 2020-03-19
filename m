@@ -2,183 +2,180 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0818C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 518FCC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86CD120836
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:41:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584639707;
-	bh=kFYy6eHOfgxXyI8tRZ4ScvOVxBPCqcDs4Bzn7BH7JTw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=gnlIWmBQNpafXfO0V8iP1LErfaP6fUBiWOscTjRAj0mRSW8sdqIxxqsW+XDEC/Wwm
-	 zPSUHb3GVa7RNN32kcjc49kRMy8SMlozMYvIchaY8eapUEu8ky3er7ruKVrA1Mwcgi
-	 1qmm5RgokfHox1CXDNymAYQ4MdMcVhLCBZnme8nA=
+	by mail.kernel.org (Postfix) with ESMTP id 33F4120754
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgCSRlq (ORCPT
+        id S1728216AbgCSRmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:41:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727034AbgCSRlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:41:45 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64F902071C;
-        Thu, 19 Mar 2020 17:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584639704;
-        bh=kFYy6eHOfgxXyI8tRZ4ScvOVxBPCqcDs4Bzn7BH7JTw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=NWgmY2/uT/gsgnGfNEWRmgppBPkoJpj21ZwuXmUDal+NRoibXBiJpRVK1E4yRlRwz
-         p5AJddyUhi4nQKIVLXo94ykxKIDJeg8NPwimOOdzWE4WFoVNdJEKk0cmNyFXjWlPNN
-         QgDGU876yWGdVqyMYXRBetUEifdWPKTrAzt81S64=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2F91935226B9; Thu, 19 Mar 2020 10:41:44 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 10:41:44 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH RFC v2 tip/core/rcu 02/22] rcu: Add per-task state to RCU
- CPU stall warnings
-Message-ID: <20200319174144.GJ3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
- <20200319001100.24917-2-paulmck@kernel.org>
- <20200319132731.49b0d020@gandalf.local.home>
+        Thu, 19 Mar 2020 13:42:07 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:59047 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbgCSRmG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:42:06 -0400
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MORN0-1ivo7k0Cbu-00Pz7Q; Thu, 19 Mar 2020 18:41:50 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id B7A7B65021B;
+        Thu, 19 Mar 2020 17:41:49 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zJ0c4ug5kAPk; Thu, 19 Mar 2020 18:41:49 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 517E264F8ED;
+        Thu, 19 Mar 2020 18:41:49 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.8.5.52) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 19 Mar 2020 18:41:49 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 9E04D8050C; Thu, 19 Mar 2020 18:41:48 +0100 (CET)
+Date:   Thu, 19 Mar 2020 18:41:48 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH v2 02/10] media: adv748x: include everything adv748x.h needs
+ into the file
+Message-ID: <fe109d58eaa34d68cad0f34bb048f827b336e024.1584639664.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1584639664.git.alexander.riesen@cetitec.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200319132731.49b0d020@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <cover.1584639664.git.alexander.riesen@cetitec.com>
+X-Originating-IP: [10.8.5.52]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A290D7F536A6D7762
+X-Provags-ID: V03:K1:FHxeNjGlIL7NzarJSPnLpbfeHB9uBfXDTSMuryQpyLu9Ee7QL4W
+ cyHLH9BjLgtvX3Up1fHkJk1x3oQvGZZu2nsQEBQftJgEHGxFJiKo8RClAoRE3uyZ526t/wv
+ YwGDdYlSP40KxGOUYds9L9lhGtR3M1CXWPpVSd5GTIGdpojWw32pqnHGTmf/I1ONnFwipMk
+ 9NB5bfT6vPJquo5wetmtw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Uu9yQPd1gcU=:hz1qzK2t6UBTEhWh44qlRL
+ UnT0ILN1Dg+H3Q3Xuht2QR7b+NRmfiztGZCJBTtVm+MjiZDsj8r/+tEEW/Xco2BhskekfoyFS
+ q0LoQAmkJKx+aBgR7RA+rN0fcecqrhWaz6LxvMk7Sr6NF0wuPOpOShVcmgPTbzRH8bj7So+be
+ XYX/Y5DQFV6ULNpfZdCExmVn4fqs0KeQEo5RzS/5xR/BJ/A+ZfnRHCyeODvPrWsyTSS0YkacF
+ vtXuICJ0Noe9kyZsM/XyRBLACmMfUe0SIUHmWEXx+zMYlJGD9Kz/9AwHlQExCgapSgRHIterd
+ j074Jm6e+c35XR2Z2eLx/jKAqa7Y0bI8gJpKhga0cWI9Txl7KRxRHp/Br6/KwEfVr90HZr7Sl
+ 69vrscCga3pUHCUQkZ9RxQqKTkAo/gggM/6EWtWDvkVdR+QmcSLqQHWzvjuvzY4LIAzMzeaRE
+ vmbO1msBdF9NBSu/JeKs7GnC/2BHY+JhRim/SBiWEO0r8Ge+kueoy12ryd76mWAPsxfR25AaO
+ qrAJRZzcE4qPUINg1d9JZYN9cNWcYccS+Z7iiOKax6eekzfxgRhEsthJUxj/L5Zeiz15HXB/S
+ NfjtKMoP2b3qfwBOuXy07q8omWmmlk8E8raNXZEEQMU57cZohSAhB4p6yOBEkUV8vz3I50caw
+ nKjSB+qXX73TDT522MWiCm7vORds1sYYppU6gO6VxS7bOuAE9dxTomrRxiUhGlvPyyXDdtTQ2
+ XIKzPTz51S+jf4gSnjrZya1JdkDhGJjcXtf7alNB4ym7FxaCI//mTDrYC4ovUPwKrEi67YCMc
+ N4L+RoQ4mX7MtMRM/fHVer9bHB9XmuZH4X2KJajmW6Gyo9trm8oAfFwnpDuneFLyRBx+LO2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 01:27:31PM -0400, Steven Rostedt wrote:
-> On Wed, 18 Mar 2020 17:10:40 -0700
-> paulmck@kernel.org wrote:
-> 
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > 
-> > Currently, an RCU-preempt CPU stall warning simply lists the PIDs of
-> > those tasks holding up the current grace period.  This can be helpful,
-> > but more can be even more helpful.
-> > 
-> > To this end, this commit adds the nesting level, whether the task
-> > things it was preempted in its current RCU read-side critical section,
-> 
-> s/things/thinks/
+To follow the established practice of not depending on others to
+pull everything in.
 
-I thing that was an excellent catch, thank you!  ;-)
+Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+---
+ drivers/media/i2c/adv748x/adv748x-afe.c  | 2 --
+ drivers/media/i2c/adv748x/adv748x-core.c | 2 --
+ drivers/media/i2c/adv748x/adv748x-csi2.c | 2 --
+ drivers/media/i2c/adv748x/adv748x-hdmi.c | 2 --
+ drivers/media/i2c/adv748x/adv748x.h      | 2 ++
+ 5 files changed, 2 insertions(+), 8 deletions(-)
 
-> > whether RCU core has asked this task for a quiescent state, whether the
-> > expedited-grace-period hint is set, and whether the task believes that
-> > it is on the blocked-tasks list (it must be, or it would not be printed,
-> > but if things are broken, best not to take too much for granted).
-> > 
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > ---
-> >  kernel/rcu/tree_stall.h | 38 ++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 36 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-> > index 502b4dd..e19487d 100644
-> > --- a/kernel/rcu/tree_stall.h
-> > +++ b/kernel/rcu/tree_stall.h
-> > @@ -192,14 +192,40 @@ static void rcu_print_detail_task_stall_rnp(struct rcu_node *rnp)
-> >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
-> >  }
-> >  
-> > +// Communicate task state back to the RCU CPU stall warning request.
-> > +struct rcu_stall_chk_rdr {
-> > +	int nesting;
-> > +	union rcu_special rs;
-> > +	bool on_blkd_list;
-> > +};
-> > +
-> > +/*
-> > + * Report out the state of a not-running task that is stalling the
-> > + * current RCU grace period.
-> > + */
-> > +static bool check_slow_task(struct task_struct *t, void *arg)
-> > +{
-> > +	struct rcu_node *rnp;
-> > +	struct rcu_stall_chk_rdr *rscrp = arg;
-> > +
-> > +	if (task_curr(t))
-> > +		return false; // It is running, so decline to inspect it.
-> 
-> Since it can be locked on_rq(), should we report that too?
+diff --git a/drivers/media/i2c/adv748x/adv748x-afe.c b/drivers/media/i2c/adv748x/adv748x-afe.c
+index dbbb1e4d6363..ab0479641c10 100644
+--- a/drivers/media/i2c/adv748x/adv748x-afe.c
++++ b/drivers/media/i2c/adv748x/adv748x-afe.c
+@@ -11,8 +11,6 @@
+ #include <linux/mutex.h>
+ #include <linux/v4l2-dv-timings.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-dv-timings.h>
+ #include <media/v4l2-ioctl.h>
+ 
+diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+index c3fb113cef62..345f009de121 100644
+--- a/drivers/media/i2c/adv748x/adv748x-core.c
++++ b/drivers/media/i2c/adv748x/adv748x-core.c
+@@ -20,8 +20,6 @@
+ #include <linux/slab.h>
+ #include <linux/v4l2-dv-timings.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-dv-timings.h>
+ #include <media/v4l2-fwnode.h>
+ #include <media/v4l2-ioctl.h>
+diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
+index c43ce5d78723..78d391009b5a 100644
+--- a/drivers/media/i2c/adv748x/adv748x-csi2.c
++++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
+@@ -8,8 +8,6 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-ioctl.h>
+ 
+ #include "adv748x.h"
+diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+index c557f8fdf11a..0dffcdf79ff2 100644
+--- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
++++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
+@@ -8,8 +8,6 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ 
+-#include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-dv-timings.h>
+ #include <media/v4l2-ioctl.h>
+ 
+diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+index fccb388ce179..09aab4138c3f 100644
+--- a/drivers/media/i2c/adv748x/adv748x.h
++++ b/drivers/media/i2c/adv748x/adv748x.h
+@@ -19,6 +19,8 @@
+  */
+ 
+ #include <linux/i2c.h>
++#include <media/v4l2-ctrls.h>
++#include <media/v4l2-device.h>
+ 
+ #ifndef _ADV748X_H_
+ #define _ADV748X_H_
+-- 
+2.25.1.25.g9ecbe7eb18
 
-If it is locked on_rq() but !task_curr(t), it is runnable but not running.
-Because the runqueue lock is held in that case, it cannot start running,
-so the remainder of this function can safely inspect its state.  The
-runqueue locks will supply the required ordering, ensuring a consistent
-snapshot of the task's state.
 
-However, if it is task_curr(t), which implies on_rq() as I understand
-it, the task is running and therefore might be changing its state, and
-doing so without any sort of attention to synchronization.  After all,
-it is the task's private state that it is changing, so we don't want to
-be paying the cost of any synchronization anyway.  Hence the return of
-false above.
-
-Or am I missing your point?
-
-							Thanx, Paul
-
-> -- Steve
-> 
-> > +	rscrp->nesting = t->rcu_read_lock_nesting;
-> > +	rscrp->rs = t->rcu_read_unlock_special;
-> > +	rnp = t->rcu_blocked_node;
-> > +	rscrp->on_blkd_list = !list_empty(&t->rcu_node_entry);
-> > +	return true;
-> > +}
-> > +
-> >  /*
-> >   * Scan the current list of tasks blocked within RCU read-side critical
-> >   * sections, printing out the tid of each.
-> >   */
-> >  static int rcu_print_task_stall(struct rcu_node *rnp)
-> >  {
-> > -	struct task_struct *t;
-> >  	int ndetected = 0;
-> > +	struct rcu_stall_chk_rdr rscr;
-> > +	struct task_struct *t;
-> >  
-> >  	if (!rcu_preempt_blocked_readers_cgp(rnp))
-> >  		return 0;
-> > @@ -208,7 +234,15 @@ static int rcu_print_task_stall(struct rcu_node *rnp)
-> >  	t = list_entry(rnp->gp_tasks->prev,
-> >  		       struct task_struct, rcu_node_entry);
-> >  	list_for_each_entry_continue(t, &rnp->blkd_tasks, rcu_node_entry) {
-> > -		pr_cont(" P%d", t->pid);
-> > +		if (!try_invoke_on_locked_down_task(t, check_slow_task, &rscr))
-> > +			pr_cont(" P%d", t->pid);
-> > +		else
-> > +			pr_cont(" P%d/%d:%c%c%c%c",
-> > +				t->pid, rscr.nesting,
-> > +				".b"[rscr.rs.b.blocked],
-> > +				".q"[rscr.rs.b.need_qs],
-> > +				".e"[rscr.rs.b.exp_hint],
-> > +				".l"[rscr.on_blkd_list]);
-> >  		ndetected++;
-> >  	}
-> >  	pr_cont("\n");
-> 
