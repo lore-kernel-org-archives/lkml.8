@@ -2,253 +2,81 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE5FC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1406FC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279392071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2AC20754
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:33:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gLdyCm/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgCSRbS (ORCPT
+        id S1727524AbgCSRdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:31:18 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53025 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbgCSRbR (ORCPT
+        Thu, 19 Mar 2020 13:33:35 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:36995 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727180AbgCSRdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:31:17 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEz0K-0003KX-8i; Thu, 19 Mar 2020 18:30:48 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEz0H-0003li-AB; Thu, 19 Mar 2020 18:30:45 +0100
-Date:   Thu, 19 Mar 2020 18:30:45 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Scott Branden <sbranden@broadcom.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
-Message-ID: <20200319173045.ystpijvwtyvil2vq@pengutronix.de>
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
- <20200317174043.GA1464607@ulmo>
- <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
- <20200318225953.GA2874972@ulmo>
- <20200319065039.szhh5dm6v3ejwijd@pengutronix.de>
- <20200319163700.GA3354541@ulmo>
+        Thu, 19 Mar 2020 13:33:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584639214;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1ltXOqIPzRx7dR67ps6b3k3yRk8aYyZvqCRinMvNF4E=;
+        b=gLdyCm/1c2NbmBLL1kp7fW/rvtP79LFDmXQkTJPY/LyHYtOYhgL+05usmaJAb345wpWZWv
+        WqB13mqmfi5oZ6UidRaGEao/to9Z4i2VQfGpiNVd6Wnh1xdkHhEm1K2nyGK93Snga64P+v
+        isvEdc1cqDrcbdJm1GTNCogM3v+0fu0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-281-UJfw37p7PLSHd3_tr4PPDA-1; Thu, 19 Mar 2020 13:33:32 -0400
+X-MC-Unique: UJfw37p7PLSHd3_tr4PPDA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 046698010EC;
+        Thu, 19 Mar 2020 17:33:31 +0000 (UTC)
+Received: from treble (unknown [10.10.110.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C404460BF1;
+        Thu, 19 Mar 2020 17:33:29 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 12:33:26 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: linux-next: Tree for Mar 18 (objtool)
+Message-ID: <20200319173326.oj4qs24x4ly5lrgt@treble>
+References: <20200318220920.48df2e76@canb.auug.org.au>
+ <d7dc5b4a-9a7e-ccf7-e00e-2e7f0e79a9bc@infradead.org>
+ <20200318182352.2dgwwl4ugbwndi4x@treble>
+ <20200318200542.GK20730@hirez.programming.kicks-ass.net>
+ <20200319173101.wufpymi7obhqgoqd@treble>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200319163700.GA3354541@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200319173101.wufpymi7obhqgoqd@treble>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Mar 19, 2020 at 12:31:05PM -0500, Josh Poimboeuf wrote:
+> ... except the __builtin_trap() UD2 seems to be coming *after* the BUG
+> UD2.  Could it be the BUG UD2 itself which is convincing UBSAN to add
+> the __builtin_trap()?
 
-On Thu, Mar 19, 2020 at 05:37:00PM +0100, Thierry Reding wrote:
-> On Thu, Mar 19, 2020 at 07:50:39AM +0100, Uwe Kleine-König wrote:
-> > On Wed, Mar 18, 2020 at 11:59:53PM +0100, Thierry Reding wrote:
-> > > On Tue, Mar 17, 2020 at 10:00:42PM +0100, Uwe Kleine-König wrote:
-> > > > Having said this I think (independent of the question if "inversed"
-> > > > exists) using two similar terms for the same thing just results in
-> > > > confusion. I hit that in the past already and I like it being addressed.
-> > > 
-> > > I don't know. It's pretty common to use different words for the same
-> > > thing. They're called synonyms.
-> > 
-> > In literature yes, I agree. In a novel it is annoying to repeat the same
-> > words over and over again and some variation is good. In programming
-> > however the goal is a different one. There the goal should be to be
-> > precise and consistent.
-> 
-> We also need to make sure that things don't break.
-
-And I'm entirely on your side here.
-
-> It's a very bad idea to have a macro with the same name as an enum
-> value for reasons I stated before. I think that's the most important
-> thing here.
-
-You might have missed it, but that's OK for me, too. And note that after
-applying the whole series the enum is gone and so the problem. (First
-hunk of include/linux/pwm.h in patch 5.)
-
-> Also, if inversed is a synonym of inverted, we don't loose any precision
-> at all.
-
-grep doesn't know about synonyms, so if I grep for stuff about inverted
-PWMs in the kernel I completely miss one half as it's called inversed
-there. (Yeah sure, I can also grep for "inversed|inverted", but therefor
-I have to know first that both are used interchangable here.)
-
-That's a bit like a schematic that has "RESET#" in one place and
-"nRESET" in an other. If you stumble about that you wonder if they are
-two different names for the same signal or if they are actually two
-different ones.
-
-Have you ever read a specification that described some property, gave it
-a name and then later used a synonym to describe it? In my eyes that's a
-bad idea.
-
-> All you have to remember is that you're dealing with a device
-> tree constant in one case and an API enumeration in the other.
-
-Everything you need to remember (or learn) about a subsystem makes it
-harder work with it.
- 
-> So I think the current form is actually more precise, though I guess it
-> could be confusing if you don't care about the difference.
-
-If there is a technical need to have different names that's one thing.
-But using synonyms to differentiate them is not optimal. Then please
-let's have names where looking at the identifier makes it obvious which
-is for the device trees and which for the API enum.
-
-> > > > > And as you noted in the cover letter, there's a conflict between the
-> > > > > macro defined in dt-bindings/pwm/pwm.txt. If they end up being included
-> > > > > in the wrong order you'll get a compile error.
-> > > > 
-> > > > There are also other symbols that exist twice (GPIO_ACTIVE_HIGH was the
-> > > > first to come to my mind). I'm not aware of any problems related to
-> > > > these. What am I missing?
-> > > 
-> > > There's currently no problem, obviously. But if for some reason the
-> > > include files end up being included in a different order (i.e. the
-> > > dt-bindings header is included before linux/pwm.h) then the macro will
-> > > be evaluated and result in something like:
-> > > 
-> > > 	enum pwm_polarity {
-> > > 		PWM_POLARITY_NORMAL,
-> > > 		1,
-> > > 	};
-> > > 
-> > > and that's not valid C, so will cause a build error.
-> > 
-> > I admit I didn't look closely here and I assume you are right. If I
-> > understand Oleksandr right this is only an intermediate step and when
-> > the series is applied completely this issue is gone. Still it might be
-> > worth to improve the series here.
-> 
-> 	$ gcc -o /dev/null -x c - <<- EOF
-> 	>     #define PWM_POLARITY_INVERTED (1 << 0)
-> 	>
-> 	>     enum pwm_polarity {
-> 	>         PWM_POLARITY_NORMAL,
-> 	>         PWM_POLARITY_INVERTED,
-> 	>     };
-> 	> EOF
-> 	<stdin>:1:35: error: expected identifier before ‘(’ token
-> 	<stdin>:5:9: note: in expansion of macro ‘PWM_POLARITY_INVERTED’
-> 
-> Q.E.D.
-
-I don't understand why you proved something here. I didn't doubt this.
-
-> > My original question was about similar problems with GPIO_ACTIVE_HIGH.
-> > Are you aware of problems there?
-> 
-> The problem exists there equally. We're probably not running into it
-> because drivers don't end up including dt-bindings/gpio/gpio.h and
-> include/linux/gpio/machine.h at the same time. Or they end up always
-> including them in the right order.
-
-Oh, that's worse than I expected. There are two .c files that include
-dt-bindings/gpio/gpio.h:
-
-	drivers/rtc/rtc-omap.c
-	drivers/tty/serial/omap-serial.c
-
-So the definition isn't even used in the gpio core to parse dt-stuff.
-(And both files don't use any definition of that file :-|)
-
-> For PWM the situation is slightly more complicated because we only have
-> one header for the kernel API, so the likelihood of including it along
-> with the dt-bindings header is increased compared to GPIO.
-
-If a consumer or provider includes the dt-bindings file there is
-something fishy. (Still catching this with a compiler message better
-than "expected identifier before ‘(’ token" would be good.)
- 
-> > > > > Note that DT bindings are an ABI and can
-> > > > > never change, whereas the enum pwm_polarity is part of a Linux internal
-> > > > > API and doesn't have the same restrictions as an ABI.
-> > > > 
-> > > > I thought only binary device trees (dtb) are supposed to be ABI.
-> > > 
-> > > Yes, the DTB is the ABI. dt-bindings/pwm/pwm.h is used to generate DTBs,
-> > > which basically makes it ABI as well.
-> > 
-> > We disagree here. With this argument you could fix quite some things as
-> > ABI.
-> 
-> I don't understand what you're trying to say.
-
-I don't want to follow your argument that dt-bindings/pwm/pwm.h is ABI
-as well. device tree binaries follow an ABI (similar to machine code),
-but the compiler and the source code (including headers) are not.
-
-> > > Yes, the symbol name may not be part of the ABI, but changing the
-> > > symbol becomes very inconvenient because everyone that depends on it
-> > > would have to change.
-> > 
-> > Oleksandr adapted all in-tree users, so it only affects out-of-tree
-> > users. In my book this is fine.
-> 
-> There used to be a time when it was assumed that eventually device tree
-> sources would live outside of the kernel tree. Given that they are a HW
-> description, they really ought not to be relying on the Linux kernel
-> tree as a way of keeping them consistent. That's really only out of
-> convenience.
-
-The other way round however is fine, isn't it? So use the dt definition
-in the kernel should be ok.
-
-Best regards
-Uwe
+Actually I suspect it's the __builtin_unreachable() annotation which is
+making UBSAN add the __builtin_trap()...  because I don't see any double
+UD2s for WARNs.
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Josh
+
