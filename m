@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7989EC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31AEC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D87A21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBDC621556
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623929;
-	bh=/tnjJMgvLSGDranwiq8LtGIlbks4hqw1BrVjb+hbWMM=;
+	s=default; t=1584623931;
+	bh=4kYPdKmtyljDUwQ9JZEsL/KXY+VsOeZgZEVW+G37tUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=POU5d20uFRsZspBsss1tIqUxQ1jKomYayzRF2vFky66zQGqz8uH4frml2C20/rkSe
-	 +ybEPuBDh+IBIJbfk/lVUf1iWuHCYUlefhyOKDKqKgEcYKyJlWHOWL+vPqP6EkfXWO
-	 r5BU5307+nr8wupXPq0miW+GXwjQyDTe1G1ukyGw=
+	b=mo+LBB0mHL4RjjjIqFPhAm2E785chs3b/Jzk5jryuTAWsoQHl5Gu4d39fku/JH9hw
+	 x2Qswwe6NIJmq+szd2hhsb1fKfOmsjDk52DPWM41b9D4FslfmGqc1HCECUoiKRtNXk
+	 JB1UOLShqv0EnkY1FAEPHAv1dfnxWNYSxobKYtWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbgCSNSr (ORCPT
+        id S1729544AbgCSNSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:18:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41350 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:18:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729656AbgCSNSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:18:44 -0400
+        id S1729643AbgCSNSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:18:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3ED8206D7;
-        Thu, 19 Mar 2020 13:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38856206D7;
+        Thu, 19 Mar 2020 13:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623924;
-        bh=/tnjJMgvLSGDranwiq8LtGIlbks4hqw1BrVjb+hbWMM=;
+        s=default; t=1584623926;
+        bh=4kYPdKmtyljDUwQ9JZEsL/KXY+VsOeZgZEVW+G37tUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HRrEqI/KLvHuqxzfMyViKrQcHtT6zMbbChLhQCJYTxYqT0GqRhVwFxPbZDrypcxf5
-         F+eQA52esb+GXpJUgbh0cZM+QsOXZs23ayTxDbWBtDftcmjVm3DCsTB6D/6MWUMtkC
-         aU3r266xpPqRJnxDA49Rncyl/NXAFhDrtJ5N73EE=
+        b=YsgIC3Hh/3VBTUMwisnyvdKyKcn9urDkuZIi9c4Ap8poP2zatzaP4fkahzjOUX2PG
+         LkVqTKYpjSmo+iRTyz75KlHyIVdJZIS3R4C+uQBIG8mJXo+c+Gw+ObNYcUrg8qLatq
+         +/QapmyXP9t1+w8YUv7tNw6GFxKDaNkbskK0sZr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Schiffer <mschiffer@universe-factory.net>,
         Sven Eckelmann <sven@narfation.org>,
+        Antonio Quartulli <a@unstable.cc>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.14 72/99] batman-adv: update data pointers after skb_cow()
-Date:   Thu, 19 Mar 2020 14:03:50 +0100
-Message-Id: <20200319124003.112213376@linuxfoundation.org>
+Subject: [PATCH 4.14 73/99] batman-adv: Avoid race in TT TVLV allocator helper
+Date:   Thu, 19 Mar 2020 14:03:51 +0100
+Message-Id: <20200319124003.298772732@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -60,64 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Schiffer <mschiffer@universe-factory.net>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit bc44b78157f621ff2a2618fe287a827bcb094ac4 upstream.
+commit 8ba0f9bd3bdea1058c2b2676bec7905724418e40 upstream.
 
-batadv_check_unicast_ttvn() calls skb_cow(), so pointers into the SKB data
-must be (re)set after calling it. The ethhdr variable is dropped
-altogether.
+The functions batadv_tt_prepare_tvlv_local_data and
+batadv_tt_prepare_tvlv_global_data are responsible for preparing a buffer
+which can be used to store the TVLV container for TT and add the VLAN
+information to it.
 
-Fixes: 7cdcf6dddc42 ("batman-adv: add UNICAST_4ADDR packet type")
-Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
+This will be done in three phases:
+
+1. count the number of VLANs and their entries
+2. allocate the buffer using the counters from the previous step and limits
+   from the caller (parameter tt_len)
+3. insert the VLAN information to the buffer
+
+The step 1 and 3 operate on a list which contains the VLANs. The access to
+these lists must be protected with an appropriate lock or otherwise they
+might operate on on different entries. This could for example happen when
+another context is adding VLAN entries to this list.
+
+This could lead to a buffer overflow in these functions when enough entries
+were added between step 1 and 3 to the VLAN lists that the buffer room for
+the entries (*tt_change) is smaller then the now required extra buffer for
+new VLAN entries.
+
+Fixes: 7ea7b4a14275 ("batman-adv: make the TT CRC logic VLAN specific")
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Antonio Quartulli <a@unstable.cc>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/routing.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ net/batman-adv/translation-table.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/batman-adv/routing.c
-+++ b/net/batman-adv/routing.c
-@@ -950,14 +950,10 @@ int batadv_recv_unicast_packet(struct sk
- 	struct batadv_orig_node *orig_node = NULL, *orig_node_gw = NULL;
- 	int check, hdr_size = sizeof(*unicast_packet);
- 	enum batadv_subtype subtype;
--	struct ethhdr *ethhdr;
- 	int ret = NET_RX_DROP;
- 	bool is4addr, is_gw;
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -872,7 +872,7 @@ batadv_tt_prepare_tvlv_global_data(struc
+ 	struct batadv_orig_node_vlan *vlan;
+ 	u8 *tt_change_ptr;
  
- 	unicast_packet = (struct batadv_unicast_packet *)skb->data;
--	unicast_4addr_packet = (struct batadv_unicast_4addr_packet *)skb->data;
--	ethhdr = eth_hdr(skb);
--
- 	is4addr = unicast_packet->packet_type == BATADV_UNICAST_4ADDR;
- 	/* the caller function should have already pulled 2 bytes */
- 	if (is4addr)
-@@ -977,12 +973,14 @@ int batadv_recv_unicast_packet(struct sk
- 	if (!batadv_check_unicast_ttvn(bat_priv, skb, hdr_size))
- 		goto free_skb;
+-	rcu_read_lock();
++	spin_lock_bh(&orig_node->vlan_list_lock);
+ 	hlist_for_each_entry_rcu(vlan, &orig_node->vlan_list, list) {
+ 		num_vlan++;
+ 		num_entries += atomic_read(&vlan->tt.num_entries);
+@@ -910,7 +910,7 @@ batadv_tt_prepare_tvlv_global_data(struc
+ 	*tt_change = (struct batadv_tvlv_tt_change *)tt_change_ptr;
  
-+	unicast_packet = (struct batadv_unicast_packet *)skb->data;
-+
- 	/* packet for me */
- 	if (batadv_is_my_mac(bat_priv, unicast_packet->dest)) {
- 		/* If this is a unicast packet from another backgone gw,
- 		 * drop it.
- 		 */
--		orig_addr_gw = ethhdr->h_source;
-+		orig_addr_gw = eth_hdr(skb)->h_source;
- 		orig_node_gw = batadv_orig_hash_find(bat_priv, orig_addr_gw);
- 		if (orig_node_gw) {
- 			is_gw = batadv_bla_is_backbone_gw(skb, orig_node_gw,
-@@ -997,6 +995,8 @@ int batadv_recv_unicast_packet(struct sk
- 		}
+ out:
+-	rcu_read_unlock();
++	spin_unlock_bh(&orig_node->vlan_list_lock);
+ 	return tvlv_len;
+ }
  
- 		if (is4addr) {
-+			unicast_4addr_packet =
-+				(struct batadv_unicast_4addr_packet *)skb->data;
- 			subtype = unicast_4addr_packet->subtype;
- 			batadv_dat_inc_counter(bat_priv, subtype);
+@@ -946,7 +946,7 @@ batadv_tt_prepare_tvlv_local_data(struct
+ 	u8 *tt_change_ptr;
+ 	int change_offset;
+ 
+-	rcu_read_lock();
++	spin_lock_bh(&bat_priv->softif_vlan_list_lock);
+ 	hlist_for_each_entry_rcu(vlan, &bat_priv->softif_vlan_list, list) {
+ 		num_vlan++;
+ 		num_entries += atomic_read(&vlan->tt.num_entries);
+@@ -984,7 +984,7 @@ batadv_tt_prepare_tvlv_local_data(struct
+ 	*tt_change = (struct batadv_tvlv_tt_change *)tt_change_ptr;
+ 
+ out:
+-	rcu_read_unlock();
++	spin_unlock_bh(&bat_priv->softif_vlan_list_lock);
+ 	return tvlv_len;
+ }
  
 
 
