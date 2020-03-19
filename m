@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3B9C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFDCC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4158820663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9665420787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624926;
-	bh=oOC8Ymnc6YKQ2B+eBNzX4Uos9Cmc2jemtlGN5gKljJc=;
+	s=default; t=1584624931;
+	bh=iux0Xb2ticIVhHEUPWQC3mRyNHY7aypyQ/BegDG1ANg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ThtLivuWMBWY4+GrvVoch9Yd16MLlbljeaWilYEOVyHBpgt55gbeEpGeesG0xay3t
-	 vYWa6vpAmmw+SGYf2A8kqR2f+pVYGTAk2yASTN9PLHbkztXDSEQnM3hE4NZb4Eh254
-	 5RjkR90Wkszeka1ZS2faWRh7WM0mQLt4jyu1hfSQ=
+	b=JPlbRf+ulIjfvfKk3tiZrLyaMt6tQrdxSyH0PrDCh1Nl5ectpIBeSiiG3rZ/WxxP3
+	 xTEgR0bYzvSiA0G06uPF67J8FVEazsBa1d32JvEZWbo7k7e//dIqQOdwjzOv2zZJFi
+	 AHc+crvrQxoVRgHiLh7xW/RfaDGXOlYsCrYdfGzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgCSNfZ (ORCPT
+        id S1728736AbgCSNLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57036 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728759AbgCSNLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:11:40 -0400
+        id S1727806AbgCSNLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:11:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1B8420722;
-        Thu, 19 Mar 2020 13:11:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B1B520789;
+        Thu, 19 Mar 2020 13:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623500;
-        bh=oOC8Ymnc6YKQ2B+eBNzX4Uos9Cmc2jemtlGN5gKljJc=;
+        s=default; t=1584623494;
+        bh=iux0Xb2ticIVhHEUPWQC3mRyNHY7aypyQ/BegDG1ANg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bpk1qcPAFA1TQo5YEfl+Tamsu22LY/3yp3l2Z5QKj8Ob27CFO1G5htSriFEsINcve
-         iRcuoq0aruoiVnoBR4BiOpeo9D3COytwoGLuXT5t/6Fvex/AkU2GhudO9xfqJwupwE
-         lSGZRa0oyAvkyURnmNMX11/hTGwWu4A6rtMlpdzo=
+        b=aeQvNstFQgtw8xAop+cmHcK5vS1NRWSIh3TXcswY3skP4oZbMPynEKC0HODf9e+XA
+         PLRocf30ZdptLM8iDKEmuM7DrpaCyi8X33BScV9vUn9E/IaM6yRj20UltzAEhaDmF3
+         ji99susgQ2AT2tJ4U9c6R3CjREI7W1cECMqHjXIY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.9 48/90] iommu/vt-d: Ignore devices with out-of-spec domain number
-Date:   Thu, 19 Mar 2020 14:00:10 +0100
-Message-Id: <20200319123943.358587880@linuxfoundation.org>
+        stable@vger.kernel.org, qize wang <wangqize888888888@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Matthias Maennich <maennich@google.com>
+Subject: [PATCH 4.9 46/90] mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()
+Date:   Thu, 19 Mar 2020 14:00:08 +0100
+Message-Id: <20200319123942.812731901@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -60,67 +60,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: qize wang <wangqize888888888@gmail.com>
 
-commit da72a379b2ec0bad3eb265787f7008bead0b040c upstream.
+commit 1e58252e334dc3f3756f424a157d1b7484464c40 upstream.
 
-VMD subdevices are created with a PCI domain ID of 0x10000 or
-higher.
+mwifiex_process_tdls_action_frame() without checking
+the incoming tdls infomation element's vality before use it,
+this may cause multi heap buffer overflows.
 
-These subdevices are also handled like all other PCI devices by
-dmar_pci_bus_notifier().
+Fix them by putting vality check before use it.
 
-However, when dmar_alloc_pci_notify_info() take records of such devices,
-it will truncate the domain ID to a u16 value (in info->seg).
-The device at (e.g.) 10000:00:02.0 is then treated by the DMAR code as if
-it is 0000:00:02.0.
+IE is TLV struct, but ht_cap and  ht_oper aren’t TLV struct.
+the origin marvell driver code is wrong:
 
-In the unlucky event that a real device also exists at 0000:00:02.0 and
-also has a device-specific entry in the DMAR table,
-dmar_insert_dev_scope() will crash on:
-   BUG_ON(i >= devices_cnt);
+memcpy(&sta_ptr->tdls_cap.ht_oper, pos,....
+memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,...
 
-That's basically a sanity check that only one PCI device matches a
-single DMAR entry; in this case we seem to have two matching devices.
+Fix the bug by changing pos(the address of IE) to
+pos+2 ( the address of IE value ).
 
-Fix this by ignoring devices that have a domain number higher than
-what can be looked up in the DMAR table.
-
-This problem was carefully diagnosed by Jian-Hong Pan.
-
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Fixes: 59ce0515cdaf3 ("iommu/vt-d: Update DRHD/RMRR/ATSR device scope caches when PCI hotplug happens")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: qize wang <wangqize888888888@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Matthias Maennich <maennich@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/dmar.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/wireless/marvell/mwifiex/tdls.c |   70 +++++++++++++++++++++++++---
+ 1 file changed, 64 insertions(+), 6 deletions(-)
 
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -39,6 +39,7 @@
- #include <linux/dmi.h>
- #include <linux/slab.h>
- #include <linux/iommu.h>
-+#include <linux/limits.h>
- #include <asm/irq_remapping.h>
- #include <asm/iommu_table.h>
+--- a/drivers/net/wireless/marvell/mwifiex/tdls.c
++++ b/drivers/net/wireless/marvell/mwifiex/tdls.c
+@@ -917,59 +917,117 @@ void mwifiex_process_tdls_action_frame(s
  
-@@ -138,6 +139,13 @@ dmar_alloc_pci_notify_info(struct pci_de
+ 		switch (*pos) {
+ 		case WLAN_EID_SUPP_RATES:
++			if (pos[1] > 32)
++				return;
+ 			sta_ptr->tdls_cap.rates_len = pos[1];
+ 			for (i = 0; i < pos[1]; i++)
+ 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
+ 			break;
  
- 	BUG_ON(dev->is_virtfn);
- 
-+	/*
-+	 * Ignore devices that have a domain number higher than what can
-+	 * be looked up in DMAR, e.g. VMD subdevices with domain 0x10000
-+	 */
-+	if (pci_domain_nr(dev->bus) > U16_MAX)
-+		return NULL;
-+
- 	/* Only generate path[] for device addition event */
- 	if (event == BUS_NOTIFY_ADD_DEVICE)
- 		for (tmp = dev; tmp; tmp = tmp->bus->self)
+ 		case WLAN_EID_EXT_SUPP_RATES:
++			if (pos[1] > 32)
++				return;
+ 			basic = sta_ptr->tdls_cap.rates_len;
++			if (pos[1] > 32 - basic)
++				return;
+ 			for (i = 0; i < pos[1]; i++)
+ 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
+ 			sta_ptr->tdls_cap.rates_len += pos[1];
+ 			break;
+ 		case WLAN_EID_HT_CAPABILITY:
+-			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,
++			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
++				return;
++			if (pos[1] != sizeof(struct ieee80211_ht_cap))
++				return;
++			/* copy the ie's value into ht_capb*/
++			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
+ 			       sizeof(struct ieee80211_ht_cap));
+ 			sta_ptr->is_11n_enabled = 1;
+ 			break;
+ 		case WLAN_EID_HT_OPERATION:
+-			memcpy(&sta_ptr->tdls_cap.ht_oper, pos,
++			if (pos > end -
++			    sizeof(struct ieee80211_ht_operation) - 2)
++				return;
++			if (pos[1] != sizeof(struct ieee80211_ht_operation))
++				return;
++			/* copy the ie's value into ht_oper*/
++			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
+ 			       sizeof(struct ieee80211_ht_operation));
+ 			break;
+ 		case WLAN_EID_BSS_COEX_2040:
++			if (pos > end - 3)
++				return;
++			if (pos[1] != 1)
++				return;
+ 			sta_ptr->tdls_cap.coex_2040 = pos[2];
+ 			break;
+ 		case WLAN_EID_EXT_CAPABILITY:
++			if (pos > end - sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] < sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] > 8)
++				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
+ 			       sizeof(struct ieee_types_header) +
+ 			       min_t(u8, pos[1], 8));
+ 			break;
+ 		case WLAN_EID_RSN:
++			if (pos > end - sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] < sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] > IEEE_MAX_IE_SIZE -
++			    sizeof(struct ieee_types_header))
++				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
+ 			       sizeof(struct ieee_types_header) +
+ 			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
+ 				     sizeof(struct ieee_types_header)));
+ 			break;
+ 		case WLAN_EID_QOS_CAPA:
++			if (pos > end - 3)
++				return;
++			if (pos[1] != 1)
++				return;
+ 			sta_ptr->tdls_cap.qos_info = pos[2];
+ 			break;
+ 		case WLAN_EID_VHT_OPERATION:
+-			if (priv->adapter->is_hw_11ac_capable)
+-				memcpy(&sta_ptr->tdls_cap.vhtoper, pos,
++			if (priv->adapter->is_hw_11ac_capable) {
++				if (pos > end -
++				    sizeof(struct ieee80211_vht_operation) - 2)
++					return;
++				if (pos[1] !=
++				    sizeof(struct ieee80211_vht_operation))
++					return;
++				/* copy the ie's value into vhtoper*/
++				memcpy(&sta_ptr->tdls_cap.vhtoper, pos + 2,
+ 				       sizeof(struct ieee80211_vht_operation));
++			}
+ 			break;
+ 		case WLAN_EID_VHT_CAPABILITY:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos,
++				if (pos > end -
++				    sizeof(struct ieee80211_vht_cap) - 2)
++					return;
++				if (pos[1] != sizeof(struct ieee80211_vht_cap))
++					return;
++				/* copy the ie's value into vhtcap*/
++				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
+ 				       sizeof(struct ieee80211_vht_cap));
+ 				sta_ptr->is_11ac_enabled = 1;
+ 			}
+ 			break;
+ 		case WLAN_EID_AID:
+-			if (priv->adapter->is_hw_11ac_capable)
++			if (priv->adapter->is_hw_11ac_capable) {
++				if (pos > end - 4)
++					return;
++				if (pos[1] != 2)
++					return;
+ 				sta_ptr->tdls_cap.aid =
+ 					      le16_to_cpu(*(__le16 *)(pos + 2));
++			}
++			break;
+ 		default:
+ 			break;
+ 		}
 
 
