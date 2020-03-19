@@ -2,72 +2,265 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5870C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F93FC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7FF020722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD1A20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:50:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgCSMuH (ORCPT
+        id S1727219AbgCSMuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:50:07 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:58459 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbgCSMuG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:50:06 -0400
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 457001BF210;
-        Thu, 19 Mar 2020 12:50:01 +0000 (UTC)
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] net: phy: mscc: add missing check on a phy_write return value
-Date:   Thu, 19 Mar 2020 13:48:19 +0100
-Message-Id: <20200319124819.369431-1-antoine.tenart@bootlin.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 19 Mar 2020 08:50:14 -0400
+Received: from mga17.intel.com ([192.55.52.151]:9223 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726589AbgCSMuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:50:12 -0400
+IronPort-SDR: 0e4P54Yqr3x5D76kBFHDLpQohAqfyxp7KitxR7IML8ThmidMuE5SPgPmjFyFiiTKLm2Cl6PwRX
+ UeVZyZc8JQmA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 05:50:11 -0700
+IronPort-SDR: agXn/G7BStNGL+dJ1Qm1eyoy6bMrjhBcPh/zB6fk1ZU6fC6mCXbcq7CdWzIOIE55r6qt/2mgcK
+ 7d7WoiKF2xaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,571,1574150400"; 
+   d="scan'208";a="234163478"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga007.jf.intel.com with ESMTP; 19 Mar 2020 05:50:01 -0700
+Date:   Thu, 19 Mar 2020 20:47:50 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH v2 3/7] fpga: dfl: introduce interrupt trigger setting API
+Message-ID: <20200319124750.GB2474@yilunxu-OptiPlex-7050>
+References: <1584332222-26652-1-git-send-email-yilun.xu@intel.com>
+ <1584332222-26652-4-git-send-email-yilun.xu@intel.com>
+ <20200318082723.GA15276@hao-dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318082723.GA15276@hao-dev>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit a5afc1678044 ("net: phy: mscc: add support for VSC8584 PHY")
-introduced a call to 'phy_write' storing its return value to a variable
-called 'ret'. But 'ret' never was checked for a possible error being
-returned, and hence was not used at all. Fix this by checking the return
-value and exiting the function if an error was returned.
+On Wed, Mar 18, 2020 at 04:27:23PM +0800, Wu Hao wrote:
+> On Mon, Mar 16, 2020 at 12:16:58PM +0800, Xu Yilun wrote:
+> > FPGA user applications may be interested in interrupts generated by
+> > DFL features. For example, users can implement their own FPGA
+> > logics with interrupts enabled in AFU (Accelerated Function Unit,
+> > dynamic region of DFL based FPGA). So user applications need to be
+> > notified to handle these interrupts.
+> > 
+> > In order to allow userspace applications to monitor interrupts,
+> > driver requires userspace to provide eventfds as interrupt
+> > notification channels. Applications then poll/select on the eventfds
+> > to get notified.
+> > 
+> > This patch introduces a generic helper function for sub features to
+> > do eventfds binding with given interrupts.
+> > 
+> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > ----
+> > v2: use unsigned int instead of int for irq array indexes in
+> >     dfl_fpga_set_irq_triggers()
+> >     Improves comments for NULL fds param in dfl_fpga_set_irq_triggers()
+> > ---
+> >  drivers/fpga/dfl.c | 95 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/fpga/dfl.h | 11 +++++++
+> >  2 files changed, 106 insertions(+)
+> > 
+> > diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+> > index 28e2cd8..8dcc4e2 100644
+> > --- a/drivers/fpga/dfl.c
+> > +++ b/drivers/fpga/dfl.c
+> > @@ -535,6 +535,7 @@ static int build_info_commit_dev(struct build_feature_devs_info *binfo)
+> >  		int i;
+> >  
+> >  		/* save resource information for each feature */
+> > +		feature->dev = fdev;
+> >  		feature->id = finfo->fid;
+> >  		feature->resource_index = index;
+> >  		feature->ioaddr = finfo->ioaddr;
+> > @@ -1385,6 +1386,100 @@ int dfl_fpga_cdev_config_ports_vf(struct dfl_fpga_cdev *cdev, int num_vfs)
+> >  }
+> >  EXPORT_SYMBOL_GPL(dfl_fpga_cdev_config_ports_vf);
+> >  
+> > +static irqreturn_t dfl_irq_handler(int irq, void *arg)
+> > +{
+> > +	struct eventfd_ctx *trigger = arg;
+> > +
+> > +	eventfd_signal(trigger, 1);
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int do_set_irq_trigger(struct dfl_feature *feature, unsigned int idx,
+> > +			      int fd)
+> > +{
+> > +	struct platform_device *pdev = feature->dev;
+> > +	struct eventfd_ctx *trigger;
+> > +	int irq, ret;
+> > +
+> > +	if (idx >= feature->nr_irqs)
+> > +		return -EINVAL;
+> > +
+> > +	irq = feature->irq_ctx[idx].irq;
+> > +
+> > +	if (feature->irq_ctx[idx].trigger) {
+> > +		free_irq(irq, feature->irq_ctx[idx].trigger);
+> > +		kfree(feature->irq_ctx[idx].name);
+> > +		eventfd_ctx_put(feature->irq_ctx[idx].trigger);
+> > +		feature->irq_ctx[idx].trigger = NULL;
+> > +	}
+> > +
+> > +	if (fd < 0)
+> > +		return 0;
+> > +
+> > +	feature->irq_ctx[idx].name =
+> > +		kasprintf(GFP_KERNEL, "fpga-irq[%u](%s-%llx)", idx,
+> > +			  dev_name(&pdev->dev),
+> > +			  (unsigned long long)feature->id);
+> > +	if (!feature->irq_ctx[idx].name)
+> > +		return -ENOMEM;
+> > +
+> > +	trigger = eventfd_ctx_fdget(fd);
+> > +	if (IS_ERR(trigger)) {
+> > +		ret = PTR_ERR(trigger);
+> > +		goto free_name;
+> > +	}
+> > +
+> > +	ret = request_irq(irq, dfl_irq_handler, 0,
+> > +			  feature->irq_ctx[idx].name, trigger);
+> > +	if (!ret) {
+> > +		feature->irq_ctx[idx].trigger = trigger;
+> > +		return ret;
+> > +	}
+> > +
+> > +	eventfd_ctx_put(trigger);
+> > +free_name:
+> > +	kfree(feature->irq_ctx[idx].name);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +/**
+> > + * dfl_fpga_set_irq_triggers - set eventfd triggers for dfl feature interrupts
+> > + *
+> > + * @feature: dfl sub feature.
+> > + * @start: start of irq index in this dfl sub feature.
+> > + * @count: number of irqs.
+> > + * @fds: eventfds to bind with irqs.
+> > + *
+> > + * Bind given eventfds with irqs in this dfl sub feature. Use NULL or negative
+> > + * fds as parameter to unbind irqs.
+> 
+> It seems that it accepts valid fds and invalid fds (negative) in the same table
+> pointed by fds ptr, righ? Could we also add this into description as well?
 
-As this does not fix a known bug, this commit is mostly cosmetic and not
-sent as a fix.
+Yes, I'll add the description.
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
----
- drivers/net/phy/mscc/mscc_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+> 
+> > + *
+> > + * Return: 0 on success, negative error code otherwise.
+> > + */
+> > +int dfl_fpga_set_irq_triggers(struct dfl_feature *feature, unsigned int start,
+> > +			      unsigned int count, int32_t *fds)
+> > +{
+> > +	unsigned int i, j;
+> > +	int ret = 0;
+> > +
+> > +	if (start + count < start || start + count > feature->nr_irqs)
+> > +		return -EINVAL;
+> > +
+> > +	for (i = 0, j = start; i < count && !ret; i++, j++) {
+> > +		int fd = fds ? fds[i] : -1;
+> > +
+> > +		ret = do_set_irq_trigger(feature, j, fd);
+> > +	}
+> 
+> could we just replace j with start + i?
 
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index 2f6229a70ec1..bc6beec8aff0 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -1411,6 +1411,8 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 	val |= (MEDIA_OP_MODE_COPPER << MEDIA_OP_MODE_POS) |
- 	       (VSC8584_MAC_IF_SELECTION_SGMII << VSC8584_MAC_IF_SELECTION_POS);
- 	ret = phy_write(phydev, MSCC_PHY_EXT_PHY_CNTL_1, val);
-+	if (ret)
-+		return ret;
- 
- 	ret = genphy_soft_reset(phydev);
- 	if (ret)
--- 
-2.25.1
+The j will be used if error happens in following code. I tried to remove
+j but feel the code becomes harder to understand.
 
+How about we keep it?
+
+> 
+> other places look good to me.
+> 
+> Hao
+> 
+> > +
+> > +	if (ret) {
+> > +		for (--j; j >= start; j--)
+> > +			do_set_irq_trigger(feature, j, -1);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(dfl_fpga_set_irq_triggers);
+> > +
+> >  static void __exit dfl_fpga_exit(void)
+> >  {
+> >  	dfl_chardev_uinit();
+> > diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+> > index 6a498cd..6b60077 100644
+> > --- a/drivers/fpga/dfl.h
+> > +++ b/drivers/fpga/dfl.h
+> > @@ -24,6 +24,8 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/uuid.h>
+> >  #include <linux/fpga/fpga-region.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/eventfd.h>
+> >  
+> >  /* maximum supported number of ports */
+> >  #define MAX_DFL_FPGA_PORT_NUM 4
+> > @@ -213,14 +215,19 @@ struct dfl_feature_driver {
+> >   * struct dfl_feature_irq_ctx - dfl private feature interrupt context
+> >   *
+> >   * @irq: Linux IRQ number of this interrupt.
+> > + * @trigger: eventfd context to signal when interrupt happens.
+> > + * @name: irq name needed when requesting irq.
+> >   */
+> >  struct dfl_feature_irq_ctx {
+> >  	int irq;
+> > +	struct eventfd_ctx *trigger;
+> > +	char *name;
+> >  };
+> >  
+> >  /**
+> >   * struct dfl_feature - sub feature of the feature devices
+> >   *
+> > + * @dev: ptr to pdev of the feature device which has the sub feature.
+> >   * @id: sub feature id.
+> >   * @resource_index: each sub feature has one mmio resource for its registers.
+> >   *		    this index is used to find its mmio resource from the
+> > @@ -231,6 +238,7 @@ struct dfl_feature_irq_ctx {
+> >   * @ops: ops of this sub feature.
+> >   */
+> >  struct dfl_feature {
+> > +	struct platform_device *dev;
+> >  	u64 id;
+> >  	int resource_index;
+> >  	void __iomem *ioaddr;
+> > @@ -506,4 +514,7 @@ int dfl_fpga_cdev_release_port(struct dfl_fpga_cdev *cdev, int port_id);
+> >  int dfl_fpga_cdev_assign_port(struct dfl_fpga_cdev *cdev, int port_id);
+> >  void dfl_fpga_cdev_config_ports_pf(struct dfl_fpga_cdev *cdev);
+> >  int dfl_fpga_cdev_config_ports_vf(struct dfl_fpga_cdev *cdev, int num_vf);
+> > +
+> > +int dfl_fpga_set_irq_triggers(struct dfl_feature *feature, unsigned int start,
+> > +			      unsigned int count, int32_t *fds);
+> >  #endif /* __FPGA_DFL_H */
+> > -- 
+> > 2.7.4
