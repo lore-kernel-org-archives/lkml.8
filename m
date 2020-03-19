@@ -2,160 +2,165 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C73C43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D871FC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACDB20773
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D2D2076F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="OnYycY2c"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIj3VaFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbgCSVqg (ORCPT
+        id S1727256AbgCSVs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 17:46:36 -0400
-Received: from mail-dm6nam11on2123.outbound.protection.outlook.com ([40.107.223.123]:46176
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726619AbgCSVqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:46:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FfCw9ZmO9cxS+ugiJEUvEtjqWXkLJoVhQIHsdhe7ejUqt6ijkzxfEgkqHUAssBOo8ZzwmfH8adF3beb6rFR0aSoS9bxryVpsM9Jp6iam1DMFYilCo5L2yPIFmnokxUzAkxB/T8p+/v0bSpBHhiG4s0GWiU3vgA14ukIMp6KMvdISKx/RFLfOOjHKvl4pwbhimiLuT/OlWCcPb7oizy7Wpv3bUfxRQA0SC4SzjWUOOEbcMxCppQE7dPhrq8oRdIaJMK96xChQhjk5BV8wN7cfsnIaqOZIE7KPiUVoEZZkEqtRIFxp4yuW4oBUFZ/639ogI7QxVCGYq3z7ogVwxHZapQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GGZFDQK0x2TthHuOrUz3Dusb/U9OWH3OvKmgQmwLTnE=;
- b=VxiN+Ziry1spuVn+m/zOn/YmWxYVakLuGYQheemHGyM0D9eaASDzSUJjgZMv9ZX/LAlMrPw0K6UKT3ho0yIyFdxNymuYIXGNqJvtfZwWToQPxLzxGySTIUlUlpsJa1sevYaq9ZU/VtyIeD0Pb9yizcaiMEUkieU/8mbamYKVyzLVu+vYHMhd4bAj3q3rAmLyvHVOlfN7UecslMpChEwAOh5kWT5S/fnUXNWZ+gI1H3GStBcIcrNMAS+f4FQfk47pF/L3eX+tzVZf+XI9Kq4ECNaXxn5aeOul6c2tdvDKYyarHNg48UEd1G7GoqDhXMw090fMeuYcKrc/J6REUfC4sA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GGZFDQK0x2TthHuOrUz3Dusb/U9OWH3OvKmgQmwLTnE=;
- b=OnYycY2cp1HPXZRazPrxFh1mOTsDnJSXZ0iUMVAat9y698OBdmCajdSqFbG8N994DIAtpeAQwZALvapmWhi5ElnDBPvz4c0FiwJy1g88TTIXV8ZVHvSK5X0M21aceUW0TSI+eGZtsCSuevGfPCgbCU0kDIf1CnA78+rPcOxrBtg=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1002.namprd21.prod.outlook.com (2603:10b6:302:4::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.2; Thu, 19 Mar
- 2020 21:46:31 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%10]) with mapi id 15.20.2856.003; Thu, 19 Mar 2020
- 21:46:31 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        Andy Whitcroft <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: RE: [PATCH v6 09/10] arm64: efi: Export screen_info
-Thread-Topic: [PATCH v6 09/10] arm64: efi: Export screen_info
-Thread-Index: AQHV+hZM60S+LKGqSUO5qXQSEIBQyahK416AgAKQkECAAKacAIACYGNw
-Date:   Thu, 19 Mar 2020 21:46:30 +0000
-Message-ID: <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
- <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
- <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
- <MW2PR2101MB10524254D2FE3EFC72329465D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <CAK8P3a1YCtc3LJ-_3iT90_Srehb96gLHvTXsbJ0wT6NFYCG=TQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a1YCtc3LJ-_3iT90_Srehb96gLHvTXsbJ0wT6NFYCG=TQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-19T21:46:28.6393005Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a1aef6bc-6f76-4372-a95f-2f5410092062;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 88dd4c6e-b82e-4804-5377-08d7cc4efc6b
-x-ms-traffictypediagnostic: MW2PR2101MB1002:|MW2PR2101MB1002:|MW2PR2101MB1002:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB100230876759C2A56EA5B5AED7F40@MW2PR2101MB1002.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0347410860
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(376002)(346002)(366004)(396003)(199004)(478600001)(81166006)(10290500003)(9686003)(76116006)(54906003)(55016002)(81156014)(66446008)(33656002)(66946007)(7416002)(66556008)(66476007)(64756008)(8676002)(8936002)(6916009)(26005)(53546011)(7696005)(186003)(6506007)(71200400001)(2906002)(5660300002)(52536014)(8990500004)(86362001)(316002)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1002;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HUM9vSPrPgIGmimBtitJzzIZoI9/+wKTz2Zxh2V7Al/xXBgGGftKYCdeRRUvr2On99gLeb0edSUEwMdNhd7fcJ82X2o+dZQE2pl3haGS5XpnwYrj/y9xtjjkg4XuSkHHV7uTVI/LIzt2iW9sW92ZQYTzcRdzA+RAMRGE98i3me/QCz8sq04boUfXfzWKtoYLlgzJs9J/W/TcjJKXQ39Iri9cj+mB3eI4mqdUFYCMqqFOeoxGBKRdQjPVrzITlTMCBx91damvnkZBICi34F4zK40Ov6rp8NdAldnHWnxlDuM3bb9dPjxXX9QffQZhpHWv6z5nr65Dou3KlZnJRzkZTEF7eUItM460INRMgrYNiq3Tf0ILCKMDAoL5ErxfEqwzPgoDFjpo0RKAlIQON8wQR23lBmrwnObK/R0OsQ4fg0Y5qLg0HYn/k1ddmyTomGn4
-x-ms-exchange-antispam-messagedata: w+KyCdwA5hDK+9GQekTuLmxBsHXXZYZsrS0+/BAv9iiqXWDA73uKmYRfHX5gkIu/THjheE55zqjo/0YtKIVWLOEwpHZbEQStR9v2jrv/o3rraDGDkWcNUSxSwJJXrcq8Fa4k02BEeTrWafNYRWCAaA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 19 Mar 2020 17:48:28 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:59355 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725787AbgCSVs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 17:48:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584654504;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tsfr9KiPwPHaSNob1o89QdgA/mKpTxdC3audBQKrY6g=;
+        b=VIj3VaFzXUnNG3jOdDv4XDNOfQq0bU1VQzy7kPD85+d3TOQYC7RCkfLkC7Cb3+xHUlDjQT
+        QUzabA0oL2pTE4ydqN268uBxnrspTGoAQctXSHWf6VCn7Kjo60CPm1dJY9LJypI/DXhmAp
+        zxuA6csXGGDTM7RCvHg8rB2SWDrSYtg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-111-OLeMbR_VN_W9GnHsc2JE3w-1; Thu, 19 Mar 2020 17:48:23 -0400
+X-MC-Unique: OLeMbR_VN_W9GnHsc2JE3w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28CAF107ACC4;
+        Thu, 19 Mar 2020 21:48:20 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.36.110.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0A40CBBBF3;
+        Thu, 19 Mar 2020 21:48:03 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 17:47:59 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
+        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
+        simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+Message-ID: <20200319214759.qgxt2sfkmd6srdol@madcap2.tricolour.ca>
+References: <20200204231454.oxa7pyvuxbj466fj@madcap2.tricolour.ca>
+ <CAHC9VhQquokw+7UOU=G0SsD35UdgmfysVKCGCE87JVaoTkbisg@mail.gmail.com>
+ <3142237.YMNxv0uec1@x2>
+ <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
+ <20200312202733.7kli64zsnqc4mrd2@madcap2.tricolour.ca>
+ <CAHC9VhS9DtxJ4gvOfMRnzoo6ccGJVKL+uZYe6qqH+SPqD8r01Q@mail.gmail.com>
+ <20200313192306.wxey3wn2h4htpccm@madcap2.tricolour.ca>
+ <CAHC9VhQKOpVWxDg-tWuCWV22QRu8P_NpFKme==0Ot1RQKa_DWA@mail.gmail.com>
+ <20200318214154.ycxy5dl4pxno6fvi@madcap2.tricolour.ca>
+ <CAHC9VhSuMnd3-ci2Bx-xJ0yscQ=X8ZqFAcNPKpbh_ZWN3FJcuQ@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88dd4c6e-b82e-4804-5377-08d7cc4efc6b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2020 21:46:30.9752
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OBggJ0tCyhhShH51osoGYn5xMAEd7+JD5W4m53hXsyprEgMVKSLtLTWNGJfTavQp1K026Ie1Si9lkM0BLkFYZw9jo4AoRVkGAHNBFMxa4Ko=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1002
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhSuMnd3-ci2Bx-xJ0yscQ=X8ZqFAcNPKpbh_ZWN3FJcuQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4gU2VudDogV2VkbmVzZGF5LCBNYXJj
-aCAxOCwgMjAyMCAyOjI3IEFNDQo+IA0KPiBPbiBXZWQsIE1hciAxOCwgMjAyMCBhdCAxOjE4IEFN
-IE1pY2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQuY29tPiB3cm90ZToNCj4gPiBGcm9t
-OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiA+ID4gT24gU2F0LCBNYXIgMTQsIDIw
-MjAgYXQgNDozNiBQTSBNaWNoYWVsIEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4gd3Jv
-dGU6DQo+ID4gPiA+DQo+ID4gPiA+IFRoZSBIeXBlci1WIGZyYW1lIGJ1ZmZlciBkcml2ZXIgbWF5
-IGJlIGJ1aWx0IGFzIGEgbW9kdWxlLCBhbmQNCj4gPiA+ID4gaXQgbmVlZHMgYWNjZXNzIHRvIHNj
-cmVlbl9pbmZvLiBTbyBleHBvcnQgc2NyZWVuX2luZm8uDQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25l
-ZC1vZmYtYnk6IE1pY2hhZWwgS2VsbGV5IDxtaWtlbGxleUBtaWNyb3NvZnQuY29tPg0KPiA+ID4N
-Cj4gPiA+IElzIHRoZXJlIGFueSBjaGFuY2Ugb2YgdXNpbmcgYSBtb3JlIG1vZGVybiBLTVMgYmFz
-ZWQgZHJpdmVyIGZvciB0aGUgc2NyZWVuDQo+ID4gPiB0aGFuIHRoZSBvbGQgZmJkZXYgc3Vic3lz
-dGVtPyBJIGhhZCBob3BlZCB0byBvbmUgZGF5IGNvbXBsZXRlbHkgcmVtb3ZlDQo+ID4gPiBzdXBw
-b3J0IGZvciB0aGUgb2xkIENPTkZJR19WSURFT19GQkRFViBhbmQgc2NyZWVuX2luZm8gZnJvbSBt
-b2Rlcm4NCj4gPiA+IGFyY2hpdGVjdHVyZXMuDQo+ID4gPg0KPiA+DQo+ID4gVGhlIGN1cnJlbnQg
-aHlwZXJ2X2ZiLmMgZHJpdmVyIGlzIGFsbCB3ZSBoYXZlIHRvZGF5IGZvciB0aGUgc3ludGhldGlj
-IEh5cGVyLVYNCj4gPiBmcmFtZSBidWZmZXIgZGV2aWNlLiAgVGhhdCBkcml2ZXIgYnVpbGRzIGFu
-ZCBydW5zIG9uIGJvdGggQVJNNjQgYW5kIHg4Ni4NCj4gPg0KPiA+IEknbSBub3Qga25vd2xlZGdl
-YWJsZSBhYm91dCB2aWRlby9ncmFwaGljcyBkcml2ZXJzLCBidXQgd2hlbiB5b3UNCj4gPiBzYXkg
-ImEgbW9yZSBtb2Rlcm4gS01TIGJhc2VkIGRyaXZlciIsIGFyZSB5b3UgbWVhbmluZyBvbmUgYmFz
-ZWQgb24NCj4gPiBEUk0gJiBLTVM/ICBEb2VzIERSTSBtYWtlIHNlbnNlIGZvciBhICJkdW1iIiBm
-cmFtZSBidWZmZXIgZGV2aWNlPw0KPiA+IEFyZSB0aGVyZSBhbnkgZHJpdmVycyB0aGF0IHdvdWxk
-IGJlIGEgZ29vZCBwYXR0ZXJuIHRvIGxvb2sgYXQ/DQo+IA0KPiBJdCB1c2VkIHRvIGJlIGEgbG90
-IGhhcmRlciB0byB3cml0ZSBhIERSTSBkcml2ZXIgY29tcGFyZWQgdG8gYW4gZmJkZXYNCj4gZHJp
-dmVyLCBidXQgdGhpcyBoYXMgY2hhbmdlZCB0byB0aGUgb3Bwb3NpdGUgb3ZlciB0aGUgeWVhcnMu
-DQo+IA0KPiBBIGZhaXJseSBtaW5pbWFsIGV4YW1wbGUgd291bGQgYmUgZHJpdmVycy9ncHUvZHJt
-L3BsMTExL3BsMTExX2Rydi5jDQo+IG9yIGFueXRoaW5nIGluIGRyaXZlcnMvZ3B1L2RybS90aW55
-LywgYnV0IHlvdSBtYXkgd2FudCB0byBsb29rIGF0IHRoZQ0KPiBvdGhlciBoeXBlcnZpc29yIHBs
-YXRmb3JtcyBmaXJzdCwgaS5lIGRyaXZlcnMvZ3B1L2RybS92aXJ0aW8vdmlydGdwdV9kcnYuYywN
-Cj4gZHJpdmVycy9ncHUvZHJtL3Ztd2dmeC92bXdnZnhfZHJ2LmMsIGRyaXZlcnMvZ3B1L2RybS94
-ZW4veGVuX2RybV9mcm9udC5jLA0KPiBkcml2ZXJzL2dwdS9kcm0vcXhsL3F4bF9kcnYuYywgYW5k
-IGRyaXZlcnMvZ3B1L2RybS9ib2Nocy9ib2Noc19kcnYuYy4NCj4gDQoNClRoYW5rcyBmb3IgdGhl
-IHBvaW50ZXJzLCBlc3BlY2lhbGx5IGZvciB0aGUgb3RoZXIgaHlwZXJ2aXNvcnMuDQoNCk1pY2hh
-ZWwNCg==
+On 2020-03-18 17:47, Paul Moore wrote:
+> On Wed, Mar 18, 2020 at 5:42 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2020-03-18 17:01, Paul Moore wrote:
+> > > On Fri, Mar 13, 2020 at 3:23 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > > On 2020-03-13 12:42, Paul Moore wrote:
+> > >
+> > > ...
+> > >
+> > > > > The thread has had a lot of starts/stops, so I may be repeating a
+> > > > > previous suggestion, but one idea would be to still emit a "death
+> > > > > record" when the final task in the audit container ID does die, but
+> > > > > block the particular audit container ID from reuse until it the
+> > > > > SIGNAL2 info has been reported.  This gives us the timely ACID death
+> > > > > notification while still preventing confusion and ambiguity caused by
+> > > > > potentially reusing the ACID before the SIGNAL2 record has been sent;
+> > > > > there is a small nit about the ACID being present in the SIGNAL2
+> > > > > *after* its death, but I think that can be easily explained and
+> > > > > understood by admins.
+> > > >
+> > > > Thinking quickly about possible technical solutions to this, maybe it
+> > > > makes sense to have two counters on a contobj so that we know when the
+> > > > last process in that container exits and can issue the death
+> > > > certificate, but we still block reuse of it until all further references
+> > > > to it have been resolved.  This will likely also make it possible to
+> > > > report the full contid chain in SIGNAL2 records.  This will eliminate
+> > > > some of the issues we are discussing with regards to passing a contobj
+> > > > vs a contid to the audit_log_contid function, but won't eliminate them
+> > > > all because there are still some contids that won't have an object
+> > > > associated with them to make it impossible to look them up in the
+> > > > contobj lists.
+> > >
+> > > I'm not sure you need a full second counter, I imagine a simple flag
+> > > would be okay.  I think you just something to indicate that this ACID
+> > > object is marked as "dead" but it still being held for sanity reasons
+> > > and should not be reused.
+> >
+> > Ok, I see your point.  This refcount can be changed to a flag easily
+> > enough without change to the api if we can be sure that more than one
+> > signal can't be delivered to the audit daemon *and* collected by sig2.
+> > I'll have a more careful look at the audit daemon code to see if I can
+> > determine this.
+> 
+> Maybe I'm not understanding your concern, but this isn't really
+> different than any of the other things we track for the auditd signal
+> sender, right?  If we are worried about multiple signals being sent
+> then it applies to everything, not just the audit container ID.
+
+Yes, you are right.  In all other cases the information is simply
+overwritten.  In the case of the audit container identifier any
+previous value is put before a new one is referenced, so only the last
+signal is kept.  So, we only need a flag.  Does a flag implemented with
+a rcu-protected refcount sound reasonable to you?
+
+> > Another question occurs to me is that what if the audit daemon is sent a
+> > signal and it cannot or will not collect the sig2 information from the
+> > kernel (SIGKILL?)?  Does that audit container identifier remain dead
+> > until reboot, or do we institute some other form of reaping, possibly
+> > time-based?
+> 
+> In order to preserve the integrity of the audit log that ACID value
+> would need to remain unavailable until the ACID which contains the
+> associated auditd is "dead" (no one can request the signal sender's
+> info if that container is dead).
+
+I don't understand why it would be associated with the contid of the
+audit daemon process rather than with the audit daemon process itself.
+How does the signal collection somehow get transferred or delegated to
+another member of that audit daemon's container?
+
+Thinking aloud here, the audit daemon's exit when it calls audit_free()
+needs to ..._put_sig and cancel that audit_sig_cid (which in the future
+will be allocated per auditd rather than the global it is now since
+there is only one audit daemon).
+
+> paul moore
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
