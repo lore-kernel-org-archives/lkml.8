@@ -2,135 +2,199 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0996BC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43711C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFAAB20740
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:57:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="N0GwUHxM"
+	by mail.kernel.org (Postfix) with ESMTP id 1662B20753
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:58:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584662312;
+	bh=1Iilp28i0bCTskgCsO8oASv9W7OdeQt1V3gTWMx3C9w=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=LRNMJ2qFtIm/M+s75+J/z/NRfZRqBeCmrlJnU3ZndIilyjR7LF9OGf4r2ogXpO83I
+	 vgtaJg2iFpGa2ra6mycoYwDOsfwI3J2rFSvx2oiuTNkimNIn0usTnCP2RU3ZHZDKwd
+	 VD7msRXdB3y6BGj+3QfFerLmmmylRPrHaQvQP+5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbgCSX5z (ORCPT
+        id S1727286AbgCSX6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:57:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48693 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726827AbgCSX5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:57:55 -0400
-Received: from [IPv6:2601:646:8600:3281:9577:eff3:b2f7:e372] ([IPv6:2601:646:8600:3281:9577:eff3:b2f7:e372])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 02JNvYSk1240058
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 19 Mar 2020 16:57:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 02JNvYSk1240058
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020022001; t=1584662256;
-        bh=7Ov2izSIpJrQkE36Te6iGCXuLs/J08C26N9tQn+FpSg=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=N0GwUHxM77X1qx243jlFS2ZbJfmcNYSjowkur8m+o7Lt2pl3qhI4XH2gJyf00vdOY
-         6lggxlq/U/+3F1SxrlyAwazEFyexf00QOJq2QowDv0iSrxyZyTQPvSG7fRWP1HlueT
-         XiC7sOwIpw/nV6OwXrGfRVUx+pvywjk6bFftQW31ZTG4DMGTn2n2WYiH+no5yhv2rE
-         F0I3IRKlcJDOOmnCKKNx/SdyPvJaMKZ0ejVno4VqOuLs1SV4sqxLfejUkldkJlGkvw
-         LHA+STAhZSo7wBipOnLh7jNutXK6Q+UTiRlgWhCrCP1IswK6zxpvktgdBbDH/6HW+q
-         xe5ev1ASYGFBw==
-Date:   Thu, 19 Mar 2020 16:57:27 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com>
-References: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com>
+        Thu, 19 Mar 2020 19:58:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727159AbgCSX6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 19:58:30 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C21C20754;
+        Thu, 19 Mar 2020 23:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584662309;
+        bh=1Iilp28i0bCTskgCsO8oASv9W7OdeQt1V3gTWMx3C9w=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=elmVnY1ABSGb+xRrvQ9PcXrqvEzg7FUzJ8x5d4XySe6/R7CY5EuUbuwIqVmiHvmYk
+         Oeroik0vKThlwP2ABGqsFEnevbm2UG7svAs2L0l7b4i4BbWUfVJHHE05dawmBDhHpv
+         h8Pn9EhppW+Ju+LisnA8r3T6cMvB0Hych4BTQ+lg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 49DA235226B9; Thu, 19 Mar 2020 16:58:29 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 16:58:29 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
+        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
+        joel@joelfernandes.org
+Subject: Re: [PATCH RFC v2 tip/core/rcu 09/22] rcu-tasks: Add an RCU-tasks
+ rude variant
+Message-ID: <20200319235829.GK3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+ <20200319001100.24917-9-paulmck@kernel.org>
+ <20200319150432.1ac9dac9@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/1] x86 support for the initrd= command line option
-To:     ron minnich <rminnich@gmail.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
-        mjg59@google.com,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   hpa@zytor.com
-Message-ID: <D31718CF-1755-4846-8043-6E62D57E4937@zytor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319150432.1ac9dac9@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 19, 2020 4:49:05 PM PDT, ron minnich <rminnich@gmail=2Ecom> wrote:
->In LinuxBoot systems, a kernel and initramfs are loaded into FLASH
->to replace proprietary firmware/BIOS code=2E Space being at a premium
->on some systems, the kernel and initramfs must be place in whatever
->open corners of the FLASH exist=2E These corners are not always
->easily used=2E
->
->For example, on Intel-based UEFI systems, the Management Engine
->(ME) is given half the FLASH, though it uses very little, as little
->as 1=2E25MiB=2E  Not only is 2=2E75MiB of an 8MiB part unused; but
->10=2E75MiB of a 16MiB part is unused=2E This space can be recovered by
->a number of tools, e=2Eg=2E utk and its tighten_me command, and if
->Linux can be told where the space is Linux can load an initrd from
->it=2E
->
->In an ideal case, we would take the space from the ME and add it to
->a FLASH-based filesystem=2E  While UEFI does have filesystem-like
->structures, this recovered space can only be added to its "file
->system" by rebuilding UEFI from source or writing a UEFI device
->driver=2E Both these options are impractical in most cases=2E The space
->can only be referenced as a physical address=2E
->
->There is code in the core that allows specification of the initrd
->as a physical address and size, but it is not supported on all
->architectures=2E This patch adds support for initrd=3D to the x86=2E
->
->For debugging and recovery purposes, if initrd=3D is present in the
->command line, other existing initrd sources should still have
->higher priority=2E The initramfs in flash might be damaged or
->broken=2E Hence, it must still be possible to load a kernel and
->initramfs with a conventional bootloader, or even load the
->FLASH-based kernel with a different initramfs; or boot a
->kernel and let it use the initrd in FLASH=2E
->
->In support of that priority ordering, this patch sets the ramdisk
->image pointer to phys_initrd_start only if it is not already set;
->and sets ramdisk_size to phys_initrd_size only if it is not already
->set=2E
->
->It has been tested extensively in LinuxBoot environments=2E
->
->Signed-off-by: Ronald G=2E Minnich <rminnich@gmail=2Ecom>
->---
-> arch/x86/kernel/setup=2Ec | 6 ++++++
-> 1 file changed, 6 insertions(+)
->
->diff --git a/arch/x86/kernel/setup=2Ec b/arch/x86/kernel/setup=2Ec
->index a74262c71484=2E=2E1b04ef8ea12d 100644
->--- a/arch/x86/kernel/setup=2Ec
->+++ b/arch/x86/kernel/setup=2Ec
->@@ -237,6 +237,9 @@ static u64 __init get_ramdisk_image(void)
->
->     ramdisk_image |=3D (u64)boot_params=2Eext_ramdisk_image << 32;
->
->+    if (ramdisk_image =3D=3D 0) {
->+        ramdisk_image =3D phys_initrd_start;
->+    }
->     return ramdisk_image;
-> }
-> static u64 __init get_ramdisk_size(void)
->@@ -245,6 +248,9 @@ static u64 __init get_ramdisk_size(void)
->
->     ramdisk_size |=3D (u64)boot_params=2Eext_ramdisk_size << 32;
->
->+    if (ramdisk_size =3D=3D 0) {
->+        ramdisk_size =3D phys_initrd_size;
->+    }
->     return ramdisk_size;
-> }
+On Thu, Mar 19, 2020 at 03:04:32PM -0400, Steven Rostedt wrote:
+> On Wed, 18 Mar 2020 17:10:47 -0700
+> paulmck@kernel.org wrote:
+> 
+> > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > 
+> > This commit adds a "rude" variant of RCU-tasks that has as quiescent
+> > states schedule(), cond_resched_tasks_rcu_qs(), userspace execution,
+> > and (in theory, anyway) cond_resched().  In other words, RCU-tasks rude
+> > readers are regions of code with preemption disabled, but excluding code
+> > early in the CPU-online sequence and late in the CPU-offline sequence.
+> > Updates make use of IPIs and force an IPI and a context switch on each
+> > online CPU.  This variant is useful in some situations in tracing.
+> > 
+> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > [ paulmck: Apply EXPORT_SYMBOL_GPL() feedback from Qiujun Huang. ]
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > ---
+> >  include/linux/rcupdate.h |  3 ++
+> >  kernel/rcu/Kconfig       | 12 +++++-
+> >  kernel/rcu/tasks.h       | 98 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 112 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> > index 5523145..2be97a8 100644
+> > --- a/include/linux/rcupdate.h
+> > +++ b/include/linux/rcupdate.h
+> > @@ -37,6 +37,7 @@
+> >  /* Exported common interfaces */
+> >  void call_rcu(struct rcu_head *head, rcu_callback_t func);
+> >  void rcu_barrier_tasks(void);
+> > +void rcu_barrier_tasks_rude(void);
+> >  void synchronize_rcu(void);
+> >  
+> >  #ifdef CONFIG_PREEMPT_RCU
+> > @@ -138,6 +139,8 @@ static inline void rcu_init_nohz(void) { }
+> >  #define rcu_note_voluntary_context_switch(t) rcu_tasks_qs(t)
+> >  void call_rcu_tasks(struct rcu_head *head, rcu_callback_t func);
+> >  void synchronize_rcu_tasks(void);
+> > +void call_rcu_tasks_rude(struct rcu_head *head, rcu_callback_t func);
+> > +void synchronize_rcu_tasks_rude(void);
+> >  void exit_tasks_rcu_start(void);
+> >  void exit_tasks_rcu_finish(void);
+> >  #else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
+> > diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
+> > index 38475d0..0d43ec1 100644
+> > --- a/kernel/rcu/Kconfig
+> > +++ b/kernel/rcu/Kconfig
+> > @@ -71,7 +71,7 @@ config TREE_SRCU
+> >  	  This option selects the full-fledged version of SRCU.
+> >  
+> >  config TASKS_RCU_GENERIC
+> > -	def_bool TASKS_RCU
+> > +	def_bool TASKS_RCU || TASKS_RUDE_RCU
+> >  	select SRCU
+> >  	help
+> >  	  This option enables generic infrastructure code supporting
+> > @@ -84,6 +84,16 @@ config TASKS_RCU
+> >  	  only voluntary context switch (not preemption!), idle, and
+> >  	  user-mode execution as quiescent states.  Not for manual selection.
+> >  
+> > +config TASKS_RUDE_RCU
+> > +	def_bool 0
+> > +	default n
+> 
+> No need for "default n" as that's the default without it.
 
-The initrd=3D option is reserved namespace for the bootloader=2E It is als=
-o worth noting that the x86 boot protocol now allows the bootloader to poin=
-t to arbitrary chunks of memory for the initrd=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Removed!
+
+> > +	help
+> > +	  This option enables a task-based RCU implementation that uses
+> > +	  only context switch (including preemption) and user-mode
+> > +	  execution as quiescent states.  It forces IPIs and context
+> > +	  switches on all online CPUs, including idle ones, so use
+> > +	  with caution.  Not for manual selection.
+> 
+> Really don't need the "Not for manual selection", as not having a prompt
+> shows that too.
+
+And also removed.
+
+> > +
+> >  config RCU_STALL_COMMON
+> >  	def_bool TREE_RCU
+> >  	help
+> > diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+> > index d77921e..7ba1730 100644
+> > --- a/kernel/rcu/tasks.h
+> > +++ b/kernel/rcu/tasks.h
+> > @@ -180,6 +180,9 @@ static void __init rcu_tasks_bootup_oddness(void)
+> >  	else
+> >  		pr_info("\tTasks RCU enabled.\n");
+> >  #endif /* #ifdef CONFIG_TASKS_RCU */
+> > +#ifdef CONFIG_TASKS_RUDE_RCU
+> > +	pr_info("\tRude variant of Tasks RCU enabled.\n");
+> > +#endif /* #ifdef CONFIG_TASKS_RUDE_RCU */
+> >  }
+> >  
+> >  #endif /* #ifndef CONFIG_TINY_RCU */
+> > @@ -410,3 +413,98 @@ static int __init rcu_spawn_tasks_kthread(void)
+> >  core_initcall(rcu_spawn_tasks_kthread);
+> >  
+> >  #endif /* #ifdef CONFIG_TASKS_RCU */
+> > +
+> > +#ifdef CONFIG_TASKS_RUDE_RCU
+> > +
+> > +////////////////////////////////////////////////////////////////////////
+> > +//
+> > +// "Rude" variant of Tasks RCU, inspired by Steve Rostedt's trick of
+> > +// passing an empty function to schedule_on_each_cpu().  This approach
+> > +// provides an asynchronous call_rcu_rude() API and batching of concurrent
+> > +// calls to the synchronous synchronize_rcu_rude() API.  This sends IPIs
+> > +// far and wide and induces otherwise unnecessary context switches on all
+> > +// online CPUs, whether online or not.
+> 
+>    "on all online CPUs, whether online or not" ????
+
+Good catch!  It should be "whether idle or not".  Fixed.  ;-)
+
+							Thanx, Paul
+
+> -- Steve
+> 
+> > +
+> > +// Empty function to allow workqueues to force a context switch.
+> > +static void rcu_tasks_be_rude(struct work_struct *work)
+> > +{
+> > +}
+> > +
