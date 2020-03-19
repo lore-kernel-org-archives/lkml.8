@@ -2,108 +2,320 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CA8C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2DBC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78E32072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:13:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="prPUHVlx"
+	by mail.kernel.org (Postfix) with ESMTP id F2CC22071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgCSHNt (ORCPT
+        id S1727262AbgCSHN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:13:49 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38984 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727011AbgCSHNs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:13:48 -0400
-Received: by mail-qk1-f196.google.com with SMTP id t17so1670005qkm.6
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 00:13:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rH9XkrtMe7HI6VnpexBxHYP1li78F1+6ZSnrUVBDTCw=;
-        b=prPUHVlxVd+bHnSt25R24pQe+7i7O9R1n3DEuULFVAUvo3IiUm9SO3mMtIEaRPGkvz
-         lKFp3mkHdQdETyKa5GlARoh4QXgZ+tKH8X2ph3Hb3vfbjQ2+qYluAggjgQRlLSsd52bT
-         F6xky0J+wLpGQWN5BDv1nVOQM0RIska5/S0L3eeZtDnd19ABYyhiASRMtwy3c8MUDgdg
-         MueSMeN4QycaC90Cs2AtPu8eP5Zj1GA+rOjdD+FDFsYeyLdGxrooicFD+2s/R7LK6p44
-         zb0L9GAp/knpAygSvvb9iA4E3xHqP8l52hMGSF/zPbcoj8c3wbqhkisuq1D9Yf61+fms
-         za4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rH9XkrtMe7HI6VnpexBxHYP1li78F1+6ZSnrUVBDTCw=;
-        b=a/MHA4zl3TXNlD0WYO43tHcEtGOwdvIrhcx+LXUH13QnYUQMKF4Dq64UnHrrdN6QI/
-         SJf/7WX77Q41U99djIQGYdhWyxf8320NJ5jgQhzCHCjMYuTehk0zUdzYHrSBaLFM0pu+
-         Xd/TI6IhR2bHmkZYWSMru/eggu1eXCmEN9LQ8m5XzTcG+MDmjkpkicEVuoe1Z1sQsXxV
-         TO3ldKZAK1AQuu7+hgUM8v4NNmF5gKy3cccSHBDCwjnbVaXCjkm3IesPGO9Vp4/ju0JX
-         fiiIPkkX0EH8wkx5JQ89/oqTdkv/NMKSWZiyOHnEXOD9LT2R5rLL4Qr36fC0U5FkEXfm
-         JQJA==
-X-Gm-Message-State: ANhLgQ2CAWGuXkLcglXUpEbL5w2FHd9wTpwbYLfgOc9f5VjQ0sjstBkT
-        AxgsrfhNyoSmWoVHrQmrk5nVhH8APXx9jVWzNK2iHw==
-X-Google-Smtp-Source: ADFU+vvRD/fu9oNydL2plK4iDRAkvvrhZlF6/7O+wy46FW3Kp9+qbKsulg4yL1lxcZZPurOY/plBmaFmtqpvf/If4vA=
-X-Received: by 2002:a37:6115:: with SMTP id v21mr1538768qkb.43.1584602027025;
- Thu, 19 Mar 2020 00:13:47 -0700 (PDT)
+        Thu, 19 Mar 2020 03:13:58 -0400
+Received: from relay.sw.ru ([185.231.240.75]:35704 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727011AbgCSHN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:13:57 -0400
+Received: from [192.168.15.165]
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1jEpMm-00041N-14; Thu, 19 Mar 2020 10:13:20 +0300
+Subject: Re: [PATCH v3 5/5] exec: Add a exec_update_mutex to replace
+ cred_guard_mutex
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB51703B44170EAB4626C9B2CAE4E20@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87tv32cxmf.fsf_-_@x220.int.ebiederm.org>
+ <87v9ne5y4y.fsf_-_@x220.int.ebiederm.org>
+ <87zhcq4jdj.fsf_-_@x220.int.ebiederm.org>
+ <f37a5d68-9674-533f-ee9c-a49174605710@virtuozzo.com>
+ <87d09hn4kt.fsf@x220.int.ebiederm.org>
+ <dbce35c7-c060-cfd8-bde1-98fd9a0747a9@virtuozzo.com>
+ <87lfo5lju6.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170E9E71B9F84330B098BADE4FA0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <6002ac56-025a-d50f-e89d-1bf42a072323@virtuozzo.com>
+ <AM6PR03MB5170353DF3575FF7742BB155E4FB0@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <532ce6a3-f0df-e3e4-6966-473c608246e1@virtuozzo.com>
+ <AM6PR03MB51705D8A5631B53844CE447CE4F60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <13c4d333-9c33-8036-3142-dac22c392c60@virtuozzo.com>
+ <AM6PR03MB5170110A5D332DD0C1AC929FE4F70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <f7c1508a-a456-6ae4-a81e-8e8aa41d8d39@virtuozzo.com>
+Date:   Thu, 19 Mar 2020 10:13:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <000000000000ae2ab305a123f146@google.com> <CACT4Y+a_d=5TNZth0dPov0B7tB5T9bAzWXBj1HjhXdn-=0KOOg@mail.gmail.com>
- <20200318214109.GV3199@paulmck-ThinkPad-P72>
-In-Reply-To: <20200318214109.GV3199@paulmck-ThinkPad-P72>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 19 Mar 2020 08:13:35 +0100
-Message-ID: <CACT4Y+ZhP_Qu+WZ4t2dLjd__H+rUKCTRCNoghvW9Uf3QQYRcNg@mail.gmail.com>
-Subject: Re: linux-next build error (8)
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     syzbot <syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <AM6PR03MB5170110A5D332DD0C1AC929FE4F70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 10:41 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Wed, Mar 18, 2020 at 09:54:07PM +0100, Dmitry Vyukov wrote:
-> > On Wed, Mar 18, 2020 at 5:57 PM syzbot
-> > <syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    47780d78 Add linux-next specific files for 20200318
-> > > git tree:       linux-next
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=14228745e00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=b68b7b89ad96c62a
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=792dec47d693ccdc05a0
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > >
-> > > Unfortunately, I don't have any reproducer for this crash yet.
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com
-> > >
-> > > kernel/rcu/tasks.h:1070:37: error: 'rcu_tasks_rude' undeclared (first use in this function); did you mean 'rcu_tasks_qs'?
-> >
-> > +rcu maintainers
->
-> The kbuild test robot beat you to it, and apologies for the hassle.
-> Fixed in -rcu on current "dev" branch.
+On 18.03.2020 23:06, Bernd Edlinger wrote:
+> On 3/18/20 1:22 PM, Kirill Tkhai wrote:
+>> On 18.03.2020 00:53, Bernd Edlinger wrote:
+>>> On 3/17/20 9:56 AM, Kirill Tkhai wrote:
+>>>> On 14.03.2020 12:11, Bernd Edlinger wrote:
+>>>>> The cred_guard_mutex is problematic.  The cred_guard_mutex is held
+>>>>> over the userspace accesses as the arguments from userspace are read.
+>>>>> The cred_guard_mutex is held of PTRACE_EVENT_EXIT as the the other
+>>>>> threads are killed.  The cred_guard_mutex is held over
+>>>>> "put_user(0, tsk->clear_child_tid)" in exit_mm().
+>>>>>
+>>>>> Any of those can result in deadlock, as the cred_guard_mutex is held
+>>>>> over a possible indefinite userspace waits for userspace.
+>>>>>
+>>>>> Add exec_update_mutex that is only held over exec updating process
+>>>>> with the new contents of exec, so that code that needs not to be
+>>>>> confused by exec changing the mm and the cred in ways that can not
+>>>>> happen during ordinary execution of a process.
+>>>>>
+>>>>> The plan is to switch the users of cred_guard_mutex to
+>>>>> exec_udpate_mutex one by one.  This lets us move forward while still
+>>>>> being careful and not introducing any regressions.
+>>>>>
+>>>>> Link: https://lore.kernel.org/lkml/20160921152946.GA24210@dhcp22.suse.cz/
+>>>>> Link: https://lore.kernel.org/lkml/AM6PR03MB5170B06F3A2B75EFB98D071AE4E60@AM6PR03MB5170.eurprd03.prod.outlook.com/
+>>>>> Link: https://lore.kernel.org/linux-fsdevel/20161102181806.GB1112@redhat.com/
+>>>>> Link: https://lore.kernel.org/lkml/20160923095031.GA14923@redhat.com/
+>>>>> Link: https://lore.kernel.org/lkml/20170213141452.GA30203@redhat.com/
+>>>>> Ref: 45c1a159b85b ("Add PTRACE_O_TRACEVFORKDONE and PTRACE_O_TRACEEXIT facilities.")
+>>>>> Ref: 456f17cd1a28 ("[PATCH] user-vm-unlock-2.5.31-A2")
+>>>>> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>>>>> Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+>>>>> ---
+>>>>>  fs/exec.c                    | 17 ++++++++++++++---
+>>>>>  include/linux/binfmts.h      |  8 +++++++-
+>>>>>  include/linux/sched/signal.h |  9 ++++++++-
+>>>>>  init/init_task.c             |  1 +
+>>>>>  kernel/fork.c                |  1 +
+>>>>>  5 files changed, 31 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> v3: this update fixes lock-order and adds an explicit data member in linux_binprm
+>>>>>
+>>>>> diff --git a/fs/exec.c b/fs/exec.c
+>>>>> index d820a72..11974a1 100644
+>>>>> --- a/fs/exec.c
+>>>>> +++ b/fs/exec.c
+>>>>> @@ -1014,12 +1014,17 @@ static int exec_mmap(struct mm_struct *mm)
+>>>>>  {
+>>>>>  	struct task_struct *tsk;
+>>>>>  	struct mm_struct *old_mm, *active_mm;
+>>>>> +	int ret;
+>>>>>  
+>>>>>  	/* Notify parent that we're no longer interested in the old VM */
+>>>>>  	tsk = current;
+>>>>>  	old_mm = current->mm;
+>>>>>  	exec_mm_release(tsk, old_mm);
+>>>>>  
+>>>>> +	ret = mutex_lock_killable(&tsk->signal->exec_update_mutex);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +
+>>>>>  	if (old_mm) {
+>>>>>  		sync_mm_rss(old_mm);
+>>>>>  		/*
+>>>>> @@ -1031,9 +1036,11 @@ static int exec_mmap(struct mm_struct *mm)
+>>>>>  		down_read(&old_mm->mmap_sem);
+>>>>>  		if (unlikely(old_mm->core_state)) {
+>>>>>  			up_read(&old_mm->mmap_sem);
+>>>>> +			mutex_unlock(&tsk->signal->exec_update_mutex);
+>>>>>  			return -EINTR;
+>>>>>  		}
+>>>>>  	}
+>>>>> +
+>>>>>  	task_lock(tsk);
+>>>>>  	active_mm = tsk->active_mm;
+>>>>>  	membarrier_exec_mmap(mm);
+>>>>> @@ -1288,11 +1295,12 @@ int flush_old_exec(struct linux_binprm * bprm)
+>>>>>  		goto out;
+>>>>>  
+>>>>>  	/*
+>>>>> -	 * After clearing bprm->mm (to mark that current is using the
+>>>>> -	 * prepared mm now), we have nothing left of the original
+>>>>> +	 * After setting bprm->called_exec_mmap (to mark that current is
+>>>>> +	 * using the prepared mm now), we have nothing left of the original
+>>>>>  	 * process. If anything from here on returns an error, the check
+>>>>>  	 * in search_binary_handler() will SEGV current.
+>>>>>  	 */
+>>>>> +	bprm->called_exec_mmap = 1;
+>>>>
+>>>> The two below is non-breaking pair:
+>>>>
+>>>> exec_mmap(bprm->mm);
+>>>> bprm->called_exec_mmap = 1;
+>>>>
+>>>> Why not move this into exec_mmap(), so nobody definitely inserts something
+>>>> between them?
+>>>>
+>>>
+>>> Hmm, could be done, but then I would probably need a different name than
+>>> "called_exec_mmap".
+>>>
+>>> How about adding a nice function comment to exec_mmap that calls out the
+>>> changed behaviour that the exec_update_mutex is taken unless the function
+>>> fails?
+>>
+>> Not sure, I understand correct.
+>>
+>> Could you post this like a small patch hunk (on top of anything you want)?
+>>
+> 
+> I was thinking of something like that:
+> 
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1010,6 +1010,11 @@ ssize_t read_code(struct file *file, unsigned long addr, 
+>  }
+>  EXPORT_SYMBOL(read_code);
+>  
+> +/*
+> + * Maps the mm_struct mm into the current task struct.
+> + * On success, this function returns with the mutex
+> + * exec_update_mutex locked.
+> + */
 
-If the kernel dev process would only have a way to avoid dups from all
-test systems...
-Now we need to spend time and deal with it. What has fixed it?
+Looks OK for me.
+
+>  static int exec_mmap(struct mm_struct *mm)
+>  {
+>         struct task_struct *tsk;
+> 
+> 
+>>> Bernd.
+>>>
+>>>
+>>>>>  	bprm->mm = NULL;
+>>>>>  
+>>>>>  #ifdef CONFIG_POSIX_TIMERS
+>>>>> @@ -1438,6 +1446,8 @@ static void free_bprm(struct linux_binprm *bprm)
+>>>>>  {
+>>>>>  	free_arg_pages(bprm);
+>>>>>  	if (bprm->cred) {
+>>>>> +		if (bprm->called_exec_mmap)
+>>>>> +			mutex_unlock(&current->signal->exec_update_mutex);
+>>>>>  		mutex_unlock(&current->signal->cred_guard_mutex);
+>>>>>  		abort_creds(bprm->cred);
+>>>>>  	}
+>>>>> @@ -1487,6 +1497,7 @@ void install_exec_creds(struct linux_binprm *bprm)
+>>>>>  	 * credentials; any time after this it may be unlocked.
+>>>>>  	 */
+>>>>>  	security_bprm_committed_creds(bprm);
+>>>>> +	mutex_unlock(&current->signal->exec_update_mutex);
+>>>>>  	mutex_unlock(&current->signal->cred_guard_mutex);
+>>>>>  }
+>>>>>  EXPORT_SYMBOL(install_exec_creds);
+>>>>> @@ -1678,7 +1689,7 @@ int search_binary_handler(struct linux_binprm *bprm)
+>>>>>  
+>>>>>  		read_lock(&binfmt_lock);
+>>>>>  		put_binfmt(fmt);
+>>>>> -		if (retval < 0 && !bprm->mm) {
+>>>>> +		if (retval < 0 && bprm->called_exec_mmap) {
+>>>>>  			/* we got to flush_old_exec() and failed after it */
+>>>>>  			read_unlock(&binfmt_lock);
+>>>>>  			force_sigsegv(SIGSEGV);
+>>>>> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+>>>>> index b40fc63..a345d9f 100644
+>>>>> --- a/include/linux/binfmts.h
+>>>>> +++ b/include/linux/binfmts.h
+>>>>> @@ -44,7 +44,13 @@ struct linux_binprm {
+>>>>>  		 * exec has happened. Used to sanitize execution environment
+>>>>>  		 * and to set AT_SECURE auxv for glibc.
+>>>>>  		 */
+>>>>> -		secureexec:1;
+>>>>> +		secureexec:1,
+>>>>> +		/*
+>>>>> +		 * Set by flush_old_exec, when exec_mmap has been called.
+>>>>> +		 * This is past the point of no return, when the
+>>>>> +		 * exec_update_mutex has been taken.
+>>>>> +		 */
+>>>>> +		called_exec_mmap:1;
+>>>>>  #ifdef __alpha__
+>>>>>  	unsigned int taso:1;
+>>>>>  #endif
+>>>>> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+>>>>> index 8805025..a29df79 100644
+>>>>> --- a/include/linux/sched/signal.h
+>>>>> +++ b/include/linux/sched/signal.h
+>>>>> @@ -224,7 +224,14 @@ struct signal_struct {
+>>>>>  
+>>>>>  	struct mutex cred_guard_mutex;	/* guard against foreign influences on
+>>>>>  					 * credential calculations
+>>>>> -					 * (notably. ptrace) */
+>>>>> +					 * (notably. ptrace)
+>>>>> +					 * Deprecated do not use in new code.
+>>>>> +					 * Use exec_update_mutex instead.
+>>>>> +					 */
+>>>>> +	struct mutex exec_update_mutex;	/* Held while task_struct is being
+>>>>> +					 * updated during exec, and may have
+>>>>> +					 * inconsistent permissions.
+>>>>> +					 */
+>>>>>  } __randomize_layout;
+>>>>>  
+>>>>>  /*
+>>>>> diff --git a/init/init_task.c b/init/init_task.c
+>>>>> index 9e5cbe5..bd403ed 100644
+>>>>> --- a/init/init_task.c
+>>>>> +++ b/init/init_task.c
+>>>>> @@ -26,6 +26,7 @@
+>>>>>  	.multiprocess	= HLIST_HEAD_INIT,
+>>>>>  	.rlim		= INIT_RLIMITS,
+>>>>>  	.cred_guard_mutex = __MUTEX_INITIALIZER(init_signals.cred_guard_mutex),
+>>>>> +	.exec_update_mutex = __MUTEX_INITIALIZER(init_signals.exec_update_mutex),
+>>>>>  #ifdef CONFIG_POSIX_TIMERS
+>>>>>  	.posix_timers = LIST_HEAD_INIT(init_signals.posix_timers),
+>>>>>  	.cputimer	= {
+>>>>> diff --git a/kernel/fork.c b/kernel/fork.c
+>>>>> index 8642530..036b692 100644
+>>>>> --- a/kernel/fork.c
+>>>>> +++ b/kernel/fork.c
+>>>>> @@ -1594,6 +1594,7 @@ static int copy_signal(unsigned long clone_flags, struct task_struct *tsk)
+>>>>>  	sig->oom_score_adj_min = current->signal->oom_score_adj_min;
+>>>>>  
+>>>>>  	mutex_init(&sig->cred_guard_mutex);
+>>>>> +	mutex_init(&sig->exec_update_mutex);
+>>>>>  
+>>>>>  	return 0;
+>>>>>  }
+>>>>>
+>>>>
+>>
+
