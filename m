@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42533C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AACC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 188D5206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 120C8208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624233;
-	bh=/sOLfcB78ooPON9tkDzlMoGzEbOGHBf9o0sHqQL4E74=;
+	s=default; t=1584624237;
+	bh=N3h6q8tCGOh4BWQmsC7dtfhBTXK5drPci7XihK3wjb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lqLfwXIb+iWQ/k7iLMYi9Sl2SZhbY7qYfrMdb+gBeeoN04QplJ5zHWETvc4CoxTcm
-	 zcQt8xekn59XiTjVik5KqapJpdF8gm+FNQlWEDYnTDJdh0vlErQyPPJzhEvV/SnDn6
-	 JkJ4QS5Jtn2tP1yOp58yPa3Ltp+fBA+8E2cV/G1A=
+	b=jWm9oXuOsqlzWLUA/zlmyoXX8dWTcJOU7HS8/nuCZCMpjyrSmHN4CjyyEI3xlqCPr
+	 r3w8ikeIIqv79X7i/BggcehFrVLPvFbLNOOu/+QP14l3E5VXvciqKw//Nw7mtw2en7
+	 ZcBkNVMqB/Btk9xyMv/Kh5dt+IqkV3rAcBYq6Xl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbgCSNXv (ORCPT
+        id S1730403AbgCSNXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49930 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:23:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730386AbgCSNXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:23:47 -0400
+        id S1729237AbgCSNXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:23:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22F8521707;
-        Thu, 19 Mar 2020 13:23:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13BEE208D6;
+        Thu, 19 Mar 2020 13:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624226;
-        bh=/sOLfcB78ooPON9tkDzlMoGzEbOGHBf9o0sHqQL4E74=;
+        s=default; t=1584624231;
+        bh=N3h6q8tCGOh4BWQmsC7dtfhBTXK5drPci7XihK3wjb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a6wjLZQwVxPhnScF2dfBJHWvjYioySBo9jeWsYJYnQrylxjiqmVUQfMqUXpXwcMnJ
-         KgoH3uS2bpt0WwY0pXDwE6dxxDEgPChiiE6qQzPNGQgWc5bLSEWE7cy2ju/j0huH/j
-         PN+vAs7yA0DlCzdQB00pibYlLYvaUmCaHGzXFbCI=
+        b=cwlFPMALFK32UEJNp7mKDPFykN7+oiB0O5RwhWAw8RUwV9WJNE4iCsjQUapNdtJ2Q
+         8qCe6FeACYc8vDwm+80zlrfu4FHR0vHpp4Ql3df2eC4jbK8WQyMd+xNKKjzArLoSoQ
+         mMaxODPd1aLaWU+KeLlZ+aPCYZFjUjU4SX5A9Vm0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tom Zanussi <zanussi@kernel.org>,
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        Igor Druzhinin <igor.druzhinin@citrix.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 22/60] tracing: Fix number printing bug in print_synth_event()
-Date:   Thu, 19 Mar 2020 14:04:00 +0100
-Message-Id: <20200319123926.307490100@linuxfoundation.org>
+Subject: [PATCH 5.4 24/60] scsi: libfc: free response frame from GPN_ID
+Date:   Thu, 19 Mar 2020 14:04:02 +0100
+Message-Id: <20200319123927.044337409@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -61,89 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+From: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-[ Upstream commit 784bd0847eda032ed2f3522f87250655a18c0190 ]
+[ Upstream commit ff6993bb79b9f99bdac0b5378169052931b65432 ]
 
-Fix a varargs-related bug in print_synth_event() which resulted in
-strange output and oopses on 32-bit x86 systems. The problem is that
-trace_seq_printf() expects the varargs to match the format string, but
-print_synth_event() was always passing u64 values regardless.  This
-results in unspecified behavior when unpacking with va_arg() in
-trace_seq_printf().
+fc_disc_gpn_id_resp() should be the last function using it so free it here
+to avoid memory leak.
 
-Add a function that takes the size into account when calling
-trace_seq_printf().
-
-Before:
-
-  modprobe-1731  [003] ....   919.039758: gen_synth_test: next_pid_field=777(null)next_comm_field=hula hoops ts_ns=1000000 ts_ms=1000 cpu=3(null)my_string_field=thneed my_int_field=598(null)
-
-After:
-
- insmod-1136  [001] ....    36.634590: gen_synth_test: next_pid_field=777 next_comm_field=hula hoops ts_ns=1000000 ts_ms=1000 cpu=1 my_string_field=thneed my_int_field=598
-
-Link: http://lkml.kernel.org/r/a9b59eb515dbbd7d4abe53b347dccf7a8e285657.1581720155.git.zanussi@kernel.org
-
-Reported-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/r/1579013000-14570-2-git-send-email-igor.druzhinin@citrix.com
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_hist.c | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
+ drivers/scsi/libfc/fc_disc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index a31be3fce3e8e..6495800fb92a1 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -811,6 +811,29 @@ static const char *synth_field_fmt(char *type)
- 	return fmt;
+diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
+index 9c5f7c9178c66..2b865c6423e29 100644
+--- a/drivers/scsi/libfc/fc_disc.c
++++ b/drivers/scsi/libfc/fc_disc.c
+@@ -628,6 +628,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 	}
+ out:
+ 	kref_put(&rdata->kref, fc_rport_destroy);
++	if (!IS_ERR(fp))
++		fc_frame_free(fp);
  }
  
-+static void print_synth_event_num_val(struct trace_seq *s,
-+				      char *print_fmt, char *name,
-+				      int size, u64 val, char *space)
-+{
-+	switch (size) {
-+	case 1:
-+		trace_seq_printf(s, print_fmt, name, (u8)val, space);
-+		break;
-+
-+	case 2:
-+		trace_seq_printf(s, print_fmt, name, (u16)val, space);
-+		break;
-+
-+	case 4:
-+		trace_seq_printf(s, print_fmt, name, (u32)val, space);
-+		break;
-+
-+	default:
-+		trace_seq_printf(s, print_fmt, name, val, space);
-+		break;
-+	}
-+}
-+
- static enum print_line_t print_synth_event(struct trace_iterator *iter,
- 					   int flags,
- 					   struct trace_event *event)
-@@ -849,10 +872,13 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
- 		} else {
- 			struct trace_print_flags __flags[] = {
- 			    __def_gfpflag_names, {-1, NULL} };
-+			char *space = (i == se->n_fields - 1 ? "" : " ");
- 
--			trace_seq_printf(s, print_fmt, se->fields[i]->name,
--					 entry->fields[n_u64],
--					 i == se->n_fields - 1 ? "" : " ");
-+			print_synth_event_num_val(s, print_fmt,
-+						  se->fields[i]->name,
-+						  se->fields[i]->size,
-+						  entry->fields[n_u64],
-+						  space);
- 
- 			if (strcmp(se->fields[i]->type, "gfp_t") == 0) {
- 				trace_seq_puts(s, " (");
+ /**
 -- 
 2.20.1
 
