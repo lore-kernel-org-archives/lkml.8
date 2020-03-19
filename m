@@ -2,52 +2,53 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116E7C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F21C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB67820789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8D020787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624808;
-	bh=XQSVEoxeqOnegSNEAFDMlk1BrADYTQjI3PdYm62NnW0=;
+	s=default; t=1584624813;
+	bh=sGqfcrKtn1JicGgKZ5wxx4N3gBY1mlTLaZyfnLlus+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EIf9QgvpzKYPKlAlc2qgNufOa0E9+Tqy33/RlOBye1VT9lJC6sN9TBdkXcXjxHr3p
-	 8XCAHMDtR8Fnm3VA2HaBsQLlyRcLDe+i/haCGD/5XChF12vOd/5fuseCwO1Nn8PiUf
-	 aERzqS0n2V12+zPY5zrDs4hjCk1f/b6utQsDlqkY=
+	b=FlytsCIup+NrJ5oS5kc2TrCLF4hgaeT1a6VWG1vubiRAMO/axLG1upW1ora2FVycZ
+	 9eM8Aa2GQ/XbLhmZ09E797GujMSP4Zrhpb5bxQ8isxgeBhaQ1WCXa6xg2r9gi96Hn0
+	 L6uSyd/wHmO2MZdbUX+mzsb9T8YM5afJ901Q4wgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbgCSNd1 (ORCPT
+        id S1729160AbgCSNNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:33:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60792 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727806AbgCSNNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:13:32 -0400
+        id S1727766AbgCSNNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:13:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C2F220722;
-        Thu, 19 Mar 2020 13:13:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E9CE21924;
+        Thu, 19 Mar 2020 13:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623611;
-        bh=XQSVEoxeqOnegSNEAFDMlk1BrADYTQjI3PdYm62NnW0=;
+        s=default; t=1584623600;
+        bh=sGqfcrKtn1JicGgKZ5wxx4N3gBY1mlTLaZyfnLlus+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1elN9ni5TIfWzLpT3Xp2TbOYywOpAkXgNRw8fq5X9d3/Qo3mGBT8wwyR0ACJiQIoD
-         q8fg+SVZjfNXin590YYw53e+FuDWGa8bCNDeIcbZY4jX9ogHzhQwO7jzIJ4/Trnoma
-         Ywvz0sNlnIFFONP39P1S0vTiO8wM1xUTCWuCDjJ4=
+        b=1DGNPliNeG53QKNNaYed5oVL9m9gTor/SI26U6xh0SZB8BDhWaMHXBRmAo5mU6rDv
+         jS46cKlHiLY1DflKB57xby0cpQwbqYZeXmj1ufJoH3XlcEXz7BaEofv479juBdDDl9
+         rJSo7+8a3+JFeiaCI1ibSGgSvqtY1Il5Gj1C/2gQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Qian Cai <cai@lca.pw>, Theodore Tso <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 86/90] jbd2: fix data races at struct journal_head
-Date:   Thu, 19 Mar 2020 14:00:48 +0100
-Message-Id: <20200319123954.894820451@linuxfoundation.org>
+        =?UTF-8?q?Leonardo=20M=F6rlein?= <me@irrelefant.net>,
+        =?UTF-8?q?Linus=20L=FCssing?= <linus.luessing@c0d3.blue>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.9 64/90] batman-adv: Fix TT sync flags for intermediate TT responses
+Date:   Thu, 19 Mar 2020 14:00:26 +0100
+Message-Id: <20200319123948.371048331@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -60,110 +61,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Linus Lüssing <linus.luessing@c0d3.blue>
 
-[ Upstream commit 6c5d911249290f41f7b50b43344a7520605b1acb ]
+commit 7072337e52b3e9d5460500d8dc9cbc1ba2db084c upstream.
 
-journal_head::b_transaction and journal_head::b_next_transaction could
-be accessed concurrently as noticed by KCSAN,
+The previous TT sync fix so far only fixed TT responses issued by the
+target node directly. So far, TT responses issued by intermediate nodes
+still lead to the wrong flags being added, leading to CRC mismatches.
 
- LTP: starting fsync04
- /dev/zero: Can't open blockdev
- EXT4-fs (loop0): mounting ext3 file system using the ext4 subsystem
- EXT4-fs (loop0): mounted filesystem with ordered data mode. Opts: (null)
- ==================================================================
- BUG: KCSAN: data-race in __jbd2_journal_refile_buffer [jbd2] / jbd2_write_access_granted [jbd2]
+This behaviour was observed at Freifunk Hannover in a 800 nodes setup
+where a considerable amount of nodes were still infected with 'WI'
+TT flags even with (most) nodes having the previous TT sync fix applied.
 
- write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on cpu 70:
-  __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
-  __jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
-  jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
-  (inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1034
-  kjournald2+0x13b/0x450 [jbd2]
-  kthread+0x1cd/0x1f0
-  ret_from_fork+0x27/0x50
+I was able to reproduce the issue with intermediate TT responses in a
+four node test setup and this patch fixes this issue by ensuring to
+use the per originator instead of the summarized, OR'd ones.
 
- read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on cpu 68:
-  jbd2_write_access_granted+0x1b2/0x250 [jbd2]
-  jbd2_write_access_granted at fs/jbd2/transaction.c:1155
-  jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
-  __ext4_journal_get_write_access+0x50/0x90 [ext4]
-  ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
-  ext4_mb_new_blocks+0x54f/0xca0 [ext4]
-  ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
-  ext4_map_blocks+0x3b4/0x950 [ext4]
-  _ext4_get_block+0xfc/0x270 [ext4]
-  ext4_get_block+0x3b/0x50 [ext4]
-  __block_write_begin_int+0x22e/0xae0
-  __block_write_begin+0x39/0x50
-  ext4_write_begin+0x388/0xb50 [ext4]
-  generic_perform_write+0x15d/0x290
-  ext4_buffered_write_iter+0x11f/0x210 [ext4]
-  ext4_file_write_iter+0xce/0x9e0 [ext4]
-  new_sync_write+0x29c/0x3b0
-  __vfs_write+0x92/0xa0
-  vfs_write+0x103/0x260
-  ksys_write+0x9d/0x130
-  __x64_sys_write+0x4c/0x60
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- 5 locks held by fsync04/25724:
-  #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at: vfs_write+0x21c/0x260
-  #1: ffff99f9db4c0348 (&sb->s_type->i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
-  #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
-  #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at: ext4_map_blocks+0x176/0x950 [ext4]
-  #4: ffffffff99086b40 (rcu_read_lock){....}, at: jbd2_write_access_granted+0x4e/0x250 [jbd2]
- irq event stamp: 1407125
- hardirqs last  enabled at (1407125): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
- hardirqs last disabled at (1407124): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
- softirqs last  enabled at (1405528): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
- softirqs last disabled at (1405521): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
-
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 68 PID: 25724 Comm: fsync04 Tainted: G L 5.6.0-rc2-next-20200221+ #7
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-
-The plain reads are outside of jh->b_state_lock critical section which result
-in data races. Fix them by adding pairs of READ|WRITE_ONCE().
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/r/20200222043111.2227-1-cai@lca.pw
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: e9c00136a475 ("batman-adv: fix tt_global_entries flags update")
+Reported-by: Leonardo Mörlein <me@irrelefant.net>
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/jbd2/transaction.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/batman-adv/translation-table.c |   61 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 51 insertions(+), 10 deletions(-)
 
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index 04dd0652bb5ca..8de458d64134a 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1037,8 +1037,8 @@ static bool jbd2_write_access_granted(handle_t *handle, struct buffer_head *bh,
- 	/* For undo access buffer must have data copied */
- 	if (undo && !jh->b_committed_data)
- 		goto out;
--	if (jh->b_transaction != handle->h_transaction &&
--	    jh->b_next_transaction != handle->h_transaction)
-+	if (READ_ONCE(jh->b_transaction) != handle->h_transaction &&
-+	    READ_ONCE(jh->b_next_transaction) != handle->h_transaction)
- 		goto out;
- 	/*
- 	 * There are two reasons for the barrier here:
-@@ -2448,8 +2448,8 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
- 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
- 	 * take a new one.
- 	 */
--	jh->b_transaction = jh->b_next_transaction;
--	jh->b_next_transaction = NULL;
-+	WRITE_ONCE(jh->b_transaction, jh->b_next_transaction);
-+	WRITE_ONCE(jh->b_next_transaction, NULL);
- 	if (buffer_freed(bh))
- 		jlist = BJ_Forget;
- 	else if (jh->b_modified)
--- 
-2.20.1
-
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -1539,6 +1539,8 @@ batadv_tt_global_orig_entry_find(const s
+  *  by a given originator
+  * @entry: the TT global entry to check
+  * @orig_node: the originator to search in the list
++ * @flags: a pointer to store TT flags for the given @entry received
++ *  from @orig_node
+  *
+  * find out if an orig_node is already in the list of a tt_global_entry.
+  *
+@@ -1546,7 +1548,8 @@ batadv_tt_global_orig_entry_find(const s
+  */
+ static bool
+ batadv_tt_global_entry_has_orig(const struct batadv_tt_global_entry *entry,
+-				const struct batadv_orig_node *orig_node)
++				const struct batadv_orig_node *orig_node,
++				u8 *flags)
+ {
+ 	struct batadv_tt_orig_list_entry *orig_entry;
+ 	bool found = false;
+@@ -1554,6 +1557,10 @@ batadv_tt_global_entry_has_orig(const st
+ 	orig_entry = batadv_tt_global_orig_entry_find(entry, orig_node);
+ 	if (orig_entry) {
+ 		found = true;
++
++		if (flags)
++			*flags = orig_entry->flags;
++
+ 		batadv_tt_orig_list_entry_put(orig_entry);
+ 	}
+ 
+@@ -1734,7 +1741,7 @@ static bool batadv_tt_global_add(struct
+ 			if (!(common->flags & BATADV_TT_CLIENT_TEMP))
+ 				goto out;
+ 			if (batadv_tt_global_entry_has_orig(tt_global_entry,
+-							    orig_node))
++							    orig_node, NULL))
+ 				goto out_remove;
+ 			batadv_tt_global_del_orig_list(tt_global_entry);
+ 			goto add_orig_entry;
+@@ -2876,23 +2883,46 @@ unlock:
+ }
+ 
+ /**
+- * batadv_tt_local_valid - verify that given tt entry is a valid one
++ * batadv_tt_local_valid() - verify local tt entry and get flags
+  * @entry_ptr: to be checked local tt entry
+  * @data_ptr: not used but definition required to satisfy the callback prototype
++ * @flags: a pointer to store TT flags for this client to
++ *
++ * Checks the validity of the given local TT entry. If it is, then the provided
++ * flags pointer is updated.
+  *
+  * Return: true if the entry is a valid, false otherwise.
+  */
+-static bool batadv_tt_local_valid(const void *entry_ptr, const void *data_ptr)
++static bool batadv_tt_local_valid(const void *entry_ptr,
++				  const void *data_ptr,
++				  u8 *flags)
+ {
+ 	const struct batadv_tt_common_entry *tt_common_entry = entry_ptr;
+ 
+ 	if (tt_common_entry->flags & BATADV_TT_CLIENT_NEW)
+ 		return false;
++
++	if (flags)
++		*flags = tt_common_entry->flags;
++
+ 	return true;
+ }
+ 
++/**
++ * batadv_tt_global_valid() - verify global tt entry and get flags
++ * @entry_ptr: to be checked global tt entry
++ * @data_ptr: an orig_node object (may be NULL)
++ * @flags: a pointer to store TT flags for this client to
++ *
++ * Checks the validity of the given global TT entry. If it is, then the provided
++ * flags pointer is updated either with the common (summed) TT flags if data_ptr
++ * is NULL or the specific, per originator TT flags otherwise.
++ *
++ * Return: true if the entry is a valid, false otherwise.
++ */
+ static bool batadv_tt_global_valid(const void *entry_ptr,
+-				   const void *data_ptr)
++				   const void *data_ptr,
++				   u8 *flags)
+ {
+ 	const struct batadv_tt_common_entry *tt_common_entry = entry_ptr;
+ 	const struct batadv_tt_global_entry *tt_global_entry;
+@@ -2906,7 +2936,8 @@ static bool batadv_tt_global_valid(const
+ 				       struct batadv_tt_global_entry,
+ 				       common);
+ 
+-	return batadv_tt_global_entry_has_orig(tt_global_entry, orig_node);
++	return batadv_tt_global_entry_has_orig(tt_global_entry, orig_node,
++					       flags);
+ }
+ 
+ /**
+@@ -2916,25 +2947,34 @@ static bool batadv_tt_global_valid(const
+  * @hash: hash table containing the tt entries
+  * @tt_len: expected tvlv tt data buffer length in number of bytes
+  * @tvlv_buff: pointer to the buffer to fill with the TT data
+- * @valid_cb: function to filter tt change entries
++ * @valid_cb: function to filter tt change entries and to return TT flags
+  * @cb_data: data passed to the filter function as argument
++ *
++ * Fills the tvlv buff with the tt entries from the specified hash. If valid_cb
++ * is not provided then this becomes a no-op.
+  */
+ static void batadv_tt_tvlv_generate(struct batadv_priv *bat_priv,
+ 				    struct batadv_hashtable *hash,
+ 				    void *tvlv_buff, u16 tt_len,
+ 				    bool (*valid_cb)(const void *,
+-						     const void *),
++						     const void *,
++						     u8 *flags),
+ 				    void *cb_data)
+ {
+ 	struct batadv_tt_common_entry *tt_common_entry;
+ 	struct batadv_tvlv_tt_change *tt_change;
+ 	struct hlist_head *head;
+ 	u16 tt_tot, tt_num_entries = 0;
++	u8 flags;
++	bool ret;
+ 	u32 i;
+ 
+ 	tt_tot = batadv_tt_entries(tt_len);
+ 	tt_change = (struct batadv_tvlv_tt_change *)tvlv_buff;
+ 
++	if (!valid_cb)
++		return;
++
+ 	rcu_read_lock();
+ 	for (i = 0; i < hash->size; i++) {
+ 		head = &hash->table[i];
+@@ -2944,11 +2984,12 @@ static void batadv_tt_tvlv_generate(stru
+ 			if (tt_tot == tt_num_entries)
+ 				break;
+ 
+-			if ((valid_cb) && (!valid_cb(tt_common_entry, cb_data)))
++			ret = valid_cb(tt_common_entry, cb_data, &flags);
++			if (!ret)
+ 				continue;
+ 
+ 			ether_addr_copy(tt_change->addr, tt_common_entry->addr);
+-			tt_change->flags = tt_common_entry->flags;
++			tt_change->flags = flags;
+ 			tt_change->vid = htons(tt_common_entry->vid);
+ 			memset(tt_change->reserved, 0,
+ 			       sizeof(tt_change->reserved));
 
 
