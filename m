@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC49C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA73C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42B42214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E2721655
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623537;
-	bh=Yn+9r6olApXMbL0vUl2d/cjH46UB0IAPFiGQT2Sdx+M=;
+	s=default; t=1584623538;
+	bh=UV/OiNI1uK+tXFC5/W30EFZQWZpDzqryDBr5ELf7jng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j/0f4PtE5Nj8abHflyaYmuCSA4F0v0FDtwlSvCpMDSNQBCvLO9N9JwWcCYa0O3S4+
-	 Eac43Z9k25b4p0XkfA4kZJtdqxlpxZV3+a1zeRbN1QvA9YyW+ganGRUmlaT3CtY2c3
-	 q8lG4ey2p5kVbrGkGJlyMQQinR5MCg+BFI8XfpVI=
+	b=k2BIiqoPAFrZJDcxAYZygR36IiIV1es95QHml+Yo9xA/CP+t5QAfUt7ja/sEbVKj1
+	 Ec10KpkqS9PEStBup072KHD0osqH6cbYPqV7qHA92L+pUudZ+Kk17k1+JkExnXXrvI
+	 aWrTNvwZBVpgukiuvlFyBDMO+TPUjaLjC1zr7OQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgCSNMP (ORCPT
+        id S1727586AbgCSNMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58024 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:12:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727977AbgCSNMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:12:13 -0400
+        id S1728893AbgCSNMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:12:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 806BC214D8;
-        Thu, 19 Mar 2020 13:12:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17499214D8;
+        Thu, 19 Mar 2020 13:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623533;
-        bh=Yn+9r6olApXMbL0vUl2d/cjH46UB0IAPFiGQT2Sdx+M=;
+        s=default; t=1584623535;
+        bh=UV/OiNI1uK+tXFC5/W30EFZQWZpDzqryDBr5ELf7jng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VAbWdt/3WgIusYEtrZz+dfhSIELJvpS9ulnfciIvH5XM6YTbbhbH2AzMfTPBCCuO9
-         wZOxKVRoZ3lECzpV677dE4TIVXHX2nP6EAestxlHo4m13h2Gg0iiDImxh+8ieiXH2y
-         1MYi5fGYzmx17IKNcpZhuRQ4FdwRsJd2k1OXc4u0=
+        b=uQQlqD9Ncm6Ya94EKXFDoCjjqrIR7ikGK7W/tvtfXgJWGgRMOdL2a8jy2DMpao7ef
+         yXzR+zAYgFzc2JYd3N23dRBcswqDoh4e1sbh97dAeNdZs9JQllJM5pd9MOGakzmJXO
+         8PNKuaKW55AFzXXFpYl04kGEZbrzJQz5Qn8bg46Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
         Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.9 42/90] nl80211: add missing attribute validation for critical protocol indication
-Date:   Thu, 19 Mar 2020 14:00:04 +0100
-Message-Id: <20200319123941.645729722@linuxfoundation.org>
+Subject: [PATCH 4.9 43/90] nl80211: add missing attribute validation for beacon report scanning
+Date:   Thu, 19 Mar 2020 14:00:05 +0100
+Message-Id: <20200319123941.948991680@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -61,14 +61,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jakub Kicinski <kuba@kernel.org>
 
-commit 0e1a1d853ecedc99da9d27f9f5c376935547a0e2 upstream.
+commit 056e9375e1f3c4bf2fd49b70258c7daf788ecd9d upstream.
 
-Add missing attribute validation for critical protocol fields
+Add missing attribute validation for beacon report scanning
 to the netlink policy.
 
-Fixes: 5de17984898c ("cfg80211: introduce critical protocol indication from user-space")
+Fixes: 1d76250bd34a ("nl80211: support beacon report scanning")
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Link: https://lore.kernel.org/r/20200303051058.4089398-2-kuba@kernel.org
+Link: https://lore.kernel.org/r/20200303051058.4089398-3-kuba@kernel.org
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
@@ -78,14 +78,14 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/net/wireless/nl80211.c
 +++ b/net/wireless/nl80211.c
-@@ -407,6 +407,8 @@ static const struct nla_policy nl80211_p
- 	[NL80211_ATTR_MDID] = { .type = NLA_U16 },
- 	[NL80211_ATTR_IE_RIC] = { .type = NLA_BINARY,
- 				  .len = IEEE80211_MAX_DATA_LEN },
-+	[NL80211_ATTR_CRIT_PROT_ID] = { .type = NLA_U16 },
-+	[NL80211_ATTR_MAX_CRIT_PROT_DURATION] = { .type = NLA_U16 },
- 	[NL80211_ATTR_PEER_AID] = { .type = NLA_U16 },
- 	[NL80211_ATTR_CH_SWITCH_COUNT] = { .type = NLA_U32 },
- 	[NL80211_ATTR_CH_SWITCH_BLOCK_TX] = { .type = NLA_FLAG },
+@@ -359,6 +359,8 @@ static const struct nla_policy nl80211_p
+ 	[NL80211_ATTR_KEY_DEFAULT_TYPES] = { .type = NLA_NESTED },
+ 	[NL80211_ATTR_WOWLAN_TRIGGERS] = { .type = NLA_NESTED },
+ 	[NL80211_ATTR_STA_PLINK_STATE] = { .type = NLA_U8 },
++	[NL80211_ATTR_MEASUREMENT_DURATION] = { .type = NLA_U16 },
++	[NL80211_ATTR_MEASUREMENT_DURATION_MANDATORY] = { .type = NLA_FLAG },
+ 	[NL80211_ATTR_SCHED_SCAN_INTERVAL] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_REKEY_DATA] = { .type = NLA_NESTED },
+ 	[NL80211_ATTR_SCAN_SUPP_RATES] = { .type = NLA_NESTED },
 
 
