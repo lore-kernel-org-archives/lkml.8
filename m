@@ -2,93 +2,187 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C346C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E692C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEBB2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2621D2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:26:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QuAr0rCw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgCSR0V (ORCPT
+        id S1727689AbgCSR0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:26:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33708 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbgCSR0U (ORCPT
+        Thu, 19 Mar 2020 13:26:55 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37097 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbgCSR0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:26:20 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jEyvW-0006QR-UH; Thu, 19 Mar 2020 18:25:51 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E6E1F103088; Thu, 19 Mar 2020 18:25:49 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Borislav Petkov <bp@alien8.de>, Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH -v2] treewide: Rename "unencrypted" to "decrypted"
-In-Reply-To: <20200319112054.GD13073@zn.tnic>
-References: <20200317111822.GA15609@zn.tnic> <20200319101657.GB13073@zn.tnic> <20200319102011.GA3617@lst.de> <20200319102834.GC13073@zn.tnic> <8d6d3b6c-7e4e-7d9e-3e19-38f7d4477c72@arm.com> <20200319112054.GD13073@zn.tnic>
-Date:   Thu, 19 Mar 2020 18:25:49 +0100
-Message-ID: <878sjw5k9u.fsf@nanos.tec.linutronix.de>
+        Thu, 19 Mar 2020 13:26:55 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w10so4147877wrm.4;
+        Thu, 19 Mar 2020 10:26:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3F6p9VA0cVyFpp1otJBkETuyS8iU0ECrOYMDdRLVRxI=;
+        b=QuAr0rCwgtiF82xHBWqQ4lSffZ977W564JnS7kFkj4jk+O1B4hwEtwYTvDMJd0KPzC
+         W7UMfVthKh74N0igpoKyyZvB59aca9fYgTGHWI0wxqZpebWmfrzwomuaPhyu2VJEO56g
+         p8dYe7vIpKa4hy2K1oGI5SvuFhZUuFjqaQ5nCVNmmA+eKRhwn1dzNTMdTUiPfQVqqylK
+         /qunIobrNuRJE4LBBm/nxChANZ1J+lczwkjXC9am2snUc9QdDh9lM9vvgy4mt1gKjnpW
+         XeCTdXi13mIw6cdMmEAXO9RJzB/RauIdkXZbliOpFv5hr2B7Il01mhJLYeyZ4YNCat++
+         sZ8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3F6p9VA0cVyFpp1otJBkETuyS8iU0ECrOYMDdRLVRxI=;
+        b=lIfsDiusw09b4ZRQw5u7Be9F5J2jhKUzKMQDrwSBsD4UvFg6M6i5NTRFZewU099JNk
+         99pP+lDT6lBXMi9IZh7L/Ry5FnUfpGRneAQbPVoGzv2OdR6oqVER2Sx/nMr8FUp+d1JT
+         K02doUFRzxo3h4we8Maw8vldCJ/57XynCyqxuTzCt/9iULyYDokU6ktNy1IsegGP73Dj
+         j3XfoqjPPRb/ermHFu4b5iD4hXz6PmnS6Z2hPXXji4kQqeLOHHj0KYirhsO+sdDB0nIf
+         /m9gX1yyyGDUw16sfbONd4r4iNjFHljGSqNzhpKs6FOOayfH8NlbeJTj0n6dP92zgJaV
+         XyYw==
+X-Gm-Message-State: ANhLgQ24D7Uv7Whb8lmAE6csKuRIl2CAao6gNBL9h3HDk2WvqlVs8AGT
+        w0w4+2mnAyVPDiUZiahCMxM+xdTIRAPHPVqXbDg=
+X-Google-Smtp-Source: ADFU+vuGxJnVkZr1vtGIyeQ2LhE/Qgr1xykJ1BEWBBmT3lH5VpBqrgI47O6jQXgHrf2qVsBwT9UGn19a4U3S1q5tmWg=
+X-Received: by 2002:a5d:56c9:: with SMTP id m9mr5376031wrw.289.1584638812775;
+ Thu, 19 Mar 2020 10:26:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200319131221.14044-1-david@redhat.com> <20200319131221.14044-9-david@redhat.com>
+In-Reply-To: <20200319131221.14044-9-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 19 Mar 2020 18:26:41 +0100
+Message-ID: <CAM9Jb+iUrSf_KixRwj9M9FP=zSzvxn_E17Bxb0ZUiKpncThSAg@mail.gmail.com>
+Subject: Re: [PATCH v3 8/8] mm/memory_hotplug: allow to specify a default online_type
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Borislav Petkov <bp@alien8.de> writes:
-
-> On Thu, Mar 19, 2020 at 11:06:15AM +0000, Robin Murphy wrote:
->> Let me add another vote from a native English speaker that "unencrypted" is
->> the appropriate term to imply the *absence* of encryption, whereas
->> "decrypted" implies the *reversal* of applied encryption.
->> 
->> Naming things is famously hard, for good reason - names are *important* for
->> understanding. Just because a decision was already made one way doesn't mean
->> that that decision was necessarily right. Churning one area to be
->> consistently inaccurate just because it's less work than churning another
->> area to be consistently accurate isn't really the best excuse.
+> For now, distributions implement advanced udev rules to essentially
+> - Don't online any hotplugged memory (s390x)
+> - Online all memory to ZONE_NORMAL (e.g., most virt environments like
+>   hyperv)
+> - Online all memory to ZONE_MOVABLE in case the zone imbalance is taken
+>   care of (e.g., bare metal, special virt environments)
 >
-> Well, the reason we chose "decrypted" vs something else is so to be as
-> different from "encrypted" as possible. If we called it "unencrypted"
-> you'd have stuff like:
+> In summary: All memory is usually onlined the same way, however, the
+> kernel always has to ask user space to come up with the same answer.
+> E.g., Hyper-V always waits for a memory block to get onlined before
+> continuing, otherwise it might end up adding memory faster than
+> onlining it, which can result in strange OOM situations. This waiting
+> slows down adding of a bigger amount of memory.
 >
->        if (force_dma_unencrypted(dev))
->                 set_memory_encrypted((unsigned long)cpu_addr, 1 << page_order);
+> Let's allow to specify a default online_type, not just "online" and
+> "offline". This allows distributions to configure the default online_type
+> when booting up and be done with it.
+>
+> We can now specify "offline", "online", "online_movable" and
+> "online_kernel" via
+> - "memhp_default_state=" on the kernel cmdline
+> - /sys/devices/system/memory/auto_online_blocks
+> just like we are able to specify for a single memory block via
+> /sys/devices/system/memory/memoryX/state
+>
+> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/base/memory.c          | 11 +++++------
+>  include/linux/memory_hotplug.h |  2 ++
+>  mm/memory_hotplug.c            |  8 ++++----
+>  3 files changed, 11 insertions(+), 10 deletions(-)
+>
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 8d3e16dab69f..2b09b68b9f78 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -35,7 +35,7 @@ static const char *const online_type_to_str[] = {
+>         [MMOP_ONLINE_MOVABLE] = "online_movable",
+>  };
+>
+> -static int memhp_online_type_from_str(const char *str)
+> +int memhp_online_type_from_str(const char *str)
+>  {
+>         int i;
+>
+> @@ -394,13 +394,12 @@ static ssize_t auto_online_blocks_store(struct device *dev,
+>                                         struct device_attribute *attr,
+>                                         const char *buf, size_t count)
+>  {
+> -       if (sysfs_streq(buf, "online"))
+> -               memhp_default_online_type = MMOP_ONLINE;
+> -       else if (sysfs_streq(buf, "offline"))
+> -               memhp_default_online_type = MMOP_OFFLINE;
+> -       else
+> +       const int online_type = memhp_online_type_from_str(buf);
+> +
+> +       if (online_type < 0)
+>                 return -EINVAL;
+>
+> +       memhp_default_online_type = online_type;
+>         return count;
+>  }
+>
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 6d6f85bb66e9..93d9ada74ddd 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -118,6 +118,8 @@ extern int arch_add_memory(int nid, u64 start, u64 size,
+>                            struct mhp_params *params);
+>  extern u64 max_mem_size;
+>
+> +extern int memhp_online_type_from_str(const char *str);
+> +
+>  /* Default online_type (MMOP_*) when new memory blocks are added. */
+>  extern int memhp_default_online_type;
+>  /* If movable_node boot option specified */
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 4efcf8cb9ac5..89197163d138 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -74,10 +74,10 @@ int memhp_default_online_type = MMOP_ONLINE;
+>
+>  static int __init setup_memhp_default_state(char *str)
+>  {
+> -       if (!strcmp(str, "online"))
+> -               memhp_default_online_type = MMOP_ONLINE;
+> -       else if (!strcmp(str, "offline"))
+> -               memhp_default_online_type = MMOP_OFFLINE;
+> +       const int online_type = memhp_online_type_from_str(str);
+> +
+> +       if (online_type >= 0)
+> +               memhp_default_online_type = online_type;
+>
+>         return 1;
+>  }
+> --
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 
-TBH, I don't see how
-
-	if (force_dma_decrypted(dev))
-		set_memory_encrypted((unsigned long)cpu_addr, 1 << page_order);
-       
-makes more sense than the above. It's both non-sensical unless there is
-a big fat comment explaining what this is about.
-
-Thanks,
-
-        tglx
-
+> 2.24.1
+>
+>
