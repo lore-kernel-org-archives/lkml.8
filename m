@@ -6,64 +6,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8B8C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6402DC43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B3020757
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DA82076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:57:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgCSD47 (ORCPT
+        id S1727129AbgCSD5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 23:56:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16512 "EHLO
+        Wed, 18 Mar 2020 23:57:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51524 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727129AbgCSD46 (ORCPT
+        by vger.kernel.org with ESMTP id S1726596AbgCSD46 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Mar 2020 23:56:58 -0400
 Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02J3XgQw061829;
-        Wed, 18 Mar 2020 23:56:48 -0400
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02J3XhBh061937;
+        Wed, 18 Mar 2020 23:56:47 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8hwa1ub-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8hwa1u1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 23:56:48 -0400
+        Wed, 18 Mar 2020 23:56:47 -0400
 Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02J3Xk1U062261;
-        Wed, 18 Mar 2020 23:56:47 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8hwa1u4-1
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02J3XnFE062380;
+        Wed, 18 Mar 2020 23:56:46 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8hwa1th-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Mar 2020 23:56:47 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02J3jrKt017584;
-        Thu, 19 Mar 2020 03:56:47 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma04dal.us.ibm.com with ESMTP id 2yrpw6y66v-1
+        Wed, 18 Mar 2020 23:56:46 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02J3n2JH031043;
+        Thu, 19 Mar 2020 03:56:45 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma04wdc.us.ibm.com with ESMTP id 2yrpw6wnsu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Mar 2020 03:56:47 +0000
+        Thu, 19 Mar 2020 03:56:45 +0000
 Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02J3ukvq47710474
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02J3ug0O45285652
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Mar 2020 03:56:46 GMT
+        Thu, 19 Mar 2020 03:56:42 GMT
 Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1AEC0112069;
-        Thu, 19 Mar 2020 03:56:46 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CAE88112063;
+        by IMSVA (Postfix) with ESMTP id 45A32112066;
         Thu, 19 Mar 2020 03:56:42 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D9C28112062;
+        Thu, 19 Mar 2020 03:56:38 +0000 (GMT)
 Received: from skywalker.ibmuc.com (unknown [9.199.34.213])
         by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 19 Mar 2020 03:56:42 +0000 (GMT)
+        Thu, 19 Mar 2020 03:56:38 +0000 (GMT)
 From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 To:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         kvm-ppc@vger.kernel.org
 Cc:     npiggin@gmail.com, paulus@ozlabs.org, leonardo@linux.ibm.com,
         kirill@shutemov.name,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH v2 07/22] powerpc/perf/callchain: Use __get_user_pages_fast in read_user_stack_slow
-Date:   Thu, 19 Mar 2020 09:25:54 +0530
-Message-Id: <20200319035609.158654-8-aneesh.kumar@linux.ibm.com>
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Subject: [PATCH v2 06/22] powerpc/mce: Don't reload pte val in addr_to_pfn
+Date:   Thu, 19 Mar 2020 09:25:53 +0530
+Message-Id: <20200319035609.158654-7-aneesh.kumar@linux.ibm.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200319035609.158654-1-aneesh.kumar@linux.ibm.com>
 References: <20200319035609.158654-1-aneesh.kumar@linux.ibm.com>
@@ -73,7 +74,7 @@ X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
  definitions=2020-03-18_10:2020-03-18,2020-03-18 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ suspectscore=0 mlxlogscore=794 priorityscore=1501 impostorscore=0
  phishscore=0 clxscore=1015 adultscore=0 malwarescore=0 bulkscore=0
  lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2003190013
@@ -82,109 +83,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-read_user_stack_slow is called with interrupts soft disabled and it copies contents
-from the page which we find mapped to a specific address. To convert
-userspace address to pfn, the kernel now uses lockless page table walk.
+A lockless page table walk should be safe against parallel THP collapse, THP
+split and madvise(MADV_DONTNEED)/parallel fault. This patch makes sure kernel
+won't reload the pteval when checking for different conditions. The patch also added
+a check for pte_present to make sure the kernel is indeed operating
+on a PTE and not a pointer to level 0 table page.
 
-The kernel needs to make sure the pfn value read remains stable and is not released
-and reused for another process while the contents are read from the page. This
-can only be achieved by holding a page reference.
+The pfn value we find here can be different from the actual pfn on which
+machine check happened. This can happen if we raced with a parallel update
+of the page table. In such a scenario we end up isolating a wrong pfn. But that
+doesn't have any other side effect.
 
-One of the first approaches I tried was to check the pte value after the kernel
-copies the contents from the page. But as shown below we can still get it wrong
-
-CPU0                           CPU1
-pte = READ_ONCE(*ptep);
-                               pte_clear(pte);
-                               put_page(page);
-                               page = alloc_page();
-                               memcpy(page_address(page), "secret password", nr);
-memcpy(buf, kaddr + offset, nb);
-                               put_page(page);
-                               handle_mm_fault()
-                               page = alloc_page();
-                               set_pte(pte, page);
-if (pte_val(pte) != pte_val(*ptep))
-
-Hence switch to __get_user_pages_fast.
-
+Cc: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 ---
- arch/powerpc/perf/callchain.c | 53 ++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 32 deletions(-)
+ arch/powerpc/kernel/mce_power.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-index cbc251981209..7b7b3ff53180 100644
---- a/arch/powerpc/perf/callchain.c
-+++ b/arch/powerpc/perf/callchain.c
-@@ -107,46 +107,35 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
-  * On 64-bit we don't want to invoke hash_page on user addresses from
-  * interrupt context, so if the access faults, we read the page tables
-  * to find which page (if any) is mapped and access it directly.
-+
-+ * This should get called only if the PMU interrupt occurred while
-+ * interrupts are soft-disabled, and there is no MMU hash table entry
-+ * for the page . In this case we will get an -EFAULT return from
-+ * __get_user_inatomic even if there is a valid Linux PTE for the page,
-+ * since hash_page isn't reentrant.  Thus we have code here to read the
-+ * Linux PTE and access the page via the kernel linear mapping.
+diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
+index 1cbf7f1a4e3d..c1580fcf95ea 100644
+--- a/arch/powerpc/kernel/mce_power.c
++++ b/arch/powerpc/kernel/mce_power.c
+@@ -27,7 +27,7 @@
   */
- static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+ unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
  {
--	int ret = -EFAULT;
--	pgd_t *pgdir;
--	pte_t *ptep, pte;
--	unsigned shift;
-+
- 	unsigned long addr = (unsigned long) ptr;
- 	unsigned long offset;
--	unsigned long pfn, flags;
-+	struct page *page;
-+	int nrpages;
- 	void *kaddr;
+-	pte_t *ptep;
++	pte_t *ptep, pte;
+ 	unsigned int shift;
+ 	unsigned long pfn, flags;
+ 	struct mm_struct *mm;
+@@ -39,19 +39,23 @@ unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
  
--	pgdir = current->mm->pgd;
--	if (!pgdir)
--		return -EFAULT;
-+	nrpages = __get_user_pages_fast(addr, 1, 1, &page);
-+	if (nrpages == 1) {
-+		kaddr = page_address(page);
- 
--	local_irq_save(flags);
--	ptep = find_current_mm_pte(pgdir, addr, NULL, &shift);
--	if (!ptep)
--		goto err_out;
--	if (!shift)
--		shift = PAGE_SHIFT;
--
--	/* align address to page boundary */
--	offset = addr & ((1UL << shift) - 1);
--
--	pte = READ_ONCE(*ptep);
--	if (!pte_present(pte) || !pte_user(pte))
--		goto err_out;
--	pfn = pte_pfn(pte);
--	if (!page_is_ram(pfn))
--		goto err_out;
--
--	/* no highmem to worry about here */
--	kaddr = pfn_to_kaddr(pfn);
--	memcpy(buf, kaddr + offset, nb);
--	ret = 0;
--err_out:
--	local_irq_restore(flags);
--	return ret;
-+		/* align address to page boundary */
-+		offset = addr & ~PAGE_MASK;
-+
-+		memcpy(buf, kaddr + offset, nb);
-+		put_page(page);
-+		return 0;
+ 	local_irq_save(flags);
+ 	ptep = __find_linux_pte(mm->pgd, addr, NULL, &shift);
++	if (!ptep) {
++		pfn = ULONG_MAX;
++		goto out;
 +	}
-+	return -EFAULT;
- }
++	pte = READ_ONCE(*ptep);
  
- static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
+-	if (!ptep || pte_special(*ptep)) {
++	if (!pte_present(pte) || pte_special(pte)) {
+ 		pfn = ULONG_MAX;
+ 		goto out;
+ 	}
+ 
+ 	if (shift <= PAGE_SHIFT)
+-		pfn = pte_pfn(*ptep);
++		pfn = pte_pfn(pte);
+ 	else {
+ 		unsigned long rpnmask = (1ul << shift) - PAGE_SIZE;
+-		pfn = pte_pfn(__pte(pte_val(*ptep) | (addr & rpnmask)));
++		pfn = pte_pfn(__pte(pte_val(pte) | (addr & rpnmask)));
+ 	}
+-
+ out:
+ 	local_irq_restore(flags);
+ 	return pfn;
 -- 
 2.24.1
 
