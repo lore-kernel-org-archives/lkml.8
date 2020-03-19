@@ -2,102 +2,63 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7A0C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03688C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2EB2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BE020732
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCSKC1 (ORCPT
+        id S1727027AbgCSKDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:02:27 -0400
-Received: from comms.puri.sm ([159.203.221.185]:37248 "EHLO comms.puri.sm"
+        Thu, 19 Mar 2020 06:03:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39456 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgCSKC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:02:26 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 4D3CBDF787;
-        Thu, 19 Mar 2020 03:02:26 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hkicrNzMPrA9; Thu, 19 Mar 2020 03:02:25 -0700 (PDT)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     balbi@kernel.org
-Cc:     gregkh@linuxfoundation.org, sergei.shtylyov@cogentembedded.com,
-        rogerq@ti.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Subject: [PATCH v3] usb: dwc3: support continuous runtime PM with dual role
-Date:   Thu, 19 Mar 2020 11:02:07 +0100
-Message-Id: <20200319100207.19957-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
+        id S1725767AbgCSKDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:03:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2511BB14B;
+        Thu, 19 Mar 2020 10:03:14 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] x86/xen: Make the secondary CPU idle tasks
+ reliable
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, jpoimboe@redhat.com,
+        andrew.cooper3@citrix.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        xen-devel@lists.xenproject.org, jslaby@suse.cz
+References: <20200319095606.23627-1-mbenes@suse.cz>
+ <20200319095606.23627-3-mbenes@suse.cz>
+From:   Jan Beulich <jbeulich@suse.com>
+Message-ID: <2ca0a03c-734c-3a9e-90fd-8209046c5f01@suse.com>
+Date:   Thu, 19 Mar 2020 11:03:13 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200319095606.23627-3-mbenes@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DRD module calls dwc3_set_mode() on role switches, i.e. when a device is
-being plugged in. In order to support continuous runtime power management when
-plugging in / unplugging a cable, we need to call pm_runtime_get_sync() in
-this path.
+On 19.03.2020 10:56, Miroslav Benes wrote:
+> --- a/arch/x86/xen/smp_pv.c
+> +++ b/arch/x86/xen/smp_pv.c
+> @@ -53,6 +53,7 @@ static DEFINE_PER_CPU(struct xen_common_irq, xen_irq_work) = { .irq = -1 };
+>  static DEFINE_PER_CPU(struct xen_common_irq, xen_pmu_irq) = { .irq = -1 };
+>  
+>  static irqreturn_t xen_irq_work_interrupt(int irq, void *dev_id);
+> +extern unsigned char asm_cpu_bringup_and_idle[];
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
----
+Imo this would better reflect the actual type, i.e. be a function
+decl. If left as an array one, I guess you may want to add const.
 
-
-revision history
-----------------
-v3: call pm_runtime_get_sync() and fix commit message typo (thanks Sergei)
-v2: move pm_rumtime calls into workqueue (thanks Roger)
-    remove unrelated documentation patch
-    https://lore.kernel.org/linux-usb/7a085229-68a7-d700-1781-14225863a228@cogentembedded.com/T/
-v1: https://lore.kernel.org/linux-usb/ef22f8de-9bfd-c1d5-111c-696f1336dbda@puri.sm/T/
-
-
- drivers/usb/dwc3/core.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 1d85c42b9c67..da93faef74a6 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -121,17 +121,19 @@ static void __dwc3_set_mode(struct work_struct *work)
- 	if (dwc->dr_mode != USB_DR_MODE_OTG)
- 		return;
- 
-+	pm_runtime_get_sync(dwc->dev);
-+
- 	if (dwc->current_dr_role == DWC3_GCTL_PRTCAP_OTG)
- 		dwc3_otg_update(dwc, 0);
- 
- 	if (!dwc->desired_dr_role)
--		return;
-+		goto out;
- 
- 	if (dwc->desired_dr_role == dwc->current_dr_role)
--		return;
-+		goto out;
- 
- 	if (dwc->desired_dr_role == DWC3_GCTL_PRTCAP_OTG && dwc->edev)
--		return;
-+		goto out;
- 
- 	switch (dwc->current_dr_role) {
- 	case DWC3_GCTL_PRTCAP_HOST:
-@@ -190,6 +192,9 @@ static void __dwc3_set_mode(struct work_struct *work)
- 		break;
- 	}
- 
-+out:
-+	pm_runtime_mark_last_busy(dwc->dev);
-+	pm_runtime_put_autosuspend(dwc->dev);
- }
- 
- void dwc3_set_mode(struct dwc3 *dwc, u32 mode)
--- 
-2.20.1
-
+Jan
