@@ -2,197 +2,423 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA97C43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E60C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA7120767
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34B22076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:31:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ia8MLTXg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgCSX2S (ORCPT
+        id S1726998AbgCSXbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:28:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbgCSX1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:27:33 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0730220789;
-        Thu, 19 Mar 2020 23:27:33 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jF4ZX-000h5v-Th; Thu, 19 Mar 2020 19:27:31 -0400
-Message-Id: <20200319232731.799117803@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Thu, 19 Mar 2020 19:22:21 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Shuah Khan <shuahkhan@gmail.com>, bpf <bpf@vger.kernel.org>
-Subject: [PATCH 02/12 v2] tracing: Save off entry when peeking at next entry
-References: <20200319232219.446480829@goodmis.org>
+        Thu, 19 Mar 2020 19:31:05 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38887 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgCSXbE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 19:31:04 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z5so2272464pfn.5;
+        Thu, 19 Mar 2020 16:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zDUOxleUCZkbCu4VF6xcEU/hC9haWp52XB2hcVocx6Q=;
+        b=Ia8MLTXgsZ+RBlUMmrzM4z11Puv+GVEcoMOQoViJxOQyTRRjBt3J3co3k6CpcxE7rg
+         SVmEBAb2OhE5EVGeL1NqvF/C7YQDOi3lIV5PnvGEx5iNortqExgtILDkNYPwHAjWeey1
+         duVKkbCf5qg9K6cqMnSsH70ATHrsmHUjskyR67mxd/PsAHnap8xH/46YMRqZs7CG/mfZ
+         IweSvXuPbzmQ2aYWfYFy/jijvdFgyCNree171bQhLIbY0DEYUGAFHTzphkGsajd0BU62
+         DfDZoFVxkt/BK9MVXjx1FneOjcPcRoNha/7jWiEJEPmS3gl7v6LYJvcHaQUZIhQOhum2
+         Lw7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zDUOxleUCZkbCu4VF6xcEU/hC9haWp52XB2hcVocx6Q=;
+        b=V1sThoFZo2WrLfq0GuNNmgfl1uqVdNubvpQ7hQP62MGT/cojgkBqbmaqyL2nCgHmLw
+         AgxARNN+Kvp5NHNrKcOLzqD4L0SjZRmIGVEeez3sNV8yXUVsnF3qvhm4By8YciJOB+wj
+         obM6KVfHe1pWysNtGfD34MzVYVLqi+6E12dcIgUTJ5i/7OwCgZSMtxGaJ4cT7hAwPnbA
+         /sjebOQL3MLl/Z7GkPZ61/fOQVg24s5nhHVWa9POcHB0QEAl4fQALcLaaYc8lRJ+rx6A
+         v8ClrYNYZTKhqvEbLs/6Z6WmfHah5zg6jQW5erfKqe6vEAx5d2ts63ZKuF0s1+4Ub9KH
+         HdmQ==
+X-Gm-Message-State: ANhLgQ2xuWfqNjoSRd7WXWA66Gd22ilTNmAFW8GDPV1xcqVwkr49htHj
+        gU1BfRcDFWNWnv/qdB2jE5AW1Rkp
+X-Google-Smtp-Source: ADFU+vvllk5pgTFu/ycrDWKysxdKCi+GGFtNAof7GszsWT2pdN9f3sEYLNW4Si35r7tRwzMkoCQoGQ==
+X-Received: by 2002:a65:5a4f:: with SMTP id z15mr5193633pgs.103.1584660661756;
+        Thu, 19 Mar 2020 16:31:01 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g14sm3424827pfb.131.2020.03.19.16.30.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 16:31:01 -0700 (PDT)
+Subject: Re: [PATCH linux hwmon-next v1 1/3] hwmon: (sbtsi) Add basic support
+ for SB-TSI sensors
+To:     Kun Yi <kunyi@google.com>, jdelvare@suse.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     openbmc@lists.ozlabs.org, joel@jms.id.au,
+        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200319224812.202013-1-kunyi@google.com>
+ <20200319224812.202013-2-kunyi@google.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <476e9c68-4532-ec07-8244-5a8aa2fbc599@roeck-us.net>
+Date:   Thu, 19 Mar 2020 16:30:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+In-Reply-To: <20200319224812.202013-2-kunyi@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+On 3/19/20 3:48 PM, Kun Yi wrote:
+> SB Temperature Sensor Interface (SB-TSI) is an SMBus compatible
+> interface that reports AMD SoC's Ttcl (normalized temperature),
+> and resembles a typical 8-pin remote temperature sensor's I2C interface
+> to BMC.
+> 
+> This commit adds basic support using this interface to read CPU
+> temperature, and read/write high/low CPU temp thresholds.
+> 
+> Test status: tested reading temp1_input, and reading/writing
+> temp1_max/min.
+> 
 
-In order to have the iterator read the buffer even when it's still updating,
-it requires that the ring buffer iterator saves each event in a separate
-location outside the ring buffer such that its use is immutable.
+How do I instantiate this driver on a system with an AMD CPU
+(in other words, what is the i2c bus and the i2c address) ?
 
-There's one use case that saves off the event returned from the ring buffer
-interator and calls it again to look at the next event, before going back to
-use the first event. As the ring buffer iterator will only have a single
-copy, this use case will no longer be supported.
+> Signed-off-by: Kun Yi <kunyi@google.com>
+> ---
+>  drivers/hwmon/Kconfig      |  10 ++
+>  drivers/hwmon/Makefile     |   1 +
+>  drivers/hwmon/sbtsi_temp.c | 218 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 229 insertions(+)
+>  create mode 100644 drivers/hwmon/sbtsi_temp.c
+> 
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 05a30832c6ba..9585dcd01d1b 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1412,6 +1412,16 @@ config SENSORS_RASPBERRYPI_HWMON
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called raspberrypi-hwmon.
+>  
+> +config SENSORS_SBTSI
+> +	tristate "Emulated SB-TSI temperature sensor"
+> +	depends on I2C
+> +	help
+> +	  If you say yes here you get support for emulated temperature
+> +	  sensors on AMD SoCs with SB-TSI interface connected to a BMC device.
+> +
+> +	  This driver can also be built as a module. If so, the module will
+> +	  be called sbtsi_temp.
+> +
+>  config SENSORS_SHT15
+>  	tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
+>  	depends on GPIOLIB || COMPILE_TEST
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index b0b9c8e57176..cd109f003ce4 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -152,6 +152,7 @@ obj-$(CONFIG_SENSORS_POWR1220)  += powr1220.o
+>  obj-$(CONFIG_SENSORS_PWM_FAN)	+= pwm-fan.o
+>  obj-$(CONFIG_SENSORS_RASPBERRYPI_HWMON)	+= raspberrypi-hwmon.o
+>  obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
+> +obj-$(CONFIG_SENSORS_SBTSI)	+= sbtsi_temp.o
+>  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
+>  obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
+>  obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
+> diff --git a/drivers/hwmon/sbtsi_temp.c b/drivers/hwmon/sbtsi_temp.c
+> new file mode 100644
+> index 000000000000..f998d944a515
+> --- /dev/null
+> +++ b/drivers/hwmon/sbtsi_temp.c
+> @@ -0,0 +1,218 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * sbtsi_temp.c - hwmon driver for a SBI Temperature Sensor Interface (SB-TSI)
+> + *                compliant AMD SoC temperature device.
+> + *
+> + * Copyright (c) 2020, Google Inc.
+> + * Copyright (c) 2020, Kun Yi <kunyi@google.com>
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
+> +
+> +/*
+> + * SB-TSI registers only support SMBus byte data access. "_INT" registers are
+> + * the integer part of a temperature value or limit, and "_DEC" registers are
+> + * corresponding decimal parts.
+> + */
+> +#define SBTSI_REG_TEMP_INT		0x01 /* RO */
+> +#define SBTSI_REG_STATUS		0x02 /* RO */
+> +#define SBTSI_REG_CONFIG		0x03 /* RO */
+> +#define SBTSI_REG_TEMP_HIGH_INT		0x07 /* RW */
+> +#define SBTSI_REG_TEMP_LOW_INT		0x08 /* RW */
+> +#define SBTSI_REG_TEMP_DEC		0x10 /* RW */
+> +#define SBTSI_REG_TEMP_HIGH_DEC		0x13 /* RW */
+> +#define SBTSI_REG_TEMP_LOW_DEC		0x14 /* RW */
+> +#define SBTSI_REG_REV			0xFF /* RO */
+> +
+> +#define SBTSI_CONFIG_READ_ORDER_SHIFT	5
+> +
+> +#define SBTSI_TEMP_MIN	(0)
+> +#define SBTSI_TEMP_MAX	(255875)
+> +#define SBTSI_REV_MAX_VALID_ID	(4)
 
-Instead, have the one use case create its own buffer to store the first
-event when looking at the next event. This way, when looking at the first
-event again, it wont be corrupted by the second read.
+Unnecessary ( ) around literals.
 
-Link: http://lkml.kernel.org/r/20200317213415.722539921@goodmis.org
+> +
+> +struct sbtsi_data {
+> +	struct device *dev;
+> +	struct i2c_client *client;
+> +	struct mutex lock;
+> +};
+> +
+> +/*
+> + * From SB-TSI spec: CPU temperature readings and limit registers encode the
+> + * temperature in increments of 0.125 from 0 to 255.875. The "high byte"
+> + * register encodes the base-2 of the integer portion, and the upper 3 bits of
+> + * the "low byte" encode in base-2 the decimal portion.
+> + *
+> + * e.g. INT=0x19, DEC=0x20 represents 25.125 degrees Celsius
+> + *
+> + * Therefore temperature in millidegree Celsius =
+> + *   (INT + DEC / 256) * 1000 = (INT * 8 + DEC / 32) * 125
+> + */
+> +static inline int SBTSI_REGS_TO_TEMP(s32 integer, s32 decimal)
+> +{
+> +	return (((u32)integer << 3) + ((u32)decimal >> 5)) * 125;
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- include/linux/trace_events.h |  2 ++
- kernel/trace/trace.c         | 40 +++++++++++++++++++++++++++++++++++-
- kernel/trace/trace_output.c  | 15 ++++++--------
- 3 files changed, 47 insertions(+), 10 deletions(-)
+Why pass s32 as parameter just to typecast to u32 ? The values
+are known to be between 0 and 255, and thus will never be negative,
+even with s32, so this is really unnecessary.
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 6c7a10a6d71e..5c6943354049 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -85,6 +85,8 @@ struct trace_iterator {
- 	struct mutex		mutex;
- 	struct ring_buffer_iter	**buffer_iter;
- 	unsigned long		iter_flags;
-+	void			*temp;	/* temp holder */
-+	unsigned int		temp_size;
- 
- 	/* trace_seq for __print_flags() and __print_symbolic() etc. */
- 	struct trace_seq	tmp_seq;
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 02be4ddd4ad5..819e31d0d66c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3466,7 +3466,31 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
- struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
- 					  int *ent_cpu, u64 *ent_ts)
- {
--	return __find_next_entry(iter, ent_cpu, NULL, ent_ts);
-+	/* __find_next_entry will reset ent_size */
-+	int ent_size = iter->ent_size;
-+	struct trace_entry *entry;
-+
-+	/*
-+	 * The __find_next_entry() may call peek_next_entry(), which may
-+	 * call ring_buffer_peek() that may make the contents of iter->ent
-+	 * undefined. Need to copy iter->ent now.
-+	 */
-+	if (iter->ent && iter->ent != iter->temp) {
-+		if (!iter->temp || iter->temp_size < iter->ent_size) {
-+			kfree(iter->temp);
-+			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
-+			if (!iter->temp)
-+				return NULL;
-+		}
-+		memcpy(iter->temp, iter->ent, iter->ent_size);
-+		iter->temp_size = iter->ent_size;
-+		iter->ent = iter->temp;
-+	}
-+	entry = __find_next_entry(iter, ent_cpu, NULL, ent_ts);
-+	/* Put back the original ent_size */
-+	iter->ent_size = ent_size;
-+
-+	return entry;
- }
- 
- /* Find the next real entry, and increment the iterator to the next entry */
-@@ -4197,6 +4221,18 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 	if (!iter->buffer_iter)
- 		goto release;
- 
-+	/*
-+	 * trace_find_next_entry() may need to save off iter->ent.
-+	 * It will place it into the iter->temp buffer. As most
-+	 * events are less than 128, allocate a buffer of that size.
-+	 * If one is greater, then trace_find_next_entry() will
-+	 * allocate a new buffer to adjust for the bigger iter->ent.
-+	 * It's not critical if it fails to get allocated here.
-+	 */
-+	iter->temp = kmalloc(128, GFP_KERNEL);
-+	if (iter->temp)
-+		iter->temp_size = 128;
-+
- 	/*
- 	 * We make a copy of the current tracer to avoid concurrent
- 	 * changes on it while we are reading.
-@@ -4269,6 +4305,7 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
-  fail:
- 	mutex_unlock(&trace_types_lock);
- 	kfree(iter->trace);
-+	kfree(iter->temp);
- 	kfree(iter->buffer_iter);
- release:
- 	seq_release_private(inode, file);
-@@ -4344,6 +4381,7 @@ static int tracing_release(struct inode *inode, struct file *file)
- 
- 	mutex_destroy(&iter->mutex);
- 	free_cpumask_var(iter->started);
-+	kfree(iter->temp);
- 	kfree(iter->trace);
- 	kfree(iter->buffer_iter);
- 	seq_release_private(inode, file);
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index e25a7da79c6b..9a121e147102 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -617,22 +617,19 @@ int trace_print_context(struct trace_iterator *iter)
- 
- int trace_print_lat_context(struct trace_iterator *iter)
- {
-+	struct trace_entry *entry, *next_entry;
- 	struct trace_array *tr = iter->tr;
--	/* trace_find_next_entry will reset ent_size */
--	int ent_size = iter->ent_size;
- 	struct trace_seq *s = &iter->seq;
--	u64 next_ts;
--	struct trace_entry *entry = iter->ent,
--			   *next_entry = trace_find_next_entry(iter, NULL,
--							       &next_ts);
- 	unsigned long verbose = (tr->trace_flags & TRACE_ITER_VERBOSE);
-+	u64 next_ts;
- 
--	/* Restore the original ent_size */
--	iter->ent_size = ent_size;
--
-+	next_entry = trace_find_next_entry(iter, NULL, &next_ts);
- 	if (!next_entry)
- 		next_ts = iter->ts;
- 
-+	/* trace_find_next_entry() may change iter->ent */
-+	entry = iter->ent;
-+
- 	if (verbose) {
- 		char comm[TASK_COMM_LEN];
- 
--- 
-2.25.1
+> +}
+> +
+> +/*
+> + * Inversely, given temperature in millidegree Celsius
+> + *   INT = (TEMP / 125) / 8
+> + *   DEC = ((TEMP / 125) % 8) * 32
+> + * Caller have to make sure temp doesn't exceed 255875, the max valid value.
+> + */
+> +static inline void SBTSI_TEMP_TO_REGS(u32 temp, u8 *integer, u8 *decimal)
+> +{
+> +	temp /= 125;
+> +	*integer = temp >> 3;
+> +	*decimal = (temp & 0x7) << 5;
+> +}
+> +
+> +static ssize_t sbtsi_show_temp(struct device *dev,
+> +			       struct device_attribute *attr, char *buf)
+> +{
+> +	struct sbtsi_data *data = dev_get_drvdata(dev);
+> +	struct i2c_client *client = data->client;
+> +	s32 err, temp_int, temp_dec;
+> +	u8 read_order;
+> +
+> +	/*
+> +	 * ReadOrder bit specifies the reading order of integer and decimal
+> +	 * part of CPU temp for atomic reads. If bit == 0, reading integer part
+> +	 * triggers latching of the decimal part, so integer part should be read
+> +	 * first. If bit == 1, read order should be reversed.
+> +	 */
+> +	err = i2c_smbus_read_byte_data(client, SBTSI_REG_CONFIG);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	read_order = (u8)err & BIT(SBTSI_CONFIG_READ_ORDER_SHIFT);
+> +
+> +	if (read_order == 0) {
+> +		temp_int = i2c_smbus_read_byte_data(client, SBTSI_REG_TEMP_INT);
+> +		temp_dec = i2c_smbus_read_byte_data(client, SBTSI_REG_TEMP_DEC);
+> +	} else {
+> +		temp_dec = i2c_smbus_read_byte_data(client, SBTSI_REG_TEMP_DEC);
+> +		temp_int = i2c_smbus_read_byte_data(client, SBTSI_REG_TEMP_INT);
+> +	}
+> +
+> +	if (temp_int < 0)
+> +		return temp_int;
+> +	if (temp_dec < 0)
+> +		return temp_dec;
+> +
+> +	return scnprintf(buf, PAGE_SIZE, "%d\n",
+> +			 SBTSI_REGS_TO_TEMP(temp_int, temp_dec));
+> +}
+> +
+> +#define sbtsi_show_temp_limit(name, REG) \
+> +static ssize_t sbtsi_show_##name(struct device *dev, \
+> +				 struct device_attribute *attr, char *buf) \
+> +{ \
+> +	struct sbtsi_data *data = dev_get_drvdata(dev); \
+> +	struct i2c_client *client = data->client; \
+> +	s32 temp_int, temp_dec; \
+> +\
+> +	temp_int = i2c_smbus_read_byte_data(client, REG##_INT); \
+> +	temp_dec = i2c_smbus_read_byte_data(client, REG##_DEC); \
+> +\
+> +	if (temp_int < 0) \
+> +		return temp_int; \
+> +	if (temp_dec < 0) \
+> +		return temp_dec; \
+> +\
+> +	return scnprintf(buf, PAGE_SIZE, "%d\n", \
+> +			 SBTSI_REGS_TO_TEMP(temp_int, temp_dec)); \
+> +}
+> +
+> +sbtsi_show_temp_limit(temp1_min, SBTSI_REG_TEMP_LOW);
+> +sbtsi_show_temp_limit(temp1_max, SBTSI_REG_TEMP_HIGH);
+> +
+> +#define sbtsi_set_temp_limit(name, REG) \
+> +static ssize_t sbtsi_set_##name(struct device *dev, \
+> +				struct device_attribute *attr, \
+> +				const char *buf, size_t count) \
+> +{ \
+> +	struct sbtsi_data *data = dev_get_drvdata(dev); \
+> +	struct i2c_client *client = data->client; \
+> +	long val; \
+> +	u8 temp_int, temp_dec; \
+> +	int err = kstrtol(buf, 10, &val); \
+> +	if (err) \
+> +		return err; \
+> +\
+> +	val = clamp_val(val, SBTSI_TEMP_MIN, SBTSI_TEMP_MAX); \
+> +	mutex_lock(&data->lock); \
+> +	SBTSI_TEMP_TO_REGS(val, &temp_int, &temp_dec); \
+> +	i2c_smbus_write_byte_data(client, REG##_INT, temp_int); \
+> +	i2c_smbus_write_byte_data(client, REG##_DEC, temp_dec); \
+> +	mutex_unlock(&data->lock); \
+> +\
+> +	return count; \
+> +}
+> +
+> +sbtsi_set_temp_limit(temp1_min, SBTSI_REG_TEMP_LOW);
+> +sbtsi_set_temp_limit(temp1_max, SBTSI_REG_TEMP_HIGH);
+> +
+> +static SENSOR_DEVICE_ATTR(temp1_input, 0444, sbtsi_show_temp, NULL, 0);
+> +static SENSOR_DEVICE_ATTR(temp1_min, 0644, sbtsi_show_temp1_min,
+> +			  sbtsi_set_temp1_min, 1);
+> +static SENSOR_DEVICE_ATTR(temp1_max, 0644, sbtsi_show_temp1_max,
+> +			  sbtsi_set_temp1_max, 2);
+> +
+> +static struct attribute *sbtsi_attrs[] = {
+> +	&sensor_dev_attr_temp1_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp1_min.dev_attr.attr,
+> +	&sensor_dev_attr_temp1_max.dev_attr.attr,
+> +	NULL,
+> +};
+> +ATTRIBUTE_GROUPS(sbtsi);
+> +
+> +static int sbtsi_probe(struct i2c_client *client,
+> +		       const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct device *hwmon_dev;
+> +	struct sbtsi_data *data;
+> +
+> +	data = devm_kzalloc(dev, sizeof(struct sbtsi_data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->client = client;
+> +	mutex_init(&data->lock);
+> +
+> +	hwmon_dev =
+> +		devm_hwmon_device_register_with_groups(dev, client->name, data,
+> +						       sbtsi_groups);
 
+Please rewrite to use the devm_hwmon_device_register_with_info() API.
+
+> +	if (IS_ERR(hwmon_dev))
+> +		return PTR_ERR(hwmon_dev);
+> +
+> +	dev_info(dev, "sensor '%s'\n", client->name);
+
+Is that really valuable / necessary ?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id sbtsi_id[] = {
+> +	{"sbtsi", 0},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, sbtsi_id);
+> +
+> +static struct i2c_driver sbtsi_driver = {
+> +	.class = I2C_CLASS_HWMON,
+> +	.driver = {
+> +		.name = "sbtsi",
+> +	},
+> +	.probe = sbtsi_probe,
+> +	.id_table = sbtsi_id,
+> +};
+> +
+> +module_i2c_driver(sbtsi_driver);
+> +
+> +MODULE_AUTHOR("Kun Yi <kunyi@google.com>");
+> +MODULE_DESCRIPTION("Hwmon driver for AMD SB-TSI emulated sensor");
+> +MODULE_LICENSE("GPL");
+> 
 
