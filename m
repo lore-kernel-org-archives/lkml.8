@@ -2,124 +2,149 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15D0C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EB2C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF47F20773
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92A02076F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:15:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="lChQmtD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgCSDLb convert rfc822-to-8bit (ORCPT
+        id S1726840AbgCSDPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 23:11:31 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:54342 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726596AbgCSDLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 23:11:31 -0400
-Received: from dggeml405-hub.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 16FFCA3731E233D93E27;
-        Thu, 19 Mar 2020 11:11:27 +0800 (CST)
-Received: from DGGEML525-MBX.china.huawei.com ([169.254.1.76]) by
- dggeml405-hub.china.huawei.com ([10.3.17.49]) with mapi id 14.03.0487.000;
- Thu, 19 Mar 2020 11:11:21 +0800
-From:   "suqiang (C)" <suqiang4@huawei.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Liyou (leeyou, RTOS)" <leeyou.li@huawei.com>
-Subject: RE: [PATCH V2] UIO: make maximum memory and port regions
- configurable
-Thread-Topic: [PATCH V2] UIO: make maximum memory and port regions
- configurable
-Thread-Index: AQHV9FfY6xaIjrFlh02wx4Qa9y4FFKhNw2YAgAF/hUA=
-Date:   Thu, 19 Mar 2020 03:11:20 +0000
-Message-ID: <7AF579E0012A4E4FA1B0EC683F4B7F591F96D204@dggeml525-mbx.china.huawei.com>
-References: <20200307081008.26848-1-suqiang4@huawei.com>
- <20200318113352.GA2365557@kroah.com>
-In-Reply-To: <20200318113352.GA2365557@kroah.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.67.100.227]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 18 Mar 2020 23:15:14 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47565 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbgCSDPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 23:15:14 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48jX8X5w3qz9sPF;
+        Thu, 19 Mar 2020 14:15:08 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1584587710;
+        bh=rG0ZNtXeOAIDv6nCRsCIvY7aiOa2R5AcTzVNUoyUCUM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=lChQmtD0utfONPyZbRLEW+i1FS865SHM6yI7oEJ/I8vHdalR5I4FhRBQZUxh0tpel
+         VTqIUg9j2ZcNdmOXQixeNcm3twMifZ/pCiiBMaeZANmLR5oR8BVyd4B5G33uc+9oHl
+         zFjnoSM69uY4a1dP7ITQnF+3ia32Rka50mwbyLDP9PRdYuyt2q1jezDPjp06F/JgRd
+         brwMOdZp3XLIl1Dakg+h5s6KcVCvuld1AmsobLfc4d86CpMcgL566CN6mhmQQDKNf6
+         0EP65bsu2Q2+wS4MyeZqZk3uZAh9rKi4FvefRqmIEqJbtw4gWiex8mLMjUiRHn6yDy
+         UXukKabLCJuEQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>, shuah@kernel.org,
+        luto@amacapital.net, wad@chromium.org, daniel@iogearbox.net,
+        kafai@fb.com, yhs@fb.com, andriin@fb.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        khilman@baylibre.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v3] selftests: Fix seccomp to support relocatable build (O=objdir)
+In-Reply-To: <202003161404.934CCE0@keescook>
+References: <20200313212404.24552-1-skhan@linuxfoundation.org> <8736a8qz06.fsf@mpe.ellerman.id.au> <202003161404.934CCE0@keescook>
+Date:   Thu, 19 Mar 2020 14:15:11 +1100
+Message-ID: <87h7yldohs.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Greg,
-Thanks a lot for suggestion. I will add more information in these help texts and send PATCH V3 soon.
-Furthermore, of cause it is better to make these values dynamic and grow as needed by the system. A possible way is to manage memory and port resource by a dynamic list instead of a static array.
-But it costs more time to design and implement a better scheme. I will try it later and push patchs when it's finished.
-This patch is a temporary way better than nothing, and I hope it could be accept.
+Kees Cook <keescook@chromium.org> writes:
+> On Mon, Mar 16, 2020 at 11:12:57PM +1100, Michael Ellerman wrote:
+>> Shuah Khan <skhan@linuxfoundation.org> writes:
+>> > Fix seccomp relocatable builds. This is a simple fix to use the right
+>> > lib.mk variable TEST_GEN_PROGS with dependency on kselftest_harness.h
+>> > header, and defining LDFLAGS for pthread lib.
+>> >
+>> > Removes custom clean rule which is no longer necessary with the use of
+>> > TEST_GEN_PROGS. 
+>> >
+>> > Uses $(OUTPUT) defined in lib.mk to handle build relocation.
+>> >
+>> > The following use-cases work with this change:
+>> >
+>> > In seccomp directory:
+>> > make all and make clean
+>> >
+>> > From top level from main Makefile:
+>> > make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc \
+>> >  CROSS_COMPILE=aarch64-linux-gnu- TARGETS=seccomp
+>> >
+>> > Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>> > ---
+>> >
+>> > Changes since v2:
+>> > -- Using TEST_GEN_PROGS is sufficient to generate objects.
+>> >    Addresses review comments from Kees Cook.
+>> >
+>> >  tools/testing/selftests/seccomp/Makefile | 18 ++++++++----------
+>> >  1 file changed, 8 insertions(+), 10 deletions(-)
+>> >
+>> > diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
+>> > index 1760b3e39730..a0388fd2c3f2 100644
+>> > --- a/tools/testing/selftests/seccomp/Makefile
+>> > +++ b/tools/testing/selftests/seccomp/Makefile
+>> > @@ -1,17 +1,15 @@
+>> >  # SPDX-License-Identifier: GPL-2.0
+>> > -all:
+>> > -
+>> > -include ../lib.mk
+>> > +CFLAGS += -Wl,-no-as-needed -Wall
+>> > +LDFLAGS += -lpthread
+>> >  
+>> >  .PHONY: all clean
+>> >  
+>> > -BINARIES := seccomp_bpf seccomp_benchmark
+>> > -CFLAGS += -Wl,-no-as-needed -Wall
+>> > +include ../lib.mk
+>> > +
+>> > +# OUTPUT set by lib.mk
+>> > +TEST_GEN_PROGS := $(OUTPUT)/seccomp_bpf $(OUTPUT)/seccomp_benchmark
+>> >  
+>> > -seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
+>> > -	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
+>> > +$(TEST_GEN_PROGS): ../kselftest_harness.h
+>> >  
+>> > -TEST_PROGS += $(BINARIES)
+>> > -EXTRA_CLEAN := $(BINARIES)
+>> > +all: $(TEST_GEN_PROGS)
+>> >  
+>> > -all: $(BINARIES)
+>> 
+>> 
+>> It shouldn't be that complicated. We just need to define TEST_GEN_PROGS
+>> before including lib.mk, and then add the dependency on the harness
+>> after we include lib.mk (so that TEST_GEN_PROGS has been updated to
+>> prefix $(OUTPUT)).
+>> 
+>> eg:
+>> 
+>>   # SPDX-License-Identifier: GPL-2.0
+>>   CFLAGS += -Wl,-no-as-needed -Wall
+>>   LDFLAGS += -lpthread
+>>   
+>>   TEST_GEN_PROGS := seccomp_bpf seccomp_benchmark
+>>   
+>>   include ../lib.mk
+>>   
+>>   $(TEST_GEN_PROGS): ../kselftest_harness.h
+>
+> Exactly. This (with an extra comment) is precisely what I suggested during
+> v2 review:
+> https://lore.kernel.org/lkml/202003041815.B8C73DEC@keescook/
 
-thanks,
-Qiang Su
+Oh sorry, I missed that.
 
------Original Message-----
-From: Greg KH [mailto:gregkh@linuxfoundation.org] 
-Sent: Wednesday, March 18, 2020 7:34 PM
-To: suqiang (C) <suqiang4@huawei.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] UIO: make maximum memory and port regions configurable
+OK so I think we know what the right solution is.
 
-On Sat, Mar 07, 2020 at 04:10:08PM +0800, Qiang Su wrote:
-> Now each uio device can only support 5 memory regions and
-> 5 port regions. It is far from enough for some big system.
-> On the other hand, the hard-coded style is not flexible.
-> 
-> Consider the marco is used as array index, so a range for the config 
-> is set in menuconfig. The range is set as 1 to 512.
-> The default value is still set as 5 to keep consistent with current 
-> code.
-> 
-> Signed-off-by: Qiang Su <suqiang4@huawei.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> ---
-> Changes since v1:
-> - also make port regions configurable in menuconfig.
-> - fix kbuild errors.
-> ---
->  drivers/uio/Kconfig        | 18 ++++++++++++++++++
->  include/linux/uio_driver.h |  4 ++--
->  2 files changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig index 
-> 202ee81cfc2b..cee7d93cfea2 100644
-> --- a/drivers/uio/Kconfig
-> +++ b/drivers/uio/Kconfig
-> @@ -165,4 +165,22 @@ config UIO_HV_GENERIC
->  	  to network and storage devices from userspace.
->  
->  	  If you compile this as a module, it will be called uio_hv_generic.
-> +
-> +config MAX_UIO_MAPS
-> +	depends on UIO
-> +	int "Maximum of memory nodes each uio device support(1-512)"
-> +	range 1 512
-> +	default 5
-> +	help
-> +	  make the max number of memory regions in uio device configurable.
-> +
-> +config MAX_UIO_PORT_REGIONS
-> +	depends on UIO
-> +	int "Maximum of port regions each uio device support(1-512)"
-> +	range 1 512
-> +	default 5
-> +	help
-> +	  make the max number of port regions in uio device configurable.
-
-
-Can you provide a lot more information in these help texts?  Explain why you would ever want to change these values, and that if you do not understand, just take the default ones.
-
-Or, better yet, can we just make these values dynamic and grow as needed by the system?  Why are they "fixed"?
-
-thanks,
-
-greg k-h
+cheers
