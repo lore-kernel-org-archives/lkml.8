@@ -2,138 +2,94 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A3FC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C9CC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B871620724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584632955;
-	bh=Og0HIKIkiN/fo+UUAiNjwmu2SNnF9lBxvD5U1TRSBhI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Xca2XMa+1i5ZbbnN9VkcWyB9CvZTtW86U6Y/NcNMgHpMhGjx7p6VhJSrQE7hl1XNh
-	 FoH7yfa5IwFrKFFYpWi70bhZAVxy6yaiAK452cCe8TNo/aHjSwnt2rJg3u+IGVIdkN
-	 8VXUYxTkN3H+4jIdsLLVFaK8aMi+frkhI7ejJtCA=
+	by mail.kernel.org (Postfix) with ESMTP id CE02020724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:49:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gN5ZTlCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbgCSPtO (ORCPT
+        id S1727825AbgCSPtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:49:14 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:42387 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbgCSPtO (ORCPT
+        Thu, 19 Mar 2020 11:49:25 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33974 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727265AbgCSPtY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:49:14 -0400
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 02JFmuqs029340;
-        Fri, 20 Mar 2020 00:48:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 02JFmuqs029340
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1584632937;
-        bh=8ePxFKbmCNPyEVXbZg9bxrLPtjJ0hIQvHoR+u5cuXlk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TWHYuVJqAJHGT2J/QN0ivaoF5RblRJztHn1gOuaI3JETl0zptVkq8T5+IXuCK4qj7
-         J89oQxTtEECTesBc5eApZqSSN4GdC62fWYMLAJTkoWV7+IHOEqftqrZ5NcBiwkhwBM
-         CxSC3NIpyv2BLiPHF0F6YJ6ea+sb138b1q+pSfQJl8gPsJbsU46roHObS5Zt/EYKoR
-         jH/q0j4XKsj4S6mt9Mo3OS5rPK96/XmRnxu5efm0jfFAwaydKqu2eDmic7ZYZjw0Jc
-         FeJt19pNG2spVwm5aNFlLXinGseNnLC5Lq40skmNx100yljF3Lzq9kKKlqEW/Ja1xD
-         kCiKka1weSc7A==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id m9so1953761vso.2;
-        Thu, 19 Mar 2020 08:48:57 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0uhvPfo7XoYRjUcAUEanC2Gx95ToKSplt7/0UBhgFBqtNE6d7A
-        o52kYKPOpOZ9Af3Q01wRBBbs6q5pPj7pcvw3PfQ=
-X-Google-Smtp-Source: ADFU+vuE+c3n/dpA4yyF3d1WQF2dPe5+qKC0jhqbTt6w2aU3d4Li83bNqcwgm5RvBt3ESyOremdAfr8BAiJJv9QTriU=
-X-Received: by 2002:a67:33cb:: with SMTP id z194mr2807732vsz.155.1584632936269;
- Thu, 19 Mar 2020 08:48:56 -0700 (PDT)
+        Thu, 19 Mar 2020 11:49:24 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j16so2876862otl.1;
+        Thu, 19 Mar 2020 08:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=eIpAPE4bbOBAfFME9IvVmrEoKjf4SO3wxrl/1DOrGIY=;
+        b=gN5ZTlCBPhL4PM0smB2Er8TdtB7xP/S8N49KJdA4jXznoCyPm8a9l7PPuDEJ32M6Pq
+         0+orHcX2Kdb9VfyyZPM88Mvymyz5C+/cRG6dMz0pTfninMN95lvEE04k9JqWCQpZUb6v
+         oRuw+dRmUzHpvooUma0ewLJVwWJAu7GJlYEOWanGT43+ao5y7qVTn06x7Q+plRSafRKD
+         CS23YgJ+TSZSX+Tm0fxJHIzXbJIFXCuKtGMDMpZF+AI1vF2cmjXcj8l7Qo3lESGJFlbf
+         b6lcSMjmCYZDQAbDKDA0lXPxsPcV0eGTiXTtZXnBzjstQoz57ho62v748ROxDrFFWdFG
+         jE5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=eIpAPE4bbOBAfFME9IvVmrEoKjf4SO3wxrl/1DOrGIY=;
+        b=VC/T3gJ3hGSBS4igF/0ftBFAIo4LScsGfG6MEjh8xGs/j24c2gh0x2bi3D1VktnXbo
+         z1hV/V9BG9eBwaKi4obGFTnMJPMgXZSmArEVGTGBnb2rNUN2QcGX7RfAp7JNBaesVVeT
+         gftd/cFHlGyiy8zrL6lPQwU2oV1llrUNfhhzRxVU6f4GO0+z5Vr5eSFp360hOlQU09/a
+         QY6wLbGjbWDbxWJa5N7Xxo0X60w+xdgBk4/Ev8biGiaY5zU/MqR6D+K2dMIfA2pRURwS
+         c7UKfB63MYQhuqEtqT94WvTa8YXaqtaIk/rCKBqaihf/xUzujmQvlFFzkwvLjQwXBLgS
+         kV9A==
+X-Gm-Message-State: ANhLgQ0mTQijXDOwCEBslhD6YXRLIpOpqP08q30p+GPq7ZYIR+CjHD3X
+        +uUTRQFtR/tfb8pdiM2ftGA9QLgR
+X-Google-Smtp-Source: ADFU+vu61VibsoJNbsbH4t3WztE1aIItFEhgyby8gN8WkalhC0OtAfI3yreiPcnBK95dC0UsebsWuA==
+X-Received: by 2002:a9d:720a:: with SMTP id u10mr2678439otj.177.1584632963787;
+        Thu, 19 Mar 2020 08:49:23 -0700 (PDT)
+Received: from raspberrypi (99-189-78-97.lightspeed.austtx.sbcglobal.net. [99.189.78.97])
+        by smtp.gmail.com with ESMTPSA id n20sm903083ota.54.2020.03.19.08.49.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 08:49:23 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 10:49:21 -0500
+From:   Grant Peltier <grantpeltier93@gmail.com>
+To:     linux@roeck-us.net, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     adam.vaughn.xh@renesas.com
+Subject: [PATCH v2 0/2] hwmon: (pmbus) add support for Gen 2 Renesas digital
+ multiphase
+Message-ID: <cover.1584568073.git.grantpeltier93@gmail.com>
 MIME-Version: 1.0
-References: <20200311223725.27662-2-masahiroy@kernel.org> <202003121230.lys3M8E8%lkp@intel.com>
- <CAK7LNARwR5X2C_VzK_3RZo+30Cu3uPuiw-rFUut1j8azLhbxAA@mail.gmail.com> <20200312083943.GA7278@alpha.franken.de>
-In-Reply-To: <20200312083943.GA7278@alpha.franken.de>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 20 Mar 2020 00:48:20 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT8AVh8PawDsUoStjYMsOq-DLJbW30SpX7hDDJHZNCd9g@mail.gmail.com>
-Message-ID: <CAK7LNAT8AVh8PawDsUoStjYMsOq-DLJbW30SpX7hDDJHZNCd9g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] kbuild: link lib-y objects to vmlinux forcibly
- when CONFIG_MODULES=y
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
-        kbuild-all@lists.01.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "sparclinux@vger.kernel.org, David S . Miller" <davem@davemloft.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ilie Halip <ilie.halip@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+The patch series adds support for 2nd generation Renesas digitial multiphase
+voltage regulators. This functionality extends the existing ISL68137 PMBus
+driver.
 
-On Thu, Mar 12, 2020 at 5:40 PM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
->
-> On Thu, Mar 12, 2020 at 03:12:28PM +0900, Masahiro Yamada wrote:
-> > I got the following report from 0-day bot.
-> > Please advise me how to fix it.
-> >
-> >
-> > I am not sure how multi-platform works in MIPS.
-> >
-> > The cavium-octeon platform has its own implementation
-> > of various functions.
-> >
-> > So, vmlinux links different library routines
-> > depending on whether CONFIG_CAVIUM_OCTEON_SOC, correct?
->
-> for cavium memcpy is directly linked in via octeon-memcpy.o, while for
-> every other platform it's coming from lib/lib.a(memcpy.o).
->
-> What have you changed, that this doesn't work anymore ?
->
-> Thomas.
+The series contains 2 patches:
+  - patch #1 adds extends the ISL68137 driver to support Gen 2 devices
+  - patch #2 adds documentation for the newly supported devices
 
+Grant Peltier (2):
+  hwmon: (pmbus) add support for 2nd Gen Renesas digital multiphase
+  docs: hwmon: Update documentation for isl68137 pmbus driver
 
-I want to change all objects from lib-y
-to be linked to vmlinux (exactly like obj-y )
-if CONFIG_MODULES is enabled.
-
-https://patchwork.kernel.org/patch/11432969/
-
-
-EXPORT_SYMBOL in libraries
-must be linked to vmlinux all the time,
-even if there is no call-site in vmlinux.
-I believe this is a good simplification because
-EXPORT_SYMBOL is interface to loadable modules.
-
-As it turned out, lib-y is (ab)used to avoid
-multiple definition errors.
-
-The 0-day detected a bug of 32-bit sparc:
-https://patchwork.kernel.org/patch/11432969/
-
-And, another is this one.
-
-MIPS relies on that
-arch/mips/lib/lib.a is weaker than octeon ones.
-
-So, annotating __weak is a good solution
-(thanks Nick!).
-
-If I send a patch, is it acceptable?
-
+ Documentation/hwmon/isl68137.rst | 541 ++++++++++++++++++++++++++++++-
+ drivers/hwmon/pmbus/Kconfig      |   6 +-
+ drivers/hwmon/pmbus/isl68137.c   | 112 ++++++-
+ 3 files changed, 633 insertions(+), 26 deletions(-)
 
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
