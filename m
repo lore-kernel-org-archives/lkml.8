@@ -2,100 +2,178 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAB6C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4629C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1DA206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:42:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="d5VoNCh0"
+	by mail.kernel.org (Postfix) with ESMTP id AF27820722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgCSJmZ (ORCPT
+        id S1726982AbgCSJqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:42:25 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:39647 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726947AbgCSJmY (ORCPT
+        Thu, 19 Mar 2020 05:46:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50140 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726589AbgCSJqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:42:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584610944; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=iz2nU03/8cnH2TUu7+7ztdtrDhkWYNP0IQa4F/BXqP4=; b=d5VoNCh0q2ppD512szBole6DhqhjKB5///q0mkFKiaEYlJP3p3d0b4KvJmnpLRS3a9kM2UFq
- D6CZA0PFTB4hCSFJMMNZYOyn9DIoK5gy54qT1IZ8S/HWdQOBuy1CQOtVzrQJwZPdwCEH6Ztf
- f2YDrNRStSiYInDzBVwYMQ5C2Jw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e733e7f.7fec72c78a08-smtp-out-n01;
- Thu, 19 Mar 2020 09:42:23 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 55451C44792; Thu, 19 Mar 2020 09:42:23 +0000 (UTC)
-Received: from [192.168.0.103] (unknown [106.51.30.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 08BB1C433CB;
-        Thu, 19 Mar 2020 09:42:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 08BB1C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Cc:     sboyd@kernel.org, georgi.djakov@linaro.org, saravanak@google.com,
-        nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
- <20200318034243.o2metmggzuah6cqw@vireshk-i7>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
-Date:   Thu, 19 Mar 2020 15:12:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200318034243.o2metmggzuah6cqw@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 19 Mar 2020 05:46:05 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02J9WqpP104235
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 05:46:04 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yua2byrx7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 05:46:03 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 19 Mar 2020 09:46:02 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 19 Mar 2020 09:45:59 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02J9jwOc54853638
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Mar 2020 09:45:58 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3CECDAE051;
+        Thu, 19 Mar 2020 09:45:58 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE824AE055;
+        Thu, 19 Mar 2020 09:45:56 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.203.81])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Mar 2020 09:45:56 +0000 (GMT)
+Subject: Re: [PATCH v3 7/8] ima: Calculate and extend PCR with digests in
+ ima_template_entry
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "James.Bottomley@HansenPartnership.com" 
+        <James.Bottomley@HansenPartnership.com>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Thu, 19 Mar 2020 05:45:55 -0400
+In-Reply-To: <7df041fd4cd64a5bb61beb4eb8276819@huawei.com>
+References: <20200210100418.22049-1-roberto.sassu@huawei.com>
+         <1583208222.8544.168.camel@linux.ibm.com>
+         <fecf59c1880045769bfecc17b5670ac5@huawei.com>
+         <1584568492.5188.200.camel@linux.ibm.com>
+         <7df041fd4cd64a5bb61beb4eb8276819@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031909-0016-0000-0000-000002F3C23E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031909-0017-0000-0000-000033574B39
+Message-Id: <1584611155.5188.214.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_01:2020-03-18,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 malwarescore=0 suspectscore=0 clxscore=1015 phishscore=0
+ priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003190043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/18/2020 9:12 AM, Viresh Kumar wrote:
-> On 18-03-20, 02:13, Sibi Sankar wrote:
->> On 2020-01-28 01:33, Sibi Sankar wrote:
->>> This RFC series aims to extend cpu based scaling support to L3/DDR on
->>> SDM845 and SC7180 SoCs.
->>>
->>
->> Hey Viresh/Saravana,
->>
->> Ping! Can you take a stab at reviewing
->> the series, it has been on the list for
->> a while now.
+On Thu, 2020-03-19 at 08:31 +0000, Roberto Sassu wrote:
+> > -----Original Message-----
+> > From: linux-integrity-owner@vger.kernel.org [mailto:linux-integrity-
+> > owner@vger.kernel.org] On Behalf Of Mimi Zohar
+> > Sent: Wednesday, March 18, 2020 10:55 PM
+> > To: Roberto Sassu <roberto.sassu@huawei.com>;
+> > James.Bottomley@HansenPartnership.com;
+> > jarkko.sakkinen@linux.intel.com
+> > Cc: linux-integrity@vger.kernel.org; linux-security-module@vger.kernel.org;
+> > linux-kernel@vger.kernel.org; Silviu Vlasceanu
+> > <Silviu.Vlasceanu@huawei.com>
+> > Subject: Re: [PATCH v3 7/8] ima: Calculate and extend PCR with digests in
+> > ima_template_entry
+> > 
+> > On Wed, 2020-03-18 at 12:42 +0000, Roberto Sassu wrote:
+> > > > -----Original Message-----
+> > > > From: owner-linux-security-module@vger.kernel.org [mailto:owner-
+> > linux-
+> > > > security-module@vger.kernel.org] On Behalf Of Mimi Zohar
+> > > > Sent: Tuesday, March 3, 2020 5:04 AM
+> > > > To: Roberto Sassu <roberto.sassu@huawei.com>;
+> > > > James.Bottomley@HansenPartnership.com;
+> > > > jarkko.sakkinen@linux.intel.com
+> > > > Cc: linux-integrity@vger.kernel.org; linux-security-
+> > module@vger.kernel.org;
+> > > > linux-kernel@vger.kernel.org; Silviu Vlasceanu
+> > > > <Silviu.Vlasceanu@huawei.com>
+> > > > Subject: Re: [PATCH v3 7/8] ima: Calculate and extend PCR with digests
+> > in
+> > > > ima_template_entry
+> > > >
+> > > > On Mon, 2020-02-10 at 11:04 +0100, Roberto Sassu wrote:
+> > > >
+> > > > > @@ -219,6 +214,8 @@ int ima_restore_measurement_entry(struct
+> > > > ima_template_entry *entry)
+> > > > >
+> > > > >  int __init ima_init_digests(void)
+> > > > >  {
+> > > > > +	u16 digest_size;
+> > > > > +	u16 crypto_id;
+> > > > >  	int i;
+> > > > >
+> > > > >  	if (!ima_tpm_chip)
+> > > > > @@ -229,8 +226,17 @@ int __init ima_init_digests(void)
+> > > > >  	if (!digests)
+> > > > >  		return -ENOMEM;
+> > > > >
+> > > > > -	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++)
+> > > > > +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
+> > > > >  		digests[i].alg_id = ima_tpm_chip->allocated_banks[i].alg_id;
+> > > > > +		digest_size = ima_tpm_chip->allocated_banks[i].digest_size;
+> > > > > +		crypto_id = ima_tpm_chip->allocated_banks[i].crypto_id;
+> > > > > +
+> > > > > +		/* for unmapped TPM algorithms digest is still a padded
+> > > > SHA1 */
+> > > > > +		if (crypto_id == HASH_ALGO__LAST)
+> > > > > +			digest_size = SHA1_DIGEST_SIZE;
+> > > > > +
+> > > > > +		memset(digests[i].digest, 0xff, digest_size);
+> > > >
+> > > > Shouldn't the memset here be of the actual digest size even for
+> > > > unmapped TPM algorithms.
+> > >
+> > > This is consistent with ima_calc_field_array_hash(), so that a verifier
+> > > will always pad the SHA1 digest with zeros to obtain the final PCR value.
+> > >
+> > > I can set all bytes if you prefer.
+> > 
+> > My concern is with violations.  The measurement list will be padded
+> > with 0's, but the value being extended into the TPM will only
+> > partially be 0xFF's.  When verifying the measurement list, replacing
+> > all 0x00's with all 0xFF's is simpler.
 > 
-> I believe this depends on Saravana's series on which I have raised
-> some doubts few weeks back ? I am still waiting for them to get
-> clarified by him.
+> If the TPM algorithm is unknown, the starting point is the SHA1 digest.
+> If there is a violation, this should be the one to be modified. Then, after
+> that, padding is done for all entries in the same way, regardless of
+> whether the entry is a violation or not.
 
-Could you please post a link to the discussion that you are referring to here?
-I looked at a few links posted in the cover letter as dependencies and it seems
-like the discussions are pending for *months* and not weeks but I might have looked
-at the wrong ones.
+Ok.  In the case that the verifier supports the hash algorithm and
+calculates the template hash, walking the measurement list will fail
+anyway.  In the case that the verifier does not support the hash
+algorithm, then it will pad/truncate the SHA1 hash consistently.  That
+works for now with the SHA1 based measurement list and should work
+with a hash agile measurement list.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+thanks,
+
+Mimi
+
