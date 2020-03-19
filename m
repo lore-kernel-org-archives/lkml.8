@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589EEC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0490C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236A120409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E5320409
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624844;
-	bh=CeS4ZfFNTDnHjmaCoZDg4O8W798qKPZe6yPihomZS+k=;
+	s=default; t=1584624846;
+	bh=MNISfiGq26FrWPxt9X9i15XovzbjQzDF8bZvT5s9xpc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BHZXZW7207dZiN9Cl2NQkmw85a1BclXaj61rCz/3G2jrKPMNnLShc3ocnkFGRQ80G
-	 VnXiwTNN0gNC80wfP7jsEmYJgVRqBMG72PF6x+sawp83eaOFEKYfELHh3LycwQGuxP
-	 jtvk0EPc1r+9BJOJ9ZyVYGdsSgF6Bzqy8S003sNE=
+	b=lHheDr7eryuSYLjdpr0xJ946GejrNtlLkbs69G3NkCpxlx9c9uB9B91Y5wjBAl+aq
+	 ugYQjLSJq8JDDgv7CBMVqbqb1RLy78FLS2EWsvBzSVeb5vhDuINvfbvCgPsPPOevP+
+	 FSixZoZGeD6N7t8OheC1TaR7314kH0RXls1gsYas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgCSNNK (ORCPT
+        id S1728553AbgCSNNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:13:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59824 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:13:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729074AbgCSNNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:13:04 -0400
+        id S1729060AbgCSNNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:13:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A66021556;
-        Thu, 19 Mar 2020 13:13:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6C8221841;
+        Thu, 19 Mar 2020 13:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623583;
-        bh=CeS4ZfFNTDnHjmaCoZDg4O8W798qKPZe6yPihomZS+k=;
+        s=default; t=1584623581;
+        bh=MNISfiGq26FrWPxt9X9i15XovzbjQzDF8bZvT5s9xpc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MPatmkjJavrDQZDcZADlac1MWEIi17kyqkJ5p/OIlHoS0tVV6+QkSep8tz9pzUhKX
-         1kADT7lY8ScFVgcBCzoxxZx0V+9RnbMpIXv3VuWgsw7q007Dqye0fNC+To5cUT7sY1
-         JBG+Nz+4BS3C0gV4Q2JTJMP/gKsTmNcasW+HiOlA=
+        b=edOhnWkXRnGoDHigGLejfCiWPgScHwXC9cvigATEqnr63Xz87hwlaaLR27cX1XXai
+         l5+Cj24MyODrhnLP1MdAEnwB2TsR0Ve62jhp1mukSeMUJG0jYjJgnahokam1Uu4F2h
+         xeRmSN7ntdpCwWFsY3Ca9DaRj96K2TmdhsS9gwA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sven Eckelmann <sven.eckelmann@open-mesh.com>,
+        Sven Eckelmann <sven.eckelmann@openmesh.com>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 59/90] batman-adv: Always initialize fragment header priority
-Date:   Thu, 19 Mar 2020 14:00:21 +0100
-Message-Id: <20200319123946.794943115@linuxfoundation.org>
+Subject: [PATCH 4.9 58/90] batman-adv: Avoid spurious warnings from bat_v neigh_cmp implementation
+Date:   Thu, 19 Mar 2020 14:00:20 +0100
+Message-Id: <20200319123946.481092472@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -59,33 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven.eckelmann@open-mesh.com>
+From: Sven Eckelmann <sven.eckelmann@openmesh.com>
 
-commit fe77d8257c4d838c5976557ddb87bd789f312412 upstream.
+commit 6a4bc44b012cbc29c9d824be2c7ab9eac8ee6b6f upstream.
 
-The batman-adv unuicast fragment header contains 3 bits for the priority of
-the packet. These bits will be initialized when the skb->priority contains
-a value between 256 and 263. But otherwise, the uninitialized bits from the
-stack will be used.
+The neighbor compare API implementation for B.A.T.M.A.N. V checks whether
+the neigh_ifinfo for this neighbor on a specific interface exists. A
+warning is printed when it isn't found.
 
-Fixes: c0f25c802b33 ("batman-adv: Include frame priority in fragment header")
-Signed-off-by: Sven Eckelmann <sven.eckelmann@open-mesh.com>
+But it is not called inside a lock which would prevent that this
+information is lost right before batadv_neigh_ifinfo_get. It must therefore
+be expected that batadv_v_neigh_(cmp|is_sob) might not be able to get the
+requested neigh_ifinfo.
+
+A WARN_ON for such a situation seems not to be appropriate because this
+will only flood the kernel logs. The warnings must therefore be removed.
+
+Signed-off-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/fragmentation.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/batman-adv/bat_v.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/net/batman-adv/fragmentation.c
-+++ b/net/batman-adv/fragmentation.c
-@@ -484,6 +484,8 @@ int batadv_frag_send_packet(struct sk_bu
- 	 */
- 	if (skb->priority >= 256 && skb->priority <= 263)
- 		frag_header.priority = skb->priority - 256;
-+	else
-+		frag_header.priority = 0;
+--- a/net/batman-adv/bat_v.c
++++ b/net/batman-adv/bat_v.c
+@@ -19,7 +19,6 @@
+ #include "main.h"
  
- 	ether_addr_copy(frag_header.orig, primary_if->net_dev->dev_addr);
- 	ether_addr_copy(frag_header.dest, orig_node->orig);
+ #include <linux/atomic.h>
+-#include <linux/bug.h>
+ #include <linux/cache.h>
+ #include <linux/errno.h>
+ #include <linux/if_ether.h>
+@@ -623,11 +622,11 @@ static int batadv_v_neigh_cmp(struct bat
+ 	int ret = 0;
+ 
+ 	ifinfo1 = batadv_neigh_ifinfo_get(neigh1, if_outgoing1);
+-	if (WARN_ON(!ifinfo1))
++	if (!ifinfo1)
+ 		goto err_ifinfo1;
+ 
+ 	ifinfo2 = batadv_neigh_ifinfo_get(neigh2, if_outgoing2);
+-	if (WARN_ON(!ifinfo2))
++	if (!ifinfo2)
+ 		goto err_ifinfo2;
+ 
+ 	ret = ifinfo1->bat_v.throughput - ifinfo2->bat_v.throughput;
+@@ -649,11 +648,11 @@ static bool batadv_v_neigh_is_sob(struct
+ 	bool ret = false;
+ 
+ 	ifinfo1 = batadv_neigh_ifinfo_get(neigh1, if_outgoing1);
+-	if (WARN_ON(!ifinfo1))
++	if (!ifinfo1)
+ 		goto err_ifinfo1;
+ 
+ 	ifinfo2 = batadv_neigh_ifinfo_get(neigh2, if_outgoing2);
+-	if (WARN_ON(!ifinfo2))
++	if (!ifinfo2)
+ 		goto err_ifinfo2;
+ 
+ 	threshold = ifinfo1->bat_v.throughput / 4;
 
 
