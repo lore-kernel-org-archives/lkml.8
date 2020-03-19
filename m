@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19963C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C72AC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF2B20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FEFF20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="O2K0uP9L"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ayDLz5wY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbgCSXHl (ORCPT
+        id S1727620AbgCSXJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:07:41 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.38]:22178 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727377AbgCSXHl (ORCPT
+        Thu, 19 Mar 2020 19:09:40 -0400
+Received: from gateway33.websitewelcome.com ([192.185.145.9]:28189 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727258AbgCSXJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:07:41 -0400
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id DED9677FE
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:07:39 -0500 (CDT)
+        Thu, 19 Mar 2020 19:09:39 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id E8DD930BAE
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:09:38 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id F4GJjZw5B8vkBF4GJjQxVi; Thu, 19 Mar 2020 18:07:39 -0500
+        id F4IEjlRnLAGTXF4IEjBNbG; Thu, 19 Mar 2020 18:09:38 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,17 +36,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=10e20ftHbNBtdbV6audFvzsWbL3yXsySetTvF2M/Lq8=; b=O2K0uP9L/sLPmqZfto8eZ9Auuz
-        3wwFpugnOnD//3aPNsBC2Yfrzs9P6q6SVPUTEmkWvRkFqr4geqD9awCrpXtgP7er9l3St8GVs32Hu
-        11vLzovX1rQ/e+aP/2W7gAwQsVwPOL7QP/w7UlC8fD817SuFG+J3gBHp2Hwc6UcQUO21Ve7FkVTB8
-        0LjnIhDC4DjjHNmIREHMNIJd7TRB5yDDzrEv5VJzOTWZTqXsKI7ISNA0pqQvKivZSC2Z6iEJ1DzPg
-        knO42HE5DxsaCGw4WkYv3bYFHwApBAfTf3it+gbpU39jgYutPu98w1QiP748MluBFdyIXYhrALmwp
-        bAt84OQA==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:54038 helo=embeddedor)
+        bh=sQw+xjq5+WUJP7rhAnVh9p35OyAlvz4DhIGg/W9Bo1E=; b=ayDLz5wYvqjcoLy7zs/4VkaZlH
+        Hd/BG0qT9NFzyMG5Ae+DNwyxzCjExZ5N0EZNw2RXcJdJDXu3OxqV2PNb1CT1Y+R6IqeNKOkaSEP13
+        9PbapJaxcJq/0KPUVIp4W+XCx05fY3vN8+/9ENVO9l8PwuSkBBdGLKK5nkL11khGCsG6IFRg8CzzP
+        bpw9bd3JfHFr5GxL3opfwYwOxpRO/ZzcrxSfr2E5H+dnlyxwvYJMIgkAsDEw7pxlo9RkbtFW4azjJ
+        yJb9BDRaPt2/yJ9yUW32/nXW+VxAM3stl/9P4WTDiMObnNtnx7m4m68OFaqA+3uGkUVsxhSZ3gS9C
+        qS91LuwQ==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:54046 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jF4GI-002PZ0-A4; Thu, 19 Mar 2020 18:07:38 -0500
-Date:   Thu, 19 Mar 2020 18:07:37 -0500
+        id 1jF4ID-002QMW-CK; Thu, 19 Mar 2020 18:09:37 -0500
+Date:   Thu, 19 Mar 2020 18:09:37 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 To:     Dan Williams <dan.j.williams@intel.com>,
         Vishal Verma <vishal.l.verma@intel.com>,
@@ -54,9 +54,9 @@ To:     Dan Williams <dan.j.williams@intel.com>,
         Ira Weiny <ira.weiny@intel.com>
 Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] nvdimm: label.h: Replace zero-length array with
+Subject: [PATCH][next] nvdimm: nd.h: Replace zero-length array with
  flexible-array member
-Message-ID: <20200319230737.GA16452@embeddedor.com>
+Message-ID: <20200319230937.GA16648@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -69,13 +69,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.218.116.241
 X-Source-L: No
-X-Exim-ID: 1jF4GI-002PZ0-A4
+X-Exim-ID: 1jF4ID-002QMW-CK
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:54038
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:54046
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 16
+X-Email-Count: 22
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -113,22 +113,31 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/nvdimm/label.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvdimm/nd.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
-index 4c7b775c2811..956b6d1bd8cc 100644
---- a/drivers/nvdimm/label.h
-+++ b/drivers/nvdimm/label.h
-@@ -62,7 +62,7 @@ struct nd_namespace_index {
- 	__le16 major;
- 	__le16 minor;
- 	__le64 checksum;
--	u8 free[0];
-+	u8 free[];
+diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+index c4d69c1cce55..85dbb2a322b9 100644
+--- a/drivers/nvdimm/nd.h
++++ b/drivers/nvdimm/nd.h
+@@ -39,7 +39,7 @@ struct nd_region_data {
+ 	int ns_count;
+ 	int ns_active;
+ 	unsigned int hints_shift;
+-	void __iomem *flush_wpq[0];
++	void __iomem *flush_wpq[];
  };
  
- /**
+ static inline void __iomem *ndrd_get_flush_wpq(struct nd_region_data *ndrd,
+@@ -157,7 +157,7 @@ struct nd_region {
+ 	struct nd_interleave_set *nd_set;
+ 	struct nd_percpu_lane __percpu *lane;
+ 	int (*flush)(struct nd_region *nd_region, struct bio *bio);
+-	struct nd_mapping mapping[0];
++	struct nd_mapping mapping[];
+ };
+ 
+ struct nd_blk_region {
 -- 
 2.23.0
 
