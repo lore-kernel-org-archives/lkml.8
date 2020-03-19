@@ -2,258 +2,95 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B882AC43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33841C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85DC92078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584642845;
-	bh=aSzeNKA/8TX/Y7EejyLEcmemd9UmM1Kf2QqLAC4wcGM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D3ww5RBPy5j7p83S8lvdiXRPggpvzr8lp31AG5D1ksA0MKZ6jB7jriE6O3Kl4tXVE
-	 Furv78/ANxhSr6C92oCX3wB+Y0OS7FsdbIKRgkznNJiJgkhs59bxhgq2VX8j6W40vD
-	 4h/TN7AKlnhZLU3seExvczWTwg2nMDC433ruOg8c=
+	by mail.kernel.org (Postfix) with ESMTP id 0C92F20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbgCSSeE (ORCPT
+        id S1727298AbgCSSfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:34:04 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:45206 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSSeE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:34:04 -0400
-Received: by mail-il1-f195.google.com with SMTP id m9so3182739ilq.12;
-        Thu, 19 Mar 2020 11:34:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uPWry8RY6+hi4eAi0Y1bb3DGJuUvwAMEt6jfhx00FwM=;
-        b=K9und+luTVy4/G+VrvPCn7W/giNS7QujmIs4i6w64rJBMAM1i9Khxem4WanFrG/bRd
-         5Rctr0ea0zrn9sZAWlcWhlNlODrT86xCfjp3k9WJsbFl7VqUajLzw7sKau2H8e7KbF+h
-         XETUey7Cnmd4vfHFAKZEKpYEskwok9nWZPMKQvPYYQydNQLRWbHq+KzwjgHp6Uu/ZiYF
-         w30qQFzZdrYiRR+spKr63DEJ2m9QUts8XzT4xogTdLaXXJDzlIYUHzx2ECj3KLoX/mbo
-         pT4BwVXENACa5FqO7UjZ/H1cnbC9neYBFExZ5P1uu4PfzaaK2j/hKr6T8LXsiAZBSueK
-         XPkA==
-X-Gm-Message-State: ANhLgQ0/j8jgc7ENBmLVUAUgGHmyuatKlNhok7P7V2fSuH7gd5KMHRCH
-        BShCOG1X5XAYnOC8eNIuLDW/KrY=
-X-Google-Smtp-Source: ADFU+vs1k4gpcdfKiMfAtAb7CaNrV8yNwy8ti//ggPn+OEJyJsCKN0w4f4f/ANYejiLSsUVzM5ackg==
-X-Received: by 2002:a92:9149:: with SMTP id t70mr4864882ild.114.1584642842382;
-        Thu, 19 Mar 2020 11:34:02 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id z1sm1124712ilq.83.2020.03.19.11.34.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 11:34:01 -0700 (PDT)
-Received: (nullmailer pid 24310 invoked by uid 1000);
-        Thu, 19 Mar 2020 18:33:58 -0000
-Date:   Thu, 19 Mar 2020 12:33:58 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com
-Subject: Re: [PATCH v13 4/6] dt-bindings: display: mediatek: convert the
- document format from txt to yaml
-Message-ID: <20200319183358.GA17237@bogus>
-References: <20200311071823.117899-1-jitao.shi@mediatek.com>
- <20200311071823.117899-5-jitao.shi@mediatek.com>
+        Thu, 19 Mar 2020 14:35:05 -0400
+Received: from mga06.intel.com ([134.134.136.31]:62956 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgCSSfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:35:05 -0400
+IronPort-SDR: aGi4gm73iQn5HhSs+wQX+zY6b0Ee7GPbNotxzldgHMaY2NAF/2qv98TBVlccbvZWB1Chx3fyZF
+ OZvVMTqteIOA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 11:35:04 -0700
+IronPort-SDR: 8PJ20HU+/1aAUtKkXBhL4ENr19sfOFgV1IzgPk5go10JOk0SJ1/gsJeVsaEb18kxxu80xGUxGu
+ /TeOiOTXzOxA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="356117527"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.249.128.140]) ([10.249.128.140])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Mar 2020 11:35:02 -0700
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, curtis@malainey.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        liam.r.girdwood@linux.intel.com
+References: <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+ <20200318215218.GA2439@light.dominikbrodowski.net>
+ <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+ <20200319130049.GA2244@light.dominikbrodowski.net>
+ <20200319134139.GB3983@sirena.org.uk>
+ <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
+ <20200319165157.GA2254@light.dominikbrodowski.net>
+ <a7bf2aee-78e7-f905-bcc3-cd21bf16a976@intel.com>
+ <20200319182413.GA3968@light.dominikbrodowski.net>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <750f7841-0b95-9fa8-d858-e0bff4d834d5@intel.com>
+Date:   Thu, 19 Mar 2020 19:35:00 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200311071823.117899-5-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200319182413.GA3968@light.dominikbrodowski.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 03:18:21PM +0800, Jitao Shi wrote:
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  .../display/mediatek/mediatek,dpi.txt         |  45 --------
->  .../display/mediatek/mediatek,dpi.yaml        | 103 ++++++++++++++++++
->  2 files changed, 103 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
->  create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+On 2020-03-19 19:24, Dominik Brodowski wrote:
+> On Thu, Mar 19, 2020 at 06:33:50PM +0100, Cezary Rojewski wrote:
+>>
+>> Could you confirm the same happens on your machine when revert of mentioned
+>> patch is not applied ("stream is NULL" messages occur)? Issue may be
+>> harmless but explained sequence does not look right.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> deleted file mode 100644
-> index 2dfb50a7321e..000000000000
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> +++ /dev/null
-> @@ -1,45 +0,0 @@
-> -Mediatek DPI Device
-> -===================
-> -
-> -The Mediatek DPI function block is a sink of the display subsystem and
-> -provides 8-bit RGB/YUV444 or 8/10/10-bit YUV422 pixel data on a parallel
-> -output bus.
-> -
-> -Required properties:
-> -- compatible: "mediatek,<chip>-dpi"
-> -  the supported chips are mt2701 , mt8173 and mt8183.
-> -- reg: Physical base address and length of the controller's registers
-> -- interrupts: The interrupt signal from the function block.
-> -- clocks: device clocks
-> -  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-> -- clock-names: must contain "pixel", "engine", and "pll"
-> -- port: Output port node with endpoint definitions as described in
-> -  Documentation/devicetree/bindings/graph.txt. This port should be connected
-> -  to the input port of an attached HDMI or LVDS encoder chip.
-> -
-> -Optional properties:
-> -- pinctrl-names: Contain "default" and "sleep".
-> -  pinctrl-names see Documentation/devicetree/bindings/pinctrlpinctrl-bindings.txt
-> -- pclk-sample: refer Documentation/devicetree/bindings/media/video-interfaces.txt.
-> -
-> -Example:
-> -
-> -dpi0: dpi@1401d000 {
-> -	compatible = "mediatek,mt8173-dpi";
-> -	reg = <0 0x1401d000 0 0x1000>;
-> -	interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-> -	clocks = <&mmsys CLK_MM_DPI_PIXEL>,
-> -		 <&mmsys CLK_MM_DPI_ENGINE>,
-> -		 <&apmixedsys CLK_APMIXED_TVDPLL>;
-> -	clock-names = "pixel", "engine", "pll";
-> -	pinctrl-names = "default", "sleep";
-> -	pinctrl-0 = <&dpi_pin_func>;
-> -	pinctrl-1 = <&dpi_pin_idle>;
-> -
-> -	port {
-> -		dpi0_out: endpoint {
-> -			pclk-sample = <0>;
-> -			remote-endpoint = <&hdmi0_in>;
-> -		};
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
-> new file mode 100644
-> index 000000000000..d65543e3bf8c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
-> @@ -0,0 +1,103 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/mediatek/mediatek,dpi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: mediatek DPI Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - CK Hu <ck.hu@mediatek.com>
-> +  - Jitao shi <jitao.shi@mediatek.com>
-> +
-> +description: |
-> +  The Mediatek DPI function block is a sink of the display subsystem and
-> +  provides 8-bit RGB/YUV444 or 8/10/10-bit YUV422 pixel data on a parallel
-> +  output bus.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt2701-dpi
-> +      - mediatek,mt8173-dpi
-> +      - mediatek,mt8183-dpi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Pixel Clock
-> +      - description: Engine Clock
-> +      - description: DPI PLL
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pixel
-> +      - const: engine
-> +      - const: pll
-> +
-> +  pinctrl-0: true
-> +  pinctrl-1: true
-> +
-> +  pinctrl-names:
-> +    items:
-> +      - const: default
-> +      - const: sleep
-> +
-> +  port@0:
-> +    type: object
-> +    description:
-> +      Output port node with endpoint definitions as described in
-> +      Documentation/devicetree/bindings/graph.txt. This port should be connected
-> +      to the input port of an attached HDMI or LVDS encoder chip.
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +
-> +        properties:
-> +          pclk-sample:
-> +            items:
-> +            - description: refer Documentation/devicetree/bindings/media/video-interfaces.txt.
+> Indeed, I still see
+> 
+> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to reset, ignore it.
+> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to free, ignore it.
+> haswell-pcm-audio haswell-pcm-audio: FW loaded, mailbox readback FW info: type 01, - version: 00.00, build 77, source commit id: 876ac6906f31a43b6772b23c7c983ce9dcb18a19
+> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to reset, ignore it.
+> haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to free, ignore it.
+> 
+> though sounds continues to work.
+> 
 
-This is not an array.
+Thanks once again for your input and time!
 
-Just 'pclk-sample: true' if both values are allowed or 'const: 0|1' if 
-only one value is allowed.
+I'll prepare patches for both issues. My guess is haswell-pcm could be 
+updated to handle 'platform' component param just fine, but it is 
+probably a change of more than few lines. I'd rather revert non-SOF 
+broadwell to its previous behavior and start a separate task from there.
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - port@0
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/mt8173-clk.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    dpi0: dpi@1401d000 {
-> +        compatible = "mediatek,mt8173-dpi";
-> +        reg = <0 0x1401d000 0 0x1000>;
-> +        interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-> +        clocks = <&mmsys CLK_MM_DPI_PIXEL>,
-> +             <&mmsys CLK_MM_DPI_ENGINE>,
-> +             <&apmixedsys CLK_APMIXED_TVDPLL>;
-> +        clock-names = "pixel", "engine", "pll";
-> +        pinctrl-names = "default", "sleep";
-> +        pinctrl-0 = <&dpi_pin_func>;
-> +        pinctrl-1 = <&dpi_pin_idle>;
-> +
-> +        port@0 {
-> +            dpi0_out: endpoint {
-> +                pclk-sample = <0>;
-> +                remote-endpoint = <&hdmi0_in>;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.21.0
+Regards,
+Czarek
