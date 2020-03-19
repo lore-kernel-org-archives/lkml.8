@@ -2,131 +2,335 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCD3C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF08C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF00A20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476222070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584643416;
-	bh=16Mv0Bki/NfvJX5iwDxd/8tDdJeb33292LnGanZEgHk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jgPILBBakyWYIiHydVX/eXL3U3ouh+qGEAGt04REbwEhYPdLfnrlhCYHfNK27jawm
-	 qe6ZJsYU7KmSh5pXzxh4CqONVD1iTxWPdhLfKOlq/vwBAI8FgtsdMa23kYF1LwRpVP
-	 pY6iJsc14ALvMa8YSm1BqDzntu+BWCCh+otq8JVE=
+	s=default; t=1584643495;
+	bh=mM5nGIDcjsfWVCpA6t2E2z7xMd2k+5fWSJ9CsgWWJwg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PMzPtgZmzJROKG5Mx4D1SGN0xbXx2QifnckbRAVXsMA7+8AfKUgxGtLm+Rjgs4+OC
+	 WS2EjjIBgfigJ7hdEx1MbAQQv0xnI57bJVOAQPoXrR534APUYn9sQXhrElDsXugE/K
+	 RGEhEjdTX6WeooUXicTz3gbBd1n4fkIajNZxOaRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgCSSnf (ORCPT
+        id S1727406AbgCSSoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:43:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSSnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:43:35 -0400
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E3FE208E4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584643414;
-        bh=16Mv0Bki/NfvJX5iwDxd/8tDdJeb33292LnGanZEgHk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gZnE0N1zX3N4hrpdEBg3hayONMFggbn4LZXMYyZpsRN0k2dZjof1Jfd1Qmvhdh93+
-         sGF9hoGmQ3D9O6lCKLVt/Fn4A0XRLnor5uOC07hgnzJMuGptsX7jsAEzADkZqINynv
-         dtZbN5mYI74zyy3gDrcqFJNyDt6bH15ZmZzbPenY=
-Received: by mail-wm1-f50.google.com with SMTP id d1so3578708wmb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 11:43:34 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3dKMJNm/28MNKF/IBrU5UTL0BRmVihKwSyKSapWPFHbhIL5nyT
-        SXltR5CLByjlzj+oVsoPbKBi3qwTqOTA1zhVvjl+vw==
-X-Google-Smtp-Source: ADFU+vv10cBd6Yipt9Fp30VfQsiUak847hkVmmyNfiLI7ndWg3gIIQhdPQtda5z9gYC13rmpADmNaW86Fu4VfLkwdyA=
-X-Received: by 2002:a1c:1904:: with SMTP id 4mr765861wmz.21.1584643412632;
- Thu, 19 Mar 2020 11:43:32 -0700 (PDT)
+        Thu, 19 Mar 2020 14:44:54 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:33588 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgCSSoy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:44:54 -0400
+Received: by mail-il1-f195.google.com with SMTP id k29so3288039ilg.0;
+        Thu, 19 Mar 2020 11:44:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bVPAncL4ha8NzXJXnSG+TdF+CX13q8qFXUMxFUpVobg=;
+        b=H7xIHM+Ak0f/wWrmPCNoeDqlX+W6MNpcmbCbDKBJehYJwq77ItAB6IcfNzxTLOAR7y
+         kNz57vNR/I0O5+3bpiwGGuZ6Av/SbAJgp4bsEmTtP/ajmJ7FtsAoHH493ABR/ejlR7RP
+         NvKAyK2ZQZ2oiZpJ8sJnV0RVonZaIGmM0aD3x/wFhcyoKsByBZKlHYVBgJC4/hG36ySN
+         NW8nYY1cKffkleadeyNUXTb0I8/9rDUWKLs2fCAdxAqoyCgCSO0vJyqqLngwtQZdizhI
+         lS9/JmuvihM+5j7rfQyMtCqFby5SeLO00NcsZvtEY06BL2DOYPzMXI9SXg4nvgGeNXVv
+         VjiA==
+X-Gm-Message-State: ANhLgQ37oi/gKFInZlfSBinymvuahp2WCpkQ7ZMZseuQASCdIydGCc5G
+        7K4Vb7RkG3a/VEzMypVVUmhR/SU=
+X-Google-Smtp-Source: ADFU+vvu4Vv92C+H/lSWRi/W8dPRz5KT9K9C6qwdOT/iLO8CZnHanXV9AtW71HUA3ivLh8Qpd7lmPQ==
+X-Received: by 2002:a92:b61d:: with SMTP id s29mr4542370ili.66.1584643492422;
+        Thu, 19 Mar 2020 11:44:52 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id s69sm1150358ill.73.2020.03.19.11.44.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 11:44:51 -0700 (PDT)
+Received: (nullmailer pid 10183 invoked by uid 1000);
+        Thu, 19 Mar 2020 18:44:48 -0000
+Date:   Thu, 19 Mar 2020 12:44:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        broonie@kernel.org, vigneshr@ti.com, devicetree@vger.kernel.org,
+        boris.brezillon@free-electrons.com,
+        simon.k.r.goldschmidt@gmail.com, dinguyen@kernel.org,
+        tien.fong.chee@intel.com, marex@denx.de,
+        linux-mtd@lists.infradead.org, dwmw2@infradead.org, richard@nod.at,
+        computersforpeace@gmail.com, cyrille.pitchen@atmel.com,
+        david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com,
+        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v12 1/4] dt-bindings: spi: Add schema for Cadence QSPI
+ Controller driver
+Message-ID: <20200319184448.GA25121@bogus>
+References: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200310015213.1734-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-References: <20200319091407.1481-1-joro@8bytes.org> <20200319091407.1481-42-joro@8bytes.org>
- <CALCETrW9EYi5dzCKNtKkxM18CC4n5BZxTp1=qQ5qZccwstXjzg@mail.gmail.com> <20200319162439.GE5122@8bytes.org>
-In-Reply-To: <20200319162439.GE5122@8bytes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 19 Mar 2020 11:43:20 -0700
-X-Gmail-Original-Message-ID: <CALCETrW6LOwEfjJz-S7fFJvPqgr9BoCkRG2MA-Pk6K_y_rmGHg@mail.gmail.com>
-Message-ID: <CALCETrW6LOwEfjJz-S7fFJvPqgr9BoCkRG2MA-Pk6K_y_rmGHg@mail.gmail.com>
-Subject: Re: [PATCH 41/70] x86/sev-es: Add Runtime #VC Exception Handler
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200310015213.1734-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 9:24 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> On Thu, Mar 19, 2020 at 08:44:03AM -0700, Andy Lutomirski wrote:
-> > On Thu, Mar 19, 2020 at 2:14 AM Joerg Roedel <joro@8bytes.org> wrote:
-> > >
-> > > From: Tom Lendacky <thomas.lendacky@amd.com>
-> > >
-> > > Add the handler for #VC exceptions invoked at runtime.
-> >
-> > If I read this correctly, this does not use IST.  If that's true, I
-> > don't see how this can possibly work.  There at least two nasty cases
-> > that come to mind:
-> >
-> > 1. SYSCALL followed by NMI.  The NMI IRET hack gets to #VC and we
-> > explode.  This is fixable by getting rid of the NMI EFLAGS.TF hack.
->
-> Not an issue in this patch-set, the confusion comes from the fact that I
-> left some parts of the single-step-over-iret code in the patch. But it
-> is not used. The NMI handling in this patch-set sends the NMI-complete
-> message before the IRET, when the kernel is still in a safe environment
-> (kernel stack, kernel cr3).
+On Tue, Mar 10, 2020 at 09:52:10AM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> Add dt-bindings documentation for Cadence-QSPI controller to support
+> spi based flash memories.
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> ---
+>  .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
+>  .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 127 +++++++++++++++++++++
+>  2 files changed, 127 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> deleted file mode 100644
+> index 945be7d5b236..000000000000
+> --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> +++ /dev/null
+> @@ -1,67 +0,0 @@
+> -* Cadence Quad SPI controller
+> -
+> -Required properties:
+> -- compatible : should be one of the following:
+> -	Generic default - "cdns,qspi-nor".
+> -	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
+> -	For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
+> -- reg : Contains two entries, each of which is a tuple consisting of a
+> -	physical address and length. The first entry is the address and
+> -	length of the controller register set. The second entry is the
+> -	address and length of the QSPI Controller data area.
+> -- interrupts : Unit interrupt specifier for the controller interrupt.
+> -- clocks : phandle to the Quad SPI clock.
+> -- cdns,fifo-depth : Size of the data FIFO in words.
+> -- cdns,fifo-width : Bus width of the data FIFO in bytes.
+> -- cdns,trigger-address : 32-bit indirect AHB trigger address.
+> -
+> -Optional properties:
+> -- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
+> -- cdns,rclk-en : Flag to indicate that QSPI return clock is used to latch
+> -  the read data rather than the QSPI clock. Make sure that QSPI return
+> -  clock is populated on the board before using this property.
+> -
+> -Optional subnodes:
+> -Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
+> -custom properties:
+> -- cdns,read-delay : Delay for read capture logic, in clock cycles
+> -- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
+> -                  mode chip select outputs are de-asserted between
+> -		  transactions.
+> -- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
+> -                  de-activated and the activation of another.
+> -- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
+> -                  transaction and deasserting the device chip select
+> -		  (qspi_n_ss_out).
+> -- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
+> -                  and first bit transfer.
+> -- resets	: Must contain an entry for each entry in reset-names.
+> -		  See ../reset/reset.txt for details.
+> -- reset-names	: Must include either "qspi" and/or "qspi-ocp".
+> -
+> -Example:
+> -
+> -	qspi: spi@ff705000 {
+> -		compatible = "cdns,qspi-nor";
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -		reg = <0xff705000 0x1000>,
+> -		      <0xffa00000 0x1000>;
+> -		interrupts = <0 151 4>;
+> -		clocks = <&qspi_clk>;
+> -		cdns,is-decoded-cs;
+> -		cdns,fifo-depth = <128>;
+> -		cdns,fifo-width = <4>;
+> -		cdns,trigger-address = <0x00000000>;
+> -		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
+> -		reset-names = "qspi", "qspi-ocp";
+> -
+> -		flash0: n25q00@0 {
+> -			...
+> -			cdns,read-delay = <4>;
+> -			cdns,tshsl-ns = <50>;
+> -			cdns,tsd2d-ns = <50>;
+> -			cdns,tchsh-ns = <4>;
+> -			cdns,tslch-ns = <4>;
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> new file mode 100644
+> index 000000000000..d21f80604af4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> @@ -0,0 +1,127 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence QSPI Flash Controller support
+> +
+> +maintainers:
+> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> +
+> +allOf:
+> +  - $ref: "spi-controller.yaml#"
+> +
+> +description: |
+> +  Binding Documentation for Cadence QSPI controller,This controller is
+> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
+> +  has been tested On Intel's LGM SoC.
+> +
+> +properties:
+> +  compatible:
+> +     enum:
+> +       - cdns,qspi-nor
+> +       - ti,k2g-qspi
+> +       - ti,am654-ospi
+> +       - intel,lgm-qspi
+> +
+> +  reg:
+> +    maxItems: 2
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  cdns,fifo-depth:
+> +    description:
+> +     Depth of hardware FIFOs.
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> +      - enum: [ 128, 256 ]
+> +      - default: 128
+> +
+> +  cdns,fifo-width:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      4 byte bus width of the data FIFO in bytes.
+> +
+> +  cdns,trigger-address:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      32-bit indirect AHB trigger address.
+> +
+> +  cdns,rclk-en:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Flag to indicate that QSPI return clock is used to latch the read data
+> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
+> +      on the board before using this property.
 
-Got it!
+Sounds like a boolean rather than a uint32? If not, then constraints on 
+the values?
 
->
-> > 2. tools/testing/selftests/x86/mov_ss_trap_64.  User code does MOV
-> > (addr), SS; SYSCALL, where addr has a data breakpoint.  We get #DB
-> > promoted to #VC with no stack.
->
-> Also not an issue, as debugging is not supported at the moment in SEV-ES
-> guests (hardware has no way yet to save/restore the debug registers
-> across #VMEXITs). But this will change with future hardware. If you look
-> at the implementation for dr7 read/write events, you see that the dr7
-> value is cached and returned, but does not make it to the hardware dr7.
+> +# subnode's properties
+> +patternProperties:
+> +  "^.*@[0-9a-fA-F]+$":
 
-Eek.  This would probably benefit from some ptrace / perf logic to
-prevent the kernel or userspace from thinking that debugging works.
+How many chip selects do you support? The unit-address can be limited as 
+I'd guess it's less than 16. Also, should be lowercase hex.
 
-I guess this means that #DB only happens due to TF or INT01.  I
-suppose this is probably okay.
+> +    type: object
+> +    description:
+> +      flash device uses the subnodes below defined properties.
+> +
+> +  cdns,read-delay:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Delay in 4 microseconds, read capture logic, in clock cycles.
 
->
-> I though about using IST for the #VC handler, but the implications for
-> nesting #VC handlers made me decide against it. But for future hardware
-> that supports debugging inside SEV-ES guests it will be an issue. I'll
-> think about how to fix the problem, it probably has to be IST :(
+4us or clock cycles?
 
-Or future generations could have enough hardware support for debugging
-that #DB doesn't need to be intercepted or can be re-injected
-correctly with the #DB vector.
+> +
+> +  cdns,tshsl-ns:
+> +    description: |
+> +      Delay in 50 nanoseconds, for the length that the master mode chip select
+> +      outputs are de-asserted between transactions.
 
->
-> Regards,
->
->         Joerg
+Sounds like you can add:
+
+multipleOf: 50
+
+> +
+> +  cdns,tsd2d-ns:
+> +    description: |
+> +      Delay in 50 nanoseconds, between one chip select being de-activated
+> +      and the activation of another.
+
+Same here
+
+> +
+> +  cdns,tchsh-ns:
+> +    description: |
+> +      Delay in 4 nanoseconds, between last bit of current transaction and
+> +      deasserting the device chip select (qspi_n_ss_out).
+
+multipleOf: 4
+
+> +
+> +  cdns,tslch-ns:
+> +    description: |
+> +      Delay in 4 nanoseconds, between setting qspi_n_ss_out low and
+> +      first bit transfer.
+
+multipleOf: 4
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - cdns,fifo-depth
+> +  - cdns,fifo-width
+> +  - cdns,trigger-address
+> +
+> +examples:
+> +  - |
+> +    qspi: spi@ff705000 {
+
+Drop the label.
+
+> +          compatible = "cdns,qspi-nor";
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          reg = <0xff705000 0x1000>,
+> +                <0xffa00000 0x1000>;
+> +          interrupts = <0 151 4>;
+> +          clocks = <&qspi_clk>;
+> +          cdns,fifo-depth = <128>;
+> +          cdns,fifo-width = <4>;
+> +          cdns,trigger-address = <0x00000000>;
+> +
+> +          flash0: n25q00@0 {
+
+flash@0
+
+> +              compatible = "jedec,spi-nor";
+> +              reg = <0x0>;
+> +              cdns,read-delay = <4>;
+> +              cdns,tshsl-ns = <50>;
+> +              cdns,tsd2d-ns = <50>;
+> +              cdns,tchsh-ns = <4>;
+> +              cdns,tslch-ns = <4>;
+> +          };
+> +    };
+> +
+> -- 
+> 2.11.0
+> 
