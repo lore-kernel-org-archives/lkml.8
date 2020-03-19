@@ -2,97 +2,144 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFA5C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0661C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5228B2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584620322;
-	bh=9n5iSscoqYAjXl49/svHpLf5qsJKzfPfCazHWgnTthY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1sR+jUDkCnGHyRoQW7S5Ll+G4Xq3N0AuZ2Wf6O4PRFB/AbxbEkbIAYaI6z3hO8C5/
-	 Y0wYkanmNAFrqeC7gislX4z/5UAckCNsPE0gqpGhWQt9Wz2+sirjPeB8y6jOEmP/gP
-	 5KnltaNfl6qSZsWpFRBGwJPr9A8SSVOVf9NtYuK4=
+	by mail.kernel.org (Postfix) with ESMTP id 9E45020663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:19:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgCSMSl (ORCPT
+        id S1727090AbgCSMTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 08:19:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33866 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSMSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:18:41 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6518E20663;
-        Thu, 19 Mar 2020 12:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584620320;
-        bh=9n5iSscoqYAjXl49/svHpLf5qsJKzfPfCazHWgnTthY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hMSyvzWudmn5PzqltwH9zVaoJflLaueZMoY7JuIBTmbwkmjCNT2hHrPKP5wQH72Yh
-         QFw0yTyO2UEaw6WkBq6MKpEtt6gXN8nHKmL84bm4cma4fb8H2wB9x2hE3YrL1/HpSO
-         TyT89wwVpUtFpxgCHtakHPiwm6ZKyuZAtda9p8uI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jEu8E-00Dvom-M6; Thu, 19 Mar 2020 12:18:38 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Mar 2020 12:18:38 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
+        id S1725787AbgCSMTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:19:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 639ABAFDC;
+        Thu, 19 Mar 2020 12:19:40 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v5 21/23] KVM: arm64: GICv4.1: Reload VLPI configuration
- on distributor enable/disable
-In-Reply-To: <7f112d75-166b-24eb-538d-e100242d8e9a@huawei.com>
-References: <20200304203330.4967-1-maz@kernel.org>
- <20200304203330.4967-22-maz@kernel.org>
- <7f112d75-166b-24eb-538d-e100242d8e9a@huawei.com>
-Message-ID: <ed4b6d1f4a156e22c5c619e197fa4752@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Arnd Bergmann <arnd@arndb.de>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v11 0/8] Disable compat cruft on ppc64le v11
+Date:   Thu, 19 Mar 2020 13:19:28 +0100
+Message-Id: <cover.1584620202.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200225173541.1549955-1-npiggin@gmail.com>
+References: <20200225173541.1549955-1-npiggin@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-18 03:17, Zenghui Yu wrote:
-> On 2020/3/5 4:33, Marc Zyngier wrote:
->> Each time a Group-enable bit gets flipped, the state of these bits
->> needs to be forwarded to the hardware. This is a pretty heavy
->> handed operation, requiring all vcpus to reload their GICv4
->> configuration. It is thus implemented as a new request type.
-> 
-> [note to myself]
-> ... and the status are forwarded to HW by programming VGrp{0,1}En
-> fields of GICR_VPENDBASER when vPEs are made resident next time.
+Less code means less bugs so add a knob to skip the compat stuff.
 
-I've added something based on this comment to the commit message.
+Changes in v2: saner CONFIG_COMPAT ifdefs
+Changes in v3:
+ - change llseek to 32bit instead of builing it unconditionally in fs
+ - clanup the makefile conditionals
+ - remove some ifdefs or convert to IS_DEFINED where possible
+Changes in v4:
+ - cleanup is_32bit_task and current_is_64bit
+ - more makefile cleanup
+Changes in v5:
+ - more current_is_64bit cleanup
+ - split off callchain.c 32bit and 64bit parts
+Changes in v6:
+ - cleanup makefile after split
+ - consolidate read_user_stack_32
+ - fix some checkpatch warnings
+Changes in v7:
+ - add back __ARCH_WANT_SYS_LLSEEK to fix build with llseek
+ - remove leftover hunk
+ - add review tags
+Changes in v8:
+ - consolidate valid_user_sp to fix it in the split callchain.c
+ - fix build errors/warnings with PPC64 !COMPAT and PPC32
+Changes in v9:
+ - remove current_is_64bit()
+Chanegs in v10:
+ - rebase, sent together with the syscall cleanup
+Changes in v11:
+ - rebase
+ - add MAINTAINERS pattern for ppc perf
 
-Thanks!
+Michal Suchanek (8):
+  powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
+  powerpc: move common register copy functions from signal_32.c to
+    signal.c
+  powerpc/perf: consolidate read_user_stack_32
+  powerpc/perf: consolidate valid_user_sp
+  powerpc/64: make buildable without CONFIG_COMPAT
+  powerpc/64: Make COMPAT user-selectable disabled on littleendian by
+    default.
+  powerpc/perf: split callchain.c by bitness
+  MAINTAINERS: perf: Add pattern that matches ppc perf to the perf
+    entry.
 
-         M.
+ MAINTAINERS                            |   2 +
+ arch/powerpc/Kconfig                   |   5 +-
+ arch/powerpc/include/asm/thread_info.h |   4 +-
+ arch/powerpc/include/asm/unistd.h      |   1 +
+ arch/powerpc/kernel/Makefile           |   6 +-
+ arch/powerpc/kernel/entry_64.S         |   2 +
+ arch/powerpc/kernel/signal.c           | 144 +++++++++-
+ arch/powerpc/kernel/signal_32.c        | 140 ----------
+ arch/powerpc/kernel/syscall_64.c       |   6 +-
+ arch/powerpc/kernel/vdso.c             |   3 +-
+ arch/powerpc/perf/Makefile             |   5 +-
+ arch/powerpc/perf/callchain.c          | 356 +------------------------
+ arch/powerpc/perf/callchain.h          |  20 ++
+ arch/powerpc/perf/callchain_32.c       | 196 ++++++++++++++
+ arch/powerpc/perf/callchain_64.c       | 174 ++++++++++++
+ fs/read_write.c                        |   3 +-
+ 16 files changed, 556 insertions(+), 511 deletions(-)
+ create mode 100644 arch/powerpc/perf/callchain.h
+ create mode 100644 arch/powerpc/perf/callchain_32.c
+ create mode 100644 arch/powerpc/perf/callchain_64.c
+
 -- 
-Jazz is not dead. It just smells funny...
+2.23.0
+
