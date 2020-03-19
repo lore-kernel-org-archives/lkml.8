@@ -2,102 +2,124 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF7DC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A4DC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E701B2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10134207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:56:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sE77CzTJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgCSQ4o (ORCPT
+        id S1728184AbgCSQ4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:56:44 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:56784 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbgCSQ4o (ORCPT
+        Thu, 19 Mar 2020 12:56:48 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44282 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbgCSQ4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:56:44 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1jEyTD-0007SS-8f; Thu, 19 Mar 2020 12:56:35 -0400
-Message-ID: <3f75f55dc6a9b4dfd3c6ac808c370bfd91d1554a.camel@surriel.com>
-Subject: Re: [PATCH] mm: hugetlb: fix hugetlb_cma_reserve() if CONFIG_NUMA
- isn't set
-From:   Rik van Riel <riel@surriel.com>
-To:     Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Aslan Bakirov <aslan@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org,
-        Andreas Schaufler <andreas.schaufler@gmx.de>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 19 Mar 2020 12:56:34 -0400
-In-Reply-To: <20200319161644.GH20800@dhcp22.suse.cz>
-References: <20200318153424.3202304-1-guro@fb.com>
-         <20200318161625.GR21362@dhcp22.suse.cz>
-         <20200318175529.GA6263@carbon.dhcp.thefacebook.com>
-         <20200319161644.GH20800@dhcp22.suse.cz>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-xqGcAAkovkjaAH5al2Q2"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Thu, 19 Mar 2020 12:56:46 -0400
+Received: by mail-wr1-f66.google.com with SMTP id o12so3474450wrh.11;
+        Thu, 19 Mar 2020 09:56:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PXsgN3Xvx75E/VQrukFl6tODlYoxT2hNR8PsVX7/5OY=;
+        b=sE77CzTJxTmivCGzQGQLd5CF6KiYJJged980d0YENUHyqfv+nCgV8rS47734kb94wi
+         5m1CueJNQhYwCACdUYAB8Ler6mLzOoXaPhI7aCYD54HcG7SylaustwPpMGGLWXaxCXuI
+         DrDXPxHx4OHeiW0Z84AWOZh0hJqeIaDTEZV6OgrO6xdeJavHAfGp77ARow/0V8cDDI6C
+         1YVvmvL5Uq3VmcklmVknIlLyvd+Xn4dtipZuRDyNjrVBd+t4Cv166kTSnlNpxcZepsdo
+         bRfXTWlXTyirdWXFocLad6ZH8rm+nDS2tIedce0Awo+pNSHPM6krFYGmWZ9a2F8/aewQ
+         d4Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PXsgN3Xvx75E/VQrukFl6tODlYoxT2hNR8PsVX7/5OY=;
+        b=q3+JwtcPSVujgELZ4GgqAkfj7AK/e3jqLiTU7Fx595gcuklqRFYbFG2mgHHNNun13V
+         Gswd9aucknnqm37Qu20ksqza1YDHCahMyf5hVYp/gUSpXWTe/nUX+8GDKaWzULm+uQLl
+         wRnOYjog/S8kj9juyOSG7mfyax65S1g0q950yNMBvPXrxKeCmTd929mcf/wQdHVyt32N
+         DiNQzBqdBZ6gJMGOG7+taUVLAK8wWU7WpTE6BMLmQ/wiDsiVcPS8ZmsC5RVTfsJLm8is
+         oh44H4XVKbl05g5+GMM0V7BBHykCMcD54jtEGTdvt7RyP0vkJnycQwYYbg47wK3M76H3
+         38Ug==
+X-Gm-Message-State: ANhLgQ3VCU5mWJTsbEd66B7opzN8eyVDNA3GHgbVr4kaRj6ZRIqfiuVv
+        vPcYhu6F7M/Zr8XaPHyKewqbVqCZ
+X-Google-Smtp-Source: ADFU+vtMYiuF+b7V87BvVUKMQP005WAqWiZY1JuJmE92AqsY+mGJCQ2UQNOW6CmZ5jhYfODmaC5scw==
+X-Received: by 2002:adf:ef0b:: with SMTP id e11mr5639053wro.115.1584637004267;
+        Thu, 19 Mar 2020 09:56:44 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f29:6000:f482:8f51:2469:4533? (p200300EA8F296000F4828F5124694533.dip0.t-ipconnect.de. [2003:ea:8f29:6000:f482:8f51:2469:4533])
+        by smtp.googlemail.com with ESMTPSA id t9sm4290708wrx.31.2020.03.19.09.56.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 09:56:43 -0700 (PDT)
+Subject: Re: [PATCH net-next 3/7] net: phy: introduce
+ phy_read_mmd_poll_timeout macro
+To:     Dejin Zheng <zhengdejin5@gmail.com>, andrew@lunn.ch,
+        f.fainelli@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+        tglx@linutronix.de, broonie@kernel.org, corbet@lwn.net,
+        mchehab+samsung@kernel.org, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200319163910.14733-1-zhengdejin5@gmail.com>
+ <20200319163910.14733-4-zhengdejin5@gmail.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <c88c0ce1-af42-db67-22bc-92e82bd9efbf@gmail.com>
+Date:   Thu, 19 Mar 2020 17:56:39 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200319163910.14733-4-zhengdejin5@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 19.03.2020 17:39, Dejin Zheng wrote:
+> it is sometimes necessary to poll a phy register by phy_read_mmd()
+> function until its value satisfies some condition. introduce
+> phy_read_mmd_poll_timeout() macros that do this.
+> 
+> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> ---
+>  include/linux/phy.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index 36d9dea04016..a30e9008647f 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -24,6 +24,7 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/u64_stats_sync.h>
+>  #include <linux/irqreturn.h>
+> +#include <linux/iopoll.h>
+>  
+>  #include <linux/atomic.h>
+>  
+> @@ -784,6 +785,9 @@ static inline int __phy_modify_changed(struct phy_device *phydev, u32 regnum,
+>   */
+>  int phy_read_mmd(struct phy_device *phydev, int devad, u32 regnum);
+>  
+> +#define phy_read_mmd_poll_timeout(val, cond, sleep_us, timeout_us, args...) \
+> +	read_poll_timeout(phy_read_mmd, val, cond, sleep_us, timeout_us, args)
+> +
+>  /**
+>   * __phy_read_mmd - Convenience function for reading a register
+>   * from an MMD on a given PHY.
+> 
+I'm not fully convinced. Usage of the new macro with its lots of
+parameters makes the code quite hard to read. Therefore I'm also
+not a big fan of readx_poll_timeout.
 
---=-xqGcAAkovkjaAH5al2Q2
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2020-03-19 at 17:16 +0100, Michal Hocko wrote:
->=20
-> This is not the first time HAVE_MEMBLOCK_NODE_MAP has been
-> problematic.
-> I might be missing something but I really do not get why do we really
-> need it these days. As for !NUMA, I suspect we can make it generate
-> the
-> right thing when !NUMA.
-
-We're working on a different fix now.
-
-It looks like cma_declare_contiguous calls memblock_phys_alloc_range,
-which calls memblock_alloc_range_nid, which takes a NUMA node as one
-of its arguments.
-
-Aslan is looking at simply adding a cma_declare_contiguous_nid, which
-also takes a NUMA node ID as an argument. At that point we can simply
-leave CMA free to allocate from anywhere in each NUMA node, which by
-default already happens from the top down.
-
-That should be the nicer long term fix to this issue.
-
---=20
-All Rights Reversed.
-
---=-xqGcAAkovkjaAH5al2Q2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5zpEIACgkQznnekoTE
-3oOzXwf+KFp0GJtUWncQg/fSVDlVuX0CDEUh2qJkjwZG8CXXZ7RetNSgWwJBh6NZ
-0/3UTuEFRIvJ+URQ1dSxSD7wxtuJxv7b0E+NR7Q0OgmhMbtxeCyLtecwazcM2nym
-4THHUWVFI1gvV22eMA25Olw5os/GrC09+LvQdr3U+fPkk6IJplWgcSfXAII04YLG
-6uLoIV0cSwfjBAPmdj4uOji9u/m+urLqCnMRA0GGHAV0GfAG9jHOcYNiDqO6phjE
-39RRgL0D4k5WaCTIcxCSfHJ9GotJBi2zFapBFB5YkYAjXU+PcaATxV08LgSyz6lK
-/aw2p4uFDgxdBFEXYjdHyHP6+XVZeA==
-=29Xz
------END PGP SIGNATURE-----
-
---=-xqGcAAkovkjaAH5al2Q2--
-
+Even though I didn't invent it, I prefer the way DECLARE_RTL_COND
+is used in the r8169 driver. The resulting code is much better
+to read, and in case of a timeout a helpful warning is printed
+automatically.
