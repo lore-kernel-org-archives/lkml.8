@@ -2,85 +2,105 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1B4C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C21C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4302080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625655;
-	bh=0C8hZU/YxpZVRYqef82R8KCTqT8U8jWoXQOw7dID8a4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dpgnwd11Tj0TPV2pyulRs9ktzOE7jUchoeI/Dx6cODnumYx51imw+2TTTGTqkUq1G
-	 fSDwm4W7Er2ny4u15v9NJQK3NvVo2N6PvhuXuLB6JSfYEbsf50/faqXQeJs7t/WNo8
-	 xXcAbOiApgmCFDlpL7CI0oJxcIUCMFoDlAOX7pN4=
+	by mail.kernel.org (Postfix) with ESMTP id CCD5A20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgCSNre (ORCPT
+        id S1727458AbgCSNtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:47:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727034AbgCSNre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:47:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 435452080C;
-        Thu, 19 Mar 2020 13:47:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584625653;
-        bh=0C8hZU/YxpZVRYqef82R8KCTqT8U8jWoXQOw7dID8a4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YjIQXGfURrlH08Kx68uk3vGL3vma7uc5UvnvSXjZL+T0WWw4yQ2LjjTQmx6aSXeQ0
-         giDRHsX2Sl+Xwb90KjYe97dQ32dXhOLWiNdYjZ2MuqkefAf9kWySPOIf7pQ7BDK5Kg
-         DAgas/A9ZCo36SmPIOYFER1o2wRyxM3hXd75v1aw=
-Date:   Thu, 19 Mar 2020 14:47:10 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kevin Hao <haokexin@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.5 01/65] gpiolib: Add support for the irqdomain which
- doesnt use irq_fwspec as arg
-Message-ID: <20200319134710.GA4092809@kroah.com>
-References: <20200319123926.466988514@linuxfoundation.org>
- <20200319123926.902914624@linuxfoundation.org>
- <20200319133355.GB711692@pek-khao-d2.corp.ad.wrs.com>
+        Thu, 19 Mar 2020 09:49:22 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39822 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727141AbgCSNtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:49:22 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 47DB16AAA082909C29D6;
+        Thu, 19 Mar 2020 21:49:16 +0800 (CST)
+Received: from [127.0.0.1] (10.133.217.205) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 19 Mar 2020
+ 21:49:05 +0800
+From:   "chengjian (D)" <cj.chengjian@huawei.com>
+Subject: Why is text_mutex used in jump_label_transform for x86_64
+To:     <andrew.murray@arm.com>, <bristot@redhat.com>,
+        <jakub.kicinski@netronome.com>, Kees Cook <keescook@chromium.org>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
+        Li Bin <huawei.libin@huawei.com>, <bobo.shaobowang@huawei.com>,
+        "chengjian (D)" <cj.chengjian@huawei.com>
+Message-ID: <f7f686f2-4f28-1763-dd19-43eff6a5a8f2@huawei.com>
+Date:   Thu, 19 Mar 2020 21:49:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319133355.GB711692@pek-khao-d2.corp.ad.wrs.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.133.217.205]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 09:33:55PM +0800, Kevin Hao wrote:
-> On Thu, Mar 19, 2020 at 02:03:43PM +0100, Greg Kroah-Hartman wrote:
-> > From: Kevin Hao <haokexin@gmail.com>
-> > 
-> > [ Upstream commit 242587616710576808dc8d7cdf18cfe0d7bf9831 ]
-> > 
-> > Some gpio's parent irqdomain may not use the struct irq_fwspec as
-> > argument, such as msi irqdomain. So rename the callback
-> > populate_parent_fwspec() to populate_parent_alloc_arg() and make it
-> > allocate and populate the specific struct which is needed by the
-> > parent irqdomain.
-> 
-> Hi Greg,
-> 
-> This commit shouldn't go to stable because it is not a bug fix. It is just a
-> prerequisite of switching to general GPIOLIB_IRQCHIP for thunderx gpio driver
-> (commit 7a9f4460f74d "gpio: thunderx: Switch to GPIOLIB_IRQCHIP").
+Hi，everyone
 
-This seems to be a prerequisite for f98371476f36 ("pinctrl: qcom:
-ssbi-gpio: Fix fwspec parsing bug") to apply properly.  With that
-information, is it ok to keep?
+I'm sorry to disturb you. I have a problem about jump_label, and a bit 
+confused about the code
 
-thanks,
+I noticed that text_mutex is used in this function under x86_64 
+architecture,
+but other architectures do not.
 
-greg k-h
+in arch/x86/kernel/jump_label.c
+         static void __ref jump_label_transform(struct jump_entry *entry,
+              enum jump_label_type type,
+              int init)
+         {
+          mutex_lock(&text_mutex);
+          __jump_label_transform(entry, type, init);
+          mutex_unlock(&text_mutex);
+
+in arch/arm64/kernel/jump_label.c
+
+         void arch_jump_label_transform(struct jump_entry *entry,
+                                        enum jump_label_type type)
+         {
+                 void *addr = (void *)jump_entry_code(entry);
+                 u32 insn;
+
+                 if (type == JUMP_LABEL_JMP) {
+                         insn = 
+aarch64_insn_gen_branch_imm(jump_entry_code(entry),
+jump_entry_target(entry),
+AARCH64_INSN_BRANCH_NOLINK);
+                 } else {
+                         insn = aarch64_insn_gen_nop();
+                 }
+
+                 aarch64_insn_patch_text_nosync(addr, insn);
+         }
+
+
+Is there anything wrong with x86
+
+or
+
+is this missing for other architectures?
+
+
+Thanks
+
+---- Cheng Jian
+
+
+
+
+
