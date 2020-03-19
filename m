@@ -2,119 +2,166 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1ECC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1CFC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8825920722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B267B20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:36:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="LrhUCrty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgCSKfR (ORCPT
+        id S1727031AbgCSKgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:35:17 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:37496 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgCSKfQ (ORCPT
+        Thu, 19 Mar 2020 06:36:42 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:43180 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgCSKgm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:35:16 -0400
-Received: by mail-io1-f72.google.com with SMTP id p4so1345411ioo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 03:35:16 -0700 (PDT)
+        Thu, 19 Mar 2020 06:36:42 -0400
+Received: by mail-il1-f196.google.com with SMTP id d14so1706550ilq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 03:36:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jByhry3gs2H5qXvZC0UkGfNm9a2QynZUOXNZT5iWXPU=;
+        b=LrhUCrty6VTjteyrFkLT7oftaJdH0uJD6Q0eFmNpFZhLmrcMUjPIENPiH/VahRSJWE
+         gyY7COYRnuM+V0sVs2XAi7UpAOkwh7RI/2fzxeAfteP2aK4lKMp/PBGmtEIuaBwy67n7
+         2ko6h3Owylut1BfFwiR+NmZB+QvKBGExgfATY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=75IFSF+U0YhTbbRGzRYltGi5QkhePC6VgWPG6wybEig=;
-        b=DoEIvIt3wVPe8O3Fckc/Edh7UUZGR4TvdwdYMIG4viakEtoHi5gveKN5B3LTTg7G22
-         LngmiqE+M53XBvubezINwZRp6ftVRFov0xeHcdAJxej70z8M/23lKzpTLZJbmmC8rc9p
-         oFi307BQZt51Zh5U6jiBNo8oHLTp6bKMGFIkJJjhdDkT5xxDqtcJHqfLNt+kI8FHBHSh
-         O4KAKhLsCoBYuN3/LSv+/nj2paKexL3DAXc54hArFfMmkisMEhpYh1ee93+GuNTFxHqr
-         oQeNOfLHVapvIyclnYbdiSp5Mpa28weSaeNpZQwAE54mTednnCbjzMZSaaK4NxQ8ExO5
-         I58w==
-X-Gm-Message-State: ANhLgQ2/1nTBEzrvdMZuFqoa5pRkSgsQwKF8j0L3cEokwxSrMg8QvV4u
-        VcGr3AojBMv8kWXL7K1AGLcyROTyVQfLiLkNES0LbIbfP/ZS
-X-Google-Smtp-Source: ADFU+vsdroRqSLGN56Cc3Nn2W+BmUiajwugkafWJeacGc4vIpO1oUXD2MhjHgSjlm5KXkDc//S5OUmRIgWgxDpDverVTVgn3ZG4F
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jByhry3gs2H5qXvZC0UkGfNm9a2QynZUOXNZT5iWXPU=;
+        b=gT0/UXbZS9DKpWHcXf3VrDazhhxVX3VEo1euvonCRQMs0Xp/bA2bi/gBuK8Y+Zp2aQ
+         5+RKalp4MQOIzlTMBmBKOq7tQ1hl02HcO6y2HJAkC/Jeiw7dpjpiPNQXtRvvNAviz8mS
+         kkRip4vorIsrISmJiD54E7fkn+d50oS0RmSjI2oijrSqDAL9knGnKTpVhLlL1cnFtvon
+         gP6MFuBUIXqYlpOySRqf+0fHvH7zqBsJ461nkBM962yNhnCm1AourSD3vu13kFHMlu9s
+         bZ0ONbRlo4HgQPty6JFJk0SJqWp1x7wh6herbXw53bsFDYsputy7yFpuycLChDgJWazD
+         lHUw==
+X-Gm-Message-State: ANhLgQ1MKFuDNgXFiUF2MMo76M5s5D74ySbv0jb78cPcXTlEE+WgPvoR
+        D5V/lnONt2v7Kpqeqeic6SYOXz6S37lNCkSihSBiMQ==
+X-Google-Smtp-Source: ADFU+vtUIa7Up2vK9a1UDtKtiFK1yVGwE7V/lc6dlLy2fPPUu+x6KfsLr3DI3JqtxeKHg9FokDpkfS2gY2/i2Lc5+pk=
+X-Received: by 2002:a92:77c2:: with SMTP id s185mr1238038ilc.297.1584614201515;
+ Thu, 19 Mar 2020 03:36:41 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:dad0:: with SMTP id o16mr2312812ilq.27.1584614116260;
- Thu, 19 Mar 2020 03:35:16 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 03:35:16 -0700
-In-Reply-To: <000000000000f965b8059877e5e6@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000081861f05a132b9cd@google.com>
-Subject: Re: WARNING in vcpu_enter_guest
-From:   syzbot <syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
+References: <20200318171003.5179-1-jagan@amarulasolutions.com> <20200318185713.GA28092@ravnborg.org>
+In-Reply-To: <20200318185713.GA28092@ravnborg.org>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 19 Mar 2020 16:06:30 +0530
+Message-ID: <CAMty3ZAjmu+h7XTyTUfge3kXFE=a=1iFm7MjR6DYnQnZ615fOg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: display: panel: Convert feiyang,
+ fy07024di26a30d to DT schema
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hi Sam,
 
-HEAD commit:    5076190d mm: slub: be more careful about the double cmpxch..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=143ca61de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
-dashboard link: https://syzkaller.appspot.com/bug?extid=00be5da1d75f1cc95f6b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10bb4023e00000
+On Thu, Mar 19, 2020 at 12:27 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Jagan.
+>
+> On Wed, Mar 18, 2020 at 10:40:01PM +0530, Jagan Teki wrote:
+> > Convert the feiyang,fy07024di26a30d panel bindings to DT schema.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>
+> Thanks for the resend.
+>
+> Please fix so the two bindings uses panel-common.yaml.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com
+Is is because few of the bindings in this panel are similar to
+panel-common.yaml?
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 9833 at arch/x86/kvm/x86.c:2447 kvm_guest_time_update arch/x86/kvm/x86.c:2447 [inline]
-WARNING: CPU: 0 PID: 9833 at arch/x86/kvm/x86.c:2447 vcpu_enter_guest+0x3cf3/0x6120 arch/x86/kvm/x86.c:8175
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9833 Comm: syz-executor.0 Not tainted 5.6.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:kvm_guest_time_update arch/x86/kvm/x86.c:2447 [inline]
-RIP: 0010:vcpu_enter_guest+0x3cf3/0x6120 arch/x86/kvm/x86.c:8175
-Code: f3 7e 0f 94 c3 31 ff 89 de e8 d9 03 64 00 84 db 0f 84 62 ea ff ff e8 9c 02 64 00 e8 fb 43 f2 ff e9 53 ea ff ff e8 8d 02 64 00 <0f> 0b e9 e7 dc ff ff e8 81 02 64 00 bf 00 94 35 77 45 31 e4 4c 69
-RSP: 0018:ffffc900024afb50 EFLAGS: 00010293
-RAX: ffff888097b88040 RBX: fffffffffffff8d2 RCX: ffffffff810dff78
-RDX: 0000000000000000 RSI: ffffffff810e2293 RDI: 0000000000000007
-RBP: ffffc900024afcc0 R08: ffff888097b88040 R09: fffffbfff180e58f
-R10: fffffbfff180e58e R11: ffffffff8c072c77 R12: 0000000000000000
-R13: ffffc90002521000 R14: ffff88808e620378 R15: ffff88808e620340
- vcpu_run arch/x86/kvm/x86.c:8513 [inline]
- kvm_arch_vcpu_ioctl_run+0x41c/0x1790 arch/x86/kvm/x86.c:8735
- kvm_vcpu_ioctl+0x493/0xe60 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2932
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl fs/ioctl.c:770 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c849
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f5029f2ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f5029f2f6d4 RCX: 000000000045c849
-RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000005
-RBP: 000000000076bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000003be R14: 00000000004c647e R15: 000000000076bf0c
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+>
+> And then only properties specific for this binding shall have a
+> description.
+>
+> See below - please fix both bindings and resend.
+>
+>         Sam
+>
+> > ---
+> > Changes for v2:
+> > - fix dt_binding_check
+> >
+> >  .../display/panel/feiyang,fy07024di26a30d.txt | 20 -------
+> >  .../panel/feiyang,fy07024di26a30d.yaml        | 57 +++++++++++++++++++
+> >  2 files changed, 57 insertions(+), 20 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+> >  create mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+> > deleted file mode 100644
+> > index 82caa7b65ae8..000000000000
+> > --- a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+> > +++ /dev/null
+> > @@ -1,20 +0,0 @@
+> > -Feiyang FY07024DI26A30-D 7" MIPI-DSI LCD Panel
+> > -
+> > -Required properties:
+> > -- compatible: must be "feiyang,fy07024di26a30d"
+> > -- reg: DSI virtual channel used by that screen
+> > -- avdd-supply: analog regulator dc1 switch
+> > -- dvdd-supply: 3v3 digital regulator
+> > -- reset-gpios: a GPIO phandle for the reset pin
+> > -
+> > -Optional properties:
+> > -- backlight: phandle for the backlight control.
+> > -
+> > -panel@0 {
+> > -     compatible = "feiyang,fy07024di26a30d";
+> > -     reg = <0>;
+> > -     avdd-supply = <&reg_dc1sw>;
+> > -     dvdd-supply = <&reg_dldo2>;
+> > -     reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
+> > -     backlight = <&backlight>;
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+> > new file mode 100644
+> > index 000000000000..f292c57a5bd6
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+> > @@ -0,0 +1,57 @@
+> > +# SPDX-License-Identifier: (GPL-2.0+ OR X11)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/display/panel/feiyang,fy07024di26a30d.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Feiyang FY07024DI26A30-D 7" MIPI-DSI LCD Panel
+> > +
+> > +maintainers:
+> > +  - Jagan Teki <jagan@amarulasolutions.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: feiyang,fy07024di26a30d
+> > +
+> > +  reg:
+> > +    description: DSI virtual channel used by that screen
+> reg is already described elsewhere so no description.
+> Thus is becomes:
+>
+>     reg: true
 
+Look like reg didn't describe in panel-common.yaml
+
+Jagan.
