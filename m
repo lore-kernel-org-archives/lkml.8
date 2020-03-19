@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FABC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D8DC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3802080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD6A4207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624374;
-	bh=wgmoLWEcseM6n7d6+U/LOI7cmzjZ0l1QeI4r/EulqzA=;
+	s=default; t=1584624379;
+	bh=1dSUJg0oKYYNWkqUqhi26j4u7MPwVcWmQRJ7yr6Z41E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pV3cf5VKaAuMCt+jMncsLw8CAok5h0uRjxEiGHU8kz3LpqYaSiCjgeswhxeSs7uRZ
-	 MtokkkmDrVi6vyA0DvevVP1Okj30rNE5aWZRxVgj1qE1k1Jc98pR5TcTykwJRKg9u0
-	 sGWCvBFuTqpQtl5K38JI/lHuQfvGhUJj1zkRA7yQ=
+	b=PsErqKPxFqPJNkQxL16ovj0qZqj+BKdImosJ7FfAjYNS0HZtdFkpF4RSzTY8HKMLH
+	 2hBFDx0p5mbTBoPTPBw5TzarCKWj3BMqHZn3uBPdvERpP+vWoO+doRpik1WRMB6jlW
+	 VYrCTZfDDSuxDc33BOjfhwBf8Xa41sDw5Zfo2o6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbgCSN0M (ORCPT
+        id S1730767AbgCSN0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54020 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:26:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730748AbgCSN0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:26:09 -0400
+        id S1728795AbgCSN0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:26:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87879207FC;
-        Thu, 19 Mar 2020 13:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0776207FC;
+        Thu, 19 Mar 2020 13:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624369;
-        bh=wgmoLWEcseM6n7d6+U/LOI7cmzjZ0l1QeI4r/EulqzA=;
+        s=default; t=1584624373;
+        bh=1dSUJg0oKYYNWkqUqhi26j4u7MPwVcWmQRJ7yr6Z41E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E4zEvVKVD8Xs1wzKC2X8X4sOLnSe9JPLvt7XREje0rxm3jftEukS/ETUdcZOvXleT
-         A9jZWdoOO4q6DUt/oMoHkLo+4zK+DcHOJZaVM26k2ta4EVhIKS9WxgHqiLJ6kfgf9C
-         rhBgA1EWdkJZjSneJsKhxsBUatcKz4uMthRk4Mo4=
+        b=qmOqPyQ63xOZcYaIzUnDXS0eiUb2xOLxDGjfdvffY9L69zAwrtj5gnSmtrsaA1y4f
+         +YaFPBLJAsQKnOCrHH2EELNtEEj5xxtjCwzZF5N69vHGyDK4kkejVAok5HTQprlkDs
+         ymFZj3R2DyqmPw0POh7d8GA21CpAY6UCmt5bIJ7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Esben Haabendal <esben@geanix.com>,
+        stable@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 30/65] net: ll_temac: Add more error handling of dma_map_single() calls
-Date:   Thu, 19 Mar 2020 14:04:12 +0100
-Message-Id: <20200319123935.928919642@linuxfoundation.org>
+Subject: [PATCH 5.5 40/65] net: bcmgenet: Clear ID_MODE_DIS in EXT_RGMII_OOB_CTRL when not needed
+Date:   Thu, 19 Mar 2020 14:04:22 +0100
+Message-Id: <20200319123939.199190560@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -60,76 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Esben Haabendal <esben@geanix.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit d07c849cd2b97d6809430dfb7e738ad31088037a ]
+[ Upstream commit 402482a6a78e5c61d8a2ec6311fc5b4aca392cd6 ]
 
-This adds error handling to the remaining dma_map_single() calls, so that
-behavior is well defined if/when we run out of DMA memory.
+Outdated Raspberry Pi 4 firmware might configure the external PHY as
+rgmii although the kernel currently sets it as rgmii-rxid. This makes
+connections unreliable as ID_MODE_DIS is left enabled. To avoid this,
+explicitly clear that bit whenever we don't need it.
 
-Fixes: 92744989533c ("net: add Xilinx ll_temac device driver")
-Signed-off-by: Esben Haabendal <esben@geanix.com>
+Fixes: da38802211cc ("net: bcmgenet: Add RGMII_RXID support")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/xilinx/ll_temac_main.c | 26 +++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index fd578568b3bff..fd4231493449b 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -367,6 +367,8 @@ static int temac_dma_bd_init(struct net_device *ndev)
- 		skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
- 					      XTE_MAX_JUMBO_FRAME_SIZE,
- 					      DMA_FROM_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr))
-+			goto out;
- 		lp->rx_bd_v[i].phys = cpu_to_be32(skb_dma_addr);
- 		lp->rx_bd_v[i].len = cpu_to_be32(XTE_MAX_JUMBO_FRAME_SIZE);
- 		lp->rx_bd_v[i].app0 = cpu_to_be32(STS_CTRL_APP0_IRQONEND);
-@@ -863,12 +865,13 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
- 				      skb_headlen(skb), DMA_TO_DEVICE);
- 	cur_p->len = cpu_to_be32(skb_headlen(skb));
-+	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr)))
-+		return NETDEV_TX_BUSY;
- 	cur_p->phys = cpu_to_be32(skb_dma_addr);
- 	ptr_to_txbd((void *)skb, cur_p);
- 
- 	for (ii = 0; ii < num_frag; ii++) {
--		lp->tx_bd_tail++;
--		if (lp->tx_bd_tail >= TX_BD_NUM)
-+		if (++lp->tx_bd_tail >= TX_BD_NUM)
- 			lp->tx_bd_tail = 0;
- 
- 		cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-@@ -876,6 +879,25 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 					      skb_frag_address(frag),
- 					      skb_frag_size(frag),
- 					      DMA_TO_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, skb_dma_addr)) {
-+			if (--lp->tx_bd_tail < 0)
-+				lp->tx_bd_tail = TX_BD_NUM - 1;
-+			cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-+			while (--ii >= 0) {
-+				--frag;
-+				dma_unmap_single(ndev->dev.parent,
-+						 be32_to_cpu(cur_p->phys),
-+						 skb_frag_size(frag),
-+						 DMA_TO_DEVICE);
-+				if (--lp->tx_bd_tail < 0)
-+					lp->tx_bd_tail = TX_BD_NUM - 1;
-+				cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-+			}
-+			dma_unmap_single(ndev->dev.parent,
-+					 be32_to_cpu(cur_p->phys),
-+					 skb_headlen(skb), DMA_TO_DEVICE);
-+			return NETDEV_TX_BUSY;
-+		}
- 		cur_p->phys = cpu_to_be32(skb_dma_addr);
- 		cur_p->len = cpu_to_be32(skb_frag_size(frag));
- 		cur_p->app0 = 0;
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index 6392a25301838..10244941a7a60 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -294,6 +294,7 @@ int bcmgenet_mii_config(struct net_device *dev, bool init)
+ 	 */
+ 	if (priv->ext_phy) {
+ 		reg = bcmgenet_ext_readl(priv, EXT_RGMII_OOB_CTRL);
++		reg &= ~ID_MODE_DIS;
+ 		reg |= id_mode_dis;
+ 		if (GENET_IS_V1(priv) || GENET_IS_V2(priv) || GENET_IS_V3(priv))
+ 			reg |= RGMII_MODE_EN_V123;
 -- 
 2.20.1
 
