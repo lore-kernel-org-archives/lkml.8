@@ -2,99 +2,98 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75613C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697C1C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568FA20752
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F18820739
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:19:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgCSMTu (ORCPT
+        id S1727262AbgCSMTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:19:50 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:30118 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727112AbgCSMTr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:19:47 -0400
-X-IronPort-AV: E=Sophos;i="5.70,571,1574089200"; 
-   d="scan'208";a="42339692"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 19 Mar 2020 21:19:45 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8488342BCBC0;
-        Thu, 19 Mar 2020 21:19:41 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 19 Mar 2020 08:19:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34098 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727217AbgCSMTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:19:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2A495B14A;
+        Thu, 19 Mar 2020 12:19:51 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 0/5] ov5645: Deprecate usage of the clock-frequency
-Date:   Thu, 19 Mar 2020 12:19:18 +0000
-Message-Id: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v11 8/8] MAINTAINERS: perf: Add pattern that matches ppc perf to the perf entry.
+Date:   Thu, 19 Mar 2020 13:19:36 +0100
+Message-Id: <5cd926191175c4a4a85dc2246adc84bcfac21b1a.1584620202.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1584620202.git.msuchanek@suse.de>
+References: <20200225173541.1549955-1-npiggin@gmail.com> <cover.1584620202.git.msuchanek@suse.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+v10: new patch
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This patch series does the following:
-1: Deprecate usage of the clock-frequency property.
-2: Increases tolerance level to 5% for external clock frequency
-3: Converts bindings to json-schema
-
-Thanks,
-Prabhakar
-
-Changes for v4:
-* Addressed to comments from Laurent updated patch description for
-  patch 1/5, 4/5.
-* Included Reviewed-by tags from Laurent.
-* Increased tolerance level to 5% for external clock frequency.
-* Patch 5/5 is new patch which converts bindings to json-schema.
-
-Changed for v3:
-* Dropped reading assigned-clock-rates
-* Increased the maximum clock frequency to 24480000
-
-Changes for v2:
-* Instead of completely dropping clock-frequency property marked it as
-  deprecated.
-* Split up imx6qdl-wandboard.dtsi changes as separate patch.
-
-Lad Prabhakar (5):
-  media: dt-bindings: media: i2c: Deprecate usage of the clock-frequency
-    property
-  media: i2c: ov5645: Switch to assigned-clock-rates
-  media: i2c: ov5645: Increase tolerance of external clock frequency
-  ARM: dts: imx6qdl-wandboard: Switch to assigned-clock-rates for ov5645
-    node
-  media: dt-bindings: media: i2c: convert ov5645 bindings to json-schema
-
- .../devicetree/bindings/media/i2c/ov5645.txt  |  54 -------
- .../devicetree/bindings/media/i2c/ov5645.yaml | 140 ++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-wandboard.dtsi      |   3 +-
- drivers/media/i2c/ov5645.c                    |  30 ++--
- 4 files changed, 156 insertions(+), 71 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bc8dbe4fe4c9..329bf4a31412 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13088,6 +13088,8 @@ F:	arch/*/kernel/*/perf_event*.c
+ F:	arch/*/kernel/*/*/perf_event*.c
+ F:	arch/*/include/asm/perf_event.h
+ F:	arch/*/kernel/perf_callchain.c
++F:	arch/*/perf/*
++F:	arch/*/perf/*/*
+ F:	arch/*/events/*
+ F:	arch/*/events/*/*
+ F:	tools/perf/
 -- 
-2.20.1
+2.23.0
 
