@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B3EC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A8FC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EADB8208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73147206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624139;
-	bh=fk9fQzxJWVAvDod5jdw7cSQ5EFdgFd7DJhHuctujlgA=;
+	s=default; t=1584624142;
+	bh=CqsKLrQra6cLEAHnT8a8YJqR3AY12jRQOjMQLpab51o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YxOB9J48Ugan+xyjuWcnzpgkSmqMCCXTgoTCtzVf9ivs52SdIsDG7euGntrXEqSwM
-	 GwkfeSrG2xD8iAdGgw21Zh1WAel//o4scgpp/75pm9NjcK8nJhzlbQjf6SqKOebe35
-	 sWDBvhQ0jq7LRCnaoe8GNE1W9liMewEyoCVzJVdI=
+	b=VE3neG284oy7Jm1rmBNVPY8LUQZ7zvB01FRrQliVfnQpywKHc2HbynfmqXC8Hf5Po
+	 wRwPqaW9+sZJULYT7CVJE+kvTjoWg6GgqdK6N4y5MyWdkrUB4IPDKkVRlDoV6JecB1
+	 Gu0gXFB1pPHMnQpVQDkHkFxL/5FrvRJi8sXRHM6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730192AbgCSNWR (ORCPT
+        id S1730080AbgCSNWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:22:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47420 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:22:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730184AbgCSNWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:22:15 -0400
+        id S1730190AbgCSNWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:22:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B46F208D6;
-        Thu, 19 Mar 2020 13:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4DF0208D6;
+        Thu, 19 Mar 2020 13:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624134;
-        bh=fk9fQzxJWVAvDod5jdw7cSQ5EFdgFd7DJhHuctujlgA=;
+        s=default; t=1584624137;
+        bh=CqsKLrQra6cLEAHnT8a8YJqR3AY12jRQOjMQLpab51o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wG3fG4V7TMRNJy68NJdlSy4IrVqXCGMjCRnf8mBGb/1SNKKfGUCJvmBVf2Wu5Tjd6
-         8sRlD56Bgzk5/gLnvK0U1xDrHziq8GZo8bkfobEREKMcerVmHChw/Zdly6z/N3gVUB
-         JDq99XOgfJ7P6069EVWkhFMdn//OwM6mJkOLsn4Y=
+        b=HggvGo8N8YbXcHLEanbrSQEoP0etIxdldyLDWCcbZ8xfVdoPLjco3X6m4f3yeCMvb
+         r0qLtEbp2h7G6fur5Y78hv1WDQjhW5Tkni1FsjHO2Dxd8fjG3fplBA7THIa8IfAB3F
+         41h3wz+CGhxVMo3lK540w4kQLPIGdZhtzwf5ll/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Kuehling <Felix.Kuehling@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Yong Zhao <Yong.Zhao@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 03/60] drm/amdgpu: Fix TLB invalidation request when using semaphore
-Date:   Thu, 19 Mar 2020 14:03:41 +0100
-Message-Id: <20200319123920.270688305@linuxfoundation.org>
+Subject: [PATCH 5.4 04/60] mmc: core: Default to generic_cmd6_time as timeout in __mmc_switch()
+Date:   Thu, 19 Mar 2020 14:03:42 +0100
+Message-Id: <20200319123920.563972990@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -62,86 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Kuehling <Felix.Kuehling@amd.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-[ Upstream commit 37c58ddf57364d1a636850bb8ba6acbe1e16195e ]
+[ Upstream commit 533a6cfe08f96a7b5c65e06d20916d552c11b256 ]
 
-Use a more meaningful variable name for the invalidation request
-that is distinct from the tmp variable that gets overwritten when
-acquiring the invalidation semaphore.
+All callers of __mmc_switch() should now be specifying a valid timeout for
+the CMD6 command. However, just to be sure, let's print a warning and
+default to use the generic_cmd6_time in case the provided timeout_ms
+argument is zero.
 
-Fixes: 4ed8a03740d0 ("drm/amdgpu: invalidate mmhub semaphore workaround in gmc9/gmc10")
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Yong Zhao <Yong.Zhao@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+In this context, let's also simplify some of the corresponding code and
+clarify some related comments.
+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200122142747.5690-4-ulf.hansson@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c | 5 +++--
- drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c  | 8 ++++----
- 2 files changed, 7 insertions(+), 6 deletions(-)
+ drivers/mmc/core/mmc_ops.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-index a7ba4c6cf7a1c..f642e066e67a2 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-@@ -230,7 +230,8 @@ static void gmc_v10_0_flush_vm_hub(struct amdgpu_device *adev, uint32_t vmid,
- 				   unsigned int vmhub, uint32_t flush_type)
- {
- 	struct amdgpu_vmhub *hub = &adev->vmhub[vmhub];
--	u32 tmp = gmc_v10_0_get_invalidate_req(vmid, flush_type);
-+	u32 inv_req = gmc_v10_0_get_invalidate_req(vmid, flush_type);
-+	u32 tmp;
- 	/* Use register 17 for GART */
- 	const unsigned eng = 17;
- 	unsigned int i;
-@@ -258,7 +259,7 @@ static void gmc_v10_0_flush_vm_hub(struct amdgpu_device *adev, uint32_t vmid,
- 			DRM_ERROR("Timeout waiting for sem acquire in VM flush!\n");
- 	}
+diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
+index 09113b9ad6790..cfb2ce979baf1 100644
+--- a/drivers/mmc/core/mmc_ops.c
++++ b/drivers/mmc/core/mmc_ops.c
+@@ -458,10 +458,6 @@ static int mmc_poll_for_busy(struct mmc_card *card, unsigned int timeout_ms,
+ 	bool expired = false;
+ 	bool busy = false;
  
--	WREG32_NO_KIQ(hub->vm_inv_eng0_req + eng, tmp);
-+	WREG32_NO_KIQ(hub->vm_inv_eng0_req + eng, inv_req);
- 
+-	/* We have an unspecified cmd timeout, use the fallback value. */
+-	if (!timeout_ms)
+-		timeout_ms = MMC_OPS_TIMEOUT_MS;
+-
  	/*
- 	 * Issue a dummy read to wait for the ACK register to be cleared
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-index da53a55bf955b..688111ef814de 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-@@ -487,13 +487,13 @@ static void gmc_v9_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
- {
- 	bool use_semaphore = gmc_v9_0_use_invalidate_semaphore(adev, vmhub);
- 	const unsigned eng = 17;
--	u32 j, tmp;
-+	u32 j, inv_req, tmp;
- 	struct amdgpu_vmhub *hub;
+ 	 * In cases when not allowed to poll by using CMD13 or because we aren't
+ 	 * capable of polling by using ->card_busy(), then rely on waiting the
+@@ -534,14 +530,19 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
  
- 	BUG_ON(vmhub >= adev->num_vmhubs);
+ 	mmc_retune_hold(host);
  
- 	hub = &adev->vmhub[vmhub];
--	tmp = gmc_v9_0_get_invalidate_req(vmid, flush_type);
-+	inv_req = gmc_v9_0_get_invalidate_req(vmid, flush_type);
- 
- 	/* This is necessary for a HW workaround under SRIOV as well
- 	 * as GFXOFF under bare metal
-@@ -504,7 +504,7 @@ static void gmc_v9_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
- 		uint32_t req = hub->vm_inv_eng0_req + eng;
- 		uint32_t ack = hub->vm_inv_eng0_ack + eng;
- 
--		amdgpu_virt_kiq_reg_write_reg_wait(adev, req, ack, tmp,
-+		amdgpu_virt_kiq_reg_write_reg_wait(adev, req, ack, inv_req,
- 				1 << vmid);
- 		return;
- 	}
-@@ -532,7 +532,7 @@ static void gmc_v9_0_flush_gpu_tlb(struct amdgpu_device *adev, uint32_t vmid,
- 			DRM_ERROR("Timeout waiting for sem acquire in VM flush!\n");
- 	}
- 
--	WREG32_NO_KIQ(hub->vm_inv_eng0_req + eng, tmp);
-+	WREG32_NO_KIQ(hub->vm_inv_eng0_req + eng, inv_req);
- 
++	if (!timeout_ms) {
++		pr_warn("%s: unspecified timeout for CMD6 - use generic\n",
++			mmc_hostname(host));
++		timeout_ms = card->ext_csd.generic_cmd6_time;
++	}
++
  	/*
- 	 * Issue a dummy read to wait for the ACK register to be cleared
+-	 * If the cmd timeout and the max_busy_timeout of the host are both
+-	 * specified, let's validate them. A failure means we need to prevent
+-	 * the host from doing hw busy detection, which is done by converting
+-	 * to a R1 response instead of a R1B.
++	 * If the max_busy_timeout of the host is specified, make sure it's
++	 * enough to fit the used timeout_ms. In case it's not, let's instruct
++	 * the host to avoid HW busy detection, by converting to a R1 response
++	 * instead of a R1B.
+ 	 */
+-	if (timeout_ms && host->max_busy_timeout &&
+-		(timeout_ms > host->max_busy_timeout))
++	if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout))
+ 		use_r1b_resp = false;
+ 
+ 	cmd.opcode = MMC_SWITCH;
+@@ -552,10 +553,6 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
+ 	cmd.flags = MMC_CMD_AC;
+ 	if (use_r1b_resp) {
+ 		cmd.flags |= MMC_RSP_SPI_R1B | MMC_RSP_R1B;
+-		/*
+-		 * A busy_timeout of zero means the host can decide to use
+-		 * whatever value it finds suitable.
+-		 */
+ 		cmd.busy_timeout = timeout_ms;
+ 	} else {
+ 		cmd.flags |= MMC_RSP_SPI_R1 | MMC_RSP_R1;
 -- 
 2.20.1
 
