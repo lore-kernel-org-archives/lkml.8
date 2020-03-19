@@ -2,52 +2,52 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B92C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EC9C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7143D2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E85C2216FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624044;
-	bh=7jeMu5jdEqklDClhytAmhA76a5o6QDGkioA600phmX4=;
+	s=default; t=1584624047;
+	bh=5nLrWCES3KQ6aDOHOe8Z7mxo2FpvMmVEDBf2SpwIX+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YzkyeH4fMofR9jBNQyllSJb+ZawgM/dtu+IahtGh4rVrdLq9xevOjQcNcX6CyA7I5
-	 0I672n9SRoA44YstgjpdQWLf2vn/XMyJ7CARe7mBdysxnOnYK8+/ZXdGI5NR59H3Py
-	 G+u45HxG5kk0Ofx4XWKGVq7++cfjCnSk/EwmFoJA=
+	b=VEUp6y6coUdJqHts/mS7J80NneEJUKNvRGDmpH4F/IZ4GWJ8rsQ7Gs/g4XaxMFRgA
+	 F89m6XRBIsm78ybhFRnBT4TzNFONp0IZ8LmpgP1cTnEy2CoCjidQLRmDpqvdARr+jH
+	 OeeM7PQbvCcqvHlNw8rhnTF+Z6EaWzn7GOyBge24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbgCSNUn (ORCPT
+        id S1729558AbgCSNUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44758 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:20:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730002AbgCSNUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:20:39 -0400
+        id S1728786AbgCSNUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:20:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D75A21556;
-        Thu, 19 Mar 2020 13:20:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 970272166E;
+        Thu, 19 Mar 2020 13:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624037;
-        bh=7jeMu5jdEqklDClhytAmhA76a5o6QDGkioA600phmX4=;
+        s=default; t=1584624042;
+        bh=5nLrWCES3KQ6aDOHOe8Z7mxo2FpvMmVEDBf2SpwIX+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=isuFE07o6uhzifdvw9ixeT8atw3z7d+GmgwcFDPBYf3CXo8sB+TGPVc7N90Paxcpi
-         seZH3pAWp9IOCtdfflUbmxSiQNU0sZYZiAOamBldXT3JK9jKQGO1xjMs7GiIUJnuJ7
-         ovJDVS80B5EVBwqTlUjq5nlcMtnqig0VB0XlC/QY=
+        b=PV0UjRsnMzg/lrgLW6Ig4pgkV9m30VtYZYakvlnZF3ttKsD2ngHNzs7hikWbLTH4g
+         WiRHJtqr9sxQfOS4zokHlc7HDEFDCl1V89wr/ea+lgqPcGtb8ZYjSftkjDXo/Tcub7
+         OnI7LY+FP99Mzc0TXHH+6XfiCa+EDJ+9HJvW5Ihs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 28/48] net: rmnet: fix bridge mode bugs
-Date:   Thu, 19 Mar 2020 14:04:10 +0100
-Message-Id: <20200319123911.809201971@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Saravana Kannan <saravanak@google.com>
+Subject: [PATCH 4.19 38/48] driver core: Make driver core own stateful device links
+Date:   Thu, 19 Mar 2020 14:04:20 +0100
+Message-Id: <20200319123914.936500139@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
 References: <20200319123902.941451241@linuxfoundation.org>
@@ -60,360 +60,265 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-[ Upstream commit d939b6d30bea1a2322bc536b12be0a7c4c2bccd7 ]
+commit 72175d4ea4c442d95cf690c3e968eeee90fd43ca upstream.
 
-In order to attach a bridge interface to the rmnet interface,
-"master" operation is used.
-(e.g. ip link set dummy1 master rmnet0)
-But, in the rmnet_add_bridge(), which is a callback of ->ndo_add_slave()
-doesn't register lower interface.
-So, ->ndo_del_slave() doesn't work.
-There are other problems too.
-1. It couldn't detect circular upper/lower interface relationship.
-2. It couldn't prevent stack overflow because of too deep depth
-of upper/lower interface
-3. It doesn't check the number of lower interfaces.
-4. Panics because of several reasons.
+Even though stateful device links are managed by the driver core in
+principle, their creators are allowed and sometimes even expected
+to drop references to them via device_link_del() or
+device_link_remove(), but that doesn't really play well with the
+"persistent" link concept.
 
-The root problem of these issues is actually the same.
-So, in this patch, these all problems will be fixed.
+If "persistent" managed device links are created from driver
+probe callbacks, device_link_add() called to do that will take a
+new reference on the link each time the callback runs and those
+references will never be dropped, which kind of isn't nice.
 
-Test commands:
-    modprobe rmnet
-    ip link add dummy0 type dummy
-    ip link add rmnet0 link dummy0 type rmnet mux_id 1
-    ip link add dummy1 master rmnet0 type dummy
-    ip link add dummy2 master rmnet0 type dummy
-    ip link del rmnet0
-    ip link del dummy2
-    ip link del dummy1
+This issues arises because of the link reference counting carried
+out by device_link_add() for existing links, but that is only done to
+avoid deleting device links that may still be necessary, which
+shouldn't be a concern for managed (stateful) links.  These device
+links are managed by the driver core and whoever creates one of them
+will need it at least as long as until the consumer driver is detached
+from its device and deleting it may be left to the driver core just
+fine.
 
-Splat looks like:
-[   41.867595][ T1164] general protection fault, probably for non-canonical address 0xdffffc0000000101I
-[   41.869993][ T1164] KASAN: null-ptr-deref in range [0x0000000000000808-0x000000000000080f]
-[   41.872950][ T1164] CPU: 0 PID: 1164 Comm: ip Not tainted 5.6.0-rc1+ #447
-[   41.873915][ T1164] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   41.875161][ T1164] RIP: 0010:rmnet_unregister_bridge.isra.6+0x71/0xf0 [rmnet]
-[   41.876178][ T1164] Code: 48 89 ef 48 89 c6 5b 5d e9 fc fe ff ff e8 f7 f3 ff ff 48 8d b8 08 08 00 00 48 ba 00 7
-[   41.878925][ T1164] RSP: 0018:ffff8880c4d0f188 EFLAGS: 00010202
-[   41.879774][ T1164] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000101
-[   41.887689][ T1164] RDX: dffffc0000000000 RSI: ffffffffb8cf64f0 RDI: 0000000000000808
-[   41.888727][ T1164] RBP: ffff8880c40e4000 R08: ffffed101b3c0e3c R09: 0000000000000001
-[   41.889749][ T1164] R10: 0000000000000001 R11: ffffed101b3c0e3b R12: 1ffff110189a1e3c
-[   41.890783][ T1164] R13: ffff8880c4d0f200 R14: ffffffffb8d56160 R15: ffff8880ccc2c000
-[   41.891794][ T1164] FS:  00007f4300edc0c0(0000) GS:ffff8880d9c00000(0000) knlGS:0000000000000000
-[   41.892953][ T1164] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   41.893800][ T1164] CR2: 00007f43003bc8c0 CR3: 00000000ca53e001 CR4: 00000000000606f0
-[   41.894824][ T1164] Call Trace:
-[   41.895274][ T1164]  ? rcu_is_watching+0x2c/0x80
-[   41.895895][ T1164]  rmnet_config_notify_cb+0x1f7/0x590 [rmnet]
-[   41.896687][ T1164]  ? rmnet_unregister_bridge.isra.6+0xf0/0xf0 [rmnet]
-[   41.897611][ T1164]  ? rmnet_unregister_bridge.isra.6+0xf0/0xf0 [rmnet]
-[   41.898508][ T1164]  ? __module_text_address+0x13/0x140
-[   41.899162][ T1164]  notifier_call_chain+0x90/0x160
-[   41.899814][ T1164]  rollback_registered_many+0x660/0xcf0
-[   41.900544][ T1164]  ? netif_set_real_num_tx_queues+0x780/0x780
-[   41.901316][ T1164]  ? __lock_acquire+0xdfe/0x3de0
-[   41.901958][ T1164]  ? memset+0x1f/0x40
-[   41.902468][ T1164]  ? __nla_validate_parse+0x98/0x1ab0
-[   41.903166][ T1164]  unregister_netdevice_many.part.133+0x13/0x1b0
-[   41.903988][ T1164]  rtnl_delete_link+0xbc/0x100
-[ ... ]
+For this reason, rework device_link_add() to apply the reference
+counting to stateless links only and make device_link_del() and
+device_link_remove() drop references to stateless links only too.
+After this change, if called to add a stateful device link for
+a consumer-supplier pair for which a stateful device link is
+present already, device_link_add() will return the existing link
+without incrementing its reference counter.  Accordingly,
+device_link_del() and device_link_remove() will WARN() and do
+nothing when called to drop a reference to a stateful link.  Thus,
+effectively, all stateful device links will be owned by the driver
+core.
 
-Fixes: 60d58f971c10 ("net: qualcomm: rmnet: Implement bridge mode")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In addition, clean up the handling of the link management flags,
+DL_FLAG_AUTOREMOVE_CONSUMER and DL_FLAG_AUTOREMOVE_SUPPLIER, so that
+(a) they are never set at the same time and (b) if device_link_add()
+is called for a consumer-supplier pair with an existing stateful link
+between them, the flags of that link will be combined with the flags
+passed to device_link_add() to ensure that the life time of the link
+is sufficient for all of the callers of device_link_add() for the
+same consumer-supplier pair.
+
+Update the device_link_add() kerneldoc comment to reflect the
+above changes.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../ethernet/qualcomm/rmnet/rmnet_config.c    | 131 +++++++++---------
- .../ethernet/qualcomm/rmnet/rmnet_config.h    |   1 +
- .../net/ethernet/qualcomm/rmnet/rmnet_vnd.c   |   8 --
- .../net/ethernet/qualcomm/rmnet/rmnet_vnd.h   |   1 -
- 4 files changed, 64 insertions(+), 77 deletions(-)
+ Documentation/driver-api/device_link.rst |   42 +++++++++++-------
+ drivers/base/core.c                      |   69 ++++++++++++++++++++++++-------
+ 2 files changed, 79 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-index 01a1d3ff3c944..37786affa9750 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -22,25 +22,6 @@
- #include "rmnet_vnd.h"
- #include "rmnet_private.h"
+--- a/Documentation/driver-api/device_link.rst
++++ b/Documentation/driver-api/device_link.rst
+@@ -25,8 +25,8 @@ suspend/resume and shutdown ordering.
  
--/* Locking scheme -
-- * The shared resource which needs to be protected is realdev->rx_handler_data.
-- * For the writer path, this is using rtnl_lock(). The writer paths are
-- * rmnet_newlink(), rmnet_dellink() and rmnet_force_unassociate_device(). These
-- * paths are already called with rtnl_lock() acquired in. There is also an
-- * ASSERT_RTNL() to ensure that we are calling with rtnl acquired. For
-- * dereference here, we will need to use rtnl_dereference(). Dev list writing
-- * needs to happen with rtnl_lock() acquired for netdev_master_upper_dev_link().
-- * For the reader path, the real_dev->rx_handler_data is called in the TX / RX
-- * path. We only need rcu_read_lock() for these scenarios. In these cases,
-- * the rcu_read_lock() is held in __dev_queue_xmit() and
-- * netif_receive_skb_internal(), so readers need to use rcu_dereference_rtnl()
-- * to get the relevant information. For dev list reading, we again acquire
-- * rcu_read_lock() in rmnet_dellink() for netdev_master_upper_dev_get_rcu().
-- * We also use unregister_netdevice_many() to free all rmnet devices in
-- * rmnet_force_unassociate_device() so we dont lose the rtnl_lock() and free in
-- * same context.
-- */
--
- /* Local Definitions and Declarations */
+ Device links allow representation of such dependencies in the driver core.
  
- static const struct nla_policy rmnet_policy[IFLA_RMNET_MAX + 1] = {
-@@ -60,9 +41,10 @@ rmnet_get_port_rtnl(const struct net_device *real_dev)
- 	return rtnl_dereference(real_dev->rx_handler_data);
- }
+-In its standard form, a device link combines *both* dependency types:
+-It guarantees correct suspend/resume and shutdown ordering between a
++In its standard or *managed* form, a device link combines *both* dependency
++types:  It guarantees correct suspend/resume and shutdown ordering between a
+ "supplier" device and its "consumer" devices, and it guarantees driver
+ presence on the supplier.  The consumer devices are not probed before the
+ supplier is bound to a driver, and they're unbound before the supplier
+@@ -69,12 +69,14 @@ know that the supplier is functional alr
+ the case, for instance, if the consumer has just acquired some resources that
+ would not have been available had the supplier not been functional then).]
  
--static int rmnet_unregister_real_device(struct net_device *real_dev,
--					struct rmnet_port *port)
-+static int rmnet_unregister_real_device(struct net_device *real_dev)
- {
-+	struct rmnet_port *port = rmnet_get_port_rtnl(real_dev);
+-If a device link is added in the ``->probe`` callback of the supplier or
+-consumer driver, it is typically deleted in its ``->remove`` callback for
+-symmetry.  That way, if the driver is compiled as a module, the device
+-link is added on module load and orderly deleted on unload.  The same
+-restrictions that apply to device link addition (e.g. exclusion of a
+-parallel suspend/resume transition) apply equally to deletion.
++If a device link with ``DL_FLAG_STATELESS`` set (i.e. a stateless device link)
++is added in the ``->probe`` callback of the supplier or consumer driver, it is
++typically deleted in its ``->remove`` callback for symmetry.  That way, if the
++driver is compiled as a module, the device link is added on module load and
++orderly deleted on unload.  The same restrictions that apply to device link
++addition (e.g. exclusion of a parallel suspend/resume transition) apply equally
++to deletion.  Device links with ``DL_FLAG_STATELESS`` unset (i.e. managed
++device links) are deleted automatically by the driver core.
+ 
+ Several flags may be specified on device link addition, two of which
+ have already been mentioned above:  ``DL_FLAG_STATELESS`` to express that no
+@@ -87,8 +89,6 @@ link is added from the consumer's ``->pr
+ can be specified to runtime resume the supplier upon addition of the
+ device link.  ``DL_FLAG_AUTOREMOVE_CONSUMER`` causes the device link to be
+ automatically purged when the consumer fails to probe or later unbinds.
+-This obviates the need to explicitly delete the link in the ``->remove``
+-callback or in the error path of the ``->probe`` callback.
+ 
+ Similarly, when the device link is added from supplier's ``->probe`` callback,
+ ``DL_FLAG_AUTOREMOVE_SUPPLIER`` causes the device link to be automatically
+@@ -97,12 +97,20 @@ purged when the supplier fails to probe
+ Limitations
+ ===========
+ 
+-Driver authors should be aware that a driver presence dependency (i.e. when
+-``DL_FLAG_STATELESS`` is not specified on link addition) may cause probing of
+-the consumer to be deferred indefinitely.  This can become a problem if the
+-consumer is required to probe before a certain initcall level is reached.
+-Worse, if the supplier driver is blacklisted or missing, the consumer will
+-never be probed.
++Driver authors should be aware that a driver presence dependency for managed
++device links (i.e. when ``DL_FLAG_STATELESS`` is not specified on link addition)
++may cause probing of the consumer to be deferred indefinitely.  This can become
++a problem if the consumer is required to probe before a certain initcall level
++is reached.  Worse, if the supplier driver is blacklisted or missing, the
++consumer will never be probed.
 +
- 	if (port->nr_rmnet_devs)
- 		return -EINVAL;
++Moreover, managed device links cannot be deleted directly.  They are deleted
++by the driver core when they are not necessary any more in accordance with the
++``DL_FLAG_AUTOREMOVE_CONSUMER`` and ``DL_FLAG_AUTOREMOVE_SUPPLIER`` flags.
++However, stateless device links (i.e. device links with ``DL_FLAG_STATELESS``
++set) are expected to be removed by whoever called :c:func:`device_link_add()`
++to add them with the help of either :c:func:`device_link_del()` or
++:c:func:`device_link_remove()`.
  
-@@ -102,28 +84,33 @@ static int rmnet_register_real_device(struct net_device *real_dev)
- 	return 0;
- }
+ Sometimes drivers depend on optional resources.  They are able to operate
+ in a degraded mode (reduced feature set or performance) when those resources
+@@ -286,4 +294,4 @@ API
+ ===
  
--static void rmnet_unregister_bridge(struct net_device *dev,
--				    struct rmnet_port *port)
-+static void rmnet_unregister_bridge(struct rmnet_port *port)
- {
--	struct rmnet_port *bridge_port;
--	struct net_device *bridge_dev;
-+	struct net_device *bridge_dev, *real_dev, *rmnet_dev;
-+	struct rmnet_port *real_port;
- 
- 	if (port->rmnet_mode != RMNET_EPMODE_BRIDGE)
- 		return;
- 
--	/* bridge slave handling */
-+	rmnet_dev = port->rmnet_dev;
- 	if (!port->nr_rmnet_devs) {
--		bridge_dev = port->bridge_ep;
-+		/* bridge device */
-+		real_dev = port->bridge_ep;
-+		bridge_dev = port->dev;
- 
--		bridge_port = rmnet_get_port_rtnl(bridge_dev);
--		bridge_port->bridge_ep = NULL;
--		bridge_port->rmnet_mode = RMNET_EPMODE_VND;
-+		real_port = rmnet_get_port_rtnl(real_dev);
-+		real_port->bridge_ep = NULL;
-+		real_port->rmnet_mode = RMNET_EPMODE_VND;
- 	} else {
-+		/* real device */
- 		bridge_dev = port->bridge_ep;
- 
--		bridge_port = rmnet_get_port_rtnl(bridge_dev);
--		rmnet_unregister_real_device(bridge_dev, bridge_port);
-+		port->bridge_ep = NULL;
-+		port->rmnet_mode = RMNET_EPMODE_VND;
+ .. kernel-doc:: drivers/base/core.c
+-   :functions: device_link_add device_link_del
++   :functions: device_link_add device_link_del device_link_remove
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -179,10 +179,21 @@ void device_pm_move_to_tail(struct devic
+  * of the link.  If DL_FLAG_PM_RUNTIME is not set, DL_FLAG_RPM_ACTIVE will be
+  * ignored.
+  *
+- * If the DL_FLAG_AUTOREMOVE_CONSUMER flag is set, the link will be removed
+- * automatically when the consumer device driver unbinds from it.  Analogously,
+- * if DL_FLAG_AUTOREMOVE_SUPPLIER is set in @flags, the link will be removed
+- * automatically when the supplier device driver unbinds from it.
++ * If DL_FLAG_STATELESS is set in @flags, the link is not going to be managed by
++ * the driver core and, in particular, the caller of this function is expected
++ * to drop the reference to the link acquired by it directly.
++ *
++ * If that flag is not set, however, the caller of this function is handing the
++ * management of the link over to the driver core entirely and its return value
++ * can only be used to check whether or not the link is present.  In that case,
++ * the DL_FLAG_AUTOREMOVE_CONSUMER and DL_FLAG_AUTOREMOVE_SUPPLIER device link
++ * flags can be used to indicate to the driver core when the link can be safely
++ * deleted.  Namely, setting one of them in @flags indicates to the driver core
++ * that the link is not going to be used (by the given caller of this function)
++ * after unbinding the consumer or supplier driver, respectively, from its
++ * device, so the link can be deleted at that point.  If none of them is set,
++ * the link will be maintained until one of the devices pointed to by it (either
++ * the consumer or the supplier) is unregistered.
+  *
+  * The combination of DL_FLAG_STATELESS and either DL_FLAG_AUTOREMOVE_CONSUMER
+  * or DL_FLAG_AUTOREMOVE_SUPPLIER set in @flags at the same time is invalid and
+@@ -228,6 +239,14 @@ struct device_link *device_link_add(stru
+ 		goto out;
  	}
+ 
++	/*
++	 * DL_FLAG_AUTOREMOVE_SUPPLIER indicates that the link will be needed
++	 * longer than for DL_FLAG_AUTOREMOVE_CONSUMER and setting them both
++	 * together doesn't make sense, so prefer DL_FLAG_AUTOREMOVE_SUPPLIER.
++	 */
++	if (flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
++		flags &= ~DL_FLAG_AUTOREMOVE_CONSUMER;
 +
-+	netdev_upper_dev_unlink(bridge_dev, rmnet_dev);
-+	rmnet_unregister_real_device(bridge_dev);
- }
+ 	list_for_each_entry(link, &supplier->links.consumers, s_node) {
+ 		if (link->consumer != consumer)
+ 			continue;
+@@ -241,12 +260,6 @@ struct device_link *device_link_add(stru
+ 			goto out;
+ 		}
  
- static int rmnet_newlink(struct net *src_net, struct net_device *dev,
-@@ -170,6 +157,7 @@ static int rmnet_newlink(struct net *src_net, struct net_device *dev,
- 		goto err2;
- 
- 	port->rmnet_mode = mode;
-+	port->rmnet_dev = dev;
- 
- 	hlist_add_head_rcu(&ep->hlnode, &port->muxed_ep[mux_id]);
- 
-@@ -187,8 +175,9 @@ static int rmnet_newlink(struct net *src_net, struct net_device *dev,
- 
- err2:
- 	unregister_netdevice(dev);
-+	rmnet_vnd_dellink(mux_id, port, ep);
- err1:
--	rmnet_unregister_real_device(real_dev, port);
-+	rmnet_unregister_real_device(real_dev);
- err0:
- 	kfree(ep);
- 	return err;
-@@ -197,30 +186,32 @@ static int rmnet_newlink(struct net *src_net, struct net_device *dev,
- static void rmnet_dellink(struct net_device *dev, struct list_head *head)
- {
- 	struct rmnet_priv *priv = netdev_priv(dev);
--	struct net_device *real_dev;
-+	struct net_device *real_dev, *bridge_dev;
-+	struct rmnet_port *real_port, *bridge_port;
- 	struct rmnet_endpoint *ep;
--	struct rmnet_port *port;
--	u8 mux_id;
-+	u8 mux_id = priv->mux_id;
- 
- 	real_dev = priv->real_dev;
- 
--	if (!real_dev || !rmnet_is_real_dev_registered(real_dev))
-+	if (!rmnet_is_real_dev_registered(real_dev))
- 		return;
- 
--	port = rmnet_get_port_rtnl(real_dev);
+-		if (flags & DL_FLAG_AUTOREMOVE_CONSUMER)
+-			link->flags |= DL_FLAG_AUTOREMOVE_CONSUMER;
 -
--	mux_id = rmnet_vnd_get_mux(dev);
-+	real_port = rmnet_get_port_rtnl(real_dev);
-+	bridge_dev = real_port->bridge_ep;
-+	if (bridge_dev) {
-+		bridge_port = rmnet_get_port_rtnl(bridge_dev);
-+		rmnet_unregister_bridge(bridge_port);
-+	}
- 
--	ep = rmnet_get_endpoint(port, mux_id);
-+	ep = rmnet_get_endpoint(real_port, mux_id);
- 	if (ep) {
- 		hlist_del_init_rcu(&ep->hlnode);
--		rmnet_unregister_bridge(dev, port);
--		rmnet_vnd_dellink(mux_id, port, ep);
-+		rmnet_vnd_dellink(mux_id, real_port, ep);
- 		kfree(ep);
- 	}
--	netdev_upper_dev_unlink(real_dev, dev);
--	rmnet_unregister_real_device(real_dev, port);
- 
-+	netdev_upper_dev_unlink(real_dev, dev);
-+	rmnet_unregister_real_device(real_dev);
- 	unregister_netdevice_queue(dev, head);
- }
- 
-@@ -232,23 +223,23 @@ static void rmnet_force_unassociate_device(struct net_device *real_dev)
- 	unsigned long bkt_ep;
- 	LIST_HEAD(list);
- 
--	ASSERT_RTNL();
+-		if (flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
+-			link->flags |= DL_FLAG_AUTOREMOVE_SUPPLIER;
 -
- 	port = rmnet_get_port_rtnl(real_dev);
+ 		if (flags & DL_FLAG_PM_RUNTIME) {
+ 			if (!(link->flags & DL_FLAG_PM_RUNTIME)) {
+ 				pm_runtime_new_link(consumer);
+@@ -256,7 +269,25 @@ struct device_link *device_link_add(stru
+ 				refcount_inc(&link->rpm_active);
+ 		}
  
--	rmnet_unregister_bridge(real_dev, port);
--
--	hash_for_each_safe(port->muxed_ep, bkt_ep, tmp_ep, ep, hlnode) {
--		netdev_upper_dev_unlink(real_dev, ep->egress_dev);
--		unregister_netdevice_queue(ep->egress_dev, &list);
--		rmnet_vnd_dellink(ep->mux_id, port, ep);
--		hlist_del_init_rcu(&ep->hlnode);
--		kfree(ep);
-+	if (port->nr_rmnet_devs) {
-+		/* real device */
-+		rmnet_unregister_bridge(port);
-+		hash_for_each_safe(port->muxed_ep, bkt_ep, tmp_ep, ep, hlnode) {
-+			unregister_netdevice_queue(ep->egress_dev, &list);
-+			netdev_upper_dev_unlink(real_dev, ep->egress_dev);
-+			rmnet_vnd_dellink(ep->mux_id, port, ep);
-+			hlist_del_init_rcu(&ep->hlnode);
-+			kfree(ep);
+-		kref_get(&link->kref);
++		if (flags & DL_FLAG_STATELESS) {
++			kref_get(&link->kref);
++			goto out;
 +		}
-+		rmnet_unregister_real_device(real_dev);
-+		unregister_netdevice_many(&list);
-+	} else {
-+		rmnet_unregister_bridge(port);
++
++		/*
++		 * If the life time of the link following from the new flags is
++		 * longer than indicated by the flags of the existing link,
++		 * update the existing link to stay around longer.
++		 */
++		if (flags & DL_FLAG_AUTOREMOVE_SUPPLIER) {
++			if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER) {
++				link->flags &= ~DL_FLAG_AUTOREMOVE_CONSUMER;
++				link->flags |= DL_FLAG_AUTOREMOVE_SUPPLIER;
++			}
++		} else if (!(flags & DL_FLAG_AUTOREMOVE_CONSUMER)) {
++			link->flags &= ~(DL_FLAG_AUTOREMOVE_CONSUMER |
++					 DL_FLAG_AUTOREMOVE_SUPPLIER);
++		}
+ 		goto out;
  	}
--
--	unregister_netdevice_many(&list);
--
--	rmnet_unregister_real_device(real_dev, port);
+ 
+@@ -406,8 +437,16 @@ static void __device_link_del(struct kre
  }
+ #endif /* !CONFIG_SRCU */
  
- static int rmnet_config_notify_cb(struct notifier_block *nb,
-@@ -427,6 +418,9 @@ int rmnet_add_bridge(struct net_device *rmnet_dev,
- 	if (port->nr_rmnet_devs > 1)
- 		return -EINVAL;
- 
-+	if (port->rmnet_mode != RMNET_EPMODE_VND)
-+		return -EINVAL;
++static void device_link_put_kref(struct device_link *link)
++{
++	if (link->flags & DL_FLAG_STATELESS)
++		kref_put(&link->kref, __device_link_del);
++	else
++		WARN(1, "Unable to drop a managed device link reference\n");
++}
 +
- 	if (rmnet_is_real_dev_registered(slave_dev))
- 		return -EBUSY;
- 
-@@ -434,9 +428,17 @@ int rmnet_add_bridge(struct net_device *rmnet_dev,
- 	if (err)
- 		return -EBUSY;
- 
-+	err = netdev_master_upper_dev_link(slave_dev, rmnet_dev, NULL, NULL,
-+					   extack);
-+	if (err) {
-+		rmnet_unregister_real_device(slave_dev);
-+		return err;
-+	}
-+
- 	slave_port = rmnet_get_port_rtnl(slave_dev);
- 	slave_port->rmnet_mode = RMNET_EPMODE_BRIDGE;
- 	slave_port->bridge_ep = real_dev;
-+	slave_port->rmnet_dev = rmnet_dev;
- 
- 	port->rmnet_mode = RMNET_EPMODE_BRIDGE;
- 	port->bridge_ep = slave_dev;
-@@ -448,16 +450,9 @@ int rmnet_add_bridge(struct net_device *rmnet_dev,
- int rmnet_del_bridge(struct net_device *rmnet_dev,
- 		     struct net_device *slave_dev)
+ /**
+- * device_link_del - Delete a link between two devices.
++ * device_link_del - Delete a stateless link between two devices.
+  * @link: Device link to delete.
+  *
+  * The caller must ensure proper synchronization of this function with runtime
+@@ -419,14 +458,14 @@ void device_link_del(struct device_link
  {
--	struct rmnet_priv *priv = netdev_priv(rmnet_dev);
--	struct net_device *real_dev = priv->real_dev;
--	struct rmnet_port *port, *slave_port;
--
--	port = rmnet_get_port_rtnl(real_dev);
--	port->rmnet_mode = RMNET_EPMODE_VND;
--	port->bridge_ep = NULL;
-+	struct rmnet_port *port = rmnet_get_port_rtnl(slave_dev);
- 
--	slave_port = rmnet_get_port_rtnl(slave_dev);
--	rmnet_unregister_real_device(slave_dev, slave_port);
-+	rmnet_unregister_bridge(port);
- 
- 	netdev_dbg(slave_dev, "removed from rmnet as slave\n");
- 	return 0;
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h
-index 6a978f486ce10..7691d1abe6e2a 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h
-@@ -37,6 +37,7 @@ struct rmnet_port {
- 	u8 rmnet_mode;
- 	struct hlist_head muxed_ep[RMNET_MAX_LOGICAL_EP];
- 	struct net_device *bridge_ep;
-+	struct net_device *rmnet_dev;
- };
- 
- extern struct rtnl_link_ops rmnet_link_ops;
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c
-index d11c16aeb19ad..ed02926f5fe90 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c
-@@ -276,14 +276,6 @@ int rmnet_vnd_dellink(u8 id, struct rmnet_port *port,
- 	return 0;
+ 	device_links_write_lock();
+ 	device_pm_lock();
+-	kref_put(&link->kref, __device_link_del);
++	device_link_put_kref(link);
+ 	device_pm_unlock();
+ 	device_links_write_unlock();
  }
+ EXPORT_SYMBOL_GPL(device_link_del);
  
--u8 rmnet_vnd_get_mux(struct net_device *rmnet_dev)
--{
--	struct rmnet_priv *priv;
--
--	priv = netdev_priv(rmnet_dev);
--	return priv->mux_id;
--}
--
- int rmnet_vnd_do_flow_control(struct net_device *rmnet_dev, int enable)
- {
- 	netdev_dbg(rmnet_dev, "Setting VND TX queue state to %d\n", enable);
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h b/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h
-index 71e4c32869512..22cfdfd5625a4 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h
-@@ -25,6 +25,5 @@ int rmnet_vnd_dellink(u8 id, struct rmnet_port *port,
- 		      struct rmnet_endpoint *ep);
- void rmnet_vnd_rx_fixup(struct sk_buff *skb, struct net_device *dev);
- void rmnet_vnd_tx_fixup(struct sk_buff *skb, struct net_device *dev);
--u8 rmnet_vnd_get_mux(struct net_device *rmnet_dev);
- void rmnet_vnd_setup(struct net_device *dev);
- #endif /* _RMNET_VND_H_ */
--- 
-2.20.1
-
+ /**
+- * device_link_remove - remove a link between two devices.
++ * device_link_remove - Delete a stateless link between two devices.
+  * @consumer: Consumer end of the link.
+  * @supplier: Supplier end of the link.
+  *
+@@ -445,7 +484,7 @@ void device_link_remove(void *consumer,
+ 
+ 	list_for_each_entry(link, &supplier->links.consumers, s_node) {
+ 		if (link->consumer == consumer) {
+-			kref_put(&link->kref, __device_link_del);
++			device_link_put_kref(link);
+ 			break;
+ 		}
+ 	}
 
 
