@@ -2,151 +2,110 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10262C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05835C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68B920740
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1608206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Zgc/MyZZ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BPB/AhEe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgCSEZ4 (ORCPT
+        id S1726735AbgCSE2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 00:25:56 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:46005 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725970AbgCSEZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 00:25:55 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 0712e1ae;
-        Thu, 19 Mar 2020 04:19:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=MZwVSXAE6iQ6mpmW/k+rzr/Ifms=; b=Zgc/My
-        ZZk5NMR6InJet56FPRr6aq77nJ1M9z70Cp63JHyJW8I6W7iwHL7yNxeKTaGHYO/P
-        177+huS83jiGeZdlH5QUbphN9tSl2kymNoGl7aMA1/4z2QF7eo5CURjUcqhwUZLN
-        m5uOHrmNxgxfAfb7jmAfo/+1vzod1kcEq4N1xZMGPOw5w0Tjl7zM3/x8bhHBHrd7
-        3uhEFSvK9GcUx6SqbhTluWbOKOChtIt1AIO/p0q+74pkrJby6dQYB7GW8MzoZX0/
-        ej7nYqtrjLmv5/pMFaaJwlMpF2uXbKBwxjvDk7Qev5orvpN7lTyjEYl/jaTrPwip
-        nIeEc93LLGRrDrhA==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 653e646b (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 19 Mar 2020 04:19:27 +0000 (UTC)
-Received: by mail-il1-f180.google.com with SMTP id k29so1035796ilg.0;
-        Wed, 18 Mar 2020 21:25:53 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1tOVTljWlaGroE7nUMPNmqjqeoKuVc8XpsDknnGO6MYJsT4GMS
-        y69zHjCVgWXvzqzLz33f89Gw2Wj3oS37H8573bo=
-X-Google-Smtp-Source: ADFU+vvLWa1F1lZ8noNezKtk4VYJZHBDRdFV9jO6jCrVxgq6Bj5Ed7nFt0P2eILiyqoOf4Sf0kg4Etel8/L8y6bVUHI=
-X-Received: by 2002:a92:c990:: with SMTP id y16mr1394184iln.207.1584591952483;
- Wed, 18 Mar 2020 21:25:52 -0700 (PDT)
+        Thu, 19 Mar 2020 00:28:44 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:51391 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725601AbgCSE2o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 00:28:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1584592124; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=0mRFMEJwpdIXaB+jwVtf97Gm3MwCqBL7eIA/yGyn8AI=; b=BPB/AhEeJu9TQdGDwd0dgE26CuVpxgXvjImghNLWITxq7FFCWDqyhrZ4yT5g2bcBebmzPeod
+ ylsdrX2LH+6nVoWat5mqZ2N/Pn5bPvDtgCjdB/oEkMz+WWO65mOwWrs6qGIG995EWOcdxVKT
+ +PuK0UJicA4emFeKd0346oW9nNc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e72f4f1.7fd13655c110-smtp-out-n04;
+ Thu, 19 Mar 2020 04:28:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CDFC3C43637; Thu, 19 Mar 2020 04:28:32 +0000 (UTC)
+Received: from [10.110.35.103] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DC6BC433CB;
+        Thu, 19 Mar 2020 04:28:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DC6BC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH 1/4] dt-bindings: phy: Add binding for qcom,usb-hs-7nm
+To:     Rob Herring <robh@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
+ <1584147293-6763-2-git-send-email-wcheng@codeaurora.org>
+ <20200318220352.GA12501@bogus>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <44d97f2d-eb09-1192-ad20-daef7542a8b0@codeaurora.org>
+Date:   Wed, 18 Mar 2020 21:28:30 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <CAHmME9otcAe7H4Anan8Tv1KreTZtwt4XXEPMG--x2Ljr0M+o1Q@mail.gmail.com>
- <20200319022732.166085-1-Jason@zx2c4.com> <20200319032526.GH2334@sol.localdomain>
-In-Reply-To: <20200319032526.GH2334@sol.localdomain>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Wed, 18 Mar 2020 22:25:40 -0600
-X-Gmail-Original-Message-ID: <CAHmME9rV7rknXMmjhNj--ZWvya7ZG37tnKQB+vxuqok4nLJwTg@mail.gmail.com>
-Message-ID: <CAHmME9rV7rknXMmjhNj--ZWvya7ZG37tnKQB+vxuqok4nLJwTg@mail.gmail.com>
-Subject: Re: [PATCH URGENT crypto v2] crypto: arm64/chacha - correctly walk
- through blocks
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200318220352.GA12501@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 9:25 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Wed, Mar 18, 2020 at 08:27:32PM -0600, Jason A. Donenfeld wrote:
-> > It also fixes up a bug in the (optional, costly) stride test that
-> > prevented it from running on arm64.
-> [...]
-> > diff --git a/lib/crypto/chacha20poly1305-selftest.c b/lib/crypto/chacha20poly1305-selftest.c
-> > index c391a91364e9..fa43deda2660 100644
-> > --- a/lib/crypto/chacha20poly1305-selftest.c
-> > +++ b/lib/crypto/chacha20poly1305-selftest.c
-> > @@ -9028,10 +9028,15 @@ bool __init chacha20poly1305_selftest(void)
-> >            && total_len <= 1 << 10; ++total_len) {
-> >               for (i = 0; i <= total_len; ++i) {
-> >                       for (j = i; j <= total_len; ++j) {
-> > +                             k = 0;
-> >                               sg_init_table(sg_src, 3);
-> > -                             sg_set_buf(&sg_src[0], input, i);
-> > -                             sg_set_buf(&sg_src[1], input + i, j - i);
-> > -                             sg_set_buf(&sg_src[2], input + j, total_len - j);
-> > +                             if (i)
-> > +                                     sg_set_buf(&sg_src[k++], input, i);
-> > +                             if (j - i)
-> > +                                     sg_set_buf(&sg_src[k++], input + i, j - i);
-> > +                             if (total_len - j)
-> > +                                     sg_set_buf(&sg_src[k++], input + j, total_len - j);
-> > +                             sg_init_marker(sg_src, k);
-> >                               memset(computed_output, 0, total_len);
-> >                               memset(input, 0, total_len);
->
-> So with this test fix, does this test find the bug?
 
-Yes.
 
-> Apparently the empty scatterlist elements caused some problem?  What was
-> that problem exactly?  And what do you mean by this "prevented the test
-> from running on arm64"?  If there is a problem it seems we should
-> something else about about it, e.g. debug checks that work in consistent
-> way on all architectures, documenting what the function expects, or make
-> it just work properly with empty scatterlist elements.
+On 3/18/2020 3:03 PM, Rob Herring wrote:
+> On Fri, 13 Mar 2020 17:54:50 -0700, Wesley Cheng wrote:
+>> This binding shows the descriptions and properties for the
+>> 7nm Synopsis HS USB PHY used on QCOM platforms.
+>>
+>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/phy/qcom,usb-hs-7nm.yaml   | 74 ++++++++++++++++++++++
+>>  1 file changed, 74 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+>>
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> warning: no schema found in file: Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml: ignoring, error parsing file
+> Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml:  while scanning a block scalar
+>   in "<unicode string>", line 59, column 5
+> found a tab character where an indentation space is expected
+>   in "<unicode string>", line 73, column 1
+> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts] Error 1
+> Makefile:1262: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1254748
+> Please check and re-submit.
+> 
 
-Yea, my next plan was to look into what's going on there. In case
-you're curious, here's what happens:
+Hi Rob,
 
-[    0.355761] [ffffffff041e9508] pgd=000000004ffe9003,
-pud=000000004ffe9003, pmd=0000000000000000
-[    0.356212] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-[    0.356587] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc5+ #10
-[    0.356695] Hardware name: linux,dummy-virt (DT)
-[    0.356972] pstate: 20000005 (nzCv daif -PAN -UAO)
-[    0.357158] pc : scatterwalk_copychunks+0x13c/0x1e0
-[    0.357257] lr : scatterwalk_copychunks+0xe0/0x1e0
-[    0.357379] sp : ffffff800f82f970
-[    0.357450] x29: ffffff800f82f970 x28: ffffff800f838000
-[    0.357607] x27: ffffff800f838000 x26: 0000000000000001
-[    0.357725] x25: ffffff800f82faf0 x24: ffffff800f82fa10
-[    0.357820] x23: 0000000000000010 x22: 0000000000000000
-[    0.357898] x21: 0000000000000000 x20: 0000000100200000
-[    0.357978] x19: ffffff8000000000 x18: 0000000000000014
-[    0.358132] x17: 0000000000000000 x16: 0000000000000002
-[    0.358214] x15: 00000000074c5755 x14: 0000000000000002
-[    0.358310] x13: 074c57550311ac67 x12: 09579e470077af1a
-[    0.358453] x11: 1d3f98018ec6f5bb x10: 3e6144a223343e11
-[    0.358560] x9 : 0000000000000000 x8 : ffffff800f82fcc0
-[    0.358638] x7 : 0000000000000000 x6 : ffffff800fa55000
-[    0.358711] x5 : 0000000000001000 x4 : 0000000000000000
-[    0.358781] x3 : ffffffff001e9540 x2 : ffffffff001e9540
-[    0.358855] x1 : ffffffff041e9500 x0 : ffffff800f82fd60
-[    0.359007] Call trace:
-[    0.359177]  scatterwalk_copychunks+0x13c/0x1e0
-[    0.359269]  scatterwalk_map_and_copy+0x50/0xa8
-[    0.359339]  chacha20poly1305_crypt_sg_inplace+0x3f4/0x418
-[    0.359418]  chacha20poly1305_encrypt_sg_inplace+0x10/0x18
-[    0.359511]  chacha20poly1305_selftest+0x4dc/0x618
-[    0.359581]  mod_init+0xc/0x2c
-[    0.359630]  do_one_initcall+0x58/0x11c
-[    0.359687]  kernel_init_freeable+0x174/0x1e0
-[    0.359751]  kernel_init+0x10/0x100
-[    0.359803]  ret_from_fork+0x10/0x18
-[    0.360074] Code: f9400002 530c7c21 927ef442 8b011841 (f9400423)
-[    0.360257] ---[ end trace 0b64264f8a25dbdf ]---
-[    0.360453] Kernel panic - not syncing: Fatal exception
-[    0.360597] SMP: stopping secondary CPUs
-[    0.360835] Kernel Offset: disabled
-[    0.360985] CPU features: 0x00002,00002000
-[    0.361042] Memory Limit: none
+Sorry for not checking this step beforehand.  I installed the tools for
+device tree validation, ran the same check, and resolved the errors.
+Will resubmit the series with the changes.
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
