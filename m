@@ -2,64 +2,116 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95FCC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A163C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30C72072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69C22072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:54:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="itPC5gsA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbgCSRxG (ORCPT
+        id S1727749AbgCSRyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:53:06 -0400
-Received: from mga04.intel.com ([192.55.52.120]:57567 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgCSRxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:53:06 -0400
-IronPort-SDR: jgJJQVo8LfQqtnIUZ+0fs3gfQHd0eWE3O9PSL7V3pI535PTnWJsdSgfnDxFauplT3A851uF9hO
- Onv++lwmQvuw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 10:53:00 -0700
-IronPort-SDR: oVW2A+P+v8UZ1v3CjfxeeilfiC243H2UiYB328K62YrscNe2463SDKKZlfrmRo9aAv28qSH7AH
- 62hKZS4TO+Dw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="356107676"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Mar 2020 10:52:59 -0700
-Date:   Thu, 19 Mar 2020 10:52:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com
-Subject: Re: [PATCH] KVM: x86: remove bogus user-triggerable WARN_ON
-Message-ID: <20200319175259.GE11305@linux.intel.com>
-References: <20200319174318.20752-1-pbonzini@redhat.com>
+        Thu, 19 Mar 2020 13:54:06 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:9656 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726867AbgCSRyF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:54:05 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JHm9SF030010;
+        Thu, 19 Mar 2020 18:53:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=xhvicN/AH/49Tg2jHic/L9lkAzHjv3HYlGeap+CFKCw=;
+ b=itPC5gsA4ELXAaE5a2xDmNDrb5QWsSt9ffWnFFkd989qno6/JM/OpyoT751KRmhW/tNQ
+ 71qYW6KimHr6RiyjbBsoHXLoJDqjWKcnirjzDlAMbVwek7QEQhR+Ik69n4vnor64SVHA
+ 4hCbsJHZMCrK5CPkIrUwH6pb9kkTCOuc5qvL4zMOLcXfH6lhm0OWuEP8vuyvHdiidnt5
+ IJfMlkjybMUpN4QYPBsXJ6KsXlqPMPsN9yTboHVu94k1OUH6FGjAsoH+1B/HTR194Xzp
+ nZgRYNOWW7u+QfXgNj0UJ9jkZT+EqGp6R266rND85YqQsEPi4/k1HkncEl4vdZmJAqgL 4w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yu8etk926-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 18:53:27 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1CBB6100034;
+        Thu, 19 Mar 2020 18:53:23 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F0DC32BC7BA;
+        Thu, 19 Mar 2020 18:53:22 +0100 (CET)
+Received: from [10.211.9.6] (10.75.127.45) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar
+ 2020 18:53:21 +0100
+Subject: Re: [PATCH] dt-bindings: iio: dac: stm32-dac: convert bindings to
+ json-schema
+To:     Rob Herring <robh@kernel.org>
+CC:     <robh+dt@kernel.org>, <jic23@kernel.org>,
+        <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
+        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <olivier.moysan@st.com>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1584543037-32095-1-git-send-email-fabrice.gasnier@st.com>
+ <20200319171231.GA17071@bogus>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <3a1474bd-ae64-96f8-d094-545e0e2eff6c@st.com>
+Date:   Thu, 19 Mar 2020 18:53:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319174318.20752-1-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200319171231.GA17071@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_06:2020-03-19,2020-03-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 01:43:18PM -0400, Paolo Bonzini wrote:
-> The WARN_ON is essentially comparing a user-provided value with 0.  It is
-> trivial to trigger it just by passing garbage to KVM_SET_CLOCK.  Guests
-> can break if you do so, but if it hurts when you do like this just do not
-> do it.
+On 3/19/20 6:12 PM, Rob Herring wrote:
+> On Wed, 18 Mar 2020 15:50:37 +0100, Fabrice Gasnier wrote:
+>> Convert the STM32 DAC binding to DT schema format using json-schema
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>> ---
+>>  .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
+>>  .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
+>>  2 files changed, 110 insertions(+), 63 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+>>  create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
+>>
 > 
-> Reported-by: syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com
-> Fixes: 9446e6fce0ab ("KVM: x86: fix WARN_ON check of an unsigned less than zero")
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml: $id: relative path/filename doesn't match actual path or filename
+> 	expected: http://devicetree.org/schemas/iio/dac/st,stm32-dac.yaml#
+> 
+> See https://patchwork.ozlabs.org/patch/1257568
+> Please check and re-submit.
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Hi Rob,
+
+Just sent a V2.
+
+I fear it's a copy/paste from another patch:
+https://patchwork.ozlabs.org/patch/1223488/
+dt-bindings: iio: adc: stm32-adc: convert bindings to json-schema
+
+Should I send a fix for this one also ?
+
+Please advise,
+Fabrice
+> 
