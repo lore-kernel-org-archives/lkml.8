@@ -2,73 +2,95 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CCDC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FDEC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A5E207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9952072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584637938;
+	bh=fxN4CnnOD6y03mHmAA5C+hhbqj2uKF+4bj47hgkFoVY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Equ4fFVOFTtQltC1G5/9+GA1YJyL9zjWS3eMUCAfFUSsgYbyoK7de4+X06z0pU3gV
+	 +BwRiqcf1uaT2n2TjhKn6ZGJDywcZePFiwbIn8Q1mQK+ymQi3hYTyFMmfiTfqRplU/
+	 JoO2Z8nID1qxqGI07itWYLy3CQarPCcOCCHIJIU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbgCSRMN (ORCPT
+        id S1728574AbgCSRMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:12:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43652 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727235AbgCSRMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:12:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 62622AD77;
-        Thu, 19 Mar 2020 17:12:11 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 17:12:07 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     Tao Zhou <ouwen210@hotmail.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
-        hdanton@sina.com, t1zhou@163.com
-Subject: Re: [PATCH] sched/fair: fix condition of avg_load calculation
-Message-ID: <20200319171207.GJ3772@suse.de>
-References: <BL0PR14MB3779226ECE6B526471FA91FD9AF40@BL0PR14MB3779.namprd14.prod.outlook.com>
+        Thu, 19 Mar 2020 13:12:17 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:41727 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbgCSRMR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:12:17 -0400
+Received: by mail-il1-f196.google.com with SMTP id l14so2938868ilj.8;
+        Thu, 19 Mar 2020 10:12:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FuFy53dKsb2fck0JMwy1FXmxdDEmegXgO4r2caNX4Qo=;
+        b=OLXIkvGw3tJqvUSlP6ONTJRWwZsrZTNqk6ywd2Tc1yN0IxBF7yPsMAPHoxyxnikmlD
+         k6HUvjjsy+ZkZLJD/b/5D/ZzNc2TvhBMIqPGkum6U+N2BpqJaYO2YWCiIXX8t2quYGOZ
+         B9l6Ooq3OXIT5mWeiBFzXRAZvXlNl4duwAsxPjXtlWE+mcTA9u9K7PHudhoHCPNWUvQk
+         Uofse2osD0WeUNHdtFcNgXl3faKzC/zItp01dVoSzU8RozIq7eZagGJxGRSYoxCIVztg
+         cqZyoJ1C9aPVJhzITLFfDlk64GzLy/eosDZ+tufTTuO0+bveW6C9TH7gDlPeFlOMdsMw
+         X/Yw==
+X-Gm-Message-State: ANhLgQ2pOWvmbDrF3UeMe3/SuzDmSDS2L73F8j6RUvKLw0eKEwhOaF96
+        aPj8YMdX62qvCUId6tzDgw==
+X-Google-Smtp-Source: ADFU+vs/qjBgZCguu4PgrA7kda0SwMTPsdT6I/2Mcj/b7bYNjpINO1LuIXtpzuRHB/7LUhmdIByVUQ==
+X-Received: by 2002:a92:35db:: with SMTP id c88mr4010676ilf.187.1584637934049;
+        Thu, 19 Mar 2020 10:12:14 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id y8sm937166iot.14.2020.03.19.10.12.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 10:12:13 -0700 (PDT)
+Received: (nullmailer pid 16694 invoked by uid 1000);
+        Thu, 19 Mar 2020 17:12:10 -0000
+Date:   Thu, 19 Mar 2020 11:12:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Alim Akhtar <alim.akhtar@samsung.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-scsi@vger.kernel.org, krzk@kernel.org, avri.altman@wdc.com,
+        martin.petersen@oracle.com, kwmad.kim@samsung.com,
+        stanley.chu@mediatek.com, cang@codeaurora.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: phy: Document Samsung UFS PHY
+ bindings
+Message-ID: <20200319171210.GA14990@bogus>
+References: <20200318111144.39525-1-alim.akhtar@samsung.com>
+ <CGME20200318111805epcas5p3e68724d923a07ddd80a45e3316292940@epcas5p3.samsung.com>
+ <20200318111144.39525-2-alim.akhtar@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BL0PR14MB3779226ECE6B526471FA91FD9AF40@BL0PR14MB3779.namprd14.prod.outlook.com>
+In-Reply-To: <20200318111144.39525-2-alim.akhtar@samsung.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 11:39:20AM +0800, Tao Zhou wrote:
-> In update_sg_wakeup_stats(), the comment says:
+On Wed, 18 Mar 2020 16:41:40 +0530, Alim Akhtar wrote:
+> This patch documents Samsung UFS PHY device tree bindings
 > 
-> Computing avg_load makes sense only when group is fully
-> busy or overloaded.
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> ---
+>  .../bindings/phy/samsung,ufs-phy.yaml         | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
 > 
-> But, the code below this comment does not check like this.
-> 
-> From reading the code about avg_load in other functions, I
-> confirm that avg_load should be calculated in fully busy or
-> overloaded case. The comment is correct and the checking
-> condition is wrong. So, change that condition.
-> 
-> Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
-> Signed-off-by: Tao Zhou <ouwen210@hotmail.com>
 
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Actual impact is variable, some machines for stressed overload benefit
-but it's not universal. That is somewhat expected given that the heavily
-overloaded case is tricky at the best of times. For tbench ramping up
-load, it's also not universally beneficial but some machines heavily
-benefit. Despite the range of results that are machine-dependant, the
-patch looks correct so;
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/samsung,ufs-phy.example.dt.yaml: example-0: 'ufs-phy@0x15571800' does not match any of the regexes: '.*-names$', '.*-supply$', '^#.*-cells$', '^#[a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}$', '^[a-zA-Z][a-zA-Z0-9,+\\-._]{0,63}@[0-9a-fA-F]+(,[0-9a-fA-F]+)*$', '^__.*__$', 'pinctrl-[0-9]+'
 
-Acked-by: Mel Gorman <mgorman@suse.de>
-
--- 
-Mel Gorman
-SUSE Labs
+See https://patchwork.ozlabs.org/patch/1257427
+Please check and re-submit.
