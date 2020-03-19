@@ -2,53 +2,51 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19C0C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F19AC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8117C21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65DBF21973
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623353;
-	bh=wsGUgv2+UGCWd44/6yKwROb496ir9337GuOV2VGZMqk=;
+	s=default; t=1584623357;
+	bh=JkTM20Kk2R0YWQ3TX/NJ6Uv6Q9HIqDn2yyxbsoFnRzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zyP7dmPKXr3jJMn6eLLgT8CNdMw7G3RLCr1PP2mQ3zUsyI5ugfmXq8hExmZ1YAW83
-	 KwpTI/whO5LQKk3iV3S6GWgtECDuAiLSkXQyO1tISFsPPTgPZSorEO8PZszyBZi9iM
-	 8Y6iUo4m621wanyfN7IJtmKACs16MQ9DUFJ72lQw=
+	b=ktP7hIHEGtisMHjP95yw2OuSRjSzxDprcZYkOqL0DtdX1Tnrx/V9iPPC+hONTSNWi
+	 NTBSMDzl7hm2tNyeLYnVQWbi2SgP4M0ncz/PWCqVfhEbS7wmKcSoPMGVBoa87Or+Oz
+	 SD+xcsDHHcn8wL8tHjNX/Py5dIb4+Kxhj6qFKyVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgCSNJM (ORCPT
+        id S1728288AbgCSNJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53526 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:09:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728265AbgCSNJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:09:09 -0400
+        id S1728275AbgCSNJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:09:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9748208D6;
-        Thu, 19 Mar 2020 13:09:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 122732145D;
+        Thu, 19 Mar 2020 13:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623349;
-        bh=wsGUgv2+UGCWd44/6yKwROb496ir9337GuOV2VGZMqk=;
+        s=default; t=1584623351;
+        bh=JkTM20Kk2R0YWQ3TX/NJ6Uv6Q9HIqDn2yyxbsoFnRzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q5XFmgsnaSuZ1sAxVCMxPUzDK0jlkmLNaRYex/xGnfjh1/Rox5uhfR15AY+tUtGjr
-         0YgfZJnEUrkxtrv9BKOQ/k9StZce3qJoVInYNEzacAeU2th6RV6PkVpx9V+NyOqpJo
-         yJPRjS8oGdoboKIK0bMs9GMgAeraMKPBPrihppk0=
+        b=iZ9ZcsgXupHDs8LjHCmMHd7cvSy+r4na2U4RzEzzS9dXKNlhHV7cpIhz2fV2lTk87
+         MAFScz0bIaQxe4mibrXleSuAuNe8r6rcmiVb15rsSsU+wbjiqkZQEMfNSGqw4fPDKV
+         6Av0T9lfrKGdzu56V7nf/ZSD1vIzc27AmQj1neOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 4.4 91/93] ARM: 8958/1: rename missed uaccess .fixup section
-Date:   Thu, 19 Mar 2020 14:00:35 +0100
-Message-Id: <20200319123953.264359388@linuxfoundation.org>
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.4 74/93] batman-adv: Fix debugfs path for renamed softif
+Date:   Thu, 19 Mar 2020 14:00:18 +0100
+Message-Id: <20200319123948.301736883@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -61,43 +59,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit f87b1c49bc675da30d8e1e8f4b60b800312c7b90 upstream.
+commit 6da7be7d24b2921f8215473ba7552796dff05fe1 upstream.
 
-When the uaccess .fixup section was renamed to .text.fixup, one case was
-missed. Under ld.bfd, the orphaned section was moved close to .text
-(since they share the "ax" bits), so things would work normally on
-uaccess faults. Under ld.lld, the orphaned section was placed outside
-the .text section, making it unreachable.
+batman-adv is creating special debugfs directories in the init
+net_namespace for each created soft-interface (batadv net_device). But it
+is possible to rename a net_device to a completely different name then the
+original one.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/282
-Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1020633#c44
-Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.1912032147340.17114@knanqh.ubzr
-Link: https://lore.kernel.org/lkml/202002071754.F5F073F1D@keescook/
+It can therefore happen that a user registers a new batadv net_device with
+the name "bat0". batman-adv is then also adding a new directory under
+$debugfs/batman-adv/ with the name "wlan0".
 
-Fixes: c4a84ae39b4a5 ("ARM: 8322/1: keep .text and .fixup regions closer together")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+The user then decides to rename this device to "bat1" and registers a
+different batadv device with the name "bat0". batman-adv will then try to
+create a directory with the name "bat0" under $debugfs/batman-adv/ again.
+But there already exists one with this name under this path and thus this
+fails. batman-adv will detect a problem and rollback the registering of
+this device.
+
+batman-adv must therefore take care of renaming the debugfs directories for
+soft-interfaces whenever it detects such a net_device rename.
+
+Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm/lib/copy_from_user.S |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/batman-adv/debugfs.c        |   20 ++++++++++++++++++++
+ net/batman-adv/debugfs.h        |    5 +++++
+ net/batman-adv/hard-interface.c |   34 ++++++++++++++++++++++++++++------
+ 3 files changed, 53 insertions(+), 6 deletions(-)
 
---- a/arch/arm/lib/copy_from_user.S
-+++ b/arch/arm/lib/copy_from_user.S
-@@ -100,7 +100,7 @@ ENTRY(arm_copy_from_user)
+--- a/net/batman-adv/debugfs.c
++++ b/net/batman-adv/debugfs.c
+@@ -581,6 +581,26 @@ out:
+ 	return -ENOMEM;
+ }
  
- ENDPROC(arm_copy_from_user)
++/**
++ * batadv_debugfs_rename_meshif() - Fix debugfs path for renamed softif
++ * @dev: net_device which was renamed
++ */
++void batadv_debugfs_rename_meshif(struct net_device *dev)
++{
++	struct batadv_priv *bat_priv = netdev_priv(dev);
++	const char *name = dev->name;
++	struct dentry *dir;
++	struct dentry *d;
++
++	dir = bat_priv->debug_dir;
++	if (!dir)
++		return;
++
++	d = debugfs_rename(dir->d_parent, dir, dir->d_parent, name);
++	if (!d)
++		pr_err("Can't rename debugfs dir to %s\n", name);
++}
++
+ void batadv_debugfs_del_meshif(struct net_device *dev)
+ {
+ 	struct batadv_priv *bat_priv = netdev_priv(dev);
+--- a/net/batman-adv/debugfs.h
++++ b/net/batman-adv/debugfs.h
+@@ -31,6 +31,7 @@ struct net_device;
+ void batadv_debugfs_init(void);
+ void batadv_debugfs_destroy(void);
+ int batadv_debugfs_add_meshif(struct net_device *dev);
++void batadv_debugfs_rename_meshif(struct net_device *dev);
+ void batadv_debugfs_del_meshif(struct net_device *dev);
+ int batadv_debugfs_add_hardif(struct batadv_hard_iface *hard_iface);
+ void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface);
+@@ -51,6 +52,10 @@ static inline int batadv_debugfs_add_mes
+ 	return 0;
+ }
  
--	.pushsection .fixup,"ax"
-+	.pushsection .text.fixup,"ax"
- 	.align 0
- 	copy_abort_preamble
- 	ldmfd	sp!, {r1, r2}
++static inline void batadv_debugfs_rename_meshif(struct net_device *dev)
++{
++}
++
+ static inline void batadv_debugfs_del_meshif(struct net_device *dev)
+ {
+ }
+--- a/net/batman-adv/hard-interface.c
++++ b/net/batman-adv/hard-interface.c
+@@ -725,6 +725,32 @@ void batadv_hardif_remove_interfaces(voi
+ 	rtnl_unlock();
+ }
+ 
++/**
++ * batadv_hard_if_event_softif() - Handle events for soft interfaces
++ * @event: NETDEV_* event to handle
++ * @net_dev: net_device which generated an event
++ *
++ * Return: NOTIFY_* result
++ */
++static int batadv_hard_if_event_softif(unsigned long event,
++				       struct net_device *net_dev)
++{
++	struct batadv_priv *bat_priv;
++
++	switch (event) {
++	case NETDEV_REGISTER:
++		batadv_sysfs_add_meshif(net_dev);
++		bat_priv = netdev_priv(net_dev);
++		batadv_softif_create_vlan(bat_priv, BATADV_NO_FLAGS);
++		break;
++	case NETDEV_CHANGENAME:
++		batadv_debugfs_rename_meshif(net_dev);
++		break;
++	}
++
++	return NOTIFY_DONE;
++}
++
+ static int batadv_hard_if_event(struct notifier_block *this,
+ 				unsigned long event, void *ptr)
+ {
+@@ -733,12 +759,8 @@ static int batadv_hard_if_event(struct n
+ 	struct batadv_hard_iface *primary_if = NULL;
+ 	struct batadv_priv *bat_priv;
+ 
+-	if (batadv_softif_is_valid(net_dev) && event == NETDEV_REGISTER) {
+-		batadv_sysfs_add_meshif(net_dev);
+-		bat_priv = netdev_priv(net_dev);
+-		batadv_softif_create_vlan(bat_priv, BATADV_NO_FLAGS);
+-		return NOTIFY_DONE;
+-	}
++	if (batadv_softif_is_valid(net_dev))
++		return batadv_hard_if_event_softif(event, net_dev);
+ 
+ 	hard_iface = batadv_hardif_get_by_netdev(net_dev);
+ 	if (!hard_iface && event == NETDEV_REGISTER)
 
 
