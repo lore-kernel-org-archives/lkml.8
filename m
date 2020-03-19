@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E1DC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E28C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03C6206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CFE214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624243;
-	bh=3af7f/CO/fTsD3hpWvzuPtjznu2o9Apvd9AMygwOY9o=;
+	s=default; t=1584624252;
+	bh=vwFQSTRGBXIuEHRlKDxDsMBN5Lx7bJ4941rvcPOxF5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CJJBZRb4WPXoZWu6M4L6CrwOQNM82bfO/+vKfCDMHeJRsR8r7sRvvFWbQEN/LdX5N
-	 N0uknbmHkmYVdERn9dvI6ZZVXNzX/33PzBGfzK+AR5ZEPHNxJN91YwpVUfmkCote9y
-	 tvb8xNHDol86nSivbRN8KiEVR+PhnftzvPRV6FRw=
+	b=zJheScp0M2AOrn60hGL3O8T3Fe6z2/f/E9cSIQRTJUJwxCHGlnm9ILgU/sKe6ryDq
+	 QaFhr1O/d8VKmllP5ypcf1VwRuCj4kUqIMM3rI0cHF7+DemW/xmEduWan+ZjyIiZ9j
+	 PHSmixssXQlWIstsMcjQaiHu+8/YMzYxggLDlacU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730412AbgCSNX6 (ORCPT
+        id S1728485AbgCSNYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:23:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50214 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:24:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729985AbgCSNXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:23:55 -0400
+        id S1728912AbgCSNYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:24:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7373B21655;
-        Thu, 19 Mar 2020 13:23:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD6D7206D7;
+        Thu, 19 Mar 2020 13:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624234;
-        bh=3af7f/CO/fTsD3hpWvzuPtjznu2o9Apvd9AMygwOY9o=;
+        s=default; t=1584624248;
+        bh=vwFQSTRGBXIuEHRlKDxDsMBN5Lx7bJ4941rvcPOxF5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=apoINyBWGgWm11YMgszUWRrIxGC8CrWYNKZL65AZMOf36rI9es1B5O9Fjkx4imALz
-         y+vZX4+XdXNYXPQGas9R756yYTGz9xSzBSGsd+kmsfHyk5+7PYCvaXnPC4Efaz+3kR
-         Iy3tx7LiaOY40j8qY8pBchYBesCB0sroK7TLMWOA=
+        b=bay4tKsJNuKzWzMWXxBcz1nuvLaiPWhv5fY7x1Q5ytEbyftrEtD+3vevebHUwTE88
+         qJ5UHj83It4f7MHwDTmIWU/QQ7YNOsEgUOfVgmevvCf6sIk5nAQPZNlba86hBI5FuV
+         rH95qlncwceWMu+6AsnKyA1W3Pf2O88dS0qbFXnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 25/60] net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
-Date:   Thu, 19 Mar 2020 14:04:03 +0100
-Message-Id: <20200319123927.351958308@linuxfoundation.org>
+Subject: [PATCH 5.4 49/60] net: rmnet: fix packet forwarding in rmnet bridge mode
+Date:   Thu, 19 Mar 2020 14:04:27 +0100
+Message-Id: <20200319123934.996521463@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -61,46 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit eae7172f8141eb98e64e6e81acc9e9d5b2add127 ]
+[ Upstream commit ad3cc31b599ea80f06b29ebdc18b3a39878a48d6 ]
 
-usbnet creates network interfaces with min_mtu = 0 and
-max_mtu = ETH_MAX_MTU.
+Packet forwarding is not working in rmnet bridge mode.
+Because when a packet is forwarded, skb_push() for an ethernet header
+is needed. But it doesn't call skb_push().
+So, the ethernet header will be lost.
 
-These values are not modified by qmi_wwan when the network interface
-is created initially, allowing, for example, to set mtu greater than 1500.
+Test commands:
+    modprobe rmnet
+    ip netns add nst
+    ip netns add nst2
+    ip link add veth0 type veth peer name veth1
+    ip link add veth2 type veth peer name veth3
+    ip link set veth1 netns nst
+    ip link set veth3 netns nst2
 
-When a raw_ip switch is done (raw_ip set to 'Y', then set to 'N') the mtu
-values for the network interface are set through ether_setup, with
-min_mtu = ETH_MIN_MTU and max_mtu = ETH_DATA_LEN, not allowing anymore to
-set mtu greater than 1500 (error: mtu greater than device maximum).
+    ip link add rmnet0 link veth0 type rmnet mux_id 1
+    ip link set veth2 master rmnet0
+    ip link set veth0 up
+    ip link set veth2 up
+    ip link set rmnet0 up
+    ip a a 192.168.100.1/24 dev rmnet0
 
-The patch restores the original min/max mtu values set by usbnet after a
-raw_ip switch.
+    ip netns exec nst ip link set veth1 up
+    ip netns exec nst ip a a 192.168.100.2/24 dev veth1
+    ip netns exec nst2 ip link set veth3 up
+    ip netns exec nst2 ip a a 192.168.100.3/24 dev veth3
+    ip netns exec nst2 ping 192.168.100.2
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
+Fixes: 60d58f971c10 ("net: qualcomm: rmnet: Implement bridge mode")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 3 +++
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 3b7a3b8a5e067..5754bb6ca0eec 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -337,6 +337,9 @@ static void qmi_wwan_netdev_setup(struct net_device *net)
- 		netdev_dbg(net, "mode: raw IP\n");
- 	} else if (!net->header_ops) { /* don't bother if already set */
- 		ether_setup(net);
-+		/* Restoring min/max mtu values set originally by usbnet */
-+		net->min_mtu = 0;
-+		net->max_mtu = ETH_MAX_MTU;
- 		clear_bit(EVENT_NO_IP_ALIGN, &dev->flags);
- 		netdev_dbg(net, "mode: Ethernet\n");
- 	}
+diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
+index 074a8b326c304..29a7bfa2584dc 100644
+--- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
++++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
+@@ -159,6 +159,9 @@ static int rmnet_map_egress_handler(struct sk_buff *skb,
+ static void
+ rmnet_bridge_handler(struct sk_buff *skb, struct net_device *bridge_dev)
+ {
++	if (skb_mac_header_was_set(skb))
++		skb_push(skb, skb->mac_len);
++
+ 	if (bridge_dev) {
+ 		skb->dev = bridge_dev;
+ 		dev_queue_xmit(skb);
 -- 
 2.20.1
 
