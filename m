@@ -2,110 +2,132 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF05C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6277CC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFD362070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C742070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gyu9c7mh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DVI33oBA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgCSQkt (ORCPT
+        id S1728432AbgCSQm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:40:49 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45765 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727302AbgCSQks (ORCPT
+        Thu, 19 Mar 2020 12:42:28 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:48608 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727772AbgCSQm1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:40:48 -0400
-Received: by mail-pl1-f193.google.com with SMTP id b9so1275853pls.12
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 09:40:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=H3Qh9MRFkrW7eubE7g/PTYkKSwQYsQfKFn0ldHiI/ek=;
-        b=gyu9c7mhkMJwzKMXvge9gD7MV1dSFaFcFzb2ZrPARvKculD8xwliJTUIG0jz2mzDvj
-         ypfN9/7QKnlAN//K6livKuNk+6ySjO8cuOakLFVVFVByS7WyaiNEnOh3hgNbIREJ6TEY
-         L/YFr6suGa8wTINd1rVecbLo8+hrZV8BG02NE=
+        Thu, 19 Mar 2020 12:42:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584636147;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zOA+IMIU8Q7WJF49pLVV19IvK2l47KrbLmH0N3YKQfA=;
+        b=DVI33oBA6X7Dve+e3IGq9Utate+xN+IxH4Stn0ykxLr8SsnCXnuKhiIkivxh80dQqLQdZu
+        FHIe3X45Dkw0i95ubNuh4nWdM4skelJrTdxKFQLHN89JBdRFtV/pGh9Eks0DUaQ0F6HYlE
+        ZQcddNcNO9/GDFdh/BtYF7oELiWjnXs=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-DMRBizbhPuSOXVrcctoT5w-1; Thu, 19 Mar 2020 12:42:25 -0400
+X-MC-Unique: DMRBizbhPuSOXVrcctoT5w-1
+Received: by mail-il1-f200.google.com with SMTP id 75so2491217ilv.16
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 09:42:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=H3Qh9MRFkrW7eubE7g/PTYkKSwQYsQfKFn0ldHiI/ek=;
-        b=MFSDgM84Jm9JIWKr5G8ttDeTB24XUmMLFC/+ADMEZTQNdIARvJfTGZz6NwqgqNyPI2
-         fOd9pW6PQT6ier04kIUowub3ZwI4rmvE7hRyLM6g/yN6bdsWNZx+tTnfFKFTyOkFF5Yt
-         hX7J6vikwBVaiptHZpqJfjZT0/6rjMO2Gxn8OOFZCIIfuHzj9fcbYpFrEALr3KejqpOK
-         IFIgcX1cGfdvFqdTTW+OOOVmySXHZnwNDqMnCC/Md/unt0gtx0uubZpx/OM/uAlO3Y02
-         HYcs49ggLiLvGVoAqyWPpmuz7ydtdlZuImINZAP0SJ1AnFtrwJgQEr8W/el3b0TooRnf
-         LrRA==
-X-Gm-Message-State: ANhLgQ3aTImR4dFVd0q5Hw3679zvfGWRMrR/Qnn+GD5CKCabr4AOOiwU
-        +mZtFr32l1fIJl11tAvmtQA30w==
-X-Google-Smtp-Source: ADFU+vt8w3kcLzL1YLsszOfH8enVFIKV6/Gk0PHjqHG+oxg3AKEfxOns8NIo8vKyf0a9X96F1vw7ZA==
-X-Received: by 2002:a17:90a:bc06:: with SMTP id w6mr4645048pjr.67.1584636047303;
-        Thu, 19 Mar 2020 09:40:47 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id u18sm3063339pfl.40.2020.03.19.09.40.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 09:40:46 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zOA+IMIU8Q7WJF49pLVV19IvK2l47KrbLmH0N3YKQfA=;
+        b=EagODj40er2C6haAQ0UVymj/AimDoKvt5oLbV4/OVS1zA5zTnqTl+EWNA/FzAcJJ/M
+         xuq6CEs1dntr9/T0j6OdTUCT7a9VTbkj5ut9SYsp2nyxED+IknLfYxRdKKDRbqIzlhNv
+         psQZjxJljkIAVhWemX6CQzDye+vfjDY2GqOOZdW5xSApeosfaZzrAB+KMFzVp8NLV9A4
+         a6ETywvqyUPBhtFH44VrHl/txT8bTyquHIGRb00z7LJkCjZZ6oJ9DAiyE9o/Nu1XPgCD
+         SXZGF1NmnV33vnYcnMMhFXCAbRNyl/lWI3F4H5jjJ9BfgTq2z/QFKxnqIRxwtSL7roWk
+         rv/Q==
+X-Gm-Message-State: ANhLgQ2Bd6yje/FXUm9t51MJekqNPNGO2IvZ6W/CKsDxPmeMQFTrCCek
+        qwqTyr+JksIkKghwRGTf/9z48IJwOeC/0vriEkZ5vlGiogWom5npwUz7gBOkKKlYD3AwbLlGkyL
+        6LeNN3vzJMDtA0Y3huZztaipyP+6VvlcwM6Z9Ys7G
+X-Received: by 2002:a6b:be02:: with SMTP id o2mr3477758iof.39.1584636144620;
+        Thu, 19 Mar 2020 09:42:24 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vs8iofIYJ+iNpo9+omXOEAEZcpDGFzEXydxLKvQtkjHH4wpvAEyj5/8Q2KiQ1Qpj4eSOH80FA0MxKZjmfU4MgQ=
+X-Received: by 2002:a6b:be02:: with SMTP id o2mr3477735iof.39.1584636144322;
+ Thu, 19 Mar 2020 09:42:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <aa6aa234-e2d1-bdcd-0f0e-64b2a7e497d3@linaro.org>
-References: <20200311191501.8165-1-bryan.odonoghue@linaro.org> <20200311191501.8165-3-bryan.odonoghue@linaro.org> <158458013177.152100.17920784952083533825@swboyd.mtv.corp.google.com> <aa6aa234-e2d1-bdcd-0f0e-64b2a7e497d3@linaro.org>
-Subject: Re: [PATCH 2/7] dt-bindings: usb: dwc3: Add a gpio-usb-connector example
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, jackp@codeaurora.org, robh@kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, balbi@kernel.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
-Date:   Thu, 19 Mar 2020 09:40:45 -0700
-Message-ID: <158463604559.152100.9219030962819234620@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200318140605.45273-1-jarod@redhat.com> <8a88d1c8-c6b1-ad85-7971-e6ae8c6fa0e4@gmail.com>
+ <CAKfmpSc0yea5-OfE1rnVdErDTeOza=owbL00QQEaH-M-A6Za7g@mail.gmail.com> <25629.1584564113@famine>
+In-Reply-To: <25629.1584564113@famine>
+From:   Jarod Wilson <jarod@redhat.com>
+Date:   Thu, 19 Mar 2020 12:42:14 -0400
+Message-ID: <CAKfmpScbzEZAEw=zOEwguQJvr6L2fQiGmAY60SqSBQ_g-+B4tw@mail.gmail.com>
+Subject: Re: [PATCH net] ipv6: don't auto-add link-local address to lag ports
+To:     Jay Vosburgh <jay.vosburgh@canonical.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Moshe Levi <moshele@mellanox.com>,
+        Marcelo Ricardo Leitner <mleitner@redhat.com>,
+        Netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bryan O'Donoghue (2020-03-19 08:22:14)
-> On 19/03/2020 01:08, Stephen Boyd wrote:
-> >=20
-> > Maybe it should be a virtual node at the root of the DT if it's GPIO
-> > controlled? And then the phy can be connected to the usb connector
-> > through the graph binding.
->=20
-> Graph binding can probably work.
->=20
-> Re: the PHY.
->=20
-> For myself the hardware model is
->=20
-> Connector -> PHY -> Host controller -> Host controller wrapper
->=20
-> Only
->=20
-> Connector -> Host controller -> Host controller wrapper
->=20
-> care about the USB role though.
->=20
-> If your PHY did care about the role, you'd really need to write a=20
-> connector/phy type-c type driver, to detect the state and toggle your=20
-> PHY bits before doing usb_role_switch_set_role() back to DWC3.
->=20
+On Wed, Mar 18, 2020 at 4:42 PM Jay Vosburgh <jay.vosburgh@canonical.com> wrote:
+>
+> Jarod Wilson <jarod@redhat.com> wrote:
+>
+> >On Wed, Mar 18, 2020 at 2:02 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> >>
+> >> On 3/18/20 7:06 AM, Jarod Wilson wrote:
+> >> > Bonding slave and team port devices should not have link-local addresses
+> >> > automatically added to them, as it can interfere with openvswitch being
+> >> > able to properly add tc ingress.
+> >> >
+> >> > Reported-by: Moshe Levi <moshele@mellanox.com>
+> >> > CC: Marcelo Ricardo Leitner <mleitner@redhat.com>
+> >> > CC: netdev@vger.kernel.org
+> >> > Signed-off-by: Jarod Wilson <jarod@redhat.com>
+> >>
+> >>
+> >> This does not look a net candidate to me, unless the bug has been added recently ?
+> >>
+> >> The absence of Fixes: tag is a red flag for a net submission.
+> >>
+> >> By adding a Fixes: tag, you are doing us a favor, please.
+> >
+> >Yeah, wasn't entirely sure on this one. It fixes a problem, but it's
+> >not exactly a new one. A quick look at git history suggests this might
+> >actually be something that technically pre-dates the move to git in
+> >2005, but only really became a problem with some additional far more
+> >recent infrastructure (tc and friends). I can resubmit it as net-next
+> >if that's preferred.
+>
+>         Commit
+>
+> c2edacf80e15 bonding / ipv6: no addrconf for slaves separately from master
+>
+>         should (in theory) already prevent ipv6 link-local addrconf, at
+> least for bonding slaves, and dates from 2007.  If something has changed
+> to break the logic in this commit, then (a) you might need to do some
+> research to find a candidate for your Fixes tag, and (b) I'd suggest
+> also investigating whether or not the change added by c2edacf80e15 to
+> addrconf_notify() no longer serves any purpose, and should be removed if
+> that is the case.
+>
+>         Note also that the hyperv netvsc driver, in netvsc_vf_join(),
+> sets IFF_SLAVE in order to trigger the addrconf prevention logic from
+> c2edacf80e15; I'm not sure if your patch would affect its expectations
+> (if c2edacf80e15 were removed).
 
-Yes some PHYs do care about the role. Sometimes they have to toggle some
-bit to switch between host and gadget mode for example. I haven't fully
-read this patch series but maybe the PHY can be the one that controls
-the gpio for the connector?
+Interesting. We'll keep digging over here, but that's definitely not
+working for this particular use case with OVS for whatever reason.
 
-We (ChromeOS) need to integrate the type-c connector class, etc. on
-sc7180 with the dwc3 driver and the current thinking has the type-c
-connectors underneath the cros_ec node because the EC is the type-c
-manager. The EC will have a type-c driver associated with it.
+-- 
+Jarod Wilson
+jarod@redhat.com
+
