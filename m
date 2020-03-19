@@ -2,135 +2,109 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62693C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3EAC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3279820754
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U2dqLL+6"
+	by mail.kernel.org (Postfix) with ESMTP id 2A45420767
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584577443;
+	bh=0vdNI3zdOZYO15DNPzJWaw/gXCPtXsJdCvTlVIpkfzQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ChX5kwryuohr7D6ZbdL5H5/6Gk/f1MZZpLciFxVT/0lLWN6sm15dTFwgTJfohacfV
+	 0K2kwejm96pawvv8/Un60uXxLFBSJuqToid8WgOf5/3vTgJtDIGd3859fRTGqQ/nOx
+	 IA0/La5lytsHYSVLzTui209uAghhxBJPaqucW8HA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgCSAVi (ORCPT
+        id S1727138AbgCSAYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 20:21:38 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59928 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgCSAVi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 20:21:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=Y0czQRAz/kOPllfphXUjXudXCZCxZCs56nRoN+fK9Zs=; b=U2dqLL+663SgPnghCMGR8BF8Y0
-        CZcLj/WCyPzBCV3IAXDape2LJMGZ9E9h8mLvL93UF6xS6flxgRdFGaZ8/3EZeFY5MLpjBkVXQdM3F
-        26ktVz0JuP/YjCOcMiUwXM8U/3WqY/1g/8JlnNOgitbzgKslHSBWEAMVo14KQymj5kToLM+xxIAPd
-        lPVeE9cKJREw8RGyVwEvCDVMzH3khG9KgYpDhZwQ52cH4cn0i8R7SP4WibjhCrLOYKc7abcSk0Cc6
-        k46Y3sU2mrcoF3pjsyU8z4kAqRfkXv0RuDgUdWhj0llbGVWPwKQDK3am5dUfZzcsQeeM023WkwPRb
-        /dkivxmA==;
-Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.252])
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jEivf-0000pW-Gf; Thu, 19 Mar 2020 00:20:55 +0000
-Subject: Re: [PATCH 4/4] hugetlbfs: clean up command line processing
-To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Longpeng <longpeng2@huawei.com>, Will Deacon <will@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>
-References: <20200318220634.32100-1-mike.kravetz@oracle.com>
- <20200318220634.32100-5-mike.kravetz@oracle.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1820045d-0bf2-9a86-226d-e9c4d5928749@infradead.org>
-Date:   Wed, 18 Mar 2020 17:20:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 18 Mar 2020 20:24:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbgCSAYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 20:24:01 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C750F20752;
+        Thu, 19 Mar 2020 00:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584577441;
+        bh=0vdNI3zdOZYO15DNPzJWaw/gXCPtXsJdCvTlVIpkfzQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mxcox9aXkzstejxFuEVygjr0iaFm4anRJcctriq+2/v5tV0Uh5CgjcXOADCqCL7go
+         8bIyenuI+0yr8tSS0D5xQiEaz0LqqJVt4Urn7qh2Or85EK8dfzvo/WM63O3MEgMqHX
+         N4ZuOZhoswsNVR9eu8nXXvdy4eaSHchMvGOeMZ8Q=
+Date:   Wed, 18 Mar 2020 17:23:59 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Ard Biesheuvel <ardb@kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH URGENT crypto] crypto: arm64/chacha - correctly walk
+ through blocks
+Message-ID: <20200319002359.GF2334@sol.localdomain>
+References: <20200318234518.83906-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-In-Reply-To: <20200318220634.32100-5-mike.kravetz@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318234518.83906-1-Jason@zx2c4.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+Hi Jason,
 
-On 3/18/20 3:06 PM, Mike Kravetz wrote:
-> With all hugetlb page processing done in a single file clean up code.
-> - Make code match desired semantics
->   - Update documentation with semantics
-> - Make all warnings and errors messages start with 'HugeTLB:'.
-> - Consistently name command line parsing routines.
-> - Add comments to code
->   - Describe some of the subtle interactions
->   - Describe semantics of command line arguments
+On Wed, Mar 18, 2020 at 05:45:18PM -0600, Jason A. Donenfeld wrote:
+> Prior, passing in chunks of 2, 3, or 4, followed by any additional
+> chunks would result in the chacha state counter getting out of sync,
+> resulting in incorrect encryption/decryption, which is a pretty nasty
+> crypto vuln, dating back to 2018. WireGuard users never experienced this
+> prior, because we have always, out of tree, used a different crypto
+> library, until the recent Frankenzinc addition. This commit fixes the
+> issue by advancing the pointers and state counter by the actual size
+> processed.
 > 
-> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-> ---
->  Documentation/admin-guide/mm/hugetlbpage.rst | 26 +++++++
->  mm/hugetlb.c                                 | 78 +++++++++++++++-----
->  2 files changed, 87 insertions(+), 17 deletions(-)
+> Fixes: f2ca1cbd0fb5 ("crypto: arm64/chacha - optimize for arbitrary length inputs")
+> Reported-and-tested-by: Emil Renner Berthing <kernel@esmil.dk>
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: stable@vger.kernel.org
 
+Thanks for fixing this!  We definitely should get this fix to Linus for 5.6.
+But I don't think your description of this bug dating back to 2018 is accurate,
+because this bug only affects the new library interface to ChaCha20 which was
+added in v5.5.  In the "regular" crypto API case, the "walksize" is set to
+'5 * CHACHA_BLOCK_SIZE', and chacha_doneon() is guaranteed to be called with a
+multiple of '5 * CHACHA_BLOCK_SIZE' except at the end.  Thus the code worked
+fine with the regular crypto API.
 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index cc85b4f156ca..2b9bf01db2b6 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
+In fact we have fuzz tests for the regular crypto API which find bugs exactly
+like these.  For example, they try dividing the data up randomly into chunks.
+It would be great if the new library interface had fuzz tests too.
 
-> @@ -3214,8 +3238,15 @@ static int __init hugetlb_nrpages_setup(char *s)
->  
->  	return 1;
->  }
-> -__setup("hugepages=", hugetlb_nrpages_setup);
-> +__setup("hugepages=", hugepages_setup);
->  
-> +/*
-> + * hugepagesz command line processing
-> + * A specific huge page size can only be specified once with hugepagesz.
-> + * hugepagesz is followed by hugepages on the commnad line.  The global
+> diff --git a/arch/arm64/crypto/chacha-neon-glue.c b/arch/arm64/crypto/chacha-neon-glue.c
+> index c1f9660d104c..debb1de0d3dd 100644
+> --- a/arch/arm64/crypto/chacha-neon-glue.c
+> +++ b/arch/arm64/crypto/chacha-neon-glue.c
+> @@ -55,10 +55,10 @@ static void chacha_doneon(u32 *state, u8 *dst, const u8 *src,
+>  			break;
+>  		}
+>  		chacha_4block_xor_neon(state, dst, src, nrounds, l);
+> -		bytes -= CHACHA_BLOCK_SIZE * 5;
+> -		src += CHACHA_BLOCK_SIZE * 5;
+> -		dst += CHACHA_BLOCK_SIZE * 5;
+> -		state[12] += 5;
+> +		bytes -= l;
+> +		src += l;
+> +		dst += l;
+> +		state[12] += round_up(l, CHACHA_BLOCK_SIZE) / CHACHA_BLOCK_SIZE;
 
-typo:                                            command
+Use DIV_ROUND_UP(l, CHACHA_BLOCK_SIZE)?
 
-> + * variable 'parsed_valid_hugepagesz' is used to determine if prior
-> + * hugepagesz argument was valid.
-> + */
->  static int __init hugepagesz_setup(char *s)
->  {
->  	unsigned long long size;
-
-
-Does any of this need to be updated?  (from Documentation/admin-guide/kernel-parameters.txt)
-
-	hugepagesz=	[HW,IA-64,PPC,X86-64] The size of the HugeTLB pages.
-			On x86-64 and powerpc, this option can be specified
-			multiple times interleaved with hugepages= to reserve
-			huge pages of different sizes. Valid pages sizes on
-			x86-64 are 2M (when the CPU supports "pse") and 1G
-			(when the CPU supports the "pdpe1gb" cpuinfo flag).
-
-
--- 
-~Randy
-
+- Eric
