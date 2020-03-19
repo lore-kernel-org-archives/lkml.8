@@ -2,149 +2,93 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6905C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD4DC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABCED20789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157392078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584643254;
-	bh=Nnz8DKyINwp4/CvCy4G7iAxgaPQesPB+hm/vCt15eTU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Zw3AaW0wH59o1FuX3BjDF6WnHwqZOolucJslY0DQxh1+06/L2hCYCVTHBYP31+XgX
-	 XDcIQ5PGPIc2Nkzw/drDGdp57O8wnRSXQ0jPwGJdzbbmkgtK/aD3gG+CJpCXrKuxRj
-	 pLmjtTnVP1CrUrY0ugmH1w3lkXbIra+MRLeMeFOc=
+	s=default; t=1584643386;
+	bh=+vgcHdLhhtb+ajyUNxQekv1ON55TgPbVwgX7E6jDLgU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C2XKYNh3OJIXtfARSxuFq9aaPibUooLJd0FMHPzcAfgUPeFGOQBE7lxl9w0+FxqWJ
+	 V++yOhPmRcTABbC9JeK+0Efv8Qa2HvWx88P8EWNNOheI1HovYwy7razTRna2LKHYbC
+	 35VQbZV/pThmpsZbPpbjA5sVuTPYeHGOn3J32O1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgCSSkx (ORCPT
+        id S1727303AbgCSSnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60764 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 14:43:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSSkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:40:53 -0400
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726589AbgCSSnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:43:05 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AB8F20836
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 18:40:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A3D820787;
+        Thu, 19 Mar 2020 18:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584643252;
-        bh=Nnz8DKyINwp4/CvCy4G7iAxgaPQesPB+hm/vCt15eTU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R55Y0XT+kDu4C+QH9pSvmerrrpvk8vLjCLyhz6RGjBEy+fuKyV/rBtZviY5CH2bji
-         i224dYCMGcoHWaxtOQJty0JTZzlS1PN6iuSbG/Wuu4j5JlPKdprJK/yKOP6Xvpa3E7
-         eUIY9FLatITEQ3vemNqnCSh3CuYYaov+WXaxPVpE=
-Received: by mail-wm1-f51.google.com with SMTP id a9so503585wmj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 11:40:52 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0kcbyyjad9jSmkzqdDMqYQP9LXZ9NTPmzttNY62y/ZbiHEpVg8
-        XAl2vprBGHF6OZllmqy35Xfn4/ptz7gtwIkV+CRkSg==
-X-Google-Smtp-Source: ADFU+vvWBH0AH3H+Jf2dJbQy+fo/OsWleVD+wRMeOKLdEDzg7ZJ7+mROEy3ck/x1sUe+/gBAEu7toV/J5yrTI9VoQ/4=
-X-Received: by 2002:a1c:b0c3:: with SMTP id z186mr5129118wme.36.1584643250721;
- Thu, 19 Mar 2020 11:40:50 -0700 (PDT)
+        s=default; t=1584643384;
+        bh=+vgcHdLhhtb+ajyUNxQekv1ON55TgPbVwgX7E6jDLgU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sUxpqcgD6Y93HTuHXg5h0Qz3nt+L3A2TfD5OrDS6vZ8dvWZqSV0Ki0TnxUUiJZY6Q
+         dmxl/GTcRwlUaw07dL8J++h7uq24D+3hFk7zw4A3UrD2mm33dnZnboHUQD/mDwb2A8
+         j03xPtn5geOFe+RB9aX1Wv2ZMxGhr7rDHuARE9K0=
+Date:   Thu, 19 Mar 2020 18:42:59 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] arm64: compat: Fix syscall number of compat_clock_getres
+Message-ID: <20200319184258.GC27141@willie-the-truck>
+References: <20200319141138.19343-1-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-References: <20200319091407.1481-1-joro@8bytes.org> <20200319091407.1481-71-joro@8bytes.org>
- <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com> <20200319160749.GC5122@8bytes.org>
-In-Reply-To: <20200319160749.GC5122@8bytes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 19 Mar 2020 11:40:39 -0700
-X-Gmail-Original-Message-ID: <CALCETrXY5M87C1Fc3QvTkc6MdbQ_3gAuOPUeWJktAzK4T60QNQ@mail.gmail.com>
-Message-ID: <CALCETrXY5M87C1Fc3QvTkc6MdbQ_3gAuOPUeWJktAzK4T60QNQ@mail.gmail.com>
-Subject: Re: [PATCH 70/70] x86/sev-es: Add NMI state tracking
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319141138.19343-1-vincenzo.frascino@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 9:07 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> Hi Andy,
->
-> On Thu, Mar 19, 2020 at 08:35:59AM -0700, Andy Lutomirski wrote:
-> > On Thu, Mar 19, 2020 at 2:14 AM Joerg Roedel <joro@8bytes.org> wrote:
-> > >
-> > > From: Joerg Roedel <jroedel@suse.de>
-> > >
-> > > Keep NMI state in SEV-ES code so the kernel can re-enable NMIs for the
-> > > vCPU when it reaches IRET.
-> >
-> > IIRC I suggested just re-enabling NMI in C from do_nmi().  What was
-> > wrong with that approach?
->
-> If I understand the code correctly a nested NMI will just reset the
-> interrupted NMI handler to start executing again at 'restart_nmi'.
-> The interrupted NMI handler could be in the #VC handler, and it is not
-> safe to just jump back to the start of the NMI handler from somewhere
-> within the #VC handler.
+On Thu, Mar 19, 2020 at 02:11:38PM +0000, Vincenzo Frascino wrote:
+> The syscall number of compat_clock_getres was erroneously set to 247
+> instead of 264. This causes the vDSO fallback of clock_getres to land
+> on the wrong syscall.
+> 
+> Address the issue fixing the syscall number of compat_clock_getres.
+> 
+> Fixes: 53c489e1dfeb6 ("arm64: compat: Add missing syscall numbers")
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> ---
+>  arch/arm64/include/asm/unistd.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+> index 1dd22da1c3a9..803039d504de 100644
+> --- a/arch/arm64/include/asm/unistd.h
+> +++ b/arch/arm64/include/asm/unistd.h
+> @@ -25,8 +25,8 @@
+>  #define __NR_compat_gettimeofday	78
+>  #define __NR_compat_sigreturn		119
+>  #define __NR_compat_rt_sigreturn	173
+> -#define __NR_compat_clock_getres	247
+>  #define __NR_compat_clock_gettime	263
+> +#define __NR_compat_clock_getres	264
+>  #define __NR_compat_clock_gettime64	403
+>  #define __NR_compat_clock_getres_time64	406
 
-Nope.  A nested NMI will reset the interrupted NMI's return frame to
-cause it to run again when it's done.  I don't think this will have
-any real interaction with #VC.  There's no longjmp() here.
+Ha, what a howler. I'll queue this one as a fix.
 
->
-> So I decided to not allow NMI nesting for SEV-ES and only re-enable the
-> NMI window when the first NMI returns. This is not implemented in this
-> patch, but I will do that once Thomas' entry-code rewrite is upstream.
->
-
-I certainly *like* preventing nesting, but I don't think we really
-want a whole alternate NMI path just for a couple of messed-up AMD
-generations.  And the TF trick is not so pretty either.
-
-> > This causes us to pop the NMI frame off the stack.  Assuming the NMI
-> > restart logic is invoked (which is maybe impossible?), we get #DB,
-> > which presumably is actually delivered.  And we end up on the #DB
-> > stack, which might already have been in use, so we have a potential
-> > increase in nesting.  Also, #DB may be called from an unexpected
-> > context.
->
-> An SEV-ES hypervisor is required to intercept #DB, which means that the
-> #DB exception actually ends up being a #VC exception. So it will not end
-> up on the #DB stack.
-
-With your patch set, #DB doesn't seem to end up on the #DB stack either.
-
->
-> > I think there are two credible ways to approach this:
-> >
-> > 1. Just put the NMI unmask in do_nmi().  The kernel *already* knows
-> > how to handle running do_nmi() with NMIs unmasked.  This is much, much
-> > simpler than your code.
->
-> Right, and I thought about that, but the implication is that the
-> complexity is moved somewhere else, namely into the #VC handler, which
-> then has to be restartable.
-
-As above, I don't think there's an actual problem here.
-
->
-> > 2. Have an entirely separate NMI path for the
-> > SEV-ES-on-misdesigned-CPU case.  And have very clear documentation for
-> > what prevents this code from being executed on future CPUs (Zen3?)
-> > that have this issue fixed for real?
->
-> That sounds like a good alternative, I will investigate this approach.
-> The NMI handler should be much simpler as it doesn't need to allow NMI
-> nesting. The question is, does the C code down the NMI path depend on
-> the NMI handlers stack frame layout (e.g. the in-nmi flag)?
-
-Nope.  In particular, the 32-bit path doesn't have all this.
+Will
