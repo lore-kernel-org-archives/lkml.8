@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BD8C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE8FC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C2620658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38E0208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624343;
-	bh=YAFvu5ij+AyAowyPL31UII9ZhMcFpurD7oRq4jnXm+Q=;
+	s=default; t=1584624346;
+	bh=LijBeT8ghRz4OhfDqJrmVw3kAoNl4ItiK+qJNyWxjHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZAuVmLv3EKGzRpFy1pIMcW39YEkvUpLYFfeRXFsP+I0ManpGXaBJKlP7xQQQ00YK7
-	 bN5I8AyGYyUCGcB+okejr9O/uXISrQ6z0dq6Cqw0mAa/EMey8kXpX9cHGvNy8CDFxi
-	 594DNYWQ8Im17QRFLqUT1SVM2zpiVEkDRjUvyEf0=
+	b=YuL67NxvaqaBOHens87xzslxSGKiCK0ds3l9lj9LS98lBDI5+fBmb8kHvuS8QoQaP
+	 PAnXl0jz7V0nkqgCiGnpWTSD6nQLTGIVB4xcB46/2Do+snHmCTsEtDEo3zIo7OSr2h
+	 2JBCxO4AWUaRmUSqowP+qBA6t+MlPGQf8ITyqdeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbgCSNZm (ORCPT
+        id S1730281AbgCSNZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53330 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:25:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730655AbgCSNZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:40 -0400
+        id S1730672AbgCSNZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AE1C214D8;
-        Thu, 19 Mar 2020 13:25:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D26C920658;
+        Thu, 19 Mar 2020 13:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624338;
-        bh=YAFvu5ij+AyAowyPL31UII9ZhMcFpurD7oRq4jnXm+Q=;
+        s=default; t=1584624342;
+        bh=LijBeT8ghRz4OhfDqJrmVw3kAoNl4ItiK+qJNyWxjHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C7wV8bA28ZfK9Is1qsSJB3/gz230DlFzCUSSDPnAoUQ8HL+Qh0gurZx95qYbqc7Ml
-         0NQ57kGkspNmXVVFiKI3zLL2MunNUDZMVGBMB632gFPSyLT0ImP5X3DBnJJnfr/G04
-         wbPlnvZDnBU8eVBXzY1An7WXeU60irhOZKU3BqGU=
+        b=qSeWNhbsbGo4YjWqna3ioHEE9NOU6wLkZZfZiH6tt7wI6Li8Hx7++RhDvdrTpiFc4
+         yKiQ1S9UDlQ6ySrCFRQnlh/jSDYL6Ezjzui98zf4f0ikRpjaR33F7Q91koG5QegkuZ
+         bwZuxrAH3kE0Sbpan4rMkS+JGzphZ+1t4aQZEwas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mansour Behabadi <mansour@oxplot.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 10/65] HID: apple: Add support for recent firmware on Magic Keyboards
-Date:   Thu, 19 Mar 2020 14:03:52 +0100
-Message-Id: <20200319123929.495355777@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 28/65] mac80211: rx: avoid RCU list traversal under mutex
+Date:   Thu, 19 Mar 2020 14:04:10 +0100
+Message-Id: <20200319123935.249074287@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -59,35 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mansour Behabadi <mansour@oxplot.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit e433be929e63265b7412478eb7ff271467aee2d7 ]
+[ Upstream commit 253216ffb2a002a682c6f68bd3adff5b98b71de8 ]
 
-Magic Keyboards with more recent firmware (0x0100) report Fn key differently.
-Without this patch, Fn key may not behave as expected and may not be
-configurable via hid_apple fnmode module parameter.
+local->sta_mtx is held in __ieee80211_check_fast_rx_iface().
+No need to use list_for_each_entry_rcu() as it also requires
+a cond argument to avoid false lockdep warnings when not used in
+RCU read-side section (with CONFIG_PROVE_RCU_LIST).
+Therefore use list_for_each_entry();
 
-Signed-off-by: Mansour Behabadi <mansour@oxplot.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Link: https://lore.kernel.org/r/20200223143302.15390-1-madhuparnabhowmik10@gmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-apple.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/mac80211/rx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
-index 6ac8becc2372e..d732d1d10cafb 100644
---- a/drivers/hid/hid-apple.c
-+++ b/drivers/hid/hid-apple.c
-@@ -340,7 +340,8 @@ static int apple_input_mapping(struct hid_device *hdev, struct hid_input *hi,
- 		unsigned long **bit, int *max)
- {
- 	if (usage->hid == (HID_UP_CUSTOM | 0x0003) ||
--			usage->hid == (HID_UP_MSVENDOR | 0x0003)) {
-+			usage->hid == (HID_UP_MSVENDOR | 0x0003) ||
-+			usage->hid == (HID_UP_HPVENDOR2 | 0x0003)) {
- 		/* The fn key on Apple USB keyboards */
- 		set_bit(EV_REP, hi->input->evbit);
- 		hid_map_usage_clear(hi, usage, bit, max, EV_KEY, KEY_FN);
+diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
+index 0e05ff0376726..0ba98ad9bc854 100644
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -4114,7 +4114,7 @@ void __ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
+ 
+ 	lockdep_assert_held(&local->sta_mtx);
+ 
+-	list_for_each_entry_rcu(sta, &local->sta_list, list) {
++	list_for_each_entry(sta, &local->sta_list, list) {
+ 		if (sdata != sta->sdata &&
+ 		    (!sta->sdata->bss || sta->sdata->bss != sdata->bss))
+ 			continue;
 -- 
 2.20.1
 
