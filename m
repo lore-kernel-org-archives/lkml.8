@@ -2,113 +2,96 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1478C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E17C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3212078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4F420789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:08:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhhRP9CT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="awMAcpFJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbgCSSHI (ORCPT
+        id S1727492AbgCSSIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:07:08 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:41308 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgCSSHI (ORCPT
+        Thu, 19 Mar 2020 14:08:13 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33175 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgCSSIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:07:08 -0400
-Received: by mail-vs1-f67.google.com with SMTP id a63so2279596vsa.8
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 11:07:07 -0700 (PDT)
+        Thu, 19 Mar 2020 14:08:12 -0400
+Received: by mail-ot1-f65.google.com with SMTP id x26so3389951otk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 11:08:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PNbkuwcxRY/5NdpGatcuzNNiZqstQLs90QoS76KAs3c=;
-        b=IhhRP9CTg02j9zaxsX8RCjJcCZ5AtYZL4qbmjD1DrW5528Hpb0kijgdCy0sBZFiO7T
-         yRw0OxLaQu/lqpWnC6ETkFwLmc2ERbZf3HZEdWJn3uZ5TxQmdSnkI/Es94NckDNUg++D
-         vrpHSj6S9uP+dbj+IJjvQIdY9fJ3cy/r6P2syGYs8KE7ZnOEUGCWMr24Urj9Y6EkGMk4
-         1xgK+oqQfw1krowg9XnkmXgB0VxogBvB/P5ba/vYoRdLYFyCg7VW9WusMhRMa/Y8jp/i
-         16XFpLenou+5+ePb1NqNWUCtOhu+SaiJkMmqNZ/hKs4dapM4v+zZHrlDzXdVoUDfcrjx
-         TitQ==
+        bh=4Xu0QrQlsjdldwRC1nps46N1nU7pCt/oK3/9Wj8IKiw=;
+        b=awMAcpFJeOrIdWpDHagljBb9cmXwR+Db8v8huGcj82AP2JTD75YhDnQsNzaPBAwyrs
+         Fd16Z6F7NlYKo53tKs5qINZiysrcrCV+YyhpWNbqZ6M9rWNkY7oxALE/JiSq5Qg1TIM9
+         W514th8N91MslC83xfX60HqJlHSzz7NL9PhT0a3pGTM1IpOkuGZIG4cmsobagKg+Rk1s
+         68vFz+vHJFyxpUwPBHmNKo3u3Q8gRHKZi7KLEUbUCsIVMEjJTtFNWW869X1W8rHXMxyX
+         fENIiEyHRFf5HtGQTuviBkpX72JoyG7khwSkr8ZyH6Z8aNWtTOSx3RXGhwmUnbGv7+Iw
+         SgyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PNbkuwcxRY/5NdpGatcuzNNiZqstQLs90QoS76KAs3c=;
-        b=RRsJ92IIb+sY98spGHw6p+3KI5fhg0UrEwp+KOuPWREMfHSi/vHniU4ourFQ4Gdbnj
-         NUDd7OH8BsIlc4rDfrKqqAe9CnWd8qnr1hh4BmQgdXlZQY9VxRSyRcn7IpuYXDtGbd8w
-         rZQH4gbG4mdRonGbgPXhmkARNKgj+0Z9TQRo0E9rEWKcLdA7H8MohMSj+0uTh3/ouyAt
-         yCpIDLMJ3oS9DcQhDYxBeev2G0jTSa90DDPnomJw6p1uRfOCmi6WjC+EhsxZCne2bTQ4
-         SG2XApQAbcBN7XFzcvA+M1ZLsiMhgcyc+WxCV37igpn5eioo7Sv/ZogTmQy9vTTm31j9
-         Py4g==
-X-Gm-Message-State: ANhLgQ30t9umvZw0XgEtsON9TS+n6jt0SRFwbkUPu8etgF8W4SOfXvvT
-        GOmEUvjEuA75RgqoYSxAGRippG0Ul2NxfUXh4Mxy3a7J
-X-Google-Smtp-Source: ADFU+vsBl5JlqDidxCK7LsaP6aXL5cdzzZUbyABF3OMZru0KbtSTc43XEhfdwj2xG3j3D7wZBRKKP7ZcYqxLzYL7QOA=
-X-Received: by 2002:a67:cb84:: with SMTP id h4mr3195097vsl.85.1584641226832;
- Thu, 19 Mar 2020 11:07:06 -0700 (PDT)
+        bh=4Xu0QrQlsjdldwRC1nps46N1nU7pCt/oK3/9Wj8IKiw=;
+        b=OaPGOtvSgsPdyXhJf3ee0bcqWqVRy/3/7L1qxGd1fgvsOJ6GSqCSIYb85DtYg1xPgL
+         i4OrVImQL1NVLfEl8hJ1mfSZmIraILXkqK2yEnAUILNI5WUIbWeOgDxhbrfqKNosEFWw
+         9+y3KicD0errOWbzGa2Exr6UV/2U9u5TBGlorrSSCHgBCR0kOR6hcrP2RWYrvJUUB7yR
+         SAgtmX1nn5E7UKD1Mfh2Dxc4P3JAHieVG+rx9DDflMfDI9Xi557nVXrWb5Cwg1M+0mBa
+         kZPXaOvn5pp1snvFTG26uys+Yt+6UlXyCxHV7ob7hTiSBtzmkoPLyh4NfHecwbv5oiTL
+         GiEw==
+X-Gm-Message-State: ANhLgQ3IkGj5t51ryJNyDZ9j5HYllKnH++NNiD3YO4zaq87h+YpADpzr
+        gTWkFby2ZAOwwHhLghlbQiuYSyQ5bM6W10zbUmQrg5UI
+X-Google-Smtp-Source: ADFU+vuXiZDQ0JtlnLICq8/ImvOKT2+DbBzIkng50geTAep6a7tCMxPkatqLefxRC7OrF3ZYll78Iq+luLrurCWjLpo=
+X-Received: by 2002:a05:6830:150f:: with SMTP id k15mr3149803otp.251.1584641290618;
+ Thu, 19 Mar 2020 11:08:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584105767-11963-1-git-send-email-kevin3.tang@gmail.com> <1584105767-11963-5-git-send-email-kevin3.tang@gmail.com>
-In-Reply-To: <1584105767-11963-5-git-send-email-kevin3.tang@gmail.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Thu, 19 Mar 2020 18:06:02 +0000
-Message-ID: <CACvgo52_KT6O79PujodCPbkegP6LLwuVSFEoRdbarZ=y50B63A@mail.gmail.com>
-Subject: Re: [PATCH RFC v5 4/6] drm/sprd: add Unisoc's drm display controller driver
-To:     Kevin Tang <kevin3.tang@gmail.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>
+References: <20200318173845.220793-1-elver@google.com> <20200319152736.GF3199@paulmck-ThinkPad-P72>
+ <20200319180245.GA17119@paulmck-ThinkPad-P72>
+In-Reply-To: <20200319180245.GA17119@paulmck-ThinkPad-P72>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 19 Mar 2020 19:07:59 +0100
+Message-ID: <CANpmjNMN_-bfqinOMG9_FakPVYx_Rk7nQ=AdkW8H6sAAdjxZPA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kcsan: Introduce report access_info and other_info
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Qian Cai <cai@lca.pw>, kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Kevin,
-
-On Sun, 15 Mar 2020 at 23:19, Kevin Tang <kevin3.tang@gmail.com> wrote:
+On Thu, 19 Mar 2020 at 19:02, Paul E. McKenney <paulmck@kernel.org> wrote:
 >
-> Adds DPU(Display Processor Unit) support for the Unisoc's display subsystem.
-> It's support multi planes, scaler, rotation, PQ(Picture Quality) and more.
+> On Thu, Mar 19, 2020 at 08:27:36AM -0700, Paul E. McKenney wrote:
+> > On Wed, Mar 18, 2020 at 06:38:44PM +0100, Marco Elver wrote:
+> > > Improve readability by introducing access_info and other_info structs,
+> > > and in preparation of the following commit in this series replaces the
+> > > single instance of other_info with an array of size 1.
+> > >
+> > > No functional change intended.
+> > >
+> > > Signed-off-by: Marco Elver <elver@google.com>
+> >
+> > Queued both for review and testing, and I am trying it out on one of
+> > the scenarios that proved problematic earlier on.  Thank you!!!
 >
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Baolin Wang <baolin.wang@linaro.org>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
-> ---
->  drivers/gpu/drm/sprd/Makefile       |   5 +-
->  drivers/gpu/drm/sprd/dpu/Makefile   |   7 +
->  drivers/gpu/drm/sprd/dpu/dpu_r2p0.c | 750 ++++++++++++++++++++++++++++++++++++
->  drivers/gpu/drm/sprd/sprd_dpu.c     | 501 ++++++++++++++++++++++++
->  drivers/gpu/drm/sprd/sprd_dpu.h     | 170 ++++++++
->  drivers/gpu/drm/sprd/sprd_drm.c     |   1 +
->  drivers/gpu/drm/sprd/sprd_drm.h     |   2 +
+> And all passed, so looking good!  ;-)
 
-Seems like v5 (patch at least, I did not look at the rest) does not
-address a handful of the feedback.
- - Access registers via readl/writel, instead of current approach
- - With ^^ you can drop the compiler workaround
- - Checking for unsupported KMS properties (format, rotation, etc)
-should happen in the XXX_check callbacks
- - Remove always true checks, around the (rather moot) abstraction layer
+Great, thank you for confirming!
 
-For the future, please keep the revision/changelog within the
-corresponding patch. This way reviewers can see, from the onset, what
-is addressed.
-Look at `git log -- drivers/gpu/drm` for examples.
+Thanks,
+-- Marco
 
-
--Emil
+>                                                         Thanx, Paul
