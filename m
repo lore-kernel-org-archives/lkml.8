@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B1BC43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9564BC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7A6208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF842137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623296;
-	bh=iA18h8YrcAmdH9ewlIRvVU1KvkEvvdnYRDefibfRY08=;
+	s=default; t=1584623301;
+	bh=BzyWt1yyJqFGlxsed1AfS2TSjeJTUbCBPz4Zprclf18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYE7F+BrDQqv6DT4IYLdtswuu2RZmISs3IFjPdPVGNhLCcDAV6cHhaWu+uYso4DFv
-	 9cO4fznRv08Q3zWn8xOoIJK25hXlOUviQHizhv31KFnKVe44G89rJZEN45OhiRGPHG
-	 4EaMfh5ppoa/e6qcqUmjrKNti+1koMYYJvbKpqu4=
+	b=CN2iaAO9hRDhALF9ks1cfiX34LXV66QYOlRjZvIwJDJP+oSWdChsGYXZysOSr0XVt
+	 W2HCjXeNFbsnNrBEe+iJi46HklrYLNa+2r47d384hZAMbn5BxLlkOmlmIh7WghZsgb
+	 7tH0a5tF3fjzIfCrzxry47v+YxM+Je59i8CpAjk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgCSNIP (ORCPT
+        id S1727488AbgCSNIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:08:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52288 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:08:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727252AbgCSNIL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:08:11 -0400
+        id S1727486AbgCSNIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:08:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34FAC208CA;
-        Thu, 19 Mar 2020 13:08:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA7BE208FE;
+        Thu, 19 Mar 2020 13:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623290;
-        bh=iA18h8YrcAmdH9ewlIRvVU1KvkEvvdnYRDefibfRY08=;
+        s=default; t=1584623293;
+        bh=BzyWt1yyJqFGlxsed1AfS2TSjeJTUbCBPz4Zprclf18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVfYdNhkxExMe2IK4IHM1UG5f1DRXagkaoDL1y2ekfAIJHSOa3wMPfd2c4wpr7qhl
-         EZzAve6tiu9iDfhjhoQqLBdQoXnRMqRdXDBm7Lvrg5mtqSQNogbKwdmI4ghpzL5egD
-         vlAnIyg+lCJUxEgrslueQi1iuWIia6FyfQuq4obA=
+        b=0NJuTndmjYKo/Wm1hZb6wvGcxI2Vjmybjin0lvGnW1rk4x/5QSvTdQu6FNn1FJJWt
+         PYCfModfX8mUZF4Kz67KamNaOOdHjjb/gn1bMi6uxm6zPJbbEEo4S19EM/43La8Ws6
+         IK9YiSBh4QaEKYQ15mHKVK/9kq5HfNYMKBdwysQ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?q?Leonardo=20M=F6rlein?= <me@irrelefant.net>,
-        =?UTF-8?q?Linus=20L=FCssing?= <linus.luessing@c0d3.blue>,
         Sven Eckelmann <sven@narfation.org>,
+        Marek Lindner <mareklindner@neomailbox.ch>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 71/93] batman-adv: Fix TT sync flags for intermediate TT responses
-Date:   Thu, 19 Mar 2020 14:00:15 +0100
-Message-Id: <20200319123947.511471554@linuxfoundation.org>
+Subject: [PATCH 4.4 57/93] batman-adv: Fix non-atomic bla_claim::backbone_gw access
+Date:   Thu, 19 Mar 2020 14:00:01 +0100
+Message-Id: <20200319123943.003265441@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -61,143 +60,281 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Lüssing <linus.luessing@c0d3.blue>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit 7072337e52b3e9d5460500d8dc9cbc1ba2db084c upstream.
+commit 3db0decf1185357d6ab2256d0dede1ca9efda03d upstream.
 
-The previous TT sync fix so far only fixed TT responses issued by the
-target node directly. So far, TT responses issued by intermediate nodes
-still lead to the wrong flags being added, leading to CRC mismatches.
+The pointer batadv_bla_claim::backbone_gw can be changed at any time.
+Therefore, access to it must be protected to ensure that two function
+accessing the same backbone_gw are actually accessing the same. This is
+especially important when the crc_lock is used or when the backbone_gw of a
+claim is exchanged.
 
-This behaviour was observed at Freifunk Hannover in a 800 nodes setup
-where a considerable amount of nodes were still infected with 'WI'
-TT flags even with (most) nodes having the previous TT sync fix applied.
+Not doing so leads to invalid memory access and/or reference leaks.
 
-I was able to reproduce the issue with intermediate TT responses in a
-four node test setup and this patch fixes this issue by ensuring to
-use the per originator instead of the summarized, OR'd ones.
-
-Fixes: e9c00136a475 ("batman-adv: fix tt_global_entries flags update")
-Reported-by: Leonardo Mörlein <me@irrelefant.net>
-Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
+Fixes: 5a1dd8a4773d ("batman-adv: lock crc access in bridge loop avoidance")
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Marek Lindner <mareklindner@neomailbox.ch>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/translation-table.c |   37 +++++++++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 8 deletions(-)
+ net/batman-adv/bridge_loop_avoidance.c |  112 ++++++++++++++++++++++++++-------
+ net/batman-adv/types.h                 |    1 
+ 2 files changed, 90 insertions(+), 23 deletions(-)
 
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -1249,7 +1249,8 @@ batadv_tt_global_orig_entry_find(const s
-  */
- static bool
- batadv_tt_global_entry_has_orig(const struct batadv_tt_global_entry *entry,
--				const struct batadv_orig_node *orig_node)
-+				const struct batadv_orig_node *orig_node,
-+				u8 *flags)
+--- a/net/batman-adv/bridge_loop_avoidance.c
++++ b/net/batman-adv/bridge_loop_avoidance.c
+@@ -129,7 +129,19 @@ batadv_backbone_gw_free_ref(struct batad
+ /* finally deinitialize the claim */
+ static void batadv_claim_release(struct batadv_bla_claim *claim)
  {
- 	struct batadv_tt_orig_list_entry *orig_entry;
- 	bool found = false;
-@@ -1257,6 +1258,10 @@ batadv_tt_global_entry_has_orig(const st
- 	orig_entry = batadv_tt_global_orig_entry_find(entry, orig_node);
- 	if (orig_entry) {
- 		found = true;
+-	batadv_backbone_gw_free_ref(claim->backbone_gw);
++	struct batadv_bla_backbone_gw *old_backbone_gw;
 +
-+		if (flags)
-+			*flags = orig_entry->flags;
++	spin_lock_bh(&claim->backbone_lock);
++	old_backbone_gw = claim->backbone_gw;
++	claim->backbone_gw = NULL;
++	spin_unlock_bh(&claim->backbone_lock);
 +
- 		batadv_tt_orig_list_entry_free_ref(orig_entry);
++	spin_lock_bh(&old_backbone_gw->crc_lock);
++	old_backbone_gw->crc ^= crc16(0, claim->addr, ETH_ALEN);
++	spin_unlock_bh(&old_backbone_gw->crc_lock);
++
++	batadv_backbone_gw_free_ref(old_backbone_gw);
++
+ 	kfree_rcu(claim, rcu);
+ }
+ 
+@@ -579,8 +591,10 @@ static void batadv_bla_add_claim(struct
+ 				 const u8 *mac, const unsigned short vid,
+ 				 struct batadv_bla_backbone_gw *backbone_gw)
+ {
++	struct batadv_bla_backbone_gw *old_backbone_gw;
+ 	struct batadv_bla_claim *claim;
+ 	struct batadv_bla_claim search_claim;
++	bool remove_crc = false;
+ 	int hash_added;
+ 
+ 	ether_addr_copy(search_claim.addr, mac);
+@@ -594,8 +608,10 @@ static void batadv_bla_add_claim(struct
+ 			return;
+ 
+ 		ether_addr_copy(claim->addr, mac);
++		spin_lock_init(&claim->backbone_lock);
+ 		claim->vid = vid;
+ 		claim->lasttime = jiffies;
++		atomic_inc(&backbone_gw->refcount);
+ 		claim->backbone_gw = backbone_gw;
+ 
+ 		atomic_set(&claim->refcount, 2);
+@@ -622,15 +638,26 @@ static void batadv_bla_add_claim(struct
+ 			   "bla_add_claim(): changing ownership for %pM, vid %d\n",
+ 			   mac, BATADV_PRINT_VID(vid));
+ 
+-		spin_lock_bh(&claim->backbone_gw->crc_lock);
+-		claim->backbone_gw->crc ^= crc16(0, claim->addr, ETH_ALEN);
+-		spin_unlock_bh(&claim->backbone_gw->crc_lock);
+-		batadv_backbone_gw_free_ref(claim->backbone_gw);
++		remove_crc = true;
+ 	}
+-	/* set (new) backbone gw */
++
++	/* replace backbone_gw atomically and adjust reference counters */
++	spin_lock_bh(&claim->backbone_lock);
++	old_backbone_gw = claim->backbone_gw;
+ 	atomic_inc(&backbone_gw->refcount);
+ 	claim->backbone_gw = backbone_gw;
++	spin_unlock_bh(&claim->backbone_lock);
+ 
++	if (remove_crc) {
++		/* remove claim address from old backbone_gw */
++		spin_lock_bh(&old_backbone_gw->crc_lock);
++		old_backbone_gw->crc ^= crc16(0, claim->addr, ETH_ALEN);
++		spin_unlock_bh(&old_backbone_gw->crc_lock);
++	}
++
++	batadv_backbone_gw_free_ref(old_backbone_gw);
++
++	/* add claim address to new backbone_gw */
+ 	spin_lock_bh(&backbone_gw->crc_lock);
+ 	backbone_gw->crc ^= crc16(0, claim->addr, ETH_ALEN);
+ 	spin_unlock_bh(&backbone_gw->crc_lock);
+@@ -640,6 +667,26 @@ claim_free_ref:
+ 	batadv_claim_free_ref(claim);
+ }
+ 
++/**
++ * batadv_bla_claim_get_backbone_gw - Get valid reference for backbone_gw of
++ *  claim
++ * @claim: claim whose backbone_gw should be returned
++ *
++ * Return: valid reference to claim::backbone_gw
++ */
++static struct batadv_bla_backbone_gw *
++batadv_bla_claim_get_backbone_gw(struct batadv_bla_claim *claim)
++{
++	struct batadv_bla_backbone_gw *backbone_gw;
++
++	spin_lock_bh(&claim->backbone_lock);
++	backbone_gw = claim->backbone_gw;
++	atomic_inc(&backbone_gw->refcount);
++	spin_unlock_bh(&claim->backbone_lock);
++
++	return backbone_gw;
++}
++
+ /* Delete a claim from the claim hash which has the
+  * given mac address and vid.
+  */
+@@ -661,10 +708,6 @@ static void batadv_bla_del_claim(struct
+ 			   batadv_choose_claim, claim);
+ 	batadv_claim_free_ref(claim); /* reference from the hash is gone */
+ 
+-	spin_lock_bh(&claim->backbone_gw->crc_lock);
+-	claim->backbone_gw->crc ^= crc16(0, claim->addr, ETH_ALEN);
+-	spin_unlock_bh(&claim->backbone_gw->crc_lock);
+-
+ 	/* don't need the reference from hash_find() anymore */
+ 	batadv_claim_free_ref(claim);
+ }
+@@ -1074,6 +1117,7 @@ static void batadv_bla_purge_claims(stru
+ 				    struct batadv_hard_iface *primary_if,
+ 				    int now)
+ {
++	struct batadv_bla_backbone_gw *backbone_gw;
+ 	struct batadv_bla_claim *claim;
+ 	struct hlist_head *head;
+ 	struct batadv_hashtable *hash;
+@@ -1088,14 +1132,17 @@ static void batadv_bla_purge_claims(stru
+ 
+ 		rcu_read_lock();
+ 		hlist_for_each_entry_rcu(claim, head, hash_entry) {
++			backbone_gw = batadv_bla_claim_get_backbone_gw(claim);
+ 			if (now)
+ 				goto purge_now;
+-			if (!batadv_compare_eth(claim->backbone_gw->orig,
++
++			if (!batadv_compare_eth(backbone_gw->orig,
+ 						primary_if->net_dev->dev_addr))
+-				continue;
++				goto skip;
++
+ 			if (!batadv_has_timed_out(claim->lasttime,
+ 						  BATADV_BLA_CLAIM_TIMEOUT))
+-				continue;
++				goto skip;
+ 
+ 			batadv_dbg(BATADV_DBG_BLA, bat_priv,
+ 				   "bla_purge_claims(): %pM, vid %d, time out\n",
+@@ -1103,8 +1150,10 @@ static void batadv_bla_purge_claims(stru
+ 
+ purge_now:
+ 			batadv_handle_unclaim(bat_priv, primary_if,
+-					      claim->backbone_gw->orig,
++					      backbone_gw->orig,
+ 					      claim->addr, claim->vid);
++skip:
++			batadv_backbone_gw_free_ref(backbone_gw);
+ 		}
+ 		rcu_read_unlock();
+ 	}
+@@ -1488,9 +1537,11 @@ void batadv_bla_free(struct batadv_priv
+ int batadv_bla_rx(struct batadv_priv *bat_priv, struct sk_buff *skb,
+ 		  unsigned short vid, bool is_bcast)
+ {
++	struct batadv_bla_backbone_gw *backbone_gw;
+ 	struct ethhdr *ethhdr;
+ 	struct batadv_bla_claim search_claim, *claim = NULL;
+ 	struct batadv_hard_iface *primary_if;
++	bool own_claim;
+ 	int ret;
+ 
+ 	ethhdr = eth_hdr(skb);
+@@ -1522,8 +1573,12 @@ int batadv_bla_rx(struct batadv_priv *ba
  	}
  
-@@ -1432,7 +1437,7 @@ static bool batadv_tt_global_add(struct
- 			if (!(common->flags & BATADV_TT_CLIENT_TEMP))
- 				goto out;
- 			if (batadv_tt_global_entry_has_orig(tt_global_entry,
--							    orig_node))
-+							    orig_node, NULL))
- 				goto out_remove;
- 			batadv_tt_global_del_orig_list(tt_global_entry);
- 			goto add_orig_entry;
-@@ -2366,17 +2371,24 @@ unlock:
-  *
-  * Returns 1 if the entry is a valid, 0 otherwise.
-  */
--static int batadv_tt_local_valid(const void *entry_ptr, const void *data_ptr)
-+static int batadv_tt_local_valid(const void *entry_ptr,
-+				 const void *data_ptr,
-+				 u8 *flags)
- {
- 	const struct batadv_tt_common_entry *tt_common_entry = entry_ptr;
- 
- 	if (tt_common_entry->flags & BATADV_TT_CLIENT_NEW)
- 		return 0;
+ 	/* if it is our own claim ... */
+-	if (batadv_compare_eth(claim->backbone_gw->orig,
+-			       primary_if->net_dev->dev_addr)) {
++	backbone_gw = batadv_bla_claim_get_backbone_gw(claim);
++	own_claim = batadv_compare_eth(backbone_gw->orig,
++				       primary_if->net_dev->dev_addr);
++	batadv_backbone_gw_free_ref(backbone_gw);
 +
-+	if (flags)
-+		*flags = tt_common_entry->flags;
++	if (own_claim) {
+ 		/* ... allow it in any case */
+ 		claim->lasttime = jiffies;
+ 		goto allow;
+@@ -1586,7 +1641,9 @@ int batadv_bla_tx(struct batadv_priv *ba
+ {
+ 	struct ethhdr *ethhdr;
+ 	struct batadv_bla_claim search_claim, *claim = NULL;
++	struct batadv_bla_backbone_gw *backbone_gw;
+ 	struct batadv_hard_iface *primary_if;
++	bool client_roamed;
+ 	int ret = 0;
+ 
+ 	primary_if = batadv_primary_if_get_selected(bat_priv);
+@@ -1616,8 +1673,12 @@ int batadv_bla_tx(struct batadv_priv *ba
+ 		goto allow;
+ 
+ 	/* check if we are responsible. */
+-	if (batadv_compare_eth(claim->backbone_gw->orig,
+-			       primary_if->net_dev->dev_addr)) {
++	backbone_gw = batadv_bla_claim_get_backbone_gw(claim);
++	client_roamed = batadv_compare_eth(backbone_gw->orig,
++					   primary_if->net_dev->dev_addr);
++	batadv_backbone_gw_free_ref(backbone_gw);
 +
- 	return 1;
- }
- 
- static int batadv_tt_global_valid(const void *entry_ptr,
--				  const void *data_ptr)
-+				  const void *data_ptr,
-+				  u8 *flags)
- {
- 	const struct batadv_tt_common_entry *tt_common_entry = entry_ptr;
- 	const struct batadv_tt_global_entry *tt_global_entry;
-@@ -2390,7 +2402,8 @@ static int batadv_tt_global_valid(const
- 				       struct batadv_tt_global_entry,
- 				       common);
- 
--	return batadv_tt_global_entry_has_orig(tt_global_entry, orig_node);
-+	return batadv_tt_global_entry_has_orig(tt_global_entry, orig_node,
-+					       flags);
- }
- 
- /**
-@@ -2406,18 +2419,25 @@ static int batadv_tt_global_valid(const
- static void batadv_tt_tvlv_generate(struct batadv_priv *bat_priv,
- 				    struct batadv_hashtable *hash,
- 				    void *tvlv_buff, u16 tt_len,
--				    int (*valid_cb)(const void *, const void *),
-+				    int (*valid_cb)(const void *,
-+						    const void *,
-+						    u8 *flags),
- 				    void *cb_data)
- {
- 	struct batadv_tt_common_entry *tt_common_entry;
- 	struct batadv_tvlv_tt_change *tt_change;
++	if (client_roamed) {
+ 		/* if yes, the client has roamed and we have
+ 		 * to unclaim it.
+ 		 */
+@@ -1670,6 +1731,7 @@ int batadv_bla_claim_table_seq_print_tex
+ 	struct net_device *net_dev = (struct net_device *)seq->private;
+ 	struct batadv_priv *bat_priv = netdev_priv(net_dev);
+ 	struct batadv_hashtable *hash = bat_priv->bla.claim_hash;
++	struct batadv_bla_backbone_gw *backbone_gw;
+ 	struct batadv_bla_claim *claim;
+ 	struct batadv_hard_iface *primary_if;
  	struct hlist_head *head;
- 	u16 tt_tot, tt_num_entries = 0;
-+	u8 flags;
-+	bool ret;
- 	u32 i;
+@@ -1694,17 +1756,21 @@ int batadv_bla_claim_table_seq_print_tex
  
- 	tt_tot = batadv_tt_entries(tt_len);
- 	tt_change = (struct batadv_tvlv_tt_change *)tvlv_buff;
- 
-+	if (!valid_cb)
-+		return;
+ 		rcu_read_lock();
+ 		hlist_for_each_entry_rcu(claim, head, hash_entry) {
+-			is_own = batadv_compare_eth(claim->backbone_gw->orig,
++			backbone_gw = batadv_bla_claim_get_backbone_gw(claim);
 +
- 	rcu_read_lock();
- 	for (i = 0; i < hash->size; i++) {
- 		head = &hash->table[i];
-@@ -2427,11 +2447,12 @@ static void batadv_tt_tvlv_generate(stru
- 			if (tt_tot == tt_num_entries)
- 				break;
++			is_own = batadv_compare_eth(backbone_gw->orig,
+ 						    primary_addr);
  
--			if ((valid_cb) && (!valid_cb(tt_common_entry, cb_data)))
-+			ret = valid_cb(tt_common_entry, cb_data, &flags);
-+			if (!ret)
- 				continue;
- 
- 			ether_addr_copy(tt_change->addr, tt_common_entry->addr);
--			tt_change->flags = tt_common_entry->flags;
-+			tt_change->flags = flags;
- 			tt_change->vid = htons(tt_common_entry->vid);
- 			memset(tt_change->reserved, 0,
- 			       sizeof(tt_change->reserved));
+-			spin_lock_bh(&claim->backbone_gw->crc_lock);
+-			backbone_crc = claim->backbone_gw->crc;
+-			spin_unlock_bh(&claim->backbone_gw->crc_lock);
++			spin_lock_bh(&backbone_gw->crc_lock);
++			backbone_crc = backbone_gw->crc;
++			spin_unlock_bh(&backbone_gw->crc_lock);
+ 			seq_printf(seq, " * %pM on %5d by %pM [%c] (%#.4x)\n",
+ 				   claim->addr, BATADV_PRINT_VID(claim->vid),
+-				   claim->backbone_gw->orig,
++				   backbone_gw->orig,
+ 				   (is_own ? 'x' : ' '),
+ 				   backbone_crc);
++
++			batadv_backbone_gw_free_ref(backbone_gw);
+ 		}
+ 		rcu_read_unlock();
+ 	}
+--- a/net/batman-adv/types.h
++++ b/net/batman-adv/types.h
+@@ -917,6 +917,7 @@ struct batadv_bla_claim {
+ 	u8 addr[ETH_ALEN];
+ 	unsigned short vid;
+ 	struct batadv_bla_backbone_gw *backbone_gw;
++	spinlock_t backbone_lock; /* protects backbone_gw */
+ 	unsigned long lasttime;
+ 	struct hlist_node hash_entry;
+ 	struct rcu_head rcu;
 
 
