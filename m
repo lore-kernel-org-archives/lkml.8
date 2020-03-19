@@ -2,125 +2,179 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC73DC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6272C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9D220658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:21:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A3/iwjkX"
+	by mail.kernel.org (Postfix) with ESMTP id A9BFA21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584631376;
+	bh=yzGcAxB0C+KeElt+4BpqJFWiXG2vLhWxT6V+UOeTDkU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=UQ3n0iUBsinLbTgrVJwChH8If10J5L8mBugsx+JuuzP0iC3VFeaCV/rMogG2zC+1m
+	 6nyekyT8Fvy6uKtd0gTaIo6dRkeQPxcEpzpaQec8fEjBHC14Own6E2s9bdhcGc1r+q
+	 s4y5B4VR9yxf2rg3l9XRTloSkS3L6wJa/L0byGeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgCSPV5 (ORCPT
+        id S1727927AbgCSPWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:21:57 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36952 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbgCSPV5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:21:57 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b23so3111213edx.4
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 08:21:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7Vo/Ftz8y0HanBL9Q9HVvo6it3DMCdNOtqGEMgDJW9I=;
-        b=A3/iwjkX8mSzEwg+8yC2HsPaBnY0BRs8nvdHzyDdfD7Rkega4Hbel/Z+53KqkZZXmO
-         wGA/zFmaNJKqzZVoItWdyptVzur6M3qHAvKdKGzimpbZoaK9xPD8ZCu031tQjA2v2MHp
-         J+FXZveu8cxu78e0xK9SA+SpEYIKheUQPMpm3TjmA551iPhkAgkkmsoGDoxc0VVa/fCQ
-         n9p8NyD7NwhTpEnj0voJdyxYYbNdgvhRtoDLGIkFJBix+bV31j0i186dnZ0pXgCRt6X7
-         cZhkQwZ1xIkdmVIJhKrAloj4k10oCmccp1UdNNiqnYeCVj0H2DkQvgBZtk+eAd56F6it
-         wjhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7Vo/Ftz8y0HanBL9Q9HVvo6it3DMCdNOtqGEMgDJW9I=;
-        b=OMBtnB3UcX2IFMMCIdDnGHkgK4UTchZNolvPs51pXoX5WGOd8Stws9ODT1ydbBCyGn
-         ONuuHtITpaJDYex2LVgLeOGWqdQzLo/ehA/PH9JYfCFC4xmLkjLuX6GdcKkOKUyihVIs
-         t+VD4VgdDg1IZcjuCBCPU6Layq19lshMRBWWBLLrsqGprMXIhwQO2DtbXRc1/dRxwY5g
-         wgYPQRp2d0JDF6jM39TVvbsS9P0LJ8z53BeS0rSj+uyq3k1Fo6CIIfr0YFxmS6Me+xJX
-         8wHp9kNOKegYkNf7pbGfsCAIyYPxYA9MXCCHEwGeQssBB+j79mxsEgFeBUuUbT2Ax9zR
-         Rg+Q==
-X-Gm-Message-State: ANhLgQ1huEIQVxQv48WFGvEKCsTakSahCUy4d7jtJTWUhu9MNRFOS3rU
-        oyY3J2qCSAhbGgbZuYuubfTZbA==
-X-Google-Smtp-Source: ADFU+vtLlcnn3fVK+LYjZ9eeWQZLIwYJtZSt0seyEWRCmYEYKSnZNg5Ich6NL3IamCZnBo4cqxl5LA==
-X-Received: by 2002:a50:9f07:: with SMTP id b7mr3330605edf.148.1584631315616;
-        Thu, 19 Mar 2020 08:21:55 -0700 (PDT)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id l19sm150533ejn.31.2020.03.19.08.21.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 08:21:54 -0700 (PDT)
-Subject: Re: [PATCH 2/7] dt-bindings: usb: dwc3: Add a gpio-usb-connector
- example
-To:     Stephen Boyd <swboyd@chromium.org>, balbi@kernel.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bjorn.andersson@linaro.org, jackp@codeaurora.org, robh@kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-References: <20200311191501.8165-1-bryan.odonoghue@linaro.org>
- <20200311191501.8165-3-bryan.odonoghue@linaro.org>
- <158458013177.152100.17920784952083533825@swboyd.mtv.corp.google.com>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <aa6aa234-e2d1-bdcd-0f0e-64b2a7e497d3@linaro.org>
-Date:   Thu, 19 Mar 2020 15:22:14 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 19 Mar 2020 11:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727395AbgCSPWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:22:55 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C84A120658;
+        Thu, 19 Mar 2020 15:22:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584631373;
+        bh=yzGcAxB0C+KeElt+4BpqJFWiXG2vLhWxT6V+UOeTDkU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=q4vQwzA/flKbNBzlh8LqbfDrP15uXTdRUOA24G/lXRd8avNQYuhfpaMP0/HWm1Tcm
+         kUtlbuuzTurieiNOLCyc/Amn1Q22I6u44QwUajrRhOyIRFyQVegoo6DmGfPf61MYoy
+         PbvlokhE8IB2ebPIJ1I3GqwI5ZBO/J4HxG9LIJVU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 9B13A3520F2A; Thu, 19 Mar 2020 08:22:53 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 08:22:53 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org
+Subject: Re: [PATCH RFC v2 tip/core/rcu 03/22] rcutorture: Add flag to
+ produce non-busy-wait task stalls
+Message-ID: <20200319152253.GE3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+ <20200319104614.11444-1-hdanton@sina.com>
+ <20200319133947.12172-1-hdanton@sina.com>
 MIME-Version: 1.0
-In-Reply-To: <158458013177.152100.17920784952083533825@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319133947.12172-1-hdanton@sina.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/03/2020 01:08, Stephen Boyd wrote:
-> Quoting Bryan O'Donoghue (2020-03-11 12:14:56)
->> A USB connector should be a child node of the USB controller
->> connector/usb-connector.txt. This patch adds an example of how to do this
->> to the dwc3 binding descriptions.
+On Thu, Mar 19, 2020 at 09:39:47PM +0800, Hillf Danton wrote:
 > 
-> I read that as a child of the USB interface controller, which is not the
-> same as the USB controller. For example, we're talking about having the
-> usb connector be a child of the EC on ChromeOS devices because that
-> manages the connector
+> On Thu, 19 Mar 2020 05:38:12 -0700 "Paul E. McKenney" wrote:
+> > 
+> > On Thu, Mar 19, 2020 at 06:46:14PM +0800, Hillf Danton wrote:
+> > > 
+> > > On Wed, 18 Mar 2020 17:10:41 -0700
+> > > >  static int rcu_torture_stall(void *args)
+> > > >  {
+> > > > +	int idx;
+> > > >  	unsigned long stop_at;
+> > > >  
+> > > >  	VERBOSE_TOROUT_STRING("rcu_torture_stall task started");
+> > > > @@ -1610,21 +1612,22 @@ static int rcu_torture_stall(void *args)
+> > > >  	if (!kthread_should_stop()) {
+> > > >  		stop_at = ktime_get_seconds() + stall_cpu;
+> > > >  		/* RCU CPU stall is expected behavior in following code. */
+> > > > -		rcu_read_lock();
+> > > > +		idx = cur_ops->readlock();
+> > > >  		if (stall_cpu_irqsoff)
+> > > >  			local_irq_disable();
+> > > > -		else
+> > > > +		else if (!stall_cpu_block)
+> > > >  			preempt_disable();
+> > > >  		pr_alert("rcu_torture_stall start on CPU %d.\n",
+> > > > -			 smp_processor_id());
+> > > > +			 raw_smp_processor_id());
+> > > >  		while (ULONG_CMP_LT((unsigned long)ktime_get_seconds(),
+> > > >  				    stop_at))
+> > > > -			continue;  /* Induce RCU CPU stall warning. */
+> > > > +			if (stall_cpu_block)
+> > > > +				schedule_timeout_uninterruptible(HZ);
+> > > 
+> > > Why is the scheduled-in task so special that it will be running on
+> > > the current CPU with irq disabled?
+> > 
+> > You lost me on this one.
 > 
->>
->> It is necessary to declare a connector as a child-node of a USB controller
->> for role-switching to work, so this example should be helpful to others
->> implementing that.
+> Quite likely :)
 > 
-> Maybe it should be a virtual node at the root of the DT if it's GPIO
-> controlled? And then the phy can be connected to the usb connector
-> through the graph binding.
+> > IRQs are not at all disabled.
+> > 
+> > > >  		if (stall_cpu_irqsoff)
+> > > >  			local_irq_enable();
+> 
+> Local IRQs get enabled here depending on stall_cpu_irqsoff.
+> 
+> What I was asking is the scheduling case like
+> 
+> 	local_irq_disable();
+> 	schedule_timeout(HZ);
+> 	local_irq_enable();
+> 
+> Is it likely going to be ruled out in this patch?
 
-Graph binding can probably work.
+If an rcutorture run specified both the rcutorture.stall_cpu_irqsoff and
+the rcutorture.stall_cpu_block module parameters, then yes, exactly the
+sequence you call out should occur.  Can't say that I have tried this,
+though.  Nor would I expect to have ever done so without your suggesting
+that I do.
 
-Re: the PHY.
+But why not try it on current -rcu?
 
-For myself the hardware model is
+tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 12 --duration 3 --configs "TRACE01" --bootargs "rcutorture.stall_cpu=25 rcutorture.stall_cpu_holdoff=30 rcutorture.stall_cpu_block=1 rcupdate.rcu_task_stall_timeout=10000 rcutorture.stall_cpu_irqsoff"
 
-Connector -> PHY -> Host controller -> Host controller wrapper
+This tells rcutorture to use all 12 hardware threads, to run the kernel for
+three minutes, to run only the TRACE01 rcutorture scenario, and to test
+RCU CPU stall warnings:
 
-Only
+rcutorture.stall_cpu=25: Stall the CPU for 25 seconds.
 
-Connector -> Host controller -> Host controller wrapper
+rcutorture.stall_cpu_holdoff=30: Wait 30 seconds after boot to start stalling.
 
-care about the USB role though.
+rcutorture.stall_cpu_block=1: Do the schedule_timeout_uninterruptible()
+	while stalling.
 
-If your PHY did care about the role, you'd really need to write a 
-connector/phy type-c type driver, to detect the state and toggle your 
-PHY bits before doing usb_role_switch_set_role() back to DWC3.
+rcupdate.rcu_task_stall_timeout=10000: Set the stall-warning timeout
+	to 10,000 jiffies, or ten seconds.
 
-At least that's my understanding.
+rcutorture.stall_cpu_irqsoff: This tells rcutorture to execute the
+	local_irq_disable() that you called out above.
 
----
-bod
+And this results in a couple of stall warning messages, as expected
+given that you get two ten-second intervals in a 25-second interval.
+
+No other complaints, though.  And of course what happens is that
+__schedule() enables interrupts on first call (as it must do) and they
+remain enabled past that point.  Then local_irq_enable() redundantly
+enables them.
+
+> Or is it anything by design?
+
+So no, not by design.  I don't see any reason to change it.  After all,
+if you are running rcutorture and also asking rcutorture to make CPU
+stall warnings, you have to expect a bit of noise from the kernel.
+Testing that noise is after all the whole point.  ;-)
+
+							Thanx, Paul
+
+> > > > -		else
+> > > > +		else if (!stall_cpu_block)
+> > > >  			preempt_enable();
+> > > > -		rcu_read_unlock();
+> > > > +		cur_ops->readunlock(idx);
+> > > >  		pr_alert("rcu_torture_stall end.\n");
+> > > >  	}
+> > > >  	torture_shutdown_absorb("rcu_torture_stall");
+> > > > -- 
+> > > > 2.9.5
+> 
