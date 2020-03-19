@@ -2,120 +2,183 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA23C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0818C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD872071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86CD120836
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:41:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584639707;
+	bh=kFYy6eHOfgxXyI8tRZ4ScvOVxBPCqcDs4Bzn7BH7JTw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=gnlIWmBQNpafXfO0V8iP1LErfaP6fUBiWOscTjRAj0mRSW8sdqIxxqsW+XDEC/Wwm
+	 zPSUHb3GVa7RNN32kcjc49kRMy8SMlozMYvIchaY8eapUEu8ky3er7ruKVrA1Mwcgi
+	 1qmm5RgokfHox1CXDNymAYQ4MdMcVhLCBZnme8nA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbgCSRll (ORCPT
+        id S1728031AbgCSRlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:41:41 -0400
-Received: from mga14.intel.com ([192.55.52.115]:50883 "EHLO mga14.intel.com"
+        Thu, 19 Mar 2020 13:41:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727034AbgCSRll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:41:41 -0400
-IronPort-SDR: d0Uyhel5dPjZk+EZ7aC8u1OlEcMiqdyS9Mwr9FZNlv6fE+Fw+cEAAkqJhgUjE4vBc5g+p5/QKe
- aB8XxHZ4GalA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 10:41:40 -0700
-IronPort-SDR: M+4pdbi+zVZ2HdNL26EbrDS7Nh29gZE9Qh/vZepeJyokUYRJ09ibtOf5M5lQA8VK42SY5c5EAR
- 0dDvtY7TShhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="245232025"
-Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.249.128.140]) ([10.249.128.140])
-  by orsmga003.jf.intel.com with ESMTP; 19 Mar 2020 10:41:37 -0700
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com
-References: <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
- <20200318162029.GA3999@light.dominikbrodowski.net>
- <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
- <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
- <20200319130049.GA2244@light.dominikbrodowski.net>
- <20200319134139.GB3983@sirena.org.uk>
- <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
- <20200319165157.GA2254@light.dominikbrodowski.net>
- <eef45d20-3bce-184a-842c-216c15252014@linux.intel.com>
-From:   Cezary Rojewski <cezary.rojewski@intel.com>
-Message-ID: <45108a58-da11-3b6a-9e3b-072ac0c63ea1@intel.com>
-Date:   Thu, 19 Mar 2020 18:41:36 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727034AbgCSRlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:41:45 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F902071C;
+        Thu, 19 Mar 2020 17:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584639704;
+        bh=kFYy6eHOfgxXyI8tRZ4ScvOVxBPCqcDs4Bzn7BH7JTw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=NWgmY2/uT/gsgnGfNEWRmgppBPkoJpj21ZwuXmUDal+NRoibXBiJpRVK1E4yRlRwz
+         p5AJddyUhi4nQKIVLXo94ykxKIDJeg8NPwimOOdzWE4WFoVNdJEKk0cmNyFXjWlPNN
+         QgDGU876yWGdVqyMYXRBetUEifdWPKTrAzt81S64=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2F91935226B9; Thu, 19 Mar 2020 10:41:44 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 10:41:44 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
+        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
+        joel@joelfernandes.org
+Subject: Re: [PATCH RFC v2 tip/core/rcu 02/22] rcu: Add per-task state to RCU
+ CPU stall warnings
+Message-ID: <20200319174144.GJ3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+ <20200319001100.24917-2-paulmck@kernel.org>
+ <20200319132731.49b0d020@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <eef45d20-3bce-184a-842c-216c15252014@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319132731.49b0d020@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-19 18:21, Pierre-Louis Bossart wrote:
-> On 3/19/20 11:51 AM, Dominik Brodowski wrote:
->> On Thu, Mar 19, 2020 at 04:48:03PM +0100, Cezary Rojewski wrote:
-
->>>
->>> Requested for tests with following diff applied:
->>>
->>> diff --git a/sound/soc/intel/boards/broadwell.c
->>> b/sound/soc/intel/boards/broadwell.c
->>> index db7e1e87156d..6ed4c1b0a515 100644
->>> --- a/sound/soc/intel/boards/broadwell.c
->>> +++ b/sound/soc/intel/boards/broadwell.c
->>> @@ -212,7 +212,6 @@ static struct snd_soc_dai_link 
->>> broadwell_rt286_dais[] =
->>> {
->>>                  .init = broadwell_rt286_codec_init,
->>>                  .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
->>>                          SND_SOC_DAIFMT_CBS_CFS,
->>> -               .ignore_suspend = 1,
->>>                  .ignore_pmdown_time = 1,
->>>                  .be_hw_params_fixup = broadwell_ssp0_fixup,
->>>                  .ops = &broadwell_rt286_ops,
->>
->> That patch fixes the issue(s). I didn't even need to revert 64df6afa0dab
->> ("ASoC: Intel: broadwell: change cpu_dai and platform components for 
->> SOF")
->> on top of that. But you can assess better whether that patch needs 
->> care for
->> other reasons; for me, this one-liner you have suggested is perfect.
+On Thu, Mar 19, 2020 at 01:27:31PM -0400, Steven Rostedt wrote:
+> On Wed, 18 Mar 2020 17:10:40 -0700
+> paulmck@kernel.org wrote:
 > 
-> .ignore_suspend is set for bdw-rt5677.c and bdw-rt5650.c as well. I 
-> don't know if that was intentional.
+> > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > 
+> > Currently, an RCU-preempt CPU stall warning simply lists the PIDs of
+> > those tasks holding up the current grace period.  This can be helpful,
+> > but more can be even more helpful.
+> > 
+> > To this end, this commit adds the nesting level, whether the task
+> > things it was preempted in its current RCU read-side critical section,
+> 
+> s/things/thinks/
 
-haswell has it too.
+I thing that was an excellent catch, thank you!  ;-)
 
-My guess is that it's supposed to mimic offload behaviour on Windows: 
-offload pin playback allows for non-interrupted playback during sleep 
-while system pin follows standard path: breaks on sleep and resumes once 
-sleep concludes. This of course also involves cooperation from 
-application side.
+> > whether RCU core has asked this task for a quiescent state, whether the
+> > expedited-grace-period hint is set, and whether the task believes that
+> > it is on the blocked-tasks list (it must be, or it would not be printed,
+> > but if things are broken, best not to take too much for granted).
+> > 
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > ---
+> >  kernel/rcu/tree_stall.h | 38 ++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 36 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+> > index 502b4dd..e19487d 100644
+> > --- a/kernel/rcu/tree_stall.h
+> > +++ b/kernel/rcu/tree_stall.h
+> > @@ -192,14 +192,40 @@ static void rcu_print_detail_task_stall_rnp(struct rcu_node *rnp)
+> >  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+> >  }
+> >  
+> > +// Communicate task state back to the RCU CPU stall warning request.
+> > +struct rcu_stall_chk_rdr {
+> > +	int nesting;
+> > +	union rcu_special rs;
+> > +	bool on_blkd_list;
+> > +};
+> > +
+> > +/*
+> > + * Report out the state of a not-running task that is stalling the
+> > + * current RCU grace period.
+> > + */
+> > +static bool check_slow_task(struct task_struct *t, void *arg)
+> > +{
+> > +	struct rcu_node *rnp;
+> > +	struct rcu_stall_chk_rdr *rscrp = arg;
+> > +
+> > +	if (task_curr(t))
+> > +		return false; // It is running, so decline to inspect it.
+> 
+> Since it can be locked on_rq(), should we report that too?
 
-However, one pin cannot serve two masters. Either it's offload or it's not.
+If it is locked on_rq() but !task_curr(t), it is runnable but not running.
+Because the runqueue lock is held in that case, it cannot start running,
+so the remainder of this function can safely inspect its state.  The
+runqueue locks will supply the required ordering, ensuring a consistent
+snapshot of the task's state.
 
-This is just a guess of course, and my vision might be clouded becuase 
-of Windows background.
-Other SSP0 examples: rt286 (SKL/ KBL) rt298 (APL) and rt274 (CNL) do not 
-have .ignore_suspend enabled for their links, except when DMIC is 
-involved. So it might be just a bug that has been covered by another bug 
-present in ASoC core, which Morimoto' San fixed during his cleanup series.
+However, if it is task_curr(t), which implies on_rq() as I understand
+it, the task is running and therefore might be changing its state, and
+doing so without any sort of attention to synchronization.  After all,
+it is the task's private state that it is changing, so we don't want to
+be paying the cost of any synchronization anyway.  Hence the return of
+false above.
 
-Czarek
+Or am I missing your point?
+
+							Thanx, Paul
+
+> -- Steve
+> 
+> > +	rscrp->nesting = t->rcu_read_lock_nesting;
+> > +	rscrp->rs = t->rcu_read_unlock_special;
+> > +	rnp = t->rcu_blocked_node;
+> > +	rscrp->on_blkd_list = !list_empty(&t->rcu_node_entry);
+> > +	return true;
+> > +}
+> > +
+> >  /*
+> >   * Scan the current list of tasks blocked within RCU read-side critical
+> >   * sections, printing out the tid of each.
+> >   */
+> >  static int rcu_print_task_stall(struct rcu_node *rnp)
+> >  {
+> > -	struct task_struct *t;
+> >  	int ndetected = 0;
+> > +	struct rcu_stall_chk_rdr rscr;
+> > +	struct task_struct *t;
+> >  
+> >  	if (!rcu_preempt_blocked_readers_cgp(rnp))
+> >  		return 0;
+> > @@ -208,7 +234,15 @@ static int rcu_print_task_stall(struct rcu_node *rnp)
+> >  	t = list_entry(rnp->gp_tasks->prev,
+> >  		       struct task_struct, rcu_node_entry);
+> >  	list_for_each_entry_continue(t, &rnp->blkd_tasks, rcu_node_entry) {
+> > -		pr_cont(" P%d", t->pid);
+> > +		if (!try_invoke_on_locked_down_task(t, check_slow_task, &rscr))
+> > +			pr_cont(" P%d", t->pid);
+> > +		else
+> > +			pr_cont(" P%d/%d:%c%c%c%c",
+> > +				t->pid, rscr.nesting,
+> > +				".b"[rscr.rs.b.blocked],
+> > +				".q"[rscr.rs.b.need_qs],
+> > +				".e"[rscr.rs.b.exp_hint],
+> > +				".l"[rscr.on_blkd_list]);
+> >  		ndetected++;
+> >  	}
+> >  	pr_cont("\n");
+> 
