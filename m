@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBF7C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13362C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B760D20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31CD2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbgCSJOp (ORCPT
+        id S1727739AbgCSJQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:14:45 -0400
-Received: from 8bytes.org ([81.169.241.247]:52440 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:16:25 -0400
+Received: from 8bytes.org ([81.169.241.247]:52476 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727326AbgCSJOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:34 -0400
+        id S1727466AbgCSJOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:44 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 2A22050C; Thu, 19 Mar 2020 10:14:21 +0100 (CET)
+        id D0A2CE9C; Thu, 19 Mar 2020 10:14:26 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 27/70] x86/idt: Split idt_data setup out of set_intr_gate()
-Date:   Thu, 19 Mar 2020 10:13:24 +0100
-Message-Id: <20200319091407.1481-28-joro@8bytes.org>
+Subject: [PATCH 56/70] x86/sev-es: Handle MONITOR/MONITORX Events
+Date:   Thu, 19 Mar 2020 10:13:53 +0100
+Message-Id: <20200319091407.1481-57-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -46,57 +46,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-The code to setup idt_data is needed for early exception handling, but
-set_intr_gate() can't be used that early because it has pv-ops in its
-code path, which don't work that early.
+Implement a handler for #VC exceptions caused by MONITOR and MONITORX
+instructions.
 
-Split out the idt_data initialization part from set_intr_gate() so
-that it can be used separatly.
-
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: Adapt to #VC handling infrastructure ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/idt.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ arch/x86/kernel/sev-es.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index a8fc01ea602a..c752027abc9e 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -231,18 +231,24 @@ idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sy
- 	}
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 11947b648b43..6bd8bc9f2e66 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -707,6 +707,22 @@ static enum es_result vc_handle_rdpmc(struct ghcb *ghcb, struct es_em_ctxt *ctxt
+ 	return ES_OK;
  }
  
-+static void init_idt_data(struct idt_data *data, unsigned int n,
-+			  const void *addr)
++static enum es_result vc_handle_monitor(struct ghcb *ghcb,
++					struct es_em_ctxt *ctxt)
 +{
-+	BUG_ON(n > 0xFF);
++	phys_addr_t monitor_pa;
++	pgd_t *pgd;
 +
-+	memset(data, 0, sizeof(*data));
-+	data->vector	= n;
-+	data->addr	= addr;
-+	data->segment	= __KERNEL_CS;
-+	data->bits.type	= GATE_INTERRUPT;
-+	data->bits.p	= 1;
++	pgd = __va(read_cr3_pa());
++	monitor_pa = vc_slow_virt_to_phys(ghcb, ctxt->regs->ax);
++
++	ghcb_set_rax(ghcb, monitor_pa);
++	ghcb_set_rcx(ghcb, ctxt->regs->cx);
++	ghcb_set_rdx(ghcb, ctxt->regs->dx);
++
++	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_MONITOR, 0, 0);
 +}
 +
- static void set_intr_gate(unsigned int n, const void *addr)
- {
- 	struct idt_data data;
- 
--	BUG_ON(n > 0xFF);
--
--	memset(&data, 0, sizeof(data));
--	data.vector	= n;
--	data.addr	= addr;
--	data.segment	= __KERNEL_CS;
--	data.bits.type	= GATE_INTERRUPT;
--	data.bits.p	= 1;
-+	init_idt_data(&data, n, addr);
- 
- 	idt_setup_from_table(idt_table, &data, 1, false);
- }
+ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 					 struct ghcb *ghcb,
+ 					 unsigned long exit_code,
+@@ -744,6 +760,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_WBINVD:
+ 		result = vc_handle_wbinvd(ghcb, ctxt);
+ 		break;
++	case SVM_EXIT_MONITOR:
++		result = vc_handle_monitor(ghcb, ctxt);
++		break;
+ 	case SVM_EXIT_NPF:
+ 		result = vc_handle_mmio(ghcb, ctxt);
+ 		break;
 -- 
 2.17.1
 
