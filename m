@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA29CC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCF8C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83252208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D97208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624331;
-	bh=iUS63HzURkdNWPqhwTnoxFpkn4beUpwEPN/ZA6lYULI=;
+	s=default; t=1584624335;
+	bh=N3h6q8tCGOh4BWQmsC7dtfhBTXK5drPci7XihK3wjb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VS0DrjKYrNvvx4VFPNYvNut1NYWyD7nrFEL0sWNN+fHthGmzCvr82B1kix4DVxJhQ
-	 zUNPUDF24MTzXH+WqpyCBYNckbhbZ88WarNeza6wbsefwXzZSlAk6I3bDexlibp/jX
-	 VpfGXyC2bWnJg1qh8UGooXLd94Zlku1ACNi3HLTo=
+	b=lfUNHf0Ue8zgA4DB0KNKDn32ro+MsJc+j7vkNRjMIUN97thoLovdaNyR/YrFXiW9y
+	 i7xBXXhXm5LRJWdQUbe9HplHmJ3GmvmkDprrjS7DDZnND6bP+DwcnvOgBgtaJIPtpq
+	 Goi7jSf3GbCuqwpfY0hLUzx9aE8s6CRrxD/ki/+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbgCSNZa (ORCPT
+        id S1730648AbgCSNZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53058 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:25:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730626AbgCSNZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:28 -0400
+        id S1730641AbgCSNZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E61CA208D6;
-        Thu, 19 Mar 2020 13:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70F32208C3;
+        Thu, 19 Mar 2020 13:25:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624328;
-        bh=iUS63HzURkdNWPqhwTnoxFpkn4beUpwEPN/ZA6lYULI=;
+        s=default; t=1584624330;
+        bh=N3h6q8tCGOh4BWQmsC7dtfhBTXK5drPci7XihK3wjb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2aokacV097h9yXuwxN8Xz09PtUSjmilIkmGOfvSUNAJzcldy2yXYF9Eo7dFkjudaw
-         uuQxAGSUMw2rlojEMWiPZey7Fwsaz3v707xtk/25BLmSjjIm9+PFL+BMih6Nh8e0cp
-         I1dF6u5lCdLgjs0UnSZkfoGymH+8tiDBmIV+bA00=
+        b=InODM8EGcLw+MoeuifHVWp0lh6kLN/XGpdVusbLNh4ecvKpMYN3WTMXGm9VylTrve
+         oAnR/i+W4FeRli1b7RMLnPAovEDkjPSNtWZaZ7QAMDc9E6YBxlO88/aGKhKIl2YiWe
+         dv9l0VkJZJ7/9+jXPeTKbs3eT2GGb/GXX46LiFuw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        Igor Druzhinin <igor.druzhinin@citrix.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 24/65] cfg80211: check reg_rule for NULL in handle_channel_custom()
-Date:   Thu, 19 Mar 2020 14:04:06 +0100
-Message-Id: <20200319123934.021795100@linuxfoundation.org>
+Subject: [PATCH 5.5 25/65] scsi: libfc: free response frame from GPN_ID
+Date:   Thu, 19 Mar 2020 14:04:07 +0100
+Message-Id: <20200319123934.294300048@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -59,35 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-[ Upstream commit a7ee7d44b57c9ae174088e53a668852b7f4f452d ]
+[ Upstream commit ff6993bb79b9f99bdac0b5378169052931b65432 ]
 
-We may end up with a NULL reg_rule after the loop in
-handle_channel_custom() if the bandwidth didn't fit,
-check if this is the case and bail out if so.
+fc_disc_gpn_id_resp() should be the last function using it so free it here
+to avoid memory leak.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Link: https://lore.kernel.org/r/20200221104449.3b558a50201c.I4ad3725c4dacaefd2d18d3cc65ba6d18acd5dbfe@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Link: https://lore.kernel.org/r/1579013000-14570-2-git-send-email-igor.druzhinin@citrix.com
+Reviewed-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/reg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/libfc/fc_disc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index fff9a74891fc4..1a8218f1bbe07 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -2276,7 +2276,7 @@ static void handle_channel_custom(struct wiphy *wiphy,
- 			break;
+diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
+index 9c5f7c9178c66..2b865c6423e29 100644
+--- a/drivers/scsi/libfc/fc_disc.c
++++ b/drivers/scsi/libfc/fc_disc.c
+@@ -628,6 +628,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
  	}
+ out:
+ 	kref_put(&rdata->kref, fc_rport_destroy);
++	if (!IS_ERR(fp))
++		fc_frame_free(fp);
+ }
  
--	if (IS_ERR(reg_rule)) {
-+	if (IS_ERR_OR_NULL(reg_rule)) {
- 		pr_debug("Disabling freq %d MHz as custom regd has no rule that fits it\n",
- 			 chan->center_freq);
- 		if (wiphy->regulatory_flags & REGULATORY_WIPHY_SELF_MANAGED) {
+ /**
 -- 
 2.20.1
 
