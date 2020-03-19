@@ -2,57 +2,56 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C28ABC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D9AC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9100E20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2978C20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623655;
-	bh=CEZE2M2M19p/tI/qitCnZMFSK+sh5USz35jRAEJmX4Q=;
+	s=default; t=1584623661;
+	bh=byaEF/vae3AUfyhaqaPGHPXOKVYFasBGOsVVtxKkHK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VCFqBxBKJdvNka4RzyAOkNhQ3GMo+GWMlLk/75Aos9zhzHQL6BC2i8XN0sM4PTEu/
-	 DUdQCDDWlJiSD5sXIFhwt93dhQwmMseCJBpPOZDKP4w0TAVtYWyNgiTOvnVliIxSSC
-	 aGbJzTw3G2XAqDpo2NI1LuQduWNmI1XatgtYoLWM=
+	b=l4fgeC1bHDhQLCfEa12iUBn9YQgEupb6AHzXLO0VsM8B6AlBbjNTiOvrdyMUPDgNK
+	 b6wgl0+hYgXzIR/26+3pbd9NeAGlnr0eYID4fY0pXLwvrC5P1et8F1xE5n5mSCkwHO
+	 QlmoewI5iIkbJPe5S4WRTv+0Qh7CMwfqlEaPmgh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgCSNOO (ORCPT
+        id S1728896AbgCSNOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:14:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33458 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:14:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728548AbgCSNOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:14:10 -0400
+        id S1728405AbgCSNOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:14:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CA2320722;
-        Thu, 19 Mar 2020 13:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AEA320409;
+        Thu, 19 Mar 2020 13:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623649;
-        bh=CEZE2M2M19p/tI/qitCnZMFSK+sh5USz35jRAEJmX4Q=;
+        s=default; t=1584623654;
+        bh=byaEF/vae3AUfyhaqaPGHPXOKVYFasBGOsVVtxKkHK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MsCSb5ZgnUmOu8sr0ef9+8w2EDUvDIFCwmgB74WKEaSc2iHQXawfek4yfLfp+IIDD
-         okuaK684yex2asQB73A4WcYhbzD13LLA17m70fDp4qVUiueJhzeBERBH/zpfKEQzVR
-         T0hMlZuNV4kFlh34Q77iFP8YUQxlmVDe5GK70QK8=
+        b=CL7/rc8qpZou5Ch5wmepsLD9RJj6vo6gqMDTKlwRz07q1QJohozh9Eyx4OuRh18UX
+         cu1b5zJuLmoDf0sX5Cw5LZCr/ziICsq8JU+12rbzy/vGxFrYYkHIcs5S6YIUhZLlxU
+         XHw6re64VdB1h17mJxjvH8TxSxDM+T/Crsg+FUMk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 84/90] mac80211: rx: avoid RCU list traversal under mutex
-Date:   Thu, 19 Mar 2020 14:00:46 +0100
-Message-Id: <20200319123954.292943173@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 01/99] phy: Revert toggling reset changes.
+Date:   Thu, 19 Mar 2020 14:02:39 +0100
+Message-Id: <20200319123942.004707889@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
-References: <20200319123928.635114118@linuxfoundation.org>
+In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
+References: <20200319123941.630731708@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,39 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+From: David S. Miller <davem@davemloft.net>
 
-[ Upstream commit 253216ffb2a002a682c6f68bd3adff5b98b71de8 ]
+commit 7b566f70e1bf65b189b66eb3de6f431c30f7dff2 upstream.
 
-local->sta_mtx is held in __ieee80211_check_fast_rx_iface().
-No need to use list_for_each_entry_rcu() as it also requires
-a cond argument to avoid false lockdep warnings when not used in
-RCU read-side section (with CONFIG_PROVE_RCU_LIST).
-Therefore use list_for_each_entry();
+This reverts:
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Link: https://lore.kernel.org/r/20200223143302.15390-1-madhuparnabhowmik10@gmail.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ef1b5bf506b1 ("net: phy: Fix not to call phy_resume() if PHY is not attached")
+8c85f4b81296 ("net: phy: micrel: add toggling phy reset if PHY is not  attached")
+
+Andrew Lunn informs me that there are alternative efforts
+underway to fix this more properly.
+
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[just take the ef1b5bf506b1 revert - gregkh]
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/mac80211/rx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/phy/phy_device.c |   11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/net/mac80211/rx.c b/net/mac80211/rx.c
-index 74652eb2f90fd..a6f265262f151 100644
---- a/net/mac80211/rx.c
-+++ b/net/mac80211/rx.c
-@@ -3841,7 +3841,7 @@ void __ieee80211_check_fast_rx_iface(struct ieee80211_sub_if_data *sdata)
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -76,7 +76,7 @@ static LIST_HEAD(phy_fixup_list);
+ static DEFINE_MUTEX(phy_fixup_lock);
  
- 	lockdep_assert_held(&local->sta_mtx);
+ #ifdef CONFIG_PM
+-static bool mdio_bus_phy_may_suspend(struct phy_device *phydev, bool suspend)
++static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
+ {
+ 	struct device_driver *drv = phydev->mdio.dev.driver;
+ 	struct phy_driver *phydrv = to_phy_driver(drv);
+@@ -88,11 +88,10 @@ static bool mdio_bus_phy_may_suspend(str
+ 	/* PHY not attached? May suspend if the PHY has not already been
+ 	 * suspended as part of a prior call to phy_disconnect() ->
+ 	 * phy_detach() -> phy_suspend() because the parent netdev might be the
+-	 * MDIO bus driver and clock gated at this point. Also may resume if
+-	 * PHY is not attached.
++	 * MDIO bus driver and clock gated at this point.
+ 	 */
+ 	if (!netdev)
+-		return suspend ? !phydev->suspended : phydev->suspended;
++		return !phydev->suspended;
  
--	list_for_each_entry_rcu(sta, &local->sta_list, list) {
-+	list_for_each_entry(sta, &local->sta_list, list) {
- 		if (sdata != sta->sdata &&
- 		    (!sta->sdata->bss || sta->sdata->bss != sdata->bss))
- 			continue;
--- 
-2.20.1
-
+ 	/* Don't suspend PHY if the attached netdev parent may wakeup.
+ 	 * The parent may point to a PCI device, as in tg3 driver.
+@@ -122,7 +121,7 @@ static int mdio_bus_phy_suspend(struct d
+ 	if (phydev->attached_dev && phydev->adjust_link)
+ 		phy_stop_machine(phydev);
+ 
+-	if (!mdio_bus_phy_may_suspend(phydev, true))
++	if (!mdio_bus_phy_may_suspend(phydev))
+ 		return 0;
+ 
+ 	return phy_suspend(phydev);
+@@ -133,7 +132,7 @@ static int mdio_bus_phy_resume(struct de
+ 	struct phy_device *phydev = to_phy_device(dev);
+ 	int ret;
+ 
+-	if (!mdio_bus_phy_may_suspend(phydev, false))
++	if (!mdio_bus_phy_may_suspend(phydev))
+ 		goto no_resume;
+ 
+ 	ret = phy_resume(phydev);
 
 
