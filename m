@@ -2,98 +2,116 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B98C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6DAC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BECE82072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F7302072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="u61RNhW6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L1c3dRTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgCSIGS (ORCPT
+        id S1726867AbgCSIHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:06:18 -0400
-Received: from ozlabs.org ([203.11.71.1]:52547 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbgCSIGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:06:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48jfcR2SLrz9sPR;
-        Thu, 19 Mar 2020 19:06:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584605175;
-        bh=EH/L6fX7wgJb6pRdg36al/X3NXleOWD/3Z64SARsFMk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=u61RNhW6t4RWzEZN1a5j0zEeQuZYw5KgDNQY5htzde6SJEO7yC6BidlMgpapfXfKN
-         wfd7bLEsneBTiwAUpO/CsoZi0tjYOBiUzFN2r0zk8rW2cruyVVN2t+ivgrkVKzGypZ
-         7z2gWmnmsNFWgi8DxPThfoCQehejcRm96ltSGioEs6SSWS62JDKDxC0XRUuo8JOcRG
-         P/cPhSBXBo42fTeSgqiig0Umc/EOxA4xvy6QhoDZtgDuzruRN+lPadKwb/+8MBjiuz
-         DmpIH/0CorvlHuTiIPPaci0UJzm+GsBh1RGavR3C2mW3baXXNLZnz8daiSRebl0YZ/
-         NDHSPpvoXxlVA==
-Date:   Thu, 19 Mar 2020 19:06:13 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greentime Hu <greentime.hu@sifive.com>
-Subject: linux-next: Fixes tag needs some work in the risc-v-fixes tree
-Message-ID: <20200319190613.36d687a6@canb.auug.org.au>
+        Thu, 19 Mar 2020 04:07:07 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42857 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgCSIHH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 04:07:07 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q19so1348815ljp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 01:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LOkrX7hW1zGRAHxDMsSc29fpSa89EQ6ExsGKUzqd/c4=;
+        b=L1c3dRTMZB/bTBF1aoG5W0v5S6N/2LO7ZPkuHqJkB50/GOMdSn2QAJ/4cYIilCU0Eo
+         fHKTV8aZfjq4m8XLvzVH8ppiK8r1FI6E0gUiCKm5SuhgbE/Hm9b4Fo+5g4b7EWqfjZcQ
+         NHDFO83ryfVDgkWZUh/5tZ4yOD8vkoI+nFd17ILStwEp2JuIl8VPeBCDkhVCUyXYv9VN
+         KYxxyQPtJNtDnQp8gnseX9FwDCm8RElkEpoXJvYH/RjjmVNLQievGQP6E3JgqgP7dZ9I
+         Xqgs1jX6WdoiMKGNx3twCu13I3UyTTa7+qWIko7N9Z4MfI25JgVYBRCA9v5NYc0lWSSZ
+         KUTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LOkrX7hW1zGRAHxDMsSc29fpSa89EQ6ExsGKUzqd/c4=;
+        b=MsGIFgdOEPuW3Vxj39cKKa0gdwM9A5kvYCnASLxPJu1N/z4B+vf+l1soOTuX5czOK2
+         EQTE4NNrFBINMKq+cy/y7aOfrMSxya1BWxlZT/TUd67eaNW6Sc3iFl3rzi6h+NUgZIW5
+         lFRXcPuOJ6nhUyD8pYjwVTisXTgPXjw3hvMNB+5lvqi7TvuXzlsVt2fAworR92sKCWoN
+         6vm2I+WQ4gGMt5ob9+i709DflBr8gnL+e28SZeHtqNzKBZB6AkQGIlYrU/kGRYOA6Y34
+         3okQeoz5Vw/2Kpb9q+B8V/+KqUCvO5YWOBYL+iqCZ0IjhemARwN3aQ9hYNO3+wBvQ37u
+         aMiQ==
+X-Gm-Message-State: ANhLgQ2b880xq8k9FeUqTz8ra3Zlc770SAB1RJmLSma8I+fzU/prN6Ht
+        503q72qVy8ETwp3ZjZ0yaHYBcZM5lVPwDzw5xs/UjPao
+X-Google-Smtp-Source: ADFU+vsiJTedd24y+49RLjRUaM5Ghhfhzk4I905exobtm5+wyqhF3RaqwEVB/AdGG/TzBQ3pS5yD98nyDJDM4ClzaSI=
+X-Received: by 2002:a2e:9a0d:: with SMTP id o13mr1300022lji.151.1584605223303;
+ Thu, 19 Mar 2020 01:07:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uStiTNL_rbDnIIFyUCu0Kdb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <BL0PR14MB3779226ECE6B526471FA91FD9AF40@BL0PR14MB3779.namprd14.prod.outlook.com>
+In-Reply-To: <BL0PR14MB3779226ECE6B526471FA91FD9AF40@BL0PR14MB3779.namprd14.prod.outlook.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 19 Mar 2020 09:06:51 +0100
+Message-ID: <CAKfTPtApQOGNLQBEGPF5UTFig2+ZbEoOVfK4GMD6uHXoeJNtzA@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: fix condition of avg_load calculation
+To:     Tao Zhou <ouwen210@hotmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Hillf Danton <hdanton@sina.com>, "T. Zhou" <t1zhou@163.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uStiTNL_rbDnIIFyUCu0Kdb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 19 Mar 2020 at 04:36, Tao Zhou <ouwen210@hotmail.com> wrote:
+>
+> In update_sg_wakeup_stats(), the comment says:
+>
+> Computing avg_load makes sense only when group is fully
+> busy or overloaded.
+>
+> But, the code below this comment does not check like this.
+>
+> From reading the code about avg_load in other functions, I
+> confirm that avg_load should be calculated in fully busy or
+> overloaded case. The comment is correct and the checking
+> condition is wrong. So, change that condition.
+>
+> Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
+> Signed-off-by: Tao Zhou <ouwen210@hotmail.com>
 
-Hi all,
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-In commit
+Thanks
 
-  3384b043ea15 ("riscv: fix the IPI missing issue in nommu mode")
-
-Fixes tag
-
-  Fixes: b2d36b5668f6 ("riscv: provide native clint access for M-mode")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: fcdc65375186 ("riscv: provide native clint access for M-mode")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/uStiTNL_rbDnIIFyUCu0Kdb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5zJ/UACgkQAVBC80lX
-0GwlXwf/ULRvjx5WzHutdXLTeeHiE1tzmBRKlY2teSVW2DtdlvTtVFpZCN15xu7r
-lmfT0SEGpldEwVTE8G0HJwi39ZdShqfZo+cHibe5TEsFt8SRUhnr2ON2w7ZZhhyL
-2sNPHAf2oa6WUIkbuLPQr8lRhwrB5FUPL2qTVN4l606TU5o6X6Q87yUcWvwtysAa
-vxW86iwqCsFvQ6JZuwAvIFbnXU9eIxook2isBVPS1UYO56Iaax5PDFq0VTH3jykU
-nEkLND4nceABg6mb2/+htAWliGj8uqn10bEYNxwjVCxymLCdavAhQAkPwcJ5bZZd
-9Pl/wFksEPAsDLdAjr2W+/jQwllrVA==
-=oR/9
------END PGP SIGNATURE-----
-
---Sig_/uStiTNL_rbDnIIFyUCu0Kdb--
+> ---
+>  kernel/sched/fair.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1dea8554ead0..9cae03676b0d 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -8613,7 +8613,8 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
+>          * Computing avg_load makes sense only when group is fully busy or
+>          * overloaded
+>          */
+> -       if (sgs->group_type < group_fully_busy)
+> +       if (sgs->group_type == group_fully_busy ||
+> +               sgs->group_type == group_overloaded)
+>                 sgs->avg_load = (sgs->group_load * SCHED_CAPACITY_SCALE) /
+>                                 sgs->group_capacity;
+>  }
+> --
+> 2.24.1
