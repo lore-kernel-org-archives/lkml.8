@@ -2,145 +2,195 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52880C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2836AC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6E52070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:01:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="l0WeQLfY"
+	by mail.kernel.org (Postfix) with ESMTP id E358D2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbgCSSBe (ORCPT
+        id S1727636AbgCSSBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:01:34 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:50338 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbgCSSBd (ORCPT
+        Thu, 19 Mar 2020 14:01:50 -0400
+Received: from hosting.gsystem.sk ([212.5.213.30]:57726 "EHLO
+        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbgCSSBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:01:33 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C8FDFA53;
-        Thu, 19 Mar 2020 19:01:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1584640891;
-        bh=J0G9o/JIk2L9YAMrgEYnSflrJ+3mDjoCeRH1I4lPqik=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l0WeQLfY4oPvGyf+T8Bwr1JXg9rF3wSCsAL/YwHYR/F4V+bPvcMIBVex2/JmFRkPq
-         wH0uwGnyJ0/qvbpO0VFVj+sYnrBU90JDCIx7sBKD7tzafPZrokKyt3pDfmx4om2Nkv
-         yNo/D2bEwfHVQcIjR59Xc9qhUHFpFJvvzC1CHe/o=
-Date:   Thu, 19 Mar 2020 20:01:25 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Alex Riesen <alexander.riesen@cetitec.com>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 07/10] dt-bindings: adv748x: add information about
- serial audio interface (I2S/TDM)
-Message-ID: <20200319180125.GJ14585@pendragon.ideasonboard.com>
-References: <cover.1584639664.git.alexander.riesen@cetitec.com>
- <c9ff553f804f178a247dca356306948e971432fb.1584639664.git.alexander.riesen@cetitec.com>
+        Thu, 19 Mar 2020 14:01:50 -0400
+Received: from [192.168.0.2] (188-167-68-178.dynamic.chello.sk [188.167.68.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by hosting.gsystem.sk (Postfix) with ESMTPSA id B6B027A0426;
+        Thu, 19 Mar 2020 19:01:48 +0100 (CET)
+From:   Ondrej Zary <linux@zary.sk>
+To:     Bart Van Assche <bvanassche@acm.org>
+Subject: Re: NULL pointer dereference in qla24xx_abort_command, kernel 4.19.98 (Debian)
+Date:   Thu, 19 Mar 2020 19:01:46 +0100
+User-Agent: KMail/1.9.10
+Cc:     qla2xxx-upstream@qlogic.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Hernandez <michael.hernandez@cavium.com>,
+        Sawan Chandak <sawan.chandak@cavium.com>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        Nilesh Javali <njavali@marvell.com>
+References: <202002231929.01662.linux@zary.sk> <202002271809.07717.linux@zary.sk> <202003022326.08698.linux@zary.sk>
+In-Reply-To: <202003022326.08698.linux@zary.sk>
+X-KMail-QuotePrefix: > 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <c9ff553f804f178a247dca356306948e971432fb.1584639664.git.alexander.riesen@cetitec.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-Id: <202003191901.46307.linux@zary.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
-
-Thank you for the patch.
-
-On Thu, Mar 19, 2020 at 06:42:36PM +0100, Alex Riesen wrote:
-> As the driver has some support for the audio interface of the device,
-> the bindings file should mention it.
-
-While at it, how about converting the bindings to YAML ? :-) It can of
-course be done on top.
-
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-> ---
->  .../devicetree/bindings/media/i2c/adv748x.txt    | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+On Monday 02 March 2020 23:26:08 Ondrej Zary wrote:
+> On Thursday 27 February 2020 18:09:07 Ondrej Zary wrote:
+> > 
+> > On Tuesday 25 February 2020 04:41:48 Bart Van Assche wrote:
+> > > On 2020-02-24 00:20, Ondrej Zary wrote:
+> > > > Looks like it's in some inlined function.
+> > > > 
+> > > > /usr/src/linux-source-4.19# gdb /lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko
+> > > > GNU gdb (Debian 8.2.1-2+b3) 8.2.1
+> > > > ...
+> > > > Reading symbols from /lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko...Reading symbols 
+> > > > from /usr/lib/debug//lib/modules/4.19.0-8-amd64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko...done.
+> > > > done.
+> > > > 
+> > > > (gdb) list *(qla24xx_async_abort_cmd+0x1b)
+> > > > 0xf88b is in qla24xx_async_abort_cmd (./arch/x86/include/asm/atomic.h:97).
+> > > > 92       *
+> > > > 93       * Atomically increments @v by 1.
+> > > > 94       */
+> > > > 95      static __always_inline void arch_atomic_inc(atomic_t *v)
+> > > > 96      {
+> > > > 97              asm volatile(LOCK_PREFIX "incl %0"
+> > > > 98                           : "+m" (v->counter) :: "memory");
+> > > > 99      }
+> > > > 100     #define arch_atomic_inc arch_atomic_inc
+> > > >
+> > > > [ ... ]
+> > > > 
+> > > > (gdb) disassemble qla24xx_async_abort_cmd
+> > > > Dump of assembler code for function qla24xx_async_abort_cmd:
+> > > >    0x000000000000f870 <+0>:     callq  0xf875 <qla24xx_async_abort_cmd+5>
+> > > >    0x000000000000f875 <+5>:     push   %r15
+> > > >    0x000000000000f877 <+7>:     push   %r14
+> > > >    0x000000000000f879 <+9>:     push   %r13
+> > > >    0x000000000000f87b <+11>:    push   %r12
+> > > >    0x000000000000f87d <+13>:    push   %rbp
+> > > >    0x000000000000f87e <+14>:    push   %rbx
+> > > >    0x000000000000f87f <+15>:    mov    0x28(%rdi),%r13
+> > > >    0x000000000000f883 <+19>:    mov    0x20(%rdi),%r15
+> > > >    0x000000000000f887 <+23>:    mov    0x48(%rdi),%r14
+> > > >    0x000000000000f88b <+27>:    lock incl 0x4(%r14)
+> > > >    0x000000000000f890 <+32>:    mfence
+> > > 
+> > > Thanks, this is very helpful. I think the above means that the crash is
+> > > triggered by the following code:
+> > > 
+> > > 	sp = qla2xxx_get_qpair_sp(cmd_sp->qpair, cmd_sp->fcport,
+> > > 		GFP_KERNEL);
+> > > 
+> > > From the start of qla2xxx_get_qpair_sp():
+> > > 
+> > > 	QLA_QPAIR_MARK_BUSY(qpair, bail);
+> > > 
+> > > From qla_def.h:
+> > > 
+> > > #define QLA_QPAIR_MARK_BUSY(__qpair, __bail) do {	\
+> > > 	atomic_inc(&__qpair->ref_count);		\
+> > > 	mb();						\
+> > > 	if (__qpair->delete_in_progress) {		\
+> > > 		atomic_dec(&__qpair->ref_count);	\
+> > > 		__bail = 1;				\
+> > > 	} else {					\
+> > > 	       __bail = 0;				\
+> > > 	}						\
+> > > } while (0)
+> > > 
+> > > One of the changes between kernel version v4.9.210 and v4.19.98 is the
+> > > following: "qla2xxx: Add multiple queue pair functionality". I think the
+> > >  above information means that the cmd_sp->qpair pointer is NULL. I will
+> > > let QLogic recommend a solution.
+> > 
+> > Thank you very much for the analysis.
+> > Unfortunately, QLogic does not seem to care...
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> index 4f91686e54a6..7d6db052c294 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> @@ -2,7 +2,9 @@
->  
->  The ADV7481 and ADV7482 are multi format video decoders with an integrated
->  HDMI receiver. They can output CSI-2 on two independent outputs TXA and TXB
-> -from three input sources HDMI, analog and TTL.
-> +from three input sources HDMI, analog and TTL. There is also support for an
-> +I2S compatible interface connected to the audio processor of the HDMI decoder.
+> Let's try to CC the people at Cavium that signed-off the commit.
 
-s/I2S compatible/I2S-compatible/ ?
+No reply.
 
-> +The interface has TDM capability (8 slots, 32 bits, left or right justified).
->  
->  Required Properties:
->  
-> @@ -16,6 +18,8 @@ Required Properties:
->      slave device on the I2C bus. The main address is mandatory, others are
->      optional and remain at default values if not specified.
->  
-> +  - #clock-cells: must be <0> if the I2S port is used
+qla2xxx-upstream@qlogic.com address is dead:
+Generating server: DC5-EXCH01.marvell.com
+qla2xxx-upstream@qlogic.com
+Remote Server returned '550 5.1.1 RESOLVER.ADR.RecipNotFound; not found'
 
-Wouldn't it be simpler to set it to 0 unconditionally ?
+Added some more CC addresses.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Yesterday it crashed again at the same place:
 
-> +
->  Optional Properties:
->  
->    - interrupt-names: Should specify the interrupts as "intrq1", "intrq2" and/or
-> @@ -47,6 +51,7 @@ are numbered as follows.
->  	  TTL		sink		9
->  	  TXA		source		10
->  	  TXB		source		11
-> +	  I2S		source		12
->  
->  The digital output port nodes, when present, shall contain at least one
->  endpoint. Each of those endpoints shall contain the data-lanes property as
-> @@ -72,6 +77,7 @@ Example:
->  
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +		#clock-cells = <0>;
->  
->  		interrupt-parent = <&gpio6>;
->  		interrupt-names = "intrq1", "intrq2";
-> @@ -113,4 +119,12 @@ Example:
->  				remote-endpoint = <&csi20_in>;
->  			};
->  		};
-> +
-> +		port@c {
-> +			reg = <12>;
-> +
-> +			adv7482_i2s: endpoint {
-> +				remote-endpoint = <&i2s_in>;
-> +			};
-> +		};
->  	};
+[2076301.849762] BUG: unable to handle kernel NULL pointer dereference at 0000000000000004
+[2076301.850021] PGD 0 P4D 0
+[2076301.850109] Oops: 0002 [#1] SMP PTI
+[2076301.850219] CPU: 4 PID: 18992 Comm: kworker/u16:1 Not tainted 4.19.0-8-amd64 #1 Debian 4.19.98-1
+[2076301.850478] Hardware name: Dell Inc. PowerEdge 2950/0JR815, BIOS 2.7.0 10/30/2010
+[2076301.850720] Workqueue: scsi_tmf_4 scmd_eh_abort_handler [scsi_mod]
+[2076301.850936] RIP: 0010:qla24xx_async_abort_cmd+0x1b/0x250 [qla2xxx]
+[2076301.851130] Code: e9 19 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 66 66 66 66 90 41 57 41 56 41 55 41 54 55 53 4c 8b 6f 28 4c 8b 7f 20 4c 8b 77 48 <f0> 41 ff 46 04 0f a
+e f0 41 f6 46 24 04 74 17 f0 41 ff 4e 04 bd 02
+[2076301.851663] RSP: 0018:ffffa10f8bbe7da8 EFLAGS: 00010293
+[2076301.851820] RAX: 0000000000000800 RBX: ffff8ab8ddd197a8 RCX: 0000000000000070
+[2076301.852036] RDX: ffff8ab8de4a8388 RSI: 0000000000000001 RDI: ffff8ab8799b8c40
+[2076301.852253] RBP: ffff8ab8dc96c480 R08: ffffffffc03b7860 R09: 0000000000000000
+[2076301.852469] R10: 8080808080808080 R11: 0000000000000010 R12: ffff8ab8dea00000
+[2076301.852686] R13: ffff8ab8ddd197a8 R14: 0000000000000000 R15: ffff8ab8dd632000
+[2076301.852902] FS:  0000000000000000(0000) GS:ffff8ab8e7b00000(0000) knlGS:0000000000000000
+[2076301.853142] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[2076301.853320] CR2: 0000000000000004 CR3: 00000002203dc000 CR4: 00000000000006e0
+[2076301.853536] Call Trace:
+[2076301.853632]  qla24xx_abort_command+0x218/0x2d0 [qla2xxx]
+[2076301.853799]  ? __switch_to_asm+0x41/0x70
+[2076301.853924]  ? __switch_to_asm+0x35/0x70
+[2076301.854056]  qla2xxx_eh_abort+0x117/0x310 [qla2xxx]
+[2076301.854209]  scmd_eh_abort_handler+0x85/0x220 [scsi_mod]
+[2076301.854375]  process_one_work+0x1a7/0x3a0
+[2076301.854506]  worker_thread+0x30/0x390
+[2076301.854628]  ? create_worker+0x1a0/0x1a0
+[2076301.854753]  kthread+0x112/0x130
+[2076301.854859]  ? kthread_bind+0x30/0x30
+[2076301.854980]  ret_from_fork+0x35/0x40
+[2076301.855095] Modules linked in: loop ipmi_ssif radeon coretemp ttm drm_kms_helper drm kvm i2c_algo_bit i5000_edac iTCO_wdt sg iTCO_vendor_support irqbypass evdev i5k_
+amb serio_raw joydev ipmi_si rng_core pcc_cpufreq dcdbas pcspkr ipmi_devintf acpi_cpufreq ipmi_msghandler button ext4 crc16 mbcache jbd2 crc32c_generic fscrypto ecb crypt
+o_simd cryptd glue_helper aes_x86_64 dm_service_time dm_multipath dm_mod scsi_dh_rdac scsi_dh_emc scsi_dh_alua uas usb_storage hid_generic usbhid hid sr_mod cdrom ses enc
+losure sd_mod scsi_transport_sas ata_generic qla2xxx ata_piix nvme_fc ehci_pci nvme_fabrics libata uhci_hcd psmouse ehci_hcd nvme_core megaraid_sas usbcore scsi_transport
+_fc lpc_ich mfd_core scsi_mod usb_common bnx2
+[2076301.856887] CR2: 0000000000000004
+[2076301.856999] ---[ end trace e9083db8fb76e126 ]---
+[2076301.857151] RIP: 0010:qla24xx_async_abort_cmd+0x1b/0x250 [qla2xxx]
+[2076301.857345] Code: e9 19 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 66 66 66 66 90 41 57 41 56 41 55 41 54 55 53 4c 8b 6f 28 4c 8b 7f 20 4c 8b 77 48 <f0> 41 ff 46 04 0f a
+e f0 41 f6 46 24 04 74 17 f0 41 ff 4e 04 bd 02
+[2076301.857878] RSP: 0018:ffffa10f8bbe7da8 EFLAGS: 00010293
+[2076301.858035] RAX: 0000000000000800 RBX: ffff8ab8ddd197a8 RCX: 0000000000000070
+[2076301.858251] RDX: ffff8ab8de4a8388 RSI: 0000000000000001 RDI: ffff8ab8799b8c40
+[2076301.858467] RBP: ffff8ab8dc96c480 R08: ffffffffc03b7860 R09: 0000000000000000
+[2076301.869384] R10: 8080808080808080 R11: 0000000000000010 R12: ffff8ab8dea00000
+[2076301.880412] R13: ffff8ab8ddd197a8 R14: 0000000000000000 R15: ffff8ab8dd632000
+[2076301.891483] FS:  0000000000000000(0000) GS:ffff8ab8e7b00000(0000) knlGS:0000000000000000
+[2076301.902490] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[2076301.913344] CR2: 0000000000000004 CR3: 00000002203dc000 CR4: 00000000000006e0
+[2077225.259348] mysqld[2155]: segfault at 0 ip 000056409366ad93 sp 00007fa049514450 error 6 in mysqld[564092eb2000+805000]
+[2077225.270564] Code: c7 45 00 00 00 00 00 8b 7d cc 4c 89 e2 4c 89 f6 e8 62 81 84 ff 49 89 c7 49 39 c4 0f 84 f6 00 00 00 e8 e1 1c 00 00 41 8b 4d 00 <89> 08 85 c9 74 37 4
+9 83 ff ff 0f 84 9d 00 00 00 f6 c3 06 75 28 4d
+
 
 -- 
-Regards,
-
-Laurent Pinchart
+Ondrej Zary
