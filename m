@@ -2,124 +2,163 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B6EC43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A58C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80D12072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2B720775
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:28:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gIvshiTi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFqUgnck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgCSQ2T (ORCPT
+        id S1728024AbgCSQ2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:28:19 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42578 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727592AbgCSQ2S (ORCPT
+        Thu, 19 Mar 2020 12:28:21 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39764 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727416AbgCSQ2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:28:18 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JGSCEg026895;
-        Thu, 19 Mar 2020 11:28:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584635292;
-        bh=YYDaI6ZUYjz6psO0DCBs/8lPMQsvbzmxovEzYI6G5/Y=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=gIvshiTiiBSpOCQOA0IEMnyQfDq9TuNXKWwizQc3vuxbsXlJ6iBx7nceXnOXXlGOp
-         7EvsyxyOdy0TKWLifQKGzS+/Wv0n2FWEJ7UKm99vmrN+7DnVvS+oiihRP2sa4ANp5B
-         pvwOGqCygUd777pznXqQDrpf2gqn2wmA3CGfYgGQ=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JGSCTx110542
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Mar 2020 11:28:12 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Mar 2020 11:28:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Mar 2020 11:28:12 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JGSB9r109960;
-        Thu, 19 Mar 2020 11:28:11 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, Roger Quadros <rogerq@ti.com>,
-        <devicetree@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>
-CC:     Murali Karicheri <m-karicheri2@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v5 01/11] phy: ti: gmii-sel: simplify config dependencies between net drivers and gmii phy
-Date:   Thu, 19 Mar 2020 18:27:56 +0200
-Message-ID: <20200319162806.25705-2-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200319162806.25705-1-grygorii.strashko@ti.com>
-References: <20200319162806.25705-1-grygorii.strashko@ti.com>
+        Thu, 19 Mar 2020 12:28:19 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h6so3858779wrs.6;
+        Thu, 19 Mar 2020 09:28:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SPgbvNOx93ZbKq64/B6/Z1gW0+quFKremjRSKVCy664=;
+        b=LFqUgnckFAOA9p+wCjOZ+EhTau2SI0k45PYdANda466lpPHrNJ665SzPzR+aNSKJxB
+         Rwm3nn/XF7a0al/6zmG4QENhSXWyEmxDnpnirHW4YW2XKi/1n/5jYuUl+/xCRq5n4oPC
+         O4XQzz8H4fKscVlPYfA2098A+MPZKS6Xhyf/chTQglAkwcbL4wa4mXMSoWDWgaQ5ZqtA
+         xuFpKp2fRITG0nc1x4ZJniRpm88xs0+d62KmZg2ZGrzTY3bzKNvjXFwmmFWNn8EQsksT
+         91cj7xrLFx3tLg+RklBpueUhbArZ/yDFXB2H44fIiYwTqkkYQ1JP3xjPeG1RGJm1Hurv
+         EXQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SPgbvNOx93ZbKq64/B6/Z1gW0+quFKremjRSKVCy664=;
+        b=QXs7c4Z5n/TJ9frAFuk9VmxebokU5ETsFl5AbzrjodejXmcFRQMrBS0V9pu73yzij2
+         W3/CxTp/MSHcrGz8HOer+bLAfg7WRmPgw2R33wAEWS5JP1KbaCGkclJOXmgN3Zb6cXyq
+         8vZ83w+CTVavNIiOh+cK+bdyVB+eOtnT/klr6tYXkDoBpAccejUAITuHnJpOqRNld1F3
+         K7380/xIVTU4yugNwxs56/+H6crYol8PVJBCYHLXp+3cbYARswUF8UUpiSw09iQKPOlk
+         8yuzDCHK2V2ZqAxHVYMQJOx0o1fdLeP/4sul5IrwYbv74Ulj8X5lNybayPKCsu7Lz7XO
+         Buvw==
+X-Gm-Message-State: ANhLgQ1B5oJA1eloo76uEK6/3KfCSM6lGJbXD2v5wk6cJcGG6pw7v2DA
+        wdwHT8x5TBjTokH9yRIES7VrbSCR+zZCuOiQ3Rk=
+X-Google-Smtp-Source: ADFU+vuaZB2YqdQTSwwXNJGT/DzeIMoI6zgsU2pirhzQONlQGEuJaSY7zIUne4g6UI8NM14HSloKXFs1XHhWX101AEo=
+X-Received: by 2002:a5d:56c9:: with SMTP id m9mr5082680wrw.289.1584635297101;
+ Thu, 19 Mar 2020 09:28:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200319131221.14044-1-david@redhat.com> <20200319131221.14044-2-david@redhat.com>
+In-Reply-To: <20200319131221.14044-2-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 19 Mar 2020 17:28:05 +0100
+Message-ID: <CAM9Jb+gD9YWgio5Nod577iH9=HHf8jZFspVHstQ7cyCWzE2PKQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/8] drivers/base/memory: rename MMOP_ONLINE_KEEP to MMOP_ONLINE
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Baoquan He <bhe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The phy-gmii-sel can be only auto selected in Kconfig and now the pretty
-complex Kconfig dependencies are defined for phy-gmii-sel driver, which
-also need to be updated every time phy-gmii-sel is re-used for any new
-networking driver.
+> The name is misleading and it's not really clear what is "kept". Let's just
+> name it like the online_type name we expose to user space ("online").
+>
+> Add some documentation to the types.
+>
+> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/base/memory.c          | 9 +++++----
+>  include/linux/memory_hotplug.h | 6 +++++-
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 6448c9ece2cb..8c5ce42c0fc3 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -216,7 +216,7 @@ static int memory_subsys_online(struct device *dev)
+>          * attribute and need to set the online_type.
+>          */
+>         if (mem->online_type < 0)
+> -               mem->online_type = MMOP_ONLINE_KEEP;
+> +               mem->online_type = MMOP_ONLINE;
+>
+>         ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
+>
+> @@ -251,7 +251,7 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
+>         else if (sysfs_streq(buf, "online_movable"))
+>                 online_type = MMOP_ONLINE_MOVABLE;
+>         else if (sysfs_streq(buf, "online"))
+> -               online_type = MMOP_ONLINE_KEEP;
+> +               online_type = MMOP_ONLINE;
+>         else if (sysfs_streq(buf, "offline"))
+>                 online_type = MMOP_OFFLINE;
+>         else {
+> @@ -262,7 +262,7 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
+>         switch (online_type) {
+>         case MMOP_ONLINE_KERNEL:
+>         case MMOP_ONLINE_MOVABLE:
+> -       case MMOP_ONLINE_KEEP:
+> +       case MMOP_ONLINE:
+>                 /* mem->online_type is protected by device_hotplug_lock */
+>                 mem->online_type = online_type;
+>                 ret = device_online(&mem->dev);
+> @@ -342,7 +342,8 @@ static ssize_t valid_zones_show(struct device *dev,
+>         }
+>
+>         nid = mem->nid;
+> -       default_zone = zone_for_pfn_range(MMOP_ONLINE_KEEP, nid, start_pfn, nr_pages);
+> +       default_zone = zone_for_pfn_range(MMOP_ONLINE, nid, start_pfn,
+> +                                         nr_pages);
+>         strcat(buf, default_zone->name);
+>
+>         print_allowed_zone(buf, nid, start_pfn, nr_pages, MMOP_ONLINE_KERNEL,
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 3195d11876ea..3aaf00db224c 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -47,9 +47,13 @@ enum {
+>
+>  /* Types for control the zone type of onlined and offlined memory */
+>  enum {
+> +       /* Offline the memory. */
+>         MMOP_OFFLINE = -1,
+> -       MMOP_ONLINE_KEEP,
+> +       /* Online the memory. Zone depends, see default_zone_for_pfn(). */
+> +       MMOP_ONLINE,
+> +       /* Online the memory to ZONE_NORMAL. */
+>         MMOP_ONLINE_KERNEL,
+> +       /* Online the memory to ZONE_MOVABLE. */
+>         MMOP_ONLINE_MOVABLE,
+>  };
+>
+> --
+Looks good to me.
 
-Simplify Kconfig definition for phy-gmii-sel PHY driver - drop all
-dependencies and from networking drivers and rely on using 'imply
-PHY_TI_GMII_SEL' in Kconfig definitions for networking drivers instead.
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-Tested-by: Murali Karicheri <m-karicheri2@ti.com>
----
- drivers/net/ethernet/ti/Kconfig | 1 +
- drivers/phy/ti/Kconfig          | 3 ---
- 2 files changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
-index bf98e0fa7d8b..8a6ca16eee3b 100644
---- a/drivers/net/ethernet/ti/Kconfig
-+++ b/drivers/net/ethernet/ti/Kconfig
-@@ -53,6 +53,7 @@ config TI_CPSW
- 	select MFD_SYSCON
- 	select PAGE_POOL
- 	select REGMAP
-+	imply PHY_TI_GMII_SEL
- 	---help---
- 	  This driver supports TI's CPSW Ethernet Switch.
- 
-diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
-index 6dbe9d0b9ff3..15a3bcf32308 100644
---- a/drivers/phy/ti/Kconfig
-+++ b/drivers/phy/ti/Kconfig
-@@ -106,11 +106,8 @@ config TWL4030_USB
- 
- config PHY_TI_GMII_SEL
- 	tristate
--	default y if TI_CPSW=y || TI_CPSW_SWITCHDEV=y
--	depends on TI_CPSW || TI_CPSW_SWITCHDEV || COMPILE_TEST
- 	select GENERIC_PHY
- 	select REGMAP
--	default m
- 	help
- 	  This driver supports configuring of the TI CPSW Port mode depending on
- 	  the Ethernet PHY connected to the CPSW Port.
--- 
-2.17.1
-
+> 2.24.1
+>
+>
