@@ -2,130 +2,94 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB6DC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096EFC43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0DA92071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAEA42071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BstyM5Fy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgCSRmr (ORCPT
+        id S1728705AbgCSRmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:42:47 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:34335 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgCSRmr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:42:47 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1M6m1g-1jDL2206Os-008Nbk; Thu, 19 Mar 2020 18:42:28 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id A53C765021B;
-        Thu, 19 Mar 2020 17:42:27 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ueP1BSl6eNCA; Thu, 19 Mar 2020 18:42:27 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 5716D64FCB4;
-        Thu, 19 Mar 2020 18:42:27 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.52) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 19 Mar 2020 18:42:27 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id AFE738050C; Thu, 19 Mar 2020 18:42:26 +0100 (CET)
-Date:   Thu, 19 Mar 2020 18:42:26 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v2 06/10] media: adv748x: only activate DAI if it is
- described in device tree
-Message-ID: <59bbe09aa6e42b3b226b394dc7edf6ac8e385d47.1584639664.git.alexander.riesen@cetitec.com>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1584639664.git.alexander.riesen@cetitec.com>
+        Thu, 19 Mar 2020 13:42:51 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:40476 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727009AbgCSRmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:42:50 -0400
+Received: from zn.tnic (p200300EC2F0A85008DCA7A58643289AE.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:8500:8dca:7a58:6432:89ae])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7F6271EC0CFA;
+        Thu, 19 Mar 2020 18:42:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584639768;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=LJgEl6+GWpjWMprHgQdpvOsZPmZ9T4AgJaJ310Sp15A=;
+        b=BstyM5FyzXd4gUjzYEKas19giaR3PryEQgqFuimsLBfSog5uMwWV2b0pL/Te/PSiFpUTow
+        +JfuNn7O4THbFfI6nYX7gKJnJsqRVfieDh1pygDl8Ash+cUnvz3cwuI8wH5wfd5vmjqxSm
+        qSP7WorzYL+KIIwiwVuKclKRo0SUmHk=
+Date:   Thu, 19 Mar 2020 18:42:54 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH -v2] treewide: Rename "unencrypted" to "decrypted"
+Message-ID: <20200319174254.GE13073@zn.tnic>
+References: <20200317111822.GA15609@zn.tnic>
+ <20200319101657.GB13073@zn.tnic>
+ <20200319102011.GA3617@lst.de>
+ <20200319102834.GC13073@zn.tnic>
+ <8d6d3b6c-7e4e-7d9e-3e19-38f7d4477c72@arm.com>
+ <20200319112054.GD13073@zn.tnic>
+ <878sjw5k9u.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1584639664.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.8.5.52]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7762
-X-Provags-ID: V03:K1:VN3VMvTICSQ56pLhXQ+DUtZDlCw5I8O1qjE7zi2ANwi99hhSBiK
- VVPuS5wMcnNx7McRoEj9B8jRCdc579FbPXHjiCjOScMXzntsm4/04BS6MkKYoUMEnU+6EuC
- uF3qxQNaKjdQAFuLQ0EnR8XWBizbBwK698Nj4OAc/ImS8EgD6s1vhRN2KDUlIADa8Htm8cw
- v62jBk13uxA37KnZuIFpA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sWZv352a1dw=:wyCA91l4uxMeGJNl4U8WL2
- EThfiyxauXiiEsRjCvZBYQ6b317ad8pejS0mPX3h9s1cTuwnMTCihEUQMth/6kSm32CUr1et5
- WJxlW2tLBycN+CEuJODCGG6u7UTy47i2v8EmOIqiog4dC/T7z4VD6d/FKMPf9yg7ExUfRtbZP
- lPUSEXx8/J694eZxE0VyqNPZY9Z6Qp3TfCMwRykpITirzKLHMMWnSlSpesCzIKIyhyRh87zI3
- KpKH4LCCxxE06DH+2lZNJ2K5tGJVlRe65Cmh6wcMyL6JcCB7xf8cu6GoQlWtChwqcwjUwJRid
- /ioq+tWkqeKxnZpi386FzDG6OlSjjC9dIJ7azq++Qdh7TOvEoCGKEbxMxizqTI7vRMwOFQ9NL
- Wq6tLZ2W7AQvzo/tBhpKeOXZoXsd9GRGW8ekP3vadBmSWOqnSABGPdFPD2GCOVVGA6d4YBUz1
- TNbrcEG/dktuKhsZzONNQy1QzrFv5cxHga2G0GRCz1RhBbyKcAL8eysy6iWnNUnZ3a4PdcS8k
- wrRUEFkdmRIPXDaChHIuEEWosdpY7jAreaOsLVj+qRMQIlFl5RIbJigkJvuFMil2V2faTZQt+
- m3Bj+6MR2UUl7MdFrA9EuvWhDg5Gtig1H3isqEV5NfDogfDq2IXQTVxsjDhiaNV6bQVBWVBn6
- BeN7aPU+t+WTg2f21TT5eFtsm2YZKlvflQvjUWEvuCLmYs6qoXjyJxl4g2d3TZxNNE8vvf2ae
- /b+ho/ROeLRDc7ZeRc1PTfy0Mw0NZDfVNaiMqlZbAEUWNssuqh8I1RTEdnGqnCSLnvHUW7rR1
- 8FsCgPBv1EZo4TPrJJ/chz0fRtmjb7oRPdPU7i0B+1PTXIFEBOR7FDSUm/fbi6nIA1OXGAA
+In-Reply-To: <878sjw5k9u.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To avoid setting it up even if the hardware is not actually connected
-to anything physically.
+On Thu, Mar 19, 2020 at 06:25:49PM +0100, Thomas Gleixner wrote:
+> TBH, I don't see how
+> 
+> 	if (force_dma_decrypted(dev))
+> 		set_memory_encrypted((unsigned long)cpu_addr, 1 << page_order);
+>
+> makes more sense than the above. It's both non-sensical unless there is
 
-Besides, the bindings explicitly notes that port definitions are
-"optional if they are not connected to anything at the hardware level".
+9087c37584fb ("dma-direct: Force unencrypted DMA under SME for certain DMA masks")
 
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
----
- drivers/media/i2c/adv748x/adv748x-dai.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> a big fat comment explaining what this is about.
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-dai.c b/drivers/media/i2c/adv748x/adv748x-dai.c
-index 4775a0c7ed7f..ce3ae7de765c 100644
---- a/drivers/media/i2c/adv748x/adv748x-dai.c
-+++ b/drivers/media/i2c/adv748x/adv748x-dai.c
-@@ -204,6 +204,11 @@ int adv748x_dai_init(struct adv748x_dai *dai)
- 	int ret;
- 	struct adv748x_state *state = adv748x_dai_to_state(dai);
- 
-+	if (!state->endpoints[ADV748X_PORT_I2S]) {
-+		adv_info(state, "no I2S port, DAI disabled\n");
-+		ret = 0;
-+		goto fail;
-+	}
- 	dai->mclk = clk_register_fixed_rate(state->dev,
- 					    "adv748x-hdmi-i2s-mclk",
- 					    NULL /* parent_name */,
+ACK to that.
+
 -- 
-2.25.1.25.g9ecbe7eb18
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
