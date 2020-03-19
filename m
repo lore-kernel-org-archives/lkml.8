@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64985C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C677FC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C562145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAAF20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623476;
-	bh=b5TTVW7188gt4/nG313X27wCLCsYHEoj3altvGYn27I=;
+	s=default; t=1584623481;
+	bh=S6QN/3KE7/L4/R1yADZW96OLCmrcELX878e8rMKYbf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bXjzqQ1yZXyVw4QAA1e/hsX/9p62HMOTrbxR+RvEjoyrx8gXFqsLsCO9Sv7Tgwvv+
-	 iIQnZG86vh3OQ9DsKuDyV6qeCxFRIwK6FmD7EGY69LbomyjRWg8uvbLfFxFxzSp+ai
-	 vYwFgkfRPMqGAeZpXof2uC9yznVkZ56YnB0tGEj4=
+	b=C2B9HwmqS3/5jyJ/ZH1Sme6UWrwGR4YedCVCq6WzEAUbvyRlJZPjfNvOZuNdjD4aT
+	 9sx80WbNsc4vNxAvzzOeFh5tW/mbhjDHfhx3toU/1TVa8hZQ2btyDrmV+HvBPLlJX9
+	 H3G2+YAUReTqeiZHrStkSQTTjn+NG6u5NelFVWEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbgCSNLO (ORCPT
+        id S1727750AbgCSNLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:11:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56282 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:11:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728686AbgCSNLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:11:11 -0400
+        id S1728695AbgCSNLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:11:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A5E20722;
-        Thu, 19 Mar 2020 13:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DF52217D8;
+        Thu, 19 Mar 2020 13:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623471;
-        bh=b5TTVW7188gt4/nG313X27wCLCsYHEoj3altvGYn27I=;
+        s=default; t=1584623476;
+        bh=S6QN/3KE7/L4/R1yADZW96OLCmrcELX878e8rMKYbf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SUg12DomGIv/RrWrHgOIOXb86uMtRvy3YxAun6u5EVi8CFgD4LuevQwSKfeQJTfqD
-         g5n5arMjCbphLXd/9SrqB9sfw9DHCSjznP16gma20hbJlcqGKCrzxhu99O5LvYcj/u
-         4XelmQYn9pqMmvVqRexem7/OlvhySZhi2frqWN6w=
+        b=y4b8HqJAGhYfDib3X/WSa54PsCrODdzm5XWulzStV7qWJ97eAi3SpYbFikF0CoxQI
+         t36zwGVuYrjIMtKZiPVgapywod0cyxaIxDOOSOOQqGLpLTe44lGYvGAI2whDtiU3TG
+         9U47Ib33o07apkNKW3wGhKy66Si2NV/tS1P9IQis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Per Sundstrom <per.sundstrom@redqube.se>,
+        Jiri Wiesner <jwiesner@suse.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Mahesh Bandewar <maheshb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 19/90] nfc: add missing attribute validation for vendor subcommand
-Date:   Thu, 19 Mar 2020 13:59:41 +0100
-Message-Id: <20200319123934.698294610@linuxfoundation.org>
+Subject: [PATCH 4.9 21/90] ipvlan: do not add hardware address of master to its unicast filter list
+Date:   Thu, 19 Mar 2020 13:59:43 +0100
+Message-Id: <20200319123935.258894604@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -59,31 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Jiri Wiesner <jwiesner@suse.com>
 
-[ Upstream commit 6ba3da446551f2150fadbf8c7788edcb977683d3 ]
+[ Upstream commit 63aae7b17344d4b08a7d05cb07044de4c0f9dcc6 ]
 
-Add missing attribute validation for vendor subcommand attributes
-to the netlink policy.
+There is a problem when ipvlan slaves are created on a master device that
+is a vmxnet3 device (ipvlan in VMware guests). The vmxnet3 driver does not
+support unicast address filtering. When an ipvlan device is brought up in
+ipvlan_open(), the ipvlan driver calls dev_uc_add() to add the hardware
+address of the vmxnet3 master device to the unicast address list of the
+master device, phy_dev->uc. This inevitably leads to the vmxnet3 master
+device being forced into promiscuous mode by __dev_set_rx_mode().
 
-Fixes: 9e58095f9660 ("NFC: netlink: Implement vendor command support")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Promiscuous mode is switched on the master despite the fact that there is
+still only one hardware address that the master device should use for
+filtering in order for the ipvlan device to be able to receive packets.
+The comment above struct net_device describes the uc_promisc member as a
+"counter, that indicates, that promiscuous mode has been enabled due to
+the need to listen to additional unicast addresses in a device that does
+not implement ndo_set_rx_mode()". Moreover, the design of ipvlan
+guarantees that only the hardware address of a master device,
+phy_dev->dev_addr, will be used to transmit and receive all packets from
+its ipvlan slaves. Thus, the unicast address list of the master device
+should not be modified by ipvlan_open() and ipvlan_stop() in order to make
+ipvlan a workable option on masters that do not support unicast address
+filtering.
+
+Fixes: 2ad7bf3638411 ("ipvlan: Initial check-in of the IPVLAN driver")
+Reported-by: Per Sundstrom <per.sundstrom@redqube.se>
+Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Mahesh Bandewar <maheshb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/nfc/netlink.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ipvlan/ipvlan_main.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -64,6 +64,8 @@ static const struct nla_policy nfc_genl_
- 				     .len = NFC_FIRMWARE_NAME_MAXSIZE },
- 	[NFC_ATTR_SE_INDEX] = { .type = NLA_U32 },
- 	[NFC_ATTR_SE_APDU] = { .type = NLA_BINARY },
-+	[NFC_ATTR_VENDOR_ID] = { .type = NLA_U32 },
-+	[NFC_ATTR_VENDOR_SUBCMD] = { .type = NLA_U32 },
- 	[NFC_ATTR_VENDOR_DATA] = { .type = NLA_BINARY },
+--- a/drivers/net/ipvlan/ipvlan_main.c
++++ b/drivers/net/ipvlan/ipvlan_main.c
+@@ -217,7 +217,6 @@ static void ipvlan_uninit(struct net_dev
+ static int ipvlan_open(struct net_device *dev)
+ {
+ 	struct ipvl_dev *ipvlan = netdev_priv(dev);
+-	struct net_device *phy_dev = ipvlan->phy_dev;
+ 	struct ipvl_addr *addr;
  
- };
+ 	if (ipvlan->port->mode == IPVLAN_MODE_L3 ||
+@@ -229,7 +228,7 @@ static int ipvlan_open(struct net_device
+ 	list_for_each_entry(addr, &ipvlan->addrs, anode)
+ 		ipvlan_ht_addr_add(ipvlan, addr);
+ 
+-	return dev_uc_add(phy_dev, phy_dev->dev_addr);
++	return 0;
+ }
+ 
+ static int ipvlan_stop(struct net_device *dev)
+@@ -241,8 +240,6 @@ static int ipvlan_stop(struct net_device
+ 	dev_uc_unsync(phy_dev, dev);
+ 	dev_mc_unsync(phy_dev, dev);
+ 
+-	dev_uc_del(phy_dev, phy_dev->dev_addr);
+-
+ 	list_for_each_entry(addr, &ipvlan->addrs, anode)
+ 		ipvlan_ht_addr_del(addr);
+ 
 
 
