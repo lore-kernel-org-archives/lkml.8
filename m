@@ -2,57 +2,59 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DC9C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E70C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A27D20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DAB20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623955;
-	bh=h++JHvlq0URUaxWR2YFil30omclmOjygV8exSEpksy0=;
+	s=default; t=1584623957;
+	bh=xpF/oJrCEXUxvt+0y7Lo8jkFhhTZdOsK+QynZE3xPvI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bJy7H56OX1/K7lD3K2p2yUxne+yZVcMUoKv0dKMTk5D+BHzpccrluqyCVbBhdu7v8
-	 2gaI5E1Zc7kmVWWRSVt3R1bb1VQQN+ktA7tjbcNdJhGqiWKJG4IFNy8HAjomAIvAUG
-	 7VgBxXbTY3SqiTvfOAQCMByKkNsjbkWqA4sIQDWA=
+	b=QiIkxvG0ERRemf35RYPEpZeZSwS4j7Zck6JvyDff2P6bNje8cuirwoXEnHw0sOxcF
+	 wV78y3ccw52ABikUbzIn7wSNVnYZ+P5jnDbMM1fIYxu1PUgqj7KCve88ooI5a638Ke
+	 DHVnlJP6Hl63qQpo5lY08ANMv5x2on9961Jkt4pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbgCSNTN (ORCPT
+        id S1729858AbgCSNTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:19:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42098 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:19:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728772AbgCSNTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:19:07 -0400
+        id S1729730AbgCSNTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:19:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E2B3206D7;
-        Thu, 19 Mar 2020 13:19:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 364F9216FD;
+        Thu, 19 Mar 2020 13:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623946;
-        bh=h++JHvlq0URUaxWR2YFil30omclmOjygV8exSEpksy0=;
+        s=default; t=1584623951;
+        bh=xpF/oJrCEXUxvt+0y7Lo8jkFhhTZdOsK+QynZE3xPvI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zTffOrOz2IDhu/5jhpYY2gUN1ZqWcPmNqLTyDDp0EdPCeEpUddDBkACTifikTl9dy
-         L9wqe/KHpjL/hPQNoFr5peZpYwJEp7LYz2k1qz5aesx88ChZuHn0D0Mr+0wVMdTrx2
-         PFPH4q1HElTzUT2aBYLDz8QzTMOowR/NmpVKC0qI=
+        b=fW2fPCdnq6NrLTRKKHDkC5gt7eMZD0W9bp+V0zGSPGoBwgQLLC4MlGyQQZEPc0vpJ
+         KrTRRKQQNyeqnJvYWTnQE4x89l4oPRbQqVqg0rENnRef5VK/aF6IBBSBcFMxUHdmBK
+         +Z/ggFa0+m6v8DWV2mjhC6H55vMuP4kBsHmZLP/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 99/99] ipv4: ensure rcu_read_lock() in cipso_v4_error()
-Date:   Thu, 19 Mar 2020 14:04:17 +0100
-Message-Id: <20200319124008.375483528@linuxfoundation.org>
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 01/48] perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
+Date:   Thu, 19 Mar 2020 14:03:43 +0100
+Message-Id: <20200319123903.575711114@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
-References: <20200319123941.630731708@linuxfoundation.org>
+In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
+References: <20200319123902.941451241@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,47 +63,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit 3e72dfdf8227b052393f71d820ec7599909dddc2 upstream.
+[ Upstream commit f967140dfb7442e2db0868b03b961f9c59418a1b ]
 
-Similarly to commit c543cb4a5f07 ("ipv4: ensure rcu_read_lock() in
-ipv4_link_failure()"), __ip_options_compile() must be called under rcu
-protection.
+Enable the sampling check in kernel/events/core.c::perf_event_open(),
+which returns the more appropriate -EOPNOTSUPP.
 
-Fixes: 3da1ed7ac398 ("net: avoid use IPCB in cipso_v4_error")
-Suggested-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+BEFORE:
 
+  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
+  Error:
+  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (l3_request_g1.caching_l3_cache_accesses).
+  /bin/dmesg | grep -i perf may provide additional information.
+
+With nothing relevant in dmesg.
+
+AFTER:
+
+  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
+  Error:
+  l3_request_g1.caching_l3_cache_accesses: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+
+Fixes: c43ca5091a37 ("perf/x86/amd: Add support for AMD NB and L2I "uncore" counters")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200311191323.13124-1-kim.phillips@amd.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/cipso_ipv4.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/x86/events/amd/uncore.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -1738,6 +1738,7 @@ void cipso_v4_error(struct sk_buff *skb,
- {
- 	unsigned char optbuf[sizeof(struct ip_options) + 40];
- 	struct ip_options *opt = (struct ip_options *)optbuf;
-+	int res;
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index baa7e36073f90..604a8558752d1 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -193,20 +193,18 @@ static int amd_uncore_event_init(struct perf_event *event)
  
- 	if (ip_hdr(skb)->protocol == IPPROTO_ICMP || error != -EACCES)
- 		return;
-@@ -1749,7 +1750,11 @@ void cipso_v4_error(struct sk_buff *skb,
+ 	/*
+ 	 * NB and Last level cache counters (MSRs) are shared across all cores
+-	 * that share the same NB / Last level cache. Interrupts can be directed
+-	 * to a single target core, however, event counts generated by processes
+-	 * running on other cores cannot be masked out. So we do not support
+-	 * sampling and per-thread events.
++	 * that share the same NB / Last level cache.  On family 16h and below,
++	 * Interrupts can be directed to a single target core, however, event
++	 * counts generated by processes running on other cores cannot be masked
++	 * out. So we do not support sampling and per-thread events via
++	 * CAP_NO_INTERRUPT, and we do not enable counter overflow interrupts:
+ 	 */
+-	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+-		return -EINVAL;
  
- 	memset(opt, 0, sizeof(struct ip_options));
- 	opt->optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
--	if (__ip_options_compile(dev_net(skb->dev), opt, skb, NULL))
-+	rcu_read_lock();
-+	res = __ip_options_compile(dev_net(skb->dev), opt, skb, NULL);
-+	rcu_read_unlock();
-+
-+	if (res)
- 		return;
+ 	/* NB and Last level cache counters do not have usr/os/guest/host bits */
+ 	if (event->attr.exclude_user || event->attr.exclude_kernel ||
+ 	    event->attr.exclude_host || event->attr.exclude_guest)
+ 		return -EINVAL;
  
- 	if (gateway)
+-	/* and we do not enable counter overflow interrupts */
+ 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
+ 	hwc->idx = -1;
+ 
+@@ -314,6 +312,7 @@ static struct pmu amd_nb_pmu = {
+ 	.start		= amd_uncore_start,
+ 	.stop		= amd_uncore_stop,
+ 	.read		= amd_uncore_read,
++	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT,
+ };
+ 
+ static struct pmu amd_llc_pmu = {
+@@ -324,6 +323,7 @@ static struct pmu amd_llc_pmu = {
+ 	.start		= amd_uncore_start,
+ 	.stop		= amd_uncore_stop,
+ 	.read		= amd_uncore_read,
++	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT,
+ };
+ 
+ static struct amd_uncore *amd_uncore_alloc(unsigned int cpu)
+-- 
+2.20.1
+
 
 
