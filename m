@@ -2,51 +2,53 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D30FC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6074C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04BAE20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BC720722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623619;
-	bh=Wtb3OqvRNjSUv9DlE4NvlYAISghwSwpMTBoU9qN3nZI=;
+	s=default; t=1584623621;
+	bh=TrcHvj+t0zhknyADv/MVGhq72AnAb4DxejAlu6KPi50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V8Yvtfb33Ij8qXB8RO/w0a9joTJC/ps27qLatKTpydlYbqmnX80puGQFxzNNqPX97
-	 nDE/i9sCS1djM9+/SQlBEbcPTJY3WeagBJJncSbyR0LXdQqoBu+g5m/jmxAIhfOaUb
-	 BFtkgpLIFoNxGnL4NeKYy75VAxE3T1ey/++krsyg=
+	b=C2C0CwXOvO7N5LFZvl5aaB+4ke+depz2CE8tEFU2oT/WPm2cAv8Qy2Lo1hztm5ye1
+	 6/HuU/QGxC+sDBgA2yufzjevAWjZzdLt23FUayO6erLdlI7Get59hJHe/pg1/RXxfF
+	 Updz5X+0zvT+smHw62nml+k6TQ2deU2L5eOyFE2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgCSNNi (ORCPT
+        id S1729195AbgCSNNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:13:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60854 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:13:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbgCSNNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:13:35 -0400
+        id S1729187AbgCSNNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:13:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1234E2166E;
-        Thu, 19 Mar 2020 13:13:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E0AD21835;
+        Thu, 19 Mar 2020 13:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623614;
-        bh=Wtb3OqvRNjSUv9DlE4NvlYAISghwSwpMTBoU9qN3nZI=;
+        s=default; t=1584623617;
+        bh=TrcHvj+t0zhknyADv/MVGhq72AnAb4DxejAlu6KPi50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cy4G4zfJLVb/6IjvNmRSGzk08WCxeUyCsYffuMZos0Ql+o2XhwQbN9vUcqkgMbxyL
-         fkp0IJDfJSzWPi9lChwUnwD9b7fthhBRmjjGUTvRrHFzOg4ZFYrUuoG9l16YvBpCPJ
-         HjvLNkEfKwu8JTggrPojiJFjm3aw7yOr3z5qHb2Q=
+        b=e87y+DFN8Wjj0sBxVKLwUUAZohJR2K6w2JqNZ8CpejsgHBcF27xzXOaAoQoRqK/W9
+         I4TnQBy7qa8cK+U8Nb/XHF7wZgmsk1XbEwZPJ4LD+dNxlgXn2jCReUwkzrQzEyPHl0
+         Uiochq+5X6ec5vfxUxjsC8XtD0YP/rOh8O94Idc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 4.9 87/90] ARM: 8957/1: VDSO: Match ARMv8 timer in cntvct_functional()
-Date:   Thu, 19 Mar 2020 14:00:49 +0100
-Message-Id: <20200319123955.174395136@linuxfoundation.org>
+Subject: [PATCH 4.9 88/90] ARM: 8958/1: rename missed uaccess .fixup section
+Date:   Thu, 19 Mar 2020 14:00:50 +0100
+Message-Id: <20200319123955.454198038@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -59,35 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 45939ce292b4b11159719faaf60aba7d58d5fe33 upstream.
+commit f87b1c49bc675da30d8e1e8f4b60b800312c7b90 upstream.
 
-It is possible for a system with an ARMv8 timer to run a 32-bit kernel.
-When this happens we will unconditionally have the vDSO code remove the
-__vdso_gettimeofday and __vdso_clock_gettime symbols because
-cntvct_functional() returns false since it does not match that
-compatibility string.
+When the uaccess .fixup section was renamed to .text.fixup, one case was
+missed. Under ld.bfd, the orphaned section was moved close to .text
+(since they share the "ax" bits), so things would work normally on
+uaccess faults. Under ld.lld, the orphaned section was placed outside
+the .text section, making it unreachable.
 
-Fixes: ecf99a439105 ("ARM: 8331/1: VDSO initialization, mapping, and synchronization")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/282
+Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1020633#c44
+Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.1912032147340.17114@knanqh.ubzr
+Link: https://lore.kernel.org/lkml/202002071754.F5F073F1D@keescook/
+
+Fixes: c4a84ae39b4a5 ("ARM: 8322/1: keep .text and .fixup regions closer together")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/kernel/vdso.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/lib/copy_from_user.S |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/kernel/vdso.c
-+++ b/arch/arm/kernel/vdso.c
-@@ -86,6 +86,8 @@ static bool __init cntvct_functional(voi
- 	 */
- 	np = of_find_compatible_node(NULL, NULL, "arm,armv7-timer");
- 	if (!np)
-+		np = of_find_compatible_node(NULL, NULL, "arm,armv8-timer");
-+	if (!np)
- 		goto out_put;
+--- a/arch/arm/lib/copy_from_user.S
++++ b/arch/arm/lib/copy_from_user.S
+@@ -100,7 +100,7 @@ ENTRY(arm_copy_from_user)
  
- 	if (of_property_read_bool(np, "arm,cpu-registers-not-fw-configured"))
+ ENDPROC(arm_copy_from_user)
+ 
+-	.pushsection .fixup,"ax"
++	.pushsection .text.fixup,"ax"
+ 	.align 0
+ 	copy_abort_preamble
+ 	ldmfd	sp!, {r1, r2, r3}
 
 
