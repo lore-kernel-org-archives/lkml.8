@@ -2,129 +2,118 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B93F6C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8A0C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B26020724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:15:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="pNO+MQyS"
+	by mail.kernel.org (Postfix) with ESMTP id DC1CF20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:15:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584605744;
+	bh=LdJipUFyZBF+HWb06ft7tA5xx8pfQFU78elBxzYZlTM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eoygcIitekmVJUElM0YHankzFRaldLPChKDSRi3Rok+s6eZWj/hofEY593MoZvX9k
+	 hU9svOkxEKlkB9wQPHLuIUm0+U/HSdIUrPQYyETyVqb0H014yu/9fl7ekFIieq2gQw
+	 CjV6jiVXzFZ3s7GiQ1c78UieBiWD53PBvRzMYHk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCSIPj (ORCPT
+        id S1726988AbgCSIPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:15:39 -0400
-Received: from mout-u-107.mailbox.org ([91.198.250.252]:57542 "EHLO
-        mout-u-107.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgCSIPi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:15:38 -0400
-Received: by mout-u-107.mailbox.org (Postfix, from userid 51)
-        id 48jfdc5ZhdzKnvC; Thu, 19 Mar 2020 09:06:40 +0100 (CET)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Thu, 19 Mar 2020 04:15:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47166 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726905AbgCSIPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 04:15:43 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 48jWJW00Y7zKp7s;
-        Thu, 19 Mar 2020 03:36:59 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1584585417;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ERpvMrK/UaDTvkIoSj6AknzdzJX6Ereus6KjymOIMWM=;
-        b=pNO+MQySdvo4EMik8yKPyOgZHetMjJNsxtHde2yGeduT9VXjz3KNh93+mPFISbax4He/fL
-        ZyJNhfGD+77JFfTfGUQWtXAuUFj7taiIpA4lkGtmjSxWabkKeG+ykH4ofktMsmIbLi4Hre
-        /weoS3vN1K1u/n68+F/Dedma7U42fE7CjWLO89sPcn3U0YoWfgy98LlhcJ1MLDnFzkGSdw
-        XW02TIknUddGC1O1q5QgIAl3DzOtyIiggGR7U6nQBF59SpjPK9J4phcXuKYnnq855MWq2n
-        7tevK0bCqdk2b1wA9kVPVpSLc2S7LRx1Gni9+SR7Va9rzFDH8BCvqWZYZgQP/Q==
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id yN29WkZ56Jih; Thu, 19 Mar 2020 03:36:55 +0100 (CET)
-From:   Sungbo Eo <mans0n@gorani.run>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-oxnas@groups.io
-Cc:     Sungbo Eo <mans0n@gorani.run>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2] irqchip/versatile-fpga: Handle chained IRQs properly
-Date:   Thu, 19 Mar 2020 11:34:48 +0900
-Message-Id: <20200319023448.1479701-1-mans0n@gorani.run>
-In-Reply-To: <002b72cab9896fa5ac76a52e0cb503ff@kernel.org>
-References: <002b72cab9896fa5ac76a52e0cb503ff@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id D66F420663;
+        Thu, 19 Mar 2020 08:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584605742;
+        bh=LdJipUFyZBF+HWb06ft7tA5xx8pfQFU78elBxzYZlTM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nGHgshCIeIYyjXviV1KXQzzgZIyEakQRG7TP5KXx+V4qOKEcRm3+dvc9WuVV0h+14
+         x36voC/EuAh3rl/mYHzUrxGeciPHqAiyi2/vt2Zx+wkp7/OoPosTm3hUWpYYe5tsz5
+         cdoU3/vyva6X37aZr3e2/j3RW8sI/VWfPKm4j/5c=
+Date:   Thu, 19 Mar 2020 08:15:37 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Torsten Duwe <duwe@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch][Fix] crypto: arm{,64} neon: memzero_explicit aes-cbc key
+Message-ID: <20200319081536.GA20670@willie-the-truck>
+References: <20200313110258.94A0668C4E@verein.lst.de>
+ <20200317221743.GD20788@willie-the-truck>
+ <CAKv+Gu9_gV0aVwa2QG7jgaR71bTz12vs386R9uPjdQTtm0HcUw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu9_gV0aVwa2QG7jgaR71bTz12vs386R9uPjdQTtm0HcUw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enclose the chained handler with chained_irq_{enter,exit}(), so that the
-muxed interrupts get properly acked.
+On Wed, Mar 18, 2020 at 04:13:33PM -0400, Ard Biesheuvel wrote:
+> On Tue, 17 Mar 2020 at 18:17, Will Deacon <will@kernel.org> wrote:
+> >
+> > [+Ard]
+> >
+> > On Fri, Mar 13, 2020 at 12:02:58PM +0100, Torsten Duwe wrote:
+> > > From: Torsten Duwe <duwe@suse.de>
+> > >
+> > > At function exit, do not leave the expanded key in the rk struct
+> > > which got allocated on the stack.
+> > >
+> > > Signed-off-by: Torsten Duwe <duwe@suse.de>
+> > > ---
+> > > Another small fix from our FIPS evaluation. I hope you don't mind I merged
+> > > arm32 and arm64 into one patch -- this is really simple.
+> > > --- a/arch/arm/crypto/aes-neonbs-glue.c
+> > > +++ b/arch/arm/crypto/aes-neonbs-glue.c
+> > > @@ -138,6 +138,7 @@ static int aesbs_cbc_setkey(struct crypto_skcipher *tfm, const u8 *in_key,
+> > >       kernel_neon_begin();
+> > >       aesbs_convert_key(ctx->key.rk, rk.key_enc, ctx->key.rounds);
+> > >       kernel_neon_end();
+> > > +     memzero_explicit(&rk, sizeof(rk));
+> > >
+> > >       return crypto_cipher_setkey(ctx->enc_tfm, in_key, key_len);
+> > >  }
+> > > diff --git a/arch/arm64/crypto/aes-neonbs-glue.c b/arch/arm64/crypto/aes-neonbs-glue.c
+> > > index e3e27349a9fe..c0b980503643 100644
+> > > --- a/arch/arm64/crypto/aes-neonbs-glue.c
+> > > +++ b/arch/arm64/crypto/aes-neonbs-glue.c
+> > > @@ -151,6 +151,7 @@ static int aesbs_cbc_setkey(struct crypto_skcipher *tfm, const u8 *in_key,
+> > >       kernel_neon_begin();
+> > >       aesbs_convert_key(ctx->key.rk, rk.key_enc, ctx->key.rounds);
+> > >       kernel_neon_end();
+> > > +     memzero_explicit(&rk, sizeof(rk));
+> > >
+> > >       return 0;
+> > >  }
+> >
+> > I'm certainly not a crypto person, but this looks sensible to me and I
+> > couldn't find any other similar stack variable usage under
+> > arch/arm64/crypto/ at a quick glance.
+> >
+> > Acked-by: Will Deacon <will@kernel.org>
+> >
+> 
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-This patch also fixes a reboot bug on OX820 SoC, where the jiffies timer
-interrupt is never acked. The kernel waits a clock tick forever in
-calibrate_delay_converge(), which leads to a boot hang.
+Cheers, Ard. I'm assuming that Herbert will pick this up via the crypto
+tree.
 
-Fixes: c41b16f8c9d9 ("ARM: integrator/versatile: consolidate FPGA IRQ handling code")
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
----
-v2: moved readl below chained_irq_enter()
-    added Fixes tag
-
- drivers/irqchip/irq-versatile-fpga.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
-index 928858dada75..70e2cfff8175 100644
---- a/drivers/irqchip/irq-versatile-fpga.c
-+++ b/drivers/irqchip/irq-versatile-fpga.c
-@@ -6,6 +6,7 @@
- #include <linux/irq.h>
- #include <linux/io.h>
- #include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
- #include <linux/irqchip/versatile-fpga.h>
- #include <linux/irqdomain.h>
- #include <linux/module.h>
-@@ -68,12 +69,16 @@ static void fpga_irq_unmask(struct irq_data *d)
- 
- static void fpga_irq_handle(struct irq_desc *desc)
- {
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct fpga_irq_data *f = irq_desc_get_handler_data(desc);
--	u32 status = readl(f->base + IRQ_STATUS);
-+	u32 status;
-+
-+	chained_irq_enter(chip, desc);
- 
-+	status = readl(f->base + IRQ_STATUS);
- 	if (status == 0) {
- 		do_bad_IRQ(desc);
--		return;
-+		goto out;
- 	}
- 
- 	do {
-@@ -82,6 +87,9 @@ static void fpga_irq_handle(struct irq_desc *desc)
- 		status &= ~(1 << irq);
- 		generic_handle_irq(irq_find_mapping(f->domain, irq));
- 	} while (status);
-+
-+out:
-+	chained_irq_exit(chip, desc);
- }
- 
- /*
--- 
-2.25.1
-
+Will
