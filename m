@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C41FC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8C0C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190A721D95
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C879421D95
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgCSJOz (ORCPT
+        id S1727585AbgCSJO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:14:55 -0400
-Received: from 8bytes.org ([81.169.241.247]:52340 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:14:58 -0400
+Received: from 8bytes.org ([81.169.241.247]:51930 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727414AbgCSJOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726926AbgCSJOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 05:14:40 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id C6A69BBB; Thu, 19 Mar 2020 10:14:24 +0100 (CET)
+        id 0435283F; Thu, 19 Mar 2020 10:14:24 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 45/70] x86/sev-es: Harden runtime #VC handler for exceptions from user-space
-Date:   Thu, 19 Mar 2020 10:13:42 +0100
-Message-Id: <20200319091407.1481-46-joro@8bytes.org>
+Subject: [PATCH 46/70] x86/sev-es: Filter exceptions not supported from user-space
+Date:   Thu, 19 Mar 2020 10:13:43 +0100
+Message-Id: <20200319091407.1481-47-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -48,70 +48,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Send SIGBUS to the user-space process that caused the #VC exception
-instead of killing the machine. Also ratelimit the error messages so
-that user-space can't flood the kernel log.
+Currently only CPUID caused #VC exceptions are supported from
+user-space. Filter the others out early.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 32 +++++++++++++++++++++++---------
- 1 file changed, 23 insertions(+), 9 deletions(-)
+ arch/x86/kernel/sev-es.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 79a71d14a1fc..71eee7b3667d 100644
+index 71eee7b3667d..6d45a2499460 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -370,16 +370,16 @@ dotraplinkage void do_vmm_communication(struct pt_regs *regs, unsigned long exit
- 		vc_finish_insn(&ctxt);
- 		break;
- 	case ES_UNSUPPORTED:
--		pr_emerg("Unsupported exit-code 0x%02lx in early #VC exception (IP: 0x%lx)\n",
--			 exit_code, regs->ip);
-+		pr_err_ratelimited("Unsupported exit-code 0x%02lx in early #VC exception (IP: 0x%lx)\n",
-+				   exit_code, regs->ip);
- 		goto fail;
- 	case ES_VMM_ERROR:
--		pr_emerg("PANIC: Failure in communication with VMM (exit-code 0x%02lx IP: 0x%lx)\n",
--			 exit_code, regs->ip);
-+		pr_err_ratelimited("Failure in communication with VMM (exit-code 0x%02lx IP: 0x%lx)\n",
-+				   exit_code, regs->ip);
- 		goto fail;
- 	case ES_DECODE_FAILED:
--		pr_emerg("PANIC: Failed to decode instruction (exit-code 0x%02lx IP: 0x%lx)\n",
--			 exit_code, regs->ip);
-+		pr_err_ratelimited("PANIC: Failed to decode instruction (exit-code 0x%02lx IP: 0x%lx)\n",
-+				   exit_code, regs->ip);
- 		goto fail;
- 	case ES_EXCEPTION:
- 		vc_forward_exception(&ctxt);
-@@ -394,10 +394,24 @@ dotraplinkage void do_vmm_communication(struct pt_regs *regs, unsigned long exit
- 	return;
- 
- fail:
--	show_regs(regs);
-+	if (user_mode(regs)) {
-+		/*
-+		 * Do not kill the machine if user-space triggered the
-+		 * exception. Send SIGBUS instead and let user-space deal with
-+		 * it.
-+		 */
-+		force_sig_fault(SIGBUS, BUS_OBJERR, (void __user *)0);
-+	} else {
-+		/* Show some debug info */
-+		show_regs(regs);
- 
--	while (true)
--		halt();
-+		/* Ask hypervisor to sev_es_terminate */
-+		sev_es_terminate(GHCB_SEV_ES_REASON_GENERAL_REQUEST);
-+
-+		/* If that fails and we get here - just halt the machine */
-+		while (true)
-+			halt();
-+	}
+@@ -318,6 +318,26 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	return result;
  }
  
- bool __init boot_vc_exception(struct pt_regs *regs)
++static enum es_result vc_context_filter(struct pt_regs *regs, long exit_code)
++{
++	enum es_result r = ES_OK;
++
++	if (user_mode(regs)) {
++		switch (exit_code) {
++		/* List of #VC exit-codes we support in user-space */
++		case SVM_EXIT_EXCP_BASE ... SVM_EXIT_LAST_EXCP:
++		case SVM_EXIT_CPUID:
++			r = ES_OK;
++			break;
++		default:
++			r = ES_UNSUPPORTED;
++			break;
++		}
++	}
++
++	return r;
++}
++
+ static void vc_forward_exception(struct es_em_ctxt *ctxt)
+ {
+ 	long error_code = ctxt->fi.error_code;
+@@ -359,6 +379,10 @@ dotraplinkage void do_vmm_communication(struct pt_regs *regs, unsigned long exit
+ 		result = vc_init_em_ctxt(&ctxt, regs, exit_code);
+ 	}
+ 
++	/* Check if the exception is supported in the context we came from. */
++	if (result == ES_OK)
++		result = vc_context_filter(regs, exit_code);
++
+ 	if (result == ES_OK)
+ 		result = vc_handle_exitcode(&ctxt, ghcb, exit_code);
+ 
 -- 
 2.17.1
 
