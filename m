@@ -2,82 +2,101 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF34FC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DA4C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B316820836
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7E72071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgCSRfw (ORCPT
+        id S1727852AbgCSRhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:35:52 -0400
-Received: from mga07.intel.com ([134.134.136.100]:38076 "EHLO mga07.intel.com"
+        Thu, 19 Mar 2020 13:37:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:39494 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgCSRfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:35:52 -0400
-IronPort-SDR: zyXWx5Wl2Y8lB5eL3mQ/XOJbqzfJ+dVXNo9v3b6GP/k4QWvp2ZVjyaY2F/xRmUgRRq9Co6MV+Q
- RSUU4KEU8eag==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 10:35:50 -0700
-IronPort-SDR: U25Y8QeKwZcBeM3tJy8sVucZGXnY815ZafwzO0n2oFiMwoWvN++K31m1yI6pQ20ljIaL57topA
- JHLen4SEe5BQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="444655601"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Mar 2020 10:35:49 -0700
-Date:   Thu, 19 Mar 2020 10:35:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     syzbot <syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com>,
-        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
-Subject: Re: WARNING in vcpu_enter_guest
-Message-ID: <20200319173549.GC11305@linux.intel.com>
-References: <000000000000f965b8059877e5e6@google.com>
- <00000000000081861f05a132b9cd@google.com>
- <20200319144952.GB11305@linux.intel.com>
- <20be9560-fce7-1495-3a83-e2b56dbc2389@redhat.com>
+        id S1727189AbgCSRhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:37:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0B4D30E;
+        Thu, 19 Mar 2020 10:37:31 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB83A3F305;
+        Thu, 19 Mar 2020 10:37:30 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 17:37:19 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Qiujun Huang <hqjagain@gmail.com>, anders.roxell@linaro.org,
+        vidyas@nvidia.com
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        amurray@thegoodpenguin.co.uk, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] PCI: dwc: fix compile err for pcie-tagra194
+Message-ID: <20200319173710.GA7433@e121166-lin.cambridge.arm.com>
+References: <1584621380-21152-1-git-send-email-hqjagain@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20be9560-fce7-1495-3a83-e2b56dbc2389@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1584621380-21152-1-git-send-email-hqjagain@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 04:14:55PM +0100, Paolo Bonzini wrote:
-> On 19/03/20 15:49, Sean Christopherson wrote:
-> > On Thu, Mar 19, 2020 at 03:35:16AM -0700, syzbot wrote:
-> >> syzbot has found a reproducer for the following crash on:
-> >>
-> >> HEAD commit:    5076190d mm: slub: be more careful about the double cmpxch..
-> >> git tree:       upstream
-> >> console output: https://syzkaller.appspot.com/x/log.txt?x=143ca61de00000
-> >> kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
-> >> dashboard link: https://syzkaller.appspot.com/bug?extid=00be5da1d75f1cc95f6b
-> >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10bb4023e00000
-> >>
-> >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> >> Reported-by: syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com
-> > Reproduced with a little tweaking of the reproducer, debug in progress.
-> > 
+On Thu, Mar 19, 2020 at 08:36:20PM +0800, Qiujun Huang wrote:
+> make allmodconfig
+> ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+> ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+> ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
+> make[2]: *** [__modpost] Error 1
+> make[1]: *** [modules] Error 2
+> make: *** [sub-make] Error 2
 > 
-> I think the WARN_ON at x86.c:2447 is just bogus.  You can always get it
-> to trigger if garbage is passed to KVM_SET_CLOCK.
+> need to export the symbols.
+> 
+> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Yep.  I worked through logic/math, mostly to gain a wee bit of knowledge
-about the clock stuff, and it's sound.  The KVM_SET_CLOCK from syzkaller
-is simply making time go backwards.
+I have squashed this in with the original patch.
+
+@Vidya: is this something we missed in the review cycle ? Asking just
+to make sure it was not me who made a mistake while merging the code.
+
+Thanks,
+Lorenzo
+
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 4233c43..60d62ef 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -18,6 +18,7 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+>  
+>  	pci_epc_linkup(epc);
+>  }
+> +EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
+>  
+>  void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+>  {
+> @@ -25,6 +26,7 @@ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
+>  
+>  	pci_epc_init_notify(epc);
+>  }
+> +EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
+>  
+>  static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
+>  				   int flags)
+> @@ -535,6 +537,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
+>  
+>  	return 0;
+>  }
+> +EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
+>  
+>  int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  {
+> -- 
+> 1.8.3.1
+> 
