@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E148C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F5DC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F365C20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2AA2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624393;
-	bh=CF0oxVd1Ljc33k3LLpWxJqOxe/MbmHC6fvTOzBAh5b0=;
+	s=default; t=1584624399;
+	bh=PNrmHsCIJfqE4uohYbNXy7WH6tKKMYk92T39QNr6kac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AZ9IlxX+7J1qOl4u9+LUUBtORe0aZznL2z92CRPbAbATTLfc6ooR8KBlKg4FFv7At
-	 w0TaNHCYUuORZMkF/fJO/RJPQxyWo0qCR/UB79cVMcvsSi/IYnBcg4W2Tg2z1hQakn
-	 Gi9vDsx1bLQTYjLlvJ8o++NLPCvwW6zoWxLyaGgA=
+	b=CD+1T2x1x0rXnzO4isEQYM8RbDaJfzSMnpvHdhcOlgMay7Z8gEPUlQcYPG8RTg7XE
+	 mcX3W1hN9Ef8/XsCOqVcJbSfBBCldrMysh4JdUnqBGbJ3d1ZTRwMcF01M3SbVDsHjf
+	 Vs+E3hFLjn2ZY+yUpv83S8uIVqcR5+tDOCK2O78c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730438AbgCSN01 (ORCPT
+        id S1730803AbgCSN0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:26:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54348 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:26:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730317AbgCSN0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:26:22 -0400
+        id S1730785AbgCSN03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:26:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EECE920658;
-        Thu, 19 Mar 2020 13:26:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D936520658;
+        Thu, 19 Mar 2020 13:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624382;
-        bh=CF0oxVd1Ljc33k3LLpWxJqOxe/MbmHC6fvTOzBAh5b0=;
+        s=default; t=1584624389;
+        bh=PNrmHsCIJfqE4uohYbNXy7WH6tKKMYk92T39QNr6kac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e7VkPkpvWb9RnkHr48YaVxfmM9h9Ul2usUwk11bZFJ96qHmDL+md0gZ88YyNOe2ns
-         dt90EqR6aYPsThY86Uez2zgf8n6nDv8JmysEf6eBBcDQ/hfpYmrlhqqeYtfmfpF6B4
-         kDNZNaDl7qbtN18HKVH8PzBvWResW27PHyMeAIFU=
+        b=EMr/0Z3AVVQaewemIHiRRROk9iE/luLIGKix2NQepKXFmT3PG2Pr2IssuIc+dBcta
+         QU1FZ4ry9TFW4jBkFRZCU+Xg0gEHnnWsr48sTFpaBJwa/u99ARzKkg459rBgGGxS4e
+         H3i3QPuQzj4bJ1JhVXYKqT7FsE0mhaCCu7IpdxmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 43/65] hinic: fix a irq affinity bug
-Date:   Thu, 19 Mar 2020 14:04:25 +0100
-Message-Id: <20200319123940.063740055@linuxfoundation.org>
+Subject: [PATCH 5.5 45/65] hinic: fix a bug of rss configuration
+Date:   Thu, 19 Mar 2020 14:04:27 +0100
+Message-Id: <20200319123940.658382490@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -62,54 +62,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit 0bff777bd0cba73ad4cd0145696ad284d7e6a99f ]
+[ Upstream commit 386d4716fd91869e07c731657f2cde5a33086516 ]
 
-can not use a local variable as an input parameter of
-irq_set_affinity_hint
+should use real receive queue number to configure hw rss
+indirect table rather than maximal queue number
 
 Signed-off-by: Luo bin <luobin9@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h | 1 +
- drivers/net/ethernet/huawei/hinic/hinic_rx.c    | 5 ++---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/huawei/hinic/hinic_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
-index f4a339b10b10b..79091e1314181 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_qp.h
-@@ -94,6 +94,7 @@ struct hinic_rq {
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+index 2411ad270c98e..42d00b049c6e8 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+@@ -356,7 +356,8 @@ static void hinic_enable_rss(struct hinic_dev *nic_dev)
+ 	if (!num_cpus)
+ 		num_cpus = num_online_cpus();
  
- 	struct hinic_wq         *wq;
+-	nic_dev->num_qps = min_t(u16, nic_dev->max_qps, num_cpus);
++	nic_dev->num_qps = hinic_hwdev_num_qps(hwdev);
++	nic_dev->num_qps = min_t(u16, nic_dev->num_qps, num_cpus);
  
-+	struct cpumask		affinity_mask;
- 	u32                     irq;
- 	u16                     msix_entry;
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-index 56ea6d692f1c3..2695ad69fca60 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-@@ -475,7 +475,6 @@ static int rx_request_irq(struct hinic_rxq *rxq)
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
- 	struct hinic_rq *rq = rxq->rq;
- 	struct hinic_qp *qp;
--	struct cpumask mask;
- 	int err;
- 
- 	rx_add_napi(rxq);
-@@ -492,8 +491,8 @@ static int rx_request_irq(struct hinic_rxq *rxq)
- 	}
- 
- 	qp = container_of(rq, struct hinic_qp, rq);
--	cpumask_set_cpu(qp->q_id % num_online_cpus(), &mask);
--	return irq_set_affinity_hint(rq->irq, &mask);
-+	cpumask_set_cpu(qp->q_id % num_online_cpus(), &rq->affinity_mask);
-+	return irq_set_affinity_hint(rq->irq, &rq->affinity_mask);
- }
- 
- static void rx_free_irq(struct hinic_rxq *rxq)
+ 	nic_dev->rss_limit = nic_dev->num_qps;
+ 	nic_dev->num_rss = nic_dev->num_qps;
 -- 
 2.20.1
 
