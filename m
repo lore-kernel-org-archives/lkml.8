@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776F4C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE94DC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FD220722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9076520722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623550;
-	bh=yz68c61gnGBkpldyJlxAypbhJtxqSMGYLCBceO05UoI=;
+	s=default; t=1584623552;
+	bh=BSxw+pLw6st8V9vF81u25Ulzfsz8BRozPqj0a4IdzRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gZZYHQbXCYEpdvRQvPr0xA8PcWYjSq3/D7tvgm24MDXrDVZXkDzn1D/ni5U1xaObV
-	 qy9nJXXIw8nPTHeNnggsNOSykkYfa2lPZeV8gF76NNVTAti5Mi9XrjSE2DfFAlQWAU
-	 icVIg2dIGYg7nMiNr/rjWU73/WPjtaSNKCbJgVKo=
+	b=BAyfG5gcyzxKbiE62j47x/0rX0yKe4ntWXR6V0ar2g/URxfYk/8oBAq3fzMCHhh9h
+	 66F8x5AHYR0Fkx7LosnSuNCYuO9zx58Armv3KIrJt9o0cKRCmq9VXLnWpKKnMrxwl0
+	 hzYu4af1Ae7udMAElJ345lIRS31x5i90hLkVbA78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727306AbgCSNM3 (ORCPT
+        id S1728939AbgCSNMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58358 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:12:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728901AbgCSNM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:12:27 -0400
+        id S1728934AbgCSNMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:12:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B4A3215A4;
-        Thu, 19 Mar 2020 13:12:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB738214D8;
+        Thu, 19 Mar 2020 13:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623546;
-        bh=yz68c61gnGBkpldyJlxAypbhJtxqSMGYLCBceO05UoI=;
+        s=default; t=1584623549;
+        bh=BSxw+pLw6st8V9vF81u25Ulzfsz8BRozPqj0a4IdzRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g/z3rCk1M9sQL6cbqQ6qz5bjxKMNFIlMvc0d8JIBqM7leX17v+5CVy555kznl8cvB
-         mz+L6gaVRC3OE3VlMVvHdpdVaEQNAedG4rx0ZkW0GY/Nxuw4YPyyvGbmUKpxRHi4JP
-         ht+sTezjtoHZz66qqNXql5zHJmWNFlJfj3O62hbg=
+        b=LYay8miPLzepD9wlwuaU1UngBBo9BX4juVvJnkUEWMRgJ1yNlcGtpqzcq0k89MaqG
+         9ZlR7FHzHPSPEcIGhQPHv5n6LdxrRTR9SkVEwSVyvmunzITcoYMI8xBugTgcIqaLjL
+         nbAR//32TAzghWBPJ9BTJIk/8B99EnW/p9LUoS6U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alvaro Antelo <alvaro.antelo@gmail.com>,
-        Sven Eckelmann <sven@narfation.org>,
         Marek Lindner <mareklindner@neomailbox.ch>,
+        Sven Eckelmann <sven@narfation.org>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 56/90] batman-adv: Accept only filled wifi station info
-Date:   Thu, 19 Mar 2020 14:00:18 +0100
-Message-Id: <20200319123945.669377960@linuxfoundation.org>
+Subject: [PATCH 4.9 65/90] batman-adv: prevent TT request storms by not sending inconsistent TT TLVLs
+Date:   Thu, 19 Mar 2020 14:00:27 +0100
+Message-Id: <20200319123948.689283801@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -61,54 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Marek Lindner <mareklindner@neomailbox.ch>
 
-commit d62890885efbc48acea46964ea3af69b61c8c5eb upstream.
+commit 16116dac23396e73c01eeee97b102e4833a4b205 upstream.
 
-The wifi driver can decide to not provide parts of the station info. For
-example, the expected throughput of the station can be omitted when the
-used rate control doesn't provide this kind of information.
+A translation table TVLV changset sent with an OGM consists
+of a number of headers (one per VLAN) plus the changeset
+itself (addition and/or deletion of entries).
 
-The B.A.T.M.A.N. V implementation must therefore check the filled bitfield
-before it tries to access the expected_throughput of the returned
-station_info.
+The per-VLAN headers are used by OGM recipients for consistency
+checks. Said consistency check might determine that a full
+translation table request is needed to restore consistency. If
+the TT sender adds per-VLAN headers of empty VLANs into the OGM,
+recipients are led to believe to have reached an inconsistent
+state and thus request a full table update. The full table does
+not contain empty VLANs (due to missing entries) the cycle
+restarts when the next OGM is issued.
 
-Reported-by: Alvaro Antelo <alvaro.antelo@gmail.com>
-Fixes: c833484e5f38 ("batman-adv: ELP - compute the metric based on the estimated throughput")
+Consequently, when the translation table TVLV headers are
+composed, empty VLANs are to be excluded.
+
+Fixes: 21a57f6e7a3b ("batman-adv: make the TT CRC logic VLAN specific")
+Signed-off-by: Marek Lindner <mareklindner@neomailbox.ch>
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Reviewed-by: Marek Lindner <mareklindner@neomailbox.ch>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/bat_v_elp.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/batman-adv/translation-table.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
---- a/net/batman-adv/bat_v_elp.c
-+++ b/net/batman-adv/bat_v_elp.c
-@@ -19,6 +19,7 @@
- #include "main.h"
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -936,15 +936,20 @@ batadv_tt_prepare_tvlv_local_data(struct
+ 	struct batadv_tvlv_tt_vlan_data *tt_vlan;
+ 	struct batadv_softif_vlan *vlan;
+ 	u16 num_vlan = 0;
+-	u16 num_entries = 0;
++	u16 vlan_entries = 0;
++	u16 total_entries = 0;
+ 	u16 tvlv_len;
+ 	u8 *tt_change_ptr;
+ 	int change_offset;
  
- #include <linux/atomic.h>
-+#include <linux/bitops.h>
- #include <linux/byteorder/generic.h>
- #include <linux/errno.h>
- #include <linux/etherdevice.h>
-@@ -29,6 +30,7 @@
- #include <linux/kernel.h>
- #include <linux/kref.h>
- #include <linux/netdevice.h>
-+#include <linux/nl80211.h>
- #include <linux/random.h>
- #include <linux/rculist.h>
- #include <linux/rcupdate.h>
-@@ -102,6 +104,8 @@ static u32 batadv_v_elp_get_throughput(s
- 			}
- 			if (ret)
- 				goto default_throughput;
-+			if (!(sinfo.filled & BIT(NL80211_STA_INFO_EXPECTED_THROUGHPUT)))
-+				goto default_throughput;
+ 	spin_lock_bh(&bat_priv->softif_vlan_list_lock);
+ 	hlist_for_each_entry_rcu(vlan, &bat_priv->softif_vlan_list, list) {
++		vlan_entries = atomic_read(&vlan->tt.num_entries);
++		if (vlan_entries < 1)
++			continue;
++
+ 		num_vlan++;
+-		num_entries += atomic_read(&vlan->tt.num_entries);
++		total_entries += vlan_entries;
+ 	}
  
- 			return sinfo.expected_throughput / 100;
- 		}
+ 	change_offset = sizeof(**tt_data);
+@@ -952,7 +957,7 @@ batadv_tt_prepare_tvlv_local_data(struct
+ 
+ 	/* if tt_len is negative, allocate the space needed by the full table */
+ 	if (*tt_len < 0)
+-		*tt_len = batadv_tt_len(num_entries);
++		*tt_len = batadv_tt_len(total_entries);
+ 
+ 	tvlv_len = *tt_len;
+ 	tvlv_len += change_offset;
+@@ -969,6 +974,10 @@ batadv_tt_prepare_tvlv_local_data(struct
+ 
+ 	tt_vlan = (struct batadv_tvlv_tt_vlan_data *)(*tt_data + 1);
+ 	hlist_for_each_entry_rcu(vlan, &bat_priv->softif_vlan_list, list) {
++		vlan_entries = atomic_read(&vlan->tt.num_entries);
++		if (vlan_entries < 1)
++			continue;
++
+ 		tt_vlan->vid = htons(vlan->vid);
+ 		tt_vlan->crc = htonl(vlan->tt.crc);
+ 
 
 
