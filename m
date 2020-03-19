@@ -2,38 +2,39 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46690C43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF5DC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7AE20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFFB22072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgCSPHl (ORCPT
+        id S1727857AbgCSPIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:07:41 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:5879 "EHLO
+        Thu, 19 Mar 2020 11:08:44 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:5928 "EHLO
         esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728308AbgCSPHi (ORCPT
+        with ESMTP id S1726912AbgCSPIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:07:38 -0400
-IronPort-SDR: wRSxf5HblxQ9NwYT/GBjzJCJSrEAZwQ4Iowek5/+9BCDrc2NvG2QbPk8z1QxzoXLDHdUSSWRnt
- dMhfHe3raYTp6xhHOkeOb59vcD7W4fE+Xgbm7JeNExuwEl5kV3qTNnizJDnMrUzyuEm5me7PIa
- DkRGXNAmEHrPN7gpzaIxkenK84ij7+L407lRod24ryhFNoPjqKAsQPRT9ojO/SoqivZJgTxYHe
- z4sJzbZykPn63FzMJPKbGaPrqe/xwRaSTW7CBdRmvlCYbaYbAvyrh6CW0bpOPee0rvPKzVwegc
- /t0=
+        Thu, 19 Mar 2020 11:08:44 -0400
+IronPort-SDR: mX/mF8i9E4LParg3Cw+l34119zw9wzWI7U/RAfLBA3H0gcpX4tGtvHTowLGUxFVpqNyy2OvTXf
+ AibtdvNaS8v1QkN1M0XdcxGJxm7pk9/+4jO2XKdElA/5XAnR2PzXHQlCPtHw9K5TfNFKAY6quB
+ oOlTHZFW2kBE3Gesyg/oeTwOk0gqwSeQ8CDWKRZ8/p7A5DHIntvtYr795jEXrHzjwUZq1tFIrg
+ 1chzlYkAv4JHYOFO7mSNrsj1rB5vQcfiGJ+hkydKsThXXsUGVko+llw0qL//EdcV2GKVn6/mbg
+ /e0=
 X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="46926665"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa4.mentor.iphmx.com with ESMTP; 19 Mar 2020 07:00:30 -0800
-IronPort-SDR: NX7S6w1EKKo/U3RM91oBUeld1qZA4Yij+7/9LBJlrVgADf2aaDkglnKrMJUcfY8tFeTqqoupC6
- EK6GtAjnKz1u1CxqDDFENYlQMeozI721oQkkkN7pqd33N4ava0QCCf5fsaGum6E/xkrQKb94DM
- y3d5FQBl9Pft6URIM2lk1RPfzizNbTFhjyjr5psVBo3RWQlg6SSoaHhDsTqpJyrKcq1i58K1mG
- Pdz4kp/8eQUwCDKBh5h2zxv6UyGHjXehxry5csji+2a8rkTXzucNhp6JHycQiWvdyd6EaW9qKN
- g6E=
+   d="scan'208";a="46926777"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa4.mentor.iphmx.com with ESMTP; 19 Mar 2020 07:01:17 -0800
+IronPort-SDR: 8cp5apIWSgCOeGSuyZn0SAWGtSTO2dfEkughUIyAl9Ip2uIsINXEY97MAdqgjsUNPbkiNXhRm4
+ sr3ekubsGnbh5xTPO3+lp0zPo6gVhVaT9tA4X2AYfZGBg2liiQxgbNVj6+Oi5klnbCpdayLP3q
+ k8S7b0aCMiSEtNMtP2sDAs4w1R1KUY2N2VLkA01s+pCYPBWXkxp+TKxfepi1wapg7QTfszcL3d
+ 1G1uRxuJ/wDWzbYCj/+9sgDOLDD6+9VkDGCehBGRQeU2EN1nLdZfYfVBbkJOKjMHGhft5OO/6+
+ j1c=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
         <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
@@ -41,9 +42,9 @@ To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
         <jiada_wang@mentor.com>
-Subject: [PATCH v8 02/52] Input: atmel_mxt_ts - rework sysfs init/remove
-Date:   Thu, 19 Mar 2020 07:59:26 -0700
-Message-ID: <20200319150016.61398-3-jiada_wang@mentor.com>
+Subject: [PATCH v8 14/52] dt-bindings: input: atmel: add suspend mode support
+Date:   Thu, 19 Mar 2020 07:59:38 -0700
+Message-ID: <20200319150016.61398-15-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319150016.61398-1-jiada_wang@mentor.com>
 References: <20200319150016.61398-1-jiada_wang@mentor.com>
@@ -54,166 +55,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+Add suspend mode support for atmel touchscreen driver
 
-An error in the sysfs init may otherwise interfere with the async return
-from the firmware loader
-
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit 3114584ae77c2b03b6dad87174f010d002e9c05d)
-[gdavis: Forward port and fixup conflicts. Also fixed sysfs leaks in
-	 both the mxt_initialize() and mxt_probe() error return cases.]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: keep call mxt_initialize() before sysfs creation
-	replace S_IWUSR with 0200]
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 64 +++++++++++++++++++-----
- 1 file changed, 52 insertions(+), 12 deletions(-)
+ .../bindings/input/atmel,maxtouch.txt         |  6 +++++
+ MAINTAINERS                                   |  1 +
+ include/dt-bindings/input/atmel_mxt_ts.h      | 23 +++++++++++++++++++
+ 3 files changed, 30 insertions(+)
+ create mode 100644 include/dt-bindings/input/atmel_mxt_ts.h
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index a2189739e30f..49bdf5cf3a0d 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -2086,10 +2086,14 @@ static int mxt_initialize_input_device(struct mxt_data *data)
- 	return 0;
+diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+index c88919480d37..e28139ce3cae 100644
+--- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
++++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+@@ -31,6 +31,12 @@ Optional properties for main touchpad device:
  
- err_free_mem:
-+	data->input_dev = NULL;
- 	input_free_device(input_dev);
- 	return error;
- }
+ - reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
  
-+static int mxt_sysfs_init(struct mxt_data *data);
-+static void mxt_sysfs_remove(struct mxt_data *data);
++- atmel,suspend-mode: Select method used to suspend:
++    MXT_SUSPEND_DEEP_SLEEP - use T7 to suspend the device into deep sleep
++    MXT_SUSPEND_T9_CTRL - use T9.CTRL to turn off touch processing
++    MXT_SUSPEND_REGULATOR - use regulators to power down device during suspend
++    Definitions are in <dt-bindings/input/atmel_mxt_ts.h>.
 +
- static int mxt_configure_objects(struct mxt_data *data,
- 				 const struct firmware *cfg);
+ Example:
  
-@@ -2141,16 +2145,24 @@ static int mxt_initialize(struct mxt_data *data)
- 	if (error)
- 		return error;
+ 	touch@4b {
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e48ab79879ac..350ae664e6f0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2873,6 +2873,7 @@ T:	git git://github.com/ndyer/linux.git
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+ F:	drivers/input/touchscreen/atmel_mxt_ts.c
++F:	include/dt-bindings/input/atmel_mxt_ts.h
  
-+	error = mxt_sysfs_init(data);
-+	if (error)
-+		return error;
+ ATMEL WIRELESS DRIVER
+ M:	Simon Kelley <simon@thekelleys.org.uk>
+diff --git a/include/dt-bindings/input/atmel_mxt_ts.h b/include/dt-bindings/input/atmel_mxt_ts.h
+new file mode 100644
+index 000000000000..41ed0f8111aa
+--- /dev/null
++++ b/include/dt-bindings/input/atmel_mxt_ts.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Atmel maXTouch Touchscreen driver
++ *
++ * Copyright (C) 2015 Atmel Corporation
++ * Author: Nick Dyer <nick.dyer@itdev.co.uk>
++ *
++ * This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the  License, or (at your
++ * option) any later version.
++ */
 +
- 	error = request_firmware_nowait(THIS_MODULE, true, MXT_CFG_NAME,
- 					&client->dev, GFP_KERNEL, data,
- 					mxt_config_cb);
- 	if (error) {
- 		dev_err(&client->dev, "Failed to invoke firmware loader: %d\n",
- 			error);
--		return error;
-+		goto err_free_sysfs;
- 	}
- 
- 	return 0;
++#ifndef __DT_BINDINGS_ATMEL_MXT_TS_H
++#define __DT_BINDINGS_ATMEL_MXT_TS_H
 +
-+err_free_sysfs:
-+	mxt_sysfs_remove(data);
-+	return error;
- }
- 
- static int mxt_set_t7_power_cfg(struct mxt_data *data, u8 sleep)
-@@ -2803,6 +2815,7 @@ static int mxt_load_fw(struct device *dev, const char *fn)
- 		if (ret)
- 			goto release_firmware;
- 
-+		mxt_sysfs_remove(data);
- 		mxt_free_input_device(data);
- 		mxt_free_object_table(data);
- 	} else {
-@@ -2909,16 +2922,25 @@ static ssize_t mxt_update_fw_store(struct device *dev,
- 	return count;
- }
- 
-+static DEVICE_ATTR(update_fw, 0200, NULL, mxt_update_fw_store);
-+
-+static struct attribute *mxt_fw_attrs[] = {
-+	&dev_attr_update_fw.attr,
-+	NULL
++enum mxt_suspend_mode {
++	MXT_SUSPEND_DEEP_SLEEP = 0,
++	MXT_SUSPEND_T9_CTRL = 1,
++	MXT_SUSPEND_REGULATOR = 2,
 +};
 +
-+static const struct attribute_group mxt_fw_attr_group = {
-+	.attrs = mxt_fw_attrs,
-+};
-+
- static DEVICE_ATTR(fw_version, S_IRUGO, mxt_fw_version_show, NULL);
- static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
- static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
--static DEVICE_ATTR(update_fw, S_IWUSR, NULL, mxt_update_fw_store);
- 
- static struct attribute *mxt_attrs[] = {
- 	&dev_attr_fw_version.attr,
- 	&dev_attr_hw_version.attr,
- 	&dev_attr_object.attr,
--	&dev_attr_update_fw.attr,
- 	NULL
- };
- 
-@@ -2926,6 +2948,28 @@ static const struct attribute_group mxt_attr_group = {
- 	.attrs = mxt_attrs,
- };
- 
-+static int mxt_sysfs_init(struct mxt_data *data)
-+{
-+	struct i2c_client *client = data->client;
-+	int error;
-+
-+	error = sysfs_create_group(&client->dev.kobj, &mxt_attr_group);
-+	if (error) {
-+		dev_err(&client->dev, "Failure %d creating sysfs group\n",
-+			error);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+
-+static void mxt_sysfs_remove(struct mxt_data *data)
-+{
-+	struct i2c_client *client = data->client;
-+
-+	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
-+}
-+
- static void mxt_start(struct mxt_data *data)
- {
- 	switch (data->suspend_mode) {
-@@ -3112,19 +3156,14 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	if (error)
- 		return error;
- 
--	error = sysfs_create_group(&client->dev.kobj, &mxt_attr_group);
-+	error = sysfs_create_group(&client->dev.kobj, &mxt_fw_attr_group);
- 	if (error) {
--		dev_err(&client->dev, "Failure %d creating sysfs group\n",
-+		dev_err(&client->dev, "Failure %d creating fw sysfs group\n",
- 			error);
--		goto err_free_object;
-+		return error;
- 	}
- 
- 	return 0;
--
--err_free_object:
--	mxt_free_input_device(data);
--	mxt_free_object_table(data);
--	return error;
- }
- 
- static int mxt_remove(struct i2c_client *client)
-@@ -3132,7 +3171,8 @@ static int mxt_remove(struct i2c_client *client)
- 	struct mxt_data *data = i2c_get_clientdata(client);
- 
- 	disable_irq(data->irq);
--	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
-+	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
-+	mxt_sysfs_remove(data);
- 	mxt_free_input_device(data);
- 	mxt_free_object_table(data);
- 
++#endif /* __DT_BINDINGS_ATMEL_MXT_TS_H */
 -- 
 2.17.1
 
