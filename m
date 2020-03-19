@@ -2,126 +2,127 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A7FC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8D9C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78ED2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FED22071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:53:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ErnQEsiJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgCSLw4 (ORCPT
+        id S1727253AbgCSLxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 07:52:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45050 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSLw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 07:52:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 41949ACEF;
-        Thu, 19 Mar 2020 11:52:52 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org,
-        "linux-fsdevel @ vger . kernel . org --in-reply-to=" 
-        <20200225173541.1549955-1-npiggin@gmail.com>
-Subject: [PATCH v11 1/8] powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
-Date:   Thu, 19 Mar 2020 12:52:21 +0100
-Message-Id: <9c35e5b04213a0fcd55458271d58e203e5bc3486.1584613649.git.msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1584613649.git.msuchanek@suse.de>
-References: <cover.1584613649.git.msuchanek@suse.de>
+        Thu, 19 Mar 2020 07:53:39 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:53610 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726765AbgCSLxi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 07:53:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584618817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=oXSDVbAEHWUnwLZgdo0+1RA3BdMgsrd4QkpoIWfyKRM=;
+        b=ErnQEsiJ8MmO7xzgKdvsMHFSn52OazDxgPWEiWHgmNFCH3qE0aWnzNfQErA2moeAEV+bLw
+        +mqaiUecPNFf2noL7CAU6AyNJ+AGGyWF6PTJBitUBIj3AbWL8ZTgySsc0b4mbpbm0QBSA7
+        o43nk36+Kead54ekTpcdWyRM1wpocpI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-69-CnL5eWaPNJeevBlU9R1ydg-1; Thu, 19 Mar 2020 07:53:32 -0400
+X-MC-Unique: CnL5eWaPNJeevBlU9R1ydg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45CD0800D5A;
+        Thu, 19 Mar 2020 11:53:31 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8182994945;
+        Thu, 19 Mar 2020 11:53:30 +0000 (UTC)
+Subject: [PATCH net 0/6] rxrpc, afs: Interruptibility fixes
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 19 Mar 2020 11:53:29 +0000
+Message-ID: <158461880968.3094720.5019510060910604912.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.21
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This partially reverts commit caf6f9c8a326 ("asm-generic: Remove
-unneeded __ARCH_WANT_SYS_LLSEEK macro")
 
-When CONFIG_COMPAT is disabled on ppc64 the kernel does not build.
+Here are a number of fixes for AF_RXRPC and AFS that make AFS system calls
+less interruptible and so less likely to leave the filesystem in an
+uncertain state.  There's also a miscellaneous patch to make tracing
+consistent.
 
-There is resistance to both removing the llseek syscall from the 64bit
-syscall tables and building the llseek interface unconditionally.
+ (1) Firstly, abstract out the Tx space calculation in sendmsg.  Much the
+     same code is replicated in a number of places that subsequent patches
+     are going to alter, including adding another copy.
 
-Link: https://lore.kernel.org/lkml/20190828151552.GA16855@infradead.org/
-Link: https://lore.kernel.org/lkml/20190829214319.498c7de2@naga/
+ (2) Fix Tx interruptibility by allowing a kernel service, such as AFS, to
+     request that a call be interruptible only when waiting for a call slot
+     to become available (ie. the call has not taken place yet) or that a
+     call be not interruptible at all (e.g. when we want to do writeback
+     and don't want a signal interrupting a VM-induced writeback).
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+ (3) Increase the minimum delay on MSG_WAITALL for userspace sendmsg() when
+     waiting for Tx buffer space as a 2*RTT delay is really small over 10G
+     ethernet and a 1 jiffy timeout might be essentially 0 if at the end of
+     the jiffy period.
+
+ (4) Fix some tracing output in AFS to make it consistent with rxrpc.
+
+ (5) Make sure aborted asynchronous AFS operations are tidied up properly
+     so we don't end up with stuck rxrpc calls.
+
+ (6) Make AFS client calls uninterruptible in the Rx phase.  If we don't
+     wait for the reply to be fully gathered, we can't update the local VFS
+     state and we end up in an indeterminate state with respect to the
+     server.
+
+The patches are tagged here:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+	rxrpc-fixes-20200319
+
+and can also be found on the following branch:
+
+	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-fixes
+
+David
 ---
-v7: new patch
----
- arch/powerpc/include/asm/unistd.h | 1 +
- fs/read_write.c                   | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+David Howells (6):
+      rxrpc: Abstract out the calculation of whether there's Tx space
+      rxrpc: Fix call interruptibility handling
+      rxrpc: Fix sendmsg(MSG_WAITALL) handling
+      afs: Fix some tracing details
+      afs: Fix handling of an abort from a service handler
+      afs: Fix client call Rx-phase signal handling
 
-diff --git a/arch/powerpc/include/asm/unistd.h b/arch/powerpc/include/asm/unistd.h
-index b0720c7c3fcf..700fcdac2e3c 100644
---- a/arch/powerpc/include/asm/unistd.h
-+++ b/arch/powerpc/include/asm/unistd.h
-@@ -31,6 +31,7 @@
- #define __ARCH_WANT_SYS_SOCKETCALL
- #define __ARCH_WANT_SYS_FADVISE64
- #define __ARCH_WANT_SYS_GETPGRP
-+#define __ARCH_WANT_SYS_LLSEEK
- #define __ARCH_WANT_SYS_NICE
- #define __ARCH_WANT_SYS_OLD_GETRLIMIT
- #define __ARCH_WANT_SYS_OLD_UNAME
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 59d819c5b92e..bbfa9b12b15e 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -331,7 +331,8 @@ COMPAT_SYSCALL_DEFINE3(lseek, unsigned int, fd, compat_off_t, offset, unsigned i
- }
- #endif
- 
--#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT)
-+#if !defined(CONFIG_64BIT) || defined(CONFIG_COMPAT) || \
-+	defined(__ARCH_WANT_SYS_LLSEEK)
- SYSCALL_DEFINE5(llseek, unsigned int, fd, unsigned long, offset_high,
- 		unsigned long, offset_low, loff_t __user *, result,
- 		unsigned int, whence)
--- 
-2.23.0
+
+ fs/afs/cmservice.c         |   14 +++++++-
+ fs/afs/internal.h          |   12 ++++++-
+ fs/afs/rxrpc.c             |   74 ++++++-------------------------------------
+ include/net/af_rxrpc.h     |   12 +++++--
+ include/trace/events/afs.h |    2 +
+ net/rxrpc/af_rxrpc.c       |   37 +++-------------------
+ net/rxrpc/ar-internal.h    |    5 +--
+ net/rxrpc/call_object.c    |    3 +-
+ net/rxrpc/conn_client.c    |   13 ++++++--
+ net/rxrpc/input.c          |    1 -
+ net/rxrpc/sendmsg.c        |   75 +++++++++++++++++++++++++++++++++-----------
+ 11 files changed, 115 insertions(+), 133 deletions(-)
+
 
