@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E28C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71A4C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67CFE214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77316208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624252;
-	bh=vwFQSTRGBXIuEHRlKDxDsMBN5Lx7bJ4941rvcPOxF5M=;
+	s=default; t=1584624255;
+	bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zJheScp0M2AOrn60hGL3O8T3Fe6z2/f/E9cSIQRTJUJwxCHGlnm9ILgU/sKe6ryDq
-	 QaFhr1O/d8VKmllP5ypcf1VwRuCj4kUqIMM3rI0cHF7+DemW/xmEduWan+ZjyIiZ9j
-	 PHSmixssXQlWIstsMcjQaiHu+8/YMzYxggLDlacU=
+	b=qsOVHCSs3s/YA/88M5QJFy+LHU+RT3OFhEr1W71YmmGb75ei6VB4uwLIYbmQVvnNM
+	 RFAj2X81RB+ef59bytlMrniqno+qp5qPMDSxIJHs9ZCXTq70zVrj7L2sX8RkwMPH7n
+	 ct3PFwnCb5W7CnIyb3D/dNTczL34fkA7c9GZLok0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgCSNYL (ORCPT
+        id S1730430AbgCSNYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:24:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50598 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:24:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728912AbgCSNYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:24:08 -0400
+        id S1730420AbgCSNYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:24:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD6D7206D7;
-        Thu, 19 Mar 2020 13:24:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4AA320724;
+        Thu, 19 Mar 2020 13:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624248;
-        bh=vwFQSTRGBXIuEHRlKDxDsMBN5Lx7bJ4941rvcPOxF5M=;
+        s=default; t=1584624244;
+        bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bay4tKsJNuKzWzMWXxBcz1nuvLaiPWhv5fY7x1Q5ytEbyftrEtD+3vevebHUwTE88
-         qJ5UHj83It4f7MHwDTmIWU/QQ7YNOsEgUOfVgmevvCf6sIk5nAQPZNlba86hBI5FuV
-         rH95qlncwceWMu+6AsnKyA1W3Pf2O88dS0qbFXnw=
+        b=nr/M2Gg8cnklsckswGMi06MtUP/Rs+v5icJq0zbf9ZS+O5nJt/LEerFqORSVcCiOI
+         fvC80zrpV5tnOW/G9Bo9Zz7CfhJv8V0aQwG/uCs4VQwvun+5bWd6aOrXzG6bKPO1G5
+         bQWWUe5iuvw6wnumKU5BhqkMx+S0kfs5IGwQYPjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Hanno Zulla <kontakt@hanno.de>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 49/60] net: rmnet: fix packet forwarding in rmnet bridge mode
-Date:   Thu, 19 Mar 2020 14:04:27 +0100
-Message-Id: <20200319123934.996521463@linuxfoundation.org>
+Subject: [PATCH 5.4 18/60] HID: hid-bigbenff: call hid_hw_stop() in case of error
+Date:   Thu, 19 Mar 2020 14:03:56 +0100
+Message-Id: <20200319123924.935663763@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -60,59 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Hanno Zulla <kontakt@hanno.de>
 
-[ Upstream commit ad3cc31b599ea80f06b29ebdc18b3a39878a48d6 ]
+[ Upstream commit 976a54d0f4202cb412a3b1fc7f117e1d97db35f3 ]
 
-Packet forwarding is not working in rmnet bridge mode.
-Because when a packet is forwarded, skb_push() for an ethernet header
-is needed. But it doesn't call skb_push().
-So, the ethernet header will be lost.
+It's required to call hid_hw_stop() once hid_hw_start() was called
+previously, so error cases need to handle this. Also, hid_hw_close() is
+not necessary during removal.
 
-Test commands:
-    modprobe rmnet
-    ip netns add nst
-    ip netns add nst2
-    ip link add veth0 type veth peer name veth1
-    ip link add veth2 type veth peer name veth3
-    ip link set veth1 netns nst
-    ip link set veth3 netns nst2
-
-    ip link add rmnet0 link veth0 type rmnet mux_id 1
-    ip link set veth2 master rmnet0
-    ip link set veth0 up
-    ip link set veth2 up
-    ip link set rmnet0 up
-    ip a a 192.168.100.1/24 dev rmnet0
-
-    ip netns exec nst ip link set veth1 up
-    ip netns exec nst ip a a 192.168.100.2/24 dev veth1
-    ip netns exec nst2 ip link set veth3 up
-    ip netns exec nst2 ip a a 192.168.100.3/24 dev veth3
-    ip netns exec nst2 ping 192.168.100.2
-
-Fixes: 60d58f971c10 ("net: qualcomm: rmnet: Implement bridge mode")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hanno Zulla <kontakt@hanno.de>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hid/hid-bigbenff.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-index 074a8b326c304..29a7bfa2584dc 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_handlers.c
-@@ -159,6 +159,9 @@ static int rmnet_map_egress_handler(struct sk_buff *skb,
- static void
- rmnet_bridge_handler(struct sk_buff *skb, struct net_device *bridge_dev)
- {
-+	if (skb_mac_header_was_set(skb))
-+		skb_push(skb, skb->mac_len);
+diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
+index f7e85bacb6889..f8c552b64a899 100644
+--- a/drivers/hid/hid-bigbenff.c
++++ b/drivers/hid/hid-bigbenff.c
+@@ -305,7 +305,6 @@ static void bigben_remove(struct hid_device *hid)
+ 	struct bigben_device *bigben = hid_get_drvdata(hid);
+ 
+ 	cancel_work_sync(&bigben->worker);
+-	hid_hw_close(hid);
+ 	hid_hw_stop(hid);
+ }
+ 
+@@ -350,7 +349,7 @@ static int bigben_probe(struct hid_device *hid,
+ 	error = input_ff_create_memless(hidinput->input, NULL,
+ 		hid_bigben_play_effect);
+ 	if (error)
+-		return error;
++		goto error_hw_stop;
+ 
+ 	name_sz = strlen(dev_name(&hid->dev)) + strlen(":red:bigben#") + 1;
+ 
+@@ -360,8 +359,10 @@ static int bigben_probe(struct hid_device *hid,
+ 			sizeof(struct led_classdev) + name_sz,
+ 			GFP_KERNEL
+ 		);
+-		if (!led)
+-			return -ENOMEM;
++		if (!led) {
++			error = -ENOMEM;
++			goto error_hw_stop;
++		}
+ 		name = (void *)(&led[1]);
+ 		snprintf(name, name_sz,
+ 			"%s:red:bigben%d",
+@@ -375,7 +376,7 @@ static int bigben_probe(struct hid_device *hid,
+ 		bigben->leds[n] = led;
+ 		error = devm_led_classdev_register(&hid->dev, led);
+ 		if (error)
+-			return error;
++			goto error_hw_stop;
+ 	}
+ 
+ 	/* initial state: LED1 is on, no rumble effect */
+@@ -389,6 +390,10 @@ static int bigben_probe(struct hid_device *hid,
+ 	hid_info(hid, "LED and force feedback support for BigBen gamepad\n");
+ 
+ 	return 0;
 +
- 	if (bridge_dev) {
- 		skb->dev = bridge_dev;
- 		dev_queue_xmit(skb);
++error_hw_stop:
++	hid_hw_stop(hid);
++	return error;
+ }
+ 
+ static __u8 *bigben_report_fixup(struct hid_device *hid, __u8 *rdesc,
 -- 
 2.20.1
 
