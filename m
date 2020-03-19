@@ -2,172 +2,170 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F78C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66778C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E8E820789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624968;
-	bh=jJUYZqV0w3aihbIA7hyyPBRaBtdQxZjgWV0UghJS45A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vf5Fb3vmkN4/sOwIGy7ZxokkxGBuV5UYzlHwLRlvSETV+Yz9pia0iMWbRFjrNRKiW
-	 aOf9ZLFObOjiJODxHJ3+PPcSkT/0vmkBw+2J4xLDxClYPuEzNx0DssX24w0OaZpxEi
-	 tSWZ72IHXW2wA7c5pnDyf2ttqd2GmmsMqIo9iufI=
+	by mail.kernel.org (Postfix) with ESMTP id 2E00A20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fSS2rSdj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgCSNK2 (ORCPT
+        id S1727697AbgCSNgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:10:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728523AbgCSNKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:10:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35BD42145D;
-        Thu, 19 Mar 2020 13:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623424;
-        bh=jJUYZqV0w3aihbIA7hyyPBRaBtdQxZjgWV0UghJS45A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0FOeEtJs76t7XEdYrIwmdExM5I45L3UqIJeVuQaJNmH5M55nxba1sAXgouPLG8yHT
-         SEyr4G0Z7YWHdBmF8St1RbchUllkFn2GSA9eXMIdCT88bDTQZlaEoYiqmRm1Y9fGmH
-         pAreSulcALere09tgP4mS6SxZ2x5puxCIikTXYdk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, You-Sheng Yang <vicamo.yang@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 09/90] r8152: check disconnect status after long sleep
-Date:   Thu, 19 Mar 2020 13:59:31 +0100
-Message-Id: <20200319123931.564917852@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
-References: <20200319123928.635114118@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 19 Mar 2020 09:36:10 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:26866 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727471AbgCSNgH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:36:07 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200319133605epoutp03035693fa01ad52d33ad6a2e13cf8d146~9uAKSrzCA3266532665epoutp03M
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 13:36:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200319133605epoutp03035693fa01ad52d33ad6a2e13cf8d146~9uAKSrzCA3266532665epoutp03M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1584624965;
+        bh=4FL33iP/jwSsQW96+6AWrtYIL4nfSj8zvnMw8LCMztg=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=fSS2rSdjXhxn6oNDINfpNeqFPOv54i7eXTlabPA9wFEWUeYjpMCDrE/xOL5Ka4F0c
+         2Ofbp0cNVzjWgzBUJwQWn5/sxBt4HxwEa6gVyVgeTkj57F9AqS+203/amPEIAobaiq
+         EqQ+7vR2Lj0VOiygkPQWo0bIWyi5JMJijmeOenxs=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200319133604epcas5p3dbbb7941cdd45bee37c4c1caa320016b~9uAJzbOTa1621316213epcas5p3E;
+        Thu, 19 Mar 2020 13:36:04 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        83.AF.04778.445737E5; Thu, 19 Mar 2020 22:36:04 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200319133603epcas5p294d8a6f404e5d168d75cfa6861e393e3~9uAJGi74l1782517825epcas5p2p;
+        Thu, 19 Mar 2020 13:36:03 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200319133603epsmtrp20dd7c56c4edec8817d0b58191b050767~9uAJFqWh63159731597epsmtrp2N;
+        Thu, 19 Mar 2020 13:36:03 +0000 (GMT)
+X-AuditID: b6c32a4a-353ff700000012aa-b1-5e73754435e2
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        13.C4.04024.345737E5; Thu, 19 Mar 2020 22:36:03 +0900 (KST)
+Received: from sriramdash03 (unknown [107.111.85.15]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200319133602epsmtip10df7c703058970433bc7f58b98daa829~9uAIAvU692963729637epsmtip1Y;
+        Thu, 19 Mar 2020 13:36:02 +0000 (GMT)
+From:   "Sriram Dash" <sriram.dash@samsung.com>
+To:     "'Shradha Todi'" <shradha.t@samsung.com>, <kishon@ti.com>
+Cc:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <pankaj.dubey@samsung.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200311102852.5207-1-shradha.t@samsung.com>
+Subject: RE: [PATCH] PCI: endpoint: Fix NULL pointer dereference for
+ ->get_features()
+Date:   Thu, 19 Mar 2020 19:06:01 +0530
+Message-ID: <000d01d5fdf3$55d43af0$017cb0d0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIRa+BXjMtyeVOz/ELce4dgT57WJwIqUA0mp8e8EHA=
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7bCmhq5LaXGcwdVHihZLmjIsLjztYbO4
+        vGsOm8XZecfZLN78fsFusWjrF3aL3sO1Duwea+atYfRYsKnUo2/LKkaP4ze2M3l83iQXwBrF
+        ZZOSmpNZllqkb5fAldGz+wJbwTKBio/LfrE1ML7m7WLk5JAQMJF4OusPUxcjF4eQwG5Gie6n
+        t9ghnE+MEvduPWOBcL4xSjT/esUK0/JpZQdUYi+jxNQVG1ghnFeMEuu75jGDVLEJ6EqcvdHE
+        BmKLCNhKLN84H2wus8BkRokby3+xgyQ4BawkOvqngTUIC4RLrJh/kxHEZhFQlfh/4jYLiM0r
+        YCkxb/tRVghbUOLkzCdgcWYBbYllC18zQ5ykIPHz6TJWiGVWEhOX3GWDqBGXOPqzhxlksYTA
+        czaJ32+/M0E0uEhsbzwBZQtLvDq+hR3ClpL4/G4vG4SdLXG57znUghKJGa8WskDY9hIHrswB
+        sjmAFmhKrN+lD7GLT6L39xMmkLCEAK9ER5sQRLWqxKvbm6GmS0scWHsaaquHxNcJF5gmMCrO
+        QvLZLCSfzULywSyEZQsYWVYxSqYWFOempxabFhjlpZbrFSfmFpfmpesl5+duYgQnIS2vHYzL
+        zvkcYhTgYFTi4V2wpihOiDWxrLgy9xCjBAezkgivbnpxnBBvSmJlVWpRfnxRaU5q8SFGaQ4W
+        JXHeSaxXY4QE0hNLUrNTUwtSi2CyTBycUg2M+gHPp+5aecx8QZtgcMeuJ2zPG2c/6O5l9Td6
+        8Mj9dXK+VqPvm0libD1SKrI5Oxd4rBfbuUJuQqdZ79ot86xu17zY2r46t36V98o6qfK9/oks
+        Gf+n9v+JO9iyxaT2yI0PDzLEK1/6blxyK8ika9eZOO+iqAuRrTPMNylOjuD6zGpdkSDONqVH
+        iaU4I9FQi7moOBEACSYjbz4DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjkeLIzCtJLcpLzFFi42LZdlhJTte5tDjOYE6LnsWSpgyLC0972Cwu
+        75rDZnF23nE2ize/X7BbLNr6hd2i93CtA7vHmnlrGD0WbCr16NuyitHj+I3tTB6fN8kFsEZx
+        2aSk5mSWpRbp2yVwZWzf0cte0CRQ8ebkN6YGxuO8XYycHBICJhKfVnawdDFycQgJ7GaUeLGj
+        n7GLkQMoIS3x864uRI2wxMp/z9khal4wSszq+sAGkmAT0JU4e6MJzBYRsJd4MWMjK0gRs8B0
+        Rom2LbOhOroZJXYsWQ9WxSlgJdHRP40ZxBYWCJX42DaVFcRmEVCV+H/iNguIzStgKTFv+1FW
+        CFtQ4uTMJ2BxZgFtid6HrYww9rKFr5khzlOQ+Pl0GSvEFVYSE5fcZYOoEZc4+rOHeQKj8Cwk
+        o2YhGTULyahZSFoWMLKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvXS87P3cQIjiUtzR2Ml5fE
+        H2IU4GBU4uH1WFUUJ8SaWFZcmXuIUYKDWUmEVze9OE6INyWxsiq1KD++qDQntfgQozQHi5I4
+        79O8Y5FCAumJJanZqakFqUUwWSYOTqkGxtD++Ueudz1imOohe1Bi0suO+5Y9DEp3P5ry54ap
+        7/8X15/VvUm4gLX0vU35kcSQVwzZ05izpUVYeVXXuBgqJ2pznbW7urZN4I5bxLdXZhr8EkpF
+        u49Fcp1cudp0U8Ijpbw0VnmzjufCm3U37G09fDLtHe+axJvxUnoHUq+dXLd7cfaBJ/VTlViK
+        MxINtZiLihMB8/g/J6ECAAA=
+X-CMS-MailID: 20200319133603epcas5p294d8a6f404e5d168d75cfa6861e393e3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132
+References: <CGME20200311103443epcas5p2e97b8f3a8e52dc6f02eb551e0c97f132@epcas5p2.samsung.com>
+        <20200311102852.5207-1-shradha.t@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: You-Sheng Yang <vicamo.yang@canonical.com>
+> From: Shradha Todi <shradha.t=40samsung.com>
+> Subject: =5BPATCH=5D PCI: endpoint: Fix NULL pointer dereference for -
+> >get_features()
+>=20
+> get_features ops of pci_epc_ops may return NULL, causing NULL pointer
+> dereference in pci_epf_test_bind function. Let us add a check for
+> pci_epc_feature pointer in pci_epf_test_bind before we access it to avoid=
+ any
+> such NULL pointer dereference and return -ENOTSUPP in case pci_epc_featur=
+e
+> is not found.
+>=20
+> Reviewed-by: Pankaj Dubey <pankaj.dubey=40samsung.com>
+> Signed-off-by: Sriram Dash <sriram.dash=40samsung.com>
+> Signed-off-by: Shradha Todi <shradha.t=40samsung.com>
+> ---
 
-[ Upstream commit d64c7a08034b32c285e576208ae44fc3ba3fa7df ]
+Hi Kishon,
 
-Dell USB Type C docking WD19/WD19DC attaches additional peripherals as:
+Any update on this?
 
-  /: Bus 02.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/6p, 5000M
-      |__ Port 1: Dev 11, If 0, Class=Hub, Driver=hub/4p, 5000M
-          |__ Port 3: Dev 12, If 0, Class=Hub, Driver=hub/4p, 5000M
-          |__ Port 4: Dev 13, If 0, Class=Vendor Specific Class,
-              Driver=r8152, 5000M
 
-where usb 2-1-3 is a hub connecting all USB Type-A/C ports on the dock.
-
-When hotplugging such dock with additional usb devices already attached on
-it, the probing process may reset usb 2.1 port, therefore r8152 ethernet
-device is also reset. However, during r8152 device init there are several
-for-loops that, when it's unable to retrieve hardware registers due to
-being disconnected from USB, may take up to 14 seconds each in practice,
-and that has to be completed before USB may re-enumerate devices on the
-bus. As a result, devices attached to the dock will only be available
-after nearly 1 minute after the dock was plugged in:
-
-  [ 216.388290] [250] r8152 2-1.4:1.0: usb_probe_interface
-  [ 216.388292] [250] r8152 2-1.4:1.0: usb_probe_interface - got id
-  [ 258.830410] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): PHY not ready
-  [ 258.830460] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Invalid header when reading pass-thru MAC addr
-  [ 258.830464] r8152 2-1.4:1.0 (unnamed net_device) (uninitialized): Get ether addr fail
-
-This happens in, for example, r8153_init:
-
-  static int generic_ocp_read(struct r8152 *tp, u16 index, u16 size,
-			    void *data, u16 type)
-  {
-    if (test_bit(RTL8152_UNPLUG, &tp->flags))
-      return -ENODEV;
-    ...
-  }
-
-  static u16 ocp_read_word(struct r8152 *tp, u16 type, u16 index)
-  {
-    u32 data;
-    ...
-    generic_ocp_read(tp, index, sizeof(tmp), &tmp, type | byen);
-
-    data = __le32_to_cpu(tmp);
-    ...
-    return (u16)data;
-  }
-
-  static void r8153_init(struct r8152 *tp)
-  {
-    ...
-    if (test_bit(RTL8152_UNPLUG, &tp->flags))
-      return;
-
-    for (i = 0; i < 500; i++) {
-      if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
-          AUTOLOAD_DONE)
-        break;
-      msleep(20);
-    }
-    ...
-  }
-
-Since ocp_read_word() doesn't check the return status of
-generic_ocp_read(), and the only exit condition for the loop is to have
-a match in the returned value, such loops will only ends after exceeding
-its maximum runs when the device has been marked as disconnected, which
-takes 500 * 20ms = 10 seconds in theory, 14 in practice.
-
-To solve this long latency another test to RTL8152_UNPLUG flag should be
-added after those 20ms sleep to skip unnecessary loops, so that the device
-probe can complete early and proceed to parent port reset/reprobe process.
-
-This can be reproduced on all kernel versions up to latest v5.6-rc2, but
-after v5.5-rc7 the reproduce rate is dramatically lowered to 1/30 or less
-while it was around 1/2.
-
-Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/r8152.c |    6 ++++++
- 1 file changed, 6 insertions(+)
-
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -3423,7 +3423,10 @@ static void r8153_init(struct r8152 *tp)
- 		if (ocp_read_word(tp, MCU_TYPE_PLA, PLA_BOOT_CTRL) &
- 		    AUTOLOAD_DONE)
- 			break;
-+
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
- 	}
- 
- 	for (i = 0; i < 500; i++) {
-@@ -3447,7 +3450,10 @@ static void r8153_init(struct r8152 *tp)
- 		ocp_data = ocp_reg_read(tp, OCP_PHY_STATUS) & PHY_STAT_MASK;
- 		if (ocp_data == PHY_STAT_LAN_ON)
- 			break;
-+
- 		msleep(20);
-+		if (test_bit(RTL8152_UNPLUG, &tp->flags))
-+			break;
- 	}
- 
- 	usb_disable_lpm(tp->udev);
+>  drivers/pci/endpoint/functions/pci-epf-test.c =7C 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
+> b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index c9121b1b9fa9..af4537a487bf 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> =40=40 -510,14 +510,17 =40=40 static int pci_epf_test_bind(struct pci_epf=
+ *epf)
+>  		return -EINVAL;
+>=20
+>  	epc_features =3D pci_epc_get_features(epc, epf->func_no);
+> -	if (epc_features) =7B
+> -		linkup_notifier =3D epc_features->linkup_notifier;
+> -		msix_capable =3D epc_features->msix_capable;
+> -		msi_capable =3D epc_features->msi_capable;
+> -		test_reg_bar =3D pci_epc_get_first_free_bar(epc_features);
+> -		pci_epf_configure_bar(epf, epc_features);
+> +	if (=21epc_features) =7B
+> +		dev_err(dev, =22epc_features not implemented=5Cn=22);
+> +		return -ENOTSUPP;
+>  	=7D
+>=20
+> +	linkup_notifier =3D epc_features->linkup_notifier;
+> +	msix_capable =3D epc_features->msix_capable;
+> +	msi_capable =3D epc_features->msi_capable;
+> +	test_reg_bar =3D pci_epc_get_first_free_bar(epc_features);
+> +	pci_epf_configure_bar(epf, epc_features);
+> +
+>  	epf_test->test_reg_bar =3D test_reg_bar;
+>  	epf_test->epc_features =3D epc_features;
+>=20
+> --
+> 2.17.1
 
 
