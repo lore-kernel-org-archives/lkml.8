@@ -2,53 +2,53 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5373EC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A855C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D2D208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D64320787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625009;
-	bh=FLNZRGavuMkuz4zrSVjLbDm5kBxmn7YKEXtrqgJr8dI=;
+	s=default; t=1584625017;
+	bh=mJ9L47MrdCzrfZVD+rdRCPGhilg+RyR1RNnSX7ozW+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G3oNrw8HpEsEoeqbrhU+BhdyuN537o/Oj5Xq8E1+3TciQ61NgCnv0aYEnDo3T8/uG
-	 c1eKhNj4iMtWJNj6Ou2HPK5CzvX6MODfebIjqgcYxNu3X0MF+UXoH2FNVDBxAXjakF
-	 ljK0A7T5z/LEYP5FszN7F56cQFkJ/a4UKJKL5YEU=
+	b=cbiBXqMOAa0ppHAl9uSSV1wNm5CAo8LQnfY1l57DTu/6N7pz0/5Kt6um+st2Q9ILH
+	 yCI0No7RjTNW/HDaZXw0Y6fjl+xVmYUalZW8MvzYBqCPazedq7/zM27v2Q00TqL0EO
+	 9ltqrixJoS4bQAiBiLqvmQjg/mouglTeO+N2yqDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgCSNJB (ORCPT
+        id S1728477AbgCSNgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:09:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53228 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:36:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728224AbgCSNI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:08:56 -0400
+        id S1728194AbgCSNIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:08:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5567921556;
-        Thu, 19 Mar 2020 13:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 462B120936;
+        Thu, 19 Mar 2020 13:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623335;
-        bh=FLNZRGavuMkuz4zrSVjLbDm5kBxmn7YKEXtrqgJr8dI=;
+        s=default; t=1584623326;
+        bh=mJ9L47MrdCzrfZVD+rdRCPGhilg+RyR1RNnSX7ozW+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qnYUDTbzMcVgMcsne/bLvffpskUNBce6q5fWTQvP30STpQN6/dfh3DfQnT1IEV9kg
-         WT96ZEUUNjJYUDD3b3hMjmIVWixsqCxBXv34JK874ENT2Y7VryV9ecMaxiAlkVLl83
-         ZuPEGwIXMAxsVzyFU/7j2aE8qULKHkEG8Y0EIkEk=
+        b=yz5IrafECha1J286HwVyzsJC7hCx9sRZem9DsQKmh5keC8nlanxq1guZA/p0mbwH4
+         0+qS1DM35YGfKPYgajeWgHOT62LCjCHybR3iqug4eSQegLHMvNhk2myHlRPaCdrdEF
+         I+uUi96kgtakkOqQnCj8rXzlDKMVfXVzTdqqnfOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 86/93] perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
-Date:   Thu, 19 Mar 2020 14:00:30 +0100
-Message-Id: <20200319123951.693318722@linuxfoundation.org>
+        syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com,
+        Sven Eckelmann <sven@narfation.org>,
+        Antonio Quartulli <a@unstable.cc>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.4 83/93] batman-adv: Only read OGM tvlv_len after buffer len check
+Date:   Thu, 19 Mar 2020 14:00:27 +0100
+Message-Id: <20200319123950.832859098@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -61,89 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-[ Upstream commit f967140dfb7442e2db0868b03b961f9c59418a1b ]
+commit a15d56a60760aa9dbe26343b9a0ac5228f35d445 upstream.
 
-Enable the sampling check in kernel/events/core.c::perf_event_open(),
-which returns the more appropriate -EOPNOTSUPP.
+Multiple batadv_ogm_packet can be stored in an skbuff. The functions
+batadv_iv_ogm_send_to_if()/batadv_iv_ogm_receive() use
+batadv_iv_ogm_aggr_packet() to check if there is another additional
+batadv_ogm_packet in the skb or not before they continue processing the
+packet.
 
-BEFORE:
+The length for such an OGM is BATADV_OGM_HLEN +
+batadv_ogm_packet->tvlv_len. The check must first check that at least
+BATADV_OGM_HLEN bytes are available before it accesses tvlv_len (which is
+part of the header. Otherwise it might try read outside of the currently
+available skbuff to get the content of tvlv_len.
 
-  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
-  Error:
-  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (l3_request_g1.caching_l3_cache_accesses).
-  /bin/dmesg | grep -i perf may provide additional information.
-
-With nothing relevant in dmesg.
-
-AFTER:
-
-  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
-  Error:
-  l3_request_g1.caching_l3_cache_accesses: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
-
-Fixes: c43ca5091a37 ("perf/x86/amd: Add support for AMD NB and L2I "uncore" counters")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200311191323.13124-1-kim.phillips@amd.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: ef26157747d4 ("batman-adv: tvlv - basic infrastructure")
+Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/perf_event_amd_uncore.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ net/batman-adv/bat_iv_ogm.c |   19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/perf_event_amd_uncore.c b/arch/x86/kernel/cpu/perf_event_amd_uncore.c
-index 49742746a6c96..98e786a779fd0 100644
---- a/arch/x86/kernel/cpu/perf_event_amd_uncore.c
-+++ b/arch/x86/kernel/cpu/perf_event_amd_uncore.c
-@@ -181,21 +181,19 @@ static int amd_uncore_event_init(struct perf_event *event)
- 		return -ENOENT;
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -397,14 +397,19 @@ static u8 batadv_hop_penalty(u8 tq, cons
+ 	return new_tq;
+ }
  
- 	/*
--	 * NB and L2 counters (MSRs) are shared across all cores that share the
--	 * same NB / L2 cache. Interrupts can be directed to a single target
--	 * core, however, event counts generated by processes running on other
--	 * cores cannot be masked out. So we do not support sampling and
--	 * per-thread events.
-+	 * NB and Last level cache counters (MSRs) are shared across all cores
-+	 * that share the same NB / Last level cache.  On family 16h and below,
-+	 * Interrupts can be directed to a single target core, however, event
-+	 * counts generated by processes running on other cores cannot be masked
-+	 * out. So we do not support sampling and per-thread events via
-+	 * CAP_NO_INTERRUPT, and we do not enable counter overflow interrupts:
- 	 */
--	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
--		return -EINVAL;
+-/* is there another aggregated packet here? */
+-static bool batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
+-				      __be16 tvlv_len)
++static bool
++batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
++			  const struct batadv_ogm_packet *ogm_packet)
+ {
+ 	int next_buff_pos = 0;
  
- 	/* NB and L2 counters do not have usr/os/guest/host bits */
- 	if (event->attr.exclude_user || event->attr.exclude_kernel ||
- 	    event->attr.exclude_host || event->attr.exclude_guest)
- 		return -EINVAL;
+-	next_buff_pos += buff_pos + BATADV_OGM_HLEN;
+-	next_buff_pos += ntohs(tvlv_len);
++	/* check if there is enough space for the header */
++	next_buff_pos += buff_pos + sizeof(*ogm_packet);
++	if (next_buff_pos > packet_len)
++		return false;
++
++	/* check if there is enough space for the optional TVLV */
++	next_buff_pos += ntohs(ogm_packet->tvlv_len);
  
--	/* and we do not enable counter overflow interrupts */
- 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
- 	hwc->idx = -1;
+ 	return (next_buff_pos <= packet_len) &&
+ 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
+@@ -432,7 +437,7 @@ static void batadv_iv_ogm_send_to_if(str
  
-@@ -271,6 +269,7 @@ static struct pmu amd_nb_pmu = {
- 	.start		= amd_uncore_start,
- 	.stop		= amd_uncore_stop,
- 	.read		= amd_uncore_read,
-+	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT,
- };
+ 	/* adjust all flags and log packets */
+ 	while (batadv_iv_ogm_aggr_packet(buff_pos, forw_packet->packet_len,
+-					 batadv_ogm_packet->tvlv_len)) {
++					 batadv_ogm_packet)) {
+ 		/* we might have aggregated direct link packets with an
+ 		 * ordinary base packet
+ 		 */
+@@ -1751,7 +1756,7 @@ static int batadv_iv_ogm_receive(struct
  
- static struct pmu amd_l2_pmu = {
-@@ -282,6 +281,7 @@ static struct pmu amd_l2_pmu = {
- 	.start		= amd_uncore_start,
- 	.stop		= amd_uncore_stop,
- 	.read		= amd_uncore_read,
-+	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT,
- };
+ 	/* unpack the aggregated packets and process them one by one */
+ 	while (batadv_iv_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
+-					 ogm_packet->tvlv_len)) {
++					 ogm_packet)) {
+ 		batadv_iv_ogm_process(skb, ogm_offset, if_incoming);
  
- static struct amd_uncore *amd_uncore_alloc(unsigned int cpu)
--- 
-2.20.1
-
+ 		ogm_offset += BATADV_OGM_HLEN;
 
 
