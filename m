@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FC2C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50344C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBD4214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9E9206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623769;
-	bh=N1IvcdAKJkHcF6FqQ5d89QbwvvBcmY/Vecti2b3XLfc=;
+	s=default; t=1584623773;
+	bh=BHl61XVaYiiLrL3vc3daOyenv1prkPnf9dqKV9w6+nc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xPaodrNdjF0GSqDdnpaK467u0efX63uEFqRd+xMGUn0YdnHWAeN4HSuY3yjg9dDI3
-	 mXJ1rkNd0F5LYvSoTPbYGw0Kxdr1LYJHBn995t9eu+NW4+mU5A2+tTmkLxBmeGLgcY
-	 hwokyuC2hWygb2e2CgVs3+6QeAT6qugFpqxok2Dk=
+	b=tqzjU08yjtPDJg4bnVzNG3ij6UdN6vf8QzgeVY/fv9AaXhKegNKl6cL7QzNnMOb81
+	 E1gmGPMw2KqyvmyWMklz7ykYpKet8f/9pDwEYcj45XjrkbdHoGnHM5mm6YMSFDP+Sg
+	 +V+ORh2T50BQN3i6TifUIp/uuwAUCIetKI9VCASQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbgCSNQI (ORCPT
+        id S1729512AbgCSNQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:16:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36192 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:16:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729483AbgCSNQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:16:04 -0400
+        id S1729483AbgCSNQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:16:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD412098B;
-        Thu, 19 Mar 2020 13:16:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E6ED21556;
+        Thu, 19 Mar 2020 13:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623764;
-        bh=N1IvcdAKJkHcF6FqQ5d89QbwvvBcmY/Vecti2b3XLfc=;
+        s=default; t=1584623769;
+        bh=BHl61XVaYiiLrL3vc3daOyenv1prkPnf9dqKV9w6+nc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iM6NXWH2lC3RkJB5BtlzTAgR6hkPTp4NheCZROuphDmSk9DxV8jA/DAYkQMbbKBFY
-         7T+eOfMbP4okiNi+kCVVnqN8HsgCzl23iMq2URUU74IJbx/LxUT3eEe1sOQIbA3rQl
-         7eOA83dSPVJXAL4eu9LSgXHPmga8G2dhj+vQgjxg=
+        b=a1AC4md+KPb57nEWofEr6ozcOiKT9mlae3dyIgskrlUR1IOgReognaGolAVw6cPYM
+         SJnodjuY8mOIOhJiITY1Qc3Do8LdFAlrBAxAMaIhsvXw9Yvj3M6yu0caHZYqtT2ESv
+         Z/UKFWvlDZnCDVAfapyKcF10cZFcIdN1TAf/IHKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        stable@kernel.org
-Subject: [PATCH 4.14 46/99] gfs2_atomic_open(): fix O_EXCL|O_CREAT handling on cold dcache
-Date:   Thu, 19 Mar 2020 14:03:24 +0100
-Message-Id: <20200319123955.852659047@linuxfoundation.org>
+        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 4.14 48/99] ARC: define __ALIGN_STR and __ALIGN symbols for ARC
+Date:   Thu, 19 Mar 2020 14:03:26 +0100
+Message-Id: <20200319123956.481702270@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -59,34 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-commit 21039132650281de06a169cbe8a0f7e5c578fd8b upstream.
+commit 8d92e992a785f35d23f845206cf8c6cafbc264e0 upstream.
 
-with the way fs/namei.c:do_last() had been done, ->atomic_open()
-instances needed to recognize the case when existing file got
-found with O_EXCL|O_CREAT, either by falling back to finish_no_open()
-or failing themselves.  gfs2 one didn't.
+The default defintions use fill pattern 0x90 for padding which for ARC
+generates unintended "ldh_s r12,[r0,0x20]" corresponding to opcode 0x9090
 
-Fixes: 6d4ade986f9c (GFS2: Add atomic_open support)
-Cc: stable@kernel.org # v3.11
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+So use ".align 4" which insert a "nop_s" instruction instead.
+
+Cc: stable@vger.kernel.org
+Acked-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arc/include/asm/linkage.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/gfs2/inode.c
-+++ b/fs/gfs2/inode.c
-@@ -1255,7 +1255,7 @@ static int gfs2_atomic_open(struct inode
- 		if (!(*opened & FILE_OPENED))
- 			return finish_no_open(file, d);
- 		dput(d);
--		return 0;
-+		return excl && (flags & O_CREAT) ? -EEXIST : 0;
- 	}
+--- a/arch/arc/include/asm/linkage.h
++++ b/arch/arc/include/asm/linkage.h
+@@ -14,6 +14,8 @@
+ #ifdef __ASSEMBLY__
  
- 	BUG_ON(d != NULL);
+ #define ASM_NL		 `	/* use '`' to mark new line in macro */
++#define __ALIGN		.align 4
++#define __ALIGN_STR	__stringify(__ALIGN)
+ 
+ /* annotation for data we want in DCCM - if enabled in .config */
+ .macro ARCFP_DATA nm
 
 
