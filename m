@@ -2,134 +2,104 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C4AC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9DDC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6782071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C86F2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:51:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tg2aN6xt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y1tKqnND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgCSEjW (ORCPT
+        id S1726592AbgCSEvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 00:39:22 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45348 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgCSEjW (ORCPT
+        Thu, 19 Mar 2020 00:51:25 -0400
+Received: from mail-qk1-f182.google.com ([209.85.222.182]:42612 "EHLO
+        mail-qk1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgCSEvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 00:39:22 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m15so534227pgv.12
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 21:39:21 -0700 (PDT)
+        Thu, 19 Mar 2020 00:51:25 -0400
+Received: by mail-qk1-f182.google.com with SMTP id e11so1256185qkg.9;
+        Wed, 18 Mar 2020 21:51:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ruMvWKaCTsbInQhs/V5bAwFT4fo/B2LhqokROVX1RJo=;
-        b=tg2aN6xtBRVVIsylVN35uS278/h81kU5E3rrZb4l9rasLTWQ0gO2RA0UvpzzCntSPD
-         ZPIiYQ8t6hnvWpKofzzGzll+jfkqbYURB0VtpYDjsIKqvD4B3bKHij1aLEY1qdFdWFUR
-         6II5O54rz9PrCLotYrETJh1NIQT3fKEtfL/DUGC2rs/BPsqoqb+egLQnKbiBy7uwf55n
-         U+kLTmtbRTdj3d3FG0Jk7dNBxxYhnOvKmqe0Oau6zQGq5nEoJVoE1nooNnvWQxELdLl8
-         0bNe9Qqfe61hyW/e5KaoNY32tTxagRuyKyaKC1epbe1ve6VNNVmKXpriu+88+RagG67M
-         Ixvg==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=7fk/+QxBD56VKIEKurBU0QH83djSBt83PbELLkY6Dfc=;
+        b=Y1tKqnNDn4aL/eiK9aD+2TTxYePBWdmg3ntC/AMPJ8JkjEG8EJF+CrN9zCLxXb7LkF
+         uOMu8vLb81XiUS5XWshmrbY/XpUOeIOuvCyNSKNwE+VAcBYdbcLV5yABDcU4wiWto2y6
+         5IylnHgjOBAqYn+mutYDLgjO3WdHozeRxJxFVZZdnNZYtxXrG25ZsRpCsIe6wOpysOGz
+         /xYLi2dyU20PEcErVIgENvYvJaC9GLW5WC5mBXFQtwrEhPO6FaaZJPKkbClIqI93Xbet
+         1zAyJPCHjw5RDNh+dT5jgNqQVqhzGKcqcD2Xcq6IqHqrhT20UFWXQN1vId/FZBZzAgo3
+         vNdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ruMvWKaCTsbInQhs/V5bAwFT4fo/B2LhqokROVX1RJo=;
-        b=rN1D5dF2LaZWZa1EXPhQwc4ZaGgKuqFsTU6ofd+PQb6uvZY90xAi8++Zm4YL6M0N2L
-         nb6ns0czJchFQYvnnItRlKlnlV8Po717jqqk5JQmKohjAH8mseMbIjmWR678+IFM2WlK
-         lV57I3X5aUhR2HlKWltb5FGspDmUjQU+oVGYSo/dcXMV07pOCuPVnVJUvnbscLJnP2lK
-         jBFkiK5JFFaUHctndprKmDuD8lUuQrVwr/Ypk0qnDNdSw7ekNtHSleq+XcyWQpJpXLFA
-         gH24wXt9BDTz+CJdCw6LAxpe+0gMJ5TNkow3touRFOwBWwx29aoLtkQ91DAjHHin+iwG
-         UYhg==
-X-Gm-Message-State: ANhLgQ3zx6FiWsIlRzFlmTFEHLgWOUIt3XzYIsF7xoI5RUqi0SvtlQDz
-        PyXDPnYvH5wF/PDZBuk+soXCgrXTv/Y=
-X-Google-Smtp-Source: ADFU+vvT12s0aAoLNNrPFmHAx5hQiycl6q/fBkWc1OwJE6FPv7umjTrZuM7h/FPuLb8vCrLAF5uWdw==
-X-Received: by 2002:a63:2a4b:: with SMTP id q72mr1309267pgq.441.1584592760401;
-        Wed, 18 Mar 2020 21:39:20 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 25sm571370pfn.190.2020.03.18.21.39.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 21:39:19 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/msm: Don't attempt to attach HDMI bridge twice
-Date:   Wed, 18 Mar 2020 21:37:41 -0700
-Message-Id: <20200319043741.3338842-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=7fk/+QxBD56VKIEKurBU0QH83djSBt83PbELLkY6Dfc=;
+        b=i8baEDyjKVy2Xi4KZqFMdbQt9ABWx12b5ckgjDryboP9xWpGqLbI1nHV5LsuAsRQqX
+         xQlT1LreTSynR5bu8msIHJ9fsj5m7dUXS5RryX/Aa5+N3bPVNHjVb/MVZUqgrT9cC1d8
+         pPZK+TIaQ3NouBiqX7/wJ/2KZBFCKNzsglHKZup6dlhHOhhgItaxUz7pnE9yC7aXndJG
+         RBW7ZqyQvFtywyp5lTRNTNvEXP0pxu9y3NrNqz37GmZ/au9bYt0wxNc/R0aARfn95YWh
+         J47tkCqrGMsJiwF9Vas4NY4VZNUc2Yd0IT22Q0zLonbn5nuUGPlh6CZcYSSkEZEFQjfH
+         zCCA==
+X-Gm-Message-State: ANhLgQ2/EYBBMLBJyv/u2B2Vopcf6yAyg7ztS3qeZMh5WD6h5qgqFREN
+        tTy5OchS5Ix7TystLpX/HGrZuqpSfgn6xxRvjouk+dO4MW8=
+X-Google-Smtp-Source: ADFU+vti6fNwCLQfSx4hYjXE02FphrC9q0B4cBPWlOsP5udPYUAUr3OaT91ApbbU8IemLFFupkupWhUaHeiZSfjeScI=
+X-Received: by 2002:a25:e805:: with SMTP id k5mr1924778ybd.14.1584593483734;
+ Wed, 18 Mar 2020 21:51:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 18 Mar 2020 23:51:13 -0500
+Message-ID: <CAH2r5msOYEYH_YrSwGn6KYW83U0kyNS9U04xLgVFMx4xr32J1Q@mail.gmail.com>
+Subject: [GIT PULL] CIFS/SMB3 fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the introduction of '3ef2f119bd3e ("drm/msm: Use
-drm_attach_bridge() to attach a bridge to an encoder")' the HDMI bridge
-is attached both in msm_hdmi_bridge_init() and later in
-msm_hdmi_modeset_init().
+Please pull the following changes since commit
+fb33c6510d5595144d585aa194d377cf74d31911:
 
-The second attempt fails as the bridge is already attached to the
-encoder and the whole process is aborted.
+  Linux 5.6-rc6 (2020-03-15 15:01:23 -0700)
 
-So instead make msm_hdmi_bridge_init() just initialize the hdmi_bridge
-object and let msm_hdmi_modeset_init() attach it later.
+are available in the Git repository at:
 
-Fixes: 3ef2f119bd3e ("drm/msm: Use drm_attach_bridge() to attach a bridge to an encoder")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 19 +++----------------
- 1 file changed, 3 insertions(+), 16 deletions(-)
+  git://git.samba.org/sfrench/cifs-2.6.git 5.6-rc6-smb3-fixes
 
-diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-index 6e380db9287b..0e103ee1b730 100644
---- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-+++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
-@@ -271,31 +271,18 @@ static const struct drm_bridge_funcs msm_hdmi_bridge_funcs = {
- /* initialize bridge */
- struct drm_bridge *msm_hdmi_bridge_init(struct hdmi *hdmi)
- {
--	struct drm_bridge *bridge = NULL;
- 	struct hdmi_bridge *hdmi_bridge;
--	int ret;
-+	struct drm_bridge *bridge;
- 
- 	hdmi_bridge = devm_kzalloc(hdmi->dev->dev,
- 			sizeof(*hdmi_bridge), GFP_KERNEL);
--	if (!hdmi_bridge) {
--		ret = -ENOMEM;
--		goto fail;
--	}
-+	if (!hdmi_bridge)
-+		return ERR_PTR(-ENOMEM);
- 
- 	hdmi_bridge->hdmi = hdmi;
- 
- 	bridge = &hdmi_bridge->base;
- 	bridge->funcs = &msm_hdmi_bridge_funcs;
- 
--	ret = drm_bridge_attach(hdmi->encoder, bridge, NULL, 0);
--	if (ret)
--		goto fail;
--
- 	return bridge;
--
--fail:
--	if (bridge)
--		msm_hdmi_bridge_destroy(bridge);
--
--	return ERR_PTR(ret);
- }
+for you to fetch changes up to 979a2665eb6c603ddce0ab374041ab101827b2e7:
+
+  CIFS: fiemap: do not return EINVAL if get nothing (2020-03-17 13:27:06 -0500)
+
+----------------------------------------------------------------
+Three small cifs/smb3 fixes, 2 for stable
+
+Regression test results:
+http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/323
+----------------------------------------------------------------
+Dan Carpenter (1):
+      cifs: potential unintitliazed error code in cifs_getattr()
+
+Murphy Zhou (1):
+      CIFS: fiemap: do not return EINVAL if get nothing
+
+Shyam Prasad N (1):
+      CIFS: Increment num_remote_opens stats counter even in case of
+smb2_query_dir_first
+
+ fs/cifs/inode.c   | 2 +-
+ fs/cifs/smb2ops.c | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+
 -- 
-2.24.0
+Thanks,
 
+Steve
