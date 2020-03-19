@@ -2,117 +2,176 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0368BC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74978C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6A82071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C352071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:37:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="glAn++hu"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qPKgnd8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgCSMg3 (ORCPT
+        id S1727108AbgCSMhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:36:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34402 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbgCSMg3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:36:29 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t3so1220798pgn.1;
-        Thu, 19 Mar 2020 05:36:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pdHYIy4o/U7zj6pa8QGy+CYZwTBER01p++W9HOV4Snk=;
-        b=glAn++hulKWCC2bZX9JB+TstjTHco70lcxIVZ3WB92ccXhR/Q/m08Lo6gP2F00mR37
-         avscJpCY9o7S5nGCYrpc4MJyjp9+f3Ic9qOHzCWCWvnQ+MgSKhuDwRRj+yfjq2e61QiX
-         enAMllnikltm56F+8Bzrse72lnVPuelFxg+7ulUosc5lIpetrITODuySnn3DTvwoCdsp
-         2uGZBzNprdNkwv3OWSbX+f6iO2kebG8mVnaO2IgcWW59T2FNs9E7FHO3AvP5toXooEa6
-         PjdFkB5ZxEeDiXQYl6Vu9NkP47/ILybP8N+K7DPP9bJXEQr8oY79co3ft5syrNAaBe9P
-         AMeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pdHYIy4o/U7zj6pa8QGy+CYZwTBER01p++W9HOV4Snk=;
-        b=N0ALIt/6pcKK5um9FDUflDFCFLPCX5EMCCnowCaZejBuQ87Q6JpZC0cMkIY+ULSYYk
-         Eu4aZh2ZY/y5/hQ6supKYdw9twhcCNqDsDbTKBUQ93Ps7YlO4bs6LQZjD5nwFgRKjRo3
-         s/pPMNgSMV72EYfDhcfI8lnUe6j911lq9b1XsW3+37vJD3wuBxBG8jUYfBe+F3QU8Rne
-         m663GJe4bYsN6Wgz4naIWAicupFT0T0Ln1rpMOlLaYDb0SKrAdIUr4xAvhTx/UWQ3m6q
-         EKnNc90VelxlvM02Dp3VUk1cKvrf7xW7RKf072TW0YwdrOGDc3D62HHElq4g9b1LwQys
-         xB6Q==
-X-Gm-Message-State: ANhLgQ0TWiqco8YNZxSl1fwB+9kO0sJPU+EnixYpq0vmVskv/x06P6NR
-        yKYVrouLQS4matzl5vJXZBdIBoxRGNQ=
-X-Google-Smtp-Source: ADFU+vsG+MAQHKlLXXNGeX7DwUAEgv8pxBRw1RCT554zJHRPCVPeTeAGUR9JTNhzNDLSEAokKQ2nqw==
-X-Received: by 2002:a63:3449:: with SMTP id b70mr3172554pga.242.1584621386668;
-        Thu, 19 Mar 2020 05:36:26 -0700 (PDT)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id x188sm2400771pfx.198.2020.03.19.05.36.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Mar 2020 05:36:25 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        amurray@thegoodpenguin.co.uk, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH -next] PCI: dwc: fix compile err for pcie-tagra194
-Date:   Thu, 19 Mar 2020 20:36:20 +0800
-Message-Id: <1584621380-21152-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 19 Mar 2020 08:37:09 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:36391 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726975AbgCSMhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:37:09 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48jmcx72fhz9txpt;
+        Thu, 19 Mar 2020 13:37:05 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=qPKgnd8p; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 73Jdkf_Zz9r3; Thu, 19 Mar 2020 13:37:05 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48jmcx5r95z9txn7;
+        Thu, 19 Mar 2020 13:37:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1584621425; bh=1l8seTHHmExwEDOIcnw6yPPOnKc59tjApU1N0ParQfA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=qPKgnd8pWHAz0ALEh0DXg6kUaXlRtuCDj39r0To7+ErwNFGf2pV6MacAucHN+F7u2
+         A5AWzbgfYDKjjoOIk6Ym4cu/bJsjEvuJYH+NkkLsOi/fQuhkPlf7nH+YnPljevNc8P
+         ZQfJ8SdwY7WktUk9WiQ8Nn8BN/SHGVmZxEU+hkXE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 255868B84E;
+        Thu, 19 Mar 2020 13:37:07 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id BHYaNWr09YCd; Thu, 19 Mar 2020 13:37:07 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 028D78B769;
+        Thu, 19 Mar 2020 13:37:04 +0100 (CET)
+Subject: Re: [PATCH v11 0/8] Disable compat cruft on ppc64le v11
+To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200225173541.1549955-1-npiggin@gmail.com>
+ <cover.1584620202.git.msuchanek@suse.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <c5f30914-4d0c-5437-e8c4-9d62d08061e1@c-s.fr>
+Date:   Thu, 19 Mar 2020 13:36:56 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <cover.1584620202.git.msuchanek@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-make allmodconfig
-ERROR: modpost: "dw_pcie_ep_init_notify" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-ERROR: modpost: "dw_pcie_ep_init_complete" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-ERROR: modpost: "dw_pcie_ep_linkup" [drivers/pci/controller/dwc/pcie-tegra194.ko] undefined!
-make[2]: *** [__modpost] Error 1
-make[1]: *** [modules] Error 2
-make: *** [sub-make] Error 2
+You sent it twice ? Any difference between the two dispatch ?
 
-need to export the symbols.
+Christophe
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 4233c43..60d62ef 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -18,6 +18,7 @@ void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
- 
- 	pci_epc_linkup(epc);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_ep_linkup);
- 
- void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
- {
-@@ -25,6 +26,7 @@ void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep)
- 
- 	pci_epc_init_notify(epc);
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_ep_init_notify);
- 
- static void __dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar,
- 				   int flags)
-@@ -535,6 +537,7 @@ int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep)
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(dw_pcie_ep_init_complete);
- 
- int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- {
--- 
-1.8.3.1
-
+Le 19/03/2020 à 13:19, Michal Suchanek a écrit :
+> Less code means less bugs so add a knob to skip the compat stuff.
+> 
+> Changes in v2: saner CONFIG_COMPAT ifdefs
+> Changes in v3:
+>   - change llseek to 32bit instead of builing it unconditionally in fs
+>   - clanup the makefile conditionals
+>   - remove some ifdefs or convert to IS_DEFINED where possible
+> Changes in v4:
+>   - cleanup is_32bit_task and current_is_64bit
+>   - more makefile cleanup
+> Changes in v5:
+>   - more current_is_64bit cleanup
+>   - split off callchain.c 32bit and 64bit parts
+> Changes in v6:
+>   - cleanup makefile after split
+>   - consolidate read_user_stack_32
+>   - fix some checkpatch warnings
+> Changes in v7:
+>   - add back __ARCH_WANT_SYS_LLSEEK to fix build with llseek
+>   - remove leftover hunk
+>   - add review tags
+> Changes in v8:
+>   - consolidate valid_user_sp to fix it in the split callchain.c
+>   - fix build errors/warnings with PPC64 !COMPAT and PPC32
+> Changes in v9:
+>   - remove current_is_64bit()
+> Chanegs in v10:
+>   - rebase, sent together with the syscall cleanup
+> Changes in v11:
+>   - rebase
+>   - add MAINTAINERS pattern for ppc perf
+> 
+> Michal Suchanek (8):
+>    powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
+>    powerpc: move common register copy functions from signal_32.c to
+>      signal.c
+>    powerpc/perf: consolidate read_user_stack_32
+>    powerpc/perf: consolidate valid_user_sp
+>    powerpc/64: make buildable without CONFIG_COMPAT
+>    powerpc/64: Make COMPAT user-selectable disabled on littleendian by
+>      default.
+>    powerpc/perf: split callchain.c by bitness
+>    MAINTAINERS: perf: Add pattern that matches ppc perf to the perf
+>      entry.
+> 
+>   MAINTAINERS                            |   2 +
+>   arch/powerpc/Kconfig                   |   5 +-
+>   arch/powerpc/include/asm/thread_info.h |   4 +-
+>   arch/powerpc/include/asm/unistd.h      |   1 +
+>   arch/powerpc/kernel/Makefile           |   6 +-
+>   arch/powerpc/kernel/entry_64.S         |   2 +
+>   arch/powerpc/kernel/signal.c           | 144 +++++++++-
+>   arch/powerpc/kernel/signal_32.c        | 140 ----------
+>   arch/powerpc/kernel/syscall_64.c       |   6 +-
+>   arch/powerpc/kernel/vdso.c             |   3 +-
+>   arch/powerpc/perf/Makefile             |   5 +-
+>   arch/powerpc/perf/callchain.c          | 356 +------------------------
+>   arch/powerpc/perf/callchain.h          |  20 ++
+>   arch/powerpc/perf/callchain_32.c       | 196 ++++++++++++++
+>   arch/powerpc/perf/callchain_64.c       | 174 ++++++++++++
+>   fs/read_write.c                        |   3 +-
+>   16 files changed, 556 insertions(+), 511 deletions(-)
+>   create mode 100644 arch/powerpc/perf/callchain.h
+>   create mode 100644 arch/powerpc/perf/callchain_32.c
+>   create mode 100644 arch/powerpc/perf/callchain_64.c
+> 
