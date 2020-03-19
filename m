@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCF8C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A17EC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D97208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1474E20BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624335;
-	bh=N3h6q8tCGOh4BWQmsC7dtfhBTXK5drPci7XihK3wjb4=;
+	s=default; t=1584624338;
+	bh=3af7f/CO/fTsD3hpWvzuPtjznu2o9Apvd9AMygwOY9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lfUNHf0Ue8zgA4DB0KNKDn32ro+MsJc+j7vkNRjMIUN97thoLovdaNyR/YrFXiW9y
-	 i7xBXXhXm5LRJWdQUbe9HplHmJ3GmvmkDprrjS7DDZnND6bP+DwcnvOgBgtaJIPtpq
-	 Goi7jSf3GbCuqwpfY0hLUzx9aE8s6CRrxD/ki/+g=
+	b=Zuk+iBWRwKY3kx7MPAVAZBqWKhau9uQRdIahzq7k79HAIajFH/vHSe34OqxaYffL1
+	 f2bPhqJeznQRo9IBZmZnAkCVJV9Q+hfQ0xp5FdCAitjdI9PczMsovg/p6kAan9Fmdp
+	 iKDCibFwjEBlIRJ+rmpz4k+Yuc427bIQACHnJJTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbgCSNZe (ORCPT
+        id S1730478AbgCSNZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53088 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:25:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbgCSNZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:31 -0400
+        id S1730647AbgCSNZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70F32208C3;
-        Thu, 19 Mar 2020 13:25:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 650D2208C3;
+        Thu, 19 Mar 2020 13:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624330;
-        bh=N3h6q8tCGOh4BWQmsC7dtfhBTXK5drPci7XihK3wjb4=;
+        s=default; t=1584624333;
+        bh=3af7f/CO/fTsD3hpWvzuPtjznu2o9Apvd9AMygwOY9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=InODM8EGcLw+MoeuifHVWp0lh6kLN/XGpdVusbLNh4ecvKpMYN3WTMXGm9VylTrve
-         oAnR/i+W4FeRli1b7RMLnPAovEDkjPSNtWZaZ7QAMDc9E6YBxlO88/aGKhKIl2YiWe
-         dv9l0VkJZJ7/9+jXPeTKbs3eT2GGb/GXX46LiFuw=
+        b=RVygLwR/2CaDsuUw2uAxOPnncSizWzO4EKLOMxaszUKgLZIEFsWOUwgSAwUmvVMKa
+         Ry9WFvtUmmyCcx4Nk7A6QDvb+8qy+Rjzt8yF8Uzpxzde3kRYMUbwypa8tBYgDMzUTV
+         f8SNg9QzJsiNgaJSpfjtza0xnCFZ04OwSuOvdXoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        Igor Druzhinin <igor.druzhinin@citrix.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 25/65] scsi: libfc: free response frame from GPN_ID
-Date:   Thu, 19 Mar 2020 14:04:07 +0100
-Message-Id: <20200319123934.294300048@linuxfoundation.org>
+Subject: [PATCH 5.5 26/65] net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
+Date:   Thu, 19 Mar 2020 14:04:08 +0100
+Message-Id: <20200319123934.633133331@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -61,35 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Druzhinin <igor.druzhinin@citrix.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-[ Upstream commit ff6993bb79b9f99bdac0b5378169052931b65432 ]
+[ Upstream commit eae7172f8141eb98e64e6e81acc9e9d5b2add127 ]
 
-fc_disc_gpn_id_resp() should be the last function using it so free it here
-to avoid memory leak.
+usbnet creates network interfaces with min_mtu = 0 and
+max_mtu = ETH_MAX_MTU.
 
-Link: https://lore.kernel.org/r/1579013000-14570-2-git-send-email-igor.druzhinin@citrix.com
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+These values are not modified by qmi_wwan when the network interface
+is created initially, allowing, for example, to set mtu greater than 1500.
+
+When a raw_ip switch is done (raw_ip set to 'Y', then set to 'N') the mtu
+values for the network interface are set through ether_setup, with
+min_mtu = ETH_MIN_MTU and max_mtu = ETH_DATA_LEN, not allowing anymore to
+set mtu greater than 1500 (error: mtu greater than device maximum).
+
+The patch restores the original min/max mtu values set by usbnet after a
+raw_ip switch.
+
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_disc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/usb/qmi_wwan.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
-index 9c5f7c9178c66..2b865c6423e29 100644
---- a/drivers/scsi/libfc/fc_disc.c
-+++ b/drivers/scsi/libfc/fc_disc.c
-@@ -628,6 +628,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 3b7a3b8a5e067..5754bb6ca0eec 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -337,6 +337,9 @@ static void qmi_wwan_netdev_setup(struct net_device *net)
+ 		netdev_dbg(net, "mode: raw IP\n");
+ 	} else if (!net->header_ops) { /* don't bother if already set */
+ 		ether_setup(net);
++		/* Restoring min/max mtu values set originally by usbnet */
++		net->min_mtu = 0;
++		net->max_mtu = ETH_MAX_MTU;
+ 		clear_bit(EVENT_NO_IP_ALIGN, &dev->flags);
+ 		netdev_dbg(net, "mode: Ethernet\n");
  	}
- out:
- 	kref_put(&rdata->kref, fc_rport_destroy);
-+	if (!IS_ERR(fp))
-+		fc_frame_free(fp);
- }
- 
- /**
 -- 
 2.20.1
 
