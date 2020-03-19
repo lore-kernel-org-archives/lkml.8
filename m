@@ -2,99 +2,117 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11D2C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D64AC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F8520789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194812070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:06:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbgCSSFS (ORCPT
+        id S1727771AbgCSSGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:05:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33816 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgCSSFS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:05:18 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jEzX8-0006yI-P7; Thu, 19 Mar 2020 19:04:42 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id CEAC0103088; Thu, 19 Mar 2020 19:04:36 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting documentation
-In-Reply-To: <20200319090426.512510cb@lwn.net>
-References: <20200318204302.693307984@linutronix.de> <20200318204408.211530902@linutronix.de> <20200319090426.512510cb@lwn.net>
-Date:   Thu, 19 Mar 2020 19:04:36 +0100
-Message-ID: <871rpo5ih7.fsf@nanos.tec.linutronix.de>
+        Thu, 19 Mar 2020 14:06:20 -0400
+Received: from mga17.intel.com ([192.55.52.151]:40562 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726934AbgCSSGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:06:20 -0400
+IronPort-SDR: AO+U2krxO3d2qTWZWe4xfRVG1lzbgSNJFjq8cPmIQb4GT99Oauh9HYISr2JFJzv8xUPFNrmLzO
+ qacpu61ZpczQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 11:06:19 -0700
+IronPort-SDR: wY9apHSG+efZiE2WRme6pg1PFqdInDc/Vg4Kcb1qPG1gRYuKc41C8aBM/6AAdVksyUT2Yia2PF
+ 6C3Xwv9R6LrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="245239663"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 19 Mar 2020 11:06:16 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jEzYg-00B9rN-LQ; Thu, 19 Mar 2020 20:06:18 +0200
+Date:   Thu, 19 Mar 2020 20:06:18 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Kammela, Gayatri" <gayatri.kammela@intel.com>
+Cc:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Somayaji, Vishwanath" <vishwanath.somayaji@intel.com>,
+        "dvhart@infradead.org" <dvhart@infradead.org>,
+        "Westerberg, Mika" <mika.westerberg@intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "Prestopine, Charles D" <charles.d.prestopine@intel.com>,
+        Chen Zhou <chenzhou10@huawei.com>,
+        "Box, David E" <david.e.box@intel.com>
+Subject: Re: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes or
+ code
+Message-ID: <20200319180618.GN1922688@smile.fi.intel.com>
+References: <cover.1583093898.git.gayatri.kammela@intel.com>
+ <20200302125427.GV1224808@smile.fi.intel.com>
+ <BYAPR11MB362421570806431752364CD3F2E70@BYAPR11MB3624.namprd11.prod.outlook.com>
+ <BYAPR11MB3624F3CB24817BB8C5AE6C10F2F40@BYAPR11MB3624.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR11MB3624F3CB24817BB8C5AE6C10F2F40@BYAPR11MB3624.namprd11.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jonathan Corbet <corbet@lwn.net> writes:
-> On Wed, 18 Mar 2020 21:43:10 +0100
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> Add initial documentation.
->
-> ...time to add a a couple of nits...:)
+On Thu, Mar 19, 2020 at 05:57:06PM +0000, Kammela, Gayatri wrote:
+> > -----Original Message-----
+> > From: Kammela, Gayatri
+> > Sent: Monday, March 2, 2020 10:29 AM
+> > To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > Somayaji, Vishwanath <vishwanath.somayaji@intel.com>;
+> > dvhart@infradead.org; Westerberg, Mika <mika.westerberg@intel.com>;
+> > peterz@infradead.org; Prestopine, Charles D
+> > <charles.d.prestopine@intel.com>; Chen Zhou <chenzhou10@huawei.com>;
+> > Box, David E <david.e.box@intel.com>
+> > Subject: RE: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug fixes or
+> > code
+> > 
+> > > -----Original Message-----
+> > > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Sent: Monday, March 2, 2020 4:54 AM
+> > > To: Kammela, Gayatri <gayatri.kammela@intel.com>
+> > > Cc: platform-driver-x86@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > Somayaji, Vishwanath <vishwanath.somayaji@intel.com>;
+> > > dvhart@infradead.org; Westerberg, Mika <mika.westerberg@intel.com>;
+> > > peterz@infradead.org; Prestopine, Charles D
+> > > <charles.d.prestopine@intel.com>; Chen Zhou
+> > <chenzhou10@huawei.com>;
+> > > Box, David E <david.e.box@intel.com>
+> > > Subject: Re: [PATCH v3 0/5] platform/x86: intel_pmc_core: Add bug
+> > > fixes or code
+> > >
+> > > On Sun, Mar 01, 2020 at 12:44:21PM -0800, Gayatri Kammela wrote:
+> > > > Hi,
+> > > >
+> > > > This patch series consists of bug fixes and code optimization for
+> > > > the series https://patchwork.kernel.org/patch/11365325/
+> > > >
+> > >
+> > > I had applied first four, the fifth requires additional work.
+> > > When send a new version, do it only for last one.
+> > 
+> > Thanks Andy! I will send the 5th patch alone in new version.
+> > 
+> 
+> Hi Andy! I see first 3 patches are merged in for-next branch on 2/28 but not 4th patch. Can you please check? http://git.infradead.org/linux-platform-drivers-x86.git/shortlog/refs/heads/for-next
 
-...time
 
-Is that valid RST?
+Is it in my review and testing queue?
 
->> +++ b/Documentation/locking/locktypes.rst
->> @@ -0,0 +1,298 @@
->> +.. _kernel_hacking_locktypes:
->> +
->
-> So ... I vaguely remember that some Thomas guy added a document saying we
-> should be putting SPDX tags on our files? :)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Never met him or heard about that.
 
->> +
->> +The preferred solution is to use :c:func:`spin_lock_irq()` or
->> +:c:func:`spin_lock_irqsave()` and their unlock counterparts.
->
-> We don't need (and shouldn't use) :c:func: anymore; just saying
-> spin_lock_irq() will cause the Right Things to happen.
-
-Good to know. Will fix.
-
-Thanks,
-
-        tglx
