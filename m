@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D1EC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742AEC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C8E208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4237820789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625383;
-	bh=C00m90Jdij6F1HqEzf8L4EgeNwUufQvJHwqJ/rsXnFI=;
+	s=default; t=1584625386;
+	bh=Bz0YxYbHmWLWVD8SNeHP5gI+dLOiUyOyCCCY14UUzLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uxCBrSAS/fsCNeGPXgj8XpIPdEs798OodI4X8iPcaQiEI5bZvy8lYUGbQMhefFBUk
-	 ccGPvL7u08HGnAPUXLyQ2mm1YX0S9HXPPjaya6qeyBAhVIHNlNdTvjZskvncg4WLif
-	 v7FzMZ6RkNR4HTyp84UHkjzMzA+OMNTpWtYTIxOs=
+	b=XqK0FaAiYdghJZh27h5wn+IplF0AUpsjAUY3jHDy8dR/I+9TTvt9GGji/tMRwE48V
+	 fsVhUURgUPF55xsKybo8ox35qD/YdawwgUzXBWVtVIQwAkwFKoCJRZ1+DU5O2rDoP7
+	 7oK64ei/gqi2J5Ny5lYDnR4eGQ74yheZX/GkjiTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgCSNnC (ORCPT
+        id S1727137AbgCSNnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:43:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39104 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727678AbgCSNnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 09:43:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727576AbgCSNm4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:42:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 239C3208D6;
-        Thu, 19 Mar 2020 13:42:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32A5E208C3;
+        Thu, 19 Mar 2020 13:42:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584625379;
-        bh=C00m90Jdij6F1HqEzf8L4EgeNwUufQvJHwqJ/rsXnFI=;
+        s=default; t=1584625374;
+        bh=Bz0YxYbHmWLWVD8SNeHP5gI+dLOiUyOyCCCY14UUzLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U3A41GcH8RiWtUUJI0DvEY89KTZfK4DNNLkMzqo2JHrhRo7L7rsszcNvUpD0jwJml
-         nvsmhUU2oAQyqn+ZsEDFe1sKkD5HUwCzNa1LNJdbojHWvXi50jmuC/ce+3+9Ip+9aw
-         xouwA7Q+fTV3c6SsaFiMDYw4wne/Tl1s3JUGXo4k=
+        b=uwx39YifvjSmtGvzCaQ3Y/x9xxsJJ/iW8dsGkqmyMjeFDxi4yAr1eCw74EpDmMSlG
+         FFnjqUz56gCBZxfCd28yeP4e1wm8TiBVGnzN4aLLT58D9gL6Sa2hzc2lBeGAxoq4he
+         MM5LgUmBxayvrd9RfXnDqpZLw9xtf1JKCk49+M9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -52,12 +52,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>,
         Feng Tang <feng.tang@intel.com>
-Subject: [PATCH 5.5 39/65] signal: avoid double atomic counter increments for user accounting
-Date:   Thu, 19 Mar 2020 14:04:21 +0100
-Message-Id: <20200319123938.858253357@linuxfoundation.org>
+Subject: [PATCH 4.19 18/48] signal: avoid double atomic counter increments for user accounting
+Date:   Thu, 19 Mar 2020 14:04:00 +0100
+Message-Id: <20200319123908.898223901@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
-References: <20200319123926.466988514@linuxfoundation.org>
+In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
+References: <20200319123902.941451241@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -130,10 +130,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/kernel/signal.c b/kernel/signal.c
-index bcd46f547db39..eea748174ade9 100644
+index 08911bb6fe9ab..c42eaf39b5729 100644
 --- a/kernel/signal.c
 +++ b/kernel/signal.c
-@@ -413,27 +413,32 @@ __sigqueue_alloc(int sig, struct task_struct *t, gfp_t flags, int override_rlimi
+@@ -407,27 +407,32 @@ __sigqueue_alloc(int sig, struct task_struct *t, gfp_t flags, int override_rlimi
  {
  	struct sigqueue *q = NULL;
  	struct user_struct *user;
@@ -173,7 +173,7 @@ index bcd46f547db39..eea748174ade9 100644
  	} else {
  		INIT_LIST_HEAD(&q->list);
  		q->flags = 0;
-@@ -447,8 +452,8 @@ static void __sigqueue_free(struct sigqueue *q)
+@@ -441,8 +446,8 @@ static void __sigqueue_free(struct sigqueue *q)
  {
  	if (q->flags & SIGQUEUE_PREALLOC)
  		return;
