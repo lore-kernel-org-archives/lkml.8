@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF66EC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0F9C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4169208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63595208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623287;
-	bh=Cp+SLVCAg4c/eX0FNwPEPztrEvszoFpfDRqmJlRSRDg=;
+	s=default; t=1584623291;
+	bh=8QFfqcd4F8m32XNf835SF6u4m+lstoRLAX3VfvFHDNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aKVOw0PQT3c6xzEqaIf5j2/F7C08EpjciaiP25TWkIA496cUwxhEs5b5zzIZNj1wL
-	 noX7FMBqgGR9+6t6N9SiXMS48BTOWPwsCOB2Yr2zNQQx8mSfGJMjsOeIKWTbLK0Tt+
-	 0Lry9dQ4phzLac9eGBcm9Ogf8bm8o6VhmwzrCcLI=
+	b=Kplvevvnm/opDMFPc6yxW7uL4ck37/8Acq2tqB3dr8tIslE9/zx2IZ2iWJzRiwdN0
+	 Q2XGbnhYss9b1CR45PuvfnAGau/qUBbtxgjX3mAt/gZl5nxMHShf3CUuwh3s9OIsWo
+	 2VOTfOq3tuT0erDgVE7qIlvMT9rb0qIKqxJhTI5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgCSNIG (ORCPT
+        id S1728096AbgCSNIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52172 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727347AbgCSNIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:08:04 -0400
+        id S1727252AbgCSNIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:08:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC61D212CC;
-        Thu, 19 Mar 2020 13:08:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35C1720789;
+        Thu, 19 Mar 2020 13:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623284;
-        bh=Cp+SLVCAg4c/eX0FNwPEPztrEvszoFpfDRqmJlRSRDg=;
+        s=default; t=1584623286;
+        bh=8QFfqcd4F8m32XNf835SF6u4m+lstoRLAX3VfvFHDNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pe5YXhMCKrovaav4dsd2UN57kZxfP03I16QWJA3wbekd0LEa0JJ9LtV5/KtjwOdXq
-         lUFJR1rlkJ4i72OO6jz3tql4/Mi46gg+xtsvTNRtrhFgw6VKZLxOUnzc9+KAAssoDb
-         +DWqlPP7ds4cfrZFrbl7ZoLQNRer7odFAxNJicwY=
+        b=JMs4vYHpyWYUhovVmxIwuSC9kAmfuUuwbiv/Ge4tj0MYK0l9n3Cy8qnHx8BpW8JnS
+         rN/a1pVGOIHDwUkeR3BYpwUIjcjTvZDkmQdw6Mw97UibNOF4Po31KcUmKN6HZuuWSs
+         K6j0CJfJ7LklXK6YiDtwTBX8SVpG55dnvGkmbVZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Schiffer <mschiffer@universe-factory.net>,
         Sven Eckelmann <sven@narfation.org>,
+        Antonio Quartulli <a@unstable.cc>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 69/93] batman-adv: Fix skbuff rcsum on packet reroute
-Date:   Thu, 19 Mar 2020 14:00:13 +0100
-Message-Id: <20200319123946.936300142@linuxfoundation.org>
+Subject: [PATCH 4.4 70/93] batman-adv: Avoid race in TT TVLV allocator helper
+Date:   Thu, 19 Mar 2020 14:00:14 +0100
+Message-Id: <20200319123947.221657508@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -62,86 +62,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sven Eckelmann <sven@narfation.org>
 
-commit fc04fdb2c8a894283259f5621d31d75610701091 upstream.
+commit 8ba0f9bd3bdea1058c2b2676bec7905724418e40 upstream.
 
-batadv_check_unicast_ttvn may redirect a packet to itself or another
-originator. This involves rewriting the ttvn and the destination address in
-the batadv unicast header. These field were not yet pulled (with skb rcsum
-update) and thus any change to them also requires a change in the receive
-checksum.
+The functions batadv_tt_prepare_tvlv_local_data and
+batadv_tt_prepare_tvlv_global_data are responsible for preparing a buffer
+which can be used to store the TVLV container for TT and add the VLAN
+information to it.
 
-Reported-by: Matthias Schiffer <mschiffer@universe-factory.net>
-Fixes: a73105b8d4c7 ("batman-adv: improved client announcement mechanism")
+This will be done in three phases:
+
+1. count the number of VLANs and their entries
+2. allocate the buffer using the counters from the previous step and limits
+   from the caller (parameter tt_len)
+3. insert the VLAN information to the buffer
+
+The step 1 and 3 operate on a list which contains the VLANs. The access to
+these lists must be protected with an appropriate lock or otherwise they
+might operate on on different entries. This could for example happen when
+another context is adding VLAN entries to this list.
+
+This could lead to a buffer overflow in these functions when enough entries
+were added between step 1 and 3 to the VLAN lists that the buffer room for
+the entries (*tt_change) is smaller then the now required extra buffer for
+new VLAN entries.
+
+Fixes: 7ea7b4a14275 ("batman-adv: make the TT CRC logic VLAN specific")
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Antonio Quartulli <a@unstable.cc>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/routing.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ net/batman-adv/translation-table.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/batman-adv/routing.c
-+++ b/net/batman-adv/routing.c
-@@ -704,6 +704,7 @@ out:
- /**
-  * batadv_reroute_unicast_packet - update the unicast header for re-routing
-  * @bat_priv: the bat priv with all the soft interface information
-+ * @skb: unicast packet to process
-  * @unicast_packet: the unicast header to be updated
-  * @dst_addr: the payload destination
-  * @vid: VLAN identifier
-@@ -715,7 +716,7 @@ out:
-  * Returns true if the packet header has been updated, false otherwise
-  */
- static bool
--batadv_reroute_unicast_packet(struct batadv_priv *bat_priv,
-+batadv_reroute_unicast_packet(struct batadv_priv *bat_priv, struct sk_buff *skb,
- 			      struct batadv_unicast_packet *unicast_packet,
- 			      u8 *dst_addr, unsigned short vid)
- {
-@@ -744,8 +745,10 @@ batadv_reroute_unicast_packet(struct bat
- 	}
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -744,7 +744,7 @@ batadv_tt_prepare_tvlv_global_data(struc
+ 	struct batadv_orig_node_vlan *vlan;
+ 	u8 *tt_change_ptr;
  
- 	/* update the packet header */
-+	skb_postpull_rcsum(skb, unicast_packet, sizeof(*unicast_packet));
- 	ether_addr_copy(unicast_packet->dest, orig_addr);
- 	unicast_packet->ttvn = orig_ttvn;
-+	skb_postpush_rcsum(skb, unicast_packet, sizeof(*unicast_packet));
+-	rcu_read_lock();
++	spin_lock_bh(&orig_node->vlan_list_lock);
+ 	hlist_for_each_entry_rcu(vlan, &orig_node->vlan_list, list) {
+ 		num_vlan++;
+ 		num_entries += atomic_read(&vlan->tt.num_entries);
+@@ -782,7 +782,7 @@ batadv_tt_prepare_tvlv_global_data(struc
+ 	*tt_change = (struct batadv_tvlv_tt_change *)tt_change_ptr;
  
- 	ret = true;
  out:
-@@ -785,7 +788,7 @@ static int batadv_check_unicast_ttvn(str
- 	 * the packet to
- 	 */
- 	if (batadv_tt_local_client_is_roaming(bat_priv, ethhdr->h_dest, vid)) {
--		if (batadv_reroute_unicast_packet(bat_priv, unicast_packet,
-+		if (batadv_reroute_unicast_packet(bat_priv, skb, unicast_packet,
- 						  ethhdr->h_dest, vid))
- 			batadv_dbg_ratelimited(BATADV_DBG_TT,
- 					       bat_priv,
-@@ -831,7 +834,7 @@ static int batadv_check_unicast_ttvn(str
- 	 * destination can possibly be updated and forwarded towards the new
- 	 * target host
- 	 */
--	if (batadv_reroute_unicast_packet(bat_priv, unicast_packet,
-+	if (batadv_reroute_unicast_packet(bat_priv, skb, unicast_packet,
- 					  ethhdr->h_dest, vid)) {
- 		batadv_dbg_ratelimited(BATADV_DBG_TT, bat_priv,
- 				       "Rerouting unicast packet to %pM (dst=%pM): TTVN mismatch old_ttvn=%u new_ttvn=%u\n",
-@@ -854,12 +857,14 @@ static int batadv_check_unicast_ttvn(str
- 	if (!primary_if)
- 		return 0;
+-	rcu_read_unlock();
++	spin_unlock_bh(&orig_node->vlan_list_lock);
+ 	return tvlv_len;
+ }
  
-+	/* update the packet header */
-+	skb_postpull_rcsum(skb, unicast_packet, sizeof(*unicast_packet));
- 	ether_addr_copy(unicast_packet->dest, primary_if->net_dev->dev_addr);
-+	unicast_packet->ttvn = curr_ttvn;
-+	skb_postpush_rcsum(skb, unicast_packet, sizeof(*unicast_packet));
+@@ -818,7 +818,7 @@ batadv_tt_prepare_tvlv_local_data(struct
+ 	u8 *tt_change_ptr;
+ 	int change_offset;
  
- 	batadv_hardif_free_ref(primary_if);
+-	rcu_read_lock();
++	spin_lock_bh(&bat_priv->softif_vlan_list_lock);
+ 	hlist_for_each_entry_rcu(vlan, &bat_priv->softif_vlan_list, list) {
+ 		num_vlan++;
+ 		num_entries += atomic_read(&vlan->tt.num_entries);
+@@ -856,7 +856,7 @@ batadv_tt_prepare_tvlv_local_data(struct
+ 	*tt_change = (struct batadv_tvlv_tt_change *)tt_change_ptr;
  
--	unicast_packet->ttvn = curr_ttvn;
--
- 	return 1;
+ out:
+-	rcu_read_unlock();
++	spin_unlock_bh(&bat_priv->softif_vlan_list_lock);
+ 	return tvlv_len;
  }
  
 
