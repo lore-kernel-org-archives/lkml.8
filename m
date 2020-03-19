@@ -2,205 +2,190 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B53C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA229C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A928207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93BD0207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625312;
-	bh=OTiOI9NpVgAuHMhA+pe29888F5J5ckdUeAQZInkekaQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PYubo36noLTmbnH0QOUkNXwAkjeU8ISxJbZOm21soBYssfeF9HrjVG2QeyuDlap0u
-	 4bAuXiSDaDiyoIzoA/IHsagndC3xYhwEhm0a/avWirJhvTJy8HGUWLWpI23g4Jb+77
-	 OG7J/yu1jpGQr0b41qgWIRBucyDSQXDlVqj8+H/0=
+	s=default; t=1584625368;
+	bh=up4wwgsbiLEY5uR71hm2Tz69akAXKI91OTsmNy2qHpo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Sr84YINONAA4d9OqRIFGrhHAMR1uTTovlRrsshmX1ji1hbgh1kjdHO8YIf+2WkGuz
+	 Bb7nPozAvgi78hGyM2uSGeYwhgilps5h614N1q3ewQhFJYbWztCR4Pn8FeGTNN5Tm8
+	 1A+B9aCIX5y85t3fwuDXhBpmlF9HLZ7l5To83kVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbgCSNlu (ORCPT
+        id S1727438AbgCSNmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:41:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38516 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:42:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgCSNlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:41:50 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1726934AbgCSNmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:42:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29B5320663;
-        Thu, 19 Mar 2020 13:41:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5715220787;
+        Thu, 19 Mar 2020 13:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584625309;
-        bh=OTiOI9NpVgAuHMhA+pe29888F5J5ckdUeAQZInkekaQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FUdGwNLlsVxO3xUB6XATLkNW2L4CKFDFFZ2NuC5jY47TDNKO0AwzaBoO63/wIa70d
-         HGaxGGV+hnyezyBixqb0ro9Rrvm5D+dKmAgAHbtBA0AVy/kR1/pZ+KVh7nGSDbdwKM
-         jf73+Ey2WwxJRUHRj8rOh3i7cyGgufOBMxn3kipg=
-Date:   Thu, 19 Mar 2020 22:41:44 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        s=default; t=1584625365;
+        bh=up4wwgsbiLEY5uR71hm2Tz69akAXKI91OTsmNy2qHpo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E3HcYIMdLEJBRPyYhQaKJqQZnLN9r7xH7eOvK6GQE7+FTKH8rP4DH2nNedDsDnXiV
+         P+f3AAhwMzfKen1qY87IqPEacto4pSabmv00ffmdcip/h4og7ZOjTg/CbuUhldcOAX
+         lJal9CdppOlPSwn2jWdaC4YIATJscE1VM5licUR4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Philip Li <philip.li@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Wu <peter@lekensteyn.nl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [RFC][PATCH 01/11] tracing: Save off entry when peeking at next
- entry
-Message-Id: <20200319224144.cc16357a3476506fd64ad448@kernel.org>
-In-Reply-To: <20200317213415.722539921@goodmis.org>
-References: <20200317213222.421100128@goodmis.org>
-        <20200317213415.722539921@goodmis.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Feng Tang <feng.tang@intel.com>
+Subject: [PATCH 4.4 88/93] signal: avoid double atomic counter increments for user accounting
+Date:   Thu, 19 Mar 2020 14:00:32 +0100
+Message-Id: <20200319123952.296587552@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
+References: <20200319123924.795019515@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-On Tue, 17 Mar 2020 17:32:23 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+[ Upstream commit fda31c50292a5062332fa0343c084bd9f46604d9 ]
 
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> 
-> In order to have the iterator read the buffer even when it's still updating,
-> it requires that the ring buffer iterator saves each event in a separate
-> location outside the ring buffer such that its use is immutable.
-> 
-> There's one use case that saves off the event returned from the ring buffer
-> interator and calls it again to look at the next event, before going back to
-> use the first event. As the ring buffer iterator will only have a single
-> copy, this use case will no longer be supported.
-> 
-> Instead, have the one use case create its own buffer to store the first
-> event when looking at the next event. This way, when looking at the first
-> event again, it wont be corrupted by the second read.
-> 
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->  include/linux/trace_events.h |  2 ++
->  kernel/trace/trace.c         | 27 ++++++++++++++++++++++++++-
->  kernel/trace/trace_output.c  | 15 ++++++---------
->  3 files changed, 34 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> index 6c7a10a6d71e..5c6943354049 100644
-> --- a/include/linux/trace_events.h
-> +++ b/include/linux/trace_events.h
-> @@ -85,6 +85,8 @@ struct trace_iterator {
->  	struct mutex		mutex;
->  	struct ring_buffer_iter	**buffer_iter;
->  	unsigned long		iter_flags;
-> +	void			*temp;	/* temp holder */
-> +	unsigned int		temp_size;
->  
->  	/* trace_seq for __print_flags() and __print_symbolic() etc. */
->  	struct trace_seq	tmp_seq;
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 6b11e4e2150c..52425aaf26c2 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -3466,7 +3466,31 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
->  struct trace_entry *trace_find_next_entry(struct trace_iterator *iter,
->  					  int *ent_cpu, u64 *ent_ts)
->  {
-> -	return __find_next_entry(iter, ent_cpu, NULL, ent_ts);
-> +	/* __find_next_entry will reset ent_size */
-> +	int ent_size = iter->ent_size;
-> +	struct trace_entry *entry;
-> +
-> +	/*
-> +	 * The __find_next_entry() may update iter->ent, making
-> +	 * the current iter->ent pointing to stale data.
-> +	 * Need to copy it over.
-> +	 */
+When queueing a signal, we increment both the users count of pending
+signals (for RLIMIT_SIGPENDING tracking) and we increment the refcount
+of the user struct itself (because we keep a reference to the user in
+the signal structure in order to correctly account for it when freeing).
 
-Is this comment correct? I can not find the code which update
-iter->ent in __find_next_entry() and peek_next_entry().
-Maybe writer updates the "*iter->ent"?
+That turns out to be fairly expensive, because both of them are atomic
+updates, and particularly under extreme signal handling pressure on big
+machines, you can get a lot of cache contention on the user struct.
+That can then cause horrid cacheline ping-pong when you do these
+multiple accesses.
 
-> +	if (iter->ent && iter->ent != iter->temp) {
-> +		if (!iter->temp || iter->temp_size < iter->ent_size) {
-> +			kfree(iter->temp);
-> +			iter->temp = kmalloc(iter->ent_size, GFP_KERNEL);
+So change the reference counting to only pin the user for the _first_
+pending signal, and to unpin it when the last pending signal is
+dequeued.  That means that when a user sees a lot of concurrent signal
+queuing - which is the only situation when this matters - the only
+atomic access needed is generally the 'sigpending' count update.
 
-This can be alloc/free several times on one iteration. Should we
-be so careful about memory consumption for this small piece?
+This was noticed because of a particularly odd timing artifact on a
+dual-socket 96C/192T Cascade Lake platform: when you get into bad
+contention, on that machine for some reason seems to be much worse when
+the contention happens in the upper 32-byte half of the cacheline.
 
-Since the reader will not run in parallel (or very rare case),
-iter->temp can allocate the max entry size at the beginning.
+As a result, the kernel test robot will-it-scale 'signal1' benchmark had
+an odd performance regression simply due to random alignment of the
+'struct user_struct' (and pointed to a completely unrelated and
+apparently nonsensical commit for the regression).
 
-Thank you,
+Avoiding the double increments (and decrements on the dequeueing side,
+of course) makes for much less contention and hugely improved
+performance on that will-it-scale microbenchmark.
 
-> +			if (!iter->temp)
-> +				return NULL;
-> +		}
-> +		memcpy(iter->temp, iter->ent, iter->ent_size);
-> +		iter->temp_size = iter->ent_size;
-> +		iter->ent = iter->temp;
-> +	}
-> +	entry = __find_next_entry(iter, ent_cpu, NULL, ent_ts);
-> +	/* Put back the original ent_size */
-> +	iter->ent_size = ent_size;
-> +
-> +	return entry;
->  }
->  
->  /* Find the next real entry, and increment the iterator to the next entry */
-> @@ -4344,6 +4368,7 @@ static int tracing_release(struct inode *inode, struct file *file)
->  
->  	mutex_destroy(&iter->mutex);
->  	free_cpumask_var(iter->started);
-> +	kfree(iter->temp);
->  	kfree(iter->trace);
->  	kfree(iter->buffer_iter);
->  	seq_release_private(inode, file);
-> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-> index e25a7da79c6b..9a121e147102 100644
-> --- a/kernel/trace/trace_output.c
-> +++ b/kernel/trace/trace_output.c
-> @@ -617,22 +617,19 @@ int trace_print_context(struct trace_iterator *iter)
->  
->  int trace_print_lat_context(struct trace_iterator *iter)
->  {
-> +	struct trace_entry *entry, *next_entry;
->  	struct trace_array *tr = iter->tr;
-> -	/* trace_find_next_entry will reset ent_size */
-> -	int ent_size = iter->ent_size;
->  	struct trace_seq *s = &iter->seq;
-> -	u64 next_ts;
-> -	struct trace_entry *entry = iter->ent,
-> -			   *next_entry = trace_find_next_entry(iter, NULL,
-> -							       &next_ts);
->  	unsigned long verbose = (tr->trace_flags & TRACE_ITER_VERBOSE);
-> +	u64 next_ts;
->  
-> -	/* Restore the original ent_size */
-> -	iter->ent_size = ent_size;
-> -
-> +	next_entry = trace_find_next_entry(iter, NULL, &next_ts);
->  	if (!next_entry)
->  		next_ts = iter->ts;
->  
-> +	/* trace_find_next_entry() may change iter->ent */
-> +	entry = iter->ent;
-> +
->  	if (verbose) {
->  		char comm[TASK_COMM_LEN];
->  
-> -- 
-> 2.25.1
-> 
-> 
+Quoting Feng Tang:
 
+ "It makes a big difference, that the performance score is tripled! bump
+  from original 17000 to 54000. Also the gap between 5.0-rc6 and
+  5.0-rc6+Jiri's patch is reduced to around 2%"
 
+[ The "2% gap" is the odd cacheline placement difference on that
+  platform: under the extreme contention case, the effect of which half
+  of the cacheline was hot was 5%, so with the reduced contention the
+  odd timing artifact is reduced too ]
+
+It does help in the non-contended case too, but is not nearly as
+noticeable.
+
+Reported-and-tested-by: Feng Tang <feng.tang@intel.com>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: Huang, Ying <ying.huang@intel.com>
+Cc: Philip Li <philip.li@intel.com>
+Cc: Andi Kleen <andi.kleen@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/signal.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 7e4a4b199a117..90a94e54db092 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -373,27 +373,32 @@ __sigqueue_alloc(int sig, struct task_struct *t, gfp_t flags, int override_rlimi
+ {
+ 	struct sigqueue *q = NULL;
+ 	struct user_struct *user;
++	int sigpending;
+ 
+ 	/*
+ 	 * Protect access to @t credentials. This can go away when all
+ 	 * callers hold rcu read lock.
++	 *
++	 * NOTE! A pending signal will hold on to the user refcount,
++	 * and we get/put the refcount only when the sigpending count
++	 * changes from/to zero.
+ 	 */
+ 	rcu_read_lock();
+-	user = get_uid(__task_cred(t)->user);
+-	atomic_inc(&user->sigpending);
++	user = __task_cred(t)->user;
++	sigpending = atomic_inc_return(&user->sigpending);
++	if (sigpending == 1)
++		get_uid(user);
+ 	rcu_read_unlock();
+ 
+-	if (override_rlimit ||
+-	    atomic_read(&user->sigpending) <=
+-			task_rlimit(t, RLIMIT_SIGPENDING)) {
++	if (override_rlimit || likely(sigpending <= task_rlimit(t, RLIMIT_SIGPENDING))) {
+ 		q = kmem_cache_alloc(sigqueue_cachep, flags);
+ 	} else {
+ 		print_dropped_signal(sig);
+ 	}
+ 
+ 	if (unlikely(q == NULL)) {
+-		atomic_dec(&user->sigpending);
+-		free_uid(user);
++		if (atomic_dec_and_test(&user->sigpending))
++			free_uid(user);
+ 	} else {
+ 		INIT_LIST_HEAD(&q->list);
+ 		q->flags = 0;
+@@ -407,8 +412,8 @@ static void __sigqueue_free(struct sigqueue *q)
+ {
+ 	if (q->flags & SIGQUEUE_PREALLOC)
+ 		return;
+-	atomic_dec(&q->user->sigpending);
+-	free_uid(q->user);
++	if (atomic_dec_and_test(&q->user->sigpending))
++		free_uid(q->user);
+ 	kmem_cache_free(sigqueue_cachep, q);
+ }
+ 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.20.1
+
+
+
