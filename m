@@ -2,574 +2,215 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE32C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CEEC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16BA2072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7D020775
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="eKxP82ka"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iW61pHPQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgCSUfL (ORCPT
+        id S1727091AbgCSUiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:35:11 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35796 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgCSUfF (ORCPT
+        Thu, 19 Mar 2020 16:38:54 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:41147 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725747AbgCSUiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 16:35:05 -0400
-Received: by mail-wm1-f67.google.com with SMTP id m3so3978859wmi.0;
-        Thu, 19 Mar 2020 13:35:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ziVyD9FCJN4HG2z3+da7r9GM//DAxlOZcLamqBGLWB0=;
-        b=eKxP82kaHZyJ2eOg0JyFtYiy2cKsXjY0adzjQEVq23qlXCkR2f6z8Gy7qYqEbd/kaH
-         6qhu/kx3rkL71nTzrj47WuHu3E4jqdTmRm6l5Nv2x1y189f7GZmuwuK5w5A9VtROo0hM
-         miCaFOijdFJ3JIA6MIjvsqjAkkaH3g9I3PKQMntQSZmptg70T+idWOPaGJVyJtfoBWJy
-         vOACXlbUGDdynVBTAmpW0ouxh1ImCDRtaWXrbIYbN70SIAT5iChKU4IwnKgywwzIQVnH
-         CmPeQ2ByVTARCZELAiZ7iNOSet7dqUbhExQCVAVtiebHOnF+YEwYLMSW/y1DaJg/LBtU
-         dsvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ziVyD9FCJN4HG2z3+da7r9GM//DAxlOZcLamqBGLWB0=;
-        b=N8dGE+DsAp01BI3n9pCEt824lJoDiaLBt8Jcns5zzgwJGUZxjiLe44cxIwcTABqyTi
-         i0WVLzCkBG3E7dFUZ03txlaOG/etsaUEQOOpEw1xnsr1smTU8hhmHjIEXyftxylODcbq
-         AvayHEDgM3sgI2yHGKaWbCnY8Gl5XOSYrTUAwpO6cr4Dz3rKrjGHnfYAKvkzBeN/LAHj
-         y52kDYKkjFHSgS+jPbthiFcC1ArFDZPGVqBxO4eccwPgSiihXhrhnu48BsgF75lneKTC
-         Tuyll0/iHQVq1/3K27FE4cjQGpqdnanE81bxIDciplynd+yZq0rUbVZsOZ/MBNNGt/ct
-         oNRw==
-X-Gm-Message-State: ANhLgQ0nAPyvmbjNosiMZ/Fl4iLBOckEgrpL/SqL1kSpShWvxk5lyYnE
-        /h5wc/F2NPs2L3sR4r52YgQ=
-X-Google-Smtp-Source: ADFU+vsUytrUAI2t+cc3E1j9XRtenXcuMyKcFRE0qTNjCbNH+P0lzplaW3CcIr8Evw/umHjSzkzxnA==
-X-Received: by 2002:a1c:ba06:: with SMTP id k6mr5553945wmf.136.1584650103166;
-        Thu, 19 Mar 2020 13:35:03 -0700 (PDT)
-Received: from localhost.localdomain (p200300F13710ED00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3710:ed00:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id r9sm4744968wma.47.2020.03.19.13.35.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 13:35:02 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     yuq825@gmail.com, dri-devel@lists.freedesktop.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
-        tomeu.vizoso@collabora.com, robh@kernel.org, steven.price@arm.com,
-        alyssa.rosenzweig@collabora.com, linux-amlogic@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, wens@csie.org,
-        linux-pm@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v4 2/2] drm/lima: Add optional devfreq and cooling device support
-Date:   Thu, 19 Mar 2020 21:34:27 +0100
-Message-Id: <20200319203427.2259891-3-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319203427.2259891-1-martin.blumenstingl@googlemail.com>
-References: <20200319203427.2259891-1-martin.blumenstingl@googlemail.com>
+        Thu, 19 Mar 2020 16:38:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584650332;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uShTuto7PeNwwk0OxuI8oVZpBKc3YZzPGr0sD1pMJCE=;
+        b=iW61pHPQn3h7nHdPuUMAxdh1a5yX61ZdteDSuREauUxUgSfEvD1RNZJoKmPGOsuXYtftNY
+        mW3EiCtXA5FGGdJxS1pjUMaM5sSd+5gfgJfGd85fLLfLJBkrN6aiKVDauAlCxkGvbJB4Lg
+        OVbmqe1Z461syra4mJqmWSY4d7xOfxE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-54-iwln2pr0NWmBbDRRtDVBdA-1; Thu, 19 Mar 2020 16:38:48 -0400
+X-MC-Unique: iwln2pr0NWmBbDRRtDVBdA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D355189F781;
+        Thu, 19 Mar 2020 20:38:46 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CD8B11036B46;
+        Thu, 19 Mar 2020 20:38:42 +0000 (UTC)
+Subject: Re: [PATCH v5 20/23] KVM: arm64: GICv4.1: Plumb SGI implementation
+ selection in the distributor
+To:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-21-maz@kernel.org>
+ <72832f51-bbde-8502-3e03-189ac20a0143@huawei.com>
+ <4a06fae9c93e10351276d173747d17f4@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <49995ec9-3970-1f62-5dfc-118563ca00fc@redhat.com>
+Date:   Thu, 19 Mar 2020 21:38:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4a06fae9c93e10351276d173747d17f4@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most platforms with a Mali-400 or Mali-450 GPU also have support for
-changing the GPU clock frequency. Add devfreq support so the GPU clock
-rate is updated based on the actual GPU usage when the
-"operating-points-v2" property is present in the board.dts.
+Hi Marc,
+On 3/19/20 1:10 PM, Marc Zyngier wrote:
+> Hi Zenghui,
+>=20
+> On 2020-03-18 06:34, Zenghui Yu wrote:
+>> Hi Marc,
+>>
+>> On 2020/3/5 4:33, Marc Zyngier wrote:
+>>> The GICv4.1 architecture gives the hypervisor the option to let
+>>> the guest choose whether it wants the good old SGIs with an
+>>> active state, or the new, HW-based ones that do not have one.
+>>>
+>>> For this, plumb the configuration of SGIs into the GICv3 MMIO
+>>> handling, present the GICD_TYPER2.nASSGIcap to the guest,
+>>> and handle the GICD_CTLR.nASSGIreq setting.
+>>>
+>>> In order to be able to deal with the restore of a guest, also
+>>> apply the GICD_CTLR.nASSGIreq setting at first run so that we
+>>> can move the restored SGIs to the HW if that's what the guest
+>>> had selected in a previous life.
+>>
+>> I'm okay with the restore path.=A0 But it seems that we still fail to
+>> save the pending state of vSGI - software pending_latch of HW-based
+>> vSGIs will not be updated (and always be false) because we directly
+>> inject them through ITS, so vgic_v3_uaccess_read_pending() can't
+>> tell the correct pending state to user-space (the correct one should
+>> be latched in HW).
+>>
+>> It would be good if we can sync the hardware state into pending_latch
+>> at an appropriate time (just before save), but not sure if we can...
+>=20
+> The problem is to find the "appropriate time". It would require to defi=
+ne
+> a point in the save sequence where we transition the state from HW to
+> SW. I'm not keen on adding more state than we already have.
 
-The actual devfreq code is taken from panfrost_devfreq.c and modified so
-it matches what the lima hardware needs:
-- a call to dev_pm_opp_set_clkname() during initialization because there
-  are two clocks on Mali-4x0 IPs. "core" is the one that actually clocks
-  the GPU so we need to control it using devfreq.
-- locking when reading or writing the devfreq statistics because (unlike
-  than panfrost) we have multiple PP and GP IRQs which may finish jobs
-  concurrently.
+may be we could use a dedicated device group/attr as we have for the ITS
+save tables? the user space would choose.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/gpu/drm/lima/Kconfig        |   2 +
- drivers/gpu/drm/lima/Makefile       |   3 +-
- drivers/gpu/drm/lima/lima_devfreq.c | 234 ++++++++++++++++++++++++++++
- drivers/gpu/drm/lima/lima_devfreq.h |  41 +++++
- drivers/gpu/drm/lima/lima_device.c  |   4 +
- drivers/gpu/drm/lima/lima_device.h  |   3 +
- drivers/gpu/drm/lima/lima_drv.c     |  14 +-
- drivers/gpu/drm/lima/lima_sched.c   |   7 +
- drivers/gpu/drm/lima/lima_sched.h   |   3 +
- 9 files changed, 308 insertions(+), 3 deletions(-)
- create mode 100644 drivers/gpu/drm/lima/lima_devfreq.c
- create mode 100644 drivers/gpu/drm/lima/lima_devfreq.h
+Thanks
 
-diff --git a/drivers/gpu/drm/lima/Kconfig b/drivers/gpu/drm/lima/Kconfig
-index d589f09d04d9..fa1d4f5df31e 100644
---- a/drivers/gpu/drm/lima/Kconfig
-+++ b/drivers/gpu/drm/lima/Kconfig
-@@ -10,5 +10,7 @@ config DRM_LIMA
-        depends on OF
-        select DRM_SCHED
-        select DRM_GEM_SHMEM_HELPER
-+       select PM_DEVFREQ
-+       select DEVFREQ_GOV_SIMPLE_ONDEMAND
-        help
- 	 DRM driver for ARM Mali 400/450 GPUs.
-diff --git a/drivers/gpu/drm/lima/Makefile b/drivers/gpu/drm/lima/Makefile
-index a85444b0a1d4..5e5c29875e9c 100644
---- a/drivers/gpu/drm/lima/Makefile
-+++ b/drivers/gpu/drm/lima/Makefile
-@@ -14,6 +14,7 @@ lima-y := \
- 	lima_sched.o \
- 	lima_ctx.o \
- 	lima_dlbu.o \
--	lima_bcast.o
-+	lima_bcast.o \
-+	lima_devfreq.o
- 
- obj-$(CONFIG_DRM_LIMA) += lima.o
-diff --git a/drivers/gpu/drm/lima/lima_devfreq.c b/drivers/gpu/drm/lima/lima_devfreq.c
-new file mode 100644
-index 000000000000..8c4d21d07529
---- /dev/null
-+++ b/drivers/gpu/drm/lima/lima_devfreq.c
-@@ -0,0 +1,234 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2020 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ *
-+ * Based on panfrost_devfreq.c:
-+ *   Copyright 2019 Collabora ltd.
-+ */
-+#include <linux/clk.h>
-+#include <linux/devfreq.h>
-+#include <linux/devfreq_cooling.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_opp.h>
-+#include <linux/property.h>
-+
-+#include "lima_device.h"
-+#include "lima_devfreq.h"
-+
-+static void lima_devfreq_update_utilization(struct lima_devfreq *devfreq)
-+{
-+	ktime_t now, last;
-+
-+	now = ktime_get();
-+	last = devfreq->time_last_update;
-+
-+	if (devfreq->busy_count > 0)
-+		devfreq->busy_time += ktime_sub(now, last);
-+	else
-+		devfreq->idle_time += ktime_sub(now, last);
-+
-+	devfreq->time_last_update = now;
-+}
-+
-+static int lima_devfreq_target(struct device *dev, unsigned long *freq,
-+			       u32 flags)
-+{
-+	struct dev_pm_opp *opp;
-+	int err;
-+
-+	opp = devfreq_recommended_opp(dev, freq, flags);
-+	if (IS_ERR(opp))
-+		return PTR_ERR(opp);
-+	dev_pm_opp_put(opp);
-+
-+	err = dev_pm_opp_set_rate(dev, *freq);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static void lima_devfreq_reset(struct lima_devfreq *devfreq)
-+{
-+	devfreq->busy_time = 0;
-+	devfreq->idle_time = 0;
-+	devfreq->time_last_update = ktime_get();
-+}
-+
-+static int lima_devfreq_get_dev_status(struct device *dev,
-+				       struct devfreq_dev_status *status)
-+{
-+	struct lima_device *ldev = dev_get_drvdata(dev);
-+	struct lima_devfreq *devfreq = &ldev->devfreq;
-+	unsigned long irqflags;
-+
-+	status->current_frequency = clk_get_rate(ldev->clk_gpu);
-+
-+	spin_lock_irqsave(&devfreq->lock, irqflags);
-+
-+	lima_devfreq_update_utilization(devfreq);
-+
-+	status->total_time = ktime_to_ns(ktime_add(devfreq->busy_time,
-+						   devfreq->idle_time));
-+	status->busy_time = ktime_to_ns(devfreq->busy_time);
-+
-+	lima_devfreq_reset(devfreq);
-+
-+	spin_unlock_irqrestore(&devfreq->lock, irqflags);
-+
-+	dev_dbg(ldev->dev, "busy %lu total %lu %lu %% freq %lu MHz\n",
-+		status->busy_time, status->total_time,
-+		status->busy_time / (status->total_time / 100),
-+		status->current_frequency / 1000 / 1000);
-+
-+	return 0;
-+}
-+
-+static struct devfreq_dev_profile lima_devfreq_profile = {
-+	.polling_ms = 50, /* ~3 frames */
-+	.target = lima_devfreq_target,
-+	.get_dev_status = lima_devfreq_get_dev_status,
-+};
-+
-+void lima_devfreq_fini(struct lima_device *ldev)
-+{
-+	struct lima_devfreq *devfreq = &ldev->devfreq;
-+
-+	if (devfreq->cooling) {
-+		devfreq_cooling_unregister(devfreq->cooling);
-+		devfreq->cooling = NULL;
-+	}
-+
-+	if (devfreq->devfreq) {
-+		devm_devfreq_remove_device(&ldev->pdev->dev,
-+					   devfreq->devfreq);
-+		devfreq->devfreq = NULL;
-+	}
-+
-+	if (devfreq->opp_of_table_added) {
-+		dev_pm_opp_of_remove_table(&ldev->pdev->dev);
-+		devfreq->opp_of_table_added = false;
-+	}
-+
-+	if (devfreq->regulators_opp_table) {
-+		dev_pm_opp_put_regulators(devfreq->regulators_opp_table);
-+		devfreq->regulators_opp_table = NULL;
-+	}
-+
-+	if (devfreq->clkname_opp_table) {
-+		dev_pm_opp_put_clkname(devfreq->clkname_opp_table);
-+		devfreq->clkname_opp_table = NULL;
-+	}
-+}
-+
-+int lima_devfreq_init(struct lima_device *ldev)
-+{
-+	struct thermal_cooling_device *cooling;
-+	struct device *dev = &ldev->pdev->dev;
-+	struct opp_table *opp_table;
-+	struct devfreq *devfreq;
-+	struct lima_devfreq *ldevfreq = &ldev->devfreq;
-+	struct dev_pm_opp *opp;
-+	unsigned long cur_freq;
-+	int ret;
-+
-+	if (!device_property_present(dev, "operating-points-v2"))
-+		/* Optional, continue without devfreq */
-+		return 0;
-+
-+	spin_lock_init(&ldevfreq->lock);
-+
-+	opp_table = dev_pm_opp_set_clkname(dev, "core");
-+	if (IS_ERR(opp_table)) {
-+		ret = PTR_ERR(opp_table);
-+		goto err_fini;
-+	}
-+
-+	ldevfreq->clkname_opp_table = opp_table;
-+
-+	opp_table = dev_pm_opp_set_regulators(dev,
-+					      (const char *[]){ "mali" },
-+					      1);
-+	if (IS_ERR(opp_table)) {
-+		ret = PTR_ERR(opp_table);
-+
-+		/* Continue if the optional regulator is missing */
-+		if (ret != -ENODEV)
-+			goto err_fini;
-+	} else {
-+		ldevfreq->regulators_opp_table = opp_table;
-+	}
-+
-+	ret = dev_pm_opp_of_add_table(dev);
-+	if (ret)
-+		goto err_fini;
-+	ldevfreq->opp_of_table_added = true;
-+
-+	lima_devfreq_reset(ldevfreq);
-+
-+	cur_freq = clk_get_rate(ldev->clk_gpu);
-+
-+	opp = devfreq_recommended_opp(dev, &cur_freq, 0);
-+	if (IS_ERR(opp)) {
-+		ret = PTR_ERR(opp);
-+		goto err_fini;
-+	}
-+
-+	lima_devfreq_profile.initial_freq = cur_freq;
-+	dev_pm_opp_put(opp);
-+
-+	devfreq = devm_devfreq_add_device(dev, &lima_devfreq_profile,
-+					  DEVFREQ_GOV_SIMPLE_ONDEMAND, NULL);
-+	if (IS_ERR(devfreq)) {
-+		dev_err(dev, "Couldn't initialize GPU devfreq\n");
-+		ret = PTR_ERR(devfreq);
-+		goto err_fini;
-+	}
-+
-+	ldevfreq->devfreq = devfreq;
-+
-+	cooling = of_devfreq_cooling_register(dev->of_node, devfreq);
-+	if (IS_ERR(cooling))
-+		dev_info(dev, "Failed to register cooling device\n");
-+	else
-+		ldevfreq->cooling = cooling;
-+
-+	return 0;
-+
-+err_fini:
-+	lima_devfreq_fini(ldev);
-+	return ret;
-+}
-+
-+void lima_devfreq_record_busy(struct lima_devfreq *devfreq)
-+{
-+	unsigned long irqflags;
-+
-+	if (!devfreq->devfreq)
-+		return;
-+
-+	spin_lock_irqsave(&devfreq->lock, irqflags);
-+
-+	lima_devfreq_update_utilization(devfreq);
-+
-+	devfreq->busy_count++;
-+
-+	spin_unlock_irqrestore(&devfreq->lock, irqflags);
-+}
-+
-+void lima_devfreq_record_idle(struct lima_devfreq *devfreq)
-+{
-+	unsigned long irqflags;
-+
-+	if (!devfreq->devfreq)
-+		return;
-+
-+	spin_lock_irqsave(&devfreq->lock, irqflags);
-+
-+	lima_devfreq_update_utilization(devfreq);
-+
-+	WARN_ON(--devfreq->busy_count < 0);
-+
-+	spin_unlock_irqrestore(&devfreq->lock, irqflags);
-+}
-diff --git a/drivers/gpu/drm/lima/lima_devfreq.h b/drivers/gpu/drm/lima/lima_devfreq.h
-new file mode 100644
-index 000000000000..8d71ba9fb22a
---- /dev/null
-+++ b/drivers/gpu/drm/lima/lima_devfreq.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright 2020 Martin Blumenstingl <martin.blumenstingl@googlemail.com> */
-+
-+#ifndef __LIMA_DEVFREQ_H__
-+#define __LIMA_DEVFREQ_H__
-+
-+#include <linux/spinlock.h>
-+#include <linux/ktime.h>
-+
-+struct devfreq;
-+struct opp_table;
-+struct thermal_cooling_device;
-+
-+struct lima_device;
-+
-+struct lima_devfreq {
-+	struct devfreq *devfreq;
-+	struct opp_table *clkname_opp_table;
-+	struct opp_table *regulators_opp_table;
-+	struct thermal_cooling_device *cooling;
-+	bool opp_of_table_added;
-+
-+	ktime_t busy_time;
-+	ktime_t idle_time;
-+	ktime_t time_last_update;
-+	int busy_count;
-+	/*
-+	 * Protect busy_time, idle_time, time_last_update and busy_count
-+	 * because these can be updated concurrently, for example by the GP
-+	 * and PP interrupts.
-+	 */
-+	spinlock_t lock;
-+};
-+
-+int lima_devfreq_init(struct lima_device *ldev);
-+void lima_devfreq_fini(struct lima_device *ldev);
-+
-+void lima_devfreq_record_busy(struct lima_devfreq *devfreq);
-+void lima_devfreq_record_idle(struct lima_devfreq *devfreq);
-+
-+#endif
-diff --git a/drivers/gpu/drm/lima/lima_device.c b/drivers/gpu/drm/lima/lima_device.c
-index 19829b543024..7f1f7a1c03e5 100644
---- a/drivers/gpu/drm/lima/lima_device.c
-+++ b/drivers/gpu/drm/lima/lima_device.c
-@@ -214,6 +214,8 @@ static int lima_init_gp_pipe(struct lima_device *dev)
- 	struct lima_sched_pipe *pipe = dev->pipe + lima_pipe_gp;
- 	int err;
- 
-+	pipe->ldev = dev;
-+
- 	err = lima_sched_pipe_init(pipe, "gp");
- 	if (err)
- 		return err;
-@@ -244,6 +246,8 @@ static int lima_init_pp_pipe(struct lima_device *dev)
- 	struct lima_sched_pipe *pipe = dev->pipe + lima_pipe_pp;
- 	int err, i;
- 
-+	pipe->ldev = dev;
-+
- 	err = lima_sched_pipe_init(pipe, "pp");
- 	if (err)
- 		return err;
-diff --git a/drivers/gpu/drm/lima/lima_device.h b/drivers/gpu/drm/lima/lima_device.h
-index 31158d86271c..d6c0f8b8f7e8 100644
---- a/drivers/gpu/drm/lima/lima_device.h
-+++ b/drivers/gpu/drm/lima/lima_device.h
-@@ -8,6 +8,7 @@
- #include <linux/delay.h>
- 
- #include "lima_sched.h"
-+#include "lima_devfreq.h"
- 
- enum lima_gpu_id {
- 	lima_gpu_mali400 = 0,
-@@ -94,6 +95,8 @@ struct lima_device {
- 
- 	u32 *dlbu_cpu;
- 	dma_addr_t dlbu_dma;
-+
-+	struct lima_devfreq devfreq;
- };
- 
- static inline struct lima_device *
-diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
-index 2daac64d8955..d9f64e52ae9e 100644
---- a/drivers/gpu/drm/lima/lima_drv.c
-+++ b/drivers/gpu/drm/lima/lima_drv.c
-@@ -10,6 +10,7 @@
- #include <drm/drm_prime.h>
- #include <drm/lima_drm.h>
- 
-+#include "lima_device.h"
- #include "lima_drv.h"
- #include "lima_gem.h"
- #include "lima_vm.h"
-@@ -306,18 +307,26 @@ static int lima_pdev_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_out1;
- 
-+	err = lima_devfreq_init(ldev);
-+	if (err) {
-+		dev_err(&pdev->dev, "Fatal error during devfreq init\n");
-+		goto err_out2;
-+	}
-+
- 	/*
- 	 * Register the DRM device with the core and the connectors with
- 	 * sysfs.
- 	 */
- 	err = drm_dev_register(ddev, 0);
- 	if (err < 0)
--		goto err_out2;
-+		goto err_out3;
- 
- 	return 0;
- 
--err_out2:
-+err_out3:
- 	lima_device_fini(ldev);
-+err_out2:
-+	lima_devfreq_fini(ldev);
- err_out1:
- 	drm_dev_put(ddev);
- err_out0:
-@@ -331,6 +340,7 @@ static int lima_pdev_remove(struct platform_device *pdev)
- 	struct drm_device *ddev = ldev->ddev;
- 
- 	drm_dev_unregister(ddev);
-+	lima_devfreq_fini(ldev);
- 	lima_device_fini(ldev);
- 	drm_dev_put(ddev);
- 	lima_sched_slab_fini();
-diff --git a/drivers/gpu/drm/lima/lima_sched.c b/drivers/gpu/drm/lima/lima_sched.c
-index 3886999b4533..d937d626b892 100644
---- a/drivers/gpu/drm/lima/lima_sched.c
-+++ b/drivers/gpu/drm/lima/lima_sched.c
-@@ -5,6 +5,7 @@
- #include <linux/slab.h>
- #include <linux/xarray.h>
- 
-+#include "lima_devfreq.h"
- #include "lima_drv.h"
- #include "lima_sched.h"
- #include "lima_vm.h"
-@@ -214,6 +215,8 @@ static struct dma_fence *lima_sched_run_job(struct drm_sched_job *job)
- 	 */
- 	ret = dma_fence_get(task->fence);
- 
-+	lima_devfreq_record_busy(&pipe->ldev->devfreq);
-+
- 	pipe->current_task = task;
- 
- 	/* this is needed for MMU to work correctly, otherwise GP/PP
-@@ -285,6 +288,8 @@ static void lima_sched_timedout_job(struct drm_sched_job *job)
- 	pipe->current_vm = NULL;
- 	pipe->current_task = NULL;
- 
-+	lima_devfreq_record_idle(&pipe->ldev->devfreq);
-+
- 	drm_sched_resubmit_jobs(&pipe->base);
- 	drm_sched_start(&pipe->base, true);
- }
-@@ -364,5 +369,7 @@ void lima_sched_pipe_task_done(struct lima_sched_pipe *pipe)
- 	} else {
- 		pipe->task_fini(pipe);
- 		dma_fence_signal(task->fence);
-+
-+		lima_devfreq_record_idle(&pipe->ldev->devfreq);
- 	}
- }
-diff --git a/drivers/gpu/drm/lima/lima_sched.h b/drivers/gpu/drm/lima/lima_sched.h
-index d64393fb50a9..19bbc5214cf2 100644
---- a/drivers/gpu/drm/lima/lima_sched.h
-+++ b/drivers/gpu/drm/lima/lima_sched.h
-@@ -6,6 +6,7 @@
- 
- #include <drm/gpu_scheduler.h>
- 
-+struct lima_device;
- struct lima_vm;
- 
- struct lima_sched_task {
-@@ -44,6 +45,8 @@ struct lima_sched_pipe {
- 	u32 fence_seqno;
- 	spinlock_t fence_lock;
- 
-+	struct lima_device *ldev;
-+
- 	struct lima_sched_task *current_task;
- 	struct lima_vm *current_vm;
- 
--- 
-2.25.2
+Eric
+>=20
+> But what we can do is to just ask the HW to give us the right state
+> on userspace access, at all times. How about this:
+>=20
+> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> index 48fd9fc229a2..281fe7216c59 100644
+> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+> @@ -305,8 +305,18 @@ static unsigned long
+> vgic_v3_uaccess_read_pending(struct kvm_vcpu *vcpu,
+> =A0=A0=A0=A0=A0 */
+> =A0=A0=A0=A0 for (i =3D 0; i < len * 8; i++) {
+> =A0=A0=A0=A0=A0=A0=A0=A0 struct vgic_irq *irq =3D vgic_get_irq(vcpu->kv=
+m, vcpu, intid + i);
+> +=A0=A0=A0=A0=A0=A0=A0 bool state =3D irq->pending_latch;
+>=20
+> -=A0=A0=A0=A0=A0=A0=A0 if (irq->pending_latch)
+> +=A0=A0=A0=A0=A0=A0=A0 if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 int err;
+> +
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 err =3D irq_get_irqchip_state(irq->h=
+ost_irq,
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0 IRQCHIP_STATE_PENDING,
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0 &state);
+> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 WARN_ON(err);
+> +=A0=A0=A0=A0=A0=A0=A0 }
+> +
+> +=A0=A0=A0=A0=A0=A0=A0 if (state)
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 value |=3D (1U << i);
+>=20
+> =A0=A0=A0=A0=A0=A0=A0=A0 vgic_put_irq(vcpu->kvm, irq);
+>=20
+> I can add this to "KVM: arm64: GICv4.1: Add direct injection capability
+> to SGI registers".
+>=20
+>>
+>>>
+>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>>> ---
+>>> =A0 virt/kvm/arm/vgic/vgic-mmio-v3.c | 48 +++++++++++++++++++++++++++=
++++--
+>>> =A0 virt/kvm/arm/vgic/vgic-v3.c=A0=A0=A0=A0=A0 |=A0 2 ++
+>>> =A0 2 files changed, 48 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> index de89da76a379..442f3b8c2559 100644
+>>> --- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> +++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+>>> @@ -3,6 +3,7 @@
+>>> =A0=A0 * VGICv3 MMIO handling functions
+>>> =A0=A0 */
+>>> =A0 +#include <linux/bitfield.h>
+>>> =A0 #include <linux/irqchip/arm-gic-v3.h>
+>>> =A0 #include <linux/kvm.h>
+>>> =A0 #include <linux/kvm_host.h>
+>>> @@ -70,6 +71,8 @@ static unsigned long vgic_mmio_read_v3_misc(struct
+>>> kvm_vcpu *vcpu,
+>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 if (vgic->enabled)
+>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 value |=3D GICD_CTLR_ENABLE_S=
+S_G1;
+>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 value |=3D GICD_CTLR_ARE_NS | GICD_CTLR_D=
+S;
+>>> +=A0=A0=A0=A0=A0=A0=A0 if (kvm_vgic_global_state.has_gicv4_1 && vgic-=
+>nassgireq)
+>>
+>> Looking at how we handle the GICD_CTLR.nASSGIreq setting, I think
+>> "nassgireq=3D=3Dtrue" already indicates "has_gicv4_1=3D=3Dtrue".=A0 So=
+ this
+>> can be simplified.
+>=20
+> Indeed. I've now dropped the has_gicv4.1 check.
+>=20
+>> But I wonder that should we use nassgireq to *only* keep track what
+>> the guest had written into the GICD_CTLR.nASSGIreq.=A0 If not, we may
+>> lose the guest-request bit after migration among hosts with different
+>> has_gicv4_1 settings.
+>=20
+> I'm unsure of what you're suggesting here. If userspace tries to set
+> GICD_CTLR.nASSGIreq on a non-4.1 host, this bit will not latch.
+> Userspace can check that at restore time. Or we could fail the
+> userspace write, which is a bit odd (the bit is otherwise RES0).
+>=20
+> Could you clarify your proposal?
+>=20
+>> The remaining patches all look good to me :-). I will wait for you to
+>> confirm these two concerns.
+>=20
+> Thanks,
+>=20
+> =A0=A0=A0=A0=A0=A0=A0 M.
 
