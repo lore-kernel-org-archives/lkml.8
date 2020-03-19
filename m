@@ -2,139 +2,79 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1D1C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E788C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730B32098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56ACF20BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbgCSO0z (ORCPT
+        id S1727445AbgCSO1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:26:55 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29584 "EHLO mga14.intel.com"
+        Thu, 19 Mar 2020 10:27:20 -0400
+Received: from mga14.intel.com ([192.55.52.115]:29627 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbgCSO0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:26:54 -0400
-IronPort-SDR: jkMZd+2+AWRiqyaOehU72nPQumHw732tr+Et8XJa6erIJ6nQngOhlUlR1hIxFnpfkGN5cZnYjm
- n6FofFRp/HgA==
+        id S1726892AbgCSO1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 10:27:20 -0400
+IronPort-SDR: wnimBr6TMM/qvZ3Eq8LRWvp9TFzr5L76J8AEl0FA2N+sA0p7u6eDtbUy6VtQOHI/9vn2IdObx9
+ VFZZhG4B719w==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 07:26:54 -0700
-IronPort-SDR: 5wTAmaiKMB7UbpfYe+dYHV7dUABogcaNY8bPZRYQ71HS0BVNr9wCzGBPFMG42llbBUh2bSaoNo
- vUJevmIpj65Q==
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 07:27:19 -0700
+IronPort-SDR: EtchYp8B7uoiL7wXlFcN9kwhNz4PotBR5UDN4L88/9cjUnL/sX041L43u1+FsR1fQ8+fpnnp2x
+ +Sf2pLhtxX4w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,571,1574150400"; 
-   d="scan'208";a="234187796"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 19 Mar 2020 07:26:43 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jEw87-00B637-Ar; Thu, 19 Mar 2020 16:26:39 +0200
-Date:   Thu, 19 Mar 2020 16:26:39 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-Cc:     "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Michael Neuling <mikey@neuling.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v11 8/8] MAINTAINERS: perf: Add pattern that matches ppc
- perf to the perf entry.
-Message-ID: <20200319142639.GL1922688@smile.fi.intel.com>
-References: <20200225173541.1549955-1-npiggin@gmail.com>
- <cover.1584620202.git.msuchanek@suse.de>
- <5cd926191175c4a4a85dc2246adc84bcfac21b1a.1584620202.git.msuchanek@suse.de>
- <CAHp75VegYhz-hwSUNHbGFB3yiatAWWytwB7Vctf=mCLyCJEy3Q@mail.gmail.com>
- <20200319140008.GI25468@kitsune.suse.cz>
+   d="scan'208";a="245175060"
+Received: from awagner-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.86.227])
+  by orsmga003.jf.intel.com with ESMTP; 19 Mar 2020 07:27:15 -0700
+Date:   Thu, 19 Mar 2020 16:27:14 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>
+Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        sachinp@linux.vnet.ibm.com, mpe@ellerman.id.au
+Subject: Re: [PATCH] tpm2: Export tpm2_get_cc_attrs_tbl for ibmvtpm driver as
+ module
+Message-ID: <20200319142714.GB3703@linux.intel.com>
+References: <20200317130819.720318-1-stefanb@linux.vnet.ibm.com>
+ <20200318194247.GC48177@linux.intel.com>
+ <4b2949a9-b251-906d-d513-1b2ccef758a0@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200319140008.GI25468@kitsune.suse.cz>
+In-Reply-To: <4b2949a9-b251-906d-d513-1b2ccef758a0@linux.ibm.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 03:00:08PM +0100, Michal Suchánek wrote:
-> On Thu, Mar 19, 2020 at 03:37:03PM +0200, Andy Shevchenko wrote:
-> > On Thu, Mar 19, 2020 at 2:21 PM Michal Suchanek <msuchanek@suse.de> wrote:
-> > >
-> > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > > ---
-> > > v10: new patch
-> > > ---
-> > >  MAINTAINERS | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index bc8dbe4fe4c9..329bf4a31412 100644
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -13088,6 +13088,8 @@ F:      arch/*/kernel/*/perf_event*.c
-> > >  F:     arch/*/kernel/*/*/perf_event*.c
-> > >  F:     arch/*/include/asm/perf_event.h
-> > >  F:     arch/*/kernel/perf_callchain.c
-> > > +F:     arch/*/perf/*
-> > > +F:     arch/*/perf/*/*
-> > >  F:     arch/*/events/*
-> > >  F:     arch/*/events/*/*
-> > >  F:     tools/perf/
-> > 
-> > Had you run parse-maintainers.pl?
-> Did not know it exists. The output is:
+On Wed, Mar 18, 2020 at 03:53:54PM -0400, Stefan Berger wrote:
+> On 3/18/20 3:42 PM, Jarkko Sakkinen wrote:
+> > On Tue, Mar 17, 2020 at 09:08:19AM -0400, Stefan Berger wrote:
+> > > From: Stefan Berger <stefanb@linux.ibm.com>
+> > > 
+> > > This patch fixes the following problem when the ibmvtpm driver
+> > > is built as a module:
+> > > 
+> > > ERROR: modpost: "tpm2_get_cc_attrs_tbl" [drivers/char/tpm/tpm_ibmvtpm.ko] undefined!
+> > > make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
+> > > make: *** [Makefile:1298: modules] Error 2
+> > > 
+> > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> > Hi, wrong tag (we use "tpm:"), missing fixes tag and please cc stable.
+> > Thanks.
 > 
-> scripts/parse-maintainers.pl 
-> Odd non-pattern line '
-> Documentation/devicetree/bindings/media/ti,cal.yaml
-> ' for 'TI VPE/CAL DRIVERS' at scripts/parse-maintainers.pl line 147,
-> <$file> line 16756.
+> I did not add the fixes tag because I do not know the final commit hash, or
+> is it the final commit hash once it is in linux-next? I doubt it with all
+> the merging that can occur.
 
-It is fixed in media tree and available in linux next as
+Can you send me a new version after rc1 is out?
 
-d44535cb14c9 ("media: MAINTAINERS: Sort entries in database for TI VPE/CAL")
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+/Jarkko
