@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2835C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C17C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C001520786
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45CD221D95
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbgCSJOs (ORCPT
+        id S1727566AbgCSJOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:14:48 -0400
-Received: from 8bytes.org ([81.169.241.247]:52110 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:14:51 -0400
+Received: from 8bytes.org ([81.169.241.247]:52420 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbgCSJOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:34 -0400
+        id S1727346AbgCSJOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:35 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 978845BC; Thu, 19 Mar 2020 10:14:21 +0100 (CET)
+        id 9E75E6BB; Thu, 19 Mar 2020 10:14:22 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 29/70] x86/head/64: Install boot GDT
-Date:   Thu, 19 Mar 2020 10:13:26 +0100
-Message-Id: <20200319091407.1481-30-joro@8bytes.org>
+Subject: [PATCH 34/70] x86/head/64: Load IDT earlier
+Date:   Thu, 19 Mar 2020 10:13:31 +0100
+Message-Id: <20200319091407.1481-35-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -48,64 +48,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Handling exceptions during boot requires a working GDT. The kernel GDT
-is not yet ready for use, so install a temporary boot GDT.
+Load the IDT right after switching to virtual addresses in head_64.S
+so that the kernel can handle #VC exceptions.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/head_64.S | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ arch/x86/kernel/head64.c  | 15 +++++++++++++++
+ arch/x86/kernel/head_64.S | 17 +++++++++++++++++
+ 2 files changed, 32 insertions(+)
 
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 206a4b6144c2..0ecdf28291fc 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -489,3 +489,18 @@ void __init x86_64_start_reservations(char *real_mode_data)
+ 
+ 	start_kernel();
+ }
++
++void __head early_idt_setup_early_handler(unsigned long physaddr)
++{
++	gate_desc *idt = fixup_pointer(idt_table, physaddr);
++	int i;
++
++	for (i = 0; i < NUM_EXCEPTION_VECTORS; i++) {
++		struct idt_data data;
++		gate_desc desc;
++
++		init_idt_data(&data, i, early_idt_handler_array[i]);
++		idt_init_desc(&desc, &data);
++		native_write_idt_entry(idt, i, &desc);
++	}
++}
 diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 4bbc770af632..5219a70b3fb4 100644
+index b8ba72f31be9..8465290a1eb3 100644
 --- a/arch/x86/kernel/head_64.S
 +++ b/arch/x86/kernel/head_64.S
-@@ -72,6 +72,26 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	/* Set up the stack for verify_cpu(), similar to initial_stack below */
- 	leaq	(__end_init_task - SIZEOF_PTREGS)(%rip), %rsp
- 
-+	/* Setup boot GDT descriptor and load boot GDT */
-+	leaq	boot_gdt(%rip), %rax
-+	movq	%rax, boot_gdt_base(%rip)
-+	lgdt	boot_gdt_descr(%rip)
-+
-+	/* New GDT is live - reload data segment registers */
-+	movl	$__KERNEL_DS, %eax
-+	movl	%eax, %ds
-+	movl	%eax, %ss
-+	movl	%eax, %es
-+
-+	/* Now switch to __KERNEL_CS so IRET works reliably */
-+	pushq	$__KERNEL_CS
-+	leaq	.Lon_kernel_cs(%rip), %rax
+@@ -104,6 +104,20 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	leaq	_text(%rip), %rdi
+ 	pushq	%rsi
+ 	call	__startup_64
++	/* Save return value */
 +	pushq	%rax
-+	lretq
 +
-+.Lon_kernel_cs:
-+	UNWIND_HINT_EMPTY
++	/*
++	 * Load IDT with early handlers - needed for SEV-ES
++	 * Do this here because this must only happen on the boot CPU
++	 * and the code below is shared with secondary CPU bringup.
++	 */
++	leaq	_text(%rip), %rdi
++	call	early_idt_setup_early_handler
 +
- 	/* Sanitize CPU configuration */
- 	call verify_cpu
++	/* Restore __startup_64 return value*/
++	popq	%rax
++	/* Restore pointer to real_mode_data */
+ 	popq	%rsi
  
-@@ -480,6 +500,18 @@ SYM_DATA_LOCAL(early_gdt_descr_base,	.quad INIT_PER_CPU_VAR(gdt_page))
- SYM_DATA(phys_base, .quad 0x0)
- EXPORT_SYMBOL(phys_base)
+ 	/* Form the CR3 value being sure to include the CR3 modifier */
+@@ -200,6 +214,9 @@ SYM_CODE_START(secondary_startup_64)
+ 	 */
+ 	movq initial_stack(%rip), %rsp
  
-+/* Boot GDT used when kernel addresses are not mapped yet */
-+SYM_DATA_LOCAL(boot_gdt_descr,		.word boot_gdt_end - boot_gdt)
-+SYM_DATA_LOCAL(boot_gdt_base,		.quad 0)
-+SYM_DATA_START(boot_gdt)
-+	.quad	0
-+	.quad   0x00cf9a000000ffff      /* __KERNEL32_CS */
-+	.quad   0x00af9a000000ffff      /* __KERNEL_CS */
-+	.quad   0x00cf92000000ffff      /* __KERNEL_DS */
-+	.quad   0x0080890000000000      /* TS descriptor */
-+	.quad   0x0000000000000000      /* TS continued */
-+SYM_DATA_END_LABEL(boot_gdt, SYM_L_LOCAL, boot_gdt_end)
++	/* Load IDT */
++	lidt	idt_descr(%rip)
 +
- #include "../../x86/xen/xen-head.S"
- 
- 	__PAGE_ALIGNED_BSS
+ 	/* Check if nx is implemented */
+ 	movl	$0x80000001, %eax
+ 	cpuid
 -- 
 2.17.1
 
