@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFC1C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1080DC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8191D20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C0C20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:23:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="l3k+wfE4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LBBXdvcP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbgCSWWe (ORCPT
+        id S1727494AbgCSWXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 18:22:34 -0400
-Received: from gateway23.websitewelcome.com ([192.185.48.71]:26513 "EHLO
-        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725895AbgCSWWd (ORCPT
+        Thu, 19 Mar 2020 18:23:55 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.196]:18094 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727432AbgCSWXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 18:22:33 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway23.websitewelcome.com (Postfix) with ESMTP id 83A5DCC1C
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 17:22:32 -0500 (CDT)
+        Thu, 19 Mar 2020 18:23:55 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 098B99831
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 17:23:54 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id F3YejkeJYAGTXF3YejAaSs; Thu, 19 Mar 2020 17:22:32 -0500
+        id F3ZxjSTd8VQh0F3ZyjhSmb; Thu, 19 Mar 2020 17:23:54 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,28 +36,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Fch2gw+FxFOXUz75GYw483nOatBMsFwMZSrEf6kFfTg=; b=l3k+wfE4lVqBWzoz4AH1Y3aB4X
-        SNG1oTH5L8odnCiD4YykyzsTml/8wJx0Nh3HQ5xOyW9QdscofmWrhUoksFaYLna1vptrw4dH7u0OR
-        JQ/z2YgbjGQYyiTjWegOVTfZTG+G0+mabbHUMsPZs9XhLRksK+sWYqVAlQcBuaPl/qkoYYGLyXrB5
-        PC3zlrvGU52YVAz6nur+atgPOezOttLLEeDD++9BdlbxykWlKNZRh1gBk7e2iJXpdJx7To+tSUoTe
-        XgzlFwksvHPa4oQpM1NfeFzE1xSw8FcfB+JxFOqiKEJ9k1tEzdDLc1Kylt1gxrEJkcj3oMD0MAnj9
-        bU+P7o4A==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53888 helo=embeddedor)
+        bh=6URqdS67bk0WU5yZN4/DlVoCb44PpZDm7Vl22nZSfqw=; b=LBBXdvcPHn6gf+mMZhQkYAC9xC
+        vGwDbqJPNc7Ukn8xPPYLMkkpdDpUT0CRoBLHfjW3opok/8ZoNsOQCA8D0E8WKVQuNyj2uwfu1+uKm
+        sONHDJg9Al6UwwLaXCRaunJnH2L0tN+WjJ+bs6cEjOpQFh2rEp8l2hqvaJcPk+0YoBaG0IX77Ylv9
+        OuMUmGbFo0o5zyjxH4/0p0oqLvkNLxuSPeHL0WYubFV32xQrqTTYmdBO3FFJiUcSQxkmFhPXTlJk1
+        /59X03wbcGPVVUB1nXGfbGUfA1pfpUB6gLk0x7JN45SYE7O6fDOkS2Hgvl8vfUqAKRD7h+Gz+3lSh
+        hLEIfV5A==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53894 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jF3Yc-0023qC-18; Thu, 19 Mar 2020 17:22:30 -0500
-Date:   Thu, 19 Mar 2020 17:22:29 -0500
+        id 1jF3Zw-0024Kc-Fd; Thu, 19 Mar 2020 17:23:52 -0500
+Date:   Thu, 19 Mar 2020 17:23:52 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] media: venus: hfi_msgs.h: Replace zero-length array
- with flexible-array member
-Message-ID: <20200319222229.GA19280@embeddedor.com>
+Subject: [PATCH][next] media: usb: pwc: pwc.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200319222352.GA19476@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -70,13 +67,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.218.116.241
 X-Source-L: No
-X-Exim-ID: 1jF3Yc-0023qC-18
+X-Exim-ID: 1jF3Zw-0024Kc-Fd
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53888
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53894
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 14
+X-Email-Count: 18
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -114,58 +111,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/media/platform/qcom/venus/hfi_msgs.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/media/usb/pwc/pwc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.h b/drivers/media/platform/qcom/venus/hfi_msgs.h
-index 7694b1d25d9d..526d9f5b487b 100644
---- a/drivers/media/platform/qcom/venus/hfi_msgs.h
-+++ b/drivers/media/platform/qcom/venus/hfi_msgs.h
-@@ -155,7 +155,7 @@ struct hfi_msg_session_empty_buffer_done_pkt {
- 	u32 input_tag;
- 	u32 packet_buffer;
- 	u32 extradata_buffer;
--	u32 data[0];
-+	u32 data[];
- };
+diff --git a/drivers/media/usb/pwc/pwc.h b/drivers/media/usb/pwc/pwc.h
+index 3362962d0d00..b02a3c7b7742 100644
+--- a/drivers/media/usb/pwc/pwc.h
++++ b/drivers/media/usb/pwc/pwc.h
+@@ -193,7 +193,7 @@ struct pwc_raw_frame {
+ 				   decompressor) */
+ 	__u8   cmd[4];		/* the four byte of the command (in case of
+ 				   nala, only the first 3 bytes is filled) */
+-	__u8   rawframe[0];	/* frame_size = H / 4 * vbandlength */
++	__u8   rawframe[];	/* frame_size = H / 4 * vbandlength */
+ } __packed;
  
- struct hfi_msg_session_fbd_compressed_pkt {
-@@ -175,7 +175,7 @@ struct hfi_msg_session_fbd_compressed_pkt {
- 	u32 picture_type;
- 	u32 packet_buffer;
- 	u32 extradata_buffer;
--	u32 data[0];
-+	u32 data[];
- };
- 
- struct hfi_msg_session_fbd_uncompressed_plane0_pkt {
-@@ -202,7 +202,7 @@ struct hfi_msg_session_fbd_uncompressed_plane0_pkt {
- 	u32 picture_type;
- 	u32 packet_buffer;
- 	u32 extradata_buffer;
--	u32 data[0];
-+	u32 data[];
- };
- 
- struct hfi_msg_session_fbd_uncompressed_plane1_pkt {
-@@ -211,7 +211,7 @@ struct hfi_msg_session_fbd_uncompressed_plane1_pkt {
- 	u32 filled_len;
- 	u32 offset;
- 	u32 packet_buffer2;
--	u32 data[0];
-+	u32 data[];
- };
- 
- struct hfi_msg_session_fbd_uncompressed_plane2_pkt {
-@@ -220,7 +220,7 @@ struct hfi_msg_session_fbd_uncompressed_plane2_pkt {
- 	u32 filled_len;
- 	u32 offset;
- 	u32 packet_buffer3;
--	u32 data[0];
-+	u32 data[];
- };
- 
- struct hfi_msg_session_parse_sequence_header_done_pkt {
+ /* intermediate buffers with raw data from the USB cam */
 -- 
 2.23.0
 
