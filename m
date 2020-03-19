@@ -2,105 +2,94 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5ED8C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798AEC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87FD32072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584645880;
-	bh=SJujlLmB/lbY0zgYGhGySbvMnPH8M7hlt4e2GXxIfrQ=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=FuDR0kuv/TlAZ8A8BWkfkwl65BoF071hlAxTPQ5lOoJLCyKT9PdqllHHTmJZobIjA
-	 H/13Tt/SJsGOU/vj7u8OGU5nwU683Fm5PRQzJ8ocYFYSVzFJ7V8jtS49mlzZdvSoZA
-	 oxUDWTTeAb7Qm3vRF/yvkbFyYDVQ+8kvcw0bSQdA=
+	by mail.kernel.org (Postfix) with ESMTP id 505A42071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbgCSTYj (ORCPT
+        id S1727432AbgCST07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:24:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58478 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 15:26:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47832 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgCSTYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:24:39 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFD2F2071C;
-        Thu, 19 Mar 2020 19:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584645878;
-        bh=SJujlLmB/lbY0zgYGhGySbvMnPH8M7hlt4e2GXxIfrQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=WahN7/eXtVpfpX70fTnJ/dzOUcszGu3v1Gp9rDj68JoimKkleJz5cY5MeMD0KEdma
-         t/Aj1e+pQygT+MU+OiVCLdDz10ntodUpyt9cuJFo0XGp8hm8rxNOKuIUD+xJiiN5ed
-         aMHAWS6VgolfAGD8E+eAXJdBJzLBI5+7X2cHr6kw=
-Message-ID: <7c10010c3d7745857ee1fba8eb06e7fe047eaa13.camel@kernel.org>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
- regression
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     NeilBrown <neilb@suse.de>, yangerkun <yangerkun@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Date:   Thu, 19 Mar 2020 15:24:36 -0400
-In-Reply-To: <CAHk-=wj=UEVBObnZNtSnvX_9afJ3XHBSuXACPbriCBkCUGTHmA@mail.gmail.com>
-References: <20200308140314.GQ5972@shao2-debian>
-         <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
-         <87blp5urwq.fsf@notabene.neil.brown.name>
-         <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
-         <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
-         <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
-         <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
-         <878sk7vs8q.fsf@notabene.neil.brown.name>
-         <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
-         <875zfbvrbm.fsf@notabene.neil.brown.name>
-         <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
-         <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
-         <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
-         <87v9nattul.fsf@notabene.neil.brown.name>
-         <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
-         <87o8t2tc9s.fsf@notabene.neil.brown.name>
-         <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
-         <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
-         <877dznu0pk.fsf@notabene.neil.brown.name>
-         <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
-         <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
-         <87pndcsxc6.fsf@notabene.neil.brown.name>
-         <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
-         <CAHk-=whnqDS0NJtAaArVeYQz3hcU=4Ja3auB1Jvs42eADfUgMQ@mail.gmail.com>
-         <5d7b448858d5a5c01e97aceb45dcadff24d6fc28.camel@kernel.org>
-         <CAHk-=wj=UEVBObnZNtSnvX_9afJ3XHBSuXACPbriCBkCUGTHmA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        id S1726785AbgCST07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:26:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B4686AD03;
+        Thu, 19 Mar 2020 19:26:56 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 20:26:54 +0100
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH 70/70] x86/sev-es: Add NMI state tracking
+Message-ID: <20200319192654.GD611@suse.de>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-71-joro@8bytes.org>
+ <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
+ <20200319160749.GC5122@8bytes.org>
+ <CALCETrXY5M87C1Fc3QvTkc6MdbQ_3gAuOPUeWJktAzK4T60QNQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrXY5M87C1Fc3QvTkc6MdbQ_3gAuOPUeWJktAzK4T60QNQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-03-19 at 12:23 -0700, Linus Torvalds wrote:
-> On Thu, Mar 19, 2020 at 10:52 AM Jeff Layton <jlayton@kernel.org> wrote:
-> > Yangerkun gave me his Reviewed-by and I sent you the most recent version
-> > of the patch yesterday (cc'ing the relevant mailing lists). I left you
-> > as author as the original patch was yours.
-> > 
-> > Let me know if you'd prefer I send a pull request instead.
+On Thu, Mar 19, 2020 at 11:40:39AM -0700, Andy Lutomirski wrote:
+ 
+> Nope.  A nested NMI will reset the interrupted NMI's return frame to
+> cause it to run again when it's done.  I don't think this will have
+> any real interaction with #VC.  There's no longjmp() here.
+
+Ahh, so I misunderstood that part, in this case your proposal of sending
+the NMI-complete message right at the beginning of do_nmi() should work
+just fine. I will test this and see how it works out.
+
+> I certainly *like* preventing nesting, but I don't think we really
+> want a whole alternate NMI path just for a couple of messed-up AMD
+> generations.  And the TF trick is not so pretty either.
+
+Indeed, if it could be avoided, it should.
+
 > 
-> Is that patch the only thing you have pending?
+> > > This causes us to pop the NMI frame off the stack.  Assuming the NMI
+> > > restart logic is invoked (which is maybe impossible?), we get #DB,
+> > > which presumably is actually delivered.  And we end up on the #DB
+> > > stack, which might already have been in use, so we have a potential
+> > > increase in nesting.  Also, #DB may be called from an unexpected
+> > > context.
+> >
+> > An SEV-ES hypervisor is required to intercept #DB, which means that the
+> > #DB exception actually ends up being a #VC exception. So it will not end
+> > up on the #DB stack.
 > 
-> If you have other things, send me a pull request, otherwise just let
-> me know and I'll apply the patch directly.
+> With your patch set, #DB doesn't seem to end up on the #DB stack either.
 
-That's it for now.
+Right, it does not use the #DB stack or shift-ist stuff. Maybe it
+should, is this needed for anything else than making entry code
+debugable by kgdb?
 
-Thanks,
--- 
-Jeff Layton <jlayton@kernel.org>
+Regards,
 
+	Joerg
