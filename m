@@ -2,254 +2,155 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966F2C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA77C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6919F20BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF93208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbgCSOAV (ORCPT
+        id S1727617AbgCSOBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:00:21 -0400
-Received: from mga06.intel.com ([134.134.136.31]:40052 "EHLO mga06.intel.com"
+        Thu, 19 Mar 2020 10:01:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35964 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbgCSOAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:00:20 -0400
-IronPort-SDR: dIwpMobRYeXuNCiWDeUHqaTFDBVv5tS0b8BF1TOSdOkg0z9wyEoyT7jFRzDGo7VUFeYuwpMqCZ
- fLlvxcOsIL1w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 07:00:20 -0700
-IronPort-SDR: Ql5Ajz5vzSKG/3qtI7pOBZbcJsWBffIqEKzZAJWnuM5WbHexR5OXRLKswYFqbap1ZuFdWnuikg
- hRNQi3xxw03A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,571,1574150400"; 
-   d="scan'208";a="418349803"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2020 07:00:19 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jEvic-000078-FG; Thu, 19 Mar 2020 22:00:18 +0800
-Date:   Thu, 19 Mar 2020 21:59:33 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.03.13a] BUILD SUCCESS
- 1bdf61af6432bf200e50074dfa572ba4dd8069fd
-Message-ID: <5e737ac5.tiNdqJEmlDE2NOzT%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1727219AbgCSOBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 10:01:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4FAA2AD48;
+        Thu, 19 Mar 2020 14:01:15 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 15:01:13 +0100
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v11 0/8] Disable compat cruft on ppc64le v11
+Message-ID: <20200319140113.GJ25468@kitsune.suse.cz>
+References: <20200225173541.1549955-1-npiggin@gmail.com>
+ <cover.1584620202.git.msuchanek@suse.de>
+ <c5f30914-4d0c-5437-e8c4-9d62d08061e1@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c5f30914-4d0c-5437-e8c4-9d62d08061e1@c-s.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.03.13a
-branch HEAD: 1bdf61af6432bf200e50074dfa572ba4dd8069fd  fixup! rcu-tasks: Add stall warnings for RCU Tasks Trace
+On Thu, Mar 19, 2020 at 01:36:56PM +0100, Christophe Leroy wrote:
+> You sent it twice ? Any difference between the two dispatch ?
+Some headers were broken the first time around.
 
-elapsed time: 2657m
+Thanks
 
-configs tested: 187
-configs skipped: 0
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-s390                             allyesconfig
-ia64                              allnoconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-x86_64               randconfig-a001-20200317
-x86_64               randconfig-a002-20200317
-x86_64               randconfig-a003-20200317
-i386                 randconfig-a001-20200317
-i386                 randconfig-a002-20200317
-i386                 randconfig-a003-20200317
-alpha                randconfig-a001-20200318
-m68k                 randconfig-a001-20200318
-mips                 randconfig-a001-20200318
-nds32                randconfig-a001-20200318
-parisc               randconfig-a001-20200318
-riscv                randconfig-a001-20200318
-alpha                randconfig-a001-20200317
-m68k                 randconfig-a001-20200317
-mips                 randconfig-a001-20200317
-nds32                randconfig-a001-20200317
-parisc               randconfig-a001-20200317
-c6x                  randconfig-a001-20200317
-h8300                randconfig-a001-20200317
-microblaze           randconfig-a001-20200317
-nios2                randconfig-a001-20200317
-sparc64              randconfig-a001-20200317
-xtensa               randconfig-a001-20200317
-openrisc             randconfig-a001-20200317
-csky                 randconfig-a001-20200317
-sh                   randconfig-a001-20200317
-s390                 randconfig-a001-20200317
-x86_64               randconfig-b001-20200317
-x86_64               randconfig-b002-20200317
-x86_64               randconfig-b003-20200317
-i386                 randconfig-b001-20200317
-i386                 randconfig-b002-20200317
-i386                 randconfig-b003-20200317
-x86_64               randconfig-c001-20200317
-x86_64               randconfig-c002-20200317
-x86_64               randconfig-c003-20200317
-i386                 randconfig-c001-20200317
-i386                 randconfig-c002-20200317
-i386                 randconfig-c003-20200317
-x86_64               randconfig-d001-20200318
-x86_64               randconfig-d002-20200318
-x86_64               randconfig-d003-20200318
-i386                 randconfig-d001-20200318
-i386                 randconfig-d002-20200318
-i386                 randconfig-d003-20200318
-x86_64               randconfig-e001-20200317
-x86_64               randconfig-e002-20200317
-x86_64               randconfig-e003-20200317
-i386                 randconfig-e001-20200317
-i386                 randconfig-e002-20200317
-i386                 randconfig-e003-20200317
-x86_64               randconfig-e001-20200318
-x86_64               randconfig-e002-20200318
-x86_64               randconfig-e003-20200318
-i386                 randconfig-e001-20200318
-i386                 randconfig-e002-20200318
-i386                 randconfig-e003-20200318
-x86_64               randconfig-f001-20200317
-x86_64               randconfig-f002-20200317
-x86_64               randconfig-f003-20200317
-i386                 randconfig-f001-20200317
-i386                 randconfig-f002-20200317
-i386                 randconfig-f003-20200317
-x86_64               randconfig-f001-20200318
-x86_64               randconfig-f002-20200318
-x86_64               randconfig-f003-20200318
-i386                 randconfig-f001-20200318
-i386                 randconfig-f002-20200318
-i386                 randconfig-f003-20200318
-x86_64               randconfig-g001-20200317
-x86_64               randconfig-g002-20200317
-x86_64               randconfig-g003-20200317
-i386                 randconfig-g001-20200317
-i386                 randconfig-g002-20200317
-i386                 randconfig-g003-20200317
-x86_64               randconfig-g001-20200318
-x86_64               randconfig-g002-20200318
-x86_64               randconfig-g003-20200318
-i386                 randconfig-g001-20200318
-i386                 randconfig-g002-20200318
-i386                 randconfig-g003-20200318
-x86_64               randconfig-h001-20200317
-x86_64               randconfig-h002-20200317
-x86_64               randconfig-h003-20200317
-i386                 randconfig-h001-20200317
-i386                 randconfig-h002-20200317
-i386                 randconfig-h003-20200317
-arc                  randconfig-a001-20200317
-ia64                 randconfig-a001-20200317
-arm                  randconfig-a001-20200317
-arm64                randconfig-a001-20200317
-powerpc              randconfig-a001-20200317
-sparc                randconfig-a001-20200317
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Michal
+> 
+> Christophe
+> 
+> Le 19/03/2020 à 13:19, Michal Suchanek a écrit :
+> > Less code means less bugs so add a knob to skip the compat stuff.
+> > 
+> > Changes in v2: saner CONFIG_COMPAT ifdefs
+> > Changes in v3:
+> >   - change llseek to 32bit instead of builing it unconditionally in fs
+> >   - clanup the makefile conditionals
+> >   - remove some ifdefs or convert to IS_DEFINED where possible
+> > Changes in v4:
+> >   - cleanup is_32bit_task and current_is_64bit
+> >   - more makefile cleanup
+> > Changes in v5:
+> >   - more current_is_64bit cleanup
+> >   - split off callchain.c 32bit and 64bit parts
+> > Changes in v6:
+> >   - cleanup makefile after split
+> >   - consolidate read_user_stack_32
+> >   - fix some checkpatch warnings
+> > Changes in v7:
+> >   - add back __ARCH_WANT_SYS_LLSEEK to fix build with llseek
+> >   - remove leftover hunk
+> >   - add review tags
+> > Changes in v8:
+> >   - consolidate valid_user_sp to fix it in the split callchain.c
+> >   - fix build errors/warnings with PPC64 !COMPAT and PPC32
+> > Changes in v9:
+> >   - remove current_is_64bit()
+> > Chanegs in v10:
+> >   - rebase, sent together with the syscall cleanup
+> > Changes in v11:
+> >   - rebase
+> >   - add MAINTAINERS pattern for ppc perf
+> > 
+> > Michal Suchanek (8):
+> >    powerpc: Add back __ARCH_WANT_SYS_LLSEEK macro
+> >    powerpc: move common register copy functions from signal_32.c to
+> >      signal.c
+> >    powerpc/perf: consolidate read_user_stack_32
+> >    powerpc/perf: consolidate valid_user_sp
+> >    powerpc/64: make buildable without CONFIG_COMPAT
+> >    powerpc/64: Make COMPAT user-selectable disabled on littleendian by
+> >      default.
+> >    powerpc/perf: split callchain.c by bitness
+> >    MAINTAINERS: perf: Add pattern that matches ppc perf to the perf
+> >      entry.
+> > 
+> >   MAINTAINERS                            |   2 +
+> >   arch/powerpc/Kconfig                   |   5 +-
+> >   arch/powerpc/include/asm/thread_info.h |   4 +-
+> >   arch/powerpc/include/asm/unistd.h      |   1 +
+> >   arch/powerpc/kernel/Makefile           |   6 +-
+> >   arch/powerpc/kernel/entry_64.S         |   2 +
+> >   arch/powerpc/kernel/signal.c           | 144 +++++++++-
+> >   arch/powerpc/kernel/signal_32.c        | 140 ----------
+> >   arch/powerpc/kernel/syscall_64.c       |   6 +-
+> >   arch/powerpc/kernel/vdso.c             |   3 +-
+> >   arch/powerpc/perf/Makefile             |   5 +-
+> >   arch/powerpc/perf/callchain.c          | 356 +------------------------
+> >   arch/powerpc/perf/callchain.h          |  20 ++
+> >   arch/powerpc/perf/callchain_32.c       | 196 ++++++++++++++
+> >   arch/powerpc/perf/callchain_64.c       | 174 ++++++++++++
+> >   fs/read_write.c                        |   3 +-
+> >   16 files changed, 556 insertions(+), 511 deletions(-)
+> >   create mode 100644 arch/powerpc/perf/callchain.h
+> >   create mode 100644 arch/powerpc/perf/callchain_32.c
+> >   create mode 100644 arch/powerpc/perf/callchain_64.c
+> > 
