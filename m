@@ -2,193 +2,70 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F07C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDACC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC7F20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:48:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZ+tPJYY"
+	by mail.kernel.org (Postfix) with ESMTP id 8B21C20782
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:49:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgCSOsF (ORCPT
+        id S1727380AbgCSOtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:48:05 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51649 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbgCSOsE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:48:04 -0400
-Received: by mail-pj1-f65.google.com with SMTP id hg10so1130921pjb.1;
-        Thu, 19 Mar 2020 07:48:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iK05xzM+yXMlMMBB96Ty+jVySQdFzOrOyJ1jKAUfrII=;
-        b=BZ+tPJYYDOYMpI+L4jin21gfyTgBL+CRJLQFsyPJAWy5RCjqyUdEkzijUGf41MX/zU
-         aHFUAmJ831sfBn4uvRfx4Yi4FnzKta6x+IiNtw695VVcV6fmNVfIenmYXn/glPL6sx5l
-         2m8n5YB2NZ6sP6JFUt5jRgUQfyArfdueifhYq5Rt1bcZG5auj0SqVQryhGRBmRpMyeNS
-         hwSxiuNTfww9prPYT/DQUe4dO/fYkKCgAWGMjJxBM6QFpph17YXi7HspCd8ppxShKvUL
-         aw2ZL++NQo0+9Z26XgRtPaosdh+4xJYzFuifpCuAEPpndKKcyj88HlP5kqmRfs2RvkNm
-         F0tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iK05xzM+yXMlMMBB96Ty+jVySQdFzOrOyJ1jKAUfrII=;
-        b=Rh7WK/2gIBUxluS1/+QuZKPJC9HMDxij/Z1yNTEOPXxJw5OZTvXmB4fzLqm7U0DZrW
-         ly0W40pQFNezigreD/XWT5nZlLaHqrD2KnTabLpNeKbMKqE4pZBJVUGJnv/xsuC5GTpH
-         hK7bu9HLCcbgrIrU+RuSRy0aAhUy6Ax2+2spaUBU1wQjijR5ra/52gr3uUKPj6bdJnrO
-         tZRK0A0jntEvt/5FgyqYVyYgSt9uZiWTI4GiJ/o5vOsqvhEYCc8I7IQJIFKPwiNzJSBL
-         p5NDbjt47ApefegPeZ0OP9s7tNBMr5tBZeKezw6hwLQbwUjYCrWofAMcw35J9WX6paFj
-         RaeA==
-X-Gm-Message-State: ANhLgQ2eJacRNADNKjB5Yf9RpXQOJovyfy9IT8Ls/cRBjAsjo7mKhHVG
-        9bxQdcYodDg4Jv+DqxrbQ5xApiEJ31Y=
-X-Google-Smtp-Source: ADFU+vtdCSYXWtpFnsVhOE0kaIaAPwen+HYz6MCw8i52mb1uyYlVrW2AAy1bhF9Gkkz0QjUWRfRxxg==
-X-Received: by 2002:a17:90b:1918:: with SMTP id mp24mr4064031pjb.98.1584629282451;
-        Thu, 19 Mar 2020 07:48:02 -0700 (PDT)
-Received: from pek-khao-d2.corp.ad.wrs.com (unknown-105-123.windriver.com. [147.11.105.123])
-        by smtp.gmail.com with ESMTPSA id i197sm2896948pfe.137.2020.03.19.07.47.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 07:48:01 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 22:47:53 +0800
-From:   Kevin Hao <haokexin@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.5 01/65] gpiolib: Add support for the irqdomain which
- doesnt use irq_fwspec as arg
-Message-ID: <20200319144753.GD711692@pek-khao-d2.corp.ad.wrs.com>
-References: <20200319123926.466988514@linuxfoundation.org>
- <20200319123926.902914624@linuxfoundation.org>
- <20200319133355.GB711692@pek-khao-d2.corp.ad.wrs.com>
- <20200319134710.GA4092809@kroah.com>
+        Thu, 19 Mar 2020 10:49:53 -0400
+Received: from mga18.intel.com ([134.134.136.126]:24948 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727103AbgCSOtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 10:49:53 -0400
+IronPort-SDR: KTx2BSn7pBK3mQ9ROjwYAm7vKHfYryLMLFrIDlhudIPjnloQ3QTR6VOWvfAFHmsOGLMPAyLxU9
+ /q9P8a2T0jSg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 07:49:52 -0700
+IronPort-SDR: wgWTFVi60EiTqDR+fxJqq1BmHs1em6B9aD+X8WwNqoqt3jG+HHnt9QkVnxnsFiSbOtpajhnVgE
+ mTigOPv9qC4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="418364671"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2020 07:49:52 -0700
+Date:   Thu, 19 Mar 2020 07:49:52 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     syzbot <syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com>
+Cc:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, pbonzini@redhat.com, rkrcmar@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
+Subject: Re: WARNING in vcpu_enter_guest
+Message-ID: <20200319144952.GB11305@linux.intel.com>
+References: <000000000000f965b8059877e5e6@google.com>
+ <00000000000081861f05a132b9cd@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jCrbxBqMcLqd4mOl"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200319134710.GA4092809@kroah.com>
+In-Reply-To: <00000000000081861f05a132b9cd@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 19, 2020 at 03:35:16AM -0700, syzbot wrote:
+> syzbot has found a reproducer for the following crash on:
+> 
+> HEAD commit:    5076190d mm: slub: be more careful about the double cmpxch..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=143ca61de00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
+> dashboard link: https://syzkaller.appspot.com/bug?extid=00be5da1d75f1cc95f6b
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10bb4023e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com
 
---jCrbxBqMcLqd4mOl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Mar 19, 2020 at 02:47:10PM +0100, Greg Kroah-Hartman wrote:
-> On Thu, Mar 19, 2020 at 09:33:55PM +0800, Kevin Hao wrote:
-> > On Thu, Mar 19, 2020 at 02:03:43PM +0100, Greg Kroah-Hartman wrote:
-> > > From: Kevin Hao <haokexin@gmail.com>
-> > >=20
-> > > [ Upstream commit 242587616710576808dc8d7cdf18cfe0d7bf9831 ]
-> > >=20
-> > > Some gpio's parent irqdomain may not use the struct irq_fwspec as
-> > > argument, such as msi irqdomain. So rename the callback
-> > > populate_parent_fwspec() to populate_parent_alloc_arg() and make it
-> > > allocate and populate the specific struct which is needed by the
-> > > parent irqdomain.
-> >=20
-> > Hi Greg,
-> >=20
-> > This commit shouldn't go to stable because it is not a bug fix. It is j=
-ust a
-> > prerequisite of switching to general GPIOLIB_IRQCHIP for thunderx gpio =
-driver
-> > (commit 7a9f4460f74d "gpio: thunderx: Switch to GPIOLIB_IRQCHIP").
->=20
-> This seems to be a prerequisite for f98371476f36 ("pinctrl: qcom:
-> ssbi-gpio: Fix fwspec parsing bug") to apply properly.  With that
-> information, is it ok to keep?
-
-Yes, this commit does change the context of commit f98371476f36 ("pinctrl: =
-qcom:
-ssbi-gpio: Fix fwspec parsing bug"). So I am fine to keep this in order to =
-apply
-f98371476f36 cleanly. But there is no really logical dependency between the=
-se two
-commits, so another option is that we can adjust the commit f98371476f36 a =
-bit in order
-to apply to v5.5.x cleanly without this commit, something like below. IMHO,=
- it is more
-suitable for the stable kernel.
-
-=46rom 2678327511f77edd8692634e81ef04cd9ca4b249 Mon Sep 17 00:00:00 2001
-=46rom: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 6 Mar 2020 15:34:15 +0100
-Subject: [PATCH] pinctrl: qcom: ssbi-gpio: Fix fwspec parsing bug
-
-[ Upstream commit f98371476f36359da2285d1807b43e5b17fd18de ]
-
-We are parsing SSBI gpios as fourcell fwspecs but they are
-twocell. Probably a simple copy-and-paste bug.
-
-Tested on the APQ8060 DragonBoard and after this ethernet
-and MMC card detection works again.
-
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: stable@vger.kernel.org
-Reviewed-by: Brian Masney <masneyb@onstation.org>
-Fixes: ae436fe81053 ("pinctrl: ssbi-gpio: convert to hierarchical IRQ helpe=
-rs in gpio core")
-Link: https://lore.kernel.org/r/20200306143416.1476250-1-linus.walleij@lina=
-ro.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-[Kevin: Replace .populate_parent_alloc_arg with .populate_parent_fwspec]
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
----
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qco=
-m/pinctrl-ssbi-gpio.c
-index dca86886b1f9..6b7f0d56a532 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-@@ -794,7 +794,7 @@ static int pm8xxx_gpio_probe(struct platform_device *pd=
-ev)
- 	girq->fwnode =3D of_node_to_fwnode(pctrl->dev->of_node);
- 	girq->parent_domain =3D parent_domain;
- 	girq->child_to_parent_hwirq =3D pm8xxx_child_to_parent_hwirq;
--	girq->populate_parent_fwspec =3D gpiochip_populate_parent_fwspec_fourcell;
-+	girq->populate_parent_fwspec =3D gpiochip_populate_parent_fwspec_twocell;
- 	girq->child_offset_to_irq =3D pm8xxx_child_offset_to_irq;
- 	girq->child_irq_domain_ops.translate =3D pm8xxx_domain_translate;
-=20
---=20
-2.25.1.377.g2d2118b814c1
-
-Thanks,
-Kevin
-
-
->=20
-> thanks,
->=20
-> greg k-h
-
---jCrbxBqMcLqd4mOl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEHc6qFoLCZqgJD98Zk1jtMN6usXEFAl5zhhkACgkQk1jtMN6u
-sXHR3wgAywMvs8wwG1TaRcINULc9kLjcErY5rTQW88zFOdaVHuINLIHX5X+7KsqV
-WOau24KOiK36M5UwW4B9cVh3Q12ue3IGKRT6mOdKkW3RLeBZrjjLWeqyDB6P8SBf
-X7lKt6g4utPBcJAITbrKmA3ukPNUIQBH7HFsBPm2BRsA50KqzdU4iTen/N/CQTSc
-wohyrROTRjDDqJ2MVRsQ6UIwNqWCcgxaxMh0RiTwq9Q3+YVOOrTCffAtk1DwwY9S
-r19EZVUk00t2NMVz3ySDf+nuFgcvgXszwyVG+MLZSR5fVQpEuJNIFcHDknbV/OzQ
-1Lg5ng7p0Gore8GQoStR9vuGyn1GnA==
-=pwIq
------END PGP SIGNATURE-----
-
---jCrbxBqMcLqd4mOl--
+Reproduced with a little tweaking of the reproducer, debug in progress.
