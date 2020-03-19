@@ -2,144 +2,262 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAD1C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC01C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A81B420724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A02862078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:24:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbgCSSXB (ORCPT
+        id S1727345AbgCSSYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:23:01 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:60700 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgCSSXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:23:00 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 02JIMKml023895;
-        Thu, 19 Mar 2020 13:22:20 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 02JIMKkc023894;
-        Thu, 19 Mar 2020 13:22:20 -0500
-Date:   Thu, 19 Mar 2020 13:22:20 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Jethro Beekman <jethro@fortanix.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>
-Subject: Re: [PATCH v28 11/22] x86/sgx: Linux Enclave Driver
-Message-ID: <20200319182219.GB22995@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <20200303233609.713348-12-jarkko.sakkinen@linux.intel.com> <20200305174015.GJ11500@linux.intel.com> <e445c2f8-fddd-5740-0e26-a03e023918bf@fortanix.com> <20200306190003.GF7472@linux.intel.com>
-Mime-Version: 1.0
+        Thu, 19 Mar 2020 14:24:25 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:54662 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCSSYZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 14:24:25 -0400
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 5249E200ACD;
+        Thu, 19 Mar 2020 18:24:22 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 3077D20578; Thu, 19 Mar 2020 19:24:13 +0100 (CET)
+Date:   Thu, 19 Mar 2020 19:24:13 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     Cezary Rojewski <cezary.rojewski@intel.com>
+Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, curtis@malainey.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        liam.r.girdwood@linux.intel.com
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+Message-ID: <20200319182413.GA3968@light.dominikbrodowski.net>
+References: <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+ <20200318215218.GA2439@light.dominikbrodowski.net>
+ <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+ <20200319130049.GA2244@light.dominikbrodowski.net>
+ <20200319134139.GB3983@sirena.org.uk>
+ <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
+ <20200319165157.GA2254@light.dominikbrodowski.net>
+ <a7bf2aee-78e7-f905-bcc3-cd21bf16a976@intel.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200306190003.GF7472@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 19 Mar 2020 13:22:21 -0500 (CDT)
+In-Reply-To: <a7bf2aee-78e7-f905-bcc3-cd21bf16a976@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 09:00:03PM +0200, Jarkko Sakkinen wrote:
-
-Good afternoon, I hope the day is going well for everyone.
-
-> > >> +/**
-> > >> + * struct sgx_enclave_create - parameter structure for the
-> > >> + *                             %SGX_IOC_ENCLAVE_CREATE ioctl
-> > >> + * @src:	address for the SECS page data
-> > >> + */
-> > >> +struct sgx_enclave_create  {
-> > >> +	__u64	src;
+On Thu, Mar 19, 2020 at 06:33:50PM +0100, Cezary Rojewski wrote:
+> On 2020-03-19 17:51, Dominik Brodowski wrote:
+> > On Thu, Mar 19, 2020 at 04:48:03PM +0100, Cezary Rojewski wrote:
+> > > On 2020-03-19 14:41, Mark Brown wrote:
+> > > > On Thu, Mar 19, 2020 at 02:00:49PM +0100, Dominik Brodowski wrote:
+> > > > 
+> > > > > Have some good news now, namely that a bisect is complete: That pointed to
+> > > > > 1272063a7ee4 ("ASoC: soc-core: care .ignore_suspend for Component suspend");
+> > > > > therefore I've added Kuninori Morimoto to this e-mail thread.
+> > > > 
+> > > > If that's an issue it feels more like a driver bug in that if the driver
+> > > > asked for ignore_suspend then it should expect not to have the suspend
+> > > > callback called.
+> > > > 
 > > > 
-> > > Would it make sense to add reserved fields to the structs so that new
-> > > features can be added in a backwards compatible way?  E.g. if we want to
-> > > allow userspace to control the backing store by passing in a file
-> > > descriptor ENCLAVE_CREATE.
+> > > Requested for tests with following diff applied:
+> > > 
+> > > diff --git a/sound/soc/intel/boards/broadwell.c
+> > > b/sound/soc/intel/boards/broadwell.c
+> > > index db7e1e87156d..6ed4c1b0a515 100644
+> > > --- a/sound/soc/intel/boards/broadwell.c
+> > > +++ b/sound/soc/intel/boards/broadwell.c
+> > > @@ -212,7 +212,6 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] =
+> > > {
+> > >                  .init = broadwell_rt286_codec_init,
+> > >                  .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
+> > >                          SND_SOC_DAIFMT_CBS_CFS,
+> > > -               .ignore_suspend = 1,
+> > >                  .ignore_pmdown_time = 1,
+> > >                  .be_hw_params_fixup = broadwell_ssp0_fixup,
+> > >                  .ops = &broadwell_rt286_ops,
+> > 
+> > That patch fixes the issue(s). I didn't even need to revert 64df6afa0dab
+> > ("ASoC: Intel: broadwell: change cpu_dai and platform components for SOF")
+> > on top of that. But you can assess better whether that patch needs care for
+> > other reasons; for me, this one-liner you have suggested is perfect.
+> > 
+> > Many thanks -- it's been a pleasure to work with you on tracking this issue
+> > down.
+> > 
+> > 	Dominik
+> > 
+> 
+> Thank you for being so cooperative during this 2day debug session.
+> 
+> The patch I mentioned earlier unintentionally (?) changed 'platform'
+> component param for ssp0_port from 'dummy' to 'platform' for non-SOF
+> solution:
+> 
+> diff --git a/sound/soc/intel/boards/broadwell.c
+> b/sound/soc/intel/boards/broadwell.c
+> index b9c12e24c70b..db7e1e87156d 100644
+> --- a/sound/soc/intel/boards/broadwell.c
+> +++ b/sound/soc/intel/boards/broadwell.c
+> @@ -164,14 +164,6 @@ SND_SOC_DAILINK_DEF(platform,
+>  SND_SOC_DAILINK_DEF(codec,
+>         DAILINK_COMP_ARRAY(COMP_CODEC("i2c-INT343A:00", "rt286-aif1")));
+> 
+> -#if IS_ENABLED(CONFIG_SND_SOC_SOF_BROADWELL)
+> -SND_SOC_DAILINK_DEF(ssp0_port,
+> -           DAILINK_COMP_ARRAY(COMP_CPU("ssp0-port")));
+> -#else
+> -SND_SOC_DAILINK_DEF(ssp0_port,
+> -           DAILINK_COMP_ARRAY(COMP_DUMMY()));
+> -#endif
+> -
+>  /* broadwell digital audio interface glue - connects codec <--> CPU */
+>  static struct snd_soc_dai_link broadwell_rt286_dais[] = {
+>         /* Front End DAI links */
+> @@ -226,7 +218,7 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] =
+> {
+>                 .ops = &broadwell_rt286_ops,
+>                 .dpcm_playback = 1,
+>                 .dpcm_capture = 1,
+> -               SND_SOC_DAILINK_REG(ssp0_port, codec, platform),
+> +               SND_SOC_DAILINK_REG(dummy, codec, dummy),
+>         },
+> 
+> 
+> Said change causes following to occur:
+> 
+> 
+> (stream start)
+> [  113.251950] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000003000000
+> size: 77
+> [  113.252090] haswell-pcm-audio haswell-pcm-audio: > rx: 0x0000000043000000
+> size: 48
+> [  113.252097] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006301000
+> size: 20
+> [  113.252147] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006301000
+> size: 20
+> [  113.252179] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006100000
+> size: 0
+> [  113.252219] snd_soc_core:dpcm_fe_dai_hw_params:  System PCM: ASoC:
+> hw_params FE System PCM rate 48000 chan 2 fmt 2
+> [  113.252229] snd_soc_core:dapm_update_dai_unlocked: haswell-pcm-audio
+> haswell-pcm-audio: Update DAI routes for System Pin playback
+> [  113.252236] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006000000
+> size: 0
+> [  113.252304] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000004000000
+> size: 4
+> [  113.252425] snd_soc_sst_haswell_pcm:create_adsp_page_table:  System PCM:
+> generating page table for 00000000a8c2b8a6 size 0x17700 pages 24
+> 
+> 
+> (In essence these tx'es denote sequence for stream initialization while the
+> last two for stream RESET (0x6000000) and FREE (0x4000000))
+> 
+> and that is only to recreate the stream once again:
+> 
+> 
+> [  113.252673] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000003000000
+> size: 77
+> [  113.252803] haswell-pcm-audio haswell-pcm-audio: > rx: 0x0000000043000000
+> size: 48
+> [  113.252810] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006301000
+> size: 20
+> [  113.252864] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006301000
+> size: 20
+> [  113.252900] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006100000
+> size: 0
+> [  113.252987] snd_soc_core:dpcm_fe_dai_prepare:  System PCM: ASoC: prepare
+> FE System PCM
+> [  113.252993] snd_soc_core:dpcm_be_dai_prepare:  Codec: ASoC: prepare BE
+> Codec
+> [  113.253028] snd_soc_core:dpcm_dapm_stream_event:  Codec: ASoC: BE Codec
+> event 1 dir 0
+> [  113.254962] snd_soc_core:dpcm_do_trigger:  Codec: ASoC: trigger BE Codec
+> cmd 1
+> 
+> 
+> Because of that we ended up in _reset and _free being called twice:
+> 
+> 
+> [  113.254969] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006200000
+> size: 0
+> [  113.254980] snd_soc_core:dpcm_dai_trigger_fe_be:  System PCM: ASoC: post
+> trigger FE System PCM cmd 1
+> [  113.254983] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006200000
+> size: 0
+> [  113.254996] snd_soc_sst_ipc:ipc_tx_msgs: haswell-pcm-audio
+> haswell-pcm-audio: ipc_tx_msgs dsp busy
+> [  118.486291]  System PCM: ASoC: trigger FE cmd: 7 failed: -22
+> [  118.486431] snd_soc_core:dpcm_dai_trigger_fe_be:  System PCM: ASoC: pre
+> trigger FE System PCM cmd 0
+> [  118.486464] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006100000
+> size: 0
+> [  118.486495] snd_soc_core:dpcm_do_trigger:  Codec: ASoC: trigger BE Codec
+> cmd 0
+> [  118.486514] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006100000
+> size: 0
+> [  118.486550] snd_soc_core:dpcm_fe_dai_hw_free:  System PCM: ASoC: hw_free
+> FE System PCM
+> [  118.486569] snd_soc_core:dpcm_be_dai_hw_free:  Codec: ASoC: hw_free BE
+> Codec
+> [  118.486719] snd_soc_core:dpcm_fe_dai_hw_free:  System PCM: ASoC: hw_free
+> FE System PCM
+> [  118.486734] snd_soc_core:dpcm_be_dai_hw_free:  Codec: ASoC: hw_free BE
+> Codec
+> [  118.486751] snd_soc_core:dpcm_be_dai_shutdown:  Codec: ASoC: close BE
+> Codec
+> [  118.486801] snd_soc_sst_ipc:ipc_tx_msgs: haswell-pcm-audio
+> haswell-pcm-audio: ipc_tx_msgs dsp busy
+> [  118.489279] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006000000
+> size: 0
+> [  118.489382] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000004000000
+> size: 4
+> [  118.489535] snd_soc_core:dpcm_fe_dai_shutdown:  System PCM: ASoC: close
+> FE System PCM
+> [  118.489547] haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL,
+> no stream to reset, ignore it.
+> [  118.489553] haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL,
+> no stream to free, ignore it.
+> [  118.489571] snd_soc_core:dpcm_be_disconnect:  System PCM: ASoC: BE
+> playback disconnect check for Codec
+> [  118.489580] snd_soc_core:dpcm_be_disconnect:  System PCM: freed DSP
+> playback path System PCM -> Codec
+> 
+> 
+> Could you confirm the same happens on your machine when revert of mentioned
+> patch is not applied ("stream is NULL" messages occur)? Issue may be
+> harmless but explained sequence does not look right.
 
-> > Reserving space for future fields is not necessary because the
-> > size of the struct is encoded in the ioctl number. The kernel can
-> > use this to differentiate between different call versions from
-> > userspace.
+Indeed, I still see
 
-> Sure but I still would never change the signature once a ioctl is
-> added.
+haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to reset, ignore it.
+haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to free, ignore it.
+haswell-pcm-audio haswell-pcm-audio: FW loaded, mailbox readback FW info: type 01, - version: 00.00, build 77, source commit id: 876ac6906f31a43b6772b23c7c983ce9dcb18a19
+haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to reset, ignore it.
+haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to free, ignore it.
 
-These reflections cause me to call, once again, what will be an
-unpopular question, but if we pride ourselves on intellectual honesty
-in our engineering practices we need to address it.
+though sounds continues to work.
 
-If we are locking ioctl's and ABI's down, then we need to address,
-before the driver goes in, how we are going to handle support for
-those of us that have engineering needs around launch token
-technology.
-
-On an FLC (unlocked) platform, which is the only thing the driver will
-initialize on, there is no reason not to preserve the initialization
-IOCTL argument structure that accepts a pointer to a launch token or
-to disallow an enclave that has the attribute bit/mask set that allows
-the enclave to have access to the launch key.  When presented with an
-enclave with the launch bit set the driver can simply set the launch
-control registers to the MRSIGNER value of that enclave.
-
-It is a straight forward process to provide a root based mechanism
-that allows the owner of the platform to control that behavior, if
-there are concerns about how the platform is to be used, much like
-what is currently being done with access to the provision key.
-
-The ideological purity statement is made by the decision to limit what
-hardware the driver will run on.  Once that statement is made, and the
-driver firmly implements that decision, the owner of that platform
-should be able to decide how they want to use and implement the
-technology from there.
-
-Unless someone else chirps up there are essentially only two complete
-runtimes that are concerned with this issue.  Intel can enforce
-enhanced ideological purity, if they desire, by simply disallowing
-anyone to pass a non-null EINIT structure pointer through their
-runtime to the driver, which leaves us to implement the behavior we
-want without ABI concerns.
-
-There is a fairly fundamental question here regarding 'software
-freedom', maybe Jonathan Corbet and company will even pick up on
-it.... :-)
-
-> /Jarkko
-
-Hopefully all of this makes sense and is reasonable.
-
-Have a good remainder of the week, wherever you happen to be locked in
-at.
-
-We now return you to your regularly scheduled programming on the
-register dance surrounding enclave entry.
-
-Dr. Greg
-
-As always,
-Dr. Greg Wettstein, Ph.D, Worker      SGX secured infrastructure and
-Enjellic Systems Development, LLC     autonomously self-defensive
-4206 N. 19th Ave.                     platforms.
-Fargo, ND  58102
-PH: 701-281-1686                      EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"More people are killed every year by pigs than by sharks, which shows
- you how good we are at evaluating risk."
-                                -- Bruce Schneier
-                                   Beyond Fear
+Thanks again,
+	Dominik
