@@ -2,132 +2,190 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8155C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D484FC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A752070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F8B2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:55:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="A4UXQGkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbgCSSy2 (ORCPT
+        id S1727228AbgCSSz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:54:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33984 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSSy2 (ORCPT
+        Thu, 19 Mar 2020 14:55:28 -0400
+Received: from mail.efficios.com ([167.114.26.124]:59908 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgCSSz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:54:28 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jF0JD-0007lm-PT; Thu, 19 Mar 2020 19:54:23 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 528201C22B7;
-        Thu, 19 Mar 2020 19:54:23 +0100 (CET)
-Date:   Thu, 19 Mar 2020 18:54:22 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] Revert "tick/common: Make tick_periodic() check
- for missing ticks"
-Cc:     Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        Waiman Long <longman@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Thu, 19 Mar 2020 14:55:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 43E0727AA9C;
+        Thu, 19 Mar 2020 14:55:27 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id YZvzRANsrTpZ; Thu, 19 Mar 2020 14:55:26 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 9AA7827A93F;
+        Thu, 19 Mar 2020 14:55:26 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 9AA7827A93F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1584644126;
+        bh=ZWNiGqU2Ab0xVGCjTKpkcmtfdONYw9vZUUAGyB1yU84=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=A4UXQGkT0v97L9oJ7OGXaT+UczjRmvuOJhXj7Aj+hT+RqMjAQUVGsVcTNjzel/Zwk
+         65JA8jEI61fHGqUj3Q4Z96Vf0wMb2MWFElu5mivA3uiTZEpaqO395hdvF93nbiACbp
+         Epv2VUOQV/QRyDcrpTpk2DdLl2kFMQbpkysSYGpgcSrlB7QDG5NXUglAji+52xSxXv
+         L+ohqYyC6LaR6B6vggWs2l713w1Iub7haBQzOtC7qXnmntKuYsCAe23JRdPwXyCH4S
+         zeq1prOFAHPEj2V909SaV7KLnGiHqXdPhpEOKyficJkXNCTBtE639JMJ7qa3Ypd3zk
+         E6vYrVnGDT3AA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 5P-5zr0GCowB; Thu, 19 Mar 2020 14:55:26 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 87BA327AB97;
+        Thu, 19 Mar 2020 14:55:26 -0400 (EDT)
+Date:   Thu, 19 Mar 2020 14:55:26 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fw@deneb.enyo.de>
+Cc:     libc-alpha <libc-alpha@sourceware.org>, carlos <carlos@redhat.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>
+Message-ID: <900536577.4062.1584644126425.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87k13ggpmf.fsf@mid.deneb.enyo.de>
+References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com> <874kukpf9f.fsf@mid.deneb.enyo.de> <2147217200.3240.1584633395285.JavaMail.zimbra@efficios.com> <87r1xo5o2s.fsf@mid.deneb.enyo.de> <1302331358.3965.1584641354569.JavaMail.zimbra@efficios.com> <87sgi4gqhf.fsf@mid.deneb.enyo.de> <1103782439.4046.1584642531222.JavaMail.zimbra@efficios.com> <87k13ggpmf.fsf@mid.deneb.enyo.de>
+Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C
+ startup and thread creation (v15)
 MIME-Version: 1.0
-Message-ID: <158464406295.28353.3230662958771714087.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v15)
+Thread-Index: R1unvLHgJY+0+0/DqhqCog6T/iuOvg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+----- On Mar 19, 2020, at 2:34 PM, Florian Weimer fw@deneb.enyo.de wrote:
 
-Commit-ID:     52da479a9aee630d2cdf37d05edfe5bcfff3e17f
-Gitweb:        https://git.kernel.org/tip/52da479a9aee630d2cdf37d05edfe5bcfff3e17f
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Thu, 19 Mar 2020 19:47:06 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 19 Mar 2020 19:47:48 +01:00
+> * Mathieu Desnoyers:
+> 
+>> ----- On Mar 19, 2020, at 2:16 PM, Florian Weimer fw@deneb.enyo.de wrote:
+>>
+>>> * Mathieu Desnoyers:
+>>> 
+>>>>> You also need to add an assert that the compiler supports
+>>>>> __attribute__ ((aligned)) because ignoring it produces an
+>>>>> ABI-incompatible header.
+>>>>
+>>>> Are you aware of some helper macro I should use to do this, or
+>>>> is it done elsewhere in glibc ?
+>>> 
+>>> I don't think we have any such GCC-only types yet.  max_align_t is
+>>> provided by GCC itself.
+>>
+>> I was thinking of adding the following to
+>>
+>> sysdeps/unix/sysv/linux/rseq-internal.h: rseq_register_current_thread()
+>>
+>> +  /* Ensure the compiler supports __attribute__ ((aligned)).  */
+>> +  _Static_assert (__alignof__ (struct rseq_cs) >= 4 * sizeof(uint64_t),
+>> +                 "alignment");
+>> +  _Static_assert (__alignof__ (struct rseq) >= 4 * sizeof(uint64_t),
+>> +                 "alignment");
+>> +
+> 
+> Something like it would have to go into the *public* header.
+> 
+> Inside glibc, you can assume __attribute__ support.
 
-Revert "tick/common: Make tick_periodic() check for missing ticks"
+OK, so the _Static_assert () could sit in sys/rseq.h
 
-This reverts commit d441dceb5dce71150f28add80d36d91bbfccba99 due to
-boot failures.
+> 
+>>>>> The struct rseq/struct rseq_cs definitions
+>>>>> are broken, they should not try to change the alignment.
+>>>>
+>>>> AFAIU, this means we should ideally not have used __attribute__((aligned))
+>>>> in the uapi headers in the first place. Why is it broken ?
+>>> 
+>>> Compilers which are not sufficiently GCC-compatible define
+>>> __attribute__(X) as the empty expansion, so you silently get a
+>>> different ABI.
+>>
+>> It is worth noting that rseq.h is not the only Linux uapi header
+>> which uses __attribute__ ((aligned)), so this ABI problem exists today
+>> anyway for those compilers.
+> 
+> Yuck.  Even with larger-than-16 alignment?
 
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Waiman Long <longman@redhat.com>
----
- kernel/time/tick-common.c | 36 +++---------------------------------
- 1 file changed, 3 insertions(+), 33 deletions(-)
+There are two:
 
-diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
-index cce4ed1..7e5d352 100644
---- a/kernel/time/tick-common.c
-+++ b/kernel/time/tick-common.c
-@@ -16,7 +16,6 @@
- #include <linux/profile.h>
- #include <linux/sched.h>
- #include <linux/module.h>
--#include <linux/sched/clock.h>
- #include <trace/events/power.h>
- 
- #include <asm/irq_regs.h>
-@@ -85,41 +84,12 @@ int tick_is_oneshot_available(void)
- static void tick_periodic(int cpu)
- {
- 	if (tick_do_timer_cpu == cpu) {
--		/*
--		 * Use running_clock() as reference to check for missing ticks.
--		 */
--		static ktime_t last_update;
--		ktime_t now;
--		int ticks = 1;
--
--		now = ns_to_ktime(running_clock());
- 		write_seqlock(&jiffies_lock);
- 
--		if (last_update) {
--			u64 delta = ktime_sub(now, last_update);
--
--			/*
--			 * Check for eventually missed ticks
--			 *
--			 * There is likely a persistent delta between
--			 * last_update and tick_next_period. So they are
--			 * updated separately.
--			 */
--			if (delta >= 2 * tick_period) {
--				s64 period = ktime_to_ns(tick_period);
--
--				ticks = ktime_divns(delta, period);
--			}
--			last_update = ktime_add(last_update,
--						ticks * tick_period);
--		} else {
--			last_update = now;
--		}
--
- 		/* Keep track of the next tick event */
--		tick_next_period = ktime_add(tick_next_period,
--					     ticks * tick_period);
--		do_timer(ticks);
-+		tick_next_period = ktime_add(tick_next_period, tick_period);
-+
-+		do_timer(1);
- 		write_sequnlock(&jiffies_lock);
- 		update_wall_time();
- 	}
+target_core_user.h
+45:#define ALIGN_SIZE 64 /* Should be enough for most CPUs */
+58:	__u32 cmd_tail __attribute__((__aligned__(ALIGN_SIZE)));
+
+netfilter_bridge/ebtables.h:90:	char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+netfilter_bridge/ebtables.h:132:	unsigned char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+netfilter_bridge/ebtables.h:145:	unsigned char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+netfilter_bridge/ebtables.h:158:	unsigned char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+netfilter_bridge/ebtables.h:191:	unsigned char elems[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+
+
+> 
+>>> There is really no need to specify 32-byte alignment here.  Is not
+>>> even the size of a standard cache line.  It can result in crashes if
+>>> these structs are heap-allocated using malloc, when optimizing for
+>>> AVX2.
+>>
+>> Why would it be valid to allocate those with malloc ? Isn't it the
+>> purpose of posix_memalign() ?
+> 
+> It would not be valid, but I don't think we have diagnostics for C
+> like we have them for C++'s operator new.
+
+We could at least make an effort to let people know that alignment is
+required here when allocating struct rseq and struct rseq_cs on the
+heap by adding some comments to that effect in linux/rseq.h ?
+
+> 
+>>>> However, now that it is in the wild, it's a bit late to change that.
+>>> 
+>>> I had forgotten about the alignment crashes.  I think we should
+>>> seriously consider changing the types. 8-(
+>>
+>> I don't think this is an option at this stage given that it is part
+>> of the Linux kernel UAPI. I am not convinced that it is valid at all
+>> to allocate struct rseq or struct rseq_cs with malloc(), because it
+>> does not guarantee any alignment.
+> 
+> The kernel ABI doesn't change.  The kernel cannot use the alignment
+> information anyway.  Userspace struct layout may change in subtle
+> ways, though.
+
+Considering the amount of pain this can cause in user-space, and because
+it can break userspace, this is not a UAPI change I am willing to consider.
+I'm not sure why we are even discussing the possibility of breaking a Linux
+UAPI considering that those are set in stone.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
