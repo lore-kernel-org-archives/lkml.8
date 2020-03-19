@@ -2,121 +2,60 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6442C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F82C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB0F206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:24:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hMfSKg1A"
+	by mail.kernel.org (Postfix) with ESMTP id 0EBFF20740
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:25:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgCSKYR (ORCPT
+        id S1727065AbgCSKZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:24:17 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45135 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgCSKYP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:24:15 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m15so1014239pgv.12
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 03:24:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ejqis7jZWtiS2ZJTMrRUUKldwFIqOJuqqMCf3220n+4=;
-        b=hMfSKg1AkvvlQME8YGZu9tky0WqVsplrt7JrWxrTqFiKboOzIKmDiLwh38WSiez0Fx
-         vXZMCa3A7gMmUsjJPEhaooP1Ibtae1V2h41wqN/eazLKPEHSNnKKYuQf/0b0+zE5J8Wi
-         0I1L0Tle35xHNWanMkUymga3f0fTvI7mHSCwYYn58YQJAYcyHXN3zU8YKYvpx+e0vH6D
-         kWPR9rMXZVqj3BbI5CqtsWgQ9GYbokoBYeInrFcSgvNOeHJmSS/l1Sledp1LRbZm+RYk
-         mQqtoEoCncsJ7+Xu3Lk5JAWFh3UVJojPdtcpy+wOXJm/sOhMva0WyyI1C8WDvdOBA5JR
-         rxMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ejqis7jZWtiS2ZJTMrRUUKldwFIqOJuqqMCf3220n+4=;
-        b=RsfbW4YjDkuIy6iW+F0Vl6aakOR8x1gIYEHtw0u7QalpQP/vY0aSqybrijrP369AoC
-         nPYic5p9cPj5queCQWW4ORnnSgaZFMYi7znip54RWHdJGFqMi00ox/cu3jJu7SA+nvX9
-         DEvsIofjNRc1hm5ZWh3U/ZaCHRLZb4q8r+fCkm+M5VM20lww0W8C55FR+hhAQKdkiDZy
-         jNXKL2v/o0RRy6DCwbUmo9GuMdb1G6sYvFIsWcZX5jjwgNXDS/yzHg3nK0v0xUgVpwiC
-         6bB4LtjRpDat3zmxAH9QZjmCt0ghw+3f+vigUdA0uFtMoCi2PiAzoEqdnmn/z0j2z5i5
-         /2Xg==
-X-Gm-Message-State: ANhLgQ0nO5SlvKINmpjZycGuMr2vTc8bpwo4/azAJHfF6YlWuOqrP70z
-        MAufKngfLKkOAi5WVD4wUiBrcA==
-X-Google-Smtp-Source: ADFU+vsfsrSDZTmHpVU3LAAmj3UlUBy/81zcWkCE3fx118L6TIcuQvcw29TgeFrn42KkMnYAVFhMaQ==
-X-Received: by 2002:aa7:8708:: with SMTP id b8mr3375903pfo.209.1584613454639;
-        Thu, 19 Mar 2020 03:24:14 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id i126sm1850038pfc.105.2020.03.19.03.24.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Mar 2020 03:24:13 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 15:54:11 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-Message-ID: <20200319102411.oivesngrk7gy7vtw@vireshk-i7>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
- <20200318034243.o2metmggzuah6cqw@vireshk-i7>
- <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
- <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
+        Thu, 19 Mar 2020 06:25:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:32900 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbgCSKZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:25:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27E0F106F;
+        Thu, 19 Mar 2020 03:25:26 -0700 (PDT)
+Received: from [192.168.1.19] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D322D3FAA0;
+        Thu, 19 Mar 2020 02:06:16 -0700 (PDT)
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH v2 1/9] sched/fair: find_idlest_group(): Remove unused
+ sd_flag parameter
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
+References: <20200311181601.18314-1-valentin.schneider@arm.com>
+ <20200311181601.18314-2-valentin.schneider@arm.com>
+Message-ID: <a8570edc-7c34-fe90-aeac-f2fc1576823c@arm.com>
+Date:   Thu, 19 Mar 2020 10:05:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200311181601.18314-2-valentin.schneider@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-03-20, 15:41, Sibi Sankar wrote:
-> Viresh,
-> Saravana's example does show a device
-> with multiple opp tables but doesn't
-> need multiple opp table support to
-> land though (since it works fine with
-> the current implementation). I am more
-> interested  in understanding your/
-> Stephen's/Saravana's stance on adding
-> multiple opp-table support. Personally
-> I feel its inevitable, since multiple
-> qc drivers using interconnect opp-tables,
-> routinely need vote on multiple paths in
-> a non-trivial manner.
-
-The OPP core doesn't support multiple OPP tables for a device and I
-don't understand how it will. And so I have been waiting for a reply.
-
-> > 
-> > Could you please post a link to the discussion that you are referring to
-> > here?
-> > I looked at a few links posted in the cover letter as dependencies and
-> > it seems
-> > like the discussions are pending for *months* and not weeks but I
-> > might have looked
-> > at the wrong ones.
+On 11.03.20 19:15, Valentin Schneider wrote:
+> The last use of that parameter was removed by commit
 > 
-> https://lore.kernel.org/lkml/20200114103448.odnvqawnqb3twst5@vireshk-i7/
+>   57abff067a08 ("sched/fair: Rework find_idlest_group()")
 > 
-> Rajendra,
-> Viresh is referring to ^^ one
+> Get rid of the parameter.
+> 
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 
-Right, thanks.
+[...]
 
--- 
-viresh
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
