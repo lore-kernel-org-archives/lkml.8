@@ -2,182 +2,211 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3640C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1FCC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794E320409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bpyxCaNd"
+	by mail.kernel.org (Postfix) with ESMTP id DA68F20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584624870;
+	bh=LIZLT9N62E2AVuvsjufu2VUHeGyEaul/xFbEjVbzRsw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I3Jxs6Xai9QG0v4mqhODamZTbxvEQ0Av+k9VQRpC43bblt/x9oZeRHRnE9g2Iy3Zi
+	 8epuQ4xT+9oo5OS9T9Q+zmqUJScJa3wtKucqZjTZ8II0Kae1hXfkGH3xphpg0w1qUm
+	 F2Wcza7rnsUiotExxWysJGPymWtKv+LSp25DxUHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgCSNeW (ORCPT
+        id S1727659AbgCSNMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:34:22 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:30319 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729059AbgCSNNC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:13:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584623581;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CkDlvPR98RYVAd3dirKd0Pp/jfVah/NRA54g1n1dohY=;
-        b=bpyxCaNdZLiQ7yy3/OptL55Qlod7p9uUzLFc1zkjvBRac9IV8EQ58D2K2yxFdkmxJwEtDr
-        7lbP8BC7gG0KY/IzRWoSdskSvMwQRwmMxlLnzSnkbMhbFfLAuD09MQExi8ZYOEnqUOTaNQ
-        44aj4gadVZRXY5/Fb5CN3zUiH5OOaqQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-461-lQFdwT1bMsG7zSRvaB2cXA-1; Thu, 19 Mar 2020 09:12:57 -0400
-X-MC-Unique: lQFdwT1bMsG7zSRvaB2cXA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 19 Mar 2020 09:12:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729010AbgCSNMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:12:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1090D107ACC4;
-        Thu, 19 Mar 2020 13:12:55 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-197.ams2.redhat.com [10.36.114.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9FD6260BF7;
+        by mail.kernel.org (Postfix) with ESMTPSA id 83B4720789;
         Thu, 19 Mar 2020 13:12:49 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-hyperv@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH v3 5/8] hv_balloon: don't check for memhp_auto_online manually
-Date:   Thu, 19 Mar 2020 14:12:18 +0100
-Message-Id: <20200319131221.14044-6-david@redhat.com>
-In-Reply-To: <20200319131221.14044-1-david@redhat.com>
-References: <20200319131221.14044-1-david@redhat.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584623570;
+        bh=LIZLT9N62E2AVuvsjufu2VUHeGyEaul/xFbEjVbzRsw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=P+pqz93ku2BhDODDgeylXaNhctPHQOZQvS16Igm1QBIvr51+QMBIh2HiUKEg04N71
+         vjQq0b6QG9YB/dqf3+6fLJ7kHTQkj7QLJiK02etiqaQlj7OpywLLZanMZThB1Fhjj/
+         JmWGDbEqrQSwtEx7jYykv+sGk/4H+3giamK/p56I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.9 72/90] batman-adv: Avoid free/alloc race when handling OGM2 buffer
+Date:   Thu, 19 Mar 2020 14:00:34 +0100
+Message-Id: <20200319123950.659818262@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
+References: <20200319123928.635114118@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get the MEM_ONLINE notifier call if memory is added right from the
-kernel via add_memory() or later from user space.
+From: Sven Eckelmann <sven@narfation.org>
 
-Let's get rid of the "ha_waiting" flag - the wait event has an inbuilt
-mechanism (->done) for that. Initialize the wait event only once and
-reinitialize before adding memory. Unconditionally call complete() and
-wait_for_completion_timeout().
+commit a8d23cbbf6c9f515ed678204ad2962be7c336344 upstream.
 
-If there are no waiters, complete() will only increment ->done - which
-will be reset by reinit_completion(). If complete() has already been
-called, wait_for_completion_timeout() will not wait.
+A B.A.T.M.A.N. V virtual interface has an OGM2 packet buffer which is
+initialized using data from the netdevice notifier and other rtnetlink
+related hooks. It is sent regularly via various slave interfaces of the
+batadv virtual interface and in this process also modified (realloced) to
+integrate additional state information via TVLV containers.
 
-There is still the chance for a small race between concurrent
-reinit_completion() and complete(). If complete() wins, we would not
-wait - which is tolerable (and the race exists in current code as well).
+It must be avoided that the worker item is executed without a common lock
+with the netdevice notifier/rtnetlink helpers. Otherwise it can either
+happen that half modified data is sent out or the functions modifying the
+OGM2 buffer try to access already freed memory regions.
 
-Note: We only wait for "some" memory to get onlined, which seems to be
-      good enough for now.
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: linux-hyperv@vger.kernel.org
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Fixes: 0da0035942d4 ("batman-adv: OGMv2 - add basic infrastructure")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/hv/hv_balloon.c | 25 ++++++++++---------------
- 1 file changed, 10 insertions(+), 15 deletions(-)
+ net/batman-adv/bat_v_ogm.c |   42 ++++++++++++++++++++++++++++++++++--------
+ net/batman-adv/types.h     |    3 +++
+ 2 files changed, 37 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-index a02ce43d778d..32e3bc0aa665 100644
---- a/drivers/hv/hv_balloon.c
-+++ b/drivers/hv/hv_balloon.c
-@@ -533,7 +533,6 @@ struct hv_dynmem_device {
- 	 * State to synchronize hot-add.
- 	 */
- 	struct completion  ol_waitevent;
--	bool ha_waiting;
- 	/*
- 	 * This thread handles hot-add
- 	 * requests from the host as well as notifying
-@@ -634,10 +633,7 @@ static int hv_memory_notifier(struct notifier_block =
-*nb, unsigned long val,
- 	switch (val) {
- 	case MEM_ONLINE:
- 	case MEM_CANCEL_ONLINE:
--		if (dm_device.ha_waiting) {
--			dm_device.ha_waiting =3D false;
--			complete(&dm_device.ol_waitevent);
--		}
-+		complete(&dm_device.ol_waitevent);
- 		break;
-=20
- 	case MEM_OFFLINE:
-@@ -726,8 +722,7 @@ static void hv_mem_hot_add(unsigned long start, unsig=
-ned long size,
- 		has->covered_end_pfn +=3D  processed_pfn;
- 		spin_unlock_irqrestore(&dm_device.ha_lock, flags);
-=20
--		init_completion(&dm_device.ol_waitevent);
--		dm_device.ha_waiting =3D !memhp_auto_online;
-+		reinit_completion(&dm_device.ol_waitevent);
-=20
- 		nid =3D memory_add_physaddr_to_nid(PFN_PHYS(start_pfn));
- 		ret =3D add_memory(nid, PFN_PHYS((start_pfn)),
-@@ -753,15 +748,14 @@ static void hv_mem_hot_add(unsigned long start, uns=
-igned long size,
- 		}
-=20
- 		/*
--		 * Wait for the memory block to be onlined when memory onlining
--		 * is done outside of kernel (memhp_auto_online). Since the hot
--		 * add has succeeded, it is ok to proceed even if the pages in
--		 * the hot added region have not been "onlined" within the
--		 * allowed time.
-+		 * Wait for memory to get onlined. If the kernel onlined the
-+		 * memory when adding it, this will return directly. Otherwise,
-+		 * it will wait for user space to online the memory. This helps
-+		 * to avoid adding memory faster than it is getting onlined. As
-+		 * adding succeeded, it is ok to proceed even if the memory was
-+		 * not onlined in time.
- 		 */
--		if (dm_device.ha_waiting)
--			wait_for_completion_timeout(&dm_device.ol_waitevent,
--						    5*HZ);
-+		wait_for_completion_timeout(&dm_device.ol_waitevent, 5 * HZ);
- 		post_status(&dm_device);
- 	}
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -28,6 +28,8 @@
+ #include <linux/kernel.h>
+ #include <linux/kref.h>
+ #include <linux/list.h>
++#include <linux/lockdep.h>
++#include <linux/mutex.h>
+ #include <linux/netdevice.h>
+ #include <linux/random.h>
+ #include <linux/rculist.h>
+@@ -127,22 +129,19 @@ static void batadv_v_ogm_send_to_if(stru
  }
-@@ -1706,6 +1700,7 @@ static int balloon_probe(struct hv_device *dev,
-=20
- #ifdef CONFIG_MEMORY_HOTPLUG
- 	set_online_page_callback(&hv_online_page);
-+	init_completion(&dm_device.ol_waitevent);
- 	register_memory_notifier(&hv_memory_nb);
- #endif
-=20
---=20
-2.24.1
+ 
+ /**
+- * batadv_v_ogm_send - periodic worker broadcasting the own OGM
+- * @work: work queue item
++ * batadv_v_ogm_send_softif() - periodic worker broadcasting the own OGM
++ *  @bat_priv: the bat priv with all the soft interface information
+  */
+-static void batadv_v_ogm_send(struct work_struct *work)
++static void batadv_v_ogm_send_softif(struct batadv_priv *bat_priv)
+ {
+ 	struct batadv_hard_iface *hard_iface;
+-	struct batadv_priv_bat_v *bat_v;
+-	struct batadv_priv *bat_priv;
+ 	struct batadv_ogm2_packet *ogm_packet;
+ 	struct sk_buff *skb, *skb_tmp;
+ 	unsigned char *ogm_buff, *pkt_buff;
+ 	int ogm_buff_len;
+ 	u16 tvlv_len = 0;
+ 
+-	bat_v = container_of(work, struct batadv_priv_bat_v, ogm_wq.work);
+-	bat_priv = container_of(bat_v, struct batadv_priv, bat_v);
++	lockdep_assert_held(&bat_priv->bat_v.ogm_buff_mutex);
+ 
+ 	if (atomic_read(&bat_priv->mesh_state) == BATADV_MESH_DEACTIVATING)
+ 		goto out;
+@@ -210,6 +209,23 @@ out:
+ }
+ 
+ /**
++ * batadv_v_ogm_send() - periodic worker broadcasting the own OGM
++ * @work: work queue item
++ */
++static void batadv_v_ogm_send(struct work_struct *work)
++{
++	struct batadv_priv_bat_v *bat_v;
++	struct batadv_priv *bat_priv;
++
++	bat_v = container_of(work, struct batadv_priv_bat_v, ogm_wq.work);
++	bat_priv = container_of(bat_v, struct batadv_priv, bat_v);
++
++	mutex_lock(&bat_priv->bat_v.ogm_buff_mutex);
++	batadv_v_ogm_send_softif(bat_priv);
++	mutex_unlock(&bat_priv->bat_v.ogm_buff_mutex);
++}
++
++/**
+  * batadv_v_ogm_iface_enable - prepare an interface for B.A.T.M.A.N. V
+  * @hard_iface: the interface to prepare
+  *
+@@ -235,11 +251,15 @@ void batadv_v_ogm_primary_iface_set(stru
+ 	struct batadv_priv *bat_priv = netdev_priv(primary_iface->soft_iface);
+ 	struct batadv_ogm2_packet *ogm_packet;
+ 
++	mutex_lock(&bat_priv->bat_v.ogm_buff_mutex);
+ 	if (!bat_priv->bat_v.ogm_buff)
+-		return;
++		goto unlock;
+ 
+ 	ogm_packet = (struct batadv_ogm2_packet *)bat_priv->bat_v.ogm_buff;
+ 	ether_addr_copy(ogm_packet->orig, primary_iface->net_dev->dev_addr);
++
++unlock:
++	mutex_unlock(&bat_priv->bat_v.ogm_buff_mutex);
+ }
+ 
+ /**
+@@ -827,6 +847,8 @@ int batadv_v_ogm_init(struct batadv_priv
+ 	atomic_set(&bat_priv->bat_v.ogm_seqno, random_seqno);
+ 	INIT_DELAYED_WORK(&bat_priv->bat_v.ogm_wq, batadv_v_ogm_send);
+ 
++	mutex_init(&bat_priv->bat_v.ogm_buff_mutex);
++
+ 	return 0;
+ }
+ 
+@@ -838,7 +860,11 @@ void batadv_v_ogm_free(struct batadv_pri
+ {
+ 	cancel_delayed_work_sync(&bat_priv->bat_v.ogm_wq);
+ 
++	mutex_lock(&bat_priv->bat_v.ogm_buff_mutex);
++
+ 	kfree(bat_priv->bat_v.ogm_buff);
+ 	bat_priv->bat_v.ogm_buff = NULL;
+ 	bat_priv->bat_v.ogm_buff_len = 0;
++
++	mutex_unlock(&bat_priv->bat_v.ogm_buff_mutex);
+ }
+--- a/net/batman-adv/types.h
++++ b/net/batman-adv/types.h
+@@ -27,6 +27,7 @@
+ #include <linux/compiler.h>
+ #include <linux/if_ether.h>
+ #include <linux/kref.h>
++#include <linux/mutex.h>
+ #include <linux/netdevice.h>
+ #include <linux/netlink.h>
+ #include <linux/sched.h> /* for linux/wait.h */
+@@ -966,12 +967,14 @@ struct batadv_softif_vlan {
+  * @ogm_buff: buffer holding the OGM packet
+  * @ogm_buff_len: length of the OGM packet buffer
+  * @ogm_seqno: OGM sequence number - used to identify each OGM
++ * @ogm_buff_mutex: lock protecting ogm_buff and ogm_buff_len
+  * @ogm_wq: workqueue used to schedule OGM transmissions
+  */
+ struct batadv_priv_bat_v {
+ 	unsigned char *ogm_buff;
+ 	int ogm_buff_len;
+ 	atomic_t ogm_seqno;
++	struct mutex ogm_buff_mutex;
+ 	struct delayed_work ogm_wq;
+ };
+ 
+
 
