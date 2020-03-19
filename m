@@ -2,110 +2,289 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05835C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6E9C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1608206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219062071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:30:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BPB/AhEe"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="YXAM1GQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgCSE2o (ORCPT
+        id S1726936AbgCSEaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 00:28:44 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:51391 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725601AbgCSE2o (ORCPT
+        Thu, 19 Mar 2020 00:30:11 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33514 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgCSEaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 00:28:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584592124; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=0mRFMEJwpdIXaB+jwVtf97Gm3MwCqBL7eIA/yGyn8AI=; b=BPB/AhEeJu9TQdGDwd0dgE26CuVpxgXvjImghNLWITxq7FFCWDqyhrZ4yT5g2bcBebmzPeod
- ylsdrX2LH+6nVoWat5mqZ2N/Pn5bPvDtgCjdB/oEkMz+WWO65mOwWrs6qGIG995EWOcdxVKT
- +PuK0UJicA4emFeKd0346oW9nNc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e72f4f1.7fd13655c110-smtp-out-n04;
- Thu, 19 Mar 2020 04:28:33 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CDFC3C43637; Thu, 19 Mar 2020 04:28:32 +0000 (UTC)
-Received: from [10.110.35.103] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DC6BC433CB;
-        Thu, 19 Mar 2020 04:28:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DC6BC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH 1/4] dt-bindings: phy: Add binding for qcom,usb-hs-7nm
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1584147293-6763-1-git-send-email-wcheng@codeaurora.org>
- <1584147293-6763-2-git-send-email-wcheng@codeaurora.org>
- <20200318220352.GA12501@bogus>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <44d97f2d-eb09-1192-ad20-daef7542a8b0@codeaurora.org>
-Date:   Wed, 18 Mar 2020 21:28:30 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 00:30:10 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r7so3825073wmg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 21:30:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BNG/4gsDlzID/iu3w+7gBGtdDaCICA3ZSeGXD3zpCk4=;
+        b=YXAM1GQ1QpTkAV165dYe5R2hLUQ7NtlOJaPdIEHv4eQutWDukXGoQWco8p0IFSXu7x
+         WTXdbLZFfC+6+MxJE1nkJEldIgRV/i/jYYEq8mD6ch/keXX8TyluN7g4fTrddvuX31wi
+         pXWcbqNc4kEFZ6vMaF86+ybbobPrWmBn7aPm5WK4oRZZ7j88SZ3zQNcs1SQQqiy8Q7XU
+         09lDLm56TmcwsJIUdrAGY8GDjmQssR16AdbliMTA4vi2OiFJmqaeu3NDwIFDxth/Cbtr
+         USrVqSkQng8XOo48I+QO604ysAX3eUtd/76DaBLY15WpsZKSF+87pDhBsnRvAmSmB6Ec
+         gRXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BNG/4gsDlzID/iu3w+7gBGtdDaCICA3ZSeGXD3zpCk4=;
+        b=PQ1UHyw1vfkxUjvLROrgCiB7Hs9s8rA6m0+AodiVtxdduE5hPkr99hyxq73FqxAp1n
+         5cHtgrVMuPUItn8MdQgPvdvzVFhfepNQcbNauh5uLkkOdbTUXF4pqTn+a7loLkdN9BXk
+         tK1B7OE7UY4sypkcYs+HyWBny9NjLAPx7TEyRmL79ByZomwLrAS+towlG9SJsIl2WsZR
+         lVDTzlrDgum6wMMur18Wx2mUIaatzKfPkt/xwJqN686joaaLNuCqEbvwD73MsFRnZoDZ
+         9idk3caUkFkSOEcPRcpQm2Hqt5Zxb6LbAQZzQPknX4VlsGW4CcisUyKMlP9v7EWZlCeh
+         GQFQ==
+X-Gm-Message-State: ANhLgQ28zXcJ6Q9ZNLConyciyPDe2ug1NMHX7N7mSLSr10GgfS0IfRQa
+        C5DJuOvq4SXdwGP2aeVTWt97uyixcDGdbo3niYt9y39U
+X-Google-Smtp-Source: ADFU+vuEQwg54UfRnVUivvi2XAvw1kpPkO+wKIeQOvogrYA6XaZZDcGKFwx/sipK4ZcE3k+HyqO+TMExufbbQHxzTm0=
+X-Received: by 2002:a7b:c458:: with SMTP id l24mr1229147wmi.120.1584592208974;
+ Wed, 18 Mar 2020 21:30:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200318220352.GA12501@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200310115925.126174-1-anup.patel@wdc.com> <20200310081558-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200310081558-mutt-send-email-mst@kernel.org>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 19 Mar 2020 09:59:56 +0530
+Message-ID: <CAAhSdy2ALTEAYO==KR3kobrmrf8ct0Zzf2aJSSU_qGJHt8SMgw@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Only select essential drivers for SOC_VIRT config
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Cc:     Anup Patel <anup.patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Palmer,
 
+On Tue, Mar 10, 2020 at 5:46 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Tue, Mar 10, 2020 at 05:29:25PM +0530, Anup Patel wrote:
+> > The kconfig select causes build failues for SOC_VIRT config becaus
+> > we are selecting lot of VIRTIO drivers without selecting all required
+> > dependencies.
+> >
+> > Better approach is to only select essential drivers from SOC_VIRT
+> > config option and enable required VIRTIO drivers using defconfigs.
+> >
+> > Fixes: 759bdc168181 ("RISC-V: Add kconfig option for QEMU virt machine")
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+>
+> Yea makes sense.
+>
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-On 3/18/2020 3:03 PM, Rob Herring wrote:
-> On Fri, 13 Mar 2020 17:54:50 -0700, Wesley Cheng wrote:
->> This binding shows the descriptions and properties for the
->> 7nm Synopsis HS USB PHY used on QCOM platforms.
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->> ---
->>  .../devicetree/bindings/phy/qcom,usb-hs-7nm.yaml   | 74 ++++++++++++++++++++++
->>  1 file changed, 74 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> warning: no schema found in file: Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml: ignoring, error parsing file
-> Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml:  while scanning a block scalar
->   in "<unicode string>", line 59, column 5
-> found a tab character where an indentation space is expected
->   in "<unicode string>", line 73, column 1
-> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts' failed
-> make[1]: *** [Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.example.dts] Error 1
-> Makefile:1262: recipe for target 'dt_binding_check' failed
-> make: *** [dt_binding_check] Error 2
-> 
-> See https://patchwork.ozlabs.org/patch/1254748
-> Please check and re-submit.
-> 
+Can you take this fix for Linux-5.6-rc7 ?
 
-Hi Rob,
+Regards,
+Anup
 
-Sorry for not checking this step beforehand.  I installed the tools for
-device tree validation, ran the same check, and resolved the errors.
-Will resubmit the series with the changes.
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>
+> > ---
+> >  arch/riscv/Kconfig.socs           | 14 --------------
+> >  arch/riscv/configs/defconfig      | 16 +++++++++++++++-
+> >  arch/riscv/configs/rv32_defconfig | 16 +++++++++++++++-
+> >  3 files changed, 30 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+> > index 3078b2de0b2d..a131174a0a77 100644
+> > --- a/arch/riscv/Kconfig.socs
+> > +++ b/arch/riscv/Kconfig.socs
+> > @@ -12,20 +12,6 @@ config SOC_SIFIVE
+> >
+> >  config SOC_VIRT
+> >         bool "QEMU Virt Machine"
+> > -       select VIRTIO_PCI
+> > -       select VIRTIO_BALLOON
+> > -       select VIRTIO_MMIO
+> > -       select VIRTIO_CONSOLE
+> > -       select VIRTIO_NET
+> > -       select NET_9P_VIRTIO
+> > -       select VIRTIO_BLK
+> > -       select SCSI_VIRTIO
+> > -       select DRM_VIRTIO_GPU
+> > -       select HW_RANDOM_VIRTIO
+> > -       select RPMSG_CHAR
+> > -       select RPMSG_VIRTIO
+> > -       select CRYPTO_DEV_VIRTIO
+> > -       select VIRTIO_INPUT
+> >         select POWER_RESET_SYSCON
+> >         select POWER_RESET_SYSCON_POWEROFF
+> >         select GOLDFISH
+> > diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> > index c8f084203067..2557c5372a25 100644
+> > --- a/arch/riscv/configs/defconfig
+> > +++ b/arch/riscv/configs/defconfig
+> > @@ -31,6 +31,7 @@ CONFIG_IP_PNP_BOOTP=y
+> >  CONFIG_IP_PNP_RARP=y
+> >  CONFIG_NETLINK_DIAG=y
+> >  CONFIG_NET_9P=y
+> > +CONFIG_NET_9P_VIRTIO=y
+> >  CONFIG_PCI=y
+> >  CONFIG_PCIEPORTBUS=y
+> >  CONFIG_PCI_HOST_GENERIC=y
+> > @@ -38,12 +39,15 @@ CONFIG_PCIE_XILINX=y
+> >  CONFIG_DEVTMPFS=y
+> >  CONFIG_DEVTMPFS_MOUNT=y
+> >  CONFIG_BLK_DEV_LOOP=y
+> > +CONFIG_VIRTIO_BLK=y
+> >  CONFIG_BLK_DEV_SD=y
+> >  CONFIG_BLK_DEV_SR=y
+> > +CONFIG_SCSI_VIRTIO=y
+> >  CONFIG_ATA=y
+> >  CONFIG_SATA_AHCI=y
+> >  CONFIG_SATA_AHCI_PLATFORM=y
+> >  CONFIG_NETDEVICES=y
+> > +CONFIG_VIRTIO_NET=y
+> >  CONFIG_MACB=y
+> >  CONFIG_E1000E=y
+> >  CONFIG_R8169=y
+> > @@ -54,13 +58,16 @@ CONFIG_SERIAL_8250_CONSOLE=y
+> >  CONFIG_SERIAL_OF_PLATFORM=y
+> >  CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+> >  CONFIG_HVC_RISCV_SBI=y
+> > +CONFIG_VIRTIO_CONSOLE=y
+> >  CONFIG_HW_RANDOM=y
+> > +CONFIG_HW_RANDOM_VIRTIO=y
+> >  CONFIG_SPI=y
+> >  CONFIG_SPI_SIFIVE=y
+> >  # CONFIG_PTP_1588_CLOCK is not set
+> >  CONFIG_POWER_RESET=y
+> >  CONFIG_DRM=y
+> >  CONFIG_DRM_RADEON=y
+> > +CONFIG_DRM_VIRTIO_GPU=y
+> >  CONFIG_FRAMEBUFFER_CONSOLE=y
+> >  CONFIG_USB=y
+> >  CONFIG_USB_XHCI_HCD=y
+> > @@ -74,6 +81,12 @@ CONFIG_USB_UAS=y
+> >  CONFIG_MMC=y
+> >  CONFIG_MMC_SPI=y
+> >  CONFIG_RTC_CLASS=y
+> > +CONFIG_VIRTIO_PCI=y
+> > +CONFIG_VIRTIO_BALLOON=y
+> > +CONFIG_VIRTIO_INPUT=y
+> > +CONFIG_VIRTIO_MMIO=y
+> > +CONFIG_RPMSG_CHAR=y
+> > +CONFIG_RPMSG_VIRTIO=y
+> >  CONFIG_EXT4_FS=y
+> >  CONFIG_EXT4_FS_POSIX_ACL=y
+> >  CONFIG_AUTOFS4_FS=y
+> > @@ -88,16 +101,17 @@ CONFIG_NFS_V4_2=y
+> >  CONFIG_ROOT_NFS=y
+> >  CONFIG_9P_FS=y
+> >  CONFIG_CRYPTO_USER_API_HASH=y
+> > +CONFIG_CRYPTO_DEV_VIRTIO=y
+> >  CONFIG_PRINTK_TIME=y
+> >  CONFIG_DEBUG_FS=y
+> >  CONFIG_DEBUG_PAGEALLOC=y
+> > +CONFIG_SCHED_STACK_END_CHECK=y
+> >  CONFIG_DEBUG_VM=y
+> >  CONFIG_DEBUG_VM_PGFLAGS=y
+> >  CONFIG_DEBUG_MEMORY_INIT=y
+> >  CONFIG_DEBUG_PER_CPU_MAPS=y
+> >  CONFIG_SOFTLOCKUP_DETECTOR=y
+> >  CONFIG_WQ_WATCHDOG=y
+> > -CONFIG_SCHED_STACK_END_CHECK=y
+> >  CONFIG_DEBUG_TIMEKEEPING=y
+> >  CONFIG_DEBUG_RT_MUTEXES=y
+> >  CONFIG_DEBUG_SPINLOCK=y
+> > diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_defconfig
+> > index a844920a261f..0292879a9690 100644
+> > --- a/arch/riscv/configs/rv32_defconfig
+> > +++ b/arch/riscv/configs/rv32_defconfig
+> > @@ -31,6 +31,7 @@ CONFIG_IP_PNP_BOOTP=y
+> >  CONFIG_IP_PNP_RARP=y
+> >  CONFIG_NETLINK_DIAG=y
+> >  CONFIG_NET_9P=y
+> > +CONFIG_NET_9P_VIRTIO=y
+> >  CONFIG_PCI=y
+> >  CONFIG_PCIEPORTBUS=y
+> >  CONFIG_PCI_HOST_GENERIC=y
+> > @@ -38,12 +39,15 @@ CONFIG_PCIE_XILINX=y
+> >  CONFIG_DEVTMPFS=y
+> >  CONFIG_DEVTMPFS_MOUNT=y
+> >  CONFIG_BLK_DEV_LOOP=y
+> > +CONFIG_VIRTIO_BLK=y
+> >  CONFIG_BLK_DEV_SD=y
+> >  CONFIG_BLK_DEV_SR=y
+> > +CONFIG_SCSI_VIRTIO=y
+> >  CONFIG_ATA=y
+> >  CONFIG_SATA_AHCI=y
+> >  CONFIG_SATA_AHCI_PLATFORM=y
+> >  CONFIG_NETDEVICES=y
+> > +CONFIG_VIRTIO_NET=y
+> >  CONFIG_MACB=y
+> >  CONFIG_E1000E=y
+> >  CONFIG_R8169=y
+> > @@ -54,11 +58,14 @@ CONFIG_SERIAL_8250_CONSOLE=y
+> >  CONFIG_SERIAL_OF_PLATFORM=y
+> >  CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+> >  CONFIG_HVC_RISCV_SBI=y
+> > +CONFIG_VIRTIO_CONSOLE=y
+> >  CONFIG_HW_RANDOM=y
+> > +CONFIG_HW_RANDOM_VIRTIO=y
+> >  # CONFIG_PTP_1588_CLOCK is not set
+> >  CONFIG_POWER_RESET=y
+> >  CONFIG_DRM=y
+> >  CONFIG_DRM_RADEON=y
+> > +CONFIG_DRM_VIRTIO_GPU=y
+> >  CONFIG_FRAMEBUFFER_CONSOLE=y
+> >  CONFIG_USB=y
+> >  CONFIG_USB_XHCI_HCD=y
+> > @@ -70,6 +77,12 @@ CONFIG_USB_OHCI_HCD_PLATFORM=y
+> >  CONFIG_USB_STORAGE=y
+> >  CONFIG_USB_UAS=y
+> >  CONFIG_RTC_CLASS=y
+> > +CONFIG_VIRTIO_PCI=y
+> > +CONFIG_VIRTIO_BALLOON=y
+> > +CONFIG_VIRTIO_INPUT=y
+> > +CONFIG_VIRTIO_MMIO=y
+> > +CONFIG_RPMSG_CHAR=y
+> > +CONFIG_RPMSG_VIRTIO=y
+> >  CONFIG_EXT4_FS=y
+> >  CONFIG_EXT4_FS_POSIX_ACL=y
+> >  CONFIG_AUTOFS4_FS=y
+> > @@ -84,16 +97,17 @@ CONFIG_NFS_V4_2=y
+> >  CONFIG_ROOT_NFS=y
+> >  CONFIG_9P_FS=y
+> >  CONFIG_CRYPTO_USER_API_HASH=y
+> > +CONFIG_CRYPTO_DEV_VIRTIO=y
+> >  CONFIG_PRINTK_TIME=y
+> >  CONFIG_DEBUG_FS=y
+> >  CONFIG_DEBUG_PAGEALLOC=y
+> > +CONFIG_SCHED_STACK_END_CHECK=y
+> >  CONFIG_DEBUG_VM=y
+> >  CONFIG_DEBUG_VM_PGFLAGS=y
+> >  CONFIG_DEBUG_MEMORY_INIT=y
+> >  CONFIG_DEBUG_PER_CPU_MAPS=y
+> >  CONFIG_SOFTLOCKUP_DETECTOR=y
+> >  CONFIG_WQ_WATCHDOG=y
+> > -CONFIG_SCHED_STACK_END_CHECK=y
+> >  CONFIG_DEBUG_TIMEKEEPING=y
+> >  CONFIG_DEBUG_RT_MUTEXES=y
+> >  CONFIG_DEBUG_SPINLOCK=y
+> > --
+> > 2.17.1
+> >
+> >
+>
