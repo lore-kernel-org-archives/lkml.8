@@ -2,335 +2,256 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF08C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D48FC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476222070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:44:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584643495;
-	bh=mM5nGIDcjsfWVCpA6t2E2z7xMd2k+5fWSJ9CsgWWJwg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PMzPtgZmzJROKG5Mx4D1SGN0xbXx2QifnckbRAVXsMA7+8AfKUgxGtLm+Rjgs4+OC
-	 WS2EjjIBgfigJ7hdEx1MbAQQv0xnI57bJVOAQPoXrR534APUYn9sQXhrElDsXugE/K
-	 RGEhEjdTX6WeooUXicTz3gbBd1n4fkIajNZxOaRU=
+	by mail.kernel.org (Postfix) with ESMTP id 1CD3220789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:48:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SVLsdmXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgCSSoy (ORCPT
+        id S1727318AbgCSSsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:44:54 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33588 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgCSSoy (ORCPT
+        Thu, 19 Mar 2020 14:48:23 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7492 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbgCSSsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:44:54 -0400
-Received: by mail-il1-f195.google.com with SMTP id k29so3288039ilg.0;
-        Thu, 19 Mar 2020 11:44:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bVPAncL4ha8NzXJXnSG+TdF+CX13q8qFXUMxFUpVobg=;
-        b=H7xIHM+Ak0f/wWrmPCNoeDqlX+W6MNpcmbCbDKBJehYJwq77ItAB6IcfNzxTLOAR7y
-         kNz57vNR/I0O5+3bpiwGGuZ6Av/SbAJgp4bsEmTtP/ajmJ7FtsAoHH493ABR/ejlR7RP
-         NvKAyK2ZQZ2oiZpJ8sJnV0RVonZaIGmM0aD3x/wFhcyoKsByBZKlHYVBgJC4/hG36ySN
-         NW8nYY1cKffkleadeyNUXTb0I8/9rDUWKLs2fCAdxAqoyCgCSO0vJyqqLngwtQZdizhI
-         lS9/JmuvihM+5j7rfQyMtCqFby5SeLO00NcsZvtEY06BL2DOYPzMXI9SXg4nvgGeNXVv
-         VjiA==
-X-Gm-Message-State: ANhLgQ37oi/gKFInZlfSBinymvuahp2WCpkQ7ZMZseuQASCdIydGCc5G
-        7K4Vb7RkG3a/VEzMypVVUmhR/SU=
-X-Google-Smtp-Source: ADFU+vvu4Vv92C+H/lSWRi/W8dPRz5KT9K9C6qwdOT/iLO8CZnHanXV9AtW71HUA3ivLh8Qpd7lmPQ==
-X-Received: by 2002:a92:b61d:: with SMTP id s29mr4542370ili.66.1584643492422;
-        Thu, 19 Mar 2020 11:44:52 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id s69sm1150358ill.73.2020.03.19.11.44.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 11:44:51 -0700 (PDT)
-Received: (nullmailer pid 10183 invoked by uid 1000);
-        Thu, 19 Mar 2020 18:44:48 -0000
-Date:   Thu, 19 Mar 2020 12:44:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        broonie@kernel.org, vigneshr@ti.com, devicetree@vger.kernel.org,
-        boris.brezillon@free-electrons.com,
-        simon.k.r.goldschmidt@gmail.com, dinguyen@kernel.org,
-        tien.fong.chee@intel.com, marex@denx.de,
-        linux-mtd@lists.infradead.org, dwmw2@infradead.org, richard@nod.at,
-        computersforpeace@gmail.com, cyrille.pitchen@atmel.com,
-        david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com,
-        tudor.ambarus@gmail.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v12 1/4] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-Message-ID: <20200319184448.GA25121@bogus>
-References: <20200310015213.1734-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200310015213.1734-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Thu, 19 Mar 2020 14:48:22 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e73be430001>; Thu, 19 Mar 2020 11:47:31 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 19 Mar 2020 11:48:21 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 19 Mar 2020 11:48:21 -0700
+Received: from [10.2.175.141] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar
+ 2020 18:48:21 +0000
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
+        <helen.koike@collabora.com>, <sboyd@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+ <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
+ <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
+ <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
+ <5f54c018-5670-8193-7c68-969f9bde92f6@xs4all.nl>
+ <19081d90-62cc-e6eb-0337-f108fb6ca9bc@nvidia.com>
+ <061eabf1-4b6f-83c0-6851-df8a193a84e8@nvidia.com>
+ <a5377068-3c70-1af4-6398-630d205e794b@nvidia.com>
+ <bc571308-93e5-e720-1cac-eb3effe1acdd@xs4all.nl>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <6be84f2c-12d7-3077-73af-55301c24627b@nvidia.com>
+Date:   Thu, 19 Mar 2020 11:49:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200310015213.1734-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <bc571308-93e5-e720-1cac-eb3effe1acdd@xs4all.nl>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1584643651; bh=PxupzcuW7ZMqezNCkpHo/442CvyUUHdXbp9nBekxA8s=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=SVLsdmXr0WHfrf0hgtzDisiZAxfyuyHfFUYHMSE5yS6u/4Se6YF/kjPJI36XBgV7C
+         sWjIv8li/pz/2v5oEe1pZa+biz6i+bsXx0WxOnyjHYQTTScsU8sA/ziPPGwWCCymH2
+         Dq6yudjoWcmcAf7teraxlh0uM0xKVcl3bNqBSGVGBW6B+eGVoLC0tuf8n1m4UsXTZy
+         Ph9oQldvv2ByWsz1SME8kS2BEQ2gkhwAXEYEFbI2zfZO/zPoPt5qceKvJnnGv4JVMj
+         TXes3AVdpajZMP7mIv3694rgWIWkphycqj4EEJWK427vojqHgKmJyo8G94xygZpdFe
+         xOSGV/UEkPiAQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 10, 2020 at 09:52:10AM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add dt-bindings documentation for Cadence-QSPI controller to support
-> spi based flash memories.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  .../devicetree/bindings/mtd/cadence-quadspi.txt    |  67 -----------
->  .../devicetree/bindings/spi/cdns,qspi-nor.yaml     | 127 +++++++++++++++++++++
->  2 files changed, 127 insertions(+), 67 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->  create mode 100644 Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> deleted file mode 100644
-> index 945be7d5b236..000000000000
-> --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-> +++ /dev/null
-> @@ -1,67 +0,0 @@
-> -* Cadence Quad SPI controller
-> -
-> -Required properties:
-> -- compatible : should be one of the following:
-> -	Generic default - "cdns,qspi-nor".
-> -	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
-> -	For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
-> -- reg : Contains two entries, each of which is a tuple consisting of a
-> -	physical address and length. The first entry is the address and
-> -	length of the controller register set. The second entry is the
-> -	address and length of the QSPI Controller data area.
-> -- interrupts : Unit interrupt specifier for the controller interrupt.
-> -- clocks : phandle to the Quad SPI clock.
-> -- cdns,fifo-depth : Size of the data FIFO in words.
-> -- cdns,fifo-width : Bus width of the data FIFO in bytes.
-> -- cdns,trigger-address : 32-bit indirect AHB trigger address.
-> -
-> -Optional properties:
-> -- cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
-> -- cdns,rclk-en : Flag to indicate that QSPI return clock is used to latch
-> -  the read data rather than the QSPI clock. Make sure that QSPI return
-> -  clock is populated on the board before using this property.
-> -
-> -Optional subnodes:
-> -Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
-> -custom properties:
-> -- cdns,read-delay : Delay for read capture logic, in clock cycles
-> -- cdns,tshsl-ns : Delay in nanoseconds for the length that the master
-> -                  mode chip select outputs are de-asserted between
-> -		  transactions.
-> -- cdns,tsd2d-ns : Delay in nanoseconds between one chip select being
-> -                  de-activated and the activation of another.
-> -- cdns,tchsh-ns : Delay in nanoseconds between last bit of current
-> -                  transaction and deasserting the device chip select
-> -		  (qspi_n_ss_out).
-> -- cdns,tslch-ns : Delay in nanoseconds between setting qspi_n_ss_out low
-> -                  and first bit transfer.
-> -- resets	: Must contain an entry for each entry in reset-names.
-> -		  See ../reset/reset.txt for details.
-> -- reset-names	: Must include either "qspi" and/or "qspi-ocp".
-> -
-> -Example:
-> -
-> -	qspi: spi@ff705000 {
-> -		compatible = "cdns,qspi-nor";
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		reg = <0xff705000 0x1000>,
-> -		      <0xffa00000 0x1000>;
-> -		interrupts = <0 151 4>;
-> -		clocks = <&qspi_clk>;
-> -		cdns,is-decoded-cs;
-> -		cdns,fifo-depth = <128>;
-> -		cdns,fifo-width = <4>;
-> -		cdns,trigger-address = <0x00000000>;
-> -		resets = <&rst QSPI_RESET>, <&rst QSPI_OCP_RESET>;
-> -		reset-names = "qspi", "qspi-ocp";
-> -
-> -		flash0: n25q00@0 {
-> -			...
-> -			cdns,read-delay = <4>;
-> -			cdns,tshsl-ns = <50>;
-> -			cdns,tsd2d-ns = <50>;
-> -			cdns,tchsh-ns = <4>;
-> -			cdns,tslch-ns = <4>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> new file mode 100644
-> index 000000000000..d21f80604af4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> @@ -0,0 +1,127 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/cdns,qspi-nor.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence QSPI Flash Controller support
-> +
-> +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
-> +
-> +description: |
-> +  Binding Documentation for Cadence QSPI controller,This controller is
-> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
-> +  has been tested On Intel's LGM SoC.
-> +
-> +properties:
-> +  compatible:
-> +     enum:
-> +       - cdns,qspi-nor
-> +       - ti,k2g-qspi
-> +       - ti,am654-ospi
-> +       - intel,lgm-qspi
-> +
-> +  reg:
-> +    maxItems: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  cdns,fifo-depth:
-> +    description:
-> +     Depth of hardware FIFOs.
-> +    allOf:
-> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +      - enum: [ 128, 256 ]
-> +      - default: 128
-> +
-> +  cdns,fifo-width:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      4 byte bus width of the data FIFO in bytes.
-> +
-> +  cdns,trigger-address:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      32-bit indirect AHB trigger address.
-> +
-> +  cdns,rclk-en:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Flag to indicate that QSPI return clock is used to latch the read data
-> +      rather than the QSPI clock. Make sure that QSPI return clock is populated
-> +      on the board before using this property.
 
-Sounds like a boolean rather than a uint32? If not, then constraints on 
-the values?
+On 3/19/20 7:29 AM, Hans Verkuil wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On 3/18/20 6:17 PM, Sowjanya Komatineni wrote:
+>> On 3/18/20 9:25 AM, Sowjanya Komatineni wrote:
+>>> On 3/18/20 9:14 AM, Sowjanya Komatineni wrote:
+>>>> On 3/18/20 4:48 AM, Hans Verkuil wrote:
+>>>>> External email: Use caution opening links or attachments
+>>>>>
+>>>>>
+>>>>> On 2/24/20 5:45 AM, Sowjanya Komatineni wrote:
+>>>>>> On 2/20/20 11:11 AM, Sowjanya Komatineni wrote:
+>>>>>>> On 2/20/20 5:33 AM, Hans Verkuil wrote:
+>>>>>>>> External email: Use caution opening links or attachments
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> (Replying to myself so I can explain this a bit more)
+>>>>>>>>
+>>>>>>>> On 2/20/20 1:44 PM, Hans Verkuil wrote:
+>>>>>>>>>> +
+>>>>>>>>>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
+>>>>>>>>>> +{
+>>>>>>>>>> +    struct device_node *node =3D csi->dev->of_node;
+>>>>>>>>>> +    unsigned int port_num;
+>>>>>>>>>> +    int ret;
+>>>>>>>>>> +    struct tegra_csi_channel *item;
+>>>>>>>>>> +    unsigned int tpg_channels =3D csi->soc->csi_max_channels;
+>>>>>>>>>> +
+>>>>>>>>>> +    /* allocate CSI channel for each CSI x2 ports */
+>>>>>>>>>> +    for (port_num =3D 0; port_num < tpg_channels; port_num++) {
+>>>>>>>>>> +            item =3D devm_kzalloc(csi->dev, sizeof(*item),
+>>>>>>>>>> GFP_KERNEL);
+>>>>>>>>> Using devm_*alloc can be dangerous. If someone unbinds the
+>>>>>>>>> driver, then
+>>>>>>>>> all memory allocated with devm_ is immediately freed. But if an
+>>>>>>>>> application
+>>>>>>>>> still has a filehandle open, then when it closes it it might stil=
+l
+>>>>>>>>> reference
+>>>>>>>>> this already-freed memory.
+>>>>>>>>>
+>>>>>>>>> I recommend that you avoid using devm_*alloc for media drivers.
+>>>>>>>> A good test is to unbind & bind the driver:
+>>>>>>>>
+>>>>>>>> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
+>>>>>>>> echo -n 54080000.vi >unbind
+>>>>>>>> echo -n 54080000.vi >bind
+>>>>>>>>
+>>>>>>>> First just do this without the driver being used. That already
+>>>>>>>> gives me 'list_del corruption' kernel messages (list debugging
+>>>>>>>> is turned on in my kernel).
+>>>>>> Will fix in v4 to use kzalloc and also proper release v4l2 to make
+>>>>>> sure
+>>>>>> unbind/bind works properly.
+>>>>>>
+>>>>>> BTW, tegra vi and csi are registered as clients to host1x video
+>>>>>> driver.
+>>>>>>
+>>>>>> So, unbind and bind should be done with host1x video driver
+>>>>>> "tegra-video"
+>>>>>>
+>>>>>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>>>>>> echo -n tegra-video > unbind
+>>>>>> echo -n tegra-video > bind
+>>>>> This still crashes with v4, at least if I am streaming with v4l2-ctl
+>>>>> --stream-mmap.
+>>>>> Is that known?
+>>>>>
+>>>>> It's not a big deal at this moment, just want to know if this will
+>>>>> be looked
+>>>>> at later.
+>>>>>
+>>>>> Regards,
+>>>>>
+>>>>>           Hans
+>>>> Weird, I tested streaming after unbind and bind as well and don't see
+>>>> crash. Did below steps and tried several times unbind/bind as well.
+>>>>
+>>>> ./v4l2-ctl --stream-mmap --stream-count=3D1 -d /dev/video3
+>>>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>>>> echo -n tegra-video > unbind
+>>>> sleep 1
+>>>> echo -n tegra-video > bind
+>>>> cd /home/ubuntu
+>>>> ./v4l2-ctl --stream-mmap --stream-count=3D1 -d /dev/video3
+>>>>
+>>>> Can you post call trace when you saw crash?
+>>> Tried unbind when  node is open with v4l2-ctl --sleep 10 as well and
+>>> bind back.
+>>>
+>>> I don't see crash. Will confirm on doing unbind/bind with stream-mmap..=
+.
+>>>
+>> Able to repro when unbind/bind happens while stream-mmap.
+> That's indeed what I did. I don't want to try it again since I'm working =
+from home
+> and the Jetson is in the office. And once it crashes I need someone in th=
+e office
+> to press the reset button. I hope I can pick it up next week to keep it a=
+t home as
+> that will make testing a lot easier.
 
-> +# subnode's properties
-> +patternProperties:
-> +  "^.*@[0-9a-fA-F]+$":
+Hi Hans, no problem. I repro'd and fixed it. Will include the fix in v5.
 
-How many chip selects do you support? The unit-address can be limited as 
-I'd guess it's less than 16. Also, should be lowercase hex.
+Tested fix to make sure of no crash with unbind/bind during sleep and=20
+also during streaming.
 
-> +    type: object
-> +    description:
-> +      flash device uses the subnodes below defined properties.
-> +
-> +  cdns,read-delay:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Delay in 4 microseconds, read capture logic, in clock cycles.
+during sleep, after specified time it shows below info but no crash.
 
-4us or clock cycles?
+Test VIDIOC_QUERYCAP:
+ =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 VIDIOC_QUERYCAP returned -1 (No such device)
+VIDIOC_QUERYCAP: No such device
 
-> +
-> +  cdns,tshsl-ns:
-> +    description: |
-> +      Delay in 50 nanoseconds, for the length that the master mode chip select
-> +      outputs are de-asserted between transactions.
+Thanks
 
-Sounds like you can add:
+Sowjanya
 
-multipleOf: 50
-
-> +
-> +  cdns,tsd2d-ns:
-> +    description: |
-> +      Delay in 50 nanoseconds, between one chip select being de-activated
-> +      and the activation of another.
-
-Same here
-
-> +
-> +  cdns,tchsh-ns:
-> +    description: |
-> +      Delay in 4 nanoseconds, between last bit of current transaction and
-> +      deasserting the device chip select (qspi_n_ss_out).
-
-multipleOf: 4
-
-> +
-> +  cdns,tslch-ns:
-> +    description: |
-> +      Delay in 4 nanoseconds, between setting qspi_n_ss_out low and
-> +      first bit transfer.
-
-multipleOf: 4
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - cdns,fifo-depth
-> +  - cdns,fifo-width
-> +  - cdns,trigger-address
-> +
-> +examples:
-> +  - |
-> +    qspi: spi@ff705000 {
-
-Drop the label.
-
-> +          compatible = "cdns,qspi-nor";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          reg = <0xff705000 0x1000>,
-> +                <0xffa00000 0x1000>;
-> +          interrupts = <0 151 4>;
-> +          clocks = <&qspi_clk>;
-> +          cdns,fifo-depth = <128>;
-> +          cdns,fifo-width = <4>;
-> +          cdns,trigger-address = <0x00000000>;
-> +
-> +          flash0: n25q00@0 {
-
-flash@0
-
-> +              compatible = "jedec,spi-nor";
-> +              reg = <0x0>;
-> +              cdns,read-delay = <4>;
-> +              cdns,tshsl-ns = <50>;
-> +              cdns,tsd2d-ns = <50>;
-> +              cdns,tchsh-ns = <4>;
-> +              cdns,tslch-ns = <4>;
-> +          };
-> +    };
-> +
-> -- 
-> 2.11.0
-> 
+>
+>> Will look and have fix in v5.
+> Nice!
+>
+> Thank you,
+>
+>          Hans
+>
+>> Thanks Hans.
+>>
+>>>>>>>> Note that this first test is basically identical to a rmmod/modpro=
+be
+>>>>>>>> of the driver. But when I compiled the driver as a module it didn'=
+t
+>>>>>>>> create any video device nodes! Nor did I see any errors in the
+>>>>>>>> kernel
+>>>>>>>> log. I didn't pursue this, and perhaps I did something wrong, but
+>>>>>>>> it's
+>>>>>>>> worth taking a look at.
+>>>>>>>>
+>>>>>>>> The next step would be to have a video node open with:
+>>>>>>>>
+>>>>>>>> v4l2-ctl --sleep 10
+>>>>>>>>
+>>>>>>>> then while it is sleeping unbind the driver and see what happens
+>>>>>>>> when v4l2-ctl exits.
+>>>>>>>>
+>>>>>>>> Worst case is when you are streaming:
+>>>>>>>>
+>>>>>>>> v4l2-ctl --stream-mmap
+>>>>>>>>
+>>>>>>>> and then unbind.
+>>>>>>>>
+>>>>>>>> In general, the best way to get this to work correctly is:
+>>>>>>>>
+>>>>>>>> 1) don't use devm_*alloc
+>>>>>>>> 2) set the release callback of struct v4l2_device and do all freei=
+ng
+>>>>>>>> there.
+>>>>>>>> 3) in the platform remove() callback you call
+>>>>>>>> media_device_unregister()
+>>>>>>>>       and video_unregister_device().
+>>>>>>> Reg 3, in current patch, media_device_unregister is called in
+>>>>>>> host1x_video_remove
+>>>>>>> video_unregister_device happens during host1x_video_remove ->
+>>>>>>> host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
+>>>>>>>
+>>>>>>>> It's worth getting this right in this early stage, rather than
+>>>>>>>> fixing it
+>>>>>>>> in the future.
+>>>>>>>>
+>>>>>>>> Regards,
+>>>>>>>>
+>>>>>>>>            Hans
