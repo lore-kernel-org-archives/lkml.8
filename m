@@ -2,51 +2,51 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB346C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DC7C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19B92072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2CBC20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgCSPDY (ORCPT
+        id S1727376AbgCSPDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:03:24 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:47372 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728463AbgCSPDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:03:21 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1jEwa5-0004U0-7Q; Thu, 19 Mar 2020 14:55:33 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1jEwYO-0004nA-PY; Thu, 19 Mar 2020 15:53:48 +0100
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Mathieu Desnoyers via Libc-alpha <libc-alpha@sourceware.org>
-Cc:     Carlos O'Donell <carlos@redhat.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Rich Felker <dalias@libc.org>, linux-api@vger.kernel.org,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Paul Turner <pjt@google.com>,
-        Joseph Myers <joseph@codesourcery.com>
-Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C startup and thread creation (v15)
-References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com>
-        <20200319144110.3733-5-mathieu.desnoyers@efficios.com>
-Date:   Thu, 19 Mar 2020 15:53:48 +0100
-In-Reply-To: <20200319144110.3733-5-mathieu.desnoyers@efficios.com> (Mathieu
-        Desnoyers via Libc-alpha's message of "Thu, 19 Mar 2020 10:41:06
-        -0400")
-Message-ID: <874kukpf9f.fsf@mid.deneb.enyo.de>
+        Thu, 19 Mar 2020 11:03:22 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:32379 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728435AbgCSPDT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:03:19 -0400
+IronPort-SDR: pnEWoouqL2/muF07ofLVYUyUy/HQD2rYos/wwYYyrndkTUgTbtuXEzf3b9yRBrSktuokXqiVg5
+ qIt4KkVYLTSeH+5ZkVMKURu6W2Eubs8SoD6beJirL/wjCgccRJoVQ/ai3n4mB74BaE8njYSvQN
+ NH9jYB+zKNFvvzgfSCqTs+s9/jHYZ++qbOS7Hm5W8Pgi9DyR2FD4uQtEBoh1AP46hIou5nFWXB
+ lWVR8vYNrJL8ztRpjg8g38N4fo8/lLhamOE9DQo2QOImh1TdWISsxPpvEoH0sCPY5wwkQjuxsv
+ oSU=
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="46891070"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 19 Mar 2020 07:03:18 -0800
+IronPort-SDR: lESiGKohi5ReR/Powo1gz/WoWbBgQye/3KGJ/7wruXSWk6WRigfNw3CAeaW67MWmNF2aQQ1xQB
+ y/85Sj0dYMPz8OnFyZs9S1UDw+eQtjIKThNmseDfy6DdO4JsEkyjRl3W2RpUlF9jutWawaQzjI
+ p0fE348BY5FK6gN5N9pI2Q+N6uo2Dv7WTnvTF/wZUK5NqEodlr0l2PzBeNn7QCbPvK+bILCLri
+ aYY1mDdiES5NHL+BKqixwOR80kT4wOWbStRlQ7FWdLXUutemTvYAdEyJEvSso5+STfiGQWb7G3
+ P64=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
+        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <bsz@semihalf.com>, <rydberg@bitmath.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <jiada_wang@mentor.com>
+Subject: [PATCH v8 45/52] Input: Atmel: Improve error handling in mxt_initialize_input_device()
+Date:   Thu, 19 Mar 2020 08:00:09 -0700
+Message-ID: <20200319150016.61398-46-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200319150016.61398-1-jiada_wang@mentor.com>
+References: <20200319150016.61398-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,16 +54,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers via Libc-alpha:
+From: Deepak Das <deepak_das@mentor.com>
 
-> Changes since v14:
-> - Update copyright range to include 2020.
-> - Introduce __ASSUME_RSEQ defined for --enable-kernel=4.18.0 and higher.
-> - Use ifdef __ASSUME_RSEQ rather than ifdef __NR_rseq to discover rseq
->   availability. This is necessary now that the system call numbers are
->   integrated within glibc.
+Currently Driver probe continues with a warning message when it
+fails to get the proper multitouch object configurations like
+TouchScreen resolution.
 
-It's not quite clear to me why you need __ASSUME_RSEQ.
+But Driver probe should fail in case of above scneario because it
+will not behave as expected without the proper touchscreen
+configurations.
 
-Can you use __has_include in <sys/rseq.h>, with a copy of the kernel
-definitions if the kernel header is not available?
+This commit modifies mxt_initialize_input_device() to return error
+when it fails to get the proper touch screen configurations.
+
+Signed-off-by: Deepak Das <deepak_das@mentor.com>
+Signed-off-by: Dean Jenkins <Dean_Jenkins@mentor.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index edab65337061..994232c43554 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -2761,15 +2761,19 @@ static int mxt_initialize_input_device(struct mxt_data *data)
+ 	case MXT_TOUCH_MULTI_T9:
+ 		num_mt_slots = data->T9_reportid_max - data->T9_reportid_min + 1;
+ 		error = mxt_read_t9_resolution(data);
+-		if (error)
+-			dev_warn(dev, "Failed to initialize T9 resolution\n");
++		if (error) {
++			dev_err(dev, "Failed to initialize T9 resolution\n");
++			return error;
++		}
+ 		break;
+ 
+ 	case MXT_TOUCH_MULTITOUCHSCREEN_T100:
+ 		num_mt_slots = data->num_touchids;
+ 		error = mxt_read_t100_config(data);
+-		if (error)
+-			dev_warn(dev, "Failed to read T100 config\n");
++		if (error) {
++			dev_err(dev, "Failed to read T100 config\n");
++			return error;
++		}
+ 		break;
+ 
+ 	default:
+-- 
+2.17.1
+
