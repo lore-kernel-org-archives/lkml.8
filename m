@@ -2,253 +2,173 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1CEC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A046C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBB120740
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0DD520722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:55:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EgQuL3Aa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B1Go1eVr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgCSLyS (ORCPT
+        id S1727016AbgCSLz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 07:54:18 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:28538 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726983AbgCSLyR (ORCPT
+        Thu, 19 Mar 2020 07:55:58 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51961 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbgCSLz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 07:54:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584618856;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rfvOuZmYPPi4oHcTlbLwuIRBNB4NZg4BmdQ1Q3rzHik=;
-        b=EgQuL3Aaf0FStudktQQl+id3Y3n3VxCpQYfPMxYdbIe2C+pRRStwZ3AMZ3y1Dmfnxsy0q0
-        eNX9x7EG73nnaM3Ih7KsRlyGmsgGsDenh7j4IXTRucDhzdmZrO7rsehWHDI0vUr07xZoZl
-        SiIF3Q4wf85BJqpj02+cA0Nqx+2a20c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-130-gLwI5eWdPLu38qGYwNUEhA-1; Thu, 19 Mar 2020 07:54:14 -0400
-X-MC-Unique: gLwI5eWdPLu38qGYwNUEhA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D958D101FC60;
-        Thu, 19 Mar 2020 11:54:12 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-126.rdu2.redhat.com [10.10.113.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F0EB260BF7;
-        Thu, 19 Mar 2020 11:54:11 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net 6/6] afs: Fix client call Rx-phase signal handling
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        Thu, 19 Mar 2020 07:55:58 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c187so1927097wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 04:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cudi9P8HlkG4etpTBbGtsxlC/P7Ku4/3Ch1toRpnrQU=;
+        b=B1Go1eVrp+YAnxp6yMKkty37/MmcSdW82gX3i0zLMqolbS7I4JzNolqflAsj4gSsdJ
+         b/pz8/OJPembmhjZaElN554UODiRnY3Z+Gm9kDWa9n14N4/Bo5Gl+pdo8k6ONcO5WqLv
+         ZHoyc6WBgCvjEnBIzRhn/JiLkvvR3h1mK8LDtUUO5lZaxx1cTvzLHVdirr56WNbmASWS
+         Mf4vzy+u5I27pZT83/r+7MlxTPDCaZLe7b2It5SVF10y3/38o+svU51T/Lboe1zVeUQh
+         U6brSHrzkHRz1/TJJc2KxP+abWn6q1YMVzJGXWt76rht2xFWTYydEXWs9a8EIkzzbTTd
+         hXDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=cudi9P8HlkG4etpTBbGtsxlC/P7Ku4/3Ch1toRpnrQU=;
+        b=nAd7OERvdj8QgnWNoSO4A9dwCpT8pUSLYB+OA3lpaTT9W1NgXIbzaD3OzS7WG9UNhR
+         rfIsWvm3wLEnAIQPwb8oXq+ki8B5sm4icE0nviEvVYtIORxspNpRmkfTHxZaDC9NC6WS
+         UqOMUn0n3wO1v9jUdDsFuFoY3qzo5d2fnzClLOvR9ewPpfB9K6LmEXTIS/xheRn7sq4a
+         zvTslInLdSqMHvhbzPI8BtgP45/3S4eIOyCc40hBDR3ChCMDx1lHNQNEoMx4s3MEe0aX
+         mRJv1n6ZhaTRuh3OxMexA7yHSsBY8fZwriAS6IViaWHBGMfw4F4GIiBW0ZnOZzmCabk3
+         BMjA==
+X-Gm-Message-State: ANhLgQ1Ie73rzyA+AZaCY5vZtcekZwlTem97r9ntf4LKoMlB75vq8WBm
+        Y0JQlcU9lKCgwM7nhQTfw7qUSg==
+X-Google-Smtp-Source: ADFU+vvsMLtvkLKFmONPsXKe/V+ti4VGgCY6Xc7r1R+43v7vArDEQyW90r6n0oopUsT8ykqNTZJnFQ==
+X-Received: by 2002:a1c:196:: with SMTP id 144mr3441513wmb.100.1584618954861;
+        Thu, 19 Mar 2020 04:55:54 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:5d64:ea6:49bd:69d7? ([2a01:e34:ed2f:f020:5d64:ea6:49bd:69d7])
+        by smtp.googlemail.com with ESMTPSA id t126sm3049344wmb.27.2020.03.19.04.55.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 04:55:54 -0700 (PDT)
+Subject: Re: [PATCH] thermal: imx_sc_thermal: Fix incorrect data type
+To:     Anson Huang <Anson.Huang@nxp.com>, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Date:   Thu, 19 Mar 2020 11:54:11 +0000
-Message-ID: <158461885129.3094720.6262740540849421125.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158461880968.3094720.5019510060910604912.stgit@warthog.procyon.org.uk>
-References: <158461880968.3094720.5019510060910604912.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.21
+Cc:     Linux-imx@nxp.com
+References: <1584606380-9972-1-git-send-email-Anson.Huang@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <bde3c414-384c-e2e8-7591-3c30d6cc3bd6@linaro.org>
+Date:   Thu, 19 Mar 2020 12:55:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <1584606380-9972-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the handling of signals in client rxrpc calls made by the afs
-filesystem.  Ignore signals completely, leaving call abandonment or
-connection loss to be detected by timeouts inside AF_RXRPC.
+On 19/03/2020 09:26, Anson Huang wrote:
+> The temperature value passed from SCU could be negative value,
+> the data type should be signed instead of unsigned.
+> 
+> Fixes: ed0843633fee ("thermal: imx_sc: add i.MX system controller thermal support")
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Allowing a filesystem call to be interrupted after the entire request has
-been transmitted and an abort sent means that the server may or may not
-have done the action - and we don't know.  It may even be worse than that
-for older servers.
+Applied, thanks
 
-Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporarily ignore signals")
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+> ---
+>  drivers/thermal/imx_sc_thermal.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_thermal.c
+> index dbb277a..a8723b1 100644
+> --- a/drivers/thermal/imx_sc_thermal.c
+> +++ b/drivers/thermal/imx_sc_thermal.c
+> @@ -30,8 +30,8 @@ struct req_get_temp {
+>  } __packed __aligned(4);
+>  
+>  struct resp_get_temp {
+> -	u16 celsius;
+> -	u8 tenths;
+> +	s16 celsius;
+> +	s8 tenths;
+>  } __packed __aligned(4);
+>  
+>  struct imx_sc_msg_misc_get_temp {
+> 
 
- fs/afs/rxrpc.c          |   34 ++--------------------------------
- include/net/af_rxrpc.h  |    4 +---
- net/rxrpc/af_rxrpc.c    |   33 +++------------------------------
- net/rxrpc/ar-internal.h |    1 -
- net/rxrpc/input.c       |    1 -
- 5 files changed, 6 insertions(+), 67 deletions(-)
 
-diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
-index 972e3aafa361..1ecc67da6c1a 100644
---- a/fs/afs/rxrpc.c
-+++ b/fs/afs/rxrpc.c
-@@ -604,11 +604,7 @@ static void afs_deliver_to_call(struct afs_call *call)
- long afs_wait_for_call_to_complete(struct afs_call *call,
- 				   struct afs_addr_cursor *ac)
- {
--	signed long rtt2, timeout;
- 	long ret;
--	bool stalled = false;
--	u64 rtt;
--	u32 life, last_life;
- 	bool rxrpc_complete = false;
- 
- 	DECLARE_WAITQUEUE(myself, current);
-@@ -619,14 +615,6 @@ long afs_wait_for_call_to_complete(struct afs_call *call,
- 	if (ret < 0)
- 		goto out;
- 
--	rtt = rxrpc_kernel_get_rtt(call->net->socket, call->rxcall);
--	rtt2 = nsecs_to_jiffies64(rtt) * 2;
--	if (rtt2 < 2)
--		rtt2 = 2;
--
--	timeout = rtt2;
--	rxrpc_kernel_check_life(call->net->socket, call->rxcall, &last_life);
--
- 	add_wait_queue(&call->waitq, &myself);
- 	for (;;) {
- 		set_current_state(TASK_UNINTERRUPTIBLE);
-@@ -637,37 +625,19 @@ long afs_wait_for_call_to_complete(struct afs_call *call,
- 			call->need_attention = false;
- 			__set_current_state(TASK_RUNNING);
- 			afs_deliver_to_call(call);
--			timeout = rtt2;
- 			continue;
- 		}
- 
- 		if (afs_check_call_state(call, AFS_CALL_COMPLETE))
- 			break;
- 
--		if (!rxrpc_kernel_check_life(call->net->socket, call->rxcall, &life)) {
-+		if (!rxrpc_kernel_check_life(call->net->socket, call->rxcall)) {
- 			/* rxrpc terminated the call. */
- 			rxrpc_complete = true;
- 			break;
- 		}
- 
--		if (call->intr && timeout == 0 &&
--		    life == last_life && signal_pending(current)) {
--			if (stalled)
--				break;
--			__set_current_state(TASK_RUNNING);
--			rxrpc_kernel_probe_life(call->net->socket, call->rxcall);
--			timeout = rtt2;
--			stalled = true;
--			continue;
--		}
--
--		if (life != last_life) {
--			timeout = rtt2;
--			last_life = life;
--			stalled = false;
--		}
--
--		timeout = schedule_timeout(timeout);
-+		schedule();
- 	}
- 
- 	remove_wait_queue(&call->waitq, &myself);
-diff --git a/include/net/af_rxrpc.h b/include/net/af_rxrpc.h
-index 8e547b4d88c8..04e97bab6f28 100644
---- a/include/net/af_rxrpc.h
-+++ b/include/net/af_rxrpc.h
-@@ -64,9 +64,7 @@ int rxrpc_kernel_charge_accept(struct socket *, rxrpc_notify_rx_t,
- 			       rxrpc_user_attach_call_t, unsigned long, gfp_t,
- 			       unsigned int);
- void rxrpc_kernel_set_tx_length(struct socket *, struct rxrpc_call *, s64);
--bool rxrpc_kernel_check_life(const struct socket *, const struct rxrpc_call *,
--			     u32 *);
--void rxrpc_kernel_probe_life(struct socket *, struct rxrpc_call *);
-+bool rxrpc_kernel_check_life(const struct socket *, const struct rxrpc_call *);
- u32 rxrpc_kernel_get_epoch(struct socket *, struct rxrpc_call *);
- bool rxrpc_kernel_get_reply_time(struct socket *, struct rxrpc_call *,
- 				 ktime_t *);
-diff --git a/net/rxrpc/af_rxrpc.c b/net/rxrpc/af_rxrpc.c
-index 7603cf811f75..15ee92d79581 100644
---- a/net/rxrpc/af_rxrpc.c
-+++ b/net/rxrpc/af_rxrpc.c
-@@ -371,44 +371,17 @@ EXPORT_SYMBOL(rxrpc_kernel_end_call);
-  * rxrpc_kernel_check_life - Check to see whether a call is still alive
-  * @sock: The socket the call is on
-  * @call: The call to check
-- * @_life: Where to store the life value
-  *
-- * Allow a kernel service to find out whether a call is still alive - ie. we're
-- * getting ACKs from the server.  Passes back in *_life a number representing
-- * the life state which can be compared to that returned by a previous call and
-- * return true if the call is still alive.
-- *
-- * If the life state stalls, rxrpc_kernel_probe_life() should be called and
-- * then 2RTT waited.
-+ * Allow a kernel service to find out whether a call is still alive -
-+ * ie. whether it has completed.
-  */
- bool rxrpc_kernel_check_life(const struct socket *sock,
--			     const struct rxrpc_call *call,
--			     u32 *_life)
-+			     const struct rxrpc_call *call)
- {
--	*_life = call->acks_latest;
- 	return call->state != RXRPC_CALL_COMPLETE;
- }
- EXPORT_SYMBOL(rxrpc_kernel_check_life);
- 
--/**
-- * rxrpc_kernel_probe_life - Poke the peer to see if it's still alive
-- * @sock: The socket the call is on
-- * @call: The call to check
-- *
-- * In conjunction with rxrpc_kernel_check_life(), allow a kernel service to
-- * find out whether a call is still alive by pinging it.  This should cause the
-- * life state to be bumped in about 2*RTT.
-- *
-- * The must be called in TASK_RUNNING state on pain of might_sleep() objecting.
-- */
--void rxrpc_kernel_probe_life(struct socket *sock, struct rxrpc_call *call)
--{
--	rxrpc_propose_ACK(call, RXRPC_ACK_PING, 0, true, false,
--			  rxrpc_propose_ack_ping_for_check_life);
--	rxrpc_send_ack_packet(call, true, NULL);
--}
--EXPORT_SYMBOL(rxrpc_kernel_probe_life);
--
- /**
-  * rxrpc_kernel_get_epoch - Retrieve the epoch value from a call.
-  * @sock: The socket the call is on
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 1f72f43b082d..3eb1ab40ca5c 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -675,7 +675,6 @@ struct rxrpc_call {
- 
- 	/* transmission-phase ACK management */
- 	ktime_t			acks_latest_ts;	/* Timestamp of latest ACK received */
--	rxrpc_serial_t		acks_latest;	/* serial number of latest ACK received */
- 	rxrpc_seq_t		acks_lowest_nak; /* Lowest NACK in the buffer (or ==tx_hard_ack) */
- 	rxrpc_seq_t		acks_lost_top;	/* tx_top at the time lost-ack ping sent */
- 	rxrpc_serial_t		acks_lost_ping;	/* Serial number of probe ACK */
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index ef10fbf71b15..69e09d69c896 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -882,7 +882,6 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 	    before(prev_pkt, call->ackr_prev_seq))
- 		goto out;
- 	call->acks_latest_ts = skb->tstamp;
--	call->acks_latest = sp->hdr.serial;
- 
- 	call->ackr_first_seq = first_soft_ack;
- 	call->ackr_prev_seq = prev_pkt;
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
