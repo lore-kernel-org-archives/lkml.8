@@ -2,111 +2,91 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B8EC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92068C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE182076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD4520773
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584577812;
-	bh=s+daCmIgkJ7+NjKAff/EpwgrnpoE3Bw4gorFJuVK7lE=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=z7+R9n0UajYD1MY5YYwPuDSb5eCvEDcyUsSFXLwdVjDy5NsuIv5ygweiUgEY7FtDm
-	 WFqybOHBGgyBK1K9yN4TEqfjIOQ8n8zjG88Xgq7pksIVid0SjEcG1NiqjQbg2crSxV
-	 2HZkq1OT1NDeSxYS0qqDk8Qs0jdJ1Tbo/1UGCHDY=
+	s=default; t=1584577842;
+	bh=lGgOA8i9jqfs6+LhGMKQbt8ZockuHa4KYi8DijDb9RM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wmvG5yITYnnwagPQMXUx4X2npvrybJ/qqOid+2aBBgSz4XF81kDNo3n/x/RKDIk/5
+	 2lALqjcbyJ8KbNZS7VioEsppkFQPVtyCfHYYKn4rjpMxq5LA8y3BvARs1OAOKtNpit
+	 FFH4NBMVHAe5qklSeUNzGMtANwPd8RxbwXC1uIqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgCSAaL (ORCPT
+        id S1727198AbgCSAal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 20:30:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46422 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 20:30:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbgCSAaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 20:30:11 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1726663AbgCSAal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 20:30:41 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 614D92076C;
-        Thu, 19 Mar 2020 00:30:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4441E2076C;
+        Thu, 19 Mar 2020 00:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584577810;
-        bh=s+daCmIgkJ7+NjKAff/EpwgrnpoE3Bw4gorFJuVK7lE=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=J0RvQjwcG4ECsSP0uhPm3cSZa7LVzDMQj3cpywfskfbNYITmDrVz/CvifyrnbvZU/
-         G0C4vtFoyBuHIG2jWmnIxdMEmUIQ/Rt6AKielMZXPFocRPhkc9YaL0V86rAvIEofJ+
-         0Zb1/a9SxuLYoyXbGrfweKaXGWgVI4pLIwWz5dFM=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1584577840;
+        bh=lGgOA8i9jqfs6+LhGMKQbt8ZockuHa4KYi8DijDb9RM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I8XA+ek/ePQChr2azNKS8Pf09LUP95nJo4TgNt/1yTH1WEtvqN+mTNWIsuWIktOWI
+         Fe3Pflwm6UytXRO3JVWX58IuV7L4/vb/AzKT4fhWWgflOyzHcR8obIWbeEThDnHFOl
+         QL2gum5qOCMvBHFEhEC2wfQtuxBo+mkQUy/spfBw=
+Date:   Wed, 18 Mar 2020 17:30:38 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Ard Biesheuvel <ardb@kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH URGENT crypto] crypto: arm64/chacha - correctly walk
+ through blocks
+Message-ID: <20200319003038.GG2334@sol.localdomain>
+References: <20200318234518.83906-1-Jason@zx2c4.com>
+ <20200319002359.GF2334@sol.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1584211798-10332-2-git-send-email-tdas@codeaurora.org>
-References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org> <1584211798-10332-2-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v6 1/3] dt-bindings: clock: Add YAML schemas for the QCOM MSS clock bindings
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Date:   Wed, 18 Mar 2020 17:30:09 -0700
-Message-ID: <158457780952.152100.6665964541366590027@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319002359.GF2334@sol.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2020-03-14 11:49:56)
-> The Modem Subsystem clock provider have a bunch of generic properties
-> that are needed in a device tree. Add a YAML schemas for those.
->=20
-> Add clock ids for GCC MSS and MSS clocks which are required to bring
-> the modem out of reset.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++=
-++++++
->  include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
->  include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
->  3 files changed, 80 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-m=
-ss.yaml
->  create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml=
- b/Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
-> new file mode 100644
-> index 0000000..72493dd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/qcom,sc7180-mss.yaml#
+On Wed, Mar 18, 2020 at 05:24:01PM -0700, Eric Biggers wrote:
+> Hi Jason,
+> 
+> On Wed, Mar 18, 2020 at 05:45:18PM -0600, Jason A. Donenfeld wrote:
+> > Prior, passing in chunks of 2, 3, or 4, followed by any additional
+> > chunks would result in the chacha state counter getting out of sync,
+> > resulting in incorrect encryption/decryption, which is a pretty nasty
+> > crypto vuln, dating back to 2018. WireGuard users never experienced this
+> > prior, because we have always, out of tree, used a different crypto
+> > library, until the recent Frankenzinc addition. This commit fixes the
+> > issue by advancing the pointers and state counter by the actual size
+> > processed.
+> > 
+> > Fixes: f2ca1cbd0fb5 ("crypto: arm64/chacha - optimize for arbitrary length inputs")
+> > Reported-and-tested-by: Emil Renner Berthing <kernel@esmil.dk>
+> > Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > Cc: stable@vger.kernel.org
+> 
+> Thanks for fixing this!  We definitely should get this fix to Linus for 5.6.
+> But I don't think your description of this bug dating back to 2018 is accurate,
+> because this bug only affects the new library interface to ChaCha20 which was
+> added in v5.5.  In the "regular" crypto API case, the "walksize" is set to
+> '5 * CHACHA_BLOCK_SIZE', and chacha_doneon() is guaranteed to be called with a
+> multiple of '5 * CHACHA_BLOCK_SIZE' except at the end.  Thus the code worked
+> fine with the regular crypto API.
 
-remove 'bindings' above.
+So I think it's actually:
 
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Modem Clock Controller Binding
-> +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm modem clock control module which supports the clocks.
-> +
-> +  See also dt-bindings/clock/qcom,mss-sc7180.h.
-
-Can you follow how for example gcc-sc7180 does this?
-
-  See also:
-  - dt-bindings/clock/qcom,mss-sc7180.h
+Fixes: b3aad5bad26a ("crypto: arm64/chacha - expose arm64 ChaCha routine as library function")
+Cc: <stable@vger.kernel.org> # v5.5+
