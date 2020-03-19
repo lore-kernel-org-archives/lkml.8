@@ -6,98 +6,118 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0917EC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7709BC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF24620663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5144820663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgCSIRC (ORCPT
+        id S1726796AbgCSIS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:17:02 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:44423 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgCSIRC (ORCPT
+        Thu, 19 Mar 2020 04:18:27 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:42062 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725601AbgCSIS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:17:02 -0400
-Received: from mail-qv1-f51.google.com ([209.85.219.51]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1McYTD-1jrCVt0zEr-00d1a5; Thu, 19 Mar 2020 09:17:00 +0100
-Received: by mail-qv1-f51.google.com with SMTP id m2so521131qvu.13;
-        Thu, 19 Mar 2020 01:16:59 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0MVelGgW9A3MfvnGDpwvgy/q3TmjsMOevt+oecnwlxFWjRnB42
-        S2dt40Ltn611sWKE3JcZ0xOBrnCpl0YPQKwj11E=
-X-Google-Smtp-Source: ADFU+vuvKhUMl9cghqMNKDgltUnhMBNGvVioHmVN2q91+1Ohn7tJEKoVYrbxquHMp8plMgeR0wZ5Qdf0EE9j967FD70=
-X-Received: by 2002:a0c:f647:: with SMTP id s7mr1832971qvm.4.1584605819082;
- Thu, 19 Mar 2020 01:16:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200317083043.226593-1-areber@redhat.com> <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
- <20200319081137.GC223854@dcbz.redhat.com>
-In-Reply-To: <20200319081137.GC223854@dcbz.redhat.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 19 Mar 2020 09:16:43 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
-Message-ID: <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
-Subject: Re: clone3: allow creation of time namespace with offset
-To:     Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thu, 19 Mar 2020 04:18:26 -0400
+Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 02J8IPaV021671
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 04:18:25 -0400
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 02J8IKoM015850
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 04:18:25 -0400
+Received: by mail-qv1-f69.google.com with SMTP id d2so1978543qve.11
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 01:18:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=EQ73z6kyR/mYMiKdZ6uBkObCrQL0cwEBtzhgaFx9xVo=;
+        b=bHck6UclLogWmQFVL2xF9xSiEyH5A4SyV1xOJ3ELsSfr98EYpMQKYOkBtFVtYnLVqn
+         JMzeSLd3cLeqoJpXBDQ9dSHVEp9FyCtnrmo/lvp1coPa/uiaE74wDaw4BLvlRgYWgF8Z
+         SytMPFFqeVgkpsunNvthIEHQszVvyqTqo9DERoHbrhQuiPTcjk41Wley/DqT2szBXHwb
+         +dOEhazTNYhR6+O1NmBcQ3Uo85xsvb3nyoo2I40RMW0zzcAb8Wfw+6RPacT5c50+Fngs
+         ncg03NBoCWZ78f/0Qt8/Xic3oJw4Ep8WOLabsETWRdIMH6oQsY/yvHf+p6mdxSgf8/qn
+         Dymg==
+X-Gm-Message-State: ANhLgQ1ECLnGH337F83f16tOC+06rIi8Vx4gsFowE5/XTwU6+9DLPtiL
+        72vpRhmxTA7clU5+tsG2SJz9TgqvwGaD9lii39uaj7QEgEKqPdElUfxlNkdW0pmn+tQgKvVpq1z
+        SRMGI94fDSBuqJ4Y++hBufI50U3rl/vp9WmE=
+X-Received: by 2002:a37:9d4a:: with SMTP id g71mr1727351qke.54.1584605899908;
+        Thu, 19 Mar 2020 01:18:19 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vudnJfwwF5zKIHxg/r6+WX0X5UaOa01b1dIoEjxI9VQIoqDjMqHuMgI/8c8/6Vcfsg9fxbOmA==
+X-Received: by 2002:a37:9d4a:: with SMTP id g71mr1727328qke.54.1584605899591;
+        Thu, 19 Mar 2020 01:18:19 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id d9sm956390qth.34.2020.03.19.01.18.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Mar 2020 01:18:18 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        linux-kernel@vger.kernel.org,
+        John Ogness <john.ogness@linutronix.de>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:+GajmnIHBBfa+wnucP62mdW4D0KSk3X5HuJXrapNIX2Pm0HqAVy
- T87l3rzDqMJGdaKHogrdbdIQt1FedsI0goItnZky84ZVHXfyVgIRphy0cvutrqaJdHwR2Lq
- J4nGDaDDzHubPhv3M+tkbunOd9knDvrVo17G0WDWm0R6olNu1fvJoGtoupP72UZrT7x6kmx
- z0jDx9T6khcAMNV4uYXrA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7gdf/FqWgSE=:+/s7qhnV4QaCD2FzAuaFxm
- AAzFdbtxiGhn3PfwVUkXVqErzqPBt1nCWXxLC6/dG/HEhlIuclDxnKBnp90P0T83YXEskcShF
- xpnA4cdNCerXyT0XinKAAUYpNdgSjToQMLGyBC6n2zSskwFXIFepnWv3PsjrFagkY/Ku92A/d
- +voIvYfG8V48sV2dhpz1iwB8iIq3ionPsb9BcHbE/1af/0mB2WiBrWVhZH1gCUVvACMdqTQjA
- FA3UIfh8Bw0ml98bjDzOB8YW1jdsTnNEdq+aAlTpjWywDBWpIQqovpxlUBb0P4KEJ3wc4B1Bv
- h3LafyAGrgVem/ZX/Dhhvlfdk83uWEvfwG2dhudSaPgeZDQSc2WSNTXwc25zQOg/f9V9bHUIO
- JAMwJFtfTJCOJ5plvCpvZEJ4On1+xo2JHXDI2E8dX2zkhzJ5IwVLxQtvGPw3FRvwXCxBrh8G+
- nBBj1oExdaVCZpbOtsnc/vlIxLCi+ItpPvlkggYqEh80pnSvSbK3ZltUWH7oCKEDo6/hdt4Lc
- 0yzDyt963QBwJiSD1P8aEwCELs4zbX0/D9/ptpKTS2TkcBuI7bZPxMAYxdbpSWm2+9IMZrTTc
- Qhgi+iQIDXEGi+GzuJtjKrqtttldpL9dJUsno4OWjWqBNu9JKk3uKI51OCDCzM55KWwuLsWTc
- 9PIiLkjxAUgt3OGefT4G/mQFcsKTiGQuTNBEDtosEdmTxQlSR+B4NcCs9fw0v04B32RZKF7+Z
- sZAC9iDdc+snPBf0IZH+s9VhxEP3OBbWT9yYvPr5PAXbotkWQwGqCqtBhTlgyHzrLmOWYcr1N
- TjyeKOjT2HmzRG82yScyt/oAeT70A0+PgRnh4VsSlj7mAj4Yks=
+        Peter Zijlstra <peterz@infradead.org>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [RFC PATCH 3/3] watchdog: Turn console verbosity on when reporting softlockup
+In-Reply-To: <20200319080156.GC24020@google.com>
+References: <20200315170903.17393-1-erosca@de.adit-jv.com> <20200315170903.17393-4-erosca@de.adit-jv.com> <20200317021818.GD219881@google.com> <20200318180525.GA5790@lxhi-065.adit-jv.com> <20200319064836.GB24020@google.com> <16373.1584603506@turing-police>
+ <20200319080156.GC24020@google.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1584605896_13116P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 19 Mar 2020 04:18:17 -0400
+Message-ID: <19150.1584605897@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
+--==_Exmh_1584605896_13116P
+Content-Type: text/plain; charset=us-ascii
 
-> With Arnd's idea of only using nanoseconds, timens_offset would then
-> contain something like this:
->
-> struct timens_offset {
->         __aligned_s64 monotonic_offset_ns;
->         __aligned_s64 boottime_offset_ns;
-> };
->
-> I kind of prefer adding boottime and monotonic directly to struct clone_args
->
->         __aligned_u64 tls;
->         __aligned_u64 set_tid;
->         __aligned_u64 set_tid_size;
-> +       __aligned_s64 monotonic_offset_ns;
-> +       __aligned_s64 boottime_offset_ns;
->  };
+On Thu, 19 Mar 2020 17:01:56 +0900, Sergey Senozhatsky said:
+> IIRC, CONFIG_PRINTK_CALLER prints pid when printk() caller is a
+> running task, and CPU-id otherwise.
 
-I would also prefer the second approach using two 64-bit integers
-instead of a pointer, as it keeps the interface simpler to implement
-and simpler to interpret by other tools.
+Ah... so it does.
 
-      Arnd
+#ifdef CONFIG_PRINTK_CALLER
+        u32 caller_id;            /* thread id or processor id */
+#endif
+
+I haven't seen it output a processor ID yet, so I didn't know that part...
+
+--==_Exmh_1584605896_13116P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXnMqyAdmEQWDXROgAQJeZRAAouGeHvFD/lFlepWbx9gLHV7+BslVrFPo
+AyYTgBHDh7YQ8D1XavW4ROAmzhl0e3fR9lH+o88kjdo/Rlz03NnLyB6e/yzoOyqJ
+hrOWg1+R9DbkElDjc3Whiidw/AWLBj0IThF8WkTGTo+iWaU1t8OzwjGM3UuchEx/
+JlO5iG+7Ae+JWxFtN4hZuzU7FHzr+ULNQt5oUwP5AhaRuTbUnFzkVch+Xhu9vVG9
+qjMzpZWOqb6yWsEJTCw7lupiahcUaiidft3eqOf+N8m0q/ul0SEgFzc+wuOh+srm
+6O/EMlXmoFakRWvrHB1RlG4+E+8xh96L83oYQjTcGTO7teA6MNGdk5xAyhmWCe0S
+5lXFfUUGQ3SoLa+Wm0C+IFgrZ1gmbLgLpTyB2pT2s8LkzDw7EWtzXbR4QkD/PSAB
+fAN5hfbAASX5eNUnnlAYBGvz4+TRf2afJl6Fxoz1+l3Fv7qJiRt36Oj3BzMntSA8
+0kOIk6FHfTp+n41C2rZiRyMhdoIZt2uAVjWAFw/+kL7gXKPS6ES6D3pM3pIvIEmi
+geKg5l8jhpc4vPknvRmVAci1LsJCiy2vX4oapPh3gSBVDTsk9+r8Lrvri1kTfHCZ
+eyxbNBGHio9q6hJV16YABOQUCbGKrA63RXFwQWUQXqJPs/kW6n/nXtL9LnnElhwT
+Z7CewKdwmtc=
+=wBgL
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1584605896_13116P--
