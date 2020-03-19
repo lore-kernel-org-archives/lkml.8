@@ -2,190 +2,113 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB460C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2802C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A763C207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:19:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BM0AGY3u"
+	by mail.kernel.org (Postfix) with ESMTP id B929B2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:21:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584638496;
+	bh=Wa5WhY7NV/amydUQxKZOOUXAC72lGMcK0NhEdS62D74=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yM3Sk8FyvVPkeZmFh2rUS82aft+iNxWc1oWr5kLZbSZ2aU97J37OP5acwx9ZRQWBb
+	 zq9v5e+6z4bZNvo+SBt9/+d25D1z/LGIbFLc6BN+2fSMqottJSF3U0G9qqca2qZl2s
+	 QhqfRt3S207l6SMYjlrW3ej7k5enR4pmS9QPsKdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgCSRTs (ORCPT
+        id S1728139AbgCSRVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:19:48 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46272 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbgCSRTs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:19:48 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j17so682429wru.13;
-        Thu, 19 Mar 2020 10:19:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=REUrjEbM9E8U0Xs3ZYSD9f/6CBam6/RPzkS7LqotySY=;
-        b=BM0AGY3urbibzhW1gohveGfBaMwlf1jLS7cxM3Vfon/hOn4zTW073R3eyT9eOcUhKY
-         1EUT6cd63hcggxA627cjejHKeGXbdUjQtC8xqJv6f4jLr2haccGtNev9syzT4f5LWANF
-         tA0pUu2GRDS7/jWWJEwWZzOcmSuyMlIthrCT2arIGb4KWhX+IGBdcxSubifbUCr27E8b
-         DAU2G3/VxwINBRs8n3NDbrwxG2TToq0uyZQ5TznKJd1cnXz/pKfBgoM3v4zdDj5wLW3+
-         vHg+hTD8s1ZY94S23UEy4yWxht3QcGogmEwIVrO9DqCmf3jVslGl/YH6YwOQlrceSbiJ
-         sVAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=REUrjEbM9E8U0Xs3ZYSD9f/6CBam6/RPzkS7LqotySY=;
-        b=WGnAIOBNoAkRtZnPz7YkQqv8oU24m3IBs4fixVHq72mpo+69kz0EbUiKfuCVKnR7vK
-         tyvzK6EtUsmal/KrjC3ljb7G0Z/YE+xy2z6vq3U+zwQDhr3qnX4Q2q0/R0aCRS8tPcYA
-         ZtwW05+LJ6TQ5Oswy8u5cSM3+yPOLCGNGSgsr6LU4o/So1oCjRdJd04/4YEQyIiPPW9e
-         j05euwUtLZEJlE+FKbsoEcLUCzjlW1oWTYXZnpNgRiKnhUbAiGCnKtQht0wnq+7siVKf
-         S19JdHZVuiTpVy9rUVhYpP9M0EVrONc19lM9M/cyaFeLf5xfFVgXTS/2mf2VCe49Dsco
-         1WvQ==
-X-Gm-Message-State: ANhLgQ1fhRZVDkr1bENht0UxXDHORiLgQkqp2TBHfC2KsKy6I9/wrYEp
-        r/MBrhKed5h3RwsDCIwx659p0ZKeTKAZEsl9Xs0=
-X-Google-Smtp-Source: ADFU+vtt4K7LLALZ400ntXCMXvpvEPIEVS4JD+piZAo5Bk7qwIuVxT+6bOMnViCSjX8yovQFCVEAetBlkIy5tk1qVrQ=
-X-Received: by 2002:a5d:6146:: with SMTP id y6mr5562155wrt.107.1584638384613;
- Thu, 19 Mar 2020 10:19:44 -0700 (PDT)
+        Thu, 19 Mar 2020 13:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727146AbgCSRVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:21:35 -0400
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F51520836;
+        Thu, 19 Mar 2020 17:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584638494;
+        bh=Wa5WhY7NV/amydUQxKZOOUXAC72lGMcK0NhEdS62D74=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ft7/kE4yvSeKvAW7bbRrolP0UaF4xWVzoUrxHpX0nmu8GiUwsWuPjC9AXv1rRvqzH
+         sVRiUQ2587taXsEXy1sB2Zk5TBLyJLMygLxbHZVX7XO/h+r/38lcGeiLC0wZaFDnYu
+         Y4lX75HTJ+SSMrlihdhmMBdXg2cJ2f851/tEqHBo=
+Received: by mail-qk1-f174.google.com with SMTP id c145so3855298qke.12;
+        Thu, 19 Mar 2020 10:21:34 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ13TX7m3D5QlSqmEd7vWKhcYbGOigfeWKTOCs/0JJzHGkIJY/Gp
+        gOrbfhLp3rgKSUMWL67AMN7RGw+g8gqZeHXyEw==
+X-Google-Smtp-Source: ADFU+vulofMsciR5pLApGaBb0QXCqdfQARLGVOuL0yu914G08i7K943mRV5VQl5ypvWeXQ6VTH6kM8/ISVQqrL9dm34=
+X-Received: by 2002:a37:8502:: with SMTP id h2mr4136038qkd.223.1584638493344;
+ Thu, 19 Mar 2020 10:21:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200319131221.14044-1-david@redhat.com> <20200319131221.14044-8-david@redhat.com>
-In-Reply-To: <20200319131221.14044-8-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Thu, 19 Mar 2020 18:19:33 +0100
-Message-ID: <CAM9Jb+hBVihQ=TSPoL_WL1tPRnfXTUw=dUw0oGGQkPWWs6gSxw@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] mm/memory_hotplug: convert memhp_auto_online to
- store an online_type
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>
+References: <1584211798-10332-1-git-send-email-tdas@codeaurora.org>
+ <1584211798-10332-2-git-send-email-tdas@codeaurora.org> <20200318220443.GA16192@bogus>
+ <2ceccbac-b289-03d0-665b-6e9ca57b4333@codeaurora.org>
+In-Reply-To: <2ceccbac-b289-03d0-665b-6e9ca57b4333@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 19 Mar 2020 11:21:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKOTRzvtTjHPmOR60tpxUoPsoaB5ZbLdPG0VrN-NnFxWg@mail.gmail.com>
+Message-ID: <CAL_JsqKOTRzvtTjHPmOR60tpxUoPsoaB5ZbLdPG0VrN-NnFxWg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> ... and rename it to memhp_default_online_type. This is a preparation
-> for more detailed default online behavior.
+On Wed, Mar 18, 2020 at 11:37 PM Taniya Das <tdas@codeaurora.org> wrote:
 >
-> Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/base/memory.c          | 10 ++++------
->  include/linux/memory_hotplug.h |  3 ++-
->  mm/memory_hotplug.c            | 11 ++++++-----
->  3 files changed, 12 insertions(+), 12 deletions(-)
 >
-> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-> index 8a7f29c0bf97..8d3e16dab69f 100644
-> --- a/drivers/base/memory.c
-> +++ b/drivers/base/memory.c
-> @@ -386,10 +386,8 @@ static DEVICE_ATTR_RO(block_size_bytes);
->  static ssize_t auto_online_blocks_show(struct device *dev,
->                                        struct device_attribute *attr, char *buf)
->  {
-> -       if (memhp_auto_online)
-> -               return sprintf(buf, "online\n");
-> -       else
-> -               return sprintf(buf, "offline\n");
-> +       return sprintf(buf, "%s\n",
-> +                      online_type_to_str[memhp_default_online_type]);
->  }
 >
->  static ssize_t auto_online_blocks_store(struct device *dev,
-> @@ -397,9 +395,9 @@ static ssize_t auto_online_blocks_store(struct device *dev,
->                                         const char *buf, size_t count)
->  {
->         if (sysfs_streq(buf, "online"))
-> -               memhp_auto_online = true;
-> +               memhp_default_online_type = MMOP_ONLINE;
->         else if (sysfs_streq(buf, "offline"))
-> -               memhp_auto_online = false;
-> +               memhp_default_online_type = MMOP_OFFLINE;
->         else
->                 return -EINVAL;
+> On 3/19/2020 3:34 AM, Rob Herring wrote:
+> > On Sun, 15 Mar 2020 00:19:56 +0530, Taniya Das wrote:
+> >> The Modem Subsystem clock provider have a bunch of generic properties
+> >> that are needed in a device tree. Add a YAML schemas for those.
+> >>
+> >> Add clock ids for GCC MSS and MSS clocks which are required to bring
+> >> the modem out of reset.
+> >>
+> >> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> >> ---
+> >>   .../devicetree/bindings/clock/qcom,sc7180-mss.yaml | 62 ++++++++++++++++++++++
+> >>   include/dt-bindings/clock/qcom,gcc-sc7180.h        |  7 ++-
+> >>   include/dt-bindings/clock/qcom,mss-sc7180.h        | 12 +++++
+> >>   3 files changed, 80 insertions(+), 1 deletion(-)
+> >>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml
+> >>   create mode 100644 include/dt-bindings/clock/qcom,mss-sc7180.h
+> >>
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > Documentation/devicetree/bindings/clock/qcom,sc7180-mss.yaml: $id: relative path/filename doesn't match actual path or filename
+> >       expected: http://devicetree.org/schemas/clock/qcom,sc7180-mss.yaml#
+> >
+> > See https://patchwork.ozlabs.org/patch/1254940
+> > Please check and re-submit.
+> >
+> Hi Rob,
 >
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 76f3c617a8ab..6d6f85bb66e9 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -118,7 +118,8 @@ extern int arch_add_memory(int nid, u64 start, u64 size,
->                            struct mhp_params *params);
->  extern u64 max_mem_size;
+> Thanks, I have fixed it in the next patch series.
 >
-> -extern bool memhp_auto_online;
-> +/* Default online_type (MMOP_*) when new memory blocks are added. */
-> +extern int memhp_default_online_type;
->  /* If movable_node boot option specified */
->  extern bool movable_node_enabled;
->  static inline bool movable_node_is_enabled(void)
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index e21a7d53ade5..4efcf8cb9ac5 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -67,17 +67,17 @@ void put_online_mems(void)
->  bool movable_node_enabled = false;
->
->  #ifndef CONFIG_MEMORY_HOTPLUG_DEFAULT_ONLINE
-> -bool memhp_auto_online;
-> +int memhp_default_online_type = MMOP_OFFLINE;
->  #else
-> -bool memhp_auto_online = true;
-> +int memhp_default_online_type = MMOP_ONLINE;
->  #endif
->
->  static int __init setup_memhp_default_state(char *str)
->  {
->         if (!strcmp(str, "online"))
-> -               memhp_auto_online = true;
-> +               memhp_default_online_type = MMOP_ONLINE;
->         else if (!strcmp(str, "offline"))
-> -               memhp_auto_online = false;
-> +               memhp_default_online_type = MMOP_OFFLINE;
->
->         return 1;
->  }
-> @@ -993,6 +993,7 @@ static int check_hotplug_memory_range(u64 start, u64 size)
->
->  static int online_memory_block(struct memory_block *mem, void *arg)
->  {
-> +       mem->online_type = memhp_default_online_type;
->         return device_online(&mem->dev);
->  }
->
-> @@ -1065,7 +1066,7 @@ int __ref add_memory_resource(int nid, struct resource *res)
->         mem_hotplug_done();
->
->         /* online pages if requested */
-> -       if (memhp_auto_online)
-> +       if (memhp_default_online_type != MMOP_OFFLINE)
->                 walk_memory_blocks(start, size, NULL, online_memory_block);
->
->         return ret;
-> --
+> Is there a way to catch these before submitting? As I do not see these
+> errors on my machine.
 
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+If you ran 'make dt_binding_check' already, then update dt-schema with pip.
 
-> 2.24.1
->
->
+Rob
