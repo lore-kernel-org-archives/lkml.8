@@ -2,99 +2,151 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D36EC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014BAC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B912137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CF82145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:08:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FUIQinlx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRl6HA2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbgCSOH4 (ORCPT
+        id S1727469AbgCSOIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:07:56 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38310 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbgCSOHz (ORCPT
+        Thu, 19 Mar 2020 10:08:16 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:33852 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbgCSOIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:07:55 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JE77L3048046;
-        Thu, 19 Mar 2020 09:07:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584626827;
-        bh=F8cnBozYX8/iF9YH+60dq/RPVSZvGKSsyeEtA3GUHiY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FUIQinlxjeigNZMn1OTmCITKd7pTLCtLHdjpqObiI5xXQgpEQT2Wo5ZRTHr02bDpR
-         m00TJZbPf6va34eqFVVpqQaBkhh0SQar92NarCwP468LvJ4ZCqMdYD3BJwrdwd2xU5
-         edsOfZgPicfvccrirHYADFMd+WtyTTISsX6abwRc=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JE77UJ026756;
-        Thu, 19 Mar 2020 09:07:07 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Mar 2020 09:07:07 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Mar 2020 09:07:07 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JE76v3049010;
-        Thu, 19 Mar 2020 09:07:06 -0500
-Subject: Re: [PATCH] ASoC: tas2562: Fixed incorrect amp_level setting.
-To:     Jonghwan Choi <charlie.jh@kakaocorp.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <20200319140043.GA6688@jhbirdchoi-MS-7B79>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0b4a59c9-6af7-a34f-fb08-f5200fbe5926@ti.com>
-Date:   Thu, 19 Mar 2020 09:01:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 19 Mar 2020 10:08:16 -0400
+Received: by mail-pj1-f67.google.com with SMTP id q16so2355121pje.1;
+        Thu, 19 Mar 2020 07:08:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=O7Q51zmRS7g4gxwj7MQtP4qiQBx0T9QoIdivgK4vLVI=;
+        b=JRl6HA2/zf7Vvf60cE21OWI9S0qRbhP70JRWPmuedNCx8LrcCrszbNh4+ftzFYTmiI
+         u5qM7hDwCykZmR4fwobtn0fOIN13LN3lBb71h9cICv3eUixaJFZwhjXjuomMhppv6Woz
+         ddR4Gmd3UmY9wg2zTq+PrcuF64C2ZP/51WzGe/413gChPM7GHzC4AtOYQ6kCXzHOabex
+         Sh+4TbPDJTkEWkgU30FR4mDdy05ZN6Us0fokChT6CY0ZqbzJWH9fXgAMtT6yvynQkiMF
+         EsFbg4yrkS+sxTYH6J+zydRLLb4/Lfs+Jj1yCmEwgjbhH9UoXdBzuSznM8L3Rm0a/MRc
+         tQaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O7Q51zmRS7g4gxwj7MQtP4qiQBx0T9QoIdivgK4vLVI=;
+        b=igbPDBvUn6MeGTIiKTy+waY4/6MGdILJeJCI5LqfuQiXnblbZ3J6Zgv4z1HeivXlCg
+         qD+xXhAbDveGjsKKgGuVcltg+zyGS9Ee+O8GZmuWrkFrf1lgdQ4xTMNq8xyTg1v8TkFR
+         LUT/sDKpk8Rkne238GZuBN1+hqS6UIS7zUPPbD9vCaj/fS1Ptk5Dhxc3lk949ch5Yjnz
+         pyMCdrtd1E5jgUKTwdBKOcPV4mimHm2AojcdcdsNQiU9vNpYSGhYV0Hmed+K3Lf8smot
+         BHgHX4ur73lvOLLAFs5L0g8jysn+sxGoh/8gulH9mVEvcWf0q3Jo3Yk2mbFcUdM31omZ
+         Ea2A==
+X-Gm-Message-State: ANhLgQ0hDLH8Q4PYMsdp+A2QRLwiRbPnpBSCD6utSugtv34+sCuEicOn
+        0eFbPvxB+KAOkLVu6Aq3XD0=
+X-Google-Smtp-Source: ADFU+vt3Uom3z61eXimWi6EYH31AV5srNGn4SND8daBCtBbNg5Si/yyHZbXUD35dwdCBvZjiBbe1KQ==
+X-Received: by 2002:a17:902:82c2:: with SMTP id u2mr3682951plz.125.1584626894899;
+        Thu, 19 Mar 2020 07:08:14 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
+        by smtp.gmail.com with ESMTPSA id l11sm2434715pjy.44.2020.03.19.07.08.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 07:08:14 -0700 (PDT)
+Subject: Re: [PATCH 0/4] x86/Hyper-V: Panic code path fixes
+To:     Michael Kelley <mikelley@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>
+References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
+ <MW2PR2101MB1052F185AF4134EB2BB9ECBFD7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <1d1bc90c-7fbe-6123-eeea-5f9a5aad77e4@gmail.com>
+Date:   Thu, 19 Mar 2020 22:08:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200319140043.GA6688@jhbirdchoi-MS-7B79>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <MW2PR2101MB1052F185AF4134EB2BB9ECBFD7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jonghwan
+Hi Michael:
+      Thanks for your review.
 
-On 3/19/20 9:00 AM, Jonghwan Choi wrote:
-> According to the tas2562 datasheet,the bits[5:1] represents the amp_level value.
-> So to set the amp_level value correctly,the shift value should be set to 1.
->
-> Signed-off-by: Jonghwan Choi <charlie.jh@kakaocorp.com>
-> ---
->   sound/soc/codecs/tas2562.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
-> index be52886a5edb..fb2233ca9103 100644
-> --- a/sound/soc/codecs/tas2562.c
-> +++ b/sound/soc/codecs/tas2562.c
-> @@ -409,7 +409,7 @@ static const struct snd_kcontrol_new vsense_switch =
->   			1, 1);
->   
->   static const struct snd_kcontrol_new tas2562_snd_controls[] = {
-> -	SOC_SINGLE_TLV("Amp Gain Volume", TAS2562_PB_CFG1, 0, 0x1c, 0,
-> +	SOC_SINGLE_TLV("Amp Gain Volume", TAS2562_PB_CFG1, 1, 0x1c, 0,
->   		       tas2562_dac_tlv),
->   };
->   
+On 3/19/2020 8:57 AM, Michael Kelley wrote:
+> From: ltykernel@gmail.com <ltykernel@gmail.com> Sent: Tuesday, March 17, 2020 6:25 AM
+>>
+>> This patchset fixes some issues in the Hyper-V panic code path.
+>> Patch 1 resolves issue that panic system still responses network
+>> packets.
+>> Patch 2-3 resolves crash enlightenment issues.
+>> Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
+>> VM in order to report crash data or kmsg to host before running
+>> kdump kernel.
+> 
+> I still see an issue that isn't addressed by these patches.  The VMbus
+> driver registers a "die notifier" and a "panic notifier".   But die() will
+> eventually call panic() if panic_on_oops is set (which I think it typically
+> is).  If the CRASH_NOTIFY_MSG option is *not* enabled, then
+> hyperv_report_panic() could get called by the die notifier, and then
+> again by the panic notifier.
+> 
+> Do we even need the "die notifier"?  If it was removed, there would
+> not be any notification to Hyper-V via the die() path unless panic_on_oops
+> is set, which I think is actually the correct behavior.  I'm not
+> completely clear on what is supposed to happen in general to the
+> Linux kernel if panic_on_oops is not set. Does it try to continue to run?
+> If so, then we should not be notifying Hyper-V if panic_on_oops is not
+> set, and removing the die notifier is the right thing to do.
+> 
+
+hyperv_report_panic() has re-enter check inside and so kernel only 
+reports crash register data once during die(). From comment in the
+hyperv_report_panic(), register value reported in die chain is more
+exact than value in panic chain. The register value in die chain is
+passed by die() caller. Register value reported in panic chain
+is collected in the hyperv_panic_event().
 
 
-Acked-by: Dan Murphy <dmurphy@ti.com>
+If panic_on_oops is not set, the task should be killed and kernel
+still runs. In this case, we may not trigger crash enlightenment.
 
+
+
+> Michael
+> 
+>>
+>> Tianyu Lan (4):
+>>    x86/Hyper-V: Unload vmbus channel in hv panic callback
+>>    x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
+>>    x86/Hyper-V: Trigger crash enlightenment only once during  system
+>>      crash.
+>>    x86/Hyper-V: Report crash register data or ksmg before running crash
+>>      kernel
+>>
+>>   arch/x86/kernel/cpu/mshyperv.c | 10 ++++++++++
+>>   drivers/hv/channel_mgmt.c      |  5 +++++
+>>   drivers/hv/vmbus_drv.c         | 35 +++++++++++++++++++++++++----------
+>>   3 files changed, 40 insertions(+), 10 deletions(-)
+>>
+>> --
+>> 2.14.5
+> 
