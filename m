@@ -2,120 +2,122 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC691C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AF3C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F08F20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:10:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ObGs3GRM"
+	by mail.kernel.org (Postfix) with ESMTP id E629920663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgCSMKm (ORCPT
+        id S1727154AbgCSMK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:10:42 -0400
-Received: from mail-eopbgr20076.outbound.protection.outlook.com ([40.107.2.76]:11013
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726785AbgCSMKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:10:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SDkXSvEokbDtemXKvsgHbq1+xMlX45kQ+Irei4Fb+dhqX2huVlcw2XaF4Z1h0LUy2KTetZc4p+xgKUsexl8oh3Yojxay/UqJCe8qQQZO6WqN8vUhJQ1RPPrkR7DzpXwHkyt7ZUzctJ1fai6VTTIuiG41QdkygegPRkuApA2HRGFWCdSB4Y8oHnJ9MPC43safn9tOH2OpRKKaHp+ny8o4RwuINDeVBRtq+nf9CN8pKlqwUjpKbruKf6MenAr/TkvJb6RO4XnSBkfUEJXWdsvOns1v7FRzGdsskG3qOUPMAp9/GvOsy0aQUAuyebuosGiHti83tHL/akZwHCXlGTnosw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7f3HiXVtPC/ErEaRBU870X0unj0Zx2x3VcdJ1etoRvU=;
- b=RWlyzhyKuIp1ZZ2V+Qu0STDIx80jUJyQYMhc23pjMn30KCucjVmH9/JIqiWF+32FBtKzW+BN402VbMm8S+oLJXc0vn4PGzNceD/0oy3dpp0QJh0QnpC7Kj0VsHU4GK5a4pMXgZkSQ+Z9oNQTCcJvbojTHp/t3DI1rb+r82UulrDdvtRDDt/PnQvCYazGl4lqH2qfFD+BKcaEXs40/3DLb0OBxg1YTI3i0MIN5UhzGOOuFJSDO3TmFt1Nfff7G2uQCQz7/cwpz7skAcL5aLhbSAO3C13nzeWBPGcPzHw8O7biBfhtNIZ/IoxfGydMPNQUSEb1h76YPJLX13sMe746cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7f3HiXVtPC/ErEaRBU870X0unj0Zx2x3VcdJ1etoRvU=;
- b=ObGs3GRMvz5AnK+e9SsaBBUrn4i63b6FD3kMQf75TFYBHFJjRcuJhYqUBpoxu0wBu3LnMpLMWlpqQkch8oLGUPEf2VS7U0XAd1kn9JZ5fj+GYpO9dFWII7Qc0SR0TcUVWxpNQyL2yIgsaQMtmnYDoQPV37Fqqq3gsXfuhW/Ed/4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=leonro@mellanox.com; 
-Received: from AM6PR05MB6408.eurprd05.prod.outlook.com (20.179.5.215) by
- AM6PR05MB4872.eurprd05.prod.outlook.com (20.177.35.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.19; Thu, 19 Mar 2020 12:10:39 +0000
-Received: from AM6PR05MB6408.eurprd05.prod.outlook.com
- ([fe80::c99f:9130:561f:dea0]) by AM6PR05MB6408.eurprd05.prod.outlook.com
- ([fe80::c99f:9130:561f:dea0%3]) with mapi id 15.20.2814.021; Thu, 19 Mar 2020
- 12:10:38 +0000
-Date:   Thu, 19 Mar 2020 14:10:35 +0200
-From:   Leon Romanovsky <leonro@mellanox.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Derek Chickles <dchickles@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH net-next] liquidio: remove set but not used variable 's'
-Message-ID: <20200319121035.GO126814@unreal>
-References: <20200306023254.61731-1-yuehaibing@huawei.com>
- <20200319120743.28056-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319120743.28056-1-yuehaibing@huawei.com>
-X-ClientProxiedBy: AM0PR05CA0049.eurprd05.prod.outlook.com
- (2603:10a6:208:be::26) To AM6PR05MB6408.eurprd05.prod.outlook.com
- (2603:10a6:20b:b8::23)
+        Thu, 19 Mar 2020 08:10:59 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42311 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgCSMK6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:10:58 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEu0L-0007Yc-KU; Thu, 19 Mar 2020 13:10:29 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jEu0I-0006oX-6J; Thu, 19 Mar 2020 13:10:26 +0100
+Date:   Thu, 19 Mar 2020 13:10:26 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+Message-ID: <20200319121026.3rzcxdknfyhtkryi@pengutronix.de>
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
+ <20200317174043.GA1464607@ulmo>
+ <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
+ <20200318225953.GA2874972@ulmo>
+ <CAGgjyvGd4y8M0L1sFMvQ1=gPcKfUPoR13dVS7F5WZx=333KG6g@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (2a00:a040:183:2d::393) by AM0PR05CA0049.eurprd05.prod.outlook.com (2603:10a6:208:be::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Thu, 19 Mar 2020 12:10:38 +0000
-X-Originating-IP: [2a00:a040:183:2d::393]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c173a8ef-f6e7-4bbd-6c91-08d7cbfe8982
-X-MS-TrafficTypeDiagnostic: AM6PR05MB4872:
-X-Microsoft-Antispam-PRVS: <AM6PR05MB4872BC32D9682C7F94766A86B0F40@AM6PR05MB4872.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:46;
-X-Forefront-PRVS: 0347410860
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(346002)(396003)(376002)(136003)(39860400002)(366004)(199004)(6496006)(6666004)(52116002)(316002)(5660300002)(6916009)(86362001)(2906002)(81156014)(81166006)(8676002)(8936002)(33656002)(6486002)(1076003)(9686003)(186003)(16526019)(66476007)(4326008)(478600001)(54906003)(66556008)(33716001)(4744005)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB4872;H:AM6PR05MB6408.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fqSL2R7T9U1f6oDTQ5yl28hJeyGm9ArXBqYKAHMnWZCl6oykmrAtKPQ4Xzs4/5f4sInd+r4LXG+GbHzxLbwZa+6gmGz4ishFiupRwquXoX52omWAaNMHrMTrpt7EFLiXdGFztYq4ZkOXBl1Z6FO6neevoS/5jPHk7HTzMKO4kD7F47PruD0EH3RkFr+dhdPPZL2lPYXfHoCEL6bTQA6x0lyHOJGM7FAEvqAIFc3OsQ9ZS5ZuP1nk2BTXaXMiE0wh+/2qlq+jfhgRCt2+3zfm+osB8dpdUd4hAj+rVBI3e8e8Pzw4bnkCrxZTOn0Dt1ZuuKw+nKsm7aftxNPUBygYsL4nP3q0EcjRXPT7jXHZ9p5KkOw9fMJLEUcZkfgAKKwaPwjKDFEZdo/tqXRc/uUbc7gPlQ7tKHvFp0wJANy+hxMEF7gprR5ZZuPYUn2zx7+q
-X-MS-Exchange-AntiSpam-MessageData: rRLD2n+dC0lPatzwXdjVWkf1fSrf3rqG8nobLkiVWLj9+poi9vdn2yWaJIK+it54LNabuw+Wv07AcS4h3U7FKb5DlEnHuphvjPDyfatZztVjJrvfjivIpbaSoiUjoda5/g4eMIfCxJRaaAOsYbgPBt8VmIDcU2QPfIrttfOhL8M=
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c173a8ef-f6e7-4bbd-6c91-08d7cbfe8982
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2020 12:10:38.7750
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: q1uDq1dwuXVwUWKVZO3u1ISPwf2WGsC66zXZGQ4banwGKIwZPVk2i9klvHdh2QiK6LDPOfjZ4PkB+aqrlpG5Qg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4872
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGgjyvGd4y8M0L1sFMvQ1=gPcKfUPoR13dVS7F5WZx=333KG6g@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 12:07:43PM +0000, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/net/ethernet/cavium/liquidio/lio_main.c: In function 'octeon_chip_specific_setup':
-> drivers/net/ethernet/cavium/liquidio/lio_main.c:1378:8: warning:
->  variable 's' set but not used [-Wunused-but-set-variable]
->
-> It's not used since commit b6334be64d6f ("net/liquidio: Delete driver version assignment")
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/net/ethernet/cavium/liquidio/lio_main.c | 5 -----
->  1 file changed, 5 deletions(-)
->
+Hello,
 
-I'm sorry for missing this warning.
+[dropping Tony Prisk <linux@prisktech.co.nz> from recipients]
 
-Thanks,
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+On Thu, Mar 19, 2020 at 01:40:28PM +0200, Oleksandr Suvorov wrote:
+> Thierry, I see the PWM core converts the bit field "third cell" into
+> the polarity variable.
+> Now I probably understand your sight and agree that we shouldn't give
+> the same names to bits in bitfield (dts) and values of a variable.
+> 
+> But there are lots of useless "0" values of third cell of "pwms"
+> option in dts files.
+> 
+> I see 2 ways now:
+> - just remove all "0" "third cell" from "pwms" options in dts files. I
+> see this "0" confuses some people.
+
+Then you have to overwrite pwm-cells of the provider. If there are two
+PWMs used from the same provider and only one is inverted this won't
+work. (Not entirely sure I understood your suggestion.) So I don't like
+this suggestion.
+
+And also in my eyes this isn't clearer, just more complicated to use.
+
+> - convert pwm_state.polarity into pwm_state.flags and use bitfield
+>   directly from dtb.
+>   It simplifies the parsing logic and makes adding new flags easier.
+
+*shrug*, I don't care much.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
