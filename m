@@ -2,74 +2,108 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80990C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CA8C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8B420732
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584602002;
-	bh=nGwFrB1PzqeUqXfvl6pxCdc1NBj97fWXvdQEAtR0opc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EC/PE6sY0Y5otlkb8pF/vX+J+tbZNLmkzyzNHjzV4u1NcFzmRdwhn2rrgHbgOw/CC
-	 MI6J/05sOpxRsF9QNz17u33bOPpGJGtzQf/O+dXGRUpeahSw3KVc6/WEsKY7hbKKwa
-	 JWaZilsZGtOHOz/K6/PQ6WkqELORvZB4s6zrbiLY=
+	by mail.kernel.org (Postfix) with ESMTP id D78E32072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:13:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="prPUHVlx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbgCSHNV (ORCPT
+        id S1727232AbgCSHNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:13:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726627AbgCSHNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:13:20 -0400
-Received: from localhost (unknown [122.167.78.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F51B20724;
-        Thu, 19 Mar 2020 07:13:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584602000;
-        bh=nGwFrB1PzqeUqXfvl6pxCdc1NBj97fWXvdQEAtR0opc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZLC6xwLtb16a3HMBrddm/hJSPfqqaUjJmMgTpxMw7qVd9/tbhV2DxqBuE4qWTo/jV
-         QVqs2eayqeu3/FwVGVENAKy+o7xP9WbAXbT3ovM/V23ymQq0p7VET8WYEA9vwy+MCZ
-         MY5rQtsrWUGioLaprb+nBPY1G5uUXYVny3yZ95bY=
-Date:   Thu, 19 Mar 2020 12:43:13 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>
-Subject: Re: [PATCH v2 00/17] SoundWire: cadence: add clock stop and fix
- programming sequences
-Message-ID: <20200319071313.GX4885@vkoul-mobl>
-References: <20200317163329.25501-1-pierre-louis.bossart@linux.intel.com>
+        Thu, 19 Mar 2020 03:13:49 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38984 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727011AbgCSHNs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:13:48 -0400
+Received: by mail-qk1-f196.google.com with SMTP id t17so1670005qkm.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 00:13:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rH9XkrtMe7HI6VnpexBxHYP1li78F1+6ZSnrUVBDTCw=;
+        b=prPUHVlxVd+bHnSt25R24pQe+7i7O9R1n3DEuULFVAUvo3IiUm9SO3mMtIEaRPGkvz
+         lKFp3mkHdQdETyKa5GlARoh4QXgZ+tKH8X2ph3Hb3vfbjQ2+qYluAggjgQRlLSsd52bT
+         F6xky0J+wLpGQWN5BDv1nVOQM0RIska5/S0L3eeZtDnd19ABYyhiASRMtwy3c8MUDgdg
+         MueSMeN4QycaC90Cs2AtPu8eP5Zj1GA+rOjdD+FDFsYeyLdGxrooicFD+2s/R7LK6p44
+         zb0L9GAp/knpAygSvvb9iA4E3xHqP8l52hMGSF/zPbcoj8c3wbqhkisuq1D9Yf61+fms
+         za4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rH9XkrtMe7HI6VnpexBxHYP1li78F1+6ZSnrUVBDTCw=;
+        b=a/MHA4zl3TXNlD0WYO43tHcEtGOwdvIrhcx+LXUH13QnYUQMKF4Dq64UnHrrdN6QI/
+         SJf/7WX77Q41U99djIQGYdhWyxf8320NJ5jgQhzCHCjMYuTehk0zUdzYHrSBaLFM0pu+
+         Xd/TI6IhR2bHmkZYWSMru/eggu1eXCmEN9LQ8m5XzTcG+MDmjkpkicEVuoe1Z1sQsXxV
+         TO3ldKZAK1AQuu7+hgUM8v4NNmF5gKy3cccSHBDCwjnbVaXCjkm3IesPGO9Vp4/ju0JX
+         fiiIPkkX0EH8wkx5JQ89/oqTdkv/NMKSWZiyOHnEXOD9LT2R5rLL4Qr36fC0U5FkEXfm
+         JQJA==
+X-Gm-Message-State: ANhLgQ2CAWGuXkLcglXUpEbL5w2FHd9wTpwbYLfgOc9f5VjQ0sjstBkT
+        AxgsrfhNyoSmWoVHrQmrk5nVhH8APXx9jVWzNK2iHw==
+X-Google-Smtp-Source: ADFU+vvRD/fu9oNydL2plK4iDRAkvvrhZlF6/7O+wy46FW3Kp9+qbKsulg4yL1lxcZZPurOY/plBmaFmtqpvf/If4vA=
+X-Received: by 2002:a37:6115:: with SMTP id v21mr1538768qkb.43.1584602027025;
+ Thu, 19 Mar 2020 00:13:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200317163329.25501-1-pierre-louis.bossart@linux.intel.com>
+References: <000000000000ae2ab305a123f146@google.com> <CACT4Y+a_d=5TNZth0dPov0B7tB5T9bAzWXBj1HjhXdn-=0KOOg@mail.gmail.com>
+ <20200318214109.GV3199@paulmck-ThinkPad-P72>
+In-Reply-To: <20200318214109.GV3199@paulmck-ThinkPad-P72>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 19 Mar 2020 08:13:35 +0100
+Message-ID: <CACT4Y+ZhP_Qu+WZ4t2dLjd__H+rUKCTRCNoghvW9Uf3QQYRcNg@mail.gmail.com>
+Subject: Re: linux-next build error (8)
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     syzbot <syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-03-20, 11:33, Pierre-Louis Bossart wrote:
-> To make progress with SoundWire support, this patchset provides the
-> missing support for clock stop modes, and revisits all Cadence Master
-> register settings. The current code is for some reason not aligned
-> with internal documentation and hardware recommended flows,
-> specifically for multi-link operation.
+On Wed, Mar 18, 2020 at 10:41 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Wed, Mar 18, 2020 at 09:54:07PM +0100, Dmitry Vyukov wrote:
+> > On Wed, Mar 18, 2020 at 5:57 PM syzbot
+> > <syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com> wrote:
+> > >
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    47780d78 Add linux-next specific files for 20200318
+> > > git tree:       linux-next
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=14228745e00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=b68b7b89ad96c62a
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=792dec47d693ccdc05a0
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > >
+> > > Unfortunately, I don't have any reproducer for this crash yet.
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+792dec47d693ccdc05a0@syzkaller.appspotmail.com
+> > >
+> > > kernel/rcu/tasks.h:1070:37: error: 'rcu_tasks_rude' undeclared (first use in this function); did you mean 'rcu_tasks_qs'?
+> >
+> > +rcu maintainers
+>
+> The kbuild test robot beat you to it, and apologies for the hassle.
+> Fixed in -rcu on current "dev" branch.
 
-Applied, thanks
-
--- 
-~Vinod
+If the kernel dev process would only have a way to avoid dups from all
+test systems...
+Now we need to spend time and deal with it. What has fixed it?
