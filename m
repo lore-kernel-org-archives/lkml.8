@@ -2,70 +2,109 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C3EC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1392C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAACC2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B34B20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:05:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jx/5n7+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgCSQBr (ORCPT
+        id S1727796AbgCSQFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:01:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40050 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 12:05:09 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:45402 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbgCSQBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:01:46 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD49920658;
-        Thu, 19 Mar 2020 16:01:45 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 12:01:43 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH v2] tracing: Use address-of operator on section symbols
-Message-ID: <20200319120143.5ffed518@gandalf.local.home>
-In-Reply-To: <CAKwvOdm9notnmKYQqAsTsZN7qqEpNtpQ091wv=rWZ0kzS3OzAA@mail.gmail.com>
-References: <20200220051011.26113-1-natechancellor@gmail.com>
-        <20200319020004.GB8292@ubuntu-m2-xlarge-x86>
-        <20200319103312.070b4246@gandalf.local.home>
-        <CAKwvOdm9notnmKYQqAsTsZN7qqEpNtpQ091wv=rWZ0kzS3OzAA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727212AbgCSQFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 12:05:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=zJnEspx9nUpxqY4oZ6sWyqjLedPnwb/JDmykq5Fz/1M=; b=jx/5n7+KC18GCR5gh5RC5Uu7Cq
+        Q/sz8HEgxnrFiv8mLmwLAmZ+N1cf43mUrBNqFvCXTMobK/b3lKoUGzXsQUO7zPJbi4NM7P9UXG9qE
+        Lz2hUkREitCNlfc7Xcfs36LleSpZrmZvX7vrLnEFVESYmHrfMNHAY8W1GPCBLRJF/6OU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jExfN-0007aG-81; Thu, 19 Mar 2020 17:05:05 +0100
+Date:   Thu, 19 Mar 2020 17:05:05 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 2/2] net: phy: mscc: RGMII skew delay
+ configuration
+Message-ID: <20200319160505.GE27807@lunn.ch>
+References: <20200319141958.383626-1-antoine.tenart@bootlin.com>
+ <20200319141958.383626-3-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319141958.383626-3-antoine.tenart@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 19 Mar 2020 08:27:11 -0700
-Nick Desaulniers <ndesaulniers@google.com> wrote:
-
-> On Thu, Mar 19, 2020 at 7:33 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > On Wed, 18 Mar 2020 19:00:04 -0700
-> > Nathan Chancellor <natechancellor@gmail.com> wrote:
-> >  
-> > > Gentle ping for review/acceptance.  
-> >
-> > Hmm, my local patchwork had this patch rejected. I'll go and apply it, run  
+On Thu, Mar 19, 2020 at 03:19:58PM +0100, Antoine Tenart wrote:
+> This patch adds support for configuring the RGMII skew delays in Rx and
+> Tx. The Rx and Tx skews are set based on the interface mode. By default
+> their configuration is set to the default value in hardware (0.2ns);
+> this means the driver do not rely anymore on the bootloader
+> configuration.
 > 
-> Local patchwork? As in patchwork.kernel.org?  (Is there a client, or
-> can you host your own instance?)
->
+> Then based on the interface mode being used, a 2ns delay is added:
+> - RGMII_ID adds it for both Rx and Tx.
+> - RGMII_RXID adds it for Rx.
+> - RGMII_TXID adds it for Tx.
+> 
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> ---
+>  drivers/net/phy/mscc/mscc.h      | 14 ++++++++++++++
+>  drivers/net/phy/mscc/mscc_main.c | 29 +++++++++++++++++++++++++++++
+>  2 files changed, 43 insertions(+)
+> 
+> diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
+> index d1b8bbe8acca..25729302714c 100644
+> --- a/drivers/net/phy/mscc/mscc.h
+> +++ b/drivers/net/phy/mscc/mscc.h
+> @@ -161,6 +161,20 @@ enum rgmii_rx_clock_delay {
+>  /* Extended Page 2 Registers */
+>  #define MSCC_PHY_CU_PMD_TX_CNTL		  16
+>  
+> +#define MSCC_PHY_RGMII_SETTINGS		  18
+> +#define RGMII_SKEW_RX_POS		  1
+> +#define RGMII_SKEW_TX_POS		  4
+> +
+> +/* RGMII skew values, in ns */
+> +#define VSC8584_RGMII_SKEW_0_2		  0
+> +#define VSC8584_RGMII_SKEW_0_8		  1
+> +#define VSC8584_RGMII_SKEW_1_1		  2
+> +#define VSC8584_RGMII_SKEW_1_7		  3
+> +#define VSC8584_RGMII_SKEW_2_0		  4
+> +#define VSC8584_RGMII_SKEW_2_3		  5
+> +#define VSC8584_RGMII_SKEW_2_6		  6
+> +#define VSC8584_RGMII_SKEW_3_4		  7
 
-No, I went into a lot of effort to get it up and running on my own inbox.
-I did this because I wasn't able to keep up with all the patches being sent
-directly to me. It's a bit fragile, and the workflow mailing list is
-working on ways to have this be a more general solution for maintainers.
+  
+> +static void vsc8584_rgmii_set_skews(struct phy_device *phydev)
+> +{
+> +	u32 skew_rx, skew_tx;
+> +
+> +	/* We first set the Rx and Tx skews to their default value in h/w
+> +	 * (0.2 ns).
+> +	 */
+> +	skew_rx = VSC8584_RGMII_SKEW_0_2;
+> +	skew_tx = VSC8584_RGMII_SKEW_0_2;
 
--- Steve
+Hi Antoine
+
+Does this mean it is impossible to have a skew of 0ns?
+
+     Andrew
