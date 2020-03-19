@@ -2,123 +2,318 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2341C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EAAC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F16520724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B069620739
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YrHOULcD"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OdJZDRE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725768AbgCSKL0 (ORCPT
+        id S1726905AbgCSKQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:11:26 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:22502 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726188AbgCSKL0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:11:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584612685; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=M1HzhVB6T9UZUN6Oig36KI7SQdXHk/1MM2NC6JmVWog=;
- b=YrHOULcD/Q4lswZjbvoK+GxOzq/d64CaG4mkcAlVyHMpQ68jdd2il12Bs5nMrypOa+JtROPJ
- Rm/xVHU8kpqCBMOYYunA4zQ9WiZVkMdedCKtT4/pEOJMJIEK8Z4pIubvJ/oiiTMa5Ts5fFhS
- N7fwnDjOjDd+NE6/OxFlqvzSkX4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e734544.7f13f5a2f8f0-smtp-out-n05;
- Thu, 19 Mar 2020 10:11:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6BBB9C4478F; Thu, 19 Mar 2020 10:11:16 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Thu, 19 Mar 2020 06:16:54 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55732 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgCSKQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:16:54 -0400
+Received: from zn.tnic (p200300EC2F0A850035180F69CBC86220.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:8500:3518:f69:cbc8:6220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA8B3C433D2;
-        Thu, 19 Mar 2020 10:11:15 +0000 (UTC)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 57D8D1EC0CF9;
+        Thu, 19 Mar 2020 11:16:52 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584613012;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=kyXB3LhXMlYk05dewzUxEywSSYigUP22lYt3Q49KHmI=;
+        b=OdJZDRE3k65QjZ/LHJJwYG2FZVA1/4CS3YUasQdlMaNOaQxumloXOafvMddSta9Lmp9mYT
+        vOHhz35eEaodYgWkBSGWw9zSLIay3NIjKQV0Ktorq9kwlDXEOdBM9dV+vFpCkOr++q0LUJ
+        TjuwZ8g+LaouH+iQR0GtJkZ76x8bYfA=
+Date:   Thu, 19 Mar 2020 11:16:57 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Borislav Petkov <bp@suse.de>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [PATCH -v2] treewide: Rename "unencrypted" to "decrypted"
+Message-ID: <20200319101657.GB13073@zn.tnic>
+References: <20200317111822.GA15609@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Mar 2020 15:41:15 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, nm@ti.com,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dianders@chromium.org, mka@chromium.org,
-        vincent.guittot@linaro.org, amit.kucheria@linaro.org,
-        ulf.hansson@linaro.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [RFC v3 00/10] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
-In-Reply-To: <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
-References: <20200127200350.24465-1-sibis@codeaurora.org>
- <19cf027ba87ade1b895ea90ac0fedbe2@codeaurora.org>
- <20200318034243.o2metmggzuah6cqw@vireshk-i7>
- <f6a7930a-4eaa-6982-88c6-b50773bee9d8@codeaurora.org>
-Message-ID: <ea4265f3f4b5a439d70d3c80bcc77b7f@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200317111822.GA15609@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-19 15:12, Rajendra Nayak wrote:
-> On 3/18/2020 9:12 AM, Viresh Kumar wrote:
->> On 18-03-20, 02:13, Sibi Sankar wrote:
->>> On 2020-01-28 01:33, Sibi Sankar wrote:
->>>> This RFC series aims to extend cpu based scaling support to L3/DDR 
->>>> on
->>>> SDM845 and SC7180 SoCs.
->>>> 
->>> 
->>> Hey Viresh/Saravana,
->>> 
->>> Ping! Can you take a stab at reviewing
->>> the series, it has been on the list for
->>> a while now.
->> 
->> I believe this depends on Saravana's series on which I have raised
->> some doubts few weeks back ? I am still waiting for them to get
->> clarified by him.
+Hi,
 
-Viresh,
-Saravana's example does show a device
-with multiple opp tables but doesn't
-need multiple opp table support to
-land though (since it works fine with
-the current implementation). I am more
-interested  in understanding your/
-Stephen's/Saravana's stance on adding
-multiple opp-table support. Personally
-I feel its inevitable, since multiple
-qc drivers using interconnect opp-tables,
-routinely need vote on multiple paths in
-a non-trivial manner.
+here's v2 with build breakage fixed on ppc and s390 (obviously I can't
+grep :-\) and commit message extended to explain more why.
 
-> 
-> Could you please post a link to the discussion that you are referring 
-> to here?
-> I looked at a few links posted in the cover letter as dependencies and 
-> it seems
-> like the discussions are pending for *months* and not weeks but I
-> might have looked
-> at the wrong ones.
+Thx.
 
-https://lore.kernel.org/lkml/20200114103448.odnvqawnqb3twst5@vireshk-i7/
+---
+From: Borislav Petkov <bp@suse.de>
+Date: Tue, 17 Mar 2020 12:03:05 +0100
 
-Rajendra,
-Viresh is referring to ^^ one
+Back then when the whole SME machinery started getting mainlined, it
+was agreed that for simplicity, clarity and sanity's sake, the terms
+denoting encrypted and not-encrypted memory should be "encrypted" and
+"decrypted". And the majority of the code sticks to that convention
+except those two. So rename them.
+
+The intent of "encrypted" and "decrypted" is to represent the binary
+concept of memory which is encrypted and of memory which is not.
+
+The further differentiation between decrypted and unencrypted memory is
+not needed in the code (for now) and therefore keep things simple by
+using solely the two terms.
+
+No functional changes.
+
+[ Convert forgotten s390 and ppc function variants. ]
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/powerpc/include/asm/mem_encrypt.h |  2 +-
+ arch/powerpc/platforms/pseries/Kconfig |  2 +-
+ arch/s390/Kconfig                      |  2 +-
+ arch/s390/mm/init.c                    |  2 +-
+ arch/x86/Kconfig                       |  2 +-
+ arch/x86/mm/mem_encrypt.c              |  4 ++--
+ include/linux/dma-direct.h             |  8 ++++----
+ kernel/dma/Kconfig                     |  2 +-
+ kernel/dma/direct.c                    | 14 +++++++-------
+ kernel/dma/mapping.c                   |  2 +-
+ 10 files changed, 20 insertions(+), 20 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/mem_encrypt.h b/arch/powerpc/include/asm/mem_encrypt.h
+index ba9dab07c1be..f0705cd3b079 100644
+--- a/arch/powerpc/include/asm/mem_encrypt.h
++++ b/arch/powerpc/include/asm/mem_encrypt.h
+@@ -15,7 +15,7 @@ static inline bool mem_encrypt_active(void)
+ 	return is_secure_guest();
+ }
+ 
+-static inline bool force_dma_unencrypted(struct device *dev)
++static inline bool force_dma_decrypted(struct device *dev)
+ {
+ 	return is_secure_guest();
+ }
+diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
+index 24c18362e5ea..a78e2c3e1d92 100644
+--- a/arch/powerpc/platforms/pseries/Kconfig
++++ b/arch/powerpc/platforms/pseries/Kconfig
+@@ -151,7 +151,7 @@ config PPC_SVM
+ 	depends on PPC_PSERIES
+ 	select SWIOTLB
+ 	select ARCH_HAS_MEM_ENCRYPT
+-	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
++	select ARCH_HAS_FORCE_DMA_DECRYPTED
+ 	help
+ 	 There are certain POWER platforms which support secure guests using
+ 	 the Protected Execution Facility, with the help of an Ultravisor
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 8abe77536d9d..ab1dbb7415b4 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -192,7 +192,7 @@ config S390
+ 	select VIRT_CPU_ACCOUNTING
+ 	select ARCH_HAS_SCALED_CPUTIME
+ 	select HAVE_NMI
+-	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
++	select ARCH_HAS_FORCE_DMA_DECRYPTED
+ 	select SWIOTLB
+ 	select GENERIC_ALLOCATOR
+ 
+diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+index ac44bd76db4b..5fed85f9fea6 100644
+--- a/arch/s390/mm/init.c
++++ b/arch/s390/mm/init.c
+@@ -157,7 +157,7 @@ int set_memory_decrypted(unsigned long addr, int numpages)
+ }
+ 
+ /* are we a protected virtualization guest? */
+-bool force_dma_unencrypted(struct device *dev)
++bool force_dma_decrypted(struct device *dev)
+ {
+ 	return is_prot_virt_guest();
+ }
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index beea77046f9b..2ae904f505e1 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1525,7 +1525,7 @@ config AMD_MEM_ENCRYPT
+ 	depends on X86_64 && CPU_SUP_AMD
+ 	select DYNAMIC_PHYSICAL_MASK
+ 	select ARCH_USE_MEMREMAP_PROT
+-	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
++	select ARCH_HAS_FORCE_DMA_DECRYPTED
+ 	---help---
+ 	  Say yes to enable support for the encryption of system memory.
+ 	  This requires an AMD processor that supports Secure Memory
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index a03614bd3e1a..66d09f269e6d 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -350,8 +350,8 @@ bool sev_active(void)
+ 	return sme_me_mask && sev_enabled;
+ }
+ 
+-/* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+-bool force_dma_unencrypted(struct device *dev)
++/* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_DECRYPTED */
++bool force_dma_decrypted(struct device *dev)
+ {
+ 	/*
+ 	 * For SEV, all DMA must be to unencrypted addresses.
+diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+index 24b8684aa21d..9f955844e9c7 100644
+--- a/include/linux/dma-direct.h
++++ b/include/linux/dma-direct.h
+@@ -26,14 +26,14 @@ static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
+ }
+ #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
+ 
+-#ifdef CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED
+-bool force_dma_unencrypted(struct device *dev);
++#ifdef CONFIG_ARCH_HAS_FORCE_DMA_DECRYPTED
++bool force_dma_decrypted(struct device *dev);
+ #else
+-static inline bool force_dma_unencrypted(struct device *dev)
++static inline bool force_dma_decrypted(struct device *dev)
+ {
+ 	return false;
+ }
+-#endif /* CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED */
++#endif /* CONFIG_ARCH_HAS_FORCE_DMA_DECRYPTED */
+ 
+ /*
+  * If memory encryption is supported, phys_to_dma will set the memory encryption
+diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+index 4c103a24e380..55c4147bb2b1 100644
+--- a/kernel/dma/Kconfig
++++ b/kernel/dma/Kconfig
+@@ -51,7 +51,7 @@ config ARCH_HAS_SYNC_DMA_FOR_CPU_ALL
+ config ARCH_HAS_DMA_PREP_COHERENT
+ 	bool
+ 
+-config ARCH_HAS_FORCE_DMA_UNENCRYPTED
++config ARCH_HAS_FORCE_DMA_DECRYPTED
+ 	bool
+ 
+ config DMA_NONCOHERENT_CACHE_SYNC
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index ac7956c38f69..a0576c0ccacd 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -26,7 +26,7 @@ unsigned int zone_dma_bits __ro_after_init = 24;
+ static inline dma_addr_t phys_to_dma_direct(struct device *dev,
+ 		phys_addr_t phys)
+ {
+-	if (force_dma_unencrypted(dev))
++	if (force_dma_decrypted(dev))
+ 		return __phys_to_dma(dev, phys);
+ 	return phys_to_dma(dev, phys);
+ }
+@@ -49,7 +49,7 @@ static gfp_t __dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
+ {
+ 	u64 dma_limit = min_not_zero(dma_mask, dev->bus_dma_limit);
+ 
+-	if (force_dma_unencrypted(dev))
++	if (force_dma_decrypted(dev))
+ 		*phys_limit = __dma_to_phys(dev, dma_limit);
+ 	else
+ 		*phys_limit = dma_to_phys(dev, dma_limit);
+@@ -138,7 +138,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+ 		return NULL;
+ 
+ 	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+-	    !force_dma_unencrypted(dev)) {
++	    !force_dma_decrypted(dev)) {
+ 		/* remove any dirty cache lines on the kernel alias */
+ 		if (!PageHighMem(page))
+ 			arch_dma_prep_coherent(page, size);
+@@ -179,7 +179,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+ 	}
+ 
+ 	ret = page_address(page);
+-	if (force_dma_unencrypted(dev))
++	if (force_dma_decrypted(dev))
+ 		set_memory_decrypted((unsigned long)ret, 1 << get_order(size));
+ 
+ 	memset(ret, 0, size);
+@@ -190,7 +190,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+ 		ret = uncached_kernel_address(ret);
+ 	}
+ done:
+-	if (force_dma_unencrypted(dev))
++	if (force_dma_decrypted(dev))
+ 		*dma_handle = __phys_to_dma(dev, page_to_phys(page));
+ 	else
+ 		*dma_handle = phys_to_dma(dev, page_to_phys(page));
+@@ -203,7 +203,7 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
+ 	unsigned int page_order = get_order(size);
+ 
+ 	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+-	    !force_dma_unencrypted(dev)) {
++	    !force_dma_decrypted(dev)) {
+ 		/* cpu_addr is a struct page cookie, not a kernel address */
+ 		dma_free_contiguous(dev, cpu_addr, size);
+ 		return;
+@@ -213,7 +213,7 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
+ 	    dma_free_from_pool(cpu_addr, PAGE_ALIGN(size)))
+ 		return;
+ 
+-	if (force_dma_unencrypted(dev))
++	if (force_dma_decrypted(dev))
+ 		set_memory_encrypted((unsigned long)cpu_addr, 1 << page_order);
+ 
+ 	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr))
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index 98e3d873792e..dbd0605a39c5 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -154,7 +154,7 @@ EXPORT_SYMBOL(dma_get_sgtable_attrs);
+  */
+ pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
+ {
+-	if (force_dma_unencrypted(dev))
++	if (force_dma_decrypted(dev))
+ 		prot = pgprot_decrypted(prot);
+ 	if (dev_is_dma_coherent(dev) ||
+ 	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
+-- 
+2.21.0
+
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
