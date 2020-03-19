@@ -2,261 +2,229 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23830C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D8EC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C6B2098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E1B20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:30:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="jOFwtFUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgCSO16 (ORCPT
+        id S1727485AbgCSO37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:27:58 -0400
-Received: from mga18.intel.com ([134.134.136.126]:23320 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726892AbgCSO16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:27:58 -0400
-IronPort-SDR: TUBp+yhLHzWwWPt6kpKDlhvduHrkjyOk/muPp4HJF/4YDjWtWe+cIIFMHosUIyJQo1x2FYILlm
- DORwirOmxScw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 07:27:57 -0700
-IronPort-SDR: JT368X00JqHy0Akd/MFb/8Xmtdik6vOXbS1d9+dn0fcU5MRfXRjaaowNpLR6nqCbQqF1wotv7M
- uvn/nTmh2IHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,571,1574150400"; 
-   d="scan'208";a="291637680"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Mar 2020 07:27:56 -0700
-Date:   Thu, 19 Mar 2020 22:25:44 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>
-Subject: Re: [PATCH v2 4/7] fpga: dfl: afu: add interrupt support for error
-  reporting
-Message-ID: <20200319142544.GC2474@yilunxu-OptiPlex-7050>
-References: <1584332222-26652-1-git-send-email-yilun.xu@intel.com>
- <1584332222-26652-5-git-send-email-yilun.xu@intel.com>
- <20200318085426.GA12088@hao-dev>
+        Thu, 19 Mar 2020 10:29:59 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:50335 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726892AbgCSO37 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 10:29:59 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id EwBEju89tfHuvEwBHjebZz; Thu, 19 Mar 2020 15:29:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1584628196; bh=YFXiHd7nWDR8UOAdHCahZXylHN8v3bMRrzPxH24YMOw=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=jOFwtFUm2SimQr5pRDhA3uZOoXMXUFDl8T8yftyxJb0WFm0BuwkePeBU2dqVXU/ho
+         OhvqzOwAZpp6DCBpUfwRlKtxafeguEre9qeUBaU7YoCt8822pUnaXBpuDJpKIScE7s
+         hgGkuprsCwIzsf7gppDvgrkBDhloDbXnLmMDLJ8gBWGwDaQax/IPKYFO/2Wi0DxjOn
+         Rn2RnNzcJCy9cMVfRUzMT5FGluDyxGLT7Jj+5Jon0oMa6jwsVUZjE9DkBrmIt0A9Tg
+         16FmogHkRI/RdeeJoBEaTmjXuum1zKK4rkhCZyt595YTElloT1ZKaX0ldv8S26jHMP
+         vY7NbAc+jY/kg==
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        helen.koike@collabora.com, sboyd@kernel.org
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
+ <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
+ <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
+ <12a36c2a-593c-e555-d44e-e2e6c4c1a562@nvidia.com>
+ <5f54c018-5670-8193-7c68-969f9bde92f6@xs4all.nl>
+ <19081d90-62cc-e6eb-0337-f108fb6ca9bc@nvidia.com>
+ <061eabf1-4b6f-83c0-6851-df8a193a84e8@nvidia.com>
+ <a5377068-3c70-1af4-6398-630d205e794b@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <bc571308-93e5-e720-1cac-eb3effe1acdd@xs4all.nl>
+Date:   Thu, 19 Mar 2020 15:29:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318085426.GA12088@hao-dev>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <a5377068-3c70-1af4-6398-630d205e794b@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfOdH5QrWWNhCYCf6J6Ms7qEEUOvIuPOpGdiEdpDygypYOns4spRU2Aj0dAuvPhDC+BDT1lq8GsYvuk/kIzlLes33OwDag0s088KBeqkAx0pC6mxxdz39
+ JQdhpNkQ317FremVgnzudw4LeJEL8f+484+n/tkwD+9SvNRvFZkajP5AtVXye1nrvu/Y3tfWNxwSqC+VnpHEMjzNYvMODJQ/IhaZ01C3ZAWLsT36R7U0hlJY
+ mpe4oVm7x5qhF7iOBWLkxM+sMyBjScjDpBPMgjfhVEh3oBoQBzNLv9L5aBRr2LcUtRusu7bqumddUkd+9KML6WI8cjSlF4c6ncdF/vuCl5DEIrBkUqa52PfD
+ Xy2IsGIp4tQsihoRqZm4fxu3knnHYSx1GSYGqPKDV7CRNUB1aaahQnqiAVmCZDMr6uaWeEMxboqrGHEaKsa374lzMLWN1Nu/fLfCwMxwfwbCZ/fulrD2RCtI
+ H+ky69uhu/D0kC5LROwNGrnFy00qfvjw7bw3CnA2CiMunN820+qWwOYxjoy/+sHu+4nlegLbRyxzyAPL
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 04:54:26PM +0800, Wu Hao wrote:
-> On Mon, Mar 16, 2020 at 12:16:59PM +0800, Xu Yilun wrote:
-> > Error reporting interrupt is very useful to notify users that some
-> > errors are detected by the hardware. Once users are notified, they
-> > could query hardware logged error states, no need to continuously
-> > poll on these states.
-> > 
-> > This patch follows the common DFL interrupt notification and handling
-> > mechanism, implements two ioctl commands below for user to query
-> > number of irqs supported, and set/unset interrupt triggers.
-> > 
-> >  Ioctls:
-> >  * DFL_FPGA_PORT_ERR_GET_IRQ_NUM
-> >    get the number of irqs, which is used to determine whether/how many
-> >    interrupts error reporting feature supports.
-> > 
-> >  * DFL_FPGA_PORT_ERR_SET_IRQ
-> >    set/unset given eventfds as error interrupt triggers.
-> > 
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > ----
-> > v2: use DFL_FPGA_PORT_ERR_GET_IRQ_NUM instead of
-> >     DFL_FPGA_PORT_ERR_GET_INFO
-> >     Delete flag field for DFL_FPGA_PORT_ERR_SET_IRQ param
-> > ---
-> >  drivers/fpga/dfl-afu-error.c  | 64 +++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/fpga/dfl-afu-main.c   |  4 +++
-> >  include/uapi/linux/fpga-dfl.h | 29 ++++++++++++++++++++
-> >  3 files changed, 97 insertions(+)
-> > 
-> > diff --git a/drivers/fpga/dfl-afu-error.c b/drivers/fpga/dfl-afu-error.c
-> > index c1467ae..4d478b2f 100644
-> > --- a/drivers/fpga/dfl-afu-error.c
-> > +++ b/drivers/fpga/dfl-afu-error.c
-> > @@ -15,6 +15,7 @@
-> >   */
-> >  
-> >  #include <linux/uaccess.h>
-> > +#include <linux/fpga-dfl.h>
-> >  
-> >  #include "dfl-afu.h"
-> >  
-> > @@ -219,6 +220,68 @@ static void port_err_uinit(struct platform_device *pdev,
-> >  	afu_port_err_mask(&pdev->dev, true);
-> >  }
-> >  
-> > +static long
-> > +port_err_get_num_irqs(struct platform_device *pdev,
-> > +		      struct dfl_feature *feature, unsigned long arg)
-> > +{
-> > +	if (copy_to_user((void __user *)arg, &feature->nr_irqs,
-> > +			 sizeof(feature->nr_irqs)))
-> > +		return -EFAULT;
+On 3/18/20 6:17 PM, Sowjanya Komatineni wrote:
 > 
-> maybe use put_user is simpler here.
+> On 3/18/20 9:25 AM, Sowjanya Komatineni wrote:
+>>
+>> On 3/18/20 9:14 AM, Sowjanya Komatineni wrote:
+>>>
+>>> On 3/18/20 4:48 AM, Hans Verkuil wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> On 2/24/20 5:45 AM, Sowjanya Komatineni wrote:
+>>>>> On 2/20/20 11:11 AM, Sowjanya Komatineni wrote:
+>>>>>> On 2/20/20 5:33 AM, Hans Verkuil wrote:
+>>>>>>> External email: Use caution opening links or attachments
+>>>>>>>
+>>>>>>>
+>>>>>>> (Replying to myself so I can explain this a bit more)
+>>>>>>>
+>>>>>>> On 2/20/20 1:44 PM, Hans Verkuil wrote:
+>>>>>>>>> +
+>>>>>>>>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
+>>>>>>>>> +{
+>>>>>>>>> +    struct device_node *node = csi->dev->of_node;
+>>>>>>>>> +    unsigned int port_num;
+>>>>>>>>> +    int ret;
+>>>>>>>>> +    struct tegra_csi_channel *item;
+>>>>>>>>> +    unsigned int tpg_channels = csi->soc->csi_max_channels;
+>>>>>>>>> +
+>>>>>>>>> +    /* allocate CSI channel for each CSI x2 ports */
+>>>>>>>>> +    for (port_num = 0; port_num < tpg_channels; port_num++) {
+>>>>>>>>> +            item = devm_kzalloc(csi->dev, sizeof(*item), 
+>>>>>>>>> GFP_KERNEL);
+>>>>>>>> Using devm_*alloc can be dangerous. If someone unbinds the 
+>>>>>>>> driver, then
+>>>>>>>> all memory allocated with devm_ is immediately freed. But if an
+>>>>>>>> application
+>>>>>>>> still has a filehandle open, then when it closes it it might still
+>>>>>>>> reference
+>>>>>>>> this already-freed memory.
+>>>>>>>>
+>>>>>>>> I recommend that you avoid using devm_*alloc for media drivers.
+>>>>>>> A good test is to unbind & bind the driver:
+>>>>>>>
+>>>>>>> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
+>>>>>>> echo -n 54080000.vi >unbind
+>>>>>>> echo -n 54080000.vi >bind
+>>>>>>>
+>>>>>>> First just do this without the driver being used. That already
+>>>>>>> gives me 'list_del corruption' kernel messages (list debugging
+>>>>>>> is turned on in my kernel).
+>>>>> Will fix in v4 to use kzalloc and also proper release v4l2 to make 
+>>>>> sure
+>>>>> unbind/bind works properly.
+>>>>>
+>>>>> BTW, tegra vi and csi are registered as clients to host1x video 
+>>>>> driver.
+>>>>>
+>>>>> So, unbind and bind should be done with host1x video driver 
+>>>>> "tegra-video"
+>>>>>
+>>>>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>>>>> echo -n tegra-video > unbind
+>>>>> echo -n tegra-video > bind
+>>>> This still crashes with v4, at least if I am streaming with v4l2-ctl 
+>>>> --stream-mmap.
+>>>> Is that known?
+>>>>
+>>>> It's not a big deal at this moment, just want to know if this will 
+>>>> be looked
+>>>> at later.
+>>>>
+>>>> Regards,
+>>>>
+>>>>          Hans
+>>>
+>>> Weird, I tested streaming after unbind and bind as well and don't see 
+>>> crash. Did below steps and tried several times unbind/bind as well.
+>>>
+>>> ./v4l2-ctl --stream-mmap --stream-count=1 -d /dev/video3
+>>> cd /sys/devices/platform/50000000.host1x/tegra-video/driver
+>>> echo -n tegra-video > unbind
+>>> sleep 1
+>>> echo -n tegra-video > bind
+>>> cd /home/ubuntu
+>>> ./v4l2-ctl --stream-mmap --stream-count=1 -d /dev/video3
+>>>
+>>> Can you post call trace when you saw crash?
+>>
+>> Tried unbind when  node is open with v4l2-ctl --sleep 10 as well and 
+>> bind back.
+>>
+>> I don't see crash. Will confirm on doing unbind/bind with stream-mmap...
+>>
+> Able to repro when unbind/bind happens while stream-mmap.
 
-I'll change it.
-
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static long port_err_set_irq(struct platform_device *pdev,
-> > +			     struct dfl_feature *feature, unsigned long arg)
-> > +{
-> > +	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> > +	struct dfl_fpga_irq_set hdr;
-> > +	s32 *fds;
-> > +	long ret;
-> > +
-> > +	if (!feature->nr_irqs)
-> > +		return -ENOENT;
-> > +
-> > +	if (copy_from_user(&hdr, (void __user *)arg, sizeof(hdr)))
-> > +		return -EFAULT;
-> > +
-> > +	if (!hdr.count || (hdr.start + hdr.count > feature->nr_irqs) ||
-> > +	    (hdr.start + hdr.count < hdr.start))
-> > +		return -EINVAL;
-> > +
-> > +	fds = memdup_user((void __user *)(arg + sizeof(hdr)),
-> > +			  hdr.count * sizeof(s32));
-> > +	if (IS_ERR(fds))
-> > +		return PTR_ERR(fds);
-> > +
-> > +	mutex_lock(&pdata->lock);
-> > +	ret = dfl_fpga_set_irq_triggers(feature, hdr.start, hdr.count, fds);
-> > +	mutex_unlock(&pdata->lock);
-> > +
-> > +	kfree(fds);
-> > +	return ret;
-> > +}
-> > +
-> > +static long
-> > +port_err_ioctl(struct platform_device *pdev, struct dfl_feature *feature,
-> > +	       unsigned int cmd, unsigned long arg)
-> > +{
-> > +	long ret = -ENODEV;
-> > +
-> > +	switch (cmd) {
-> > +	case DFL_FPGA_PORT_ERR_GET_IRQ_NUM:
-> > +		ret = port_err_get_num_irqs(pdev, feature, arg);
-> > +		break;
-> > +	case DFL_FPGA_PORT_ERR_SET_IRQ:
-> > +		ret = port_err_set_irq(pdev, feature, arg);
-> > +		break;
-> > +	default:
-> > +		dev_dbg(&pdev->dev, "%x cmd not handled", cmd);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >  const struct dfl_feature_id port_err_id_table[] = {
-> >  	{.id = PORT_FEATURE_ID_ERROR,},
-> >  	{0,}
-> > @@ -227,4 +290,5 @@ const struct dfl_feature_id port_err_id_table[] = {
-> >  const struct dfl_feature_ops port_err_ops = {
-> >  	.init = port_err_init,
-> >  	.uinit = port_err_uinit,
-> > +	.ioctl = port_err_ioctl,
-> >  };
-> > diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> > index 435bde4..fc8b9cf 100644
-> > --- a/drivers/fpga/dfl-afu-main.c
-> > +++ b/drivers/fpga/dfl-afu-main.c
-> > @@ -577,6 +577,7 @@ static int afu_release(struct inode *inode, struct file *filp)
-> >  {
-> >  	struct platform_device *pdev = filp->private_data;
-> >  	struct dfl_feature_platform_data *pdata;
-> > +	struct dfl_feature *feature;
-> >  
-> >  	dev_dbg(&pdev->dev, "Device File Release\n");
-> >  
-> > @@ -586,6 +587,9 @@ static int afu_release(struct inode *inode, struct file *filp)
-> >  	dfl_feature_dev_use_end(pdata);
-> >  
-> >  	if (!dfl_feature_dev_use_count(pdata)) {
-> > +		dfl_fpga_dev_for_each_feature(pdata, feature)
-> > +			dfl_fpga_set_irq_triggers(feature, 0,
-> > +						  feature->nr_irqs, NULL);
-> >  		__port_reset(pdev);
-> >  		afu_dma_region_destroy(pdata);
-> >  	}
-> > diff --git a/include/uapi/linux/fpga-dfl.h b/include/uapi/linux/fpga-dfl.h
-> > index ec70a0746..ced859d 100644
-> > --- a/include/uapi/linux/fpga-dfl.h
-> > +++ b/include/uapi/linux/fpga-dfl.h
-> > @@ -151,6 +151,35 @@ struct dfl_fpga_port_dma_unmap {
-> >  
-> >  #define DFL_FPGA_PORT_DMA_UNMAP		_IO(DFL_FPGA_MAGIC, DFL_PORT_BASE + 4)
-> >  
-> > +/**
-> > + * DFL_FPGA_PORT_ERR_GET_IRQ_NUM - _IOR(DFL_FPGA_MAGIC, DFL_PORT_BASE + 5,
-> > + *								__u32 num_irqs)
-> > + *
-> > + * Get the number of irqs supported by the fpga port error reporting private
-> > + * feature.
-> > + * Return: 0 on success, -errno on failure.
-> > + */
-> > +#define DFL_FPGA_PORT_ERR_GET_IRQ_NUM	_IOR(DFL_FPGA_MAGIC,	\
-> > +					     DFL_PORT_BASE + 5, __u32)
-> > +
-> > +/**
-> > + * DFL_FPGA_PORT_ERR_SET_IRQ - _IOW(DFL_FPGA_MAGIC, DFL_PORT_BASE + 6,
-> > + *						struct dfl_fpga_irq_set)
-> > + *
-> > + * Set fpga port error reporting interrupt trigger if evtfds[n] is valid.
-> > + * Unset related interrupt trigger if evtfds[n] is a NULL or negative value.
-> 
-> Looks like the code only unset trigger if fd < 0, right?
-
-Yes, will fix it.
+That's indeed what I did. I don't want to try it again since I'm working from home
+and the Jetson is in the office. And once it crashes I need someone in the office
+to press the reset button. I hope I can pick it up next week to keep it at home as
+that will make testing a lot easier.
 
 > 
-> > + * Return: 0 on success, -errno on failure.
-> > + */
-> > +struct dfl_fpga_irq_set {
-> > +	__u32 start;		/* First irq number */
-> 
-> Sounds a little confusing, what about index of the first irq?
+> Will look and have fix in v5.
 
-I'll take this change.
+Nice!
 
-Thanks.
+Thank you,
+
+	Hans
 
 > 
+> Thanks Hans.
 > 
-> Thanks
-> Hao
-> 
-> > +	__u32 count;		/* The number of eventfd handler */
-> > +	__s32 evtfds[];		/* Eventfd handler */
-> > +};
-> > +
-> > +#define DFL_FPGA_PORT_ERR_SET_IRQ	_IOW(DFL_FPGA_MAGIC,	\
-> > +					     DFL_PORT_BASE + 6,	\
-> > +					     struct dfl_fpga_irq_set)
-> > +
-> >  /* IOCTLs for FME file descriptor */
-> >  
-> >  /**
-> > -- 
-> > 2.7.4
+>>>
+>>>>>>> Note that this first test is basically identical to a rmmod/modprobe
+>>>>>>> of the driver. But when I compiled the driver as a module it didn't
+>>>>>>> create any video device nodes! Nor did I see any errors in the 
+>>>>>>> kernel
+>>>>>>> log. I didn't pursue this, and perhaps I did something wrong, but 
+>>>>>>> it's
+>>>>>>> worth taking a look at.
+>>>>>>>
+>>>>>>> The next step would be to have a video node open with:
+>>>>>>>
+>>>>>>> v4l2-ctl --sleep 10
+>>>>>>>
+>>>>>>> then while it is sleeping unbind the driver and see what happens
+>>>>>>> when v4l2-ctl exits.
+>>>>>>>
+>>>>>>> Worst case is when you are streaming:
+>>>>>>>
+>>>>>>> v4l2-ctl --stream-mmap
+>>>>>>>
+>>>>>>> and then unbind.
+>>>>>>>
+>>>>>>> In general, the best way to get this to work correctly is:
+>>>>>>>
+>>>>>>> 1) don't use devm_*alloc
+>>>>>>> 2) set the release callback of struct v4l2_device and do all freeing
+>>>>>>> there.
+>>>>>>> 3) in the platform remove() callback you call 
+>>>>>>> media_device_unregister()
+>>>>>>>      and video_unregister_device().
+>>>>>> Reg 3, in current patch, media_device_unregister is called in
+>>>>>> host1x_video_remove
+>>>>>> video_unregister_device happens during host1x_video_remove ->
+>>>>>> host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
+>>>>>>
+>>>>>>> It's worth getting this right in this early stage, rather than 
+>>>>>>> fixing it
+>>>>>>> in the future.
+>>>>>>>
+>>>>>>> Regards,
+>>>>>>>
+>>>>>>>           Hans
+
