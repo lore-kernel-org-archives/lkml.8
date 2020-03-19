@@ -6,87 +6,67 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92068C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C37C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD4520773
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9829220773
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584577842;
-	bh=lGgOA8i9jqfs6+LhGMKQbt8ZockuHa4KYi8DijDb9RM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wmvG5yITYnnwagPQMXUx4X2npvrybJ/qqOid+2aBBgSz4XF81kDNo3n/x/RKDIk/5
-	 2lALqjcbyJ8KbNZS7VioEsppkFQPVtyCfHYYKn4rjpMxq5LA8y3BvARs1OAOKtNpit
-	 FFH4NBMVHAe5qklSeUNzGMtANwPd8RxbwXC1uIqQ=
+	s=default; t=1584577927;
+	bh=luwv1tWhVqWBgIzABSQPeSxHDt0MZSFdSU+ZcgevEAI=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=qydwtYpXi7F2tg0zJfrbThnrZ9Ak7Lofc6TkUi98hkvpVErcAdoNSgu1HdivBscHV
+	 YWPBg/2OddJElLTIzzsbFTM2sqTh7DbHBco6jDFTJjFz1buxk0YfI+AbPKkE52GMx9
+	 Nups57JSIdwhMnG90b9iTYdPJdicXsRPsYFiJ4bY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgCSAal (ORCPT
+        id S1727162AbgCSAcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 20:30:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46816 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 20:32:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgCSAal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 20:30:41 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        id S1726596AbgCSAcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 20:32:06 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4441E2076C;
-        Thu, 19 Mar 2020 00:30:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C86952076C;
+        Thu, 19 Mar 2020 00:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584577840;
-        bh=lGgOA8i9jqfs6+LhGMKQbt8ZockuHa4KYi8DijDb9RM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I8XA+ek/ePQChr2azNKS8Pf09LUP95nJo4TgNt/1yTH1WEtvqN+mTNWIsuWIktOWI
-         Fe3Pflwm6UytXRO3JVWX58IuV7L4/vb/AzKT4fhWWgflOyzHcR8obIWbeEThDnHFOl
-         QL2gum5qOCMvBHFEhEC2wfQtuxBo+mkQUy/spfBw=
-Date:   Wed, 18 Mar 2020 17:30:38 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ard Biesheuvel <ardb@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH URGENT crypto] crypto: arm64/chacha - correctly walk
- through blocks
-Message-ID: <20200319003038.GG2334@sol.localdomain>
-References: <20200318234518.83906-1-Jason@zx2c4.com>
- <20200319002359.GF2334@sol.localdomain>
+        s=default; t=1584577925;
+        bh=luwv1tWhVqWBgIzABSQPeSxHDt0MZSFdSU+ZcgevEAI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=zfhlQBQI6Oaz0sVeNTVLRYb7NBfhPMAnKPnycY4eREt/q/C0bT0kVmfEiK++JkI6U
+         GNQjC93HL3Nuq5KNve5I0MU1tj747t/uV7ytpvj5bs8KjU0c3RCAt0GzR1/DVpex7v
+         DJHmmJFHe5X0s5KuY1Mbty4nqs1OUWO6O6q61RjI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319002359.GF2334@sol.localdomain>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200318133213.1041-1-ansuelsmth@gmail.com>
+References: <20200318133213.1041-1-ansuelsmth@gmail.com>
+Subject: Re: [PATCH] ARM: dts: qcom: add scm definition
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+To:     Andy Gross <agross@kernel.org>, Ansuel Smith <ansuelsmth@gmail.com>
+Date:   Wed, 18 Mar 2020 17:32:05 -0700
+Message-ID: <158457792505.152100.5245855143436847803@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 05:24:01PM -0700, Eric Biggers wrote:
-> Hi Jason,
-> 
-> On Wed, Mar 18, 2020 at 05:45:18PM -0600, Jason A. Donenfeld wrote:
-> > Prior, passing in chunks of 2, 3, or 4, followed by any additional
-> > chunks would result in the chacha state counter getting out of sync,
-> > resulting in incorrect encryption/decryption, which is a pretty nasty
-> > crypto vuln, dating back to 2018. WireGuard users never experienced this
-> > prior, because we have always, out of tree, used a different crypto
-> > library, until the recent Frankenzinc addition. This commit fixes the
-> > issue by advancing the pointers and state counter by the actual size
-> > processed.
-> > 
-> > Fixes: f2ca1cbd0fb5 ("crypto: arm64/chacha - optimize for arbitrary length inputs")
-> > Reported-and-tested-by: Emil Renner Berthing <kernel@esmil.dk>
-> > Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > Cc: stable@vger.kernel.org
-> 
-> Thanks for fixing this!  We definitely should get this fix to Linus for 5.6.
-> But I don't think your description of this bug dating back to 2018 is accurate,
-> because this bug only affects the new library interface to ChaCha20 which was
-> added in v5.5.  In the "regular" crypto API case, the "walksize" is set to
-> '5 * CHACHA_BLOCK_SIZE', and chacha_doneon() is guaranteed to be called with a
-> multiple of '5 * CHACHA_BLOCK_SIZE' except at the end.  Thus the code worked
-> fine with the regular crypto API.
+Quoting Ansuel Smith (2020-03-18 06:32:14)
+> Add missing scm definition for ipq806x soc
 
-So I think it's actually:
+Would be good to put ipq8064 somewhere in the subject.
 
-Fixes: b3aad5bad26a ("crypto: arm64/chacha - expose arm64 ChaCha routine as library function")
-Cc: <stable@vger.kernel.org> # v5.5+
+>=20
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  arch/arm/boot/dts/qcom-ipq8064.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
