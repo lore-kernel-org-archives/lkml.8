@@ -2,125 +2,139 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83476C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F168C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4D720740
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E824E20740
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:49:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2UpNnFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgCSXrq (ORCPT
+        id S1727238AbgCSXtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:47:46 -0400
-Received: from mga04.intel.com ([192.55.52.120]:23507 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgCSXrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:47:46 -0400
-IronPort-SDR: 9dD2uojPZvTES1JeE4uKY8crjQ//qthW79N8IbYrDZjW2g2W3rv7VzHHTqZIBeGdTrcjYmQx7F
- c3DYXtX0jLog==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 16:47:45 -0700
-IronPort-SDR: bHiYt5HDMIE9YwlgXNYceQMPMy1leuD0nyfCae+QpsBK3aDPbY2OM/ttnZi/gQiGEcEYRWqsQy
- /wmgw4ygKKLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,573,1574150400"; 
-   d="scan'208";a="263895304"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga002.jf.intel.com with ESMTP; 19 Mar 2020 16:47:45 -0700
-Date:   Thu, 19 Mar 2020 16:47:44 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] nvdimm: nd.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200319234744.GA1688758@iweiny-DESK2.sc.intel.com>
-References: <20200319230937.GA16648@embeddedor.com>
+        Thu, 19 Mar 2020 19:49:17 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42622 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCSXtR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 19:49:17 -0400
+Received: by mail-oi1-f195.google.com with SMTP id 13so4687281oiy.9
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:49:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=O6UYEuu9USYd3Lm4ZwOGt6AHTZhdq8dyDYUaZFKRfAw=;
+        b=R2UpNnFWF9Dcbu0Bjkayq97kdYaixurxyQKhaCoIjtSRcIa919RhSx3VsZsz0dfqw6
+         EgVjfgOsTMDJuVMH0Ig8bmC5VFUyPYxrM7pjaqc4lUKZbXOpHFK6Os5JvTOkxMA40lDY
+         oOk8gbdLw9FI0bNHGs1OOm1Dh8C8keAnChC2meNY4KMWlRfuOtQxr7vZRZ4D2nBE10iy
+         3ManvCKP09sfNk8jbCwmlnhwSnOMwp1caW3vqbfBPUdGR6nkbQZy+WFMLu5ljNoazr5W
+         mMbzX46wOBJ/1l4m1TCfkbswrYRYOaeLs5cMaU9LMWYFMHoUkaSlXy14Kz7+XCaDy6YI
+         SG2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=O6UYEuu9USYd3Lm4ZwOGt6AHTZhdq8dyDYUaZFKRfAw=;
+        b=WUaN3Vgue9ZE7V+GV4iXZtvp89Uh6CNRLpvbTS8N7eAodL9CKyuRsI151hm+kzLJDQ
+         u7F+8NaX//xY6ZUnBS04Tlfyi24mLhywKJStQXhHILbj9xOmSKNtF4L5EWQBaXd/50aK
+         jVlK4/x2pWdr9L44b0FCPY6E18N/u/WpSNGLezmHo6DCFnBsvA6u/2/J4/wO9UVoSCez
+         0ygragx9T5YbqDwbb1oujiynjeFwSrpVCTEBaURsQQdKuNWzjFYwAtFPlt4c360cra0S
+         AYUA7EE+bABK3KTBj3x+IIJwRPvS5OvP+ZCzxcAI8BFOEABSjf9bTZckIB+2gPeQ4Ioe
+         zlIw==
+X-Gm-Message-State: ANhLgQ3HhiBoW8U/+O/Q/tT+RJduwbOh27dYHx1VR8WEy05G0qIVOvaG
+        P/603LA8NESxC6qYbupdqesyxiEQZjgZ900j6J4=
+X-Google-Smtp-Source: ADFU+vuROdl+ozSkhfloI3j/e9o4YsKIhz3pHbuyhzobsGDKP8Fp2eQ0Iy+/WRBhjRMDF7/+lgmkxiQS4v6eXJh7DOg=
+X-Received: by 2002:aca:1e1a:: with SMTP id m26mr4459581oic.39.1584661756692;
+ Thu, 19 Mar 2020 16:49:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319230937.GA16648@embeddedor.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+From:   ron minnich <rminnich@gmail.com>
+Date:   Thu, 19 Mar 2020 16:49:05 -0700
+Message-ID: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com>
+Subject: [PATCH 1/1] x86 support for the initrd= command line option
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
+        mjg59@google.com,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 06:09:37PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
+In LinuxBoot systems, a kernel and initramfs are loaded into FLASH
+to replace proprietary firmware/BIOS code. Space being at a premium
+on some systems, the kernel and initramfs must be place in whatever
+open corners of the FLASH exist. These corners are not always
+easily used.
 
-"won't" be affected?
+For example, on Intel-based UEFI systems, the Management Engine
+(ME) is given half the FLASH, though it uses very little, as little
+as 1.25MiB.  Not only is 2.75MiB of an 8MiB part unused; but
+10.75MiB of a 16MiB part is unused. This space can be recovered by
+a number of tools, e.g. utk and its tighten_me command, and if
+Linux can be told where the space is Linux can load an initrd from
+it.
 
-My reading of [1] indicates that this change will break the allocation in
-nd_region_activate() because sizeof() can no longer be used on the base
-structure?
+In an ideal case, we would take the space from the ME and add it to
+a FLASH-based filesystem.  While UEFI does have filesystem-like
+structures, this recovered space can only be added to its "file
+system" by rebuilding UEFI from source or writing a UEFI device
+driver. Both these options are impractical in most cases. The space
+can only be referenced as a physical address.
 
-What am I missing?
+There is code in the core that allows specification of the initrd
+as a physical address and size, but it is not supported on all
+architectures. This patch adds support for initrd= to the x86.
 
-Ira
+For debugging and recovery purposes, if initrd= is present in the
+command line, other existing initrd sources should still have
+higher priority. The initramfs in flash might be damaged or
+broken. Hence, it must still be possible to load a kernel and
+initramfs with a conventional bootloader, or even load the
+FLASH-based kernel with a different initramfs; or boot a
+kernel and let it use the initrd in FLASH.
 
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/nvdimm/nd.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-> index c4d69c1cce55..85dbb2a322b9 100644
-> --- a/drivers/nvdimm/nd.h
-> +++ b/drivers/nvdimm/nd.h
-> @@ -39,7 +39,7 @@ struct nd_region_data {
->  	int ns_count;
->  	int ns_active;
->  	unsigned int hints_shift;
-> -	void __iomem *flush_wpq[0];
-> +	void __iomem *flush_wpq[];
->  };
->  
->  static inline void __iomem *ndrd_get_flush_wpq(struct nd_region_data *ndrd,
-> @@ -157,7 +157,7 @@ struct nd_region {
->  	struct nd_interleave_set *nd_set;
->  	struct nd_percpu_lane __percpu *lane;
->  	int (*flush)(struct nd_region *nd_region, struct bio *bio);
-> -	struct nd_mapping mapping[0];
-> +	struct nd_mapping mapping[];
->  };
->  
->  struct nd_blk_region {
-> -- 
-> 2.23.0
-> 
+In support of that priority ordering, this patch sets the ramdisk
+image pointer to phys_initrd_start only if it is not already set;
+and sets ramdisk_size to phys_initrd_size only if it is not already
+set.
+
+It has been tested extensively in LinuxBoot environments.
+
+Signed-off-by: Ronald G. Minnich <rminnich@gmail.com>
+---
+ arch/x86/kernel/setup.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index a74262c71484..1b04ef8ea12d 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -237,6 +237,9 @@ static u64 __init get_ramdisk_image(void)
+
+     ramdisk_image |= (u64)boot_params.ext_ramdisk_image << 32;
+
++    if (ramdisk_image == 0) {
++        ramdisk_image = phys_initrd_start;
++    }
+     return ramdisk_image;
+ }
+ static u64 __init get_ramdisk_size(void)
+@@ -245,6 +248,9 @@ static u64 __init get_ramdisk_size(void)
+
+     ramdisk_size |= (u64)boot_params.ext_ramdisk_size << 32;
+
++    if (ramdisk_size == 0) {
++        ramdisk_size = phys_initrd_size;
++    }
+     return ramdisk_size;
+ }
+
+-- 
+2.17.1
