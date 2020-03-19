@@ -2,231 +2,102 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCA1C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EC1C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46228206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9251B20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:00:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="o0jRAuHP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgCSE6v (ORCPT
+        id S1726968AbgCSFAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 00:58:51 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48746 "EHLO mga14.intel.com"
+        Thu, 19 Mar 2020 01:00:06 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35491 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgCSE6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 00:58:51 -0400
-IronPort-SDR: 3BcXqSKeq2bRbNvVAmkBD751l6GR1FPikM6smPQfT7IHpw48eLAD02NWhkCG9c3p/oxiizbCvI
- 2zgWABqtX/Yg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 21:58:50 -0700
-IronPort-SDR: SNckE4tX452DJ+4L9+XxjWdEBU5fN/ziE9p1VG1MPKwXf1f/OsLr2XxemVFLfn1BVvtfU5fWW5
- 8oWqZL7ba4wg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,570,1574150400"; 
-   d="scan'208";a="291528604"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Mar 2020 21:58:49 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jEnGa-0006ZA-W7; Thu, 19 Mar 2020 12:58:48 +0800
-Date:   Thu, 19 Mar 2020 12:58:37 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- fafdc445db3c5cfc46843a3b61ad10660ecdfd60
-Message-ID: <5e72fbfd.ZXazGYPZ4ZrajlIl%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725874AbgCSFAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 01:00:06 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48jZTZ1tJcz9sPR;
+        Thu, 19 Mar 2020 16:00:02 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584594003;
+        bh=aTbHR7hHUN6fU6enhevF6rNEujrRIXd6MP2kaGHM6ps=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=o0jRAuHPTG7y3TjFRIfqgvymrH9m/fme+Jp30Ajqu21qSWhQqDEUytv3LpXEOx6t/
+         c7nLrs4jJfrqg2oxcWwTMMp9aHMhmXOkm6EPt3rWzMmilW2ny2+CBovAu95NNznj9A
+         YFjcNlLCx6g4pwTUeSFPH7SMhq6c7uco0PeANTvRiP3bmtsSHJ3XeutqNSrBWeSUFo
+         g/lC7kZe4rrF4j4icfWZScp8qw3qvPgc24inkaF+O2fS+4ptQvbYteVpgc68Y6ZIBQ
+         GzzB7ZFWJYpoOvOefHRuliCiBYhXdKHpZ2yTrNWNe5tmTSWpB7UY4GEorz2Bn1MoeP
+         DDj/kyIWvzpkw==
+Date:   Thu, 19 Mar 2020 15:59:56 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20200319155956.1e916454@canb.auug.org.au>
+In-Reply-To: <CA+h21hq1pVEJCZHzM4mCPEWhOL-_ugJ5h=EA4g=Lv5sweXGnAA@mail.gmail.com>
+References: <20200311123318.51eff802@canb.auug.org.au>
+        <CA+h21hq1pVEJCZHzM4mCPEWhOL-_ugJ5h=EA4g=Lv5sweXGnAA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/aKmygoOAv6BkFT.MF31uU50";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: fafdc445db3c5cfc46843a3b61ad10660ecdfd60  rcu-tasks: Add grace-period and IPI counts to statistics
+--Sig_/aKmygoOAv6BkFT.MF31uU50
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-elapsed time: 482m
+Hi Vladimir,
 
-configs tested: 164
-configs skipped: 0
+[Sorry fr the slow response]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+On Wed, 11 Mar 2020 11:50:17 +0200 Vladimir Oltean <olteanv@gmail.com> wrot=
+e:
+>
+> What would be the takeaway here? I did bring the fact that it will
+> conflict to David's attention here, not sure what else should have
+> been done:
+> https://www.spinics.net/lists/netdev/msg636207.html
+> The conflict resolution looks fine btw, I've tested linux-next and it
+> also works.
 
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-riscv                          rv32_defconfig
-riscv                            allyesconfig
-microblaze                      mmu_defconfig
-um                                  defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200318
-x86_64               randconfig-a002-20200318
-x86_64               randconfig-a003-20200318
-i386                 randconfig-a001-20200318
-i386                 randconfig-a002-20200318
-i386                 randconfig-a003-20200318
-alpha                randconfig-a001-20200318
-m68k                 randconfig-a001-20200318
-mips                 randconfig-a001-20200318
-nds32                randconfig-a001-20200318
-parisc               randconfig-a001-20200318
-riscv                randconfig-a001-20200318
-c6x                  randconfig-a001-20200318
-h8300                randconfig-a001-20200318
-microblaze           randconfig-a001-20200318
-nios2                randconfig-a001-20200318
-sparc64              randconfig-a001-20200318
-csky                 randconfig-a001-20200318
-openrisc             randconfig-a001-20200318
-s390                 randconfig-a001-20200318
-sh                   randconfig-a001-20200318
-xtensa               randconfig-a001-20200318
-x86_64               randconfig-b001-20200318
-x86_64               randconfig-b002-20200318
-x86_64               randconfig-b003-20200318
-i386                 randconfig-b001-20200318
-i386                 randconfig-b002-20200318
-i386                 randconfig-b003-20200318
-x86_64               randconfig-c001-20200318
-x86_64               randconfig-c002-20200318
-x86_64               randconfig-c003-20200318
-i386                 randconfig-c001-20200318
-i386                 randconfig-c002-20200318
-i386                 randconfig-c003-20200318
-x86_64               randconfig-d001-20200318
-x86_64               randconfig-d002-20200318
-x86_64               randconfig-d003-20200318
-i386                 randconfig-d001-20200318
-i386                 randconfig-d002-20200318
-i386                 randconfig-d003-20200318
-x86_64               randconfig-e001-20200318
-x86_64               randconfig-e002-20200318
-x86_64               randconfig-e003-20200318
-i386                 randconfig-e001-20200318
-i386                 randconfig-e002-20200318
-i386                 randconfig-e003-20200318
-x86_64               randconfig-f001-20200318
-x86_64               randconfig-f002-20200318
-x86_64               randconfig-f003-20200318
-i386                 randconfig-f001-20200318
-i386                 randconfig-f002-20200318
-i386                 randconfig-f003-20200318
-x86_64               randconfig-g001-20200318
-x86_64               randconfig-g002-20200318
-x86_64               randconfig-g003-20200318
-i386                 randconfig-g001-20200318
-i386                 randconfig-g002-20200318
-i386                 randconfig-g003-20200318
-x86_64               randconfig-h001-20200318
-x86_64               randconfig-h002-20200318
-x86_64               randconfig-h003-20200318
-i386                 randconfig-h001-20200318
-i386                 randconfig-h002-20200318
-i386                 randconfig-h003-20200318
-arc                  randconfig-a001-20200318
-arm                  randconfig-a001-20200318
-arm64                randconfig-a001-20200318
-ia64                 randconfig-a001-20200318
-powerpc              randconfig-a001-20200318
-sparc                randconfig-a001-20200318
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+David has now merged the two trees and resolved this.  My notification
+is just so that people are aware of conflicts in separate trees that
+usually only come together in Linus' tree.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/aKmygoOAv6BkFT.MF31uU50
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5y/EwACgkQAVBC80lX
+0Gwcnwf/Y/1g384Izgi4aLvLdFAw7MtRWrwTnTUWPbITPyFb3/N0Gqr+18wLDWsq
+tN/m2dEWW5vxPhKt5f6GP99eZldcmJjxGCJwseix/LZNgtIbynZuf8Y2txNMaBoe
+fKqgzlb28t8BfKdXvnvsY0EhUJMqyg8NMCyx1eK0BgfNlWdURf/qU+kRo87l4Ptg
+soXxtL3ldR1pbu924PzCnCDpwyahDCPlEAoCHRsU5WVpaPepzyb2dAu4YBG1Y5AP
+tWPrjAxirMfzJPWbv0ME7rsk8QT5knPnPc8K+gpuTeAJ6Vk3SjlSFyWz2sLyjLxf
+ujzMaw75yyZbCnmSzrCVzTVnVL+DWw==
+=nXma
+-----END PGP SIGNATURE-----
+
+--Sig_/aKmygoOAv6BkFT.MF31uU50--
