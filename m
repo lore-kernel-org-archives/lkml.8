@@ -2,87 +2,86 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B85C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E383BC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE64320409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B8A208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:40:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="afKhusDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgCSRj3 (ORCPT
+        id S1727738AbgCSRkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:39:29 -0400
-Received: from mga14.intel.com ([192.55.52.115]:50665 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727738AbgCSRj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:39:28 -0400
-IronPort-SDR: lGRe65Fvn0RIp5w8PoNxDLU6MYG7n4/XUEVCNzIPF4qnCF+BRynnuhLGBPYs4IWiUFMnhwt7lc
- dmVYY+/UV2/Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 10:39:28 -0700
-IronPort-SDR: ZPRFzhgSiT9jQbcRgtc1cApiGfS2EB2VD6ZV4hvWWsCwVorO9ZXxMC8HrCVv1XwlzXPZmgI+0q
- J1WkJpGjamVA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="444657304"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Mar 2020 10:39:27 -0700
-Date:   Thu, 19 Mar 2020 10:39:27 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     syzbot <syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com>,
-        bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
-Subject: Re: WARNING in vcpu_enter_guest
-Message-ID: <20200319173927.GD11305@linux.intel.com>
-References: <000000000000f965b8059877e5e6@google.com>
- <00000000000081861f05a132b9cd@google.com>
- <20200319144952.GB11305@linux.intel.com>
- <20be9560-fce7-1495-3a83-e2b56dbc2389@redhat.com>
- <20200319173549.GC11305@linux.intel.com>
+        Thu, 19 Mar 2020 13:40:37 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:26528 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727212AbgCSRkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:40:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584639636;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rDGB2gISJXumrloU25X+e/BYgSZE7+VD3fP0lUQQ0zM=;
+        b=afKhusDRZv2YOBDHQP8J4oo8T4QFxH0AJPKtr18Rng3xTX2xpNe9fFZGHlC9gzh3/VXKgB
+        2UHtpaE8BC5qI753N2wU67+g5gcRjELbnb+M1yxAYxvagUoRMvr1e5yN/wMNymSLvXHSwU
+        nozXsp6OCAxGjXA37HH4ChwNOpWMyIM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-259-wBhfegWhPqmK0Zf4qjgI8w-1; Thu, 19 Mar 2020 13:40:34 -0400
+X-MC-Unique: wBhfegWhPqmK0Zf4qjgI8w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF7D8190A7A0;
+        Thu, 19 Mar 2020 17:40:32 +0000 (UTC)
+Received: from treble (unknown [10.10.110.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 63D2760BF7;
+        Thu, 19 Mar 2020 17:40:31 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 12:40:28 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: linux-next: Tree for Mar 18 (objtool)
+Message-ID: <20200319174028.azzaisoj5gbss7zk@treble>
+References: <20200318220920.48df2e76@canb.auug.org.au>
+ <d7dc5b4a-9a7e-ccf7-e00e-2e7f0e79a9bc@infradead.org>
+ <20200318182352.2dgwwl4ugbwndi4x@treble>
+ <20200318200542.GK20730@hirez.programming.kicks-ass.net>
+ <20200319173101.wufpymi7obhqgoqd@treble>
+ <20200319173326.oj4qs24x4ly5lrgt@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200319173549.GC11305@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200319173326.oj4qs24x4ly5lrgt@treble>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 10:35:49AM -0700, Sean Christopherson wrote:
-> On Thu, Mar 19, 2020 at 04:14:55PM +0100, Paolo Bonzini wrote:
-> > On 19/03/20 15:49, Sean Christopherson wrote:
-> > > On Thu, Mar 19, 2020 at 03:35:16AM -0700, syzbot wrote:
-> > >> syzbot has found a reproducer for the following crash on:
-> > >>
-> > >> HEAD commit:    5076190d mm: slub: be more careful about the double cmpxch..
-> > >> git tree:       upstream
-> > >> console output: https://syzkaller.appspot.com/x/log.txt?x=143ca61de00000
-> > >> kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
-> > >> dashboard link: https://syzkaller.appspot.com/bug?extid=00be5da1d75f1cc95f6b
-> > >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > >> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10bb4023e00000
-> > >>
-> > >> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > >> Reported-by: syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com
-> > > Reproduced with a little tweaking of the reproducer, debug in progress.
-> > > 
-> > 
-> > I think the WARN_ON at x86.c:2447 is just bogus.  You can always get it
-> > to trigger if garbage is passed to KVM_SET_CLOCK.
+On Thu, Mar 19, 2020 at 12:33:31PM -0500, Josh Poimboeuf wrote:
+> On Thu, Mar 19, 2020 at 12:31:05PM -0500, Josh Poimboeuf wrote:
+> > ... except the __builtin_trap() UD2 seems to be coming *after* the BUG
+> > UD2.  Could it be the BUG UD2 itself which is convincing UBSAN to add
+> > the __builtin_trap()?
 > 
-> Yep.  I worked through logic/math, mostly to gain a wee bit of knowledge
-> about the clock stuff, and it's sound.  The KVM_SET_CLOCK from syzkaller
-> is simply making time go backwards.
+> Actually I suspect it's the __builtin_unreachable() annotation which is
+> making UBSAN add the __builtin_trap()...  because I don't see any double
+> UD2s for WARNs.
 
-Actually, would it make sense to return -EINVAL for KVM_SET_CLOCK if the
-user tries to make kvmclock_offset go backwards?
+Scratch that theory, removing the __builtin_unreachable() from
+unreachable() doesn't make the double UD2 go away.
+
+-- 
+Josh
+
