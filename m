@@ -2,132 +2,135 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261B9C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E67C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8FC206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:51:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="PotKNb+o"
+	by mail.kernel.org (Postfix) with ESMTP id 0D1042076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:52:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584658373;
+	bh=4iJFtuBMo87wnt6wZpaiJ+4GDnysLlZVMy3uErkY7YI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=BwE1upkHD6f7tGPmAh5PzKPQC5siXokPlcK+Z6Hr8q+6qbroy5J88lzUlphxtjn2V
+	 rop0EKVPWt5CPer1Ud46+CajE1mwaw7zTYcXTSLik+St+MsGFGQS1Nwkh/xDkB2P1B
+	 HBY7dti1VZuSmpRlf4FrRrsET6jzEgot+GExWFmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbgCSWvh (ORCPT
+        id S1727617AbgCSWww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 18:51:37 -0400
-Received: from gateway31.websitewelcome.com ([192.185.143.38]:23354 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726867AbgCSWvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 18:51:36 -0400
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id EA7576036F
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 17:51:35 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id F40ljMW9XXVkQF40ljdcRf; Thu, 19 Mar 2020 17:51:35 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3GUe41RpPlWxlU4UBdpwU27X24kKmhrLlmW78YqosvU=; b=PotKNb+ojypKAQcTZXqn6if3jp
-        Srm3U3QXP+I2eCm3vRPlhyNZvf+iMxuwAbk8RNsE/azcr+xZ4O2g3wyazkYL5U7ufaSPXnwxmTdtR
-        JDqNhHWzZxzBw9Y3D2YbDLbenraJDPcPfg9DXxtWbUSx8/xa8UtGsBiMOclsqHxfGrTsdYjQ9DiC3
-        5xFy1289MlR6RdXR4hL9jY291Kan/s7WO+xylOcX1JJjiV/bv9q3vnr1x0Y32AWtyv9Lq3o0keQKM
-        tx8WI2gC5VtMPenvh5fVDfjqLnk8SzoMbiYe0HBI7+LRgVfc34WjXzlbfNVQB78md2Duj2oHc3any
-        hiyLBVZQ==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:54002 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jF40k-002HVt-1I; Thu, 19 Mar 2020 17:51:34 -0500
-Date:   Thu, 19 Mar 2020 17:51:33 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] atmel: at76c50x-usb.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200319225133.GA29672@embeddedor.com>
+        Thu, 19 Mar 2020 18:52:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726856AbgCSWwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 18:52:51 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A1D3206D7;
+        Thu, 19 Mar 2020 22:52:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584658370;
+        bh=4iJFtuBMo87wnt6wZpaiJ+4GDnysLlZVMy3uErkY7YI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nGS71f+Cp6K/f3h8pftZt6yFGhSxOmsB4UdOy/rTqcDXGOdoeG2TB1pompXBz2RPG
+         D4B2TYl48sWzsbD5c6/UvfBsrJVewO3hpPiIX/wn+jvjzwsiiy7HG2zs4TGvg8kWEn
+         YvUAD7vrOWbRRddyrmAPj53DST+AXScperyD2M9c=
+Date:   Thu, 19 Mar 2020 17:52:48 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     bjorn@helgaas.com,
+        "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [PATCH v17 06/12] Documentation: PCI: Remove reset_link
+ references
+Message-ID: <20200319225248.GA12599@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.218.116.241
-X-Source-L: No
-X-Exim-ID: 1jF40k-002HVt-1I
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:54002
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 54
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20200317170654.GA23125@infradead.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Tue, Mar 17, 2020 at 10:06:54AM -0700, Christoph Hellwig wrote:
+> On Tue, Mar 17, 2020 at 11:03:36AM -0500, Bjorn Helgaas wrote:
+> > On Tue, Mar 17, 2020 at 10:09 AM Christoph Hellwig <hch@infradead.org> wrote:
+> > > On Tue, Mar 17, 2020 at 08:05:50AM -0700, Kuppuswamy, Sathyanarayanan wrote:
+> > > > > > From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> > > > >
+> > > > > This should be folded into the patch removing the method.
+> > > > This is also folded in the mentioned patch.
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=review/edr&id=7a18dc6506f108db3dc40f5cd779bc15270c4183
+> > >
+> > > I can't find that series anywhere on the list.  What did I miss?
+> > 
+> > We've still been discussing other issues (access to AER registers,
+> > synchronization between EDR and hotplug, etc) in other parts of this
+> > thread.  The git branch Sathy pointed to above is my local branch.
+> > I'll send it to the list before putting it into -next, but I wanted to
+> > make progress on some of these other issues first.
+> 
+> A few nitpicks:
+> 
+> PCI/ERR: Update error status after reset_link():
+> 
+>  - there are two "if (state == pci_channel_io_frozen)"
+>    right after each other now, merging them would make the code a little
+>    easier to read.
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Merged, thanks.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+> PCI/DPC: Move DPC data into struct pci_dev:
+> 
+>  - dpc_rp_extensions probable should be a "bool : 1"
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+I actually had not seen "bool : 1" used, but you're right, there are
+several.  There aren't any in drivers/pci, though, so I'm inclined to
+stay consistent with "unsigned int : 1" unless there's an advantage,
+and then I'd probably convert all of drivers/pci over.
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+My rule of thumb has been [1], where Linus suggests "unsigned int
+percpu:1", but maybe that should be updated.
 
-This issue was found with the help of Coccinelle.
+> PCI/ERR: Remove service dependency in pcie_do_recovery():
+> 
+>  - as mentioned to Kuppuswamy the reset_cb is never NULL, and thus
+>    a lot of dead code in reset_link can be removed.
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+Agreed, thanks, I removed that dead code.
 
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/net/wireless/atmel/at76c50x-usb.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>    Also reset_link should be merged into pcie_do_recovery.  That
+>    would also enable to call the argument reset_link, which might be
+>    a bit more descriptive than reset_cb.
 
-diff --git a/drivers/net/wireless/atmel/at76c50x-usb.h b/drivers/net/wireless/atmel/at76c50x-usb.h
-index f56863403b05..746e64dfd8aa 100644
---- a/drivers/net/wireless/atmel/at76c50x-usb.h
-+++ b/drivers/net/wireless/atmel/at76c50x-usb.h
-@@ -151,7 +151,7 @@ struct at76_command {
- 	u8 cmd;
- 	u8 reserved;
- 	__le16 size;
--	u8 data[0];
-+	u8 data[];
- } __packed;
- 
- /* Length of Atmel-specific Rx header before 802.11 frame */
--- 
-2.23.0
+I didn't do this because it sounds like it might be a separate patch.
+But maybe Sathy can do this in the next round?
 
+> PCI/DPC: Cache DPC capabilities in pci_init_capabilities():
+> 
+>  - I think the pci_dpc_init could be cleaned up a bit to:
+> 
+> 	...
+> 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
+> 	if (!(cap & PCI_EXP_DPC_CAP_RP_EXT))
+> 		return;
+> 	pdev->dpc_rp_extensions = true;
+> 	pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
+> 	...
+
+Nice, thanks!  I made this change, too.
+
+Thanks a lot for reviewing this!
+
+Bjorn
+
+
+[1] https://lore.kernel.org/linux-arm-kernel/CA+55aFxnePDimkVKVtv3gNmRGcwc8KQ5mHYvUxY8sAQg6yvVYg@mail.gmail.com/
