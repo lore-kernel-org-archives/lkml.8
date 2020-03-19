@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F053C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6486C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A7121556
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2DB5215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623330;
-	bh=EYQOWPY8vAXWHUB6f4RQwDkcB1H0VABO48Stohkc0fA=;
+	s=default; t=1584623335;
+	bh=hedeAf0rV2LLKTPqhOfQDXEs8LfUKLz37sITMuILkOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OSWHkakTD6zhsLjdIo7Lx9ZftiyZrievKJs4hps/qfR0SubWFSLRl5BFcy2mi5TWU
-	 XaEwIHxkqhjQRod7T9DfEG22xVAuE9y2J91XP+Moc2pomHIxEE9QwW/tDEFFpY+jXs
-	 OQI0YdtSyGoRutKgkHqYXLcfugs20+KPdxdLxTMM=
+	b=MdhkuptobRgZUnRnRbQDRpo+Jz2IKplJNXxSGJJijpOC7PV/FYA3EEhvJRxDGRumk
+	 cEGibMNXbiIjBVY/62v+mGX1CstY//Zh8HnyaOncgXj/mePR895U+S4oXkVM2ubMSY
+	 TcGf06+TGm0m6Q3ChU0mQhsud6XKsm1myV2j1hKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgCSNIt (ORCPT
+        id S1728216AbgCSNIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:08:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53010 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:08:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728197AbgCSNIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:08:45 -0400
+        id S1727612AbgCSNIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:08:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C54172098B;
-        Thu, 19 Mar 2020 13:08:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B39B212CC;
+        Thu, 19 Mar 2020 13:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623324;
-        bh=EYQOWPY8vAXWHUB6f4RQwDkcB1H0VABO48Stohkc0fA=;
+        s=default; t=1584623330;
+        bh=hedeAf0rV2LLKTPqhOfQDXEs8LfUKLz37sITMuILkOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YjbLH5e3xWKVmvxIzxNSysyDUQ7KhY/XNDENQohTpk9PJUq5M8L7odTiZEtAy1IJq
-         cbkPwLqcHW5l3W70uz+eoAUsx69sLaAMPqyqnoo1EQqMH3/8MfJA778y7f5LbJKfCu
-         7w0qo5FZD2LsvpoQbg2cJPVkyXRoQ8a2DrgKdhX8=
+        b=eEdk2ZwufB20DRHkImLxzTb5K2RfZEmitgl63ZGF0qi2ugPEg79c48n3yucHcbwQK
+         R7500LlDrDmJNYx8CPScJmKdgpqkNxFWdGIrzar4nuvvtBIM6SnxyzS9OEmmM92VmQ
+         2fhgdrLCQ24sRXOyT63eHMCmOeDCpd/EpkFT6V1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Weinelt <martin@linuxlounge.net>,
+        syzbot+0cc629f19ccb8534935b@syzkaller.appspotmail.com,
         Sven Eckelmann <sven@narfation.org>,
-        Antonio Quartulli <a@unstable.cc>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 82/93] batman-adv: Reduce tt_global hash refcnt only for removed entry
-Date:   Thu, 19 Mar 2020 14:00:26 +0100
-Message-Id: <20200319123950.489055929@linuxfoundation.org>
+Subject: [PATCH 4.4 84/93] batman-adv: Avoid free/alloc race when handling OGM buffer
+Date:   Thu, 19 Mar 2020 14:00:28 +0100
+Message-Id: <20200319123951.145988947@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -63,69 +62,191 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sven Eckelmann <sven@narfation.org>
 
-commit f131a56880d10932931e74773fb8702894a94a75 upstream.
+commit 40e220b4218bb3d278e5e8cc04ccdfd1c7ff8307 upstream.
 
-The batadv_hash_remove is a function which searches the hashtable for an
-entry using a needle, a hashtable bucket selection function and a compare
-function. It will lock the bucket list and delete an entry when the compare
-function matches it with the needle. It returns the pointer to the
-hlist_node which matches or NULL when no entry matches the needle.
+Each slave interface of an B.A.T.M.A.N. IV virtual interface has an OGM
+packet buffer which is initialized using data from netdevice notifier and
+other rtnetlink related hooks. It is sent regularly via various slave
+interfaces of the batadv virtual interface and in this process also
+modified (realloced) to integrate additional state information via TVLV
+containers.
 
-The batadv_tt_global_free is not itself protected in anyway to avoid that
-any other function is modifying the hashtable between the search for the
-entry and the call to batadv_hash_remove. It can therefore happen that the
-entry either doesn't exist anymore or an entry was deleted which is not the
-same object as the needle. In such an situation, the reference counter (for
-the reference stored in the hashtable) must not be reduced for the needle.
-Instead the reference counter of the actually removed entry has to be
-reduced.
+It must be avoided that the worker item is executed without a common lock
+with the netdevice notifier/rtnetlink helpers. Otherwise it can either
+happen that half modified/freed data is sent out or functions modifying the
+OGM buffer try to access already freed memory regions.
 
-Otherwise the reference counter will underflow and the object might be
-freed before all its references were dropped. The kref helpers reported
-this problem as:
-
-  refcount_t: underflow; use-after-free.
-
-Fixes: 7683fdc1e886 ("batman-adv: protect the local and the global trans-tables with rcu")
-Reported-by: Martin Weinelt <martin@linuxlounge.net>
+Reported-by: syzbot+0cc629f19ccb8534935b@syzkaller.appspotmail.com
+Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/translation-table.c |   18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ net/batman-adv/bat_iv_ogm.c     |   57 +++++++++++++++++++++++++++++++++++-----
+ net/batman-adv/hard-interface.c |    2 +
+ net/batman-adv/types.h          |    2 +
+ 3 files changed, 55 insertions(+), 6 deletions(-)
 
---- a/net/batman-adv/translation-table.c
-+++ b/net/batman-adv/translation-table.c
-@@ -508,14 +508,26 @@ static void batadv_tt_global_free(struct
- 				  struct batadv_tt_global_entry *tt_global,
- 				  const char *message)
- {
-+	struct batadv_tt_global_entry *tt_removed_entry;
-+	struct hlist_node *tt_removed_node;
-+
- 	batadv_dbg(BATADV_DBG_TT, bat_priv,
- 		   "Deleting global tt entry %pM (vid: %d): %s\n",
- 		   tt_global->common.addr,
- 		   BATADV_PRINT_VID(tt_global->common.vid), message);
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -316,14 +316,18 @@ static int batadv_iv_ogm_iface_enable(st
+ 	unsigned char *ogm_buff;
+ 	u32 random_seqno;
  
--	batadv_hash_remove(bat_priv->tt.global_hash, batadv_compare_tt,
--			   batadv_choose_tt, &tt_global->common);
--	batadv_tt_global_entry_free_ref(tt_global);
-+	tt_removed_node = batadv_hash_remove(bat_priv->tt.global_hash,
-+					     batadv_compare_tt,
-+					     batadv_choose_tt,
-+					     &tt_global->common);
-+	if (!tt_removed_node)
++	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
++
+ 	/* randomize initial seqno to avoid collision */
+ 	get_random_bytes(&random_seqno, sizeof(random_seqno));
+ 	atomic_set(&hard_iface->bat_iv.ogm_seqno, random_seqno);
+ 
+ 	hard_iface->bat_iv.ogm_buff_len = BATADV_OGM_HLEN;
+ 	ogm_buff = kmalloc(hard_iface->bat_iv.ogm_buff_len, GFP_ATOMIC);
+-	if (!ogm_buff)
++	if (!ogm_buff) {
++		mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
+ 		return -ENOMEM;
++	}
+ 
+ 	hard_iface->bat_iv.ogm_buff = ogm_buff;
+ 
+@@ -335,36 +339,60 @@ static int batadv_iv_ogm_iface_enable(st
+ 	batadv_ogm_packet->reserved = 0;
+ 	batadv_ogm_packet->tq = BATADV_TQ_MAX_VALUE;
+ 
++	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
++
+ 	return 0;
+ }
+ 
+ static void batadv_iv_ogm_iface_disable(struct batadv_hard_iface *hard_iface)
+ {
++	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
++
+ 	kfree(hard_iface->bat_iv.ogm_buff);
+ 	hard_iface->bat_iv.ogm_buff = NULL;
++
++	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
+ }
+ 
+ static void batadv_iv_ogm_iface_update_mac(struct batadv_hard_iface *hard_iface)
+ {
+ 	struct batadv_ogm_packet *batadv_ogm_packet;
+-	unsigned char *ogm_buff = hard_iface->bat_iv.ogm_buff;
++	void *ogm_buff;
+ 
+-	batadv_ogm_packet = (struct batadv_ogm_packet *)ogm_buff;
++	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
++
++	ogm_buff = hard_iface->bat_iv.ogm_buff;
++	if (!ogm_buff)
++		goto unlock;
++
++	batadv_ogm_packet = ogm_buff;
+ 	ether_addr_copy(batadv_ogm_packet->orig,
+ 			hard_iface->net_dev->dev_addr);
+ 	ether_addr_copy(batadv_ogm_packet->prev_sender,
+ 			hard_iface->net_dev->dev_addr);
++
++unlock:
++	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
+ }
+ 
+ static void
+ batadv_iv_ogm_primary_iface_set(struct batadv_hard_iface *hard_iface)
+ {
+ 	struct batadv_ogm_packet *batadv_ogm_packet;
+-	unsigned char *ogm_buff = hard_iface->bat_iv.ogm_buff;
++	void *ogm_buff;
+ 
+-	batadv_ogm_packet = (struct batadv_ogm_packet *)ogm_buff;
++	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
++
++	ogm_buff = hard_iface->bat_iv.ogm_buff;
++	if (!ogm_buff)
++		goto unlock;
++
++	batadv_ogm_packet = ogm_buff;
+ 	batadv_ogm_packet->flags = BATADV_PRIMARIES_FIRST_HOP;
+ 	batadv_ogm_packet->ttl = BATADV_TTL;
++
++unlock:
++	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
+ }
+ 
+ /* when do we schedule our own ogm to be sent */
+@@ -899,7 +927,11 @@ batadv_iv_ogm_slide_own_bcast_window(str
+ 	}
+ }
+ 
+-static void batadv_iv_ogm_schedule(struct batadv_hard_iface *hard_iface)
++/**
++ * batadv_iv_ogm_schedule_buff() - schedule submission of hardif ogm buffer
++ * @hard_iface: interface whose ogm buffer should be transmitted
++ */
++static void batadv_iv_ogm_schedule_buff(struct batadv_hard_iface *hard_iface)
+ {
+ 	struct batadv_priv *bat_priv = netdev_priv(hard_iface->soft_iface);
+ 	unsigned char **ogm_buff = &hard_iface->bat_iv.ogm_buff;
+@@ -910,6 +942,8 @@ static void batadv_iv_ogm_schedule(struc
+ 	u16 tvlv_len = 0;
+ 	unsigned long send_time;
+ 
++	lockdep_assert_held(&hard_iface->bat_iv.ogm_buff_mutex);
++
+ 	primary_if = batadv_primary_if_get_selected(bat_priv);
+ 
+ 	if (hard_iface == primary_if) {
+@@ -961,6 +995,17 @@ out:
+ 		batadv_hardif_free_ref(primary_if);
+ }
+ 
++static void batadv_iv_ogm_schedule(struct batadv_hard_iface *hard_iface)
++{
++	if (hard_iface->if_status == BATADV_IF_NOT_IN_USE ||
++	    hard_iface->if_status == BATADV_IF_TO_BE_REMOVED)
 +		return;
 +
-+	/* drop reference of remove hash entry */
-+	tt_removed_entry = hlist_entry(tt_removed_node,
-+				       struct batadv_tt_global_entry,
-+				       common.hash_entry);
-+	batadv_tt_global_entry_free_ref(tt_removed_entry);
- }
++	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
++	batadv_iv_ogm_schedule_buff(hard_iface);
++	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
++}
++
+ /**
+  * batadv_iv_ogm_orig_update - use OGM to update corresponding data in an
+  *  originator
+--- a/net/batman-adv/hard-interface.c
++++ b/net/batman-adv/hard-interface.c
+@@ -26,6 +26,7 @@
+ #include <linux/if.h>
+ #include <linux/kernel.h>
+ #include <linux/list.h>
++#include <linux/mutex.h>
+ #include <linux/netdevice.h>
+ #include <linux/printk.h>
+ #include <linux/rculist.h>
+@@ -671,6 +672,7 @@ batadv_hardif_add_interface(struct net_d
+ 		goto free_sysfs;
+ 
+ 	INIT_LIST_HEAD(&hard_iface->list);
++	mutex_init(&hard_iface->bat_iv.ogm_buff_mutex);
+ 	INIT_WORK(&hard_iface->cleanup_work,
+ 		  batadv_hardif_remove_interface_finish);
+ 
+--- a/net/batman-adv/types.h
++++ b/net/batman-adv/types.h
+@@ -77,11 +77,13 @@ enum batadv_dhcp_recipient {
+  * @ogm_buff: buffer holding the OGM packet
+  * @ogm_buff_len: length of the OGM packet buffer
+  * @ogm_seqno: OGM sequence number - used to identify each OGM
++ * @ogm_buff_mutex: lock protecting ogm_buff and ogm_buff_len
+  */
+ struct batadv_hard_iface_bat_iv {
+ 	unsigned char *ogm_buff;
+ 	int ogm_buff_len;
+ 	atomic_t ogm_seqno;
++	struct mutex ogm_buff_mutex;
+ };
  
  /**
 
