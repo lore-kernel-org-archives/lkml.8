@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5626C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E5EC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3B6C20732
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14E820732
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:48:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbgCSIsP (ORCPT
+        id S1727318AbgCSIsX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:48:15 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59767 "EHLO
+        Thu, 19 Mar 2020 04:48:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59791 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727045AbgCSIsA (ORCPT
+        with ESMTP id S1727088AbgCSIsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:48:00 -0400
+        Thu, 19 Mar 2020 04:48:03 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEqqJ-000327-GX; Thu, 19 Mar 2020 09:47:55 +0100
+        id 1jEqqL-00033e-0d; Thu, 19 Mar 2020 09:47:57 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7CB381C2298;
-        Thu, 19 Mar 2020 09:47:52 +0100 (CET)
-Date:   Thu, 19 Mar 2020 08:47:52 -0000
-From:   "tip-bot2 for Lokesh Vutla" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1AE871C22A1;
+        Thu, 19 Mar 2020 09:47:54 +0100 (CET)
+Date:   Thu, 19 Mar 2020 08:47:53 -0000
+From:   "tip-bot2 for Joel Stanley" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/timer-ti-dm: Do not update
- counter on updating the period
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+Subject: [tip: timers/core] clocksource/drivers/fttmr010: Set interrupt and shutdown
+Cc:     clg@kaod.org, Linus Walleij <linus.walleij@linaro.org>,
+        Joel Stanley <joel@jms.id.au>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200224050753.17784-3-lokeshvutla@ti.com>
-References: <20200224050753.17784-3-lokeshvutla@ti.com>
+In-Reply-To: <20191107094218.13210-3-joel@jms.id.au>
+References: <20191107094218.13210-3-joel@jms.id.au>
 MIME-Version: 1.0
-Message-ID: <158460767223.28353.3956921614051586529.tip-bot2@tip-bot2>
+Message-ID: <158460767369.28353.13687641500549950134.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -58,42 +57,131 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     6ce4fcb015a1a1290ffafcf3554901b40f9322df
-Gitweb:        https://git.kernel.org/tip/6ce4fcb015a1a1290ffafcf3554901b40f9322df
-Author:        Lokesh Vutla <lokeshvutla@ti.com>
-AuthorDate:    Mon, 24 Feb 2020 10:37:53 +05:30
+Commit-ID:     5422413ce56877f35415f6e4b53171e6e13ec4c1
+Gitweb:        https://git.kernel.org/tip/5422413ce56877f35415f6e4b53171e6e13ec4c1
+Author:        Joel Stanley <joel@jms.id.au>
+AuthorDate:    Thu, 07 Nov 2019 20:12:16 +10:30
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Thu, 27 Feb 2020 10:26:23 +01:00
+CommitterDate: Fri, 21 Feb 2020 09:28:38 +01:00
 
-clocksource/drivers/timer-ti-dm: Do not update counter on updating the period
+clocksource/drivers/fttmr010: Set interrupt and shutdown
 
-Write to trigger register(OMAP_TIMER_TRIGGER_REG) will load the value
-in Load register(OMAP_TIMER_LOAD_REG) into Counter register
-(OMAP_TIMER_COUNTER_REG).
+In preparation for supporting the ast2600, pass the shutdown and
+interrupt functions to the common init callback.
 
-omap_dm_timer_set_load() writes into trigger register every time load
-register is updated. When timer is configured in pwm mode, this causes
-disruption in current pwm cycle, which is not expected especially when
-pwm is used as PPS signal for synchronized PTP clocks. So do not write
-into trigger register on updating the period.
-
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Tested-by: Tony Lindgren <tony@atomide.com>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200224050753.17784-3-lokeshvutla@ti.com
+Link: https://lore.kernel.org/r/20191107094218.13210-3-joel@jms.id.au
 ---
- drivers/clocksource/timer-ti-dm.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/clocksource/timer-fttmr010.c | 51 ++++++++++++++++++++++++---
+ 1 file changed, 46 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 269a994..acc9360 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -577,7 +577,6 @@ static int omap_dm_timer_set_load(struct omap_dm_timer *timer, int autoreload,
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_CTRL_REG, l);
- 	omap_dm_timer_write_reg(timer, OMAP_TIMER_LOAD_REG, load);
+diff --git a/drivers/clocksource/timer-fttmr010.c b/drivers/clocksource/timer-fttmr010.c
+index c2d30eb..edb1d5f 100644
+--- a/drivers/clocksource/timer-fttmr010.c
++++ b/drivers/clocksource/timer-fttmr010.c
+@@ -38,6 +38,11 @@
+ #define TIMER_CR		(0x30)
  
--	omap_dm_timer_write_reg(timer, OMAP_TIMER_TRIGGER_REG, 0);
- 	/* Save the context */
- 	timer->context.tclr = l;
- 	timer->context.tldr = load;
+ /*
++ * Control register set to clear for ast2600 only.
++ */
++#define AST2600_TIMER_CR_CLR	(0x3c)
++
++/*
+  * Control register (TMC30) bit fields for fttmr010/gemini/moxart timers.
+  */
+ #define TIMER_1_CR_ENABLE	BIT(0)
+@@ -163,6 +168,16 @@ static int fttmr010_timer_set_next_event(unsigned long cycles,
+ 	return 0;
+ }
+ 
++static int ast2600_timer_shutdown(struct clock_event_device *evt)
++{
++	struct fttmr010 *fttmr010 = to_fttmr010(evt);
++
++	/* Stop */
++	writel(fttmr010->t1_enable_val, fttmr010->base + AST2600_TIMER_CR_CLR);
++
++	return 0;
++}
++
+ static int fttmr010_timer_shutdown(struct clock_event_device *evt)
+ {
+ 	struct fttmr010 *fttmr010 = to_fttmr010(evt);
+@@ -244,7 +259,21 @@ static irqreturn_t fttmr010_timer_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static int __init fttmr010_common_init(struct device_node *np, bool is_aspeed)
++static irqreturn_t ast2600_timer_interrupt(int irq, void *dev_id)
++{
++	struct clock_event_device *evt = dev_id;
++	struct fttmr010 *fttmr010 = to_fttmr010(evt);
++
++	writel(0x1, fttmr010->base + TIMER_INTR_STATE);
++
++	evt->event_handler(evt);
++	return IRQ_HANDLED;
++}
++
++static int __init fttmr010_common_init(struct device_node *np,
++		bool is_aspeed,
++		int (*timer_shutdown)(struct clock_event_device *),
++		irq_handler_t irq_handler)
+ {
+ 	struct fttmr010 *fttmr010;
+ 	int irq;
+@@ -345,7 +374,7 @@ static int __init fttmr010_common_init(struct device_node *np, bool is_aspeed)
+ 				     fttmr010->tick_rate);
+ 	}
+ 
+-	fttmr010->timer_shutdown = fttmr010_timer_shutdown;
++	fttmr010->timer_shutdown = timer_shutdown;
+ 
+ 	/*
+ 	 * Setup clockevent timer (interrupt-driven) on timer 1.
+@@ -354,7 +383,7 @@ static int __init fttmr010_common_init(struct device_node *np, bool is_aspeed)
+ 	writel(0, fttmr010->base + TIMER1_LOAD);
+ 	writel(0, fttmr010->base + TIMER1_MATCH1);
+ 	writel(0, fttmr010->base + TIMER1_MATCH2);
+-	ret = request_irq(irq, fttmr010_timer_interrupt, IRQF_TIMER,
++	ret = request_irq(irq, irq_handler, IRQF_TIMER,
+ 			  "FTTMR010-TIMER1", &fttmr010->clkevt);
+ 	if (ret) {
+ 		pr_err("FTTMR010-TIMER1 no IRQ\n");
+@@ -401,14 +430,25 @@ out_disable_clock:
+ 	return ret;
+ }
+ 
++static __init int ast2600_timer_init(struct device_node *np)
++{
++	return fttmr010_common_init(np, true,
++			ast2600_timer_shutdown,
++			ast2600_timer_interrupt);
++}
++
+ static __init int aspeed_timer_init(struct device_node *np)
+ {
+-	return fttmr010_common_init(np, true);
++	return fttmr010_common_init(np, true,
++			fttmr010_timer_shutdown,
++			fttmr010_timer_interrupt);
+ }
+ 
+ static __init int fttmr010_timer_init(struct device_node *np)
+ {
+-	return fttmr010_common_init(np, false);
++	return fttmr010_common_init(np, false,
++			fttmr010_timer_shutdown,
++			fttmr010_timer_interrupt);
+ }
+ 
+ TIMER_OF_DECLARE(fttmr010, "faraday,fttmr010", fttmr010_timer_init);
+@@ -416,3 +456,4 @@ TIMER_OF_DECLARE(gemini, "cortina,gemini-timer", fttmr010_timer_init);
+ TIMER_OF_DECLARE(moxart, "moxa,moxart-timer", fttmr010_timer_init);
+ TIMER_OF_DECLARE(ast2400, "aspeed,ast2400-timer", aspeed_timer_init);
+ TIMER_OF_DECLARE(ast2500, "aspeed,ast2500-timer", aspeed_timer_init);
++TIMER_OF_DECLARE(ast2600, "aspeed,ast2600-timer", ast2600_timer_init);
