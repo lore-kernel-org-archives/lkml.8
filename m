@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23726C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E28C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54CD206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F7820724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623717;
-	bh=g4N6libNPpBEVVYAsslQki2XBh+u0Xx98ZwpV4Q+6Xc=;
+	s=default; t=1584623719;
+	bh=lTJ/hevi2Fpxe8gohbznTq9UURuuyOF+S5hRr9kQW6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z4zwUHT+WyP9ByZ61Bw9HB9RV7oAn+sL4D906AJMxcSUW32d7wS0/uUCnIJuBRWbx
-	 c2g1uhrqslGf75crJx5HHrFEoGOg6J0RjPHdM3a0FTphk9BAvn1VRoCaqGcVP8qUlN
-	 3IeeGjWpNgK5/fxsDvdAdLLQZUveBV4WScRrinXc=
+	b=MvZsXDWCLKiY9tRK73IaN/1gz8FEw1na8a0o7vE2o3LvQ6ITciSP2Qn2S72U1mIMQ
+	 PDgO/eK3HML/oIh1iT7xyou+NiedOo3MGES1MQTJhNa1+oEmRQofqr/184eUXuhEGE
+	 QQwf0r3eqinOulfiv5pCu7/NtNSXbcDCFEx1U2X8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgCSNPP (ORCPT
+        id S1729171AbgCSNPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34934 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728981AbgCSNPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:15:11 -0400
+        id S1728435AbgCSNPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:15:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9966720724;
-        Thu, 19 Mar 2020 13:15:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF15A20724;
+        Thu, 19 Mar 2020 13:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623711;
-        bh=g4N6libNPpBEVVYAsslQki2XBh+u0Xx98ZwpV4Q+6Xc=;
+        s=default; t=1584623715;
+        bh=lTJ/hevi2Fpxe8gohbznTq9UURuuyOF+S5hRr9kQW6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AynsI1TuN85pe08/m2ADecX/KrD9uHq5dznaaDJq1C7b6hWwv4awzkviu3FReuYCR
-         Ph+Hp5KD4AtulgHEuJA6RR36Sx+rEywbKTlSIGaEmzLMIDgfe0OmldnedIXuwcFv2b
-         3aPjBPAv1JosOArfwN4zAX+3iXcchWBISTsSdDJk=
+        b=peCfvM1honIRGcQPPyRIo7p91tTabpKLgOeaqXdVN0K1i8cLb6esZlRxebq1ilRlA
+         EzV4xuaT8X02N/2gH2DhwCGW8d9HVPP40dhSyjxxl2aEVRM1tMH8uaKw8Ag3M5axwP
+         o2g8BhYR0VGPtmb6gCVkisIzJ8i6eh1h0ALaE5Hw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 27/99] nfc: add missing attribute validation for vendor subcommand
-Date:   Thu, 19 Mar 2020 14:03:05 +0100
-Message-Id: <20200319123949.999040284@linuxfoundation.org>
+Subject: [PATCH 4.14 28/99] net: phy: fix MDIO bus PM PHY resuming
+Date:   Thu, 19 Mar 2020 14:03:06 +0100
+Message-Id: <20200319123950.287587516@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -59,31 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit 6ba3da446551f2150fadbf8c7788edcb977683d3 ]
+[ Upstream commit 611d779af7cad2b87487ff58e4931a90c20b113c ]
 
-Add missing attribute validation for vendor subcommand attributes
-to the netlink policy.
+So far we have the unfortunate situation that mdio_bus_phy_may_suspend()
+is called in suspend AND resume path, assuming that function result is
+the same. After the original change this is no longer the case,
+resulting in broken resume as reported by Geert.
 
-Fixes: 9e58095f9660 ("NFC: netlink: Implement vendor command support")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+To fix this call mdio_bus_phy_may_suspend() in the suspend path only,
+and let the phy_device store the info whether it was suspended by
+MDIO bus PM.
+
+Fixes: 503ba7c69610 ("net: phy: Avoid multiple suspends")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/nfc/netlink.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/phy/phy_device.c |    6 +++++-
+ include/linux/phy.h          |    2 ++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -57,6 +57,8 @@ static const struct nla_policy nfc_genl_
- 				     .len = NFC_FIRMWARE_NAME_MAXSIZE },
- 	[NFC_ATTR_SE_INDEX] = { .type = NLA_U32 },
- 	[NFC_ATTR_SE_APDU] = { .type = NLA_BINARY },
-+	[NFC_ATTR_VENDOR_ID] = { .type = NLA_U32 },
-+	[NFC_ATTR_VENDOR_SUBCMD] = { .type = NLA_U32 },
- 	[NFC_ATTR_VENDOR_DATA] = { .type = NLA_BINARY },
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -125,6 +125,8 @@ static int mdio_bus_phy_suspend(struct d
+ 	if (!mdio_bus_phy_may_suspend(phydev))
+ 		return 0;
  
- };
++	phydev->suspended_by_mdio_bus = true;
++
+ 	return phy_suspend(phydev);
+ }
+ 
+@@ -133,9 +135,11 @@ static int mdio_bus_phy_resume(struct de
+ 	struct phy_device *phydev = to_phy_device(dev);
+ 	int ret;
+ 
+-	if (!mdio_bus_phy_may_suspend(phydev))
++	if (!phydev->suspended_by_mdio_bus)
+ 		goto no_resume;
+ 
++	phydev->suspended_by_mdio_bus = false;
++
+ 	ret = phy_resume(phydev);
+ 	if (ret < 0)
+ 		return ret;
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -372,6 +372,7 @@ struct phy_c45_device_ids {
+  * is_pseudo_fixed_link: Set to true if this phy is an Ethernet switch, etc.
+  * has_fixups: Set to true if this phy has fixups/quirks.
+  * suspended: Set to true if this phy has been suspended successfully.
++ * suspended_by_mdio_bus: Set to true if this phy was suspended by MDIO bus.
+  * sysfs_links: Internal boolean tracking sysfs symbolic links setup/removal.
+  * loopback_enabled: Set true if this phy has been loopbacked successfully.
+  * state: state of the PHY for management purposes
+@@ -410,6 +411,7 @@ struct phy_device {
+ 	bool is_pseudo_fixed_link;
+ 	bool has_fixups;
+ 	bool suspended;
++	bool suspended_by_mdio_bus;
+ 	bool sysfs_links;
+ 	bool loopback_enabled;
+ 
 
 
