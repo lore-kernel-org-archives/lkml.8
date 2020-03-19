@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3AB7C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61C4C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2831207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAFE208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624539;
-	bh=GK0txNaAhC1Tj3gLksvBxH5YZiIIZrSnVTFV8FXTM/8=;
+	s=default; t=1584624542;
+	bh=Gkbskkt5Gyu5DT0af7NouvEBc3hpmFpLfbbZiBpS7EM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x3n3bE/xywiVoUq64/js5+zlTrdtUUP0YnbZxS+YF0iB8JPR3w81UfBKpPJ3NYb3a
-	 F5G5q/8waJz1i/yXv0mHiS9kWqazUx+ML/Scf/4kZCDcdi4AvqPl+v9qg3GDYT/nY2
-	 mxSqqv7IXk1KODFVFE2qz2vp/BbeApyi5yzMWxRg=
+	b=bfzlA+5Gbs1bv9+VyfL2QZGPIbogUY9zIJmIHBLnQUeLpbHNy2tWBuXjHz/zA+Lwm
+	 bRQoP/omln+ODuoUq6xaJTEPHVbmlFpDlmsoUMmRdxNjfU9SyPFmPW4IFeUVmHsVh9
+	 /qUbu1j/jOn52I1PnslvuUrKUKsKCy5HaAyH15VM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730630AbgCSNZ3 (ORCPT
+        id S1730422AbgCSNZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52896 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730445AbgCSNZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:22 -0400
+        id S1727684AbgCSNZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F7A208D6;
-        Thu, 19 Mar 2020 13:25:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21AC52080C;
+        Thu, 19 Mar 2020 13:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624322;
-        bh=GK0txNaAhC1Tj3gLksvBxH5YZiIIZrSnVTFV8FXTM/8=;
+        s=default; t=1584624324;
+        bh=Gkbskkt5Gyu5DT0af7NouvEBc3hpmFpLfbbZiBpS7EM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sMvWE8K9ePGbR/2WArP7iKwYZbixJiflDFITuLDN3IN4ec5y3K31nO4a+wCt1Ywav
-         gw/rJeoMMB89mr/sLrd0fbQsCj2jgs2W/bfbXnAjJbRmUpo6GiiH/f/JkeVlISAtde
-         p/+CFSd5L3ncbnYlYjZq+3smMv9nPRtMvTKBGY8Y=
+        b=2hUp7Z/c+CCQIfTqV35RAlgXTxyMjMzBNtD7QfaZUCYUfZWtkl1A4o67d73oXH//J
+         D819vAoT458s8aPKvKIob6u6HfHhToBYBCBF6uO3APw30SzKAqxySZT8kCH9FhQDNe
+         qf486G9nODbdmFuQOlkaTle8PM1JJV0M5PPzGkpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tom Zanussi <zanussi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 22/65] selftests/rseq: Fix out-of-tree compilation
-Date:   Thu, 19 Mar 2020 14:04:04 +0100
-Message-Id: <20200319123933.387989829@linuxfoundation.org>
+Subject: [PATCH 5.5 23/65] tracing: Fix number printing bug in print_synth_event()
+Date:   Thu, 19 Mar 2020 14:04:05 +0100
+Message-Id: <20200319123933.689001532@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -60,46 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Tom Zanussi <zanussi@kernel.org>
 
-[ Upstream commit ef89d0545132d685f73da6f58b7e7fe002536f91 ]
+[ Upstream commit 784bd0847eda032ed2f3522f87250655a18c0190 ]
 
-Currently if you build with O=... the rseq tests don't build:
+Fix a varargs-related bug in print_synth_event() which resulted in
+strange output and oopses on 32-bit x86 systems. The problem is that
+trace_seq_printf() expects the varargs to match the format string, but
+print_synth_event() was always passing u64 values regardless.  This
+results in unspecified behavior when unpacking with va_arg() in
+trace_seq_printf().
 
-  $ make O=$PWD/output -C tools/testing/selftests/ TARGETS=rseq
-  make: Entering directory '/linux/tools/testing/selftests'
-  ...
-  make[1]: Entering directory '/linux/tools/testing/selftests/rseq'
-  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./  -shared -fPIC rseq.c -lpthread -o /linux/output/rseq/librseq.so
-  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./  basic_test.c -lpthread -lrseq -o /linux/output/rseq/basic_test
-  /usr/bin/ld: cannot find -lrseq
-  collect2: error: ld returned 1 exit status
+Add a function that takes the size into account when calling
+trace_seq_printf().
 
-This is because the library search path points to the source
-directory, not the output.
+Before:
 
-We can fix it by changing the library search path to $(OUTPUT).
+  modprobe-1731  [003] ....   919.039758: gen_synth_test: next_pid_field=777(null)next_comm_field=hula hoops ts_ns=1000000 ts_ms=1000 cpu=3(null)my_string_field=thneed my_int_field=598(null)
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+After:
+
+ insmod-1136  [001] ....    36.634590: gen_synth_test: next_pid_field=777 next_comm_field=hula hoops ts_ns=1000000 ts_ms=1000 cpu=1 my_string_field=thneed my_int_field=598
+
+Link: http://lkml.kernel.org/r/a9b59eb515dbbd7d4abe53b347dccf7a8e285657.1581720155.git.zanussi@kernel.org
+
+Reported-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/rseq/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_events_hist.c | 32 +++++++++++++++++++++++++++++---
+ 1 file changed, 29 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/rseq/Makefile b/tools/testing/selftests/rseq/Makefile
-index f1053630bb6f5..2af9d39a97168 100644
---- a/tools/testing/selftests/rseq/Makefile
-+++ b/tools/testing/selftests/rseq/Makefile
-@@ -4,7 +4,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
- CLANG_FLAGS += -no-integrated-as
- endif
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index e10585ef00e15..862fb6d16edb8 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -811,6 +811,29 @@ static const char *synth_field_fmt(char *type)
+ 	return fmt;
+ }
  
--CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ \
-+CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L$(OUTPUT) -Wl,-rpath=./ \
- 	  $(CLANG_FLAGS)
- LDLIBS += -lpthread
++static void print_synth_event_num_val(struct trace_seq *s,
++				      char *print_fmt, char *name,
++				      int size, u64 val, char *space)
++{
++	switch (size) {
++	case 1:
++		trace_seq_printf(s, print_fmt, name, (u8)val, space);
++		break;
++
++	case 2:
++		trace_seq_printf(s, print_fmt, name, (u16)val, space);
++		break;
++
++	case 4:
++		trace_seq_printf(s, print_fmt, name, (u32)val, space);
++		break;
++
++	default:
++		trace_seq_printf(s, print_fmt, name, val, space);
++		break;
++	}
++}
++
+ static enum print_line_t print_synth_event(struct trace_iterator *iter,
+ 					   int flags,
+ 					   struct trace_event *event)
+@@ -849,10 +872,13 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
+ 		} else {
+ 			struct trace_print_flags __flags[] = {
+ 			    __def_gfpflag_names, {-1, NULL} };
++			char *space = (i == se->n_fields - 1 ? "" : " ");
  
+-			trace_seq_printf(s, print_fmt, se->fields[i]->name,
+-					 entry->fields[n_u64],
+-					 i == se->n_fields - 1 ? "" : " ");
++			print_synth_event_num_val(s, print_fmt,
++						  se->fields[i]->name,
++						  se->fields[i]->size,
++						  entry->fields[n_u64],
++						  space);
+ 
+ 			if (strcmp(se->fields[i]->type, "gfp_t") == 0) {
+ 				trace_seq_puts(s, " (");
 -- 
 2.20.1
 
