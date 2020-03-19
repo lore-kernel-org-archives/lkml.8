@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCF9C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367ACC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A26B82098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F288A206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623947;
-	bh=AmjpSPBj4WtZlzlwhFS7i5lLcqju7uJ94qQo2ibr2BE=;
+	s=default; t=1584623951;
+	bh=lRTZN2oE+b/mRMO0TruZEH4BhQHL7dCEFWIEA4m/xVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TOsLgX83Z7zhwAGO4+4aRKoFd9YxtLeiQTecZVkBdUMKWIUM+7jwNoxuwHZppNro7
-	 VfnMUzy4rYw0m3HFPZTTQZWwNbRQKzRzn3K1Z1ghlaTgNglH7SObaDfyPPTgoDEvcK
-	 oSeWhHx6erj893DNV6+ck5LS0/N3rKMYl3hUbLq0=
+	b=gwxSfW2zvJiqLmFyXWCwXwltNjTzv0g6RLrtGOrcxnakSiyMtUIX/IJpDGVF+IALo
+	 l8Yp9hdwnIP49u1ZfIGVZbSyyWORvVYbWcxuPQffK8c9qt6is4JN41RB1zBDyqZ+t+
+	 QbMyBY4z/PuoOeA7KtNdzvfdR3rYJD3nl+4n+j0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbgCSNTG (ORCPT
+        id S1729713AbgCSNTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:19:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42020 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:19:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728892AbgCSNTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:19:04 -0400
+        id S1728095AbgCSNTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:19:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88DBA2098B;
-        Thu, 19 Mar 2020 13:19:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E73206D7;
+        Thu, 19 Mar 2020 13:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623944;
-        bh=AmjpSPBj4WtZlzlwhFS7i5lLcqju7uJ94qQo2ibr2BE=;
+        s=default; t=1584623940;
+        bh=lRTZN2oE+b/mRMO0TruZEH4BhQHL7dCEFWIEA4m/xVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vNMm3WHAySLY9kvVsQJWWQymH4O8gtmd9k9gcPvv85AtW2HUfNLnilCXKwPp8z2Iw
-         csKlUXpNGEqhGJNlpki4uH4Vt0eOYuvhOqZz4VDCaAzeUDQcI3aQ/BnyIPePguBlof
-         Mj6NOqqP+DEWVYQucees9vQpWq0QgDYHcCcG5UeE=
+        b=Q3f642/QMPsVyoheIFjc2fuf/CCe9KfjaqvGqACeasF+OKK4dZb9AAe1xHdRm5m38
+         bjVisJO4X3pU1+h22vHofbeW9eWta5t3C8VkFkaCZ+Gye/gcTQiKi0ZpreXLDhfV5J
+         Om5IAtm0T6OHjRfpId8dNR7MpKhpR7etDAmXzpf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 98/99] mm: slub: add missing TID bump in kmem_cache_alloc_bulk()
-Date:   Thu, 19 Mar 2020 14:04:16 +0100
-Message-Id: <20200319124008.208357378@linuxfoundation.org>
+        Sven Eckelmann <sven.eckelmann@open-mesh.com>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.14 68/99] batman-adv: Always initialize fragment header priority
+Date:   Thu, 19 Mar 2020 14:03:46 +0100
+Message-Id: <20200319124001.868359273@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -59,46 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Sven Eckelmann <sven.eckelmann@open-mesh.com>
 
-commit fd4d9c7d0c71866ec0c2825189ebd2ce35bd95b8 upstream.
+commit fe77d8257c4d838c5976557ddb87bd789f312412 upstream.
 
-When kmem_cache_alloc_bulk() attempts to allocate N objects from a percpu
-freelist of length M, and N > M > 0, it will first remove the M elements
-from the percpu freelist, then call ___slab_alloc() to allocate the next
-element and repopulate the percpu freelist. ___slab_alloc() can re-enable
-IRQs via allocate_slab(), so the TID must be bumped before ___slab_alloc()
-to properly commit the freelist head change.
+The batman-adv unuicast fragment header contains 3 bits for the priority of
+the packet. These bits will be initialized when the skb->priority contains
+a value between 256 and 263. But otherwise, the uninitialized bits from the
+stack will be used.
 
-Fix it by unconditionally bumping c->tid when entering the slowpath.
-
-Cc: stable@vger.kernel.org
-Fixes: ebe909e0fdb3 ("slub: improve bulk alloc strategy")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: c0f25c802b33 ("batman-adv: Include frame priority in fragment header")
+Signed-off-by: Sven Eckelmann <sven.eckelmann@open-mesh.com>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/slub.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ net/batman-adv/fragmentation.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -3123,6 +3123,15 @@ int kmem_cache_alloc_bulk(struct kmem_ca
+--- a/net/batman-adv/fragmentation.c
++++ b/net/batman-adv/fragmentation.c
+@@ -500,6 +500,8 @@ int batadv_frag_send_packet(struct sk_bu
+ 	 */
+ 	if (skb->priority >= 256 && skb->priority <= 263)
+ 		frag_header.priority = skb->priority - 256;
++	else
++		frag_header.priority = 0;
  
- 		if (unlikely(!object)) {
- 			/*
-+			 * We may have removed an object from c->freelist using
-+			 * the fastpath in the previous iteration; in that case,
-+			 * c->tid has not been bumped yet.
-+			 * Since ___slab_alloc() may reenable interrupts while
-+			 * allocating memory, we should bump c->tid now.
-+			 */
-+			c->tid = next_tid(c->tid);
-+
-+			/*
- 			 * Invoking slow path likely have side-effect
- 			 * of re-populating per CPU c->freelist
- 			 */
+ 	ether_addr_copy(frag_header.orig, primary_if->net_dev->dev_addr);
+ 	ether_addr_copy(frag_header.dest, orig_node->orig);
 
 
