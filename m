@@ -1,85 +1,118 @@
 Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499E0C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF778C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF5A20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 962F120663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:12:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E6zKJVqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgCSTMQ (ORCPT
+        id S1727256AbgCSTM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:12:16 -0400
-Received: from mga11.intel.com ([192.55.52.93]:41367 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSTMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:12:16 -0400
-IronPort-SDR: 31OAq9M4oafQovx7IKaxxoC4y+6+dyHIeM+bQMf9Xdz2MRF7Zm2iD2O1AdLEQtSld3Gmg3oz6t
- Y6xnxLAenSVA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 12:12:15 -0700
-IronPort-SDR: c9S+K+uFzLYKF+qGkvWx0r9T16FI1VLY79SrInUDH+R3/bKivLNcKPfb+XmyFg/GeIngRZDAB6
- 2KZMZQL3509w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="291712096"
-Received: from oamor-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.182.181])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Mar 2020 12:12:12 -0700
-Date:   Thu, 19 Mar 2020 21:12:11 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     George Wilson <gcwilson@linux.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Nayna Jain <nayna@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, Linh Pham <phaml@us.ibm.com>
-Subject: Re: [PATCH v2] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
-Message-ID: <20200319191211.GA23430@linux.intel.com>
-References: <20200317214600.9561-1-gcwilson@linux.ibm.com>
- <20200318204318.GA48352@linux.intel.com>
- <20200318223542.GD20941@ziepe.ca>
+        Thu, 19 Mar 2020 15:12:57 -0400
+Received: from mail-lj1-f179.google.com ([209.85.208.179]:39877 "EHLO
+        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCSTM5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:12:57 -0400
+Received: by mail-lj1-f179.google.com with SMTP id a2so3814407ljk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 12:12:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QVkzVRwG8di2tV6d9YdwSc9NIMTzCM+uJhyKylo1Pzk=;
+        b=E6zKJVqsleblpxQaJ1FWAniwuWP5ugaz/XSRDSzVEdINjBKBZjI48DRwXAI0x0p8Zd
+         hpsF1BtFBG0z3GYhzFEBRTCRSN7i5vW8Y8YQWKEMSDh2Vylf9Hxw0qpD8NAozGRmQ4ja
+         xoYO3rqRtyRWZGHfjwHPeqK9LLmCyCN6vMea8BAN8nXDw22vyXLzC2wx7/4DKyZQMwPW
+         e3ZlBHjyFdX1TU01dMWDe4h354svsio3n203GM5AN2sVlSI8VgHVsl5qDyEY+xS7D1X8
+         pVlkt91FpDoXKqSsmj1GK0sgNY+wW3W1UY9q38ghDisL2LigK+qlapoCy3PgDQNU1FeL
+         Pn5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QVkzVRwG8di2tV6d9YdwSc9NIMTzCM+uJhyKylo1Pzk=;
+        b=aO56uir6KvJnSBtE+6PuQ4ZSPrPFIpUuBIPxgHtBjQQl5+qS6gXfgADVGen41bOYnU
+         tqYinBh+HuGpScSn2lwzdZm6eDqywZ5WcsgMx4BH4VlprNebyf7ZEkSOAW/Ks2+HcgC0
+         N9iywu6rkChhYgPTBVqpHIMd6p46vTJQaOTFhKmoeY3tAj2DQvQMQXyIKKINs24aRDo/
+         YvwJKxL3oZ/c9z40295V7sqKs36H0dTmvTMjGz8dMaa/CANLerUI+fB7IQpL+rSmhrK8
+         s41T9+2xyUP9yLrcS+l/ExDnEV7aVV0vHJ8Sv9MePHMm4vwAdiEOuUf8Blva3c6fP12l
+         jXmw==
+X-Gm-Message-State: ANhLgQ2tNVIK+OraofsrEUg8l1WXIKO4xTRy7Ov4hB7LWDt/l8AXlbWM
+        qMrHzymcymPc9jGskWuC7LH6yYYvm8PIoAb310LrgA==
+X-Google-Smtp-Source: ADFU+vsKLCuj84BZqh1D35j+IPEy0J1WwDoWmAn2x/8mm/THSHMQB4laIrHvWqUIzr6HPJRVjNoMN4BhVjiGfEqvO34=
+X-Received: by 2002:a05:651c:285:: with SMTP id b5mr2911047ljo.165.1584645174876;
+ Thu, 19 Mar 2020 12:12:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318223542.GD20941@ziepe.ca>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com> <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
+ <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com> <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
+ <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com> <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
+ <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
+ <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com> <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
+ <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com> <CAPDyKFp93H0=ttazofW9NMBtL5VnjB4PdkwN0FDCtWR0pMHrPA@mail.gmail.com>
+ <f01b5533-124a-d978-a90a-9c9c6235fb65@nvidia.com> <CAPDyKFqJjsuHect-azQKO8cCoq5JJQrZ=eShsdLHq97NXgXnuQ@mail.gmail.com>
+ <227d9f08-582e-fd79-e1dc-7695bddd162d@nvidia.com> <2456654f-2724-0b6d-8936-afa05f345344@nvidia.com>
+ <df939962-2cb4-1c36-0baf-d82e3527d05a@nvidia.com> <41348c8f-6bc7-a5a3-e1ed-9143f60cbdae@nvidia.com>
+ <CAPDyKFqWRGK6LCevwXQoZnRqfMkUDWNUMqbGqnqv+OopmhvBeg@mail.gmail.com>
+In-Reply-To: <CAPDyKFqWRGK6LCevwXQoZnRqfMkUDWNUMqbGqnqv+OopmhvBeg@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 20 Mar 2020 00:42:43 +0530
+Message-ID: <CA+G9fYv+bhdmq9O5rmnOkigCossK5WX9AMr76AF57f8KKydV9g@mail.gmail.com>
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kishon <kishon@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 07:35:42PM -0300, Jason Gunthorpe wrote:
-> On Wed, Mar 18, 2020 at 10:43:18PM +0200, Jarkko Sakkinen wrote:
-> > >  static const char tpm_ibmvtpm_driver_name[] = "tpm_ibmvtpm";
-> > >  
-> > >  static const struct vio_device_id tpm_ibmvtpm_device_table[] = {
-> > > @@ -147,6 +149,7 @@ static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> > >  {
-> > >  	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
-> > >  	int rc, sig;
-> > > +	bool retry = true;
-> > 
-> > Cosmetic: would be nice to have inits when possible in reverse
-> > Christmas tree order i.e.
-> > 
-> > 	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
-> > 	bool retry = true;
-> > 	int rc, sig;
-> > 
-> > It is way more pleasing for the eye when you have to read the source
-> > code.
-> 
-> I thought only netdev insisted on that :O
+FYI,
 
-x86 seems to prefer too and I agree with the idea. But as I said only
-that it would be nice.
+The arm device x15 running stable rc 4.19.112-rc1, 5.4.27-rc1 and 5.5.11-rc2
+kernel pops up the following messages on console log,
+Is this a problem ?
 
-/Jarkko
+[ 0.000000] Linux version 4.19.112-rc1 (oe-user@oe-host) (gcc version
+7.3.0 (GCC)) #1 SMP Thu Mar 19 12:55:45 UTC 2020
+
+[   15.737765] mmc1: unspecified timeout for CMD6 - use generic
+[   16.754248] mmc1: unspecified timeout for CMD6 - use generic
+[   16.842071] mmc1: unspecified timeout for CMD6 - use generic
+...
+[   20.580541] mmc1: unspecified timeout for CMD6 - use generic
+[   20.588216] mmc1: unspecified timeout for CMD6 - use generic
+[   20.604011] mmc1: unspecified timeout for CMD6 - use generic
+
+ref:
+https://lkft.validation.linaro.org/scheduler/job/1298207#L4037
+https://lkft.validation.linaro.org/scheduler/job/1298945#L4132
+https://lkft.validation.linaro.org/scheduler/job/1299973#L4232
+
+- Naresh
