@@ -2,122 +2,143 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AF3C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C191C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E629920663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87FE20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dvmBHnBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgCSMK7 (ORCPT
+        id S1727089AbgCSMMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:10:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42311 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgCSMK6 (ORCPT
+        Thu, 19 Mar 2020 08:12:19 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36283 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgCSMMS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:10:58 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEu0L-0007Yc-KU; Thu, 19 Mar 2020 13:10:29 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jEu0I-0006oX-6J; Thu, 19 Mar 2020 13:10:26 +0100
-Date:   Thu, 19 Mar 2020 13:10:26 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Paul Barker <pbarker@konsulko.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Scott Branden <sbranden@broadcom.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-amlogic@lists.infradead.org,
+        Thu, 19 Mar 2020 08:12:18 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g62so1963178wme.1;
+        Thu, 19 Mar 2020 05:12:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:subject:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=daN7ej1V/WbdDXvs8Fgxqp9xAyCMYiSLqVG5aeGru8U=;
+        b=dvmBHnBUXGiqvvQ1+2E51PjzCzn/o0oGD7PLE7ea8u0pLrC31AtHH/04xGfdBYmXEZ
+         bFrsZ23yrpPVd9GhXnKVFJMFe+Z/nOVknS97xlq4HF9IUENfspVLHt0yk36Hc0D8TWWl
+         RfxTZSc95T4TII146KC0tdDa9Z5XTpyBaB2T8OcPTbRVpK6JJ/zOFGvVZrDVQ695g6kn
+         3CfQN9LJgEBIz3n/lbi1DaJfyWpqQFbrv9+xOJgp9XypgVB6GWkV9798vtpzBuw3ndX+
+         5kBfdzL42NLgQLemfpeza4Wr4lQ+OUj3UMPNqYlEuGeMWtPad0BQZEtvtPU1VRR9eqDT
+         5Baw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=daN7ej1V/WbdDXvs8Fgxqp9xAyCMYiSLqVG5aeGru8U=;
+        b=YLXTJzoEaWVU5uxZn9DZmsdRLCtmQ28nwxg9wRCOm2UGQ5YYxcLjHmBGDna7h+mx8J
+         0bGZw6s1/5w+v32Le94wKtV+KCyYzgpugHteyb849jfvfB6QY15i/AZ7q/57nEKMoE5s
+         OwEw30hZ0MuFCbX+nphySFn1F+fLIHUPzHuPDzAGxUUbf83KgNgi3pLp+RvOc9hDcxNG
+         XPbgotpLyODSyhyUfJqJR4vx/KhNmUiu/m31Vvp5UsdbeLHGyivzxhxy/7rz1PD8xOk9
+         IbVKsQMJ2psNtHWxZyXf/IQpq1Ejj7qgdCWcbxVydtYk3NiC21oT4YCH5/7bN48WUBiP
+         k5qA==
+X-Gm-Message-State: ANhLgQ04qlf3DGeNwiw0JbKb+8SjCqr1Ml8t9xjoHqe2zzpYSQ6snamO
+        0VmKNIxSVZfA6BwvAhO80YY=
+X-Google-Smtp-Source: ADFU+vsWdNexPTrldLcXBS702PY8o8wIPXwP8saxqT60mkVJ/ps29oW5lL6dM5+K82yyY3AUWrKxag==
+X-Received: by 2002:a1c:9d0b:: with SMTP id g11mr3450811wme.77.1584619936056;
+        Thu, 19 Mar 2020 05:12:16 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id c85sm2910002wmd.48.2020.03.19.05.12.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 05:12:15 -0700 (PDT)
+To:     jbx6244@gmail.com
+Cc:     devicetree@vger.kernel.org, heiko@sntech.de, kishon@ti.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
-Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
-Message-ID: <20200319121026.3rzcxdknfyhtkryi@pengutronix.de>
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-2-oleksandr.suvorov@toradex.com>
- <20200317174043.GA1464607@ulmo>
- <20200317210042.ryrof3amr7fxp4w5@pengutronix.de>
- <20200318225953.GA2874972@ulmo>
- <CAGgjyvGd4y8M0L1sFMvQ1=gPcKfUPoR13dVS7F5WZx=333KG6g@mail.gmail.com>
+        linux-rockchip@lists.infradead.org, robh+dt@kernel.org
+References: <20200318192901.5023-1-jbx6244@gmail.com>
+Subject: Re: [RFC PATCH 1/2] dt-bindings: phy: convert phy-rockchip-inno-usb2
+ bindings to yaml
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <86f9bff8-4e3e-8a26-b89b-ce80cb865103@gmail.com>
+Date:   Thu, 19 Mar 2020 13:12:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGgjyvGd4y8M0L1sFMvQ1=gPcKfUPoR13dVS7F5WZx=333KG6g@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200318192901.5023-1-jbx6244@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-[dropping Tony Prisk <linux@prisktech.co.nz> from recipients]
+A test with the command below gives this error:
 
-On Thu, Mar 19, 2020 at 01:40:28PM +0200, Oleksandr Suvorov wrote:
-> Thierry, I see the PWM core converts the bit field "third cell" into
-> the polarity variable.
-> Now I probably understand your sight and agree that we shouldn't give
-> the same names to bits in bitfield (dts) and values of a variable.
-> 
-> But there are lots of useless "0" values of third cell of "pwms"
-> option in dts files.
-> 
-> I see 2 ways now:
-> - just remove all "0" "third cell" from "pwms" options in dts files. I
-> see this "0" confuses some people.
+  DTC     Documentation/devicetree/bindings/phy/
+phy-rockchip-inno-usb2.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/phy/
+phy-rockchip-inno-usb2.example.dt.yaml
+Documentation/devicetree/bindings/phy/
+phy-rockchip-inno-usb2.example.dt.yaml: usb2-phy@e450:
+'#phy-cells' is a required property
 
-Then you have to overwrite pwm-cells of the provider. If there are two
-PWMs used from the same provider and only one is inverted this won't
-work. (Not entirely sure I understood your suggestion.) So I don't like
-this suggestion.
+'phy-provider.yaml' uses regex pattern:
 
-And also in my eyes this isn't clearer, just more complicated to use.
+"^(|usb-|usb2-|usb3-|pci-|pcie-|sata-)phy(@[0-9a-f,]+)*$"
 
-> - convert pwm_state.polarity into pwm_state.flags and use bitfield
->   directly from dtb.
->   It simplifies the parsing logic and makes adding new flags easier.
+in combination with nodename 'usb2-phy' gives a full match.
+'#phy-cells' is only for subnodes I think.
 
-*shrug*, I don't care much.
+Question:
+Should we:
+1: rename all 'usb2-phy' nodes in dtsi, then please advise what name
+should be used.
 
-Best regards
-Uwe
+Or:
+2:  add '#phy-cells' to 'usb2-phy' nodes? Please advice.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+make -k ARCH=arm dt_binding_check
+
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/rk3399-cru.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+
+> +    u2phy0: usb2-phy@e450 {
+
+Regex gives a full match.
+
+> +      compatible = "rockchip,rk3399-usb2phy";
+> +      reg = <0xe450 0x10>;
+> +      clocks = <&cru SCLK_USB2PHY0_REF>;
+> +      clock-names = "phyclk";
+> +      clock-output-names = "clk_usbphy0_480m";
+> +      #clock-cells = <0>;
+> +
+> +      u2phy0_host: host-port {
+> +        #phy-cells = <0>;
+> +        interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>;
+> +        interrupt-names = "linestate";
+> +      };
+> +
+> +      u2phy0_otg: otg-port {
+> +        #phy-cells = <0>;
+> +        interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH 0>,
+> +                     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH 0>,
+> +                     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH 0>;
+> +        interrupt-names = "otg-bvalid", "otg-id", "linestate";
+> +      };
+> +    };
+
+
+
