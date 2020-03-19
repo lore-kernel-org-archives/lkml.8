@@ -3,168 +3,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B6EC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C808C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB9A320732
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6218020658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="BrVfrXjB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZiDLa46"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgCSH6j (ORCPT
+        id S1726902AbgCSH7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:58:39 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:41700 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726188AbgCSH6j (ORCPT
+        Thu, 19 Mar 2020 03:59:34 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35432 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgCSH7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:58:39 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02J7sYma004612;
-        Thu, 19 Mar 2020 03:58:24 -0400
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2048.outbound.protection.outlook.com [104.47.66.48])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2yu9jawhur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Mar 2020 03:58:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i7PsLqatcaDOXczflUZKDKF+hFo8OUJYAOGg/F77hYaOG9AlIM2D7//tQuQ3iuIHxtXSEftgyYxTJs+mzrnAdioxF36HF4unAm9As+FsEch7GIvDdzrCkJPZOH3QT7vCRd/UM2cEaJ7GPJox7z5BO3ojBzv1cixjIw39+2Hi3O1MbvN8S0RcUVaOc0P1ps9jvmUUPH5qsOANcCPIT44vtJA63t9PBtx4liGgq4xW7UvuSXVdNbkkOMXONEGLtcfP0zzPx3/mCBxl4ak6rFyN+sEAkwtT9GzM6YoZBNRJEFybva7MkMOn3Om5uqaEJ4C0vC7UJq1OTnueRMBuQ9yPFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dIk1sullkjZEXeaRr0ds+8ztGg6Hh3jbDoCxpQpH2NU=;
- b=ISfcugNP7/D8+w1N6c84kPtAnaq7VNGeXtfG4oU3uxjplRm7plGQJknl0kJCuh8evpSoENFxnyL5DC3OUmUK7vBlGy0DBiO0kn1KCZFFflxrCJ/yxXPRTiwJFWZxTgCBvNHJPNC088Bk46aesV77L614m6B41gH/bNUHIrFfJGhn8mp9mojAmu4j+xFByyjHD8jo5GkVHlA68ZlxCiCkFVrKvqsTV6iAH6LcV95xliGqH67GsU+1CdgHB+ZH20rzq+l4F7P10+maxTWx9pPUTyEMoaug7bipZFUO7VBOeV454V7GTQyy7mI8VRNtrGL8+POUwTq4L+8/bYYFkd+fag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
+        Thu, 19 Mar 2020 03:59:33 -0400
+Received: by mail-ot1-f68.google.com with SMTP id k26so1459160otr.2;
+        Thu, 19 Mar 2020 00:59:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dIk1sullkjZEXeaRr0ds+8ztGg6Hh3jbDoCxpQpH2NU=;
- b=BrVfrXjBDSuXKvDL4PXsT4Bv1PGJLf61oallOS+Um23WytVj3tAedIHW8K5ehhcUzr2AKKU+q/SW5UVI7q8ndyHhUvEXZX/BCuR0pMUO6ACIxkbX6vmatkzfL8uh/2YopTA98PfgIzZPwaYOvoS1BUGYqNxc9l4m4a1dbhFbdbU=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB3708.namprd03.prod.outlook.com (2603:10b6:5:b3::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.16; Thu, 19 Mar
- 2020 07:58:23 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2814.025; Thu, 19 Mar 2020
- 07:58:23 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "ardeleanalex@gmail.com" <ardeleanalex@gmail.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "renatogeh@gmail.com" <renatogeh@gmail.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "Caprioru, Mircea" <Mircea.Caprioru@analog.com>
-Subject: Re: [PATCH 5/5] iio: adc: ad7793: use read_avail iio hook for scale
- available
-Thread-Topic: [PATCH 5/5] iio: adc: ad7793: use read_avail iio hook for scale
- available
-Thread-Index: AQHV/SppVVVrWL45DUGrOveHnZbXKqhOdEoAgAEaowA=
-Date:   Thu, 19 Mar 2020 07:58:22 +0000
-Message-ID: <e4a2757a8eaa148b15111830e4cf783319d0d68b.camel@analog.com>
-References: <20200318134042.30133-1-alexandru.ardelean@analog.com>
-         <20200318134042.30133-6-alexandru.ardelean@analog.com>
-         <ffe8008d-5506-0e88-7ab2-6b221e36afba@metafoo.de>
-In-Reply-To: <ffe8008d-5506-0e88-7ab2-6b221e36afba@metafoo.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [188.26.73.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c8f04e2d-3c7d-4480-42b2-08d7cbdb4c2e
-x-ms-traffictypediagnostic: DM6PR03MB3708:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR03MB3708FFF9353F50BF4568FAE3F9F40@DM6PR03MB3708.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0347410860
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(136003)(346002)(376002)(199004)(66556008)(6506007)(6512007)(91956017)(76116006)(478600001)(2906002)(107886003)(36756003)(66476007)(71200400001)(4326008)(5660300002)(316002)(186003)(2616005)(8936002)(26005)(6486002)(66446008)(64756008)(8676002)(53546011)(81156014)(81166006)(110136005)(66946007)(54906003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB3708;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BPzNY4PlFLXufGcY93S1rQeTpygeE3r9zUws7FOnWlwnW+q7uM+fkNYhhxU05WqP64VX7vKzoI3pL6fep/YxSsntyQ8/wSuATDYys0/U1Lx0+/+wCv512NzHXga+LB4GD0KIEo1VjEk1K985rqr/3utElbJaV20LO+m+ZaxuLV94YzwBfwK7fQuAp0AW8D+Crc7zG9fptAX+pQCxzlYafFX+uyDcs1NqhPTKvmazO7zYh76B4DSdR9WhRQ7f3Um8/ODs9DxFioflR+Bg4Nxj2b90GG5qwXiN+SmFAD9Vy82dPCpEYcFU+Y6u0hyTT6okxlPwoFJjQq9Qk4hsXKvK1MFkngLL/pxFceqQmC8lMF2phikrPwQsCGKHoCQ/OYKcMyNWQqwbX+6uq3pesoyhj6596y44B59PHG+db6E3kaJYz2iOyBG5XgxxY4LXZHDo
-x-ms-exchange-antispam-messagedata: vDxBPZPzZTqIa3iopnSgNDPj/RnDs1urG4URmklXO4p8pMQpepFr1ge0hdm5p3QDjObD1CiY0rho6wQgFADcp+cXA5y5qg8qSF7QX1Gs8B/2MZJGUauZuLaTv0e8B6XXj4myU8anHTEUEH3WTcMZ5g==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <11730AA20BF13849A771C9BC32B0544B@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WGuLoQf5u7HUV1s6V0PJEh7hCfVde9pwvIQPGZyYQTI=;
+        b=qZiDLa46teEuK2rajTRflr18qRzuR5NndOEGPXvlr179Ju8VL/Ofce4AkeFhLh9nip
+         ZzanXJjbrpiMXdwMWwWbxtH6/xd5p3Rv2zLp8hHz6SnTxoue1HQImJyWAsjDRlcy6dEK
+         OBVEwGw4iaSkXk4HJGaaK9vwv4zP+n2f+wSY7yFNmP3x5iCylUTqJexNG2NZfBgmqzq3
+         OmDZAmbmwEA8ihQmQ/pSd/MfRj5GbxMmFGYUGA2vOAmPbsufKqiTdB2PuCwb0Vp780PU
+         uPYuF2pPCfvFi/xs4a7AXzUHO5T2amrQ8OYt+3U0k7qlidGY9rL7k+JHNi0ogA4hdsZy
+         2s+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WGuLoQf5u7HUV1s6V0PJEh7hCfVde9pwvIQPGZyYQTI=;
+        b=AgkH5DYLu25M2ljr6f7Q5ai5UfTWJlRCaESDdnwuLw0YJlFKICMIBzij4PxTIOihLg
+         UIgunMDWGQRWLqLfPWqyyxsQjM8Gdu7Zey1Prn3zqC1JGyvatxzKkqW6lwJcruu5Qr/1
+         ULjDNHcyUEDi90+boywyztRnR4pKXZ3e4YbJZNsRQcdiC3hxX9tH2tU/6eBxCEOgDbLU
+         KqammAmMUKHybqUoV2OLROjmKLPe4akoQGiB5zIj+z/JYhkBajU5ZXrnmsIL3IEw3MlF
+         6RTy7/ItdTHSMTNXm+TDTM5MdwuqW40whX4JfhhRPlYMZo2je82Nos8DLwHtSkUXqy0h
+         sgjg==
+X-Gm-Message-State: ANhLgQ3CvQqmnrleVhwIvOtnR1AFj3s5N9ozOAGLV2ekshHdni9ndutm
+        0A9SZOZDtOokMaC5/RUtNkte6vEo6E18XVxIZnfwyUCdfCg=
+X-Google-Smtp-Source: ADFU+vuIIIHNA4ZO912/LtdlGvI64BbtmJSEPBlpDdMaqv4OGgHNQe3VeUMReQ1HsRfr1TuzQnePy7S0Yf9T2aZ2n6A=
+X-Received: by 2002:a9d:64ca:: with SMTP id n10mr1287571otl.325.1584604772313;
+ Thu, 19 Mar 2020 00:59:32 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8f04e2d-3c7d-4480-42b2-08d7cbdb4c2e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2020 07:58:22.8623
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HzugVRvO6r6LCoiClRs4xZV6y80u47jHaBpj0r5JR5t1eV3YNaJ6IZW3bzpVCyYddhB8ZkqorzPvxZv9IGe+YKtfABa6p1gVtbr4B+t5q0U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3708
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-19_01:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- bulkscore=0 impostorscore=0 clxscore=1011 suspectscore=0 phishscore=0
- malwarescore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003190036
+References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584133954-6953-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200313212345.GM4751@pendragon.ideasonboard.com> <OSBPR01MB359079EAA32E0DCBF63C6886AAFA0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
+ <20200318231856.GI24538@pendragon.ideasonboard.com>
+In-Reply-To: <20200318231856.GI24538@pendragon.ideasonboard.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 19 Mar 2020 07:59:06 +0000
+Message-ID: <CA+V-a8sUscZPW0xWANnkQQHwXobR-ABZc2RzfGr+0uumV6V+tQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] media: i2c: ov5645: Set maximum leverage of
+ external clock frequency to 24480000
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAzLTE4IGF0IDE2OjEwICswMTAwLCBMYXJzLVBldGVyIENsYXVzZW4gd3Jv
-dGU6DQo+IE9uIDMvMTgvMjAgMjo0MCBQTSwgQWxleGFuZHJ1IEFyZGVsZWFuIHdyb3RlOg0KPiA+
-IFRoaXMgY2hhbmdlIHVzZXMgdGhlIHJlYWRfYXZhaWwgYW5kICcuaW5mb19tYXNrX3NoYXJlZF9i
-eV90eXBlX2F2YWlsYWJsZScNCj4gPiBtb2RpZmllciB0byBzZXQgdGhlIGF2YWlsYWJsZSBzY2Fs
-ZS4NCj4gPiBFc3NlbnRpYWxseSwgbm90aGluZyBjaGFuZ2VzIHRvIHRoZSBkcml2ZXIncyBBQkku
-DQo+ID4gDQo+ID4gVGhlIG1haW4gaWRlYSBmb3IgdGhpcyBwYXRjaCBpcyB0byByZW1vdmUgdGhl
-IEFENzc5MyBkcml2ZXIgZnJvbQ0KPiA+IGNoZWNrcGF0Y2gncyByYWRhci4gVGhlcmUgaGF2ZSBi
-ZWVuIGFib3V0IH4zIGF0dGVtcHRzIHRvIGZpeC9icmVhayB0aGUNCj4gPiAnaW5fdm9sdGFnZS12
-b2x0YWdlX3NjYWxlX2F2YWlsYWJsZScgYXR0cmlidXRlLCBiZWNhdXNlIGNoZWNrcGF0Y2ggYXNz
-dW1lZA0KPiA+IGl0IHRvIGJlIGFuIGFyaXRobWV0aWMgb3BlcmF0aW9uIGFuZCBwZW9wbGUgd2Vy
-ZSB0cnlpbmcgdG8gY2hhbmdlIHRoYXQuDQo+IA0KPiBZZWFoLCBwcm9iYWJseSBhIGdvb2QgaWRl
-YSENCj4gDQo+ID4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJ1IEFyZGVsZWFuIDxhbGV4YW5kcnUu
-YXJkZWxlYW5AYW5hbG9nLmNvbT4NCj4gPiAtLS0NCj4gPiAgIGRyaXZlcnMvaWlvL2FkYy9hZDc3
-OTMuYyB8IDUzICsrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0NCj4gPiAg
-IDEgZmlsZSBjaGFuZ2VkLCAzNiBpbnNlcnRpb25zKCspLCAxNyBkZWxldGlvbnMoLSkNCj4gPiAN
-Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vYWRjL2FkNzc5My5jIGIvZHJpdmVycy9paW8v
-YWRjL2FkNzc5My5jDQo+ID4gaW5kZXggNTU5MmFlNTczZTZiLi5mYWQ5OGYxODAxZGIgMTAwNjQ0
-DQo+ID4gLS0tIGEvZHJpdmVycy9paW8vYWRjL2FkNzc5My5jDQo+ID4gKysrIGIvZHJpdmVycy9p
-aW8vYWRjL2FkNzc5My5jDQo+ID4gQEAgLTM1NCwyOSArMzU0LDI4IEBAIHN0YXRpYyBJSU9fQ09O
-U1RfQVRUUl9TQU1QX0ZSRVFfQVZBSUwoDQo+ID4gICBzdGF0aWMgSUlPX0NPTlNUX0FUVFJfTkFN
-RUQoc2FtcGxpbmdfZnJlcXVlbmN5X2F2YWlsYWJsZV9hZDc3OTcsDQo+ID4gICAJc2FtcGxpbmdf
-ZnJlcXVlbmN5X2F2YWlsYWJsZSwgIjEyMyA2MiA1MCAzMyAxNyAxNiAxMiAxMCA4IDYgNCIpOw0K
-PiA+ICAgDQo+ID4gLXN0YXRpYyBzc2l6ZV90IGFkNzc5M19zaG93X3NjYWxlX2F2YWlsYWJsZShz
-dHJ1Y3QgZGV2aWNlICpkZXYsDQo+ID4gLQkJCXN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRy
-LCBjaGFyICpidWYpDQo+ID4gK3N0YXRpYyBpbnQgYWQ3NzkzX3JlYWRfYXZhaWwoc3RydWN0IGlp
-b19kZXYgKmluZGlvX2RldiwNCj4gPiArCQkJICAgICBzdHJ1Y3QgaWlvX2NoYW5fc3BlYyBjb25z
-dCAqY2hhbiwNCj4gPiArCQkJICAgICBjb25zdCBpbnQgKip2YWxzLCBpbnQgKnR5cGUsIGludCAq
-bGVuZ3RoLA0KPiA+ICsJCQkgICAgIGxvbmcgbWFzaykNCj4gPiAgIHsNCj4gPiAtCXN0cnVjdCBp
-aW9fZGV2ICppbmRpb19kZXYgPSBkZXZfdG9faWlvX2RldihkZXYpOw0KPiA+ICAgCXN0cnVjdCBh
-ZDc3OTNfc3RhdGUgKnN0ID0gaWlvX3ByaXYoaW5kaW9fZGV2KTsNCj4gPiAtCWludCBpLCBsZW4g
-PSAwOw0KPiA+ICAgDQo+ID4gLQlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShzdC0+c2NhbGVf
-YXZhaWwpOyBpKyspDQo+ID4gLQkJbGVuICs9IHNwcmludGYoYnVmICsgbGVuLCAiJWQuJTA5dSAi
-LCBzdC0+c2NhbGVfYXZhaWxbaV1bMF0sDQo+ID4gLQkJCSAgICAgICBzdC0+c2NhbGVfYXZhaWxb
-aV1bMV0pOw0KPiA+ICsJc3dpdGNoIChtYXNrKSB7DQo+ID4gKwljYXNlIElJT19DSEFOX0lORk9f
-U0NBTEU6DQo+ID4gKwkJKnZhbHMgPSAoaW50ICopc3QtPnNjYWxlX2F2YWlsOw0KPiANCj4gQ2Fu
-IHlvdSBjaGFuZ2UgdGhlIHR5cGUgb2Ygc2NhbGVfYXZhaWwgdG8gaW50IHNvIHdlIGRvbid0IG5l
-ZWQgdGhlIGNhc3Q/DQo+IA0KDQpTbywgSSBkb24ndCB3YW50IHRvIGNvbWUtdXAgYXMgbG9va2lu
-ZyBsYXp5Lg0KW0kgbWVhbiwgSSBhbSBsYXp5LCBidXQgSSBkb24ndCB3YW50IHRvIGxvb2sgbGF6
-eS5dDQoNCkkgdG9vayBhIGxvb2sgYXQgd2hhdCBpdCBtZWFucyB0byBjaGFuZ2UgdGhpcyB0byBh
-IHNpbXBsZSBhcnJheS4NClRoZSByZXdvcmsgZmVlbHMgdG8gbWUgbGlrZSBhIGJpdCBtb3JlIG5v
-aXNlIHRoYW4gaXMgcHJvYmFibHkgd29ydGggaXQuDQpJIG1lYW4sIGlmIHRoZSBwdXJwb3NlIG9m
-IHRoZSByZXdvcmsgaXMgdG8ganVzdCBnZXQgcmlkIG9mIHRoaXMgY2FzdCwgdGhlbiBpdA0KZmVl
-bHMgbm9pc3kgW3RvIG1lXS4NCg0KVGhhdCBiZWluZyBzYWlkLCBpZiB5b3UgaW5zaXN0LCBJIGNh
-biB0YWtlIGEgbG9vayBhbmQgZG8gYSBwYXRjaCBbYmVmb3JlIHRoaXMNCm9uZV0gdG8gY29udmVy
-dCBpdCB0byBhIHNpbXBsZSBhcnJheS4NCg0KDQo+ID4gKwkJKnR5cGUgPSBJSU9fVkFMX0lOVF9Q
-TFVTX05BTk87DQo+ID4gKwkJLyogVmFsdWVzIGFyZSBzdG9yZWQgaW4gYSAyRCBtYXRyaXggICov
-DQo+ID4gKwkJKmxlbmd0aCA9IEFSUkFZX1NJWkUoc3QtPnNjYWxlX2F2YWlsKSAqIDI7DQo+ID4g
-ICANCj4gPiAtCWxlbiArPSBzcHJpbnRmKGJ1ZiArIGxlbiwgIlxuIik7DQo+ID4gKwkJcmV0dXJu
-IElJT19BVkFJTF9MSVNUOw0KPiA+ICsJfQ0KPiA+ICAgDQo+ID4gLQlyZXR1cm4gbGVuOw0KPiA+
-ICsJcmV0dXJuIC1FSU5WQUw7DQo+ID4gICB9DQo=
+Hi Laurent,
+
+On Wed, Mar 18, 2020 at 11:19 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On Fri, Mar 13, 2020 at 09:31:25PM +0000, Prabhakar Mahadev Lad wrote:
+> > On 13 March 2020 21:24, Laurent Pinchart wrote:
+> > > On Fri, Mar 13, 2020 at 09:12:33PM +0000, Lad Prabhakar wrote:
+> > > > While testing on Renesas RZ/G2E platform, noticed the clock frequency
+> > > > to be 24242424 as a result the probe failed. However increasing the
+> > > > maximum leverage of external clock frequency to 24480000 fixes this
+> > > > issue. Since this difference is small enough and is insignificant set
+> > > > the same in the driver.
+> > > >
+> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > ---
+> > > >  drivers/media/i2c/ov5645.c | 6 ++++--
+> > > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+> > > > index 4fbabf3..b49359b 100644
+> > > > --- a/drivers/media/i2c/ov5645.c
+> > > > +++ b/drivers/media/i2c/ov5645.c
+> > > > @@ -1107,8 +1107,10 @@ static int ov5645_probe(struct i2c_client *client)
+> > > >  }
+> > > >
+> > > >  xclk_freq = clk_get_rate(ov5645->xclk);
+> > > > -/* external clock must be 24MHz, allow 1% tolerance */
+> > > > -if (xclk_freq < 23760000 || xclk_freq > 24240000) {
+> > > > +/* external clock must be 24MHz, allow a minimum 1% and a maximum of 2%
+> > > > + * tolerance
+> > >
+> > > So where do these numbers come from ? I understand that 2% is what you
+> > > need to make your clock fit in the range, but why -1%/+2% instead of -
+> > > 2%/+2% ? And why not 2.5 or 3% ? The sensor datasheet documents the
+> > > range of supported xvclk frequencies to be 6MHz to 54MHz. I understand
+> > > that PLL parameters depend on the clock frequency, but could they be
+> > > calculated instead of hardcoded, to avoid requiring an exact 24MHz input
+> > > frequency ?
+> >
+> > To be honest I don't have the datasheet for ov5645, the flyer says 6-54Mhz but the
+> > logs/comment says 24Mhz.
+>
+> The OV5645 clock topology is fairly complex, with two PLLs and different
+> set of output dividers. It however shouldn't be impossible to calculate
+> the PLL configuration in the driver, but would require some dedication,
+> and is probably not worth it.
+>
+> I've discussed the matter with Sakari, and we concluded that this is
+> just a sanity check. We advise increasing the tolerance by a bigger
+> amount to avoid patching this for every new board (completely
+> arbitrarily, +/- 5%), and turning the fatal error into a dev_warn,
+> dropping the return -EINVAL statement.
+>
+Thank you for looking into this. I'll update the patch accordingly.
+
+Cheers,
+--Prabhakar
+
+> > > > + */
+> > > > +if (xclk_freq < 23760000 || xclk_freq > 24480000) {
+> > > >  dev_err(dev, "external clock frequency %u is not supported\n",
+> > > >  xclk_freq);
+> > > >  return -EINVAL;
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
