@@ -2,123 +2,228 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334D9C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0171C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3932076F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:12:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WDWvPg/w"
+	by mail.kernel.org (Postfix) with ESMTP id 6D84020772
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:12:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584576725;
+	bh=c5tWnocDc5au1/G7gjOm+z+uCidBAVAit2WkiuH7E+c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Itl2M2RjpwXbWe1+ocfJaRSbNCEW+pS7C2Df8Qx+UiW312bGFJxgdt3lRBR7w1W87
+	 2OzEhJd2XXfEroTvRN7Y2RYwI8BJ7KBKc8jMgL8ptACcvP7xlYkOEjOjwEmHQdw2Jf
+	 mm7tBbcFHWZsQX1Zv2/dIyKr3zQRZcYOKH2N7bjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgCSAMD (ORCPT
+        id S1727802AbgCSAMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 18 Mar 2020 20:12:03 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49299 "EHLO ozlabs.org"
+Received: from mail.kernel.org ([198.145.29.99]:37102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727321AbgCSALE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727360AbgCSALE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Mar 2020 20:11:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48jS4626w6z9sPk;
-        Thu, 19 Mar 2020 11:11:02 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1584576662;
-        bh=4NeHfuenkCF6u/+kEoesLWlSHw3XkaaPyGQc98hjRGQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=WDWvPg/wLRHG3UHvKXOZH8kDol+lSTsMmw0hkBGJaT742jX2qdWR8r8HEpRfKiGeU
-         wJdjcRBuTUam5RpR3JdszpnZYzYIlSqleCh0qLceAxD6Mey+RIetnjxEUHDrBelurR
-         F8+zRbC5VcOOhlTksTbrCF1U61NLlQRHlpLMiWsEuOhsqZhBO6mn0S79y/RCc64cdf
-         ohc6P+D10KTCjwkzEsCgay0Jux/CzM13FaXu6cwAeE+s/+WKErUTVfptVc5CecLk0I
-         gD3guZfOcG13qtkc9GYDg33SyBuckEHfSdjQiGfKICPCooc+WDupeoVVdJQbK7hrox
-         w+kIk6MIQZi6Q==
-Date:   Thu, 19 Mar 2020 11:10:53 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        Noam Dagan <ndagan@amazon.com>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20200319111053.597bd4d1@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/5vHI_Q_c2A6E/.8i+PNP8Go";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        by mail.kernel.org (Postfix) with ESMTPSA id 781C420776;
+        Thu, 19 Mar 2020 00:11:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584576663;
+        bh=c5tWnocDc5au1/G7gjOm+z+uCidBAVAit2WkiuH7E+c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yQ0Y6FrgpawqRwhJCu+BGRKf8+l/tNAWefb8Vh6BRXc5cRxq3PPeAmEpZg9FZZ6my
+         q8pl/pulVNjkbRwWqE6f8Ujm+FmRw/2NyaVPzoxoy0Uchs+v2Nc2MqIYxnm8+S5u9v
+         a+SRuW6rXZagcy8UaozX1Ugnj7LnyMRXBZwzJqWg=
+From:   paulmck@kernel.org
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH RFC v2 tip/core/rcu 05/22] rcu-tasks: Create struct to hold state information
+Date:   Wed, 18 Mar 2020 17:10:43 -0700
+Message-Id: <20200319001100.24917-5-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/5vHI_Q_c2A6E/.8i+PNP8Go
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Hi all,
+This commit creates an rcu_tasks struct to hold state information for
+RCU Tasks.  This is a preparation commit for adding additional flavors
+of Tasks RCU, each of which would have its own rcu_tasks struct.
 
-Today's linux-next merge of the net-next tree got a conflict in:
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/tasks.h | 73 ++++++++++++++++++++++++++++++++++--------------------
+ 1 file changed, 46 insertions(+), 27 deletions(-)
 
-  drivers/net/ethernet/amazon/ena/ena_netdev.c
+diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+index be8d179..5ccfe0d 100644
+--- a/kernel/rcu/tasks.h
++++ b/kernel/rcu/tasks.h
+@@ -7,6 +7,30 @@
+ 
+ #ifdef CONFIG_TASKS_RCU
+ 
++/**
++ * Definition for a Tasks-RCU-like mechanism.
++ * @cbs_head: Head of callback list.
++ * @cbs_tail: Tail pointer for callback list.
++ * @cbs_wq: Wait queue allowning new callback to get kthread's attention.
++ * @cbs_lock: Lock protecting callback list.
++ * @kthread_ptr: This flavor's grace-period/callback-invocation kthread.
++ */
++struct rcu_tasks {
++	struct rcu_head *cbs_head;
++	struct rcu_head **cbs_tail;
++	struct wait_queue_head cbs_wq;
++	raw_spinlock_t cbs_lock;
++	struct task_struct *kthread_ptr;
++};
++
++#define DEFINE_RCU_TASKS(name)						\
++static struct rcu_tasks name =						\
++{									\
++	.cbs_tail = &name.cbs_head,					\
++	.cbs_wq = __WAIT_QUEUE_HEAD_INITIALIZER(name.cbs_wq),		\
++	.cbs_lock = __RAW_SPIN_LOCK_UNLOCKED(name.cbs_lock),		\
++}
++
+ /*
+  * Simple variant of RCU whose quiescent states are voluntary context
+  * switch, cond_resched_rcu_qs(), user-space execution, and idle.
+@@ -18,12 +42,7 @@
+  * rates from multiple CPUs.  If this is required, per-CPU callback lists
+  * will be needed.
+  */
+-
+-/* Global list of callbacks and associated lock. */
+-static struct rcu_head *rcu_tasks_cbs_head;
+-static struct rcu_head **rcu_tasks_cbs_tail = &rcu_tasks_cbs_head;
+-static DECLARE_WAIT_QUEUE_HEAD(rcu_tasks_cbs_wq);
+-static DEFINE_RAW_SPINLOCK(rcu_tasks_cbs_lock);
++DEFINE_RCU_TASKS(rcu_tasks);
+ 
+ /* Track exiting tasks in order to allow them to be waited for. */
+ DEFINE_STATIC_SRCU(tasks_rcu_exit_srcu);
+@@ -33,8 +52,6 @@ DEFINE_STATIC_SRCU(tasks_rcu_exit_srcu);
+ static int rcu_task_stall_timeout __read_mostly = RCU_TASK_STALL_TIMEOUT;
+ module_param(rcu_task_stall_timeout, int, 0644);
+ 
+-static struct task_struct *rcu_tasks_kthread_ptr;
+-
+ /**
+  * call_rcu_tasks() - Queue an RCU for invocation task-based grace period
+  * @rhp: structure to be used for queueing the RCU updates.
+@@ -57,17 +74,18 @@ void call_rcu_tasks(struct rcu_head *rhp, rcu_callback_t func)
+ {
+ 	unsigned long flags;
+ 	bool needwake;
++	struct rcu_tasks *rtp = &rcu_tasks;
+ 
+ 	rhp->next = NULL;
+ 	rhp->func = func;
+-	raw_spin_lock_irqsave(&rcu_tasks_cbs_lock, flags);
+-	needwake = !rcu_tasks_cbs_head;
+-	WRITE_ONCE(*rcu_tasks_cbs_tail, rhp);
+-	rcu_tasks_cbs_tail = &rhp->next;
+-	raw_spin_unlock_irqrestore(&rcu_tasks_cbs_lock, flags);
++	raw_spin_lock_irqsave(&rtp->cbs_lock, flags);
++	needwake = !rtp->cbs_head;
++	WRITE_ONCE(*rtp->cbs_tail, rhp);
++	rtp->cbs_tail = &rhp->next;
++	raw_spin_unlock_irqrestore(&rtp->cbs_lock, flags);
+ 	/* We can't create the thread unless interrupts are enabled. */
+-	if (needwake && READ_ONCE(rcu_tasks_kthread_ptr))
+-		wake_up(&rcu_tasks_cbs_wq);
++	if (needwake && READ_ONCE(rtp->kthread_ptr))
++		wake_up(&rtp->cbs_wq);
+ }
+ EXPORT_SYMBOL_GPL(call_rcu_tasks);
+ 
+@@ -169,10 +187,12 @@ static int __noreturn rcu_tasks_kthread(void *arg)
+ 	struct rcu_head *list;
+ 	struct rcu_head *next;
+ 	LIST_HEAD(rcu_tasks_holdouts);
++	struct rcu_tasks *rtp = arg;
+ 	int fract;
+ 
+ 	/* Run on housekeeping CPUs by default.  Sysadm can move if desired. */
+ 	housekeeping_affine(current, HK_FLAG_RCU);
++	WRITE_ONCE(rtp->kthread_ptr, current); // Let GPs start!
+ 
+ 	/*
+ 	 * Each pass through the following loop makes one check for
+@@ -183,17 +203,17 @@ static int __noreturn rcu_tasks_kthread(void *arg)
+ 	for (;;) {
+ 
+ 		/* Pick up any new callbacks. */
+-		raw_spin_lock_irqsave(&rcu_tasks_cbs_lock, flags);
+-		list = rcu_tasks_cbs_head;
+-		rcu_tasks_cbs_head = NULL;
+-		rcu_tasks_cbs_tail = &rcu_tasks_cbs_head;
+-		raw_spin_unlock_irqrestore(&rcu_tasks_cbs_lock, flags);
++		raw_spin_lock_irqsave(&rtp->cbs_lock, flags);
++		list = rtp->cbs_head;
++		rtp->cbs_head = NULL;
++		rtp->cbs_tail = &rtp->cbs_head;
++		raw_spin_unlock_irqrestore(&rtp->cbs_lock, flags);
+ 
+ 		/* If there were none, wait a bit and start over. */
+ 		if (!list) {
+-			wait_event_interruptible(rcu_tasks_cbs_wq,
+-						 READ_ONCE(rcu_tasks_cbs_head));
+-			if (!rcu_tasks_cbs_head) {
++			wait_event_interruptible(rtp->cbs_wq,
++						 READ_ONCE(rtp->cbs_head));
++			if (!rtp->cbs_head) {
+ 				WARN_ON(signal_pending(current));
+ 				schedule_timeout_interruptible(HZ/10);
+ 			}
+@@ -211,7 +231,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
+ 		 *
+ 		 * This synchronize_rcu() also dispenses with the
+ 		 * need for a memory barrier on the first store to
+-		 * ->rcu_tasks_holdout, as it forces the store to happen
++		 * t->rcu_tasks_holdout, as it forces the store to happen
+ 		 * after the beginning of the grace period.
+ 		 */
+ 		synchronize_rcu();
+@@ -278,7 +298,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
+ 			firstreport = true;
+ 			WARN_ON(signal_pending(current));
+ 			list_for_each_entry_safe(t, t1, &rcu_tasks_holdouts,
+-						rcu_tasks_holdout_list) {
++						 rcu_tasks_holdout_list) {
+ 				check_holdout_task(t, needreport, &firstreport);
+ 				cond_resched();
+ 			}
+@@ -325,11 +345,10 @@ static int __init rcu_spawn_tasks_kthread(void)
+ {
+ 	struct task_struct *t;
+ 
+-	t = kthread_run(rcu_tasks_kthread, NULL, "rcu_tasks_kthread");
++	t = kthread_run(rcu_tasks_kthread, &rcu_tasks, "rcu_tasks_kthread");
+ 	if (WARN_ONCE(IS_ERR(t), "%s: Could not start Tasks-RCU grace-period kthread, OOM is now expected behavior\n", __func__))
+ 		return 0;
+ 	smp_mb(); /* Ensure others see full kthread. */
+-	WRITE_ONCE(rcu_tasks_kthread_ptr, t);
+ 	return 0;
+ }
+ core_initcall(rcu_spawn_tasks_kthread);
+-- 
+2.9.5
 
-between commit:
-
-  dfdde1345bc1 ("net: ena: fix continuous keep-alive resets")
-
-from the net tree and commit:
-
-  1a63443afd70 ("net/amazon: Ensure that driver version is aligned to the l=
-inux kernel")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 4647d7656761,555c7273d712..000000000000
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@@ -3486,10 -3473,7 +3483,8 @@@ static int ena_restore_device(struct en
-  		netif_carrier_on(adapter->netdev);
- =20
-  	mod_timer(&adapter->timer_service, round_jiffies(jiffies + HZ));
- +	adapter->last_keep_alive_jiffies =3D jiffies;
-- 	dev_err(&pdev->dev,
-- 		"Device reset completed successfully, Driver info: %s\n",
-- 		version);
-+ 	dev_err(&pdev->dev, "Device reset completed successfully\n");
- =20
-  	return rc;
-  err_disable_msix:
-
---Sig_/5vHI_Q_c2A6E/.8i+PNP8Go
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5yuI0ACgkQAVBC80lX
-0GxwDQf/Uho6IaGCmfwvaMFtSKnQW6lVYzKQ9v6sVtTjaTch6Vnj4DOGZDMUPN/G
-KaGHYNehY4s4L/jicSCImhMkY7Lm5aFmnDsCLhhjBt93EypyW0KDvNGg9CbwYfjY
-dYr7Ii3RQnhJCxgocnF5HQNxtg2Ssns9m1Ynj2LxTYxN065b9ELGOI56zEUI2bp4
-+rxlXgJuG1SeZMXNYj2+FZIpgZM2P8D/CXcgQuhr7Q038YmKQFscdTEoh1Jj6yio
-GH2kNEjMpMjmSnzR+E4So8gTMVyGGEXe6kqtzGgqQq73mM3pfI3x1FCZP/bl62KO
-6LvklCycRNGSyv7JmuMsJYjYEp72NQ==
-=/Xxx
------END PGP SIGNATURE-----
-
---Sig_/5vHI_Q_c2A6E/.8i+PNP8Go--
