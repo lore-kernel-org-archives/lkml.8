@@ -2,262 +2,353 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC01C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CDDC43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A02862078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C70D720724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:25:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A+WkHmfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbgCSSYZ (ORCPT
+        id S1727377AbgCSSZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:24:25 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:54662 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgCSSYZ (ORCPT
+        Thu, 19 Mar 2020 14:25:09 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40958 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727146AbgCSSZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:24:25 -0400
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 5249E200ACD;
-        Thu, 19 Mar 2020 18:24:22 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 3077D20578; Thu, 19 Mar 2020 19:24:13 +0100 (CET)
-Date:   Thu, 19 Mar 2020 19:24:13 +0100
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-Message-ID: <20200319182413.GA3968@light.dominikbrodowski.net>
-References: <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
- <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
- <20200319130049.GA2244@light.dominikbrodowski.net>
- <20200319134139.GB3983@sirena.org.uk>
- <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
- <20200319165157.GA2254@light.dominikbrodowski.net>
- <a7bf2aee-78e7-f905-bcc3-cd21bf16a976@intel.com>
+        Thu, 19 Mar 2020 14:25:09 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f3so4363812wrw.7
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 11:25:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TQw1PGKPTMJ0Q+G+rToKEsu033L1SxRIQ9vKoZ/eDhs=;
+        b=A+WkHmfuVZsFxCjHcaDc9Y7G1koy/78ePcbzpo8H4EM8G+UO0W8GrGqJS3hAlyRB2Y
+         jSCLuzuc+wTQrNfjWriUn3KYMN8thh+BzIsWmkTyYd/mi7r+DXdpTfQZcm6ulczysm0k
+         jsiAnwvD5XqBxVbpJ7a/BGIr9pthtyNciZ93RVCvBls3yYEajYgMENBLoEtVEQZq8cLU
+         x2r2yy06cmkMEHeAw+mOrwgzIXs4bUU8aOnM4aOZnrOCgAbvZrAXMX9BarGcuH4q0wOy
+         7FuGCPi+jQzgXIlxT83SOw3PV5GHNIQ6VWhbr2Xzvyk2WVP3WA0oT4f4qavgAeVZTPMP
+         ElTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=TQw1PGKPTMJ0Q+G+rToKEsu033L1SxRIQ9vKoZ/eDhs=;
+        b=RQh/gB3fANi2RC6fmD8OFIkfKgEg266lfsSon5z3dS5Ua+t7Pvk773iAR6vNj1+nt0
+         rhJyz1GWmSyOopFIAiHeOswrAJBD7eLqkQnKw89uyHDMj0wUVTM5DL78qi6X3E/itPCF
+         7i5Ju+wep8IKNESOYWnH+pJ9faypUVsQtSHPKR7YsjLfj4yvc6WM9y4wHUJxM7V9QUkW
+         Y0nh3uyQFDbfPHKORNipz9IoO/+sLlcAbOanwmiMDoLfaYxJ+B+iDTXJh58PecYiWKAY
+         eDhLJA3BAWqPLeZ0P1Y29PCHULrEyIFjuM+9cEe6uQp8XIWWgs52Qv3aSRiB/+H6RSiB
+         SCtg==
+X-Gm-Message-State: ANhLgQ024i0ElUfJABtPHDeVsBGkTmLJfivhOq4lvhxKGzwkNb04jm2T
+        JlgMwC18pIYhT7z5pNiUjrB6VQ==
+X-Google-Smtp-Source: ADFU+vvuSBHAjDT5LCtY3qcBQjT2otLqXL+Z1gaggmOcIerNmThW/9KDIxTDfWqLw7BM09CnCrk8NQ==
+X-Received: by 2002:a5d:630e:: with SMTP id i14mr4962841wru.260.1584642304007;
+        Thu, 19 Mar 2020 11:25:04 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:6dd6:dc1a:136d:210e? ([2a01:e34:ed2f:f020:6dd6:dc1a:136d:210e])
+        by smtp.googlemail.com with ESMTPSA id d15sm4498193wrp.37.2020.03.19.11.25.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 11:25:03 -0700 (PDT)
+Subject: Re: [PATCH 2/3] thermal: imx8mm: Add i.MX8MP support
+To:     Anson Huang <Anson.Huang@nxp.com>, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+References: <1583681240-14782-1-git-send-email-Anson.Huang@nxp.com>
+ <1583681240-14782-2-git-send-email-Anson.Huang@nxp.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <9ca81c42-6086-eb17-3eda-9bc2dab1101e@linaro.org>
+Date:   Thu, 19 Mar 2020 19:25:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a7bf2aee-78e7-f905-bcc3-cd21bf16a976@intel.com>
+In-Reply-To: <1583681240-14782-2-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 06:33:50PM +0100, Cezary Rojewski wrote:
-> On 2020-03-19 17:51, Dominik Brodowski wrote:
-> > On Thu, Mar 19, 2020 at 04:48:03PM +0100, Cezary Rojewski wrote:
-> > > On 2020-03-19 14:41, Mark Brown wrote:
-> > > > On Thu, Mar 19, 2020 at 02:00:49PM +0100, Dominik Brodowski wrote:
-> > > > 
-> > > > > Have some good news now, namely that a bisect is complete: That pointed to
-> > > > > 1272063a7ee4 ("ASoC: soc-core: care .ignore_suspend for Component suspend");
-> > > > > therefore I've added Kuninori Morimoto to this e-mail thread.
-> > > > 
-> > > > If that's an issue it feels more like a driver bug in that if the driver
-> > > > asked for ignore_suspend then it should expect not to have the suspend
-> > > > callback called.
-> > > > 
-> > > 
-> > > Requested for tests with following diff applied:
-> > > 
-> > > diff --git a/sound/soc/intel/boards/broadwell.c
-> > > b/sound/soc/intel/boards/broadwell.c
-> > > index db7e1e87156d..6ed4c1b0a515 100644
-> > > --- a/sound/soc/intel/boards/broadwell.c
-> > > +++ b/sound/soc/intel/boards/broadwell.c
-> > > @@ -212,7 +212,6 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] =
-> > > {
-> > >                  .init = broadwell_rt286_codec_init,
-> > >                  .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-> > >                          SND_SOC_DAIFMT_CBS_CFS,
-> > > -               .ignore_suspend = 1,
-> > >                  .ignore_pmdown_time = 1,
-> > >                  .be_hw_params_fixup = broadwell_ssp0_fixup,
-> > >                  .ops = &broadwell_rt286_ops,
-> > 
-> > That patch fixes the issue(s). I didn't even need to revert 64df6afa0dab
-> > ("ASoC: Intel: broadwell: change cpu_dai and platform components for SOF")
-> > on top of that. But you can assess better whether that patch needs care for
-> > other reasons; for me, this one-liner you have suggested is perfect.
-> > 
-> > Many thanks -- it's been a pleasure to work with you on tracking this issue
-> > down.
-> > 
-> > 	Dominik
-> > 
+On 08/03/2020 16:27, Anson Huang wrote:
+> i.MX8MP shares same TMU with i.MX8MM, the only difference is i.MX8MP
+> has two thermal sensors while i.MX8MM ONLY has one, add multiple sensors
+> support for i.MX8MM TMU driver.
 > 
-> Thank you for being so cooperative during this 2day debug session.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/thermal/imx8mm_thermal.c | 108 +++++++++++++++++++++++++++++++++------
+>  1 file changed, 93 insertions(+), 15 deletions(-)
 > 
-> The patch I mentioned earlier unintentionally (?) changed 'platform'
-> component param for ssp0_port from 'dummy' to 'platform' for non-SOF
-> solution:
-> 
-> diff --git a/sound/soc/intel/boards/broadwell.c
-> b/sound/soc/intel/boards/broadwell.c
-> index b9c12e24c70b..db7e1e87156d 100644
-> --- a/sound/soc/intel/boards/broadwell.c
-> +++ b/sound/soc/intel/boards/broadwell.c
-> @@ -164,14 +164,6 @@ SND_SOC_DAILINK_DEF(platform,
->  SND_SOC_DAILINK_DEF(codec,
->         DAILINK_COMP_ARRAY(COMP_CODEC("i2c-INT343A:00", "rt286-aif1")));
-> 
-> -#if IS_ENABLED(CONFIG_SND_SOC_SOF_BROADWELL)
-> -SND_SOC_DAILINK_DEF(ssp0_port,
-> -           DAILINK_COMP_ARRAY(COMP_CPU("ssp0-port")));
-> -#else
-> -SND_SOC_DAILINK_DEF(ssp0_port,
-> -           DAILINK_COMP_ARRAY(COMP_DUMMY()));
-> -#endif
-> -
->  /* broadwell digital audio interface glue - connects codec <--> CPU */
->  static struct snd_soc_dai_link broadwell_rt286_dais[] = {
->         /* Front End DAI links */
-> @@ -226,7 +218,7 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] =
-> {
->                 .ops = &broadwell_rt286_ops,
->                 .dpcm_playback = 1,
->                 .dpcm_capture = 1,
-> -               SND_SOC_DAILINK_REG(ssp0_port, codec, platform),
-> +               SND_SOC_DAILINK_REG(dummy, codec, dummy),
->         },
-> 
-> 
-> Said change causes following to occur:
-> 
-> 
-> (stream start)
-> [  113.251950] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000003000000
-> size: 77
-> [  113.252090] haswell-pcm-audio haswell-pcm-audio: > rx: 0x0000000043000000
-> size: 48
-> [  113.252097] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006301000
-> size: 20
-> [  113.252147] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006301000
-> size: 20
-> [  113.252179] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006100000
-> size: 0
-> [  113.252219] snd_soc_core:dpcm_fe_dai_hw_params:  System PCM: ASoC:
-> hw_params FE System PCM rate 48000 chan 2 fmt 2
-> [  113.252229] snd_soc_core:dapm_update_dai_unlocked: haswell-pcm-audio
-> haswell-pcm-audio: Update DAI routes for System Pin playback
-> [  113.252236] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006000000
-> size: 0
-> [  113.252304] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000004000000
-> size: 4
-> [  113.252425] snd_soc_sst_haswell_pcm:create_adsp_page_table:  System PCM:
-> generating page table for 00000000a8c2b8a6 size 0x17700 pages 24
-> 
-> 
-> (In essence these tx'es denote sequence for stream initialization while the
-> last two for stream RESET (0x6000000) and FREE (0x4000000))
-> 
-> and that is only to recreate the stream once again:
-> 
-> 
-> [  113.252673] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000003000000
-> size: 77
-> [  113.252803] haswell-pcm-audio haswell-pcm-audio: > rx: 0x0000000043000000
-> size: 48
-> [  113.252810] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006301000
-> size: 20
-> [  113.252864] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006301000
-> size: 20
-> [  113.252900] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006100000
-> size: 0
-> [  113.252987] snd_soc_core:dpcm_fe_dai_prepare:  System PCM: ASoC: prepare
-> FE System PCM
-> [  113.252993] snd_soc_core:dpcm_be_dai_prepare:  Codec: ASoC: prepare BE
-> Codec
-> [  113.253028] snd_soc_core:dpcm_dapm_stream_event:  Codec: ASoC: BE Codec
-> event 1 dir 0
-> [  113.254962] snd_soc_core:dpcm_do_trigger:  Codec: ASoC: trigger BE Codec
-> cmd 1
-> 
-> 
-> Because of that we ended up in _reset and _free being called twice:
-> 
-> 
-> [  113.254969] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006200000
-> size: 0
-> [  113.254980] snd_soc_core:dpcm_dai_trigger_fe_be:  System PCM: ASoC: post
-> trigger FE System PCM cmd 1
-> [  113.254983] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006200000
-> size: 0
-> [  113.254996] snd_soc_sst_ipc:ipc_tx_msgs: haswell-pcm-audio
-> haswell-pcm-audio: ipc_tx_msgs dsp busy
-> [  118.486291]  System PCM: ASoC: trigger FE cmd: 7 failed: -22
-> [  118.486431] snd_soc_core:dpcm_dai_trigger_fe_be:  System PCM: ASoC: pre
-> trigger FE System PCM cmd 0
-> [  118.486464] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006100000
-> size: 0
-> [  118.486495] snd_soc_core:dpcm_do_trigger:  Codec: ASoC: trigger BE Codec
-> cmd 0
-> [  118.486514] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006100000
-> size: 0
-> [  118.486550] snd_soc_core:dpcm_fe_dai_hw_free:  System PCM: ASoC: hw_free
-> FE System PCM
-> [  118.486569] snd_soc_core:dpcm_be_dai_hw_free:  Codec: ASoC: hw_free BE
-> Codec
-> [  118.486719] snd_soc_core:dpcm_fe_dai_hw_free:  System PCM: ASoC: hw_free
-> FE System PCM
-> [  118.486734] snd_soc_core:dpcm_be_dai_hw_free:  Codec: ASoC: hw_free BE
-> Codec
-> [  118.486751] snd_soc_core:dpcm_be_dai_shutdown:  Codec: ASoC: close BE
-> Codec
-> [  118.486801] snd_soc_sst_ipc:ipc_tx_msgs: haswell-pcm-audio
-> haswell-pcm-audio: ipc_tx_msgs dsp busy
-> [  118.489279] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000006000000
-> size: 0
-> [  118.489382] haswell-pcm-audio haswell-pcm-audio: tx: 0x0000000004000000
-> size: 4
-> [  118.489535] snd_soc_core:dpcm_fe_dai_shutdown:  System PCM: ASoC: close
-> FE System PCM
-> [  118.489547] haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL,
-> no stream to reset, ignore it.
-> [  118.489553] haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL,
-> no stream to free, ignore it.
-> [  118.489571] snd_soc_core:dpcm_be_disconnect:  System PCM: ASoC: BE
-> playback disconnect check for Codec
-> [  118.489580] snd_soc_core:dpcm_be_disconnect:  System PCM: freed DSP
-> playback path System PCM -> Codec
-> 
-> 
-> Could you confirm the same happens on your machine when revert of mentioned
-> patch is not applied ("stream is NULL" messages occur)? Issue may be
-> harmless but explained sequence does not look right.
+> diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
+> index d597ceb..8a87ed0 100644
+> --- a/drivers/thermal/imx8mm_thermal.c
+> +++ b/drivers/thermal/imx8mm_thermal.c
+> @@ -10,34 +10,75 @@
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> -#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/thermal.h>
+>  
+>  #include "thermal_core.h"
+>  
+>  #define TER			0x0	/* TMU enable */
+> +#define TPS			0x4
+>  #define TRITSR			0x20	/* TMU immediate temp */
+>  
+>  #define TER_EN			BIT(31)
+>  #define TRITSR_VAL_MASK		0xff
+>  
+> -#define TEMP_LOW_LIMIT		10
+> +#define PROBE_SEL_ALL		GENMASK(31, 30)
+>  
+> -struct imx8mm_tmu {
+> +#define PROBE0_STATUS_OFFSET	30
+> +#define PROBE0_VAL_OFFSET	16
+> +#define SIGN_BIT		BIT(7)
+> +#define TEMP_VAL_MASK		GENMASK(6, 0)
+> +
+> +#define VER1_TEMP_LOW_LIMIT	10
+> +#define VER2_TEMP_LOW_LIMIT	-40
+> +#define VER2_TEMP_HIGH_LIMIT	125
+> +
+> +#define TMU_VER1		0x1
+> +#define TMU_VER2		0x2
+> +
+> +struct thermal_soc_data {
+> +	u32 num_sensors;
+> +	u32 version;
+> +};
+> +
+> +struct tmu_sensor {
+> +	struct imx8mm_tmu *priv;
+> +	u32 hw_id;
+>  	struct thermal_zone_device *tzd;
+> +};
+> +
+> +struct imx8mm_tmu {
+>  	void __iomem *base;
+>  	struct clk *clk;
+> +	const struct thermal_soc_data *socdata;
+> +	struct tmu_sensor sensors[0];
+>  };
+>  
+>  static int tmu_get_temp(void *data, int *temp)
+>  {
+> -	struct imx8mm_tmu *tmu = data;
+> +	struct tmu_sensor *sensor = data;
+> +	struct imx8mm_tmu *tmu = sensor->priv;
+> +	bool ready;
+>  	u32 val;
+>  
+> -	val = readl_relaxed(tmu->base + TRITSR) & TRITSR_VAL_MASK;
+> -	if (val < TEMP_LOW_LIMIT)
+> -		return -EAGAIN;
+> +	if (tmu->socdata->version == TMU_VER1) {
 
-Indeed, I still see
+Don't do this here, implement a callback to read the temp, store it in
+the socdata and call it directly from here.
 
-haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to reset, ignore it.
-haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to free, ignore it.
-haswell-pcm-audio haswell-pcm-audio: FW loaded, mailbox readback FW info: type 01, - version: 00.00, build 77, source commit id: 876ac6906f31a43b6772b23c7c983ce9dcb18a19
-haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to reset, ignore it.
-haswell-pcm-audio haswell-pcm-audio: warning: stream is NULL, no stream to free, ignore it.
+So you end up with something simple like:
 
-though sounds continues to work.
+	*temp = tmu->socdata->get_temp(...);
 
-Thanks again,
-	Dominik
+> +		val = readl_relaxed(tmu->base + TRITSR) & TRITSR_VAL_MASK;
+> +		if (val < VER1_TEMP_LOW_LIMIT)
+> +			return -EAGAIN;> +	} else {
+> +		val = readl_relaxed(tmu->base + TRITSR);
+> +		ready = val & (1 << (sensor->hw_id + PROBE0_STATUS_OFFSET));
+
+	test_bit()?
+
+> +		val = (val >> (sensor->hw_id * PROBE0_VAL_OFFSET))
+> +		      & TRITSR_VAL_MASK;
+> +		if (val & SIGN_BIT) /* negative */
+> +			val = (~(val & TEMP_VAL_MASK) + 1);
+
+Please have a look at the different bitops available to simplify this
+decoding.
+
+> +		*temp = val;
+> +		if (!ready || *temp < VER2_TEMP_LOW_LIMIT ||
+> +		    *temp > VER2_TEMP_HIGH_LIMIT)
+> +			return -EAGAIN;
+> +	}
+>  
+>  	*temp = val * 1000;
+>  
+> @@ -50,14 +91,21 @@ static struct thermal_zone_of_device_ops tmu_tz_ops = {
+>  
+>  static int imx8mm_tmu_probe(struct platform_device *pdev)
+>  {
+> +	const struct thermal_soc_data *data;
+>  	struct imx8mm_tmu *tmu;
+>  	u32 val;
+>  	int ret;
+> +	int i;
+> +
+> +	data = of_device_get_match_data(&pdev->dev);
+>  
+> -	tmu = devm_kzalloc(&pdev->dev, sizeof(struct imx8mm_tmu), GFP_KERNEL);
+> +	tmu = devm_kzalloc(&pdev->dev, struct_size(tmu, sensors,
+> +			   data->num_sensors), GFP_KERNEL);
+>  	if (!tmu)
+>  		return -ENOMEM;
+>  
+> +	tmu->socdata = data;
+> +
+>  	tmu->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(tmu->base))
+>  		return PTR_ERR(tmu->base);
+> @@ -77,16 +125,35 @@ static int imx8mm_tmu_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	tmu->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0,
+> -							tmu, &tmu_tz_ops);
+> -	if (IS_ERR(tmu->tzd)) {
+> -		dev_err(&pdev->dev,
+> -			"failed to register thermal zone sensor: %d\n", ret);
+> -		return PTR_ERR(tmu->tzd);
+> +	/* disable the monitor during initialization */
+> +	val = readl_relaxed(tmu->base + TER);
+> +	val &= ~TER_EN;
+> +	writel_relaxed(val, tmu->base + TER);
+
+Could you wrap those calls inside a small helper function with a self
+described name?
+
+> +
+> +	for (i = 0; i < data->num_sensors; i++) {
+> +		tmu->sensors[i].priv = tmu;
+> +		tmu->sensors[i].tzd =
+> +			devm_thermal_zone_of_sensor_register(&pdev->dev, i,
+> +							     &tmu->sensors[i],
+> +							     &tmu_tz_ops);
+> +		if (IS_ERR(tmu->sensors[i].tzd)) {
+> +			dev_err(&pdev->dev,
+> +				"failed to register thermal zone sensor[%d]: %d\n",
+> +				i, ret);
+> +			return PTR_ERR(tmu->sensors[i].tzd);
+> +		}
+> +		tmu->sensors[i].hw_id = i;
+
+May be you can store the offset directly, so it is not computed every
+time the temperature is read?
+
+>  	}
+>  
+>  	platform_set_drvdata(pdev, tmu);
+>  
+> +	/* enable all the probes for V2 TMU */
+> +	if (tmu->socdata->version == TMU_VER2) {
+> +		val = readl_relaxed(tmu->base + TPS);
+> +		val |= PROBE_SEL_ALL;
+> +		writel_relaxed(val, tmu->base + TPS);
+> +	}
+
+Same comment as before about putting these in a helper
+
+>  	/* enable the monitor */
+>  	val = readl_relaxed(tmu->base + TER);
+>  	val |= TER_EN;
+> @@ -111,8 +178,19 @@ static int imx8mm_tmu_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static struct thermal_soc_data imx8mm_tmu_data = {
+> +	.num_sensors = 1,
+> +	.version = TMU_VER1,
+> +};
+> +
+> +static struct thermal_soc_data imx8mp_tmu_data = {
+> +	.num_sensors = 2,
+> +	.version = TMU_VER2,
+> +};
+> +
+>  static const struct of_device_id imx8mm_tmu_table[] = {
+> -	{ .compatible = "fsl,imx8mm-tmu", },
+> +	{ .compatible = "fsl,imx8mm-tmu", .data = &imx8mm_tmu_data, },
+> +	{ .compatible = "fsl,imx8mp-tmu", .data = &imx8mp_tmu_data, },
+>  	{ },
+>  };
+>  
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
