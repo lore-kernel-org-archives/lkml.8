@@ -2,51 +2,53 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120AAC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719EBC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEFAD20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32F3E21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623626;
-	bh=MEAFJ/oPF2BniSS4RFFS+76kZuzglg5LdmRA2oWk27w=;
+	s=default; t=1584623634;
+	bh=Ibns6yabCqjeqH2at4IQLztiSvf1V4JSW/Y2OeryvaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZctI4MUcqKgKE/ECMiFxd4XQWqEOUhqAEeXI0M7o9Cb224bMpvauS3f3Ys1EjsiRt
-	 qQe5bTVeXDKVAlCIdPv04JW3HSZ+RPgmFc2vZSemZPLZ4Qaz+VCN7NJi2nZz5kt5Kw
-	 vf9G2246acyiefLREnjDkJfgRCgRfFLvoygGK/JU=
+	b=MrAqILR7jFZ/rNZdoXHcrMZG5sqcxf6GcEmRirJjlDyS6+E3FuQ1y8DAi92CsHCcZ
+	 x/pJZ0LbS/km5V8Th8z7sVyTIrFkGQihU8w8QgC1YIzdJNg01Wv1Lqq0PDdUmaQpdM
+	 BWgyfL8ecNssgZhOjyKgZkeGkl6qOHSco4nFrF8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbgCSNNp (ORCPT
+        id S1727710AbgCSNNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:13:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32792 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:13:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729194AbgCSNNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:13:41 -0400
+        id S1728732AbgCSNNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:13:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 239B12166E;
-        Thu, 19 Mar 2020 13:13:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9788620722;
+        Thu, 19 Mar 2020 13:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623620;
-        bh=MEAFJ/oPF2BniSS4RFFS+76kZuzglg5LdmRA2oWk27w=;
+        s=default; t=1584623630;
+        bh=Ibns6yabCqjeqH2at4IQLztiSvf1V4JSW/Y2OeryvaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LptEkpX684BJ0cw/CjPD7Ujsyl4JgVmut+sA7D+q5CVjdvIteBkIRuIDwEvpESa4y
-         l6HbbuGw9BQd6H9Or9ah9cPEYuM085evEMxM3tUSQU3nfc2QaYGo3Q6Isl7+bD+2p1
-         V5DqZmbTSf/Ilz7nzF/kTeFnm/OjFhz6a57jIPmc=
+        b=tm8z/k78Kc5JsRSTS3/oH91t1KPdUr9hbnpqvX1KCCcK3/O9hM91HR6P9i7A0Bd3k
+         XPEICGpx3O0dQM3DmhriuHFwRvoXNq0P0E3jaDBIsTZE5B5pt2SYub8cNjLmxz6jPC
+         mRnqH9bBq5IxGeCGfItsqg1p/7jcszLehrczRDBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 89/90] mm: slub: add missing TID bump in kmem_cache_alloc_bulk()
-Date:   Thu, 19 Mar 2020 14:00:51 +0100
-Message-Id: <20200319123955.702270303@linuxfoundation.org>
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 78/90] perf/amd/uncore: Replace manual sampling check with CAP_NO_INTERRUPT flag
+Date:   Thu, 19 Mar 2020 14:00:40 +0100
+Message-Id: <20200319123952.550140510@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -59,46 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit fd4d9c7d0c71866ec0c2825189ebd2ce35bd95b8 upstream.
+[ Upstream commit f967140dfb7442e2db0868b03b961f9c59418a1b ]
 
-When kmem_cache_alloc_bulk() attempts to allocate N objects from a percpu
-freelist of length M, and N > M > 0, it will first remove the M elements
-from the percpu freelist, then call ___slab_alloc() to allocate the next
-element and repopulate the percpu freelist. ___slab_alloc() can re-enable
-IRQs via allocate_slab(), so the TID must be bumped before ___slab_alloc()
-to properly commit the freelist head change.
+Enable the sampling check in kernel/events/core.c::perf_event_open(),
+which returns the more appropriate -EOPNOTSUPP.
 
-Fix it by unconditionally bumping c->tid when entering the slowpath.
+BEFORE:
 
+  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
+  Error:
+  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (l3_request_g1.caching_l3_cache_accesses).
+  /bin/dmesg | grep -i perf may provide additional information.
+
+With nothing relevant in dmesg.
+
+AFTER:
+
+  $ sudo perf record -a -e instructions,l3_request_g1.caching_l3_cache_accesses true
+  Error:
+  l3_request_g1.caching_l3_cache_accesses: PMU Hardware doesn't support sampling/overflow-interrupts. Try 'perf stat'
+
+Fixes: c43ca5091a37 ("perf/x86/amd: Add support for AMD NB and L2I "uncore" counters")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
 Cc: stable@vger.kernel.org
-Fixes: ebe909e0fdb3 ("slub: improve bulk alloc strategy")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lkml.kernel.org/r/20200311191323.13124-1-kim.phillips@amd.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slub.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/events/amd/uncore.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -3115,6 +3115,15 @@ int kmem_cache_alloc_bulk(struct kmem_ca
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index c16c99bc2a109..6bfb9a68134c1 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -185,20 +185,18 @@ static int amd_uncore_event_init(struct perf_event *event)
  
- 		if (unlikely(!object)) {
- 			/*
-+			 * We may have removed an object from c->freelist using
-+			 * the fastpath in the previous iteration; in that case,
-+			 * c->tid has not been bumped yet.
-+			 * Since ___slab_alloc() may reenable interrupts while
-+			 * allocating memory, we should bump c->tid now.
-+			 */
-+			c->tid = next_tid(c->tid);
-+
-+			/*
- 			 * Invoking slow path likely have side-effect
- 			 * of re-populating per CPU c->freelist
- 			 */
+ 	/*
+ 	 * NB and Last level cache counters (MSRs) are shared across all cores
+-	 * that share the same NB / Last level cache. Interrupts can be directed
+-	 * to a single target core, however, event counts generated by processes
+-	 * running on other cores cannot be masked out. So we do not support
+-	 * sampling and per-thread events.
++	 * that share the same NB / Last level cache.  On family 16h and below,
++	 * Interrupts can be directed to a single target core, however, event
++	 * counts generated by processes running on other cores cannot be masked
++	 * out. So we do not support sampling and per-thread events via
++	 * CAP_NO_INTERRUPT, and we do not enable counter overflow interrupts:
+ 	 */
+-	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+-		return -EINVAL;
+ 
+ 	/* NB and Last level cache counters do not have usr/os/guest/host bits */
+ 	if (event->attr.exclude_user || event->attr.exclude_kernel ||
+ 	    event->attr.exclude_host || event->attr.exclude_guest)
+ 		return -EINVAL;
+ 
+-	/* and we do not enable counter overflow interrupts */
+ 	hwc->config = event->attr.config & AMD64_RAW_EVENT_MASK_NB;
+ 	hwc->idx = -1;
+ 
+@@ -275,6 +273,7 @@ static struct pmu amd_nb_pmu = {
+ 	.start		= amd_uncore_start,
+ 	.stop		= amd_uncore_stop,
+ 	.read		= amd_uncore_read,
++	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT,
+ };
+ 
+ static struct pmu amd_llc_pmu = {
+@@ -287,6 +286,7 @@ static struct pmu amd_llc_pmu = {
+ 	.start		= amd_uncore_start,
+ 	.stop		= amd_uncore_stop,
+ 	.read		= amd_uncore_read,
++	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT,
+ };
+ 
+ static struct amd_uncore *amd_uncore_alloc(unsigned int cpu)
+-- 
+2.20.1
+
 
 
