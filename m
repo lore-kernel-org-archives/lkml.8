@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CD2C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5C5C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43CE20836
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18BBE2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ieJRA4s1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nIPmMzix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbgCSQ6Y (ORCPT
+        id S1728718AbgCSQ6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:58:24 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45608 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728624AbgCSQ6W (ORCPT
+        Thu, 19 Mar 2020 12:58:32 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:57226 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728667AbgCSQ62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:58:22 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JGwIQ6034144;
-        Thu, 19 Mar 2020 11:58:18 -0500
+        Thu, 19 Mar 2020 12:58:28 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JGwMIc092593;
+        Thu, 19 Mar 2020 11:58:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1584637098;
-        bh=TQ3NwLkd7ZYcJa91yZrHE1XpSmWeGNXoGX/sRlDathA=;
+        s=ti-com-17Q1; t=1584637102;
+        bh=6N8/toIMvlAGd3HDZf9XqU3UucKsfu721IMfxyC5r2k=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ieJRA4s176RtFnEE5KsFi3UBeHkD9D8xT0eOB81tZx4fhn6CZSZY112W1QBOiABYe
-         NM2Ezi3JqVlNBZw1Al21waGd0dvMsQ6YCbg54LSP12Aa9EbwWIVoQLsFFfjD9WSb4s
-         cJhphNLkoaUgYSgqlAllgEs+BgCZkuce0lsrMVJ4=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JGwIoE058565
+        b=nIPmMzixu+i7zoag6IVwj7THEaCchNEFixGwRVwzOeOtnSoagSCGeIEtQXdoslwKH
+         3lPPxo4ZEow0nMwMxkQmQklRL8z+15aI6Mx3UGkJnOEai6Z4eD0wKG44PGv3z5OZXf
+         iE/bTTl1eqKjhQaVyDcV27f0Eul57wgpAcggwqVk=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JGwMaW023224
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 19 Mar 2020 11:58:18 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 19 Mar 2020 11:58:22 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
- Mar 2020 11:58:18 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2020 11:58:22 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 19 Mar 2020 11:58:17 -0500
+ Frontend Transport; Thu, 19 Mar 2020 11:58:22 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JGwGBQ104850;
-        Thu, 19 Mar 2020 11:58:17 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JGwL2r111560;
+        Thu, 19 Mar 2020 11:58:21 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     "David S . Miller" <davem@davemloft.net>,
         Richard Cochran <richardcochran@gmail.com>,
@@ -58,9 +58,9 @@ CC:     Sekhar Nori <nsekhar@ti.com>,
         netdev <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v2 06/10] net: ethernet: ti: cpts: move tx timestamp processing to ptp worker only
-Date:   Thu, 19 Mar 2020 18:57:58 +0200
-Message-ID: <20200319165802.30898-7-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 08/10] net: ethernet: ti: cpts: move rx timestamp processing to ptp worker only
+Date:   Thu, 19 Mar 2020 18:58:00 +0200
+Message-ID: <20200319165802.30898-9-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319165802.30898-1-grygorii.strashko@ti.com>
 References: <20200319165802.30898-1-grygorii.strashko@ti.com>
@@ -72,117 +72,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now the tx timestamp processing happens from different contexts - softirq
-and thread/PTP worker. Enabling IRQ will add one more hard_irq context.
-This makes over all defered TX timestamp processing and locking
-overcomplicated. Move tx timestamp processing to PTP worker always instead.
+Once CPTS IRQ will be enabled the CPTS irq handler may compete with netif
+RX sofirq path and so RX timestamp might not be ready at the moment packet
+is processed. As result, packet has to be deferred and processed later.
 
-napi_rx->cpts_tx_timestamp
- if ptp_packet then
-    push to txq
-    ptp_schedule_worker()
+This patch moves RX timestamp processing tx timestamp processing to PTP
+worker always the same way as it's been done for TX timestamps.
 
-do_aux_work->cpts_overflow_check
- cpts_process_events()
+  napi_rx->cpts_rx_timestamp
+   if ptp_packet then
+      push to rxq
+      ptp_schedule_worker()
+
+  do_aux_work->cpts_overflow_check
+    cpts_process_events()
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/net/ethernet/ti/cpts.c | 165 +++++++++++++++++++--------------
- 1 file changed, 94 insertions(+), 71 deletions(-)
+ drivers/net/ethernet/ti/cpsw.c     |  14 +--
+ drivers/net/ethernet/ti/cpsw_new.c |  13 ++-
+ drivers/net/ethernet/ti/cpts.c     | 132 ++++++++++++++++++-----------
+ drivers/net/ethernet/ti/cpts.h     |   3 +-
+ 4 files changed, 104 insertions(+), 58 deletions(-)
 
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index c2c5bf87da01..ce2155394830 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -433,17 +433,21 @@ static void cpsw_rx_handler(void *token, int len, int status)
+ 	skb->dev = ndev;
+ 	if (status & CPDMA_RX_VLAN_ENCAP)
+ 		cpsw_rx_vlan_encap(skb);
+-	if (priv->rx_ts_enabled)
+-		cpts_rx_timestamp(cpsw->cpts, skb);
+-	skb->protocol = eth_type_trans(skb, ndev);
+ 
+ 	/* unmap page as no netstack skb page recycling */
+ 	page_pool_release_page(pool, page);
+-	netif_receive_skb(skb);
+-
+ 	ndev->stats.rx_bytes += len;
+ 	ndev->stats.rx_packets++;
+ 
++	ret = 0;
++	if (priv->rx_ts_enabled)
++		ret = cpts_rx_timestamp(cpsw->cpts, skb);
++
++	if (!ret) {
++		skb->protocol = eth_type_trans(skb, ndev);
++		netif_receive_skb(skb);
++	}
++
+ requeue:
+ 	xmeta = page_address(new_page) + CPSW_XMETA_OFFSET;
+ 	xmeta->ndev = ndev;
+diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
+index 9209e613257d..8561f0e3b769 100644
+--- a/drivers/net/ethernet/ti/cpsw_new.c
++++ b/drivers/net/ethernet/ti/cpsw_new.c
+@@ -375,17 +375,22 @@ static void cpsw_rx_handler(void *token, int len, int status)
+ 	skb->dev = ndev;
+ 	if (status & CPDMA_RX_VLAN_ENCAP)
+ 		cpsw_rx_vlan_encap(skb);
+-	if (priv->rx_ts_enabled)
+-		cpts_rx_timestamp(cpsw->cpts, skb);
+-	skb->protocol = eth_type_trans(skb, ndev);
+ 
+ 	/* unmap page as no netstack skb page recycling */
+ 	page_pool_release_page(pool, page);
+-	netif_receive_skb(skb);
+ 
+ 	ndev->stats.rx_bytes += len;
+ 	ndev->stats.rx_packets++;
+ 
++	ret = 0;
++	if (priv->rx_ts_enabled)
++		ret = cpts_rx_timestamp(cpsw->cpts, skb);
++
++	if (!ret) {
++		skb->protocol = eth_type_trans(skb, ndev);
++		netif_receive_skb(skb);
++	}
++
+ requeue:
+ 	xmeta = page_address(new_page) + CPSW_XMETA_OFFSET;
+ 	xmeta->ndev = ndev;
 diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
-index f7ce482ad09c..10061e17d7b4 100644
+index 3cfa0f78287b..fe70eb677b88 100644
 --- a/drivers/net/ethernet/ti/cpts.c
 +++ b/drivers/net/ethernet/ti/cpts.c
-@@ -21,6 +21,8 @@
- #include "cpts.h"
- 
- #define CPTS_SKB_TX_WORK_TIMEOUT 1 /* jiffies */
-+#define CPTS_SKB_RX_TX_TMO 100 /*ms */
-+#define CPTS_EVENT_RX_TX_TIMEOUT (100) /* ms */
- 
- struct cpts_skb_cb_data {
- 	u32 skb_mtype_seqid;
-@@ -92,46 +94,6 @@ static void cpts_purge_txq(struct cpts *cpts)
- 		dev_dbg(cpts->dev, "txq cleaned up %d\n", removed);
+@@ -311,6 +311,66 @@ static bool cpts_match_tx_ts(struct cpts *cpts, struct cpts_event *event)
+ 	return found;
  }
  
--static bool cpts_match_tx_ts(struct cpts *cpts, struct cpts_event *event)
--{
--	struct sk_buff *skb, *tmp;
--	bool found = false;
--	u32 mtype_seqid;
--
--	mtype_seqid = event->high &
--		      ((MESSAGE_TYPE_MASK << MESSAGE_TYPE_SHIFT) |
--		       (SEQUENCE_ID_MASK << SEQUENCE_ID_SHIFT) |
--		       (EVENT_TYPE_MASK << EVENT_TYPE_SHIFT));
--
--	/* no need to grab txq.lock as access is always done under cpts->lock */
--	skb_queue_walk_safe(&cpts->txq, skb, tmp) {
--		struct skb_shared_hwtstamps ssh;
--		struct cpts_skb_cb_data *skb_cb =
--					(struct cpts_skb_cb_data *)skb->cb;
--
--		if (mtype_seqid == skb_cb->skb_mtype_seqid) {
--			memset(&ssh, 0, sizeof(ssh));
--			ssh.hwtstamp = ns_to_ktime(event->timestamp);
--			skb_tstamp_tx(skb, &ssh);
--			found = true;
--			__skb_unlink(skb, &cpts->txq);
--			dev_consume_skb_any(skb);
--			dev_dbg(cpts->dev, "match tx timestamp mtype_seqid %08x\n",
--				mtype_seqid);
--			break;
--		}
--
--		if (time_after(jiffies, skb_cb->tmo)) {
--			/* timeout any expired skbs over 1s */
--			dev_dbg(cpts->dev, "expiring tx timestamp from txq\n");
--			__skb_unlink(skb, &cpts->txq);
--			dev_consume_skb_any(skb);
--		}
--	}
--
--	return found;
--}
--
- /*
-  * Returns zero if matching event type was found.
-  */
-@@ -151,7 +113,6 @@ static int cpts_fifo_read(struct cpts *cpts, int match)
- 		}
- 
- 		event = list_first_entry(&cpts->pool, struct cpts_event, list);
--		event->tmo = jiffies + 2;
- 		event->high = hi;
- 		event->low = lo;
- 		event->timestamp = timecounter_cyc2time(&cpts->tc, event->low);
-@@ -169,14 +130,10 @@ static int cpts_fifo_read(struct cpts *cpts, int match)
- 			}
- 			break;
- 		case CPTS_EV_TX:
--			if (cpts_match_tx_ts(cpts, event)) {
--				/* if the new event matches an existing skb,
--				 * then don't queue it
--				 */
--				break;
--			}
--			/* fall through */
- 		case CPTS_EV_RX:
-+			event->tmo = jiffies +
-+				msecs_to_jiffies(CPTS_EVENT_RX_TX_TIMEOUT);
-+
- 			list_del_init(&event->list);
- 			list_add_tail(&event->list, &cpts->events);
- 			break;
-@@ -297,6 +254,84 @@ static int cpts_ptp_enable(struct ptp_clock_info *ptp,
- 	return -EOPNOTSUPP;
- }
- 
-+static bool cpts_match_tx_ts(struct cpts *cpts, struct cpts_event *event)
++static bool cpts_match_rx_ts(struct cpts *cpts, struct cpts_event *event)
 +{
-+	struct sk_buff_head txq_list;
++	struct sk_buff_head rxq_list;
++	struct sk_buff_head tempq;
 +	struct sk_buff *skb, *tmp;
 +	unsigned long flags;
 +	bool found = false;
@@ -193,146 +179,193 @@ index f7ce482ad09c..10061e17d7b4 100644
 +		       (SEQUENCE_ID_MASK << SEQUENCE_ID_SHIFT) |
 +		       (EVENT_TYPE_MASK << EVENT_TYPE_SHIFT));
 +
-+	__skb_queue_head_init(&txq_list);
++	__skb_queue_head_init(&rxq_list);
++	__skb_queue_head_init(&tempq);
 +
-+	spin_lock_irqsave(&cpts->txq.lock, flags);
-+	skb_queue_splice_init(&cpts->txq, &txq_list);
-+	spin_unlock_irqrestore(&cpts->txq.lock, flags);
++	spin_lock_irqsave(&cpts->rxq.lock, flags);
++	skb_queue_splice_init(&cpts->rxq, &rxq_list);
++	spin_unlock_irqrestore(&cpts->rxq.lock, flags);
 +
-+	skb_queue_walk_safe(&txq_list, skb, tmp) {
-+		struct skb_shared_hwtstamps ssh;
++	skb_queue_walk_safe(&rxq_list, skb, tmp) {
++		struct skb_shared_hwtstamps *ssh;
 +		struct cpts_skb_cb_data *skb_cb =
 +					(struct cpts_skb_cb_data *)skb->cb;
 +
 +		if (mtype_seqid == skb_cb->skb_mtype_seqid) {
-+			memset(&ssh, 0, sizeof(ssh));
-+			ssh.hwtstamp = ns_to_ktime(event->timestamp);
-+			skb_tstamp_tx(skb, &ssh);
++			__skb_unlink(skb, &rxq_list);
++			ssh = skb_hwtstamps(skb);
++			memset(ssh, 0, sizeof(*ssh));
++			ssh->hwtstamp = ns_to_ktime(event->timestamp);
 +			found = true;
-+			__skb_unlink(skb, &txq_list);
-+			dev_consume_skb_any(skb);
-+			dev_dbg(cpts->dev, "match tx timestamp mtype_seqid %08x\n",
++			dev_dbg(cpts->dev, "match rx timestamp mtype_seqid %08x\n",
 +				mtype_seqid);
++			__skb_queue_tail(&tempq, skb);
 +			break;
 +		}
 +
 +		if (time_after(jiffies, skb_cb->tmo)) {
-+			/* timeout any expired skbs over 1s */
-+			dev_dbg(cpts->dev, "expiring tx timestamp from txq\n");
-+			__skb_unlink(skb, &txq_list);
-+			dev_consume_skb_any(skb);
++			/* timeout any expired skbs */
++			dev_dbg(cpts->dev, "expiring rx timestamp\n");
++			__skb_unlink(skb, &rxq_list);
++			__skb_queue_tail(&tempq, skb);
 +		}
 +	}
 +
-+	spin_lock_irqsave(&cpts->txq.lock, flags);
-+	skb_queue_splice(&txq_list, &cpts->txq);
-+	spin_unlock_irqrestore(&cpts->txq.lock, flags);
++	spin_lock_irqsave(&cpts->rxq.lock, flags);
++	skb_queue_splice(&rxq_list, &cpts->rxq);
++	spin_unlock_irqrestore(&cpts->rxq.lock, flags);
++
++	local_bh_disable();
++	while ((skb = __skb_dequeue(&tempq))) {
++		skb->protocol = eth_type_trans(skb, skb->dev);
++		netif_receive_skb(skb);
++	}
++	local_bh_enable();
 +
 +	return found;
 +}
 +
-+static void cpts_process_events(struct cpts *cpts)
-+{
-+	struct list_head *this, *next;
-+	struct cpts_event *event;
-+	LIST_HEAD(events_free);
-+	unsigned long flags;
-+	LIST_HEAD(events);
+ static void cpts_process_events(struct cpts *cpts)
+ {
+ 	struct list_head *this, *next;
+@@ -318,6 +378,7 @@ static void cpts_process_events(struct cpts *cpts)
+ 	LIST_HEAD(events_free);
+ 	unsigned long flags;
+ 	LIST_HEAD(events);
++	int type;
+ 
+ 	spin_lock_irqsave(&cpts->lock, flags);
+ 	list_splice_init(&cpts->events, &events);
+@@ -325,8 +386,18 @@ static void cpts_process_events(struct cpts *cpts)
+ 
+ 	list_for_each_safe(this, next, &events) {
+ 		event = list_entry(this, struct cpts_event, list);
+-		if (cpts_match_tx_ts(cpts, event) ||
+-		    time_after(jiffies, event->tmo)) {
++		type = event_type(event);
 +
-+	spin_lock_irqsave(&cpts->lock, flags);
-+	list_splice_init(&cpts->events, &events);
-+	spin_unlock_irqrestore(&cpts->lock, flags);
-+
-+	list_for_each_safe(this, next, &events) {
-+		event = list_entry(this, struct cpts_event, list);
-+		if (cpts_match_tx_ts(cpts, event) ||
-+		    time_after(jiffies, event->tmo)) {
++		if (type == CPTS_EV_TX &&
++		    (cpts_match_tx_ts(cpts, event) ||
++		     time_after(jiffies, event->tmo))) {
 +			list_del_init(&event->list);
 +			list_add(&event->list, &events_free);
 +		}
-+	}
 +
-+	spin_lock_irqsave(&cpts->lock, flags);
-+	list_splice_tail(&events, &cpts->events);
-+	list_splice_tail(&events_free, &cpts->pool);
-+	spin_unlock_irqrestore(&cpts->lock, flags);
-+}
-+
- static long cpts_overflow_check(struct ptp_clock_info *ptp)
- {
- 	struct cpts *cpts = container_of(ptp, struct cpts, info);
-@@ -305,17 +340,20 @@ static long cpts_overflow_check(struct ptp_clock_info *ptp)
- 	u64 ns;
- 
- 	spin_lock_irqsave(&cpts->lock, flags);
--
- 	cpts_update_cur_time(cpts, -1, NULL);
-+	spin_unlock_irqrestore(&cpts->lock, flags);
- 
- 	ns = timecounter_read(&cpts->tc);
- 
-+	cpts_process_events(cpts);
-+
-+	spin_lock_irqsave(&cpts->txq.lock, flags);
- 	if (!skb_queue_empty(&cpts->txq)) {
- 		cpts_purge_txq(cpts);
- 		if (!skb_queue_empty(&cpts->txq))
- 			delay = CPTS_SKB_TX_WORK_TIMEOUT;
- 	}
--	spin_unlock_irqrestore(&cpts->lock, flags);
-+	spin_unlock_irqrestore(&cpts->txq.lock, flags);
- 
- 	dev_dbg(cpts->dev, "cpts overflow check at %lld\n", ns);
- 	return (long)delay;
-@@ -409,19 +447,6 @@ static u64 cpts_find_ts(struct cpts *cpts, struct sk_buff *skb,
- 			break;
++		if (type == CPTS_EV_RX &&
++		    (cpts_match_rx_ts(cpts, event) ||
++		     time_after(jiffies, event->tmo))) {
+ 			list_del_init(&event->list);
+ 			list_add(&event->list, &events_free);
  		}
- 	}
--
--	if (ev_type == CPTS_EV_TX && !ns) {
--		struct cpts_skb_cb_data *skb_cb =
--				(struct cpts_skb_cb_data *)skb->cb;
--		/* Not found, add frame to queue for processing later.
--		 * The periodic FIFO check will handle this.
--		 */
--		skb_get(skb);
--		/* get the timestamp for timeouts */
--		skb_cb->tmo = jiffies + msecs_to_jiffies(100);
--		__skb_queue_tail(&cpts->txq, skb);
--		ptp_schedule_worker(cpts->clock, 0);
--	}
- 	spin_unlock_irqrestore(&cpts->lock, flags);
+@@ -422,64 +493,27 @@ static int cpts_skb_get_mtype_seqid(struct sk_buff *skb, u32 *mtype_seqid)
+ 	return 1;
+ }
  
- 	return ns;
-@@ -455,9 +480,7 @@ EXPORT_SYMBOL_GPL(cpts_rx_timestamp);
- void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb)
+-static u64 cpts_find_ts(struct cpts *cpts, struct sk_buff *skb,
+-			int ev_type, u32 skb_mtype_seqid)
+-{
+-	struct list_head *this, *next;
+-	struct cpts_event *event;
+-	unsigned long flags;
+-	u32 mtype_seqid;
+-	u64 ns = 0;
+-
+-	cpts_fifo_read(cpts, -1);
+-	spin_lock_irqsave(&cpts->lock, flags);
+-	list_for_each_safe(this, next, &cpts->events) {
+-		event = list_entry(this, struct cpts_event, list);
+-		if (event_expired(event)) {
+-			list_del_init(&event->list);
+-			list_add(&event->list, &cpts->pool);
+-			continue;
+-		}
+-
+-		mtype_seqid = event->high &
+-			      ((MESSAGE_TYPE_MASK << MESSAGE_TYPE_SHIFT) |
+-			       (SEQUENCE_ID_MASK << SEQUENCE_ID_SHIFT) |
+-			       (EVENT_TYPE_MASK << EVENT_TYPE_SHIFT));
+-
+-		if (mtype_seqid == skb_mtype_seqid) {
+-			ns = event->timestamp;
+-			list_del_init(&event->list);
+-			list_add(&event->list, &cpts->pool);
+-			break;
+-		}
+-	}
+-	spin_unlock_irqrestore(&cpts->lock, flags);
+-
+-	return ns;
+-}
+-
+-void cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb)
++int cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb)
  {
  	struct cpts_skb_cb_data *skb_cb = (struct cpts_skb_cb_data *)skb->cb;
--	struct skb_shared_hwtstamps ssh;
+-	struct skb_shared_hwtstamps *ssh;
  	int ret;
 -	u64 ns;
  
- 	if (!(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS))
- 		return;
-@@ -471,12 +494,12 @@ void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb)
+ 	ret = cpts_skb_get_mtype_seqid(skb, &skb_cb->skb_mtype_seqid);
+ 	if (!ret)
+-		return;
++		return 0;
+ 
+ 	skb_cb->skb_mtype_seqid |= (CPTS_EV_RX << EVENT_TYPE_SHIFT);
+ 
  	dev_dbg(cpts->dev, "%s mtype seqid %08x\n",
  		__func__, skb_cb->skb_mtype_seqid);
  
--	ns = cpts_find_ts(cpts, skb, CPTS_EV_TX, skb_cb->skb_mtype_seqid);
+-	ns = cpts_find_ts(cpts, skb, CPTS_EV_RX, skb_cb->skb_mtype_seqid);
 -	if (!ns)
 -		return;
--	memset(&ssh, 0, sizeof(ssh));
--	ssh.hwtstamp = ns_to_ktime(ns);
--	skb_tstamp_tx(skb, &ssh);
-+	/* Always defer TX TS processing to PTP worker */
-+	skb_get(skb);
+-	ssh = skb_hwtstamps(skb);
+-	memset(ssh, 0, sizeof(*ssh));
+-	ssh->hwtstamp = ns_to_ktime(ns);
++	/* Always defer RX TS processing to PTP worker */
 +	/* get the timestamp for timeouts */
 +	skb_cb->tmo = jiffies + msecs_to_jiffies(CPTS_SKB_RX_TX_TMO);
-+	skb_queue_tail(&cpts->txq, skb);
++	skb_queue_tail(&cpts->rxq, skb);
 +	ptp_schedule_worker(cpts->clock, 0);
++
++	return 1;
  }
- EXPORT_SYMBOL_GPL(cpts_tx_timestamp);
+ EXPORT_SYMBOL_GPL(cpts_rx_timestamp);
  
+@@ -514,6 +548,7 @@ int cpts_register(struct cpts *cpts)
+ 	int err, i;
+ 
+ 	skb_queue_head_init(&cpts->txq);
++	skb_queue_head_init(&cpts->rxq);
+ 	INIT_LIST_HEAD(&cpts->events);
+ 	INIT_LIST_HEAD(&cpts->pool);
+ 	for (i = 0; i < CPTS_MAX_EVENTS; i++)
+@@ -556,6 +591,7 @@ void cpts_unregister(struct cpts *cpts)
+ 
+ 	/* Drop all packet */
+ 	skb_queue_purge(&cpts->txq);
++	skb_queue_purge(&cpts->rxq);
+ 
+ 	clk_disable(cpts->refclk);
+ }
+diff --git a/drivers/net/ethernet/ti/cpts.h b/drivers/net/ethernet/ti/cpts.h
+index f16e14d67f5f..993b4cfa4e86 100644
+--- a/drivers/net/ethernet/ti/cpts.h
++++ b/drivers/net/ethernet/ti/cpts.h
+@@ -115,12 +115,13 @@ struct cpts {
+ 	struct cpts_event pool_data[CPTS_MAX_EVENTS];
+ 	unsigned long ov_check_period;
+ 	struct sk_buff_head txq;
++	struct sk_buff_head rxq;
+ 	u64 cur_timestamp;
+ 	u32 mult_new;
+ 	struct mutex ptp_clk_mutex; /* sync PTP interface and worker */
+ };
+ 
+-void cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb);
++int cpts_rx_timestamp(struct cpts *cpts, struct sk_buff *skb);
+ void cpts_tx_timestamp(struct cpts *cpts, struct sk_buff *skb);
+ int cpts_register(struct cpts *cpts);
+ void cpts_unregister(struct cpts *cpts);
 -- 
 2.17.1
 
