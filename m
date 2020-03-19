@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F274C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7C8C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D64A7207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 753E920789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624975;
-	bh=6NYbwMXoJ+wlGSNvLLs16uAuTFfZ4lyBAET+75s50H8=;
+	s=default; t=1584624978;
+	bh=8r1JzYpubC4slGmm0ofKqAar6/zFi7ZX6fP030u/+Ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUvzM8yhuDqDF3VzQx/Ytv5zvrPhTis8/dY8UjBScTQiATFAU88Xl+KTk0B9sOChT
-	 SGtVKJk9lavHFNv0vPd26ddcQHsCI/P3KwOT/pMOfo5PIHhtbJ3vti6wybeqfCNU3M
-	 aWw5rdnQkbp5HKD0Xn0EQobZJ1+ooJRtdqD4bAb4=
+	b=fjewg1ssSq83EEDITPxuHCD7cVc5Si9iTrRTF7w/TUEg6wpQDLX6KJQa5MrTdEIAN
+	 AeeKymUK1Enz+5KMqmTyE5gZBU9EQHOIx814kVJnUyqC4hYAhqVZtYHHdu4R3VW6FM
+	 dprxWkKoZvXe1gOWBJ+oWUiGcHgavJIvo/ivylr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbgCSNKX (ORCPT
+        id S1728490AbgCSNKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55092 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:10:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbgCSNKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:10:20 -0400
+        id S1727431AbgCSNKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:10:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01D0521556;
-        Thu, 19 Mar 2020 13:10:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E8BA215A4;
+        Thu, 19 Mar 2020 13:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623420;
-        bh=6NYbwMXoJ+wlGSNvLLs16uAuTFfZ4lyBAET+75s50H8=;
+        s=default; t=1584623413;
+        bh=8r1JzYpubC4slGmm0ofKqAar6/zFi7ZX6fP030u/+Ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vmFdvcUHKBVuGaU7VWFxIoS8OUy8hRRLp3IpSUNccF26bykM7T9v1EGA/PPu4KS6O
-         Rm8BZJjUXSkzLvE2Qi3LvNUl+29M65jAIwNqYke3Zk5S0+RzgcuTJxSQm6Srn1t8ti
-         XHsD43AE4UT6ZphPPkfxMcUe/bclftutT7/OJp44=
+        b=hiKrDWr10Cj11FdgJzhjqj0bLGmfyfB2VDTN2+pnzmrLobKsNZxAxR79Yj2p7zHdW
+         0wWgPet/SJqxJJHKiF9kZrwayReS/VV/4qxL4TmMoG//lfa4U8UL6x93bvaRZ4SeGK
+         nGJzucPI21h1RfrdpL1EMhaJQGklQQZgQhYKO9Ds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 08/90] net: nfc: fix bounds checking bugs on "pipe"
-Date:   Thu, 19 Mar 2020 13:59:30 +0100
-Message-Id: <20200319123931.252651797@linuxfoundation.org>
+Subject: [PATCH 4.9 06/90] ipv6/addrconf: call ipv6_mc_up() for non-Ethernet interface
+Date:   Thu, 19 Mar 2020 13:59:28 +0100
+Message-Id: <20200319123930.575806686@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -59,67 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit a3aefbfe45751bf7b338c181b97608e276b5bb73 ]
+[ Upstream commit 60380488e4e0b95e9e82aa68aa9705baa86de84c ]
 
-This is similar to commit 674d9de02aa7 ("NFC: Fix possible memory
-corruption when handling SHDLC I-Frame commands") and commit d7ee81ad09f0
-("NFC: nci: Add some bounds checking in nci_hci_cmd_received()") which
-added range checks on "pipe".
+Rafał found an issue that for non-Ethernet interface, if we down and up
+frequently, the memory will be consumed slowly.
 
-The "pipe" variable comes skb->data[0] in nfc_hci_msg_rx_work().
-It's in the 0-255 range.  We're using it as the array index into the
-hdev->pipes[] array which has NFC_HCI_MAX_PIPES (128) members.
+The reason is we add allnodes/allrouters addressed in multicast list in
+ipv6_add_dev(). When link down, we call ipv6_mc_down(), store all multicast
+addresses via mld_add_delrec(). But when link up, we don't call ipv6_mc_up()
+for non-Ethernet interface to remove the addresses. This makes idev->mc_tomb
+getting bigger and bigger. The call stack looks like:
 
-Fixes: 118278f20aa8 ("NFC: hci: Add pipes table to reference them with a tuple {gate, host}")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+addrconf_notify(NETDEV_REGISTER)
+	ipv6_add_dev
+		ipv6_dev_mc_inc(ff01::1)
+		ipv6_dev_mc_inc(ff02::1)
+		ipv6_dev_mc_inc(ff02::2)
+
+addrconf_notify(NETDEV_UP)
+	addrconf_dev_config
+		/* Alas, we support only Ethernet autoconfiguration. */
+		return;
+
+addrconf_notify(NETDEV_DOWN)
+	addrconf_ifdown
+		ipv6_mc_down
+			igmp6_group_dropped(ff02::2)
+				mld_add_delrec(ff02::2)
+			igmp6_group_dropped(ff02::1)
+			igmp6_group_dropped(ff01::1)
+
+After investigating, I can't found a rule to disable multicast on
+non-Ethernet interface. In RFC2460, the link could be Ethernet, PPP, ATM,
+tunnels, etc. In IPv4, it doesn't check the dev type when calls ip_mc_up()
+in inetdev_event(). Even for IPv6, we don't check the dev type and call
+ipv6_add_dev(), ipv6_dev_mc_inc() after register device.
+
+So I think it's OK to fix this memory consumer by calling ipv6_mc_up() for
+non-Ethernet interface.
+
+v2: Also check IFF_MULTICAST flag to make sure the interface supports
+    multicast
+
+Reported-by: Rafał Miłecki <zajec5@gmail.com>
+Tested-by: Rafał Miłecki <zajec5@gmail.com>
+Fixes: 74235a25c673 ("[IPV6] addrconf: Fix IPv6 on tuntap tunnels")
+Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/nfc/hci/core.c |   19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ net/ipv6/addrconf.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/nfc/hci/core.c
-+++ b/net/nfc/hci/core.c
-@@ -193,13 +193,20 @@ exit:
- void nfc_hci_cmd_received(struct nfc_hci_dev *hdev, u8 pipe, u8 cmd,
- 			  struct sk_buff *skb)
- {
--	u8 gate = hdev->pipes[pipe].gate;
- 	u8 status = NFC_HCI_ANY_OK;
- 	struct hci_create_pipe_resp *create_info;
- 	struct hci_delete_pipe_noti *delete_info;
- 	struct hci_all_pipe_cleared_noti *cleared_info;
-+	u8 gate;
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -3189,6 +3189,10 @@ static void addrconf_dev_config(struct n
+ 	    (dev->type != ARPHRD_6LOWPAN) &&
+ 	    (dev->type != ARPHRD_NONE)) {
+ 		/* Alas, we support only Ethernet autoconfiguration. */
++		idev = __in6_dev_get(dev);
++		if (!IS_ERR_OR_NULL(idev) && dev->flags & IFF_UP &&
++		    dev->flags & IFF_MULTICAST)
++			ipv6_mc_up(idev);
+ 		return;
+ 	}
  
--	pr_debug("from gate %x pipe %x cmd %x\n", gate, pipe, cmd);
-+	pr_debug("from pipe %x cmd %x\n", pipe, cmd);
-+
-+	if (pipe >= NFC_HCI_MAX_PIPES) {
-+		status = NFC_HCI_ANY_E_NOK;
-+		goto exit;
-+	}
-+
-+	gate = hdev->pipes[pipe].gate;
- 
- 	switch (cmd) {
- 	case NFC_HCI_ADM_NOTIFY_PIPE_CREATED:
-@@ -387,8 +394,14 @@ void nfc_hci_event_received(struct nfc_h
- 			    struct sk_buff *skb)
- {
- 	int r = 0;
--	u8 gate = hdev->pipes[pipe].gate;
-+	u8 gate;
-+
-+	if (pipe >= NFC_HCI_MAX_PIPES) {
-+		pr_err("Discarded event %x to invalid pipe %x\n", event, pipe);
-+		goto exit;
-+	}
- 
-+	gate = hdev->pipes[pipe].gate;
- 	if (gate == NFC_HCI_INVALID_GATE) {
- 		pr_err("Discarded event %x to unopened pipe %x\n", event, pipe);
- 		goto exit;
 
 
