@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B66C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A16C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EADC2098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C86920BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624353;
-	bh=3FrZdYvpqhFybQqlRH77rhrJ/OHxk2sMndBLGH2KYyY=;
+	s=default; t=1584624356;
+	bh=kJdYtdkXoUJqBCbsGNBYogiLr8GIFp4ngkilDarlmMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FvyHiCRaoKsZB73fvczeky8LOaaKUt4N2Lrrjz5F5TazyStrOter7Br3sWWN1gM+V
-	 YNZZ+pZWm21PgrfIZzP4k+VeyhrDplQo7yvR9KEcTPgB8L3Hp6TF5N6g1+4QMhx2GO
-	 fUCDY2H+nPguxjCWzqOOH9jrPAboP/8aoot0AklM=
+	b=y/JEWZFk5qLJOiOyW0NgvyrNiA63Xo/WvmOGmnzRjhyTlVBo3TPW5k/5IyTkdFhGI
+	 yupZBRJwvdRPFmqYQXPpvRiKfh8NOrq3P9tox46z0v6hanbxdkDdGFIwxNHsjxzcEk
+	 IbXK1rT0EJPJIbdbFsYrSBrZ7OZUOSMsWqRmqtOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730513AbgCSNZv (ORCPT
+        id S1730705AbgCSNZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53546 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:25:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730229AbgCSNZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:25:49 -0400
+        id S1730694AbgCSNZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:25:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 260222080C;
-        Thu, 19 Mar 2020 13:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8045D208C3;
+        Thu, 19 Mar 2020 13:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624348;
-        bh=3FrZdYvpqhFybQqlRH77rhrJ/OHxk2sMndBLGH2KYyY=;
+        s=default; t=1584624351;
+        bh=kJdYtdkXoUJqBCbsGNBYogiLr8GIFp4ngkilDarlmMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GsO1JosLthVC4K5VCURVnt4bq4Wu3lc0N/VA5FAwTO7Q1yByusVhtidJFzWk1lLna
-         ozyPCbQnq13G3TxeEKjPqS6eI3vICFkE5P0yLEhGTFMOcjxGrGHAANiIftd/T45gNJ
-         PWQL6MqDtfaaIs73vkahKEzl6v4CNRM5x109gyfg=
+        b=WDmgnlBAdY82QQ6cayWDQgfBx8T2WYBPyIabciDR/EpXXhdW5eRGUyf/dBCU70sHQ
+         Yq+nFlDEu7H42l/sG75fjmLUsvXQj2Tk5Fs99e+xSSz0u2/ocJy/IaxPZDjGJTWmAE
+         ro2MdfcbAec7sI6WfswFNrbhft+CdaV2MiiubkAk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 12/65] HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
-Date:   Thu, 19 Mar 2020 14:03:54 +0100
-Message-Id: <20200319123930.165718974@linuxfoundation.org>
+        stable@vger.kernel.org, Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Victor Kamensky <kamensky@cisco.com>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        richard.purdie@linuxfoundation.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 13/65] mips: vdso: fix jalr t9 crash in vdso code
+Date:   Thu, 19 Mar 2020 14:03:55 +0100
+Message-Id: <20200319123930.497716995@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -62,41 +64,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Victor Kamensky <kamensky@cisco.com>
 
-[ Upstream commit be0aba826c4a6ba5929def1962a90d6127871969 ]
+[ Upstream commit d3f703c4359ff06619b2322b91f69710453e6b6d ]
 
-The Surfbook E11B uses the SIPODEV SP1064 touchpad, which does not supply
-descriptors, so it has to be added to the override list.
+Observed that when kernel is built with Yocto mips64-poky-linux-gcc,
+and mips64-poky-linux-gnun32-gcc toolchain, resulting vdso contains
+'jalr t9' instructions in its code and since in vdso case nobody
+sets GOT table code crashes when instruction reached. On other hand
+observed that when kernel is built mips-poky-linux-gcc toolchain, the
+same 'jalr t9' instruction are replaced with PC relative function
+calls using 'bal' instructions.
 
-BugLink: https://bugs.launchpad.net/bugs/1858299
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+The difference boils down to -mrelax-pic-calls and -mexplicit-relocs
+gcc options that gets different default values depending on gcc
+target triplets and corresponding binutils. -mrelax-pic-calls got
+enabled by default only in mips-poky-linux-gcc case. MIPS binutils
+ld relies on R_MIPS_JALR relocation to convert 'jalr t9' into 'bal'
+and such relocation is generated only if -mrelax-pic-calls option
+is on.
+
+Please note 'jalr t9' conversion to 'bal' can happen only to static
+functions. These static PIC calls use mips local GOT entries that
+are supposed to be filled with start of DSO value by run-time linker
+(missing in VDSO case) and they do not have dynamic relocations.
+Global mips GOT entries must have dynamic relocations and they should
+be prevented by cmd_vdso_check Makefile rule.
+
+Solution call out -mrelax-pic-calls and -mexplicit-relocs options
+explicitly while compiling MIPS vdso code. That would get correct
+and consistent between different toolchains behaviour.
+
+Reported-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+Signed-off-by: Victor Kamensky <kamensky@cisco.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: richard.purdie@linuxfoundation.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/mips/vdso/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-index d31ea82b84c17..a66f08041a1aa 100644
---- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -341,6 +341,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
- 		},
- 		.driver_data = (void *)&sipodev_desc
- 	},
-+	{
-+		.ident = "Trekstor SURFBOOK E11B",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SURFBOOK E11B"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
- 	{
- 		.ident = "Direkt-Tek DTLAPY116-2",
- 		.matches = {
+diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+index e05938997e696..96afd73c94e8a 100644
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -29,6 +29,7 @@ endif
+ cflags-vdso := $(ccflags-vdso) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+ 	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
++	-mrelax-pic-calls -mexplicit-relocs \
+ 	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+ 	$(call cc-option, -fno-asynchronous-unwind-tables) \
+ 	$(call cc-option, -fno-stack-protector)
 -- 
 2.20.1
 
