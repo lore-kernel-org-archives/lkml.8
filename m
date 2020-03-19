@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FBAC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BE1C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08D520724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4401F20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbgCSJRW (ORCPT
+        id S1726783AbgCSJR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:17:22 -0400
-Received: from 8bytes.org ([81.169.241.247]:52476 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:17:28 -0400
+Received: from 8bytes.org ([81.169.241.247]:51922 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727406AbgCSJOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:39 -0400
+        id S1727386AbgCSJOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:38 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 9157DA75; Thu, 19 Mar 2020 10:14:24 +0100 (CET)
+        id CB7747D3; Thu, 19 Mar 2020 10:14:23 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 44/70] x86/sev-es: Handle instruction fetches from user-space
-Date:   Thu, 19 Mar 2020 10:13:41 +0100
-Message-Id: <20200319091407.1481-45-joro@8bytes.org>
+Subject: [PATCH 40/70] x86/sev-es: Setup per-cpu GHCBs for the runtime handler
+Date:   Thu, 19 Mar 2020 10:13:37 +0100
+Message-Id: <20200319091407.1481-41-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -46,61 +46,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-When a #VC exception is triggered by user-space the instruction decoder
-needs to read the instruction bytes from user addresses.  Enhance
-vc_decode_insn() to safely fetch kernel and user instructions.
+The runtime handler needs a GHCB per CPU. Set them up and map them
+unencrypted.
 
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/mem_encrypt.h |  2 ++
+ arch/x86/kernel/sev-es.c           | 28 +++++++++++++++++++++++++++-
+ arch/x86/kernel/traps.c            |  3 +++
+ 3 files changed, 32 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index 6f61bb93366a..8b69b389688f 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -48,6 +48,7 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size);
+ void __init mem_encrypt_init(void);
+ void __init mem_encrypt_free_decrypted_mem(void);
+ 
++void __init sev_es_init_ghcbs(void);
+ bool sme_active(void);
+ bool sev_active(void);
+ bool sev_es_active(void);
+@@ -71,6 +72,7 @@ static inline void __init sme_early_init(void) { }
+ static inline void __init sme_encrypt_kernel(struct boot_params *bp) { }
+ static inline void __init sme_enable(struct boot_params *bp) { }
+ 
++static inline void sev_es_init_ghcbs(void) { }
+ static inline bool sme_active(void) { return false; }
+ static inline bool sev_active(void) { return false; }
+ static inline bool sev_es_active(void) { return false; }
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 226ab0c57a09..79a71d14a1fc 100644
+index c17980e8db78..4bf5286310a0 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -114,17 +114,30 @@ static enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
- 	enum es_result ret;
- 	int res;
+@@ -8,8 +8,11 @@
+  */
  
--	res = vc_fetch_insn_kernel(ctxt, buffer);
--	if (unlikely(res == -EFAULT)) {
--		ctxt->fi.vector     = X86_TRAP_PF;
--		ctxt->fi.error_code = 0;
--		ctxt->fi.cr2        = ctxt->regs->ip;
--		return ES_EXCEPTION;
-+	if (!user_mode(ctxt->regs)) {
-+		res = vc_fetch_insn_kernel(ctxt, buffer);
-+		if (unlikely(res == -EFAULT)) {
-+			ctxt->fi.vector     = X86_TRAP_PF;
-+			ctxt->fi.error_code = 0;
-+			ctxt->fi.cr2        = ctxt->regs->ip;
-+			return ES_EXCEPTION;
-+		}
+ #include <linux/sched/debug.h>	/* For show_regs() */
+-#include <linux/kernel.h>
++#include <linux/percpu-defs.h>
++#include <linux/mem_encrypt.h>
+ #include <linux/printk.h>
++#include <linux/set_memory.h>
++#include <linux/kernel.h>
+ #include <linux/mm.h>
+ 
+ #include <asm/trap_defs.h>
+@@ -29,6 +32,9 @@ struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
+  */
+ struct ghcb __initdata *boot_ghcb;
+ 
++/* Runtime GHCB pointers */
++static struct ghcb __percpu *ghcb_page;
 +
-+		insn_init(&ctxt->insn, buffer, MAX_INSN_SIZE - res, 1);
-+		insn_get_length(&ctxt->insn);
-+	} else {
-+		res = insn_fetch_from_user(ctxt->regs, buffer);
-+		if (res == 0) {
-+			ctxt->fi.vector     = X86_TRAP_PF;
-+			ctxt->fi.cr2        = ctxt->regs->ip;
-+			ctxt->fi.error_code = X86_PF_INSTR | X86_PF_USER;
-+			return ES_EXCEPTION;
-+		}
+ /* Needed in vc_early_vc_forward_exception */
+ extern void early_exception(struct pt_regs *regs, int trapnr);
+ 
+@@ -197,6 +203,26 @@ static bool __init sev_es_setup_ghcb(void)
+ 	return true;
+ }
+ 
++void sev_es_init_ghcbs(void)
++{
++	int cpu;
 +
-+		if (!insn_decode(ctxt->regs, &ctxt->insn, buffer, res))
-+			return ES_DECODE_FAILED;
- 	}
++	if (!sev_es_active())
++		return;
++
++	/* Allocate GHCB pages */
++	ghcb_page = __alloc_percpu(sizeof(struct ghcb), PAGE_SIZE);
++
++	/* Initialize per-cpu GHCB pages */
++	for_each_possible_cpu(cpu) {
++		struct ghcb *ghcb = (struct ghcb *)per_cpu_ptr(ghcb_page, cpu);
++
++		set_memory_decrypted((unsigned long)ghcb,
++				     sizeof(*ghcb) >> PAGE_SHIFT);
++		memset(ghcb, 0, sizeof(*ghcb));
++	}
++}
++
+ static void __init vc_early_vc_forward_exception(struct es_em_ctxt *ctxt)
+ {
+ 	int trapnr = ctxt->fi.vector;
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 6ef00eb6fbb9..09bebda9b053 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -918,6 +918,9 @@ void __init trap_init(void)
+ 	/* Init cpu_entry_area before IST entries are set up */
+ 	setup_cpu_entry_areas();
  
--	insn_init(&ctxt->insn, buffer, MAX_INSN_SIZE - res, 1);
--	insn_get_length(&ctxt->insn);
--
- 	ret = ctxt->insn.immediate.got ? ES_OK : ES_DECODE_FAILED;
++	/* Init GHCB memory pages when running as an SEV-ES guest */
++	sev_es_init_ghcbs();
++
+ 	idt_setup_traps();
  
- 	return ret;
+ 	/*
 -- 
 2.17.1
 
