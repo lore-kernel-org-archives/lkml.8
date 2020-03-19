@@ -2,190 +2,85 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93747C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1B4C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:47:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD6520789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4302080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625387;
-	bh=C00m90Jdij6F1HqEzf8L4EgeNwUufQvJHwqJ/rsXnFI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QvzOxDUYwCH6/mIvTcoGVhajjKmWz4FPLZ4XMe/rp0bOPIWIy42i2zK0znFZTrP2o
-	 9OAAamJbXv031sZxH+Tx5vOh4DU3fM02koMJpuhtmay+61QZnpcsqv8Pzx4Kcc4QWL
-	 7peqhsO2XMRHtuWFAZZ0tePYFNU/nj/cGYlSkblM=
+	s=default; t=1584625655;
+	bh=0C8hZU/YxpZVRYqef82R8KCTqT8U8jWoXQOw7dID8a4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dpgnwd11Tj0TPV2pyulRs9ktzOE7jUchoeI/Dx6cODnumYx51imw+2TTTGTqkUq1G
+	 fSDwm4W7Er2ny4u15v9NJQK3NvVo2N6PvhuXuLB6JSfYEbsf50/faqXQeJs7t/WNo8
+	 xXcAbOiApgmCFDlpL7CI0oJxcIUCMFoDlAOX7pN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbgCSNm7 (ORCPT
+        id S1727291AbgCSNre (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:42:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39050 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:47:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727137AbgCSNm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:42:57 -0400
+        id S1727034AbgCSNre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:47:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 900B420B1F;
-        Thu, 19 Mar 2020 13:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 435452080C;
+        Thu, 19 Mar 2020 13:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584625377;
-        bh=C00m90Jdij6F1HqEzf8L4EgeNwUufQvJHwqJ/rsXnFI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NsPLpzOoVFfSTr1EFDHg3MaHV7EbYHmcf9YrKjKTOYL+vs+VK7/knaHHvuOWw7jLz
-         gJy4o9LX9sLWt/I6fuNQJsRaptYy+p38CxCaTAzAo8p5HI8bMwvstBpaxDfkD6SsiK
-         +g9xmzgT6Gl5dgpDWVHo/6GpVZcGihebn8sLOAyQ=
+        s=default; t=1584625653;
+        bh=0C8hZU/YxpZVRYqef82R8KCTqT8U8jWoXQOw7dID8a4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YjIQXGfURrlH08Kx68uk3vGL3vma7uc5UvnvSXjZL+T0WWw4yQ2LjjTQmx6aSXeQ0
+         giDRHsX2Sl+Xwb90KjYe97dQ32dXhOLWiNdYjZ2MuqkefAf9kWySPOIf7pQ7BDK5Kg
+         DAgas/A9ZCo36SmPIOYFER1o2wRyxM3hXd75v1aw=
+Date:   Thu, 19 Mar 2020 14:47:10 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Philip Li <philip.li@intel.com>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Feng Tang <feng.tang@intel.com>
-Subject: [PATCH 5.4 36/60] signal: avoid double atomic counter increments for user accounting
-Date:   Thu, 19 Mar 2020 14:04:14 +0100
-Message-Id: <20200319123931.207979837@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
-References: <20200319123919.441695203@linuxfoundation.org>
-User-Agent: quilt/0.66
+To:     Kevin Hao <haokexin@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.5 01/65] gpiolib: Add support for the irqdomain which
+ doesnt use irq_fwspec as arg
+Message-ID: <20200319134710.GA4092809@kroah.com>
+References: <20200319123926.466988514@linuxfoundation.org>
+ <20200319123926.902914624@linuxfoundation.org>
+ <20200319133355.GB711692@pek-khao-d2.corp.ad.wrs.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319133355.GB711692@pek-khao-d2.corp.ad.wrs.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+On Thu, Mar 19, 2020 at 09:33:55PM +0800, Kevin Hao wrote:
+> On Thu, Mar 19, 2020 at 02:03:43PM +0100, Greg Kroah-Hartman wrote:
+> > From: Kevin Hao <haokexin@gmail.com>
+> > 
+> > [ Upstream commit 242587616710576808dc8d7cdf18cfe0d7bf9831 ]
+> > 
+> > Some gpio's parent irqdomain may not use the struct irq_fwspec as
+> > argument, such as msi irqdomain. So rename the callback
+> > populate_parent_fwspec() to populate_parent_alloc_arg() and make it
+> > allocate and populate the specific struct which is needed by the
+> > parent irqdomain.
+> 
+> Hi Greg,
+> 
+> This commit shouldn't go to stable because it is not a bug fix. It is just a
+> prerequisite of switching to general GPIOLIB_IRQCHIP for thunderx gpio driver
+> (commit 7a9f4460f74d "gpio: thunderx: Switch to GPIOLIB_IRQCHIP").
 
-[ Upstream commit fda31c50292a5062332fa0343c084bd9f46604d9 ]
+This seems to be a prerequisite for f98371476f36 ("pinctrl: qcom:
+ssbi-gpio: Fix fwspec parsing bug") to apply properly.  With that
+information, is it ok to keep?
 
-When queueing a signal, we increment both the users count of pending
-signals (for RLIMIT_SIGPENDING tracking) and we increment the refcount
-of the user struct itself (because we keep a reference to the user in
-the signal structure in order to correctly account for it when freeing).
+thanks,
 
-That turns out to be fairly expensive, because both of them are atomic
-updates, and particularly under extreme signal handling pressure on big
-machines, you can get a lot of cache contention on the user struct.
-That can then cause horrid cacheline ping-pong when you do these
-multiple accesses.
-
-So change the reference counting to only pin the user for the _first_
-pending signal, and to unpin it when the last pending signal is
-dequeued.  That means that when a user sees a lot of concurrent signal
-queuing - which is the only situation when this matters - the only
-atomic access needed is generally the 'sigpending' count update.
-
-This was noticed because of a particularly odd timing artifact on a
-dual-socket 96C/192T Cascade Lake platform: when you get into bad
-contention, on that machine for some reason seems to be much worse when
-the contention happens in the upper 32-byte half of the cacheline.
-
-As a result, the kernel test robot will-it-scale 'signal1' benchmark had
-an odd performance regression simply due to random alignment of the
-'struct user_struct' (and pointed to a completely unrelated and
-apparently nonsensical commit for the regression).
-
-Avoiding the double increments (and decrements on the dequeueing side,
-of course) makes for much less contention and hugely improved
-performance on that will-it-scale microbenchmark.
-
-Quoting Feng Tang:
-
- "It makes a big difference, that the performance score is tripled! bump
-  from original 17000 to 54000. Also the gap between 5.0-rc6 and
-  5.0-rc6+Jiri's patch is reduced to around 2%"
-
-[ The "2% gap" is the odd cacheline placement difference on that
-  platform: under the extreme contention case, the effect of which half
-  of the cacheline was hot was 5%, so with the reduced contention the
-  odd timing artifact is reduced too ]
-
-It does help in the non-contended case too, but is not nearly as
-noticeable.
-
-Reported-and-tested-by: Feng Tang <feng.tang@intel.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Huang, Ying <ying.huang@intel.com>
-Cc: Philip Li <philip.li@intel.com>
-Cc: Andi Kleen <andi.kleen@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/signal.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
-
-diff --git a/kernel/signal.c b/kernel/signal.c
-index bcd46f547db39..eea748174ade9 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -413,27 +413,32 @@ __sigqueue_alloc(int sig, struct task_struct *t, gfp_t flags, int override_rlimi
- {
- 	struct sigqueue *q = NULL;
- 	struct user_struct *user;
-+	int sigpending;
- 
- 	/*
- 	 * Protect access to @t credentials. This can go away when all
- 	 * callers hold rcu read lock.
-+	 *
-+	 * NOTE! A pending signal will hold on to the user refcount,
-+	 * and we get/put the refcount only when the sigpending count
-+	 * changes from/to zero.
- 	 */
- 	rcu_read_lock();
--	user = get_uid(__task_cred(t)->user);
--	atomic_inc(&user->sigpending);
-+	user = __task_cred(t)->user;
-+	sigpending = atomic_inc_return(&user->sigpending);
-+	if (sigpending == 1)
-+		get_uid(user);
- 	rcu_read_unlock();
- 
--	if (override_rlimit ||
--	    atomic_read(&user->sigpending) <=
--			task_rlimit(t, RLIMIT_SIGPENDING)) {
-+	if (override_rlimit || likely(sigpending <= task_rlimit(t, RLIMIT_SIGPENDING))) {
- 		q = kmem_cache_alloc(sigqueue_cachep, flags);
- 	} else {
- 		print_dropped_signal(sig);
- 	}
- 
- 	if (unlikely(q == NULL)) {
--		atomic_dec(&user->sigpending);
--		free_uid(user);
-+		if (atomic_dec_and_test(&user->sigpending))
-+			free_uid(user);
- 	} else {
- 		INIT_LIST_HEAD(&q->list);
- 		q->flags = 0;
-@@ -447,8 +452,8 @@ static void __sigqueue_free(struct sigqueue *q)
- {
- 	if (q->flags & SIGQUEUE_PREALLOC)
- 		return;
--	atomic_dec(&q->user->sigpending);
--	free_uid(q->user);
-+	if (atomic_dec_and_test(&q->user->sigpending))
-+		free_uid(q->user);
- 	kmem_cache_free(sigqueue_cachep, q);
- }
- 
--- 
-2.20.1
-
-
-
+greg k-h
