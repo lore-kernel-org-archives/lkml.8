@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3EAC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B54C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A629E20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3BF21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624381;
-	bh=M3tpY7xARF8p9JJiyj/NDGxEIXft6hv4AOv3H5Ace84=;
+	s=default; t=1584624385;
+	bh=ACVs9EEdSSF2EStts4WvgDFgGjqrcJok/0eJsCLUZM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U6s6LrEd5XA7zxIWap28UO5kDp76epr9NHdfT5tlIG8Uai/dlCWFtrGChrU0wmOja
-	 gvQuCh9uHtMj7YAPm1zxLgxDUpqF6JtotJE+GHKkuzCmYv5LvQooglc+g1M1Fcg0da
-	 oDYPGKO3fWbjwpxGv0Vuw83JNA1I2YSfbydHXax0=
+	b=gxNZjHY1wToxt0vkWxHb0532msLd7rVfNftp52Ei4gQe+mP0gr1XsdqZPle0gikBR
+	 ElEa8sYEJqQ9T0PAmGbt8V8Bd0Uz2CndoIICxCbsUbnSzZ8ZgpGh7pdeDDbIF3k2p/
+	 8QAhBNIBvbGrdI7zqBnLnhQuciI0fhAjS/QdeJSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730773AbgCSN0T (ORCPT
+        id S1730771AbgCSN0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:26:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54178 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:26:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730312AbgCSN0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:26:16 -0400
+        id S1730772AbgCSN0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:26:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FD392080C;
-        Thu, 19 Mar 2020 13:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E89DC20658;
+        Thu, 19 Mar 2020 13:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624375;
-        bh=M3tpY7xARF8p9JJiyj/NDGxEIXft6hv4AOv3H5Ace84=;
+        s=default; t=1584624378;
+        bh=ACVs9EEdSSF2EStts4WvgDFgGjqrcJok/0eJsCLUZM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SG6Uv7vOvnzsIGtLJ8ums6m4VmVnrdDee+c+GEHqmxx3LkrADOLWKOkyWV7qrKtIK
-         fv/0K06hwG2hVfb6WjcENFIgZG6APywSkWlJUKKLUxj6q+dsCGQhRGifltTV9g5PSN
-         tOLgUX6uaGqnC70VuLY4kR89wKILG9ofyomWuPPk=
+        b=B9zzMw/jDUgVFBzoLcbTZYs6ZHiWZSzZzWk9gugrOfn+lrKAL6f+8O0QnQTc8sKmK
+         bAykaYyw51TEZ7bVxgwVrMc6MICPaSfHmCoKauG/z1UGM1Kd+T5TFO/Kj4CmQfX5jN
+         x8Kf0NvqCA0ddySjdAkG2wUMPvEQh6pkeHNlwVjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
+        stable@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 41/65] slip: not call free_netdev before rtnl_unlock in slip_open
-Date:   Thu, 19 Mar 2020 14:04:23 +0100
-Message-Id: <20200319123939.479037568@linuxfoundation.org>
+Subject: [PATCH 5.5 42/65] net: phy: mscc: fix firmware paths
+Date:   Thu, 19 Mar 2020 14:04:24 +0100
+Message-Id: <20200319123939.770299315@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -61,36 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Antoine Tenart <antoine.tenart@bootlin.com>
 
-[ Upstream commit f596c87005f7b1baeb7d62d9a9e25d68c3dfae10 ]
+[ Upstream commit c87a9d6fc6d555e4981f2ded77d9a8cce950743e ]
 
-As the description before netdev_run_todo, we cannot call free_netdev
-before rtnl_unlock, fix it by reorder the code.
+The firmware paths for the VSC8584 PHYs not not contain the leading
+'microchip/' directory, as used in linux-firmware, resulting in an
+error when probing the driver. This patch fixes it.
 
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Reviewed-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Fixes: a5afc1678044 ("net: phy: mscc: add support for VSC8584 PHY")
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/slip/slip.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/phy/mscc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
-index 61d7e0d1d77db..8e56a41dd7585 100644
---- a/drivers/net/slip/slip.c
-+++ b/drivers/net/slip/slip.c
-@@ -863,7 +863,10 @@ static int slip_open(struct tty_struct *tty)
- 	tty->disc_data = NULL;
- 	clear_bit(SLF_INUSE, &sl->flags);
- 	sl_free_netdev(sl->dev);
-+	/* do not call free_netdev before rtnl_unlock */
-+	rtnl_unlock();
- 	free_netdev(sl->dev);
-+	return err;
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index d5f8f351d9eff..3e38d15a67c64 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -310,11 +310,11 @@ enum rgmii_rx_clock_delay {
+ 				BIT(VSC8531_FORCE_LED_OFF) | \
+ 				BIT(VSC8531_FORCE_LED_ON))
  
- err_exit:
- 	rtnl_unlock();
+-#define MSCC_VSC8584_REVB_INT8051_FW		"mscc_vsc8584_revb_int8051_fb48.bin"
++#define MSCC_VSC8584_REVB_INT8051_FW		"microchip/mscc_vsc8584_revb_int8051_fb48.bin"
+ #define MSCC_VSC8584_REVB_INT8051_FW_START_ADDR	0xe800
+ #define MSCC_VSC8584_REVB_INT8051_FW_CRC	0xfb48
+ 
+-#define MSCC_VSC8574_REVB_INT8051_FW		"mscc_vsc8574_revb_int8051_29e8.bin"
++#define MSCC_VSC8574_REVB_INT8051_FW		"microchip/mscc_vsc8574_revb_int8051_29e8.bin"
+ #define MSCC_VSC8574_REVB_INT8051_FW_START_ADDR	0x4000
+ #define MSCC_VSC8574_REVB_INT8051_FW_CRC	0x29e8
+ 
 -- 
 2.20.1
 
