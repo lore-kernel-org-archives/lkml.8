@@ -2,59 +2,63 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68448C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C152DC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F76A2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:11:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872A52076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:11:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JPG7XzZa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="id27pi0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgCSWLt (ORCPT
+        id S1727437AbgCSWLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 18:11:49 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:40699 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgCSWLs (ORCPT
+        Thu, 19 Mar 2020 18:11:53 -0400
+Received: from mail-wr1-f74.google.com ([209.85.221.74]:39324 "EHLO
+        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727413AbgCSWLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 18:11:48 -0400
-Received: by mail-qt1-f202.google.com with SMTP id v10so4134944qtk.7
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 15:11:46 -0700 (PDT)
+        Thu, 19 Mar 2020 18:11:51 -0400
+Received: by mail-wr1-f74.google.com with SMTP id l16so1685739wrr.6
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 15:11:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=VTNvjGbtv+rJdA49QP9OyHSdusD/AeN0IX2HvMc3zR0=;
-        b=JPG7XzZaHH0XjWC/90MErvGgNicxMfN2BDKtuLKjuszT+tRxUY2YABTeDguPgaBN9M
-         DMKB6n1tM89aVbQ8q2RZRR4N3ZmIfYKKzG6YoHSZ9WCSmhqX00SvrBaRL4kDz+ANvq/N
-         V1a5qCaVDBlo9IvmIxGxbGglxSuLvPvKS0E0dSGDjuiMacGU/pbocygtX5/sUbxFqWDs
-         ler0qrBpCVk9pOVfaq+7Vxf1/X9t38YJ4EUcrukaFz56Kx5pCFa7q5rKH7Zwy6mnZsXn
-         fqKBcgjlgHBojyaXr8cvhMRr3l8DZza8FNqZiNxLlk/ICGwFCVpekKJe5QlLYhwN8oNi
-         pgGQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=BNxXtj/13XDbJ7Ka5VyV4F1h9//JX6ytXN0Nb1qnsrE=;
+        b=id27pi0BKE21ye862UMlUIUsuloyLQnOaq47flGVBFu8NhiSN8iJGFuELhO9fL9c2i
+         3DrvAuZxJ7uG3R2yiWiVPLL73B1N59dm/Z80mOxbMZIZFIhXIPDoyNnqH5xsgNLIOffF
+         +941+dhcc6Nfhs+StEbc4VztERyewJDbgZBqS94bNCFl69NQHAMezP3UboVU+6s46s2q
+         +k/XeLO17v0Tfuqy8f/qzkayAHyeZpc6EPp3pewS0xJXR0F/1MHNGPIobNcTomXr5jzp
+         yqlLXZ2LKHuE9OYGkte1TDW4v0RedlqKBLLtYEqp7gxi9DS5spWZgrgcPB5pbLCJTKTQ
+         Qu0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=VTNvjGbtv+rJdA49QP9OyHSdusD/AeN0IX2HvMc3zR0=;
-        b=Od+HRLTxnRVCSpoPr9j5XgrHZlo+EKdhBqZOW0zgVeMIc5qF4A7gcLFSMfwflZ8Zf1
-         0bU/QoCuPVesCVtrfKnvix9N88nbWkreuT6taQe+dhYhOkBRFs7dr+IJKomaKVfsEd34
-         yk2nMNfyVArXoEL6qwxCcZgwhOiHF8ywlfaG6FjtYGqv0OMgfw3H5Wo4dYLLdL0oEeJ4
-         fOyZI1JSLu+DtAN2VGhXUE0S3VWKQrSpa/oOjF15V2xM4vISvFSQWLujfq1WA8/yL6jp
-         nIoXcEGU7J+lFn6s0Uh8ntbgMvHNkqYC9vlRQjjMBr3TU0Jq1HuZwCOM2BRCjALokGCf
-         hYrA==
-X-Gm-Message-State: ANhLgQ1Iz5qkZSb1OlNE1C1+e1Q7hW67n+xj3wGGA1P6Cj8UpiwJsqMl
-        K7BSfrYcs4Rc4kyQLqnzjo4y6knwkZgcuIlj
-X-Google-Smtp-Source: ADFU+vtDDVSGNtLbDlpY7K187U2l/dbvf5RSvskr4+U8bogD2dnap7fb4A9wUqSbvEnrh3MFPuHaY9syO9SqrEIx
-X-Received: by 2002:a0c:e88d:: with SMTP id b13mr5421478qvo.219.1584655905980;
- Thu, 19 Mar 2020 15:11:45 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 23:11:33 +0100
-Message-Id: <cover.1584655448.git.andreyknvl@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=BNxXtj/13XDbJ7Ka5VyV4F1h9//JX6ytXN0Nb1qnsrE=;
+        b=Z1UHv0N3TI8SS7/VZVFM/RA9ObnfkyKI6nnRYA5ShDI5npqbWWK7PceK3lUIMDQVeJ
+         +WqvY+DQKwhnWFwEGPF8yJq+2vy2PUwQUEvfFPeYUflTfbDxom4ah+ICJcKzefAQrO16
+         LqsXXvQJ2WvCGXZeyuOXaPhddRkkKsw0LJwJorO42CEh87rAlWY7bwK1FGYOZ7JDK2Ij
+         KkFYrHXv2/y1Ya7Sa3L7vkJ+L8BvmZjSGyAu6puAW+YypAMmH8Qh1yOdPYu9Tj1+ODXj
+         YLf4z22KCTfrZWM+8ih6kHU5nYIQwDsrKdYcg2/qOJ0la5GkMASPoValFJkXvmuJ9y5U
+         X5VQ==
+X-Gm-Message-State: ANhLgQ2oFlf9ownLp+BE0tJ+wU90GZAsEPMX3E5eWw+np65ZA/3jClbR
+        kKNYF7JBJNoL15leuUFlfGa3Id/s/ltTbNlu
+X-Google-Smtp-Source: ADFU+vtDV7twOz6cfedgfECl1aqVWSE+cPZjczrKqwiVgPhLXraJNbvYbTMR8e5CySx3P1IyGBOhlWHfXkkBdUJb
+X-Received: by 2002:a5d:4683:: with SMTP id u3mr6704253wrq.310.1584655909192;
+ Thu, 19 Mar 2020 15:11:49 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 23:11:34 +0100
+In-Reply-To: <cover.1584655448.git.andreyknvl@google.com>
+Message-Id: <4a497134b2cf7a9d306d28e3dd2746f5446d1605.1584655448.git.andreyknvl@google.com>
 Mime-Version: 1.0
+References: <cover.1584655448.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v3 0/7] kcov: collect coverage from usb soft interrupts
+Subject: [PATCH v3 1/7] kcov: cleanup debug messages
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Dmitry Vyukov <dvyukov@google.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -70,75 +74,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset extends kcov to allow collecting coverage from soft
-interrupts and then uses the new functionality to collect coverage from
-USB code.
-
-This has allowed to find at least one new HID bug [1], which was recently
-fixed by Alan [2].
-
-[1] https://syzkaller.appspot.com/bug?extid=09ef48aa58261464b621
-[2] https://patchwork.kernel.org/patch/11283319/
-
-Any subsystem that uses softirqs (e.g. timers) can make use of this in
-the future. Looking at the recent syzbot reports, an obvious candidate
-is the networking subsystem [3, 4, 5 and many more].
-
-[3] https://syzkaller.appspot.com/bug?extid=522ab502c69badc66ab7
-[4] https://syzkaller.appspot.com/bug?extid=57f89d05946c53dbbb31
-[5] https://syzkaller.appspot.com/bug?extid=df358e65d9c1b9d3f5f4
-
-This patchset has been pushed to the public Linux kernel Gerrit instance:
-
-https://linux-review.googlesource.com/c/linux/kernel/git/torvalds/linux/+/2225
-
-Changes v2 -> v3:
-- New patch: "kcov: fix potential use-after-free in kcov_remote_start".
-- New patch: "kcov: move t->kcov assignments into kcov_start/stop".
-- New patch: "kcov: move t->kcov_sequence assignment".
-- New patch: "kcov: use t->kcov_mode as enabled indicator".
-- Dropped out-of-memory error message from kcov_init() as checkpatch
-  complains.
-- Use a single local_irq_disable section when accessing per-task kcov
-  variables in kcov_remote_start/stop().
-
-Changes v1 -> v2:
-- Add local_irq_save/restore() critical sections to simplify dealing with
-  softirqs happening during kcov_remote_start/stop().
-- Set kcov_softirq after flag kcov_start() in kcov_remote_start().
-
-Changes RFC -> v1:
-- Don't support hardirq or nmi, only softirq, to avoid issues with nested
-  interrupts.
-- Combined multiple per-cpu variables into one.
-- Used plain accesses and kcov_start/stop() instead of xchg()'s.
-- Simplified handling of per-cpu variables.
-- Avoid disabling interrupts for the whole kcov_remote_start/stop()
-  region.
-- Avoid overwriting t->kcov_sequence when saving/restoring state.
-- Move kcov_remote_start/stop_usb() annotations into
-  __usb_hcd_giveback_urb() to cover all urb complete() callbacks at once.
-- Drop unneeded Dummy HCD changes.
-- Split out a patch that removed debug messages.
+Previous commit left a lot of excessive debug messages, clean them up.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+---
+ kernel/kcov.c | 22 ++--------------------
+ 1 file changed, 2 insertions(+), 20 deletions(-)
 
-Andrey Konovalov (7):
-  kcov: cleanup debug messages
-  kcov: fix potential use-after-free in kcov_remote_start
-  kcov: move t->kcov assignments into kcov_start/stop
-  kcov: move t->kcov_sequence assignment
-  kcov: use t->kcov_mode as enabled indicator
-  kcov: collect coverage from interrupts
-  usb: core: kcov: collect coverage from usb complete callback
-
- Documentation/dev-tools/kcov.rst |  17 +-
- drivers/usb/core/hcd.c           |   3 +
- include/linux/sched.h            |   3 +
- kernel/kcov.c                    | 266 ++++++++++++++++++++++---------
- lib/Kconfig.debug                |   9 ++
- 5 files changed, 213 insertions(+), 85 deletions(-)
-
+diff --git a/kernel/kcov.c b/kernel/kcov.c
+index f50354202dbe..f6bd119c9419 100644
+--- a/kernel/kcov.c
++++ b/kernel/kcov.c
+@@ -98,6 +98,7 @@ static struct kcov_remote *kcov_remote_find(u64 handle)
+ 	return NULL;
+ }
+ 
++/* Must be called with kcov_remote_lock locked. */
+ static struct kcov_remote *kcov_remote_add(struct kcov *kcov, u64 handle)
+ {
+ 	struct kcov_remote *remote;
+@@ -119,16 +120,13 @@ static struct kcov_remote_area *kcov_remote_area_get(unsigned int size)
+ 	struct kcov_remote_area *area;
+ 	struct list_head *pos;
+ 
+-	kcov_debug("size = %u\n", size);
+ 	list_for_each(pos, &kcov_remote_areas) {
+ 		area = list_entry(pos, struct kcov_remote_area, list);
+ 		if (area->size == size) {
+ 			list_del(&area->list);
+-			kcov_debug("rv = %px\n", area);
+ 			return area;
+ 		}
+ 	}
+-	kcov_debug("rv = NULL\n");
+ 	return NULL;
+ }
+ 
+@@ -136,7 +134,6 @@ static struct kcov_remote_area *kcov_remote_area_get(unsigned int size)
+ static void kcov_remote_area_put(struct kcov_remote_area *area,
+ 					unsigned int size)
+ {
+-	kcov_debug("area = %px, size = %u\n", area, size);
+ 	INIT_LIST_HEAD(&area->list);
+ 	area->size = size;
+ 	list_add(&area->list, &kcov_remote_areas);
+@@ -366,7 +363,6 @@ static void kcov_remote_reset(struct kcov *kcov)
+ 	hash_for_each_safe(kcov_remote_map, bkt, tmp, remote, hnode) {
+ 		if (remote->kcov != kcov)
+ 			continue;
+-		kcov_debug("removing handle %llx\n", remote->handle);
+ 		hash_del(&remote->hnode);
+ 		kfree(remote);
+ 	}
+@@ -553,7 +549,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
+ 
+ 	switch (cmd) {
+ 	case KCOV_INIT_TRACE:
+-		kcov_debug("KCOV_INIT_TRACE\n");
+ 		/*
+ 		 * Enable kcov in trace mode and setup buffer size.
+ 		 * Must happen before anything else.
+@@ -572,7 +567,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
+ 		kcov->mode = KCOV_MODE_INIT;
+ 		return 0;
+ 	case KCOV_ENABLE:
+-		kcov_debug("KCOV_ENABLE\n");
+ 		/*
+ 		 * Enable coverage for the current task.
+ 		 * At this point user must have been enabled trace mode,
+@@ -598,7 +592,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
+ 		kcov_get(kcov);
+ 		return 0;
+ 	case KCOV_DISABLE:
+-		kcov_debug("KCOV_DISABLE\n");
+ 		/* Disable coverage for the current task. */
+ 		unused = arg;
+ 		if (unused != 0 || current->kcov != kcov)
+@@ -610,7 +603,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
+ 		kcov_put(kcov);
+ 		return 0;
+ 	case KCOV_REMOTE_ENABLE:
+-		kcov_debug("KCOV_REMOTE_ENABLE\n");
+ 		if (kcov->mode != KCOV_MODE_INIT || !kcov->area)
+ 			return -EINVAL;
+ 		t = current;
+@@ -629,7 +621,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
+ 		kcov->remote_size = remote_arg->area_size;
+ 		spin_lock(&kcov_remote_lock);
+ 		for (i = 0; i < remote_arg->num_handles; i++) {
+-			kcov_debug("handle %llx\n", remote_arg->handles[i]);
+ 			if (!kcov_check_handle(remote_arg->handles[i],
+ 						false, true, false)) {
+ 				spin_unlock(&kcov_remote_lock);
+@@ -644,8 +635,6 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
+ 			}
+ 		}
+ 		if (remote_arg->common_handle) {
+-			kcov_debug("common handle %llx\n",
+-					remote_arg->common_handle);
+ 			if (!kcov_check_handle(remote_arg->common_handle,
+ 						true, false, false)) {
+ 				spin_unlock(&kcov_remote_lock);
+@@ -782,7 +771,6 @@ void kcov_remote_start(u64 handle)
+ 	spin_lock(&kcov_remote_lock);
+ 	remote = kcov_remote_find(handle);
+ 	if (!remote) {
+-		kcov_debug("no remote found");
+ 		spin_unlock(&kcov_remote_lock);
+ 		return;
+ 	}
+@@ -810,8 +798,6 @@ void kcov_remote_start(u64 handle)
+ 	/* Reset coverage size. */
+ 	*(u64 *)area = 0;
+ 
+-	kcov_debug("area = %px, size = %u", area, size);
+-
+ 	kcov_start(t, size, area, mode, sequence);
+ 
+ }
+@@ -881,10 +867,8 @@ void kcov_remote_stop(void)
+ 	unsigned int size = t->kcov_size;
+ 	int sequence = t->kcov_sequence;
+ 
+-	if (!kcov) {
+-		kcov_debug("no kcov found\n");
++	if (!kcov)
+ 		return;
+-	}
+ 
+ 	kcov_stop(t);
+ 	t->kcov = NULL;
+@@ -894,8 +878,6 @@ void kcov_remote_stop(void)
+ 	 * KCOV_DISABLE could have been called between kcov_remote_start()
+ 	 * and kcov_remote_stop(), hence the check.
+ 	 */
+-	kcov_debug("move if: %d == %d && %d\n",
+-		sequence, kcov->sequence, (int)kcov->remote);
+ 	if (sequence == kcov->sequence && kcov->remote)
+ 		kcov_move_area(kcov->mode, kcov->area, kcov->size, area);
+ 	spin_unlock(&kcov->lock);
 -- 
 2.25.1.696.g5e7596f4ac-goog
 
