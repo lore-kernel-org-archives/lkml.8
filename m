@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB46C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26EDC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC9D208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97F78208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623451;
-	bh=6UjSgcbQnk73zTfNrkP2gQ8Vocq5lCa1JwxxrhLwVlc=;
+	s=default; t=1584623457;
+	bh=/18kTopnrkc7k6kqaEp+1pzsiGmVmHexcs8erim2Flg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bDgNNW5m2yOTz22Kwem9d4OKnpwWgtQjWp32i8pY8uocsS8ZlAhUETk8Ye7h1bDuo
-	 +F1Hky5+l8IjFj0iUZdLnUztwk8b+BD6QW/Mj1vmyIkzPjRXX078uSbYfh7rLUGxr5
-	 kQZMzLmGCVBXi2ylSoHUeaYXaHUp0Vle183DjweQ=
+	b=ktGCEZD1IDQA3g9d2vihFIWCoCzOFDtuTEJwqCDPOA3RwNZ0Lm4RJA04PG911ia7x
+	 iwak9f0m6PIget22goH9YpM0/FWWsPpfafbjqd/OxArbM36qQCo8guO7kAn9KRPWHp
+	 djmoAKe6DhsyhllGRO7TLXq3dQHqyUrMEUEb2wI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgCSNKu (ORCPT
+        id S1728606AbgCSNKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:10:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55768 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:10:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728034AbgCSNKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:10:49 -0400
+        id S1728593AbgCSNKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:10:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E48262145D;
-        Thu, 19 Mar 2020 13:10:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A8D20722;
+        Thu, 19 Mar 2020 13:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623448;
-        bh=6UjSgcbQnk73zTfNrkP2gQ8Vocq5lCa1JwxxrhLwVlc=;
+        s=default; t=1584623452;
+        bh=/18kTopnrkc7k6kqaEp+1pzsiGmVmHexcs8erim2Flg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NzGYYUtAjn8S8kzhf2OE4mWVItcYqv+rQNo5V0+b+keSi0b+5knWks5t+Pgts70NV
-         w/SA0GT1/xf+mt9vsEvV1hMo37E1nVZLPzoFrgh//W9CN/le1tKn6TUDDwPRHM0D5L
-         QtjmoTEvB8r4wNhVPKpTMTpJAfG1JQF89qSqtcUk=
+        b=tq4xUuxMiRSxDg7D+ZVOrXTiWds/Bw5Wh0OccYjnEoCyVX/L1YEhgbX3xb0Omamu3
+         tjRchqV5IYAKDLn8BcJRFkb4tDJ7SbQalwsFbG+8gc8ayty4EhWClwLDVtwzGNVbSj
+         irD631yamywplZdEltZSgasopCe1Fs8aWcg9ISRk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 30/90] net: phy: fix MDIO bus PM PHY resuming
-Date:   Thu, 19 Mar 2020 13:59:52 +0100
-Message-Id: <20200319123937.932178563@linuxfoundation.org>
+        stable@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: [PATCH 4.9 31/90] virtio-blk: fix hw_queue stopped on arbitrary error
+Date:   Thu, 19 Mar 2020 13:59:53 +0100
+Message-Id: <20200319123938.213868113@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -61,72 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-[ Upstream commit 611d779af7cad2b87487ff58e4931a90c20b113c ]
+commit f5f6b95c72f7f8bb46eace8c5306c752d0133daa upstream.
 
-So far we have the unfortunate situation that mdio_bus_phy_may_suspend()
-is called in suspend AND resume path, assuming that function result is
-the same. After the original change this is no longer the case,
-resulting in broken resume as reported by Geert.
+Since nobody else is going to restart our hw_queue for us, the
+blk_mq_start_stopped_hw_queues() is in virtblk_done() is not sufficient
+necessarily sufficient to ensure that the queue will get started again.
+In case of global resource outage (-ENOMEM because mapping failure,
+because of swiotlb full) our virtqueue may be empty and we can get
+stuck with a stopped hw_queue.
 
-To fix this call mdio_bus_phy_may_suspend() in the suspend path only,
-and let the phy_device store the info whether it was suspended by
-MDIO bus PM.
+Let us not stop the queue on arbitrary errors, but only on -EONSPC which
+indicates a full virtqueue, where the hw_queue is guaranteed to get
+started by virtblk_done() before when it makes sense to carry on
+submitting requests. Let us also remove a stale comment.
 
-Fixes: 503ba7c69610 ("net: phy: Avoid multiple suspends")
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Fixes: f7728002c1c7 ("virtio_ring: fix return code on DMA mapping fails")
+Link: https://lore.kernel.org/r/20200213123728.61216-2-pasic@linux.ibm.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/phy/phy_device.c |    6 +++++-
- include/linux/phy.h          |    2 ++
- 2 files changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -129,6 +129,8 @@ static int mdio_bus_phy_suspend(struct d
- 	if (!mdio_bus_phy_may_suspend(phydev))
- 		return 0;
- 
-+	phydev->suspended_by_mdio_bus = true;
-+
- 	return phy_suspend(phydev);
- }
- 
-@@ -137,9 +139,11 @@ static int mdio_bus_phy_resume(struct de
- 	struct phy_device *phydev = to_phy_device(dev);
- 	int ret;
- 
--	if (!mdio_bus_phy_may_suspend(phydev))
-+	if (!phydev->suspended_by_mdio_bus)
- 		goto no_resume;
- 
-+	phydev->suspended_by_mdio_bus = false;
-+
- 	ret = phy_resume(phydev);
- 	if (ret < 0)
- 		return ret;
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -333,6 +333,7 @@ struct phy_c45_device_ids {
-  * is_pseudo_fixed_link: Set to true if this phy is an Ethernet switch, etc.
-  * has_fixups: Set to true if this phy has fixups/quirks.
-  * suspended: Set to true if this phy has been suspended successfully.
-+ * suspended_by_mdio_bus: Set to true if this phy was suspended by MDIO bus.
-  * state: state of the PHY for management purposes
-  * dev_flags: Device-specific flags used by the PHY driver.
-  * link_timeout: The number of timer firings to wait before the
-@@ -369,6 +370,7 @@ struct phy_device {
- 	bool is_pseudo_fixed_link;
- 	bool has_fixups;
- 	bool suspended;
-+	bool suspended_by_mdio_bus;
- 
- 	enum phy_state state;
- 
+---
+ drivers/block/virtio_blk.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -215,10 +215,12 @@ static int virtio_queue_rq(struct blk_mq
+ 	err = __virtblk_add_req(vblk->vqs[qid].vq, vbr, vbr->sg, num);
+ 	if (err) {
+ 		virtqueue_kick(vblk->vqs[qid].vq);
+-		blk_mq_stop_hw_queue(hctx);
++		/* Don't stop the queue if -ENOMEM: we may have failed to
++		 * bounce the buffer due to global resource outage.
++		 */
++		if (err == -ENOSPC)
++			blk_mq_stop_hw_queue(hctx);
+ 		spin_unlock_irqrestore(&vblk->vqs[qid].lock, flags);
+-		/* Out of mem doesn't actually happen, since we fall back
+-		 * to direct descriptors */
+ 		if (err == -ENOMEM || err == -ENOSPC)
+ 			return BLK_MQ_RQ_QUEUE_BUSY;
+ 		return BLK_MQ_RQ_QUEUE_ERROR;
 
 
