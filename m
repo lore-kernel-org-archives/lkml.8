@@ -2,52 +2,51 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A578C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65493C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C5B21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA402098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623921;
-	bh=KPV4xBHfo2J1Cm3TP9h9kb7gA4hXX8+vaoOMMPNrTSI=;
+	s=default; t=1584623924;
+	bh=1sBIkeTKIfNbKJsAZXXIYq07vCvmoC9l+d3drbBYvkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W8DSSveR7JP/Ut6Tzs4Ideq39PxgNXurQmnAqmMHUd+XbOpHGTPHaQmHPMyH+g0TA
-	 hypR6S3Hph/H7TFtVBZYPvpBtKSqA54Ynj4k8Ou/BA8VI/H0mCstcth0ZOgT/7V+d6
-	 BHhn7N6z2XS/yR6xZ9LafyhS4LP6Ndn0pQxutEzs=
+	b=NKr2kSrA5roE6m1Pat/VXBDnW4IWz2Wb4pzCXDmTyDgtD3mEUJff3DxyZIi/9aIaO
+	 jNuJ5kArMIbK7vbA2Xx+AHQw0+wdecp8s2MM3emR3hCxMlh5Io7jMOJQIwyZtR0U5m
+	 +6D8XEcPfZ7wXBeJijwoJbr7s2opmoz8yZH4H8BU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgCSNSk (ORCPT
+        id S1729825AbgCSNSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:18:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729808AbgCSNSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:18:36 -0400
+        id S1729814AbgCSNSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:18:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C7B3206D7;
-        Thu, 19 Mar 2020 13:18:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5118206D7;
+        Thu, 19 Mar 2020 13:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623915;
-        bh=KPV4xBHfo2J1Cm3TP9h9kb7gA4hXX8+vaoOMMPNrTSI=;
+        s=default; t=1584623918;
+        bh=1sBIkeTKIfNbKJsAZXXIYq07vCvmoC9l+d3drbBYvkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MOgvKYQbMOAjriOnlTNbE4BwyQpx41I+65derUeLmG10Mo5+8eY7+57rJiHXt1Znm
-         /S3MlvB5lLY3klQMXztQ63O3G7/3T2vI+m9rpa4ahMn5t4lcQIoQ24qiIu/dubCY7H
-         lJmytylUSad/8b1YJVte4NBFTygZ4UUS78whQYJQ=
+        b=vtxc4tsOaH+nnK0XKZNk3b4imIUYb+BXHRec05VuJDB1qaN+JPujOZ8znfqttWr+4
+         ritvEVciWxTiGC1z/k3Ty5QumViOUaSk24zuS4w3JoX4aL+GLfoN/C88xhU41B3ikV
+         sKZL5m3noBuQBFQr2UTL/m8Ey+CyJS0Y5flWXMVA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Qian Cai <cai@lca.pw>, Theodore Tso <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 95/99] jbd2: fix data races at struct journal_head
-Date:   Thu, 19 Mar 2020 14:04:13 +0100
-Message-Id: <20200319124007.604200119@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 4.14 96/99] ARM: 8957/1: VDSO: Match ARMv8 timer in cntvct_functional()
+Date:   Thu, 19 Mar 2020 14:04:14 +0100
+Message-Id: <20200319124007.803853028@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -60,110 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 6c5d911249290f41f7b50b43344a7520605b1acb ]
+commit 45939ce292b4b11159719faaf60aba7d58d5fe33 upstream.
 
-journal_head::b_transaction and journal_head::b_next_transaction could
-be accessed concurrently as noticed by KCSAN,
+It is possible for a system with an ARMv8 timer to run a 32-bit kernel.
+When this happens we will unconditionally have the vDSO code remove the
+__vdso_gettimeofday and __vdso_clock_gettime symbols because
+cntvct_functional() returns false since it does not match that
+compatibility string.
 
- LTP: starting fsync04
- /dev/zero: Can't open blockdev
- EXT4-fs (loop0): mounting ext3 file system using the ext4 subsystem
- EXT4-fs (loop0): mounted filesystem with ordered data mode. Opts: (null)
- ==================================================================
- BUG: KCSAN: data-race in __jbd2_journal_refile_buffer [jbd2] / jbd2_write_access_granted [jbd2]
+Fixes: ecf99a439105 ("ARM: 8331/1: VDSO initialization, mapping, and synchronization")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
- write to 0xffff99f9b1bd0e30 of 8 bytes by task 25721 on cpu 70:
-  __jbd2_journal_refile_buffer+0xdd/0x210 [jbd2]
-  __jbd2_journal_refile_buffer at fs/jbd2/transaction.c:2569
-  jbd2_journal_commit_transaction+0x2d15/0x3f20 [jbd2]
-  (inlined by) jbd2_journal_commit_transaction at fs/jbd2/commit.c:1034
-  kjournald2+0x13b/0x450 [jbd2]
-  kthread+0x1cd/0x1f0
-  ret_from_fork+0x27/0x50
-
- read to 0xffff99f9b1bd0e30 of 8 bytes by task 25724 on cpu 68:
-  jbd2_write_access_granted+0x1b2/0x250 [jbd2]
-  jbd2_write_access_granted at fs/jbd2/transaction.c:1155
-  jbd2_journal_get_write_access+0x2c/0x60 [jbd2]
-  __ext4_journal_get_write_access+0x50/0x90 [ext4]
-  ext4_mb_mark_diskspace_used+0x158/0x620 [ext4]
-  ext4_mb_new_blocks+0x54f/0xca0 [ext4]
-  ext4_ind_map_blocks+0xc79/0x1b40 [ext4]
-  ext4_map_blocks+0x3b4/0x950 [ext4]
-  _ext4_get_block+0xfc/0x270 [ext4]
-  ext4_get_block+0x3b/0x50 [ext4]
-  __block_write_begin_int+0x22e/0xae0
-  __block_write_begin+0x39/0x50
-  ext4_write_begin+0x388/0xb50 [ext4]
-  generic_perform_write+0x15d/0x290
-  ext4_buffered_write_iter+0x11f/0x210 [ext4]
-  ext4_file_write_iter+0xce/0x9e0 [ext4]
-  new_sync_write+0x29c/0x3b0
-  __vfs_write+0x92/0xa0
-  vfs_write+0x103/0x260
-  ksys_write+0x9d/0x130
-  __x64_sys_write+0x4c/0x60
-  do_syscall_64+0x91/0xb05
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- 5 locks held by fsync04/25724:
-  #0: ffff99f9911093f8 (sb_writers#13){.+.+}, at: vfs_write+0x21c/0x260
-  #1: ffff99f9db4c0348 (&sb->s_type->i_mutex_key#15){+.+.}, at: ext4_buffered_write_iter+0x65/0x210 [ext4]
-  #2: ffff99f5e7dfcf58 (jbd2_handle){++++}, at: start_this_handle+0x1c1/0x9d0 [jbd2]
-  #3: ffff99f9db4c0168 (&ei->i_data_sem){++++}, at: ext4_map_blocks+0x176/0x950 [ext4]
-  #4: ffffffff99086b40 (rcu_read_lock){....}, at: jbd2_write_access_granted+0x4e/0x250 [jbd2]
- irq event stamp: 1407125
- hardirqs last  enabled at (1407125): [<ffffffff980da9b7>] __find_get_block+0x107/0x790
- hardirqs last disabled at (1407124): [<ffffffff980da8f9>] __find_get_block+0x49/0x790
- softirqs last  enabled at (1405528): [<ffffffff98a0034c>] __do_softirq+0x34c/0x57c
- softirqs last disabled at (1405521): [<ffffffff97cc67a2>] irq_exit+0xa2/0xc0
-
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 68 PID: 25724 Comm: fsync04 Tainted: G L 5.6.0-rc2-next-20200221+ #7
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-
-The plain reads are outside of jh->b_state_lock critical section which result
-in data races. Fix them by adding pairs of READ|WRITE_ONCE().
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/r/20200222043111.2227-1-cai@lca.pw
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/transaction.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/kernel/vdso.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index f2ff141a4479e..a355ca418e788 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1050,8 +1050,8 @@ static bool jbd2_write_access_granted(handle_t *handle, struct buffer_head *bh,
- 	/* For undo access buffer must have data copied */
- 	if (undo && !jh->b_committed_data)
- 		goto out;
--	if (jh->b_transaction != handle->h_transaction &&
--	    jh->b_next_transaction != handle->h_transaction)
-+	if (READ_ONCE(jh->b_transaction) != handle->h_transaction &&
-+	    READ_ONCE(jh->b_next_transaction) != handle->h_transaction)
- 		goto out;
- 	/*
- 	 * There are two reasons for the barrier here:
-@@ -2466,8 +2466,8 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
- 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
- 	 * take a new one.
+--- a/arch/arm/kernel/vdso.c
++++ b/arch/arm/kernel/vdso.c
+@@ -104,6 +104,8 @@ static bool __init cntvct_functional(voi
  	 */
--	jh->b_transaction = jh->b_next_transaction;
--	jh->b_next_transaction = NULL;
-+	WRITE_ONCE(jh->b_transaction, jh->b_next_transaction);
-+	WRITE_ONCE(jh->b_next_transaction, NULL);
- 	if (buffer_freed(bh))
- 		jlist = BJ_Forget;
- 	else if (jh->b_modified)
--- 
-2.20.1
-
+ 	np = of_find_compatible_node(NULL, NULL, "arm,armv7-timer");
+ 	if (!np)
++		np = of_find_compatible_node(NULL, NULL, "arm,armv8-timer");
++	if (!np)
+ 		goto out_put;
+ 
+ 	if (of_property_read_bool(np, "arm,cpu-registers-not-fw-configured"))
 
 
