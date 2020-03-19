@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E347C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38151C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F7B20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1035020740
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623162;
-	bh=YCwknx/V/AJ8HbdipewMPP+FZ4X03uVZsduURbA9Whk=;
+	s=default; t=1584623164;
+	bh=BtyX3q8zZFhrL4BwDnAymk7B7SD3Y8Qa2VN9pKeAW0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kQDJb1pbfrtS1iJO+ZmJ8BIvUcZLbHzNPCphhhPPp+42PhOwtbrAqUjng7LhE/Kx1
-	 wdNoNJz76DLyeWw6qw8AzLOG2eoU8R3jS7G4fRvJr63CAqhWc607eDfBiqnz0zwW/d
-	 ORxjRSdYTELZL687iN3B8wz/7rEy56k8lL00gXjk=
+	b=gkTePA8QGBZfH7Edx4nL+biEh5BVvWb1JrBfCMIrvZJ3RENzhFqkh1usJvRN7+S1F
+	 ByOzuwmSmauRqEmiGmoxQhFjTDN+Uz4J2Qn2hj5gluUdSAJMXr0JqNyySZ8N+nOAwK
+	 Rr8STzlzVj+5yMng1lF2QSdg4XFa9BZ0NZ6hyRZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbgCSNGA (ORCPT
+        id S1727561AbgCSNGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:06:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48824 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:06:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727514AbgCSNFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:05:54 -0400
+        id S1727548AbgCSNGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:06:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B33020739;
-        Thu, 19 Mar 2020 13:05:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1570E20757;
+        Thu, 19 Mar 2020 13:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623153;
-        bh=YCwknx/V/AJ8HbdipewMPP+FZ4X03uVZsduURbA9Whk=;
+        s=default; t=1584623159;
+        bh=BtyX3q8zZFhrL4BwDnAymk7B7SD3Y8Qa2VN9pKeAW0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=polwci4FSxnc5WZWq+04uYCwgukO2Erac7IF1Q3YyP8sH5wZQQT64N/413He0As03
-         oKuMOCDPIs00i+WR3vL2v/5Y4e+Ry7LGY3Nnlx36AihF+5w74HV/SAyJcUJ7j+tOiR
-         bMcmrv17bPHFn6Y77cA+SvjXBIfM7uKFDb9j7uDo=
+        b=c0OOQRzhscn0DtBqiQkeidIj+TXOFKF58OY3G3M+D3AtNajeBxtQJ/YMiDzNgJBAM
+         DT66sUT+QM9lIb1mqrB9F6vUQIBKHx5bBOiPee0vl0XBri8sRqpqpd0eG1CGyt25fO
+         KL/GfKXUOdqC7SCNHDD710scXCx1GFcuyzN/2gy4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 4.4 26/93] ARC: define __ALIGN_STR and __ALIGN symbols for ARC
-Date:   Thu, 19 Mar 2020 13:59:30 +0100
-Message-Id: <20200319123933.336202324@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 4.4 28/93] iommu/vt-d: dmar: replace WARN_TAINT with pr_warn + add_taint
+Date:   Thu, 19 Mar 2020 13:59:32 +0100
+Message-Id: <20200319123933.978789756@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -59,35 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 8d92e992a785f35d23f845206cf8c6cafbc264e0 upstream.
+commit 59833696442c674acbbd297772ba89e7ad8c753d upstream.
 
-The default defintions use fill pattern 0x90 for padding which for ARC
-generates unintended "ldh_s r12,[r0,0x20]" corresponding to opcode 0x9090
+Quoting from the comment describing the WARN functions in
+include/asm-generic/bug.h:
 
-So use ".align 4" which insert a "nop_s" instruction instead.
+ * WARN(), WARN_ON(), WARN_ON_ONCE, and so on can be used to report
+ * significant kernel issues that need prompt attention if they should ever
+ * appear at runtime.
+ *
+ * Do not use these macros when checking for invalid external inputs
 
+The (buggy) firmware tables which the dmar code was calling WARN_TAINT
+for really are invalid external inputs. They are not under the kernel's
+control and the issues in them cannot be fixed by a kernel update.
+So logging a backtrace, which invites bug reports to be filed about this,
+is not helpful.
+
+Some distros, e.g. Fedora, have tools watching for the kernel backtraces
+logged by the WARN macros and offer the user an option to file a bug for
+this when these are encountered. The WARN_TAINT in warn_invalid_dmar()
++ another iommu WARN_TAINT, addressed in another patch, have lead to over
+a 100 bugs being filed this way.
+
+This commit replaces the WARN_TAINT("...") calls, with
+pr_warn(FW_BUG "...") + add_taint(TAINT_FIRMWARE_WORKAROUND, ...) calls
+avoiding the backtrace and thus also avoiding bug-reports being filed
+about this against the kernel.
+
+Fixes: fd0c8894893c ("intel-iommu: Set a more specific taint flag for invalid BIOS DMAR tables")
+Fixes: e625b4a95d50 ("iommu/vt-d: Parse ANDD records")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
 Cc: stable@vger.kernel.org
-Acked-by: Vineet Gupta <vgupta@synopsys.com>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Link: https://lore.kernel.org/r/20200309140138.3753-2-hdegoede@redhat.com
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1564895
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arc/include/asm/linkage.h |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iommu/dmar.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/arch/arc/include/asm/linkage.h
-+++ b/arch/arc/include/asm/linkage.h
-@@ -12,6 +12,8 @@
- #ifdef __ASSEMBLY__
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -438,12 +438,13 @@ static int __init dmar_parse_one_andd(st
  
- #define ASM_NL		 `	/* use '`' to mark new line in macro */
-+#define __ALIGN		.align 4
-+#define __ALIGN_STR	__stringify(__ALIGN)
+ 	/* Check for NUL termination within the designated length */
+ 	if (strnlen(andd->device_name, header->length - 8) == header->length - 8) {
+-		WARN_TAINT(1, TAINT_FIRMWARE_WORKAROUND,
++		pr_warn(FW_BUG
+ 			   "Your BIOS is broken; ANDD object name is not NUL-terminated\n"
+ 			   "BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+ 			   dmi_get_system_info(DMI_BIOS_VENDOR),
+ 			   dmi_get_system_info(DMI_BIOS_VERSION),
+ 			   dmi_get_system_info(DMI_PRODUCT_VERSION));
++		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+ 		return -EINVAL;
+ 	}
+ 	pr_info("ANDD device: %x name: %s\n", andd->device_number,
+@@ -469,14 +470,14 @@ static int dmar_parse_one_rhsa(struct ac
+ 			return 0;
+ 		}
+ 	}
+-	WARN_TAINT(
+-		1, TAINT_FIRMWARE_WORKAROUND,
++	pr_warn(FW_BUG
+ 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
+ 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+ 		drhd->reg_base_addr,
+ 		dmi_get_system_info(DMI_BIOS_VENDOR),
+ 		dmi_get_system_info(DMI_BIOS_VERSION),
+ 		dmi_get_system_info(DMI_PRODUCT_VERSION));
++	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
  
- /* annotation for data we want in DCCM - if enabled in .config */
- .macro ARCFP_DATA nm
+ 	return 0;
+ }
+@@ -822,14 +823,14 @@ int __init dmar_table_init(void)
+ 
+ static void warn_invalid_dmar(u64 addr, const char *message)
+ {
+-	WARN_TAINT_ONCE(
+-		1, TAINT_FIRMWARE_WORKAROUND,
++	pr_warn_once(FW_BUG
+ 		"Your BIOS is broken; DMAR reported at address %llx%s!\n"
+ 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+ 		addr, message,
+ 		dmi_get_system_info(DMI_BIOS_VENDOR),
+ 		dmi_get_system_info(DMI_BIOS_VERSION),
+ 		dmi_get_system_info(DMI_PRODUCT_VERSION));
++	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+ }
+ 
+ static int __ref
 
 
