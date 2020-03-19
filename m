@@ -2,117 +2,171 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055B2C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223C8C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D136720767
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87BB2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:25:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W4p7IqK8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbgCSXWc (ORCPT
+        id S1727573AbgCSXZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:22:32 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:43782 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727258AbgCSXWc (ORCPT
+        Thu, 19 Mar 2020 19:25:55 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37834 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbgCSXZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:22:32 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 1910A1C0320; Fri, 20 Mar 2020 00:22:30 +0100 (CET)
-Date:   Fri, 20 Mar 2020 00:22:25 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        ben.hutchings@codethink.co.uk, Chris.Paterson2@renesas.com,
-        bigeasy@linutronix.de
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Julia Cartwright <julia@ni.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: 4.19.106-rt44 -- boot problems with irqwork: push most work into
- softirq context
-Message-ID: <20200319232225.GA7878@duo.ucw.cz>
-References: <20200228170837.3fe8bb57@gandalf.local.home>
- <20200319214835.GA29781@duo.ucw.cz>
+        Thu, 19 Mar 2020 19:25:55 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j11so3090599lfg.4;
+        Thu, 19 Mar 2020 16:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xryJO8lkXqRCZQK2yjx1cRHjWBLO8IFysYsWxEoA3uE=;
+        b=W4p7IqK840U96gHxPUFDwKRKl0DeyM62Cf4hK4MVxDeZLz/NuJnzVzNLCXHzzJPXw3
+         cuO7UoACnyau5ntSIeAtexp74bDciO1/5FPGcp4uN5dfZOgTP1gdGS6uEx07EyMxxSuW
+         UTG41vXaINQUcorBOvlljqNGUuDzQ/Gzdti5RddYiwIqkyU/TcLQoyujB40JItwp4I44
+         aLE8124W9EF1NiPA2u/s7EaM8iAp9jTolVsVbLF6auvhBLnXqNVx2On8kwVpvS0Al6yh
+         3ce8EGJVdi1kbQEQX8KtoqT37e1mM0eGUDk1WEofyR/5anu3exltpzmPFnsw6CUMrPmR
+         10SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xryJO8lkXqRCZQK2yjx1cRHjWBLO8IFysYsWxEoA3uE=;
+        b=MKcr+XdNyQCVdcT89qLObnS3T9lVEzJOuviZO3j+W/r3Zv8IaVhcZzet+GN3J8LP/E
+         Yybjn6SmXRUwp9gYrh9i0i6MxqxVUu3Algmc5sdmjXT+fQdJmQF9C5xNGhLWRbWVjYyy
+         w9wCTx8+ls84XsFk+6SBdGXg2fgr1yEqy20FBXp/0QF8H0RtIG77ny9HxEx8uEyKSugz
+         bKwm7aUhBWNP6757hq7L1WkTEVG6EBzD48IrXtJcxRShetf1NkVF5gwdfb1zxSvh/6DE
+         fkFqGhz9UhrWoRZ+E2cFXDmG92VHD9Mp8YgQpC+sHdcBRH7GRfnmMFib90IxMzgykkn8
+         qDxw==
+X-Gm-Message-State: ANhLgQ2Gj6xWISZgAGHPVfwZjf+u3YPECEtKCTvFyioTJGydiJHlVz3W
+        nNsUSXGvaPyMHp9Tl3w0K7gZvu3gxjf68AIPgy4=
+X-Google-Smtp-Source: ADFU+vutZe3vAn9jxlvO0kvX2a2rYQyzTHs+93M3VoF6k7ot+b480wfjbV128JnurPO8vWCARFUaoAdJ1D285cdVDEc=
+X-Received: by 2002:a19:5504:: with SMTP id n4mr3537070lfe.149.1584660352957;
+ Thu, 19 Mar 2020 16:25:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
-Content-Disposition: inline
-In-Reply-To: <20200319214835.GA29781@duo.ucw.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200318204302.693307984@linutronix.de> <20200318204408.521507446@linutronix.de>
+In-Reply-To: <20200318204408.521507446@linutronix.de>
+From:   Julian Calaby <julian.calaby@gmail.com>
+Date:   Fri, 20 Mar 2020 10:25:41 +1100
+Message-ID: <CAGRGNgXAW14=8ntTiB_hJ_nLq7WC_oFR3N9BNjqVEZM=ze85tQ@mail.gmail.com>
+Subject: Re: [patch V2 11/15] completion: Use simple wait queues
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Thomas,
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Mar 19, 2020 at 7:48 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> From: Thomas Gleixner <tglx@linutronix.de>
+>
+> completion uses a wait_queue_head_t to enqueue waiters.
+>
+> wait_queue_head_t contains a spinlock_t to protect the list of waiters
+> which excludes it from being used in truly atomic context on a PREEMPT_RT
+> enabled kernel.
+>
+> The spinlock in the wait queue head cannot be replaced by a raw_spinlock
+> because:
+>
+>   - wait queues can have custom wakeup callbacks, which acquire other
+>     spinlock_t locks and have potentially long execution times
+>
+>   - wake_up() walks an unbounded number of list entries during the wake up
+>     and may wake an unbounded number of waiters.
+>
+> For simplicity and performance reasons complete() should be usable on
+> PREEMPT_RT enabled kernels.
+>
+> completions do not use custom wakeup callbacks and are usually single
+> waiter, except for a few corner cases.
+>
+> Replace the wait queue in the completion with a simple wait queue (swait),
+> which uses a raw_spinlock_t for protecting the waiter list and therefore is
+> safe to use inside truly atomic regions on PREEMPT_RT.
+>
+> There is no semantical or functional change:
+>
+>   - completions use the exclusive wait mode which is what swait provides
+>
+>   - complete() wakes one exclusive waiter
+>
+>   - complete_all() wakes all waiters while holding the lock which protects
+>     the wait queue against newly incoming waiters. The conversion to swait
+>     preserves this behaviour.
+>
+> complete_all() might cause unbound latencies with a large number of waiters
+> being woken at once, but most complete_all() usage sites are either in
+> testing or initialization code or have only a really small number of
+> concurrent waiters which for now does not cause a latency problem. Keep it
+> simple for now.
+>
+> The fixup of the warning check in the USB gadget driver is just a straight
+> forward conversion of the lockless waiter check from one waitqueue type to
+> the other.
+>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> ---
+> V2: Split out the orinoco and usb gadget parts and amended change log
+> ---
+>  drivers/usb/gadget/function/f_fs.c |    2 +-
+>  include/linux/completion.h         |    8 ++++----
+>  kernel/sched/completion.c          |   36 +++++++++++++++++++-----------------
+>  3 files changed, 24 insertions(+), 22 deletions(-)
+>
+> --- a/drivers/usb/gadget/function/f_fs.c
+> +++ b/drivers/usb/gadget/function/f_fs.c
+> @@ -1703,7 +1703,7 @@ static void ffs_data_put(struct ffs_data
+>                 pr_info("%s(): freeing\n", __func__);
+>                 ffs_data_clear(ffs);
+>                 BUG_ON(waitqueue_active(&ffs->ev.waitq) ||
+> -                      waitqueue_active(&ffs->ep0req_completion.wait) ||
+> +                      swait_active(&ffs->ep0req_completion.wait) ||
 
+This looks like some code is reaching deep into the dirty dark corners
+of the completion implementation, should there be some wrapper around
+this to hide that?
 
-On Thu 2020-03-19 22:48:35, Pavel Machek wrote:
-> Hi!
->=20
-> > I'm pleased to announce the 4.19.106-rt44 stable release.
-> >=20
-> >=20
-> > This release is just an update to the new stable 4.19.106 version
-> > and no RT specific changes have been made.
-> >=20
-> >=20
-> > You can get this release via the git tree at:
-> >=20
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-> >=20
-> >   branch: v4.19-rt
-> >   Head SHA1: 0f2960c75dd68d339f0aff2935f51652b5625fbf
->=20
-> This brought some problems for me. de0-nano board now fails to boot in
-> cca 50% of cases if I move these patches on top of -cip tree.
->=20
-> This is example of failed job:
->=20
-> https://lava.ciplatform.org/scheduler/job/13037
->=20
-> de0-nano is 32-bit arm, should be based on Altera SoCFPGA if I understand
-> things correctly.
->=20
-> "fc9f4631a290 irqwork: push most work into softirq context" touches
-> area of the panic above. I tried to revert it on top of the full
-> series, and tests passed twice so far...
+Thanks,
 
-Test passed 7 times now. So yes, reverting this fixes de0-nano
-boot. Any ideas what might be wrong?
+-- 
+Julian Calaby
 
-I'll be running it few more times.
-
-https://gitlab.com/cip-project/cip-kernel/linux-cip/pipelines/127953471
-
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnP+sQAKCRAw5/Bqldv6
-8o9IAJ9jvIADInaCXP9F/avhH2UBquZc1wCZAZUJP58ybTLpilfer1ebbkOX5Qg=
-=mlYB
------END PGP SIGNATURE-----
-
---2oS5YaxWCcQjTEyO--
+Email: julian.calaby@gmail.com
+Profile: http://www.google.com/profiles/julian.calaby/
