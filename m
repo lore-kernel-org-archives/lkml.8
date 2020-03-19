@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD57C55187
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CF6C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A14216FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B6A2076F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584576688;
-	bh=6byI644vY95Z8j8I2/LLCQleRYKanOWh2SiaJcHFMDY=;
+	s=default; t=1584576693;
+	bh=/lNK+4AM9ncCFxX+MXSXM9gMwQMVbCsWMIAl06YFsLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JIqpu5g1vWWfPAedETZadj87nwW8AR8eFll/ZhGP9AejLkf0fMkygbIMvP5hVmEki
-	 rtF3sZ18B6otmlu01oVpaEs9W2SA4s7Wrp5pAob2goWlQcDFIhBrZAPSObI5ceE/3b
-	 KuCfSAT4q/XI3Db0SPzYyPAGjRnRT7IGEplv2NFY=
+	b=gPmnBlcbSOSjnDIosJoEkamc5lP2pP99XbvU+v04tx1GdLbOEKcrrIIkfTIQgSA7S
+	 Gugfpv+KqYvSa314p5Hf1w3Cf1QINxieGtmiywHr5wKmIf/cW4ezjPFgpOEIp4idpv
+	 9nQo3fTY1K+FL4AEFQx09Bct9nAuJ3ZScenlVrow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbgCSAL1 (ORCPT
+        id S1727589AbgCSALc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 20:11:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37102 "EHLO mail.kernel.org"
+        Wed, 18 Mar 2020 20:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727467AbgCSALJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 20:11:09 -0400
+        id S1727455AbgCSALI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 20:11:08 -0400
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0D78212CC;
-        Thu, 19 Mar 2020 00:11:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A15ED20A8B;
+        Thu, 19 Mar 2020 00:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584576669;
-        bh=6byI644vY95Z8j8I2/LLCQleRYKanOWh2SiaJcHFMDY=;
+        s=default; t=1584576667;
+        bh=/lNK+4AM9ncCFxX+MXSXM9gMwQMVbCsWMIAl06YFsLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqYzOI7XWp7ElP4SCoGBWyaJ7GMGNnVnPv9pzQuaCArzV9YlGSmPR+6NYTuHV+YVJ
-         /KhxWAEYRIFVt0LUpqyRGv6qkdEV2V8Apzo8rbQF98K6vG8vAwPhZ78pbVz1CUdZbR
-         5axC4dU5+FEy0wMazV8MCspgam789p5YwoYQWJis=
+        b=N03b92lE/zMh4l3V4ifhQMgPHwnMkRpH0Q6dON4fpatIKPgXxfMV1W7lPpL+XG3YL
+         B3NoIFH2c//ufCcWhhtXSugLxKpTNUvzn4XtU/fFJXmjZxlXN9jl7iw5LUcObGGuD2
+         tYd+81SiWM4Jxj3XztdnHG6SZYJPRuchDIiZ4X2c=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH RFC v2 tip/core/rcu 21/22] rcu-tasks: Add a grace-period start time for throttling and debug
-Date:   Wed, 18 Mar 2020 17:10:59 -0700
-Message-Id: <20200319001100.24917-21-paulmck@kernel.org>
+Subject: [PATCH RFC v2 tip/core/rcu 17/22] rcu-tasks: Move #ifdef into tasks.h
+Date:   Wed, 18 Mar 2020 17:10:55 -0700
+Message-Id: <20200319001100.24917-17-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200319001024.GA28798@paulmck-ThinkPad-P72>
 References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
@@ -61,35 +61,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit adds a place to record the grace-period start in jiffies.
-This will be used by later commits for debugging purposes and to throttle
-IPIs early in the grace period.
+This commit pushes the #ifdef CONFIG_TASKS_RCU_GENERIC from
+kernel/rcu/update.c to kernel/rcu/tasks.h in order to improve
+readability as more APIs are added.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tasks.h | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/rcu/tasks.h  | 5 +++++
+ kernel/rcu/update.c | 4 ----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-index ca5fbde..6d237c4 100644
+index e6ef98e..220f264 100644
 --- a/kernel/rcu/tasks.h
 +++ b/kernel/rcu/tasks.h
-@@ -46,6 +46,7 @@ struct rcu_tasks {
- 	raw_spinlock_t cbs_lock;
- 	int gp_state;
- 	unsigned long gp_jiffies;
-+	unsigned long gp_start;
- 	struct task_struct *kthread_ptr;
- 	rcu_tasks_gp_func_t gp_func;
- 	pregp_func_t pregp_func;
-@@ -200,6 +201,7 @@ static int __noreturn rcu_tasks_kthread(void *arg)
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2020 Paul E. McKenney
+  */
  
- 		// Wait for one grace period.
- 		set_tasks_gp_state(rtp, RTGS_WAIT_GP);
-+		rtp->gp_start = jiffies;
- 		rtp->gp_func(rtp);
++#ifdef CONFIG_TASKS_RCU_GENERIC
  
- 		/* Invoke the callbacks. */
+ ////////////////////////////////////////////////////////////////////////
+ //
+@@ -976,3 +977,7 @@ core_initcall(rcu_spawn_tasks_trace_kthread);
+ #else /* #ifdef CONFIG_TASKS_TRACE_RCU */
+ void exit_tasks_rcu_finish_trace(struct task_struct *t) { }
+ #endif /* #else #ifdef CONFIG_TASKS_TRACE_RCU */
++
++#else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
++static inline void rcu_tasks_bootup_oddness(void) {}
++#endif /* #else #ifdef CONFIG_TASKS_RCU_GENERIC */
+diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+index 16058a5..0fb2a9e 100644
+--- a/kernel/rcu/update.c
++++ b/kernel/rcu/update.c
+@@ -559,11 +559,7 @@ late_initcall(rcu_verify_early_boot_tests);
+ void rcu_early_boot_tests(void) {}
+ #endif /* CONFIG_PROVE_RCU */
+ 
+-#ifdef CONFIG_TASKS_RCU_GENERIC
+ #include "tasks.h"
+-#else /* #ifdef CONFIG_TASKS_RCU_GENERIC */
+-static inline void rcu_tasks_bootup_oddness(void) {}
+-#endif /* #else #ifdef CONFIG_TASKS_RCU_GENERIC */
+ 
+ #ifndef CONFIG_TINY_RCU
+ 
 -- 
 2.9.5
 
