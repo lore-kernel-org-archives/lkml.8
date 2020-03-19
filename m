@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9582DC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3494C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E61120724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB97A20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623723;
-	bh=2v1uNbSxWhgrMumFvLQLA+S2MjNcr7SshIkinNw/mFE=;
+	s=default; t=1584623725;
+	bh=NicYv+xXnAXfDctz+t+S/m6T519QNl4E0FE9Hr6KYqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TDg/mQq1Pa/d8VQAWKXYajZp9SBh2p3KIP2HrOT1/vBhztcX/oX2Tz1oWFU+rB0Ew
-	 5kV6PubimQ2z8iD3ZxdoPDaLSuLjYYcnhfeewjMM8d/mekFN5mVb+aSLXYMWf6p2Xt
-	 5psfv5w80lg+1cxeplX43fXJ9IwRife9gKsC4k9M=
+	b=POoNUUq2X5PnityqHYZ078Z9mG8GiIWiuEbltEyZhLsjvZbUtzV+B3GA6y4ZYszCr
+	 LqpCYgYhQbn3F2AMba0+wF+IyymQorcS5u3MjoxtWJwjsbD9aA2MmJVXL3/v5F9nG2
+	 SnuRi23Z0lThPOWceggwBgJsZpORhoerd4eB++5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgCSNPW (ORCPT
+        id S1729413AbgCSNPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:15:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35068 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:15:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728981AbgCSNPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:15:19 -0400
+        id S1729402AbgCSNPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:15:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ECAE21D79;
-        Thu, 19 Mar 2020 13:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33CA520787;
+        Thu, 19 Mar 2020 13:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623717;
-        bh=2v1uNbSxWhgrMumFvLQLA+S2MjNcr7SshIkinNw/mFE=;
+        s=default; t=1584623721;
+        bh=NicYv+xXnAXfDctz+t+S/m6T519QNl4E0FE9Hr6KYqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/j5WFtJjoPQOqBMeSLy43PmCJSNQQv35B6PVijrIeKRDnALTs7PXq5HlJ1hACu5i
-         yD5gSsTMs530scMdcwcOtzebnleKURUGkzScwAKDhE5ARx7MLIqryxvbw+RKYfqQO5
-         jCYOql6glMiyLKoSYsnAHuFwhR3Kz8N9qDmQMRzE=
+        b=CA0bASvUM6ZMzuC+VYSdfobqPeMvbAXct70ESxCzDGe61rukiZGmXX8T9teGYtZ0E
+         u3VuNEl8SXjvxn2jtlMik1AWCxrgiI3tv0aHVCbIZA/3AcOdUS9SXoReTPh4RDaPhf
+         EfokfWkyYj8YaTziq3TzpX1djpGXM9f1+WUG4yl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
+        stable@vger.kernel.org, Dmitry Yakunin <zeil@yandex-team.ru>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 29/99] bonding/alb: make sure arp header is pulled before accessing it
-Date:   Thu, 19 Mar 2020 14:03:07 +0100
-Message-Id: <20200319123950.580684040@linuxfoundation.org>
+Subject: [PATCH 4.14 03/99] cgroup, netclassid: periodically release file_lock on classid updating
+Date:   Thu, 19 Mar 2020 14:02:41 +0100
+Message-Id: <20200319123942.544163406@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -63,157 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Dmitry Yakunin <zeil@yandex-team.ru>
 
-commit b7469e83d2add567e4e0b063963db185f3167cea upstream.
+[ Upstream commit 018d26fcd12a75fb9b5fe233762aa3f2f0854b88 ]
 
-Similar to commit 38f88c454042 ("bonding/alb: properly access headers
-in bond_alb_xmit()"), we need to make sure arp header was pulled
-in skb->head before blindly accessing it in rlb_arp_xmit().
+In our production environment we have faced with problem that updating
+classid in cgroup with heavy tasks cause long freeze of the file tables
+in this tasks. By heavy tasks we understand tasks with many threads and
+opened sockets (e.g. balancers). This freeze leads to an increase number
+of client timeouts.
 
-Remove arp_pkt() private helper, since it is more readable/obvious
-to have the following construct back to back :
+This patch implements following logic to fix this issue:
+аfter iterating 1000 file descriptors file table lock will be released
+thus providing a time gap for socket creation/deletion.
 
-	if (!pskb_network_may_pull(skb, sizeof(*arp)))
-		return NULL;
-	arp = (struct arp_pkt *)skb_network_header(skb);
+Now update is non atomic and socket may be skipped using calls:
 
-syzbot reported :
+dup2(oldfd, newfd);
+close(oldfd);
 
-BUG: KMSAN: uninit-value in bond_slave_has_mac_rx include/net/bonding.h:704 [inline]
-BUG: KMSAN: uninit-value in rlb_arp_xmit drivers/net/bonding/bond_alb.c:662 [inline]
-BUG: KMSAN: uninit-value in bond_alb_xmit+0x575/0x25e0 drivers/net/bonding/bond_alb.c:1477
-CPU: 0 PID: 12743 Comm: syz-executor.4 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- bond_slave_has_mac_rx include/net/bonding.h:704 [inline]
- rlb_arp_xmit drivers/net/bonding/bond_alb.c:662 [inline]
- bond_alb_xmit+0x575/0x25e0 drivers/net/bonding/bond_alb.c:1477
- __bond_start_xmit drivers/net/bonding/bond_main.c:4257 [inline]
- bond_start_xmit+0x85d/0x2f70 drivers/net/bonding/bond_main.c:4282
- __netdev_start_xmit include/linux/netdevice.h:4524 [inline]
- netdev_start_xmit include/linux/netdevice.h:4538 [inline]
- xmit_one net/core/dev.c:3470 [inline]
- dev_hard_start_xmit+0x531/0xab0 net/core/dev.c:3486
- __dev_queue_xmit+0x37de/0x4220 net/core/dev.c:4063
- dev_queue_xmit+0x4b/0x60 net/core/dev.c:4096
- packet_snd net/packet/af_packet.c:2967 [inline]
- packet_sendmsg+0x8347/0x93b0 net/packet/af_packet.c:2992
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- __sys_sendto+0xc1b/0xc50 net/socket.c:1998
- __do_sys_sendto net/socket.c:2010 [inline]
- __se_sys_sendto+0x107/0x130 net/socket.c:2006
- __x64_sys_sendto+0x6e/0x90 net/socket.c:2006
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45c479
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc77ffbbc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 00007fc77ffbc6d4 RCX: 000000000045c479
-RDX: 000000000000000e RSI: 00000000200004c0 RDI: 0000000000000003
-RBP: 000000000076bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000a04 R14: 00000000004cc7b0 R15: 000000000076bf2c
+But this case is not typical. Moreover before this patch skip is possible
+too by hiding socket fd in unix socket buffer.
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
- slab_alloc_node mm/slub.c:2793 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1051 [inline]
- alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5766
- sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2242
- packet_alloc_skb net/packet/af_packet.c:2815 [inline]
- packet_snd net/packet/af_packet.c:2910 [inline]
- packet_sendmsg+0x66a0/0x93b0 net/packet/af_packet.c:2992
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg net/socket.c:672 [inline]
- __sys_sendto+0xc1b/0xc50 net/socket.c:1998
- __do_sys_sendto net/socket.c:2010 [inline]
- __se_sys_sendto+0x107/0x130 net/socket.c:2006
- __x64_sys_sendto+0x6e/0x90 net/socket.c:2006
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+New sockets will be allocated with updated classid because cgroup state
+is updated before start of the file descriptors iteration.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Cc: Veaceslav Falico <vfalico@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
+So in common cases this patch has no side effects.
+
+Signed-off-by: Dmitry Yakunin <zeil@yandex-team.ru>
+Reviewed-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_alb.c |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ net/core/netclassid_cgroup.c |   47 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 37 insertions(+), 10 deletions(-)
 
---- a/drivers/net/bonding/bond_alb.c
-+++ b/drivers/net/bonding/bond_alb.c
-@@ -71,11 +71,6 @@ struct arp_pkt {
- };
- #pragma pack()
- 
--static inline struct arp_pkt *arp_pkt(const struct sk_buff *skb)
--{
--	return (struct arp_pkt *)skb_network_header(skb);
--}
--
- /* Forward declaration */
- static void alb_send_learning_packets(struct slave *slave, u8 mac_addr[],
- 				      bool strict_match);
-@@ -574,10 +569,11 @@ static void rlb_req_update_subnet_client
- 	spin_unlock(&bond->mode_lock);
+--- a/net/core/netclassid_cgroup.c
++++ b/net/core/netclassid_cgroup.c
+@@ -57,30 +57,60 @@ static void cgrp_css_free(struct cgroup_
+ 	kfree(css_cls_state(css));
  }
  
--static struct slave *rlb_choose_channel(struct sk_buff *skb, struct bonding *bond)
-+static struct slave *rlb_choose_channel(struct sk_buff *skb,
-+					struct bonding *bond,
-+					const struct arp_pkt *arp)
- {
- 	struct alb_bond_info *bond_info = &(BOND_ALB_INFO(bond));
--	struct arp_pkt *arp = arp_pkt(skb);
- 	struct slave *assigned_slave, *curr_active_slave;
- 	struct rlb_client_info *client_info;
- 	u32 hash_index = 0;
-@@ -674,8 +670,12 @@ static struct slave *rlb_choose_channel(
-  */
- static struct slave *rlb_arp_xmit(struct sk_buff *skb, struct bonding *bond)
- {
--	struct arp_pkt *arp = arp_pkt(skb);
- 	struct slave *tx_slave = NULL;
-+	struct arp_pkt *arp;
++/*
++ * To avoid freezing of sockets creation for tasks with big number of threads
++ * and opened sockets lets release file_lock every 1000 iterated descriptors.
++ * New sockets will already have been created with new classid.
++ */
 +
-+	if (!pskb_network_may_pull(skb, sizeof(*arp)))
-+		return NULL;
-+	arp = (struct arp_pkt *)skb_network_header(skb);
++struct update_classid_context {
++	u32 classid;
++	unsigned int batch;
++};
++
++#define UPDATE_CLASSID_BATCH 1000
++
+ static int update_classid_sock(const void *v, struct file *file, unsigned n)
+ {
+ 	int err;
++	struct update_classid_context *ctx = (void *)v;
+ 	struct socket *sock = sock_from_file(file, &err);
  
- 	/* Don't modify or load balance ARPs that do not originate locally
- 	 * (e.g.,arrive via a bridge).
-@@ -685,7 +685,7 @@ static struct slave *rlb_arp_xmit(struct
+ 	if (sock) {
+ 		spin_lock(&cgroup_sk_update_lock);
+-		sock_cgroup_set_classid(&sock->sk->sk_cgrp_data,
+-					(unsigned long)v);
++		sock_cgroup_set_classid(&sock->sk->sk_cgrp_data, ctx->classid);
+ 		spin_unlock(&cgroup_sk_update_lock);
+ 	}
++	if (--ctx->batch == 0) {
++		ctx->batch = UPDATE_CLASSID_BATCH;
++		return n + 1;
++	}
+ 	return 0;
+ }
  
- 	if (arp->op_code == htons(ARPOP_REPLY)) {
- 		/* the arp must be sent on the selected rx channel */
--		tx_slave = rlb_choose_channel(skb, bond);
-+		tx_slave = rlb_choose_channel(skb, bond, arp);
- 		if (tx_slave)
- 			bond_hw_addr_copy(arp->mac_src, tx_slave->dev->dev_addr,
- 					  tx_slave->dev->addr_len);
-@@ -696,7 +696,7 @@ static struct slave *rlb_arp_xmit(struct
- 		 * When the arp reply is received the entry will be updated
- 		 * with the correct unicast address of the client.
- 		 */
--		rlb_choose_channel(skb, bond);
-+		rlb_choose_channel(skb, bond, arp);
++static void update_classid_task(struct task_struct *p, u32 classid)
++{
++	struct update_classid_context ctx = {
++		.classid = classid,
++		.batch = UPDATE_CLASSID_BATCH
++	};
++	unsigned int fd = 0;
++
++	do {
++		task_lock(p);
++		fd = iterate_fd(p->files, fd, update_classid_sock, &ctx);
++		task_unlock(p);
++		cond_resched();
++	} while (fd);
++}
++
+ static void cgrp_attach(struct cgroup_taskset *tset)
+ {
+ 	struct cgroup_subsys_state *css;
+ 	struct task_struct *p;
  
- 		/* The ARP reply packets must be delayed so that
- 		 * they can cancel out the influence of the ARP request.
+ 	cgroup_taskset_for_each(p, css, tset) {
+-		task_lock(p);
+-		iterate_fd(p->files, 0, update_classid_sock,
+-			   (void *)(unsigned long)css_cls_state(css)->classid);
+-		task_unlock(p);
++		update_classid_task(p, css_cls_state(css)->classid);
+ 	}
+ }
+ 
+@@ -102,10 +132,7 @@ static int write_classid(struct cgroup_s
+ 
+ 	css_task_iter_start(css, 0, &it);
+ 	while ((p = css_task_iter_next(&it))) {
+-		task_lock(p);
+-		iterate_fd(p->files, 0, update_classid_sock,
+-			   (void *)(unsigned long)cs->classid);
+-		task_unlock(p);
++		update_classid_task(p, cs->classid);
+ 		cond_resched();
+ 	}
+ 	css_task_iter_end(&it);
 
 
