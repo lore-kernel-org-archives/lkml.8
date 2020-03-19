@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C021C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5F4C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6A82098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D00B214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623763;
-	bh=l5cFa6Emn1btZwMRpEet7GN0OLXU861N0lQ98ZxATI4=;
+	s=default; t=1584623766;
+	bh=lyNKpJMdv/hRGrY6vQ5FO5YBieAql1r3tO2rsCM3OB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BSR6CU9jXOcH2tQfCXjGGgcG+YmgbH/mo/S3Mb3cYXGqMGXqycyGDxsoDNjt0jsnJ
-	 WatvtFKZL1UqcThqFALvK1U9cYhZOmipyzVT5RCr1zWBExgaAFstPP6araGkngRdUA
-	 pMm1zXAWNJt+lHV7HFaOi606SmijrBLHwnNttWZQ=
+	b=mcFS7OLiD7Kx3TBF2zNXl8+MISo2GRrwMxUBSlCaZSG8a7HG73xqJIxFzh6ncD6Sd
+	 ATAH8tSKFgHoBoftS/Lr0vXiP0YbLeXbOGev5+2ki7DUoQ7vgFF9dsK2kY0+lYFRfl
+	 OXJsk4a4u7M0UWERBPQ690A4J8fGkskXpxaSNRwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbgCSNQC (ORCPT
+        id S1729487AbgCSNQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36008 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:16:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729462AbgCSNP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:15:56 -0400
+        id S1729478AbgCSNQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:16:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0F7420724;
-        Thu, 19 Mar 2020 13:15:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7829720724;
+        Thu, 19 Mar 2020 13:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623756;
-        bh=l5cFa6Emn1btZwMRpEet7GN0OLXU861N0lQ98ZxATI4=;
+        s=default; t=1584623761;
+        bh=lyNKpJMdv/hRGrY6vQ5FO5YBieAql1r3tO2rsCM3OB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PeTQwJ6Ar+wFSmHT7JQ2TdxuqNOylhej7IcizGYhvJkKsmx8qPuTflhL8StHhKdpr
-         YQBFEfOvG/CZtsxYWdr38VzGY4ujon5/ffRLpcZK3p0GeVJbcoM6hL/i30ImFuzHr5
-         CL5b1hBv6vY9yHM3e9y38WlAjOWUsAiez4eQVgPE=
+        b=gzTyZUf4940+pgnYFLIxvCLyThXCpun4nI1cUxnh3yFC/8I5NuTEHORJ/o/dpkKIs
+         m78SnccjdhWwC1SzNUb39/CbVj1lOnqtILiEvSJGBZpD13TiV3yqdSSNJLCWAFzgjs
+         Qhobb6nijUKFC9xQMvPqfO20MdA1wojbLhrFZyWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 35/99] ipvlan: egress mcast packets are not exceptional
-Date:   Thu, 19 Mar 2020 14:03:13 +0100
-Message-Id: <20200319123952.429268161@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@kernel.org
+Subject: [PATCH 4.14 45/99] cifs_atomic_open(): fix double-put on late allocation failure
+Date:   Thu, 19 Mar 2020 14:03:23 +0100
+Message-Id: <20200319123955.571682852@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -59,39 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit cccc200fcaf04cff4342036a72e51d6adf6c98c1 upstream.
+commit d9a9f4849fe0c9d560851ab22a85a666cddfdd24 upstream.
 
-Currently, if IPv6 is enabled on top of an ipvlan device in l3
-mode, the following warning message:
+several iterations of ->atomic_open() calling conventions ago, we
+used to need fput() if ->atomic_open() failed at some point after
+successful finish_open().  Now (since 2016) it's not needed -
+struct file carries enough state to make fput() work regardless
+of the point in struct file lifecycle and discarding it on
+failure exits in open() got unified.  Unfortunately, I'd missed
+the fact that we had an instance of ->atomic_open() (cifs one)
+that used to need that fput(), as well as the stale comment in
+finish_open() demanding such late failure handling.  Trivially
+fixed...
 
- Dropped {multi|broad}cast of type= [86dd]
-
-is emitted every time that a RS is generated and dmseg is soon
-filled with irrelevant messages. Replace pr_warn with pr_debug,
-to preserve debuggability, without scaring the sysadmin.
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: fe9ec8291fca "do_last(): take fput() on error after opening to out:"
+Cc: stable@kernel.org # v4.7+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ipvlan/ipvlan_core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/filesystems/porting |    7 +++++++
+ fs/cifs/dir.c                     |    1 -
+ fs/open.c                         |    3 ---
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ipvlan/ipvlan_core.c
-+++ b/drivers/net/ipvlan/ipvlan_core.c
-@@ -451,8 +451,8 @@ static int ipvlan_process_outbound(struc
- 
- 	/* In this mode we dont care about multicast and broadcast traffic */
- 	if (is_multicast_ether_addr(ethh->h_dest)) {
--		pr_warn_ratelimited("Dropped {multi|broad}cast of type= [%x]\n",
--				    ntohs(skb->protocol));
-+		pr_debug_ratelimited("Dropped {multi|broad}cast of type=[%x]\n",
-+				     ntohs(skb->protocol));
- 		kfree_skb(skb);
- 		goto out;
+--- a/Documentation/filesystems/porting
++++ b/Documentation/filesystems/porting
+@@ -606,3 +606,10 @@ in your dentry operations instead.
+ 	dentry separately, and it now has request_mask and query_flags arguments
+ 	to specify the fields and sync type requested by statx.  Filesystems not
+ 	supporting any statx-specific features may ignore the new arguments.
++--
++[mandatory]
++
++	[should've been added in 2016] stale comment in finish_open()
++	nonwithstanding, failure exits in ->atomic_open() instances should
++	*NOT* fput() the file, no matter what.  Everything is handled by the
++	caller.
+--- a/fs/cifs/dir.c
++++ b/fs/cifs/dir.c
+@@ -562,7 +562,6 @@ cifs_atomic_open(struct inode *inode, st
+ 		if (server->ops->close)
+ 			server->ops->close(xid, tcon, &fid);
+ 		cifs_del_pending_open(&open);
+-		fput(file);
+ 		rc = -ENOMEM;
  	}
+ 
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -824,9 +824,6 @@ cleanup_file:
+  * the return value of d_splice_alias(), then the caller needs to perform dput()
+  * on it after finish_open().
+  *
+- * On successful return @file is a fully instantiated open file.  After this, if
+- * an error occurs in ->atomic_open(), it needs to clean up with fput().
+- *
+  * Returns zero on success or -errno if the open failed.
+  */
+ int finish_open(struct file *file, struct dentry *dentry,
 
 
