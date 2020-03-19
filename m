@@ -2,89 +2,106 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBECC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF79C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664B720753
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:26:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584609982;
-	bh=i80PIWwQqRoWpTqME1AVxQ31D0dO2cnau71BVefHtJc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QvM59LLo6PDLxSyRjLVDRtW4CAOgsa5Jd2Fp5LVfwiccRR7NqmwlxXYXQp6cKjqP2
-	 97ZFiFxos7sBXFnibAw3VXHJlZugbgy1bVAHAVFVRubX1UGbEG6bEqe0Odn0iliWHo
-	 vecJh8Le32E1lShcmKjIlCUDNFNQGFQwoi3zGbGQ=
+	by mail.kernel.org (Postfix) with ESMTP id D966720754
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nr67BPBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgCSJ0V (ORCPT
+        id S1727041AbgCSJ2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:26:21 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43915 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgCSJ0U (ORCPT
+        Thu, 19 Mar 2020 05:28:18 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46648 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgCSJ2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:26:20 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a6so1608837otb.10;
-        Thu, 19 Mar 2020 02:26:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bIaUrrQz5sxoRpPg3kthmDFHJOgZz3gYkQ32mtU6C2g=;
-        b=Q6IzsMYja9UDQX0gA7YtsKjRdZ3pSCItCgxSCLPh+p3qb98+/HwlzPPqLu4+4GFyxm
-         eGiHph2/AR8a2I+t0vEz7PzgqC2lR4mHMdEIa5w+wEDnbvRyDVCHoyuKDhlVTQNQ1xGE
-         bmeIosMLSIa7JPUBSUU4cPIjQ4hPGWQmlAGqHlQd48JK+gnfVheX3pZf3ANjJ9pzfR2T
-         UXW7mMeCmWEAV+PhsdOwtY9VLLoKmo/+DVXa9r1bkU07N0WPXgGbCrrVXHgzTdZM4XKO
-         1uD112rLaBijY4wm1GSbM+HzvDMFgk1TOJ0cKyt+0yeO0libvZPKAXgAOXd87nvexIZg
-         m8OQ==
-X-Gm-Message-State: ANhLgQ2nIpHm+WqT4nL4472ivojNafpmkrEAZXkvitQULORhkcTi8zVf
-        mFSKvK9tEAd4NUjjuUUo21wSx/V80MBsNcG+JAGtIw==
-X-Google-Smtp-Source: ADFU+vv+qP2pk76YtrLBdi/ACWZY0xwmzWdEy5G8RrcqAXBpyrHShn4MSw/4CygaJnE6K9O5l9krAhsmtEjFhq9jXpc=
-X-Received: by 2002:a9d:1d07:: with SMTP id m7mr1409379otm.167.1584609979839;
- Thu, 19 Mar 2020 02:26:19 -0700 (PDT)
+        Thu, 19 Mar 2020 05:28:18 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02J9S8AZ010903;
+        Thu, 19 Mar 2020 04:28:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584610088;
+        bh=UEwEnyl32F01p44oeA8YEloWkVx0Y9IDXcQfa9MD6go=;
+        h=From:To:CC:Subject:Date;
+        b=nr67BPBaGJ2/eZkEenADfUCnKG+CTOIRV4zwNLaF62EXzlyjfMrt1604bIERMdv2y
+         8iJKR7e/NbWrLLQ6JQ8szGmOcxSy14cBVnNdEwJNl5l6jBCX1/K1cX44rsGhdv4lCW
+         VPxgNdVv0OfygsGC5+9Vl/ijc3+kbq6JxEfbJ0TA=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02J9S7EH051953
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Mar 2020 04:28:07 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Mar 2020 04:28:06 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Mar 2020 04:28:06 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02J9S4eo088372;
+        Thu, 19 Mar 2020 04:28:05 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <robh+dt@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] ASoC: ti: Add support for audio on J721e EVM
+Date:   Thu, 19 Mar 2020 11:28:12 +0200
+Message-ID: <20200319092815.3776-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <1584545391-20811-1-git-send-email-clabbe@baylibre.com>
-In-Reply-To: <1584545391-20811-1-git-send-email-clabbe@baylibre.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 19 Mar 2020 10:26:08 +0100
-Message-ID: <CAJZ5v0iU6z2QFk3_s9bZarc=NJibJYBeSr98Wy=+Y8qShT5-hg@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add linux-acpi list to PNP
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 4:30 PM Corentin Labbe <clabbe@baylibre.com> wrote:
->
-> As asked by the PNP maintainer, linux PNP patch should be CC to
-> the linux-acpi mailing list.
->
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index be44251d1e04..4979de5c0c61 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13452,6 +13452,7 @@ F:      Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
->
->  PNP SUPPORT
->  M:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> +L:     linux-acpi@vger.kernel.org
->  S:     Maintained
->  F:     include/linux/pnp.h
->  F:     drivers/pnp/
-> --
+Hi,
 
-Applied as 5.7 material, thanks!
+This series adds support for the analog audio setup on the j721e EVM.
+The audio setup of the EVM is:
+Common Processor Board (CPB): McASP10 <-> pcm3168a
+Infotainment Expansion Board (IVI): McASP0 <-> 2x pcm3168a
+
+Both CPB and IVI wired in parallel serializer setup.
+
+The first patch adds the stream_name for McASP driver as it is needed in
+multicodec (and would be needed in DPCM) setup for proper DAPM handling.
+
+The second patch adds two DT schema, one for the cpb and one for the cpb+ivi
+card.
+
+Regards,
+Peter
+---
+Peter Ujfalusi (3):
+  ASoC: ti: davinci-mcasp: Specify stream_name for playback/capture
+  bindings: sound: Add documentation for TI j721e EVM (CPB and IVI)
+  ASoC: ti: Add custom machine driver for j721e EVM (CPB and IVI)
+
+ .../bindings/sound/ti,j721e-cpb-audio.yaml    |  93 ++
+ .../sound/ti,j721e-cpb-ivi-audio.yaml         | 145 +++
+ sound/soc/ti/Kconfig                          |   8 +
+ sound/soc/ti/Makefile                         |   2 +
+ sound/soc/ti/davinci-mcasp.c                  |   3 +
+ sound/soc/ti/j721e-evm.c                      | 864 ++++++++++++++++++
+ 6 files changed, 1115 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
+ create mode 100644 sound/soc/ti/j721e-evm.c
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
