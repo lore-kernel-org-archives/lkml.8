@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45DDC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE84C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987A520740
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B7B20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCSIr4 (ORCPT
+        id S1727142AbgCSIsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:47:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59715 "EHLO
+        Thu, 19 Mar 2020 04:48:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59706 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgCSIry (ORCPT
+        with ESMTP id S1726623AbgCSIry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 04:47:54 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEqqE-000307-U8; Thu, 19 Mar 2020 09:47:51 +0100
+        id 1jEqqC-0002xS-M0; Thu, 19 Mar 2020 09:47:48 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 946381C2298;
-        Thu, 19 Mar 2020 09:47:50 +0100 (CET)
-Date:   Thu, 19 Mar 2020 08:47:50 -0000
-From:   "tip-bot2 for afzal mohammed" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4FCB31C2298;
+        Thu, 19 Mar 2020 09:47:48 +0100 (CET)
+Date:   Thu, 19 Mar 2020 08:47:47 -0000
+From:   "tip-bot2 for Lokesh Vutla" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/timer-cs5535: Request irq with
- non-NULL dev_id
-Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+Subject: [tip: timers/core] clocksource/drivers/timer-ti-dm: Add support to
+ get pwm current status
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>, Tony Lindgen <tony@atomide.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200312064817.19000-1-afzal.mohd.ma@gmail.com>
-References: <20200312064817.19000-1-afzal.mohd.ma@gmail.com>
+In-Reply-To: <20200305082715.15861-6-lokeshvutla@ti.com>
+References: <20200305082715.15861-6-lokeshvutla@ti.com>
 MIME-Version: 1.0
-Message-ID: <158460767029.28353.2138334938469821354.tip-bot2@tip-bot2>
+Message-ID: <158460766792.28353.14134380643914951850.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,50 +57,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     470cf1c28d2f601ea666a96d676c10b09b2321ab
-Gitweb:        https://git.kernel.org/tip/470cf1c28d2f601ea666a96d676c10b09b2321ab
-Author:        afzal mohammed <afzal.mohd.ma@gmail.com>
-AuthorDate:    Thu, 12 Mar 2020 12:18:17 +05:30
+Commit-ID:     92fd86864ec4ac089de47f0f1f4c47418b343448
+Gitweb:        https://git.kernel.org/tip/92fd86864ec4ac089de47f0f1f4c47418b343448
+Author:        Lokesh Vutla <lokeshvutla@ti.com>
+AuthorDate:    Thu, 05 Mar 2020 13:57:14 +05:30
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Thu, 12 Mar 2020 19:23:06 +01:00
+CommitterDate: Mon, 16 Mar 2020 12:40:42 +01:00
 
-clocksource/drivers/timer-cs5535: Request irq with non-NULL dev_id
+clocksource/drivers/timer-ti-dm: Add support to get pwm current status
 
-Recently all usages of setup_irq() was replaced by request_irq().
-request_irq() does a few sanity checks that were not done in
-setup_irq(), if they fail irq registration will fail. One of the check
-is to ensure that non-NULL dev_id is passed in the case of shared irq.
+omap_dm_timer_ops provide support to configure the pwm but there is no
+support to get the current status. For configuring pwm it is advised to
+check the current hw status instead of relying on pwm framework. So
+implement a new timer ops to get the current status of pwm.
 
-Fix it by passing non-NULL dev_id while registering the shared irq.
-
-Fixes: cc2550b421aa ("clocksource: Replace setup_irq() by request_irq()")
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Acked-by: Tony Lindgen <tony@atomide.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200312064817.19000-1-afzal.mohd.ma@gmail.com
+Link: https://lore.kernel.org/r/20200305082715.15861-6-lokeshvutla@ti.com
 ---
- drivers/clocksource/timer-cs5535.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/clocksource/timer-ti-dm.c          | 15 +++++++++++++++
+ include/linux/platform_data/dmtimer-omap.h |  1 +
+ 2 files changed, 16 insertions(+)
 
-diff --git a/drivers/clocksource/timer-cs5535.c b/drivers/clocksource/timer-cs5535.c
-index 51ea050..d47acfe 100644
---- a/drivers/clocksource/timer-cs5535.c
-+++ b/drivers/clocksource/timer-cs5535.c
-@@ -133,6 +133,7 @@ static irqreturn_t mfgpt_tick(int irq, void *dev_id)
+diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+index b565b84..73ac73e 100644
+--- a/drivers/clocksource/timer-ti-dm.c
++++ b/drivers/clocksource/timer-ti-dm.c
+@@ -627,6 +627,20 @@ static int omap_dm_timer_set_pwm(struct omap_dm_timer *timer, int def_on,
+ 	return 0;
+ }
  
- static int __init cs5535_mfgpt_init(void)
++static int omap_dm_timer_get_pwm_status(struct omap_dm_timer *timer)
++{
++	u32 l;
++
++	if (unlikely(!timer))
++		return -EINVAL;
++
++	omap_dm_timer_enable(timer);
++	l = omap_dm_timer_read_reg(timer, OMAP_TIMER_CTRL_REG);
++	omap_dm_timer_disable(timer);
++
++	return l;
++}
++
+ static int omap_dm_timer_set_prescaler(struct omap_dm_timer *timer,
+ 					int prescaler)
  {
-+	unsigned long flags = IRQF_NOBALANCING | IRQF_TIMER | IRQF_SHARED;
- 	struct cs5535_mfgpt_timer *timer;
- 	int ret;
- 	uint16_t val;
-@@ -152,9 +153,7 @@ static int __init cs5535_mfgpt_init(void)
- 	}
+@@ -927,6 +941,7 @@ static const struct omap_dm_timer_ops dmtimer_ops = {
+ 	.set_load = omap_dm_timer_set_load,
+ 	.set_match = omap_dm_timer_set_match,
+ 	.set_pwm = omap_dm_timer_set_pwm,
++	.get_pwm_status = omap_dm_timer_get_pwm_status,
+ 	.set_prescaler = omap_dm_timer_set_prescaler,
+ 	.read_counter = omap_dm_timer_read_counter,
+ 	.write_counter = omap_dm_timer_write_counter,
+diff --git a/include/linux/platform_data/dmtimer-omap.h b/include/linux/platform_data/dmtimer-omap.h
+index bdaaf53..3173b7b 100644
+--- a/include/linux/platform_data/dmtimer-omap.h
++++ b/include/linux/platform_data/dmtimer-omap.h
+@@ -36,6 +36,7 @@ struct omap_dm_timer_ops {
+ 			     unsigned int match);
+ 	int	(*set_pwm)(struct omap_dm_timer *timer, int def_on,
+ 			   int toggle, int trigger);
++	int	(*get_pwm_status)(struct omap_dm_timer *timer);
+ 	int	(*set_prescaler)(struct omap_dm_timer *timer, int prescaler);
  
- 	/* And register it with the kernel */
--	ret = request_irq(timer_irq, mfgpt_tick,
--			  IRQF_NOBALANCING | IRQF_TIMER | IRQF_SHARED,
--			  DRV_NAME, NULL);
-+	ret = request_irq(timer_irq, mfgpt_tick, flags, DRV_NAME, timer);
- 	if (ret) {
- 		printk(KERN_ERR DRV_NAME ": Unable to set up the interrupt.\n");
- 		goto err_irq;
+ 	unsigned int (*read_counter)(struct omap_dm_timer *timer);
