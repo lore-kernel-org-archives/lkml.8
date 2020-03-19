@@ -2,70 +2,117 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDACC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C909BC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B21C20782
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FEA720782
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:50:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="c/jB37cd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727380AbgCSOtx (ORCPT
+        id S1727671AbgCSOuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:49:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24948 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgCSOtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:49:53 -0400
-IronPort-SDR: KTx2BSn7pBK3mQ9ROjwYAm7vKHfYryLMLFrIDlhudIPjnloQ3QTR6VOWvfAFHmsOGLMPAyLxU9
- /q9P8a2T0jSg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 07:49:52 -0700
-IronPort-SDR: wgWTFVi60EiTqDR+fxJqq1BmHs1em6B9aD+X8WwNqoqt3jG+HHnt9QkVnxnsFiSbOtpajhnVgE
- mTigOPv9qC4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="418364671"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2020 07:49:52 -0700
-Date:   Thu, 19 Mar 2020 07:49:52 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     syzbot <syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com>
-Cc:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com, rkrcmar@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
-Subject: Re: WARNING in vcpu_enter_guest
-Message-ID: <20200319144952.GB11305@linux.intel.com>
-References: <000000000000f965b8059877e5e6@google.com>
- <00000000000081861f05a132b9cd@google.com>
+        Thu, 19 Mar 2020 10:50:20 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47146 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbgCSOuU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 10:50:20 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A5D2AA53;
+        Thu, 19 Mar 2020 15:50:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1584629417;
+        bh=Pby7Rfq98gCjrIQMddd1yja9dLfow5voxs2h3guV+As=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c/jB37cddxIH58tafwLvJabTiL6v7j8NXqUDy/OZfrKwJ5UmZYFYTKUgxkadrlMD+
+         oXxrR2AZLl9dopTWTs2TaZczsuCSoZbZR6/N4YkrMlNAOp5huLu0H1288VEg2YJhsQ
+         BRnZmQnWGxtddFyZ652yVvb07WU+SF2oFyagIiMw=
+Date:   Thu, 19 Mar 2020 16:50:12 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v4 3/5] media: i2c: ov5645: Increase tolerance of
+ external clock frequency
+Message-ID: <20200319145012.GB14585@pendragon.ideasonboard.com>
+References: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584620363-2255-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <00000000000081861f05a132b9cd@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1584620363-2255-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 03:35:16AM -0700, syzbot wrote:
-> syzbot has found a reproducer for the following crash on:
-> 
-> HEAD commit:    5076190d mm: slub: be more careful about the double cmpxch..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=143ca61de00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
-> dashboard link: https://syzkaller.appspot.com/bug?extid=00be5da1d75f1cc95f6b
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10bb4023e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com
+Hi Prabhakar,
 
-Reproduced with a little tweaking of the reproducer, debug in progress.
+Thank you for the patch.
+
+On Thu, Mar 19, 2020 at 12:19:21PM +0000, Lad Prabhakar wrote:
+> While testing on Renesas RZ/G2E platform, noticed the clock frequency to
+> be 24242424 as a result the probe failed.
+> 
+> This patch increases the tolerance to 5% so that it avoids patching for
+> new platforms and it warns the users if the frequency is not within the
+> range and continue further in the probe instead of returning failure.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  drivers/media/i2c/ov5645.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+> index e298acdadeef..52a185ed4368 100644
+> --- a/drivers/media/i2c/ov5645.c
+> +++ b/drivers/media/i2c/ov5645.c
+> @@ -1105,13 +1105,11 @@ static int ov5645_probe(struct i2c_client *client)
+>  		}
+>  	}
+>  
+> -	/* external clock must be 24MHz, allow 1% tolerance */
+> +	/* ideally external clock must be 24MHz, allow 5% tolerance */
+>  	xclk_freq = clk_get_rate(ov5645->xclk);
+> -	if (xclk_freq < 23760000 || xclk_freq > 24240000) {
+> -		dev_err(dev, "external clock frequency %u is not supported\n",
+> -			xclk_freq);
+> -		return -EINVAL;
+> -	}
+> +	if (xclk_freq < 22800000 || xclk_freq > 25200000)
+> +		dev_warn(dev, "external clock frequency is set to %u, sensor might misbehave\n",
+> +			 xclk_freq);
+
+The code looks good to me. You may want to mention in the commit subject
+that the probe error is turned into a warning, but that may be hard to
+do on a single line. Splitting this in two patches could be best, but is
+not worth a new version if it's the only change required. If more
+changes are required, you can consider it.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+>  	for (i = 0; i < OV5645_NUM_SUPPLIES; i++)
+>  		ov5645->supplies[i].supply = ov5645_supply_name[i];
+
+-- 
+Regards,
+
+Laurent Pinchart
