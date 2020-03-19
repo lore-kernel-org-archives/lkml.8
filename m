@@ -2,112 +2,196 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A26C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B508DC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D6E2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82ADB20787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623737;
-	bh=wvqD7rgwFusMJIqaPtOnYUgUIANAKYUee6Yxt4ifw9A=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=m9Qsx4Cm86ckocGq7bZ2Y++UTkkLbRfK3/PY6A9dBgKHVjKb7tLnDUQC9UWPNrbpa
-	 owMw6pXPExufZ3dNYz7uEaw1jXCDl+t33iO95rWoONiUuRgIttJ/aUke1b4DZWWLbP
-	 p7jjfd02MIpMh/9cDSyJYTTaIw1TI1rpyXowzAnE=
+	s=default; t=1584623740;
+	bh=rAVFUJsC2fbfSa72Ha8YXz2t+5YXLNBW2AQww6znxFg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nOs26lwS4/fLjNUFqOHLgGtUUS7wXMAKv1DRIZzVwc0ENlDmJte7rEb0eTTSQNfRd
+	 t+z8Kez3SmpdUzjnEWvVbUvZxiGdE2ePG1ypbzfu3Hszg9ITqnady+tkl8Bbs2devE
+	 OkDNCyZJ9Q5zikqi4h/r1t9H+8ahqh1Rs49g7SaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgCSNPg (ORCPT
+        id S1728905AbgCSNPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:15:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35442 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:15:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728905AbgCSNPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:15:33 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1729426AbgCSNPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:15:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6AF420724;
-        Thu, 19 Mar 2020 13:15:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A87320724;
+        Thu, 19 Mar 2020 13:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623732;
-        bh=wvqD7rgwFusMJIqaPtOnYUgUIANAKYUee6Yxt4ifw9A=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=HVixYOylJ1qJ3Wi428rgaPC1XwRb2R/HIRyQwvaDFDTtm/teRklxVedSMVdKz9P5t
-         gdmH4L6a5vk2ryS6eXLCQYcHw4G35H6hi6MLzL9jiLU1JmGUqWorFtz6LY8yk2YxV/
-         sTriOXNIFULtVstfX/DrM8Cz8Xkst55e+/zI2Buk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id C147A35227C6; Thu, 19 Mar 2020 06:15:32 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 06:15:32 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [rcu:dev.2020.03.17a 61/80] kernel/rcu/tasks.h:1000:37: error:
- 'rcu_tasks_rude' undeclared; did you mean 'rcu_tasks_qs'?
-Message-ID: <20200319131532.GC3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <202003191926.FloXO0MA%lkp@intel.com>
+        s=default; t=1584623735;
+        bh=rAVFUJsC2fbfSa72Ha8YXz2t+5YXLNBW2AQww6znxFg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EudKvut0lYVOCAiEmpW2Mko5OqXDhKppco2QIRAyqha7Frn+DZz5jEqJaKCmpPX41
+         aIDpjTKTSP9wEXBkuvvpVEMpoQYqjSQHu779LXUuTdiQ7DxCy4r+eMM7NTnXCjJndP
+         TAfOHKXCB75cXLJMArcorOzUl7s70AMCvW7UJKIw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 04/99] gre: fix uninit-value in __iptunnel_pull_header
+Date:   Thu, 19 Mar 2020 14:02:42 +0100
+Message-Id: <20200319123942.882603512@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
+References: <20200319123941.630731708@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003191926.FloXO0MA%lkp@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 07:01:29PM +0800, kbuild test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.03.17a
-> head:   0b42559abf67253005cca061233987ae9a2849a4
-> commit: 589081348a37ec02d9b067aa08d4a771ae590e1e [61/80] rcu-tasks: Add RCU tasks to rcutorture writer stall output
-> config: nds32-defconfig (attached as .config)
-> compiler: nds32le-linux-gcc (GCC) 9.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout 589081348a37ec02d9b067aa08d4a771ae590e1e
->         # save the attached .config to linux build tree
->         GCC_VERSION=9.2.0 make.cross ARCH=nds32 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> Note: the rcu/dev.2020.03.17a HEAD 0b42559abf67253005cca061233987ae9a2849a4 builds fine.
->       It only hurts bisectibility.
+From: Eric Dumazet <edumazet@google.com>
 
-FYI, fixed by c6ef38e4d595 ("rcu-tasks: Add RCU tasks to rcutorture writer
-stall output").
+[ Upstream commit 17c25cafd4d3e74c83dce56b158843b19c40b414 ]
 
-							Thanx, Paul
+syzbot found an interesting case of the kernel reading
+an uninit-value [1]
 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from kernel/rcu/update.c:562:
->    kernel/rcu/tasks.h: In function 'show_rcu_tasks_gp_kthreads':
-> >> kernel/rcu/tasks.h:1000:37: error: 'rcu_tasks_rude' undeclared (first use in this function); did you mean 'rcu_tasks_qs'?
->     1000 |  show_rcu_tasks_generic_gp_kthread(&rcu_tasks_rude, "");
->          |                                     ^~~~~~~~~~~~~~
->          |                                     rcu_tasks_qs
->    kernel/rcu/tasks.h:1000:37: note: each undeclared identifier is reported only once for each function it appears in
-> 
-> vim +1000 kernel/rcu/tasks.h
-> 
->    996	
->    997	void show_rcu_tasks_gp_kthreads(void)
->    998	{
->    999		show_rcu_tasks_generic_gp_kthread(&rcu_tasks, "");
-> > 1000		show_rcu_tasks_generic_gp_kthread(&rcu_tasks_rude, "");
->   1001		show_rcu_tasks_trace_gp_kthread();
->   1002	}
->   1003	
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Problem is in the handling of ETH_P_WCCP in gre_parse_header()
+
+We look at the byte following GRE options to eventually decide
+if the options are four bytes longer.
+
+Use skb_header_pointer() to not pull bytes if we found
+that no more bytes were needed.
+
+All callers of gre_parse_header() are properly using pskb_may_pull()
+anyway before proceeding to next header.
+
+[1]
+BUG: KMSAN: uninit-value in pskb_may_pull include/linux/skbuff.h:2303 [inline]
+BUG: KMSAN: uninit-value in __iptunnel_pull_header+0x30c/0xbd0 net/ipv4/ip_tunnel_core.c:94
+CPU: 1 PID: 11784 Comm: syz-executor940 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ pskb_may_pull include/linux/skbuff.h:2303 [inline]
+ __iptunnel_pull_header+0x30c/0xbd0 net/ipv4/ip_tunnel_core.c:94
+ iptunnel_pull_header include/net/ip_tunnels.h:411 [inline]
+ gre_rcv+0x15e/0x19c0 net/ipv6/ip6_gre.c:606
+ ip6_protocol_deliver_rcu+0x181b/0x22c0 net/ipv6/ip6_input.c:432
+ ip6_input_finish net/ipv6/ip6_input.c:473 [inline]
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ ip6_input net/ipv6/ip6_input.c:482 [inline]
+ ip6_mc_input+0xdf2/0x1460 net/ipv6/ip6_input.c:576
+ dst_input include/net/dst.h:442 [inline]
+ ip6_rcv_finish net/ipv6/ip6_input.c:76 [inline]
+ NF_HOOK include/linux/netfilter.h:307 [inline]
+ ipv6_rcv+0x683/0x710 net/ipv6/ip6_input.c:306
+ __netif_receive_skb_one_core net/core/dev.c:5198 [inline]
+ __netif_receive_skb net/core/dev.c:5312 [inline]
+ netif_receive_skb_internal net/core/dev.c:5402 [inline]
+ netif_receive_skb+0x66b/0xf20 net/core/dev.c:5461
+ tun_rx_batched include/linux/skbuff.h:4321 [inline]
+ tun_get_user+0x6aef/0x6f60 drivers/net/tun.c:1997
+ tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
+ call_write_iter include/linux/fs.h:1901 [inline]
+ new_sync_write fs/read_write.c:483 [inline]
+ __vfs_write+0xa5a/0xca0 fs/read_write.c:496
+ vfs_write+0x44a/0x8f0 fs/read_write.c:558
+ ksys_write+0x267/0x450 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __ia32_sys_write+0xdb/0x120 fs/read_write.c:620
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f62d99
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000fffedb2c EFLAGS: 00000217 ORIG_RAX: 0000000000000004
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000020002580
+RDX: 0000000000000fca RSI: 0000000000000036 RDI: 0000000000000004
+RBP: 0000000000008914 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
+ slab_alloc_node mm/slub.c:2793 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4401
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1051 [inline]
+ alloc_skb_with_frags+0x18c/0xa70 net/core/skbuff.c:5766
+ sock_alloc_send_pskb+0xada/0xc60 net/core/sock.c:2242
+ tun_alloc_skb drivers/net/tun.c:1529 [inline]
+ tun_get_user+0x10ae/0x6f60 drivers/net/tun.c:1843
+ tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2026
+ call_write_iter include/linux/fs.h:1901 [inline]
+ new_sync_write fs/read_write.c:483 [inline]
+ __vfs_write+0xa5a/0xca0 fs/read_write.c:496
+ vfs_write+0x44a/0x8f0 fs/read_write.c:558
+ ksys_write+0x267/0x450 fs/read_write.c:611
+ __do_sys_write fs/read_write.c:623 [inline]
+ __se_sys_write fs/read_write.c:620 [inline]
+ __ia32_sys_write+0xdb/0x120 fs/read_write.c:620
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+
+Fixes: 95f5c64c3c13 ("gre: Move utility functions to common headers")
+Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ipv4/gre_demux.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+--- a/net/ipv4/gre_demux.c
++++ b/net/ipv4/gre_demux.c
+@@ -60,7 +60,9 @@ int gre_del_protocol(const struct gre_pr
+ }
+ EXPORT_SYMBOL_GPL(gre_del_protocol);
+ 
+-/* Fills in tpi and returns header length to be pulled. */
++/* Fills in tpi and returns header length to be pulled.
++ * Note that caller must use pskb_may_pull() before pulling GRE header.
++ */
+ int gre_parse_header(struct sk_buff *skb, struct tnl_ptk_info *tpi,
+ 		     bool *csum_err, __be16 proto, int nhs)
+ {
+@@ -114,8 +116,14 @@ int gre_parse_header(struct sk_buff *skb
+ 	 * - When dealing with WCCPv2, Skip extra 4 bytes in GRE header
+ 	 */
+ 	if (greh->flags == 0 && tpi->proto == htons(ETH_P_WCCP)) {
++		u8 _val, *val;
++
++		val = skb_header_pointer(skb, nhs + hdr_len,
++					 sizeof(_val), &_val);
++		if (!val)
++			return -EINVAL;
+ 		tpi->proto = proto;
+-		if ((*(u8 *)options & 0xF0) != 0x40)
++		if ((*val & 0xF0) != 0x40)
+ 			hdr_len += 4;
+ 	}
+ 	tpi->hdr_len = hdr_len;
 
 
