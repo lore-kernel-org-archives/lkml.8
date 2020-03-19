@@ -2,116 +2,214 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACADEC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD37C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EC7120739
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8342320753
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:16:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgCSLPb (ORCPT
+        id S1727000AbgCSLQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 07:15:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:33516 "EHLO foss.arm.com"
+        Thu, 19 Mar 2020 07:16:37 -0400
+Received: from mga03.intel.com ([134.134.136.65]:26975 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgCSLP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 07:15:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9FE3FEC;
-        Thu, 19 Mar 2020 04:15:26 -0700 (PDT)
-Received: from a075553-lin.blr.arm.com (unknown [10.162.16.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 275233FA45;
-        Thu, 19 Mar 2020 00:39:32 -0700 (PDT)
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Dave Anderson <anderson@redhat.com>
-Subject: [PATCH 1/2] arm64/crash_core: Export KERNELPACMASK in vmcoreinfo
-Date:   Thu, 19 Mar 2020 13:09:10 +0530
-Message-Id: <1584603551-23845-1-git-send-email-amit.kachhap@arm.com>
-X-Mailer: git-send-email 2.7.4
+        id S1725601AbgCSLQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 07:16:36 -0400
+IronPort-SDR: poyMXB/VkIgbJqlO58ZEPo+bjimym5FEh/tYvsCpv9i4zHwbgsHnKffoeUgH0CMsJu3cn19reJ
+ +EJ/0wPdN7lQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 04:16:36 -0700
+IronPort-SDR: 7nN+FOTJSwTfvJHvdtgoy9FuXgE1W8nfQEGWinjJ/TiWpxGUCdpzacJSElmR8sDdG8dZJkX6Xf
+ 5voeu04mGzjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,571,1574150400"; 
+   d="scan'208";a="268699077"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 19 Mar 2020 04:16:35 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jEtAA-000Csn-CZ; Thu, 19 Mar 2020 19:16:34 +0800
+Date:   Thu, 19 Mar 2020 19:16:12 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:auto-latest] BUILD SUCCESS
+ b9eea797a6d89f14414f9cd27f6d7470bcdd928b
+Message-ID: <5e73547c.bbOgx9wXikZwGfCy%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARMv8.3-A mandated feature Pointer Authentication may needs this change.
-If this feature is enabled in the kernel and the hardware supports address
-authentication then the return addresses are signed and stored in the stack
-to prevent ROP kind of attack.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  auto-latest
+branch HEAD: b9eea797a6d89f14414f9cd27f6d7470bcdd928b  Merge branch 'perf/core'
 
-User tools like "crash" may need the kernel pac mask information to
-generate the correct return address for stacktrace purpose.
+elapsed time: 884m
 
-This patch is similar to commit ec6e822d1a22d0eef ("arm64: expose user PAC
-bit positions via ptrace") which exposes pac mask information via ptrace
-interfaces.
+configs tested: 147
+configs skipped: 0
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Dave Anderson <anderson@redhat.com>
-Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+xtensa                       common_defconfig
+m68k                       m5475evb_defconfig
+nds32                             allnoconfig
+sh                                allnoconfig
+i386                             allyesconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+alpha                               defconfig
+csky                                defconfig
+nds32                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+i386                 randconfig-a003-20200318
+i386                 randconfig-a001-20200318
+x86_64               randconfig-a001-20200318
+x86_64               randconfig-a002-20200318
+i386                 randconfig-a002-20200318
+x86_64               randconfig-a003-20200318
+alpha                randconfig-a001-20200318
+m68k                 randconfig-a001-20200318
+mips                 randconfig-a001-20200318
+nds32                randconfig-a001-20200318
+parisc               randconfig-a001-20200318
+riscv                randconfig-a001-20200318
+csky                 randconfig-a001-20200318
+openrisc             randconfig-a001-20200318
+s390                 randconfig-a001-20200318
+sh                   randconfig-a001-20200318
+xtensa               randconfig-a001-20200318
+x86_64               randconfig-b001-20200318
+x86_64               randconfig-b002-20200318
+x86_64               randconfig-b003-20200318
+i386                 randconfig-b001-20200318
+i386                 randconfig-b002-20200318
+i386                 randconfig-b003-20200318
+x86_64               randconfig-c001-20200318
+i386                 randconfig-c001-20200318
+x86_64               randconfig-c002-20200318
+i386                 randconfig-c003-20200318
+x86_64               randconfig-c003-20200318
+i386                 randconfig-c002-20200318
+x86_64               randconfig-d001-20200319
+i386                 randconfig-d001-20200319
+i386                 randconfig-d003-20200319
+i386                 randconfig-d002-20200319
+x86_64               randconfig-d002-20200319
+x86_64               randconfig-d003-20200319
+x86_64               randconfig-e001-20200318
+x86_64               randconfig-e002-20200318
+x86_64               randconfig-e003-20200318
+i386                 randconfig-e001-20200318
+i386                 randconfig-e002-20200318
+i386                 randconfig-e003-20200318
+x86_64               randconfig-f001-20200318
+x86_64               randconfig-f002-20200318
+x86_64               randconfig-f003-20200318
+i386                 randconfig-f001-20200318
+i386                 randconfig-f002-20200318
+i386                 randconfig-f003-20200318
+i386                 randconfig-g003-20200319
+x86_64               randconfig-h001-20200318
+x86_64               randconfig-h002-20200318
+x86_64               randconfig-h003-20200318
+i386                 randconfig-h001-20200318
+i386                 randconfig-h002-20200318
+i386                 randconfig-h003-20200318
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
 ---
- 
-An implementation of this field used by crash tool can be found here [1].
-
-The patches in this series are based on in-kernel Pointer Authentication
-patches present for-next tree [2].
-
-[1]: http://linux-arm.org/git?p=crash-ak.git;a=commit;h=1775c6c33bed9269964719b90064b43a24ce97a5
-[2]: git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/kernel-ptrauth
-
- arch/arm64/include/asm/compiler.h | 3 +++
- arch/arm64/kernel/crash_core.c    | 4 ++++
- 2 files changed, 7 insertions(+)
-
-diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
-index eece20d..32d5900 100644
---- a/arch/arm64/include/asm/compiler.h
-+++ b/arch/arm64/include/asm/compiler.h
-@@ -19,6 +19,9 @@
- #define __builtin_return_address(val)					\
- 	(void *)(ptrauth_clear_pac((unsigned long)__builtin_return_address(val)))
- 
-+#else  /* !CONFIG_ARM64_PTR_AUTH */
-+#define	ptrauth_user_pac_mask()		0ULL
-+#define	ptrauth_kernel_pac_mask()	0ULL
- #endif /* CONFIG_ARM64_PTR_AUTH */
- 
- #endif /* __ASM_COMPILER_H */
-diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
-index ca4c3e1..25cf2ce 100644
---- a/arch/arm64/kernel/crash_core.c
-+++ b/arch/arm64/kernel/crash_core.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/crash_core.h>
- #include <asm/memory.h>
-+#include <asm/pointer_auth.h>
- 
- void arch_crash_save_vmcoreinfo(void)
- {
-@@ -16,4 +17,7 @@ void arch_crash_save_vmcoreinfo(void)
- 	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
- 						PHYS_OFFSET);
- 	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
-+	vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
-+						system_supports_address_auth() ?
-+						ptrauth_kernel_pac_mask() : 0);
- }
--- 
-2.7.4
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
