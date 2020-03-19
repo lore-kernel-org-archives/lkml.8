@@ -2,371 +2,426 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30634C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C2CC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 010A02076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE03220768
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 03:23:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNnqo+bV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbgCSDVx (ORCPT
+        id S1726901AbgCSDXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 23:21:53 -0400
-Received: from m177134.mail.qiye.163.com ([123.58.177.134]:47524 "EHLO
-        m177134.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCSDVw (ORCPT
+        Wed, 18 Mar 2020 23:23:36 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45856 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgCSDXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 23:21:52 -0400
-Received: from lcc-VirtualBox.vivo.xyz (unknown [58.251.74.227])
-        by m17617.mail.qiye.163.com (Hmail) with ESMTPA id 35C64261B7F;
-        Thu, 19 Mar 2020 11:21:04 +0800 (CST)
-From:   Chucheng Luo <luochucheng@vivo.com>
-To:     Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Chucheng Luo <luochucheng@vivo.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@vivo.com
-Subject: [PATCH v3] Translate Documentation/filesystems/debugfs.txt into Chinese
-Date:   Thu, 19 Mar 2020 11:20:43 +0800
-Message-Id: <20200319032057.29833-1-luochucheng@vivo.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Mar 2020 23:23:36 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z8so621944qto.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 20:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=G3jgg7jUsrwjzV0RJBqO0y67Hy+me0H+xWLnisPRBms=;
+        b=SNnqo+bV83FWx0JNguQJs++jl4oSPX2fBZqqSxKq35pIWFbzQuxuZVlkIsh+jMQBa7
+         sXaH62cZ5hXV6WyLOpLY1dhkscsXZ2IjEivJI9R5J3DhObmft+Fbh404Xboxnz27IBEy
+         EIwzNhL1/0+En0gFGUc1msXe4wA0nKn/dxdFJUi+1t0yKZR5C3wALIXMR1HtVk52maLw
+         0epYTHicdvvLD9EnI/pEN0ihQy3Z1AFkRosrI4s9qovic9iytICWSZ2266EZLZdbiscy
+         evnx3jhbR449vVok73PUj6fS9plsw802zY4gp963eaIrThboGt1cx0cVDpaZaLrrBJPz
+         IaSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G3jgg7jUsrwjzV0RJBqO0y67Hy+me0H+xWLnisPRBms=;
+        b=f0qy838siNl6PzADWaMoWfOmNSUmTPxYxEIwT3yK0sdZUNvTmSTppL925H/QQ6+WAp
+         ziB34yfp1czgFP0nEUMbz1rEf9fTA5EEBI6Va8ThwNrJJivioX1lZ02vPi5aQuv9JyaR
+         djhGHHanBJGcoApr2ynYkCDP4Abr2uEyGHQK88ZaE+rxAAtcyy8y9RI3e4DKyNvNgO7B
+         YJ8Y4AHFBFhWnb1WUSmRf+Ua1JY6QrcaEiJznCVb55EuBOfEiEVjA/dPq7sn8XMmwycP
+         cp54xRvc9paf4AHmjbyz7d6dgv9MmSzsdaYiEsAy3nGur5CBJ+CHmVbKokwBj6KAAVcO
+         WsfA==
+X-Gm-Message-State: ANhLgQ1y0qJNdEQu4yONaVMgDJAFZFMIwfUpCR6PtVC/kEDtuta9Y0EF
+        kPxxjlxxIiv7ZPVLClqYfbA=
+X-Google-Smtp-Source: ADFU+vuQihjJXl0tYvIJzjsarc7WH8hJ+nSLJpvTc6STPFAO+qgwGWP9MuacMrRzmUeLGEynRv3OyA==
+X-Received: by 2002:ac8:41d4:: with SMTP id o20mr890283qtm.201.1584588212920;
+        Wed, 18 Mar 2020 20:23:32 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id b7sm692147qkc.61.2020.03.18.20.23.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Mar 2020 20:23:32 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 365BC27C005A;
+        Wed, 18 Mar 2020 23:23:29 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Wed, 18 Mar 2020 23:23:29 -0400
+X-ME-Sender: <xms:sOVyXrAtF7h54i0UWXX4ulLFH8v1NTnJJdwUA6sKGBBmTK-emDNGfQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudefkedgiedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecukfhppeehvd
+    drudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthi
+    dqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghi
+    lhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:sOVyXt2A1bQLYTtyUOMtug9KygK_DCGXkmmZzkhlhopWPw2KS3DTxA>
+    <xmx:sOVyXpV1aVEObKRE9n6mhAJPdxdc_-btnKvzUYCnuGVhtUjFGG35uA>
+    <xmx:sOVyXvmNet0HEsCqLWWjNa1gdMaDq0t3w7QHcVb6g12PQHMVtrJzNA>
+    <xmx:seVyXrjxuIKkdAeSPGBGKPilHb3ZUzhXTEtnM5TcpAmRE_JPx5r3MdZF3GM>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 184AE3060F09;
+        Wed, 18 Mar 2020 23:23:27 -0400 (EDT)
+Date:   Thu, 19 Mar 2020 11:23:26 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Marco Elver <elver@google.com>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>, kernel-team@fb.com,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH kcsan 17/32] kcsan: Introduce ASSERT_EXCLUSIVE_* macros
+Message-ID: <20200319032326.GE105953@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200309190359.GA5822@paulmck-ThinkPad-P72>
+ <20200309190420.6100-17-paulmck@kernel.org>
+ <20200313085220.GC105953@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <CANpmjNO-hjVfp729YOGdoiuwWjLacW+OCJ=5RnxEYGvQjfQGhA@mail.gmail.com>
+ <20200314022210.GD105953@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <CANpmjNPu67nnaWbOtA8xntBWafDm5Ykspzj43wuSdRckLGC=UA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUlXWQgYFAkeWUFZTVVDS0tCQkJNT0pPSkNPTVlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PBQ6HQw6MzgwMCtRUVFRLzFI
-        DBgaC0pVSlVKTkNPTkNDS01PTEpJVTMWGhIXVRcOFBgTDhgTHhUcOw0SDRRVGBQWRVlXWRILWUFZ
-        TkNVSU5KVUxPVUlJTFlXWQgBWUFKSEhDQzcG
-X-HM-Tid: 0a70f0cf06ed9375kuws35c64261b7f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNPu67nnaWbOtA8xntBWafDm5Ykspzj43wuSdRckLGC=UA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Translate debugfs.txt into Chinese and link it to the index.
+On Tue, Mar 17, 2020 at 12:12:36PM +0100, Marco Elver wrote:
+> On Sat, 14 Mar 2020 at 03:22, Boqun Feng <boqun.feng@gmail.com> wrote:
+> >
+> > On Fri, Mar 13, 2020 at 05:15:32PM +0100, Marco Elver wrote:
+> > > On Fri, 13 Mar 2020 at 09:52, Boqun Feng <boqun.feng@gmail.com> wrote:
+> > > >
+> > > > Hi Marco,
+> > > >
+> > > > On Mon, Mar 09, 2020 at 12:04:05PM -0700, paulmck@kernel.org wrote:
+> > > > > From: Marco Elver <elver@google.com>
+> > > > >
+> > > > > Introduces ASSERT_EXCLUSIVE_WRITER and ASSERT_EXCLUSIVE_ACCESS, which
+> > > > > may be used to assert properties of synchronization logic, where
+> > > > > violation cannot be detected as a normal data race.
+> > > > >
+> > > > > Examples of the reports that may be generated:
+> > > > >
+> > > > >     ==================================================================
+> > > > >     BUG: KCSAN: assert: race in test_thread / test_thread
+> > > > >
+> > > > >     write to 0xffffffffab3d1540 of 8 bytes by task 466 on cpu 2:
+> > > > >      test_thread+0x8d/0x111
+> > > > >      debugfs_write.cold+0x32/0x44
+> > > > >      ...
+> > > > >
+> > > > >     assert no writes to 0xffffffffab3d1540 of 8 bytes by task 464 on cpu 0:
+> > > > >      test_thread+0xa3/0x111
+> > > > >      debugfs_write.cold+0x32/0x44
+> > > > >      ...
+> > > > >     ==================================================================
+> > > > >
+> > > > >     ==================================================================
+> > > > >     BUG: KCSAN: assert: race in test_thread / test_thread
+> > > > >
+> > > > >     assert no accesses to 0xffffffffab3d1540 of 8 bytes by task 465 on cpu 1:
+> > > > >      test_thread+0xb9/0x111
+> > > > >      debugfs_write.cold+0x32/0x44
+> > > > >      ...
+> > > > >
+> > > > >     read to 0xffffffffab3d1540 of 8 bytes by task 464 on cpu 0:
+> > > > >      test_thread+0x77/0x111
+> > > > >      debugfs_write.cold+0x32/0x44
+> > > > >      ...
+> > > > >     ==================================================================
+> > > > >
+> > > > > Signed-off-by: Marco Elver <elver@google.com>
+> > > > > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> > > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > > > ---
+> > > > >  include/linux/kcsan-checks.h | 40 ++++++++++++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 40 insertions(+)
+> > > > >
+> > > > > diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
+> > > > > index 5dcadc2..cf69617 100644
+> > > > > --- a/include/linux/kcsan-checks.h
+> > > > > +++ b/include/linux/kcsan-checks.h
+> > > > > @@ -96,4 +96,44 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
+> > > > >       kcsan_check_access(ptr, size, KCSAN_ACCESS_ATOMIC | KCSAN_ACCESS_WRITE)
+> > > > >  #endif
+> > > > >
+> > > > > +/**
+> > > > > + * ASSERT_EXCLUSIVE_WRITER - assert no other threads are writing @var
+> > > > > + *
+> > > > > + * Assert that there are no other threads writing @var; other readers are
+> > > > > + * allowed. This assertion can be used to specify properties of concurrent code,
+> > > > > + * where violation cannot be detected as a normal data race.
+> > > > > + *
+> > > >
+> > > > I like the idea that we can assert no other writers, however I think
+> > > > assertions like ASSERT_EXCLUSIVE_WRITER() are a little limited. For
+> > > > example, if we have the following code:
+> > > >
+> > > >         preempt_disable();
+> > > >         do_sth();
+> > > >         raw_cpu_write(var, 1);
+> > > >         do_sth_else();
+> > > >         preempt_enable();
+> > > >
+> > > > we can add the assert to detect another potential writer like:
+> > > >
+> > > >         preempt_disable();
+> > > >         do_sth();
+> > > >         ASSERT_EXCLUSIVE_WRITER(var);
+> > > >         raw_cpu_write(var, 1);
+> > > >         do_sth_else();
+> > > >         preempt_enable();
+> > > >
+> > > > , but, if I understand how KCSAN works correctly, it only works if the
+> > > > another writer happens when the ASSERT_EXCLUSIVE_WRITER(var) is called,
+> > > > IOW, it can only detect another writer between do_sth() and
+> > > > raw_cpu_write(). But our intent is to prevent other writers for the
+> > > > whole preemption-off section. With this assertion introduced, people may
+> > > > end up with code like:
+> > >
+> > > To confirm: KCSAN will detect a race if it sets up a watchpoint on
+> > > ASSERT_EXCLUSIVE_WRITER(var), and a concurrent write happens. Note
+> > > that the watchpoints aren't always set up, but only periodically
+> > > (discussed more below). For every watchpoint, we also inject an
+> > > artificial delay. Pseudo-code:
+> > >
+> > > if watchpoint for access already set up {
+> > >   consume watchpoint;
+> > > else if should set up watchpoint {
+> > >   setup watchpoint;
+> > >   udelay(...);
+> > >   check watchpoint consumed;
+> > >   release watchpoint;
+> > > }
+> > >
+> >
+> > Yes, I get this part.
+> >
+> > > >         preempt_disable();
+> > > >         ASSERT_EXCLUSIVE_WRITER(var);
+> > > >         do_sth();
+> > > >         ASSERT_EXCLUSIVE_WRITER(var);
+> > > >         raw_cpu_write(var, 1);
+> > > >         ASSERT_EXCLUSIVE_WRITER(var);
+> > > >         do_sth_else();
+> > > >         ASSERT_EXCLUSIVE_WRITER(var);
+> > > >         preempt_enable();
+> > > >
+> > > > and that is horrible...
+> > >
+> > > It is, and I would strongly discourage any such use, because it's not
+> > > necessary. See below.
+> > >
+> > > > So how about making a pair of annotations
+> > > > ASSERT_EXCLUSIVE_WRITER_BEGIN() and ASSERT_EXCLUSIVE_WRITER_END(), so
+> > > > that we can write code like:
+> > > >
+> > > >         preempt_disable();
+> > > >         ASSERT_EXCLUSIVE_WRITER_BEGIN(var);
+> > > >         do_sth();
+> > > >         raw_cpu_write(var, 1);
+> > > >         do_sth_else();
+> > > >         ASSERT_EXCLUSIVE_WRITER_END(var);
+> > > >         preempt_enable();
+> > > >
+> > > > ASSERT_EXCLUSIVE_WRITER_BEGIN() could be a rough version of watchpoint
+> > > > setting up and ASSERT_EXCLUSIVE_WRITER_END() could be watchpoint
+> > > > removing. So I think it's feasible.
+> > >
+> > > Keep in mind that the time from ASSERT_EXCLUSIVE_WRITER_BEGIN to END
+> > > might be on the order of a few nanosec, whereas KCSAN's default
+> > > watchpoint delay is 10s of microsec (default ~80 for tasks). That
+> > > means we would still have to set up a delay somewhere, and the few
+> > > nanosec between BEGIN and END are insignificant and don't buy us
+> > > anything.
+> > >
+> >
+> > Yeah, the delay doesn't buy us anything given the default watchpoint
+> > delay, and I agree even with *_{BEGIN/END}, we still need to set up a
+> > delay somewhere. Adding a delay makes the watchpoint live longer so that
+> > a problem will more likely happen, but sometimes the delay won't be
+> > enough, considering another writer like:
+> >
+> >         if (per_cpu(var, cpu) == 1)
+> >                 per_cpu(var, cpu) = 0;
+> >
+> > in this user case, percpu variable "var" is used for maintaining some
+> > state machine, and a CPU set a state with its own variable so that other
+> > CPUs can consume it. And this another writer cannot be catched by:
+> >
+> >         preempt_disable();
+> >         do_sth();
+> >         ASSERT_EXCLUSIVE_WRITER(var);
+> >         raw_cpu_write(var, 1);
+> >         do_sth_else();
+> >         preempt_enable();
+> >
+> 
+> Right, the example makes sense.
+> 
+> That is assuming there are various other expected racy reads that are
+> fine. If that's not true, ASSERT_EXCLUSIVE_ACCESS should be
+> considered.
+> 
+> > , no matter how long the delay is set. Another example: let's say the
+> > do_sth_else() above is actually an operation that queues a callback
+> > which writes to "var". In one version, do_sth_else() uses call_rcu(),
+> > which works, because preemption-off is treated as RCU read-side critical
+> > section, so we are fine. But if someone else changes it to queue_work()
+> > for some reason, the code is just broken, and KCSAN cannot detect it, no
+> > matter how long the delay is.
+> >
+> > To summarize, a delay is helpful to trigger a problem because it allows
+> > _other_ CPU/threads to run more code and do more memory accesses,
+> > however it's not helpful if a particular problem happens due to some
+> > memory effects of the current/watched CPU/thread. While *_{BEGIN/END}
+> > can be helpful in this case.
+> 
+> Makes sense.
+> 
+> > > Re feasibility: Right now setting up and removing watchpoints is not
+> > > exposed, and doing something like this would be an extremely intrusive
+> > > change. Because of that, without being able to quantify the actual
+> > > usefulness of this, and having evaluated better options (see below),
+> > > I'd recommend not pursuing this.
+> > >
+> > > > Thoughts?
+> > >
+> > > Firstly, what is your objective? From what I gather you want to
+> > > increase the probability of detecting a race with 'var'.
+> > >
+> >
+> > Right, I want to increase the probablity.
+> >
+> > > I agree, and have been thinking about it, but there are other options
+> > > that haven't been exhausted, before we go and make the interface more
+> > > complicated.
+> > >
+> > > == Interface design ==
+> > > The interface as it is right now, is intuitive and using it is hard to
+> > > get wrong. Demanding begin/end markers introduces complexity that will
+> >
+> > Yeah, the interface is intuitive, however it's still an extra effort to
+> > put those assertions, right? Which means it doesn't come for free,
+> > compared to other detection KCSAN can do, the developers don't need to
+> > put extra lines of code. Given the extra effort for developers to use
+> > the detect, I think we should dicuss the design thoroughly.
+> >
+> > Besides the semantics of assertions is usually "do some checking right
+> > now to see if things go wrong", and I don't think it quite matches the
+> > semantics of an exclusive writer: "in this piece of code, I'm the only
+> > one who can do the write".
+> >
+> > > undoubtedly result in incorrect usage, because as soon as you somehow
+> > > forget to end the region, you'll get tons of false positives. This may
+> > > be due to control-flow that was missed etc. We had a similar problem
+> > > with seqlocks, and getting them to work correctly with KCSAN was
+> > > extremely difficult, because clear begin and end markers weren't
+> > > always given. I imagine introducing an interface like this will
+> > > ultimately result in similar problems, as much as we'd like to believe
+> > > this won't ever happen.
+> > >
+> >
+> > Well, if we use *_{BEGIN,END} approach, one solution is combining them
+> > with sections introducing primitives (such as preemp_disable() and
+> > preempt_enable()), for example, we can add
+> >
+> >         #define preempt_disable_for(var)                                \
+> >         do {                                                            \
+> >                 preempt_disable();                                      \
+> >                 ASSERT_EXCLUSIVE_WRITER_BEGIN(var);                     \
+> >         }
+> >
+> >         #define preempt_enable_for(var)                                 \
+> >         do {                                                            \
+> >                 ASSERT_EXCLUSIVE_WRITER_END(var);                       \
+> >                 preempt_enable();                                       \
+> >         }
+> >
+> >         (similar for spin lock)
+> >
+> >         #define spin_lock_for(lock, var)                                \
+> >         do {                                                            \
+> >                 spin_lock(lock);                                        \
+> >                 ASSERT_EXCLUSIVE_WRITER_BEGIN(var);                     \
+> >         }
+> >
+> >         #define spin_unlock_for(lock, var)                              \
+> >         do {                                                            \
+> >                 ASSERT_EXCLUSIVE_WRITER_END(var);                       \
+> >                 spin_unlock(lock);                                      \
+> >         }
+> >
+> > I admit that I haven't thought this thoroughly, but I think this works,
+> > and besides primitives like above can help the reader to understand the
+> > questions like: what this lock/preemption-off critical sections are
+> > protecting?
+> 
+> I can't say anything about introducing even more macros. I'd say we
+> need at least a dozen use-cases or more and understand them, otherwise
+> we may end up with the wrong API that we can never take back.
+> 
 
-Signed-off-by: Chucheng Luo <luochucheng@vivo.com>
-Acked-by: Jonathan Corbet <corbet@lwn.net>
----
- .../zh_CN/filesystems/debugfs.rst             | 257 ++++++++++++++++++
- .../translations/zh_CN/filesystems/index.rst  |  21 ++
- Documentation/translations/zh_CN/index.rst    |   2 +
- 3 files changed, 280 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/filesystems/debugfs.rst
- create mode 100644 Documentation/translations/zh_CN/filesystems/index.rst
+Agreed, real use-cases are needed for the justification of introducing
+those APIs.
 
-diff --git a/Documentation/translations/zh_CN/filesystems/debugfs.rst b/Documentation/translations/zh_CN/filesystems/debugfs.rst
-new file mode 100644
-index 000000000000..02f639445d3d
---- /dev/null
-+++ b/Documentation/translations/zh_CN/filesystems/debugfs.rst
-@@ -0,0 +1,257 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: :ref:`Documentation/filesystems/debugfs.txt<debugfs_index>`
-+
-+==========================
-+Debugfs
-+==========================
-+
-+译者
-+::
-+
-+	中文版维护者： 罗楚成 Chucheng Luo <luochucheng@vivo.com>
-+	中文版翻译者： 罗楚成 Chucheng Luo <luochucheng@vivo.com>
-+	中文版校译者:  罗楚成 Chucheng Luo <luochucheng@vivo.com>
-+
-+
-+
-+
-+版权所有2009 Jonathan Corbet <corbet@lwn.net>
-+
-+介绍
-+====
-+
-+Debugfs是内核开发人员在用户空间获取信息的简单方法。
-+与/proc不同，proc只提供进程信息。也不像sysfs,具有严格的“每个文件一个值“的规则。
-+debugfs根本没有规则。开发人员可以放置他们想要的任何信息在那里。
-+debugfs文件系统也不能用作稳定的
-+ABI接口到用户空间；从理论上讲，文件在debugfs里导出没有任何稳定性的约束。
-+尽管[1]现实世界并不总是那么简单。
-+即使是debugfs接口，也最好根据需要进行设计
-+永远保持下去。
-+
-+用法
-+====
-+
-+Debugfs通常使用以下命令安装::
-+
-+    mount -t debugfs none /sys/kernel/debug
-+
-+（或等效的/etc/fstab行）。
-+debugfs根目录默认仅可由root用户访问。
-+要更改对树的访问，请使用“ uid”，“ gid”和“ mode”挂载选项。
-+
-+请注意，debugfs API仅导出为GPL到模块。
-+
-+使用debugfs的代码应包含<linux/debugfs.h>。然后，第一阶
-+业务将是创建至少一个目录来保存一组debugfs文件::
-+
-+    struct dentry *debugfs_create_dir(const char *name, struct dentry *parent);
-+
-+如果成功，此调用将在指定的父目录目录下创建一个名为name的目录。
-+如果parent为NULL，则目录为
-+在debugfs根目录中创建。成功时，返回值是一个结构
-+dentry指针，可用于在目录中创建文件（以及
-+最后将其清理干净）。 ERR_PTR（-ERROR）返回值表面出错。如果返回ERR_PTR（-ENODEV），则为
-+表明内核是在没有debugfs支持的情况下构建的，并且下述函数都不会起作用。
-+
-+在debugfs目录中创建文件的最通用方法是::
-+
-+    struct dentry *debugfs_create_file(const char *name, umode_t mode,
-+				       struct dentry *parent, void *data,
-+				       const struct file_operations *fops);
-+
-+在这里，name是要创建的文件的名称，mode描述了访问
-+文件应具有的权限，parent指向应该保存文件的目录
-+，data将存储在产生的inode结构的i_private字段中
-+，而fops是一组文件操作，其中
-+实现文件的行为。至少，read（）和/或write（）
-+操作应提供；其他可以根据需要包括在内。再次，
-+返回值将是指向创建文件的dentry指针，
-+错误时显示ERR_PTR（-ERROR），不支持debugfs时返回值为ERR_PTR（-ENODEV）。
-+
-+创建一个初始大小的文件，可以使用以下函数代替::
-+
-+    struct dentry *debugfs_create_file_size(const char *name, umode_t mode,
-+				struct dentry *parent, void *data,
-+				const struct file_operations *fops,
-+				loff_t file_size);
-+
-+file_size是初始文件大小。其他参数跟函数debugfs_create_file的相同。
-+
-+在许多情况下，创建一组文件操作不是
-+实际必要的，对于简单的情况。debugfs代码提供了许多帮助函数
-+。包含单个整数值的文件可以使用以下任何一项创建::
-+
-+    void debugfs_create_u8(const char *name, umode_t mode,
-+			   struct dentry *parent, u8 *value);
-+    void debugfs_create_u16(const char *name, umode_t mode,
-+			    struct dentry *parent, u16 *value);
-+    struct dentry *debugfs_create_u32(const char *name, umode_t mode,
-+				      struct dentry *parent, u32 *value);
-+    void debugfs_create_u64(const char *name, umode_t mode,
-+			    struct dentry *parent, u64 *value);
-+
-+这些文件支持读取和写入给定值。如果具体
-+不应写入文件，只需相应地设置模式位。的
-+这些文件中的值以十进制表示；如果十六进制更合适，
-+可以使用以下功能::
-+
-+    void debugfs_create_x8(const char *name, umode_t mode,
-+			   struct dentry *parent, u8 *value);
-+    void debugfs_create_x16(const char *name, umode_t mode,
-+			    struct dentry *parent, u16 *value);
-+    void debugfs_create_x32(const char *name, umode_t mode,
-+			    struct dentry *parent, u32 *value);
-+    void debugfs_create_x64(const char *name, umode_t mode,
-+			    struct dentry *parent, u64 *value);
-+
-+只要开发人员知道导出值的大小，这些功能就很有用。
-+某些类型在不同的架构上可以具有不同的宽度
-+但是，这样会使情况变得有些复杂。有
-+在以下特殊情况下可以提供帮助的功能::
-+
-+    void debugfs_create_size_t(const char *name, umode_t mode,
-+			       struct dentry *parent, size_t *value);
-+
-+不出所料，此函数将创建一个debugfs文件来表示
-+类型为size_t的变量。
-+
-+同样地，也有无符号长整型型变量的助手，以十进制表示
-+和十六进制::
-+
-+    struct dentry *debugfs_create_ulong(const char *name, umode_t mode,
-+					struct dentry *parent,
-+					unsigned long *value);
-+    void debugfs_create_xul(const char *name, umode_t mode,
-+			    struct dentry *parent, unsigned long *value);
-+
-+布尔值可以通过以下方式放置在debugfs中::
-+
-+    struct dentry *debugfs_create_bool(const char *name, umode_t mode,
-+				       struct dentry *parent, bool *value);
-+
-+
-+读取结果文件将产生Y（对于非零值）或
-+N，后跟换行符。如果写入，它将接受大写或
-+小写值或1或0。任何其他输入将被忽略。
-+
-+同样，可以使用以下命令将atomic_t值放置在debugfs中::
-+
-+    void debugfs_create_atomic_t(const char *name, umode_t mode,
-+				 struct dentry *parent, atomic_t *value)
-+
-+读取此文件将获得atomic_t值，并写入该文件
-+将设置atomic_t值。
-+
-+另一个选择是导出一个任意二进制数据块，
-+这个结构和功能::
-+
-+    struct debugfs_blob_wrapper {
-+	void *data;
-+	unsigned long size;
-+    };
-+
-+    struct dentry *debugfs_create_blob(const char *name, umode_t mode,
-+				       struct dentry *parent,
-+				       struct debugfs_blob_wrapper *blob);
-+
-+读取此文件将返回由指针指向debugfs_blob_wrapper结构
-+的数据。一些驱动使用“blobs”作为一种简单的方法
-+返回几行（静态）格式化文本输出。这个功能
-+可用于导出二进制信息，但似乎没有
-+在主线中执行此操作的任何代码。请注意，使用debugfs_create_blob（）命令创建的所有文件
-+是只读的。
-+
-+如果您要转储一个寄存器块（发生的事情相当
-+通常在开发过程中，即使很少有这样的代码到达主线。
-+Debugfs提供两个功能：一个用于创建仅寄存器文件，另一个
-+把一个寄存器块插入一个顺序文件中::
-+
-+    struct debugfs_reg32 {
-+	char *name;
-+	unsigned long offset;
-+    };
-+
-+    struct debugfs_regset32 {
-+	struct debugfs_reg32 *regs;
-+	int nregs;
-+	void __iomem *base;
-+    };
-+
-+    struct dentry *debugfs_create_regset32(const char *name, umode_t mode,
-+				     struct dentry *parent,
-+				     struct debugfs_regset32 *regset);
-+
-+    void debugfs_print_regs32(struct seq_file *s, struct debugfs_reg32 *regs,
-+			 int nregs, void __iomem *base, char *prefix);
-+
-+“base”参数可能为0，但您可能需要构建reg32数组
-+使用__stringify，实际上有许多寄存器名称（宏）
-+寄存器块的基址上的字节偏移量。
-+
-+如果要在debugfs中转储u32数组，可以使用以下命令创建文件::
-+
-+     void debugfs_create_u32_array(const char *name, umode_t mode,
-+			struct dentry *parent,
-+			u32 *array, u32 elements);
-+
-+“array”参数提供数据，而“elements”参数为
-+数组中元素的数量。注意：建立数组后，
-+大小无法更改。
-+
-+有一个帮助函数来创建与设备相关的seq_file::
-+
-+   struct dentry *debugfs_create_devm_seqfile(struct device *dev,
-+				const char *name,
-+				struct dentry *parent,
-+				int (*read_fn)(struct seq_file *s,
-+					void *data));
-+
-+“dev”参数是与此debugfs文件相关的设备，并且
-+“read_fn”是一个函数指针，将被调用以打印
-+seq_file内容。
-+
-+还有一些其他的面向目录的帮助器功能::
-+
-+    struct dentry *debugfs_rename(struct dentry *old_dir,
-+		                  struct dentry *old_dentry,
-+		                  struct dentry *new_dir,
-+				  const char *new_name);
-+
-+    struct dentry *debugfs_create_symlink(const char *name,
-+                                          struct dentry *parent,
-+                                          const char *target);
-+
-+调用debugfs_rename()将为现有的debugfs文件提供一个新名称，
-+可能在其他目录中。 new_name函数调用之前不能存在；
-+返回值为old_dentry，其中包含更新的信息。
-+可以使用debugfs_create_symlink（）创建符号链接。
-+
-+所有debugfs用户必须考虑的一件事是：
-+没有自动清除在debugfs中创建的任何目录。如果一个
-+在不显式删除debugfs条目的情况下卸载模块，结果
-+将会有很多陈旧的指针，和没完没了的高度反社会行为。
-+因此，所有debugfs用户-至少是那些可以作为模块构建的用户-必须
-+准备删除在此创建的所有文件和目录。一份文件
-+可以通过以下方式删除::
-+
-+    void debugfs_remove(struct dentry *dentry);
-+
-+dentry值可以为NULL或错误值，在这种情况下，不会有任何结果
-+被删除。
-+
-+从前，debugfs用户需要记住该dentry
-+他们创建的每个debugfs文件的指针，以便所有文件都可以
-+清理。但是，我们现在生活在更加文明的时代，并且debugfs用户
-+能调用::
-+
-+    void debugfs_remove_recursive(struct dentry *dentry);
-+
-+如果传递了此函数，则对应于
-+顶层目录，该目录下的整个层次结构将会被删除。
-+
-+注意：
-+[1] http://lwn.net/Articles/309298/
-diff --git a/Documentation/translations/zh_CN/filesystems/index.rst b/Documentation/translations/zh_CN/filesystems/index.rst
-new file mode 100644
-index 000000000000..3a7f5233767d
---- /dev/null
-+++ b/Documentation/translations/zh_CN/filesystems/index.rst
-@@ -0,0 +1,21 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===============================
-+Linux 内核中的文件系统
-+===============================
-+
-+这个不完整的指南在某一天将会提供关于Linux 虚拟文件系统(VFS)层如何工作的
-+完整信息。以及VFS以下的的文件系统。目前为止，我们提供了以下信息。
-+
-+
-+
-+
-+文件系统
-+===========
-+
-+关于文件系统实现的文档.
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   debugfs
-diff --git a/Documentation/translations/zh_CN/index.rst b/Documentation/translations/zh_CN/index.rst
-index d3165535ec9e..770f886d081c 100644
---- a/Documentation/translations/zh_CN/index.rst
-+++ b/Documentation/translations/zh_CN/index.rst
-@@ -1,3 +1,4 @@
-+.. SPDX-License-Identifier: GPL-2.0
- .. raw:: latex
- 
- 	\renewcommand\thesection*
-@@ -14,6 +15,7 @@
-    :maxdepth: 2
- 
-    process/index
-+   filesystems/index
- 
- 目录和表格
- ----------
--- 
-2.17.1
+> > Thoughts?
+> 
+> Makes sense for the cases you described.
+> 
+> Changing KCSAN to do this is a major change. On surface, it seems like
+> a refactor and exporting some existing functionality, but there are
+> various new corner cases, because now 2 accesses don't really have to
+> be concurrent anymore to detect a race (and simple properties like a
+> thread can't race with itself need to be taken care of). The existing
+> ASSERT_EXCLUSIVE macros were able to leverage existing functionality
+> mostly as-is. So, to motivate something like this, we need at least a
+> dozen or so good use-cases, where careful placement of an existing
+> ASSERT_EXCLUSIVE would not catch what you describe.
+> 
 
+Right, I think at this point, I'm not object to merging this into
+kernel, using ASSERT_EXCLUSIVE_*() does provide more chances for us to
+catch bugs. That said, I think it's better if we have some comments
+describing the semantics (or the limitation) of the annotations to avoid
+"mis-use"s (for example, using multiple ASSERT_EXCLUSIVE_WRITER()s for
+one variables in a function). But that doesn't necessarily block the
+merge of this feature, we can always do that later.
+
+Also, I think it's worthwhile to do some experiments on the
+*_{BEGIN,END} interfaces. If you're interested and have cycles to work
+on this, please let me, othwerwise, I can have a look at it.
+
+Thanks!
+
+Regards,
+Boqun
+
+
+> Thanks,
+> -- Marco
+> 
+> > Regards,
+> > Boqun
+> >
+[...]
