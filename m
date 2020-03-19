@@ -2,108 +2,88 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BE0C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1018FC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78DD52071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584648616;
-	bh=6D5hT7+jLr3Iy3UiMAn9XDDirUwO522VhjHqnbQXtdo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=sWMTgy3exdbNexV8/G0Ft1HZXwBxJTh0rxSodigzRt3hVbqunH15i1u8BB+SG4a6t
-	 jiia5wdCycJ87PfV64x+NxogcInEfeO9Vrv2xzmooPzuB705XYclCfgSbLztWv96z9
-	 vdOaiV7YaLYT76W6EeyH/1uAtyWNsKSatS7vB51Y=
+	by mail.kernel.org (Postfix) with ESMTP id D831E206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 20:10:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BmY4+PFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgCSUKP (ORCPT
+        id S1727103AbgCSUKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 16:10:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39876 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 16:10:25 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:32962 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgCSUKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 16:10:15 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        id S1725747AbgCSUKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 16:10:25 -0400
+Received: from zn.tnic (p200300EC2F0A85001D12B79F4268FE9A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:8500:1d12:b79f:4268:fe9a])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97223206D7;
-        Thu, 19 Mar 2020 20:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584648614;
-        bh=6D5hT7+jLr3Iy3UiMAn9XDDirUwO522VhjHqnbQXtdo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=r4DkOONnnYwfpWtDADd+3vX6IJtWgIxuOAOHnmUPnUkJ5ww9CxX3liEfSs0zlcqQZ
-         VVfBelLWhUuWH7s9X5bKh3OjaJxUkev1dzOZgwYkbcuqe9lSvgpp/XapJtzUJV/Uvb
-         g0tCkCoFTEJWwTgeNfParlBlsYhEb8Bseb1cF94w=
-Message-ID: <815c83462125f350b61163f682fb674e515e954e.camel@kernel.org>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
- regression
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     NeilBrown <neilb@suse.de>, yangerkun <yangerkun@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Date:   Thu, 19 Mar 2020 16:10:12 -0400
-In-Reply-To: <CAHk-=whAWFw5vZB-krqUteHuAYCYypKG6683WEydOynBizpixQ@mail.gmail.com>
-References: <20200308140314.GQ5972@shao2-debian>
-         <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
-         <87blp5urwq.fsf@notabene.neil.brown.name>
-         <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
-         <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
-         <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
-         <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
-         <878sk7vs8q.fsf@notabene.neil.brown.name>
-         <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
-         <875zfbvrbm.fsf@notabene.neil.brown.name>
-         <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
-         <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
-         <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
-         <87v9nattul.fsf@notabene.neil.brown.name>
-         <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
-         <87o8t2tc9s.fsf@notabene.neil.brown.name>
-         <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
-         <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
-         <877dznu0pk.fsf@notabene.neil.brown.name>
-         <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
-         <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
-         <87pndcsxc6.fsf@notabene.neil.brown.name>
-         <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
-         <CAHk-=whnqDS0NJtAaArVeYQz3hcU=4Ja3auB1Jvs42eADfUgMQ@mail.gmail.com>
-         <5d7b448858d5a5c01e97aceb45dcadff24d6fc28.camel@kernel.org>
-         <CAHk-=wj=UEVBObnZNtSnvX_9afJ3XHBSuXACPbriCBkCUGTHmA@mail.gmail.com>
-         <7c10010c3d7745857ee1fba8eb06e7fe047eaa13.camel@kernel.org>
-         <CAHk-=whAWFw5vZB-krqUteHuAYCYypKG6683WEydOynBizpixQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 25F441EC0C89;
+        Thu, 19 Mar 2020 21:10:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584648623;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=+HS0izfSYQQOnipoPaapcyspiM739Lng58jOQDsrp1s=;
+        b=BmY4+PFyddycgep4N1QRA69Ah/4jgqcJGG8qR5Z1zqJ3e14DF8mf95hySlRL7G7UWNtz41
+        EJiDhpHGju+qM+gSbrECSngmwzKiahVMnzGBQAzH2w9x8ci0lnmpzj+CA3c+ERzAacVC+j
+        T5+HWwgbmeA84FVXdZVuQ/gztW5jy80=
+Date:   Thu, 19 Mar 2020 21:10:28 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-tip-commits@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Waiman Long <longman@redhat.com>, x86 <x86@kernel.org>
+Subject: Re: [tip: timers/core] Revert "tick/common: Make tick_periodic()
+ check for missing ticks"
+Message-ID: <20200319201028.GF13073@zn.tnic>
+References: <158464406295.28353.3230662958771714087.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <158464406295.28353.3230662958771714087.tip-bot2@tip-bot2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-03-19 at 12:35 -0700, Linus Torvalds wrote:
-> On Thu, Mar 19, 2020 at 12:24 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > > If you have other things, send me a pull request, otherwise just let
-> > > me know and I'll apply the patch directly.
-> > 
-> > That's it for now.
+On Thu, Mar 19, 2020 at 06:54:22PM -0000, tip-bot2 for Thomas Gleixner wrote:
+> The following commit has been merged into the timers/core branch of tip:
 > 
-> Lol. You confused me with your question of whether I wanted a pull
-> request or not.
+> Commit-ID:     52da479a9aee630d2cdf37d05edfe5bcfff3e17f
+> Gitweb:        https://git.kernel.org/tip/52da479a9aee630d2cdf37d05edfe5bcfff3e17f
+> Author:        Thomas Gleixner <tglx@linutronix.de>
+> AuthorDate:    Thu, 19 Mar 2020 19:47:06 +01:00
+> Committer:     Thomas Gleixner <tglx@linutronix.de>
+> CommitterDate: Thu, 19 Mar 2020 19:47:48 +01:00
 > 
-> I had already applied the patch as dcf23ac3e846 ("locks: reinstate
-> locks_delete_block optimization") yesterday ;)
+> Revert "tick/common: Make tick_periodic() check for missing ticks"
 > 
+> This reverts commit d441dceb5dce71150f28add80d36d91bbfccba99 due to
+> boot failures.
+> 
+> Reported-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Waiman Long <longman@redhat.com>
+> ---
+>  kernel/time/tick-common.c | 36 +++---------------------------------
+>  1 file changed, 3 insertions(+), 33 deletions(-)
 
-Sorry about that! I did a pull this morning and didn't see it, you must
-have pushed afterward. Thanks again for picking it up.
+ACK, this fixes an early boot freeze on one of my boxes too.
+
+Tested-by: Borislav Petkov <bp@suse.de>
 
 -- 
-Jeff Layton <jlayton@kernel.org>
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
