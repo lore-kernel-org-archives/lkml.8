@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59583C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F83CC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0C820409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E0620409
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624591;
-	bh=SBlGPjDxTktVE+Zjo7EzEDmtdlPEaGueBE/SF2K63Ks=;
+	s=default; t=1584624611;
+	bh=3FrZdYvpqhFybQqlRH77rhrJ/OHxk2sMndBLGH2KYyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vyOsTtOX1BtPbtW5QpVhbaEZSnjwmDzmc04XgvoISHgRkfuYBJipya6iKE/UP1eAV
-	 HyufQ8icEk5INaohYCrrZ5dZH5LNpoVYd12jnaIh1UZW1Ebn1LdGFlvjUBxt/hl6Of
-	 BF+Oerxe5hknMFpTCqmxgFwnBBZi9VbrSU1hMWhU=
+	b=CSG1ouuSoIWSBYap935kL2ZBLxg5TxURwnyhbE8qM4yOv96osxP8cAVLI2bCPH3YY
+	 anxMLEQh5hRqnCJNUyVFm3NcxjvgUd6aKZreNWlNlSFPqwcoF4r1Yft9knM7XPUkyD
+	 MPTnqVD4TNRrUw1tWUmOtEhUkiNJyKw1vl3MAHaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbgCSN3t (ORCPT
+        id S1727580AbgCSNWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49226 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:22:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730039AbgCSNXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:23:18 -0400
+        id S1729614AbgCSNV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:21:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01B1B20724;
-        Thu, 19 Mar 2020 13:23:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88543208D6;
+        Thu, 19 Mar 2020 13:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624197;
-        bh=SBlGPjDxTktVE+Zjo7EzEDmtdlPEaGueBE/SF2K63Ks=;
+        s=default; t=1584624118;
+        bh=3FrZdYvpqhFybQqlRH77rhrJ/OHxk2sMndBLGH2KYyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MCkCFnz+fFxK/g9pH8eWyZQmW7CGmK+m92c5fMzJomACYirS0leowNBGPAsTZl1TT
-         vRc6w2OTL78RpRAqz+CUH4tLLVrJPWFLtaYaO7OEdhFL7mRnPqjDW6uVFbMkrM39+k
-         G4NnFA6KmGCvpRDbel2Z9b8zb6T9oOQ0g3nP/X60=
+        b=rRJa5z5D1nVRCNbIM2wLR+Jp5MaCrUyKO3L6CJfUzCQ9TTQnP1urEoJ+687VAAeot
+         BKlp/mD/k0gLetRseePzigpyo7oUW7ZKulQP0dJYXcW8oaDTc4GOtMx0o/VybBxFc2
+         uNWZ6g+tLBJfrlnOaYHKmozj3OEheNz2T/sM8lto=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luo bin <luobin9@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 40/60] hinic: fix a bug of setting hw_ioctxt
-Date:   Thu, 19 Mar 2020 14:04:18 +0100
-Message-Id: <20200319123932.329909138@linuxfoundation.org>
+Subject: [PATCH 5.4 13/60] HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
+Date:   Thu, 19 Mar 2020 14:03:51 +0100
+Message-Id: <20200319123923.268412538@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -60,61 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit d2ed69ce9ed3477e2a9527e6b89fe4689d99510e ]
+[ Upstream commit be0aba826c4a6ba5929def1962a90d6127871969 ]
 
-a reserved field is used to signify prime physical function index
-in the latest firmware version, so we must assign a value to it
-correctly
+The Surfbook E11B uses the SIPODEV SP1064 touchpad, which does not supply
+descriptors, so it has to be added to the override list.
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+BugLink: https://bugs.launchpad.net/bugs/1858299
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c | 1 +
- drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h | 2 +-
- drivers/net/ethernet/huawei/hinic/hinic_hw_if.h  | 1 +
- 3 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 6f2cf569a283c..79b3d53f2fbfa 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -297,6 +297,7 @@ static int set_hw_ioctxt(struct hinic_hwdev *hwdev, unsigned int rq_depth,
- 	}
- 
- 	hw_ioctxt.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
-+	hw_ioctxt.ppf_idx = HINIC_HWIF_PPF_IDX(hwif);
- 
- 	hw_ioctxt.set_cmdq_depth = HW_IOCTXT_SET_CMDQ_DEPTH_DEFAULT;
- 	hw_ioctxt.cmdq_depth = 0;
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-index b069045de416c..66fd2340d4479 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-@@ -151,8 +151,8 @@ struct hinic_cmd_hw_ioctxt {
- 
- 	u8      lro_en;
- 	u8      rsvd3;
-+	u8      ppf_idx;
- 	u8      rsvd4;
--	u8      rsvd5;
- 
- 	u16     rq_depth;
- 	u16     rx_buf_sz_idx;
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
-index 517794509eb29..c7bb9ceca72ca 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_if.h
-@@ -137,6 +137,7 @@
- #define HINIC_HWIF_FUNC_IDX(hwif)       ((hwif)->attr.func_idx)
- #define HINIC_HWIF_PCI_INTF(hwif)       ((hwif)->attr.pci_intf_idx)
- #define HINIC_HWIF_PF_IDX(hwif)         ((hwif)->attr.pf_idx)
-+#define HINIC_HWIF_PPF_IDX(hwif)        ((hwif)->attr.ppf_idx)
- 
- #define HINIC_FUNC_TYPE(hwif)           ((hwif)->attr.func_type)
- #define HINIC_IS_PF(hwif)               (HINIC_FUNC_TYPE(hwif) == HINIC_PF)
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index d31ea82b84c17..a66f08041a1aa 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -341,6 +341,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Trekstor SURFBOOK E11B",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SURFBOOK E11B"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{
+ 		.ident = "Direkt-Tek DTLAPY116-2",
+ 		.matches = {
 -- 
 2.20.1
 
