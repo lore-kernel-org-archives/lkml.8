@@ -2,101 +2,144 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C22C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38361C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84B220789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1116E20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:19:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ilA6UgYT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lgXZcIvA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgCSSTU (ORCPT
+        id S1727220AbgCSST3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:19:20 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35317 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726663AbgCSSTU (ORCPT
+        Thu, 19 Mar 2020 14:19:29 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46179 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCSST2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:19:20 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JIEBPw006390;
-        Thu, 19 Mar 2020 19:18:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=/NryDuotj7GwNZeRIKiNEE04efcoGmBTQAarcZjEeEM=;
- b=ilA6UgYTk/SDj4tn5Z6fnFBav5jjz1+QPUuhykOWCICXnTQbuN9lCImuGO5mfM74pK5G
- zwHzIGNe8OZtgvP8b5h5uHX0X664bbc8r2oBXBCViIyVq6UU8eCUfmYGPO8UL857euAg
- Gl2bMIbLLfn8BKroKXWRAudQVM0xht+L59+g07dQg8c9X9ox8mDre43QM2mDXwS8j4Ck
- v6Pfv3qj514b276Bct9qyAKQAjVmywK3rRSN3IDEN3TU36uvbU9i3ZJugxrVWoWsB56w
- SGT5h/Ct2mhkqEEqorqZVUL2hJ2XgJY3U4MJC3z/gG+fMxSwKZdKbI9BlZoXv0KbXF4e +w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yu8etkc0q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Mar 2020 19:18:54 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 733AC10002A;
-        Thu, 19 Mar 2020 19:18:49 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3AC7A2A70CB;
-        Thu, 19 Mar 2020 19:18:49 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar 2020 19:18:48
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <robh+dt@kernel.org>, <jic23@kernel.org>
-CC:     <alexandre.torgue@st.com>, <mark.rutland@arm.com>,
-        <mcoquelin.stm32@gmail.com>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <fabrice.gasnier@st.com>,
-        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dt-bindings: iio: adc: stm32-adc: fix id relative path
-Date:   Thu, 19 Mar 2020 19:18:27 +0100
-Message-ID: <1584641907-8228-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 19 Mar 2020 14:19:28 -0400
+Received: by mail-ed1-f68.google.com with SMTP id ca19so3880651edb.13;
+        Thu, 19 Mar 2020 11:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VUnLPRFaXYEyBMAu2KerTyrQvIYIc8Adcw0gQEvJv1g=;
+        b=lgXZcIvA+kWlIoPJziys10SY+bpa92mglfzT+MBUMHhjvOu9zbr2UUe9GFdhoqCKEx
+         B2NIDVBcMACw4/h86uBHZHdkFxDKlqEO3RbQHlJdpwsvDLoLyM8g0h35hwOW0kHwRTZb
+         b+b40DXCqdQgTO6FtOInYhhcpCumJvr6veMoQTtS6fqGKXuIECoUzAGrPeZPke+MO8mp
+         dWjl5fe5YasL/G+bdIQlOTbWyUCjDY1j2AUthyCd7vClmH+ulbx8MjbtSHCV73KXo+FK
+         46rgB5WN9EfrklB/kJOGc+zwo6/WKRKM7nyRAOVOIWkNQd8JsfRECJmTIBfutDRonDsD
+         aIsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VUnLPRFaXYEyBMAu2KerTyrQvIYIc8Adcw0gQEvJv1g=;
+        b=gvaumCxT2/OeG9g3HQoedlgovkOHRbxwiwzksVpBe7S7sUXkT51pAVwL2PEAcs4s4M
+         /pB9ifHfPyWsj2zlUexH8CYCG90geGNFvRyJI3PhOcf726C/dZ/XSSM5bBvDhWJzlHhi
+         vmvD6nkYH1vetwpUFNMIoNtzxPb4LiXrXSuFOVa9tYdR+7tty8o1BoiOGuBnLZDFLAli
+         e9tQOaRVizu7ub+wG+h1O5vHQARENZqAgPAnoOdqEyRlEXQcXsD62RuHssZuVauXC0vg
+         Y4qQkeDm+6SUGUtD0acCtKG25PWMXnWTkl16Xkh2yRMVEF3s7AcXZbhdLI2iQlpaD/B/
+         1WnA==
+X-Gm-Message-State: ANhLgQ1RVWZ+kwaCMp45MwUpXUhfndp+XEwJIeUz7Vddw0L4TwwECy/i
+        g3o16pz3XzKV4a+FTMC01eqLGE1Adk1kr8H3fA4=
+X-Google-Smtp-Source: ADFU+vud33ZNOWzEZL7qH7qtQzJyc7BdVgN4hxJA6xo79YTL1rHt/UMu58hsnUr03cPz9Jge8sTfUNaovlby3KRdpbE=
+X-Received: by 2002:a05:6402:8ca:: with SMTP id d10mr4157650edz.362.1584641965480;
+ Thu, 19 Mar 2020 11:19:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-19_07:2020-03-19,2020-03-19 signatures=0
+References: <20200319043741.3338842-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200319043741.3338842-1-bjorn.andersson@linaro.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 19 Mar 2020 11:19:15 -0700
+Message-ID: <CAF6AEGtvSZOp48hyrBUzqQLV6+twtuy6k6MLimz6fhC-dqWEVA@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm: Don't attempt to attach HDMI bridge twice
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix id relative path that shouldn't contain 'bindings', as pointed out
-when submitting st,stm32-dac bindings conversion to json-schema [1].
-[1] https://patchwork.ozlabs.org/patch/1257568/
+On Wed, Mar 18, 2020 at 9:39 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> With the introduction of '3ef2f119bd3e ("drm/msm: Use
+> drm_attach_bridge() to attach a bridge to an encoder")' the HDMI bridge
+> is attached both in msm_hdmi_bridge_init() and later in
+> msm_hdmi_modeset_init().
+>
+> The second attempt fails as the bridge is already attached to the
+> encoder and the whole process is aborted.
+>
+> So instead make msm_hdmi_bridge_init() just initialize the hdmi_bridge
+> object and let msm_hdmi_modeset_init() attach it later.
+>
+> Fixes: 3ef2f119bd3e ("drm/msm: Use drm_attach_bridge() to attach a bridge to an encoder")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Fixes: a8cf1723c4b7 ("dt-bindings: iio: adc: stm32-adc: convert bindings to json-schema")
+Thanks, I think this should also be solved by:
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://patchwork.freedesktop.org/patch/357331/?series=74611&rev=1
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
-index 933ba37..dd8eb15 100644
---- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: "http://devicetree.org/schemas/bindings/iio/adc/st,stm32-adc.yaml#"
-+$id: "http://devicetree.org/schemas/iio/adc/st,stm32-adc.yaml#"
- $schema: "http://devicetree.org/meta-schemas/core.yaml#"
- 
- title: STMicroelectronics STM32 ADC bindings
--- 
-2.7.4
+BR,
+-R
 
+> ---
+>  drivers/gpu/drm/msm/hdmi/hdmi_bridge.c | 19 +++----------------
+>  1 file changed, 3 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> index 6e380db9287b..0e103ee1b730 100644
+> --- a/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> +++ b/drivers/gpu/drm/msm/hdmi/hdmi_bridge.c
+> @@ -271,31 +271,18 @@ static const struct drm_bridge_funcs msm_hdmi_bridge_funcs = {
+>  /* initialize bridge */
+>  struct drm_bridge *msm_hdmi_bridge_init(struct hdmi *hdmi)
+>  {
+> -       struct drm_bridge *bridge = NULL;
+>         struct hdmi_bridge *hdmi_bridge;
+> -       int ret;
+> +       struct drm_bridge *bridge;
+>
+>         hdmi_bridge = devm_kzalloc(hdmi->dev->dev,
+>                         sizeof(*hdmi_bridge), GFP_KERNEL);
+> -       if (!hdmi_bridge) {
+> -               ret = -ENOMEM;
+> -               goto fail;
+> -       }
+> +       if (!hdmi_bridge)
+> +               return ERR_PTR(-ENOMEM);
+>
+>         hdmi_bridge->hdmi = hdmi;
+>
+>         bridge = &hdmi_bridge->base;
+>         bridge->funcs = &msm_hdmi_bridge_funcs;
+>
+> -       ret = drm_bridge_attach(hdmi->encoder, bridge, NULL, 0);
+> -       if (ret)
+> -               goto fail;
+> -
+>         return bridge;
+> -
+> -fail:
+> -       if (bridge)
+> -               msm_hdmi_bridge_destroy(bridge);
+> -
+> -       return ERR_PTR(ret);
+>  }
+> --
+> 2.24.0
+>
