@@ -2,72 +2,78 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D36FC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FB0C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D80420739
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 629F720740
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:25:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hgCqBFjt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgCSKZ1 (ORCPT
+        id S1727102AbgCSKZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:25:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:32906 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbgCSKZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:25:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 278EE1045;
-        Thu, 19 Mar 2020 03:25:26 -0700 (PDT)
-Received: from [192.168.1.19] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E4B503FAB1;
-        Thu, 19 Mar 2020 02:07:32 -0700 (PDT)
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH v2 2/9] sched/debug: Make sd->flags sysctl read-only
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
-References: <20200311181601.18314-1-valentin.schneider@arm.com>
- <20200311181601.18314-3-valentin.schneider@arm.com>
-Message-ID: <4a7fe6ae-3587-4a55-1cf2-c4fe568a5ffa@arm.com>
-Date:   Thu, 19 Mar 2020 10:07:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 19 Mar 2020 06:25:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57688 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbgCSKZk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:25:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BIh9xpmYL6wBc1GMSHkXlW6IWHwV1fcXo2svbBsNWG8=; b=hgCqBFjt1RzDhJfs/PfmFkuTJq
+        vrK4ZnXVbMISbps5hxJnRkddvOI4Pwh8ovjAIBs9DPq3+dQFQHdfSmlRbtSQZ2TjFmMkTqngYqUfG
+        QkWshDrMAfwxIY42FFnyMrH5eZ4c3C/8fFhEuiao5oK6osENqSHCxC+Rp7uPu4zbCvY6zahoj5hhV
+        S3I6oUVbJj6rJmSUG0+jdJqn3uT0VjS3qP3Kj+Ygw1Vd+HaxXTVi/sYiVntXO7R25JqXJgEiXFcGo
+        Nhk5cNXGsu3BTmqTOtB/kkpz3dGa6wYzz3btR15/7b+BPY4dw9FceEkvd2iNgNADVZS/HiL15LUgK
+        LTmb+kag==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEsMq-0006S7-2X; Thu, 19 Mar 2020 10:25:36 +0000
+Date:   Thu, 19 Mar 2020 03:25:36 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     light.hsieh@mediatek.com
+Cc:     ulf.hansson@linaro.org, linux-mediatek@lists.infradead.org,
+        axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kuohong.wang@mediatek.com,
+        stanley.chu@mediatek.com
+Subject: Re: [PATCH v1 3/3] block: set partition read/write policy according
+ to write-protection status
+Message-ID: <20200319102536.GA16757@infradead.org>
+References: <1583290274-5525-1-git-send-email-light.hsieh@mediatek.com>
+ <1583290274-5525-4-git-send-email-light.hsieh@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311181601.18314-3-valentin.schneider@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583290274-5525-4-git-send-email-light.hsieh@mediatek.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.03.20 19:15, Valentin Schneider wrote:
-> Writing to the sysctl of a sched_domain->flags directly updates the value of
-> the field, and goes nowhere near update_top_cache_domain(). This means that
-> the cached domain pointers can end up containing stale data (e.g. the
-> domain pointed to doesn't have the relevant flag set anymore).
+On Wed, Mar 04, 2020 at 10:51:14AM +0800, light.hsieh@mediatek.com wrote:
+> From: Light Hsieh <light.hsieh@mediatek.com>
 > 
-> Explicit domain walks that check for flags will be affected by
-> the write, but this won't be in sync with the cached pointers which will
-> still point to the domains that were cached at the last sched_domain
-> build.
+> For storage device with write-protection support, e.g. eMMC, register
+> check_disk_range_wp() in struct block_device_operations for checking
+> write-protection status. When creating block device for a partition, set
+> read/write policy according to result of check_disk_range_wp() operation
+> (if registered).
 > 
-> In other words, writing to this interface is playing a dangerous game. It
-> could be made to trigger an update of the cached sched_domain pointers when
-> written to, but this does not seem to be worth the trouble. Make it
-> read-only.
+> Without this patch, ro attribute is not set for created block device of
+> write-protected partition. User perform asynchronous buffered write to
+> such partition won't get immediate error and therefore he won't be awared
+> that write is not actually performed.
+> With this patch, ro attribute is set for created block device of
+> write-protected partition. User perform asynchronous buffered write to
+> such partition will get immediate error and therefore he will be awared.
 
-As long as I don't change SD flags for which cached SD pointers exist
-(SD_SHARE_PKG_RESOURCES, SD_NUMA, SD_ASYM_PACKING or
-SD_ASYM_CPUCAPACITY) the write-able interface still could make some sense.
-
-E.g. by enabling SD_BALANCE_WAKE on the fly, I can force !want_affine
-wakees into slow path.
-
-The question is, do people use the writable flags interface to tweak
-select_task_rq_fair() behavior in this regard?
+NAK.  This is complete BS.  Partitions are a complete software concepts
+and idiotic features like a range read only should not interact with it
+at all (and I urge all Linux users to never make use of such broken
+features, so the less support we have for them, the better).
