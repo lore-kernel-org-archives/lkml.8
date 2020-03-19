@@ -2,473 +2,250 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A39C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75B2C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34FE20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:27:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584631659;
-	bh=FwGYkAd+pOXdYF1v4AOJ/TYNU6oLoszFJjUDWHl2ZvI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=bilJwLwEEVg0LyhZdTpVed8Dd7+DxcRaOc8b9jhTMsebANMtUBUzS3hPddJarZdhH
-	 jJED2a4FuqrGENVfOwwkEUDlK6bV+7Gk5kVG61RVyr7OycNRQ11O5q+IZVr26TWKEQ
-	 bixSrEchhVwOKe2R/ZHF/T2dkf3cf7pIl02lrnJ4=
+	by mail.kernel.org (Postfix) with ESMTP id 72A0C20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:28:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQxiGA25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgCSP1i (ORCPT
+        id S1727950AbgCSP2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:27:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727555AbgCSP1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:27:38 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A7B22072D;
-        Thu, 19 Mar 2020 15:27:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584631656;
-        bh=FwGYkAd+pOXdYF1v4AOJ/TYNU6oLoszFJjUDWHl2ZvI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=PNYPzcil43ds4pS6EHXAS8dx7QtG61amOZCA9PTO/SOf6rUGUCuyvGMhKGWhiSUyn
-         PjwTCoaAMpKpi97olFQC4qQ2iGgxUyb958HQvxvYJaUNCVtLgwt8SgXWkhZkI/ZuUQ
-         7zmnoywG8+dWLYJaTvJVpIezD5xvHRE4SwH5VUfg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3C9F03520F2A; Thu, 19 Mar 2020 08:27:36 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 08:27:36 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     dvyukov@google.com, glider@google.com, andreyknvl@google.com,
-        cai@lca.pw, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] kcsan: Introduce report access_info and other_info
-Message-ID: <20200319152736.GF3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200318173845.220793-1-elver@google.com>
+        Thu, 19 Mar 2020 11:28:31 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36996 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727520AbgCSP2a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:28:30 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 3so1614371pff.4
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 08:28:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9fQqai2gqFpYcX1wUjo6UxR57b9P4LhGEX1peb8WMV4=;
+        b=aQxiGA25wruzqIUlSjkHFPlp8jQiKXfdQk3Tzb9B4tbtPocSloNGmKZRsqvcfaPoc2
+         0EzAtmA7xylTfRzBRrrxyFG9dmRUQg3TH1mYwWP4YMihKsqHd0RUK4xr45JKZHzq474d
+         MlkWwSdxIkI0u1UnhJVF+tad8UZoJJPXDQHqcWxbvGv9v+WpOcaCwt3ZFFyFHNgIz99G
+         Az/Oz0lMwXPk7CCugBuxphriTn5DUjdK1tvdBbfGqPTeLzipe8vlCcd1h6m6r8B09azr
+         NrhB0bIRInRdP4zF+0RLHrQ47TFhcGcBMv8dyNYpWM1S6bM07wrjtS3HSDhRVQ0iDgbx
+         03mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=9fQqai2gqFpYcX1wUjo6UxR57b9P4LhGEX1peb8WMV4=;
+        b=tDCsPekPC6OxFaS7JQnEQlt1Q8g9wj3R7DH10nYXRjUwTHCBE/qdS9WQOAJITgayBO
+         wqZ8zVa0Jz77Zv1yI41AkLOWweOuQB0xi+N7S6Tysrk7SbM/rgB/65tZROs+GRc6uGPe
+         LeMS50o9laH+P3fB+ngy1oHyRQHLdyToJ2s6q4X6tC7BS1llPLWOkXCg6SrCUn1dRYoj
+         6bNx0egkFac7Xs4NAwSLjbxKxiyarDH+OYsNtT0HFWep8kU0drKWSzUIPwJl8+PXxhRa
+         NAFp2dDEpZrsNttF4pSkL5A7koZyZLKLLLPph8vmUKvDLp3Y+tQeqfFFT6nT3I3L5fFw
+         Ff1g==
+X-Gm-Message-State: ANhLgQ3WUsLRHuGIgBuAlfTFVUB8xGgqXKe8GlkiGAaeYR1RZdlZbdz1
+        hWxQ401Qf4Sxr/4cImfDXxQ=
+X-Google-Smtp-Source: ADFU+vt6KSAHQ3Rp5U6Z5bUs+O0j+x8Gc6RZPnoYUwavDCKzRie5eXX2KymgGNEx+9FXsnOZjDPLpA==
+X-Received: by 2002:a62:30c6:: with SMTP id w189mr4618556pfw.257.1584631708743;
+        Thu, 19 Mar 2020 08:28:28 -0700 (PDT)
+Received: from lenovo ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id z6sm2808906pfn.212.2020.03.19.08.28.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Mar 2020 08:28:27 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 23:28:21 +0800
+From:   Orson Zhai <orson.unisoc@gmail.com>
+To:     Jason Baron <jbaron@akamai.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        David Gow <davidgow@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, orsonzhai@gmail.com,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [RFC PATCH] dynamic_debug: Add config option of
+ DYNAMIC_DEBUG_CORE
+Message-ID: <20200319152820.GA2793@lenovo>
+Mail-Followup-To: Jason Baron <jbaron@akamai.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        David Gow <davidgow@google.com>,
+        Mark Rutland <mark.rutland@arm.com>, orsonzhai@gmail.com,
+        linux-kernel@vger.kernel.org, kernel-team@android.com
+References: <1584558186-23373-1-git-send-email-orson.unisoc@gmail.com>
+ <51568376-da8b-3265-ddb3-6ddba74207dc@akamai.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200318173845.220793-1-elver@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <51568376-da8b-3265-ddb3-6ddba74207dc@akamai.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 06:38:44PM +0100, Marco Elver wrote:
-> Improve readability by introducing access_info and other_info structs,
-> and in preparation of the following commit in this series replaces the
-> single instance of other_info with an array of size 1.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Marco Elver <elver@google.com>
+Hi Jason,
 
-Queued both for review and testing, and I am trying it out on one of
-the scenarios that proved problematic earlier on.  Thank you!!!
-
-							Thanx, Paul
-
-> ---
->  kernel/kcsan/core.c   |   6 +-
->  kernel/kcsan/kcsan.h  |   2 +-
->  kernel/kcsan/report.c | 147 +++++++++++++++++++++---------------------
->  3 files changed, 77 insertions(+), 78 deletions(-)
+On Wed, Mar 18, 2020 at 05:18:43PM -0400, Jason Baron wrote:
 > 
-> diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-> index ee8200835b60..f1c38620e3cf 100644
-> --- a/kernel/kcsan/core.c
-> +++ b/kernel/kcsan/core.c
-> @@ -321,7 +321,7 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
->  	flags = user_access_save();
->  
->  	if (consumed) {
-> -		kcsan_report(ptr, size, type, true, raw_smp_processor_id(),
-> +		kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_MAYBE,
->  			     KCSAN_REPORT_CONSUMED_WATCHPOINT);
->  	} else {
->  		/*
-> @@ -500,8 +500,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
->  		if (is_assert && value_change == KCSAN_VALUE_CHANGE_TRUE)
->  			kcsan_counter_inc(KCSAN_COUNTER_ASSERT_FAILURES);
->  
-> -		kcsan_report(ptr, size, type, value_change, raw_smp_processor_id(),
-> -			     KCSAN_REPORT_RACE_SIGNAL);
-> +		kcsan_report(ptr, size, type, value_change, KCSAN_REPORT_RACE_SIGNAL);
->  	} else if (value_change == KCSAN_VALUE_CHANGE_TRUE) {
->  		/* Inferring a race, since the value should not have changed. */
->  
-> @@ -511,7 +510,6 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
->  
->  		if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN) || is_assert)
->  			kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_TRUE,
-> -				     raw_smp_processor_id(),
->  				     KCSAN_REPORT_RACE_UNKNOWN_ORIGIN);
->  	}
->  
-> diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-> index e282f8b5749e..6630dfe32f31 100644
-> --- a/kernel/kcsan/kcsan.h
-> +++ b/kernel/kcsan/kcsan.h
-> @@ -135,7 +135,7 @@ enum kcsan_report_type {
->   * Print a race report from thread that encountered the race.
->   */
->  extern void kcsan_report(const volatile void *ptr, size_t size, int access_type,
-> -			 enum kcsan_value_change value_change, int cpu_id,
-> +			 enum kcsan_value_change value_change,
->  			 enum kcsan_report_type type);
->  
->  #endif /* _KERNEL_KCSAN_KCSAN_H */
-> diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-> index 18f9d3bc93a5..de234d1c1b3d 100644
-> --- a/kernel/kcsan/report.c
-> +++ b/kernel/kcsan/report.c
-> @@ -19,18 +19,23 @@
->   */
->  #define NUM_STACK_ENTRIES 64
->  
-> +/* Common access info. */
-> +struct access_info {
-> +	const volatile void	*ptr;
-> +	size_t			size;
-> +	int			access_type;
-> +	int			task_pid;
-> +	int			cpu_id;
-> +};
-> +
->  /*
->   * Other thread info: communicated from other racing thread to thread that set
->   * up the watchpoint, which then prints the complete report atomically. Only
->   * need one struct, as all threads should to be serialized regardless to print
->   * the reports, with reporting being in the slow-path.
->   */
-> -static struct {
-> -	const volatile void	*ptr;
-> -	size_t			size;
-> -	int			access_type;
-> -	int			task_pid;
-> -	int			cpu_id;
-> +struct other_info {
-> +	struct access_info	ai;
->  	unsigned long		stack_entries[NUM_STACK_ENTRIES];
->  	int			num_stack_entries;
->  
-> @@ -52,7 +57,9 @@ static struct {
->  	 * that populated @other_info until it has been consumed.
->  	 */
->  	struct task_struct	*task;
-> -} other_info;
-> +};
-> +
-> +static struct other_info other_infos[1];
->  
->  /*
->   * Information about reported races; used to rate limit reporting.
-> @@ -238,7 +245,7 @@ static const char *get_thread_desc(int task_id)
->  }
->  
->  /* Helper to skip KCSAN-related functions in stack-trace. */
-> -static int get_stack_skipnr(unsigned long stack_entries[], int num_entries)
-> +static int get_stack_skipnr(const unsigned long stack_entries[], int num_entries)
->  {
->  	char buf[64];
->  	int skip = 0;
-> @@ -279,9 +286,10 @@ static void print_verbose_info(struct task_struct *task)
->  /*
->   * Returns true if a report was generated, false otherwise.
->   */
-> -static bool print_report(const volatile void *ptr, size_t size, int access_type,
-> -			 enum kcsan_value_change value_change, int cpu_id,
-> -			 enum kcsan_report_type type)
-> +static bool print_report(enum kcsan_value_change value_change,
-> +			 enum kcsan_report_type type,
-> +			 const struct access_info *ai,
-> +			 const struct other_info *other_info)
->  {
->  	unsigned long stack_entries[NUM_STACK_ENTRIES] = { 0 };
->  	int num_stack_entries = stack_trace_save(stack_entries, NUM_STACK_ENTRIES, 1);
-> @@ -297,9 +305,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
->  		return false;
->  
->  	if (type == KCSAN_REPORT_RACE_SIGNAL) {
-> -		other_skipnr = get_stack_skipnr(other_info.stack_entries,
-> -						other_info.num_stack_entries);
-> -		other_frame = other_info.stack_entries[other_skipnr];
-> +		other_skipnr = get_stack_skipnr(other_info->stack_entries,
-> +						other_info->num_stack_entries);
-> +		other_frame = other_info->stack_entries[other_skipnr];
->  
->  		/* @value_change is only known for the other thread */
->  		if (skip_report(value_change, other_frame))
-> @@ -321,13 +329,13 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
->  		 */
->  		cmp = sym_strcmp((void *)other_frame, (void *)this_frame);
->  		pr_err("BUG: KCSAN: %s in %ps / %ps\n",
-> -		       get_bug_type(access_type | other_info.access_type),
-> +		       get_bug_type(ai->access_type | other_info->ai.access_type),
->  		       (void *)(cmp < 0 ? other_frame : this_frame),
->  		       (void *)(cmp < 0 ? this_frame : other_frame));
->  	} break;
->  
->  	case KCSAN_REPORT_RACE_UNKNOWN_ORIGIN:
-> -		pr_err("BUG: KCSAN: %s in %pS\n", get_bug_type(access_type),
-> +		pr_err("BUG: KCSAN: %s in %pS\n", get_bug_type(ai->access_type),
->  		       (void *)this_frame);
->  		break;
->  
-> @@ -341,30 +349,28 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
->  	switch (type) {
->  	case KCSAN_REPORT_RACE_SIGNAL:
->  		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
-> -		       get_access_type(other_info.access_type), other_info.ptr,
-> -		       other_info.size, get_thread_desc(other_info.task_pid),
-> -		       other_info.cpu_id);
-> +		       get_access_type(other_info->ai.access_type), other_info->ai.ptr,
-> +		       other_info->ai.size, get_thread_desc(other_info->ai.task_pid),
-> +		       other_info->ai.cpu_id);
->  
->  		/* Print the other thread's stack trace. */
-> -		stack_trace_print(other_info.stack_entries + other_skipnr,
-> -				  other_info.num_stack_entries - other_skipnr,
-> +		stack_trace_print(other_info->stack_entries + other_skipnr,
-> +				  other_info->num_stack_entries - other_skipnr,
->  				  0);
->  
->  		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-> -			print_verbose_info(other_info.task);
-> +			print_verbose_info(other_info->task);
->  
->  		pr_err("\n");
->  		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
-> -		       get_access_type(access_type), ptr, size,
-> -		       get_thread_desc(in_task() ? task_pid_nr(current) : -1),
-> -		       cpu_id);
-> +		       get_access_type(ai->access_type), ai->ptr, ai->size,
-> +		       get_thread_desc(ai->task_pid), ai->cpu_id);
->  		break;
->  
->  	case KCSAN_REPORT_RACE_UNKNOWN_ORIGIN:
->  		pr_err("race at unknown origin, with %s to 0x%px of %zu bytes by %s on cpu %i:\n",
-> -		       get_access_type(access_type), ptr, size,
-> -		       get_thread_desc(in_task() ? task_pid_nr(current) : -1),
-> -		       cpu_id);
-> +		       get_access_type(ai->access_type), ai->ptr, ai->size,
-> +		       get_thread_desc(ai->task_pid), ai->cpu_id);
->  		break;
->  
->  	default:
-> @@ -386,22 +392,23 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
->  	return true;
->  }
->  
-> -static void release_report(unsigned long *flags, enum kcsan_report_type type)
-> +static void release_report(unsigned long *flags, struct other_info *other_info)
->  {
-> -	if (type == KCSAN_REPORT_RACE_SIGNAL)
-> -		other_info.ptr = NULL; /* mark for reuse */
-> +	if (other_info)
-> +		other_info->ai.ptr = NULL; /* Mark for reuse. */
->  
->  	spin_unlock_irqrestore(&report_lock, *flags);
->  }
->  
->  /*
-> - * Sets @other_info.task and awaits consumption of @other_info.
-> + * Sets @other_info->task and awaits consumption of @other_info.
->   *
->   * Precondition: report_lock is held.
->   * Postcondition: report_lock is held.
->   */
-> -static void
-> -set_other_info_task_blocking(unsigned long *flags, const volatile void *ptr)
-> +static void set_other_info_task_blocking(unsigned long *flags,
-> +					 const struct access_info *ai,
-> +					 struct other_info *other_info)
->  {
->  	/*
->  	 * We may be instrumenting a code-path where current->state is already
-> @@ -418,7 +425,7 @@ set_other_info_task_blocking(unsigned long *flags, const volatile void *ptr)
->  	 */
->  	int timeout = max(kcsan_udelay_task, kcsan_udelay_interrupt);
->  
-> -	other_info.task = current;
-> +	other_info->task = current;
->  	do {
->  		if (is_running) {
->  			/*
-> @@ -438,19 +445,19 @@ set_other_info_task_blocking(unsigned long *flags, const volatile void *ptr)
->  		spin_lock_irqsave(&report_lock, *flags);
->  		if (timeout-- < 0) {
->  			/*
-> -			 * Abort. Reset other_info.task to NULL, since it
-> +			 * Abort. Reset @other_info->task to NULL, since it
->  			 * appears the other thread is still going to consume
->  			 * it. It will result in no verbose info printed for
->  			 * this task.
->  			 */
-> -			other_info.task = NULL;
-> +			other_info->task = NULL;
->  			break;
->  		}
->  		/*
->  		 * If @ptr nor @current matches, then our information has been
->  		 * consumed and we may continue. If not, retry.
->  		 */
-> -	} while (other_info.ptr == ptr && other_info.task == current);
-> +	} while (other_info->ai.ptr == ai->ptr && other_info->task == current);
->  	if (is_running)
->  		set_current_state(TASK_RUNNING);
->  }
-> @@ -460,9 +467,8 @@ set_other_info_task_blocking(unsigned long *flags, const volatile void *ptr)
->   * acquires the matching other_info and returns true. If other_info is not
->   * required for the report type, simply acquires report_lock and returns true.
->   */
-> -static bool prepare_report(unsigned long *flags, const volatile void *ptr,
-> -			   size_t size, int access_type, int cpu_id,
-> -			   enum kcsan_report_type type)
-> +static bool prepare_report(unsigned long *flags, enum kcsan_report_type type,
-> +			   const struct access_info *ai, struct other_info *other_info)
->  {
->  	if (type != KCSAN_REPORT_CONSUMED_WATCHPOINT &&
->  	    type != KCSAN_REPORT_RACE_SIGNAL) {
-> @@ -476,18 +482,14 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
->  
->  	switch (type) {
->  	case KCSAN_REPORT_CONSUMED_WATCHPOINT:
-> -		if (other_info.ptr != NULL)
-> +		if (other_info->ai.ptr)
->  			break; /* still in use, retry */
->  
-> -		other_info.ptr			= ptr;
-> -		other_info.size			= size;
-> -		other_info.access_type		= access_type;
-> -		other_info.task_pid		= in_task() ? task_pid_nr(current) : -1;
-> -		other_info.cpu_id		= cpu_id;
-> -		other_info.num_stack_entries	= stack_trace_save(other_info.stack_entries, NUM_STACK_ENTRIES, 1);
-> +		other_info->ai = *ai;
-> +		other_info->num_stack_entries = stack_trace_save(other_info->stack_entries, NUM_STACK_ENTRIES, 1);
->  
->  		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-> -			set_other_info_task_blocking(flags, ptr);
-> +			set_other_info_task_blocking(flags, ai, other_info);
->  
->  		spin_unlock_irqrestore(&report_lock, *flags);
->  
-> @@ -498,37 +500,31 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
->  		return false;
->  
->  	case KCSAN_REPORT_RACE_SIGNAL:
-> -		if (other_info.ptr == NULL)
-> +		if (!other_info->ai.ptr)
->  			break; /* no data available yet, retry */
->  
->  		/*
->  		 * First check if this is the other_info we are expecting, i.e.
->  		 * matches based on how watchpoint was encoded.
->  		 */
-> -		if (!matching_access((unsigned long)other_info.ptr &
-> -					     WATCHPOINT_ADDR_MASK,
-> -				     other_info.size,
-> -				     (unsigned long)ptr & WATCHPOINT_ADDR_MASK,
-> -				     size))
-> +		if (!matching_access((unsigned long)other_info->ai.ptr & WATCHPOINT_ADDR_MASK, other_info->ai.size,
-> +				     (unsigned long)ai->ptr & WATCHPOINT_ADDR_MASK, ai->size))
->  			break; /* mismatching watchpoint, retry */
->  
-> -		if (!matching_access((unsigned long)other_info.ptr,
-> -				     other_info.size, (unsigned long)ptr,
-> -				     size)) {
-> +		if (!matching_access((unsigned long)other_info->ai.ptr, other_info->ai.size,
-> +				     (unsigned long)ai->ptr, ai->size)) {
->  			/*
->  			 * If the actual accesses to not match, this was a false
->  			 * positive due to watchpoint encoding.
->  			 */
-> -			kcsan_counter_inc(
-> -				KCSAN_COUNTER_ENCODING_FALSE_POSITIVES);
-> +			kcsan_counter_inc(KCSAN_COUNTER_ENCODING_FALSE_POSITIVES);
->  
->  			/* discard this other_info */
-> -			release_report(flags, KCSAN_REPORT_RACE_SIGNAL);
-> +			release_report(flags, other_info);
->  			return false;
->  		}
->  
-> -		access_type |= other_info.access_type;
-> -		if ((access_type & KCSAN_ACCESS_WRITE) == 0) {
-> +		if (!((ai->access_type | other_info->ai.access_type) & KCSAN_ACCESS_WRITE)) {
->  			/*
->  			 * While the address matches, this is not the other_info
->  			 * from the thread that consumed our watchpoint, since
-> @@ -561,15 +557,11 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
->  			 * data, and at this point the likelihood that we
->  			 * re-report the same race again is high.
->  			 */
-> -			release_report(flags, KCSAN_REPORT_RACE_SIGNAL);
-> +			release_report(flags, other_info);
->  			return false;
->  		}
->  
-> -		/*
-> -		 * Matching & usable access in other_info: keep other_info_lock
-> -		 * locked, as this thread consumes it to print the full report;
-> -		 * unlocked in release_report.
-> -		 */
-> +		/* Matching access in other_info. */
->  		return true;
->  
->  	default:
-> @@ -582,10 +574,19 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
->  }
->  
->  void kcsan_report(const volatile void *ptr, size_t size, int access_type,
-> -		  enum kcsan_value_change value_change, int cpu_id,
-> +		  enum kcsan_value_change value_change,
->  		  enum kcsan_report_type type)
->  {
->  	unsigned long flags = 0;
-> +	const struct access_info ai = {
-> +		.ptr		= ptr,
-> +		.size		= size,
-> +		.access_type	= access_type,
-> +		.task_pid	= in_task() ? task_pid_nr(current) : -1,
-> +		.cpu_id		= raw_smp_processor_id()
-> +	};
-> +	struct other_info *other_info = type == KCSAN_REPORT_RACE_UNKNOWN_ORIGIN
-> +					? NULL : &other_infos[0];
->  
->  	/*
->  	 * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
-> @@ -596,19 +597,19 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
->  	lockdep_off();
->  
->  	kcsan_disable_current();
-> -	if (prepare_report(&flags, ptr, size, access_type, cpu_id, type)) {
-> +	if (prepare_report(&flags, type, &ai, other_info)) {
->  		/*
->  		 * Never report if value_change is FALSE, only if we it is
->  		 * either TRUE or MAYBE. In case of MAYBE, further filtering may
->  		 * be done once we know the full stack trace in print_report().
->  		 */
->  		bool reported = value_change != KCSAN_VALUE_CHANGE_FALSE &&
-> -				print_report(ptr, size, access_type, value_change, cpu_id, type);
-> +				print_report(value_change, type, &ai, other_info);
->  
->  		if (reported && panic_on_warn)
->  			panic("panic_on_warn set ...\n");
->  
-> -		release_report(&flags, type);
-> +		release_report(&flags, other_info);
->  	}
->  	kcsan_enable_current();
->  
-> -- 
-> 2.25.1.481.gfbce0eb801-goog
 > 
+> On 3/18/20 3:03 PM, Orson Zhai wrote:
+> > There is the requirement from new Android that kernel image (GKI) and
+> > kernel modules are supposed to be built at differnet places. Some people
+> > want to enable dynamic debug for kernel modules only but not for kernel
+> > image itself with the consideration of binary size increased or more
+> > memory being used.
+> > 
+> > By this patch, dynamic debug is divided into core part (the defination of
+> > functions) and macro replacement part. We can only have the core part to
+> > be built-in and do not have to activate the debug output from kenrel image.
+> > 
+> > Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
+> 
+> Hi Orson,
+> 
+> I think this is a nice feature. Is the idea then that driver can do
+> something like:
+> 
+> #if defined(CONFIG_DRIVER_FOO_DEBUG)
+> #define driver_foo_debug(fmt, ...) \
+>         dynamic_pr_debug(fmt, ##__VA_ARGS__)
+> #else
+> 	no_printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__)
+> #enif
+> 
+> And then the Kconfig:
+> 
+> config DYNAMIC_DRIVER_FOO_DEBUG
+> 	bool "Enable dynamic driver foo printk() support"
+> 	select DYNAMIC_DEBUG_CORE
+> 
+I highly appreciate you for giving this good example to us.
+To be honest I did not really think of this kind of usage. :)
+But it makes much sense. I think dynamic debug might be a little
+bit high for requirement of memory. Every line of pr_debug will be
+added with a static data structure and malloc with an item in link table.
+It might be sensitive especially in embeded system.
+So this example shows how to avoid to turn on dynamci debug for whole
+system but part of it when being needed.
+
+> 
+> Or did you have something else in mind? Do you have an example
+> code for the drivers that you mention?
+
+My motivation comes from new Andorid GKI release flow. Android kernel team will
+be in charge of GKI release. And SoC vendors will build their device driver as
+kernel modules which are diffrent from each vendor. End-users will get their phones
+installed with GKI plus some modules all together.
+
+So at Google side, they can only set DYNAMIC_DEBUG_CORE in their defconfig to build
+out GKI without worrying about the kernel image size increased too much. Actually
+GKI is relatively stable as a common binary and there is no strong reason to do 
+dynamic debugging to it.
+
+And at vendor side, they will use a local defconfig which is same with Google one but add 
+CONFIG_DYNAMIC_DEBUG to build their kenrel modules. As DYNAMIC_DEBUG enables only a
+set of macro expansion, so it has no impact to kernel ABI or the modversion.
+All modules will be compatible with GKI and with dynamic debug enabled.
+
+Then the result will be that Google has his clean GKI and vendors have their dynamic-debug-powered modules.
+
+Best Regards,
+-Orson
+
+> 
+> Thanks,
+> 
+> -Jason
+> 
+> 
+> > ---
+> >  include/linux/dynamic_debug.h |  2 +-
+> >  lib/Kconfig.debug             | 18 ++++++++++++++++--
+> >  lib/Makefile                  |  2 +-
+> >  3 files changed, 18 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
+> > index 4cf02ec..abcd5fd 100644
+> > --- a/include/linux/dynamic_debug.h
+> > +++ b/include/linux/dynamic_debug.h
+> > @@ -48,7 +48,7 @@ struct _ddebug {
+> >  
+> >  
+> >  
+> > -#if defined(CONFIG_DYNAMIC_DEBUG)
+> > +#if defined(CONFIG_DYNAMIC_DEBUG_CORE)
+> >  int ddebug_add_module(struct _ddebug *tab, unsigned int n,
+> >  				const char *modname);
+> >  extern int ddebug_remove_module(const char *mod_name);
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index 69def4a..78a7256 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -97,8 +97,7 @@ config BOOT_PRINTK_DELAY
+> >  config DYNAMIC_DEBUG
+> >  	bool "Enable dynamic printk() support"
+> >  	default n
+> > -	depends on PRINTK
+> > -	depends on DEBUG_FS
+> > +	select DYNAMIC_DEBUG_CORE
+> >  	help
+> >  
+> >  	  Compiles debug level messages into the kernel, which would not
+> > @@ -164,6 +163,21 @@ config DYNAMIC_DEBUG
+> >  	  See Documentation/admin-guide/dynamic-debug-howto.rst for additional
+> >  	  information.
+> >  
+> > +config DYNAMIC_DEBUG_CORE
+> > +	bool "Enable core functions of dynamic debug support"
+> > +	depends on PRINTK
+> > +	depends on DEBUG_FS
+> > +	help
+> > +	  Enable this option to build ddebug_* and __dynamic_* routines
+> > +	  into kernel. If you want enable whole dynamic debug features,
+> > +	  select CONFIG_DYNAMIC_DEBUG directly and this option will be
+> > +	  automatically selected.
+> > +
+> > +	  This option is selected when you want to enable dynamic debug
+> > +	  for kernel modules only but not for the kernel base. Especailly
+> > +	  in the case that kernel modules are built out of the place where
+> > +	  kernel base is built.
+> > +
+> >  config SYMBOLIC_ERRNAME
+> >  	bool "Support symbolic error names in printf"
+> >  	default y if PRINTK
+> > diff --git a/lib/Makefile b/lib/Makefile
+> > index 611872c..2096d83 100644
+> > --- a/lib/Makefile
+> > +++ b/lib/Makefile
+> > @@ -183,7 +183,7 @@ lib-$(CONFIG_GENERIC_BUG) += bug.o
+> >  
+> >  obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
+> >  
+> > -obj-$(CONFIG_DYNAMIC_DEBUG) += dynamic_debug.o
+> > +obj-$(CONFIG_DYNAMIC_DEBUG_CORE) += dynamic_debug.o
+> >  obj-$(CONFIG_SYMBOLIC_ERRNAME) += errname.o
+> >  
+> >  obj-$(CONFIG_NLATTR) += nlattr.o
+> > 
