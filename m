@@ -2,71 +2,305 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76865C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232E0C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B894F20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDAFD2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:01:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="rfFr5wPm"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="kSCCxuWg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgCSG56 (ORCPT
+        id S1727089AbgCSHBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 02:57:58 -0400
-Received: from mail-40135.protonmail.ch ([185.70.40.135]:46453 "EHLO
-        mail-40135.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSG56 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 02:57:58 -0400
-Date:   Thu, 19 Mar 2020 06:57:50 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=default; t=1584601075;
-        bh=TEpmdsT2V7CIHomw95fmSIsJlLfCW5+pecEvhmtWhmY=;
-        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
-        b=rfFr5wPmiPlCI27b9csSDbK8Nu26khAiD+RZJhLv2xpVj720ycpckbaAhkmMqTl6U
-         sMjxT23pMzYVeZVFS1PWippqNiP0WsqeurxVsS52L1ect431PS7a9WFED7m6HCgvHr
-         c9zvmAU7nIb32zUaec/5CHhRng4J8QxezrngCNdA=
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Reply-To: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
-Subject: Re: fair pay sys, an additional inclusion and update.
-Message-ID: <g_Vg-Z0qch8I5o6SDuUqHBSD3SlzjBK761-y1y5YcAVBnK-h1jle76aoxyIW7uYxfbSNPAXDpuGo0Yo-NmymrtpUxB87gzEAQ31oFu8_O94=@protonmail.com>
-Feedback-ID: jE8CP55NmWCGfbi9g5qzrOGkxuwuSXpchSI6fmYzjd5UEveHXeJrmiWc0_sgJdqIHM8YAKf9EEyPwffaRmhZ0A==:Ext:ProtonMail
+        Thu, 19 Mar 2020 03:01:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:38932 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725787AbgCSHBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:01:09 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48jd9D5Wspz9v1Md;
+        Thu, 19 Mar 2020 08:01:04 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=kSCCxuWg; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id a91KdXxJSw9z; Thu, 19 Mar 2020 08:01:04 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48jd9D4MMFz9v1Mc;
+        Thu, 19 Mar 2020 08:01:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1584601264; bh=f1YwOhdxX26Y+wBuzZ6KcmY62u5y/+8Hvgm0wH6ueYs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kSCCxuWg89EGpfCGJFvQQEKaoHe/kCd5TGb/eJd9YNW4o9nMza+I2DetAh60y0OYl
+         jNWoevB3fgK3oMJ2kFYnvfR61+Z0w2UWeOnoIyGuiPFaUDv3CG1pmdSv9t5BVLTXov
+         N7ub0KXLdsT/u4I32YAoSgYf0fhvDN90dndC0kTk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 784F58B769;
+        Thu, 19 Mar 2020 08:01:05 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id MWrtuWx18n7g; Thu, 19 Mar 2020 08:01:05 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DFB5B8B798;
+        Thu, 19 Mar 2020 08:01:03 +0100 (CET)
+Subject: Re: [PATCH 1/4] hugetlbfs: add arch_hugetlb_valid_size
+To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Longpeng <longpeng2@huawei.com>, Will Deacon <will@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+References: <20200318220634.32100-1-mike.kravetz@oracle.com>
+ <20200318220634.32100-2-mike.kravetz@oracle.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <c3071359-c5d3-4247-7f16-6f61b2fa0756@c-s.fr>
+Date:   Thu, 19 Mar 2020 08:00:59 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200318220634.32100-2-mike.kravetz@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It seems Canadian lobotomy might be an outdated procedure, and so we includ=
-e this into our design spec name: I/T L.
-
-Then we aim for a global optimization of economy, supporting the phasing ou=
-t of canadian lobotomy, hindu idols, and similar things. (Al-Qaida etc)
-
-Replacing also the almost required X in unix derivaties, for when X was axi=
-ng things, L is now booting things.
-
-Or really better what I aimed for all along, I/T economy the lexic way, wit=
-h a filestructure of:
-
-Com:/Top/Category/Subcategory/1m km2 zone/22.500 km2 zone/Person/Groupings
-
-And viewcount below 45.000, is a reason to delete 10 year old files.
-We can include an option to keep, but then person is responsible for this a=
-rchival choice himself.
-
-Serene Greetings.
-https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
 
 
+Le 18/03/2020 à 23:06, Mike Kravetz a écrit :
+> The architecture independent routine hugetlb_default_setup sets up
+> the default huge pages size.  It has no way to verify if the passed
+> value is valid, so it accepts it and attempts to validate at a later
+> time.  This requires undocumented cooperation between the arch specific
+> and arch independent code.
+> 
+> For architectures that support more than one huge page size, provide
+> a routine arch_hugetlb_valid_size to validate a huge page size.
+> hugetlb_default_setup can use this to validate passed values.
+> 
+> arch_hugetlb_valid_size will also be used in a subsequent patch to
+> move processing of the "hugepagesz=" in arch specific code to a common
+> routine in arch independent code.
+> 
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> ---
+>   arch/arm64/include/asm/hugetlb.h   |  2 ++
+>   arch/arm64/mm/hugetlbpage.c        | 19 ++++++++++++++-----
+>   arch/powerpc/include/asm/hugetlb.h |  3 +++
+>   arch/powerpc/mm/hugetlbpage.c      | 20 +++++++++++++-------
+>   arch/riscv/include/asm/hugetlb.h   |  3 +++
+>   arch/riscv/mm/hugetlbpage.c        | 28 ++++++++++++++++++----------
+>   arch/s390/include/asm/hugetlb.h    |  3 +++
+>   arch/s390/mm/hugetlbpage.c         | 18 +++++++++++++-----
+>   arch/sparc/include/asm/hugetlb.h   |  3 +++
+>   arch/sparc/mm/init_64.c            | 23 ++++++++++++++++-------
+>   arch/x86/include/asm/hugetlb.h     |  3 +++
+>   arch/x86/mm/hugetlbpage.c          | 21 +++++++++++++++------
+>   include/linux/hugetlb.h            |  7 +++++++
+>   mm/hugetlb.c                       | 16 +++++++++++++---
+>   14 files changed, 126 insertions(+), 43 deletions(-)
+> 
+
+[snip]
+
+> diff --git a/arch/powerpc/include/asm/hugetlb.h b/arch/powerpc/include/asm/hugetlb.h
+> index bd6504c28c2f..3b5939016955 100644
+> --- a/arch/powerpc/include/asm/hugetlb.h
+> +++ b/arch/powerpc/include/asm/hugetlb.h
+> @@ -64,6 +64,9 @@ static inline void arch_clear_hugepage_flags(struct page *page)
+>   {
+>   }
+>   
+> +#define arch_hugetlb_valid_size arch_hugetlb_valid_size
+> +extern bool __init arch_hugetlb_valid_size(unsigned long long size);
+
+Don't add 'extern' keyword, it is irrelevant for a function declaration.
+
+checkpatch --strict doesn't like it either 
+(https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/12318//artifact/linux/checkpatch.log)
+
+> +
+>   #include <asm-generic/hugetlb.h>
+>   
+>   #else /* ! CONFIG_HUGETLB_PAGE */
+> diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+> index 33b3461d91e8..b78f660252f3 100644
+> --- a/arch/powerpc/mm/hugetlbpage.c
+> +++ b/arch/powerpc/mm/hugetlbpage.c
+> @@ -558,7 +558,7 @@ unsigned long vma_mmu_pagesize(struct vm_area_struct *vma)
+>   	return vma_kernel_pagesize(vma);
+>   }
+>   
+> -static int __init add_huge_page_size(unsigned long long size)
+> +bool __init arch_hugetlb_valid_size(unsigned long long size)
+>   {
+>   	int shift = __ffs(size);
+>   	int mmu_psize;
+> @@ -566,20 +566,26 @@ static int __init add_huge_page_size(unsigned long long size)
+>   	/* Check that it is a page size supported by the hardware and
+>   	 * that it fits within pagetable and slice limits. */
+>   	if (size <= PAGE_SIZE || !is_power_of_2(size))
+> -		return -EINVAL;
+> +		return false;
+>   
+>   	mmu_psize = check_and_get_huge_psize(shift);
+>   	if (mmu_psize < 0)
+> -		return -EINVAL;
+> +		return false;
+>   
+>   	BUG_ON(mmu_psize_defs[mmu_psize].shift != shift);
+>   
+> -	/* Return if huge page size has already been setup */
+> -	if (size_to_hstate(size))
+> -		return 0;
+> +	return true;
+> +}
+>   
+> -	hugetlb_add_hstate(shift - PAGE_SHIFT);
+> +static int __init add_huge_page_size(unsigned long long size)
+> +{
+> +	int shift = __ffs(size);
+> +
+> +	if (!arch_hugetlb_valid_size(size))
+> +		return -EINVAL;
+>   
+> +	if (!size_to_hstate(size))
+> +		hugetlb_add_hstate(shift - PAGE_SHIFT);
+>   	return 0;
+>   }
+>   
+
+[snip]
+
+> diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
+> index 5bfd5aef5378..51e6208fdeec 100644
+> --- a/arch/x86/mm/hugetlbpage.c
+> +++ b/arch/x86/mm/hugetlbpage.c
+> @@ -181,16 +181,25 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+>   #endif /* CONFIG_HUGETLB_PAGE */
+>   
+>   #ifdef CONFIG_X86_64
+> +bool __init arch_hugetlb_valid_size(unsigned long long size)
+> +{
+> +	if (size == PMD_SIZE)
+> +		return true;
+> +	else if (size == PUD_SIZE && boot_cpu_has(X86_FEATURE_GBPAGES))
+> +		return true;
+> +	else
+> +		return false;
+> +}
+> +
+>   static __init int setup_hugepagesz(char *opt)
+>   {
+> -	unsigned long ps = memparse(opt, &opt);
+> -	if (ps == PMD_SIZE) {
+> -		hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
+> -	} else if (ps == PUD_SIZE && boot_cpu_has(X86_FEATURE_GBPAGES)) {
+> -		hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
+> +	unsigned long long ps = memparse(opt, &opt);
+> +
+> +	if (arch_hugetlb_valid_size(ps)) {
+> +		hugetlb_add_hstate(ilog2(ps) - PAGE_SHIFT);
+>   	} else {
+>   		hugetlb_bad_size();
+> -		printk(KERN_ERR "hugepagesz: Unsupported page size %lu M\n",
+> +		printk(KERN_ERR "hugepagesz: Unsupported page size %llu M\n",
+>   			ps >> 20);
+
+Nowadays we use pr_err() instead of printk.
+
+It would also likely allow you to have everything fit on a single line.
+
+>   		return 0;
+>   	}
+> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+> index b831e9fa1a26..33343eb980d0 100644
+> --- a/include/linux/hugetlb.h
+> +++ b/include/linux/hugetlb.h
+> @@ -678,6 +678,13 @@ static inline spinlock_t *huge_pte_lockptr(struct hstate *h,
+>   	return &mm->page_table_lock;
+>   }
+>   
+> +#ifndef arch_hugetlb_valid_size
+> +static inline bool arch_hugetlb_valid_size(unsigned long long size)
+> +{
+> +	return (size == HPAGE_SIZE);
+
+Not sure the ( ) are necessary.
+
+> +}
+> +#endif
+> +
+>   #ifndef hugepages_supported
+>   /*
+>    * Some platform decide whether they support huge pages at boot
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index d8ebd876871d..2f99359b93af 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -3224,12 +3224,22 @@ static int __init hugetlb_nrpages_setup(char *s)
+>   }
+>   __setup("hugepages=", hugetlb_nrpages_setup);
+>   
+> -static int __init hugetlb_default_setup(char *s)
+> +static int __init default_hugepagesz_setup(char *s)
+>   {
+> -	default_hstate_size = memparse(s, &s);
+> +	unsigned long long size;
+
+Why unsigned long long ?
+
+default_hstate_size is long.
+
+I can't imagine 32 bits platforms having a hugepage with a 64 bits size.
+
+> +	char *saved_s = s;
+> +
+> +	size = memparse(s, &s);
+
+The updated s is not reused after that so you can pass NULL instead of 
+&s and then you don't need the saved_s.
+
+> +
+> +	if (!arch_hugetlb_valid_size(size)) {
+> +		pr_err("HugeTLB: unsupported default_hugepagesz %s\n", saved_s);
+> +		return 0;
+> +	}
+> +
+> +	default_hstate_size = size;
+>   	return 1;
+>   }
+> -__setup("default_hugepagesz=", hugetlb_default_setup);
+> +__setup("default_hugepagesz=", default_hugepagesz_setup);
+>   
+>   static unsigned int cpuset_mems_nr(unsigned int *array)
+>   {
+> 
 
 
-
+Christophe
