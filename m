@@ -2,162 +2,72 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E3AC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BBBC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37F6220B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7618720B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584630142;
+	bh=Wm4G73npLtlzYtMDeYoIvvpBN/OsexLDrTVojSELgIg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r7EXysurI+QJSNkPo2t4cj9jkmnRo8LD9UxX74AUMhvoULf68OYL9ErYmqvMgz4Fw
+	 dqe0Kfxi0snjQJ+rZx7CZvvlustcb60jqXZzDsJhslUDc6gUZnd9LGnCkEibjKRlJC
+	 scm/p1rOzIZHhZbHumQfouxUWnpIzO4raDqEcM9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgCSPCR (ORCPT
+        id S1728196AbgCSPCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:02:17 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:16097 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgCSPCQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:02:16 -0400
-IronPort-SDR: DDqhPAIgi65i0UbSP7JQ1AM3sPclp2C2kGTvBVe8Z0+dWglERdvX5/OmCPN6hLww43yblged7V
- 5dCJq9unJBYgKK4I9R1sKlvFBTiAriKZmvhCqYp2L8xaRWU/sZCOrAoM7xClfQwWVSkJTPefi+
- +D6c4OK/wsLzclKfhHLwaoepKPxDM84U8RdJWi0goiXDhJe+E9NYI/V5LtIGXcLFuil0ESMh97
- 9feytIIZ7yXAXU+T1ZNjkl1PxhHUjHNKXCFN/7vbQyP4y89oSdKTed+eGnhC8ICeVqs7J27HLr
- HVg=
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="48850336"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 19 Mar 2020 07:02:15 -0800
-IronPort-SDR: 8AHbllqAEXjVKi7pyS7LCzE63lgnJpSwq1IaOWeCJgxcLDCznpIgfnKRvj5DnXiZO9hTXLlcYQ
- qgjbNCS6UvuYyilE3IT3ka0GKGTBg6t2bIi/SL+jITUJFK4aIWIEtrFTkJOm/xGqoTm8z/eWwI
- lYT72GVel+K5MBm68fs9eytdzxQ4mgMZXEo0kaW/wzx0PeDdTjDOd9V+kGXLpJRJwUaHXHnLHb
- pNS2IwyISlfAbU1FE+lRyOmx67bNSALtEacWbDk26YxWrQI+xWCYZyy4ScCHkv98zD/v5kjSSJ
- 90E=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <bsz@semihalf.com>, <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v8 29/52] Input: atmel_mxt_ts - implement I2C retries
-Date:   Thu, 19 Mar 2020 07:59:53 -0700
-Message-ID: <20200319150016.61398-30-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200319150016.61398-1-jiada_wang@mentor.com>
-References: <20200319150016.61398-1-jiada_wang@mentor.com>
+        Thu, 19 Mar 2020 11:02:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727720AbgCSPCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:02:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E0ED2072D;
+        Thu, 19 Mar 2020 15:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584630139;
+        bh=Wm4G73npLtlzYtMDeYoIvvpBN/OsexLDrTVojSELgIg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PGeWkMTEGWHJZUFxJh8T9pY9JKxXDk3gvf3lxJo+22KKLhcYir3HCBSpi5jaWn7Zf
+         rEC61zXFOLTXUeluEeWH7Cr10XAS+cJRj1xT2Qvau3BHQSvrPUy6LYfLyIokNJUKq0
+         j0zPdjALKq6LUWyq8ALG2Xs1LVeUCuB6zX9EVL+4=
+Date:   Thu, 19 Mar 2020 16:02:16 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 00/64] 5.5.11-rc1 review
+Message-ID: <20200319150216.GD92193@kroah.com>
+References: <20200319145826.910131145@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319145826.910131145@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+On Thu, Mar 19, 2020 at 03:59:16PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.5.11 release.
+> There are 64 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 21 Mar 2020 14:57:53 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.11-rc1.gz
 
-Some maXTouch chips (eg mXT1386) will not respond on the first I2C request
-when they are in a sleep state. It must be retried after a delay for the
-chip to wake up.
-
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-Acked-by: Yufeng Shen <miletus@chromium.org>
-(cherry picked from ndyer/linux/for-upstream commit 63fd7a2cd03c3a572a5db39c52f4856819e1835d)
-[gdavis: Forward port and fix conflicts.]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 45 ++++++++++++++++--------
- 1 file changed, 30 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index a1a322f41f9e..670159c2f218 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -216,6 +216,7 @@ enum t100_type {
- #define MXT_CRC_TIMEOUT		1000	/* msec */
- #define MXT_FW_RESET_TIME	3000	/* msec */
- #define MXT_FW_CHG_TIMEOUT	300	/* msec */
-+#define MXT_WAKEUP_TIME		25	/* msec */
- #define MXT_REGULATOR_DELAY	150	/* msec */
- #define MXT_CHG_DELAY		100	/* msec */
- #define MXT_POWERON_DELAY	150	/* msec */
-@@ -720,6 +721,7 @@ static int __mxt_read_chunk(struct i2c_client *client,
- 	struct i2c_msg xfer[2];
- 	u8 buf[2];
- 	int ret;
-+	bool retry = false;
- 
- 	buf[0] = reg & 0xff;
- 	buf[1] = (reg >> 8) & 0xff;
-@@ -736,17 +738,22 @@ static int __mxt_read_chunk(struct i2c_client *client,
- 	xfer[1].len = len;
- 	xfer[1].buf = val;
- 
--	ret = i2c_transfer(client->adapter, xfer, 2);
--	if (ret == 2) {
--		ret = 0;
--	} else {
--		if (ret >= 0)
--			ret = -EIO;
--		dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
--			__func__, ret);
-+retry_read:
-+	ret = i2c_transfer(client->adapter, xfer, ARRAY_SIZE(xfer));
-+	if (ret != ARRAY_SIZE(xfer)) {
-+		if (!retry) {
-+			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
-+			msleep(MXT_WAKEUP_TIME);
-+			retry = true;
-+			goto retry_read;
-+		} else {
-+			dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
-+				__func__, ret);
-+			return -EIO;
-+		}
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
- static int __mxt_read_reg(struct i2c_client *client,
-@@ -777,6 +784,7 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
- 	u8 *buf;
- 	size_t count;
- 	int ret;
-+	bool retry = false;
- 
- 	count = len + 2;
- 	buf = kmalloc(count, GFP_KERNEL);
-@@ -787,14 +795,21 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
- 	buf[1] = (reg >> 8) & 0xff;
- 	memcpy(&buf[2], val, len);
- 
-+retry_write:
- 	ret = i2c_master_send(client, buf, count);
--	if (ret == count) {
--		ret = 0;
--	} else {
--		if (ret >= 0)
-+	if (ret != count) {
-+		if (!retry) {
-+			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
-+			msleep(MXT_WAKEUP_TIME);
-+			retry = true;
-+			goto retry_write;
-+		} else {
-+			dev_err(&client->dev, "%s: i2c send failed (%d)\n",
-+				__func__, ret);
- 			ret = -EIO;
--		dev_err(&client->dev, "%s: i2c send failed (%d)\n",
--			__func__, ret);
-+		}
-+	} else {
-+		ret = 0;
- 	}
- 
- 	kfree(buf);
--- 
-2.17.1
+Crap, this should have been -rc2, let me go fix that...
 
