@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB02C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A14C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A73B20732
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F383220722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623105;
-	bh=Q4ze9RNhPw9/2gdiRhp0T2htBiBYKR/rd4T7I4hwO2g=;
+	s=default; t=1584623109;
+	bh=52y55w0rqNYpPUljx483CSkXB9D/bZmyrc6yu2+pbtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ideBEFrJLpl2sPJhaQKyaRrH8R+UvazkJZ54q3A4zNLvrfLCEkoo+jUCaxcBgwmvc
-	 /PEmG5OKNGJ0jcQvbqT7jw4OOMuKYP7FDFEwxO1F1vgb0+hTkYt6mwFNYGrRcK0Fx/
-	 tupEaZqNVT8Tx5MptomT0+0nj/KFzIC3C6hBEzyc=
+	b=ZU4HkLZeNy2ZrGyKDuJhEHZ24mGVJRuLvHo6s/A0RLCk4f0a+wqSt0AEQl1u0s5nH
+	 hddZZXebtxL8p32eMhjOAlqQkfdvoS34xyeSjG63B8GSB7UxL+SEsHmT0zdwyd6Tr9
+	 EhneEvReRFj6yc8bQ/oz3Prto20IhFdBtzMUtJ9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbgCSNFE (ORCPT
+        id S1727277AbgCSNFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:05:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbgCSNFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:05:03 -0400
+        id S1726864AbgCSNFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:05:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C539D20732;
-        Thu, 19 Mar 2020 13:05:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4991920739;
+        Thu, 19 Mar 2020 13:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623103;
-        bh=Q4ze9RNhPw9/2gdiRhp0T2htBiBYKR/rd4T7I4hwO2g=;
+        s=default; t=1584623105;
+        bh=52y55w0rqNYpPUljx483CSkXB9D/bZmyrc6yu2+pbtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YW3gveMFKcGrpk6c6PIGRx63PGVpz/OvqvOlqOLzHhDBoI/h6EvUvGplZ6F0IUF/o
-         sB65Vs0qJn5RkqIcA9ZjgA5mb2k6aFP/XGTXF2nOZB+YC5Vc2ueYgeahQyvvgYlq9t
-         RgZJMlaBIkAX+QBYGCtisCGKDGkSH18ypf9jnViQ=
+        b=tpZUdKw6LNZGc3J8IHmScNQ0iKZOl4g6V488dOIOQ+pz6Qg02xaYlNDVqxsLI2ze7
+         +Jrh7FqJIl3QsP4NCw6oM27cIjM+ZWK9xB9glrH2145nQ3BfpSdzZEM7DOTU0u3pUC
+         csQ7hyogpfgDxcV888x8I5wtnPFls36BP9rvUS0c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Malat <oss@malat.biz>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 01/93] NFS: Remove superfluous kmap in nfs_readdir_xdr_to_array
-Date:   Thu, 19 Mar 2020 13:59:05 +0100
-Message-Id: <20200319123925.195750467@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 10/93] nfc: add missing attribute validation for SE API
+Date:   Thu, 19 Mar 2020 13:59:14 +0100
+Message-Id: <20200319123928.205006265@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,32 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Malat <oss@malat.biz>
+From: Jakub Kicinski <kuba@kernel.org>
 
-Array is mapped by nfs_readdir_get_array(), the further kmap is a result
-of a bad merge and should be removed.
+[ Upstream commit 361d23e41ca6e504033f7e66a03b95788377caae ]
 
-This resource leakage can be exploited for DoS by receptively reading
-a content of a directory on NFS (e.g. by running ls).
+Add missing attribute validation for NFC_ATTR_SE_INDEX
+to the netlink policy.
 
-Fixes: 67a56e9743171 ("NFS: Fix memory leaks and corruption in readdir")
-Signed-off-by: Petr Malat <oss@malat.biz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 5ce3f32b5264 ("NFC: netlink: SE API implementation")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/nfs/dir.c |    2 --
- 1 file changed, 2 deletions(-)
+ net/nfc/netlink.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -657,8 +657,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir
- 		goto out_label_free;
- 	}
+--- a/net/nfc/netlink.c
++++ b/net/nfc/netlink.c
+@@ -62,6 +62,7 @@ static const struct nla_policy nfc_genl_
+ 	[NFC_ATTR_LLC_SDP] = { .type = NLA_NESTED },
+ 	[NFC_ATTR_FIRMWARE_NAME] = { .type = NLA_STRING,
+ 				     .len = NFC_FIRMWARE_NAME_MAXSIZE },
++	[NFC_ATTR_SE_INDEX] = { .type = NLA_U32 },
+ 	[NFC_ATTR_SE_APDU] = { .type = NLA_BINARY },
+ 	[NFC_ATTR_VENDOR_DATA] = { .type = NLA_BINARY },
  
--	array = kmap(page);
--
- 	status = nfs_readdir_alloc_pages(pages, array_size);
- 	if (status < 0)
- 		goto out_release_array;
 
 
