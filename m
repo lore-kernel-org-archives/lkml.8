@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1080DC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BCFC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C0C20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB37720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 22:25:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LBBXdvcP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="alNFm6x1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbgCSWXz (ORCPT
+        id S1727426AbgCSWZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 18:23:55 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.196]:18094 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727432AbgCSWXz (ORCPT
+        Thu, 19 Mar 2020 18:25:37 -0400
+Received: from gateway34.websitewelcome.com ([192.185.149.72]:26293 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725787AbgCSWZh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 18:23:55 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 098B99831
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 17:23:54 -0500 (CDT)
+        Thu, 19 Mar 2020 18:25:37 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 903CB67812
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 17:25:35 -0500 (CDT)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id F3ZxjSTd8VQh0F3ZyjhSmb; Thu, 19 Mar 2020 17:23:54 -0500
+        id F3bbjkhjwAGTXF3bbjAdrs; Thu, 19 Mar 2020 17:25:35 -0500
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,25 +36,28 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6URqdS67bk0WU5yZN4/DlVoCb44PpZDm7Vl22nZSfqw=; b=LBBXdvcPHn6gf+mMZhQkYAC9xC
-        vGwDbqJPNc7Ukn8xPPYLMkkpdDpUT0CRoBLHfjW3opok/8ZoNsOQCA8D0E8WKVQuNyj2uwfu1+uKm
-        sONHDJg9Al6UwwLaXCRaunJnH2L0tN+WjJ+bs6cEjOpQFh2rEp8l2hqvaJcPk+0YoBaG0IX77Ylv9
-        OuMUmGbFo0o5zyjxH4/0p0oqLvkNLxuSPeHL0WYubFV32xQrqTTYmdBO3FFJiUcSQxkmFhPXTlJk1
-        /59X03wbcGPVVUB1nXGfbGUfA1pfpUB6gLk0x7JN45SYE7O6fDOkS2Hgvl8vfUqAKRD7h+Gz+3lSh
-        hLEIfV5A==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53894 helo=embeddedor)
+        bh=TL6TVrB3e/45SD3ES0SlXrCS9Eof0rSqhEbtuxxX0x8=; b=alNFm6x1iNM37ziy9M+QKtKG7v
+        uLOAGBZq2cjGF2t9Bq0aV0HHx5vOnX/eamgh1v+JKST0U+F6zxQAYEt0S/p6uVtCt7rFPmuGT0guC
+        5zGYp/EaHyrT1FcNCRDgGs2geqaMmJIoG4Yqa6s1I2LZ+ZN0EuxPIxj7meKVKdnkVrFtV36VU7nqW
+        JzDqaju2felTxZPBWkZntMVDOaFoxTPUijloYULUTi6+1T16stQ3+YOFyNx5LK+fqsywCkwrQ/35U
+        ICQwfGd3V36Qs9eFOyMMdmhz8oTqtj6+6fo9m4xXpo9woCOtco4JjyI1m8pfVab1TFbzqaMKyqdJ4
+        1vzluDzg==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:53902 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1jF3Zw-0024Kc-Fd; Thu, 19 Mar 2020 17:23:52 -0500
-Date:   Thu, 19 Mar 2020 17:23:52 -0500
+        id 1jF3ba-002549-1L; Thu, 19 Mar 2020 17:25:34 -0500
+Date:   Thu, 19 Mar 2020 17:25:33 -0500
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Sathya Prakash <sathya.prakash@broadcom.com>,
+        Chaitra P B <chaitra.basappa@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>
+Cc:     MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] media: usb: pwc: pwc.h: Replace zero-length array with
- flexible-array member
-Message-ID: <20200319222352.GA19476@embeddedor.com>
+Subject: [PATCH][next] message: fusion: mptsas.h: Replace zero-length array
+ with flexible-array member
+Message-ID: <20200319222533.GA20577@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -67,13 +70,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 189.218.116.241
 X-Source-L: No
-X-Exim-ID: 1jF3Zw-0024Kc-Fd
+X-Exim-ID: 1jF3ba-002549-1L
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53894
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:53902
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 18
+X-Email-Count: 24
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -111,22 +114,22 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- drivers/media/usb/pwc/pwc.h | 2 +-
+ drivers/message/fusion/mptsas.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/usb/pwc/pwc.h b/drivers/media/usb/pwc/pwc.h
-index 3362962d0d00..b02a3c7b7742 100644
---- a/drivers/media/usb/pwc/pwc.h
-+++ b/drivers/media/usb/pwc/pwc.h
-@@ -193,7 +193,7 @@ struct pwc_raw_frame {
- 				   decompressor) */
- 	__u8   cmd[4];		/* the four byte of the command (in case of
- 				   nala, only the first 3 bytes is filled) */
--	__u8   rawframe[0];	/* frame_size = H / 4 * vbandlength */
-+	__u8   rawframe[];	/* frame_size = H / 4 * vbandlength */
- } __packed;
+diff --git a/drivers/message/fusion/mptsas.h b/drivers/message/fusion/mptsas.h
+index c396483d3624..e35b13891fe4 100644
+--- a/drivers/message/fusion/mptsas.h
++++ b/drivers/message/fusion/mptsas.h
+@@ -110,7 +110,7 @@ struct fw_event_work {
+ 	MPT_ADAPTER	*ioc;
+ 	u32			event;
+ 	u8			retries;
+-	char			event_data[0] __aligned(4);
++	char			event_data[] __aligned(4);
+ };
  
- /* intermediate buffers with raw data from the USB cam */
+ struct mptsas_discovery_event {
 -- 
 2.23.0
 
