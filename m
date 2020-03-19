@@ -2,60 +2,50 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B141AC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13EEC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95936207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D652070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 18:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgCSSC4 (ORCPT
+        id S1728189AbgCSSD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 14:02:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33784 "EHLO
+        Thu, 19 Mar 2020 14:03:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:33793 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727303AbgCSSC4 (ORCPT
+        with ESMTP id S1727383AbgCSSD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 14:02:56 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        Thu, 19 Mar 2020 14:03:27 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jEzUo-0006uF-9W; Thu, 19 Mar 2020 19:02:18 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 8F6F8103088; Thu, 19 Mar 2020 19:02:17 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     paulmck@kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [patch V2 08/15] Documentation: Add lock ordering and nesting documentation
-In-Reply-To: <20200318223137.GW3199@paulmck-ThinkPad-P72>
-References: <20200318204302.693307984@linutronix.de> <20200318204408.211530902@linutronix.de> <20200318223137.GW3199@paulmck-ThinkPad-P72>
-Date:   Thu, 19 Mar 2020 19:02:17 +0100
-Message-ID: <874kuk5il2.fsf@nanos.tec.linutronix.de>
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jEzVo-0006wd-Nw; Thu, 19 Mar 2020 19:03:20 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C943C1C22B5;
+        Thu, 19 Mar 2020 19:03:19 +0100 (CET)
+Date:   Thu, 19 Mar 2020 18:03:19 -0000
+From:   "tip-bot2 for Randy Dunlap" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/configs: Slightly reduce defconfigs
+Cc:     Randy Dunlap <rdunlap@infradead.org>, Borislav Petkov <bp@suse.de>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <433f203e-4e00-f317-2e6b-81518b72843c@infradead.org>
+References: <433f203e-4e00-f317-2e6b-81518b72843c@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <158464099943.28353.10943155317127048693.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -64,180 +54,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paul,
+The following commit has been merged into the x86/cleanups branch of tip:
 
-"Paul E. McKenney" <paulmck@kernel.org> writes:
+Commit-ID:     e2bdafc1070f5db0bc1bc40116955f54188771cb
+Gitweb:        https://git.kernel.org/tip/e2bdafc1070f5db0bc1bc40116955f54188771cb
+Author:        Randy Dunlap <rdunlap@infradead.org>
+AuthorDate:    Tue, 25 Feb 2020 21:14:05 -08:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 19 Mar 2020 18:48:52 +01:00
 
-> On Wed, Mar 18, 2020 at 09:43:10PM +0100, Thomas Gleixner wrote:
->
-> Mostly native-English-speaker services below, so please feel free to
-> ignore.  The one place I made a substantive change, I marked it "@@@".
-> I only did about half of this document, but should this prove useful,
-> I will do the other half later.
+x86/configs: Slightly reduce defconfigs
 
-Native speaker services are always useful and appreciated.
+Eliminate 2 config symbols from both x86 defconfig files:
+HAMRADIO and FDDI.
 
->> +The kernel provides a variety of locking primitives which can be divided
->> +into two categories:
->> +
->> + - Sleeping locks
->> + - Spinning locks
->> +
->> +This document describes the lock types at least at the conceptual level and
->> +provides rules for nesting of lock types also under the aspect of PREEMPT_RT.
->
-> I suggest something like this:
->
-> This document conceptually describes these lock types and provides rules
-> for their nesting, including the rules for use under PREEMPT_RT.
+The FDDI Kconfig file even says (for the FDDI config symbol):
+  Most people will say N.
 
-Way better :)
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Maciej W. Rozycki <macro@linux-mips.org> # CONFIG_FDDI
+Link: https://lkml.kernel.org/r/433f203e-4e00-f317-2e6b-81518b72843c@infradead.org
+---
+ arch/x86/configs/i386_defconfig   | 2 --
+ arch/x86/configs/x86_64_defconfig | 2 --
+ 2 files changed, 4 deletions(-)
 
->> +Sleeping locks can only be acquired in preemptible task context.
->> +
->> +Some of the implementations allow try_lock() attempts from other contexts,
->> +but that has to be really evaluated carefully including the question
->> +whether the unlock can be done from that context safely as well.
->> +
->> +Note that some lock types change their implementation details when
->> +debugging is enabled, so this should be really only considered if there is
->> +no other option.
->
-> How about something like this?
->
-> Although implementations allow try_lock() from other contexts, it is
-> necessary to carefully evaluate the safety of unlock() as well as of
-> try_lock().  Furthermore, it is also necessary to evaluate the debugging
-> versions of these primitives.  In short, don't acquire sleeping locks
-> from other contexts unless there is no other option.
-
-Yup.
-
->> +Sleeping lock types:
->> +
->> + - mutex
->> + - rt_mutex
->> + - semaphore
->> + - rw_semaphore
->> + - ww_mutex
->> + - percpu_rw_semaphore
->> +
->> +On a PREEMPT_RT enabled kernel the following lock types are converted to
->> +sleeping locks:
->
-> On PREEMPT_RT kernels, these lock types are converted to sleeping
-> locks:
-
-Ok.
-
->> + - spinlock_t
->> + - rwlock_t
->> +
->> +Spinning locks
->> +--------------
->> +
->> + - raw_spinlock_t
->> + - bit spinlocks
->> +
->> +On a non PREEMPT_RT enabled kernel the following lock types are spinning
->> +locks as well:
->
-> On non-PREEMPT_RT kernels, these lock types are also spinning locks:
-
-Ok.
-
->> + - spinlock_t
->> + - rwlock_t
->> +
->> +Spinning locks implicitly disable preemption and the lock / unlock functions
->> +can have suffixes which apply further protections:
->> +
->> + ===================  ====================================================
->> + _bh()                Disable / enable bottom halves (soft interrupts)
->> + _irq()               Disable / enable interrupts
->> + _irqsave/restore()   Save and disable / restore interrupt disabled state
->> + ===================  ====================================================
->> +
->> +
->> +rtmutex
->> +=======
->> +
->> +RT-mutexes are mutexes with support for priority inheritance (PI).
->> +
->> +PI has limitations on non PREEMPT_RT enabled kernels due to preemption and
->> +interrupt disabled sections.
->> +
->> +On a PREEMPT_RT enabled kernel most of these sections are fully
->> +preemptible. This is possible because PREEMPT_RT forces most executions
->> +into task context, especially interrupt handlers and soft interrupts, which
->> +allows to substitute spinlock_t and rwlock_t with RT-mutex based
->> +implementations.
->
-> PI clearly cannot preempt preemption-disabled or interrupt-disabled
-> regions of code, even on PREEMPT_RT kernels.  Instead, PREEMPT_RT kernels
-> execute most such regions of code in preemptible task context, especially
-> interrupt handlers and soft interrupts.  This conversion allows spinlock_t
-> and rwlock_t to be implemented via RT-mutexes.
-
-Nice.
-
->> +
->> +raw_spinlock_t and spinlock_t
->> +=============================
->> +
->> +raw_spinlock_t
->> +--------------
->> +
->> +raw_spinlock_t is a strict spinning lock implementation regardless of the
->> +kernel configuration including PREEMPT_RT enabled kernels.
->> +
->> +raw_spinlock_t is to be used only in real critical core code, low level
->> +interrupt handling and places where protecting (hardware) state is required
->> +to be safe against preemption and eventually interrupts.
->> +
->> +Another reason to use raw_spinlock_t is when the critical section is tiny
->> +to avoid the overhead of spinlock_t on a PREEMPT_RT enabled kernel in the
->> +contended case.
->
-> raw_spinlock_t is a strict spinning lock implementation in all kernels,
-> including PREEMPT_RT kernels.  Use raw_spinlock_t only in real critical
-> core code, low level interrupt handling and places where disabling
-> preemption or interrupts is required, for example, to safely access
-> hardware state.  raw_spinlock_t can sometimes also be used when the
-> critical section is tiny and the lock is lightly contended, thus avoiding
-> RT-mutex overhead.
->
-> @@@  I added the point about the lock being lightly contended.
-
-Hmm, not sure. The point is that if the critical section is small the
-overhead of cross CPU boosting along with the resulting IPIs is going to
-be at least an order of magnitude larger. And on contention this is just
-pushing the raw_spinlock contention off to the raw_spinlock in the rt
-mutex plus the owning tasks pi_lock which makes things even worse.
-
->> + - The hard interrupt related suffixes for spin_lock / spin_unlock
->> +   operations (_irq, _irqsave / _irqrestore) do not affect the CPUs
->                                                                   CPU's
-
-Si senor!
-
->> +   interrupt disabled state
->> +
->> + - The soft interrupt related suffix (_bh()) is still disabling the
->> +   execution of soft interrupts, but contrary to a non PREEMPT_RT enabled
->> +   kernel, which utilizes the preemption count, this is achieved by a per
->> +   CPU bottom half locking mechanism.
->
->  - The soft interrupt related suffix (_bh()) still disables softirq
->    handlers.  However, unlike non-PREEMPT_RT kernels (which disable
->    preemption to get this effect), PREEMPT_RT kernels use a per-CPU
->    per-bottom-half locking mechanism.
-
-it's not per-bottom-half anymore. That turned out to be dangerous due to
-dependencies between BH types, e.g. network and timers.
-
-I hope I was able to encourage you to comment on the other half as well :)
-
-Thanks,
-
-        tglx
+diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
+index 59ce9ed..5b602be 100644
+--- a/arch/x86/configs/i386_defconfig
++++ b/arch/x86/configs/i386_defconfig
+@@ -125,7 +125,6 @@ CONFIG_IP6_NF_MANGLE=y
+ CONFIG_NET_SCHED=y
+ CONFIG_NET_EMATCH=y
+ CONFIG_NET_CLS_ACT=y
+-CONFIG_HAMRADIO=y
+ CONFIG_CFG80211=y
+ CONFIG_MAC80211=y
+ CONFIG_MAC80211_LEDS=y
+@@ -171,7 +170,6 @@ CONFIG_FORCEDETH=y
+ CONFIG_8139TOO=y
+ # CONFIG_8139TOO_PIO is not set
+ CONFIG_R8169=y
+-CONFIG_FDDI=y
+ CONFIG_INPUT_POLLDEV=y
+ # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
+ CONFIG_INPUT_EVDEV=y
+diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
+index 0b9654c..f3d1f36 100644
+--- a/arch/x86/configs/x86_64_defconfig
++++ b/arch/x86/configs/x86_64_defconfig
+@@ -123,7 +123,6 @@ CONFIG_IP6_NF_MANGLE=y
+ CONFIG_NET_SCHED=y
+ CONFIG_NET_EMATCH=y
+ CONFIG_NET_CLS_ACT=y
+-CONFIG_HAMRADIO=y
+ CONFIG_CFG80211=y
+ CONFIG_MAC80211=y
+ CONFIG_MAC80211_LEDS=y
+@@ -164,7 +163,6 @@ CONFIG_SKY2=y
+ CONFIG_FORCEDETH=y
+ CONFIG_8139TOO=y
+ CONFIG_R8169=y
+-CONFIG_FDDI=y
+ CONFIG_INPUT_POLLDEV=y
+ # CONFIG_INPUT_MOUSEDEV_PSAUX is not set
+ CONFIG_INPUT_EVDEV=y
