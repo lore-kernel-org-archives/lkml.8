@@ -2,86 +2,97 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85813C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A95C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 676512070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5022070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgCSKBY (ORCPT
+        id S1727003AbgCSKB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:01:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38442 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgCSKBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:01:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4638CB152;
-        Thu, 19 Mar 2020 10:01:22 +0000 (UTC)
-Subject: Re: [PATCH v2 1/2] x86/xen: Make the boot CPU idle task reliable
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, jpoimboe@redhat.com,
-        andrew.cooper3@citrix.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        xen-devel@lists.xenproject.org, jslaby@suse.cz
-References: <20200319095606.23627-1-mbenes@suse.cz>
- <20200319095606.23627-2-mbenes@suse.cz>
-From:   Jan Beulich <jbeulich@suse.com>
-Message-ID: <71c4eeaf-958a-b215-3033-c3e0d74a9cfa@suse.com>
-Date:   Thu, 19 Mar 2020 11:01:21 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 19 Mar 2020 06:01:57 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60207 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbgCSKB5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:01:57 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jErzp-0004ya-QK; Thu, 19 Mar 2020 11:01:49 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 552141C229F;
+        Thu, 19 Mar 2020 11:01:49 +0100 (CET)
+Date:   Thu, 19 Mar 2020 10:01:49 -0000
+From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/ioremap: Fix CONFIG_EFI=n build
+Cc:     Randy Dunlap <rdunlap@infradead.org>, Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        <stable@vger.kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <7561e981-0d9b-d62c-0ef2-ce6007aff1ab@infradead.org>
+References: <7561e981-0d9b-d62c-0ef2-ce6007aff1ab@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200319095606.23627-2-mbenes@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Message-ID: <158461210901.28353.10235841690300952771.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.03.2020 10:56, Miroslav Benes wrote:
-> The unwinder reports the boot CPU idle task's stack on XEN PV as
-> unreliable, which affects at least live patching. There are two reasons
-> for this. First, the task does not follow the x86 convention that its
-> stack starts at the offset right below saved pt_regs. It allows the
-> unwinder to easily detect the end of the stack and verify it. Second,
-> startup_xen() function does not store the return address before jumping
-> to xen_start_kernel() which confuses the unwinder.
-> 
-> Amend both issues by moving the starting point of initial stack in
-> startup_xen() and storing the return address before the jump, which is
-> exactly what call instruction does.
-> 
-> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-> ---
->  arch/x86/xen/xen-head.S | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
-> index 1d0cee3163e4..edc776af0e0a 100644
-> --- a/arch/x86/xen/xen-head.S
-> +++ b/arch/x86/xen/xen-head.S
-> @@ -35,7 +35,11 @@ SYM_CODE_START(startup_xen)
->  	rep __ASM_SIZE(stos)
->  
->  	mov %_ASM_SI, xen_start_info
-> -	mov $init_thread_union+THREAD_SIZE, %_ASM_SP
-> +#ifdef CONFIG_X86_64
-> +	mov initial_stack(%rip), %_ASM_SP
-> +#else
-> +	mov pa(initial_stack), %_ASM_SP
-> +#endif
+The following commit has been merged into the x86/urgent branch of tip:
 
-If you need to distinguish the two anyway, why not use %rsp and
-%esp respectively?
+Commit-ID:     870b4333a62e45b0b2000d14b301b7b8b8cad9da
+Gitweb:        https://git.kernel.org/tip/870b4333a62e45b0b2000d14b301b7b8b8cad9da
+Author:        Borislav Petkov <bp@suse.de>
+AuthorDate:    Wed, 18 Mar 2020 19:27:48 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 19 Mar 2020 10:55:56 +01:00
 
-Jan
+x86/ioremap: Fix CONFIG_EFI=n build
+
+In order to use efi_mem_type(), one needs CONFIG_EFI enabled. Otherwise
+that function is undefined. Use IS_ENABLED() to check and avoid the
+ifdeffery as the compiler optimizes away the following unreachable code
+then.
+
+Fixes: 985e537a4082 ("x86/ioremap: Map EFI runtime services data as encrypted for SEV")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/7561e981-0d9b-d62c-0ef2-ce6007aff1ab@infradead.org
+---
+ arch/x86/mm/ioremap.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 935a91e..18c637c 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -115,6 +115,9 @@ static void __ioremap_check_other(resource_size_t addr, struct ioremap_desc *des
+ 	if (!sev_active())
+ 		return;
+ 
++	if (!IS_ENABLED(CONFIG_EFI))
++		return;
++
+ 	if (efi_mem_type(addr) == EFI_RUNTIME_SERVICES_DATA)
+ 		desc->flags |= IORES_MAP_ENCRYPTED;
+ }
