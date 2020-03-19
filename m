@@ -2,150 +2,185 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CDDC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C39FC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E18D20752
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:55:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brNWfESJ"
+	by mail.kernel.org (Postfix) with ESMTP id E1DF220753
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584615364;
+	bh=FgL+vAAVjsz7UBPASMA+6v+M3lCJAwKJ3E3l89+r2xk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AAFxqyfuQvfIBabBiHf56BGyjRgEPkKFa8axw/X/ZQIWmR+joZvn+5IUSqYnBiijM
+	 jTlCQosQuAuKMVaB2Wdoc3nrOrHokaawabRmiDEY7uo3La5meOqeakvcSuKX7OdaI7
+	 GCd7aDW9PWFTQv0Vu1/URZGKe291Ds3cpY3kq+Fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgCSKz1 (ORCPT
+        id S1727236AbgCSK4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:55:27 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35154 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727216AbgCSKzZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:55:25 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u68so1241841pfb.2;
-        Thu, 19 Mar 2020 03:55:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=X5441Jy2VbGV6dbzgZxForefu3q50NuP2ovt+obRsE4=;
-        b=brNWfESJSuqO+4+09IIvPRsaedOM8E/pS6J73eUynhP08GAvpMo/aK/w8QFA2Qg4bE
-         roRO7HwQklcJpIqr8DjAl101c1rL3bCjonnjy21/3z0aZVIEGqxms6VjEBh9/zeNBgDX
-         0/i9r9yIF5mn5kA2/nudMZkZ9I5SBLDzJrCIwrUpjNS6d1lbaQHkpDEsevmhXW9xPSvd
-         L4K7qOZ3LX5XksSK7+b0jsbddBkE1gCFTegQVUeAci6TtPWImJCeChHjWECuPSrK2wBl
-         1lmbyImG54W9cU36DqP+5dkLYxTNLBPHidlVPVz4E/Ponii9ozXALQnCvcfZZwo4qIuM
-         ntVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=X5441Jy2VbGV6dbzgZxForefu3q50NuP2ovt+obRsE4=;
-        b=VIRpZzMVZ7/H6Kvfoi/rwlpzZ53RsCY65LE7lFsEXNPpRjUkjW5ZJcKN67G0P2/MQ0
-         WEEDiztk7ODan6Sv+BIscHccDk734chB3ZxAypKnBXONg1/a70D7OGTSNXYsmI+a0eVg
-         v9lfvdvht3wWq8+kx/pGLvrgj1qLq1yVBiqSbjwTcZzeFuWiXuWr2YYheYnSkTIx1Fzh
-         oMd9Cz84bu5DB10pxibysBhxDt+0SRw+Ht7KCiTDpddVsFGrUG5V1vGLIc810N7EbPcJ
-         HrU1MxF6Evk96EOvsQV4bmlO6Q7SDDc80RvnQpUtszEJBP/fJZCRWGNG5pFhIfpyr2oX
-         UWHQ==
-X-Gm-Message-State: ANhLgQ0GgNGdIISeZp1YY1bQmO/n5Jpdow9fVJIszp050rrWPXrPLsI8
-        v804HU/4Qk1aEHpgiaxfSkM=
-X-Google-Smtp-Source: ADFU+vvwr8HV9kNS8ey2y7NUz400nhpNIeCWQcMYfi1GWHsCIpQjBM3WTOp+//wfnfqtqKg2GfParg==
-X-Received: by 2002:a63:7c5b:: with SMTP id l27mr573245pgn.414.1584615324647;
-        Thu, 19 Mar 2020 03:55:24 -0700 (PDT)
-Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id f6sm2209949pfk.99.2020.03.19.03.55.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 19 Mar 2020 03:55:24 -0700 (PDT)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
-        arnd@arndb.de, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/4] mmc: host: sdhci-sprd: Implement the request_atomic() API
-Date:   Thu, 19 Mar 2020 18:54:22 +0800
-Message-Id: <2a7469f93323b6fc80176affa92f9396942a56e3.1584615043.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1584615043.git.baolin.wang7@gmail.com>
-References: <cover.1584615043.git.baolin.wang7@gmail.com>
-In-Reply-To: <cover.1584615043.git.baolin.wang7@gmail.com>
-References: <cover.1584615043.git.baolin.wang7@gmail.com>
+        Thu, 19 Mar 2020 06:56:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726785AbgCSK4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:56:02 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37C3A20752;
+        Thu, 19 Mar 2020 10:56:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584615361;
+        bh=FgL+vAAVjsz7UBPASMA+6v+M3lCJAwKJ3E3l89+r2xk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xEgMD21+sF/isioXATJ90/m2wi0y1eRKeruTMs8rk9CD1Q9iumXQAdXmWUS4B/RRd
+         2Pg+TkmzhNP7c2ra6Akbn061od5ZXeDR2Wk54YMhNqPJefcJMb2XGDcsB2JHpKbS6w
+         qxW/nfnI4iwDHFmUPTI+FYcBjJkfVWLyVAQM+xHQ=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jEsqF-00Duty-9Q; Thu, 19 Mar 2020 10:55:59 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 19 Mar 2020 10:55:59 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v5 16/23] irqchip/gic-v4.1: Eagerly vmap vPEs
+In-Reply-To: <2817cb89-4cc2-549f-6e40-91d941aa8a5f@huawei.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-17-maz@kernel.org>
+ <2817cb89-4cc2-549f-6e40-91d941aa8a5f@huawei.com>
+Message-ID: <d45e7ddfd51d4d8229e02efc42c8da04@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement the request_atomic() API for nonremovable cards, that means
-we can submit next request in the irq hard handler context to reduce
-latency.
+On 2020-03-17 02:49, Zenghui Yu wrote:
+> Hi Marc,
+> 
+> On 2020/3/5 4:33, Marc Zyngier wrote:
+>> Now that we have HW-accelerated SGIs being delivered to VPEs, it
+>> becomes required to map the VPEs on all ITSs instead of relying
+>> on the lazy approach that we would use when using the ITS-list
+>> mechanism.
+>> 
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> 
+> Before GICv4.1, we use vlpi_count to evaluate whether the vPE has been
+> mapped on the specified ITS, and use this refcount to only issue VMOVP
+> to those involved ITSes. It's broken after this patch.
+> 
+> We may need to re-evaluate "whether the vPE is mapped" now that we're 
+> at
+> GICv4.1, otherwise *no* VMOVP will be issued on the v4.1 capable 
+> machine
+> (I mean those without single VMOVP support).
+> 
+> What I'm saying is something like below (only an idea, it even can't
+> compile), any thoughts?
+> 
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+> b/drivers/irqchip/irq-gic-v3-its.c
+> index 2e12bc52e3a2..3450b5e847ca 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -198,7 +198,8 @@ static u16 get_its_list(struct its_vm *vm)
+>  		if (!is_v4(its))
+>  			continue;
+> 
+> -		if (vm->vlpi_count[its->list_nr])
+> +		if (vm->vlpi_count[its->list_nr] ||
+> +		    gic_requires_eager_mapping())
+>  			__set_bit(its->list_nr, &its_list);
+>  	}
+> 
+> @@ -1295,7 +1296,8 @@ static void its_send_vmovp(struct its_vpe *vpe)
+>  		if (!is_v4(its))
+>  			continue;
+> 
+> -		if (!vpe->its_vm->vlpi_count[its->list_nr])
+> +		if (!vpe->its_vm->vlpi_count[its->list_nr] &&
+> +		    !gic_requires_eager_mapping())
+>  			continue;
+> 
+>  		desc.its_vmovp_cmd.col = &its->collections[col_id];
 
-Moreover factor out the AUTO CMD23 checking into a separate function
-to reduce duplicate code.
+It took me a while to wrap my head around that one, but you're as usual 
+spot on.
 
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- drivers/mmc/host/sdhci-sprd.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+The use of gic_requires_eager_mapping() is a bit confusing here, as it 
+isn't
+so much that the VPE is eagerly mapped, but the predicate on which we 
+evaluate
+the need for a VMOVP. How about this:
 
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index 2ab42c5..bc7a8cb 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -406,7 +406,8 @@ static void sdhci_sprd_request_done(struct sdhci_host *host,
- 	.request_done = sdhci_sprd_request_done,
- };
- 
--static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
-+static void sdhci_sprd_check_auto_cmd23(struct mmc_host *mmc,
-+					struct mmc_request *mrq)
- {
- 	struct sdhci_host *host = mmc_priv(mmc);
- 	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
-@@ -422,10 +423,23 @@ static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
- 	    mrq->sbc && (mrq->sbc->arg & SDHCI_SPRD_ARG2_STUFF) &&
- 	    (host->flags & SDHCI_AUTO_CMD23))
- 		host->flags &= ~SDHCI_AUTO_CMD23;
+diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+b/drivers/irqchip/irq-gic-v3-its.c
+index cd6451e190c9..348f7a909a69 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -189,6 +189,15 @@ static DEFINE_IDA(its_vpeid_ida);
+  #define gic_data_rdist_rd_base()	(gic_data_rdist()->rd_base)
+  #define gic_data_rdist_vlpi_base()	(gic_data_rdist_rd_base() + SZ_128K)
+
++/*
++ * Skip ITSs that have no vLPIs mapped, unless we're on GICv4.1, as we
++ * always have vSGIs mapped.
++ */
++static bool require_its_list_vmovp(struct its_vm *vm, struct its_node 
+*its)
++{
++	return (gic_rdists->has_rvpeid || vm->vlpi_count[its->list_nr]);
 +}
 +
-+static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
-+{
-+	sdhci_sprd_check_auto_cmd23(mmc, mrq);
- 
- 	sdhci_request(mmc, mrq);
- }
- 
-+static int sdhci_sprd_request_atomic(struct mmc_host *mmc,
-+				      struct mmc_request *mrq)
-+{
-+	sdhci_sprd_check_auto_cmd23(mmc, mrq);
-+
-+	return sdhci_request_atomic(mmc, mrq);
-+}
-+
- static int sdhci_sprd_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
- {
- 	struct sdhci_host *host = mmc_priv(mmc);
-@@ -561,6 +575,11 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto pltfm_free;
- 
-+	if (!mmc_card_is_removable(host->mmc))
-+		host->mmc_host_ops.request_atomic = sdhci_sprd_request_atomic;
-+	else
-+		host->always_defer_done = true;
-+
- 	sprd_host = TO_SPRD_HOST(host);
- 	sdhci_sprd_phy_param_parse(sprd_host, pdev->dev.of_node);
- 
-@@ -654,8 +673,6 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_cleanup_host;
- 
--	host->always_defer_done = true;
--
- 	ret = __sdhci_add_host(host);
- 	if (ret)
- 		goto err_cleanup_host;
+  static u16 get_its_list(struct its_vm *vm)
+  {
+  	struct its_node *its;
+@@ -198,7 +207,7 @@ static u16 get_its_list(struct its_vm *vm)
+  		if (!is_v4(its))
+  			continue;
+
+-		if (vm->vlpi_count[its->list_nr])
++		if (require_its_list_vmovp(vm, its))
+  			__set_bit(its->list_nr, &its_list);
+  	}
+
+@@ -1295,7 +1304,7 @@ static void its_send_vmovp(struct its_vpe *vpe)
+  		if (!is_v4(its))
+  			continue;
+
+-		if (!vpe->its_vm->vlpi_count[its->list_nr])
++		if (!require_its_list_vmovp(vpe->its_vm, its))
+  			continue;
+
+  		desc.its_vmovp_cmd.col = &its->collections[col_id];
+
+
+Thanks,
+
+         M.
 -- 
-1.9.1
-
+Jazz is not dead. It just smells funny...
