@@ -1,118 +1,137 @@
 Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF778C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0452AC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 962F120663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:12:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E6zKJVqs"
+	by mail.kernel.org (Postfix) with ESMTP id D5BD82072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbgCSTM5 (ORCPT
+        id S1727244AbgCSTSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:12:57 -0400
-Received: from mail-lj1-f179.google.com ([209.85.208.179]:39877 "EHLO
-        mail-lj1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgCSTM5 (ORCPT
+        Thu, 19 Mar 2020 15:18:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48391 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbgCSTSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:12:57 -0400
-Received: by mail-lj1-f179.google.com with SMTP id a2so3814407ljk.6
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 12:12:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QVkzVRwG8di2tV6d9YdwSc9NIMTzCM+uJhyKylo1Pzk=;
-        b=E6zKJVqsleblpxQaJ1FWAniwuWP5ugaz/XSRDSzVEdINjBKBZjI48DRwXAI0x0p8Zd
-         hpsF1BtFBG0z3GYhzFEBRTCRSN7i5vW8Y8YQWKEMSDh2Vylf9Hxw0qpD8NAozGRmQ4ja
-         xoYO3rqRtyRWZGHfjwHPeqK9LLmCyCN6vMea8BAN8nXDw22vyXLzC2wx7/4DKyZQMwPW
-         e3ZlBHjyFdX1TU01dMWDe4h354svsio3n203GM5AN2sVlSI8VgHVsl5qDyEY+xS7D1X8
-         pVlkt91FpDoXKqSsmj1GK0sgNY+wW3W1UY9q38ghDisL2LigK+qlapoCy3PgDQNU1FeL
-         Pn5w==
+        Thu, 19 Mar 2020 15:18:13 -0400
+Received: from mail-qk1-f200.google.com ([209.85.222.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1jF0gE-0005Ze-PN
+        for linux-kernel@vger.kernel.org; Thu, 19 Mar 2020 19:18:10 +0000
+Received: by mail-qk1-f200.google.com with SMTP id k16so3351839qkk.16
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 12:18:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QVkzVRwG8di2tV6d9YdwSc9NIMTzCM+uJhyKylo1Pzk=;
-        b=aO56uir6KvJnSBtE+6PuQ4ZSPrPFIpUuBIPxgHtBjQQl5+qS6gXfgADVGen41bOYnU
-         tqYinBh+HuGpScSn2lwzdZm6eDqywZ5WcsgMx4BH4VlprNebyf7ZEkSOAW/Ks2+HcgC0
-         N9iywu6rkChhYgPTBVqpHIMd6p46vTJQaOTFhKmoeY3tAj2DQvQMQXyIKKINs24aRDo/
-         YvwJKxL3oZ/c9z40295V7sqKs36H0dTmvTMjGz8dMaa/CANLerUI+fB7IQpL+rSmhrK8
-         s41T9+2xyUP9yLrcS+l/ExDnEV7aVV0vHJ8Sv9MePHMm4vwAdiEOuUf8Blva3c6fP12l
-         jXmw==
-X-Gm-Message-State: ANhLgQ2tNVIK+OraofsrEUg8l1WXIKO4xTRy7Ov4hB7LWDt/l8AXlbWM
-        qMrHzymcymPc9jGskWuC7LH6yYYvm8PIoAb310LrgA==
-X-Google-Smtp-Source: ADFU+vsKLCuj84BZqh1D35j+IPEy0J1WwDoWmAn2x/8mm/THSHMQB4laIrHvWqUIzr6HPJRVjNoMN4BhVjiGfEqvO34=
-X-Received: by 2002:a05:651c:285:: with SMTP id b5mr2911047ljo.165.1584645174876;
- Thu, 19 Mar 2020 12:12:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SX7toKZWodKfwjLUNVU3mZINSd3WdGinFSx6G9WeLDk=;
+        b=rYtVGnNnssVPXFdsCcpoMnOvnMTX9mhXB/d6Ud3PWRGJ1ZtqCW95llRUk/C0CGfGec
+         nyEfjt0gMzaN6Vo7Uf5WGToDLWUkeo6B5eTeLA25gLDm3jy7iVwe9vgKpamtEaZaFaZ8
+         37ETuTAp+D4/doTb3gtszURV+pFZxHDL5rR9AP5LlyaGnH6uJD3fWypwcbMF0RFwkVKf
+         OfoeV53BPxp9QzlBJKTDcDTydqs1hlCexwxG9lHA4j4b8oRyfrZ5CLeXb9K26patW8NG
+         Fj0UBL/Ec9Uq6iYhvszAfsHuxFsq48NJs6gPsKwaIDDyZv+ye4Yr/JbvTGf3Ku4vCf59
+         ocNQ==
+X-Gm-Message-State: ANhLgQ1VHC3hTh0s/paM+htilxsAZf9+SkjjfVyLUQi5dHb3jZLv0wmA
+        gbPTHAFvz3wj6qbYHJIgYo5gc9RYwd7qpEVTQLH3fOxJWa1mUQ6P8atGNpEPQf2noPW9/WQHek/
+        3buH6VzsHXZK9sNdU+YKSyWrjq772NxqlXOdTOmL5pA==
+X-Received: by 2002:a0c:9104:: with SMTP id q4mr4690612qvq.61.1584645489878;
+        Thu, 19 Mar 2020 12:18:09 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vuSwnj3+tnGuSZlOdxomBJxoWwMUMMpVRd1vQywR/Ot4Jz0Yn/5uAxPW/i+EZ5gJwiAhjv49g==
+X-Received: by 2002:a0c:9104:: with SMTP id q4mr4690573qvq.61.1584645489574;
+        Thu, 19 Mar 2020 12:18:09 -0700 (PDT)
+Received: from localhost (189-47-87-73.dsl.telesp.net.br. [189.47.87.73])
+        by smtp.gmail.com with ESMTPSA id s36sm2364603qtb.28.2020.03.19.12.18.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Mar 2020 12:18:08 -0700 (PDT)
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+To:     linux-doc@vger.kernel.org
+Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org, swood@redhat.com,
+        mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
+        gpiccoli@canonical.com, kernel@gpiccoli.net
+Subject: [PATCH] Documentation: Better document the softlockup_panic sysctl
+Date:   Thu, 19 Mar 2020 16:18:06 -0300
+Message-Id: <20200319191806.11453-1-gpiccoli@canonical.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com> <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
- <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com> <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
- <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com> <57ddddc2-3ee8-d867-bba0-0dd9929ba37d@nvidia.com>
- <CAPDyKFqZSd9E3+16yFsmpee2JsbRJ-DGThxx7NJHu6UE00Xi1Q@mail.gmail.com>
- <26ee7225-9483-4664-c2d7-b5cefeadcd4b@nvidia.com> <CAPDyKFqwVQDEnPNi33mc9ycTxpaT1cRLejbR3Ja4c8dha4gFRw@mail.gmail.com>
- <0301bbd5-8d4d-4a77-42c7-8a1391c2d60a@nvidia.com> <CAPDyKFp93H0=ttazofW9NMBtL5VnjB4PdkwN0FDCtWR0pMHrPA@mail.gmail.com>
- <f01b5533-124a-d978-a90a-9c9c6235fb65@nvidia.com> <CAPDyKFqJjsuHect-azQKO8cCoq5JJQrZ=eShsdLHq97NXgXnuQ@mail.gmail.com>
- <227d9f08-582e-fd79-e1dc-7695bddd162d@nvidia.com> <2456654f-2724-0b6d-8936-afa05f345344@nvidia.com>
- <df939962-2cb4-1c36-0baf-d82e3527d05a@nvidia.com> <41348c8f-6bc7-a5a3-e1ed-9143f60cbdae@nvidia.com>
- <CAPDyKFqWRGK6LCevwXQoZnRqfMkUDWNUMqbGqnqv+OopmhvBeg@mail.gmail.com>
-In-Reply-To: <CAPDyKFqWRGK6LCevwXQoZnRqfMkUDWNUMqbGqnqv+OopmhvBeg@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 20 Mar 2020 00:42:43 +0530
-Message-ID: <CA+G9fYv+bhdmq9O5rmnOkigCossK5WX9AMr76AF57f8KKydV9g@mail.gmail.com>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kishon <kishon@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FYI,
+Commit 9c44bc03fff4 ("softlockup: allow panic on lockup") added the
+softlockup_panic sysctl, but didn't add information about it to the file
+Documentation/admin-guide/sysctl/kernel.rst (which in that time certainly
+wasn't rst and had other name!).
 
-The arm device x15 running stable rc 4.19.112-rc1, 5.4.27-rc1 and 5.5.11-rc2
-kernel pops up the following messages on console log,
-Is this a problem ?
+This patch just adds the respective documentation and references it from
+the corresponding entry in Documentation/admin-guide/kernel-parameters.txt.
 
-[ 0.000000] Linux version 4.19.112-rc1 (oe-user@oe-host) (gcc version
-7.3.0 (GCC)) #1 SMP Thu Mar 19 12:55:45 UTC 2020
+This patch was strongly based on Scott Wood's commit d22881dc13b6
+("Documentation: Better document the hardlockup_panic sysctl").
 
-[   15.737765] mmc1: unspecified timeout for CMD6 - use generic
-[   16.754248] mmc1: unspecified timeout for CMD6 - use generic
-[   16.842071] mmc1: unspecified timeout for CMD6 - use generic
-...
-[   20.580541] mmc1: unspecified timeout for CMD6 - use generic
-[   20.588216] mmc1: unspecified timeout for CMD6 - use generic
-[   20.604011] mmc1: unspecified timeout for CMD6 - use generic
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  6 +++---
+ Documentation/admin-guide/sysctl/kernel.rst     | 13 +++++++++++++
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-ref:
-https://lkft.validation.linaro.org/scheduler/job/1298207#L4037
-https://lkft.validation.linaro.org/scheduler/job/1298945#L4132
-https://lkft.validation.linaro.org/scheduler/job/1299973#L4232
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index c07815d230bc..adf77ead02c3 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4515,9 +4515,9 @@
+ 
+ 			A nonzero value instructs the soft-lockup detector
+ 			to panic the machine when a soft-lockup occurs. This
+-			is also controlled by CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC
+-			which is the respective build-time switch to that
+-			functionality.
++			is also controlled by kernel.softlockup_panic sysctl
++			and CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC, which is the
++			respective build-time switch to that functionality.
+ 
+ 	softlockup_all_cpu_backtrace=
+ 			[KNL] Should the soft-lockup detector generate
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index def074807cee..95b2f3256323 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -95,6 +95,7 @@ show up in /proc/sys/kernel:
+ - shmmax                      [ sysv ipc ]
+ - shmmni
+ - softlockup_all_cpu_backtrace
++- softlockup_panic
+ - soft_watchdog
+ - stack_erasing
+ - stop-a                      [ SPARC only ]
+@@ -1029,6 +1030,18 @@ NMI.
+ 1: on detection capture more debug information.
+ 
+ 
++softlockup_panic:
++=================
++
++This parameter can be used to control whether the kernel panics when
++a soft lockup is detected.
++
++0: don't panic on soft lockup
++1: panic on soft lockup
++
++This can also be set using the softlockup_panic kernel parameter.
++
++
+ soft_watchdog:
+ ==============
+ 
+-- 
+2.24.1
 
-- Naresh
