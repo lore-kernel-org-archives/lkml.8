@@ -2,265 +2,147 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A820C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4C1C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F6D20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584653717;
-	bh=2lNHn4kRt+Z7xc10xfDSVFGeTLx4ykXDxtTBlKddkcs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=fV7/em4kBaQl10dVPPaf5aN/+J/kqAG7MHyatW8IOE9dWypj2QNbf6xXa4ej2UR3R
-	 fhVvq/+Fwo1PSBAbOKCuTknueS9nsx50/xQfd6vrZKrMDrl+YY6NSmNZ2cHpmRsrUG
-	 if4VYempJDs8l+BHdBErknYLCUjz59edcNjzquWw=
+	by mail.kernel.org (Postfix) with ESMTP id 768FE2076F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:35:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="LLE68p0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgCSVfP (ORCPT
+        id S1727220AbgCSVfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 17:35:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35148 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgCSVfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:35:15 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 671AB2076F;
-        Thu, 19 Mar 2020 21:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584653714;
-        bh=2lNHn4kRt+Z7xc10xfDSVFGeTLx4ykXDxtTBlKddkcs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aAU0Lzpe/C5KZfK8/Ii55DZc8zab4TcDPmxQLV32qu9CRsUNGPgxeCAWcFk5pDbt0
-         1iXpY9cEHttbqHPd7TNXcf8QUOOCdPuoY0ee07NSz5LaMC2Sfrg/etm6j2dSO8aQH8
-         bLRoaPOvFgVe2/mNq5UVYju4nIV+U79eEJeqIaEc=
-Date:   Thu, 19 Mar 2020 16:35:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Aman Sharma <amanharitsh123@gmail.com>
-Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Mans Rullgard <mans@mansr.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 4/5] pci: handled return value of platform_get_irq
- correctly
-Message-ID: <20200319213512.GA415@google.com>
+        Thu, 19 Mar 2020 17:35:50 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.123]:12432 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727103AbgCSVft (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 17:35:49 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id B0FA1555BE
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 16:35:48 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id F2pQjjizRAGTXF2pQj9fUs; Thu, 19 Mar 2020 16:35:48 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ydq1VF0bf/TIb29Ec7UOcHY18zoRNSkk+eZv0/9UsFU=; b=LLE68p0d0bDxd8QL1H1Osnsg78
+        a00q1RsNLa0tjsk/aCeJKAPXcPgmVMYs055Mq6zAhfLPU6bs5Wy8OkXVOTGe59h+wmum3VlTBk4/o
+        wx8kPh4EX+UP59kt/jNAIQjJv04DxfMkuu1GfkPP7T+PO9vV6imMqy07fDyaYiBbbr4+/MMcFDphq
+        PSP0hFhNM1+WvEKJVFQcrMXo/lzqgSesTYmCNQbiT2eYeeTXMivssAmB2tnx2NSBL9zcjxzyN7qxZ
+        PpGxdnzZklzwNzY9XLe5vCej/4K/MvS8jGiykxN+Ac7SC9L2PkXKXX+fJPV9AXLf0BERHavsdBW+c
+        irao3bPw==;
+Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:40970 helo=[192.168.0.22])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1jF2pQ-001fgL-Cd; Thu, 19 Mar 2020 16:35:48 -0500
+Subject: Re: [PATCH] rsxx: Replace zero-length array with flexible-array
+ member
+To:     Jens Axboe <axboe@kernel.dk>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200212194602.GA31712@embeddedor>
+ <555096e4-4ce7-3769-f998-6e429d20cadf@kernel.dk>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <c00aa47c-ec41-4145-152f-66c823246690@embeddedor.com>
+Date:   Thu, 19 Mar 2020 16:35:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877dzgennw.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <555096e4-4ce7-3769-f998-6e429d20cadf@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.218.116.241
+X-Source-L: No
+X-Exim-ID: 1jF2pQ-001fgL-Cd
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net ([192.168.0.22]) [189.218.116.241]:40970
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 36
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 09:47:47AM +0100, Thomas Gleixner wrote:
-> Bjorn Helgaas <helgaas@kernel.org> writes:
-> > On Wed, Mar 18, 2020 at 02:42:48PM +0100, Thomas Gleixner wrote:
-> >> Bjorn Helgaas <helgaas@kernel.org> writes:
-> >> > On Fri, Mar 13, 2020 at 04:56:42PM -0500, Bjorn Helgaas wrote:
-> >> >> On Fri, Mar 13, 2020 at 10:05:58PM +0100, Thomas Gleixner wrote:
-> >> >> > >   I think the best pattern is:
-> >> >> > >
-> >> >> > >     irq = platform_get_irq(pdev, i);
-> >> >> > >     if (irq < 0)
-> >> >> > >       return irq;
-> >> >> > 
-> >> >> > Careful. 0 is not a valid interrupt.
-> >> >> 
-> >> >> Should callers of platform_get_irq() check for a 0 return value?
-> >> >> About 900 of them do not.
-> >> 
-> >> I don't know what I was looking at.
-> >> 
-> >> platform_get_irq() does the right thing already, so checking for irq < 0
-> >> is sufficient.
-> >> 
-> >> Sorry for the confusion!
-> >
-> > Thanks, I was indeed confused!  Maybe we could reduce future confusion
-> > by strengthening the comments slightly, e.g.,
-> >
-> >   - * Return: IRQ number on success, negative error number on failure.
-> >   + * Return: non-zero IRQ number on success, negative error number on failure.
-> >
-> > I don't want to push my luck, but it's pretty hard to prove that
-> > platform_get_irq() never returns 0.  What would you think of something
-> > like the following?
+
+
+On 3/19/20 4:27 PM, Jens Axboe wrote:
+
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 > 
-> No objections from my side.
+> Applied for 5.7, thanks.
+> 
 
-OK, thanks!
-
-Aman, my suggestion for you is to include the patch below as the first
-patch in your series.  Then post a v2 of it, making sure to cc:
-everybody who commented on the first version.
-
-Bjorn
-
-
-driver core: platform: Specify that IRQ 0 is invalid
-
-These interfaces return a negative error number or an IRQ:
-
-  platform_get_irq()
-  platform_get_irq_optional()
-  platform_get_irq_byname()
-  platform_get_irq_byname_optional()
-
-The function comments suggest checking for error like this:
-
-  irq = platform_get_irq(...);
-  if (irq < 0)
-    return irq;
-
-which is what most callers (~900 of 1400) do, so it's implicit that IRQ 0
-is invalid.  But some callers check for "irq <= 0", and it's not obvious
-from the source that we never return an IRQ 0.
-
-Make this more explicit by updating the comments to say that an IRQ number
-is always non-zero and adding a WARN() if we ever do return zero.  If we do
-return IRQ 0, it likely indicates a bug in the arch-specific parts of
-platform_get_irq().
-
-Relevant prior discussion at [1,2].
-
-[1] https://lore.kernel.org/lkml/Pine.LNX.4.64.0701250940220.25027@woody.linux-foundation.org/
-[2] https://lore.kernel.org/lkml/Pine.LNX.4.64.0701252029570.25027@woody.linux-foundation.org/
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 7fa654f1288b..50f3a5da89dc 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -133,23 +133,24 @@ EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
-  *		if (irq < 0)
-  *			return irq;
-  *
-- * Return: IRQ number on success, negative error number on failure.
-+ * Return: non-zero IRQ number on success, negative error number on failure.
-  */
- int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
- {
-+	int ret;
- #ifdef CONFIG_SPARC
- 	/* sparc does not have irqs represented as IORESOURCE_IRQ resources */
- 	if (!dev || num >= dev->archdata.num_irqs)
- 		return -ENXIO;
--	return dev->archdata.irqs[num];
-+	ret = dev->archdata.irqs[num];
-+	goto out;
- #else
- 	struct resource *r;
--	int ret;
- 
- 	if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node) {
- 		ret = of_irq_get(dev->dev.of_node, num);
- 		if (ret > 0 || ret == -EPROBE_DEFER)
--			return ret;
-+			goto out;
- 	}
- 
- 	r = platform_get_resource(dev, IORESOURCE_IRQ, num);
-@@ -157,7 +158,7 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
- 		if (r && r->flags & IORESOURCE_DISABLED) {
- 			ret = acpi_irq_get(ACPI_HANDLE(&dev->dev), num, r);
- 			if (ret)
--				return ret;
-+				goto out;
- 		}
- 	}
- 
-@@ -171,13 +172,17 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
- 		struct irq_data *irqd;
- 
- 		irqd = irq_get_irq_data(r->start);
--		if (!irqd)
--			return -ENXIO;
-+		if (!irqd) {
-+			ret = -ENXIO;
-+			goto out;
-+		}
- 		irqd_set_trigger_type(irqd, r->flags & IORESOURCE_BITS);
- 	}
- 
--	if (r)
--		return r->start;
-+	if (r) {
-+		ret = r->start;
-+		goto out;
-+	}
- 
- 	/*
- 	 * For the index 0 interrupt, allow falling back to GpioInt
-@@ -190,11 +195,14 @@ int platform_get_irq_optional(struct platform_device *dev, unsigned int num)
- 		ret = acpi_dev_gpio_irq_get(ACPI_COMPANION(&dev->dev), num);
- 		/* Our callers expect -ENXIO for missing IRQs. */
- 		if (ret >= 0 || ret == -EPROBE_DEFER)
--			return ret;
-+			goto out;
- 	}
- 
--	return -ENXIO;
-+	ret = -ENXIO;
- #endif
-+out:
-+	WARN(ret == 0, "0 is an invalid IRQ number\n");
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(platform_get_irq_optional);
- 
-@@ -212,7 +220,7 @@ EXPORT_SYMBOL_GPL(platform_get_irq_optional);
-  *		if (irq < 0)
-  *			return irq;
-  *
-- * Return: IRQ number on success, negative error number on failure.
-+ * Return: non-zero IRQ number on success, negative error number on failure.
-  */
- int platform_get_irq(struct platform_device *dev, unsigned int num)
- {
-@@ -284,8 +292,10 @@ static int __platform_get_irq_byname(struct platform_device *dev,
- 	}
- 
- 	r = platform_get_resource_byname(dev, IORESOURCE_IRQ, name);
--	if (r)
-+	if (r) {
-+		WARN(r->start == 0, "0 is an invalid IRQ number\n");
- 		return r->start;
-+	}
- 
- 	return -ENXIO;
- }
-@@ -297,7 +307,7 @@ static int __platform_get_irq_byname(struct platform_device *dev,
-  *
-  * Get an IRQ like platform_get_irq(), but then by name rather then by index.
-  *
-- * Return: IRQ number on success, negative error number on failure.
-+ * Return: non-zero IRQ number on success, negative error number on failure.
-  */
- int platform_get_irq_byname(struct platform_device *dev, const char *name)
- {
-@@ -319,7 +329,7 @@ EXPORT_SYMBOL_GPL(platform_get_irq_byname);
-  * Get an optional IRQ by name like platform_get_irq_byname(). Except that it
-  * does not print an error message if an IRQ can not be obtained.
-  *
-- * Return: IRQ number on success, negative error number on failure.
-+ * Return: non-zero IRQ number on success, negative error number on failure.
-  */
- int platform_get_irq_byname_optional(struct platform_device *dev,
- 				     const char *name)
+Thanks, Jens.
+--
+Gustavo
