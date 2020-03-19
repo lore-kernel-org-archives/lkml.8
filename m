@@ -2,162 +2,107 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B893C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC724C43333
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015BA20787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcAQ0yZC"
+	by mail.kernel.org (Postfix) with ESMTP id 9AC0220787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584624687;
+	bh=B7+I1mSmsDqDgm4UDj9cbHnSmDsai94jiaEQVKiE0ZE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=o27nJof32Kk0WR9oVkgzaGVP/SIlkbEcEb5v/MTXQNURI+6iPwJzoWSZCgzcYnVnd
+	 moGBUIhvq3zYAaJglCsybt40y9UaWWYMFLypZ3zFEV4J+VoYo+pM5oHIois46MXXRW
+	 WDI9dtumbBohcdJk0iTrhvEMhZ93njpGHNsCtaVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbgCSNS1 (ORCPT
+        id S1728570AbgCSNSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:18:27 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34576 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729763AbgCSNSS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:18:18 -0400
-Received: by mail-oi1-f195.google.com with SMTP id j5so2634509oij.1;
-        Thu, 19 Mar 2020 06:18:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qDQpti7t01GpCTV3F9lVKa0JXF79TC4yEbf9DOSPn8g=;
-        b=mcAQ0yZCaJg48cbZ+UPok9xqwUcsLaZsb9fzmjLgeh8zdqkKXz81zq/ILbwNrBso2a
-         MN4btAAs+YQirt8xgKGSVUBCNTD5zHSZMVoAo15X2tUTWsKNcvIDf9ULConjYj0Aprz0
-         bpiQ94KXoh7flze0IXswZPt+qyF2ZmgAi+FL55Ar139q+XJxp4ZasBrKaZYUwGFxD95X
-         tRz65ibnOZuh9KDbSY3lfdkiqYrn9QcbjX/2NHFqETcoSloqNpfMtrf5PdxLbZOgMjA/
-         GFpujd6djm/SWaidRo4GwHfr2sGBvYlPciDOrkswyNdJYyeprCBX+oLvAN4PxdBkODDL
-         lXEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qDQpti7t01GpCTV3F9lVKa0JXF79TC4yEbf9DOSPn8g=;
-        b=NgK+Nb2BDfym+91DR2b7pBSA+2CY96Hu58aoFKaBGWv1hVxUi3LMHUIbeGKzWQfOTX
-         cRj84OuHwjf7BcBJyUZy7/ApEnKoyjIOmlMuRZqm/cZDITEn9aPAzMjmfU3ew1OElFy5
-         V7nXWvK2wOdeyJpgoKWZ39QBV/W3ZI0dmfiuFKR+NCTnxgpXOMNkrOcEmC4GvzxgQz4D
-         6Ze6H/sdKpjGrYDoMC5/BjawN21XX1iTWSsNTCYtIQcVAvWt1YJp9JQdF+XXjgH1RLvH
-         UPzUnfwG1RfHVMSnbserkpdWxnBkCOelT+igAGm8SF9nnWfc7+a+2/9ppZ1JxmmoWd6n
-         tE5A==
-X-Gm-Message-State: ANhLgQ2mBDrS3Luc0AhFr5qD3BrVu8k55A+T7Ghmgudo91RxlO2ImPKb
-        oUCJ9i4Kq1deKpE18kMynHlkL52yCsAat6jNb1A=
-X-Google-Smtp-Source: ADFU+vsS6/XH+ew6MFOJMJjm3XI7q3PIxIoAJ7KFCUkmkMgL0Zaluvh9eiLo/6KcPprvw6aGuxFV0AQaeSh8Jiiw3FI=
-X-Received: by 2002:aca:ac89:: with SMTP id v131mr2290732oie.7.1584623898057;
- Thu, 19 Mar 2020 06:18:18 -0700 (PDT)
+        Thu, 19 Mar 2020 09:18:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729584AbgCSNSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:18:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E5421556;
+        Thu, 19 Mar 2020 13:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584623892;
+        bh=B7+I1mSmsDqDgm4UDj9cbHnSmDsai94jiaEQVKiE0ZE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kZjAWD5bUvXFWI08Y7lz8KxqzbkXfRzJDzAAec79QINQsFdWOhQVhGFJWmx2yzqKa
+         RazdkgQwxYGFPa3hW+xsym4rm2v6lErevibM1hmcwQMt/7RR8L2ixR8GXqgxsUb9KF
+         XUJfQquC4NsW8C4csxcoLpyOp9Mh7MaqaYLtqx64=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 88/99] net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
+Date:   Thu, 19 Mar 2020 14:04:06 +0100
+Message-Id: <20200319124006.527255358@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
+References: <20200319123941.630731708@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200319124452.3yfcvq754vi4q2rv@gilmour.lan> <20200319130348.GC4872@pendragon.ideasonboard.com>
-In-Reply-To: <20200319130348.GC4872@pendragon.ideasonboard.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 19 Mar 2020 13:17:51 +0000
-Message-ID: <CA+V-a8s-GZsYuBLyGnzURZfGD42f0c+QEan6FSwb2ew1=7Gj3g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to assigned-clock-rates
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        linux-media <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+From: Daniele Palmas <dnlplm@gmail.com>
 
-On Thu, Mar 19, 2020 at 1:04 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Maxime,
->
-> On Thu, Mar 19, 2020 at 01:44:52PM +0100, Maxime Ripard wrote:
-> > On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
-> > > Use assigned-clock-rates to specify the clock rate. Also mark
-> > > clock-frequency property as deprecated.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
-> > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > index 72ad992..e62fe82 100644
-> > > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > @@ -8,7 +8,7 @@ Required Properties:
-> > >  - compatible: Value should be "ovti,ov5645".
-> > >  - clocks: Reference to the xclk clock.
-> > >  - clock-names: Should be "xclk".
-> > > -- clock-frequency: Frequency of the xclk clock.
-> > > +- clock-frequency (deprecated): Frequency of the xclk clock.
-> > >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > >    to the hardware pin PWDNB which is physically active low.
-> > >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > > @@ -37,7 +37,8 @@ Example:
-> > >
-> > >                     clocks = <&clks 200>;
-> > >                     clock-names = "xclk";
-> > > -                   clock-frequency = <24000000>;
-> > > +                   assigned-clocks = <&clks 200>;
-> > > +                   assigned-clock-rates = <24000000>;
-> > >
-> > >                     vdddo-supply = <&camera_dovdd_1v8>;
-> > >                     vdda-supply = <&camera_avdd_2v8>;
-> >
-> > clock-frequency is quite different from assigned-clock-rates though,
-> > semantically speaking. clock-frequency is only about what the clock
-> > frequency is, while assigned-clock-rates will change the rate as well,
-> > and you have no idea how long it will last.
->
-> The driver currently reads the clock-frequency property and then calls
-> clk_set_rate(). I agree tht assigned-clock-rates isn't a panacea, but I
-> think it's less of a hack than what we currently have.
->
-> As discussed on IRC, maybe the best option in this specific case is to
-> drop clock-frequency and assigned-clok-rates, and call clk_set_rate()
-> with a hardcoded frequency of 24MHz in the driver, as that's the only
-> frequency the driver supports.
->
-Does this mean any driver which has a fixed clock requirement shouldn't be a
-DT property and should be just handled by the drivers internally ?
+[ Upstream commit eae7172f8141eb98e64e6e81acc9e9d5b2add127 ]
 
-Cheers,
---Prabhakar
+usbnet creates network interfaces with min_mtu = 0 and
+max_mtu = ETH_MAX_MTU.
 
-> > If you want to retrieve that through the clock framework, then just
-> > making clock-frequency optional is enough and falling back to
-> > clk_get_rate on the clocks property already provided is enough.
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+These values are not modified by qmi_wwan when the network interface
+is created initially, allowing, for example, to set mtu greater than 1500.
+
+When a raw_ip switch is done (raw_ip set to 'Y', then set to 'N') the mtu
+values for the network interface are set through ether_setup, with
+min_mtu = ETH_MIN_MTU and max_mtu = ETH_DATA_LEN, not allowing anymore to
+set mtu greater than 1500 (error: mtu greater than device maximum).
+
+The patch restores the original min/max mtu values set by usbnet after a
+raw_ip switch.
+
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/usb/qmi_wwan.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 189715438328f..a8d5561afc7d4 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -274,6 +274,9 @@ static void qmi_wwan_netdev_setup(struct net_device *net)
+ 		netdev_dbg(net, "mode: raw IP\n");
+ 	} else if (!net->header_ops) { /* don't bother if already set */
+ 		ether_setup(net);
++		/* Restoring min/max mtu values set originally by usbnet */
++		net->min_mtu = 0;
++		net->max_mtu = ETH_MAX_MTU;
+ 		clear_bit(EVENT_NO_IP_ALIGN, &dev->flags);
+ 		netdev_dbg(net, "mode: Ethernet\n");
+ 	}
+-- 
+2.20.1
+
+
+
