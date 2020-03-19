@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0977C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F73AC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA0302137B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DDD42137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgCSOMU (ORCPT
+        id S1727905AbgCSOLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:12:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:32779 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgCSOLH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 10:11:07 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60958 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbgCSOLA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 10:11:00 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEvsu-00029Y-8k; Thu, 19 Mar 2020 15:10:56 +0100
+        id 1jEvso-00026d-ST; Thu, 19 Mar 2020 15:10:51 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2CAF91C22A8;
-        Thu, 19 Mar 2020 15:10:48 +0100 (CET)
-Date:   Thu, 19 Mar 2020 14:10:47 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CEE8D1C22A4;
+        Thu, 19 Mar 2020 15:10:46 +0100 (CET)
+Date:   Thu, 19 Mar 2020 14:10:46 -0000
 From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf jevents: Support metric constraint
+Subject: [tip: perf/core] perf metricgroup: Support metric constraint
 Cc:     Kan Liang <kan.liang@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
         Jin Yao <yao.jin@linux.intel.com>,
@@ -43,10 +43,10 @@ Cc:     Kan Liang <kan.liang@linux.intel.com>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1582581564-184429-2-git-send-email-kan.liang@linux.intel.com>
-References: <1582581564-184429-2-git-send-email-kan.liang@linux.intel.com>
+In-Reply-To: <1582581564-184429-5-git-send-email-kan.liang@linux.intel.com>
+References: <1582581564-184429-5-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <158462704785.28353.5256831509301618697.tip-bot2@tip-bot2>
+Message-ID: <158462704654.28353.11563888471626644942.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,19 +62,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     03fe02b113888576dc90c3e918d8e1a76b1ceb63
-Gitweb:        https://git.kernel.org/tip/03fe02b113888576dc90c3e918d8e1a76b1ceb63
+Commit-ID:     ab483d8bc8acb83f0103bc38ef8f2c27d98ffd1b
+Gitweb:        https://git.kernel.org/tip/ab483d8bc8acb83f0103bc38ef8f2c27d98ffd1b
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Mon, 24 Feb 2020 13:59:20 -08:00
+AuthorDate:    Mon, 24 Feb 2020 13:59:23 -08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 10 Mar 2020 14:43:05 -03:00
+CommitterDate: Tue, 10 Mar 2020 14:47:50 -03:00
 
-perf jevents: Support metric constraint
+perf metricgroup: Support metric constraint
 
-A new field "MetricConstraint" is introduced in JSON event list.
+Some metric groups have metric constraints. A metric group can be
+scheduled as a group only when some constraints are applied.  For
+example, Page_Walks_Utilization has a metric constraint,
+"NO_NMI_WATCHDOG".
 
-Extend jevents to parse the field and save the value in
-metric_constraint.
+When NMI watchdog is disabled, the metric group can be scheduled as a
+group. Otherwise, splitting the metric group into standalone metrics.
+
+Add a new function, metricgroup__has_constraint(), to check whether all
+constraints are applied. If not, splitting the metric group into
+standalone metrics.
+
+Currently, only one constraint, "NO_NMI_WATCHDOG", is checked. Print a
+warning for the metric group with the constraint, when NMI WATCHDOG is
+enabled.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
@@ -84,134 +95,95 @@ Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/1582581564-184429-2-git-send-email-kan.liang@linux.intel.com
+Link: http://lore.kernel.org/lkml/1582581564-184429-5-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/jevents.c    | 19 +++++++++++++------
- tools/perf/pmu-events/jevents.h    |  2 +-
- tools/perf/pmu-events/pmu-events.h |  1 +
- 3 files changed, 15 insertions(+), 7 deletions(-)
+ tools/perf/util/metricgroup.c | 54 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 53 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 079c77b..6d0f61f 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -323,7 +323,7 @@ static int print_events_table_entry(void *data, char *name, char *event,
- 				    char *pmu, char *unit, char *perpkg,
- 				    char *metric_expr,
- 				    char *metric_name, char *metric_group,
--				    char *deprecated)
-+				    char *deprecated, char *metric_constraint)
- {
- 	struct perf_entry_data *pd = data;
- 	FILE *outfp = pd->outfp;
-@@ -357,6 +357,8 @@ static int print_events_table_entry(void *data, char *name, char *event,
- 		fprintf(outfp, "\t.metric_group = \"%s\",\n", metric_group);
- 	if (deprecated)
- 		fprintf(outfp, "\t.deprecated = \"%s\",\n", deprecated);
-+	if (metric_constraint)
-+		fprintf(outfp, "\t.metric_constraint = \"%s\",\n", metric_constraint);
- 	fprintf(outfp, "},\n");
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 1cd042c..c3a8c70 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -22,6 +22,8 @@
+ #include <linux/string.h>
+ #include <linux/zalloc.h>
+ #include <subcmd/parse-options.h>
++#include <api/fs/fs.h>
++#include "util.h"
  
- 	return 0;
-@@ -375,6 +377,7 @@ struct event_struct {
- 	char *metric_name;
- 	char *metric_group;
- 	char *deprecated;
-+	char *metric_constraint;
- };
+ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+ 					 struct evsel *evsel,
+@@ -429,6 +431,49 @@ static void metricgroup__add_metric_weak_group(struct strbuf *events,
+ 		strbuf_addf(events, "}:W");
+ }
  
- #define ADD_EVENT_FIELD(field) do { if (field) {		\
-@@ -422,7 +425,7 @@ static int save_arch_std_events(void *data, char *name, char *event,
- 				char *desc, char *long_desc, char *pmu,
- 				char *unit, char *perpkg, char *metric_expr,
- 				char *metric_name, char *metric_group,
--				char *deprecated)
-+				char *deprecated, char *metric_constraint)
++static void metricgroup__add_metric_non_group(struct strbuf *events,
++					      const char **ids,
++					      int idnum)
++{
++	int i;
++
++	for (i = 0; i < idnum; i++)
++		strbuf_addf(events, ",%s", ids[i]);
++}
++
++static void metricgroup___watchdog_constraint_hint(const char *name, bool foot)
++{
++	static bool violate_nmi_constraint;
++
++	if (!foot) {
++		pr_warning("Splitting metric group %s into standalone metrics.\n", name);
++		violate_nmi_constraint = true;
++		return;
++	}
++
++	if (!violate_nmi_constraint)
++		return;
++
++	pr_warning("Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:\n"
++		   "    echo 0 > /proc/sys/kernel/nmi_watchdog\n"
++		   "    perf stat ...\n"
++		   "    echo 1 > /proc/sys/kernel/nmi_watchdog\n");
++}
++
++static bool metricgroup__has_constraint(struct pmu_event *pe)
++{
++	if (!pe->metric_constraint)
++		return false;
++
++	if (!strcmp(pe->metric_constraint, "NO_NMI_WATCHDOG") &&
++	    sysctl__nmi_watchdog_enabled()) {
++		metricgroup___watchdog_constraint_hint(pe->metric_name, false);
++		return true;
++	}
++
++	return false;
++}
++
+ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 				   struct list_head *group_list)
  {
- 	struct event_struct *es;
+@@ -460,7 +505,10 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 			if (events->len > 0)
+ 				strbuf_addf(events, ",");
  
-@@ -486,7 +489,7 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
- 	  char **name, char **long_desc, char **pmu, char **filter,
- 	  char **perpkg, char **unit, char **metric_expr, char **metric_name,
- 	  char **metric_group, unsigned long long eventcode,
--	  char **deprecated)
-+	  char **deprecated, char **metric_constraint)
- {
- 	/* try to find matching event from arch standard values */
- 	struct event_struct *es;
-@@ -515,7 +518,7 @@ int json_events(const char *fn,
- 		      char *pmu, char *unit, char *perpkg,
- 		      char *metric_expr,
- 		      char *metric_name, char *metric_group,
--		      char *deprecated),
-+		      char *deprecated, char *metric_constraint),
- 	  void *data)
- {
- 	int err;
-@@ -545,6 +548,7 @@ int json_events(const char *fn,
- 		char *metric_name = NULL;
- 		char *metric_group = NULL;
- 		char *deprecated = NULL;
-+		char *metric_constraint = NULL;
- 		char *arch_std = NULL;
- 		unsigned long long eventcode = 0;
- 		struct msrmap *msr = NULL;
-@@ -629,6 +633,8 @@ int json_events(const char *fn,
- 				addfield(map, &metric_name, "", "", val);
- 			} else if (json_streq(map, field, "MetricGroup")) {
- 				addfield(map, &metric_group, "", "", val);
-+			} else if (json_streq(map, field, "MetricConstraint")) {
-+				addfield(map, &metric_constraint, "", "", val);
- 			} else if (json_streq(map, field, "MetricExpr")) {
- 				addfield(map, &metric_expr, "", "", val);
- 				for (s = metric_expr; *s; s++)
-@@ -670,13 +676,13 @@ int json_events(const char *fn,
- 					&long_desc, &pmu, &filter, &perpkg,
- 					&unit, &metric_expr, &metric_name,
- 					&metric_group, eventcode,
--					&deprecated);
-+					&deprecated, &metric_constraint);
- 			if (err)
- 				goto free_strings;
+-			metricgroup__add_metric_weak_group(events, ids, idnum);
++			if (metricgroup__has_constraint(pe))
++				metricgroup__add_metric_non_group(events, ids, idnum);
++			else
++				metricgroup__add_metric_weak_group(events, ids, idnum);
+ 
+ 			eg = malloc(sizeof(struct egroup));
+ 			if (!eg) {
+@@ -502,6 +550,10 @@ static int metricgroup__add_metric_list(const char *list, struct strbuf *events,
  		}
- 		err = func(data, name, real_event(name, event), desc, long_desc,
- 			   pmu, unit, perpkg, metric_expr, metric_name,
--			   metric_group, deprecated);
-+			   metric_group, deprecated, metric_constraint);
- free_strings:
- 		free(event);
- 		free(desc);
-@@ -691,6 +697,7 @@ free_strings:
- 		free(metric_expr);
- 		free(metric_name);
- 		free(metric_group);
-+		free(metric_constraint);
- 		free(arch_std);
+ 	}
+ 	free(nlist);
++
++	if (!ret)
++		metricgroup___watchdog_constraint_hint(NULL, true);
++
+ 	return ret;
+ }
  
- 		if (err)
-diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
-index 5cda49a..2afc830 100644
---- a/tools/perf/pmu-events/jevents.h
-+++ b/tools/perf/pmu-events/jevents.h
-@@ -8,7 +8,7 @@ int json_events(const char *fn,
- 				char *pmu,
- 				char *unit, char *perpkg, char *metric_expr,
- 				char *metric_name, char *metric_group,
--				char *deprecated),
-+				char *deprecated, char *metric_constraint),
- 		void *data);
- char *get_cpu_str(void);
- 
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index caeb577..53e76d5 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -18,6 +18,7 @@ struct pmu_event {
- 	const char *metric_name;
- 	const char *metric_group;
- 	const char *deprecated;
-+	const char *metric_constraint;
- };
- 
- /*
