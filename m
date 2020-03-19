@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18094C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A69C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC42C20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07E421473
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgCSOMf (ORCPT
+        id S1728387AbgCSOMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:12:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60973 "EHLO
+        Thu, 19 Mar 2020 10:12:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60955 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgCSOLC (ORCPT
+        with ESMTP id S1727811AbgCSOLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:11:02 -0400
+        Thu, 19 Mar 2020 10:11:01 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEvsr-00027B-2i; Thu, 19 Mar 2020 15:10:53 +0100
+        id 1jEvso-00023d-CT; Thu, 19 Mar 2020 15:10:50 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4DA1A1C22A6;
-        Thu, 19 Mar 2020 15:10:47 +0100 (CET)
-Date:   Thu, 19 Mar 2020 14:10:46 -0000
-From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D03661C22A7;
+        Thu, 19 Mar 2020 15:10:44 +0100 (CET)
+Date:   Thu, 19 Mar 2020 14:10:44 -0000
+From:   "tip-bot2 for Leo Yan" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf util: Factor out sysctl__nmi_watchdog_enabled()
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+Subject: [tip: perf/core] perf cs-etm: Continuously record last branch
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Robert Walker <robert.walker@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        coresight ml <coresight@lists.linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1582581564-184429-4-git-send-email-kan.liang@linux.intel.com>
-References: <1582581564-184429-4-git-send-email-kan.liang@linux.intel.com>
+In-Reply-To: <20200219021811.20067-3-leo.yan@linaro.org>
+References: <20200219021811.20067-3-leo.yan@linaro.org>
 MIME-Version: 1.0
-Message-ID: <158462704694.28353.6873127426138751069.tip-bot2@tip-bot2>
+Message-ID: <158462704454.28353.11740281942674708113.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,113 +67,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     2a14c1bf017f48a17c8c0ba26a22625363e77cc7
-Gitweb:        https://git.kernel.org/tip/2a14c1bf017f48a17c8c0ba26a22625363e77cc7
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Mon, 24 Feb 2020 13:59:22 -08:00
+Commit-ID:     f1410028c762893daf353765112cf6797e4442fa
+Gitweb:        https://git.kernel.org/tip/f1410028c762893daf353765112cf6797e4442fa
+Author:        Leo Yan <leo.yan@linaro.org>
+AuthorDate:    Wed, 19 Feb 2020 10:18:08 +08:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 10 Mar 2020 14:46:19 -03:00
+CommitterDate: Wed, 11 Mar 2020 10:48:44 -03:00
 
-perf util: Factor out sysctl__nmi_watchdog_enabled()
+perf cs-etm: Continuously record last branch
 
-The NMI watchdog status is required for metric group constraint
-examination.  Factor out sysctl__nmi_watchdog_enabled() to retrieve the
-NMI watchdog status.
+Every time synthesize instruction sample, the last branch recording will
+be reset.  This is fine if the instruction period is big enough, for
+example if use the option '--itrace=i100000', the last branch array is
+reset for every sample with 100000 instructions per period; before
+generate the next instruction sample, there has the sufficient packets
+coming to fill the last branch array.
 
-Users may count more than one metric group each time. If so, the NMI
-watchdog status may be retrieved several times. To reduce the overhead,
-cache the NMI watchdog status.
+On the other hand, if set a very small period, the packets will be
+significantly reduced between two continuous instruction samples, thus
+the last branch array is almost empty for new instruction sample by
+frequently resetting.
 
-Replace the NMI watchdog status checking in print_footer() by
-sysctl__nmi_watchdog_enabled().
+To allow the last branches to work properly for any instruction periods,
+this patch avoids to reset the last branch for every instruction sample
+and only reset it when flush the trace data.  The last branches will be
+reset only for two cases, one is for trace starting, another case is for
+discontinuous trace; other cases can keep recording last branches for
+continuous instruction samples.
 
-Suggested-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/1582581564-184429-4-git-send-email-kan.liang@linux.intel.com
+Cc: Robert Walker <robert.walker@arm.com>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: coresight ml <coresight@lists.linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lore.kernel.org/lkml/20200219021811.20067-3-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat-display.c |  6 ++----
- tools/perf/util/util.c         | 18 ++++++++++++++++++
- tools/perf/util/util.h         |  2 ++
- 3 files changed, 22 insertions(+), 4 deletions(-)
+ tools/perf/util/cs-etm.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index d89cb0d..76c6052 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -16,6 +16,7 @@
- #include <linux/ctype.h>
- #include "cgroup.h"
- #include <api/fs/fs.h>
-+#include "util.h"
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 294b09c..2c4156c 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1170,9 +1170,6 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+ 			"CS ETM Trace: failed to deliver instruction event, error %d\n",
+ 			ret);
  
- #define CNTR_NOT_SUPPORTED	"<not supported>"
- #define CNTR_NOT_COUNTED	"<not counted>"
-@@ -1097,7 +1098,6 @@ static void print_footer(struct perf_stat_config *config)
- {
- 	double avg = avg_stats(config->walltime_nsecs_stats) / NSEC_PER_SEC;
- 	FILE *output = config->output;
--	int n;
- 
- 	if (!config->null_run)
- 		fprintf(output, "\n");
-@@ -1131,9 +1131,7 @@ static void print_footer(struct perf_stat_config *config)
- 	}
- 	fprintf(output, "\n\n");
- 
--	if (config->print_free_counters_hint &&
--	    sysctl__read_int("kernel/nmi_watchdog", &n) >= 0 &&
--	    n > 0)
-+	if (config->print_free_counters_hint && sysctl__nmi_watchdog_enabled())
- 		fprintf(output,
- "Some events weren't counted. Try disabling the NMI watchdog:\n"
- "	echo 0 > /proc/sys/kernel/nmi_watchdog\n"
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 969ae56..d707c96 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -55,6 +55,24 @@ int sysctl__max_stack(void)
- 	return sysctl_perf_event_max_stack;
+-	if (etm->synth_opts.last_branch)
+-		cs_etm__reset_last_branch_rb(tidq);
+-
+ 	return ret;
  }
  
-+bool sysctl__nmi_watchdog_enabled(void)
-+{
-+	static bool cached;
-+	static bool nmi_watchdog;
-+	int value;
-+
-+	if (cached)
-+		return nmi_watchdog;
-+
-+	if (sysctl__read_int("kernel/nmi_watchdog", &value) < 0)
-+		return false;
-+
-+	nmi_watchdog = (value > 0) ? true : false;
-+	cached = true;
-+
-+	return nmi_watchdog;
-+}
-+
- bool test_attr__enabled;
+@@ -1487,6 +1484,10 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+ swap_packet:
+ 	cs_etm__packet_swap(etm, tidq);
  
- bool perf_host  = true;
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index 9969b8b..f486fdd 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -29,6 +29,8 @@ size_t hex_width(u64 v);
- 
- int sysctl__max_stack(void);
- 
-+bool sysctl__nmi_watchdog_enabled(void);
++	/* Reset last branches after flush the trace */
++	if (etm->synth_opts.last_branch)
++		cs_etm__reset_last_branch_rb(tidq);
 +
- int fetch_kernel_version(unsigned int *puint,
- 			 char *str, size_t str_sz);
- #define KVER_VERSION(x)		(((x) >> 16) & 0xff)
+ 	return err;
+ }
+ 
