@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54A3C5518B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2DCC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6802072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D602D2072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:04:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hdZiJC4z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lr3jIRYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbgCSTEP (ORCPT
+        id S1727647AbgCSTER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:04:15 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38170 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgCSTEM (ORCPT
+        Thu, 19 Mar 2020 15:04:17 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42292 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727532AbgCSTEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:04:12 -0400
-Received: by mail-lf1-f67.google.com with SMTP id n13so2575483lfh.5;
-        Thu, 19 Mar 2020 12:04:09 -0700 (PDT)
+        Thu, 19 Mar 2020 15:04:15 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t21so2554245lfe.9;
+        Thu, 19 Mar 2020 12:04:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=AlGN/9KxfqGP1gha8cnpAV1qjiffCVac50q6n9Lx2fc=;
-        b=hdZiJC4z0SdQqSyWftZwUgVtGcjthk7l45qSR1wQTB9u37zfMyrwHIx5GlsSx57aLs
-         0/RU9gjAKCJipg32LTOoe7jX1MYQ3m0KR7IHp5sz8cwbI7TMsSeHDHDkGVVnAqiJD6nO
-         mfEJILqQ4G2BpCOnwLEIXbzYjl2FeVGpkwmPSnkQNRxUybXap2Si5WpBgIxXwoBIeAUA
-         iJaa8SzoCu4wY4Ak2F5kL/8yaRo1G+v7BcW0rdcRKEmkNGcfRjqxLo0Zr+zkeGU3LvlP
-         wx3Rw9lbhv+fTstB2uF8xRam24n5N9AaQNCDAz9oK91qo4QvyFgU5msjGp+BwBtV1PSV
-         YhpQ==
+        bh=EYtwxh3M0WCDakQMYK6DovCpFCADDGOR6efWhY9EA5A=;
+        b=lr3jIRYyhBT4KmYsOY3VhhCZZB2LkOgGOGd5DeAjpZ9V+xz6sClDAXin4nBvsXqCmu
+         wHBBexrwWsfCchcXviHX0il3ngcfyRyVSV8MhcH5b/0rMTj49tFssKtcfvIwTGlulB0c
+         xx7B6akVM4AvVJ04tz0OH8cPB0RnDdwpRU7hHLWbwEMLcuKspBmGfRLhOb590E7kt5PW
+         jg3sC7qg9F7OKhFIEAoqZNl7dfwm+7nVyQ6bC+gg5TF9xLKNx5/o1oVrosfGJWQsZf1O
+         4vgastk/Z/Tms/TcYdUcEbh6A0vywfsj9YCzHbkI34tXYgdYmp4T81F0HqH4PPqqtAzI
+         wEfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AlGN/9KxfqGP1gha8cnpAV1qjiffCVac50q6n9Lx2fc=;
-        b=P6t3ooIo2HN3hIP+l5RTr65n3M/cEdMOOdlHNBe5XKPh/XlbHEHUkLYFFPZ5VdgGNY
-         iEAtGOsHSlzzkD/uwMOdfwhqPGTjCAtSwZvE4JezV2t/ODAYNN6XRMGgrUSszkVeXfEd
-         OCAjPpQAyBIRyldTcgZp53tz2f8/3Zr1bOQdTCU6JUx/UtsSJqbcTPedTxo3o4Stcwi6
-         f5oVG8eiRaWQTTpnZgKwm0PxCIO8ycfxbVUVq4UtNZCNMLOdjhiRPtQ188e4pOALEIxR
-         uu2nuEI8e9PiFuv7R+0OwBO9eV8QjtiIvisFVUtNywg2f20BykuGyoXJz8gbLMWdqS9E
-         37rw==
-X-Gm-Message-State: ANhLgQ0wuS+iJYT5KzCLtbuXtU+BuCq2AYHey4b8114YFMzrz8TkG3XM
-        w2grvQX2RGdui9EkpdS3ZYg=
-X-Google-Smtp-Source: ADFU+vt1ZXbG+Xg7AuEkHJu+k3N6+eh1nkUz9bxUj9O/sc9v+WC6JGwJKZXoUTupdzN3gYl+JvVjtQ==
-X-Received: by 2002:ac2:4145:: with SMTP id c5mr3009914lfi.19.1584644649164;
-        Thu, 19 Mar 2020 12:04:09 -0700 (PDT)
+        bh=EYtwxh3M0WCDakQMYK6DovCpFCADDGOR6efWhY9EA5A=;
+        b=g73DsK8PqBRlEXti8OAg3cL1DDjLVqTEGuaG0MuLQQWi5oe+mXLdLk/lZbxaGnsmti
+         XlEpkVrO+mFVtRO2/G0d6WYy347xBx0s0r+BoHm4eqoECezf5vwOOiyUoeSFDx1Dky+W
+         WEk48Yf6SKF7GczHqlY3sf2Uq9H3A7QqPZeegYmoXFw3Adh0AhmQpDYtv0cWIYSkr/zW
+         0bsIcI0uyZ6XLTAUsHeXKGfiurI8PC0Zkm5ydGzd+PpYRgpcapM0+ciEHQfucoJba1Nn
+         6UHiBQuii3tJ2xCiJ5RvoIc4jQ/fxv/CkJAWg64WTBXKrI2sc3dyrhFBndvsU5OYV+Fg
+         I7Sg==
+X-Gm-Message-State: ANhLgQ3NfpoD9vKAmjv/pj3j1EVlDAy+VmSxrQd587Iyb3c0AFQpOBnQ
+        +fVppYALLTkoYV8KISEbvxaKwxj4
+X-Google-Smtp-Source: ADFU+vtBwRJ6EJ+7CZAsKbNUCuVjCzTZlGUgAHK4g8oqA0XRRkDZZTh7ycJg+SYDnFURJnBa4V+XfQ==
+X-Received: by 2002:a19:4a12:: with SMTP id x18mr2953940lfa.161.1584644651906;
+        Thu, 19 Mar 2020 12:04:11 -0700 (PDT)
 Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.gmail.com with ESMTPSA id k14sm2025380lfg.96.2020.03.19.12.04.07
+        by smtp.gmail.com with ESMTPSA id k14sm2025380lfg.96.2020.03.19.12.04.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 12:04:08 -0700 (PDT)
+        Thu, 19 Mar 2020 12:04:11 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -74,9 +74,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         David Heidelberg <david@ixit.cz>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 02/12] clk: tegra: pll: Add pre/post rate-change hooks
-Date:   Thu, 19 Mar 2020 22:02:19 +0300
-Message-Id: <20200319190229.32200-3-digetx@gmail.com>
+Subject: [PATCH v8 04/12] clk: tegra20: Use custom CCLK implementation
+Date:   Thu, 19 Mar 2020 22:02:21 +0300
+Message-Id: <20200319190229.32200-5-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200319190229.32200-1-digetx@gmail.com>
 References: <20200319190229.32200-1-digetx@gmail.com>
@@ -87,9 +87,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a need to temporarily re-parent CCLK away from PLLX if PLLX's
-rate is about to change. The newly introduced PLL pre/post rate-change
-hooks allow to handle such case.
+We're going to use the generic cpufreq-dt driver on Tegra20 and thus CCLK
+intermediate re-parenting will be performed by the clock driver. There is
+now special CCLK implementation that supports all CCLK quirks, this patch
+makes Tegra20 SoCs to use that implementation.
 
 Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 Tested-by: Peter Geis <pgwipeout@gmail.com>
@@ -99,70 +100,35 @@ Tested-by: David Heidelberg <david@ixit.cz>
 Tested-by: Nicolas Chauvet <kwizart@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/clk/tegra/clk-pll.c | 12 +++++++++++-
- drivers/clk/tegra/clk.h     |  6 ++++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ drivers/clk/tegra/clk-tegra20.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-index 531c2b3d814e..0b212cf2e794 100644
---- a/drivers/clk/tegra/clk-pll.c
-+++ b/drivers/clk/tegra/clk-pll.c
-@@ -744,13 +744,19 @@ static int _program_pll(struct clk_hw *hw, struct tegra_clk_pll_freq_table *cfg,
- 
- 	state = clk_pll_is_enabled(hw);
- 
-+	if (state && pll->params->pre_rate_change) {
-+		ret = pll->params->pre_rate_change();
-+		if (WARN_ON(ret))
-+			return ret;
-+	}
-+
- 	_get_pll_mnp(pll, &old_cfg);
- 
- 	if (state && pll->params->defaults_set && pll->params->dyn_ramp &&
- 			(cfg->m == old_cfg.m) && (cfg->p == old_cfg.p)) {
- 		ret = pll->params->dyn_ramp(pll, cfg);
- 		if (!ret)
--			return 0;
-+			goto done;
- 	}
- 
- 	if (state) {
-@@ -772,6 +778,10 @@ static int _program_pll(struct clk_hw *hw, struct tegra_clk_pll_freq_table *cfg,
- 		pll_clk_start_ss(pll);
- 	}
- 
-+done:
-+	if (state && pll->params->post_rate_change)
-+		pll->params->post_rate_change();
-+
- 	return ret;
- }
- 
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index 412d4b47ecfd..e67c19eadb19 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -266,6 +266,10 @@ struct tegra_clk_pll;
-  *				disabled.
-  * @dyn_ramp:			Callback which can be used to define a custom
-  *				dynamic ramp function for a given PLL.
-+ * @pre_rate_change:		Callback which is invoked just before changing
-+ *				PLL's rate.
-+ * @post_rate_change:		Callback which is invoked right after changing
-+ *				PLL's rate.
-  *
-  * Flags:
-  * TEGRA_PLL_USE_LOCK - This flag indicated to use lock bits for
-@@ -342,6 +346,8 @@ struct tegra_clk_pll_params {
- 	void	(*set_defaults)(struct tegra_clk_pll *pll);
- 	int	(*dyn_ramp)(struct tegra_clk_pll *pll,
- 			struct tegra_clk_pll_freq_table *cfg);
-+	int	(*pre_rate_change)(void);
-+	void	(*post_rate_change)(void);
+diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+index 085feb04e913..3efc651b42e3 100644
+--- a/drivers/clk/tegra/clk-tegra20.c
++++ b/drivers/clk/tegra/clk-tegra20.c
+@@ -391,6 +391,8 @@ static struct tegra_clk_pll_params pll_x_params = {
+ 	.lock_delay = 300,
+ 	.freq_table = pll_x_freq_table,
+ 	.flags = TEGRA_PLL_HAS_CPCON | TEGRA_PLL_HAS_LOCK_ENABLE,
++	.pre_rate_change = tegra_cclk_pre_pllx_rate_change,
++	.post_rate_change = tegra_cclk_post_pllx_rate_change,
  };
  
- #define TEGRA_PLL_USE_LOCK BIT(0)
+ static struct tegra_clk_pll_params pll_e_params = {
+@@ -702,9 +704,10 @@ static void tegra20_super_clk_init(void)
+ 	struct clk *clk;
+ 
+ 	/* CCLK */
+-	clk = tegra_clk_register_super_mux("cclk", cclk_parents,
++	clk = tegra_clk_register_super_cclk("cclk", cclk_parents,
+ 			      ARRAY_SIZE(cclk_parents), CLK_SET_RATE_PARENT,
+-			      clk_base + CCLK_BURST_POLICY, 0, 4, 0, 0, NULL);
++			      clk_base + CCLK_BURST_POLICY, TEGRA20_SUPER_CLK,
++			      NULL);
+ 	clks[TEGRA20_CLK_CCLK] = clk;
+ 
+ 	/* SCLK */
 -- 
 2.25.1
 
