@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22725C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE537C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFB1320658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82BFB20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624266;
-	bh=Dxey7Q8OdyIqif19MhI4LcJl0lda+wnDI72pKg7H+PI=;
+	s=default; t=1584624268;
+	bh=Yivh9jBNNB/MmZSHPMoGUKVLpcluWTAvb+8Lib0SRgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vg6+VneSJ4pr0zVObzjt7DJyqB8nFki/vTOD4iVZ512WlNDc4faSiBFfJymPLI5Xq
-	 Yv1P8yIT6uOaObAHuxiHGKz3UP+cMdrjU10vNe23+ErmdvtKLxkv36/eTI868rgjD3
-	 plqnk786lzXRFYvO0BR8RiN4QbkU5odkvzElDPm4=
+	b=GRZhic7BS7dAtH5NFtkZ4vNaxo3m6pzd5bnuLe9zOvpdsqbggFvhMIqYzekXpXdl1
+	 DOuw4GTeWkBNCGhj/7XAYArh1xSgrjhv1IguWqWLPAVKF0tY0Jb/+UwzX9NtUVf1yr
+	 vP7IC7T8JLUml/PYtkGuFT8dWKVkCqUBeXrF91B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbgCSNYY (ORCPT
+        id S1729197AbgCSNY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50988 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:24:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729892AbgCSNYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:24:20 -0400
+        id S1730470AbgCSNYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:24:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40E5120658;
-        Thu, 19 Mar 2020 13:24:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E56520B1F;
+        Thu, 19 Mar 2020 13:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624259;
-        bh=Dxey7Q8OdyIqif19MhI4LcJl0lda+wnDI72pKg7H+PI=;
+        s=default; t=1584624264;
+        bh=Yivh9jBNNB/MmZSHPMoGUKVLpcluWTAvb+8Lib0SRgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x+QHZhEI0Gtu6O5RZJgwcfwZXC25rqSWa996FewyH/xfVuZHHzzjbBhDBfLQp0K8J
-         exsh5PVa9Loauf9RhYwcfauEcMWuBQjJyxXl5KFbguZQC7kQ/+yHACCsWApjVNXnpd
-         mi04AZyfXESzx52M6CCWuU+2s61eZRFEqhED8yYM=
+        b=v5I77Fthj0wdWXSr+9hcXp6vfCDbXRt3mFPTeHgEGd0sIAHsuPk1YqroTsq3LOuIx
+         ewHEcNcOhcQ06D5/mRuC0PaJ8I07apEsUFol+VqSH6PxozGTk2UDYloxeNZZO1DQce
+         GsjFgB7k6+LMSCF0KPIXJWn7vzQh/4QUKJLN8pm8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandru-Mihai Maftei <amaftei@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 50/60] sfc: fix timestamp reconstruction at 16-bit rollover points
-Date:   Thu, 19 Mar 2020 14:04:28 +0100
-Message-Id: <20200319123935.284186646@linuxfoundation.org>
+Subject: [PATCH 5.4 52/60] blk-mq: insert flush request to the front of dispatch queue
+Date:   Thu, 19 Mar 2020 14:04:30 +0100
+Message-Id: <20200319123935.805656072@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -62,79 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Maftei (amaftei) <amaftei@solarflare.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 23797b98909f34b75fd130369bde86f760db69d0 ]
+[ Upstream commit cc3200eac4c5eb11c3f34848a014d1f286316310 ]
 
-We can't just use the top bits of the last sync event as they could be
-off-by-one every 65,536 seconds, giving an error in reconstruction of
-65,536 seconds.
+commit 01e99aeca397 ("blk-mq: insert passthrough request into
+hctx->dispatch directly") may change to add flush request to the tail
+of dispatch by applying the 'add_head' parameter of
+blk_mq_sched_insert_request.
 
-This patch uses the difference in the bottom 16 bits (mod 2^16) to
-calculate an offset that needs to be applied to the last sync event to
-get to the current time.
+Turns out this way causes performance regression on NCQ controller because
+flush is non-NCQ command, which can't be queued when there is any in-flight
+NCQ command. When adding flush rq to the front of hctx->dispatch, it is
+easier to introduce extra time to flush rq's latency compared with adding
+to the tail of dispatch queue because of S_SCHED_RESTART, then chance of
+flush merge is increased, and less flush requests may be issued to
+controller.
 
-Signed-off-by: Alexandru-Mihai Maftei <amaftei@solarflare.com>
-Acked-by: Martin Habets <mhabets@solarflare.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+So always insert flush request to the front of dispatch queue just like
+before applying commit 01e99aeca397 ("blk-mq: insert passthrough request
+into hctx->dispatch directly").
+
+Cc: Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Reported-by: Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+Fixes: 01e99aeca397 ("blk-mq: insert passthrough request into hctx->dispatch directly")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/sfc/ptp.c | 38 +++++++++++++++++++++++++++++++---
- 1 file changed, 35 insertions(+), 3 deletions(-)
+ block/blk-mq-sched.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/net/ethernet/sfc/ptp.c b/drivers/net/ethernet/sfc/ptp.c
-index af15a737c6756..59b4f16896a81 100644
---- a/drivers/net/ethernet/sfc/ptp.c
-+++ b/drivers/net/ethernet/sfc/ptp.c
-@@ -560,13 +560,45 @@ efx_ptp_mac_nic_to_ktime_correction(struct efx_nic *efx,
- 				    u32 nic_major, u32 nic_minor,
- 				    s32 correction)
- {
-+	u32 sync_timestamp;
- 	ktime_t kt = { 0 };
-+	s16 delta;
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 856356b1619e8..74cedea560348 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -398,6 +398,28 @@ void blk_mq_sched_insert_request(struct request *rq, bool at_head,
+ 	WARN_ON(e && (rq->tag != -1));
  
- 	if (!(nic_major & 0x80000000)) {
- 		WARN_ON_ONCE(nic_major >> 16);
--		/* Use the top bits from the latest sync event. */
--		nic_major &= 0xffff;
--		nic_major |= (last_sync_timestamp_major(efx) & 0xffff0000);
-+
-+		/* Medford provides 48 bits of timestamp, so we must get the top
-+		 * 16 bits from the timesync event state.
+ 	if (blk_mq_sched_bypass_insert(hctx, !!e, rq)) {
++		/*
++		 * Firstly normal IO request is inserted to scheduler queue or
++		 * sw queue, meantime we add flush request to dispatch queue(
++		 * hctx->dispatch) directly and there is at most one in-flight
++		 * flush request for each hw queue, so it doesn't matter to add
++		 * flush request to tail or front of the dispatch queue.
 +		 *
-+		 * We only have the lower 16 bits of the time now, but we do
-+		 * have a full resolution timestamp at some point in past. As
-+		 * long as the difference between the (real) now and the sync
-+		 * is less than 2^15, then we can reconstruct the difference
-+		 * between those two numbers using only the lower 16 bits of
-+		 * each.
++		 * Secondly in case of NCQ, flush request belongs to non-NCQ
++		 * command, and queueing it will fail when there is any
++		 * in-flight normal IO request(NCQ command). When adding flush
++		 * rq to the front of hctx->dispatch, it is easier to introduce
++		 * extra time to flush rq's latency because of S_SCHED_RESTART
++		 * compared with adding to the tail of dispatch queue, then
++		 * chance of flush merge is increased, and less flush requests
++		 * will be issued to controller. It is observed that ~10% time
++		 * is saved in blktests block/004 on disk attached to AHCI/NCQ
++		 * drive when adding flush rq to the front of hctx->dispatch.
 +		 *
-+		 * Put another way
-+		 *
-+		 * a - b = ((a mod k) - b) mod k
-+		 *
-+		 * when -k/2 < (a-b) < k/2. In our case k is 2^16. We know
-+		 * (a mod k) and b, so can calculate the delta, a - b.
-+		 *
++		 * Simply queue flush rq to the front of hctx->dispatch so that
++		 * intensive flush workloads can benefit in case of NCQ HW.
 +		 */
-+		sync_timestamp = last_sync_timestamp_major(efx);
-+
-+		/* Because delta is s16 this does an implicit mask down to
-+		 * 16 bits which is what we need, assuming
-+		 * MEDFORD_TX_SECS_EVENT_BITS is 16. delta is signed so that
-+		 * we can deal with the (unlikely) case of sync timestamps
-+		 * arriving from the future.
-+		 */
-+		delta = nic_major - sync_timestamp;
-+
-+		/* Recover the fully specified time now, by applying the offset
-+		 * to the (fully specified) sync time.
-+		 */
-+		nic_major = sync_timestamp + delta;
- 
- 		kt = ptp->nic_to_kernel_time(nic_major, nic_minor,
- 					     correction);
++		at_head = (rq->rq_flags & RQF_FLUSH_SEQ) ? true : at_head;
+ 		blk_mq_request_bypass_insert(rq, at_head, false);
+ 		goto run;
+ 	}
 -- 
 2.20.1
 
