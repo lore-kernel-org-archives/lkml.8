@@ -2,130 +2,151 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B38AC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10262C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8A2206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D68B920740
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 04:25:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CwG+gh5s"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Zgc/MyZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgCSEPc (ORCPT
+        id S1726623AbgCSEZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 00:15:32 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46860 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgCSEPa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 00:15:30 -0400
-Received: by mail-qk1-f193.google.com with SMTP id f28so1129425qkk.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 21:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ACBUKYFz56rYSMbOM+EDRADHwdlHl87he6dVYm6MK9o=;
-        b=CwG+gh5sXV9wy+tdYlPTnwWLm7qgqOCz3P6COc+q7457NMW2P3ILqA9s/+6QWv+8vy
-         8poFHRcQ2iyu2WQoT18uwC8irch5rPRHfJfOodCtaENVCtj6wEn968TulTeVlJv+TbHa
-         lSCnkp95AKtM8YcmZIgPfhV9Ao1mY69toKjri1Jvi/ZmATilfCNSDhkj4YI5/KwutmEx
-         RqV0jUabNY0F8wmHlO0NXWuLke34ieFdeKAnbh5MQqOM67EM1lw8qUc5GpJ0NEEICGhy
-         o2slQW9GqFNFy49gCEo1pT+d3GSIbd1sz30KuWJzFArsch87jxN8L7VJ0JIh/rAjUCU1
-         CO1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ACBUKYFz56rYSMbOM+EDRADHwdlHl87he6dVYm6MK9o=;
-        b=J/MJ8ZhaiYQfDLzB4fm53aBeMkxOrg82C2smqSosl2FepB6ttgv+jv8OQjj1nWTQy8
-         n6FHGHQoKFOEAEZ2VFWNhcYll2gaP3O4uf9w0SLfTnlgatB5riMF1WKazI0QpF7QlsLj
-         O/5e1jCgKqLgxtJIlkSbEkv3bKbr2mRWpIf3Bh2myDO1PnZYPAH8SjEYLjkpIJaZBZJ/
-         H8yQSLRtVoUvmtXjb780JzI0+PDpPFQAehZNYOdZiPfBuN7A2VhEZGJRIL48s8P5VC5X
-         EnEKg22or+a0XKWKSp7SZKI/mJmGd+BUD8fC2HTjQzuCW5tUAtyoPBRUGnlm+GIHgFK4
-         UCIg==
-X-Gm-Message-State: ANhLgQ082iwVmyz/s4ViJDVafkE50BYLj1STE3J4ARNqAGtiqSqc7za5
-        VkFb1KrDF97iFAycwzW7fgonV7L7T/7FXEs5GRzZGg==
-X-Google-Smtp-Source: ADFU+vudYeq0nk20DXy4ZGbabaOUyEUw0/1aXSBXmC1cJBFh0dfvNlUlDrZx/nKddUUhI80erV587MhYrbNlUcW6c2Q=
-X-Received: by 2002:a25:bb89:: with SMTP id y9mr1675045ybg.324.1584591327469;
- Wed, 18 Mar 2020 21:15:27 -0700 (PDT)
+        Thu, 19 Mar 2020 00:25:56 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:46005 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbgCSEZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 00:25:55 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 0712e1ae;
+        Thu, 19 Mar 2020 04:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=MZwVSXAE6iQ6mpmW/k+rzr/Ifms=; b=Zgc/My
+        ZZk5NMR6InJet56FPRr6aq77nJ1M9z70Cp63JHyJW8I6W7iwHL7yNxeKTaGHYO/P
+        177+huS83jiGeZdlH5QUbphN9tSl2kymNoGl7aMA1/4z2QF7eo5CURjUcqhwUZLN
+        m5uOHrmNxgxfAfb7jmAfo/+1vzod1kcEq4N1xZMGPOw5w0Tjl7zM3/x8bhHBHrd7
+        3uhEFSvK9GcUx6SqbhTluWbOKOChtIt1AIO/p0q+74pkrJby6dQYB7GW8MzoZX0/
+        ej7nYqtrjLmv5/pMFaaJwlMpF2uXbKBwxjvDk7Qev5orvpN7lTyjEYl/jaTrPwip
+        nIeEc93LLGRrDrhA==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 653e646b (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Thu, 19 Mar 2020 04:19:27 +0000 (UTC)
+Received: by mail-il1-f180.google.com with SMTP id k29so1035796ilg.0;
+        Wed, 18 Mar 2020 21:25:53 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1tOVTljWlaGroE7nUMPNmqjqeoKuVc8XpsDknnGO6MYJsT4GMS
+        y69zHjCVgWXvzqzLz33f89Gw2Wj3oS37H8573bo=
+X-Google-Smtp-Source: ADFU+vvLWa1F1lZ8noNezKtk4VYJZHBDRdFV9jO6jCrVxgq6Bj5Ed7nFt0P2eILiyqoOf4Sf0kg4Etel8/L8y6bVUHI=
+X-Received: by 2002:a92:c990:: with SMTP id y16mr1394184iln.207.1584591952483;
+ Wed, 18 Mar 2020 21:25:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200311213613.210749-1-irogers@google.com> <20200318102254.GC821557@krava>
-In-Reply-To: <20200318102254.GC821557@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 18 Mar 2020 21:15:16 -0700
-Message-ID: <CAP-5=fU0AAmW7B5Qw+mmA9PhLYgMxKtiuxo3UcPbbowKJPhg8A@mail.gmail.com>
-Subject: Re: [PATCH v3] perf tools: add support for libpfm4
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
+References: <CAHmME9otcAe7H4Anan8Tv1KreTZtwt4XXEPMG--x2Ljr0M+o1Q@mail.gmail.com>
+ <20200319022732.166085-1-Jason@zx2c4.com> <20200319032526.GH2334@sol.localdomain>
+In-Reply-To: <20200319032526.GH2334@sol.localdomain>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Wed, 18 Mar 2020 22:25:40 -0600
+X-Gmail-Original-Message-ID: <CAHmME9rV7rknXMmjhNj--ZWvya7ZG37tnKQB+vxuqok4nLJwTg@mail.gmail.com>
+Message-ID: <CAHmME9rV7rknXMmjhNj--ZWvya7ZG37tnKQB+vxuqok4nLJwTg@mail.gmail.com>
+Subject: Re: [PATCH URGENT crypto v2] crypto: arm64/chacha - correctly walk
+ through blocks
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 3:23 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Wed, Mar 18, 2020 at 9:25 PM Eric Biggers <ebiggers@kernel.org> wrote:
 >
-> On Wed, Mar 11, 2020 at 02:36:13PM -0700, Ian Rogers wrote:
-> > This patch links perf with the libpfm4 library if it is available and
-> > NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
-> > event tables for all processors supported by perf_events. It is a helper
-> > library that helps convert from a symbolic event name to the event
-> > encoding required by the underlying kernel interface. This
-> > library is open-source and available from: http://perfmon2.sf.net.
-> >
-> > With this patch, it is possible to specify full hardware events
-> > by name. Hardware filters are also supported. Events must be
-> > specified via the --pfm-events and not -e option. Both options
-> > are active at the same time and it is possible to mix and match:
-> >
-> > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
-> >
-> > v3 is against acme/perf/core removes a diagnostic warning
-> > v2 of this patch makes the --pfm-events man page documentation
-> > conditional on libpfm4 behing configured. It tidies some of the
-> > documentation and adds the feature test missed in the v1 patch.
-> >
-> > Author: Stephane Eranian <eranian@google.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> On Wed, Mar 18, 2020 at 08:27:32PM -0600, Jason A. Donenfeld wrote:
+> > It also fixes up a bug in the (optional, costly) stride test that
+> > prevented it from running on arm64.
+> [...]
+> > diff --git a/lib/crypto/chacha20poly1305-selftest.c b/lib/crypto/chacha20poly1305-selftest.c
+> > index c391a91364e9..fa43deda2660 100644
+> > --- a/lib/crypto/chacha20poly1305-selftest.c
+> > +++ b/lib/crypto/chacha20poly1305-selftest.c
+> > @@ -9028,10 +9028,15 @@ bool __init chacha20poly1305_selftest(void)
+> >            && total_len <= 1 << 10; ++total_len) {
+> >               for (i = 0; i <= total_len; ++i) {
+> >                       for (j = i; j <= total_len; ++j) {
+> > +                             k = 0;
+> >                               sg_init_table(sg_src, 3);
+> > -                             sg_set_buf(&sg_src[0], input, i);
+> > -                             sg_set_buf(&sg_src[1], input + i, j - i);
+> > -                             sg_set_buf(&sg_src[2], input + j, total_len - j);
+> > +                             if (i)
+> > +                                     sg_set_buf(&sg_src[k++], input, i);
+> > +                             if (j - i)
+> > +                                     sg_set_buf(&sg_src[k++], input + i, j - i);
+> > +                             if (total_len - j)
+> > +                                     sg_set_buf(&sg_src[k++], input + j, total_len - j);
+> > +                             sg_init_marker(sg_src, k);
+> >                               memset(computed_output, 0, total_len);
+> >                               memset(input, 0, total_len);
 >
-> hi,
-> is this the latest version? I can't apply it on Arnaldo's perf/core
->
-> jirka
+> So with this test fix, does this test find the bug?
 
+Yes.
 
-Sorry, I'd failed to re-add the feature test when I shifted branches.
-The complete patch should be here:
-https://lkml.org/lkml/2020/3/19/4
+> Apparently the empty scatterlist elements caused some problem?  What was
+> that problem exactly?  And what do you mean by this "prevented the test
+> from running on arm64"?  If there is a problem it seems we should
+> something else about about it, e.g. debug checks that work in consistent
+> way on all architectures, documenting what the function expects, or make
+> it just work properly with empty scatterlist elements.
 
-Thanks,
-Ian
+Yea, my next plan was to look into what's going on there. In case
+you're curious, here's what happens:
+
+[    0.355761] [ffffffff041e9508] pgd=000000004ffe9003,
+pud=000000004ffe9003, pmd=0000000000000000
+[    0.356212] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+[    0.356587] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc5+ #10
+[    0.356695] Hardware name: linux,dummy-virt (DT)
+[    0.356972] pstate: 20000005 (nzCv daif -PAN -UAO)
+[    0.357158] pc : scatterwalk_copychunks+0x13c/0x1e0
+[    0.357257] lr : scatterwalk_copychunks+0xe0/0x1e0
+[    0.357379] sp : ffffff800f82f970
+[    0.357450] x29: ffffff800f82f970 x28: ffffff800f838000
+[    0.357607] x27: ffffff800f838000 x26: 0000000000000001
+[    0.357725] x25: ffffff800f82faf0 x24: ffffff800f82fa10
+[    0.357820] x23: 0000000000000010 x22: 0000000000000000
+[    0.357898] x21: 0000000000000000 x20: 0000000100200000
+[    0.357978] x19: ffffff8000000000 x18: 0000000000000014
+[    0.358132] x17: 0000000000000000 x16: 0000000000000002
+[    0.358214] x15: 00000000074c5755 x14: 0000000000000002
+[    0.358310] x13: 074c57550311ac67 x12: 09579e470077af1a
+[    0.358453] x11: 1d3f98018ec6f5bb x10: 3e6144a223343e11
+[    0.358560] x9 : 0000000000000000 x8 : ffffff800f82fcc0
+[    0.358638] x7 : 0000000000000000 x6 : ffffff800fa55000
+[    0.358711] x5 : 0000000000001000 x4 : 0000000000000000
+[    0.358781] x3 : ffffffff001e9540 x2 : ffffffff001e9540
+[    0.358855] x1 : ffffffff041e9500 x0 : ffffff800f82fd60
+[    0.359007] Call trace:
+[    0.359177]  scatterwalk_copychunks+0x13c/0x1e0
+[    0.359269]  scatterwalk_map_and_copy+0x50/0xa8
+[    0.359339]  chacha20poly1305_crypt_sg_inplace+0x3f4/0x418
+[    0.359418]  chacha20poly1305_encrypt_sg_inplace+0x10/0x18
+[    0.359511]  chacha20poly1305_selftest+0x4dc/0x618
+[    0.359581]  mod_init+0xc/0x2c
+[    0.359630]  do_one_initcall+0x58/0x11c
+[    0.359687]  kernel_init_freeable+0x174/0x1e0
+[    0.359751]  kernel_init+0x10/0x100
+[    0.359803]  ret_from_fork+0x10/0x18
+[    0.360074] Code: f9400002 530c7c21 927ef442 8b011841 (f9400423)
+[    0.360257] ---[ end trace 0b64264f8a25dbdf ]---
+[    0.360453] Kernel panic - not syncing: Fatal exception
+[    0.360597] SMP: stopping secondary CPUs
+[    0.360835] Kernel Offset: disabled
+[    0.360985] CPU features: 0x00002,00002000
+[    0.361042] Memory Limit: none
