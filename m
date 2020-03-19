@@ -2,136 +2,231 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C98C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43552C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5E42072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584634610;
-	bh=s4auXPFGhqXkaZ6kGgZOfjVD+IS6QTcU36WvedUF6e0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QlqOtI+ENlXTxUDrVLu+EkpisoBFn2QMRawVBoWOk1r0R5HK1m0L2ZG3OU+VV48Dq
-	 Ik83AnZ6SwPJ6z5K9bDsUFR/w+wIwbVNaal8cE45kjgxvZacg2kymhhlDIPVB1/RGD
-	 Ylwr4lCSkQCDz6X0JubX8FFsek2zqS9r1KixvNAQ=
+	by mail.kernel.org (Postfix) with ESMTP id 11CC820836
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KgBlCxjb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgCSQQt (ORCPT
+        id S1728078AbgCSQQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 19 Mar 2020 12:16:49 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50301 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727753AbgCSQQt (ORCPT
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:37997 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727885AbgCSQQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:16:49 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z13so3188934wml.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 09:16:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NPTln5B3sexFE9RG59KkUGJksK/x876CRm/hBQhYswk=;
-        b=L1YcBxWiZAGktiM9T/kVvoOaJtYEKE6rkl3mhLVRUhJUu+hVfsvff3hPIWc2FQ8p2z
-         lnOWXMl2XI9dzX1vc0Muk+mrJxsR8rrMyq+DALhHd0Jpb3hD93MO/Rp2lS0relBZYzhX
-         kmIcrSxS/lKNdgBSTY9fbqGAT9HtylTiJe5yowj2hDvobGIir0KBcBp8qdMXA6YxnDX0
-         BeCOiztFKuAsCgiUETLFQkaRDiYgNPAUZuciUczKuKZJEnXeurCmh1AKC4D369JV1oLc
-         NBwbFGVz5b40iUxRrkVNFNDaWqy142738pVuUiL8JXcFA0sooCfdCLH8n2NAdvJJ8FCn
-         r/0Q==
-X-Gm-Message-State: ANhLgQ0laO9zycbTXVuqa0i409kwIwMMKeHUS0NpibD4u0ec8WRUabOE
-        GJG3FkG8c6B9V+fPFyw+XK8=
-X-Google-Smtp-Source: ADFU+vvzMUCkCdznfIsApgN3Ujz0TAy3SkeVhx2NsB1/wICHclRQ1FeLUIegJBP7PW8hFBbOc7gfTg==
-X-Received: by 2002:a05:600c:11:: with SMTP id g17mr4542705wmc.142.1584634606754;
-        Thu, 19 Mar 2020 09:16:46 -0700 (PDT)
-Received: from localhost (ip-37-188-140-107.eurotel.cz. [37.188.140.107])
-        by smtp.gmail.com with ESMTPSA id p16sm3693176wmi.40.2020.03.19.09.16.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 09:16:45 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 17:16:44 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org,
-        Rik van Riel <riel@surriel.com>,
-        Andreas Schaufler <andreas.schaufler@gmx.de>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: Re: [PATCH] mm: hugetlb: fix hugetlb_cma_reserve() if CONFIG_NUMA
- isn't set
-Message-ID: <20200319161644.GH20800@dhcp22.suse.cz>
-References: <20200318153424.3202304-1-guro@fb.com>
- <20200318161625.GR21362@dhcp22.suse.cz>
- <20200318175529.GA6263@carbon.dhcp.thefacebook.com>
+        Thu, 19 Mar 2020 12:16:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584634607;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6L0/RW+VybIY9YlBcySb8qcqc4y1OrahRYFLfqqgB0g=;
+        b=KgBlCxjbqbYoiqatd3+NrXxrG1HfjarWdYT+tNn9EAWFB3JdUaqdCsiZ0OqukyF7W9ENBs
+        wbprPRpodh4ZFVA/gq0B0DgZupq2QRUSMDn3Gfijzrbc2m7lLT4NrMjKtvA4m20vKdIq8F
+        LTWjWZqJHiWl0L/1WI/di8SoYGAHSFQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-378-vX5yTDLbP-aj3TcYLVcNAw-1; Thu, 19 Mar 2020 12:16:43 -0400
+X-MC-Unique: vX5yTDLbP-aj3TcYLVcNAw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 129021005516;
+        Thu, 19 Mar 2020 16:16:41 +0000 (UTC)
+Received: from [10.36.113.142] (ovpn-113-142.ams2.redhat.com [10.36.113.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D7D6F60BF1;
+        Thu, 19 Mar 2020 16:16:37 +0000 (UTC)
+Subject: Re: [PATCH v5 19/23] KVM: arm64: GICv4.1: Allow SGIs to switch
+ between HW and SW interrupts
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200304203330.4967-1-maz@kernel.org>
+ <20200304203330.4967-20-maz@kernel.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <8a6cf87a-7eee-5502-3b54-093ea0ab5e2d@redhat.com>
+Date:   Thu, 19 Mar 2020 17:16:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200318175529.GA6263@carbon.dhcp.thefacebook.com>
+In-Reply-To: <20200304203330.4967-20-maz@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 18-03-20 10:55:29, Roman Gushchin wrote:
-> On Wed, Mar 18, 2020 at 05:16:25PM +0100, Michal Hocko wrote:
-> > On Wed 18-03-20 08:34:24, Roman Gushchin wrote:
-> > > If CONFIG_NUMA isn't set, there is no need to ensure that
-> > > the hugetlb cma area belongs to a specific numa node.
-> > > 
-> > > min/max_low_pfn can be used for limiting the maximum size
-> > > of the hugetlb_cma area.
-> > > 
-> > > Also for_each_mem_pfn_range() is defined only if
-> > > CONFIG_HAVE_MEMBLOCK_NODE_MAP is set, and on arm (unlike most
-> > > other architectures) it depends on CONFIG_NUMA. This makes the
-> > > build fail if CONFIG_NUMA isn't set.
-> > 
-> > CONFIG_HAVE_MEMBLOCK_NODE_MAP has popped out as a problem several times
-> > already. Is there any real reason we cannot make it unconditional?
-> > Essentially make the functionality always enabled and drop the config?
+Hi Marc,
+
+On 3/4/20 9:33 PM, Marc Zyngier wrote:
+> In order to let a guest buy in the new, active-less SGIs, we
+> need to be able to switch between the two modes.
 > 
-> It depends on CONFIG_NUMA only on arm, and I really don't know
-> if there is a good justification for it. It not, that will be a much
-> simpler fix.
-
-I have checked the history and the dependency is there since NUMA was
-introduced in arm64. So it would be great to double check with arch
-maintainers.
-
-> > The code below is ugly as hell. Just look at it. You have
-> > for_each_node_state without any ifdefery but the having ifdef
-> > CONFIG_NUMA. That just doesn't make any sense.
+> Handle this by stopping all guest activity, transfer the state
+> from one mode to the other, and resume the guest. Nothing calls
+> this code so far, but a later patch will plug it into the MMIO
+> emulation.
 > 
-> I don't think it makes no sense:
-> it tries to reserve a cma area on each node (need for_each_node_state()),
-> and it uses the for_each_mem_pfn_range() to get a min and max pfn
-> for each node. With !CONFIG_NUMA the first part is reduced to one
-> iteration and the second part is not required at all.
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  include/kvm/arm_vgic.h      |  3 ++
+>  virt/kvm/arm/vgic/vgic-v4.c | 94 +++++++++++++++++++++++++++++++++++++
+>  virt/kvm/arm/vgic/vgic.h    |  1 +
+>  3 files changed, 98 insertions(+)
+> 
+> diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
+> index 63457908c9c4..69f4164d6477 100644
+> --- a/include/kvm/arm_vgic.h
+> +++ b/include/kvm/arm_vgic.h
+> @@ -231,6 +231,9 @@ struct vgic_dist {
+>  	/* distributor enabled */
+>  	bool			enabled;
+>  
+> +	/* Wants SGIs without active state */
+> +	bool			nassgireq;
+> +
+>  	struct vgic_irq		*spis;
+>  
+>  	struct vgic_io_device	dist_iodev;
+> diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
+> index c2fcde104ea2..a65dc1c85363 100644
+> --- a/virt/kvm/arm/vgic/vgic-v4.c
+> +++ b/virt/kvm/arm/vgic/vgic-v4.c
+> @@ -97,6 +97,100 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void vgic_v4_sync_sgi_config(struct its_vpe *vpe, struct vgic_irq *irq)
+> +{
+> +	vpe->sgi_config[irq->intid].enabled	= irq->enabled;
+> +	vpe->sgi_config[irq->intid].group 	= irq->group;
+> +	vpe->sgi_config[irq->intid].priority	= irq->priority;
+> +}
+> +
+> +static void vgic_v4_enable_vsgis(struct kvm_vcpu *vcpu)
+> +{
+> +	struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
+> +	int i;
+> +
+> +	/*
+> +	 * With GICv4.1, every virtual SGI can be directly injected. So
+> +	 * let's pretend that they are HW interrupts, tied to a host
+> +	 * IRQ. The SGI code will do its magic.
+> +	 */
+> +	for (i = 0; i < VGIC_NR_SGIS; i++) {
+> +		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
+> +		struct irq_desc *desc;
+> +		int ret;
+Is is safe without holding the irq->irq_lock?
+> +
+> +		if (irq->hw) {
+> +			vgic_put_irq(vcpu->kvm, irq);
+> +			continue;
+> +		}
+> +
+> +		irq->hw = true;
+> +		irq->host_irq = irq_find_mapping(vpe->sgi_domain, i);
+> +
+> +		/* Transfer the full irq state to the vPE */
+> +		vgic_v4_sync_sgi_config(vpe, irq);
+> +		desc = irq_to_desc(irq->host_irq);
+> +		ret = irq_domain_activate_irq(irq_desc_get_irq_data(desc),
+> +					      false);
+> +		if (!WARN_ON(ret)) {
+> +			/* Transfer pending state */
+> +			ret = irq_set_irqchip_state(irq->host_irq,
+> +						    IRQCHIP_STATE_PENDING,
+> +						    irq->pending_latch);
+> +			WARN_ON(ret);
+> +			irq->pending_latch = false;
+> +		}
+> +
+> +		vgic_put_irq(vcpu->kvm, irq);
+> +	}
+> +}
+> +
+> +static void vgic_v4_disable_vsgis(struct kvm_vcpu *vcpu)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < VGIC_NR_SGIS; i++) {
+> +		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
+> +		struct irq_desc *desc;
+> +		int ret;
+> +
+> +		if (!irq->hw) {
+> +			vgic_put_irq(vcpu->kvm, irq);
+> +			continue;
+> +		}
+> +
+> +		irq->hw = false;
+> +		ret = irq_get_irqchip_state(irq->host_irq,
+> +					    IRQCHIP_STATE_PENDING,
+> +					    &irq->pending_latch);
+> +		WARN_ON(ret);
+> +
+> +		desc = irq_to_desc(irq->host_irq);
+> +		irq_domain_deactivate_irq(irq_desc_get_irq_data(desc));
+> +
+> +		vgic_put_irq(vcpu->kvm, irq);
+> +	}
+> +}
+> +
+> +/* Must be called with the kvm lock held */
+> +void vgic_v4_configure_vsgis(struct kvm *kvm)
+> +{
+> +	struct vgic_dist *dist = &kvm->arch.vgic;
+> +	struct kvm_vcpu *vcpu;
+> +	int i;
+> +
+> +	kvm_arm_halt_guest(kvm);
+> +
+> +	kvm_for_each_vcpu(i, vcpu, kvm) {
+> +		if (dist->nassgireq)
+> +			vgic_v4_enable_vsgis(vcpu);
+> +		else
+> +			vgic_v4_disable_vsgis(vcpu);
+> +	}
+> +
+> +	kvm_arm_resume_guest(kvm);
+> +}
+> +
+>  /**
+>   * vgic_v4_init - Initialize the GICv4 data structures
+>   * @kvm:	Pointer to the VM being initialized
+> diff --git a/virt/kvm/arm/vgic/vgic.h b/virt/kvm/arm/vgic/vgic.h
+> index c7fefd6b1c80..769e4802645e 100644
+> --- a/virt/kvm/arm/vgic/vgic.h
+> +++ b/virt/kvm/arm/vgic/vgic.h
+> @@ -316,5 +316,6 @@ void vgic_its_invalidate_cache(struct kvm *kvm);
+>  bool vgic_supports_direct_msis(struct kvm *kvm);
+>  int vgic_v4_init(struct kvm *kvm);
+>  void vgic_v4_teardown(struct kvm *kvm);
+> +void vgic_v4_configure_vsgis(struct kvm *kvm);
+>  
+>  #endif
+> 
+Thanks
 
-Sure the resulting code logic makes sense. I meant that it doesn't make
-much sense wrt readability. There is a loop over all existing numa nodes
-to have ifdef for NUMA inside the loop. See?
+Eric
 
-> I agree that for_each_mem_pfn_range() here looks quite ugly, but I don't know
-> of a better way to get min/max pfns for a node so early in the boot process.
-> If somebody has any ideas here, I'll appreciate a lot.
-
-The loop is ok. Maybe we have other memblock API that would be better
-but I am not really aware of it from top of my head. I would stick with
-it. It just sucks that this API depends on HAVE_MEMBLOCK_NODE_MAP and
-that it is not generally available. This is what I am complaining about.
-Just look what kind of dirty hack it made you to create ;)
-
-> I know Rik plans some further improvements here, so the goal for now
-> is to fix the build. If you think that enabling CONFIG_HAVE_MEMBLOCK_NODE_MAP
-> unconditionally is a way to go, I'm fine with it too.
-
-This is not the first time HAVE_MEMBLOCK_NODE_MAP has been problematic.
-I might be missing something but I really do not get why do we really
-need it these days. As for !NUMA, I suspect we can make it generate the
-right thing when !NUMA.
--- 
-Michal Hocko
-SUSE Labs
