@@ -2,83 +2,86 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C50AC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321ACC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 721A420740
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0115C20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:32:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gSXNZdVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgCSKcF (ORCPT
+        id S1727232AbgCSKcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:32:05 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:34658 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgCSKcF (ORCPT
+        Thu, 19 Mar 2020 06:32:15 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57106 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbgCSKcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:32:05 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id BAEA880453;
-        Thu, 19 Mar 2020 11:32:00 +0100 (CET)
-Date:   Thu, 19 Mar 2020 11:31:59 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Subject: Re: [PATCH v2 3/3] MAINTAINERS: Update feiyang, st7701 panel
- bindings converted as YAML
-Message-ID: <20200319103159.GA18744@ravnborg.org>
-References: <20200318171003.5179-1-jagan@amarulasolutions.com>
- <20200318171003.5179-3-jagan@amarulasolutions.com>
- <20200318185814.GB28092@ravnborg.org>
- <CAMty3ZDhVfvYXV7OO+NT+d_2YHbsJXebzjdtYkqtdD+X=Ch0yQ@mail.gmail.com>
+        Thu, 19 Mar 2020 06:32:14 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02JAW9Fn129511;
+        Thu, 19 Mar 2020 05:32:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1584613929;
+        bh=1kWR+CKoZeAh81DpG4GKp4GDuawCt79rl//8++rYBb0=;
+        h=From:To:CC:Subject:Date;
+        b=gSXNZdVIinyLpvNJk3FpLNt46U3dzVLuhngsbGaVDpfLL4b98pL+rts+c0IFRNSmJ
+         gQAWhFZJeYCTVsnLVTsj7jFHsB7k/SeLUBZpsCZtrhRD8ivv0+zmMG/pUogNCjVped
+         YKbntn5T1CKglo+6bcM/2hycBZe9bv8Om8PUHpOc=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02JAW9QW014132
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 19 Mar 2020 05:32:09 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Mar 2020 05:32:09 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Mar 2020 05:32:09 -0500
+Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02JAW6Ah068234;
+        Thu, 19 Mar 2020 05:32:07 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+CC:     Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Oliver Barta <o.barta89@gmail.com>
+Subject: [PATCH 0/2] 8250_omap: Fix throttle callback
+Date:   Thu, 19 Mar 2020 16:02:28 +0530
+Message-ID: <20200319103230.16867-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZDhVfvYXV7OO+NT+d_2YHbsJXebzjdtYkqtdD+X=Ch0yQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=iP-xVBlJAAAA:8 a=-5vWvTUDYGztgwe3K24A:9 a=CjuIK1q_8ugA:10
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=lHLH-nfn2y1bM_0xSXwp:22
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jagan.
-On Thu, Mar 19, 2020 at 03:50:44PM +0530, Jagan Teki wrote:
-> On Thu, Mar 19, 2020 at 12:28 AM Sam Ravnborg <sam@ravnborg.org> wrote:
-> >
-> > On Wed, Mar 18, 2020 at 10:40:03PM +0530, Jagan Teki wrote:
-> > > The feiyang,fy07024di26a30d.txt and sitronix,st7701.txt has been
-> > > converted to YAML schemas, update MAINTAINERS to match them again.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> >
-> > The patch is fine.
-> > I just dislike we repeat the maintainer info in two places..
-> 
-> Since these are two different panels. and entry similar like other
-> panels.do you look for single entry for both the panels?
-My comment was related to the fact that we have maintainer entry in the
-.yaml file, and in MAINTAINERS.
+This series tries to reimplement commit 2e9fe5391083 ("serial: 8250: Don't
+service RX FIFO if interrupts are disabled") which was reverted by
+commit 3f2640ed7be8 ("Revert "serial: 8250: Don't service RX FIFO if
+interrupts are disabled") due a bug that caused error informations to be
+missed.
+Current series uses stop_rx() instead of relying on IIR bits
 
-Seems a waste to have a distributed and a centralized place for this.
-So patches are fine in this respect.
-And merging the two bindings would be very bad, they are not alike.
+Vignesh Raghavendra (2):
+  serial: 8250: Don't service RX FIFO if throttled
+  serial: 8250: 8250_omap: Fix throttle to call stop_rx()
 
-	Sam
+ drivers/tty/serial/8250/8250_omap.c |  5 ++---
+ drivers/tty/serial/8250/8250_port.c | 16 +++++++++++++++-
+ 2 files changed, 17 insertions(+), 4 deletions(-)
+
+-- 
+2.25.2
+
