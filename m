@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97547C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E505C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBA320722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE81208D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623514;
-	bh=If8LOuZuwFEjouDXrY7qAUXtG8O0r9olz6X8s3nhxu8=;
+	s=default; t=1584623519;
+	bh=FU4WyfQvIhbjeHX3WokTysTLIe/V+NR3fCkHiRcOJww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s5ag8wYJJR7/BGQvnRG7WKsEZRgXnM5q5PJfLhjvtsamaQUDA67qFKG35rXH68mJR
-	 HUPSdxLYEHFDSfV7LlDeSkMADVnGSrFiFOdOVe5CbPRLC0kz8DzijmU9hXInYbGpVm
-	 XI3I1FVCo7vLOZDUQZBAFUsdAHDRzD+HhVV7voaM=
+	b=nUwvy4f1glGP/qzBfwxlqAGeXkts9eRh6n97+UpGBNjzNlp//i7mY2wNUJKvzag0k
+	 xijzaOih/VjHRsZUV3hn3EmmnT7+RE9xp+9iRy0SFa0vQ5SGfIQc/4egBoCLZHIv0R
+	 ireOwOb3BRth6ZuGuYttTYMRIn2evlge7G75nYV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgCSNLx (ORCPT
+        id S1727949AbgCSNL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:11:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57284 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:11:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728219AbgCSNLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:11:49 -0400
+        id S1728799AbgCSNLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:11:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7908A20722;
-        Thu, 19 Mar 2020 13:11:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECDFA208D6;
+        Thu, 19 Mar 2020 13:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623508;
-        bh=If8LOuZuwFEjouDXrY7qAUXtG8O0r9olz6X8s3nhxu8=;
+        s=default; t=1584623514;
+        bh=FU4WyfQvIhbjeHX3WokTysTLIe/V+NR3fCkHiRcOJww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tZI/AXDRcqFSXBGc3HvrNV3w9IlV/vdFmayqAlEcc+8lhgQaEnRa2/NLSBhI1Q7cf
-         9nwvr90K67N5yXI910I/N1jnUEDlHCisd0MaPtWaLfQPDbAEUE4U8eIjQ5OpIOAAsE
-         0HqdwpgCjWHNCZmcmIpzxEBhQgO3IRanE0z8kL+4=
+        b=aWhEaG8zrGnZabN1EBQ+w4JrJX17yMO+iL2eOQ6KHMBVeDmrmhkVb0FulHCTdH7mP
+         yWbkkj83ZJpiD7I6x9+EDMQPPK2VZVxwRRdzydpIWOOhMnXSM6wKO4AKGthShn/S0t
+         TTBVryakqFyRopMrUsc4EXcj+ufPm/8splflNqXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sven Eckelmann <sven@narfation.org>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.9 51/90] batman-adv: Fix double free during fragment merge error
-Date:   Thu, 19 Mar 2020 14:00:13 +0100
-Message-Id: <20200319123944.264971850@linuxfoundation.org>
+Subject: [PATCH 4.9 53/90] batman-adv: Initialize gw sel_class via batadv_algo
+Date:   Thu, 19 Mar 2020 14:00:15 +0100
+Message-Id: <20200319123944.801016349@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -61,78 +61,136 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sven Eckelmann <sven@narfation.org>
 
-commit 248e23b50e2da0753f3b5faa068939cbe9f8a75a upstream.
+commit 1a9070ec91b37234fe915849b767c61584c64a44 upstream.
 
-The function batadv_frag_skb_buffer was supposed not to consume the skbuff
-on errors. This was followed in the helper function
-batadv_frag_insert_packet when the skb would potentially be inserted in the
-fragment queue. But it could happen that the next helper function
-batadv_frag_merge_packets would try to merge the fragments and fail. This
-results in a kfree_skb of all the enqueued fragments (including the just
-inserted one). batadv_recv_frag_packet would detect the error in
-batadv_frag_skb_buffer and try to free the skb again.
+The gateway selection class variable is shared between different algorithm
+versions. But the interpretation of the content is algorithm specific. The
+initialization is therefore also algorithm specific.
 
-The behavior of batadv_frag_skb_buffer (and its helper
-batadv_frag_insert_packet) must therefore be changed to always consume the
-skbuff to have a common behavior and avoid the double kfree_skb.
+But this was implemented incorrectly and the initialization for BATMAN_V
+always overwrote the value previously written for BATMAN_IV. This could
+only be avoided when BATMAN_V was disabled during compile time.
 
-Fixes: 610bfc6bc99b ("batman-adv: Receive fragmented packets and merge")
+Using a special batadv_algo hook for this initialization avoids this
+problem.
+
+Fixes: 50164d8f500f ("batman-adv: B.A.T.M.A.N. V - implement GW selection logic")
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/fragmentation.c |    8 +++++---
- net/batman-adv/routing.c       |    6 ++++++
- 2 files changed, 11 insertions(+), 3 deletions(-)
+ net/batman-adv/bat_iv_ogm.c     |   11 +++++++++++
+ net/batman-adv/bat_v.c          |   14 +++++++++++---
+ net/batman-adv/gateway_common.c |    5 +++++
+ net/batman-adv/soft-interface.c |    1 -
+ net/batman-adv/types.h          |    2 ++
+ 5 files changed, 29 insertions(+), 4 deletions(-)
 
---- a/net/batman-adv/fragmentation.c
-+++ b/net/batman-adv/fragmentation.c
-@@ -232,8 +232,10 @@ err_unlock:
- 	spin_unlock_bh(&chain->lock);
- 
- err:
--	if (!ret)
-+	if (!ret) {
- 		kfree(frag_entry_new);
-+		kfree_skb(skb);
-+	}
- 
- 	return ret;
- }
-@@ -305,7 +307,7 @@ free:
-  *
-  * There are three possible outcomes: 1) Packet is merged: Return true and
-  * set *skb to merged packet; 2) Packet is buffered: Return true and set *skb
-- * to NULL; 3) Error: Return false and leave skb as is.
-+ * to NULL; 3) Error: Return false and free skb.
-  *
-  * Return: true when packet is merged or buffered, false when skb is not not
-  * used.
-@@ -330,9 +332,9 @@ bool batadv_frag_skb_buffer(struct sk_bu
- 		goto out_err;
- 
- out:
--	*skb = skb_out;
- 	ret = true;
- out_err:
-+	*skb = skb_out;
- 	return ret;
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -2479,6 +2479,16 @@ static void batadv_iv_iface_activate(str
+ 	batadv_iv_ogm_schedule(hard_iface);
  }
  
---- a/net/batman-adv/routing.c
-+++ b/net/batman-adv/routing.c
-@@ -1080,6 +1080,12 @@ int batadv_recv_frag_packet(struct sk_bu
- 	batadv_inc_counter(bat_priv, BATADV_CNT_FRAG_RX);
- 	batadv_add_counter(bat_priv, BATADV_CNT_FRAG_RX_BYTES, skb->len);
- 
-+	/* batadv_frag_skb_buffer will always consume the skb and
-+	 * the caller should therefore never try to free the
-+	 * skb after this point
-+	 */
-+	ret = NET_RX_SUCCESS;
++/**
++ * batadv_iv_init_sel_class - initialize GW selection class
++ * @bat_priv: the bat priv with all the soft interface information
++ */
++static void batadv_iv_init_sel_class(struct batadv_priv *bat_priv)
++{
++	/* set default TQ difference threshold to 20 */
++	atomic_set(&bat_priv->gw.sel_class, 20);
++}
 +
- 	/* Add fragment to buffer and merge if possible. */
- 	if (!batadv_frag_skb_buffer(&skb, orig_node_src))
- 		goto out;
+ static struct batadv_gw_node *
+ batadv_iv_gw_get_best_gw_node(struct batadv_priv *bat_priv)
+ {
+@@ -2827,6 +2837,7 @@ static struct batadv_algo_ops batadv_bat
+ 		.del_if = batadv_iv_ogm_orig_del_if,
+ 	},
+ 	.gw = {
++		.init_sel_class = batadv_iv_init_sel_class,
+ 		.get_best_gw_node = batadv_iv_gw_get_best_gw_node,
+ 		.is_eligible = batadv_iv_gw_is_eligible,
+ #ifdef CONFIG_BATMAN_ADV_DEBUGFS
+--- a/net/batman-adv/bat_v.c
++++ b/net/batman-adv/bat_v.c
+@@ -668,6 +668,16 @@ err_ifinfo1:
+ 	return ret;
+ }
+ 
++/**
++ * batadv_v_init_sel_class - initialize GW selection class
++ * @bat_priv: the bat priv with all the soft interface information
++ */
++static void batadv_v_init_sel_class(struct batadv_priv *bat_priv)
++{
++	/* set default throughput difference threshold to 5Mbps */
++	atomic_set(&bat_priv->gw.sel_class, 50);
++}
++
+ static ssize_t batadv_v_store_sel_class(struct batadv_priv *bat_priv,
+ 					char *buff, size_t count)
+ {
+@@ -1054,6 +1064,7 @@ static struct batadv_algo_ops batadv_bat
+ 		.dump = batadv_v_orig_dump,
+ 	},
+ 	.gw = {
++		.init_sel_class = batadv_v_init_sel_class,
+ 		.store_sel_class = batadv_v_store_sel_class,
+ 		.show_sel_class = batadv_v_show_sel_class,
+ 		.get_best_gw_node = batadv_v_gw_get_best_gw_node,
+@@ -1094,9 +1105,6 @@ int batadv_v_mesh_init(struct batadv_pri
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	/* set default throughput difference threshold to 5Mbps */
+-	atomic_set(&bat_priv->gw.sel_class, 50);
+-
+ 	return 0;
+ }
+ 
+--- a/net/batman-adv/gateway_common.c
++++ b/net/batman-adv/gateway_common.c
+@@ -253,6 +253,11 @@ static void batadv_gw_tvlv_ogm_handler_v
+  */
+ void batadv_gw_init(struct batadv_priv *bat_priv)
+ {
++	if (bat_priv->algo_ops->gw.init_sel_class)
++		bat_priv->algo_ops->gw.init_sel_class(bat_priv);
++	else
++		atomic_set(&bat_priv->gw.sel_class, 1);
++
+ 	batadv_tvlv_handler_register(bat_priv, batadv_gw_tvlv_ogm_handler_v1,
+ 				     NULL, BATADV_TVLV_GW, 1,
+ 				     BATADV_TVLV_HANDLER_OGM_CIFNOTFND);
+--- a/net/batman-adv/soft-interface.c
++++ b/net/batman-adv/soft-interface.c
+@@ -808,7 +808,6 @@ static int batadv_softif_init_late(struc
+ 	atomic_set(&bat_priv->mcast.num_want_all_ipv6, 0);
+ #endif
+ 	atomic_set(&bat_priv->gw.mode, BATADV_GW_MODE_OFF);
+-	atomic_set(&bat_priv->gw.sel_class, 20);
+ 	atomic_set(&bat_priv->gw.bandwidth_down, 100);
+ 	atomic_set(&bat_priv->gw.bandwidth_up, 20);
+ 	atomic_set(&bat_priv->orig_interval, 1000);
+--- a/net/batman-adv/types.h
++++ b/net/batman-adv/types.h
+@@ -1466,6 +1466,7 @@ struct batadv_algo_orig_ops {
+ 
+ /**
+  * struct batadv_algo_gw_ops - mesh algorithm callbacks (GW specific)
++ * @init_sel_class: initialize GW selection class (optional)
+  * @store_sel_class: parse and stores a new GW selection class (optional)
+  * @show_sel_class: prints the current GW selection class (optional)
+  * @get_best_gw_node: select the best GW from the list of available nodes
+@@ -1476,6 +1477,7 @@ struct batadv_algo_orig_ops {
+  * @dump: dump gateways to a netlink socket (optional)
+  */
+ struct batadv_algo_gw_ops {
++	void (*init_sel_class)(struct batadv_priv *bat_priv);
+ 	ssize_t (*store_sel_class)(struct batadv_priv *bat_priv, char *buff,
+ 				   size_t count);
+ 	ssize_t (*show_sel_class)(struct batadv_priv *bat_priv, char *buff);
 
 
