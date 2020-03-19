@@ -2,128 +2,165 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D91BC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E68FC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C20A20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A442072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:31:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/OjG0aZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgCSIbL (ORCPT
+        id S1726881AbgCSIb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:31:11 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2579 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726063AbgCSIbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:31:11 -0400
-Received: from lhreml706-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 3B78CAEE143F21C7708F;
-        Thu, 19 Mar 2020 08:31:09 +0000 (GMT)
-Received: from fraeml706-chm.china.huawei.com (10.206.15.55) by
- lhreml706-cah.china.huawei.com (10.201.108.47) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 19 Mar 2020 08:31:08 +0000
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml706-chm.china.huawei.com (10.206.15.55) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Thu, 19 Mar 2020 09:31:08 +0100
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1713.004;
- Thu, 19 Mar 2020 09:31:08 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH v3 7/8] ima: Calculate and extend PCR with digests in
- ima_template_entry
-Thread-Topic: [PATCH v3 7/8] ima: Calculate and extend PCR with digests in
- ima_template_entry
-Thread-Index: AQHV3/maB4b2w9bxIkSFxAC0vgzFrag2UL0AgBgzWHCAAIroAIAAvEow
-Date:   Thu, 19 Mar 2020 08:31:07 +0000
-Message-ID: <7df041fd4cd64a5bb61beb4eb8276819@huawei.com>
-References: <20200210100418.22049-1-roberto.sassu@huawei.com>
-         <1583208222.8544.168.camel@linux.ibm.com>
-         <fecf59c1880045769bfecc17b5670ac5@huawei.com>
- <1584568492.5188.200.camel@linux.ibm.com>
-In-Reply-To: <1584568492.5188.200.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.0.250]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 19 Mar 2020 04:31:56 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:43464 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgCSIb4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 04:31:56 -0400
+Received: by mail-qv1-f68.google.com with SMTP id c28so544723qvb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 01:31:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0hH/8ZvXQv+Mfjqbb5U9DwxAPHLEKJbYdC6hBHVijbk=;
+        b=O/OjG0aZGy9yhc1+2BMb27k6RQk2H0/k26Ns7y1G3IFc6qr4OIEx5piUhcRJD2rrPj
+         JLSsocLIQqmFxF54te+uwug86NBcBvub9X2UfmlhWFqDQVw95MuNkzvPIBu4a2aCX/c4
+         dlN422LAV9iN812kP8M+XPow4V6+xhnacsrgYj/ujY1vu/lOVmWNVTDWBcN4HeB0k77k
+         mq4wajr830ub2bBwNBgHgl87GdRjap86D0xoYm3HNXGavHg1fXOR4EwiKMU2PL0CCJ8i
+         N518pbqhpIXrRaVAYmz+pJLJE4jrq77v++MEc2DZxRQciS0FSYV4gHj7qojBGVOYDOAV
+         L9Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0hH/8ZvXQv+Mfjqbb5U9DwxAPHLEKJbYdC6hBHVijbk=;
+        b=XzhOIRSTEcvJYA5UHatr1XC+9LKgmxmXJAwLr4YxDou6s2HpImJ+cEzMaxH3V0kdTe
+         CLBhSC63aDQrt8VzVqc6Q6EMD6mfcNwOzWe9D6H9EIGblq4tIlwBit5Y1xWuaLMb7m+W
+         JO2SQHEmaXOgecgsfFCQIXJP5qliK9mxGdkNipHP6gDzcDYcITPGZUQ+eq/wPnrSfzhe
+         fWb1+U6yJsVDSQCSEocktdHuIhY9RITgiRZT9bYGaXFES6MVHrEuAMfdTLLWfiMxIUzc
+         k9kFEIjgxCogPeHf6CYKYSNiNO5MFLcfSV94YZrJmpIdjyxG03QSC9m9ANQM1VVARNlV
+         FUlQ==
+X-Gm-Message-State: ANhLgQ1zCkIa/bz3VXfOPm8R42b9OTrzR49YKEQDS+8t8J3KWcapa6KW
+        Ylz+VTWgWNUHb6CoLatyfWcTb0lezSujws9W9yI=
+X-Google-Smtp-Source: ADFU+vvuRpn8VDUE6NrbjQLgwjoXTyQY98piTROb9Kh6G6elugJxnjNozpur/smZvr97PrgmTTVHwhR39cngLVVQSOM=
+X-Received: by 2002:a05:6214:11f4:: with SMTP id e20mr1862550qvu.66.1584606715035;
+ Thu, 19 Mar 2020 01:31:55 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <1584423717-3440-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1584423717-3440-7-git-send-email-iamjoonsoo.kim@lge.com> <20200318195911.GF154135@cmpxchg.org>
+In-Reply-To: <20200318195911.GF154135@cmpxchg.org>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Thu, 19 Mar 2020 17:31:44 +0900
+Message-ID: <CAAmzW4MBQP56=RNxUfKYJ10WAEp-m2bKhC-WVVF8Nt6PZ+JuJw@mail.gmail.com>
+Subject: Re: [PATCH v3 6/9] mm/workingset: handle the page without memcg
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1pbnRlZ3JpdHktb3du
-ZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtaW50ZWdyaXR5LQ0KPiBvd25lckB2Z2Vy
-Lmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBNaW1pIFpvaGFyDQo+IFNlbnQ6IFdlZG5lc2RheSwg
-TWFyY2ggMTgsIDIwMjAgMTA6NTUgUE0NCj4gVG86IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fz
-c3VAaHVhd2VpLmNvbT47DQo+IEphbWVzLkJvdHRvbWxleUBIYW5zZW5QYXJ0bmVyc2hpcC5jb207
-DQo+IGphcmtrby5zYWtraW5lbkBsaW51eC5pbnRlbC5jb20NCj4gQ2M6IGxpbnV4LWludGVncml0
-eUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNlY3VyaXR5LW1vZHVsZUB2Z2VyLmtlcm5lbC5vcmc7
-DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNpbHZpdSBWbGFzY2VhbnUNCj4gPFNp
-bHZpdS5WbGFzY2VhbnVAaHVhd2VpLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyA3Lzhd
-IGltYTogQ2FsY3VsYXRlIGFuZCBleHRlbmQgUENSIHdpdGggZGlnZXN0cyBpbg0KPiBpbWFfdGVt
-cGxhdGVfZW50cnkNCj4gDQo+IE9uIFdlZCwgMjAyMC0wMy0xOCBhdCAxMjo0MiArMDAwMCwgUm9i
-ZXJ0byBTYXNzdSB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4g
-PiBGcm9tOiBvd25lci1saW51eC1zZWN1cml0eS1tb2R1bGVAdmdlci5rZXJuZWwub3JnIFttYWls
-dG86b3duZXItDQo+IGxpbnV4LQ0KPiA+ID4gc2VjdXJpdHktbW9kdWxlQHZnZXIua2VybmVsLm9y
-Z10gT24gQmVoYWxmIE9mIE1pbWkgWm9oYXINCj4gPiA+IFNlbnQ6IFR1ZXNkYXksIE1hcmNoIDMs
-IDIwMjAgNTowNCBBTQ0KPiA+ID4gVG86IFJvYmVydG8gU2Fzc3UgPHJvYmVydG8uc2Fzc3VAaHVh
-d2VpLmNvbT47DQo+ID4gPiBKYW1lcy5Cb3R0b21sZXlASGFuc2VuUGFydG5lcnNoaXAuY29tOw0K
-PiA+ID4gamFya2tvLnNha2tpbmVuQGxpbnV4LmludGVsLmNvbQ0KPiA+ID4gQ2M6IGxpbnV4LWlu
-dGVncml0eUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNlY3VyaXR5LQ0KPiBtb2R1bGVAdmdlci5r
-ZXJuZWwub3JnOw0KPiA+ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgU2lsdml1IFZs
-YXNjZWFudQ0KPiA+ID4gPFNpbHZpdS5WbGFzY2VhbnVAaHVhd2VpLmNvbT4NCj4gPiA+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggdjMgNy84XSBpbWE6IENhbGN1bGF0ZSBhbmQgZXh0ZW5kIFBDUiB3aXRo
-IGRpZ2VzdHMNCj4gaW4NCj4gPiA+IGltYV90ZW1wbGF0ZV9lbnRyeQ0KPiA+ID4NCj4gPiA+IE9u
-IE1vbiwgMjAyMC0wMi0xMCBhdCAxMTowNCArMDEwMCwgUm9iZXJ0byBTYXNzdSB3cm90ZToNCj4g
-PiA+DQo+ID4gPiA+IEBAIC0yMTksNiArMjE0LDggQEAgaW50IGltYV9yZXN0b3JlX21lYXN1cmVt
-ZW50X2VudHJ5KHN0cnVjdA0KPiA+ID4gaW1hX3RlbXBsYXRlX2VudHJ5ICplbnRyeSkNCj4gPiA+
-ID4NCj4gPiA+ID4gIGludCBfX2luaXQgaW1hX2luaXRfZGlnZXN0cyh2b2lkKQ0KPiA+ID4gPiAg
-ew0KPiA+ID4gPiArCXUxNiBkaWdlc3Rfc2l6ZTsNCj4gPiA+ID4gKwl1MTYgY3J5cHRvX2lkOw0K
-PiA+ID4gPiAgCWludCBpOw0KPiA+ID4gPg0KPiA+ID4gPiAgCWlmICghaW1hX3RwbV9jaGlwKQ0K
-PiA+ID4gPiBAQCAtMjI5LDggKzIyNiwxNyBAQCBpbnQgX19pbml0IGltYV9pbml0X2RpZ2VzdHMo
-dm9pZCkNCj4gPiA+ID4gIAlpZiAoIWRpZ2VzdHMpDQo+ID4gPiA+ICAJCXJldHVybiAtRU5PTUVN
-Ow0KPiA+ID4gPg0KPiA+ID4gPiAtCWZvciAoaSA9IDA7IGkgPCBpbWFfdHBtX2NoaXAtPm5yX2Fs
-bG9jYXRlZF9iYW5rczsgaSsrKQ0KPiA+ID4gPiArCWZvciAoaSA9IDA7IGkgPCBpbWFfdHBtX2No
-aXAtPm5yX2FsbG9jYXRlZF9iYW5rczsgaSsrKSB7DQo+ID4gPiA+ICAJCWRpZ2VzdHNbaV0uYWxn
-X2lkID0gaW1hX3RwbV9jaGlwLT5hbGxvY2F0ZWRfYmFua3NbaV0uYWxnX2lkOw0KPiA+ID4gPiAr
-CQlkaWdlc3Rfc2l6ZSA9IGltYV90cG1fY2hpcC0+YWxsb2NhdGVkX2JhbmtzW2ldLmRpZ2VzdF9z
-aXplOw0KPiA+ID4gPiArCQljcnlwdG9faWQgPSBpbWFfdHBtX2NoaXAtPmFsbG9jYXRlZF9iYW5r
-c1tpXS5jcnlwdG9faWQ7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwkJLyogZm9yIHVubWFwcGVkIFRQ
-TSBhbGdvcml0aG1zIGRpZ2VzdCBpcyBzdGlsbCBhIHBhZGRlZA0KPiA+ID4gU0hBMSAqLw0KPiA+
-ID4gPiArCQlpZiAoY3J5cHRvX2lkID09IEhBU0hfQUxHT19fTEFTVCkNCj4gPiA+ID4gKwkJCWRp
-Z2VzdF9zaXplID0gU0hBMV9ESUdFU1RfU0laRTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCQltZW1z
-ZXQoZGlnZXN0c1tpXS5kaWdlc3QsIDB4ZmYsIGRpZ2VzdF9zaXplKTsNCj4gPiA+DQo+ID4gPiBT
-aG91bGRuJ3QgdGhlIG1lbXNldCBoZXJlIGJlIG9mIHRoZSBhY3R1YWwgZGlnZXN0IHNpemUgZXZl
-biBmb3INCj4gPiA+IHVubWFwcGVkIFRQTSBhbGdvcml0aG1zLg0KPiA+DQo+ID4gVGhpcyBpcyBj
-b25zaXN0ZW50IHdpdGggaW1hX2NhbGNfZmllbGRfYXJyYXlfaGFzaCgpLCBzbyB0aGF0IGEgdmVy
-aWZpZXINCj4gPiB3aWxsIGFsd2F5cyBwYWQgdGhlIFNIQTEgZGlnZXN0IHdpdGggemVyb3MgdG8g
-b2J0YWluIHRoZSBmaW5hbCBQQ1IgdmFsdWUuDQo+ID4NCj4gPiBJIGNhbiBzZXQgYWxsIGJ5dGVz
-IGlmIHlvdSBwcmVmZXIuDQo+IA0KPiBNeSBjb25jZXJuIGlzIHdpdGggdmlvbGF0aW9ucy4gwqBU
-aGUgbWVhc3VyZW1lbnQgbGlzdCB3aWxsIGJlIHBhZGRlZA0KPiB3aXRoIDAncywgYnV0IHRoZSB2
-YWx1ZSBiZWluZyBleHRlbmRlZCBpbnRvIHRoZSBUUE0gd2lsbCBvbmx5DQo+IHBhcnRpYWxseSBi
-ZSAweEZGJ3MuIMKgV2hlbiB2ZXJpZnlpbmcgdGhlIG1lYXN1cmVtZW50IGxpc3QsIHJlcGxhY2lu
-Zw0KPiBhbGwgMHgwMCdzIHdpdGggYWxsIDB4RkYncyBpcyBzaW1wbGVyLg0KDQpJZiB0aGUgVFBN
-IGFsZ29yaXRobSBpcyB1bmtub3duLCB0aGUgc3RhcnRpbmcgcG9pbnQgaXMgdGhlIFNIQTEgZGln
-ZXN0Lg0KSWYgdGhlcmUgaXMgYSB2aW9sYXRpb24sIHRoaXMgc2hvdWxkIGJlIHRoZSBvbmUgdG8g
-YmUgbW9kaWZpZWQuIFRoZW4sIGFmdGVyDQp0aGF0LCBwYWRkaW5nIGlzIGRvbmUgZm9yIGFsbCBl
-bnRyaWVzIGluIHRoZSBzYW1lIHdheSwgcmVnYXJkbGVzcyBvZg0Kd2hldGhlciB0aGUgZW50cnkg
-aXMgYSB2aW9sYXRpb24gb3Igbm90Lg0KDQpSb2JlcnRvDQoNCkhVQVdFSSBURUNITk9MT0dJRVMg
-RHVlc3NlbGRvcmYgR21iSCwgSFJCIDU2MDYzDQpNYW5hZ2luZyBEaXJlY3RvcjogTGkgUGVuZywg
-TGkgSmlhbiwgU2hpIFlhbmxpDQo=
+2020=EB=85=84 3=EC=9B=94 19=EC=9D=BC (=EB=AA=A9) =EC=98=A4=EC=A0=84 4:59, J=
+ohannes Weiner <hannes@cmpxchg.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Tue, Mar 17, 2020 at 02:41:54PM +0900, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> >
+> > When implementing workingset detection for anonymous page, I found
+> > some swapcache pages with NULL memcg. From the code reading, I found
+> > two reasons.
+> >
+> > One is the case that swap-in readahead happens. The other is the
+> > corner case related to the shmem cache. These two problems should be
+> > fixed, but, it's not straight-forward to fix. For example, when swap-of=
+f,
+> > all swapped-out pages are read into swapcache. In this case, who's the
+> > owner of the swapcache page?
+> >
+> > Since this problem doesn't look trivial, I decide to leave the issue an=
+d
+> > handles this corner case on the place where the error occurs.
+> >
+> > Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+>
+> It wouldn't be hard to find out who owns this page. The code in
+> mem_cgroup_try_charge() is only a few lines:
+
+lookup_swap_cgroup_id() uses additional memory and is only
+usable if CONFIG_MEMCG_SWAP is on.
+
+>                         swp_entry_t ent =3D { .val =3D page_private(page)=
+, };
+>                         unsigned short id =3D lookup_swap_cgroup_id(ent);
+>
+>                         rcu_read_lock();
+>                         memcg =3D mem_cgroup_from_id(id);
+>                         if (memcg && !css_tryget_online(&memcg->css))
+>                                 memcg =3D NULL;
+>                         rcu_read_unlock();
+>
+> THAT BEING SAID, I don't think we actually *want* to know the original
+> cgroup for readahead pages. Because before they are accessed and
+> charged to the original owner, the pages are sitting on the root
+> cgroup LRU list and follow the root group's aging speed and LRU order.
+
+Okay. Sound reasonable.
+
+> Eviction and refault tracking is about the LRU that hosts the pages.
+>
+> So IMO your patch is much less of a hack than you might think.
+
+Good!
+
+> > diff --git a/mm/workingset.c b/mm/workingset.c
+> > index a9f474a..8d2e83a 100644
+> > --- a/mm/workingset.c
+> > +++ b/mm/workingset.c
+> > @@ -257,6 +257,10 @@ void *workingset_eviction(struct page *page, struc=
+t mem_cgroup *target_memcg)
+> >       VM_BUG_ON_PAGE(page_count(page), page);
+> >       VM_BUG_ON_PAGE(!PageLocked(page), page);
+> >
+> > +     /* page_memcg() can be NULL if swap-in readahead happens */
+> > +     if (!page_memcg(page))
+> > +             return NULL;
+> > +
+> >       advance_inactive_age(page_memcg(page), pgdat, is_file);
+> >
+> >       lruvec =3D mem_cgroup_lruvec(target_memcg, pgdat);
+>
+> This means a readahead page that hasn't been accessed will actively
+> not be tracked as an eviction and later as a refault.
+>
+> I think that's the right thing to do, but I would expand the comment:
+
+Okay. I will add the following comment.
+
+Thanks.
+
+> /*
+>  * A page can be without a cgroup here when it was brought in by swap
+>  * readahead and nobody has touched it since.
+>  *
+>  * The idea behind the workingset code is to tell on page fault time
+>  * whether pages have been previously used or not. Since this page
+>  * hasn't been used, don't store a shadow entry for it; when it later
+>  * faults back in, we treat it as the new page that it is.
+>  */
