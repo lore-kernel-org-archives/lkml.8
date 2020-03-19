@@ -2,113 +2,89 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E446C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A351C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32BD920663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:35:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbLWcG94"
+	by mail.kernel.org (Postfix) with ESMTP id 5183920787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584624949;
+	bh=+Mv7wUdO0+tABFoYEHIdSzS2ybIGutDo97mHi4P418E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zz7IynYWO9XAdTuThbFSOZ5f4VpD4JWuq9dE/un2fydYCD1ZAFwcb29EtxJIfAbYX
+	 ZaBLOXn5pJgvyJFqYp9pUwfDg5H45NISU9iFRtVfQygZJ9Gb6ZBVBSWJu/nmIvtS4l
+	 YuULafcjdUpGNHVkJWW5GqLlgJBvmS6RqSl1HqCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbgCSNLI (ORCPT
+        id S1728065AbgCSNLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:11:08 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40958 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728649AbgCSNLF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:11:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t24so1248927pgj.7;
-        Thu, 19 Mar 2020 06:11:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B4nHSl+0pWGmInbe8FQHGu8YA5O/4e10+dn6tS8W63s=;
-        b=gbLWcG94Hw5eFr5F713x2ZHuuzXvDsR7HTPfXMj/bIwF+d8ypI7MQ0pyYwa+09U5TZ
-         NqzDcIq3rhIlQ4m3ktNvDy5fiWpyluuTk2aj13Vrd5xi/rvbzDOTKr5HnOlQqlMtqq2I
-         M30MLa3Mre/tQuTekAAIEmcBZZtLSzzPQpAZxWmDu3aa4Zrs7fadQ+K7/FGUMgA0sb49
-         PyYhYjlIHoob0v7+ijdGrXE0Gm8ie9bwPUlzDJXrH7xRsp8cxgd4KmLEzHO+mBmV/t2S
-         jn7lhWtnvbAEt837OOgOCRB6KtNhzETY7bPO8q91avv2t4qOmYnjaaHLMF7/VWFOygUJ
-         ukTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B4nHSl+0pWGmInbe8FQHGu8YA5O/4e10+dn6tS8W63s=;
-        b=Gd/WnK5Id+0kOR8yUmlYcoz0mJ8rcqCJP+ZjVtF0X/hUSsnaLCkO+qvO8hwxO3/8th
-         07OwE9rDhdQ1/KzXEzls8CDoPRTCPxt85rARLfpRxPmSgeohfHU0A5PbfrWT42ZCNTbG
-         YRdSYkGxpF99JLgriqnDWoXIsYyecEQhmXi1/dPOh+lHsSVJ44YrvBQwV/m1kQ174tKA
-         2zqtAKtxYBSuQVZD/tJqFXCrKkgTCsDVPtMSHAwhQ7Cnot3Re9f3C+Q+UNC05TJx7kQu
-         CPjE20pQAcsvxLyH3QY/Lty4lK06hk9riHUIwBpW4SrZwLA6z6kb+Xg6Xykqji9wWnnO
-         QSKA==
-X-Gm-Message-State: ANhLgQ0XUm0vNu0GIZG2vUj7pDaXwWT/eAkoht907q9CN2urT509lFmb
-        8Bm496jgDz1X4L6Eq0Whwt4=
-X-Google-Smtp-Source: ADFU+vu6U87IPTR0D2iW/QPtoCB5nPrRdEyRPfJY+KBcojiba6nAoCyZgW5BQnWhYb7EwcPvHQuD8w==
-X-Received: by 2002:aa7:81c1:: with SMTP id c1mr3943700pfn.236.1584623463897;
-        Thu, 19 Mar 2020 06:11:03 -0700 (PDT)
-Received: from localhost ([216.24.188.11])
-        by smtp.gmail.com with ESMTPSA id lt11sm2087682pjb.2.2020.03.19.06.11.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 19 Mar 2020 06:11:03 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        joabreu@synopsys.com, davem@davemloft.net,
-        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH] net: stmmac: dwmac_lib: remove unnecessary checks in dwmac_dma_reset()
-Date:   Thu, 19 Mar 2020 21:10:19 +0800
-Message-Id: <20200319131019.12829-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Thu, 19 Mar 2020 09:11:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728637AbgCSNLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:11:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6239208D6;
+        Thu, 19 Mar 2020 13:11:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584623462;
+        bh=+Mv7wUdO0+tABFoYEHIdSzS2ybIGutDo97mHi4P418E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=w19ZZIkaW8Q56TauyA18KZVpTwoSyitC1dMrg74E3dYM+jHIzSOOf3AUj1wS4Jc3y
+         LrAV+olQjtSOzoG4mjCu8WJ/EPrCf+T26MozuOuIRZa6FoMoRherjockTHAulK6VRW
+         k03P6apLyK2nvAsmcwelRf7eVTiawK238B5U/gvw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 17/90] team: add missing attribute validation for array index
+Date:   Thu, 19 Mar 2020 13:59:39 +0100
+Message-Id: <20200319123934.024870953@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
+References: <20200319123928.635114118@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-it will check the return value of dwmac_dma_reset() in the
-stmmac_init_dma_engine() function and report an error if the
-return value is not zero. so don't need check here.
+From: Jakub Kicinski <kuba@kernel.org>
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+[ Upstream commit 669fcd7795900cd1880237cbbb57a7db66cb9ac8 ]
+
+Add missing attribute validation for TEAM_ATTR_OPTION_ARRAY_INDEX
+to the netlink policy.
+
+Fixes: b13033262d24 ("team: introduce array options")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/net/team/team.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c b/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
-index 688d36095333..cb87d31a99df 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
-@@ -16,19 +16,14 @@
- int dwmac_dma_reset(void __iomem *ioaddr)
- {
- 	u32 value = readl(ioaddr + DMA_BUS_MODE);
--	int err;
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -2217,6 +2217,7 @@ team_nl_option_policy[TEAM_ATTR_OPTION_M
+ 	[TEAM_ATTR_OPTION_TYPE]			= { .type = NLA_U8 },
+ 	[TEAM_ATTR_OPTION_DATA]			= { .type = NLA_BINARY },
+ 	[TEAM_ATTR_OPTION_PORT_IFINDEX]		= { .type = NLA_U32 },
++	[TEAM_ATTR_OPTION_ARRAY_INDEX]		= { .type = NLA_U32 },
+ };
  
- 	/* DMA SW reset */
- 	value |= DMA_BUS_MODE_SFT_RESET;
- 	writel(value, ioaddr + DMA_BUS_MODE);
- 
--	err = readl_poll_timeout(ioaddr + DMA_BUS_MODE, value,
-+	return readl_poll_timeout(ioaddr + DMA_BUS_MODE, value,
- 				 !(value & DMA_BUS_MODE_SFT_RESET),
- 				 10000, 100000);
--	if (err)
--		return -EBUSY;
--
--	return 0;
- }
- 
- /* CSR1 enables the transmit DMA to check for new descriptor */
--- 
-2.25.0
+ static int team_nl_cmd_noop(struct sk_buff *skb, struct genl_info *info)
+
 
