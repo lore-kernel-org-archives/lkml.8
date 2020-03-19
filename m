@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13362C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447DAC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31CD2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F52320724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727739AbgCSJQZ (ORCPT
+        id S1727753AbgCSJQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:16:25 -0400
-Received: from 8bytes.org ([81.169.241.247]:52476 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:16:31 -0400
+Received: from 8bytes.org ([81.169.241.247]:51922 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727466AbgCSJOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727460AbgCSJOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 05:14:44 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id D0A2CE9C; Thu, 19 Mar 2020 10:14:26 +0100 (CET)
+        id 95E19E97; Thu, 19 Mar 2020 10:14:26 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 56/70] x86/sev-es: Handle MONITOR/MONITORX Events
-Date:   Thu, 19 Mar 2020 10:13:53 +0100
-Message-Id: <20200319091407.1481-57-joro@8bytes.org>
+Subject: [PATCH 55/70] x86/sev-es: Handle RDTSCP Events
+Date:   Thu, 19 Mar 2020 10:13:52 +0100
+Message-Id: <20200319091407.1481-56-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -46,56 +46,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Implement a handler for #VC exceptions caused by MONITOR and MONITORX
-instructions.
+Extend the RDTSC handler to also handle RDTSCP events.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Adapt to #VC handling infrastructure ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/x86/kernel/sev-es.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 11947b648b43..6bd8bc9f2e66 100644
+index a4f136b2e149..11947b648b43 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -707,6 +707,22 @@ static enum es_result vc_handle_rdpmc(struct ghcb *ghcb, struct es_em_ctxt *ctxt
- 	return ES_OK;
+@@ -665,19 +665,25 @@ static enum es_result vc_handle_wbinvd(struct ghcb *ghcb,
+ 	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_WBINVD, 0, 0);
  }
  
-+static enum es_result vc_handle_monitor(struct ghcb *ghcb,
-+					struct es_em_ctxt *ctxt)
-+{
-+	phys_addr_t monitor_pa;
-+	pgd_t *pgd;
-+
-+	pgd = __va(read_cr3_pa());
-+	monitor_pa = vc_slow_virt_to_phys(ghcb, ctxt->regs->ax);
-+
-+	ghcb_set_rax(ghcb, monitor_pa);
-+	ghcb_set_rcx(ghcb, ctxt->regs->cx);
-+	ghcb_set_rdx(ghcb, ctxt->regs->dx);
-+
-+	return sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_MONITOR, 0, 0);
-+}
-+
- static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 					 struct ghcb *ghcb,
- 					 unsigned long exit_code,
-@@ -744,6 +760,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	case SVM_EXIT_WBINVD:
- 		result = vc_handle_wbinvd(ghcb, ctxt);
+-static enum es_result vc_handle_rdtsc(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
++static enum es_result vc_handle_rdtsc(struct ghcb *ghcb,
++				      struct es_em_ctxt *ctxt,
++				      unsigned long exit_code)
+ {
++	bool rdtscp = (exit_code == SVM_EXIT_RDTSCP);
+ 	enum es_result ret;
+ 
+-	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_RDTSC, 0, 0);
++	ret = sev_es_ghcb_hv_call(ghcb, ctxt, exit_code, 0, 0);
+ 	if (ret != ES_OK)
+ 		return ret;
+ 
+-	if (!(ghcb_is_valid_rax(ghcb) && ghcb_is_valid_rdx(ghcb)))
++	if (!(ghcb_is_valid_rax(ghcb) && ghcb_is_valid_rdx(ghcb) &&
++	     (!rdtscp || ghcb_is_valid_rcx(ghcb))))
+ 		return ES_VMM_ERROR;
+ 
+ 	ctxt->regs->ax = ghcb->save.rax;
+ 	ctxt->regs->dx = ghcb->save.rdx;
++	if (rdtscp)
++		ctxt->regs->cx = ghcb->save.rcx;
+ 
+ 	return ES_OK;
+ }
+@@ -716,7 +722,8 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 		result = vc_handle_dr7_write(ghcb, ctxt, early);
  		break;
-+	case SVM_EXIT_MONITOR:
-+		result = vc_handle_monitor(ghcb, ctxt);
-+		break;
- 	case SVM_EXIT_NPF:
- 		result = vc_handle_mmio(ghcb, ctxt);
+ 	case SVM_EXIT_RDTSC:
+-		result = vc_handle_rdtsc(ghcb, ctxt);
++	case SVM_EXIT_RDTSCP:
++		result = vc_handle_rdtsc(ghcb, ctxt, exit_code);
  		break;
+ 	case SVM_EXIT_RDPMC:
+ 		result = vc_handle_rdpmc(ghcb, ctxt);
 -- 
 2.17.1
 
