@@ -2,72 +2,85 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BBBC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA18C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7618720B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584630142;
-	bh=Wm4G73npLtlzYtMDeYoIvvpBN/OsexLDrTVojSELgIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r7EXysurI+QJSNkPo2t4cj9jkmnRo8LD9UxX74AUMhvoULf68OYL9ErYmqvMgz4Fw
-	 dqe0Kfxi0snjQJ+rZx7CZvvlustcb60jqXZzDsJhslUDc6gUZnd9LGnCkEibjKRlJC
-	 scm/p1rOzIZHhZbHumQfouxUWnpIzO4raDqEcM9k=
+	by mail.kernel.org (Postfix) with ESMTP id C141F20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgCSPCV (ORCPT
+        id S1728215AbgCSPCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 19 Mar 2020 11:02:24 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:16097 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728129AbgCSPCV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 11:02:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbgCSPCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:02:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E0ED2072D;
-        Thu, 19 Mar 2020 15:02:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584630139;
-        bh=Wm4G73npLtlzYtMDeYoIvvpBN/OsexLDrTVojSELgIg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PGeWkMTEGWHJZUFxJh8T9pY9JKxXDk3gvf3lxJo+22KKLhcYir3HCBSpi5jaWn7Zf
-         rEC61zXFOLTXUeluEeWH7Cr10XAS+cJRj1xT2Qvau3BHQSvrPUy6LYfLyIokNJUKq0
-         j0zPdjALKq6LUWyq8ALG2Xs1LVeUCuB6zX9EVL+4=
-Date:   Thu, 19 Mar 2020 16:02:16 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 00/64] 5.5.11-rc1 review
-Message-ID: <20200319150216.GD92193@kroah.com>
-References: <20200319145826.910131145@linuxfoundation.org>
+IronPort-SDR: 0zTL7Za8JOUEyJPdPMenA9n7460q6vvYfF4VzN0cpemyXMwJxtlcpG0ZkS5ULfOYzlmxD8e+Eq
+ P3PXeO4++u3unfcFIt6jcwE52SbZnRgdtHkriuY1BvJ6vbEVj73M2jOtOWFUuwDbqbSrUTBM1U
+ x+8hufDwcqu8SovbEjB8nW4uv5OfukistON63N3rdHtUUjyYvwtHG2glOxVBULSFnRBwhOBjuI
+ xE4Wfj6r90SoUrnRR9RfW4+NmGECBAolfm4JFmr/3+tJOenj7rpHnUUT0Ute8IVcfVdw7zeqp1
+ nWM=
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="48850344"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 19 Mar 2020 07:02:19 -0800
+IronPort-SDR: 7+VyomUZtwuDSYAh/SY6xAWH61GxtJJCC9q1OnWr8SWj/fLw5gaLoApLCfNrm9kXu4FPX7oWeH
+ mbhS/18AQcub+EhPx3bzxG1WDZDSqq+xWFXhe8SrhXp8NCB3kx/4xZlHS/Grez27r193G3cO21
+ aXFarAcgjeZlNEpuheWnHUCG0h3TuWmpO+E2g5z1g4AXP9xwwDFDSvro3rr1DwFcbFL6uC2LeY
+ aTGLE+v4+2pNFYdEu3sIRNDzxvRx5h0lNfUIxs/26AgXtv9Katg99ivA1M8TIvIcLYMvfqimpT
+ R+s=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
+        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <bsz@semihalf.com>, <rydberg@bitmath.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
+        <jiada_wang@mentor.com>
+Subject: [PATCH v8 30/52] Input: atmel_mxt_ts - orientation is not present in hover
+Date:   Thu, 19 Mar 2020 07:59:54 -0700
+Message-ID: <20200319150016.61398-31-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200319150016.61398-1-jiada_wang@mentor.com>
+References: <20200319150016.61398-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319145826.910131145@linuxfoundation.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 03:59:16PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.11 release.
-> There are 64 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 21 Mar 2020 14:57:53 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.11-rc1.gz
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-Crap, this should have been -rc2, let me go fix that...
+When in hover, the orientation information is not sent
+
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+(cherry picked from ndyer/linux/for-upstream commit 0c885d5bd276bd9240c43aa046fc407cbe2ae864)
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 670159c2f218..2c3a59ff70c4 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -1026,10 +1026,6 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
+ 			distance = MXT_DISTANCE_HOVERING;
+ 			hover = true;
+ 			active = true;
+-
+-			if (data->t100_aux_vect)
+-				orientation = message[data->t100_aux_vect];
+-
+ 			break;
+ 
+ 		case MXT_T100_TYPE_FINGER:
+-- 
+2.17.1
 
