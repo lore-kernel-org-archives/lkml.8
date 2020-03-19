@@ -2,129 +2,135 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A56C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BDB9C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF70220789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625030;
-	bh=PXYai1ZiJAgW5vL3Zh/m08qdMjBroO5ouphz7+nA/oI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LhOhSpgFr4HucMWWiRluT4i7nh1bJF70Qq64tbTUipEjKR0EoGO20TUaDeweyhBeI
-	 weNQGSpwowlMOlc0ztub3OWr3EfstVclJOgymO5qSzxXffcQCMlLO7bEI8EShW90Oa
-	 xx/7bg6Eia1QTsi46MjqfOr+Dz/Xrmuz2Hh+nLGg=
+	by mail.kernel.org (Postfix) with ESMTP id 6349D20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:37:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRi61yux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgCSNhJ (ORCPT
+        id S1727704AbgCSNhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:37:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbgCSNI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:08:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47EFB20789;
-        Thu, 19 Mar 2020 13:08:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623308;
-        bh=PXYai1ZiJAgW5vL3Zh/m08qdMjBroO5ouphz7+nA/oI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U0MhjwdQyoq9ifv6rbKAEPJYaZkHp2zValX5aOtRbqkqx0BDbAG3zqr314mq+xRoY
-         UobdhL6wAbGiroiXBOLcAyRwWlkZIkM1RTD2f0oNpaoL7YmnfM2Jb0aSMWVCdqKLL2
-         6W27gE+m51a3BfrCz+lCy+qtOBgPja0adHphQ9LU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 62/93] batman-adv: Fix double free during fragment merge error
-Date:   Thu, 19 Mar 2020 14:00:06 +0100
-Message-Id: <20200319123944.598841370@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
-References: <20200319123924.795019515@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 19 Mar 2020 09:37:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35993 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728286AbgCSNhM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:37:12 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i13so1457907pfe.3;
+        Thu, 19 Mar 2020 06:37:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MbaLg9Gua2M3U1asnVDIvDva7tQ41AoreM1Ms+SYaSk=;
+        b=nRi61yuxZ0Xq+2Qr8bOpOgW2XtV6fryd3C0G4dMcc9FFEMKfZGwP+P/GAI17pT9cjn
+         1lviN+GIEhx3YiHb3db3mmCnPH5CiTFUs0hR3zK+JcRGkonTqxCrgePfWqm24DVtKC+N
+         yKBMMLxYkqoQHnxA9hX3R6YTpQhMUTIU2EkMA3FcYmOAraM8BMrIN/BcbR6OXfguc3Aj
+         CRtrYhn61Lez9OI9owj8+MzXzOZ3Al2zvlk2n0sipwdqQik013kKza2ByhsQSUvdQQXB
+         4hgKnZjY0Rdf9u5ZaK2sdFyVLPpQIw/+/l3IVizC7fEil118v2V60y5p2BgFFHrSbP+x
+         N5kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MbaLg9Gua2M3U1asnVDIvDva7tQ41AoreM1Ms+SYaSk=;
+        b=nPlBA9Ks+nonFertcmS1fje0jRNVhXJll4uNillC8ZplomqiBOdRQ2D3i9pdqXNJvX
+         giZcY0sG8CZw0WP5ovPRVUe23QGUBLFFa72M0gNp6ZtOqJPDR5xaIFfSgpdcCW08lng7
+         gBhMse/17eSRC1w119R8R1l1ipbC7iIinMDWiMMQOS+V57dYFDPt8d2r1vvkVU3FKRtM
+         iIUr96j/H3pQ1E80HlpVP7xu8gSWMOWuLSIIz1fm8SMKs6iJ2zfr2z+lRfvplpHeHz6w
+         jcP0/afv16xqT2RZOYXUOfWwStwCM0wdHB4voo8OyDn0UiOxfQwA4k0tPfjNQ7RZSQhW
+         f1ig==
+X-Gm-Message-State: ANhLgQ0Vf6G7fby9yk1sxuvPwrI9BBRiSrb6pueU4VL7QxGTBukW3oFt
+        oVX6bpK4o3yjbtG9l1K2obG/mXZ4ALYoxfwx9Xk=
+X-Google-Smtp-Source: ADFU+vtAoSv40N/3WnXxvMcn62PtlKa6UP0H140pXfQ3uWlj/cLaUak6oaGVR1tGFhEl0JCb/O0lFMkytGGb/lpOUcA=
+X-Received: by 2002:a63:798a:: with SMTP id u132mr3546499pgc.203.1584625031303;
+ Thu, 19 Mar 2020 06:37:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200225173541.1549955-1-npiggin@gmail.com> <cover.1584620202.git.msuchanek@suse.de>
+ <5cd926191175c4a4a85dc2246adc84bcfac21b1a.1584620202.git.msuchanek@suse.de>
+In-Reply-To: <5cd926191175c4a4a85dc2246adc84bcfac21b1a.1584620202.git.msuchanek@suse.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 19 Mar 2020 15:37:03 +0200
+Message-ID: <CAHp75VegYhz-hwSUNHbGFB3yiatAWWytwB7Vctf=mCLyCJEy3Q@mail.gmail.com>
+Subject: Re: [PATCH v11 8/8] MAINTAINERS: perf: Add pattern that matches ppc
+ perf to the perf entry.
+To:     Michal Suchanek <msuchanek@suse.de>
+Cc:     "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+On Thu, Mar 19, 2020 at 2:21 PM Michal Suchanek <msuchanek@suse.de> wrote:
+>
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+> v10: new patch
+> ---
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index bc8dbe4fe4c9..329bf4a31412 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13088,6 +13088,8 @@ F:      arch/*/kernel/*/perf_event*.c
+>  F:     arch/*/kernel/*/*/perf_event*.c
+>  F:     arch/*/include/asm/perf_event.h
+>  F:     arch/*/kernel/perf_callchain.c
+> +F:     arch/*/perf/*
+> +F:     arch/*/perf/*/*
+>  F:     arch/*/events/*
+>  F:     arch/*/events/*/*
+>  F:     tools/perf/
 
-commit 248e23b50e2da0753f3b5faa068939cbe9f8a75a upstream.
+Had you run parse-maintainers.pl?
 
-The function batadv_frag_skb_buffer was supposed not to consume the skbuff
-on errors. This was followed in the helper function
-batadv_frag_insert_packet when the skb would potentially be inserted in the
-fragment queue. But it could happen that the next helper function
-batadv_frag_merge_packets would try to merge the fragments and fail. This
-results in a kfree_skb of all the enqueued fragments (including the just
-inserted one). batadv_recv_frag_packet would detect the error in
-batadv_frag_skb_buffer and try to free the skb again.
-
-The behavior of batadv_frag_skb_buffer (and its helper
-batadv_frag_insert_packet) must therefore be changed to always consume the
-skbuff to have a common behavior and avoid the double kfree_skb.
-
-Fixes: 610bfc6bc99b ("batman-adv: Receive fragmented packets and merge")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/batman-adv/fragmentation.c |    6 ++++--
- net/batman-adv/routing.c       |    6 ++++++
- 2 files changed, 10 insertions(+), 2 deletions(-)
-
---- a/net/batman-adv/fragmentation.c
-+++ b/net/batman-adv/fragmentation.c
-@@ -233,8 +233,10 @@ err_unlock:
- 	spin_unlock_bh(&chain->lock);
- 
- err:
--	if (!ret)
-+	if (!ret) {
- 		kfree(frag_entry_new);
-+		kfree_skb(skb);
-+	}
- 
- 	return ret;
- }
-@@ -329,9 +331,9 @@ bool batadv_frag_skb_buffer(struct sk_bu
- 		goto out_err;
- 
- out:
--	*skb = skb_out;
- 	ret = true;
- out_err:
-+	*skb = skb_out;
- 	return ret;
- }
- 
---- a/net/batman-adv/routing.c
-+++ b/net/batman-adv/routing.c
-@@ -1053,6 +1053,12 @@ int batadv_recv_frag_packet(struct sk_bu
- 	batadv_inc_counter(bat_priv, BATADV_CNT_FRAG_RX);
- 	batadv_add_counter(bat_priv, BATADV_CNT_FRAG_RX_BYTES, skb->len);
- 
-+	/* batadv_frag_skb_buffer will always consume the skb and
-+	 * the caller should therefore never try to free the
-+	 * skb after this point
-+	 */
-+	ret = NET_RX_SUCCESS;
-+
- 	/* Add fragment to buffer and merge if possible. */
- 	if (!batadv_frag_skb_buffer(&skb, orig_node_src))
- 		goto out;
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
