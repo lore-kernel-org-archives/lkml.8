@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CCAC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B3AC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E10208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502D52098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624474;
-	bh=Dxey7Q8OdyIqif19MhI4LcJl0lda+wnDI72pKg7H+PI=;
+	s=default; t=1584624477;
+	bh=vIWVVQSsxa0q2PBnre3MSrwGIHMPHLvVS/E2Zr8HFLo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CSuHdQ6KTaMV+5U5KM1USzUjA0hptjm8DNsrNrujxYeH/b/F0UWaIKDZg0yjYRfmH
-	 3nSP4CDThuA4Vo8lk+t0Wtt46NIEik+2aMM/hxLzY3qbwp14T/tDkqRa+Bc0tIof4y
-	 XPpTFj5DvYScQ4X4Zb/5d8G/7rYim7/DRjtz+rKs=
+	b=zLuxjVz9n9cpi7xPk0Wo/XqQoqJqGLQn5aeuhijH5e0UH0Xsak3IXEdrJ0b//V34u
+	 CYu4OlPg5oX72odc+0A+D2L2KrFK6R6vKLgOPJ/WvoSFRG3qvwH6mP0/0BGWURGoK3
+	 5qZ6HFgDxoXUGf1BzQc/fwIjAJmPeaK6T9ccjwOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbgCSN1w (ORCPT
+        id S1728957AbgCSN14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56186 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:27:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730937AbgCSN1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:27:46 -0400
+        id S1730946AbgCSN1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:27:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB1A520B1F;
-        Thu, 19 Mar 2020 13:27:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD15C208D6;
+        Thu, 19 Mar 2020 13:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624465;
-        bh=Dxey7Q8OdyIqif19MhI4LcJl0lda+wnDI72pKg7H+PI=;
+        s=default; t=1584624470;
+        bh=vIWVVQSsxa0q2PBnre3MSrwGIHMPHLvVS/E2Zr8HFLo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XzJ3+E33Y4nzD1tN8QB2ht6qFk1vSfCELhBmR/L7KUu6NM60kwqczBhisUKvz0qDy
-         ROL85hiLkXTN+L3u+6hfAaVtssxE8vyTJZSIql7Z1+dcqecVjVE/r6yFdPrGzT9nR1
-         lxCTlJ3lhBctpYLOUHMCeeIKWwR73NgzZs+DsB8U=
+        b=DSBZaP7I4lHsRKMzdrt6pu73Cmz8lYnls6FKXZ17jhpkOLso4ySBc4HO9u5vmkL9v
+         F2mfTHH92tVKRrfKNcYvd7MZlZKZchV4DQqjoCx0l08xbCLRapMxGLWqRvFuyAgm3v
+         5xyhi0sX5Of9I/l2FA8zA3OQk31bkGoEccyitK48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandru-Mihai Maftei <amaftei@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>,
+        stable@vger.kernel.org, Kevin Benson <Kevin.Benson@zii.aero>,
+        Chris Healy <Chris.Healy@zii.aero>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 54/65] sfc: fix timestamp reconstruction at 16-bit rollover points
-Date:   Thu, 19 Mar 2020 14:04:36 +0100
-Message-Id: <20200319123943.355676922@linuxfoundation.org>
+Subject: [PATCH 5.5 56/65] net: dsa: mv88e6xxx: Fix masking of egress port
+Date:   Thu, 19 Mar 2020 14:04:38 +0100
+Message-Id: <20200319123943.985046228@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -62,79 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Maftei (amaftei) <amaftei@solarflare.com>
+From: Andrew Lunn <andrew@lunn.ch>
 
-[ Upstream commit 23797b98909f34b75fd130369bde86f760db69d0 ]
+[ Upstream commit 3ee339eb28959629db33aaa2b8cde4c63c6289eb ]
 
-We can't just use the top bits of the last sync event as they could be
-off-by-one every 65,536 seconds, giving an error in reconstruction of
-65,536 seconds.
+Add missing ~ to the usage of the mask.
 
-This patch uses the difference in the bottom 16 bits (mod 2^16) to
-calculate an offset that needs to be applied to the last sync event to
-get to the current time.
-
-Signed-off-by: Alexandru-Mihai Maftei <amaftei@solarflare.com>
-Acked-by: Martin Habets <mhabets@solarflare.com>
+Reported-by: Kevin Benson <Kevin.Benson@zii.aero>
+Reported-by: Chris Healy <Chris.Healy@zii.aero>
+Fixes: 5c74c54ce6ff ("net: dsa: mv88e6xxx: Split monitor port configuration")
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/sfc/ptp.c | 38 +++++++++++++++++++++++++++++++---
- 1 file changed, 35 insertions(+), 3 deletions(-)
+ drivers/net/dsa/mv88e6xxx/global1.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/sfc/ptp.c b/drivers/net/ethernet/sfc/ptp.c
-index af15a737c6756..59b4f16896a81 100644
---- a/drivers/net/ethernet/sfc/ptp.c
-+++ b/drivers/net/ethernet/sfc/ptp.c
-@@ -560,13 +560,45 @@ efx_ptp_mac_nic_to_ktime_correction(struct efx_nic *efx,
- 				    u32 nic_major, u32 nic_minor,
- 				    s32 correction)
- {
-+	u32 sync_timestamp;
- 	ktime_t kt = { 0 };
-+	s16 delta;
- 
- 	if (!(nic_major & 0x80000000)) {
- 		WARN_ON_ONCE(nic_major >> 16);
--		/* Use the top bits from the latest sync event. */
--		nic_major &= 0xffff;
--		nic_major |= (last_sync_timestamp_major(efx) & 0xffff0000);
-+
-+		/* Medford provides 48 bits of timestamp, so we must get the top
-+		 * 16 bits from the timesync event state.
-+		 *
-+		 * We only have the lower 16 bits of the time now, but we do
-+		 * have a full resolution timestamp at some point in past. As
-+		 * long as the difference between the (real) now and the sync
-+		 * is less than 2^15, then we can reconstruct the difference
-+		 * between those two numbers using only the lower 16 bits of
-+		 * each.
-+		 *
-+		 * Put another way
-+		 *
-+		 * a - b = ((a mod k) - b) mod k
-+		 *
-+		 * when -k/2 < (a-b) < k/2. In our case k is 2^16. We know
-+		 * (a mod k) and b, so can calculate the delta, a - b.
-+		 *
-+		 */
-+		sync_timestamp = last_sync_timestamp_major(efx);
-+
-+		/* Because delta is s16 this does an implicit mask down to
-+		 * 16 bits which is what we need, assuming
-+		 * MEDFORD_TX_SECS_EVENT_BITS is 16. delta is signed so that
-+		 * we can deal with the (unlikely) case of sync timestamps
-+		 * arriving from the future.
-+		 */
-+		delta = nic_major - sync_timestamp;
-+
-+		/* Recover the fully specified time now, by applying the offset
-+		 * to the (fully specified) sync time.
-+		 */
-+		nic_major = sync_timestamp + delta;
- 
- 		kt = ptp->nic_to_kernel_time(nic_major, nic_minor,
- 					     correction);
+diff --git a/drivers/net/dsa/mv88e6xxx/global1.c b/drivers/net/dsa/mv88e6xxx/global1.c
+index b016cc205f81f..ca3a7a7a73c32 100644
+--- a/drivers/net/dsa/mv88e6xxx/global1.c
++++ b/drivers/net/dsa/mv88e6xxx/global1.c
+@@ -278,13 +278,13 @@ int mv88e6095_g1_set_egress_port(struct mv88e6xxx_chip *chip,
+ 	switch (direction) {
+ 	case MV88E6XXX_EGRESS_DIR_INGRESS:
+ 		dest_port_chip = &chip->ingress_dest_port;
+-		reg &= MV88E6185_G1_MONITOR_CTL_INGRESS_DEST_MASK;
++		reg &= ~MV88E6185_G1_MONITOR_CTL_INGRESS_DEST_MASK;
+ 		reg |= port <<
+ 		       __bf_shf(MV88E6185_G1_MONITOR_CTL_INGRESS_DEST_MASK);
+ 		break;
+ 	case MV88E6XXX_EGRESS_DIR_EGRESS:
+ 		dest_port_chip = &chip->egress_dest_port;
+-		reg &= MV88E6185_G1_MONITOR_CTL_EGRESS_DEST_MASK;
++		reg &= ~MV88E6185_G1_MONITOR_CTL_EGRESS_DEST_MASK;
+ 		reg |= port <<
+ 		       __bf_shf(MV88E6185_G1_MONITOR_CTL_EGRESS_DEST_MASK);
+ 		break;
 -- 
 2.20.1
 
