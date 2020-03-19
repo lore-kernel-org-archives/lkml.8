@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1F6C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E78C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3906820722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4822020722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbgCSJUk (ORCPT
+        id S1727114AbgCSJOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:20:40 -0400
-Received: from 8bytes.org ([81.169.241.247]:51922 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:14:19 -0400
+Received: from 8bytes.org ([81.169.241.247]:51868 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbgCSJOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:20 -0400
+        id S1727091AbgCSJOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:18 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 380BD1E0; Thu, 19 Mar 2020 10:14:16 +0100 (CET)
+        id D3105B0; Thu, 19 Mar 2020 10:14:15 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 03/70] x86/cpufeatures: Add SEV-ES CPU feature
-Date:   Thu, 19 Mar 2020 10:13:00 +0100
-Message-Id: <20200319091407.1481-4-joro@8bytes.org>
+Subject: [PATCH 01/70] KVM: SVM: Add GHCB definitions
+Date:   Thu, 19 Mar 2020 10:12:58 +0100
+Message-Id: <20200319091407.1481-2-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -48,63 +48,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Add CPU feature detection for Secure Encrypted Virtualization with
-Encrypted State. This feature enhances SEV by also encrypting the
-guest register state, making it in-accessible to the hypervisor.
+Extend the vmcb_safe_area with SEV-ES fields and add a new
+'struct ghcb' which will be used for guest-hypervisor communication.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/cpufeatures.h | 1 +
- arch/x86/kernel/cpu/amd.c          | 3 ++-
- arch/x86/kernel/cpu/scattered.c    | 1 +
- 3 files changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/svm.h | 42 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index f3327cb56edf..2fee1a2cac2f 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -234,6 +234,7 @@
- #define X86_FEATURE_EPT_AD		( 8*32+17) /* Intel Extended Page Table access-dirty bit */
- #define X86_FEATURE_VMCALL		( 8*32+18) /* "" Hypervisor supports the VMCALL instruction */
- #define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* "" VMware prefers VMMCALL hypercall instruction */
-+#define X86_FEATURE_SEV_ES		( 8*32+20) /* AMD Secure Encrypted Virtualization - Encrypted State */
- 
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
- #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 1f875fbe1384..523a6a76c6c1 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -581,7 +581,7 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
- 	 *	      If BIOS has not enabled SME then don't advertise the
- 	 *	      SME feature (set in scattered.c).
- 	 *   For SEV: If BIOS has not enabled SEV then don't advertise the
--	 *            SEV feature (set in scattered.c).
-+	 *            SEV and SEV_ES feature (set in scattered.c).
- 	 *
- 	 *   In all cases, since support for SME and SEV requires long mode,
- 	 *   don't advertise the feature under CONFIG_X86_32.
-@@ -612,6 +612,7 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
- 		setup_clear_cpu_cap(X86_FEATURE_SME);
- clear_sev:
- 		setup_clear_cpu_cap(X86_FEATURE_SEV);
-+		setup_clear_cpu_cap(X86_FEATURE_SEV_ES);
- 	}
- }
- 
-diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-index 62b137c3c97a..30f354989cf1 100644
---- a/arch/x86/kernel/cpu/scattered.c
-+++ b/arch/x86/kernel/cpu/scattered.c
-@@ -41,6 +41,7 @@ static const struct cpuid_bit cpuid_bits[] = {
- 	{ X86_FEATURE_MBA,		CPUID_EBX,  6, 0x80000008, 0 },
- 	{ X86_FEATURE_SME,		CPUID_EAX,  0, 0x8000001f, 0 },
- 	{ X86_FEATURE_SEV,		CPUID_EAX,  1, 0x8000001f, 0 },
-+	{ X86_FEATURE_SEV_ES,		CPUID_EAX,  3, 0x8000001f, 0 },
- 	{ 0, 0, 0, 0, 0 }
+diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+index 6ece8561ba66..f36288c659b5 100644
+--- a/arch/x86/include/asm/svm.h
++++ b/arch/x86/include/asm/svm.h
+@@ -201,6 +201,48 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
+ 	u64 br_to;
+ 	u64 last_excp_from;
+ 	u64 last_excp_to;
++
++	/*
++	 * The following part of the save area is valid only for
++	 * SEV-ES guests when referenced through the GHCB.
++	 */
++	u8 reserved_7[104];
++	u64 reserved_8;		/* rax already available at 0x01f8 */
++	u64 rcx;
++	u64 rdx;
++	u64 rbx;
++	u64 reserved_9;		/* rsp already available at 0x01d8 */
++	u64 rbp;
++	u64 rsi;
++	u64 rdi;
++	u64 r8;
++	u64 r9;
++	u64 r10;
++	u64 r11;
++	u64 r12;
++	u64 r13;
++	u64 r14;
++	u64 r15;
++	u8 reserved_10[16];
++	u64 sw_exit_code;
++	u64 sw_exit_info_1;
++	u64 sw_exit_info_2;
++	u64 sw_scratch;
++	u8 reserved_11[56];
++	u64 xcr0;
++	u8 valid_bitmap[16];
++	u64 x87_state_gpa;
++	u8 reserved_12[1016];
++};
++
++struct __attribute__ ((__packed__)) ghcb {
++	struct vmcb_save_area save;
++
++	u8 shared_buffer[2032];
++
++	u8 reserved_1[10];
++	u16 protocol_version;	/* negotiated SEV-ES/GHCB protocol version */
++	u32 ghcb_usage;
  };
  
+ struct __attribute__ ((__packed__)) vmcb {
 -- 
 2.17.1
 
