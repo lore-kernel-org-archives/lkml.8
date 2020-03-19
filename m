@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E859C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B33AC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 728B820724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F06B120722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgCSJPz (ORCPT
+        id S1727729AbgCSJQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:15:55 -0400
-Received: from 8bytes.org ([81.169.241.247]:52476 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:16:04 -0400
+Received: from 8bytes.org ([81.169.241.247]:53168 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727504AbgCSJOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:47 -0400
+        id S1727486AbgCSJOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:46 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 32B06ED8; Thu, 19 Mar 2020 10:14:28 +0100 (CET)
+        id A9D92EC7; Thu, 19 Mar 2020 10:14:27 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 64/70] x86/realmode: Add SEV-ES specific trampoline entry point
-Date:   Thu, 19 Mar 2020 10:14:01 +0100
-Message-Id: <20200319091407.1481-65-joro@8bytes.org>
+Subject: [PATCH 61/70] x86/paravirt: Allow hypervisor specific VMMCALL handling under SEV-ES
+Date:   Thu, 19 Mar 2020 10:13:58 +0100
+Message-Id: <20200319091407.1481-62-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -48,87 +48,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The code at the trampoline entry point is executed in real-mode. In
-real-mode #VC exceptions can't be handled, so anything that might cause
-such an exception must be avoided.
-
-In the standard trampoline entry code this is the WBINVD instruction and
-the call to verify_cpu(), which are both not needed anyway when running
-as an SEV-ES guest.
+Add two new paravirt callbacks to provide hypervisor specific processor
+state in the GHCB and to copy state from the hypervisor back to the
+processor.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/realmode.h      |  3 +++
- arch/x86/realmode/rm/header.S        |  3 +++
- arch/x86/realmode/rm/trampoline_64.S | 20 ++++++++++++++++++++
- 3 files changed, 26 insertions(+)
+ arch/x86/include/asm/x86_init.h | 16 +++++++++++++++-
+ arch/x86/kernel/sev-es.c        | 12 ++++++++++++
+ 2 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index b35030eeec36..6590394af309 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -21,6 +21,9 @@ struct real_mode_header {
- 	/* SMP trampoline */
- 	u32	trampoline_start;
- 	u32	trampoline_header;
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	u32	sev_es_trampoline_start;
-+#endif
- #ifdef CONFIG_X86_64
- 	u32	trampoline_pgd;
- #endif
-diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
-index af04512c02d9..8c1db5bf5d78 100644
---- a/arch/x86/realmode/rm/header.S
-+++ b/arch/x86/realmode/rm/header.S
-@@ -20,6 +20,9 @@ SYM_DATA_START(real_mode_header)
- 	/* SMP trampoline */
- 	.long	pa_trampoline_start
- 	.long	pa_trampoline_header
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	.long	pa_sev_es_trampoline_start
-+#endif
- #ifdef CONFIG_X86_64
- 	.long	pa_trampoline_pgd;
- #endif
-diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
-index 251758ed7443..84c5d1b33d10 100644
---- a/arch/x86/realmode/rm/trampoline_64.S
-+++ b/arch/x86/realmode/rm/trampoline_64.S
-@@ -56,6 +56,7 @@ SYM_CODE_START(trampoline_start)
- 	testl   %eax, %eax		# Check for return code
- 	jnz	no_longmode
+diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+index 96d9cd208610..c4790ec279cc 100644
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -4,8 +4,10 @@
  
-+.Lswitch_to_protected:
- 	/*
- 	 * GDT tables in non default location kernel can be beyond 16MB and
- 	 * lgdt will not be able to load the address as in real mode default
-@@ -80,6 +81,25 @@ no_longmode:
- 	jmp no_longmode
- SYM_CODE_END(trampoline_start)
+ #include <asm/bootparam.h>
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+/* SEV-ES supports non-zero IP for entry points - no alignment needed */
-+SYM_CODE_START(sev_es_trampoline_start)
-+	cli			# We should be safe anyway
-+
-+	LJMPW_RM(1f)
-+1:
-+	mov	%cs, %ax	# Code and data in the same place
-+	mov	%ax, %ds
-+	mov	%ax, %es
-+	mov	%ax, %ss
-+
-+	# Setup stack
-+	movl	$rm_stack_end, %esp
-+
-+	jmp	.Lswitch_to_protected
-+SYM_CODE_END(sev_es_trampoline_start)
-+#endif	/* CONFIG_AMD_MEM_ENCRYPT */
-+
- #include "../kernel/verify_cpu.S"
++struct ghcb;
+ struct mpc_bus;
+ struct mpc_cpu;
++struct pt_regs;
+ struct mpc_table;
+ struct cpuinfo_x86;
  
- 	.section ".text32","ax"
+@@ -238,10 +240,22 @@ struct x86_legacy_features {
+ /**
+  * struct x86_hyper_runtime - x86 hypervisor specific runtime callbacks
+  *
+- * @pin_vcpu:		pin current vcpu to specified physical cpu (run rarely)
++ * @pin_vcpu:			pin current vcpu to specified physical
++ *				cpu (run rarely)
++ * @sev_es_hcall_prepare:	Load additional hypervisor-specific
++ *				state into the GHCB when doing a VMMCALL under
++ *				SEV-ES. Called from the #VC exception handler.
++ * @sev_es_hcall_finish:	Copies state from the GHCB back into the
++ *				processor (or pt_regs). Also runs checks on the
++ *				state returned from the hypervisor after a
++ *				VMMCALL under SEV-ES.  Needs to return 'false'
++ *				if the checks fail.  Called from the #VC
++ *				exception handler.
+  */
+ struct x86_hyper_runtime {
+ 	void (*pin_vcpu)(int cpu);
++	void (*sev_es_hcall_prepare)(struct ghcb *ghcb, struct pt_regs *regs);
++	bool (*sev_es_hcall_finish)(struct ghcb *ghcb, struct pt_regs *regs);
+ };
+ 
+ /**
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index bc553aae31d2..635e7fc90d01 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -740,6 +740,9 @@ static enum es_result vc_handle_vmmcall(struct ghcb *ghcb,
+ 	ghcb_set_rax(ghcb, ctxt->regs->ax);
+ 	ghcb_set_cpl(ghcb, user_mode(ctxt->regs) ? 3 : 0);
+ 
++	if (x86_platform.hyper.sev_es_hcall_prepare)
++		x86_platform.hyper.sev_es_hcall_prepare(ghcb, ctxt->regs);
++
+ 	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_VMMCALL, 0, 0);
+ 	if (ret != ES_OK)
+ 		return ret;
+@@ -749,6 +752,15 @@ static enum es_result vc_handle_vmmcall(struct ghcb *ghcb,
+ 
+ 	ctxt->regs->ax = ghcb->save.rax;
+ 
++	/*
++	 * Call sev_es_hcall_finish() after regs->ax is already set.
++	 * This allows the hypervisor handler to overwrite it again if
++	 * necessary.
++	 */
++	if (x86_platform.hyper.sev_es_hcall_finish &&
++	    !x86_platform.hyper.sev_es_hcall_finish(ghcb, ctxt->regs))
++		return ES_VMM_ERROR;
++
+ 	return ES_OK;
+ }
+ 
 -- 
 2.17.1
 
