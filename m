@@ -2,143 +2,134 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81C4C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EC4C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B501120870
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ABB42080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ejd+tsKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728438AbgCSR1f (ORCPT
+        id S1728554AbgCSR1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:27:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727852AbgCSR1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:27:35 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 19 Mar 2020 13:27:45 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:56327 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728269AbgCSR1o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:27:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584638864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nLOauL8M9FVaEJHiI8vrCSN5L9Q/vL8MaYK0pNPq4Zs=;
+        b=Ejd+tsKoJc9OjJaj+kI/D/9WpQbQ/meFzFafI22/nH6DEy4yaV9RQek6VOEDJH7doiikhd
+        PZisdEGKpjr8st0YBpDd7wxXDuSSNm+IodxRV8EXEgZh1+Mce3vPNx5PaunMbQvBLSOWt1
+        gY6dY2I2s1c7lM7uEn0vcehX8B/vVKA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-250-Ykp0k2vZNi68gU2utY-ppQ-1; Thu, 19 Mar 2020 13:27:40 -0400
+X-MC-Unique: Ykp0k2vZNi68gU2utY-ppQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 028132080C;
-        Thu, 19 Mar 2020 17:27:32 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 13:27:31 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
-        joel@joelfernandes.org
-Subject: Re: [PATCH RFC v2 tip/core/rcu 02/22] rcu: Add per-task state to
- RCU CPU stall warnings
-Message-ID: <20200319132731.49b0d020@gandalf.local.home>
-In-Reply-To: <20200319001100.24917-2-paulmck@kernel.org>
-References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
-        <20200319001100.24917-2-paulmck@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7DED41857BE0;
+        Thu, 19 Mar 2020 17:27:38 +0000 (UTC)
+Received: from gondolin (ovpn-113-188.ams2.redhat.com [10.36.113.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F5D760BF1;
+        Thu, 19 Mar 2020 17:27:33 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 18:27:30 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dev@dpdk.org, mtosatti@redhat.com,
+        thomas@monjalon.net, bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com, kevin.tian@intel.com
+Subject: Re: [PATCH v3 3/7] vfio/pci: Introduce VF token
+Message-ID: <20200319182730.16f4c476.cohuck@redhat.com>
+In-Reply-To: <158396393244.5601.10297430724964025753.stgit@gimli.home>
+References: <158396044753.5601.14804870681174789709.stgit@gimli.home>
+        <158396393244.5601.10297430724964025753.stgit@gimli.home>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Mar 2020 17:10:40 -0700
-paulmck@kernel.org wrote:
+On Wed, 11 Mar 2020 15:58:52 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-> From: "Paul E. McKenney" <paulmck@kernel.org>
+> If we enable SR-IOV on a vfio-pci owned PF, the resulting VFs are not
+> fully isolated from the PF.  The PF can always cause a denial of service
+> to the VF, even if by simply resetting itself.  The degree to which a PF
+> can access the data passed through a VF or interfere with its operation
+> is dependent on a given SR-IOV implementation.  Therefore we want to
+> avoid a scenario where an existing vfio-pci based userspace driver might
+> assume the PF driver is trusted, for example assigning a PF to one VM
+> and VF to another with some expectation of isolation.  IOMMU grouping
+> could be a solution to this, but imposes an unnecessarily strong
+> relationship between PF and VF drivers if they need to operate with the
+> same IOMMU context.  Instead we introduce a "VF token", which is
+> essentially just a shared secret between PF and VF drivers, implemented
+> as a UUID.
 > 
-> Currently, an RCU-preempt CPU stall warning simply lists the PIDs of
-> those tasks holding up the current grace period.  This can be helpful,
-> but more can be even more helpful.
+> The VF token can be set by a vfio-pci based PF driver and must be known
+> by the vfio-pci based VF driver in order to gain access to the device.
+> This allows the degree to which this VF token is considered secret to be
+> determined by the applications and environment.  For example a VM might
+> generate a random UUID known only internally to the hypervisor while a
+> userspace networking appliance might use a shared, or even well know,
+> UUID among the application drivers.
 > 
-> To this end, this commit adds the nesting level, whether the task
-> things it was preempted in its current RCU read-side critical section,
-
-s/things/thinks/
-
-> whether RCU core has asked this task for a quiescent state, whether the
-> expedited-grace-period hint is set, and whether the task believes that
-> it is on the blocked-tasks list (it must be, or it would not be printed,
-> but if things are broken, best not to take too much for granted).
+> To incorporate this VF token, the VFIO_GROUP_GET_DEVICE_FD interface is
+> extended to accept key=value pairs in addition to the device name.  This
+> allows us to most easily deny user access to the device without risk
+> that existing userspace drivers assume region offsets, IRQs, and other
+> device features, leading to more elaborate error paths.  The format of
+> these options are expected to take the form:
 > 
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> "$DEVICE_NAME $OPTION1=$VALUE1 $OPTION2=$VALUE2"
+> 
+> Where the device name is always provided first for compatibility and
+> additional options are specified in a space separated list.  The
+> relation between and requirements for the additional options will be
+> vfio bus driver dependent, however unknown or unused option within this
+> schema should return error.  This allow for future use of unknown
+> options as well as a positive indication to the user that an option is
+> used.
+> 
+> An example VF token option would take this form:
+> 
+> "0000:03:00.0 vf_token=2ab74924-c335-45f4-9b16-8569e5b08258"
+> 
+> When accessing a VF where the PF is making use of vfio-pci, the user
+> MUST provide the current vf_token.  When accessing a PF, the user MUST
+> provide the current vf_token IF there are active VF users or MAY provide
+> a vf_token in order to set the current VF token when no VF users are
+> active.  The former requirement assures VF users that an unassociated
+> driver cannot usurp the PF device.  These semantics also imply that a
+> VF token MUST be set by a PF driver before VF drivers can access their
+> device, the default token is random and mechanisms to read the token are
+> not provided in order to protect the VF token of previous users.  Use of
+> the vf_token option outside of these cases will return an error, as
+> discussed above.
+> 
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 > ---
->  kernel/rcu/tree_stall.h | 38 ++++++++++++++++++++++++++++++++++++--
->  1 file changed, 36 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-> index 502b4dd..e19487d 100644
-> --- a/kernel/rcu/tree_stall.h
-> +++ b/kernel/rcu/tree_stall.h
-> @@ -192,14 +192,40 @@ static void rcu_print_detail_task_stall_rnp(struct rcu_node *rnp)
->  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
->  }
->  
-> +// Communicate task state back to the RCU CPU stall warning request.
-> +struct rcu_stall_chk_rdr {
-> +	int nesting;
-> +	union rcu_special rs;
-> +	bool on_blkd_list;
-> +};
-> +
-> +/*
-> + * Report out the state of a not-running task that is stalling the
-> + * current RCU grace period.
-> + */
-> +static bool check_slow_task(struct task_struct *t, void *arg)
-> +{
-> +	struct rcu_node *rnp;
-> +	struct rcu_stall_chk_rdr *rscrp = arg;
-> +
-> +	if (task_curr(t))
-> +		return false; // It is running, so decline to inspect it.
+>  drivers/vfio/pci/vfio_pci.c         |  198 +++++++++++++++++++++++++++++++++++
+>  drivers/vfio/pci/vfio_pci_private.h |    8 +
+>  2 files changed, 205 insertions(+), 1 deletion(-)
 
-Since it can be locked on_rq(), should we report that too?
-
--- Steve
-
-> +	rscrp->nesting = t->rcu_read_lock_nesting;
-> +	rscrp->rs = t->rcu_read_unlock_special;
-> +	rnp = t->rcu_blocked_node;
-> +	rscrp->on_blkd_list = !list_empty(&t->rcu_node_entry);
-> +	return true;
-> +}
-> +
->  /*
->   * Scan the current list of tasks blocked within RCU read-side critical
->   * sections, printing out the tid of each.
->   */
->  static int rcu_print_task_stall(struct rcu_node *rnp)
->  {
-> -	struct task_struct *t;
->  	int ndetected = 0;
-> +	struct rcu_stall_chk_rdr rscr;
-> +	struct task_struct *t;
->  
->  	if (!rcu_preempt_blocked_readers_cgp(rnp))
->  		return 0;
-> @@ -208,7 +234,15 @@ static int rcu_print_task_stall(struct rcu_node *rnp)
->  	t = list_entry(rnp->gp_tasks->prev,
->  		       struct task_struct, rcu_node_entry);
->  	list_for_each_entry_continue(t, &rnp->blkd_tasks, rcu_node_entry) {
-> -		pr_cont(" P%d", t->pid);
-> +		if (!try_invoke_on_locked_down_task(t, check_slow_task, &rscr))
-> +			pr_cont(" P%d", t->pid);
-> +		else
-> +			pr_cont(" P%d/%d:%c%c%c%c",
-> +				t->pid, rscr.nesting,
-> +				".b"[rscr.rs.b.blocked],
-> +				".q"[rscr.rs.b.need_qs],
-> +				".e"[rscr.rs.b.exp_hint],
-> +				".l"[rscr.on_blkd_list]);
->  		ndetected++;
->  	}
->  	pr_cont("\n");
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
