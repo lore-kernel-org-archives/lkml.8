@@ -2,165 +2,136 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A84C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEA8C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207502072C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672722072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ow1azw8U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Za+oOSYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgCSIL4 (ORCPT
+        id S1726879AbgCSINC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:11:56 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:53049 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725895AbgCSILz (ORCPT
+        Thu, 19 Mar 2020 04:13:02 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46666 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgCSINC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:11:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584605514;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=T1NFGmp/ZfO2b8+xQcK8SU35k88uC0jA2Heq1vKlCdU=;
-        b=Ow1azw8UG+duFMw9atLpskBwUBODVOVm6TnpgYITR2YA9FLhAGPk9bXaUgbhxz5novhje6
-        7MEGCQV5HHZA7pvNcvk0u8Tey6SY1XKADhJ0jBchlmSc9+VHWzliuKGKD5pi5lNhf8OzPo
-        I7mUnxJPLlo2DxkxyKCYWBEzkNH7WN4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-137-8_ZP5jXTN323QX24HDHZtQ-1; Thu, 19 Mar 2020 04:11:48 -0400
-X-MC-Unique: 8_ZP5jXTN323QX24HDHZtQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44FAE13EA;
-        Thu, 19 Mar 2020 08:11:46 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-112-179.ams2.redhat.com [10.36.112.179])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AE1776EFA8;
-        Thu, 19 Mar 2020 08:11:39 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 09:11:37 +0100
-From:   Adrian Reber <areber@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: clone3: allow creation of time namespace with offset
-Message-ID: <20200319081137.GC223854@dcbz.redhat.com>
-References: <20200317083043.226593-1-areber@redhat.com>
- <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
+        Thu, 19 Mar 2020 04:13:02 -0400
+Received: by mail-pg1-f195.google.com with SMTP id y30so837207pga.13;
+        Thu, 19 Mar 2020 01:13:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ac1YV381+pu+9t+a/snJbLjzWPHz5dhKlor8SQORWwk=;
+        b=Za+oOSYZruRvXcb3jvvrfDOxN1r4gMFYrIHrPH+NLDOOV/dU81M8LlZcV71oCnaywF
+         nDJifkcOnIy2J8SWGVkoPEGhEElNgNaGOu1j0L2jW41zObzPejqGuryJDOh87NSBdowr
+         W6RBvHPVGxLHfzKBegLovxWkuWRkyKKE86N8BNQiyaclUn8Qi88sYGCbsK364tUVa/td
+         xnY0+1BmrodEIFu5J7OleM935QQmSYIp4jRLICQPB33Ti4Nogl/mM8sFQ7qEoLUcEfvm
+         ifpfC5cnJXlx/QZ6TakYEIIQphlvfM53IY7L8r3HwRL9o8cyUU01gstK/x0Ip3/hhdGs
+         AvhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ac1YV381+pu+9t+a/snJbLjzWPHz5dhKlor8SQORWwk=;
+        b=P3U2S1xXjzvJA19+XpOGMSE4oAbmpIyL36b56+VbLJfT+xNa5izPhPE7P9G/JDRl9o
+         SNhLWuMlAciNTVWCj3zfPXM3n62JfdJ5oQgbQzhN583bsCDmytDdAC5J+fOglTpm32A5
+         4wVkkzLRMxQZk8oABgmvaDS/QeFFZdDERpHNeyCpq+17eak48qpo2R4rVdc+begiHvRL
+         jXeFxcrdXaZCEhAggS4MVtF2NnzMAGR1t/FHFNuNj0QQw0J5EGQhGbTkcU53YhW6nC32
+         lA3n2fGmFgSXM1m//t1F8F1k/q2IwkPYMIKYe4PgQyRO5Ee0u9jaMoqS8PWbzxUcIRI5
+         cYQA==
+X-Gm-Message-State: ANhLgQ3+kMSqMA4E72+fHqUVRmLm5k9QMyjfuOyRCz5j9Lcozjfr8cui
+        qmavGxGsEPX6//qo7ab8FfU=
+X-Google-Smtp-Source: ADFU+vuUYCNoMeUgkA/1IgD1NG/JZmJhAbBzL1jvwz0SYdcYS0LdsBPwlXa2sPuDTncEr3ayDRgW9g==
+X-Received: by 2002:aa7:99c8:: with SMTP id v8mr2640858pfi.151.1584605581088;
+        Thu, 19 Mar 2020 01:13:01 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
+        by smtp.gmail.com with ESMTPSA id 67sm1362804pfe.168.2020.03.19.01.12.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Mar 2020 01:13:00 -0700 (PDT)
+Subject: Re: [PATCH 2/4] x86/Hyper-V: Free hv_panic_page when fail to register
+ kmsg dump
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com
+References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
+ <20200317132523.1508-3-Tianyu.Lan@microsoft.com>
+ <20200317173600.2hqznyabyj4nckjo@debian>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <0105c10b-b546-6d93-bb49-e9a4ce4589f6@gmail.com>
+Date:   Thu, 19 Mar 2020 16:12:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
-X-Operating-System: Linux (5.5.8-200.fc31.x86_64)
-X-Load-Average: 1.26 0.61 0.49
-X-Unexpected: The Spanish Inquisition
-X-GnuPG-Key: gpg --recv-keys D3C4906A
-Organization: Red Hat
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200317173600.2hqznyabyj4nckjo@debian>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 11:18:53AM +0100, Arnd Bergmann wrote:
-> On Tue, Mar 17, 2020 at 9:32 AM Adrian Reber <areber@redhat.com> wrote:
-> >
-> > This is an attempt to add time namespace support to clone3(). I am not
-> > really sure which way clone3() should handle time namespaces. The time
-> > namespace through /proc cannot be used with clone3() because the offsets
-> > for the time namespace need to be written before a process has been
-> > created in that time namespace. This means it is necessary to somehow
-> > tell clone3() the offsets for the clocks.
-> >
-> > The time namespace offers the possibility to set offsets for
-> > CLOCK_MONOTONIC and CLOCK_BOOTTIME. My first approach was to extend
-> > 'struct clone_args` with '__aligned_u64 monotonic_offset' and
-> > '__aligned_u64 boottime_offset'. The problem with this approach was that
-> > it was not possible to set nanoseconds for the clocks in the time
-> > namespace.
-> >
-> > One of the motivations for clone3() with CLONE_NEWTIME was to enable
-> > CRIU to restore a process in a time namespace with the corresponding
-> > offsets. And although the nanosecond value can probably never be
-> > restored to the same value it had during checkpointing, because the
-> > clock keeps on running between CRIU pausing all processes and CRIU
-> > actually reading the value of the clocks, the nanosecond value is still
-> > necessary for CRIU to not restore a process where the clock jumps back
-> > due to CRIU restoring it with a nanonsecond value that is too small.
-> >
-> > Requiring nanoseconds as well as seconds for two clocks during clone3()
-> > means that it would require 4 additional members to 'struct clone_args':
-> >
-> >         __aligned_u64 tls;
-> >         __aligned_u64 set_tid;
-> >         __aligned_u64 set_tid_size;
-> > +       __aligned_u64 boottime_offset_seconds;
-> > +       __aligned_u64 boottime_offset_nanoseconds;
-> > +       __aligned_u64 monotonic_offset_seconds;
-> > +       __aligned_u64 monotonic_offset_nanoseconds;
-> >  };
+Hi Wei:
+	Thanks for your review.
+
+On 3/18/2020 1:36 AM, Wei Liu wrote:
+> On Tue, Mar 17, 2020 at 06:25:21AM -0700, ltykernel@gmail.com wrote:
+>> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>>
+>> If fail to register kmsg dump on Hyper-V platform, hv_panic_page
+>> will not be used anywhere. So free and reset it.
+>>
+>> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>> ---
+>>   drivers/hv/vmbus_drv.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+>> index b56b9fb9bd90..b043efea092a 100644
+>> --- a/drivers/hv/vmbus_drv.c
+>> +++ b/drivers/hv/vmbus_drv.c
+>> @@ -1385,9 +1385,13 @@ static int vmbus_bus_init(void)
+>>   			hv_panic_page = (void *)hv_alloc_hyperv_zeroed_page();
+>>   			if (hv_panic_page) {
+>>   				ret = kmsg_dump_register(&hv_kmsg_dumper);
+>> -				if (ret)
+>> +				if (ret) {
+>>   					pr_err("Hyper-V: kmsg dump register "
+>>   						"error 0x%x\n", ret);
+>> +					hv_free_hyperv_page(
+>> +					    (unsigned long)hv_panic_page);
+>> +					hv_panic_page = NULL;
+>> +				}
 > 
-> Wouldn't it be sufficient to have the two nanosecond values, rather
-> than both seconds and nanoseconds? With 64-bit nanoseconds
-> you can represent several hundred years, and these would
-> always start at zero during boot.
+> While this modification looks correct to me, there is a call to free
+> hv_panic_page in the err_alloc path. That makes the error handling a bit
+> confusing here.
+> 
+> I think you can just remove that function call in err_alloc path.
 
-I like this. Just using nanoseconds will make it easier and should
-indeed be enough.
+OK. Will update in the next version.
 
-> Regardless of this, I think you need a signed offset, not unsigned.
-
-Right, that was just a quick test at some point.
-
-Christian and I have also been discussing this a bit and Christian
-prefers a pointer to a struct. Maybe something like this:
-
-        __aligned_u64 tls;
-        __aligned_u64 set_tid;
-        __aligned_u64 set_tid_size;
-+       __aligned_u64 timens_offset;
- };
-
-With Arnd's idea of only using nanoseconds, timens_offset would then
-contain something like this:
-
-struct timens_offset {
-	__aligned_s64 monotonic_offset_ns;
-	__aligned_s64 boottime_offset_ns;
-};
-
-I kind of prefer adding boottime and monotonic directly to struct clone_args
-
-        __aligned_u64 tls;
-        __aligned_u64 set_tid;
-        __aligned_u64 set_tid_size;
-+       __aligned_s64 monotonic_offset_ns;
-+       __aligned_s64 boottime_offset_ns;
- };
-
-But setting the time namespace offset is probably something which does
-not happen very often while using clone3(), so maybe the pointer to a
-struct approach is better.
-
-I will resend the patches using the pointer to a struct approach if
-there are no other ideas how to do this.
-
-		Adrian
-
+> 
+> Wei.
+> 
+>>   			} else
+>>   				pr_err("Hyper-V: panic message page memory "
+>>   					"allocation failed");
+>> -- 
+>> 2.14.5
+>>
