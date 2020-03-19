@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96FDC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73563C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79BF20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DBD20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgCSGfk (ORCPT
+        id S1727216AbgCSGfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 02:35:40 -0400
-Received: from mga18.intel.com ([134.134.136.126]:53786 "EHLO mga18.intel.com"
+        Thu, 19 Mar 2020 02:35:53 -0400
+Received: from mga07.intel.com ([134.134.136.100]:53530 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbgCSGfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 02:35:40 -0400
-IronPort-SDR: uN70BF67evq3fYIOzWXYrvPcgwYfO6elXpxF4mw3jyNrYXI6j3GParuuDhjplExTyO8VcCgoBh
- ICM546pLLQcA==
+        id S1727120AbgCSGfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 02:35:52 -0400
+IronPort-SDR: JhQwyoD1zybLXHyd4e4sop52SYKUtukwJPnroOGBbxCFGM7+MfMf8NiKjjMBXj4vKzf8a/d0Vo
+ FQW+j6k+Jnmg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 23:35:39 -0700
-IronPort-SDR: mO6BQX3Nubr+1jnwsgXjApcFxUDYoktBvcVK/l5I75yXI3q9hhvDsIoE62AI6hXhjSQ8r+nluz
- bZOVt17vDFQA==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2020 23:35:52 -0700
+IronPort-SDR: 4RkaYS/Mfpl/sbXysiJGLMeWazWpGn5QMfwNlC7zjmnPwbb3paiyv5ucG0CmKR4/USgTue7++J
+ Zn9XFzn1/0vA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,570,1574150400"; 
-   d="scan'208";a="248439100"
+   d="scan'208";a="248439144"
 Received: from snr.bj.intel.com ([10.240.193.90])
-  by orsmga006.jf.intel.com with ESMTP; 18 Mar 2020 23:35:33 -0700
+  by orsmga006.jf.intel.com with ESMTP; 18 Mar 2020 23:35:46 -0700
 From:   Luwei Kang <luwei.kang@intel.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
@@ -44,9 +44,9 @@ Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
         thomas.lendacky@amd.com, fenghua.yu@intel.com,
         kan.liang@linux.intel.com, Luwei Kang <luwei.kang@intel.com>
-Subject: [PATCH v2 1/5] KVM: x86/pmu: Add base address parameter for get_fixed_pmc function
-Date:   Thu, 19 Mar 2020 22:33:46 +0800
-Message-Id: <1584628430-23220-2-git-send-email-luwei.kang@intel.com>
+Subject: [PATCH v2 3/5] KVM: x86/pmu: PEBS output Intel PT MSRs emulation
+Date:   Thu, 19 Mar 2020 22:33:48 +0800
+Message-Id: <1584628430-23220-4-git-send-email-luwei.kang@intel.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1584628430-23220-1-git-send-email-luwei.kang@intel.com>
 References: <1584628430-23220-1-git-send-email-luwei.kang@intel.com>
@@ -55,99 +55,246 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PEBS output to Inte PT feature introduces some new
-MSRs(MSR_RELOAD_FIXED_CTRx) for fixed function counters that using for
-autoload the present value after writing out a PEBS event.
+PEBS output to PT introduce a mechanism to direct PEBS output into
+the Intel PT output stream and new performance monitoring counter
+reload MSRs, which are used by PEBS in place of the counter reload
+values stored in the DS management area when PEBS output is directed
+into the Intel PT output stream.
 
-Introduce a base MSRs address parameter to make this function can get
-kvm performance monitor counter structure by MSR_RELOAD_FIXED_CTRx
-registers.
+This patch implements the reload MSRs read/write emulation and update
+the mask value of MSR_IA32_PEBS_ENABLE register.
 
 Signed-off-by: Luwei Kang <luwei.kang@intel.com>
 ---
- arch/x86/kvm/pmu.h           |  5 ++---
- arch/x86/kvm/vmx/pmu_intel.c | 16 ++++++++++------
- 2 files changed, 12 insertions(+), 9 deletions(-)
+ arch/x86/events/perf_event.h     |  5 -----
+ arch/x86/include/asm/kvm_host.h  |  2 ++
+ arch/x86/include/asm/msr-index.h |  5 +++++
+ arch/x86/kvm/vmx/pmu_intel.c     | 42 +++++++++++++++++++++++++++++++++++-----
+ arch/x86/kvm/x86.c               | 32 ++++++++++++++++++++++++++++++
+ 5 files changed, 76 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index 9de6ef1..d640628 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -117,10 +117,9 @@ static inline struct kvm_pmc *get_gp_pmc(struct kvm_pmu *pmu, u32 msr,
- }
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 621529c..957adbb 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -87,11 +87,6 @@ struct amd_nb {
+ };
  
- /* returns fixed PMC with the specified MSR */
--static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu, u32 msr)
-+static inline struct kvm_pmc *get_fixed_pmc(struct kvm_pmu *pmu,
-+						u32 msr, u32 base)
- {
--	int base = MSR_CORE_PERF_FIXED_CTR0;
--
- 	if (msr >= base && msr < base + pmu->nr_arch_fixed_counters) {
- 		u32 index = array_index_nospec(msr - base,
- 					       pmu->nr_arch_fixed_counters);
+ #define PEBS_COUNTER_MASK	((1ULL << MAX_PEBS_EVENTS) - 1)
+-#define PEBS_PMI_AFTER_EACH_RECORD BIT_ULL(60)
+-#define PEBS_OUTPUT_OFFSET	61
+-#define PEBS_OUTPUT_MASK	(3ull << PEBS_OUTPUT_OFFSET)
+-#define PEBS_OUTPUT_PT		(1ull << PEBS_OUTPUT_OFFSET)
+-#define PEBS_VIA_PT_MASK	(PEBS_OUTPUT_PT | PEBS_PMI_AFTER_EACH_RECORD)
+ 
+ /*
+  * Flags PEBS can handle without an PMI.
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 7b0a023..bba7270 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -456,6 +456,7 @@ struct kvm_pmc {
+ 	enum pmc_type type;
+ 	u8 idx;
+ 	u64 counter;
++	u64 reload_cnt;
+ 	u64 eventsel;
+ 	struct perf_event *perf_event;
+ 	struct kvm_vcpu *vcpu;
+@@ -500,6 +501,7 @@ struct kvm_pmu {
+ 	bool need_cleanup;
+ 
+ 	bool has_pebs_via_ds;
++	bool has_pebs_via_pt;
+ 	bool has_pebs_adaptive;
+ 
+ 	/*
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 750a2d5..768e61c 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -148,6 +148,11 @@
+ #define LBR_INFO_CYCLES			0xffff
+ 
+ #define MSR_IA32_PEBS_ENABLE		0x000003f1
++#define PEBS_PMI_AFTER_EACH_RECORD	BIT_ULL(60)
++#define PEBS_OUTPUT_OFFSET		61
++#define PEBS_OUTPUT_MASK		(3ull << PEBS_OUTPUT_OFFSET)
++#define PEBS_OUTPUT_PT			(1ull << PEBS_OUTPUT_OFFSET)
++#define PEBS_VIA_PT_MASK		(PEBS_OUTPUT_PT | PEBS_PMI_AFTER_EACH_RECORD)
+ #define MSR_PEBS_DATA_CFG		0x000003f2
+ #define MSR_IA32_DS_AREA		0x00000600
+ #define MSR_IA32_PERF_CAPABILITIES	0x00000345
 diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 6a0eef3..2db9b9e 100644
+index f04e5eb..a8b0a8d 100644
 --- a/arch/x86/kvm/vmx/pmu_intel.c
 +++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -43,7 +43,8 @@ static void reprogram_fixed_counters(struct kvm_pmu *pmu, u64 data)
- 		u8 old_ctrl = fixed_ctrl_field(pmu->fixed_ctr_ctrl, i);
- 		struct kvm_pmc *pmc;
- 
--		pmc = get_fixed_pmc(pmu, MSR_CORE_PERF_FIXED_CTR0 + i);
-+		pmc = get_fixed_pmc(pmu, MSR_CORE_PERF_FIXED_CTR0 + i,
-+					MSR_CORE_PERF_FIXED_CTR0);
- 
- 		if (old_ctrl == new_ctrl)
- 			continue;
-@@ -135,7 +136,8 @@ static struct kvm_pmc *intel_pmc_idx_to_pmc(struct kvm_pmu *pmu, int pmc_idx)
- 	else {
- 		u32 idx = pmc_idx - INTEL_PMC_IDX_FIXED;
- 
--		return get_fixed_pmc(pmu, idx + MSR_CORE_PERF_FIXED_CTR0);
-+		return get_fixed_pmc(pmu, idx + MSR_CORE_PERF_FIXED_CTR0,
-+						MSR_CORE_PERF_FIXED_CTR0);
- 	}
- }
- 
-@@ -196,7 +198,7 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
- 	default:
+@@ -188,9 +188,11 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+ 		ret = pmu->version > 1;
+ 		break;
+ 	case MSR_IA32_DS_AREA:
++		ret = pmu->has_pebs_via_ds;
++		break;
+ 	case MSR_IA32_PEBS_ENABLE:
+ 	case MSR_IA32_PERF_CAPABILITIES:
+-		ret = pmu->has_pebs_via_ds;
++		ret = pmu->has_pebs_via_ds || pmu->has_pebs_via_pt;
+ 		break;
+ 	case MSR_PEBS_DATA_CFG:
+ 		ret = pmu->has_pebs_adaptive;
+@@ -199,6 +201,9 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
  		ret = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0) ||
  			get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0) ||
--			get_fixed_pmc(pmu, msr);
-+			get_fixed_pmc(pmu, msr, MSR_CORE_PERF_FIXED_CTR0);
+ 			get_fixed_pmc(pmu, msr, MSR_CORE_PERF_FIXED_CTR0);
++		if (!ret && pmu->has_pebs_via_pt)
++			ret = get_gp_pmc(pmu, msr, MSR_RELOAD_PMC0) ||
++				get_fixed_pmc(pmu, msr, MSR_RELOAD_FIXED_CTR0);
  		break;
  	}
  
-@@ -236,7 +238,7 @@ static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu, u32 msr)
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
- 	struct kvm_pmc *pmc;
- 
--	pmc = get_fixed_pmc(pmu, msr);
-+	pmc = get_fixed_pmc(pmu, msr, MSR_CORE_PERF_FIXED_CTR0);
+@@ -253,6 +258,11 @@ static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu, u32 msr)
+ 	pmc = get_fixed_pmc(pmu, msr, MSR_CORE_PERF_FIXED_CTR0);
  	pmc = pmc ? pmc : get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0);
  	pmc = pmc ? pmc : get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0);
++	if (!pmc && pmu->has_pebs_via_pt) {
++		pmc = pmc ? pmc : get_gp_pmc(pmu, msr, MSR_RELOAD_PMC0);
++		pmc = pmc ? pmc :
++			get_fixed_pmc(pmu, msr, MSR_RELOAD_FIXED_CTR0);
++	}
  
-@@ -278,7 +280,8 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
- 			u64 val = pmc_read_counter(pmc);
- 			*data = val & pmu->counter_bitmask[KVM_PMC_GP];
- 			return 0;
--		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
-+		} else if ((pmc = get_fixed_pmc(pmu, msr,
-+				MSR_CORE_PERF_FIXED_CTR0))) {
- 			u64 val = pmc_read_counter(pmc);
- 			*data = val & pmu->counter_bitmask[KVM_PMC_FIXED];
- 			return 0;
-@@ -354,7 +357,8 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 				data = (s64)(s32)data;
- 			pmc->counter += data - pmc_read_counter(pmc);
- 			return 0;
--		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
-+		} else if ((pmc = get_fixed_pmc(pmu, msr,
-+				MSR_CORE_PERF_FIXED_CTR0))) {
- 			pmc->counter += data - pmc_read_counter(pmc);
- 			return 0;
+ 	return pmc;
+ }
+@@ -300,6 +310,11 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
  		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+ 			*data = pmc->eventsel;
+ 			return 0;
++		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_RELOAD_PMC0)) ||
++				(pmc = get_fixed_pmc(pmu, msr,
++						MSR_RELOAD_FIXED_CTR0))) {
++			*data = pmc->reload_cnt;
++			return 0;
+ 		}
+ 	}
+ 
+@@ -380,6 +395,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 				reprogram_gp_counter(pmc, data);
+ 				return 0;
+ 			}
++		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_RELOAD_PMC0)) ||
++			(pmc = get_fixed_pmc(pmu, msr,
++				MSR_RELOAD_FIXED_CTR0))) {
++			if (!(data & ~pmc_bitmask(pmc))) {
++				pmc->reload_cnt = data;
++				return 0;
++			}
+ 		}
+ 	}
+ 
+@@ -449,14 +471,17 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 	if (entry && (entry->ecx & X86_FEATURE_DTES64) &&
+ 		     (entry->ecx & X86_FEATURE_PDCM) &&
+ 		     (entry->edx & X86_FEATURE_DS) &&
+-		      intel_is_pebs_via_ds_supported()) {
++		      intel_is_pebs_via_ds_supported())
+ 		pmu->has_pebs_via_ds = 1;
+-		pmu->pebs_enable_mask = ~pmu->global_ctrl;
+-	}
+ 
+-	if (pmu->has_pebs_via_ds) {
++	if (intel_is_pebs_via_pt_supported())
++		pmu->has_pebs_via_pt = 1;
++
++	if (pmu->has_pebs_via_ds || pmu->has_pebs_via_pt) {
+ 		u64 perf_cap;
+ 
++		pmu->pebs_enable_mask = ~pmu->global_ctrl;
++
+ 		rdmsrl(MSR_IA32_PERF_CAPABILITIES, perf_cap);
+ 		pmu->perf_cap = (perf_cap & (PERF_CAP_PEBS_TRAP |
+ 					     PERF_CAP_ARCH_REG |
+@@ -471,6 +496,11 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 				pmu->fixed_ctr_ctrl_mask &= ~(1ULL <<
+ 						(INTEL_PMC_IDX_FIXED + i * 4));
+ 		}
++
++		if (pmu->has_pebs_via_pt) {
++			pmu->pebs_enable_mask &= ~PEBS_VIA_PT_MASK;
++			 pmu->perf_cap |= PERF_CAP_PEBS_OUTPUT_PT;
++		}
+ 	}
+ 
+ 	entry = kvm_find_cpuid_entry(vcpu, 7, 0);
+@@ -497,6 +527,7 @@ static void intel_pmu_init(struct kvm_vcpu *vcpu)
+ 		pmu->gp_counters[i].vcpu = vcpu;
+ 		pmu->gp_counters[i].idx = i;
+ 		pmu->gp_counters[i].current_config = 0;
++		pmu->gp_counters[i].reload_cnt = 0;
+ 	}
+ 
+ 	for (i = 0; i < INTEL_PMC_MAX_FIXED; i++) {
+@@ -504,6 +535,7 @@ static void intel_pmu_init(struct kvm_vcpu *vcpu)
+ 		pmu->fixed_counters[i].vcpu = vcpu;
+ 		pmu->fixed_counters[i].idx = i + INTEL_PMC_IDX_FIXED;
+ 		pmu->fixed_counters[i].current_config = 0;
++		pmu->fixed_counters[i].reload_cnt = 0;
+ 	}
+ }
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index aa1344b..5031f50 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1193,6 +1193,17 @@ bool kvm_rdpmc(struct kvm_vcpu *vcpu)
+ 	MSR_ARCH_PERFMON_EVENTSEL0 + 12, MSR_ARCH_PERFMON_EVENTSEL0 + 13,
+ 	MSR_ARCH_PERFMON_EVENTSEL0 + 14, MSR_ARCH_PERFMON_EVENTSEL0 + 15,
+ 	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
++	MSR_RELOAD_FIXED_CTR0, MSR_RELOAD_FIXED_CTR0 + 1,
++	MSR_RELOAD_FIXED_CTR0 + 2, MSR_RELOAD_FIXED_CTR0 + 3,
++	MSR_RELOAD_PMC0, MSR_RELOAD_PMC0 + 1,
++	MSR_RELOAD_PMC0 + 2, MSR_RELOAD_PMC0 + 3,
++	MSR_RELOAD_PMC0 + 4, MSR_RELOAD_PMC0 + 5,
++	MSR_RELOAD_PMC0 + 6, MSR_RELOAD_PMC0 + 7,
++	MSR_RELOAD_PMC0 + 8, MSR_RELOAD_PMC0 + 9,
++	MSR_RELOAD_PMC0 + 10, MSR_RELOAD_PMC0 + 11,
++	MSR_RELOAD_PMC0 + 12, MSR_RELOAD_PMC0 + 13,
++	MSR_RELOAD_PMC0 + 14, MSR_RELOAD_PMC0 + 15,
++	MSR_RELOAD_PMC0 + 16, MSR_RELOAD_PMC0 + 17,
+ 	MSR_IA32_PEBS_ENABLE, MSR_IA32_DS_AREA,
+ 	MSR_PEBS_DATA_CFG,
+ };
+@@ -5270,11 +5281,32 @@ static void kvm_init_msr_list(void)
+ 				continue;
+ 			break;
+ 		case MSR_IA32_PEBS_ENABLE:
++			if (!kvm_x86_ops->pmu_ops ||
++			   (!kvm_x86_ops->pmu_ops->is_pebs_via_ds_supported() &&
++			    !kvm_x86_ops->pmu_ops->is_pebs_via_pt_supported()))
++				continue;
++			break;
+ 		case MSR_IA32_DS_AREA:
+ 			if (!kvm_x86_ops->pmu_ops ||
+ 			    !kvm_x86_ops->pmu_ops->is_pebs_via_ds_supported())
+ 				continue;
+ 			break;
++		case MSR_RELOAD_FIXED_CTR0 ... MSR_RELOAD_FIXED_CTR0 + INTEL_PMC_MAX_FIXED:
++			if (!kvm_x86_ops->pmu_ops ||
++			    !kvm_x86_ops->pmu_ops->is_pebs_via_pt_supported())
++				continue;
++			if (msrs_to_save_all[i] - MSR_RELOAD_FIXED_CTR0 >=
++				min(INTEL_PMC_MAX_FIXED, x86_pmu.num_counters_fixed))
++				continue;
++			break;
++		case MSR_RELOAD_PMC0 ... MSR_RELOAD_PMC0 + 17:
++			if (!kvm_x86_ops->pmu_ops ||
++			    !kvm_x86_ops->pmu_ops->is_pebs_via_pt_supported())
++				continue;
++			if (msrs_to_save_all[i] - MSR_RELOAD_PMC0 >=
++				min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
++				continue;
++			break;
+ 		case MSR_PEBS_DATA_CFG:
+ 			if (!kvm_x86_ops->pmu_ops ||
+ 			    !kvm_x86_ops->pmu_ops->is_pebs_baseline_supported())
 -- 
 1.8.3.1
 
