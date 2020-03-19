@@ -2,54 +2,51 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A0C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571FDC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5CB212CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260F6212CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623344;
-	bh=qtcfD6FTjBWYW6gIAT7Wx9leaZlkgDsnGRHNqIN1es8=;
+	s=default; t=1584623350;
+	bh=cqpcUKInM8KEnxxv3p0L5FDK+yT1T3NzGkLe0G7rrvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i2TDuc9dDLtGyNXVNGkm/ASyutqz8SErC4sHATGFFHElO0FPjfAtBDNNz1eeIj4Mi
-	 MJlDiFeNaQ2zme4qc3hM8Qm9A6vHc57gcmzhLRdot5ygyVDmpmApcFv6AAlyN5aO21
-	 iIECQNsjlB/442RHxR4N5jMZWpDyXOgiSOpcuCO8=
+	b=p8h2SlaTMpu5mXj02AXTJ9Nr9W9n5rARXYK49KKZ2KeRRS/D8p/2iVAhE0azu+H8t
+	 0PHiW225JwQDeKLj7ux1iWIsLXLtL5PddXGUSrpey6WA2sKwesMr9QPtm8+BWEWgO9
+	 7NQUZXokjenUAtHV4uG7aWYVOKwGtQ3i+ZsZS+zE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgCSNJC (ORCPT
+        id S1728267AbgCSNJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53302 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:09:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728229AbgCSNI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:08:59 -0400
+        id S1727235AbgCSNJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:09:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFED420722;
-        Thu, 19 Mar 2020 13:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 119E720722;
+        Thu, 19 Mar 2020 13:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623338;
-        bh=qtcfD6FTjBWYW6gIAT7Wx9leaZlkgDsnGRHNqIN1es8=;
+        s=default; t=1584623346;
+        bh=cqpcUKInM8KEnxxv3p0L5FDK+yT1T3NzGkLe0G7rrvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QjfeDpYXkKW1wLlu7/f4fuDQDLB/zYvxY9sxsmWXChdVt1lpRYjNgbRe6jaBLi8Bn
-         on4lipQcfHtJ0+InmaVmuDRRhKozoBYeBb7Y1jwRfoak/Q52tnUcmUelk6gQs+ZNjn
-         0Qub4pW3WqfLP1PDzAO4EZTVuMIJjcxPd5Gbq3Pk=
+        b=sa/A0xEfvmSPLU8K0iTLCvurUKkIqV2ZUCRKiO/qssFZqpM03JLRNxoP9m3s7DbMD
+         ulhv4KzA7OYosW5n99P8AtGZPL830YP0d3qJ1zy9pTYaVuuGSFGELiPCUSzNaHbbB6
+         1pquTrHvKc8oROaUVWPSlTAaDVNQosPdnDE9ZS10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 87/93] net: ks8851-ml: Fix IRQ handling and locking
-Date:   Thu, 19 Mar 2020 14:00:31 +0100
-Message-Id: <20200319123952.041594546@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 4.4 90/93] ARM: 8957/1: VDSO: Match ARMv8 timer in cntvct_functional()
+Date:   Thu, 19 Mar 2020 14:00:34 +0100
+Message-Id: <20200319123952.940027209@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -62,102 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 44343418d0f2f623cb9da6f5000df793131cbe3b ]
+commit 45939ce292b4b11159719faaf60aba7d58d5fe33 upstream.
 
-The KS8851 requires that packet RX and TX are mutually exclusive.
-Currently, the driver hopes to achieve this by disabling interrupt
-from the card by writing the card registers and by disabling the
-interrupt on the interrupt controller. This however is racy on SMP.
+It is possible for a system with an ARMv8 timer to run a 32-bit kernel.
+When this happens we will unconditionally have the vDSO code remove the
+__vdso_gettimeofday and __vdso_clock_gettime symbols because
+cntvct_functional() returns false since it does not match that
+compatibility string.
 
-Replace this approach by expanding the spinlock used around the
-ks_start_xmit() TX path to ks_irq() RX path to assure true mutual
-exclusion and remove the interrupt enabling/disabling, which is
-now not needed anymore. Furthermore, disable interrupts also in
-ks_net_stop(), which was missing before.
+Fixes: ecf99a439105 ("ARM: 8331/1: VDSO initialization, mapping, and synchronization")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Note that a massive improvement here would be to re-use the KS8851
-driver approach, which is to move the TX path into a worker thread,
-interrupt handling to threaded interrupt, and synchronize everything
-with mutexes, but that would be a much bigger rework, for a separate
-patch.
-
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/arm/kernel/vdso.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index d94e151cff12b..d4747caf1e7cc 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -831,14 +831,17 @@ static irqreturn_t ks_irq(int irq, void *pw)
- {
- 	struct net_device *netdev = pw;
- 	struct ks_net *ks = netdev_priv(netdev);
-+	unsigned long flags;
- 	u16 status;
+--- a/arch/arm/kernel/vdso.c
++++ b/arch/arm/kernel/vdso.c
+@@ -85,6 +85,8 @@ static bool __init cntvct_functional(voi
+ 	 */
+ 	np = of_find_compatible_node(NULL, NULL, "arm,armv7-timer");
+ 	if (!np)
++		np = of_find_compatible_node(NULL, NULL, "arm,armv8-timer");
++	if (!np)
+ 		goto out_put;
  
-+	spin_lock_irqsave(&ks->statelock, flags);
- 	/*this should be the first in IRQ handler */
- 	ks_save_cmd_reg(ks);
- 
- 	status = ks_rdreg16(ks, KS_ISR);
- 	if (unlikely(!status)) {
- 		ks_restore_cmd_reg(ks);
-+		spin_unlock_irqrestore(&ks->statelock, flags);
- 		return IRQ_NONE;
- 	}
- 
-@@ -864,6 +867,7 @@ static irqreturn_t ks_irq(int irq, void *pw)
- 		ks->netdev->stats.rx_over_errors++;
- 	/* this should be the last in IRQ handler*/
- 	ks_restore_cmd_reg(ks);
-+	spin_unlock_irqrestore(&ks->statelock, flags);
- 	return IRQ_HANDLED;
- }
- 
-@@ -933,6 +937,7 @@ static int ks_net_stop(struct net_device *netdev)
- 
- 	/* shutdown RX/TX QMU */
- 	ks_disable_qmu(ks);
-+	ks_disable_int(ks);
- 
- 	/* set powermode to soft power down to save power */
- 	ks_set_powermode(ks, PMECR_PM_SOFTDOWN);
-@@ -989,10 +994,9 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	netdev_tx_t retv = NETDEV_TX_OK;
- 	struct ks_net *ks = netdev_priv(netdev);
-+	unsigned long flags;
- 
--	disable_irq(netdev->irq);
--	ks_disable_int(ks);
--	spin_lock(&ks->statelock);
-+	spin_lock_irqsave(&ks->statelock, flags);
- 
- 	/* Extra space are required:
- 	*  4 byte for alignment, 4 for status/length, 4 for CRC
-@@ -1006,9 +1010,7 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
- 		dev_kfree_skb(skb);
- 	} else
- 		retv = NETDEV_TX_BUSY;
--	spin_unlock(&ks->statelock);
--	ks_enable_int(ks);
--	enable_irq(netdev->irq);
-+	spin_unlock_irqrestore(&ks->statelock, flags);
- 	return retv;
- }
- 
--- 
-2.20.1
-
+ 	if (of_property_read_bool(np, "arm,cpu-registers-not-fw-configured"))
 
 
