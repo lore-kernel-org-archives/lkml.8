@@ -2,132 +2,92 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534F8C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4FAC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243DB20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94C1620722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:44:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZyXeHZ6E"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FR9k72Z5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbgCSHoG (ORCPT
+        id S1726666AbgCSHot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:44:06 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42967 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgCSHoG (ORCPT
+        Thu, 19 Mar 2020 03:44:49 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:59961 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725767AbgCSHot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:44:06 -0400
-Received: by mail-wr1-f65.google.com with SMTP id v11so1385573wrm.9
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 00:44:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=8G6ZnhC76S+a0nX3uIB0o/UbMU7oc2ekBRk4ZBzMhfk=;
-        b=ZyXeHZ6E9GgI7PQ3/JNJnGVywJvMuyEuNUPHAE0C3Hrsl2fCjTBQSYRPxZzgj0Q12y
-         jUhvnPZ9Y7L1OxpqqPQ5YUEUNzqU6oZFiflxogGT1qYVKz5l4dxn19NQZmF+op4PWyzU
-         3GEZw0OETcFOj7b7dcwEpbqRPQKJPxSo1LoJktwcRrCvHgZPvSr4QqJDRI38ZeedOKe8
-         z1GxWMcugiheSTKebig9iTziBCUOMI/nc8MsUpQBhUMbP5gWe2Ey6L7tllGwfW27pDbJ
-         PPIUhDbHXT1oxzUkqIWFdwVrVnUz9Do/0Qbikeu6Aiyi/2DyZU6BDCfjgN+h2p6qr/KZ
-         PHqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=8G6ZnhC76S+a0nX3uIB0o/UbMU7oc2ekBRk4ZBzMhfk=;
-        b=Zl34inUEtNVFoYczU/a6mi6HXOqTSpZUh5iihsaLQvj3Ti2EByfzU/odMgc3vgu0Sn
-         +NhlRVuHt6ZpJYyIk+4spu9A+gEkxzaVjptDJhH32dt6N20g0bKmDcinDD89D0XaV34p
-         89DctN8ns6ubSUujPeL8EAZQdUBXb2IkqJ+04IF/sY95lKPrBItAm0x8u5kzl+x4FHSk
-         yrSKZ5GkUq6lgQVebi+aTluvaHTtswWCJftbaGCc5isyCw6w4MFR1SVAtJcnuQGrb4Ni
-         0JRRD+10MGfFDB0A2Kw6vqBGBDw3sv2vhloa28gFIGnDYNry0x5+46+lMRGISe8q/5mZ
-         GTqA==
-X-Gm-Message-State: ANhLgQ30R6ZW8uSCkV0UEUH6HgZSECLeBcG/wMEsmagftNkXAcRfvBcx
-        2kIymJeOTQw0Rm00mh9N5hQhPg==
-X-Google-Smtp-Source: ADFU+vuKr+qEFy31VI/80gx52dPSn4WmMzXMLVRosndQlVFjNAd1HfXNRlss+zm7FNEZsfvLhA0lqg==
-X-Received: by 2002:adf:ec88:: with SMTP id z8mr2431975wrn.61.1584603844041;
-        Thu, 19 Mar 2020 00:44:04 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id g8sm1925537wmk.26.2020.03.19.00.44.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 00:44:03 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 08:44:01 +0100
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        pgaikwad@nvidia.com, pdeschrijver@nvidia.com,
-        mturquette@baylibre.com, sboyd@kernel.org, axboe@kernel.dk
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-ide@vger.kernel.org
-Subject: tegra124-jetson-tk1: sata doesnt work since 5.2
-Message-ID: <20200319074401.GA4116@Red>
+        Thu, 19 Mar 2020 03:44:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1584603888;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LqosX0I8MemyviAwLJfehcZri3xdX1d3AgPwhagy1LI=;
+        b=FR9k72Z5Bn8NrKsgVbFgdvRI6hxNGVyQMiZLmESJji2AXB8iJlpFgSHqwsODvC7r2beILM
+        xZaQsC1gM9oFUxTRMFbVX70FDvVbYCjg8bWvlFxRfpailMPDfbpmvKqhaklz53HCqtWYDz
+        EzNrlbMcoqK5hmlcArw9zucUHePPk8w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-cLj4inWeOQaIr1hq7jNBww-1; Thu, 19 Mar 2020 03:44:46 -0400
+X-MC-Unique: cLj4inWeOQaIr1hq7jNBww-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35B58149C2;
+        Thu, 19 Mar 2020 07:44:45 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.192.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6A98162673;
+        Thu, 19 Mar 2020 07:44:29 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 08:44:26 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v7 10/14] KVM: selftests: Use a single binary for
+ dirty/clear log test
+Message-ID: <20200319074426.4gzvslbxvkngnkcc@kamzik.brq.redhat.com>
+References: <20200318163720.93929-1-peterx@redhat.com>
+ <20200318163720.93929-11-peterx@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200318163720.93929-11-peterx@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Wed, Mar 18, 2020 at 12:37:16PM -0400, Peter Xu wrote:
+> Remove the clear_dirty_log test, instead merge it into the existing
+> dirty_log_test.  It should be cleaner to use this single binary to do
+> both tests, also it's a preparation for the upcoming dirty ring test.
+> 
+> The default behavior will run all the modes in sequence.
+> 
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/Makefile          |   2 -
+>  .../selftests/kvm/clear_dirty_log_test.c      |   6 -
+>  tools/testing/selftests/kvm/dirty_log_test.c  | 187 +++++++++++++++---
+>  3 files changed, 156 insertions(+), 39 deletions(-)
+>  delete mode 100644 tools/testing/selftests/kvm/clear_dirty_log_test.c
+>
 
-sata doesnt work on tegra124-jetson-tk1 on next and master and at least since 5.2 (but 5.1 works).
-[    0.492810] +5V_SATA: supplied by +5V_SYS
-[    0.493230] +12V_SATA: supplied by +VDD_MUX
-[    2.088675] tegra-ahci 70027000.sata: 70027000.sata supply ahci not found, using dummy regulator
-[    2.097643] tegra-ahci 70027000.sata: 70027000.sata supply phy not found, using dummy regulator
-[    3.314776] tegra-ahci 70027000.sata: 70027000.sata supply ahci not found, using dummy regulator
-[    3.323658] tegra-ahci 70027000.sata: 70027000.sata supply phy not found, using dummy regulator
-[    5.236964] tegra-ahci 70027000.sata: 70027000.sata supply ahci not found, using dummy regulator
-[    5.245867] tegra-ahci 70027000.sata: 70027000.sata supply phy not found, using dummy regulator
-[    5.254706] tegra-ahci 70027000.sata: 70027000.sata supply target not found, using dummy regulator
-[    5.310270] phy phy-sata.6: phy poweron failed --> -110
-[    5.315604] tegra-ahci 70027000.sata: failed to power on AHCI controller: -110
-[    5.323022] tegra-ahci: probe of 70027000.sata failed with error -110
-[   35.694269] +5V_SATA: disabling
-[   35.697438] +12V_SATA: disabling
+Reviewed-by: Andrew Jones <drjones@redhat.com>
 
-I have bisected this problem:
-git bisect start
-# bad: [22c58fd70ca48a29505922b1563826593b08cc00] Merge tag 'armsoc-soc' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-git bisect bad 22c58fd70ca48a29505922b1563826593b08cc00
-# good: [67e38f578aaebf34fc1278bbe45a78ee8c73dd33] ARM: ep93xx: move pinctrl interfaces into include/linux/soc
-git bisect good 67e38f578aaebf34fc1278bbe45a78ee8c73dd33
-# good: [80f232121b69cc69a31ccb2b38c1665d770b0710] Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next
-git bisect good 80f232121b69cc69a31ccb2b38c1665d770b0710
-# good: [e57ccca1ba33e1d92cc3bbf8b6304a46948844b0] Merge tag 'sound-5.2-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
-git bisect good e57ccca1ba33e1d92cc3bbf8b6304a46948844b0
-# bad: [983dfa4b6ee556563f7963348e4e2f97fc8a15b8] Merge tag 'for-linus-5.2-rc1' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/rw/uml
-git bisect bad 983dfa4b6ee556563f7963348e4e2f97fc8a15b8
-# good: [8e4ff713ce313dcabbb60e6ede1ffc193e67631f] Merge tag 'rtc-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux
-git bisect good 8e4ff713ce313dcabbb60e6ede1ffc193e67631f
-# bad: [b970afcfcabd63cd3832e95db096439c177c3592] Merge tag 'powerpc-5.2-1' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
-git bisect bad b970afcfcabd63cd3832e95db096439c177c3592
-# bad: [601e6bcc4ef02bda2831d5ac8133947b5edf597b] Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
-git bisect bad 601e6bcc4ef02bda2831d5ac8133947b5edf597b
-# good: [7e9c62bdb41af76974d594da89854a6aba645e58] Merge branches 'clk-sa', 'clk-aspeed', 'clk-samsung', 'clk-ingenic' and 'clk-zynq' into clk-next
-git bisect good 7e9c62bdb41af76974d594da89854a6aba645e58
-# bad: [0caf000817353cfc5db22363ecdac63b83d3a3f9] Merge branch 'clk-ti' into clk-next
-git bisect bad 0caf000817353cfc5db22363ecdac63b83d3a3f9
-# good: [5816b74581b45cf086a84ab14e13354a65e8e22c] Merge branches 'clk-hisi', 'clk-lochnagar', 'clk-allwinner', 'clk-rockchip' and 'clk-qoriq' into clk-next
-git bisect good 5816b74581b45cf086a84ab14e13354a65e8e22c
-# good: [7b4c162e03d47e037f8ee773c3e300eefb599a83] clk: at91: Mark struct clk_range as const
-git bisect good 7b4c162e03d47e037f8ee773c3e300eefb599a83
-# bad: [e71f4d385878671991e200083c7d30eb4ca8e99a] clk: tegra: divider: Mark Memory Controller clock as read-only
-git bisect bad e71f4d385878671991e200083c7d30eb4ca8e99a
-# bad: [924ee3d551c9deb16090230b824988bd37e72aa8] clk: tegra: emc: Don't enable EMC clock manually
-git bisect bad 924ee3d551c9deb16090230b824988bd37e72aa8
-# bad: [40db569d6769ffa3864fd1b89616b1a7323568a8] clk: tegra: Fix PLLM programming on Tegra124+ when PMC overrides divider
-git bisect bad 40db569d6769ffa3864fd1b89616b1a7323568a8
-# bad: [bff1cef5f23afbe49f5ebd766980dc612f5e9d0a] clk: tegra: Don't enable already enabled PLLs
-git bisect bad bff1cef5f23afbe49f5ebd766980dc612f5e9d0a
-# first bad commit: [bff1cef5f23afbe49f5ebd766980dc612f5e9d0a] clk: tegra: Don't enable already enabled PLLs
-
-Basic reverting of this patch is impossible.
-
-Regards
