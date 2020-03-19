@@ -2,122 +2,64 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EDBC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95FCC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDB78207FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584640322;
-	bh=SHOS3GFFaivbdQvbvmQXUdj/9i/JrMdJcqQ6ZMWKEho=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=WH1eK1H0oVHXmKgBoaKGtoSGxp3Bq1nJeuM9Sg8+d36BmOBWJQ5aV4IFZFP5IG5vP
-	 rPyl008prPK6+/iVlVOBOsULf9LyoLjQehtMzJVmPst+4nWMGU4Tv5dSX1rQyJBRPL
-	 KiQD9M6zXflorllDCJZ5xFwDHCzi4Ojgak6nVjrA=
+	by mail.kernel.org (Postfix) with ESMTP id A30C72072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:53:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbgCSRwB (ORCPT
+        id S1727544AbgCSRxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:52:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43400 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 13:53:06 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57567 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgCSRwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:52:01 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05B472072D;
-        Thu, 19 Mar 2020 17:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584640320;
-        bh=SHOS3GFFaivbdQvbvmQXUdj/9i/JrMdJcqQ6ZMWKEho=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=0UvT1D4ScmuQ+iPUH1ekz62MC/eDbQ313IF3jXMNP8ltAcOv3zQmRkCQDmZogKOMo
-         U1fOhLXTtnhdqjhTW0e/JrCp5+s3/2zJzrYnpkHyDGK+LXc573BOo0TDhJom9BYcEh
-         mt3rRs9KzVaG0GBlyxxzqcXQYFtC1iU9tb9WSQ8Q=
-Message-ID: <5d7b448858d5a5c01e97aceb45dcadff24d6fc28.camel@kernel.org>
-Subject: Re: [locks] 6d390e4b5d: will-it-scale.per_process_ops -96.6%
- regression
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     NeilBrown <neilb@suse.de>, yangerkun <yangerkun@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Bruce Fields <bfields@fieldses.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Date:   Thu, 19 Mar 2020 13:51:59 -0400
-In-Reply-To: <CAHk-=whnqDS0NJtAaArVeYQz3hcU=4Ja3auB1Jvs42eADfUgMQ@mail.gmail.com>
-References: <20200308140314.GQ5972@shao2-debian>
-         <1bfba96b4bf0d3ca9a18a2bced3ef3a2a7b44dad.camel@kernel.org>
-         <87blp5urwq.fsf@notabene.neil.brown.name>
-         <41c83d34ae4c166f48e7969b2b71e43a0f69028d.camel@kernel.org>
-         <ed73fb5d-ddd5-fefd-67ae-2d786e68544a@huawei.com>
-         <923487db2c9396c79f8e8dd4f846b2b1762635c8.camel@kernel.org>
-         <36c58a6d07b67aac751fca27a4938dc1759d9267.camel@kernel.org>
-         <878sk7vs8q.fsf@notabene.neil.brown.name>
-         <c4ef31a663fbf7a3de349696e9f00f2f5c4ec89a.camel@kernel.org>
-         <875zfbvrbm.fsf@notabene.neil.brown.name>
-         <CAHk-=wg8N4fDRC3M21QJokoU+TQrdnv7HqoaFW-Z-ZT8z_Bi7Q@mail.gmail.com>
-         <0066a9f150a55c13fcc750f6e657deae4ebdef97.camel@kernel.org>
-         <CAHk-=whUgeZGcs5YAfZa07BYKNDCNO=xr4wT6JLATJTpX0bjGg@mail.gmail.com>
-         <87v9nattul.fsf@notabene.neil.brown.name>
-         <CAHk-=wiNoAk8v3GrbK3=q6KRBrhLrTafTmWmAo6-up6Ce9fp6A@mail.gmail.com>
-         <87o8t2tc9s.fsf@notabene.neil.brown.name>
-         <CAHk-=wj5jOYxjZSUNu_jdJ0zafRS66wcD-4H0vpQS=a14rS8jw@mail.gmail.com>
-         <f000e352d9e103b3ade3506aac225920420d2323.camel@kernel.org>
-         <877dznu0pk.fsf@notabene.neil.brown.name>
-         <CAHk-=whYQqtW6B7oPmPr9-PXwyqUneF4sSFE+o3=7QcENstE-g@mail.gmail.com>
-         <b5a1bb4c4494a370f915af479bcdf8b3b351eb6d.camel@kernel.org>
-         <87pndcsxc6.fsf@notabene.neil.brown.name>
-         <ce48ed9e48eda3c0f27d2f417314bd00cb1a68db.camel@kernel.org>
-         <CAHk-=whnqDS0NJtAaArVeYQz3hcU=4Ja3auB1Jvs42eADfUgMQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        id S1726867AbgCSRxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:53:06 -0400
+IronPort-SDR: jgJJQVo8LfQqtnIUZ+0fs3gfQHd0eWE3O9PSL7V3pI535PTnWJsdSgfnDxFauplT3A851uF9hO
+ Onv++lwmQvuw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 10:53:00 -0700
+IronPort-SDR: oVW2A+P+v8UZ1v3CjfxeeilfiC243H2UiYB328K62YrscNe2463SDKKZlfrmRo9aAv28qSH7AH
+ 62hKZS4TO+Dw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="356107676"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Mar 2020 10:52:59 -0700
+Date:   Thu, 19 Mar 2020 10:52:59 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com
+Subject: Re: [PATCH] KVM: x86: remove bogus user-triggerable WARN_ON
+Message-ID: <20200319175259.GE11305@linux.intel.com>
+References: <20200319174318.20752-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200319174318.20752-1-pbonzini@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-16 at 10:26 -0700, Linus Torvalds wrote:
-> On Mon, Mar 16, 2020 at 4:07 AM Jeff Layton <jlayton@kernel.org> wrote:
-> > 
-> > +       /*
-> > +        * If fl_blocker is NULL, it won't be set again as this thread "owns"
-> > +        * the lock and is the only one that might try to claim the lock.
-> > +        * Because fl_blocker is explicitly set last during a delete, it's
-> > +        * safe to locklessly test to see if it's NULL. If it is, then we know
-> > +        * that no new locks can be inserted into its fl_blocked_requests list,
-> > +        * and we can therefore avoid doing anything further as long as that
-> > +        * list is empty.
-> > +        */
-> > +       if (!smp_load_acquire(&waiter->fl_blocker) &&
-> > +           list_empty(&waiter->fl_blocked_requests))
-> > +               return status;
+On Thu, Mar 19, 2020 at 01:43:18PM -0400, Paolo Bonzini wrote:
+> The WARN_ON is essentially comparing a user-provided value with 0.  It is
+> trivial to trigger it just by passing garbage to KVM_SET_CLOCK.  Guests
+> can break if you do so, but if it hurts when you do like this just do not
+> do it.
 > 
-> Ack. This looks sane to me now.
-> 
-> yangerkun - how did you find the original problem?
-> 
-> Would you mind using whatever stress test that caused commit
-> 6d390e4b5d48 ("locks: fix a potential use-after-free problem when
-> wakeup a waiter") with this patch? And if you did it analytically,
-> you're a champ and should look at this patch too!
-> 
+> Reported-by: syzbot+00be5da1d75f1cc95f6b@syzkaller.appspotmail.com
+> Fixes: 9446e6fce0ab ("KVM: x86: fix WARN_ON check of an unsigned less than zero")
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
 
-Thanks for all the help with this.
-
-Yangerkun gave me his Reviewed-by and I sent you the most recent version
-of the patch yesterday (cc'ing the relevant mailing lists). I left you
-as author as the original patch was yours.
-
-Let me know if you'd prefer I send a pull request instead.
-
-Cheers,
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
