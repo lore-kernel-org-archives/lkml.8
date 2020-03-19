@@ -2,153 +2,197 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75165C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98A6C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570D820767
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE70720767
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:45:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="TRH9dF/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgCSBm5 (ORCPT
+        id S1726903AbgCSBpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 21:42:57 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47522 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726623AbgCSBm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 21:42:57 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D2B13D9740C94B40F8FC;
-        Thu, 19 Mar 2020 09:42:51 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 19 Mar 2020
- 09:42:45 +0800
-Subject: Re: [PATCH] block, bfq: fix use-after-free in
- bfq_idle_slice_timer_body
-To:     Paolo Valente <paolo.valente@linaro.org>
-CC:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mingfangsen <mingfangsen@huawei.com>,
-        Yanxiaodan <yanxiaodan@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>, renxudong <renxudong1@huawei.com>,
-        Louhongxiang <louhongxiang@huawei.com>
-References: <6c0d0b36-751b-a63a-418b-888a88ce58f4@huawei.com>
- <C69604D5-CBB7-4A5F-AD73-7A9C0B6B3360@linaro.org>
- <0a6e190a-3393-53f9-b127-d57d67cdcdc8@huawei.com>
- <4171EF13-7956-44DA-A5BF-0245E4926436@linaro.org>
- <241f9766-bfe6-485a-331c-fdc693738ffc@huawei.com>
- <A7FFF605-BAA8-42C1-B648-1D5BA17D1286@linaro.org>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Message-ID: <d4769184-c049-2a2d-0ad4-907bea0e3c6b@huawei.com>
-Date:   Thu, 19 Mar 2020 09:42:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <A7FFF605-BAA8-42C1-B648-1D5BA17D1286@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+        Wed, 18 Mar 2020 21:45:12 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37527 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCSBpM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 21:45:12 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a32so302286pga.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 18:45:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=defp/e8uGf2l7bhewdU6OaL68+EfMO5fZxpJqA0gb44=;
+        b=TRH9dF/Bcso2rM5yQA5z7+HWKaf/U9fQXXXiGt+gvIlAl7EBBYtBY4P+uGN6zC0HeM
+         ZqLFF52447PgzW427qP+o/M9QSozt8dx0MUmU6xZ2Q41q9XnatKdKLZZ50i/KMy9FOdh
+         gOVor3GK9zXWV5MRE1Z6SxblJGjR/+AKkenXZyyAtKG+W0t55wxsxhCIRJ0rCiUYKXdL
+         GWi0nm3Iga4ibfBonBAUtYYJvd+kl+FDzXBQF4v7uS0/vKgirOzLgWxcqWg1ii2ZqZNy
+         sL5vWndu8SKanEVT9bXtgRrhMRHVl8Az9Q0KwQ0HByoB4oRMVGJ4ZKpYg+8DIDX5qEeR
+         SKbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=defp/e8uGf2l7bhewdU6OaL68+EfMO5fZxpJqA0gb44=;
+        b=SNSlTU4B3wSKuwOm77kCV+Vokj55ma+L/PvSobLBcSa4mC9yEVAuC1T8WSnYvudmw9
+         YDcJfHa/fouKXdhU8lHkFleJeE5I2NENmhpN791jLCEFNaTUydozZn5iNGaJvJJu4dXE
+         5C3/xn9J0wV8If2hzVky6JMal/XAO6zmJ+OdC515P490MITBWybJC4QYgdEiwE4oV3E0
+         L1tZGMFg+KKo8b3aCKo+HLBYp7k3tDHnM/ZQlfwJK9iaSz4lXjp9R4AIvYfvRhFLn0Ar
+         lBpyJHoILRQm3MVFJZoYqsMBFq4iId8cWKUhXXGidiT4/DXOBb54OiFVWY8roRKX4NWb
+         Robw==
+X-Gm-Message-State: ANhLgQ1nbU7Ir95j3uPnAbRQa1wi+iNdmXzTjPThy4g9oKzvTD7dAYVL
+        RS3z8C55DUsJn0AWmMHPPm1nGg==
+X-Google-Smtp-Source: ADFU+vv85oxDxQAFmm7XMMsICpoRLKqZYdHMoXpDM4rA+wl3SEkqIZ7ih9rz7hyN855EqqkemkO67g==
+X-Received: by 2002:a65:44c1:: with SMTP id g1mr722666pgs.362.1584582310663;
+        Wed, 18 Mar 2020 18:45:10 -0700 (PDT)
+Received: from localhost (c-67-161-15-180.hsd1.ca.comcast.net. [67.161.15.180])
+        by smtp.gmail.com with ESMTPSA id k17sm249690pfp.194.2020.03.18.18.45.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 18:45:09 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 18:45:09 -0700 (PDT)
+X-Google-Original-Date: Wed, 18 Mar 2020 16:19:33 PDT (-0700)
+Subject:     Re: [PATCH 1/2] riscv: uaccess should be used in nommu mode
+In-Reply-To: <20200303093418.9180-1-greentime.hu@sifive.com>
+CC:     green.hu@gmail.com, greentime@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        greentime.hu@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     greentime.hu@sifive.com
+Message-ID: <mhng-c8144bd2-e457-4949-90bc-c05113a6c954@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 03 Mar 2020 01:34:17 PST (-0800), greentime.hu@sifive.com wrote:
+> It might have the unaligned access exception when trying to exchange data
+> with user space program. In this case, it failed in tty_ioctl(). Therefore
+> we should enable uaccess.S for NOMMU mode since the generic code doesn't
+> handle the unaligned access cases.
+>
+>    0x8013a212 <tty_ioctl+462>:  ld      a5,460(s1)
+>
+> [    0.115279] Oops - load address misaligned [#1]
+> [    0.115284] CPU: 0 PID: 29 Comm: sh Not tainted 5.4.0-rc5-00020-gb4c27160d562-dirty #36
+> [    0.115294] epc: 000000008013a212 ra : 000000008013a212 sp : 000000008f48dd50
+> [    0.115303]  gp : 00000000801cac28 tp : 000000008fb80000 t0 : 00000000000000e8
+> [    0.115312]  t1 : 000000008f58f108 t2 : 0000000000000009 s0 : 000000008f48ddf0
+> [    0.115321]  s1 : 000000008f8c6220 a0 : 0000000000000001 a1 : 000000008f48dd28
+> [    0.115330]  a2 : 000000008fb80000 a3 : 00000000801a7398 a4 : 0000000000000000
+> [    0.115339]  a5 : 0000000000000000 a6 : 000000008f58f0c6 a7 : 000000000000001d
+> [    0.115348]  s2 : 000000008f8c6308 s3 : 000000008f78b7c8 s4 : 000000008fb834c0
+> [    0.115357]  s5 : 0000000000005413 s6 : 0000000000000000 s7 : 000000008f58f2b0
+> [    0.115366]  s8 : 000000008f858008 s9 : 000000008f776818 s10: 000000008f776830
+> [    0.115375]  s11: 000000008fb840a8 t3 : 1999999999999999 t4 : 000000008f78704c
+> [    0.115384]  t5 : 0000000000000005 t6 : 0000000000000002
+> [    0.115391] status: 0000000200001880 badaddr: 000000008f8c63ec cause: 0000000000000004
+> [    0.115401] ---[ end trace 00d490c6a8b6c9ac ]---
+>
+> This failure could be fixed after this patch applied.
+>
+> [    0.002282] Run /init as init process
+> Initializing random number generator... [    0.005573] random: dd: uninitialized urandom read (512 bytes read)
+> done.
+>
+> Welcome to Buildroot
+> buildroot login: root
+> Password:
+> Jan  1 00:00:00 login[62]: root login on 'ttySIF0'
+> ~ #
+>
+> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> ---
+>  arch/riscv/Kconfig               |  1 -
+>  arch/riscv/include/asm/uaccess.h | 36 ++++++++++++++++----------------
+>  arch/riscv/lib/Makefile          |  2 +-
+>  3 files changed, 19 insertions(+), 20 deletions(-)
+>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 73f029eae0cc..92d63a63aec8 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -50,7 +50,6 @@ config RISCV
+>  	select PCI_DOMAINS_GENERIC if PCI
+>  	select PCI_MSI if PCI
+>  	select RISCV_TIMER
+> -	select UACCESS_MEMCPY if !MMU
+>  	select GENERIC_IRQ_MULTI_HANDLER
+>  	select GENERIC_ARCH_TOPOLOGY if SMP
+>  	select ARCH_HAS_PTE_SPECIAL
+> diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+> index f462a183a9c2..8ce9d607b53d 100644
+> --- a/arch/riscv/include/asm/uaccess.h
+> +++ b/arch/riscv/include/asm/uaccess.h
+> @@ -11,6 +11,24 @@
+>  /*
+>   * User space memory access functions
+>   */
+> +
+> +extern unsigned long __must_check __asm_copy_to_user(void __user *to,
+> +	const void *from, unsigned long n);
+> +extern unsigned long __must_check __asm_copy_from_user(void *to,
+> +	const void __user *from, unsigned long n);
+> +
+> +static inline unsigned long
+> +raw_copy_from_user(void *to, const void __user *from, unsigned long n)
+> +{
+> +	return __asm_copy_from_user(to, from, n);
+> +}
+> +
+> +static inline unsigned long
+> +raw_copy_to_user(void __user *to, const void *from, unsigned long n)
+> +{
+> +	return __asm_copy_to_user(to, from, n);
+> +}
+> +
+>  #ifdef CONFIG_MMU
+>  #include <linux/errno.h>
+>  #include <linux/compiler.h>
+> @@ -367,24 +385,6 @@ do {								\
+>  		-EFAULT;					\
+>  })
+>
+> -
+> -extern unsigned long __must_check __asm_copy_to_user(void __user *to,
+> -	const void *from, unsigned long n);
+> -extern unsigned long __must_check __asm_copy_from_user(void *to,
+> -	const void __user *from, unsigned long n);
+> -
+> -static inline unsigned long
+> -raw_copy_from_user(void *to, const void __user *from, unsigned long n)
+> -{
+> -	return __asm_copy_from_user(to, from, n);
+> -}
+> -
+> -static inline unsigned long
+> -raw_copy_to_user(void __user *to, const void *from, unsigned long n)
+> -{
+> -	return __asm_copy_to_user(to, from, n);
+> -}
+> -
+>  extern long strncpy_from_user(char *dest, const char __user *src, long count);
+>
+>  extern long __must_check strlen_user(const char __user *str);
+> diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
+> index 47e7a8204460..0d0db80800c4 100644
+> --- a/arch/riscv/lib/Makefile
+> +++ b/arch/riscv/lib/Makefile
+> @@ -2,5 +2,5 @@
+>  lib-y			+= delay.o
+>  lib-y			+= memcpy.o
+>  lib-y			+= memset.o
+> -lib-$(CONFIG_MMU)	+= uaccess.o
+> +lib-y			+= uaccess.o
+>  lib-$(CONFIG_64BIT)	+= tishift.o
 
-On 2020/3/18 19:07, Paolo Valente wrote:
-> 
-> 
->> Il giorno 18 mar 2020, alle ore 10:52, Zhiqiang Liu <liuzhiqiang26@huawei.com> ha scritto:
->>
->>
->>
->> On 2020/3/18 16:45, Paolo Valente wrote:
->>>
->>>
->>>>>> 	spin_lock_irqsave(&bfqd->lock, flags);
->>>>>> -	bfq_clear_bfqq_wait_request(bfqq);
->>>>>> -
->>>>>> 	if (bfqq != bfqd->in_service_queue) {
->>>>>> 		spin_unlock_irqrestore(&bfqd->lock, flags);
->>>>>> 		return;
->>>>>> 	}
->>>>>>
->>>>>> +	bfq_clear_bfqq_wait_request(bfqq);
->>>>>> +
->>>>>
->>>>> Please add a comment on why you (correctly) clear this flag only if bfqq is in service.
->>>>>
->>>>> For the rest, seems ok to me.
->>>>>
->>>>> Thank you very much for spotting and fixing this bug,
->>>>> Paolo
->>>>>
->>>> Thanks for your reply.
->>>> Considering that the bfqq may be in race, we should firstly check whether bfqq is in service before
->>>> doing something on it.
->>>>
->>>
->>> The comment you propose is correct, but the correctness issue I raised
->>> is essentially the opposite.  Sorry for not being clear.
->>>
->>> Let me put it the other way round: why is it still correct that, if
->>> bfqq is not the queue in service, then that flag is not cleared at all?
->>> IOW, why is it not a problem that that flag remains untouched is bfqq
->>> is not in service?
->>>
->>> Thanks,
->>> Paolo
->>>
->> Thanks for your patient.
->> As you comment in bfq_idle_slice_timer, there are two race situations as follows,
->> a) bfqq is null
->>   bfq_idle_slice_timer will not call bfq_idle_slice_timer_body ->no problem
->> b) bfqq are not in service
->>   1) bfqq is freed
->>      it will cause use-after-free problem before calling bfq_clear_bfqq_wait_request
->>      in bfq_idle_slice_timer_body. -> use-after-free problem as analyzed in the patch.
->>   2) bfqq is not freed
->>      it means in_service_queue has been set to a new bfqq. The old bfqq has been expired
->>      through __bfq_bfqq_expire func. Then the wait_request flags of old bfqq will be cleared
->>      in __bfq_bfqd_reset_in_service func. -> it is no a problem to re-clear the wait_request
->>      flags before checking whether bfqq is in service.
-> 
-> Great, this item 2 is exactly what I meant.  We need a comment
-> because, even if now this stuff is clear to you, imagine somebody
-> else getting to your modified piece of code after reading hundreds of
-> lines of code, about a non-trivial state machine as BFQ ...  :)
-> 
-> Thanks,
-> Paolo
-> 
-Ok, I will add the following comment in the v3 patch.
-
-Considering that the bfqq may be in race, we should firstly check whether bfqq is in service
-before doing something on it. If the bfqq in race is not in service, it means the bfqq has
-been expired through __bfq_bfqq_expire func, and wait_request flags has been cleared in
-__bfq_bfqd_reset_in_service func.
-
->>
->> In one word, the old bfqq in race has already cleared the wait_request flag when switching in_service_queue.
->>
->> Thanks,
->> Zhiqiang Liu
->>
->>>>>>
->>>>>
->>>>>
->>>>> .
->>>
->>>
->>> .
->>>
->>
-> 
-> 
-> .
-> 
-
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
