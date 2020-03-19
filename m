@@ -2,219 +2,133 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE11C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAA5C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96AEC20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E720A20768
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lTy0INGy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MT0Y8soJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgCSBDN (ORCPT
+        id S1726980AbgCSBIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 21:03:13 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40106 "EHLO
+        Wed, 18 Mar 2020 21:08:55 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40524 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCSBDM (ORCPT
+        with ESMTP id S1726877AbgCSBIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 21:03:12 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t24so245052pgj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 18:03:11 -0700 (PDT)
+        Wed, 18 Mar 2020 21:08:54 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t24so251936pgj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 18:08:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=cxvWWdiLWhwcBWA6ADvkCOYt4fG2zyPQ2T9tIxIBDEQ=;
-        b=lTy0INGyi6isNdz4BWtj2OHapIpXObN/A5Bw5xR2jUiAyFrM0ev10C0DXvExOlxwhc
-         ImZia8GiXsiPGuNaM/4kS8ZVnHfFUYJ2HWiWCkHtxE2eL6fhgDfNjv8fDe5Y3TDI0/og
-         7WX/Gjp9iTU9Hl6Uqs4FH6jOiVv/YankzE2fo=
+        bh=HOrVTVj94hEqYzP+BNYpSkqs29uiFE6WXOJ/uoI1nY0=;
+        b=MT0Y8soJkEXXSdQVlOiuDB77ehUHT9j37xPgvUaPEAjUfLvnUxhWsASSZRDBU80+UE
+         4Yvm727E1zUBc7xZdiND5J9r7CGnI47FLMRXA/TzwP0VJmbe4GjX95BHgnmtZ5gbpDnq
+         YVcYCFBwG76DaaWPMx5qXkx/DqtnKFixVSljU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=cxvWWdiLWhwcBWA6ADvkCOYt4fG2zyPQ2T9tIxIBDEQ=;
-        b=OMxTv/o8gk47AsMkcquJnQAYXtp8xFrM4pwI+amE4QkwHBIRxcDpXAvUERpl9qrArf
-         gvlHUb7qMZCQZzLVSUeDT8KIXCkQGCBybyZBlSpdufb0QUdFHybGhNJXYusHQwBWHFFC
-         FhbV4VnbfqkjPADteZ2ssXdbrCy0QnnRWQdAqNdQBsXXN0IzjQW4Hos4tjoZ7pyOAluK
-         220ajjRcjaN8YZUg8TDjxIIz6cW+9SikdrrdjphTsVRvUBCOGxRHryuniQ+uh1UGHfYB
-         nz9IZG/i92ZF9ykQ9BPYMjv/Z2Ka7rAaTfEXCX+EeD+hjHFB0ZvI/BL6tS8ykRCaE+1L
-         YKzg==
-X-Gm-Message-State: ANhLgQ2eQbeq0n83iZSl/arpFberras8kUgPqLuftuntNc+Ufz5SUDY4
-        yL7VU1eJ6lr9zerod+T8Bs3zww==
-X-Google-Smtp-Source: ADFU+vvJQBekMCStovu5VWz10374hQ0R97C2UWDJEFdyIkEHKe7U2rbXhUVHYtmBV6EUNpQHMp4PHg==
-X-Received: by 2002:a63:1404:: with SMTP id u4mr564252pgl.172.1584579790905;
-        Wed, 18 Mar 2020 18:03:10 -0700 (PDT)
+        bh=HOrVTVj94hEqYzP+BNYpSkqs29uiFE6WXOJ/uoI1nY0=;
+        b=nP2rz2CZKvqPm6NA0bjIokESOS5N7YrR4jTL8Tk+8+evMs1U3IKpsQ3OsJESXalsnd
+         dRHAh9gT6J1qdjI81RWbCProH/orW+qi6jrSA3lNKFQW8c/Rdh4fjbpFsz/3Agpc2Ccy
+         5724UVsvRqnxNp1ItfUWIVNTbUQXuspCjgbC0WtXOPXD4VzuL5qI5dbDi5UKpj1gS0dh
+         CuecxtavPTQy+4ORsXqAPi5LFiQcohqS3ikrCvQEndnIo867+ozdw9RjwphIo5LtC86Z
+         BktcJ/lFpVg+ym1G3895hesgKvGWFv3JrS9IEUVyAisObgHNO2P7tuLSc4lbOrwxgenp
+         I+5Q==
+X-Gm-Message-State: ANhLgQ08FTYhf/c7E3j5Vt+yUAVVYeGWaABgTI9JT481P+omtSthTF4D
+        gLJcV1UXcZ7iDEs+KW9P6huIbA==
+X-Google-Smtp-Source: ADFU+vuAWgIWajuJGpPlRJxuUxjrbJeZVY6ltZuXXUYT9Lo/14j2AaHjIDuHwCwpxd//vqXGygp/gA==
+X-Received: by 2002:aa7:8bd1:: with SMTP id s17mr1130786pfd.225.1584580133274;
+        Wed, 18 Mar 2020 18:08:53 -0700 (PDT)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id u14sm250068pgg.67.2020.03.18.18.03.09
+        by smtp.gmail.com with ESMTPSA id y15sm209863pfc.206.2020.03.18.18.08.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 18:03:10 -0700 (PDT)
+        Wed, 18 Mar 2020 18:08:52 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1583928252-21246-2-git-send-email-sanm@codeaurora.org>
-References: <1583928252-21246-1-git-send-email-sanm@codeaurora.org> <1583928252-21246-2-git-send-email-sanm@codeaurora.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: phy: qcom,qmp: Convert QMP PHY bindings to yaml
+In-Reply-To: <20200311191501.8165-3-bryan.odonoghue@linaro.org>
+References: <20200311191501.8165-1-bryan.odonoghue@linaro.org> <20200311191501.8165-3-bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH 2/7] dt-bindings: usb: dwc3: Add a gpio-usb-connector example
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
+        bjorn.andersson@linaro.org, jackp@codeaurora.org, robh@kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Date:   Wed, 18 Mar 2020 18:03:09 -0700
-Message-ID: <158457978900.152100.4898904631535195370@swboyd.mtv.corp.google.com>
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, balbi@kernel.org,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
+Date:   Wed, 18 Mar 2020 18:08:51 -0700
+Message-ID: <158458013177.152100.17920784952083533825@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-03-11 05:04:09)
-> diff --git a/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml b/Do=
-cumentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> new file mode 100644
-> index 0000000..39ec3f24
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom,qmp-phy.yaml
-> @@ -0,0 +1,311 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/qcom,qmp-phy.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm QMP PHY controller
-> +
-> +maintainers:
-> +  - Manu Gautam <mgautam@codeaurora.org>
-> +
-> +description:
-> +  QMP phy controller supports physical layer functionality for a number =
-of
-> +  controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,ipq8074-qmp-pcie-phy
-> +      - qcom,msm8996-qmp-pcie-phy
-> +      - qcom,msm8996-qmp-usb3-phy
-> +      - qcom,msm8998-qmp-pcie-phy
-> +      - qcom,msm8998-qmp-ufs-phy
-> +      - qcom,msm8998-qmp-usb3-phy
-> +      - qcom,sdm845-qhp-pcie-phy
-> +      - qcom,sdm845-qmp-pcie-phy
-> +      - qcom,sdm845-qmp-ufs-phy
-> +      - qcom,sdm845-qmp-usb3-phy
-> +      - qcom,sdm845-qmp-usb3-uni-phy
+Quoting Bryan O'Donoghue (2020-03-11 12:14:56)
+> A USB connector should be a child node of the USB controller
+> connector/usb-connector.txt. This patch adds an example of how to do this
+> to the dwc3 binding descriptions.
 
-I was looking at the DP phy binding in another thread and I'm wondering
-what qmp-usb3-uni-phy means. Is that a usb3 phy that doesn't have DP phy
-combined with it? It looks like the DP phy binding needs to be merged
-with this binding (and some of the driver part too), so I'm not sure
-this binding is correct as it stands. Probably needs to be updated to
-support DP too.
+I read that as a child of the USB interface controller, which is not the
+same as the USB controller. For example, we're talking about having the
+usb connector be a child of the EC on ChromeOS devices because that
+manages the connector
 
-> +      - qcom,sm8150-qmp-ufs-phy
-> +
-> +  reg:
-> +    minItems: 1
-> +    items:
-> +      - description: Address and length of PHY's common serdes block.
-> +      - description: Address and length of the DP_COM control block.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: reg-base
-> +      - const: dp_com
-> +
-> +  "#clock-cells":
-> +     enum: [ 1, 2 ]
-> +
-> +  "#address-cells":
-> +    enum: [ 1, 2 ]
-> +
-> +  "#size-cells":
-> +    enum: [ 1, 2 ]
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 4
-> +
-> +  clock-names:
-> +    minItems: 1
-> +    maxItems: 4
-> +
-> +  resets:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  reset-names:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  vdda-phy-supply:
-> +    description:
-> +        Phandle to a regulator supply to PHY core block.
-> +
-> +  vdda-pll-supply:
-> +    description:
-> +        Phandle to 1.8V regulator supply to PHY refclk pll block.
-> +
-> +  vddp-ref-clk-supply:
-> +    description:
-> +        Phandle to a regulator supply to any specific refclk
-> +        pll block.
-> +
-> +#Required nodes:
-> +patternProperties:
-> +  "^phy@[0-9a-f]+$":
-> +    type: object
-> +    description:
-> +      Each device node of QMP phy is required to have as many child node=
-s as
-> +      the number of lanes the PHY has.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#clock-cells"
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +  - vdda-phy-supply
-> +  - vdda-pll-supply
-> +
-> +additionalProperties: false
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,sdm845-qmp-usb3-phy
-> +              - qcom,sdm845-qmp-usb3-uni-phy
-> +    then:
+>=20
+> It is necessary to declare a connector as a child-node of a USB controller
+> for role-switching to work, so this example should be helpful to others
+> implementing that.
 
-There's a lot of if-then nesting stuff. Maybe we could split the binding
-into many files for the different compatibles so that it is more
-readable.
+Maybe it should be a virtual node at the root of the DT if it's GPIO
+controlled? And then the phy can be connected to the usb connector
+through the graph binding.
 
-> +      properties:
-> +        clocks:
+>=20
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Acked-by: Felipe Balbi <balbi@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentati=
+on/devicetree/bindings/usb/dwc3.txt
+> index 66780a47ad85..4e1e4afccee6 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -121,4 +121,12 @@ dwc3@4a030000 {
+>         interrupts =3D <0 92 4>
+>         usb-phy =3D <&usb2_phy>, <&usb3,phy>;
+
+Weird that there's a comma here        ^
+
+Not a problem with this patch, just noticing it while reading the diff.
+
+>         snps,incr-burst-type-adjustment =3D <1>, <4>, <8>, <16>;
+> +
+> +       usb_con: connector {
+> +               compatible =3D "gpio-usb-b-connector";
+> +               id-gpios =3D <&tlmm 116 GPIO_ACTIVE_HIGH>;
+> +               vbus-supply =3D <&usb3_vbus_reg>;
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&usb3_id_pin>, <&usb3_vbus_pin>;
+> +       };
