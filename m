@@ -2,129 +2,110 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94C5C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69E9C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC212072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A945D2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgCSPAj (ORCPT
+        id S1727815AbgCSPAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:00:39 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:15923 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgCSPAj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:00:39 -0400
-IronPort-SDR: aq9BidRel6u2dHiaDJejrznQabVWcfiPPFH28pVCrpcPy7uOPOy6uVuBMswiEYLRHhXxalLjTD
- uKq1vuPQN3sm6VuR2sX8PJg2VbJbCzPyQtbXYv7KmQP/yXo8sZlENlUNimQroYPwlSztJXd3nV
- Rfbe41je5n0JV0hmfFxKSxpuxUP0x1UTtC529Jk8/B/jN+Rx5DUQTXsNMY3N72TVAw3WZodCOt
- 3mB8N3DFnUx9FOhbzuAcQ+HjVWP30N/2hWKsPO+lnPcLeo4bFBm4znv1o7XjzA5g9x3UQxTQrT
- JT8=
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="48850130"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 19 Mar 2020 07:00:38 -0800
-IronPort-SDR: V666wCBxE7uhKD5NWWFiTqoOOsLRkXJrRveIYym1WNZCWKtzP0x97v1QPSH2t0oGS5T+aZk5W/
- hyCgiu6UFOeySoCZSgy6NjeR6HOaxNhZjY9MLrfQNQimU+jrOLcXvGzvwB47Q6fT3RsRNN2Iyn
- s0S0cT1vWhzbwRkqF71ZiJcLm0LYzcj9ESTap6APZIR6TQhDZ4u9BxMhdXL0ZN/t5ybq/7owq2
- AeSYNod7d9SwBrcU0ac2w72rCCR04an8iekEeX2npB1KAdvwOgjNanEm/WiHk1yLr1t9gJZdWB
- J98=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <bsz@semihalf.com>, <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v8 04/52] Input: atmel_mxt_ts - split large i2c transfers into blocks
-Date:   Thu, 19 Mar 2020 07:59:28 -0700
-Message-ID: <20200319150016.61398-5-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200319150016.61398-1-jiada_wang@mentor.com>
-References: <20200319150016.61398-1-jiada_wang@mentor.com>
+        Thu, 19 Mar 2020 11:00:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50444 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727781AbgCSPAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:00:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A5FBAAE48;
+        Thu, 19 Mar 2020 15:00:40 +0000 (UTC)
+Received: from localhost (webern.olymp [local])
+        by webern.olymp (OpenSMTPD) with ESMTPA id 4a952f62;
+        Thu, 19 Mar 2020 15:00:39 +0000 (WET)
+Date:   Thu, 19 Mar 2020 15:00:39 +0000
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ceph: fix memory leak in ceph_cleanup_snapid_map
+Message-ID: <20200319150039.GA24696@suse.com>
+References: <20200319114348.GA72449@suse.com>
+ <e00d01582d39f1036bd73fb66e45e56c8c07016d.camel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e00d01582d39f1036bd73fb66e45e56c8c07016d.camel@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+On Thu, Mar 19, 2020 at 10:41:13AM -0400, Jeff Layton wrote:
+> On Thu, 2020-03-19 at 11:43 +0000, Luis Henriques wrote:
+> > kmemleak reports the following memory leak:
+> > 
+> > unreferenced object 0xffff88821feac8a0 (size 96):
+> >   comm "kworker/1:0", pid 17, jiffies 4294896362 (age 20.512s)
+> >   hex dump (first 32 bytes):
+> >     a0 c8 ea 1f 82 88 ff ff 00 c9 ea 1f 82 88 ff ff  ................
+> >     00 00 00 00 00 00 00 00 00 01 00 00 00 00 ad de  ................
+> >   backtrace:
+> >     [<00000000b3ea77fb>] ceph_get_snapid_map+0x75/0x2a0
+> >     [<00000000d4060942>] fill_inode+0xb26/0x1010
+> >     [<0000000049da6206>] ceph_readdir_prepopulate+0x389/0xc40
+> >     [<00000000e2fe2549>] dispatch+0x11ab/0x1521
+> >     [<000000007700b894>] ceph_con_workfn+0xf3d/0x3240
+> >     [<0000000039138a41>] process_one_work+0x24d/0x590
+> >     [<00000000eb751f34>] worker_thread+0x4a/0x3d0
+> >     [<000000007e8f0d42>] kthread+0xfb/0x130
+> >     [<00000000d49bd1fa>] ret_from_fork+0x3a/0x50
+> > 
+> > A kfree was missing in commit 75c9627efb72 ("ceph: map snapid to anonymous
+> > bdev ID"), while looping the 'to_free' list of ceph_snapid_map objects.
+> > 
+> > Fixes: 75c9627efb72 ("ceph: map snapid to anonymous bdev ID")
+> > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > ---
+> > Hi!
+> > 
+> > A bit of mailing-list archaeology shows that v1 of this patch actually
+> > included this kfree [1], and was lost on v2 [2].
+> > 
+> > [1] https://patchwork.kernel.org/patch/10114319/
+> > [2] https://patchwork.kernel.org/patch/10749907/
+> > 
+> > Cheers,
+> > --
+> > Luis
+> > 
+> > fs/ceph/snap.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/fs/ceph/snap.c b/fs/ceph/snap.c
+> > index ccfcc66aaf44..923be9399b21 100644
+> > --- a/fs/ceph/snap.c
+> > +++ b/fs/ceph/snap.c
+> > @@ -1155,5 +1155,6 @@ void ceph_cleanup_snapid_map(struct ceph_mds_client *mdsc)
+> >  			pr_err("snapid map %llx -> %x still in use\n",
+> >  			       sm->snap, sm->dev);
+> >  		}
+> > +		kfree(sm);
+> >  	}
+> >  }
+> 
+> Good catch. This looks correct to me.
+> 
+> Hmmm...we'll leak one of these for every snapid we encounter. Any
+> objection to marking this for stable?
 
-On some firmware variants, the size of the info block exceeds what can
-be read in a single transfer.
+No, please do.  I assumed it would be a stable candidate already by having
+the 'Fixes: <sha1>' but maybe it's better to explicitly tag it.
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit 74c4f5277cfa403d43fafc404119dc57a08677db)
-[gdavis: Forward port and fix conflicts due to v4.14.51 commit
-	 960fe000b1d3 ("Input: atmel_mxt_ts - fix the firmware
-	 update").]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: Change mxt_read_blks() to __mxt_read_reg(), original __mxt_read_reg() to
-	__mxt_read_chunk()]
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 28 +++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 3f1ebe14802f..7e6a66e3e1e0 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -40,7 +40,7 @@
- #define MXT_OBJECT_START	0x07
- #define MXT_OBJECT_SIZE		6
- #define MXT_INFO_CHECKSUM_SIZE	3
--#define MXT_MAX_BLOCK_WRITE	256
-+#define MXT_MAX_BLOCK_WRITE	255
- 
- /* Object types */
- #define MXT_DEBUG_DIAGNOSTIC_T37	37
-@@ -624,8 +624,8 @@ static int mxt_send_bootloader_cmd(struct mxt_data *data, bool unlock)
- 	return 0;
- }
- 
--static int __mxt_read_reg(struct i2c_client *client,
--			       u16 reg, u16 len, void *val)
-+static int __mxt_read_chunk(struct i2c_client *client,
-+			    u16 reg, u16 len, void *val)
- {
- 	struct i2c_msg xfer[2];
- 	u8 buf[2];
-@@ -659,6 +659,28 @@ static int __mxt_read_reg(struct i2c_client *client,
- 	return ret;
- }
- 
-+static int __mxt_read_reg(struct i2c_client *client,
-+			  u16 reg, u16 len, void *buf)
-+{
-+	u16 offset = 0;
-+	int error;
-+	u16 size;
-+
-+	while (offset < len) {
-+		size = min(MXT_MAX_BLOCK_WRITE, len - offset);
-+
-+		error = __mxt_read_chunk(client,
-+					 reg + offset,
-+					 size, buf + offset);
-+		if (error)
-+			return error;
-+
-+		offset += size;
-+	}
-+
-+	return 0;
-+}
-+
- static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
- 			   const void *val)
- {
--- 
-2.17.1
-
+Cheers,
+--
+Luis
