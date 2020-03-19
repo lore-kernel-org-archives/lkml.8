@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AB1C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF50C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A295520663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B761720787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624994;
-	bh=AdNahJelzRheswR/YE75fk2oSiEMrLk9h64N1vmKkcg=;
+	s=default; t=1584624997;
+	bh=XdIXxjQE02hUwbTN4cGVTEPpCkxy4dyeETmIeQqK4j8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vebfqPL3xGLJVv+K6/58+3JzxIWOM2WQpUebkK9tXMrf+1UmkHmRMGLv+Juh+mGK4
-	 vMGhWkuWyDQ4/8lxiTGc1ukXrcZZAeAnLKLaBzeHiY+z5A9hdUEOTqXIEul12fSWMJ
-	 7li+4JtM2ulA32HaV9JuRY+2jV1ZW8qDs9qSvH7M=
+	b=vepjBMRkQ3Vj9guRdRmhK90QbA2wMLFSVmtxICyJqKQx922EZRTfFOYN1iE8lvuMN
+	 x2XBU9S4P8B6ty0zfAQ2UP6BwHN2hf/oLU2ahrS1+3+/4IYR8g6BIdDVj2oYuxRXo/
+	 TogjKBGsrB85paAJ2nOLAE+szPi5agi8BaOta/8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgCSNgd (ORCPT
+        id S1728366AbgCSNJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:36:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54306 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:09:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727821AbgCSNJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:09:45 -0400
+        id S1727775AbgCSNJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:09:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD69C208D6;
-        Thu, 19 Mar 2020 13:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A47DE214D8;
+        Thu, 19 Mar 2020 13:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623385;
-        bh=AdNahJelzRheswR/YE75fk2oSiEMrLk9h64N1vmKkcg=;
+        s=default; t=1584623373;
+        bh=XdIXxjQE02hUwbTN4cGVTEPpCkxy4dyeETmIeQqK4j8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xt5AoCHOg8w+tpeD8Yzk9srjjHhbiVQnBg82BRkNWG96JYw5WOCQqP+dQFzXlEe+m
-         fynT4A5jXn7KoOgcR9vOda7m4AizfjZC/X8RaTTnTTfrPlni5561XQzql0Fmy7gatF
-         6Isc8ItuPlTAYCy4v3AXEM1AgaSVUJHeSmjFvCfQ=
+        b=VGR1QXU6fhVzhsH2agQbl6Py/J85L9yTm0LyuMeT5g8F7gmPOnXZ5k2lmlbxYTEkB
+         UBj3Xhb9OYR8hcMpKbCXSOxZboTZgRUaFnu/KhYA9ZRqjMXxK70aOEOUEiZX9Fcu9L
+         GPQik3NTP93IbsOLaTfgY/qW9yl65N9FF/qM/e2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Malat <oss@malat.biz>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 01/90] NFS: Remove superfluous kmap in nfs_readdir_xdr_to_array
-Date:   Thu, 19 Mar 2020 13:59:23 +0100
-Message-Id: <20200319123928.955435028@linuxfoundation.org>
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.4 81/93] batman-adv: Reduce tt_local hash refcnt only for removed entry
+Date:   Thu, 19 Mar 2020 14:00:25 +0100
+Message-Id: <20200319123950.223234871@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
-References: <20200319123928.635114118@linuxfoundation.org>
+In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
+References: <20200319123924.795019515@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,32 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Malat <oss@malat.biz>
+From: Sven Eckelmann <sven@narfation.org>
 
-Array is mapped by nfs_readdir_get_array(), the further kmap is a result
-of a bad merge and should be removed.
+commit 3d65b9accab4a7ed5038f6df403fbd5e298398c7 upstream.
 
-This resource leakage can be exploited for DoS by receptively reading
-a content of a directory on NFS (e.g. by running ls).
+The batadv_hash_remove is a function which searches the hashtable for an
+entry using a needle, a hashtable bucket selection function and a compare
+function. It will lock the bucket list and delete an entry when the compare
+function matches it with the needle. It returns the pointer to the
+hlist_node which matches or NULL when no entry matches the needle.
 
-Fixes: 67a56e9743171 ("NFS: Fix memory leaks and corruption in readdir")
-Signed-off-by: Petr Malat <oss@malat.biz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The batadv_tt_local_remove is not itself protected in anyway to avoid that
+any other function is modifying the hashtable between the search for the
+entry and the call to batadv_hash_remove. It can therefore happen that the
+entry either doesn't exist anymore or an entry was deleted which is not the
+same object as the needle. In such an situation, the reference counter (for
+the reference stored in the hashtable) must not be reduced for the needle.
+Instead the reference counter of the actually removed entry has to be
+reduced.
+
+Otherwise the reference counter will underflow and the object might be
+freed before all its references were dropped. The kref helpers reported
+this problem as:
+
+  refcount_t: underflow; use-after-free.
+
+Fixes: ef72706a0543 ("batman-adv: protect tt_local_entry from concurrent delete events")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/nfs/dir.c |    2 --
- 1 file changed, 2 deletions(-)
+ net/batman-adv/translation-table.c |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -678,8 +678,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir
- 		goto out_label_free;
- 	}
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -1049,9 +1049,10 @@ u16 batadv_tt_local_remove(struct batadv
+ 			   unsigned short vid, const char *message,
+ 			   bool roaming)
+ {
++	struct batadv_tt_local_entry *tt_removed_entry;
+ 	struct batadv_tt_local_entry *tt_local_entry;
+ 	u16 flags, curr_flags = BATADV_NO_FLAGS;
+-	void *tt_entry_exists;
++	struct hlist_node *tt_removed_node;
  
--	array = kmap(page);
--
- 	status = nfs_readdir_alloc_pages(pages, array_size);
- 	if (status < 0)
- 		goto out_release_array;
+ 	tt_local_entry = batadv_tt_local_hash_find(bat_priv, addr, vid);
+ 	if (!tt_local_entry)
+@@ -1080,15 +1081,18 @@ u16 batadv_tt_local_remove(struct batadv
+ 	 */
+ 	batadv_tt_local_event(bat_priv, tt_local_entry, BATADV_TT_CLIENT_DEL);
+ 
+-	tt_entry_exists = batadv_hash_remove(bat_priv->tt.local_hash,
++	tt_removed_node = batadv_hash_remove(bat_priv->tt.local_hash,
+ 					     batadv_compare_tt,
+ 					     batadv_choose_tt,
+ 					     &tt_local_entry->common);
+-	if (!tt_entry_exists)
++	if (!tt_removed_node)
+ 		goto out;
+ 
+-	/* extra call to free the local tt entry */
+-	batadv_tt_local_entry_free_ref(tt_local_entry);
++	/* drop reference of remove hash entry */
++	tt_removed_entry = hlist_entry(tt_removed_node,
++				       struct batadv_tt_local_entry,
++				       common.hash_entry);
++	batadv_tt_local_entry_free_ref(tt_removed_entry);
+ 
+ out:
+ 	if (tt_local_entry)
 
 
