@@ -6,118 +6,123 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7709BC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A11C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5144820663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5396220714
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 08:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgCSIS1 (ORCPT
+        id S1726592AbgCSIUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 04:18:27 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:42062 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725601AbgCSIS0 (ORCPT
+        Thu, 19 Mar 2020 04:20:51 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59617 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgCSIUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 04:18:26 -0400
-Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 02J8IPaV021671
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 04:18:25 -0400
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 02J8IKoM015850
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 04:18:25 -0400
-Received: by mail-qv1-f69.google.com with SMTP id d2so1978543qve.11
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 01:18:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=EQ73z6kyR/mYMiKdZ6uBkObCrQL0cwEBtzhgaFx9xVo=;
-        b=bHck6UclLogWmQFVL2xF9xSiEyH5A4SyV1xOJ3ELsSfr98EYpMQKYOkBtFVtYnLVqn
-         JMzeSLd3cLeqoJpXBDQ9dSHVEp9FyCtnrmo/lvp1coPa/uiaE74wDaw4BLvlRgYWgF8Z
-         SytMPFFqeVgkpsunNvthIEHQszVvyqTqo9DERoHbrhQuiPTcjk41Wley/DqT2szBXHwb
-         +dOEhazTNYhR6+O1NmBcQ3Uo85xsvb3nyoo2I40RMW0zzcAb8Wfw+6RPacT5c50+Fngs
-         ncg03NBoCWZ78f/0Qt8/Xic3oJw4Ep8WOLabsETWRdIMH6oQsY/yvHf+p6mdxSgf8/qn
-         Dymg==
-X-Gm-Message-State: ANhLgQ1ECLnGH337F83f16tOC+06rIi8Vx4gsFowE5/XTwU6+9DLPtiL
-        72vpRhmxTA7clU5+tsG2SJz9TgqvwGaD9lii39uaj7QEgEKqPdElUfxlNkdW0pmn+tQgKvVpq1z
-        SRMGI94fDSBuqJ4Y++hBufI50U3rl/vp9WmE=
-X-Received: by 2002:a37:9d4a:: with SMTP id g71mr1727351qke.54.1584605899908;
-        Thu, 19 Mar 2020 01:18:19 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vudnJfwwF5zKIHxg/r6+WX0X5UaOa01b1dIoEjxI9VQIoqDjMqHuMgI/8c8/6Vcfsg9fxbOmA==
-X-Received: by 2002:a37:9d4a:: with SMTP id g71mr1727328qke.54.1584605899591;
-        Thu, 19 Mar 2020 01:18:19 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id d9sm956390qth.34.2020.03.19.01.18.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 01:18:18 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        linux-kernel@vger.kernel.org,
-        John Ogness <john.ogness@linutronix.de>,
-        Petr Mladek <pmladek@suse.com>,
+        Thu, 19 Mar 2020 04:20:50 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1jEqPm-0002Oo-Vy; Thu, 19 Mar 2020 09:20:31 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        <linux-kernel@vger.kernel.org>, Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>,
         Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Andrew Gabbasov <andrew_gabbasov@mentor.com>,
         Dirk Behme <dirk.behme@de.bosch.com>,
         Eugeniu Rosca <roscaeugeniu@gmail.com>
 Subject: Re: [RFC PATCH 3/3] watchdog: Turn console verbosity on when reporting softlockup
-In-Reply-To: <20200319080156.GC24020@google.com>
-References: <20200315170903.17393-1-erosca@de.adit-jv.com> <20200315170903.17393-4-erosca@de.adit-jv.com> <20200317021818.GD219881@google.com> <20200318180525.GA5790@lxhi-065.adit-jv.com> <20200319064836.GB24020@google.com> <16373.1584603506@turing-police>
- <20200319080156.GC24020@google.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1584605896_13116P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 19 Mar 2020 04:18:17 -0400
-Message-ID: <19150.1584605897@turing-police>
+References: <20200315170903.17393-1-erosca@de.adit-jv.com>
+        <20200315170903.17393-4-erosca@de.adit-jv.com>
+        <20200317021818.GD219881@google.com>
+        <20200318180525.GA5790@lxhi-065.adit-jv.com>
+Date:   Thu, 19 Mar 2020 09:20:27 +0100
+In-Reply-To: <20200318180525.GA5790@lxhi-065.adit-jv.com> (Eugeniu Rosca's
+        message of "Wed, 18 Mar 2020 19:05:25 +0100")
+Message-ID: <87r1xog3hw.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1584605896_13116P
-Content-Type: text/plain; charset=us-ascii
+On 2020-03-18, Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
+> On Tue, Mar 17, 2020 at 11:18:18AM +0900, Sergey Senozhatsky wrote:
+>> On (20/03/15 18:09), Eugeniu Rosca wrote:
+>>> @@ -428,6 +428,8 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+>>>  			}
+>>>  		}
+>>>  
+>>> +		console_verbose_start();
+>>> +
+>>>  		pr_emerg("BUG: soft lockup - CPU#%d stuck for %us! [%s:%d]\n",
+>>>  			smp_processor_id(), duration,
+>>>  			current->comm, task_pid_nr(current));
+>>> @@ -453,6 +455,8 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+>>>  		if (softlockup_panic)
+>>>  			panic("softlockup: hung tasks");
+>>>  		__this_cpu_write(soft_watchdog_warn, true);
+>>> +
+>>> +		console_verbose_end();
+>>>  	} else
+>>>  		__this_cpu_write(soft_watchdog_warn, false);
+>> 
+>> I'm afraid, as of now, this approach is not going to work the way it's
+>> supposed to work in 100% of cases. Because the only thing that printk()
+>> call sort of guarantees is that the message will be stored somewhere.
+>> Either in the main kernel log buffer, on in one of auxiliary per-CPU
+>> log buffers. It does not guarantee, generally speaking, that the message
+>> will be printed on the console immediately.
+>
+> I take this passage as an acknowledgement of the problem being _real_,
+> in spite of the fix being not perfect.
+>
+> One aspect I would like to emphasize is that (please, NAK this
+> statement if it's not accurate) the problem reported in this patch is
+> not specific to the existing printk mechanism, but also applies to the
+> upcoming kthread-based printk. If that's true, then IMHO this is a
+> compelling argument to join forces and try to find a working, safe and
+> future-proof solution.
 
-On Thu, 19 Mar 2020 17:01:56 +0900, Sergey Senozhatsky said:
-> IIRC, CONFIG_PRINTK_CALLER prints pid when printk() caller is a
-> running task, and CPU-id otherwise.
+Let me clarify that the upcoming rework is _not_ simply to make a
+kthread-based printk. There upcoming rework addresses several issues
+(kthreads being only a piece):
 
-Ah... so it does.
+1. allow printk-callers to get their messages immediately and locklessly
+   into the log buffer from any context
 
-#ifdef CONFIG_PRINTK_CALLER
-        u32 caller_id;            /* thread id or processor id */
-#endif
+2. during normal operation, printk-callers are completely decoupled from
+   console printing
 
-I haven't seen it output a processor ID yet, so I didn't know that part...
+3. in the case of an emergency, every printk-caller will directly and
+   synchronously perform console printing of its messages on consoles
+   that support atomic writing
 
---==_Exmh_1584605896_13116P
-Content-Type: application/pgp-signature
+For the rework we decided that triggering an oops is what irreversibly
+transitions the system from "normal operation" to "emergency".
 
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
+One could interpret the current "console_verbose()" to be some sort of
+equivalent to irreversibly transitioning the system to "emergency". But
+that is not how it was decided to be interpreted. For the rework,
+printk-callers do not have any influence on forcing immediate console
+printing (unless they trigger an oops). console_verbose() is still
+relevant in the rework. console_verbose() is affecting _what_ is printed
+to consoles and _not when_.
 
-iQIVAwUBXnMqyAdmEQWDXROgAQJeZRAAouGeHvFD/lFlepWbx9gLHV7+BslVrFPo
-AyYTgBHDh7YQ8D1XavW4ROAmzhl0e3fR9lH+o88kjdo/Rlz03NnLyB6e/yzoOyqJ
-hrOWg1+R9DbkElDjc3Whiidw/AWLBj0IThF8WkTGTo+iWaU1t8OzwjGM3UuchEx/
-JlO5iG+7Ae+JWxFtN4hZuzU7FHzr+ULNQt5oUwP5AhaRuTbUnFzkVch+Xhu9vVG9
-qjMzpZWOqb6yWsEJTCw7lupiahcUaiidft3eqOf+N8m0q/ul0SEgFzc+wuOh+srm
-6O/EMlXmoFakRWvrHB1RlG4+E+8xh96L83oYQjTcGTO7teA6MNGdk5xAyhmWCe0S
-5lXFfUUGQ3SoLa+Wm0C+IFgrZ1gmbLgLpTyB2pT2s8LkzDw7EWtzXbR4QkD/PSAB
-fAN5hfbAASX5eNUnnlAYBGvz4+TRf2afJl6Fxoz1+l3Fv7qJiRt36Oj3BzMntSA8
-0kOIk6FHfTp+n41C2rZiRyMhdoIZt2uAVjWAFw/+kL7gXKPS6ES6D3pM3pIvIEmi
-geKg5l8jhpc4vPknvRmVAci1LsJCiy2vX4oapPh3gSBVDTsk9+r8Lrvri1kTfHCZ
-eyxbNBGHio9q6hJV16YABOQUCbGKrA63RXFwQWUQXqJPs/kW6n/nXtL9LnnElhwT
-Z7CewKdwmtc=
-=wBgL
------END PGP SIGNATURE-----
+Once the printk rework is complete, the mechanisms for atomic and
+synchronous console printing will be in place. It would be possible that
+these mechanisms could also be used in non-oops scenarios. But that
+would need to be discussed in depth and clearly defined with caution for
+abuse.
 
---==_Exmh_1584605896_13116P--
+John Ogness
