@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3680C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D560C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9D821775
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705DA2098B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:21:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624056;
-	bh=ty2CbhniB1FxbwVN75rtpSaBu+7hc0x/K2UXdSRQI0w=;
+	s=default; t=1584624060;
+	bh=0taveyrClKRSFHcmYXfJ0NNt6YlS9nmIS9zwpPLOoYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1T9gJnL194N168y3Amrdd3wj1aWCHX3QRb1hiFKQcJhPfkqzes6vlhWkmvs4VvwPV
-	 TmV7c+Iqrd8uXnmvuzsj9nsqIO3tOf1F30wlOvHP00GNkiVHm4CSPV5DNh+e3qwaWe
-	 hBpRNRWmLqWG4qjCPB6Lrnd8JpsCuMswkF9EC2dg=
+	b=NuNMrsZZXpM5Cu+2KaXE/pPgHgKnYEDgxbHdAIU8jBaArdFdZ4Cr3bd4SSkrJV5es
+	 avvFghFgPYRsZY8bALybKLEvo9OT1jk7gFqQTN3XQfolste3icIac5R/YTlHwJk0VD
+	 a5isQkjXXFoC+oH3azobcNvvt9U5KKS2KZ2j0sWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730034AbgCSNUz (ORCPT
+        id S1730041AbgCSNU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:20:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45214 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:20:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730020AbgCSNUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:20:53 -0400
+        id S1730038AbgCSNU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:20:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2A4F2166E;
-        Thu, 19 Mar 2020 13:20:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 785002098B;
+        Thu, 19 Mar 2020 13:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624053;
-        bh=ty2CbhniB1FxbwVN75rtpSaBu+7hc0x/K2UXdSRQI0w=;
+        s=default; t=1584624055;
+        bh=0taveyrClKRSFHcmYXfJ0NNt6YlS9nmIS9zwpPLOoYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b75oI49Hmx16N5PF8u4JdhYT/nyOl3AfPiz6UuAQtBgAdqjGZld7oTXuwPTdSvKdc
-         +sbZ1GizemHT3p6EY3LF3Y4yCbcZ19r+m+Ie0Huquz6KjFsqoMAzFv/+tNPILm07Jk
-         ZsVfUGvtiKB216v/Y6XrI2qNI/pz/R80PBYdJNjs=
+        b=kCA2z9DT+R7Zszrn6xWiQUDrDdJ69BbBnK5GNPpdo/Y/umkI+YIXlHA83oGSOh8op
+         9YyXYiArwOYTlyyN4nbtQuYBDf+qK8i9/4Qfbyu+OrMfNYnwZZSMWqIOAPpvY8mi4T
+         hKN4vqZfBQLH/RUpxiKLpJ9k86CVxS9E4WIMZqZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Saravana Kannan <saravanak@google.com>
-Subject: [PATCH 4.19 41/48] driver core: Fix creation of device links with PM-runtime flags
-Date:   Thu, 19 Mar 2020 14:04:23 +0100
-Message-Id: <20200319123915.806448528@linuxfoundation.org>
+        stable@vger.kernel.org, Carl Huang <cjhuang@codeaurora.org>,
+        Wen Gong <wgong@codeaurora.org>,
+        Doug Anderson <dianders@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 42/48] net: qrtr: fix len of skb_put_padto in qrtr_node_enqueue
+Date:   Thu, 19 Mar 2020 14:04:24 +0100
+Message-Id: <20200319123916.071662618@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
 References: <20200319123902.941451241@linuxfoundation.org>
@@ -62,53 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Carl Huang <cjhuang@codeaurora.org>
 
-commit fb583c8eeeb1fd57e24ef41ed94c9112067aeac9 upstream.
+commit ce57785bf91b1ceaef4f4bffed8a47dc0919c8da upstream.
 
-After commit 515db266a9da ("driver core: Remove device link creation
-limitation"), if PM-runtime flags are passed to device_link_add(), it
-will fail (returning NULL) due to an overly restrictive flags check
-introduced by that commit.
+The len used for skb_put_padto is wrong, it need to add len of hdr.
 
-Fix this issue by extending the check in question to cover the
-PM-runtime flags too.
+In qrtr_node_enqueue, local variable size_t len is assign with
+skb->len, then skb_push(skb, sizeof(*hdr)) will add skb->len with
+sizeof(*hdr), so local variable size_t len is not same with skb->len
+after skb_push(skb, sizeof(*hdr)).
 
-Fixes: 515db266a9da ("driver core: Remove device link creation limitation")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Link: https://lore.kernel.org/r/7674989.cD04D8YV3U@kreacher
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+Then the purpose of skb_put_padto(skb, ALIGN(len, 4)) is to add add
+pad to the end of the skb's data if skb->len is not aligned to 4, but
+unfortunately it use len instead of skb->len, at this line, skb->len
+is 32 bytes(sizeof(*hdr)) more than len, for example, len is 3 bytes,
+then skb->len is 35 bytes(3 + 32), and ALIGN(len, 4) is 4 bytes, so
+__skb_put_padto will do nothing after check size(35) < len(4), the
+correct value should be 36(sizeof(*hdr) + ALIGN(len, 4) = 32 + 4),
+then __skb_put_padto will pass check size(35) < len(36) and add 1 byte
+to the end of skb's data, then logic is correct.
+
+function of skb_push:
+void *skb_push(struct sk_buff *skb, unsigned int len)
+{
+	skb->data -= len;
+	skb->len  += len;
+	if (unlikely(skb->data < skb->head))
+		skb_under_panic(skb, len, __builtin_return_address(0));
+	return skb->data;
+}
+
+function of skb_put_padto
+static inline int skb_put_padto(struct sk_buff *skb, unsigned int len)
+{
+	return __skb_put_padto(skb, len, true);
+}
+
+function of __skb_put_padto
+static inline int __skb_put_padto(struct sk_buff *skb, unsigned int len,
+				  bool free_on_error)
+{
+	unsigned int size = skb->len;
+
+	if (unlikely(size < len)) {
+		len -= size;
+		if (__skb_pad(skb, len, free_on_error))
+			return -ENOMEM;
+		__skb_put(skb, len);
+	}
+	return 0;
+}
+
+Signed-off-by: Carl Huang <cjhuang@codeaurora.org>
+Signed-off-by: Wen Gong <wgong@codeaurora.org>
+Cc: Doug Anderson <dianders@chromium.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/core.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/qrtr/qrtr.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -213,6 +213,9 @@ void device_pm_move_to_tail(struct devic
- 			       DL_FLAG_AUTOREMOVE_SUPPLIER | \
- 			       DL_FLAG_AUTOPROBE_CONSUMER)
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -203,7 +203,7 @@ static int qrtr_node_enqueue(struct qrtr
+ 	hdr->size = cpu_to_le32(len);
+ 	hdr->confirm_rx = 0;
  
-+#define DL_ADD_VALID_FLAGS (DL_MANAGED_LINK_FLAGS | DL_FLAG_STATELESS | \
-+			    DL_FLAG_PM_RUNTIME | DL_FLAG_RPM_ACTIVE)
-+
- /**
-  * device_link_add - Create a link between two devices.
-  * @consumer: Consumer end of the link.
-@@ -274,8 +277,7 @@ struct device_link *device_link_add(stru
- {
- 	struct device_link *link;
+-	skb_put_padto(skb, ALIGN(len, 4));
++	skb_put_padto(skb, ALIGN(len, 4) + sizeof(*hdr));
  
--	if (!consumer || !supplier ||
--	    (flags & ~(DL_FLAG_STATELESS | DL_MANAGED_LINK_FLAGS)) ||
-+	if (!consumer || !supplier || flags & ~DL_ADD_VALID_FLAGS ||
- 	    (flags & DL_FLAG_STATELESS && flags & DL_MANAGED_LINK_FLAGS) ||
- 	    (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
- 	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
+ 	mutex_lock(&node->ep_lock);
+ 	if (node->ep)
 
 
