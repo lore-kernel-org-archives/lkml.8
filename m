@@ -2,194 +2,113 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A6BC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DB8C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C65620767
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190BB20767
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:47:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="gMgArnBy"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="UyUB0eHG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCSAqB (ORCPT
+        id S1727112AbgCSArc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 20:46:01 -0400
-Received: from mail-mw2nam10on2105.outbound.protection.outlook.com ([40.107.94.105]:19168
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726663AbgCSAqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 20:46:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b82Qb0TatJLtI2Codq3i8JSC7V9lEk8thOq+VO0rTpBjY/h4bDzrNjDpmZAdqMVKSpGN8lk+OdaK5CjHyYIt69aPqkClbXWKO0GaYdnrWsrKpUzGRCcun30+hTE1Tnmv9f5ghcu85+psIM7j6MroVVuktm5jZzyJU6AllozCl+alPfmN3ODjVj9GpyDCxk4YnjZ66bI2swOebCyLM/upMgFRZPcHjQdde55SHUveaI/6XxkCdKbScx4MDNYsy3k/pbtJCUK4rAAxjSz/qEPsasEDa2mG2TSXAq6cfGLE2F2vsjZ+zQ7YoLUUzpPb4OaCkasp5jJfDltxfYI8z0hR0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sV/nhAVByx8/jGXB+97ZazBB2eBL1QtcT1jTxYys4V0=;
- b=WffuJmUAxV/Szy0X/b6VIZYc1h3zRnJSc9Xdg29pje5VV7/em42ujoJ2XbQQG/JsDXg1cVoDIY4bHGMQvPYL83PDcTUjF3mwsVjJVVq4TcFgf/jZqUFYoUApo++GSxONCQbbLK98hfFVmuO4EOeUdU0DmtUaM8/VCRvuWafR8IBAygFYKWBUHoi6E4vgu59ipKyLB1VavKAdnqek0+mVBooOCcU9CV6HfTw44nSZ7njUN9ayYdnHzGWhC1Nldcz4bjA0jKoCTVn/lxwNfd/2sA7Wr4emnGzKqBbH6SCg1XYSbj38vEk0vNjVoMEq0jxwOg+LoqmRb8oy/iJSSBDTaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sV/nhAVByx8/jGXB+97ZazBB2eBL1QtcT1jTxYys4V0=;
- b=gMgArnBylp30VIsAh4tO9S7gNZ6g9yJAcVvt0nBMQ3tw1imDq3KMFRjTooAMfpyCQIHHEpy4iMOTFrp7BGq440nH2AUC24k5nCLXfm8U0YZccSSga4QFh8RqgIlavIrpYOzdkoFT9IwJPm8OF1TgUtwnMH2WyqBtCaSGhPQiSCs=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0937.namprd21.prod.outlook.com (2603:10b6:302:4::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.2; Thu, 19 Mar
- 2020 00:45:16 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%9]) with mapi id 15.20.2835.003; Thu, 19 Mar 2020
- 00:45:16 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH 3/4] x86/Hyper-V: Trigger crash enlightenment only once
- during system crash.
-Thread-Topic: [PATCH 3/4] x86/Hyper-V: Trigger crash enlightenment only once
- during system crash.
-Thread-Index: AQHV/F+KzUALdljO+kyyp8Deinbn3KhPFKGA
-Date:   Thu, 19 Mar 2020 00:45:16 +0000
-Message-ID: <MW2PR2101MB1052BABDBF2AD9AD0EF15B47D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200317132523.1508-1-Tianyu.Lan@microsoft.com>
- <20200317132523.1508-4-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20200317132523.1508-4-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-19T00:45:13.9057515Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=64b49a2a-fe01-404b-a9b3-dfb847659add;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 85186abf-e12d-4dbf-147c-08d7cb9ecade
-x-ms-traffictypediagnostic: MW2PR2101MB0937:|MW2PR2101MB0937:|MW2PR2101MB0937:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB09375D90EADB7F9848CDDD46D7F40@MW2PR2101MB0937.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 0347410860
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(376002)(346002)(39860400002)(136003)(199004)(2906002)(4326008)(55016002)(66946007)(8936002)(478600001)(7696005)(54906003)(110136005)(76116006)(316002)(26005)(9686003)(33656002)(81156014)(10290500003)(71200400001)(81166006)(8990500004)(86362001)(66556008)(8676002)(66446008)(64756008)(66476007)(186003)(52536014)(5660300002)(6506007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0937;H:MW2PR2101MB1052.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6xRXqAiSXY2GmJSJF+fjTXtCjdjYfpPVYdvomv/gXLJ99CyFxRGbA2wDuqGH3qujw1cbNnr2Bo1opSsvksDicmm8wrNvZDjy87f3wtoq2wP1EaKN7w6t9GerLhKt5n4UAJguFFT9ez0HbuIAQu9QXU8Q61tosFw9wIgWKQ3cF1CcGPy30BvvqGnCk2EDc/WqhknhgxatngWWDCtddwcVqUQR1lYgolKX15p9Rx95oOQG9F/F3ISI4ZhWvC3LaWcDyVcjkP0DZW4ZukwOg7tgQe+9qX9DNCOTRR6uA+L/oS/aHMdKJajmnTa6CDEhV6sEpUzIElrP9+N7zYG9Re0RmBMMTj1V6AQE51YcCvTr3C8DzlnUimjqoPJZn9gJroL3l3qc9HC8GrSv8d1sMmVkQY4QhpqqypPiiRO1lB3yK8ji0P0OAxQ2cEcYw2dA9U/nMZ0VfVXbbLzxf9L3jiWxkVL3r50W0Ixzv+omKRBBUchsvl3o3+qIIkvLAZA6x3TQ
-x-ms-exchange-antispam-messagedata: HcRXldSbcJbHcSnRqXMppS4Rtf9FUgREKJSD8FvtyvEZLpte2XiiIvf6cJaGfxCToUn/NnmMHuObb8wSpAHvWhXPBodMqOipX2LuQnA0akXTpJLj2VjupWyHDk+AOauhcQyuIPIkuDtzMgT8UC7FPQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Mar 2020 20:47:32 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42709 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbgCSArb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 20:47:31 -0400
+Received: by mail-io1-f66.google.com with SMTP id q128so484589iof.9
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 17:47:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nikfs2mITY1YnXregatCfjsnN0VxQx1MLHWWy5mZepo=;
+        b=UyUB0eHGnGw9m1dq+wwqfipb+e49FVRrNMBxA7casT2HN+Z9yLj4EKGNR9lyGbcx55
+         KkQujx6BOLkfj/DMsoWnz4gc8HQgeuNk7J/Ymzcgcr9a3WZRujV1KBRPHVHqxxFqrHsL
+         rC6cZTsbs2NrBW6LkZ8snTeMclPM8M1h3wAvA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nikfs2mITY1YnXregatCfjsnN0VxQx1MLHWWy5mZepo=;
+        b=bGDjDKyyFtBRVHSbZAIwc6xKvhBL7JaRg3W92Swaal7kdlAlL1vnCncy15pOxq2t2B
+         7gw3pnLxUxAT0a3wZxLIn1HUwsiXv3w+/MWMFhCJb9Gai4/1J97jKYySGlEdwDMRPl0d
+         aK3heSTNlQ3L1HtmsFjBJsCN/+MvVl9svUNV80fhEHavUIm7g4bODmp26MuLihebggT4
+         WThyL2cIu+BKT0ky6iD0+TAi6OvCihLAq6VY12DktChZWagsRsblybQ9VzltLUY7QRMl
+         yzddR830ZpXry4+AdUdCPeAm+pJhg1v2WuVNu/I1rzmunlbi+fr0KcbgF0zp5hiSsZjZ
+         0I8A==
+X-Gm-Message-State: ANhLgQ0wEtcpZxfE0oMOvyVBXH+0vO9aR9LsN1+RZVXutoRGRY/J76Cl
+        krZpDhGfSDFcChZXIE1A/myuyUV1JfrqZCz5lTokVA==
+X-Google-Smtp-Source: ADFU+vsUlxX18RINXbTIKk/71K/n1UmMkxX3JU9OJ9HNcL+q/mSD0Gp2PA3I1g/jz2/K2Yt2Ke+h8g36hOL7IzNEeJg=
+X-Received: by 2002:a02:c85a:: with SMTP id r26mr829137jao.74.1584578849973;
+ Wed, 18 Mar 2020 17:47:29 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85186abf-e12d-4dbf-147c-08d7cb9ecade
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2020 00:45:16.3728
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CcfHsoEuqRyEGs9GNybqZ079ocn/ZwdR04O/zxuDjQe9vOjXSCv3mMUrKbNMYqLvJZZRrM9KclhngyLuOTsA2gPW0UA6PNfPa0ziDNVjEuk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0937
+References: <20200305003526.GA20601@paulmck-ThinkPad-P72> <20200305081135.yg7wryd3hrqzocrm@linutronix.de>
+In-Reply-To: <20200305081135.yg7wryd3hrqzocrm@linutronix.de>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Wed, 18 Mar 2020 20:47:18 -0400
+Message-ID: <CAEXW_YSiKrT50mTR1a4tB5x_jQzZKnuAo6JY-Vc5w7r=XLv+OA@mail.gmail.com>
+Subject: Re: RCU use of swait
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Thomas Glexiner <tglx@linutronix.de>,
+        Scott Wood <swood@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        linux-rt-users@vger.kernel.org, rcu <rcu@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ltykernel@gmail.com <ltykernel@gmail.com>  Sent: Tuesday, March 17, 2=
-020 6:25 AM
->=20
-> Hyper-V expects guest only triggers crash enlightenment.
-> The second crash notify will be ignored by Hyper-V.
->=20
-> Current code may trigger crash enlightenment during system
-> panic twice.
-> 1) The enlightenment is triggered in hyperv_panic/die_event()
-> via hyperv_report_panic().
-> 2) hv_kmsg_dump() reports kmsg to host via hyperv_report_panic_msg().
->=20
-> Fix it. If kmsg dump is registered successfully, just report
-> kmsg via hyperv_report_panic_msg() and not report register values
-> via hyperv_report_panic().
+On Thu, Mar 5, 2020 at 3:11 AM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
+>
+> On 2020-03-04 16:35:26 [-0800], Paul E. McKenney wrote:
+> > Hello!
+> Hi Paul,
+>
+> > Or is there some other reason why {S,}RCU needs to use swait that I
+> > am forgetting?
+>
+> swait can be used in hardirq-context (on RT) that is in a section within
+> local_irq_save() / raw_spin_lock() and so.
+> wait on the hand uses spinlock_t which can not be used in this context.
+> So if you have no users which fall into that category then you could
+> move back to wait.h.
 
-Suggested wording improvements:
+In RCU, there are some truly-atomic code sections containing an
+swake_upXX() call, which would be considered atomic also on
+PREEMPT_RT, one example is:
 
-When a guest VM panics, Hyper-V should be notified only once via the
-crash synthetic MSRs.  Current Linux code might write these crash MSRs
-twice during a system panic:
-1) hyperv_panic/die_event() calling hyperv_report_panic()
-2) hv_kmsg_dump() calling hyperv_report_panic_msg()
+rcu_core() contains an local_irq_{save,restore}() section.
 
-Fix this by not calling hyperv_report_panic() if a kmsg dump has been
-successfully registered.  The notification will happen later via
-hyperv_report_panic_msg().
+        /* No grace period and unregistered callbacks? */
+        if (!rcu_gp_in_progress() &&
+            rcu_segcblist_is_enabled(&rdp->cblist) && !offloaded) {
+                local_irq_save(flags);
+                if (!rcu_segcblist_restempty(&rdp->cblist, RCU_NEXT_READY_TAIL))
+                        rcu_accelerate_cbs_unlocked(rnp, rdp);
+                local_irq_restore(flags);
+        }
 
->=20
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index b043efea092a..1787d6246251 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -55,7 +55,12 @@ static int hyperv_panic_event(struct notifier_block *n=
-b, unsigned
-> long val,
->=20
->  	vmbus_initiate_unload(true);
->=20
-> -	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
-> +	/*
-> +	 * Crash notify only can be triggered once. If crash notify
-> +	 * message is available, just report kmsg to crash buffer.
-> +	 */
-> +	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
-> +	    && !hv_panic_page) {
->  		regs =3D current_pt_regs();
->  		hyperv_report_panic(regs, val);
->  	}
-> @@ -68,7 +73,12 @@ static int hyperv_die_event(struct notifier_block *nb,=
- unsigned long
-> val,
->  	struct die_args *die =3D (struct die_args *)args;
->  	struct pt_regs *regs =3D die->regs;
->=20
-> -	hyperv_report_panic(regs, val);
-> +	/*
-> +	 * Crash notify only can be triggered once. If crash notify
-> +	 * message is available, just report kmsg to crash buffer.
-> +	 */
-> +	if (!hv_panic_page)
-> +		hyperv_report_panic(regs, val);
->  	return NOTIFY_DONE;
->  }
->=20
-> --
-> 2.14.5
+And rcu_accelerate_cbs_unlocked(rnp, rdp) calls rcu_gp_kthread_wake()
+which does an swake_up_one(), so I think we will have to leave it as
+swake_up() the way it is.
 
+thanks,
+
+ - Joel
