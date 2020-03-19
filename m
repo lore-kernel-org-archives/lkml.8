@@ -2,109 +2,130 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C56FC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C263AC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1481520722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584603573;
-	bh=B+kuIQBeqbL5y1IBvD1kqR+vLTh4kU6kglLn21OfosA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ILBeBrOKgw+VlE3YGpZqVOkFNUJTvP9KQGumBJSEqew43wGb+KaSemq0/DJpvyErl
-	 /q0ZX6nwFBcyWFGCBcOz7WkmGB0W2XouBmdmJ8jnrC59JEna0DWSXsT0g3Z9auO23E
-	 tD6CK223Oc0fdOGgvGNIb5/7chtB+pRUz/2g+xpw=
+	by mail.kernel.org (Postfix) with ESMTP id A472920724
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 07:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbgCSHja (ORCPT
+        id S1727302AbgCSHjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 03:39:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbgCSHja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 03:39:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2B2420722;
-        Thu, 19 Mar 2020 07:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584603569;
-        bh=B+kuIQBeqbL5y1IBvD1kqR+vLTh4kU6kglLn21OfosA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=slBOoSo8jU7XWJNyt9HMs/D7BU5N4d1RWZrIl/AtrtSC/WcoQIO4czzdaSRiPFznN
-         jR87nNzz6pcQWRv5f/53sFP9ybja1lCun4m25ZukioZGVcLoZgl07Ri1GbYQraNWtn
-         Jy6NBOaOFzZYF0WuHE0s2ki/s3IxdldCRotalTZw=
-Date:   Thu, 19 Mar 2020 08:39:27 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     stable <stable@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Android Kernel Team <kernel-team@android.com>
-Subject: Re: [PATCH v1 0/6] Fix device links functional breakage in 4.19.99
-Message-ID: <20200319073927.GA3442166@kroah.com>
-References: <20200317065452.236670-1-saravanak@google.com>
- <CAGETcx-uZ3YJHCYqFm3so8-woTvL3SSDY2deNonthTetcE+mXQ@mail.gmail.com>
+        Thu, 19 Mar 2020 03:39:36 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47394 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726589AbgCSHjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 03:39:35 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B36FB20979CB64AEA57E;
+        Thu, 19 Mar 2020 15:39:29 +0800 (CST)
+Received: from huawei.com (10.67.133.63) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Thu, 19 Mar 2020
+ 15:39:24 +0800
+From:   Qiang Su <suqiang4@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <suqiang4@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>
+Subject: [PATCH V3] UIO: make maximum memory and port regions configurable
+Date:   Thu, 19 Mar 2020 15:39:23 +0800
+Message-ID: <20200319073923.51812-1-suqiang4@huawei.com>
+X-Mailer: git-send-email 2.12.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx-uZ3YJHCYqFm3so8-woTvL3SSDY2deNonthTetcE+mXQ@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.67.133.63]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 12:10:43PM -0700, Saravana Kannan wrote:
-> On Mon, Mar 16, 2020 at 11:54 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > As mentioned in an earlier email thread [1], 4.19.99 broke the ability
-> > to create stateful and stateless device links between the same set of
-> > devices when it pulled in a valid bug fix [2]. While the fix was valid,
-> > it removes a functionality that was present before the bug fix.
-> >
-> > This patch series attempts to fix that by pulling in more patches from
-> > upstream. I've just done compilation testing so far. But wanted to send
-> > out a v1 to see if this patch list was acceptable before I fixed up the
-> > commit text format to match what's needed for stable mailing list.
-> >
-> > Some of the patches are new functionality, but for a first pass, it was
-> > easier to pull these in than try and fix the conflicts. If these patches
-> > are okay to pull into stable, then all I need to do is fix the commit
-> > text.
-> 
-> I took a closer look at all the patches. Everyone of them is a bug fix
-> except Patch 4/6. But Patch 4/6 is a fairly minimal change and I think
-> it's easier/cleaner to just pick it up too instead of trying to
-> resolve merge conflicts in the stable branch.
-> 
-> 1/6 - Fixes what appears to be a memory leak bug in upstream.
-> 2/6 - Fixes error in initial state of the device link if it's created
-> under some circumstances.
-> 3/6 - Fixes a ref count bug in upstream. Looks like it can lead to memory leaks?
-> 4/6 - Adds a minor feature to kick off a probe attempt of a consumer
-> 5/6 - Fixes the break in functionality that happened in 4.19.99
-> 6/6 - Fixes bug in 5/6 (upstream bug)
-> 
-> Greg
-> 
-> Do these patches look okay for you to pull into 4.19 stable? If so,
-> please let me know if you need me to send v2 with commit fix up.
-> 
-> The only fix up needed is to these patches at this point is changing
-> "(cherry picked from commit ...)" with "[ Upstream commit ... ]". The
-> SHAs themselves are the correct SHAs from upstream.
+Now each uio device can only support 5 memory regions and
+5 port regions. It may be far from enough for some big system.
+On the other hand, the hard-coded style is not flexible.
+So make these values configurable by menuconfig, thus users
+can easily expand them according to their actual situation.
 
-These all look good to me, now all queued up, thanks.
+Consider the marco is used as array index, so a range for
+the config is set in menuconfig. The range is set as 1 to 512.
+The default value is still set as 5 to keep consistent with
+current code.
 
-greg k-h
+Signed-off-by: Qiang Su <suqiang4@huawei.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reviewed-by: Greg KH <gregkh@linuxfoundation.org>
+---
+Changes since v1:
+also make port regions configurable in menuconfig.
+fix kbuild errors.
+---
+Changes since v2:
+provide more information in the help texts.
+---
+ drivers/uio/Kconfig        | 28 ++++++++++++++++++++++++++++
+ include/linux/uio_driver.h |  4 ++--
+ 2 files changed, 30 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
+index 202ee81cfc2b..669000df80df 100644
+--- a/drivers/uio/Kconfig
++++ b/drivers/uio/Kconfig
+@@ -165,4 +165,32 @@ config UIO_HV_GENERIC
+ 	  to network and storage devices from userspace.
+ 
+ 	  If you compile this as a module, it will be called uio_hv_generic.
++
++config MAX_UIO_MAPS
++	depends on UIO
++	int "Maximum of memory nodes each uio device support(1-512)"
++	range 1 512
++	default 5
++	help
++	  make the max number of memory regions in uio device configurable.
++	  For some big system, you may need to map more memory regions
++	  than the default 5. For example, your driver need to access 10
++	  discontinuous address space, thus you need to set this value.
++	  to 10 or greater.
++
++	  If you do not understand, just keep the default value.
++
++config MAX_UIO_PORT_REGIONS
++	depends on UIO
++	int "Maximum of port regions each uio device support(1-512)"
++	range 1 512
++	default 5
++	help
++	  make the max number of port regions in uio device configurable.
++	  For some big system, you may need to use more port regions than
++	  the default 5. For example, your driver need to use 10 port regions
++	  of gpio type, then you need to set this value to 10 or greater.
++
++	  If you do not understand, just keep the default value.
++
+ endif
+diff --git a/include/linux/uio_driver.h b/include/linux/uio_driver.h
+index 01081c4726c0..5dc60088834c 100644
+--- a/include/linux/uio_driver.h
++++ b/include/linux/uio_driver.h
+@@ -44,7 +44,7 @@ struct uio_mem {
+ 	struct uio_map		*map;
+ };
+ 
+-#define MAX_UIO_MAPS	5
++#define MAX_UIO_MAPS	CONFIG_MAX_UIO_MAPS
+ 
+ struct uio_portio;
+ 
+@@ -64,7 +64,7 @@ struct uio_port {
+ 	struct uio_portio	*portio;
+ };
+ 
+-#define MAX_UIO_PORT_REGIONS	5
++#define MAX_UIO_PORT_REGIONS	CONFIG_MAX_UIO_PORT_REGIONS
+ 
+ struct uio_device {
+         struct module           *owner;
+-- 
+2.12.3
+
