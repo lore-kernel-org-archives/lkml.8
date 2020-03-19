@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62D0C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54554C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE91520836
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28BB92080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584638708;
-	bh=lnsQjdeqJQsdSGPoMaKkmJ46L3EHOJRkUYALAl/T4nI=;
+	s=default; t=1584638712;
+	bh=NfS59A8mHznDlIVDVb5fxZyORY84TtYTcQNxzuhgarc=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=CUYw47HiC+0P/HDVwlUi7XnyfGZL0/a1hu0h0um6PU0vE2UK+LbTOKaMFi7GSB7xu
-	 f1gj19HStbVpnVYZpFC77+mKgpSr0WUWoRBVPFxKdrnJsDbN/pxKMct8HRhqdsCf74
-	 LyazbCU92qZ5gqOumTPc7z7ONbrYtJbefBZaf0VU=
+	b=Q8WqU3qAkIezeXS/jsYV9R+woT99s8f0/FUCEMd6DBkph88IHu3R6lbO/wxoNRIXM
+	 qs1UC+f0oBkCtHKMbgN6dccJEJ0lalqfFn622fbY0aGSZp279s1oNCPwm124iipQd6
+	 i84aGyKOT2u58SmtzDRDreF+Vk/8l78q10ewoYEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgCSRZH (ORCPT
+        id S1728297AbgCSRZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:25:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57362 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 13:25:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgCSRZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727146AbgCSRZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 13:25:07 -0400
-Subject: Re: [GIT PULL] CIFS/SMB3 fixes
+Subject: Re: [GIT PULL] Kbuild fixes for v5.6-rc7
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1584638706;
-        bh=lnsQjdeqJQsdSGPoMaKkmJ46L3EHOJRkUYALAl/T4nI=;
+        bh=NfS59A8mHznDlIVDVb5fxZyORY84TtYTcQNxzuhgarc=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=QfURL3qSTgykW8OKyPew6FC2qUrN+6/U1ZCOiFVKUtL8cKHL3n4GJHltI+6X+J/OO
-         rzpswnOyInQDAqygVyXYmYzPstfdrzozoUuKiylrQ39vVV+LIQ4eam9xCQW3/2Shfv
-         UW1Bxi+FiM0wqRGrjBz3OUqMaWHd49QCYE5E7aNM=
+        b=0CdHN6IsLTgXeYgTBnKSsX78gVITpfl0UF+6FzjBHwL3uOrEMTgGxF4H+ZjXQB2hq
+         y+i8iojRIvGnFsqO/dzYsfkLy+8sFsbkY5xinKYdMhVODe2nmXW0HM0CEPDBZgPrhr
+         qdsj3/fKH2mq1+nHaFtpqWiZJSlmc0MkVBFVoWxQ=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAH2r5msOYEYH_YrSwGn6KYW83U0kyNS9U04xLgVFMx4xr32J1Q@mail.gmail.com>
-References: <CAH2r5msOYEYH_YrSwGn6KYW83U0kyNS9U04xLgVFMx4xr32J1Q@mail.gmail.com>
+In-Reply-To: <CAK7LNASTxvF9AbddpkgABM2fAmvCP_bwCCrS9gmeDN0w-ZjfwA@mail.gmail.com>
+References: <CAK7LNASTxvF9AbddpkgABM2fAmvCP_bwCCrS9gmeDN0w-ZjfwA@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAH2r5msOYEYH_YrSwGn6KYW83U0kyNS9U04xLgVFMx4xr32J1Q@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
- 5.6-rc6-smb3-fixes
-X-PR-Tracked-Commit-Id: 979a2665eb6c603ddce0ab374041ab101827b2e7
+X-PR-Tracked-Message-Id: <CAK7LNASTxvF9AbddpkgABM2fAmvCP_bwCCrS9gmeDN0w-ZjfwA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+ tags/kbuild-fixes-v5.6-3
+X-PR-Tracked-Commit-Id: 7883a14339299773b2ce08dcfd97c63c199a9289
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: cd607737f3b84432b8a00cd31ac753dab1c38678
-Message-Id: <158463870646.20508.5032357592544063265.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 207f75c4543fcd34ed7ec84ede43479f1c08e7ca
+Message-Id: <158463870675.20508.344533080914750903.pr-tracker-bot@kernel.org>
 Date:   Thu, 19 Mar 2020 17:25:06 +0000
-To:     Steve French <smfrench@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 18 Mar 2020 23:51:13 -0500:
+The pull request you sent on Fri, 20 Mar 2020 00:22:09 +0900:
 
-> git://git.samba.org/sfrench/cifs-2.6.git 5.6-rc6-smb3-fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git tags/kbuild-fixes-v5.6-3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/cd607737f3b84432b8a00cd31ac753dab1c38678
+https://git.kernel.org/torvalds/c/207f75c4543fcd34ed7ec84ede43479f1c08e7ca
 
 Thank you!
 
