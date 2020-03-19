@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874DDC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2835C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697E020740
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C001520786
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgCSJOn (ORCPT
+        id S1727542AbgCSJOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:14:43 -0400
-Received: from 8bytes.org ([81.169.241.247]:52214 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:14:48 -0400
+Received: from 8bytes.org ([81.169.241.247]:52110 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727297AbgCSJOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:32 -0400
+        id S1727334AbgCSJOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:34 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id C9C57457; Thu, 19 Mar 2020 10:14:19 +0100 (CET)
+        id 978845BC; Thu, 19 Mar 2020 10:14:21 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 20/70] x86/boot/compressed/64: Check return value of kernel_ident_mapping_init()
-Date:   Thu, 19 Mar 2020 10:13:17 +0100
-Message-Id: <20200319091407.1481-21-joro@8bytes.org>
+Subject: [PATCH 29/70] x86/head/64: Install boot GDT
+Date:   Thu, 19 Mar 2020 10:13:26 +0100
+Message-Id: <20200319091407.1481-30-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -48,39 +48,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The function can fail to create an identity mapping, check for that
-and bail out if it happens.
+Handling exceptions during boot requires a working GDT. The kernel GDT
+is not yet ready for use, so install a temporary boot GDT.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/x86/kernel/head_64.S | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index 5b720736a789..feb180cced28 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -93,6 +93,8 @@ static struct x86_mapping_info mapping_info;
-  */
- static void add_identity_map(unsigned long start, unsigned long end)
- {
-+	int ret;
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 4bbc770af632..5219a70b3fb4 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -72,6 +72,26 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	/* Set up the stack for verify_cpu(), similar to initial_stack below */
+ 	leaq	(__end_init_task - SIZEOF_PTREGS)(%rip), %rsp
+ 
++	/* Setup boot GDT descriptor and load boot GDT */
++	leaq	boot_gdt(%rip), %rax
++	movq	%rax, boot_gdt_base(%rip)
++	lgdt	boot_gdt_descr(%rip)
 +
- 	/* Align boundary to 2M. */
- 	start = round_down(start, PMD_SIZE);
- 	end = round_up(end, PMD_SIZE);
-@@ -100,8 +102,9 @@ static void add_identity_map(unsigned long start, unsigned long end)
- 		return;
++	/* New GDT is live - reload data segment registers */
++	movl	$__KERNEL_DS, %eax
++	movl	%eax, %ds
++	movl	%eax, %ss
++	movl	%eax, %es
++
++	/* Now switch to __KERNEL_CS so IRET works reliably */
++	pushq	$__KERNEL_CS
++	leaq	.Lon_kernel_cs(%rip), %rax
++	pushq	%rax
++	lretq
++
++.Lon_kernel_cs:
++	UNWIND_HINT_EMPTY
++
+ 	/* Sanitize CPU configuration */
+ 	call verify_cpu
  
- 	/* Build the mapping. */
--	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
--				  start, end);
-+	ret = kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt, start, end);
-+	if (ret)
-+		error("Error: kernel_ident_mapping_init() failed\n");
- }
+@@ -480,6 +500,18 @@ SYM_DATA_LOCAL(early_gdt_descr_base,	.quad INIT_PER_CPU_VAR(gdt_page))
+ SYM_DATA(phys_base, .quad 0x0)
+ EXPORT_SYMBOL(phys_base)
  
- /* Locates and clears a region for a new top level page table. */
++/* Boot GDT used when kernel addresses are not mapped yet */
++SYM_DATA_LOCAL(boot_gdt_descr,		.word boot_gdt_end - boot_gdt)
++SYM_DATA_LOCAL(boot_gdt_base,		.quad 0)
++SYM_DATA_START(boot_gdt)
++	.quad	0
++	.quad   0x00cf9a000000ffff      /* __KERNEL32_CS */
++	.quad   0x00af9a000000ffff      /* __KERNEL_CS */
++	.quad   0x00cf92000000ffff      /* __KERNEL_DS */
++	.quad   0x0080890000000000      /* TS descriptor */
++	.quad   0x0000000000000000      /* TS continued */
++SYM_DATA_END_LABEL(boot_gdt, SYM_L_LOCAL, boot_gdt_end)
++
+ #include "../../x86/xen/xen-head.S"
+ 
+ 	__PAGE_ALIGNED_BSS
 -- 
 2.17.1
 
