@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D9EC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AB1C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD0920663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A295520663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624989;
-	bh=crAqJyoagg8GitwByqJaPF+YkVcw17OpzZ34+rgPKAk=;
+	s=default; t=1584624994;
+	bh=AdNahJelzRheswR/YE75fk2oSiEMrLk9h64N1vmKkcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dc52HmYSui54guH4pH529vXm+czwJyFpfV963z+mS/S32xU9UjZruear5INg5wKGK
-	 278+z4fz1AJvt/LM2/71IWlrLWBnMtRhvRYTzJtIHwdLYTf3WMKNq+/Cf/w5T9hVaA
-	 6bazlywhg3syYG/T/cXSqVAPZDI3WDRgN1rqYGGE=
+	b=vebfqPL3xGLJVv+K6/58+3JzxIWOM2WQpUebkK9tXMrf+1UmkHmRMGLv+Juh+mGK4
+	 vMGhWkuWyDQ4/8lxiTGc1ukXrcZZAeAnLKLaBzeHiY+z5A9hdUEOTqXIEul12fSWMJ
+	 7li+4JtM2ulA32HaV9JuRY+2jV1ZW8qDs9qSvH7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgCSNJ6 (ORCPT
+        id S1728288AbgCSNgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:09:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54492 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:36:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbgCSNJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:09:54 -0400
+        id S1727821AbgCSNJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:09:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AFB020789;
-        Thu, 19 Mar 2020 13:09:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD69C208D6;
+        Thu, 19 Mar 2020 13:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623394;
-        bh=crAqJyoagg8GitwByqJaPF+YkVcw17OpzZ34+rgPKAk=;
+        s=default; t=1584623385;
+        bh=AdNahJelzRheswR/YE75fk2oSiEMrLk9h64N1vmKkcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KERSvMTe1q5id/It8xQToCcGwhdGj7jh7ZISckE1bxxpRytmdKp9dKi8CrDEXbP2E
-         mCv3uCWafuqTFVxlH0qh3+0Gn693liam6896Bnysg2EGWArSy45hz0rBswNmUnb4+9
-         TYgAdZdiR9INYZBG767Ved1r5dzeK+sa/JXARLHE=
+        b=xt5AoCHOg8w+tpeD8Yzk9srjjHhbiVQnBg82BRkNWG96JYw5WOCQqP+dQFzXlEe+m
+         fynT4A5jXn7KoOgcR9vOda7m4AizfjZC/X8RaTTnTTfrPlni5561XQzql0Fmy7gatF
+         6Isc8ItuPlTAYCy4v3AXEM1AgaSVUJHeSmjFvCfQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 12/90] nl802154: add missing attribute validation
-Date:   Thu, 19 Mar 2020 13:59:34 +0100
-Message-Id: <20200319123932.502424765@linuxfoundation.org>
+        stable@vger.kernel.org, Petr Malat <oss@malat.biz>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 01/90] NFS: Remove superfluous kmap in nfs_readdir_xdr_to_array
+Date:   Thu, 19 Mar 2020 13:59:23 +0100
+Message-Id: <20200319123928.955435028@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,34 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Petr Malat <oss@malat.biz>
 
-[ Upstream commit 9322cd7c4af2ccc7fe7c5f01adb53f4f77949e92 ]
+Array is mapped by nfs_readdir_get_array(), the further kmap is a result
+of a bad merge and should be removed.
 
-Add missing attribute validation for several u8 types.
+This resource leakage can be exploited for DoS by receptively reading
+a content of a directory on NFS (e.g. by running ls).
 
-Fixes: 2c21d11518b6 ("net: add NL802154 interface for configuration of 802.15.4 devices")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 67a56e9743171 ("NFS: Fix memory leaks and corruption in readdir")
+Signed-off-by: Petr Malat <oss@malat.biz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ieee802154/nl_policy.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/nfs/dir.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/net/ieee802154/nl_policy.c
-+++ b/net/ieee802154/nl_policy.c
-@@ -30,6 +30,11 @@ const struct nla_policy ieee802154_polic
- 	[IEEE802154_ATTR_HW_ADDR] = { .type = NLA_HW_ADDR, },
- 	[IEEE802154_ATTR_PAN_ID] = { .type = NLA_U16, },
- 	[IEEE802154_ATTR_CHANNEL] = { .type = NLA_U8, },
-+	[IEEE802154_ATTR_BCN_ORD] = { .type = NLA_U8, },
-+	[IEEE802154_ATTR_SF_ORD] = { .type = NLA_U8, },
-+	[IEEE802154_ATTR_PAN_COORD] = { .type = NLA_U8, },
-+	[IEEE802154_ATTR_BAT_EXT] = { .type = NLA_U8, },
-+	[IEEE802154_ATTR_COORD_REALIGN] = { .type = NLA_U8, },
- 	[IEEE802154_ATTR_PAGE] = { .type = NLA_U8, },
- 	[IEEE802154_ATTR_COORD_SHORT_ADDR] = { .type = NLA_U16, },
- 	[IEEE802154_ATTR_COORD_HW_ADDR] = { .type = NLA_HW_ADDR, },
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -678,8 +678,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir
+ 		goto out_label_free;
+ 	}
+ 
+-	array = kmap(page);
+-
+ 	status = nfs_readdir_alloc_pages(pages, array_size);
+ 	if (status < 0)
+ 		goto out_release_array;
 
 
