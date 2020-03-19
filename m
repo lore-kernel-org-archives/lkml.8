@@ -2,256 +2,235 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCE0C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D47C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 001EC20739
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF432070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 11:41:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="E0mc/8xa"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="VbSKhkxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgCSLky (ORCPT
+        id S1727002AbgCSLl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 07:40:54 -0400
-Received: from mail-db8eur05on2134.outbound.protection.outlook.com ([40.107.20.134]:62689
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbgCSLkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 07:40:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fGNgbY9Ta49flkaM2nIjgTt+NYq9wLh41R5lAD9EyRj46jaCMvge+TE5MVNVpZdq4kwfQEL+3R9J2XhlKVvznxhXshMar9hld7kRpPgnYZQehkWr84VCrs2MkkUWuFN7XjFAuF8Yb3EAmv6tcT1AuxkeeftHg5fl7MVfvvDCzwTBhlgRFmT/mcZuXrIfKGmSwN0WJSDgHOrGge0GZfk5sXOs3uq1w1ngPWcuouott2Nd8li7NkcxZkFOaWN8mjoWbJdOKMP1MSeMMpEyBpqRgiU69FQk/aSjtFzZPrE3QKt99altXM5AFX67CELH47ohplqUP06CEm8U55moIvnBoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X1JMdCzgSmxnlUslDXemgsBTKCWxeoCXEBHNe8q40zU=;
- b=cXvUH43rBxWxJsyA3MT7D8Mo9qr2P0Mfy+spXSRY4npnGF8dQKPVF4O5FWGUpbsdYQlmzYhlksMv6SCDWbZb4bOZ6VlAR+KCM92CyOkbsp7M7Udcg3k/zGgbQ+dLSp9mrvSRvuXaEOoj046N5hCNNV4OGcA8A6Qn3MUclYivs6qez6y7YY4KgOVV22IgZPVlDD4p7EeKqaA0ES+szSl6LTeVcB29Kl0kDhsAkUxgi/0jo7ML/1laLl4oitwctfM6CToXE8uPuw3oYrzPtIKxYYqZoQx8WvEPhhUbiv0Dlr5XgejhA3rmc3ECUhgbK2hcwDE4jpy1+9y8WWRoVsJ2WA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X1JMdCzgSmxnlUslDXemgsBTKCWxeoCXEBHNe8q40zU=;
- b=E0mc/8xaX/FcUVsqgbRpopylcTiIiw5Ht59oE3jGK0P4PXh/Ll4Fow+Ty0SpQuTWt4BnPuHaJemesI5Ajr/kEx9chxqziPZlNL06SdaBuTau7iEkHvEuDTBZhQ1CY9+QaKqaV/CXW16wyuUWE9hqwkuGo3+a/lBTjdzgdH9twbM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
- VI1PR05MB5853.eurprd05.prod.outlook.com (20.178.125.211) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.22; Thu, 19 Mar 2020 11:40:46 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2814.021; Thu, 19 Mar 2020
- 11:40:46 +0000
-X-Gm-Message-State: ANhLgQ1ampUMxo3ccssqc5hopvgbvbautAA67MHyXVcHV71YmYZ6tOjL
-        CMyaa3/YHf9vJpvlFJLAsn7zp4FyTyS4dSAfiQk=
-X-Google-Smtp-Source: ADFU+vtIv9WWiUZDY1zK2/5Xskt2zIX9VTS8I1COHPgUfpZpdDX7VDSalNnvt8sXvRj9YOkAdKw03F1mQyy6mpu0nPY=
-X-Received: by 2002:ad4:54d4:: with SMTP id j20mr2405410qvx.75.1584618039943;
- Thu, 19 Mar 2020 04:40:39 -0700 (PDT)
-References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
- <20200317123231.2843297-2-oleksandr.suvorov@toradex.com> <20200317174043.GA1464607@ulmo>
- <20200317210042.ryrof3amr7fxp4w5@pengutronix.de> <20200318225953.GA2874972@ulmo>
-In-Reply-To: <20200318225953.GA2874972@ulmo>
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Date:   Thu, 19 Mar 2020 13:40:28 +0200
-X-Gmail-Original-Message-ID: <CAGgjyvGd4y8M0L1sFMvQ1=gPcKfUPoR13dVS7F5WZx=333KG6g@mail.gmail.com>
-Message-ID: <CAGgjyvGd4y8M0L1sFMvQ1=gPcKfUPoR13dVS7F5WZx=333KG6g@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, devicetree@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Ray Jui <rjui@broadcom.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Scott Branden <sbranden@broadcom.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: MN2PR08CA0004.namprd08.prod.outlook.com
- (2603:10b6:208:239::9) To VI1PR05MB3279.eurprd05.prod.outlook.com
- (2603:10a6:802:1c::24)
+        Thu, 19 Mar 2020 07:41:56 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:38005 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725601AbgCSLl4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 07:41:56 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JBcB1X023788;
+        Thu, 19 Mar 2020 12:41:51 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : subject : to : cc
+ : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=kDMXz0MhKopx7KXlXCqnguWCVFPXUtL3vDpbb9CupGQ=;
+ b=VbSKhkxrdvx9xMS/Z6/ehATeCpW224opQHWXn4vzH1n319kyhUSz3usrcQbFwssWrQz0
+ LOD6ZopRbfXoQF46C+7agRLrUp8QrJG6S6GdCsZN+RZGIsdjoqC/HajPXbP4ODxXlA7m
+ JGJWX6aA6Xv1AvhtBUWA6WsRegEZvODylQjRQnIos/w6XfZIDiV0J85P3/RS0f1O+tlH
+ VEjK8HD2j3cH1Tq3XC3a2KWvGjGn6NcxUT/SYxn7HSQTYEJ2akyasAip87ovbmWsiicc
+ haiFkA7isoKbC5cK+//PCF2xz9KQwCdzHRslmCPMI4OPy9afxsKxNJoF9p5BSVxSHlwc 6A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yu8ethj97-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 12:41:51 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7367B10002A;
+        Thu, 19 Mar 2020 12:41:50 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6329D2A9704;
+        Thu, 19 Mar 2020 12:41:50 +0100 (CET)
+Received: from lmecxl0889.lme.st.com (10.75.127.51) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar
+ 2020 12:41:49 +0100
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 2/2] remoteproc: Fix and restore the parenting hierarchy
+ for vdev
+To:     Suman Anna <s-anna@ti.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200305224108.21351-1-s-anna@ti.com>
+ <20200305224108.21351-3-s-anna@ti.com> <20200317180530.GA1801@xps15>
+ <76772d98-93d9-e559-01b8-ba7d4d1cc1eb@st.com>
+ <f08b15c2-639c-2919-e321-a5a5296e8112@ti.com>
+Message-ID: <884c84e3-6eb7-165f-cbdf-ba513558ed28@st.com>
+Date:   Thu, 19 Mar 2020 12:41:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mail-qv1-f47.google.com (209.85.219.47) by MN2PR08CA0004.namprd08.prod.outlook.com (2603:10b6:208:239::9) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18 via Frontend Transport; Thu, 19 Mar 2020 11:40:44 +0000
-Received: by mail-qv1-f47.google.com with SMTP id m2so757808qvu.13;        Thu, 19 Mar 2020 04:40:44 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1ampUMxo3ccssqc5hopvgbvbautAA67MHyXVcHV71YmYZ6tOjL
-        CMyaa3/YHf9vJpvlFJLAsn7zp4FyTyS4dSAfiQk=
-X-Google-Smtp-Source: ADFU+vtIv9WWiUZDY1zK2/5Xskt2zIX9VTS8I1COHPgUfpZpdDX7VDSalNnvt8sXvRj9YOkAdKw03F1mQyy6mpu0nPY=
-X-Received: by 2002:ad4:54d4:: with SMTP id j20mr2405410qvx.75.1584618039943;
- Thu, 19 Mar 2020 04:40:39 -0700 (PDT)
-X-Gmail-Original-Message-ID: <CAGgjyvGd4y8M0L1sFMvQ1=gPcKfUPoR13dVS7F5WZx=333KG6g@mail.gmail.com>
-X-Originating-IP: [209.85.219.47]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: bc59c9d9-1966-4563-eb30-08d7cbfa5c1c
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5853:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB5853D574983C0F5F95F799A0F9F40@VI1PR05MB5853.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0347410860
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(136003)(376002)(39850400004)(366004)(199004)(966005)(55446002)(2906002)(54906003)(66574012)(42186006)(8936002)(81156014)(81166006)(52116002)(6862004)(53546011)(55236004)(316002)(86362001)(8676002)(478600001)(450100002)(6666004)(186003)(66556008)(26005)(66476007)(4326008)(107886003)(9686003)(44832011)(5660300002)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB5853;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: m/KJ7e/Nuj1XRbffIEePkthkH8UAkjoHfWdIlJqky2+8eDFTN4jt1mLidz72ThNfCdl4OrvkC3s0e00afDoYN9h9eX1B4ukxfRrm2VuztDp1ZMlhSj7KovfYz9TJb/YdF7dKn1mdTvI8//KlravPd2Iz2oGEoPaXF5HP9nW/iXKfc3OM4ElHXARoIo8dOrzUvGynVSuLycOKMdvHxFg87P9MgIXDftxfOehwQVsBiX8QLUEVfQhWI5g0zJnWTd3mnWzAtN1tKpLblLKx50v7g5F31GuMVgvugrCp7IdkwngwDgh/2mkvDL0cxCl6dItedv1YuAb1v2VvzncUoUYyL8OS4nkQIuP4hYYedZvCJN78/bR0+E6BwPAiczpz0XXWbDsLIzdD0J9nTQ4IjBPXJEiDuczLhdhC3X8oraPPrzyZnPAMEVqEtenazMbX7b3vz5FR8f0/AGHrXJ9M9eWNuxjYU+sB4tbAVvQGXRWw1WbuFChs4ChRF/kLwiKE7t/MlFWHJUznovtlSwloo/BrjA==
-X-MS-Exchange-AntiSpam-MessageData: pwIqy2QTMmaxoGU/pXEbilSJqPa3DBq6Lopz4xLDDdPFk+wpLuJExSgkvww1cioJm9vaxq6EbTCXYZ3Sztbtty03L3bLZJdEUPJjdKYjQ29QGIr6fhtunWNXhQ+3TZx+4dj7yGMmFxFyiUpcD81EuQ==
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc59c9d9-1966-4563-eb30-08d7cbfa5c1c
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2020 11:40:44.8333
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: squJ2IJSilYixbqLzxdJ2vWg/TJ3DRWS2v1aWg2AP5dw6nWZXi7ppesIkALarIbYw3gsyct4LkUfoDBKc5pPZJRKz1P3hR3WnmXNk26tIzE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5853
+In-Reply-To: <f08b15c2-639c-2919-e321-a5a5296e8112@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_03:2020-03-19,2020-03-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 1:00 AM Thierry Reding <thierry.reding@gmail.com> w=
-rote:
->
-> On Tue, Mar 17, 2020 at 10:00:42PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> > Hello,
-> >
-> > On Tue, Mar 17, 2020 at 06:40:43PM +0100, Thierry Reding wrote:
-> > > On Tue, Mar 17, 2020 at 02:32:25PM +0200, Oleksandr Suvorov wrote:
-> > > > The polarity enum definition PWM_POLARITY_INVERSED is misspelled.
-> > > > Rename it to PWM_POLARITY_INVERTED.
-> > >
-> > > It isn't misspelled. "inversed" is a synonym for "inverted". Both
-> > > spellings are correct.
-> >
-> > Some time ago I stumbled about "inversed", too. My spell checker doesn'=
-t
-> > know it and I checked some dictionaries and none of them knew that word=
-:
-> >
-> > https://www.lexico.com/search?utf8=3D%E2%9C%93&filter=3Ddictionary&dict=
-ionary=3Den&query=3Dinversed
-> > https://de.pons.com/%C3%BCbersetzung/englisch-deutsch/inversed
-> > https://dictionary.cambridge.org/spellcheck/english-german/?q=3Dinverse=
-d
-> >
-> > https://en.wiktionary.org/wiki/inverse#Verb mentions "inverse" as a ver=
-b
-> > having "inversed" as past participle.
->
-> Here are the first three results from a Google query:
->
->         https://www.yourdictionary.com/inversed
->         https://www.dictionary.com/browse/inversed
->         https://en.wiktionary.org/wiki/inversed
->
-> > Having said this I think (independent of the question if "inversed"
-> > exists) using two similar terms for the same thing just results in
-> > confusion. I hit that in the past already and I like it being addressed=
-.
->
-> I don't know. It's pretty common to use different words for the same
-> thing. They're called synonyms.
->
-> > > And as you noted in the cover letter, there's a conflict between the
-> > > macro defined in dt-bindings/pwm/pwm.txt. If they end up being includ=
-ed
-> > > in the wrong order you'll get a compile error.
-> >
-> > There are also other symbols that exist twice (GPIO_ACTIVE_HIGH was the
-> > first to come to my mind). I'm not aware of any problems related to
-> > these. What am I missing?
->
-> There's currently no problem, obviously. But if for some reason the
-> include files end up being included in a different order (i.e. the
-> dt-bindings header is included before linux/pwm.h) then the macro will
-> be evaluated and result in something like:
->
->         enum pwm_polarity {
->                 PWM_POLARITY_NORMAL,
->                 1,
->         };
->
-> and that's not valid C, so will cause a build error.
->
-> > > The enum was named this way on purpose to make it separate from the
-> > > definition for the DT bindings.
-> >
-> > Then please let's make it different by picking a different prefix or
-> > something like that.
->
-> Again, seems to me like unnecessary churn. Feel free to propose
-> something, but I recall being in the same position at the time and this
-> was the best I could come up with.
->
-> > > Note that DT bindings are an ABI and can
-> > > never change, whereas the enum pwm_polarity is part of a Linux intern=
-al
-> > > API and doesn't have the same restrictions as an ABI.
-> >
-> > I thought only binary device trees (dtb) are supposed to be ABI.
->
-> Yes, the DTB is the ABI. dt-bindings/pwm/pwm.h is used to generate DTBs,
-> which basically makes it ABI as well. Yes, the symbol name may not be
-> part of the ABI, but changing the symbol becomes very inconvenient
-> because everyone that depends on it would have to change. Why bother?
->
-> My point is that enum pwm_polarity is an API in the kernel and hence its
-> easy to change or extend. But since that is not the same for the DTB, we
-> need to be careful what from the internal kernel API leaks into the DTB.
-> That's why they are different symbols, so that it is clear that what's
-> in dt-bindings/pwm/pwm.h is the ABI.
+hi Suman,
 
-Thierry, I see the PWM core converts the bit field "third cell" into
-the polarity variable.
-Now I probably understand your sight and agree that we shouldn't give
-the same names to bits in bitfield (dts) and values of a variable.
+On 3/18/20 8:23 PM, Suman Anna wrote:
+> Hi Arnaud,
+> 
+> On 3/18/20 11:38 AM, Arnaud POULIQUEN wrote:
+>> Hi Suman, Mathieu,
+>>
+>> On 3/17/20 7:05 PM, Mathieu Poirier wrote:
+>>> Hi Suman,
+>>>
+>>> On Thu, Mar 05, 2020 at 04:41:08PM -0600, Suman Anna wrote:
+>>>> The commit 086d08725d34 ("remoteproc: create vdev subdevice with specific
+>>>> dma memory pool") has introduced a new vdev subdevice for each vdev
+>>>> declared in the firmware resource table and made it as the parent for the
+>>>> created virtio rpmsg devices instead of the previous remoteproc device.
+>>>> This changed the overall parenting hierarchy for the rpmsg devices, which
+>>>> were children of virtio devices, and does not allow the corresponding
+>>>> rpmsg drivers to retrieve the parent rproc device through the
+>>>> rproc_get_by_child() API.
+>>>>
+>>>> Fix this by restoring the remoteproc device as the parent. The new vdev
+>>>> subdevice can continue to inherit the DMA attributes from the remoteproc's
+>>>> parent device (actual platform device).
+>>>>
+>>>> Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>> ---
+>>>>  drivers/remoteproc/remoteproc_core.c | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+>>>> index 097f33e4f1f3..ba18f32bd0c4 100644
+>>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>>> @@ -510,7 +510,7 @@ static int rproc_handle_vdev(struct rproc *rproc, struct fw_rsc_vdev *rsc,
+>>>>  
+>>>>  	/* Initialise vdev subdevice */
+>>>>  	snprintf(name, sizeof(name), "vdev%dbuffer", rvdev->index);
+>>>> -	rvdev->dev.parent = rproc->dev.parent;
+>>>> +	rvdev->dev.parent = &rproc->dev;
+>>>
+>>> I can see how it would not be possible to retrieve the parent rproc device since
+>>> rvdev->dev.parent was set to be platform device...
+>>
+>> In rpmsg_virtio_bus.c [1] the vdev buffers are allocated in a memory region using a dma_alloc_coherent
+>> So the buffers are allocated in the platform driver memory region if declared, else in the default memory region. 
+>>
+>> According to  086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool"),
+>> A patch has been integrated in rpmsg framework:  d999b622fcfb3 ("rpmsg: virtio: allocate buffer from parent")
+>>
+>> -	bufs_va = dma_alloc_coherent(vdev->dev.parent->parent,
+>> +	bufs_va = dma_alloc_coherent(vdev->dev.parent,
+>>
+>> So in term of parent-child relationchip the Loic's patches seem coherent, and don't affect parenting hierarchy
+>> for the rpmsg bus.
+> 
+> So, there are two things w.r.t rpmsg device hierarchy - buffer
+> allocations and the overall hierarchy to allow a child rpmsg device to
+> be able to retrieve the corresponding rproc. This is done using
+> rproc_get_by_child() which walks up the dev parent hierarchy and
+> matching the parent device type to rproc_type.
+> 
+> Commit 086d08725d34 adds a new vdevbuffer device with parent as the
+> rproc platform device and makes this the parent of the virtio device, so
+> the buffer allocations were unchanged just with that commit, but the
+> rproc lookup will always fail. The later commit d999b622fcfb3 switches
+> the buffer allocation over to the vdevbuffer device, and with rproc
+> drivers that added dedicated vdevbuf pools allocates from those pools
+> (these were mostly coming from a specific rproc platform device memory
+> region index anyway). For those that did not define, this actually
+> became the global pool even if the rproc device was using a single
+> DMA/CMA pool (patch 1).
+> 
+> Please see my cover-letter for an example of the dev hierarchy.
+You are right allocation is not affected by your patch.
+It is still done in the memory pool attached to rvdev.
+This is the main point i missed. I reviewed the whole parent hierarchy to better understand why your patch
+does not affect the memory allocation.
+Now it clear to me, sorry for my misunderstanding of your point.
 
-But there are lots of useless "0" values of third cell of "pwms"
-option in dts files.
+Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 
-I see 2 ways now:
-- just remove all "0" "third cell" from "pwms" options in dts files. I
-see this "0" confuses some people.
-- convert pwm_state.polarity into pwm_state.flags and use bitfield
-directly from dtb.
-  It simplifies the parsing logic and makes adding new flags easier.
-
-What do think?
-
+> 
+>>
+>> So It seems to me that this patch breaks the relationship between the rpmsg bus
+>> and the rproc platform driver, at least concerning the buffer allocation.
+> 
+> I am not sure if you were interpreting this patch with or without
+> d999b622fcfb3 ("rpmsg: virtio: allocate buffer from parent"). Both of
+> the above commits are in 5.1, so I consider this patch to be fixing only
+> on 5.1+ kernels and it does use d999b622fcfb3. Buffer allocations after
+> this patch without d999b622fcfb3 would try to allocate from rproc device
+> which is a pseudo-device and doesn't have any pools defined with it, so
+> will allocate from the global pool.
+> 
+>> But on the other side this patch doesn't introduce regression for rpmsg bus on my platform... 
+>>
+>> I probably missed something important because i can not figure out how this patch don't introduce regression.
+>> Can the rproc->dev inherits from the rproc platform device in term of memory regions?
+>>
+>> [1]: https://elixir.bootlin.com/linux/latest/source/drivers/rpmsg/virtio_rpmsg_bus.c#L915
+>> [2]: https://lkml.org/lkml/2018/11/30/180
+>>
+>>>
+>>> I wonder how the original change didn't blow up sysmon_probe() and potentially
+>>> other out-of-tree users of rproc_get_by_child().  It would be nice to have
+>>> someone from the QCOM team test your patch.
+>>
+>> You are right the rproc platform device is now the grand parent of a rpmsg device, while before it was the parent.
+>> Anyway, does it makes sense to have this kind of dependency between rpmsg device and rproc device?
+>> The fix could be done in the rpmsg device that would be rproc dependent (if out-of-tree).
+> 
+> Not sure what you are proposing here, since you cannot retrieve a rproc
+> handle. We use this to perform address translations in rpmsg drivers
+> since all the addresses are with the rproc device.
 >
-> Thierry
+>> The alternative could be to declare the rpmsg device in device tree as child of the rproc platform device...
+> 
+> And that is completely orthogonal and doesn't solve the current scenario
+> where rpmsg devices are created through the virtio-rpmsg bus nameservice
+> announcement.
+Yes it another discussion. The only thing i would like to highlight here (for future discussion) is the relation chip
+you create between rpmsg and remoteproc using rproc_get_by_child. 
+Would be nice to have an abstraction layer for memory allocation and translation for generic RPMsg devices decorrelated
+from remoteproc.
+No more the topic here...
 
---=20
-Best regards
-Oleksandr Suvorov
+Thanks,
+Arnaud
 
-Toradex AG
-Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
+> 
+> regards
+> Suman
+> 
+> 
+>>
+>> Regards,
+>> Arnaud
+>>
+>>>
+>>>>  	rvdev->dev.dma_pfn_offset = rproc->dev.parent->dma_pfn_offset;
+>>>>  	rvdev->dev.release = rproc_rvdev_release;
+>>>>  	dev_set_name(&rvdev->dev, "%s#%s", dev_name(rvdev->dev.parent), name);
+>>>
+>>> Be mindful there might be fallouts from applying this patch since it does change
+>>> the location of the vdev under /sys/device/platform/ .
+>>>
+>>> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>>
+>>>> -- 
+>>>> 2.23.0
+>>>>
+> 
