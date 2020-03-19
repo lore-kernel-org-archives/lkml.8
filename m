@@ -2,109 +2,116 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6BFC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 763A4C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247232072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584634277;
-	bh=Oq6OzcJ1pRJcVvHx5D+K9KmKO9NwGHb+oIM0SQfrTGs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2HvuHgUY6ugjbny08hDRjyUWBfcAOrqOY7GYLz4VV77f1k+8XBLyu8/T12Ya0DXqN
-	 VZC+joxntQLFcbzB82ZsZduBbZOo4/xqgMWOei3UkiDozJ4662ebPBBlwjK+ns1wOW
-	 3UR075S+PZfTWofKh6zJLtHSs767K10xAwPzPA58=
+	by mail.kernel.org (Postfix) with ESMTP id 4AF6520663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 16:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqKQF2NS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgCSQLQ (ORCPT
+        id S1728055AbgCSQMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 12:11:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727436AbgCSQLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 12:11:15 -0400
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F27E20663;
-        Thu, 19 Mar 2020 16:11:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584634274;
-        bh=Oq6OzcJ1pRJcVvHx5D+K9KmKO9NwGHb+oIM0SQfrTGs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KzU80ZHDeVWY/ZNhn0HPi7cNIDTjzPgDKJdmPAv1jjgRoKscNnggHw5HB5RUHV63q
-         nM9OGEN6mPxLr1rnJjWGSLEv4KZ4vZwUvUUl3MEQTedHm0AGmNV4WMICiZrgqotvpx
-         pnDSIKDyMY+KKWeD9jJFnmHMnh6cA5gnf04e2fGA=
-Received: by mail-yb1-f174.google.com with SMTP id g206so565717ybg.11;
-        Thu, 19 Mar 2020 09:11:14 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ39SFbQHZA5wHLdGEf2uFUaC2C4BFqkZOWehVCu5IaHn9u7t7zh
-        UEAPvJDLkjZ2gmcCepQnpJG1jRKBqAnESBWmog==
-X-Google-Smtp-Source: ADFU+vvLsEep/vx8qHUUkolYGJcIcerwEptFuq/LXBSqDUZWP4P71Gah1wXv8Hn1g+bbgxKGowiIJN9Kj3EiKfBUm/U=
-X-Received: by 2002:a5b:48e:: with SMTP id n14mr6129045ybp.462.1584634273454;
- Thu, 19 Mar 2020 09:11:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200317093922.20785-1-lkundrak@v3.sk> <20200317093922.20785-14-lkundrak@v3.sk>
-In-Reply-To: <20200317093922.20785-14-lkundrak@v3.sk>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 19 Mar 2020 10:11:02 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+wG+DTZ8Vxcw=NR2isABGrkoDiBt-uG9+NF6qdWuU62Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+wG+DTZ8Vxcw=NR2isABGrkoDiBt-uG9+NF6qdWuU62Q@mail.gmail.com>
-Subject: Re: [PATCH 13/28] dt-bindings: serial: move Marvell compatible string
- to 8250 binding doc
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 19 Mar 2020 12:12:10 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50994 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727577AbgCSQMK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 12:12:10 -0400
+Received: by mail-wm1-f68.google.com with SMTP id z13so3163589wml.0;
+        Thu, 19 Mar 2020 09:12:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=KrbGWoGHrNAkN/7yoRVhGOKa+eWQ1UuA90EUgfCOQho=;
+        b=JqKQF2NSbWpkaB2YQgRtXi4pRnvqxVXmxEgbnq8qDBmDopCObaDOAnMTXtkDT0oNU5
+         cpvIF2wxDxKAj4elpcd6dfsDzZbAuKrT43BAPG1Jqa8ten4zIMVGeoOg/n+6miEMbmaB
+         ZBuaerwrjc1U/nDIL23r8oouA0huCJJndVhe2FNfSxsGzsbvc86yZKm3cHMMu1XpFsvn
+         bZVyC8ug9BqSrbIHzKlxBxwqs/QljYkfVWQLmPt1gS8WqFmCB+fKSLSrW6E448fWLMfx
+         HHcmiofaLLNdeWPJscgY4LsFVR13MCTf23SaGz6OUcs0rLggP81rdpWr0w50nyvmU3Fb
+         EHIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=KrbGWoGHrNAkN/7yoRVhGOKa+eWQ1UuA90EUgfCOQho=;
+        b=EBEvymiFSM6Ix6Tw/U+sXePad9F4W8dh5pEFYqL8aUlUV4UINyEZDXW1lw+2ViGDi+
+         EdsNPzerdQ24ZBElgGAyCOSMcIl9GMmS1FEv+Pjb8/RNT0zXat/nBpjTwMdceNzaVMi+
+         EQRrkNUXNG16lOYeFpO2MURqlQgxkpt9s1IgS/DcJM0J9SnOH0fXE94qhzF+aqaciO1O
+         0lRR+dYSkJYItUC6tFBPEhlIS5VPv8IP+69oDUnST3g2LJ7cX5iwWayo67/8e4E8R680
+         vdcf2J6gjDdK8svVIhIlLjhezxJpcGx8agGTabo8IqiaNto3ZGBo24+9TQgD5JlHX+fB
+         r2SQ==
+X-Gm-Message-State: ANhLgQ3gflIWJ+xe9qWaey2k5S6rdBIW1s3N0ryCMgsGs/fD16fTAJk5
+        4NnIgdDm+7me7OKCjYqbRvM=
+X-Google-Smtp-Source: ADFU+vui/AhR7WL50TXv0XoVgoj9U4tQmO2VTlUOWhnKa9HAfhIMLkPJTm7GaGae0ATpMTrjXS2SRQ==
+X-Received: by 2002:a7b:c0cf:: with SMTP id s15mr4793754wmh.106.1584634328020;
+        Thu, 19 Mar 2020 09:12:08 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id w204sm3973485wma.1.2020.03.19.09.12.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Mar 2020 09:12:07 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v2 2/2] ARM: dts: rockchip: fix yaml warnings for rk3288-pmu-sram compatible nodes
+Date:   Thu, 19 Mar 2020 17:11:59 +0100
+Message-Id: <20200319161159.24548-2-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200319161159.24548-1-jbx6244@gmail.com>
+References: <20200319161159.24548-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 3:40 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> These ports are compatible with NS8250 and handled by the same driver.
-> Get rid of the extra document that fails to document the properties that
-> are actually supported.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  Documentation/devicetree/bindings/serial/8250.txt        | 2 ++
->  Documentation/devicetree/bindings/serial/mrvl-serial.txt | 4 ----
->  2 files changed, 2 insertions(+), 4 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/serial/mrvl-serial.txt
+A test with the command below gives for example these warnings:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
+'#address-cells' is a required property
+arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
+'#size-cells' is a required property
+arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: sram@ff720000:
+'ranges' is a required property
 
-I'd really like to see 8250.txt converted to schema.
+Fix this error by adding '#address-cells', '#size-cells' and
+'ranges' to the 'rockchip,rk3288-pmu-sram' compatible node
+in rk3288.dtsi.
 
-Rob
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/sram/sram.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+Not tested with hardware.
+
+Changed v2:
+  Fix dtsi.
+---
+ arch/arm/boot/dts/rk3288.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 07681f1f0..e72368a7a 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -731,6 +731,9 @@
+ 	pmu_sram: sram@ff720000 {
+ 		compatible = "rockchip,rk3288-pmu-sram", "mmio-sram";
+ 		reg = <0x0 0xff720000 0x0 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x0 0xff720000 0x1000>;
+ 	};
+ 
+ 	pmu: power-management@ff730000 {
+-- 
+2.11.0
+
