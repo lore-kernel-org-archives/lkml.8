@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01EAC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62296C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7AD208D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394D5214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623370;
-	bh=afazES3LJUgiIS1Fm0X0rEFWfns6OqumedveuowKv8Y=;
+	s=default; t=1584623372;
+	bh=02K4N+O2xv7mwBzmmPLvM1cmWS5GsidpF10WJrr9krw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YShnj2PxEBgvHmadLlJFWSQcw9VWUy2FNoNPQawYp5Gdw3vDs/4SBDZf55/W/XXwk
-	 yQ1AJR1Sqte5jtyyi+ssS1Sq7qzPfPtnOW5JRtqBqNLo2r6LsoMEEo7EKHS8/Aa8Cr
-	 w+ckKQ+AIyT17thUYR3sXC1MnEQrTN/7JNpIb1rc=
+	b=apiGkAvRJSIPfMOnPMQTQd3fohp294Id0qeFXODom0HJ8l1povU2yF1PcX3qv76bU
+	 pMInue0i6/sYpXOVsPjfQOOWdLoyFZOL0nYEIKKsL53zYr36DKrSC5mz1lyg8ha0wo
+	 oVWwWHgkWZjz0Ac605hRT4TXmEsQF1uFK1rzbQjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgCSNJ3 (ORCPT
+        id S1728336AbgCSNJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:09:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728331AbgCSNJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 09:09:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728304AbgCSNJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:09:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42C1820789;
-        Thu, 19 Mar 2020 13:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8FDF20789;
+        Thu, 19 Mar 2020 13:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623366;
-        bh=afazES3LJUgiIS1Fm0X0rEFWfns6OqumedveuowKv8Y=;
+        s=default; t=1584623364;
+        bh=02K4N+O2xv7mwBzmmPLvM1cmWS5GsidpF10WJrr9krw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ys0XafyJ5AFEKHg4YTImEwUdB9IvEzhZ5PD88aGeHVdWwwTAqJO7rgDXjIpDx4upc
-         Fy/x+n0iGOQfbar3lcFgEP3ILbN/CFLzLjKOX51NDS6pVYAJYHoG+oscWIw0pN+L60
-         EFhYBoqT2fg9wk4t4Nj439em34C/Wmlsl8wVBeW0=
+        b=X9qf+lkMu+yTH0/RKSh0WZPTEGC3X857nCXcLe2bM3Xiy0Fi33vMw2wMTR/676BZi
+         QmxDUdSOBmI4LT7wc7atH0Gi451cgUUiAPVQyseHq1ZEJttpK6u/mLQ7XnHv1W46rO
+         3BJ9CyIy3Cxmhk13XCbCYQaRUxrBkD5iUEGLgHzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sven Eckelmann <sven@narfation.org>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 79/93] batman-adv: Prevent duplicated tvlv handler
-Date:   Thu, 19 Mar 2020 14:00:23 +0100
-Message-Id: <20200319123949.663710173@linuxfoundation.org>
+Subject: [PATCH 4.4 78/93] batman-adv: Prevent duplicated global TT entry
+Date:   Thu, 19 Mar 2020 14:00:22 +0100
+Message-Id: <20200319123949.406744237@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -61,10 +61,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sven Eckelmann <sven@narfation.org>
 
-commit ae3cdc97dc10c7a3b31f297dab429bfb774c9ccb upstream.
+commit e7136e48ffdfb9f37b0820f619380485eb407361 upstream.
 
-The function batadv_tvlv_handler_register is responsible for adding new
-tvlv_handler to the handler_list. It first checks whether the entry
+The function batadv_tt_global_orig_entry_add is responsible for adding new
+tt_orig_list_entry to the orig_list. It first checks whether the entry
 already is in the list or not. If it is, then the creation of a new entry
 is aborted.
 
@@ -75,45 +75,44 @@ an entry with the same key between the check and the list manipulation.
 The check and the manipulation of the list must therefore be in the same
 locked code section.
 
-Fixes: ef26157747d4 ("batman-adv: tvlv - basic infrastructure")
+Fixes: d657e621a0f5 ("batman-adv: add reference counting for type batadv_tt_orig_list_entry")
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/batman-adv/main.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/batman-adv/translation-table.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/net/batman-adv/main.c
-+++ b/net/batman-adv/main.c
-@@ -1079,15 +1079,20 @@ void batadv_tvlv_handler_register(struct
+--- a/net/batman-adv/translation-table.c
++++ b/net/batman-adv/translation-table.c
+@@ -1315,6 +1315,8 @@ batadv_tt_global_orig_entry_add(struct b
  {
- 	struct batadv_tvlv_handler *tvlv_handler;
+ 	struct batadv_tt_orig_list_entry *orig_entry;
  
-+	spin_lock_bh(&bat_priv->tvlv.handler_list_lock);
++	spin_lock_bh(&tt_global->list_lock);
 +
- 	tvlv_handler = batadv_tvlv_handler_get(bat_priv, type, version);
- 	if (tvlv_handler) {
-+		spin_unlock_bh(&bat_priv->tvlv.handler_list_lock);
- 		batadv_tvlv_handler_free_ref(tvlv_handler);
- 		return;
- 	}
+ 	orig_entry = batadv_tt_global_orig_entry_find(tt_global, orig_node);
+ 	if (orig_entry) {
+ 		/* refresh the ttvn: the current value could be a bogus one that
+@@ -1337,10 +1339,8 @@ batadv_tt_global_orig_entry_add(struct b
+ 	orig_entry->flags = flags;
+ 	atomic_set(&orig_entry->refcount, 2);
  
- 	tvlv_handler = kzalloc(sizeof(*tvlv_handler), GFP_ATOMIC);
--	if (!tvlv_handler)
-+	if (!tvlv_handler) {
-+		spin_unlock_bh(&bat_priv->tvlv.handler_list_lock);
- 		return;
-+	}
+-	spin_lock_bh(&tt_global->list_lock);
+ 	hlist_add_head_rcu(&orig_entry->list,
+ 			   &tt_global->orig_list);
+-	spin_unlock_bh(&tt_global->list_lock);
+ 	atomic_inc(&tt_global->orig_list_count);
  
- 	tvlv_handler->ogm_handler = optr;
- 	tvlv_handler->unicast_handler = uptr;
-@@ -1097,7 +1102,6 @@ void batadv_tvlv_handler_register(struct
- 	atomic_set(&tvlv_handler->refcount, 1);
- 	INIT_HLIST_NODE(&tvlv_handler->list);
- 
--	spin_lock_bh(&bat_priv->tvlv.handler_list_lock);
- 	hlist_add_head_rcu(&tvlv_handler->list, &bat_priv->tvlv.handler_list);
- 	spin_unlock_bh(&bat_priv->tvlv.handler_list_lock);
+ sync_flags:
+@@ -1348,6 +1348,8 @@ sync_flags:
+ out:
+ 	if (orig_entry)
+ 		batadv_tt_orig_list_entry_free_ref(orig_entry);
++
++	spin_unlock_bh(&tt_global->list_lock);
  }
+ 
+ /**
 
 
