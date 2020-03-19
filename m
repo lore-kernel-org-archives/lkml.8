@@ -2,112 +2,78 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E769C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DC0C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1A520663
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD6620757
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgCSMVW (ORCPT
+        id S1727206AbgCSMV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:21:22 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:58800 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726864AbgCSMVV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:21:21 -0400
-X-IronPort-AV: E=Sophos;i="5.70,571,1574089200"; 
-   d="scan'208";a="42339811"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 19 Mar 2020 21:21:20 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id CF1A44013DFF;
-        Thu, 19 Mar 2020 21:21:16 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 2/5] media: i2c: ov5645: Switch to assigned-clock-rates
-Date:   Thu, 19 Mar 2020 12:19:20 +0000
-Message-Id: <1584620363-2255-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 19 Mar 2020 08:21:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36044 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726864AbgCSMV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:21:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A06E6AFC8;
+        Thu, 19 Mar 2020 12:21:21 +0000 (UTC)
+Subject: Re: [PATCH v2 1/2] mm/page_alloc: use ac->high_zoneidx for
+ classzone_idx
+To:     Joonsoo Kim <js1304@gmail.com>,
+        David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Ye Xiaolong <xiaolong.ye@intel.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1584502378-12609-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1584502378-12609-2-git-send-email-iamjoonsoo.kim@lge.com>
+ <alpine.DEB.2.21.2003181419090.70237@chino.kir.corp.google.com>
+ <CAAmzW4PZr6QiO=6VcM_Nbf4079awHBLULAm+_A_-2mCxrzOO2g@mail.gmail.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <9a7c94c0-c2b2-d533-316a-4fd42bdf55b1@suse.cz>
+Date:   Thu, 19 Mar 2020 13:21:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <CAAmzW4PZr6QiO=6VcM_Nbf4079awHBLULAm+_A_-2mCxrzOO2g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch switches to assigned-clock-rates for specifying the clock rate.
-The clk-conf.c internally handles setting the clock rate when
-assigned-clock-rates is passed.
+On 3/19/20 9:57 AM, Joonsoo Kim wrote:
+>> Curious: is this only an issue when vm.numa_zonelist_order is set to Node?
+> 
+> Do you mean "/proc/sys/vm/numa_zonelist_order"? It looks like it's gone now.
+> 
+> Thanks.
 
-The driver now sets the clock frequency only if the deprecated property
-clock-frequency is defined instead assigned-clock-rates, this is to avoid
-breakage with existing DT binaries.
+Yes it's gone now, but indeed, AFAIU on older kernels with zone order instead of
+node order, this problem wouldn't manifest.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/media/i2c/ov5645.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+This was in my reply to v1, 2 years ago :)
 
-diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
-index a6c17d15d754..e298acdadeef 100644
---- a/drivers/media/i2c/ov5645.c
-+++ b/drivers/media/i2c/ov5645.c
-@@ -1094,25 +1094,25 @@ static int ov5645_probe(struct i2c_client *client)
- 		return PTR_ERR(ov5645->xclk);
- 	}
- 
--	ret = of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);
--	if (ret) {
--		dev_err(dev, "could not get xclk frequency\n");
--		return ret;
-+	/* check if deprecated property clock-frequency is defined */
-+	ret = of_property_read_u32(dev->of_node, "clock-frequency",
-+				   &xclk_freq);
-+	if (!ret) {
-+		ret = clk_set_rate(ov5645->xclk, xclk_freq);
-+		if (ret) {
-+			dev_err(dev, "could not set xclk frequency\n");
-+			return ret;
-+		}
- 	}
- 
- 	/* external clock must be 24MHz, allow 1% tolerance */
-+	xclk_freq = clk_get_rate(ov5645->xclk);
- 	if (xclk_freq < 23760000 || xclk_freq > 24240000) {
- 		dev_err(dev, "external clock frequency %u is not supported\n",
- 			xclk_freq);
- 		return -EINVAL;
- 	}
- 
--	ret = clk_set_rate(ov5645->xclk, xclk_freq);
--	if (ret) {
--		dev_err(dev, "could not set xclk frequency\n");
--		return ret;
--	}
--
- 	for (i = 0; i < OV5645_NUM_SUPPLIES; i++)
- 		ov5645->supplies[i].supply = ov5645_supply_name[i];
- 
--- 
-2.20.1
+So to summarize;
+- ac->high_zoneidx is computed via the arcane gfp_zone(gfp_mask) and
+represents the highest zone the allocation can use
+- classzone_idx was supposed to be the highest zone that the allocation can use,
+that is actually available in the system. Somehow that became the highest zone
+that is available on the preferred node (in the default node-order zonelist),
+which causes the watermark inconsistencies you mention.
+
+
 
