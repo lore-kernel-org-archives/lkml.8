@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 463B1C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A47C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10772214DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73AED21D79
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 14:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgCSOLU (ORCPT
+        id S1728083AbgCSOLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 10:11:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:32860 "EHLO
+        Thu, 19 Mar 2020 10:11:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:32879 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727973AbgCSOLO (ORCPT
+        with ESMTP id S1727999AbgCSOLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 10:11:14 -0400
+        Thu, 19 Mar 2020 10:11:16 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jEvt2-0002M7-Tf; Thu, 19 Mar 2020 15:11:05 +0100
+        id 1jEvsz-0002JS-KB; Thu, 19 Mar 2020 15:11:01 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 21B5A1C22A9;
-        Thu, 19 Mar 2020 15:10:56 +0100 (CET)
-Date:   Thu, 19 Mar 2020 14:10:55 -0000
-From:   "tip-bot2 for Jin Yao" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E9EF51C22A5;
+        Thu, 19 Mar 2020 15:10:53 +0100 (CET)
+Date:   Thu, 19 Mar 2020 14:10:53 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf stat: Show percore counts in per CPU output
-Cc:     Jin Yao <yao.jin@linux.intel.com>,
+Subject: [tip: perf/core] tools headers UAPI: Update tools's copy of
+ linux/perf_event.h
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Pavel Gerasimov <pavel.gerasimov@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200214080452.26402-1-yao.jin@linux.intel.com>
-References: <20200214080452.26402-1-yao.jin@linux.intel.com>
+In-Reply-To: <20200304134902.GB12612@kernel.org>
+References: <20200304134902.GB12612@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158462705579.28353.14375689809717945838.tip-bot2@tip-bot2>
+Message-ID: <158462705366.28353.12216328553955134825.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,247 +68,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     1af62ce61cd80a25590d5abeccfb5c3a666527dd
-Gitweb:        https://git.kernel.org/tip/1af62ce61cd80a25590d5abeccfb5c3a666527dd
-Author:        Jin Yao <yao.jin@linux.intel.com>
-AuthorDate:    Fri, 14 Feb 2020 16:04:52 +08:00
+Commit-ID:     6339998d22ecae5d6435dd87b4904ff6e16bfe56
+Gitweb:        https://git.kernel.org/tip/6339998d22ecae5d6435dd87b4904ff6e16bfe56
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Wed, 04 Mar 2020 10:50:58 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Wed, 04 Mar 2020 10:34:09 -03:00
+CommitterDate: Thu, 05 Mar 2020 11:01:11 -03:00
 
-perf stat: Show percore counts in per CPU output
+tools headers UAPI: Update tools's copy of linux/perf_event.h
 
-We have supported the event modifier "percore" which sums up the event
-counts for all hardware threads in a core and show the counts per core.
+To get the changes in:
 
-For example,
+  bbfd5e4fab63 ("perf/core: Add new branch sample type for HW index of raw branch records")
 
- # perf stat -e cpu/event=cpu-cycles,percore/ -a -A -- sleep 1
+This silences this perf tools build warning:
 
-  Performance counter stats for 'system wide':
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/perf_event.h' differs from latest version at 'include/uapi/linux/perf_event.h'
+  diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
 
- S0-D0-C0                395,072      cpu/event=cpu-cycles,percore/
- S0-D0-C1                851,248      cpu/event=cpu-cycles,percore/
- S0-D0-C2                954,226      cpu/event=cpu-cycles,percore/
- S0-D0-C3              1,233,659      cpu/event=cpu-cycles,percore/
+This update is a prerequisite to adding support for the HW index of raw
+branch records.
 
-This patch provides a new option "--percore-show-thread". It is used
-with event modifier "percore" together to sum up the event counts for
-all hardware threads in a core but show the counts per hardware thread.
-
-This is essentially a replacement for the any bit (which is gone in
-Icelake). Per core counts are useful for some formulas, e.g. CoreIPC.
-The original percore version was inconvenient to post process. This
-variant matches the output of the any bit.
-
-With this patch, for example,
-
- # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -- sleep 1
-
-  Performance counter stats for 'system wide':
-
- CPU0               2,453,061      cpu/event=cpu-cycles,percore/
- CPU1               1,823,921      cpu/event=cpu-cycles,percore/
- CPU2               1,383,166      cpu/event=cpu-cycles,percore/
- CPU3               1,102,652      cpu/event=cpu-cycles,percore/
- CPU4               2,453,061      cpu/event=cpu-cycles,percore/
- CPU5               1,823,921      cpu/event=cpu-cycles,percore/
- CPU6               1,383,166      cpu/event=cpu-cycles,percore/
- CPU7               1,102,652      cpu/event=cpu-cycles,percore/
-
-We can see counts are duplicated in CPU pairs (CPU0/CPU4, CPU1/CPU5,
-CPU2/CPU6, CPU3/CPU7).
-
-The interval mode also works. For example,
-
- # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -I 1000
- #           time CPU                    counts unit events
-      1.000425421 CPU0                 925,032      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU1                 430,202      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU2                 436,843      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU3               1,192,504      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU4                 925,032      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU5                 430,202      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU6                 436,843      cpu/event=cpu-cycles,percore/
-      1.000425421 CPU7               1,192,504      cpu/event=cpu-cycles,percore/
-
-If we offline CPU5, the result is:
-
- # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread -- sleep 1
-
-  Performance counter stats for 'system wide':
-
- CPU0               2,752,148      cpu/event=cpu-cycles,percore/
- CPU1               1,009,312      cpu/event=cpu-cycles,percore/
- CPU2               2,784,072      cpu/event=cpu-cycles,percore/
- CPU3               2,427,922      cpu/event=cpu-cycles,percore/
- CPU4               2,752,148      cpu/event=cpu-cycles,percore/
- CPU6               2,784,072      cpu/event=cpu-cycles,percore/
- CPU7               2,427,922      cpu/event=cpu-cycles,percore/
-
-        1.001416041 seconds time elapsed
-
- v4:
- ---
- Ravi Bangoria reports an issue in v3. Once we offline a CPU,
- the output is not correct. The issue is we should use the cpu
- idx in print_percore_thread rather than using the cpu value.
-
- v3:
- ---
- 1. Fix the interval mode output error
- 2. Use cpu value (not cpu index) in config->aggr_get_id().
- 3. Refine the code according to Jiri's comments.
-
- v2:
- ---
- Add the explanation in change log. This is essentially a replacement
- for the any bit. No code change.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Acked-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200214080452.26402-1-yao.jin@linux.intel.com
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Pavel Gerasimov <pavel.gerasimov@intel.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
+Link: http://lore.kernel.org/lkml/20200304134902.GB12612@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-stat.txt |  9 +++++++-
- tools/perf/builtin-stat.c              |  4 +++-
- tools/perf/util/stat-display.c         | 33 +++++++++++++++++++++----
- tools/perf/util/stat.h                 |  1 +-
- 4 files changed, 42 insertions(+), 5 deletions(-)
+ tools/include/uapi/linux/perf_event.h | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 9431b80..4d56586 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -334,6 +334,15 @@ Configure all used events to run in kernel space.
- --all-user::
- Configure all used events to run in user space.
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index 377d794..397cfd6 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -181,6 +181,8 @@ enum perf_branch_sample_type_shift {
  
-+--percore-show-thread::
-+The event modifier "percore" has supported to sum up the event counts
-+for all hardware threads in a core and show the counts per core.
-+
-+This option with event modifier "percore" enabled also sums up the event
-+counts for all hardware threads in a core but show the sum counts per
-+hardware thread. This is essentially a replacement for the any bit and
-+convenient for post processing.
-+
- EXAMPLES
- --------
+ 	PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT	= 16, /* save branch type */
  
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index a098c2e..ec053dc 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -929,6 +929,10 @@ static struct option stat_options[] = {
- 	OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
- 			 "Configure all used events to run in user space.",
- 			 PARSE_OPT_EXCLUSIVE),
-+	OPT_BOOLEAN(0, "percore-show-thread", &stat_config.percore_show_thread,
-+		    "Use with 'percore' event qualifier to show the event "
-+		    "counts of one hardware thread by sum up total hardware "
-+		    "threads of same physical core"),
- 	OPT_END()
++	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
++
+ 	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
  };
  
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index bc31fcc..d89cb0d 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -110,7 +110,7 @@ static void aggr_printout(struct perf_stat_config *config,
- 			config->csv_sep);
- 			break;
- 	case AGGR_NONE:
--		if (evsel->percore) {
-+		if (evsel->percore && !config->percore_show_thread) {
- 			fprintf(config->output, "S%d-D%d-C%*d%s",
- 				cpu_map__id_to_socket(id),
- 				cpu_map__id_to_die(id),
-@@ -628,7 +628,7 @@ static void aggr_cb(struct perf_stat_config *config,
- static void print_counter_aggrdata(struct perf_stat_config *config,
- 				   struct evsel *counter, int s,
- 				   char *prefix, bool metric_only,
--				   bool *first)
-+				   bool *first, int cpu)
- {
- 	struct aggr_data ad;
- 	FILE *output = config->output;
-@@ -654,7 +654,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 		fprintf(output, "%s", prefix);
+@@ -208,6 +210,8 @@ enum perf_branch_sample_type {
+ 	PERF_SAMPLE_BRANCH_TYPE_SAVE	=
+ 		1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
  
- 	uval = val * counter->scale;
--	printout(config, id, nr, counter, uval, prefix,
-+	printout(config, cpu != -1 ? cpu : id, nr, counter, uval, prefix,
- 		 run, ena, 1.0, &rt_stat);
- 	if (!metric_only)
- 		fputc('\n', output);
-@@ -687,7 +687,7 @@ static void print_aggr(struct perf_stat_config *config,
- 		evlist__for_each_entry(evlist, counter) {
- 			print_counter_aggrdata(config, counter, s,
- 					       prefix, metric_only,
--					       &first);
-+					       &first, -1);
- 		}
- 		if (metric_only)
- 			fputc('\n', output);
-@@ -1146,6 +1146,26 @@ static void print_footer(struct perf_stat_config *config)
- 			"the same PMU. Try reorganizing the group.\n");
- }
- 
-+static void print_percore_thread(struct perf_stat_config *config,
-+				 struct evsel *counter, char *prefix)
-+{
-+	int s, s2, id;
-+	bool first = true;
++	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
 +
-+	for (int i = 0; i < perf_evsel__nr_cpus(counter); i++) {
-+		s2 = config->aggr_get_id(config, evsel__cpus(counter), i);
-+		for (s = 0; s < config->aggr_map->nr; s++) {
-+			id = config->aggr_map->map[s];
-+			if (s2 == id)
-+				break;
-+		}
-+
-+		print_counter_aggrdata(config, counter, s,
-+				       prefix, false,
-+				       &first, i);
-+	}
-+}
-+
- static void print_percore(struct perf_stat_config *config,
- 			  struct evsel *counter, char *prefix)
- {
-@@ -1157,13 +1177,16 @@ static void print_percore(struct perf_stat_config *config,
- 	if (!(config->aggr_map || config->aggr_get_id))
- 		return;
+ 	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
+ };
  
-+	if (config->percore_show_thread)
-+		return print_percore_thread(config, counter, prefix);
-+
- 	for (s = 0; s < config->aggr_map->nr; s++) {
- 		if (prefix && metric_only)
- 			fprintf(output, "%s", prefix);
- 
- 		print_counter_aggrdata(config, counter, s,
- 				       prefix, metric_only,
--				       &first);
-+				       &first, -1);
- 	}
- 
- 	if (metric_only)
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index fb990ef..b4fdfaa 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -109,6 +109,7 @@ struct perf_stat_config {
- 	bool			 walltime_run_table;
- 	bool			 all_kernel;
- 	bool			 all_user;
-+	bool			 percore_show_thread;
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
+@@ -853,7 +857,9 @@ enum perf_event_type {
+ 	 *	  char                  data[size];}&& PERF_SAMPLE_RAW
+ 	 *
+ 	 *	{ u64                   nr;
+-	 *        { u64 from, to, flags } lbr[nr];} && PERF_SAMPLE_BRANCH_STACK
++	 *	  { u64	hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
++	 *        { u64 from, to, flags } lbr[nr];
++	 *      } && PERF_SAMPLE_BRANCH_STACK
+ 	 *
+ 	 * 	{ u64			abi; # enum perf_sample_regs_abi
+ 	 * 	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
