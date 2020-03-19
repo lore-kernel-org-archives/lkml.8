@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66568C43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADFEC5518C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4089620754
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991AE2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgCSRmS (ORCPT
+        id S1728654AbgCSRmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:42:18 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:39493 "EHLO
+        Thu, 19 Mar 2020 13:42:22 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:54921 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728576AbgCSRmP (ORCPT
+        with ESMTP id S1727034AbgCSRmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:42:15 -0400
+        Thu, 19 Mar 2020 13:42:19 -0400
 Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MryKr-1jbePu2RHx-00nvui; Thu, 19 Mar 2020 18:41:47 +0100
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MdNHa-1jo2sj1L96-00ZRRu; Thu, 19 Mar 2020 18:42:01 +0100
 Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 718EF65021B;
-        Thu, 19 Mar 2020 17:41:44 +0000 (UTC)
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id E9A1C65021B;
+        Thu, 19 Mar 2020 17:42:00 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at cetitec.com
 Received: from mail.cetitecgmbh.com ([127.0.0.1])
         by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dqw4xhgj7N5p; Thu, 19 Mar 2020 18:41:44 +0100 (CET)
+        with ESMTP id 8esBAehby7dE; Thu, 19 Mar 2020 18:42:00 +0100 (CET)
 Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 0690264F8ED;
-        Thu, 19 Mar 2020 18:41:44 +0100 (CET)
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 8689A64C8E4;
+        Thu, 19 Mar 2020 18:42:00 +0100 (CET)
 Received: from pflmari.corp.cetitec.com (10.8.5.52) by
  PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 19 Mar 2020 18:41:44 +0100
+ id 15.0.1497.2; Thu, 19 Mar 2020 18:42:00 +0100
 Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 739388050C; Thu, 19 Mar 2020 18:41:43 +0100 (CET)
-Date:   Thu, 19 Mar 2020 18:41:43 +0100
+        id E2EBF8050C; Thu, 19 Mar 2020 18:41:59 +0100 (CET)
+Date:   Thu, 19 Mar 2020 18:41:59 +0100
 From:   Alex Riesen <alexander.riesen@cetitec.com>
 To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
 CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -51,9 +51,9 @@ CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
         <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v2 01/10] media: adv748x: fix end-of-line terminators in
- diagnostic statements
-Message-ID: <5272d873b4daf8b0bdb8aff81b08ab3508da9567.1584639664.git.alexander.riesen@cetitec.com>
+Subject: [PATCH v2 04/10] media: adv748x: add definitions for audio output
+ related registers
+Message-ID: <d4e559cfedc57c8f3364fbe9ac29e2b50e2e4095.1584639664.git.alexander.riesen@cetitec.com>
 Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -76,23 +76,23 @@ X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
  PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
 X-EsetResult: clean, is OK
 X-EsetId: 37303A290D7F536A6D7762
-X-Provags-ID: V03:K1:4ZJC+78LMq1c97WiQD0OVYyKMvI2ohF7vZwBoZBySSHelaCDmeq
- jTulDTZ6oMWVm6JGSPM381luWOIXY0G0Xy5Jxtd8+LkP1J+xMMgMF47U3XO2pC5K8ZA27SY
- u5z3JDR9b4J1zpLbY1EPsQjHQ0Btv7f6oUPcCl/l0Xwv7tkGj2EKFAR7qPWpZRl8zRrMKE4
- pLDCrm3hu+wfQJsKjvp3A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ojVJRJsVJU8=:N5P41ydm6kNSZsBBgmqFAA
- uEE2h2JO+yHumdQ9fz1F9A/c5FzikkH18zSopYh0pRURk6Z7xz+RVD3YvK1gatezthfuqIDi1
- 9nIDWA/VFnlEe2MhYIc6VgiaJ6jc6hQP6h63xCqd6lKk/GaWDTRgEt7M6rRPVKavixF92lVRw
- jghXdwG745BXiwwtC86RusvPnHpwEfq6UotmurYqKeZwNWAi2bix/i8Z5qL3wWl9EzPMt1jXy
- COXi0qoQsQwYBIm3S+EDHhmW5n/qgJKQcgxZP4roONapuv6yYYhLi9pvbiZDTj7SXOhwmS9OB
- 4w0cEhx8iDf7B6Sf13irliZfQj0OAMbooAJoTaTrEL9eGowycTt1ljZ8BSWF6L/2evIbu4Rog
- 7oU0hApyfODq7n7izg6L3xJIYUAcpS1fPiKquwgfsa7wX3RSGI8MwMN6XQedhkOCDLvwUxqQh
- ZpDA6p6aH756Jbsevz/O1YIk8iGv6zXmptiQ5J/wU+75c0tY78y7R5wXFbPv0MM8SK/VOfGai
- dIm+jBNxmNdVeTKu3nNbQJjMkfMx4z1DAi+pPQMgt3XNVPBz4BSOU4VHjyEsfNPaHNaYCK5Wq
- FVph8hsp7VEJLAS/milgxzS6UJw/AxVyv+LbTII30H/DuL5GS0/0vfXhac/lir0z7Fz3q4OnC
- XTGBstnL40lvis1QCKTiMpxbC6CzO+57XrIaJr0N8f+N7H7BkqV6O3Q1c/+HpCw9bLpsNqgI8
- WyFHcBMRMa51BKTEXIRmXbJxSBqZ8n4/ry3Qvm2gXsgG1JN6VfM94MofeFm7PRLFz9E/6B3Ba
- FTPjLdLk7yXbaRey6xUmFJzXWS1eBkn+uXGl8QlscgNPKH+A4sS/LGx6jQkwv+3cLIpiZM/
+X-Provags-ID: V03:K1:Vo2K/VTMWkVdhVMtQeeghLxtti+GBh6O4hQNukVvpokfadoHVTp
+ tuP0189+9O2UgdrJciVhWaGC+vxjxxDNytLpolbUOn2Hy0+LULvCfW6TxcRhwv2Qd3/GT+O
+ uHBHNWbY0cG8Zaag4orBKqhprPq9+gGO4WzxmcEUsWIhKJXI1/rsn1u/lRiYFEgO51rRLMH
+ FrEnl8xbB9k41JdgSwX/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1vv3pqTA6GE=:VZsglhE509dfDsP0MfGu89
+ zkdQf3UsyVEutDa0us3kySvAb/DEMcbWhuxdzvNuQ/qiMcPUxJ0zvG0FjcJY00fi050cum63u
+ Ip8djaE28Eq6zmKYAQAorvIhy9SAaCFaFotlWHR0givUzb8ti5rKQ2CYrOP3gDKMyRtecpCw2
+ nCvLHBjO8Dj/ysYHyKLYnlFXilKPY2tLkMDlynTISKndrDDslcx499f7XvWPATTWBUFUhqJK7
+ NQnOfXHoQTuiolNsbQ7wEYwfy/OHcReAdzkIC1NCEy6sOEg3XquklkflFFEZfKto1dJ97q/ds
+ wM4EXUTDBmdmUBv7yBFN3uR1kPHib8247OvPPlsW5WvJ87WbbokKsg70TxJdddMtGi7rWV9Kk
+ RhLb1JCqK2Bs19wLMkCaM4cJ7KH+k739rgMHaTYfaNqboEc0dcE3J/vgD0tN+Rsqq6hGc65/5
+ DHai2bKEnmCXzZk7OIlO5/NZWlUbVjxCC9Nf+XpgllGVim3JlusKa0rI0RGEzUb6c88CdsSDY
+ fKO/ZY4zEoWPDT+Dwi2siZGOmqdCGABDYGF/TXMSZveHoD7M6AeHf5bTBkYqvlgU25zCbH3ag
+ KfsGwVCb1mNFBOhe2syIf+oP0fg1YN5Zdubc7kJNHIetQHnSfGqNWJjcrdSJcQNMaknR7KRCO
+ 1s5azany6QSAL0fEil6R9U/6ylOGR5HbRQJ+k2lx3kNIYY3zWmgQ4gnFg+M3Tk7n2FOFFrsGs
+ KYAas9pQhR7TygyTFnAXMQk9CxoICkZl6Bxfwilr6vS4WW7f2GlPXnpZao5YHuFLReLW4/AZU
+ OtYtWQ2va4Q71MRpqXUFeve1ckAXGdRXZ1Uj5hiqk9JcGnL6BAXaN9kflHOUAywqgvQE1m/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -100,122 +100,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
 ---
- drivers/media/i2c/adv748x/adv748x-core.c | 24 ++++++++++++------------
- drivers/media/i2c/adv748x/adv748x-csi2.c |  2 +-
- 2 files changed, 13 insertions(+), 13 deletions(-)
+ drivers/media/i2c/adv748x/adv748x.h | 32 +++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-index 23e02ff27b17..c3fb113cef62 100644
---- a/drivers/media/i2c/adv748x/adv748x-core.c
-+++ b/drivers/media/i2c/adv748x/adv748x-core.c
-@@ -623,11 +623,11 @@ static int adv748x_parse_dt(struct adv748x_state *state)
+diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+index c5245464fffc..7bc1bb0b3756 100644
+--- a/drivers/media/i2c/adv748x/adv748x.h
++++ b/drivers/media/i2c/adv748x/adv748x.h
+@@ -226,6 +226,11 @@ struct adv748x_state {
  
- 	for_each_endpoint_of_node(state->dev->of_node, ep_np) {
- 		of_graph_parse_endpoint(ep_np, &ep);
--		adv_info(state, "Endpoint %pOF on port %d", ep.local_node,
-+		adv_info(state, "Endpoint %pOF on port %d\n", ep.local_node,
- 			 ep.port);
+ #define ADV748X_IO_VID_STD		0x05
  
- 		if (ep.port >= ADV748X_PORT_MAX) {
--			adv_err(state, "Invalid endpoint %pOF on port %d",
-+			adv_err(state, "Invalid endpoint %pOF on port %d\n",
- 				ep.local_node, ep.port);
++#define ADV748X_IO_PAD_CONTROLS		0x0e
++#define ADV748X_IO_PAD_CONTROLS_TRI_AUD	BIT(5)
++#define ADV748X_IO_PAD_CONTROLS_PDN_AUD	BIT(1)
++#define ADV748X_IO_PAD_CONTROLS1	0x1d
++
+ #define ADV748X_IO_10			0x10	/* io_reg_10 */
+ #define ADV748X_IO_10_CSI4_EN		BIT(7)
+ #define ADV748X_IO_10_CSI1_EN		BIT(6)
+@@ -248,7 +253,21 @@ struct adv748x_state {
+ #define ADV748X_IO_REG_FF		0xff
+ #define ADV748X_IO_REG_FF_MAIN_RESET	0xff
  
- 			continue;
-@@ -635,7 +635,7 @@ static int adv748x_parse_dt(struct adv748x_state *state)
++/* DPLL Map */
++#define ADV748X_DPLL_MCLK_FS		0xb5
++#define ADV748X_DPLL_MCLK_FS_N_MASK	GENMASK(2, 0)
++
+ /* HDMI RX Map */
++#define ADV748X_HDMI_I2S		0x03	/* I2S mode and width */
++#define ADV748X_HDMI_I2SBITWIDTH_MASK	GENMASK(4, 0)
++#define ADV748X_HDMI_I2SOUTMODE_SHIFT	5
++#define ADV748X_HDMI_I2SOUTMODE_MASK	\
++	GENMASK(6, ADV748X_HDMI_I2SOUTMODE_SHIFT)
++#define ADV748X_I2SOUTMODE_I2S 0
++#define ADV748X_I2SOUTMODE_RIGHT_J 1
++#define ADV748X_I2SOUTMODE_LEFT_J 2
++#define ADV748X_I2SOUTMODE_SPDIF 3
++
+ #define ADV748X_HDMI_LW1		0x07	/* line width_1 */
+ #define ADV748X_HDMI_LW1_VERT_FILTER	BIT(7)
+ #define ADV748X_HDMI_LW1_DE_REGEN	BIT(5)
+@@ -260,6 +279,16 @@ struct adv748x_state {
+ #define ADV748X_HDMI_F1H1		0x0b	/* field1 height_1 */
+ #define ADV748X_HDMI_F1H1_INTERLACED	BIT(5)
  
- 		if (state->endpoints[ep.port]) {
- 			adv_err(state,
--				"Multiple port endpoints are not supported");
-+				"Multiple port endpoints are not supported\n");
- 			continue;
- 		}
++#define ADV748X_HDMI_MUTE_CTRL		0x1a
++#define ADV748X_HDMI_MUTE_CTRL_MUTE_AUDIO BIT(4)
++#define ADV748X_HDMI_MUTE_CTRL_WAIT_UNMUTE_MASK	GENMASK(3, 1)
++#define ADV748X_HDMI_MUTE_CTRL_NOT_AUTO_UNMUTE	BIT(0)
++
++#define ADV748X_HDMI_AUDIO_MUTE_SPEED	0x0f
++#define ADV748X_HDMI_AUDIO_MUTE_SPEED_MASK	GENMASK(4, 0)
++#define ADV748X_MAN_AUDIO_DL_BYPASS BIT(7)
++#define ADV748X_AUDIO_DELAY_LINE_BYPASS BIT(6)
++
+ #define ADV748X_HDMI_HFRONT_PORCH	0x20	/* hsync_front_porch_1 */
+ #define ADV748X_HDMI_HFRONT_PORCH_MASK	0x1fff
  
-@@ -702,62 +702,62 @@ static int adv748x_probe(struct i2c_client *client)
- 	/* Discover and process ports declared by the Device tree endpoints */
- 	ret = adv748x_parse_dt(state);
- 	if (ret) {
--		adv_err(state, "Failed to parse device tree");
-+		adv_err(state, "Failed to parse device tree\n");
- 		goto err_free_mutex;
- 	}
+@@ -281,6 +310,9 @@ struct adv748x_state {
+ #define ADV748X_HDMI_TMDS_1		0x51	/* hdmi_reg_51 */
+ #define ADV748X_HDMI_TMDS_2		0x52	/* hdmi_reg_52 */
  
- 	/* Configure IO Regmap region */
- 	ret = adv748x_configure_regmap(state, ADV748X_PAGE_IO);
- 	if (ret) {
--		adv_err(state, "Error configuring IO regmap region");
-+		adv_err(state, "Error configuring IO regmap region\n");
- 		goto err_cleanup_dt;
- 	}
- 
- 	ret = adv748x_identify_chip(state);
- 	if (ret) {
--		adv_err(state, "Failed to identify chip");
-+		adv_err(state, "Failed to identify chip\n");
- 		goto err_cleanup_dt;
- 	}
- 
- 	/* Configure remaining pages as I2C clients with regmap access */
- 	ret = adv748x_initialise_clients(state);
- 	if (ret) {
--		adv_err(state, "Failed to setup client regmap pages");
-+		adv_err(state, "Failed to setup client regmap pages\n");
- 		goto err_cleanup_clients;
- 	}
- 
- 	/* SW reset ADV748X to its default values */
- 	ret = adv748x_reset(state);
- 	if (ret) {
--		adv_err(state, "Failed to reset hardware");
-+		adv_err(state, "Failed to reset hardware\n");
- 		goto err_cleanup_clients;
- 	}
- 
- 	/* Initialise HDMI */
- 	ret = adv748x_hdmi_init(&state->hdmi);
- 	if (ret) {
--		adv_err(state, "Failed to probe HDMI");
-+		adv_err(state, "Failed to probe HDMI\n");
- 		goto err_cleanup_clients;
- 	}
- 
- 	/* Initialise AFE */
- 	ret = adv748x_afe_init(&state->afe);
- 	if (ret) {
--		adv_err(state, "Failed to probe AFE");
-+		adv_err(state, "Failed to probe AFE\n");
- 		goto err_cleanup_hdmi;
- 	}
- 
- 	/* Initialise TXA */
- 	ret = adv748x_csi2_init(state, &state->txa);
- 	if (ret) {
--		adv_err(state, "Failed to probe TXA");
-+		adv_err(state, "Failed to probe TXA\n");
- 		goto err_cleanup_afe;
- 	}
- 
- 	/* Initialise TXB */
- 	ret = adv748x_csi2_init(state, &state->txb);
- 	if (ret) {
--		adv_err(state, "Failed to probe TXB");
-+		adv_err(state, "Failed to probe TXB\n");
- 		goto err_cleanup_txa;
- 	}
- 
-diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
-index 2091cda50935..c43ce5d78723 100644
---- a/drivers/media/i2c/adv748x/adv748x-csi2.c
-+++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
-@@ -72,7 +72,7 @@ static int adv748x_csi2_registered(struct v4l2_subdev *sd)
- 	struct adv748x_state *state = tx->state;
- 	int ret;
- 
--	adv_dbg(state, "Registered %s (%s)", is_txa(tx) ? "TXA":"TXB",
-+	adv_dbg(state, "Registered %s (%s)\n", is_txa(tx) ? "TXA":"TXB",
- 			sd->name);
- 
- 	/*
++#define ADV748X_HDMI_REG_6D		0x6d	/* hdmi_reg_6d */
++#define ADV748X_I2S_TDM_MODE_ENABLE BIT(7)
++
+ /* HDMI RX Repeater Map */
+ #define ADV748X_REPEATER_EDID_SZ	0x70	/* primary_edid_size */
+ #define ADV748X_REPEATER_EDID_SZ_SHIFT	4
 -- 
 2.25.1.25.g9ecbe7eb18
 
