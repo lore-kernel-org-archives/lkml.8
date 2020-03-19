@@ -4,80 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A557C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D9AC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036FE20767
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C47F720767
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 01:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgCSBAw (ORCPT
+        id S1726975AbgCSBCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 21:00:52 -0400
-Received: from tartarus.angband.pl ([54.37.238.230]:40440 "EHLO
-        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgCSBAw (ORCPT
+        Wed, 18 Mar 2020 21:02:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17522 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726596AbgCSBCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 21:00:52 -0400
-Received: from [2a02:a31c:853f:a300::4] (helo=valinor.angband.pl)
-        by tartarus.angband.pl with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <kilobyte@angband.pl>)
-        id 1jEjYC-0000Dl-Ud; Thu, 19 Mar 2020 02:00:46 +0100
-Received: from kilobyte by valinor.angband.pl with local (Exim 4.93)
-        (envelope-from <kilobyte@valinor.angband.pl>)
-        id 1jEjYC-00070Z-Gi; Thu, 19 Mar 2020 02:00:44 +0100
-From:   Adam Borowski <kilobyte@angband.pl>
-To:     Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org,
-        Chris Mason <clm@fb.com>, linux-kbuild@vger.kernel.org,
-        x86@kernel.org, gregkh@linuxfoundation.org,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Nick Terrell <nickrterrell@gmail.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        mingo@kernel.org
-Date:   Thu, 19 Mar 2020 02:00:15 +0100
-Message-Id: <20200319010015.26880-1-kilobyte@angband.pl>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200318002303.977158-1-terrelln@fb.com>
-References: <20200318002303.977158-1-terrelln@fb.com>
+        Wed, 18 Mar 2020 21:02:30 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02J0X0sF017985;
+        Wed, 18 Mar 2020 21:00:20 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu932gr91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Mar 2020 21:00:20 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02J0tiV9017885;
+        Thu, 19 Mar 2020 01:00:19 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01wdc.us.ibm.com with ESMTP id 2yrpw6mp6k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 01:00:19 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02J10IBq48759194
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Mar 2020 01:00:18 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8CEE6112075;
+        Thu, 19 Mar 2020 01:00:18 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7225B112070;
+        Thu, 19 Mar 2020 01:00:18 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Mar 2020 01:00:18 +0000 (GMT)
+From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
+To:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sachinp@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v2] qtpm2: Export tpm2_get_cc_attrs_tbl for ibmvtpm driver as module
+Date:   Wed, 18 Mar 2020 21:00:17 -0400
+Message-Id: <20200319010017.738677-1-stefanb@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a02:a31c:853f:a300::4
-X-SA-Exim-Mail-From: kilobyte@angband.pl
-Subject: [PATCH v2 8/7] .gitignore: add ZSTD-compressed files
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on tartarus.angband.pl)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-18_07:2020-03-18,2020-03-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 impostorscore=0
+ clxscore=1015 spamscore=0 bulkscore=0 phishscore=0 mlxlogscore=999
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003190001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For now, that's arch/x86/boot/compressed/vmlinux.bin.zst but probably more
-will come, thus let's be consistent with all other compressors.
+From: Stefan Berger <stefanb@linux.ibm.com>
 
-Signed-off-by: Adam Borowski <kilobyte@angband.pl>
+This patch fixes the following problem when the ibmvtpm driver
+is built as a module:
+
+ERROR: modpost: "tpm2_get_cc_attrs_tbl" [drivers/char/tpm/tpm_ibmvtpm.ko] undefined!
+make[1]: *** [scripts/Makefile.modpost:94: __modpost] Error 1
+make: *** [Makefile:1298: modules] Error 2
+
+Fixes: 18b3670d79ae ("tpm: ibmvtpm: Add support for TPM2")
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
 ---
-Otherwise, "git status" will complain.
-
-
- .gitignore | 1 +
+ drivers/char/tpm/tpm2-cmd.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/.gitignore b/.gitignore
-index 72ef86a5570d..edb0191c294f 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -43,6 +43,7 @@
- *.tab.[ch]
- *.tar
- *.xz
-+*.zst
- Module.symvers
- modules.builtin
- modules.order
+diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+index 76f67b155bd5..eff1f12d981a 100644
+--- a/drivers/char/tpm/tpm2-cmd.c
++++ b/drivers/char/tpm/tpm2-cmd.c
+@@ -681,6 +681,7 @@ int tpm2_get_cc_attrs_tbl(struct tpm_chip *chip)
+ 		rc = -ENODEV;
+ 	return rc;
+ }
++EXPORT_SYMBOL_GPL(tpm2_get_cc_attrs_tbl);
+ 
+ /**
+  * tpm2_startup - turn on the TPM
 -- 
-2.26.0.rc2
+2.23.0
 
