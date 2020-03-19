@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AF5C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 010E6C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FA0208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A232137B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624465;
-	bh=rscVf6dwNB9dzq/D3Nht1OZDO62VoVsl8EagXBA8kRo=;
+	s=default; t=1584624468;
+	bh=eXhIrVyJerNTUpPKVXh2U3p0Q0MPdGuQo3G1tSmSyoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GrQFer4uQe1xOS3jJKP65E8suid0jenVyrrvyY1nYmlidB5ixPCRqv8szZeKrVm45
-	 ys0bTRtLzQ+4OgPprGzxS5arGSp/n8VYCzSkhsKVMSuoUzhQDh4BphTH9N34oAL93+
-	 CWIRzL9iCnSSpeP0FUx394iT7VowVJhZKMi7v828=
+	b=oDozPbrAcqFwO96K2N2wstDpQSqn9JE+t/4M5VHoL7TpTGAiYP6SETt7KnyR2cOpe
+	 hLHHDcAM074siCwy8rqjPDdcCoBX8BYEQSWHe9/lQuMI5h6e173yX47nfROG4smR3J
+	 DmkgblUhXtQJvdVACmUnHS9kCdAZ/fWhqzoQENC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730930AbgCSN1o (ORCPT
+        id S1730824AbgCSN1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56022 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:27:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729897AbgCSN1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:27:40 -0400
+        id S1730925AbgCSN1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:27:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4AA3208D6;
-        Thu, 19 Mar 2020 13:27:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43BA6208C3;
+        Thu, 19 Mar 2020 13:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624459;
-        bh=rscVf6dwNB9dzq/D3Nht1OZDO62VoVsl8EagXBA8kRo=;
+        s=default; t=1584624456;
+        bh=eXhIrVyJerNTUpPKVXh2U3p0Q0MPdGuQo3G1tSmSyoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ot2aDdAjkthFLpWXt5o0Q4zmp4tYZL+0Qp1lrMw4nJlBbUXPSmDO4wRNp0nDaNI+w
-         7HiGLgIgpkUmdK5Tz8w8p4ZHRq5xETdEJcDepMMdozp1zLqBae4KX8+4q/YzsGdpM4
-         Eahf9TFk3LVU/CLjITTTRwMOiWbgoSVh7EWjIm5w=
+        b=m7nqggvn5sblkejp07TFgou1O/9Xl8xG3QddW6L+ECfufuSPvUedTwGsau3NbE6Da
+         i9CTq2y52YyKhrwB9UP0D2DvGM04z3Nqmg86Sqqk1itzcBzfPkT2PW/OUfZwi7uc0p
+         PIlij31314pRP/Xb9n52UxzaZ+hwtEghEQoJHf3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 52/65] net: rmnet: fix bridge mode bugs
-Date:   Thu, 19 Mar 2020 14:04:34 +0100
-Message-Id: <20200319123942.702984088@linuxfoundation.org>
+Subject: [PATCH 5.5 51/65] net: rmnet: use upper/lower device infrastructure
+Date:   Thu, 19 Mar 2020 14:04:33 +0100
+Message-Id: <20200319123942.415957534@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -62,356 +62,195 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit d939b6d30bea1a2322bc536b12be0a7c4c2bccd7 ]
+[ Upstream commit 037f9cdf72fb8a7ff9ec2b5dd05336ec1492bdf1 ]
 
-In order to attach a bridge interface to the rmnet interface,
-"master" operation is used.
-(e.g. ip link set dummy1 master rmnet0)
-But, in the rmnet_add_bridge(), which is a callback of ->ndo_add_slave()
-doesn't register lower interface.
-So, ->ndo_del_slave() doesn't work.
-There are other problems too.
-1. It couldn't detect circular upper/lower interface relationship.
-2. It couldn't prevent stack overflow because of too deep depth
-of upper/lower interface
-3. It doesn't check the number of lower interfaces.
-4. Panics because of several reasons.
-
-The root problem of these issues is actually the same.
-So, in this patch, these all problems will be fixed.
+netdev_upper_dev_link() is useful to manage lower/upper interfaces.
+And this function internally validates looping, maximum depth.
+All or most virtual interfaces that could have a real interface
+(e.g. macsec, macvlan, ipvlan etc.) use lower/upper infrastructure.
 
 Test commands:
     modprobe rmnet
     ip link add dummy0 type dummy
-    ip link add rmnet0 link dummy0 type rmnet mux_id 1
-    ip link add dummy1 master rmnet0 type dummy
-    ip link add dummy2 master rmnet0 type dummy
-    ip link del rmnet0
-    ip link del dummy2
-    ip link del dummy1
+    ip link add rmnet1 link dummy0 type rmnet mux_id 1
+    for i in {2..100}
+    do
+        let A=$i-1
+        ip link add rmnet$i link rmnet$A type rmnet mux_id $i
+    done
+    ip link del dummy0
+
+The purpose of the test commands is to make stack overflow.
 
 Splat looks like:
-[   41.867595][ T1164] general protection fault, probably for non-canonical address 0xdffffc0000000101I
-[   41.869993][ T1164] KASAN: null-ptr-deref in range [0x0000000000000808-0x000000000000080f]
-[   41.872950][ T1164] CPU: 0 PID: 1164 Comm: ip Not tainted 5.6.0-rc1+ #447
-[   41.873915][ T1164] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   41.875161][ T1164] RIP: 0010:rmnet_unregister_bridge.isra.6+0x71/0xf0 [rmnet]
-[   41.876178][ T1164] Code: 48 89 ef 48 89 c6 5b 5d e9 fc fe ff ff e8 f7 f3 ff ff 48 8d b8 08 08 00 00 48 ba 00 7
-[   41.878925][ T1164] RSP: 0018:ffff8880c4d0f188 EFLAGS: 00010202
-[   41.879774][ T1164] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000101
-[   41.887689][ T1164] RDX: dffffc0000000000 RSI: ffffffffb8cf64f0 RDI: 0000000000000808
-[   41.888727][ T1164] RBP: ffff8880c40e4000 R08: ffffed101b3c0e3c R09: 0000000000000001
-[   41.889749][ T1164] R10: 0000000000000001 R11: ffffed101b3c0e3b R12: 1ffff110189a1e3c
-[   41.890783][ T1164] R13: ffff8880c4d0f200 R14: ffffffffb8d56160 R15: ffff8880ccc2c000
-[   41.891794][ T1164] FS:  00007f4300edc0c0(0000) GS:ffff8880d9c00000(0000) knlGS:0000000000000000
-[   41.892953][ T1164] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   41.893800][ T1164] CR2: 00007f43003bc8c0 CR3: 00000000ca53e001 CR4: 00000000000606f0
-[   41.894824][ T1164] Call Trace:
-[   41.895274][ T1164]  ? rcu_is_watching+0x2c/0x80
-[   41.895895][ T1164]  rmnet_config_notify_cb+0x1f7/0x590 [rmnet]
-[   41.896687][ T1164]  ? rmnet_unregister_bridge.isra.6+0xf0/0xf0 [rmnet]
-[   41.897611][ T1164]  ? rmnet_unregister_bridge.isra.6+0xf0/0xf0 [rmnet]
-[   41.898508][ T1164]  ? __module_text_address+0x13/0x140
-[   41.899162][ T1164]  notifier_call_chain+0x90/0x160
-[   41.899814][ T1164]  rollback_registered_many+0x660/0xcf0
-[   41.900544][ T1164]  ? netif_set_real_num_tx_queues+0x780/0x780
-[   41.901316][ T1164]  ? __lock_acquire+0xdfe/0x3de0
-[   41.901958][ T1164]  ? memset+0x1f/0x40
-[   41.902468][ T1164]  ? __nla_validate_parse+0x98/0x1ab0
-[   41.903166][ T1164]  unregister_netdevice_many.part.133+0x13/0x1b0
-[   41.903988][ T1164]  rtnl_delete_link+0xbc/0x100
-[ ... ]
+[   52.411438][ T1395] BUG: KASAN: slab-out-of-bounds in find_busiest_group+0x27e/0x2c00
+[   52.413218][ T1395] Write of size 64 at addr ffff8880c774bde0 by task ip/1395
+[   52.414841][ T1395]
+[   52.430720][ T1395] CPU: 1 PID: 1395 Comm: ip Not tainted 5.6.0-rc1+ #447
+[   52.496511][ T1395] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   52.513597][ T1395] Call Trace:
+[   52.546516][ T1395]
+[   52.558773][ T1395] Allocated by task 3171537984:
+[   52.588290][ T1395] BUG: unable to handle page fault for address: ffffffffb999e260
+[   52.589311][ T1395] #PF: supervisor read access in kernel mode
+[   52.590529][ T1395] #PF: error_code(0x0000) - not-present page
+[   52.591374][ T1395] PGD d6818067 P4D d6818067 PUD d6819063 PMD 0
+[   52.592288][ T1395] Thread overran stack, or stack corrupted
+[   52.604980][ T1395] Oops: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[   52.605856][ T1395] CPU: 1 PID: 1395 Comm: ip Not tainted 5.6.0-rc1+ #447
+[   52.611764][ T1395] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   52.621520][ T1395] RIP: 0010:stack_depot_fetch+0x10/0x30
+[   52.622296][ T1395] Code: ff e9 f9 fe ff ff 48 89 df e8 9c 1d 91 ff e9 ca fe ff ff cc cc cc cc cc cc cc 89 f8 0
+[   52.627887][ T1395] RSP: 0018:ffff8880c774bb60 EFLAGS: 00010006
+[   52.628735][ T1395] RAX: 00000000001f8880 RBX: ffff8880c774d140 RCX: 0000000000000000
+[   52.631773][ T1395] RDX: 000000000000001d RSI: ffff8880c774bb68 RDI: 0000000000003ff0
+[   52.649584][ T1395] RBP: ffffea00031dd200 R08: ffffed101b43e403 R09: ffffed101b43e403
+[   52.674857][ T1395] R10: 0000000000000001 R11: ffffed101b43e402 R12: ffff8880d900e5c0
+[   52.678257][ T1395] R13: ffff8880c774c000 R14: 0000000000000000 R15: dffffc0000000000
+[   52.694541][ T1395] FS:  00007fe867f6e0c0(0000) GS:ffff8880da000000(0000) knlGS:0000000000000000
+[   52.764039][ T1395] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   52.815008][ T1395] CR2: ffffffffb999e260 CR3: 00000000c26aa005 CR4: 00000000000606e0
+[   52.862312][ T1395] Call Trace:
+[   52.887133][ T1395] Modules linked in: dummy rmnet veth openvswitch nsh nf_conncount nf_nat nf_conntrack nf_dex
+[   52.936749][ T1395] CR2: ffffffffb999e260
+[   52.965695][ T1395] ---[ end trace 7e32ca99482dbb31 ]---
+[   52.966556][ T1395] RIP: 0010:stack_depot_fetch+0x10/0x30
+[   52.971083][ T1395] Code: ff e9 f9 fe ff ff 48 89 df e8 9c 1d 91 ff e9 ca fe ff ff cc cc cc cc cc cc cc 89 f8 0
+[   53.003650][ T1395] RSP: 0018:ffff8880c774bb60 EFLAGS: 00010006
+[   53.043183][ T1395] RAX: 00000000001f8880 RBX: ffff8880c774d140 RCX: 0000000000000000
+[   53.076480][ T1395] RDX: 000000000000001d RSI: ffff8880c774bb68 RDI: 0000000000003ff0
+[   53.093858][ T1395] RBP: ffffea00031dd200 R08: ffffed101b43e403 R09: ffffed101b43e403
+[   53.112795][ T1395] R10: 0000000000000001 R11: ffffed101b43e402 R12: ffff8880d900e5c0
+[   53.139837][ T1395] R13: ffff8880c774c000 R14: 0000000000000000 R15: dffffc0000000000
+[   53.141500][ T1395] FS:  00007fe867f6e0c0(0000) GS:ffff8880da000000(0000) knlGS:0000000000000000
+[   53.143343][ T1395] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   53.152007][ T1395] CR2: ffffffffb999e260 CR3: 00000000c26aa005 CR4: 00000000000606e0
+[   53.156459][ T1395] Kernel panic - not syncing: Fatal exception
+[   54.213570][ T1395] Shutting down cpus with NMI
+[   54.354112][ T1395] Kernel Offset: 0x33000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0x)
+[   54.355687][ T1395] Rebooting in 5 seconds..
 
-Fixes: 60d58f971c10 ("net: qualcomm: rmnet: Implement bridge mode")
+Fixes: b37f78f234bf ("net: qualcomm: rmnet: Fix crash on real dev unregistration")
 Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/qualcomm/rmnet/rmnet_config.c    | 131 +++++++++---------
- .../ethernet/qualcomm/rmnet/rmnet_config.h    |   1 +
- .../net/ethernet/qualcomm/rmnet/rmnet_vnd.c   |   8 --
- .../net/ethernet/qualcomm/rmnet/rmnet_vnd.h   |   1 -
- 4 files changed, 64 insertions(+), 77 deletions(-)
+ .../ethernet/qualcomm/rmnet/rmnet_config.c    | 35 +++++++++----------
+ 1 file changed, 16 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-index e3fbf2331b965..fbf4cbcf1a654 100644
+index 3c0e6d24d0834..e3fbf2331b965 100644
 --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
 +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-@@ -13,25 +13,6 @@
- #include "rmnet_vnd.h"
- #include "rmnet_private.h"
+@@ -61,9 +61,6 @@ static int rmnet_unregister_real_device(struct net_device *real_dev,
  
--/* Locking scheme -
-- * The shared resource which needs to be protected is realdev->rx_handler_data.
-- * For the writer path, this is using rtnl_lock(). The writer paths are
-- * rmnet_newlink(), rmnet_dellink() and rmnet_force_unassociate_device(). These
-- * paths are already called with rtnl_lock() acquired in. There is also an
-- * ASSERT_RTNL() to ensure that we are calling with rtnl acquired. For
-- * dereference here, we will need to use rtnl_dereference(). Dev list writing
-- * needs to happen with rtnl_lock() acquired for netdev_master_upper_dev_link().
-- * For the reader path, the real_dev->rx_handler_data is called in the TX / RX
-- * path. We only need rcu_read_lock() for these scenarios. In these cases,
-- * the rcu_read_lock() is held in __dev_queue_xmit() and
-- * netif_receive_skb_internal(), so readers need to use rcu_dereference_rtnl()
-- * to get the relevant information. For dev list reading, we again acquire
-- * rcu_read_lock() in rmnet_dellink() for netdev_master_upper_dev_get_rcu().
-- * We also use unregister_netdevice_many() to free all rmnet devices in
-- * rmnet_force_unassociate_device() so we dont lose the rtnl_lock() and free in
-- * same context.
-- */
+ 	kfree(port);
+ 
+-	/* release reference on real_dev */
+-	dev_put(real_dev);
 -
- /* Local Definitions and Declarations */
- 
- static const struct nla_policy rmnet_policy[IFLA_RMNET_MAX + 1] = {
-@@ -51,9 +32,10 @@ rmnet_get_port_rtnl(const struct net_device *real_dev)
- 	return rtnl_dereference(real_dev->rx_handler_data);
- }
- 
--static int rmnet_unregister_real_device(struct net_device *real_dev,
--					struct rmnet_port *port)
-+static int rmnet_unregister_real_device(struct net_device *real_dev)
- {
-+	struct rmnet_port *port = rmnet_get_port_rtnl(real_dev);
-+
- 	if (port->nr_rmnet_devs)
- 		return -EINVAL;
- 
-@@ -93,28 +75,33 @@ static int rmnet_register_real_device(struct net_device *real_dev)
+ 	netdev_dbg(real_dev, "Removed from rmnet\n");
  	return 0;
  }
- 
--static void rmnet_unregister_bridge(struct net_device *dev,
--				    struct rmnet_port *port)
-+static void rmnet_unregister_bridge(struct rmnet_port *port)
- {
--	struct rmnet_port *bridge_port;
--	struct net_device *bridge_dev;
-+	struct net_device *bridge_dev, *real_dev, *rmnet_dev;
-+	struct rmnet_port *real_port;
- 
- 	if (port->rmnet_mode != RMNET_EPMODE_BRIDGE)
- 		return;
- 
--	/* bridge slave handling */
-+	rmnet_dev = port->rmnet_dev;
- 	if (!port->nr_rmnet_devs) {
--		bridge_dev = port->bridge_ep;
-+		/* bridge device */
-+		real_dev = port->bridge_ep;
-+		bridge_dev = port->dev;
- 
--		bridge_port = rmnet_get_port_rtnl(bridge_dev);
--		bridge_port->bridge_ep = NULL;
--		bridge_port->rmnet_mode = RMNET_EPMODE_VND;
-+		real_port = rmnet_get_port_rtnl(real_dev);
-+		real_port->bridge_ep = NULL;
-+		real_port->rmnet_mode = RMNET_EPMODE_VND;
- 	} else {
-+		/* real device */
- 		bridge_dev = port->bridge_ep;
- 
--		bridge_port = rmnet_get_port_rtnl(bridge_dev);
--		rmnet_unregister_real_device(bridge_dev, bridge_port);
-+		port->bridge_ep = NULL;
-+		port->rmnet_mode = RMNET_EPMODE_VND;
+@@ -89,9 +86,6 @@ static int rmnet_register_real_device(struct net_device *real_dev)
+ 		return -EBUSY;
  	}
+ 
+-	/* hold on to real dev for MAP data */
+-	dev_hold(real_dev);
+-
+ 	for (entry = 0; entry < RMNET_MAX_LOGICAL_EP; entry++)
+ 		INIT_HLIST_HEAD(&port->muxed_ep[entry]);
+ 
+@@ -162,6 +156,10 @@ static int rmnet_newlink(struct net *src_net, struct net_device *dev,
+ 	if (err)
+ 		goto err1;
+ 
++	err = netdev_upper_dev_link(real_dev, dev, extack);
++	if (err < 0)
++		goto err2;
 +
-+	netdev_upper_dev_unlink(bridge_dev, rmnet_dev);
-+	rmnet_unregister_real_device(bridge_dev);
- }
- 
- static int rmnet_newlink(struct net *src_net, struct net_device *dev,
-@@ -161,6 +148,7 @@ static int rmnet_newlink(struct net *src_net, struct net_device *dev,
- 		goto err2;
- 
  	port->rmnet_mode = mode;
-+	port->rmnet_dev = dev;
  
  	hlist_add_head_rcu(&ep->hlnode, &port->muxed_ep[mux_id]);
+@@ -178,6 +176,8 @@ static int rmnet_newlink(struct net *src_net, struct net_device *dev,
  
-@@ -178,8 +166,9 @@ static int rmnet_newlink(struct net *src_net, struct net_device *dev,
+ 	return 0;
  
- err2:
- 	unregister_netdevice(dev);
-+	rmnet_vnd_dellink(mux_id, port, ep);
++err2:
++	unregister_netdevice(dev);
  err1:
--	rmnet_unregister_real_device(real_dev, port);
-+	rmnet_unregister_real_device(real_dev);
+ 	rmnet_unregister_real_device(real_dev, port);
  err0:
- 	kfree(ep);
- 	return err;
-@@ -188,30 +177,32 @@ static int rmnet_newlink(struct net *src_net, struct net_device *dev,
- static void rmnet_dellink(struct net_device *dev, struct list_head *head)
- {
- 	struct rmnet_priv *priv = netdev_priv(dev);
--	struct net_device *real_dev;
-+	struct net_device *real_dev, *bridge_dev;
-+	struct rmnet_port *real_port, *bridge_port;
- 	struct rmnet_endpoint *ep;
--	struct rmnet_port *port;
--	u8 mux_id;
-+	u8 mux_id = priv->mux_id;
- 
- 	real_dev = priv->real_dev;
- 
--	if (!real_dev || !rmnet_is_real_dev_registered(real_dev))
-+	if (!rmnet_is_real_dev_registered(real_dev))
- 		return;
- 
--	port = rmnet_get_port_rtnl(real_dev);
--
--	mux_id = rmnet_vnd_get_mux(dev);
-+	real_port = rmnet_get_port_rtnl(real_dev);
-+	bridge_dev = real_port->bridge_ep;
-+	if (bridge_dev) {
-+		bridge_port = rmnet_get_port_rtnl(bridge_dev);
-+		rmnet_unregister_bridge(bridge_port);
-+	}
- 
--	ep = rmnet_get_endpoint(port, mux_id);
-+	ep = rmnet_get_endpoint(real_port, mux_id);
- 	if (ep) {
- 		hlist_del_init_rcu(&ep->hlnode);
--		rmnet_unregister_bridge(dev, port);
--		rmnet_vnd_dellink(mux_id, port, ep);
-+		rmnet_vnd_dellink(mux_id, real_port, ep);
+@@ -209,33 +209,30 @@ static void rmnet_dellink(struct net_device *dev, struct list_head *head)
+ 		rmnet_vnd_dellink(mux_id, port, ep);
  		kfree(ep);
  	}
--	netdev_upper_dev_unlink(real_dev, dev);
--	rmnet_unregister_real_device(real_dev, port);
- 
 +	netdev_upper_dev_unlink(real_dev, dev);
-+	rmnet_unregister_real_device(real_dev);
+ 	rmnet_unregister_real_device(real_dev, port);
+ 
  	unregister_netdevice_queue(dev, head);
  }
  
-@@ -223,23 +214,23 @@ static void rmnet_force_unassociate_device(struct net_device *real_dev)
+-static void rmnet_force_unassociate_device(struct net_device *dev)
++static void rmnet_force_unassociate_device(struct net_device *real_dev)
+ {
+-	struct net_device *real_dev = dev;
+ 	struct hlist_node *tmp_ep;
+ 	struct rmnet_endpoint *ep;
+ 	struct rmnet_port *port;
  	unsigned long bkt_ep;
  	LIST_HEAD(list);
  
--	ASSERT_RTNL();
+-	if (!rmnet_is_real_dev_registered(real_dev))
+-		return;
 -
- 	port = rmnet_get_port_rtnl(real_dev);
+ 	ASSERT_RTNL();
  
--	rmnet_unregister_bridge(real_dev, port);
+-	port = rmnet_get_port_rtnl(dev);
++	port = rmnet_get_port_rtnl(real_dev);
+ 
+-	rmnet_unregister_bridge(dev, port);
++	rmnet_unregister_bridge(real_dev, port);
+ 
+ 	hash_for_each_safe(port->muxed_ep, bkt_ep, tmp_ep, ep, hlnode) {
++		netdev_upper_dev_unlink(real_dev, ep->egress_dev);
+ 		unregister_netdevice_queue(ep->egress_dev, &list);
+ 		rmnet_vnd_dellink(ep->mux_id, port, ep);
 -
--	hash_for_each_safe(port->muxed_ep, bkt_ep, tmp_ep, ep, hlnode) {
--		netdev_upper_dev_unlink(real_dev, ep->egress_dev);
--		unregister_netdevice_queue(ep->egress_dev, &list);
--		rmnet_vnd_dellink(ep->mux_id, port, ep);
--		hlist_del_init_rcu(&ep->hlnode);
--		kfree(ep);
-+	if (port->nr_rmnet_devs) {
-+		/* real device */
-+		rmnet_unregister_bridge(port);
-+		hash_for_each_safe(port->muxed_ep, bkt_ep, tmp_ep, ep, hlnode) {
-+			unregister_netdevice_queue(ep->egress_dev, &list);
-+			netdev_upper_dev_unlink(real_dev, ep->egress_dev);
-+			rmnet_vnd_dellink(ep->mux_id, port, ep);
-+			hlist_del_init_rcu(&ep->hlnode);
-+			kfree(ep);
-+		}
-+		rmnet_unregister_real_device(real_dev);
-+		unregister_netdevice_many(&list);
-+	} else {
-+		rmnet_unregister_bridge(port);
+ 		hlist_del_init_rcu(&ep->hlnode);
+ 		kfree(ep);
  	}
--
--	unregister_netdevice_many(&list);
--
--	rmnet_unregister_real_device(real_dev, port);
- }
- 
+@@ -248,15 +245,15 @@ static void rmnet_force_unassociate_device(struct net_device *dev)
  static int rmnet_config_notify_cb(struct notifier_block *nb,
-@@ -418,6 +409,9 @@ int rmnet_add_bridge(struct net_device *rmnet_dev,
- 	if (port->nr_rmnet_devs > 1)
- 		return -EINVAL;
- 
-+	if (port->rmnet_mode != RMNET_EPMODE_VND)
-+		return -EINVAL;
-+
- 	if (rmnet_is_real_dev_registered(slave_dev))
- 		return -EBUSY;
- 
-@@ -425,9 +419,17 @@ int rmnet_add_bridge(struct net_device *rmnet_dev,
- 	if (err)
- 		return -EBUSY;
- 
-+	err = netdev_master_upper_dev_link(slave_dev, rmnet_dev, NULL, NULL,
-+					   extack);
-+	if (err) {
-+		rmnet_unregister_real_device(slave_dev);
-+		return err;
-+	}
-+
- 	slave_port = rmnet_get_port_rtnl(slave_dev);
- 	slave_port->rmnet_mode = RMNET_EPMODE_BRIDGE;
- 	slave_port->bridge_ep = real_dev;
-+	slave_port->rmnet_dev = rmnet_dev;
- 
- 	port->rmnet_mode = RMNET_EPMODE_BRIDGE;
- 	port->bridge_ep = slave_dev;
-@@ -439,16 +441,9 @@ int rmnet_add_bridge(struct net_device *rmnet_dev,
- int rmnet_del_bridge(struct net_device *rmnet_dev,
- 		     struct net_device *slave_dev)
+ 				  unsigned long event, void *data)
  {
--	struct rmnet_priv *priv = netdev_priv(rmnet_dev);
--	struct net_device *real_dev = priv->real_dev;
--	struct rmnet_port *port, *slave_port;
--
--	port = rmnet_get_port_rtnl(real_dev);
--	port->rmnet_mode = RMNET_EPMODE_VND;
--	port->bridge_ep = NULL;
-+	struct rmnet_port *port = rmnet_get_port_rtnl(slave_dev);
+-	struct net_device *dev = netdev_notifier_info_to_dev(data);
++	struct net_device *real_dev = netdev_notifier_info_to_dev(data);
  
--	slave_port = rmnet_get_port_rtnl(slave_dev);
--	rmnet_unregister_real_device(slave_dev, slave_port);
-+	rmnet_unregister_bridge(port);
+-	if (!dev)
++	if (!rmnet_is_real_dev_registered(real_dev))
+ 		return NOTIFY_DONE;
  
- 	netdev_dbg(slave_dev, "removed from rmnet as slave\n");
- 	return 0;
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h
-index 0d568dcfd65a1..be515982d6286 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.h
-@@ -28,6 +28,7 @@ struct rmnet_port {
- 	u8 rmnet_mode;
- 	struct hlist_head muxed_ep[RMNET_MAX_LOGICAL_EP];
- 	struct net_device *bridge_ep;
-+	struct net_device *rmnet_dev;
- };
+ 	switch (event) {
+ 	case NETDEV_UNREGISTER:
+-		netdev_dbg(dev, "Kernel unregister\n");
+-		rmnet_force_unassociate_device(dev);
++		netdev_dbg(real_dev, "Kernel unregister\n");
++		rmnet_force_unassociate_device(real_dev);
+ 		break;
  
- extern struct rtnl_link_ops rmnet_link_ops;
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c
-index 509dfc895a33e..26ad40f19c64c 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.c
-@@ -266,14 +266,6 @@ int rmnet_vnd_dellink(u8 id, struct rmnet_port *port,
- 	return 0;
+ 	default:
+@@ -477,8 +474,8 @@ static int __init rmnet_init(void)
+ 
+ static void __exit rmnet_exit(void)
+ {
+-	unregister_netdevice_notifier(&rmnet_dev_notifier);
+ 	rtnl_link_unregister(&rmnet_link_ops);
++	unregister_netdevice_notifier(&rmnet_dev_notifier);
  }
  
--u8 rmnet_vnd_get_mux(struct net_device *rmnet_dev)
--{
--	struct rmnet_priv *priv;
--
--	priv = netdev_priv(rmnet_dev);
--	return priv->mux_id;
--}
--
- int rmnet_vnd_do_flow_control(struct net_device *rmnet_dev, int enable)
- {
- 	netdev_dbg(rmnet_dev, "Setting VND TX queue state to %d\n", enable);
-diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h b/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h
-index 54cbaf3c3bc43..14d77c709d4ad 100644
---- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h
-+++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_vnd.h
-@@ -16,6 +16,5 @@ int rmnet_vnd_dellink(u8 id, struct rmnet_port *port,
- 		      struct rmnet_endpoint *ep);
- void rmnet_vnd_rx_fixup(struct sk_buff *skb, struct net_device *dev);
- void rmnet_vnd_tx_fixup(struct sk_buff *skb, struct net_device *dev);
--u8 rmnet_vnd_get_mux(struct net_device *rmnet_dev);
- void rmnet_vnd_setup(struct net_device *dev);
- #endif /* _RMNET_VND_H_ */
+ module_init(rmnet_init)
 -- 
 2.20.1
 
