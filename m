@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D326C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AB4C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20E620724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240B720722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbgCSJS6 (ORCPT
+        id S1727801AbgCSJTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:18:58 -0400
-Received: from 8bytes.org ([81.169.241.247]:51930 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:19:01 -0400
+Received: from 8bytes.org ([81.169.241.247]:52110 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727304AbgCSJOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727299AbgCSJOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 05:14:32 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 8FB6C4BB; Thu, 19 Mar 2020 10:14:20 +0100 (CET)
+        id 072A046A; Thu, 19 Mar 2020 10:14:19 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +36,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 24/70] x86/fpu: Move xgetbv()/xsetbv() into separate header
-Date:   Thu, 19 Mar 2020 10:13:21 +0100
-Message-Id: <20200319091407.1481-25-joro@8bytes.org>
+Subject: [PATCH 21/70] x86/boot/compressed/64: Add function to map a page unencrypted
+Date:   Thu, 19 Mar 2020 10:13:18 +0100
+Message-Id: <20200319091407.1481-22-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -48,104 +49,171 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The xgetbv() function is needed in pre-decompression boot code, but
-asm/fpu/internal.h can't be included there directly. Doing so opens
-the door to include-hell due to various include-magic in
-boot/compressed/misc.h.
-
-Avoid that by moving xgetbv()/xsetbv() to a separate header file and
-include this instead.
+This function is needed to map the GHCB for SEV-ES guests. The GHCB is
+used for communication with the hypervisor, so its content must not be
+encrypted.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/fpu/internal.h | 29 +-------------------------
- arch/x86/include/asm/fpu/xcr.h      | 32 +++++++++++++++++++++++++++++
- 2 files changed, 33 insertions(+), 28 deletions(-)
- create mode 100644 arch/x86/include/asm/fpu/xcr.h
+ arch/x86/boot/compressed/ident_map_64.c | 125 ++++++++++++++++++++++++
+ arch/x86/boot/compressed/misc.h         |   1 +
+ 2 files changed, 126 insertions(+)
 
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 44c48e34d799..795fc049988e 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -19,6 +19,7 @@
- #include <asm/user.h>
- #include <asm/fpu/api.h>
- #include <asm/fpu/xstate.h>
-+#include <asm/fpu/xcr.h>
- #include <asm/cpufeature.h>
- #include <asm/trace/fpu.h>
- 
-@@ -614,32 +615,4 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
- 	}
- 	__write_pkru(pkru_val);
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index feb180cced28..04a5ff4bda66 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -26,6 +26,7 @@
+ #include <asm/init.h>
+ #include <asm/pgtable.h>
+ #include <asm/trap_defs.h>
++#include <asm/cmpxchg.h>
+ /* Use the static base for this part of the boot process */
+ #undef __PAGE_OFFSET
+ #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+@@ -157,6 +158,130 @@ void initialize_identity_maps(void)
+ 	write_cr3(top_level_pgt);
  }
--
--/*
-- * MXCSR and XCR definitions:
-- */
--
--extern unsigned int mxcsr_feature_mask;
--
--#define XCR_XFEATURE_ENABLED_MASK	0x00000000
--
--static inline u64 xgetbv(u32 index)
--{
--	u32 eax, edx;
--
--	asm volatile(".byte 0x0f,0x01,0xd0" /* xgetbv */
--		     : "=a" (eax), "=d" (edx)
--		     : "c" (index));
--	return eax + ((u64)edx << 32);
--}
--
--static inline void xsetbv(u32 index, u64 value)
--{
--	u32 eax = value;
--	u32 edx = value >> 32;
--
--	asm volatile(".byte 0x0f,0x01,0xd1" /* xsetbv */
--		     : : "a" (eax), "d" (edx), "c" (index));
--}
--
- #endif /* _ASM_X86_FPU_INTERNAL_H */
-diff --git a/arch/x86/include/asm/fpu/xcr.h b/arch/x86/include/asm/fpu/xcr.h
-new file mode 100644
-index 000000000000..91ee45712737
---- /dev/null
-+++ b/arch/x86/include/asm/fpu/xcr.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_FPU_XCR_H
-+#define _ASM_X86_FPU_XCR_H
-+
-+/*
-+ * MXCSR and XCR definitions:
-+ */
-+
-+extern unsigned int mxcsr_feature_mask;
-+
-+#define XCR_XFEATURE_ENABLED_MASK	0x00000000
-+
-+static inline u64 xgetbv(u32 index)
+ 
++static pte_t *split_large_pmd(struct x86_mapping_info *info,
++			      pmd_t *pmdp, unsigned long __address)
 +{
-+	u32 eax, edx;
++	unsigned long page_flags;
++	unsigned long address;
++	pte_t *pte;
++	pmd_t pmd;
++	int i;
 +
-+	asm volatile(".byte 0x0f,0x01,0xd0" /* xgetbv */
-+		     : "=a" (eax), "=d" (edx)
-+		     : "c" (index));
-+	return eax + ((u64)edx << 32);
++	pte = (pte_t *)info->alloc_pgt_page(info->context);
++	if (!pte)
++		return NULL;
++
++	address     = __address & PMD_MASK;
++	/* No large page - clear PSE flag */
++	page_flags  = info->page_flag & ~_PAGE_PSE;
++
++	/* Populate the PTEs */
++	for (i = 0; i < PTRS_PER_PMD; i++) {
++		set_pte(&pte[i], __pte(address | page_flags));
++		address += PAGE_SIZE;
++	}
++
++	/*
++	 * Ideally we need to clear the large PMD first and do a TLB
++	 * flush before we write the new PMD. But the 2M range of the
++	 * PMD might contain the code we execute and/or the stack
++	 * we are on, so we can't do that. But that should be safe here
++	 * because we are going from large to small mappings and we are
++	 * also the only user of the page-table, so there is no chance
++	 * of a TLB multihit.
++	 */
++	pmd = __pmd((unsigned long)pte | info->kernpg_flag);
++	set_pmd(pmdp, pmd);
++	/* Flush TLB to establish the new PMD */
++	write_cr3(top_level_pgt);
++
++	return pte + pte_index(__address);
 +}
 +
-+static inline void xsetbv(u32 index, u64 value)
++static void clflush_page(unsigned long address)
 +{
-+	u32 eax = value;
-+	u32 edx = value >> 32;
++	unsigned int flush_size;
++	char *cl, *start, *end;
 +
-+	asm volatile(".byte 0x0f,0x01,0xd1" /* xsetbv */
-+		     : : "a" (eax), "d" (edx), "c" (index));
++	/*
++	 * Hardcode cl-size to 64 - CPUID can't be used here because that might
++	 * cause another #VC exception and the GHCB is not ready to use yet.
++	 */
++	flush_size = 64;
++	start      = (char *)(address & PAGE_MASK);
++	end        = start + PAGE_SIZE;
++
++	/*
++	 * First make sure there are no pending writes on the cache-lines to
++	 * flush.
++	 */
++	asm volatile("mfence" : : : "memory");
++
++	for (cl = start; cl != end; cl += flush_size)
++		clflush(cl);
 +}
 +
-+#endif /* _ASM_X86_FPU_XCR_H */
++static int __set_page_decrypted(struct x86_mapping_info *info,
++				unsigned long address)
++{
++	unsigned long scratch, *target;
++	pgd_t *pgdp = (pgd_t *)top_level_pgt;
++	p4d_t *p4dp;
++	pud_t *pudp;
++	pmd_t *pmdp;
++	pte_t *ptep, pte;
++
++	/*
++	 * First make sure there is a PMD mapping for 'address'.
++	 * It should already exist, but keep things generic.
++	 *
++	 * To map the page just read from it and fault it in if there is no
++	 * mapping yet. add_identity_map() can't be called here because that
++	 * would unconditionally map the address on PMD level, destroying any
++	 * PTE-level mappings that might already exist.  Also do something
++	 * useless with 'scratch' so the access won't be optimized away.
++	 */
++	target = (unsigned long *)address;
++	scratch = *target;
++	arch_cmpxchg(target, scratch, scratch);
++
++	/*
++	 * The page is mapped at least with PMD size - so skip checks and walk
++	 * directly to the PMD.
++	 */
++	p4dp = p4d_offset(pgdp, address);
++	pudp = pud_offset(p4dp, address);
++	pmdp = pmd_offset(pudp, address);
++
++	if (pmd_large(*pmdp))
++		ptep = split_large_pmd(info, pmdp, address);
++	else
++		ptep = pte_offset_kernel(pmdp, address);
++
++	if (!ptep)
++		return -ENOMEM;
++
++	/* Clear encryption flag and write new pte */
++	pte = pte_clear_flags(*ptep, _PAGE_ENC);
++	set_pte(ptep, pte);
++
++	/* Flush TLB to map the page unencrypted */
++	write_cr3(top_level_pgt);
++
++	/*
++	 * Changing encryption attributes of a page requires to flush it from
++	 * the caches.
++	 */
++	clflush_page(address);
++
++	return 0;
++}
++
++int set_page_decrypted(unsigned long address)
++{
++	return __set_page_decrypted(&mapping_info, address);
++}
++
+ static void pf_error(unsigned long error_code, unsigned long address,
+ 		     struct pt_regs *regs)
+ {
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 0e3508c5c15c..42f68a858a35 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -98,6 +98,7 @@ static inline void choose_random_location(unsigned long input,
+ #endif
+ 
+ #ifdef CONFIG_X86_64
++extern int set_page_decrypted(unsigned long address);
+ extern unsigned char _pgtable[];
+ #endif
+ 
 -- 
 2.17.1
 
