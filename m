@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C07C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AFCC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE702098B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 748F9214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624189;
-	bh=+X0ujDjCuGYkvq48UVYFgVt4Eue6hH+34n23JUj3498=;
+	s=default; t=1584624192;
+	bh=M3tpY7xARF8p9JJiyj/NDGxEIXft6hv4AOv3H5Ace84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1pSTpSb++3XvBxOZ+xijx2qJ7RLl8PH5cOoNhqzBRne7Lzyz4tTmC9KNaw1PQXBvP
-	 OpJ6Nl464UT2i2kY2wzM7ICovIrH92GCFYHChLsa6VujxZ4PPWt+lMXLFeDds8PVmC
-	 oT7YokC6cgUlM/jGL0GSfN7wc3w3OmuP8vHeZZ6k=
+	b=GHWtMZSSZi8qeWW0iosLVLdYpCmtX05vsO1RqBjg/AJ0O7ISzVXNBIavDelzMvzjU
+	 KikSw/qKXP8rx9IDx7dBMxrtD7wdjZGswKvmGXHun1j9JWVNayd65lcnk4nuHD56XX
+	 B+aEsr5/stptijoBkNbwGlGe1Uj51gwzIhUBFZ8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbgCSNXI (ORCPT
+        id S1729803AbgCSNXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:23:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48796 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:23:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730125AbgCSNXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:23:02 -0400
+        id S1730306AbgCSNXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:23:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70811206D7;
-        Thu, 19 Mar 2020 13:23:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1238206D7;
+        Thu, 19 Mar 2020 13:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624181;
-        bh=+X0ujDjCuGYkvq48UVYFgVt4Eue6hH+34n23JUj3498=;
+        s=default; t=1584624187;
+        bh=M3tpY7xARF8p9JJiyj/NDGxEIXft6hv4AOv3H5Ace84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cbkDbhPIOcim++rx9vBL9c34phdE+baiQUuxnFlfjFVGUNWPNF4QCDAfrR5sQ7Isc
-         nG3ool/SwN4nV+4JsyIjPBnQwYMJg/hRIHkqu9mXtnBUWMTONRWUDj21rY+zC5pzq+
-         Wb97FofcF9uxLpKI4FX8D6nEJP3osHwrpt5ssk3g=
+        b=bR4ZUeQ1wJHOKYKVVdevZxFl+1heqsLb3ClPuHGh61FXmpgNMXyVkDOXC+qRQTba7
+         FFkCNZDE7dQtJhBv69LvmaLa1iS9AIDgExXoTkmXLmkGFD08IOVVLLfmPOPDUEZk9W
+         GYeaVbmllO1OSsMNErMRWJ2PiAzk79LjueLt1EGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 35/60] kbuild: add dt_binding_check to PHONY in a correct place
-Date:   Thu, 19 Mar 2020 14:04:13 +0100
-Message-Id: <20200319123930.886063941@linuxfoundation.org>
+        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 37/60] slip: not call free_netdev before rtnl_unlock in slip_open
+Date:   Thu, 19 Mar 2020 14:04:15 +0100
+Message-Id: <20200319123931.463942483@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123919.441695203@linuxfoundation.org>
 References: <20200319123919.441695203@linuxfoundation.org>
@@ -59,44 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: yangerkun <yangerkun@huawei.com>
 
-[ Upstream commit c473a8d03ea8e03ca9d649b0b6d72fbcf6212c05 ]
+[ Upstream commit f596c87005f7b1baeb7d62d9a9e25d68c3dfae10 ]
 
-The dt_binding_check is added to PHONY, but it is invisible when
-$(dtstree) is empty. So, it is not specified as phony for
-ARCH=x86 etc.
+As the description before netdev_run_todo, we cannot call free_netdev
+before rtnl_unlock, fix it by reorder the code.
 
-Add it to PHONY outside the ifneq ... endif block.
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+Reviewed-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/slip/slip.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Makefile b/Makefile
-index b308b84c069c8..cae04a373f862 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1237,7 +1237,7 @@ ifneq ($(dtstree),)
- %.dtb: include/config/kernel.release scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+diff --git a/drivers/net/slip/slip.c b/drivers/net/slip/slip.c
+index 61d7e0d1d77db..8e56a41dd7585 100644
+--- a/drivers/net/slip/slip.c
++++ b/drivers/net/slip/slip.c
+@@ -863,7 +863,10 @@ static int slip_open(struct tty_struct *tty)
+ 	tty->disc_data = NULL;
+ 	clear_bit(SLF_INUSE, &sl->flags);
+ 	sl_free_netdev(sl->dev);
++	/* do not call free_netdev before rtnl_unlock */
++	rtnl_unlock();
+ 	free_netdev(sl->dev);
++	return err;
  
--PHONY += dtbs dtbs_install dtbs_check dt_binding_check
-+PHONY += dtbs dtbs_install dtbs_check
- dtbs dtbs_check: include/config/kernel.release scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree)
- 
-@@ -1257,6 +1257,7 @@ PHONY += scripts_dtc
- scripts_dtc: scripts_basic
- 	$(Q)$(MAKE) $(build)=scripts/dtc
- 
-+PHONY += dt_binding_check
- dt_binding_check: scripts_dtc
- 	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
- 
+ err_exit:
+ 	rtnl_unlock();
 -- 
 2.20.1
 
