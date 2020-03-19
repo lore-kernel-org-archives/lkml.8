@@ -2,54 +2,54 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63912C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A0C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C20421655
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B5CB212CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623338;
-	bh=wOxoSKoBYaXoDbRzYnXeW5ePbgwzTF8u6cjic2D4jGs=;
+	s=default; t=1584623344;
+	bh=qtcfD6FTjBWYW6gIAT7Wx9leaZlkgDsnGRHNqIN1es8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cdYbh6h0CYqFPiJC3VYDu8qlKuUks+cGHsoR2hzy1mRJIPuQ/zSWoH9cJ7OhwuhO+
-	 DnRKK5hNq7ZYOBs8hzV1rSBXC8112DH7J9wlvZJyLK08ZV4MuXfeR9f3csn1XTmPm7
-	 ZMjUO6ukJIIuMpeF/g2+dnRgh03msqyZhJkm+/7o=
+	b=i2TDuc9dDLtGyNXVNGkm/ASyutqz8SErC4sHATGFFHElO0FPjfAtBDNNz1eeIj4Mi
+	 MJlDiFeNaQ2zme4qc3hM8Qm9A6vHc57gcmzhLRdot5ygyVDmpmApcFv6AAlyN5aO21
+	 iIECQNsjlB/442RHxR4N5jMZWpDyXOgiSOpcuCO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgCSNI4 (ORCPT
+        id S1728251AbgCSNJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:08:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53194 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:09:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728211AbgCSNIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:08:53 -0400
+        id S1728229AbgCSNI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:08:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5C28212CC;
-        Thu, 19 Mar 2020 13:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFED420722;
+        Thu, 19 Mar 2020 13:08:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623333;
-        bh=wOxoSKoBYaXoDbRzYnXeW5ePbgwzTF8u6cjic2D4jGs=;
+        s=default; t=1584623338;
+        bh=qtcfD6FTjBWYW6gIAT7Wx9leaZlkgDsnGRHNqIN1es8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RkuEyR/YdenX3yDQ/v0BwhlgEJ8CRRt9qoIDgpnlps/za95yOJ1HmkrWLLTo2knMq
-         hyoXO1z2tP74CWlDFDHbApVGvxnKk8eeJCR8AZa4wGdhucHoEW9MW7LbvSre0wA/ZD
-         Ru6KpRH3q4IXrTHmOWabVvJAc2nM15ZPhs30vWFI=
+        b=QjfeDpYXkKW1wLlu7/f4fuDQDLB/zYvxY9sxsmWXChdVt1lpRYjNgbRe6jaBLi8Bn
+         on4lipQcfHtJ0+InmaVmuDRRhKozoBYeBb7Y1jwRfoak/Q52tnUcmUelk6gQs+ZNjn
+         0Qub4pW3WqfLP1PDzAO4EZTVuMIJjcxPd5Gbq3Pk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com,
-        syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com,
-        Sven Eckelmann <sven@narfation.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.4 85/93] batman-adv: Dont schedule OGM for disabled interface
-Date:   Thu, 19 Mar 2020 14:00:29 +0100
-Message-Id: <20200319123951.445806441@linuxfoundation.org>
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 87/93] net: ks8851-ml: Fix IRQ handling and locking
+Date:   Thu, 19 Mar 2020 14:00:31 +0100
+Message-Id: <20200319123952.041594546@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -62,41 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Marek Vasut <marex@denx.de>
 
-A transmission scheduling for an interface which is currently dropped by
-batadv_iv_ogm_iface_disable could still be in progress. The B.A.T.M.A.N. V
-is simply cancelling the workqueue item in an synchronous way but this is
-not possible with B.A.T.M.A.N. IV because the OGM submissions are
-intertwined.
+[ Upstream commit 44343418d0f2f623cb9da6f5000df793131cbe3b ]
 
-Instead it has to stop submitting the OGM when it detect that the buffer
-pointer is set to NULL.
+The KS8851 requires that packet RX and TX are mutually exclusive.
+Currently, the driver hopes to achieve this by disabling interrupt
+from the card by writing the card registers and by disabling the
+interrupt on the interrupt controller. This however is racy on SMP.
 
-Reported-by: syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com
-Reported-by: syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com
-Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Cc: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Replace this approach by expanding the spinlock used around the
+ks_start_xmit() TX path to ks_irq() RX path to assure true mutual
+exclusion and remove the interrupt enabling/disabling, which is
+now not needed anymore. Furthermore, disable interrupts also in
+ks_net_stop(), which was missing before.
+
+Note that a massive improvement here would be to re-use the KS8851
+driver approach, which is to move the TX path into a worker thread,
+interrupt handling to threaded interrupt, and synchronize everything
+with mutexes, but that would be a much bigger rework, for a separate
+patch.
+
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/bat_iv_ogm.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -944,6 +944,10 @@ static void batadv_iv_ogm_schedule_buff(
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index d94e151cff12b..d4747caf1e7cc 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -831,14 +831,17 @@ static irqreturn_t ks_irq(int irq, void *pw)
+ {
+ 	struct net_device *netdev = pw;
+ 	struct ks_net *ks = netdev_priv(netdev);
++	unsigned long flags;
+ 	u16 status;
  
- 	lockdep_assert_held(&hard_iface->bat_iv.ogm_buff_mutex);
++	spin_lock_irqsave(&ks->statelock, flags);
+ 	/*this should be the first in IRQ handler */
+ 	ks_save_cmd_reg(ks);
  
-+	/* interface already disabled by batadv_iv_ogm_iface_disable */
-+	if (!*ogm_buff)
-+		return;
-+
- 	primary_if = batadv_primary_if_get_selected(bat_priv);
+ 	status = ks_rdreg16(ks, KS_ISR);
+ 	if (unlikely(!status)) {
+ 		ks_restore_cmd_reg(ks);
++		spin_unlock_irqrestore(&ks->statelock, flags);
+ 		return IRQ_NONE;
+ 	}
  
- 	if (hard_iface == primary_if) {
+@@ -864,6 +867,7 @@ static irqreturn_t ks_irq(int irq, void *pw)
+ 		ks->netdev->stats.rx_over_errors++;
+ 	/* this should be the last in IRQ handler*/
+ 	ks_restore_cmd_reg(ks);
++	spin_unlock_irqrestore(&ks->statelock, flags);
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -933,6 +937,7 @@ static int ks_net_stop(struct net_device *netdev)
+ 
+ 	/* shutdown RX/TX QMU */
+ 	ks_disable_qmu(ks);
++	ks_disable_int(ks);
+ 
+ 	/* set powermode to soft power down to save power */
+ 	ks_set_powermode(ks, PMECR_PM_SOFTDOWN);
+@@ -989,10 +994,9 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	netdev_tx_t retv = NETDEV_TX_OK;
+ 	struct ks_net *ks = netdev_priv(netdev);
++	unsigned long flags;
+ 
+-	disable_irq(netdev->irq);
+-	ks_disable_int(ks);
+-	spin_lock(&ks->statelock);
++	spin_lock_irqsave(&ks->statelock, flags);
+ 
+ 	/* Extra space are required:
+ 	*  4 byte for alignment, 4 for status/length, 4 for CRC
+@@ -1006,9 +1010,7 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 		dev_kfree_skb(skb);
+ 	} else
+ 		retv = NETDEV_TX_BUSY;
+-	spin_unlock(&ks->statelock);
+-	ks_enable_int(ks);
+-	enable_irq(netdev->irq);
++	spin_unlock_irqrestore(&ks->statelock, flags);
+ 	return retv;
+ }
+ 
+-- 
+2.20.1
+
 
 
