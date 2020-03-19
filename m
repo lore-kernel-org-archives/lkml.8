@@ -2,133 +2,100 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16642C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E434C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEB592145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MhELTk5h"
+	by mail.kernel.org (Postfix) with ESMTP id 1BC3E20789
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:13:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584623584;
+	bh=r1ArD9mjzCiyxRrZZath0sRKbnKgk5N6rmHiLKxfqZA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jR/fSfSmajVqZCScUVEnZYHZl7oiwf+drxxF7wTs2CDN7v6Y8+q2oWuCWRgDXLmZr
+	 1OiU0AnFCHVKqEFNUovxVYRwT79ZLr549YWWDZFS2XiThxJ+k+HHAhEQ3o6CSJPYoF
+	 udshZ3uUu3RHZH7KRjtxpLAs7/xtQqlapoIFdmQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgCSNM7 (ORCPT
+        id S1729064AbgCSNNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:12:59 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:58088 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729026AbgCSNM4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:13:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729034AbgCSNM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 19 Mar 2020 09:12:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584623575;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JlnwwL4csnhrfpFsCAW7BWsCLUc5f6XxMI4ECvmcmKg=;
-        b=MhELTk5hyA655r8QYFw8AxHpPnxSJsnuaZdWgTSs4HjnU4mbZUA5uJiAcHjOhuvHIG6XIM
-        XXa4jPXMxvApYaeXiqFUZDD84BS+5v6T6rpRMSpnlkg50EJOL2aXQiOeNHCAOr4Wcvqr6q
-        KVbOkdquh5AomQNdwqEkAdaysyYMrA0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-zo0jgjcNNi6uvY7zDpcOsg-1; Thu, 19 Mar 2020 09:12:51 -0400
-X-MC-Unique: zo0jgjcNNi6uvY7zDpcOsg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5394F801E74;
-        Thu, 19 Mar 2020 13:12:49 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-197.ams2.redhat.com [10.36.114.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C1CF60BF7;
-        Thu, 19 Mar 2020 13:12:43 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-hyperv@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 4/8] powernv/memtrace: always online added memory blocks
-Date:   Thu, 19 Mar 2020 14:12:17 +0100
-Message-Id: <20200319131221.14044-5-david@redhat.com>
-In-Reply-To: <20200319131221.14044-1-david@redhat.com>
-References: <20200319131221.14044-1-david@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 843C721556;
+        Thu, 19 Mar 2020 13:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584623576;
+        bh=r1ArD9mjzCiyxRrZZath0sRKbnKgk5N6rmHiLKxfqZA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aj30V/U9lUvjHXd2aii0/TjAy4jbdvV5oIXIrVhkIouWksEwUXcFcPbU2MOnqGJXQ
+         o53A9imY/tnK6WOn8JCDw065qEabmFCTSI3OeQ3hJBmzs5iINapkFN1Z3Ys97L70Eh
+         HonB14WS1uqySQpYyzcF/xyy56AaCWRYxDyOQx5k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com,
+        syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com,
+        Sven Eckelmann <sven@narfation.org>,
+        Hillf Danton <hdanton@sina.com>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.9 74/90] batman-adv: Dont schedule OGM for disabled interface
+Date:   Thu, 19 Mar 2020 14:00:36 +0100
+Message-Id: <20200319123951.301775876@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
+References: <20200319123928.635114118@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's always try to online the re-added memory blocks. In case add_memory=
-()
-already onlined the added memory blocks, the first device_online() call
-will fail and stop processing the remaining memory blocks.
+From: Sven Eckelmann <sven@narfation.org>
 
-This avoids manually having to check memhp_auto_online.
+A transmission scheduling for an interface which is currently dropped by
+batadv_iv_ogm_iface_disable could still be in progress. The B.A.T.M.A.N. V
+is simply cancelling the workqueue item in an synchronous way but this is
+not possible with B.A.T.M.A.N. IV because the OGM submissions are
+intertwined.
 
-Note: PPC always onlines all hotplugged memory directly from the kernel
-as well - something that is handled by user space on other
-architectures.
+Instead it has to stop submitting the OGM when it detect that the buffer
+pointer is set to NULL.
 
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Reported-by: syzbot+a98f2016f40b9cd3818a@syzkaller.appspotmail.com
+Reported-by: syzbot+ac36b6a33c28a491e929@syzkaller.appspotmail.com
+Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Cc: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/platforms/powernv/memtrace.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ net/batman-adv/bat_iv_ogm.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/platforms/powernv/memtrace.c b/arch/powerpc/pla=
-tforms/powernv/memtrace.c
-index d6d64f8718e6..13b369d2cc45 100644
---- a/arch/powerpc/platforms/powernv/memtrace.c
-+++ b/arch/powerpc/platforms/powernv/memtrace.c
-@@ -231,16 +231,10 @@ static int memtrace_online(void)
- 			continue;
- 		}
-=20
--		/*
--		 * If kernel isn't compiled with the auto online option
--		 * we need to online the memory ourselves.
--		 */
--		if (!memhp_auto_online) {
--			lock_device_hotplug();
--			walk_memory_blocks(ent->start, ent->size, NULL,
--					   online_mem_block);
--			unlock_device_hotplug();
--		}
-+		lock_device_hotplug();
-+		walk_memory_blocks(ent->start, ent->size, NULL,
-+				   online_mem_block);
-+		unlock_device_hotplug();
-=20
- 		/*
- 		 * Memory was added successfully so clean up references to it
---=20
-2.24.1
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -969,6 +969,10 @@ static void batadv_iv_ogm_schedule_buff(
+ 
+ 	lockdep_assert_held(&hard_iface->bat_iv.ogm_buff_mutex);
+ 
++	/* interface already disabled by batadv_iv_ogm_iface_disable */
++	if (!*ogm_buff)
++		return;
++
+ 	/* the interface gets activated here to avoid race conditions between
+ 	 * the moment of activating the interface in
+ 	 * hardif_activate_interface() where the originator mac is set and
+
 
