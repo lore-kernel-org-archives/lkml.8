@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6080AC43332
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F560C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CEFA20773
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A4520842
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbgCSJOZ (ORCPT
+        id S1727521AbgCSJUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:14:25 -0400
+        Thu, 19 Mar 2020 05:20:05 -0400
 Received: from 8bytes.org ([81.169.241.247]:51922 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727060AbgCSJOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:22 -0400
+        id S1727211AbgCSJOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:23 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id E409320A; Thu, 19 Mar 2020 10:14:16 +0100 (CET)
+        id 79D6C22A; Thu, 19 Mar 2020 10:14:17 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 06/70] x86/umip: Factor out instruction fetch
-Date:   Thu, 19 Mar 2020 10:13:03 +0100
-Message-Id: <20200319091407.1481-7-joro@8bytes.org>
+Subject: [PATCH 09/70] x86/insn: Add insn_rep_prefix() helper
+Date:   Thu, 19 Mar 2020 10:13:06 +0100
+Message-Id: <20200319091407.1481-10-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -48,123 +48,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Factor out the code to fetch the instruction from user-space to a helper
-function.
+Add a function to check whether an instruction has a REP prefix.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/insn-eval.h |  2 ++
- arch/x86/kernel/umip.c           | 26 +++++-----------------
- arch/x86/lib/insn-eval.c         | 38 ++++++++++++++++++++++++++++++++
- 3 files changed, 46 insertions(+), 20 deletions(-)
+ arch/x86/include/asm/insn-eval.h |  1 +
+ arch/x86/lib/insn-eval.c         | 24 ++++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
 diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
-index 2b6ccf2c49f1..b8b9ef1bbd06 100644
+index 1e343010129e..41dee0faae97 100644
 --- a/arch/x86/include/asm/insn-eval.h
 +++ b/arch/x86/include/asm/insn-eval.h
-@@ -19,5 +19,7 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
+@@ -15,6 +15,7 @@
+ #define INSN_CODE_SEG_OPND_SZ(params) (params & 0xf)
+ #define INSN_CODE_SEG_PARAMS(oper_sz, addr_sz) (oper_sz | (addr_sz << 4))
+ 
++bool insn_rep_prefix(struct insn *insn);
+ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
  int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
- unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
- int insn_get_code_seg_params(struct pt_regs *regs);
-+int insn_fetch_from_user(struct pt_regs *regs,
-+			 unsigned char buf[MAX_INSN_SIZE]);
- 
- #endif /* _ASM_X86_INSN_EVAL_H */
-diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-index 4d732a444711..00cb157673b1 100644
---- a/arch/x86/kernel/umip.c
-+++ b/arch/x86/kernel/umip.c
-@@ -317,11 +317,11 @@ static void force_sig_info_umip_fault(void __user *addr, struct pt_regs *regs)
-  */
- bool fixup_umip_exception(struct pt_regs *regs)
- {
--	int not_copied, nr_copied, reg_offset, dummy_data_size, umip_inst;
--	unsigned long seg_base = 0, *reg_addr;
-+	int nr_copied, reg_offset, dummy_data_size, umip_inst;
- 	/* 10 bytes is the maximum size of the result of UMIP instructions */
- 	unsigned char dummy_data[10] = { 0 };
- 	unsigned char buf[MAX_INSN_SIZE];
-+	unsigned long *reg_addr;
- 	void __user *uaddr;
- 	struct insn insn;
- 	int seg_defs;
-@@ -329,26 +329,12 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	if (!regs)
- 		return false;
- 
--	/*
--	 * If not in user-space long mode, a custom code segment could be in
--	 * use. This is true in protected mode (if the process defined a local
--	 * descriptor table), or virtual-8086 mode. In most of the cases
--	 * seg_base will be zero as in USER_CS.
--	 */
--	if (!user_64bit_mode(regs))
--		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
--
--	if (seg_base == -1L)
--		return false;
--
--	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
--				    sizeof(buf));
--	nr_copied = sizeof(buf) - not_copied;
-+	nr_copied = insn_fetch_from_user(regs, buf);
- 
- 	/*
--	 * The copy_from_user above could have failed if user code is protected
--	 * by a memory protection key. Give up on emulation in such a case.
--	 * Should we issue a page fault?
-+	 * The insn_fetch_from_user above could have failed if user code
-+	 * is protected by a memory protection key. Give up on emulation
-+	 * in such a case.  Should we issue a page fault?
- 	 */
- 	if (!nr_copied)
- 		return false;
+ int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
 diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index 31600d851fd8..95ae3953e2a2 100644
+index f18260a19960..5d98dff5a2d7 100644
 --- a/arch/x86/lib/insn-eval.c
 +++ b/arch/x86/lib/insn-eval.c
-@@ -1369,3 +1369,41 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs)
- 		return (void __user *)-1L;
+@@ -53,6 +53,30 @@ static bool is_string_insn(struct insn *insn)
  	}
  }
-+
+ 
 +/**
-+ * insn_fetch_from_user() - Copy instruction bytes from user-space memory
-+ * @regs:	Structure with register values as seen when entering kernel mode
-+ * @buf:	Array to store the fetched instruction
-+ *
-+ * Gets the linear address of the instruction and copies the instruction bytes
-+ * to the buf.
++ * insn_rep_prefix() - Determine if instruction has a REP prefix
++ * @insn:	Instruction containing the prefix to inspect
 + *
 + * Returns:
 + *
-+ * Number of instruction bytes copied.
-+ *
-+ * 0 if nothing was copied.
++ * true if the instruction has a REP prefix, false if not.
 + */
-+int insn_fetch_from_user(struct pt_regs *regs,
-+			 unsigned char buf[MAX_INSN_SIZE])
++bool insn_rep_prefix(struct insn *insn)
 +{
-+	unsigned long seg_base = 0;
-+	int not_copied;
++	int i;
 +
-+	/*
-+	 * If not in user-space long mode, a custom code segment could be in
-+	 * use. This is true in protected mode (if the process defined a local
-+	 * descriptor table), or virtual-8086 mode. In most of the cases
-+	 * seg_base will be zero as in USER_CS.
-+	 */
-+	if (!user_64bit_mode(regs))
-+		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
++	insn_get_prefixes(insn);
 +
-+	if (seg_base == -1L)
-+		return 0;
++	for (i = 0; i < insn->prefixes.nbytes; i++) {
++		insn_byte_t p = insn->prefixes.bytes[i];
 +
-+	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
-+				    MAX_INSN_SIZE);
++		if (p == 0xf2 || p == 0xf3)
++			return true;
++	}
 +
-+	return MAX_INSN_SIZE - not_copied;
++	return false;
 +}
++
+ /**
+  * get_seg_reg_override_idx() - obtain segment register override index
+  * @insn:	Valid instruction with segment override prefixes
 -- 
 2.17.1
 
