@@ -2,157 +2,195 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C94F9C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63784C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A057E20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XyOcn8LT"
+	by mail.kernel.org (Postfix) with ESMTP id 38A2020663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:34:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584624896;
+	bh=wiALrJhg3TcaKsIRiM/YULV3e4/UuFySxyrqjKCWbrY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gWtLDTmCxy4eIo+Ejjtg1X6Ib//5JkW73p7zzTkm+HYUNi3DQBmZ456JOJFiapRM7
+	 ruHqD1XVBMhUTH+8YDnyL7iS7Tt97JS8Jtkfj2Q2yRc2F+Lu7tKJvsPUnwtCtu9cyk
+	 +T0UC8DjZ5ihxcuqFihrH8+2NzYdLyM88/PLHq3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgCSNeq (ORCPT
+        id S1728516AbgCSNez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:34:46 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:44462 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728964AbgCSNMk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:12:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584623559;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rx1LvEZgAQgfY3xwuj9jjkM3L7Bytnt/zhNrUnrYFaE=;
-        b=XyOcn8LTy5JO/M4XH1AFBWfIcFJZyj9hQeXmmpryScyPYfHUFMnDkMEpOqYCYF0Ot3JmRp
-        wbn9VpPsaMpKr/GAmRKNTjd8eq5rMPgItB3hStEepQmsG8WvBscSzs+paepBhx/+qvubG5
-        6zGOWJsijAe2dfJ0hws4QmgtMveM3W8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-SKMNXm6IOPioc_5ZFsWhFQ-1; Thu, 19 Mar 2020 09:12:35 -0400
-X-MC-Unique: SKMNXm6IOPioc_5ZFsWhFQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 19 Mar 2020 09:34:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728139AbgCSNMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:12:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36C50800D53;
-        Thu, 19 Mar 2020 13:12:33 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-197.ams2.redhat.com [10.36.114.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D50E60BF7;
-        Thu, 19 Mar 2020 13:12:30 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-hyperv@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 1/8] drivers/base/memory: rename MMOP_ONLINE_KEEP to MMOP_ONLINE
-Date:   Thu, 19 Mar 2020 14:12:14 +0100
-Message-Id: <20200319131221.14044-2-david@redhat.com>
-In-Reply-To: <20200319131221.14044-1-david@redhat.com>
-References: <20200319131221.14044-1-david@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B70C0208D6;
+        Thu, 19 Mar 2020 13:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584623556;
+        bh=wiALrJhg3TcaKsIRiM/YULV3e4/UuFySxyrqjKCWbrY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QLcdCAo87EnRf+zSy5TqVHF8al8Vx33XXj4XTb94rVeDrpAkk17sbnBqVq1ODaOrl
+         CAR59+IOouLlRSkwie93OOA7b29m0TatwUcyUDqTnq6KQrrLm65p+pT4tKjTOVV9Z1
+         HdO+pqZPyFfNqW3IflmmhsMcGKRVUBBQV1XTWI2g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.9 67/90] batman-adv: Fix debugfs path for renamed softif
+Date:   Thu, 19 Mar 2020 14:00:29 +0100
+Message-Id: <20200319123949.308277150@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
+References: <20200319123928.635114118@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The name is misleading and it's not really clear what is "kept". Let's ju=
-st
-name it like the online_type name we expose to user space ("online").
+From: Sven Eckelmann <sven@narfation.org>
 
-Add some documentation to the types.
+commit 6da7be7d24b2921f8215473ba7552796dff05fe1 upstream.
 
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+batman-adv is creating special debugfs directories in the init
+net_namespace for each created soft-interface (batadv net_device). But it
+is possible to rename a net_device to a completely different name then the
+original one.
+
+It can therefore happen that a user registers a new batadv net_device with
+the name "bat0". batman-adv is then also adding a new directory under
+$debugfs/batman-adv/ with the name "wlan0".
+
+The user then decides to rename this device to "bat1" and registers a
+different batadv device with the name "bat0". batman-adv will then try to
+create a directory with the name "bat0" under $debugfs/batman-adv/ again.
+But there already exists one with this name under this path and thus this
+fails. batman-adv will detect a problem and rollback the registering of
+this device.
+
+batman-adv must therefore take care of renaming the debugfs directories for
+soft-interfaces whenever it detects such a net_device rename.
+
+Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/base/memory.c          | 9 +++++----
- include/linux/memory_hotplug.h | 6 +++++-
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ net/batman-adv/debugfs.c        |   20 ++++++++++++++++++++
+ net/batman-adv/debugfs.h        |    5 +++++
+ net/batman-adv/hard-interface.c |   34 ++++++++++++++++++++++++++++------
+ 3 files changed, 53 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 6448c9ece2cb..8c5ce42c0fc3 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -216,7 +216,7 @@ static int memory_subsys_online(struct device *dev)
- 	 * attribute and need to set the online_type.
- 	 */
- 	if (mem->online_type < 0)
--		mem->online_type =3D MMOP_ONLINE_KEEP;
-+		mem->online_type =3D MMOP_ONLINE;
-=20
- 	ret =3D memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
-=20
-@@ -251,7 +251,7 @@ static ssize_t state_store(struct device *dev, struct=
- device_attribute *attr,
- 	else if (sysfs_streq(buf, "online_movable"))
- 		online_type =3D MMOP_ONLINE_MOVABLE;
- 	else if (sysfs_streq(buf, "online"))
--		online_type =3D MMOP_ONLINE_KEEP;
-+		online_type =3D MMOP_ONLINE;
- 	else if (sysfs_streq(buf, "offline"))
- 		online_type =3D MMOP_OFFLINE;
- 	else {
-@@ -262,7 +262,7 @@ static ssize_t state_store(struct device *dev, struct=
- device_attribute *attr,
- 	switch (online_type) {
- 	case MMOP_ONLINE_KERNEL:
- 	case MMOP_ONLINE_MOVABLE:
--	case MMOP_ONLINE_KEEP:
-+	case MMOP_ONLINE:
- 		/* mem->online_type is protected by device_hotplug_lock */
- 		mem->online_type =3D online_type;
- 		ret =3D device_online(&mem->dev);
-@@ -342,7 +342,8 @@ static ssize_t valid_zones_show(struct device *dev,
- 	}
-=20
- 	nid =3D mem->nid;
--	default_zone =3D zone_for_pfn_range(MMOP_ONLINE_KEEP, nid, start_pfn, n=
-r_pages);
-+	default_zone =3D zone_for_pfn_range(MMOP_ONLINE, nid, start_pfn,
-+					  nr_pages);
- 	strcat(buf, default_zone->name);
-=20
- 	print_allowed_zone(buf, nid, start_pfn, nr_pages, MMOP_ONLINE_KERNEL,
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplu=
-g.h
-index 3195d11876ea..3aaf00db224c 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -47,9 +47,13 @@ enum {
-=20
- /* Types for control the zone type of onlined and offlined memory */
- enum {
-+	/* Offline the memory. */
- 	MMOP_OFFLINE =3D -1,
--	MMOP_ONLINE_KEEP,
-+	/* Online the memory. Zone depends, see default_zone_for_pfn(). */
-+	MMOP_ONLINE,
-+	/* Online the memory to ZONE_NORMAL. */
- 	MMOP_ONLINE_KERNEL,
-+	/* Online the memory to ZONE_MOVABLE. */
- 	MMOP_ONLINE_MOVABLE,
- };
-=20
---=20
-2.24.1
+--- a/net/batman-adv/debugfs.c
++++ b/net/batman-adv/debugfs.c
+@@ -423,6 +423,26 @@ out:
+ 	return -ENOMEM;
+ }
+ 
++/**
++ * batadv_debugfs_rename_meshif() - Fix debugfs path for renamed softif
++ * @dev: net_device which was renamed
++ */
++void batadv_debugfs_rename_meshif(struct net_device *dev)
++{
++	struct batadv_priv *bat_priv = netdev_priv(dev);
++	const char *name = dev->name;
++	struct dentry *dir;
++	struct dentry *d;
++
++	dir = bat_priv->debug_dir;
++	if (!dir)
++		return;
++
++	d = debugfs_rename(dir->d_parent, dir, dir->d_parent, name);
++	if (!d)
++		pr_err("Can't rename debugfs dir to %s\n", name);
++}
++
+ void batadv_debugfs_del_meshif(struct net_device *dev)
+ {
+ 	struct batadv_priv *bat_priv = netdev_priv(dev);
+--- a/net/batman-adv/debugfs.h
++++ b/net/batman-adv/debugfs.h
+@@ -29,6 +29,7 @@ struct net_device;
+ void batadv_debugfs_init(void);
+ void batadv_debugfs_destroy(void);
+ int batadv_debugfs_add_meshif(struct net_device *dev);
++void batadv_debugfs_rename_meshif(struct net_device *dev);
+ void batadv_debugfs_del_meshif(struct net_device *dev);
+ int batadv_debugfs_add_hardif(struct batadv_hard_iface *hard_iface);
+ void batadv_debugfs_rename_hardif(struct batadv_hard_iface *hard_iface);
+@@ -49,6 +50,10 @@ static inline int batadv_debugfs_add_mes
+ 	return 0;
+ }
+ 
++static inline void batadv_debugfs_rename_meshif(struct net_device *dev)
++{
++}
++
+ static inline void batadv_debugfs_del_meshif(struct net_device *dev)
+ {
+ }
+--- a/net/batman-adv/hard-interface.c
++++ b/net/batman-adv/hard-interface.c
+@@ -755,6 +755,32 @@ void batadv_hardif_remove_interfaces(voi
+ 	rtnl_unlock();
+ }
+ 
++/**
++ * batadv_hard_if_event_softif() - Handle events for soft interfaces
++ * @event: NETDEV_* event to handle
++ * @net_dev: net_device which generated an event
++ *
++ * Return: NOTIFY_* result
++ */
++static int batadv_hard_if_event_softif(unsigned long event,
++				       struct net_device *net_dev)
++{
++	struct batadv_priv *bat_priv;
++
++	switch (event) {
++	case NETDEV_REGISTER:
++		batadv_sysfs_add_meshif(net_dev);
++		bat_priv = netdev_priv(net_dev);
++		batadv_softif_create_vlan(bat_priv, BATADV_NO_FLAGS);
++		break;
++	case NETDEV_CHANGENAME:
++		batadv_debugfs_rename_meshif(net_dev);
++		break;
++	}
++
++	return NOTIFY_DONE;
++}
++
+ static int batadv_hard_if_event(struct notifier_block *this,
+ 				unsigned long event, void *ptr)
+ {
+@@ -763,12 +789,8 @@ static int batadv_hard_if_event(struct n
+ 	struct batadv_hard_iface *primary_if = NULL;
+ 	struct batadv_priv *bat_priv;
+ 
+-	if (batadv_softif_is_valid(net_dev) && event == NETDEV_REGISTER) {
+-		batadv_sysfs_add_meshif(net_dev);
+-		bat_priv = netdev_priv(net_dev);
+-		batadv_softif_create_vlan(bat_priv, BATADV_NO_FLAGS);
+-		return NOTIFY_DONE;
+-	}
++	if (batadv_softif_is_valid(net_dev))
++		return batadv_hard_if_event_softif(event, net_dev);
+ 
+ 	hard_iface = batadv_hardif_get_by_netdev(net_dev);
+ 	if (!hard_iface && (event == NETDEV_REGISTER ||
+
 
