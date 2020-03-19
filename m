@@ -2,57 +2,56 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23133C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335A6C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8DD20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E503B20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624659;
-	bh=+aPVeQ9DXXL+NeBXpPp44nt1j9JJrYKhO7gvx1soYkw=;
+	s=default; t=1584624668;
+	bh=TrcHvj+t0zhknyADv/MVGhq72AnAb4DxejAlu6KPi50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZZG5dOFuh7oa8yVRRSaAUmwQT6lwJGenYj7Qngx2J0hRC3f+WB2Rdq8l+IYNqlIHo
-	 Z3/ih0L2pczBAs4GpFqwaNC0zWAKb1D4s8lsCezrh6kfbOV7TpAPMDqMziIk0EwRzs
-	 7OPE0tFxkdI6RqEV5K4jNgdZDOuK89B7cIHl5SHM=
+	b=gWAgy32PPY6qm/GQ+X6Gm6O8ipsXo08D3LgqKiRtPFZYzYhFu1EXrbMM2gqJRI2vc
+	 kpN38T99RRNpREIWZknafVBnfOlxn0KN4yo26cmwCuhEQ3rAVTJjmweqsiPIiSD7Kx
+	 0l4EeGmY+zMtQZGZlch/EF+c84cZBBWZonAfdNYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgCSNa5 (ORCPT
+        id S1729872AbgCSNbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:30:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42882 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:31:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728475AbgCSNTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:19:33 -0400
+        id S1729842AbgCSNTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:19:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A37F216FD;
-        Thu, 19 Mar 2020 13:19:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82EB621556;
+        Thu, 19 Mar 2020 13:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623972;
-        bh=+aPVeQ9DXXL+NeBXpPp44nt1j9JJrYKhO7gvx1soYkw=;
+        s=default; t=1584623949;
+        bh=TrcHvj+t0zhknyADv/MVGhq72AnAb4DxejAlu6KPi50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZG98O9Num8508sWdiqKM2Q1pKTeyi8j2CfSEA2fCW6pLys9yApR+pk4PQarp70ys
-         EyX45OLTchm3V9fIsF/roKDgzBT62qwuacoHStDNRkgZDarOVma/SGe5qUT/x0+lgW
-         6am0KBZnfhJNNnjbbBV8cHxoRiOuWtMKelhCeXR8=
+        b=ROSsNHA7MN7fn012yc+M+ZCrVYg4wTRpm4k4UVPpSzxQNkGj4hAcOFxbgJeYv2ap3
+         nMbqILPc/VjNc92ypAuxw9BmNCqyPSu5KtrdbBAaCGnn/BPXoYat9hdp7K3QOYV/0B
+         DbLpYn8qWxS3dhnTtJBcKMU6eCi2XpRk1X8EVBWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 16/48] net: ks8851-ml: Fix IRQ handling and locking
-Date:   Thu, 19 Mar 2020 14:03:58 +0100
-Message-Id: <20200319123908.160054078@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 4.14 97/99] ARM: 8958/1: rename missed uaccess .fixup section
+Date:   Thu, 19 Mar 2020 14:04:15 +0100
+Message-Id: <20200319124007.995068803@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200319123902.941451241@linuxfoundation.org>
-References: <20200319123902.941451241@linuxfoundation.org>
+In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
+References: <20200319123941.630731708@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,102 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 44343418d0f2f623cb9da6f5000df793131cbe3b ]
+commit f87b1c49bc675da30d8e1e8f4b60b800312c7b90 upstream.
 
-The KS8851 requires that packet RX and TX are mutually exclusive.
-Currently, the driver hopes to achieve this by disabling interrupt
-from the card by writing the card registers and by disabling the
-interrupt on the interrupt controller. This however is racy on SMP.
+When the uaccess .fixup section was renamed to .text.fixup, one case was
+missed. Under ld.bfd, the orphaned section was moved close to .text
+(since they share the "ax" bits), so things would work normally on
+uaccess faults. Under ld.lld, the orphaned section was placed outside
+the .text section, making it unreachable.
 
-Replace this approach by expanding the spinlock used around the
-ks_start_xmit() TX path to ks_irq() RX path to assure true mutual
-exclusion and remove the interrupt enabling/disabling, which is
-now not needed anymore. Furthermore, disable interrupts also in
-ks_net_stop(), which was missing before.
+Link: https://github.com/ClangBuiltLinux/linux/issues/282
+Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1020633#c44
+Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.1912032147340.17114@knanqh.ubzr
+Link: https://lore.kernel.org/lkml/202002071754.F5F073F1D@keescook/
 
-Note that a massive improvement here would be to re-use the KS8851
-driver approach, which is to move the TX path into a worker thread,
-interrupt handling to threaded interrupt, and synchronize everything
-with mutexes, but that would be a much bigger rework, for a separate
-patch.
+Fixes: c4a84ae39b4a5 ("ARM: 8322/1: keep .text and .fixup regions closer together")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/arm/lib/copy_from_user.S |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index 9de59facec218..a5525bf977e2c 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -832,14 +832,17 @@ static irqreturn_t ks_irq(int irq, void *pw)
- {
- 	struct net_device *netdev = pw;
- 	struct ks_net *ks = netdev_priv(netdev);
-+	unsigned long flags;
- 	u16 status;
+--- a/arch/arm/lib/copy_from_user.S
++++ b/arch/arm/lib/copy_from_user.S
+@@ -100,7 +100,7 @@ ENTRY(arm_copy_from_user)
  
-+	spin_lock_irqsave(&ks->statelock, flags);
- 	/*this should be the first in IRQ handler */
- 	ks_save_cmd_reg(ks);
+ ENDPROC(arm_copy_from_user)
  
- 	status = ks_rdreg16(ks, KS_ISR);
- 	if (unlikely(!status)) {
- 		ks_restore_cmd_reg(ks);
-+		spin_unlock_irqrestore(&ks->statelock, flags);
- 		return IRQ_NONE;
- 	}
- 
-@@ -865,6 +868,7 @@ static irqreturn_t ks_irq(int irq, void *pw)
- 		ks->netdev->stats.rx_over_errors++;
- 	/* this should be the last in IRQ handler*/
- 	ks_restore_cmd_reg(ks);
-+	spin_unlock_irqrestore(&ks->statelock, flags);
- 	return IRQ_HANDLED;
- }
- 
-@@ -934,6 +938,7 @@ static int ks_net_stop(struct net_device *netdev)
- 
- 	/* shutdown RX/TX QMU */
- 	ks_disable_qmu(ks);
-+	ks_disable_int(ks);
- 
- 	/* set powermode to soft power down to save power */
- 	ks_set_powermode(ks, PMECR_PM_SOFTDOWN);
-@@ -990,10 +995,9 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
- {
- 	netdev_tx_t retv = NETDEV_TX_OK;
- 	struct ks_net *ks = netdev_priv(netdev);
-+	unsigned long flags;
- 
--	disable_irq(netdev->irq);
--	ks_disable_int(ks);
--	spin_lock(&ks->statelock);
-+	spin_lock_irqsave(&ks->statelock, flags);
- 
- 	/* Extra space are required:
- 	*  4 byte for alignment, 4 for status/length, 4 for CRC
-@@ -1007,9 +1011,7 @@ static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
- 		dev_kfree_skb(skb);
- 	} else
- 		retv = NETDEV_TX_BUSY;
--	spin_unlock(&ks->statelock);
--	ks_enable_int(ks);
--	enable_irq(netdev->irq);
-+	spin_unlock_irqrestore(&ks->statelock, flags);
- 	return retv;
- }
- 
--- 
-2.20.1
-
+-	.pushsection .fixup,"ax"
++	.pushsection .text.fixup,"ax"
+ 	.align 0
+ 	copy_abort_preamble
+ 	ldmfd	sp!, {r1, r2, r3}
 
 
