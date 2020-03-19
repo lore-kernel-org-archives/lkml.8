@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29775C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9E5C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A52E2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82C320BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:02:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgCSPCJ (ORCPT
+        id S1728307AbgCSPCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:02:09 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:32318 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgCSPCI (ORCPT
+        Thu, 19 Mar 2020 11:02:47 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:5502 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728287AbgCSPCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:02:08 -0400
-IronPort-SDR: OyItQqcIyCP/SBzqXQJCiP0w+FrwGmauM2MFaD9XlSQn98S4nBc/vqxwHA5wWBMcTmHQ05TKUK
- oRc0W63LN56vaAd7msQcM2+hYubbIX14JC4J0VZYudqZKvIs2awgQiTEhE+szhuQI4c8viBkcz
- bPhDeoPGiQKAY9YSGFYwxLg27VEqkxMi7sls27S2ynFRlLKxQAZrUUvIZQiyuwX603QQR7IHMw
- yiy1OyR2LHVebqPafF2XFFtJeNQ/dE8k+YtUnOsCFly4vu3kaardv24sIDNixubvwrD+eBPUnw
- POk=
+        Thu, 19 Mar 2020 11:02:43 -0400
+IronPort-SDR: vlsjRHpcXiLoa3gqLqNLp/lDS8T+cj+P/9dzLE+M9v5SFZZUW1a5a2p6SaLa1Bcz84QdYqQPBY
+ 2PWRHGrLGjtoX/ONQa7e3aOUFAAhYoXItRVjVz6XdgEvbJUUli9rqCWub9mgLmvhX1SRpbVakM
+ NIFEFzG94QoxrMfSPkaQCiAMtUiry09iEMyuh0fj5Kh/XAeyYedFEZ1Pv6ca/YEPrttOYVKEgD
+ vFiv5c3AN/lgVxmsA4soIYrVBEZJg1R3aK5Sg9/NOcnMKTHbTepTfyfYPa3XYo6RNXQ2EfMBYM
+ 7L8=
 X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="46890921"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 19 Mar 2020 07:01:52 -0800
-IronPort-SDR: 0fluhvLogtlYw42cqS6Gs1FsUeJQ1gp22+Esg0fqFlplIcZEx8eExGTbrVOYRazaKQvOsiBZ3f
- U6TPLB6V28YvHEjWv1CAeCLsEPCi9MI0s+QWo5+Aobgqa607IxACY7pGnQaudZBwIGaE0q9jAl
- 7PcK+4frl7Lus6QfYyckzmZ30yImRmliYSIrSuoiAN9TGiJIBw1oA1OcqGoP1RTBeDdVW1Y4k3
- Bz460MkebPFIYxniJVOAdWWurBrtnsBFWMyahuEDOhxVy8WS0n1kXmJVmIJn66LVa63sOIn1Bb
- plE=
+   d="scan'208";a="46818860"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa2.mentor.iphmx.com with ESMTP; 19 Mar 2020 07:02:43 -0800
+IronPort-SDR: CKCIL9tpA0XvZJErtxAM/Y2cQM+DlSH5z4UWVmX/DRvwv0KMdlF+J2Ais3BczfXUIUVrZBhYJj
+ 0Jr0VGPgyIkxuJ/mwPBK4GWjT+ufMXga7jRoHCERclxlG/kUM0eZKCzr6x2ZA8h/EhvK6cl34l
+ sK6+EgHRLpKbYsKgvVRu0OH/r1esUX/ygoJsec3lSeL6j5L0EjJmtM/1dhqnW8aGdAJXP0hAaj
+ TGvdIMspGANEWyWkQb/77GmIlFCL+bvnjF4Ayc7ayCtPenykgQMSEr4JpqPvXoHa9rov+rIdYT
+ 9hk=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
         <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
@@ -41,9 +41,9 @@ To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
         <jiada_wang@mentor.com>
-Subject: [PATCH v8 23/52] Input: atmel_mxt_ts - refactor code to enter bootloader into separate func
-Date:   Thu, 19 Mar 2020 07:59:47 -0700
-Message-ID: <20200319150016.61398-24-jiada_wang@mentor.com>
+Subject: [PATCH v8 36/52] input: atmel_mxt_ts: export GPIO reset line via sysfs
+Date:   Thu, 19 Mar 2020 08:00:00 -0700
+Message-ID: <20200319150016.61398-37-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319150016.61398-1-jiada_wang@mentor.com>
 References: <20200319150016.61398-1-jiada_wang@mentor.com>
@@ -54,102 +54,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+From: "George G. Davis" <george_davis@mentor.com>
 
-Refactor code to enter bootloader into separate func
+N.B. Modifying the atmel_mxt_ts GPIO reset line during operation will
+cause problems with normal driver operation.  This feature is provided
+as a diagnostic debug aid.  It does not take into consideration any
+pending operations which may be in progress.  Modifying the atmel_mxt_ts
+GPIO reset line at any time will inevitably cause the driver to fail.
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit bedd706a32522b946467e15f4f4f24de86a1b4d7)
-[gdavis: Resolve forward port conflicts due to applying upstream
-	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
-	 data support").]
 Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: Squash change from ndyer/linux/for-upstream commit d691d3ee6c6de84b38464a42
-3207b3e23cb9dc3a
-	- Input: atmel_mxt_ts - check firmware format before entering bootloader
-	Add commit description]
+Signed-off-by: Rajeev Kumar <rajeev_kumar@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 43 +++++++++++++++---------
- 1 file changed, 27 insertions(+), 16 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index e5dc554a0845..b4d0835ba196 100644
+index 18372e8d1ef2..fd3db4f8d55d 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -3257,23 +3257,10 @@ static int mxt_check_firmware_format(struct device *dev,
- 	return -EINVAL;
- }
+@@ -4083,6 +4083,19 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		return error;
+ 	}
  
--static int mxt_load_fw(struct device *dev)
-+static int mxt_enter_bootloader(struct mxt_data *data)
- {
--	struct mxt_data *data = dev_get_drvdata(dev);
--	struct mxt_flash f = { 0, };
- 	int ret;
- 
--	ret = request_firmware(&f.fw, data->fw_name, dev);
--	if (ret) {
--		dev_err(dev, "Unable to open firmware %s\n", data->fw_name);
--		return ret;
--	}
--
--	/* Check for incorrect enc file */
--	ret = mxt_check_firmware_format(dev, f.fw);
--	if (ret)
--		goto release_firmware;
--
- 	if (data->suspended) {
- 		if (data->suspend_mode == MXT_SUSPEND_REGULATOR)
- 			mxt_regulator_enable(data);
-@@ -3291,14 +3278,14 @@ static int mxt_load_fw(struct device *dev)
- 		ret = mxt_t6_command(data, MXT_COMMAND_RESET,
- 				     MXT_BOOT_VALUE, false);
- 		if (ret)
--			goto release_firmware;
-+			return ret;
- 
- 		msleep(MXT_RESET_TIME);
- 
- 		/* Do not need to scan since we know family ID */
- 		ret = mxt_lookup_bootloader_address(data, 0);
- 		if (ret)
--			goto release_firmware;
-+			return ret;
- 
- 		mxt_sysfs_remove(data);
- 		mxt_free_input_device(data);
-@@ -3309,6 +3296,30 @@ static int mxt_load_fw(struct device *dev)
- 
- 	reinit_completion(&data->bl_completion);
- 
-+	return 0;
-+}
++	if (data->reset_gpio) {
++		error = gpiod_export(data->reset_gpio, 0);
++		if (error)
++			return error;
 +
-+static int mxt_load_fw(struct device *dev)
-+{
-+	struct mxt_data *data = dev_get_drvdata(dev);
-+	struct mxt_flash f = { 0, };
-+	int ret;
-+
-+	ret = request_firmware(&f.fw, data->fw_name, dev);
-+	if (ret) {
-+		dev_err(dev, "Unable to open firmware %s\n", data->fw_name);
-+		return ret;
++		error = gpiod_export_link(&client->dev, "reset",
++					  data->reset_gpio);
++		if (error) {
++			gpiod_unexport(data->reset_gpio);
++			return error;
++		}
 +	}
 +
-+	/* Check for incorrect enc file */
-+	ret = mxt_check_firmware_format(dev, f.fw);
-+	if (ret)
-+		goto release_firmware;
-+
-+	ret = mxt_enter_bootloader(data);
-+	if (ret)
-+		goto release_firmware;
-+
- 	ret = mxt_check_bootloader(data, MXT_WAITING_BOOTLOAD_CMD, false);
- 	if (ret) {
- 		/* Bootloader may still be unlocked from previous attempt */
+ 	if (data->suspend_mode == MXT_SUSPEND_REGULATOR) {
+ 		error = mxt_acquire_irq(data);
+ 		if (error)
+@@ -4115,6 +4128,10 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ err_free_object:
+ 	mxt_free_input_device(data);
+ 	mxt_free_object_table(data);
++	if (data->reset_gpio) {
++		sysfs_remove_link(&client->dev.kobj, "reset");
++		gpiod_unexport(data->reset_gpio);
++	}
+ 	return error;
+ }
+ 
+@@ -4124,6 +4141,10 @@ static int mxt_remove(struct i2c_client *client)
+ 
+ 	disable_irq(data->irq);
+ 	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
++	if (data->reset_gpio) {
++		sysfs_remove_link(&client->dev.kobj, "reset");
++		gpiod_unexport(data->reset_gpio);
++	}
+ 	mxt_debug_msg_remove(data);
+ 	mxt_sysfs_remove(data);
+ 	mxt_free_input_device(data);
 -- 
 2.17.1
 
