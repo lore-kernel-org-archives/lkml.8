@@ -2,76 +2,105 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9F6C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4FCC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F01B20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED2120722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgCSK3i (ORCPT
+        id S1727064AbgCSKaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:29:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:33030 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbgCSK3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:29:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6BF7D31B;
-        Thu, 19 Mar 2020 03:29:37 -0700 (PDT)
-Received: from [192.168.1.19] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 719903F305;
-        Thu, 19 Mar 2020 03:29:36 -0700 (PDT)
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH v2 4/9] sched/topology: Kill SD_LOAD_BALANCE
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org
-References: <20200311181601.18314-1-valentin.schneider@arm.com>
- <20200311181601.18314-5-valentin.schneider@arm.com>
-Message-ID: <a4a87ce6-9770-dc58-c2b6-e001b8050a8e@arm.com>
-Date:   Thu, 19 Mar 2020 11:29:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 19 Mar 2020 06:30:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51109 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbgCSKaN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:30:13 -0400
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jEsR2-00065s-3p; Thu, 19 Mar 2020 10:29:56 +0000
+Date:   Thu, 19 Mar 2020 11:29:55 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Adrian Reber <areber@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: clone3: allow creation of time namespace with offset
+Message-ID: <20200319102955.i7slokibkkysz6g6@wittgenstein>
+References: <20200317083043.226593-1-areber@redhat.com>
+ <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
+ <20200319081137.GC223854@dcbz.redhat.com>
+ <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311181601.18314-5-valentin.schneider@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.03.20 19:15, Valentin Schneider wrote:
-> That flag is set unconditionally in sd_init(), and no one checks for it
-> anymore. Remove it.
+On Thu, Mar 19, 2020 at 09:16:43AM +0100, Arnd Bergmann wrote:
+> On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
+> 
+> > With Arnd's idea of only using nanoseconds, timens_offset would then
+> > contain something like this:
+> >
+> > struct timens_offset {
+> >         __aligned_s64 monotonic_offset_ns;
+> >         __aligned_s64 boottime_offset_ns;
+> > };
+> >
+> > I kind of prefer adding boottime and monotonic directly to struct clone_args
+> >
+> >         __aligned_u64 tls;
+> >         __aligned_u64 set_tid;
+> >         __aligned_u64 set_tid_size;
+> > +       __aligned_s64 monotonic_offset_ns;
+> > +       __aligned_s64 boottime_offset_ns;
+> >  };
+> 
+> I would also prefer the second approach using two 64-bit integers
+> instead of a pointer, as it keeps the interface simpler to implement
+> and simpler to interpret by other tools.
 
-Why not merge 3/9 and 4/9 ?
+Why I don't like has two reasons. There's the scenario where we have
+added new extensions after the new boottime member and then we introduce
+another offset. Then you'd be looking at:
 
-[...]
+__aligned_u64 tls;
+__aligned_u64 set_tid;
+__aligned_u64 set_tid_size;
++ __aligned_s64 monotonic_offset_ns;
++ __aligned_s64 boottime_offset_ns;
+__aligned_s64 something_1
+__aligned_s64 anything_2
++ __aligned_s64 sometime_offset_ns
 
-> diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-> index f341163fedc9..8de2f9744569 100644
-> --- a/include/linux/sched/topology.h
-> +++ b/include/linux/sched/topology.h
-> @@ -11,21 +11,20 @@
->   */
->  #ifdef CONFIG_SMP
->  
-> -#define SD_LOAD_BALANCE		0x0001	/* Do load balancing on this domain. */
-> -#define SD_BALANCE_NEWIDLE	0x0002	/* Balance when about to become idle */
+which bothers me just by looking at it. That's in addition to adding two
+new members to the struct when most people will never set CLONE_NEWTIME.
+We'll also likely have more features in the future that will want to
+pass down more info than we want to directly expose in struct
+clone_args, e.g. for a long time I have been thinking about adding a
+struct for CLONE_NEWUSER that allows you to specify the id mappings you
+want the new user namespace to get. We surely don't want to force all
+new info into the uppermost struct. So I'm not convinced we should here.
 
-[...]
-
-> -#define SD_OVERLAP		0x2000	/* sched_domains of this level overlap */
-> -#define SD_NUMA			0x4000	/* cross-node balancing */
-> +#define SD_BALANCE_NEWIDLE	0x0001	/* Balance when about to become idle */
-
-IMHO, changing the values of the remaining SD flags will break lots of
-userspace scripts.
-
-[...]
+Christian
