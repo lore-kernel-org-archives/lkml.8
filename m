@@ -2,67 +2,77 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2BDC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B90BC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE50206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584647408;
-	bh=OkC2gr/8Q7KCXYy428Zc1GIymS+WvTDBBkkQTP+Z8U8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=DokUspcJPAXO2H6PulUVBWweIxNMejcSPP02bWiy1RJIWYV9M3GiRl4Xgbg/uI8GB
-	 FNEyVvLVaCBWpUw6/4M/3LkFW9q3vBkGyQeLhYAOAXvp2b5bEXxHzAekNQfIrZiIIP
-	 HRFQFj6LxSOAR95WJQriTJelDnF0f94oIOn4NIIY=
+	by mail.kernel.org (Postfix) with ESMTP id 20500206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 19:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbgCSTuH (ORCPT
+        id S1727504AbgCSTuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 15:50:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33796 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 15:50:16 -0400
+Received: from mga09.intel.com ([134.134.136.24]:56609 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgCSTuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 15:50:07 -0400
-Subject: Re: [GIT PULL] MMC fixes for v5.6-rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584647406;
-        bh=OkC2gr/8Q7KCXYy428Zc1GIymS+WvTDBBkkQTP+Z8U8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=CoixHqPkkvv8gEcedf0ii5jfmQHd5coj+BaF43DA746JAYlUtm+r5uNUn5St2qIZr
-         FAeqTsret8WeQq2M8HXoq7b/NgzMcOEnpGCpdSondK30hpnzIf+bCLdsYwqG3fOgCb
-         m6dKq+rTlrKjBY5vZRS90GrmVi0CjJKQwYqBKZkI=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200319193925.19656-1-ulf.hansson@linaro.org>
-References: <20200319193925.19656-1-ulf.hansson@linaro.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200319193925.19656-1-ulf.hansson@linaro.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.6-rc6
-X-PR-Tracked-Commit-Id: 4686392c32361c97e8434adf9cc77ad7991bfa81
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6c90b86a745a446717fdf408c4a8a4631a5e8ee3
-Message-Id: <158464740676.23356.14515670613847007769.pr-tracker-bot@kernel.org>
-Date:   Thu, 19 Mar 2020 19:50:06 +0000
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+        id S1725747AbgCSTuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 15:50:16 -0400
+IronPort-SDR: hKfHissdjwBklOU32ObzkksMfw+FH9z1yKa0Ci4Mslf/qPnet8r/lz7PXbJfxAtHdUbZPHcb8O
+ WvMxqxygJC8Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 12:50:15 -0700
+IronPort-SDR: BYxoJ7jptfyU+TPIae5+d54PIcg3caerdEfPmOY8aOHzDUqK9S5WCGbr3R+pS29zweUNwyX2qA
+ yLwsjb+mLcJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="418466982"
+Received: from oamor-mobl1.ger.corp.intel.com (HELO localhost) ([10.251.182.181])
+  by orsmga005.jf.intel.com with ESMTP; 19 Mar 2020 12:50:12 -0700
+Date:   Thu, 19 Mar 2020 21:50:11 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     George Wilson <gcwilson@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Nayna Jain <nayna@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        Linh Pham <phaml@us.ibm.com>
+Subject: Re: [PATCH v3] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
+Message-ID: <20200319195011.GB24804@linux.intel.com>
+References: <20200318234927.206075-1-gcwilson@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200318234927.206075-1-gcwilson@linux.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 19 Mar 2020 20:39:25 +0100:
+On Wed, Mar 18, 2020 at 07:49:27PM -0400, George Wilson wrote:
+> tpm_ibmvtpm_send() can fail during PowerVM Live Partition Mobility resume
+> with an H_CLOSED return from ibmvtpm_send_crq().  The PAPR says, 'The
+> “partner partition suspended” transport event disables the associated CRQ
+> such that any H_SEND_CRQ hcall() to the associated CRQ returns H_Closed
+> until the CRQ has been explicitly enabled using the H_ENABLE_CRQ hcall.'
+> This patch adds a check in tpm_ibmvtpm_send() for an H_CLOSED return from
+> ibmvtpm_send_crq() and in that case calls tpm_ibmvtpm_resume() and
+> retries the ibmvtpm_send_crq() once.
+> 
+> Reported-by: Linh Pham <phaml@us.ibm.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Signed-off-by: George Wilson <gcwilson@linux.ibm.com>
+> Tested-by: Linh Pham <phaml@us.ibm.com>
+> Fixes: 132f76294744 ("Add new device driver to support IBM vTPM")
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.6-rc6
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6c90b86a745a446717fdf408c4a8a4631a5e8ee3
+Thank you.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+/Jarkko
