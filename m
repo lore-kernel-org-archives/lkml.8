@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD910C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B268C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40E121655
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12ECF20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623544;
-	bh=8mjxTOiY7jUCy5oNZ2Nth+B6EYgs6wniQaBkZLtmxKY=;
+	s=default; t=1584623547;
+	bh=gshXoy1Vsgwe1/X1ljL9vo8JPm80oVkJvWWSclvaRM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=clJWUteKwx3TXdGoSlHz+uPqFkHnA6e/zxAQTloo/Wx4lMgnD2LfmXyKL+6SgJBbi
-	 /eCvG5kgRbNNut9/u7czDGpCIle5RcHzqjtFzgJ3TYgMpwC1cF148KHkfzga/eKD2x
-	 +u8QVWwxP41hd/k2nrqIfO0uHggVWsgRA7ClOZoA=
+	b=S8M32eoUHuQNw6DQQNo10xc/A6avJk4Ajfo7bkzr//0i3zKZMkIQdosQotMIaZUvn
+	 FJvZj6Ofyw8uLTh/OceXbFGk1MgjTx9ZIlNXUk2/7t7hkwu+ytBxUOLIRmEmSP1Tmp
+	 jZxQf3/AJKme6baOWQP0TMinEfyw+tKtiE821Sj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727416AbgCSNMX (ORCPT
+        id S1728926AbgCSNMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:12:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58216 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:12:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728901AbgCSNMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:12:21 -0400
+        id S1728901AbgCSNMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:12:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81010214D8;
-        Thu, 19 Mar 2020 13:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10466214D8;
+        Thu, 19 Mar 2020 13:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623541;
-        bh=8mjxTOiY7jUCy5oNZ2Nth+B6EYgs6wniQaBkZLtmxKY=;
+        s=default; t=1584623543;
+        bh=gshXoy1Vsgwe1/X1ljL9vo8JPm80oVkJvWWSclvaRM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lJW058Z6rpll035hLAMKmXi45civIvmaLHXdayZF8xk0gXjyT2bVOER2JinXXP7r1
-         cJFQSiUdVOPygGVyNyA+Z5mJhTFO8FUTtVPIgQiCFEdQTDhyouHDAkKKAy0pVTTI14
-         5ZjIjNHeS+MAy7S5AKnUJ5qlO2wrLxIjbF99DCsE=
+        b=eF8XE5rn2HbRhd09cflKjaUlBn3lNT5Y1vB6vHPfQLzw+NQE57of2B7pmSS8Ib7Fh
+         iJgkk21H5CD9uuyQNf6aoQ86VAFa8mO4G442ETm60OCskNQXdDkmnWUzE5GvxR/uBx
+         h6Ssoku7tz8pSCWtc2WLlffRf9zsRzg40qlQBfTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.9 45/90] netfilter: cthelper: add missing attribute validation for cthelper
-Date:   Thu, 19 Mar 2020 14:00:07 +0100
-Message-Id: <20200319123942.544615304@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@kernel.org
+Subject: [PATCH 4.9 36/90] gfs2_atomic_open(): fix O_EXCL|O_CREAT handling on cold dcache
+Date:   Thu, 19 Mar 2020 13:59:58 +0100
+Message-Id: <20200319123939.831610471@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -59,32 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit c049b3450072b8e3998053490e025839fecfef31 upstream.
+commit 21039132650281de06a169cbe8a0f7e5c578fd8b upstream.
 
-Add missing attribute validation for cthelper
-to the netlink policy.
+with the way fs/namei.c:do_last() had been done, ->atomic_open()
+instances needed to recognize the case when existing file got
+found with O_EXCL|O_CREAT, either by falling back to finish_no_open()
+or failing themselves.  gfs2 one didn't.
 
-Fixes: 12f7a505331e ("netfilter: add user-space connection tracking helper infrastructure")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 6d4ade986f9c (GFS2: Add atomic_open support)
+Cc: stable@kernel.org # v3.11
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nfnetlink_cthelper.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/gfs2/inode.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/netfilter/nfnetlink_cthelper.c
-+++ b/net/netfilter/nfnetlink_cthelper.c
-@@ -711,6 +711,8 @@ static const struct nla_policy nfnl_cthe
- 	[NFCTH_NAME] = { .type = NLA_NUL_STRING,
- 			 .len = NF_CT_HELPER_NAME_LEN-1 },
- 	[NFCTH_QUEUE_NUM] = { .type = NLA_U32, },
-+	[NFCTH_PRIV_DATA_LEN] = { .type = NLA_U32, },
-+	[NFCTH_STATUS] = { .type = NLA_U32, },
- };
+--- a/fs/gfs2/inode.c
++++ b/fs/gfs2/inode.c
+@@ -1248,7 +1248,7 @@ static int gfs2_atomic_open(struct inode
+ 		if (!(*opened & FILE_OPENED))
+ 			return finish_no_open(file, d);
+ 		dput(d);
+-		return 0;
++		return excl && (flags & O_CREAT) ? -EEXIST : 0;
+ 	}
  
- static const struct nfnl_callback nfnl_cthelper_cb[NFNL_MSG_CTHELPER_MAX] = {
+ 	BUG_ON(d != NULL);
 
 
