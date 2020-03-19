@@ -2,108 +2,140 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5845C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE17CC43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966732072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7A32072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584637591;
-	bh=aP9ejx7SnCaC82qYc3Vt82pK0yL3U36c8HGf9fweu5k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qKsLVA7fyYDk2xf1s4EkrZ0M+paxvPO5ab3ffAKhIaX3NHlRkf6ivepoSrliz1BRs
-	 8p3dVK7LJwBRCvW9hmmFiUXI9kyc0tcQX6+mdGUSh2/mTW9NoVcW0pXZRHdc442Tl6
-	 rYUucj2rjx/4B6lCW93yKqXZvbsMSCRC4gs6J9Kg=
+	s=default; t=1584637624;
+	bh=NdR6LVZ2cIsGAen/1ujzdrUs8tOtmmAvYQrgY/mLbXM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=OCdAKotwuBKU7S2mV+HReFljski92vIxts9QFzVW2jtXRv+IOrGwRm06wtj+R0MTf
+	 TljtuCLEVbFUFr72a05gAESyUSLAouzCqYONsvSNAhPSRXgb+txTGLASFoQxyg7FoR
+	 KNvFWjqvyg5qx7pMfBHRZQsIXbNe2wP+0FYcCSgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgCSRGa (ORCPT
+        id S1728453AbgCSRHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:06:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49762 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 13:07:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727252AbgCSRGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:06:30 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727252AbgCSRHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:07:02 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A473207FC;
-        Thu, 19 Mar 2020 17:06:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71D4C2072D;
+        Thu, 19 Mar 2020 17:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584637589;
-        bh=aP9ejx7SnCaC82qYc3Vt82pK0yL3U36c8HGf9fweu5k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XM2Syf+m0FPM5y451GLPJloUXJW+SHrVz3gtS+F2kYAKF+JPMq3t3kxXd4T9UhQdu
-         /DH4w1/T/X5JYOS05FN7SiXn2ToTRs263m3yh9l2+FLCPiM2rAy/w8VoC0pGi89aVS
-         MA5ixdCa2OTXbTW7xAYxhbsETQydP+Xw8No5Ku/I=
-Received: by mail-qt1-f172.google.com with SMTP id t13so2422200qtn.13;
-        Thu, 19 Mar 2020 10:06:29 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2rF099seJU1ow3pV63h8W07xUaoYtWv8b1tllhmYdPwuLqWtC9
-        XtklYob0ZKTwB+fWNiMz267qk6UqeP15fucQpg==
-X-Google-Smtp-Source: ADFU+vt+yFqWedpHLHifVRY04DtI47w8tUOPVx49UqRoZIuaFPvx2qIUuM2+JMkhxWeFf5AgL90mTKdywpKvgvFxzBQ=
-X-Received: by 2002:ac8:59:: with SMTP id i25mr4039750qtg.110.1584637586896;
- Thu, 19 Mar 2020 10:06:26 -0700 (PDT)
+        s=default; t=1584637621;
+        bh=NdR6LVZ2cIsGAen/1ujzdrUs8tOtmmAvYQrgY/mLbXM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fAsoMHdZ+CYuM4c3hgzSAXhoiZ3xbVbN8s2cz7P9jqZcY1HB2yJCvRtzAv8IouYHO
+         LC3dp3VGJ75UAMS0WzOgKBLBc3qum4Xg8DyXU67qvbSw9FVQNq+jdccLoJUC4cY0Oe
+         POScnOpP9mVL6PMYpSsyL0K3elHJk1q6Tes9R0s8=
+Date:   Thu, 19 Mar 2020 12:06:59 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v2 2/2] PCI: uniphier: Add UniPhier PCIe endpoint
+ controller support
+Message-ID: <20200319170659.GA158868@google.com>
 MIME-Version: 1.0
-References: <CAGWqDJ7AccvoxjKfQJ3GytJ-+u56Bk3rEn0sSYv-zCuBe1brAg@mail.gmail.com>
- <CAL_JsqLz-0myc-PSSaCQWDFXQx+=X9nBSXWsJaGCVqTFn0d5kw@mail.gmail.com> <CAGWqDJ4yA4ikz5MwQQwW8CAvE_dt16iuvN6cKRL2DdAuw8QWww@mail.gmail.com>
-In-Reply-To: <CAGWqDJ4yA4ikz5MwQQwW8CAvE_dt16iuvN6cKRL2DdAuw8QWww@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 19 Mar 2020 11:06:15 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLU4kEmRnXhQ5+gP-ZisS2Za+s6mNFg4RnMdpDtDRQB3g@mail.gmail.com>
-Message-ID: <CAL_JsqLU4kEmRnXhQ5+gP-ZisS2Za+s6mNFg4RnMdpDtDRQB3g@mail.gmail.com>
-Subject: Re: graph connection to node is not bidirectional kernel-5.6.0-rc6
-To:     Vinay Simha B N <simhavcs@gmail.com>
-Cc:     "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584604449-13461-3-git-send-email-hayashi.kunihiko@socionext.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 9:56 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
->
-> On Thu, Mar 19, 2020 at 9:16 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, Mar 19, 2020 at 1:31 AM Vinay Simha B N <simhavcs@gmail.com> wrote:
-> > >
-> > > hi,
-> > >
-> > > I am getting the endpoint' is not bidirectional(d2l_in, dsi0_out)
-> > > warning in compilation, built boot image works on qcom apq8016-ifc6309
-> > > board with the dsi->bridge->lvds panel.
-> > > Because of this warning i cannot create a .yaml documentation examples.
-> > > Please suggest.
-> > >
-> > > tc_bridge: bridge@f {
-> >
-> >              ^^^^^^^^
-> >
-> > > arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:253.28-255.9: Warning
-> > > (graph_endpoint): /soc/i2c@78b8000/bridge@39/ports/port@0/endpoint:
-> >
-> >                                      ^^^^^^^^^
-> >
-> > Looks like you have 2 different bridges.
-> >
-> i had two bridges, if we disable one bridge also we get the warning
->
-> arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi:333.53-335.35: Warning
-> (graph_endpoint): /soc/auo,b101xtn01/port/endpoint: graph connection
-> to node '/soc/i2c@78b8000/bridge@f/ports/port@1/endpoint' is not
-> bidirectional
+On Thu, Mar 19, 2020 at 04:54:09PM +0900, Kunihiko Hayashi wrote:
+> This introduces specific glue layer for UniPhier platform to support
+> PCIe controller that is based on the DesignWare PCIe core, and
+> this driver supports endpoint mode. This supports for Pro5 SoC only.
 
-You can't just disable nodes. To switch which bridge is enabled, you
-already have to modify remote-endpoint at the other end. So the
-requirement is you have to modify both 'remote-endpoint' properties
-(or really all 3).
+Possible alternate text: ("specific glue layer" isn't the usual way to
+describe a driver)
 
-The other options is if you want both connections described, then you
-need 2 'endpoint' nodes to connect both bridges.
+  PCI: uniphier: Add Socionext UniPhier Pro5 SoC endpoint controller driver
+
+  Add driver for the Socionext UniPhier Pro5 SoC endpoint controller.
+  This controller is based on the DesignWare PCIe core.
+
+> +/* assertion time of intx in usec */
+
+s/intx/INTx/ to match usage in spec (and in comments below :))
+
+> +#define PCL_INTX_WIDTH_USEC		30
+
+> +struct uniphier_pcie_ep_soc_data {
+> +	bool is_legacy;
+
+I'd prefer "unsigned int is_legacy:1".  See [1].
+
+But AFAICT you actually don't need this at all (yet), since you only
+have a single of_device_id, and it sets "is_legacy = true".  That
+means the *not* legacy code is effectively dead and hasn't been
+tested.
+
+My preference would be to add "is_legacy" and the associated tests
+when you actually *need* them, i.e., when you add support for a
+non-legacy device.
+
+> +static int uniphier_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
+> +	u32 val;
+> +
+> +	/* assert INTx */
+> +	val = readl(priv->base + PCL_APP_INTX);
+> +	val |= PCL_APP_INTX_SYS_INT;
+> +	writel(val, priv->base + PCL_APP_INTX);
+> +
+> +	udelay(PCL_INTX_WIDTH_USEC);
+> +
+> +	/* deassert INTx */
+> +	val = readl(priv->base + PCL_APP_INTX);
+
+Why do you need to read PCL_APP_INTX again here?
+
+> +	val &= ~PCL_APP_INTX_SYS_INT;
+> +	writel(val, priv->base + PCL_APP_INTX);
+> +
+> +	return 0;
+> +}
+
+> +	ret = dw_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+
+This is equivalent to:
+
+  ret = dw_pcie_ep_init(ep);
+  if (ret)
+    dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
+
+  return ret;
+
+> +}
+
+[1] https://lore.kernel.org/linux-fsdevel/CA+55aFzKQ6Pj18TB8p4Yr0M4t+S+BsiHH=BJNmn=76-NcjTj-g@mail.gmail.com/
