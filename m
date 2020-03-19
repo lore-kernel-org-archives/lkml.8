@@ -2,149 +2,156 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA05BC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC51C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E32B20775
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:36:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584632174;
-	bh=p/B+fhi7kTckDWuDXt2TkHFiBI1WQNcNA2Sa0G/Pzkk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iy4kXrT4DrAp0uz/60U8ukfJ7HtoDrP1DrzROKV6kQfT2k61ufW3IiA8UDPFz74Gg
-	 6VZ0DibepWAjwNPiFz1qVz7+YyST/oiXEIClNF9XoJOyngWtZgFvhBBI75Ka39aulW
-	 vc96CBaUdJuiWCwTwRIaDZyyRENZZRc6l3PKY3TQ=
+	by mail.kernel.org (Postfix) with ESMTP id 84B6320775
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:38:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Xy4Hv9B1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgCSPgN (ORCPT
+        id S1727985AbgCSPiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:36:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbgCSPgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:36:13 -0400
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 032EB208C3
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 15:36:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584632172;
-        bh=p/B+fhi7kTckDWuDXt2TkHFiBI1WQNcNA2Sa0G/Pzkk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kDtEIJR+zlEaQ/No+7kRn4gYAD3sfU2FohOc6I6bLex8EKbRZ+YiNu5pKvs8E4Dz+
-         y1kTaB6IzP0VvgIVn7CnlGmTQKijL05V4UIwcb8uBS/RdloqjAAsyyP+qTCKfZoZBN
-         u9YvM1HKyem8L7u8RA9ZyHUpN5AZ7WyKdzwXgpx0=
-Received: by mail-wm1-f41.google.com with SMTP id z13so2979000wml.0
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 08:36:11 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2qPDDjhjdpKulhcrMHpqS97+OFCCtXFdHoU6ZTla4dhuxHqlfH
-        fVrahPYvW4OiGRfcvYXDsN07DPTb3ZS0bUEvAXPxqQ==
-X-Google-Smtp-Source: ADFU+vsYJk1iHN4pEM4zZ66rCnKS3xMKlbrb8V+A2LRCAZxaX77pLeIiTvN2Ikuq0ELD0wy47MEn9E4nb4r2hME/0yY=
-X-Received: by 2002:a1c:b0c3:: with SMTP id z186mr4272698wme.36.1584632170436;
- Thu, 19 Mar 2020 08:36:10 -0700 (PDT)
+        Thu, 19 Mar 2020 11:38:14 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43341 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727521AbgCSPiO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:38:14 -0400
+Received: by mail-ot1-f65.google.com with SMTP id a6so2766444otb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 08:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=seCAy6xYY0ujQIsNH75m2599DrTdig4Y4u9evBOvPIA=;
+        b=Xy4Hv9B1Q/8NsaVAgg5N3Z6vnoVUApM/gVfQN6OhHKjRA8QBEmOawruEKVCVz0LAkt
+         CeJpe/zz4rUmz3J+2o4fdngDWigvxvl51Jn1Wq68BGK8s02vJJkjhxw/SrcJn/aVn83w
+         DGUsdQ4R0giuJKSGh/IMUtDG7szQcVjT6SMV4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=seCAy6xYY0ujQIsNH75m2599DrTdig4Y4u9evBOvPIA=;
+        b=npNL01n5Mf1DgwaxNA/lAyFNUG/B4v/1TS2yiKkH86m4hypMmBEk5id6FhGw/auemM
+         US0i3PhopQV2wiGgUlnUJYkSL52KLc5JfW6IQeBTfihMdcCZ3LQtJVojofB0UfqW2HSw
+         ELZQTMWKNqyYX7VlicU/lMSW4ivE6t8qAb5oUS6EgODCZmTSMTtF8Z85eo1xUL0sDGew
+         TU/ZbvnV7K51yJyeH8AabjhwkhAqgokIIQMHcDEVhWzTMHnAvC6wrxrDrLUBjClqc4sD
+         ui8ccMO56iDKbICm/O75eKnRVk5uaU/C8g/S7+hmqw2tsDLcJLdPQ24sPeanx5zlBgfT
+         g1Vg==
+X-Gm-Message-State: ANhLgQ1miqeI1SJXHBLC1eP8Dy5QZFyOiqMY6luW72f1gyjMeCV0Nbqr
+        RRYO1sqE2OBcfF8iTriFWJcVMUthrdrRcqMjSS0qPA==
+X-Google-Smtp-Source: ADFU+vub2oGGaZwK6dqB/jd4b8EpyH4/obAagvR+weJB1BPBkFBrFv81Vmk8W+ZBTFzEINX6QykYl8LH1mYocO4UqFc=
+X-Received: by 2002:a9d:6310:: with SMTP id q16mr2598495otk.147.1584632293068;
+ Thu, 19 Mar 2020 08:38:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200319091407.1481-1-joro@8bytes.org> <20200319091407.1481-71-joro@8bytes.org>
-In-Reply-To: <20200319091407.1481-71-joro@8bytes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 19 Mar 2020 08:35:59 -0700
-X-Gmail-Original-Message-ID: <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
-Message-ID: <CALCETrUOQneBHjoZkP-7T5PDijb=WOyv7xF7TD0GLR2Aw77vyA@mail.gmail.com>
-Subject: Re: [PATCH 70/70] x86/sev-es: Add NMI state tracking
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>
+References: <20200319124631.58432-1-yuehaibing@huawei.com>
+In-Reply-To: <20200319124631.58432-1-yuehaibing@huawei.com>
+From:   Lorenz Bauer <lmb@cloudflare.com>
+Date:   Thu, 19 Mar 2020 15:38:00 +0000
+Message-ID: <CACAyw9_B+qNYHPrDPfYszjOwJbiV92vehT7BA_NGuFtzkj0D0w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: tcp: Fix unused function warnings
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 2:14 AM Joerg Roedel <joro@8bytes.org> wrote:
+On Thu, 19 Mar 2020 at 12:47, YueHaibing <yuehaibing@huawei.com> wrote:
 >
-> From: Joerg Roedel <jroedel@suse.de>
+> If BPF_STREAM_PARSER is not set, gcc warns:
 >
-> Keep NMI state in SEV-ES code so the kernel can re-enable NMIs for the
-> vCPU when it reaches IRET.
+> net/ipv4/tcp_bpf.c:483:12: warning: 'tcp_bpf_sendpage' defined but not used [-Wunused-function]
+> net/ipv4/tcp_bpf.c:395:12: warning: 'tcp_bpf_sendmsg' defined but not used [-Wunused-function]
+> net/ipv4/tcp_bpf.c:13:13: warning: 'tcp_bpf_stream_read' defined but not used [-Wunused-function]
+>
+> Moves the unused functions into the #ifdef
 
-IIRC I suggested just re-enabling NMI in C from do_nmi().  What was
-wrong with that approach?
+Thanks for fixing this.
 
-> +#ifdef CONFIG_AMD_MEM_ENCRYPT
-> +SYM_CODE_START(sev_es_iret_user)
-> +       UNWIND_HINT_IRET_REGS offset=8
-> +       /*
-> +        * The kernel jumps here directly from
-> +        * swapgs_restore_regs_and_return_to_usermode. %rsp points already to
-> +        * trampoline stack, but %cr3 is still from kernel. User-regs are live
-> +        * except %rdi. Switch to user CR3, restore user %rdi and user gs_base
-> +        * and single-step over IRET
-> +        */
-> +       SWITCH_TO_USER_CR3_STACK scratch_reg=%rdi
-> +       popq    %rdi
-> +       SWAPGS
-> +       /*
-> +        * Enable single-stepping and execute IRET. When IRET is
-> +        * finished the resulting #DB exception will cause a #VC
-> +        * exception to be raised. The #VC exception handler will send a
-> +        * NMI-complete message to the hypervisor to re-open the NMI
-> +        * window.
+Reviewed-by: Lorenz Bauer <lmb@cloudflare.com>
 
-This is distressing to say the least.  The sequence if events is, roughly:
 
-1. We're here with NMI masking in an unknown state because do_nmi()
-and any nested faults could have done IRET, at least architecturally.
-NMI could occur or it could not.  I suppose that, on SEV-ES, as least
-on current CPUs, NMI is definitely masked.  What about on newer CPUs?
-What if we migrate?
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  net/ipv4/tcp_bpf.c | 28 ++++++++++++++--------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
+>
+> diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+> index fe7b4fbc31c1..37c91f25cae3 100644
+> --- a/net/ipv4/tcp_bpf.c
+> +++ b/net/ipv4/tcp_bpf.c
+> @@ -10,19 +10,6 @@
+>  #include <net/inet_common.h>
+>  #include <net/tls.h>
+>
+> -static bool tcp_bpf_stream_read(const struct sock *sk)
+> -{
+> -       struct sk_psock *psock;
+> -       bool empty = true;
+> -
+> -       rcu_read_lock();
+> -       psock = sk_psock(sk);
+> -       if (likely(psock))
+> -               empty = list_empty(&psock->ingress_msg);
+> -       rcu_read_unlock();
+> -       return !empty;
+> -}
+> -
+>  static int tcp_bpf_wait_data(struct sock *sk, struct sk_psock *psock,
+>                              int flags, long timeo, int *err)
+>  {
+> @@ -298,6 +285,20 @@ int tcp_bpf_sendmsg_redir(struct sock *sk, struct sk_msg *msg,
+>  }
+>  EXPORT_SYMBOL_GPL(tcp_bpf_sendmsg_redir);
+>
+> +#ifdef CONFIG_BPF_STREAM_PARSER
+> +static bool tcp_bpf_stream_read(const struct sock *sk)
+> +{
+> +       struct sk_psock *psock;
+> +       bool empty = true;
+> +
+> +       rcu_read_lock();
+> +       psock = sk_psock(sk);
+> +       if (likely(psock))
+> +               empty = list_empty(&psock->ingress_msg);
+> +       rcu_read_unlock();
+> +       return !empty;
+> +}
+> +
+>  static int tcp_bpf_send_verdict(struct sock *sk, struct sk_psock *psock,
+>                                 struct sk_msg *msg, int *copied, int flags)
+>  {
+> @@ -528,7 +529,6 @@ static int tcp_bpf_sendpage(struct sock *sk, struct page *page, int offset,
+>         return copied ? copied : err;
+>  }
+>
+> -#ifdef CONFIG_BPF_STREAM_PARSER
+>  enum {
+>         TCP_BPF_IPV4,
+>         TCP_BPF_IPV6,
+> --
+> 2.17.1
+>
+>
 
-> +        */
-> +sev_es_iret_kernel:
-> +       pushf
-> +       btsq $X86_EFLAGS_TF_BIT, (%rsp)
-> +       popf
 
-Now we have TF on, NMIs (architecturally) in unknown state.
+--
+Lorenz Bauer  |  Systems Engineer
+6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
 
-> +       iretq
-
-This causes us to pop the NMI frame off the stack.  Assuming the NMI
-restart logic is invoked (which is maybe impossible?), we get #DB,
-which presumably is actually delivered.  And we end up on the #DB
-stack, which might already have been in use, so we have a potential
-increase in nesting.  Also, #DB may be called from an unexpected
-context.
-
-Now somehow #DB is supposed to invoke #VC, which is supposed to do the
-magic hypercall, and all of this is supposed to be safe?  Or is #DB
-unconditionally redirected to #VC?  What happens if we had no stack
-(e.g. we interrupted SYSCALL) or we were already in #VC to begin with?
-
-I think there are two credible ways to approach this:
-
-1. Just put the NMI unmask in do_nmi().  The kernel *already* knows
-how to handle running do_nmi() with NMIs unmasked.  This is much, much
-simpler than your code.
-
-2. Have an entirely separate NMI path for the
-SEV-ES-on-misdesigned-CPU case.  And have very clear documentation for
-what prevents this code from being executed on future CPUs (Zen3?)
-that have this issue fixed for real?
-
-This hybrid code is no good.
-
---Andy
+www.cloudflare.com
