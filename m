@@ -2,275 +2,75 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B60C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98810C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D37732070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C40F20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbgCSMW1 (ORCPT
+        id S1727065AbgCSMXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:22:27 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:6990 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726864AbgCSMW0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:22:26 -0400
-X-IronPort-AV: E=Sophos;i="5.70,571,1574089200"; 
-   d="scan'208";a="42339866"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 19 Mar 2020 21:22:25 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8C96142ED940;
-        Thu, 19 Mar 2020 21:22:21 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 5/5] media: dt-bindings: media: i2c: convert ov5645 bindings to json-schema
-Date:   Thu, 19 Mar 2020 12:19:23 +0000
-Message-Id: <1584620363-2255-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 19 Mar 2020 08:23:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:34410 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726936AbgCSMXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 08:23:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDBA731B;
+        Thu, 19 Mar 2020 05:23:22 -0700 (PDT)
+Received: from e113632-lin (unknown [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0ECD93F305;
+        Thu, 19 Mar 2020 05:23:21 -0700 (PDT)
+References: <20200311181601.18314-1-valentin.schneider@arm.com> <20200311181601.18314-10-valentin.schneider@arm.com> <53763a32-0ce5-e267-9d5d-99e65c921d08@arm.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org
+Subject: Re: [PATCH v2 9/9] sched/topology: Define and use shortcut pointers for wakeup sd_flag scan
+In-reply-to: <53763a32-0ce5-e267-9d5d-99e65c921d08@arm.com>
+Date:   Thu, 19 Mar 2020 12:22:34 +0000
+Message-ID: <jhj8sjwilf9.mognet@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert ov5645 bindings to json-schema.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- .../devicetree/bindings/media/i2c/ov5645.txt  |  54 -------
- .../devicetree/bindings/media/i2c/ov5645.yaml | 140 ++++++++++++++++++
- 2 files changed, 140 insertions(+), 54 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+On Thu, Mar 19 2020, Dietmar Eggemann wrote:
+> On 11.03.20 19:16, Valentin Schneider wrote:
+>> @@ -6621,7 +6610,19 @@ select_task_rq_fair(struct task_struct *p, int prev_cpu, int wake_flags)
+>>
+>>      rcu_read_lock();
+>>
+>> -	sd = highest_flag_domain(cpu, sd_flag);
+>> +	switch (wake_flags & (WF_TTWU | WF_FORK | WF_EXEC)) {
+>> +	case WF_TTWU:
+>> +		sd_flag = SD_BALANCE_WAKE;
+>> +		sd = rcu_dereference(per_cpu(sd_balance_wake, cpu));
+>
+> IMHO, since we hard-code 0*SD_BALANCE_WAKE in sd_init(), sd would always
+> be NULL, so !want_affine (i.e. wake_wide()) would still go sis().
+>
+> SD_BALANCE_WAKE is no a topology related sd_flag so it can't be set from
+> outside. Since the sd->flags sysctl is now read-only, wouldn't this case
+> be redundant?
+>
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-deleted file mode 100644
-index 1c85c78ec58c..000000000000
---- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-+++ /dev/null
-@@ -1,54 +0,0 @@
--* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
--
--The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
--an active array size of 2592H x 1944V. It is programmable through a serial I2C
--interface.
--
--Required Properties:
--- compatible: Value should be "ovti,ov5645".
--- clocks: Reference to the xclk clock.
--- clock-names: Should be "xclk".
--- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
--  to the hardware pin PWDNB which is physically active low.
--- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
--  the hardware pin RESETB.
--- vdddo-supply: Chip digital IO regulator.
--- vdda-supply: Chip analog regulator.
--- vddd-supply: Chip digital core regulator.
--
--The device node must contain one 'port' child node for its digital output
--video port, in accordance with the video interface bindings defined in
--Documentation/devicetree/bindings/media/video-interfaces.txt.
--
--Example:
--
--	&i2c1 {
--		...
--
--		ov5645: ov5645@3c {
--			compatible = "ovti,ov5645";
--			reg = <0x3c>;
--
--			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
--			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&camera_rear_default>;
--
--			clocks = <&clks 200>;
--			clock-names = "xclk";
--			assigned-clocks = <&clks 200>;
--			assigned-clock-rates = <24000000>;
--
--			vdddo-supply = <&camera_dovdd_1v8>;
--			vdda-supply = <&camera_avdd_2v8>;
--			vddd-supply = <&camera_dvdd_1v2>;
--
--			port {
--				ov5645_ep: endpoint {
--					clock-lanes = <1>;
--					data-lanes = <0 2>;
--					remote-endpoint = <&csi0_ep>;
--				};
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.yaml b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-new file mode 100644
-index 000000000000..4bf58ad210c5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-@@ -0,0 +1,140 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/ov5645.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
-+
-+maintainers:
-+  - Sakari Ailus <sakari.ailus@linux.intel.com>
-+  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-+
-+description: |-
-+ The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-+ an active array size of 2592H x 1944V. It is programmable through a serial I2C
-+ interface.
-+
-+properties:
-+  compatible:
-+    const: ovti,ov5645
-+
-+  reg:
-+    description: I2C device address
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: xclk
-+
-+  assigned-clocks:
-+    maxItems: 1
-+
-+  assigned-clock-rates:
-+     items:
-+     - description: Must be 24MHz (24000000).
-+
-+  enable-gpios:
-+    description: |-
-+      Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-+      to the hardware pin PWDNB which is physically active low.
-+
-+  reset-gpios:
-+    description: |-
-+      Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-+      the hardware pin RESETB.
-+
-+  vdddo-supply:
-+    description:
-+      Chip digital IO regulator.
-+
-+  vdda-supply:
-+    description:
-+      Chip analog regulator.
-+
-+  vddd-supply:
-+    description:
-+      Chip digital core regulator.
-+
-+  # See ../video-interfaces.txt for more details
-+  port:
-+    type: object
-+    properties:
-+      endpoint:
-+        type: object
-+
-+        properties:
-+          data-lanes:
-+            description: |-
-+              The sensor supports two-lane operation.
-+              For two-lane operation the property must be set to <1 2>.
-+            items:
-+              - const: 1
-+              - const: 2
-+
-+          clock-lanes:
-+            description:
-+              should be set to <0> (clock lane on hardware lane 0).
-+            items:
-+              - const: 0
-+
-+          remote-endpoint: true
-+
-+        required:
-+          - data-lanes
-+          - clock-lanes
-+          - remote-endpoint
-+
-+        additionalProperties: false
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - assigned-clocks
-+  - assigned-clock-rates
-+  - enable-gpios
-+  - reset-gpios
-+  - vdddo-supply
-+  - vdda-supply
-+  - vddd-supply
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c1 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        ov5645: sensor@3c {
-+            compatible = "ovti,ov5645";
-+            reg = <0x3c>;
-+            clocks = <&ov5645_cl>;
-+            clock-names = "xclk";
-+            assigned-clocks = <&ov5645_cl>;
-+            assigned-clock-rates = <24000000>;
-+            enable-gpios = <&gpio1 6 /* GPIO_ACTIVE_HIGH */>;
-+            reset-gpios = <&gpio5 20 /* GPIO_ACTIVE_LOW */>;
-+            vdddo-supply = <&camera_dovdd_1v8>;
-+            vdda-supply = <&camera_avdd_2v8>;
-+            vddd-supply = <&camera_dvdd_1v2>;
-+
-+            port {
-+                ov5645_0: endpoint {
-+                    remote-endpoint = <&csi1_ep>;
-+                    clock-lanes = <0>;
-+                    data-lanes = <1 2>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
--- 
-2.20.1
+On a purely mainline kernel, yes, 'sd' will always be NULL for
+wakeups. I'm playing a bit more conservative here with SD_BALANCE_WAKE,
+as I could see some folks using that flag in some ~franken~ downstream
+kernels (I am not aware of any, however).
 
+Also, to be fair we've only very recently gotten rid of the last
+SD_BALANCE_WAKE user (asymmetric CPU capacity topologies), so I felt
+like keeping it around for a bit before entirely killing it would be a
+sane thing to do.
+
+> [...]
