@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A8BC4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B24CC4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3018820722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FA120722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbgCSJPp (ORCPT
+        id S1727507AbgCSJOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:15:45 -0400
-Received: from 8bytes.org ([81.169.241.247]:53168 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:14:47 -0400
+Received: from 8bytes.org ([81.169.241.247]:52476 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727523AbgCSJOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:48 -0400
+        id S1727337AbgCSJOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:34 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id BE8C5EE0; Thu, 19 Mar 2020 10:14:28 +0100 (CET)
+        id 6428B546; Thu, 19 Mar 2020 10:14:21 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -35,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 67/70] x86/head/64: Rename start_cpu0
-Date:   Thu, 19 Mar 2020 10:14:04 +0100
-Message-Id: <20200319091407.1481-68-joro@8bytes.org>
+Subject: [PATCH 28/70] x86/idt: Move two function from k/idt.c to i/a/desc.h
+Date:   Thu, 19 Mar 2020 10:13:25 +0100
+Message-Id: <20200319091407.1481-29-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -48,94 +48,139 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-For SEV-ES this entry point will be used for restarting APs after they
-have been offlined. Remove the '0' from the name to reflect that.
+Move these two functions from kernel/idt.c to include/asm/desc.h:
+
+	* init_idt_data()
+	* idt_init_desc()
+
+These functions are needed to setup IDT entries very early and need to
+be called from head64.c. To be usable this early these functions need to
+be compiled without instrumentation and the stack-protector feature.
+These features need to be kept enabled for kernel/idt.c, so head64.c
+must use its own versions.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/cpu.h | 2 +-
- arch/x86/kernel/head_32.S  | 4 ++--
- arch/x86/kernel/head_64.S  | 6 +++---
- arch/x86/kernel/smpboot.c  | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/desc.h      | 27 +++++++++++++++++++++++++
+ arch/x86/include/asm/desc_defs.h |  7 +++++++
+ arch/x86/kernel/idt.c            | 34 --------------------------------
+ 3 files changed, 34 insertions(+), 34 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index adc6cc86b062..00668daf8991 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -29,7 +29,7 @@ struct x86_cpu {
- #ifdef CONFIG_HOTPLUG_CPU
- extern int arch_register_cpu(int num);
- extern void arch_unregister_cpu(int);
--extern void start_cpu0(void);
-+extern void start_cpu(void);
- #ifdef CONFIG_DEBUG_HOTPLUG_CPU0
- extern int _debug_hotplug_cpu(int cpu, int action);
- #endif
-diff --git a/arch/x86/kernel/head_32.S b/arch/x86/kernel/head_32.S
-index 3923ab4630d7..1a280152bd10 100644
---- a/arch/x86/kernel/head_32.S
-+++ b/arch/x86/kernel/head_32.S
-@@ -180,12 +180,12 @@ SYM_CODE_END(startup_32)
-  * up already except stack. We just set up stack here. Then call
-  * start_secondary().
-  */
--SYM_FUNC_START(start_cpu0)
-+SYM_FUNC_START(start_cpu)
- 	movl initial_stack, %ecx
- 	movl %ecx, %esp
- 	call *(initial_code)
- 1:	jmp 1b
--SYM_FUNC_END(start_cpu0)
-+SYM_FUNC_END(start_cpu)
+diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
+index 68a99d2a5f33..80bf63c08007 100644
+--- a/arch/x86/include/asm/desc.h
++++ b/arch/x86/include/asm/desc.h
+@@ -389,6 +389,33 @@ static inline void set_desc_limit(struct desc_struct *desc, unsigned long limit)
+ void update_intr_gate(unsigned int n, const void *addr);
+ void alloc_intr_gate(unsigned int n, const void *addr);
+ 
++static inline void init_idt_data(struct idt_data *data, unsigned int n,
++				 const void *addr)
++{
++	BUG_ON(n > 0xFF);
++
++	memset(data, 0, sizeof(*data));
++	data->vector	= n;
++	data->addr	= addr;
++	data->segment	= __KERNEL_CS;
++	data->bits.type	= GATE_INTERRUPT;
++	data->bits.p	= 1;
++}
++
++static inline void idt_init_desc(gate_desc *gate, const struct idt_data *d)
++{
++	unsigned long addr = (unsigned long) d->addr;
++
++	gate->offset_low	= (u16) addr;
++	gate->segment		= (u16) d->segment;
++	gate->bits		= d->bits;
++	gate->offset_middle	= (u16) (addr >> 16);
++#ifdef CONFIG_X86_64
++	gate->offset_high	= (u32) (addr >> 32);
++	gate->reserved		= 0;
++#endif
++}
++
+ extern unsigned long system_vectors[];
+ 
+ #ifdef CONFIG_X86_64
+diff --git a/arch/x86/include/asm/desc_defs.h b/arch/x86/include/asm/desc_defs.h
+index 5621fb3f2d1a..f7e7099af595 100644
+--- a/arch/x86/include/asm/desc_defs.h
++++ b/arch/x86/include/asm/desc_defs.h
+@@ -74,6 +74,13 @@ struct idt_bits {
+ 			p	: 1;
+ } __attribute__((packed));
+ 
++struct idt_data {
++	unsigned int	vector;
++	unsigned int	segment;
++	struct idt_bits	bits;
++	const void	*addr;
++};
++
+ struct gate_struct {
+ 	u16		offset_low;
+ 	u16		segment;
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index c752027abc9e..4a2c7791c697 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -9,13 +9,6 @@
+ #include <asm/desc.h>
+ #include <asm/hw_irq.h>
+ 
+-struct idt_data {
+-	unsigned int	vector;
+-	unsigned int	segment;
+-	struct idt_bits	bits;
+-	const void	*addr;
+-};
+-
+ #define DPL0		0x0
+ #define DPL3		0x3
+ 
+@@ -204,20 +197,6 @@ const struct desc_ptr debug_idt_descr = {
+ };
  #endif
  
- /*
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index c935d6d07393..f2e793213fa7 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -299,15 +299,15 @@ SYM_CODE_END(secondary_startup_64)
- 
- #ifdef CONFIG_HOTPLUG_CPU
- /*
-- * Boot CPU0 entry point. It's called from play_dead(). Everything has been set
-+ * CPU entry point. It's called from play_dead(). Everything has been set
-  * up already except stack. We just set up stack here. Then call
-  * start_secondary() via .Ljump_to_C_code.
-  */
--SYM_CODE_START(start_cpu0)
-+SYM_CODE_START(start_cpu)
- 	UNWIND_HINT_EMPTY
- 	movq	initial_stack(%rip), %rsp
- 	jmp	.Ljump_to_C_code
--SYM_CODE_END(start_cpu0)
-+SYM_CODE_END(start_cpu)
- #endif
- 
- 	/* Both SMP bootup and ACPI suspend change these variables */
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 69881b2d446c..19aa18f1e307 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1717,7 +1717,7 @@ static inline void mwait_play_dead(void)
- 		 * If NMI wants to wake up CPU0, start CPU0.
- 		 */
- 		if (wakeup_cpu0())
--			start_cpu0();
-+			start_cpu();
+-static inline void idt_init_desc(gate_desc *gate, const struct idt_data *d)
+-{
+-	unsigned long addr = (unsigned long) d->addr;
+-
+-	gate->offset_low	= (u16) addr;
+-	gate->segment		= (u16) d->segment;
+-	gate->bits		= d->bits;
+-	gate->offset_middle	= (u16) (addr >> 16);
+-#ifdef CONFIG_X86_64
+-	gate->offset_high	= (u32) (addr >> 32);
+-	gate->reserved		= 0;
+-#endif
+-}
+-
+ static void
+ idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sys)
+ {
+@@ -231,19 +210,6 @@ idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sy
  	}
  }
  
-@@ -1732,7 +1732,7 @@ void hlt_play_dead(void)
- 		 * If NMI wants to wake up CPU0, start CPU0.
- 		 */
- 		if (wakeup_cpu0())
--			start_cpu0();
-+			start_cpu();
- 	}
- }
- 
+-static void init_idt_data(struct idt_data *data, unsigned int n,
+-			  const void *addr)
+-{
+-	BUG_ON(n > 0xFF);
+-
+-	memset(data, 0, sizeof(*data));
+-	data->vector	= n;
+-	data->addr	= addr;
+-	data->segment	= __KERNEL_CS;
+-	data->bits.type	= GATE_INTERRUPT;
+-	data->bits.p	= 1;
+-}
+-
+ static void set_intr_gate(unsigned int n, const void *addr)
+ {
+ 	struct idt_data data;
 -- 
 2.17.1
 
