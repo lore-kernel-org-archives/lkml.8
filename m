@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B115C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22459C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634B6214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB691206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623684;
-	bh=PUdzZYugZHWk0go5DbhJKp0/LPpvBUayg4xyV7uRois=;
+	s=default; t=1584623688;
+	bh=1C0UM58jz/JtXEfEO16S4A019J3dh/4Fk7anR3rx3cw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wkI/P3oPpsJjLqtFXPq1cV9My/0XrxVV57Ht0ZhBykcQEwcCA3TvXeQ2v0ZyiwIyG
-	 NKIF7wmBKEtQU8P3SLq35iDJd213AMgUrld1l0CrXZy6GqjhbWPQssyA0TDthB61/X
-	 c7hd9pefVhg8c6q34/48ADx4FGQQD/07zYmrHniM=
+	b=SfRghI+Q1kqvbDCr8fHLXajIcdXqEtUnEnIMFyOz4RTll0i7Rf/z0b+asCahxmFEN
+	 4nTf0rJzG8wrAPbPQngzG+qQrkK29uH3vW/zgkbdmhmWZlcaR9RPKwHYPhH9kqmnKj
+	 9N9JCtnaawZPGh82o4uYDyae+QgWgNbRTG26dPyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgCSNOn (ORCPT
+        id S1727980AbgCSNOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:14:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34084 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:14:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728893AbgCSNOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:14:38 -0400
+        id S1728929AbgCSNOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:14:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB293206D7;
-        Thu, 19 Mar 2020 13:14:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76255206D7;
+        Thu, 19 Mar 2020 13:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623677;
-        bh=PUdzZYugZHWk0go5DbhJKp0/LPpvBUayg4xyV7uRois=;
+        s=default; t=1584623680;
+        bh=1C0UM58jz/JtXEfEO16S4A019J3dh/4Fk7anR3rx3cw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dr82HVWcqoSewlhrSgzWE3JeijFB6s73OseJwBRbckzCkgQVjpEG9NfhIONVnLeZG
-         Q8o2c9zxJeltlpMGfV3d1OrjgnH9wBZq61jmaPMtNnR9PqCZgxQQZEz/Ar05Ak/DVj
-         Vl8NNhKzw41Y1gqp9XSgFbxiD6Z+LT/7iE/CJ3Ic=
+        b=W5IsBaVfg+vgNe6J0THOV78gFLYTvT4g3txo/UFU7Dp4O7ZqdOPFdn7wiM1JDchuh
+         7kc5z1hNP4FRjFgw4svnsvcE465yBTCr7Sqt3j7LIXA1BVqtetIsaS63A9ra9qUlfn
+         mDx1O84mVLJRo7Qye/ztdZR6qSBUToZ0Tnd8lclo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 17/99] net: memcg: fix lockdep splat in inet_csk_accept()
-Date:   Thu, 19 Mar 2020 14:02:55 +0100
-Message-Id: <20200319123946.831659737@linuxfoundation.org>
+Subject: [PATCH 4.14 18/99] fib: add missing attribute validation for tun_id
+Date:   Thu, 19 Mar 2020 14:02:56 +0100
+Message-Id: <20200319123947.132776144@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -61,123 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-commit 06669ea346e476a5339033d77ef175566a40efbb upstream.
+[ Upstream commit 4c16d64ea04056f1b1b324ab6916019f6a064114 ]
 
-Locking newsk while still holding the listener lock triggered
-a lockdep splat [1]
+Add missing netlink policy entry for FRA_TUN_ID.
 
-We can simply move the memcg code after we release the listener lock,
-as this can also help if multiple threads are sharing a common listener.
-
-Also fix a typo while reading socket sk_rmem_alloc.
-
-[1]
-WARNING: possible recursive locking detected
-5.6.0-rc3-syzkaller #0 Not tainted
---------------------------------------------
-syz-executor598/9524 is trying to acquire lock:
-ffff88808b5b8b90 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
-ffff88808b5b8b90 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x69f/0xd30 net/ipv4/inet_connection_sock.c:492
-
-but task is already holding lock:
-ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
-ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x8d/0xd30 net/ipv4/inet_connection_sock.c:445
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(sk_lock-AF_INET6);
-  lock(sk_lock-AF_INET6);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-1 lock held by syz-executor598/9524:
- #0: ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: lock_sock include/net/sock.h:1541 [inline]
- #0: ffff88808b5b9590 (sk_lock-AF_INET6){+.+.}, at: inet_csk_accept+0x8d/0xd30 net/ipv4/inet_connection_sock.c:445
-
-stack backtrace:
-CPU: 0 PID: 9524 Comm: syz-executor598 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_deadlock_bug kernel/locking/lockdep.c:2370 [inline]
- check_deadlock kernel/locking/lockdep.c:2411 [inline]
- validate_chain kernel/locking/lockdep.c:2954 [inline]
- __lock_acquire.cold+0x114/0x288 kernel/locking/lockdep.c:3954
- lock_acquire+0x197/0x420 kernel/locking/lockdep.c:4484
- lock_sock_nested+0xc5/0x110 net/core/sock.c:2947
- lock_sock include/net/sock.h:1541 [inline]
- inet_csk_accept+0x69f/0xd30 net/ipv4/inet_connection_sock.c:492
- inet_accept+0xe9/0x7c0 net/ipv4/af_inet.c:734
- __sys_accept4_file+0x3ac/0x5b0 net/socket.c:1758
- __sys_accept4+0x53/0x90 net/socket.c:1809
- __do_sys_accept4 net/socket.c:1821 [inline]
- __se_sys_accept4 net/socket.c:1818 [inline]
- __x64_sys_accept4+0x93/0xf0 net/socket.c:1818
- do_syscall_64+0xf6/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4445c9
-Code: e8 0c 0d 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc35b37608 EFLAGS: 00000246 ORIG_RAX: 0000000000000120
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004445c9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000306777 R09: 0000000000306777
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00000000004053d0 R14: 0000000000000000 R15: 0000000000000000
-
-Fixes: d752a4986532 ("net: memcg: late association of sock to memcg")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: e7030878fc84 ("fib: Add fib rule match on tunnel id")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/inet_connection_sock.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ include/net/fib_rules.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -476,27 +476,27 @@ struct sock *inet_csk_accept(struct sock
- 		spin_unlock_bh(&queue->fastopenq.lock);
- 	}
- 
--	if (mem_cgroup_sockets_enabled) {
-+out:
-+	release_sock(sk);
-+	if (newsk && mem_cgroup_sockets_enabled) {
- 		int amt;
- 
- 		/* atomically get the memory usage, set and charge the
--		 * sk->sk_memcg.
-+		 * newsk->sk_memcg.
- 		 */
- 		lock_sock(newsk);
- 
--		/* The sk has not been accepted yet, no need to look at
--		 * sk->sk_wmem_queued.
-+		/* The socket has not been accepted yet, no need to look at
-+		 * newsk->sk_wmem_queued.
- 		 */
- 		amt = sk_mem_pages(newsk->sk_forward_alloc +
--				   atomic_read(&sk->sk_rmem_alloc));
-+				   atomic_read(&newsk->sk_rmem_alloc));
- 		mem_cgroup_sk_alloc(newsk);
- 		if (newsk->sk_memcg && amt)
- 			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
- 
- 		release_sock(newsk);
- 	}
--out:
--	release_sock(sk);
- 	if (req)
- 		reqsk_put(req);
- 	return newsk;
+--- a/include/net/fib_rules.h
++++ b/include/net/fib_rules.h
+@@ -102,6 +102,7 @@ struct fib_rule_notifier_info {
+ 	[FRA_OIFNAME]	= { .type = NLA_STRING, .len = IFNAMSIZ - 1 }, \
+ 	[FRA_PRIORITY]	= { .type = NLA_U32 }, \
+ 	[FRA_FWMARK]	= { .type = NLA_U32 }, \
++	[FRA_TUN_ID]	= { .type = NLA_U64 }, \
+ 	[FRA_FWMASK]	= { .type = NLA_U32 }, \
+ 	[FRA_TABLE]     = { .type = NLA_U32 }, \
+ 	[FRA_SUPPRESS_PREFIXLEN] = { .type = NLA_U32 }, \
 
 
