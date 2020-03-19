@@ -2,168 +2,135 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64E0C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62693C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5CB2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3279820754
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 00:21:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="MWL8x5y6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U2dqLL+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgCSAM7 (ORCPT
+        id S1727065AbgCSAVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 20:12:59 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43481 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbgCSAM7 (ORCPT
+        Wed, 18 Mar 2020 20:21:38 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59928 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgCSAVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 20:12:59 -0400
-Received: by mail-lj1-f194.google.com with SMTP id u15so142188lji.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 17:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lPrGEwKRXyO9yXOFR59fcYZi9g17e4yyfNBd9nprDqQ=;
-        b=MWL8x5y6FCR54ZVgurHR1a4U2f2qAK+jQbBFBpVG0ZAaTwG4qeq2SzJdTWmYih0deb
-         3io78o73rd2gFvbgv8y2FL8afylt+4D3TknLuqgJ2aXvT5n/jFG40Nk1Pv4aGYJzvb2W
-         z+9DCbkj5orhMg0Mxl3d5ao7TfDm0L+8xh/MB/XsEC073kHS04Zh7xiLeBINBy5Tsm7d
-         dJgioQToL/CjHmVind6OINoE6sxkGVAvEcbd/yBwWdgzJFSHvGtN0GvHEJ9ZVnwu4wpa
-         qJWJiEaYh9Rne96GtYsMYZFDkGVXKfF/QBZuu/m7W1eC0yAjoYAGiUfqyT7i6eD42KkM
-         0dcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lPrGEwKRXyO9yXOFR59fcYZi9g17e4yyfNBd9nprDqQ=;
-        b=rWLY+gt8kSO9cKyk/1i08jy6ozeW9qNGuQkKPBSTvb/GQ882mbzJefdrU5X6bmpde0
-         PLwc4DxA+mb/L620qjM9qoQL8WxDTD6aO+ttMtZPQXrfDgE98OxviOu9XlajAcd1Qs9L
-         F8xSDJaK3LxX6vup9rZedG24FxKjQVNThQXIhy7vuFPnQCQApV6lr/HKWdYkLJ892HpN
-         N8Jo+GHmjAiR4B1dYWRFrKJT3s5VYy5AQtAQCY7QXLRm8xZg/mDQ5z00QkrZiYfRkGtr
-         Liw3bKR1QNFhl6MLPzc208yEJFjX+v1BwjncXI+pL6shcdgkx4xCXPIpmrShjXDM/FVX
-         uhzw==
-X-Gm-Message-State: ANhLgQ3fkTW2UsZ4aqGgROWmA4FRtC/NOse0+oin52FA3fJTTvWQhOJr
-        t+kd/JQFURPVZHFlCooOlTAq7g==
-X-Google-Smtp-Source: ADFU+vu5tKNdJ9YZUqehURNqjhJh3Yv8MtI6Yf+YXJFfbrRf0fgmxZiKyfLhCqNfc7ljD8Z8N0UuvQ==
-X-Received: by 2002:a05:651c:110b:: with SMTP id d11mr349708ljo.52.1584576777458;
-        Wed, 18 Mar 2020 17:12:57 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id q4sm138647lfd.82.2020.03.18.17.12.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Mar 2020 17:12:56 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 080D71025D1; Thu, 19 Mar 2020 03:12:59 +0300 (+03)
-Date:   Thu, 19 Mar 2020 03:12:58 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: khugepaged: fix potential page state corruption
-Message-ID: <20200319001258.creziw6ffw4jvwl3@box>
-References: <1584573582-116702-1-git-send-email-yang.shi@linux.alibaba.com>
+        Wed, 18 Mar 2020 20:21:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Y0czQRAz/kOPllfphXUjXudXCZCxZCs56nRoN+fK9Zs=; b=U2dqLL+663SgPnghCMGR8BF8Y0
+        CZcLj/WCyPzBCV3IAXDape2LJMGZ9E9h8mLvL93UF6xS6flxgRdFGaZ8/3EZeFY5MLpjBkVXQdM3F
+        26ktVz0JuP/YjCOcMiUwXM8U/3WqY/1g/8JlnNOgitbzgKslHSBWEAMVo14KQymj5kToLM+xxIAPd
+        lPVeE9cKJREw8RGyVwEvCDVMzH3khG9KgYpDhZwQ52cH4cn0i8R7SP4WibjhCrLOYKc7abcSk0Cc6
+        k46Y3sU2mrcoF3pjsyU8z4kAqRfkXv0RuDgUdWhj0llbGVWPwKQDK3am5dUfZzcsQeeM023WkwPRb
+        /dkivxmA==;
+Received: from c-73-157-219-8.hsd1.or.comcast.net ([73.157.219.8] helo=[10.0.0.252])
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jEivf-0000pW-Gf; Thu, 19 Mar 2020 00:20:55 +0000
+Subject: Re: [PATCH 4/4] hugetlbfs: clean up command line processing
+To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Longpeng <longpeng2@huawei.com>, Will Deacon <will@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>
+References: <20200318220634.32100-1-mike.kravetz@oracle.com>
+ <20200318220634.32100-5-mike.kravetz@oracle.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1820045d-0bf2-9a86-226d-e9c4d5928749@infradead.org>
+Date:   Wed, 18 Mar 2020 17:20:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584573582-116702-1-git-send-email-yang.shi@linux.alibaba.com>
+In-Reply-To: <20200318220634.32100-5-mike.kravetz@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 07:19:42AM +0800, Yang Shi wrote:
-> When khugepaged collapses anonymous pages, the base pages would be freed
-> via pagevec or free_page_and_swap_cache().  But, the anonymous page may
-> be added back to LRU, then it might result in the below race:
+Hi Mike,
+
+On 3/18/20 3:06 PM, Mike Kravetz wrote:
+> With all hugetlb page processing done in a single file clean up code.
+> - Make code match desired semantics
+>   - Update documentation with semantics
+> - Make all warnings and errors messages start with 'HugeTLB:'.
+> - Consistently name command line parsing routines.
+> - Add comments to code
+>   - Describe some of the subtle interactions
+>   - Describe semantics of command line arguments
 > 
-> 	CPU A				CPU B
-> khugepaged:
->   unlock page
->   putback_lru_page
->     add to lru
-> 				page reclaim:
-> 				  isolate this page
-> 				  try_to_unmap
->   page_remove_rmap <-- corrupt _mapcount
-> 
-> It looks nothing would prevent the pages from isolating by reclaimer.
-
-Hm. Why should it?
-
-try_to_unmap() doesn't exclude parallel page unmapping. _mapcount is
-protected by ptl. And this particular _mapcount pin is reachable for
-reclaim as it's not part of usual page table tree. Basically
-try_to_unmap() will never succeeds until we give up the _mapcount on
-khugepaged side.
-
-I don't see the issue right away.
-
-> The other problem is the page's active or unevictable flag might be
-> still set when freeing the page via free_page_and_swap_cache().
-
-So what?
-
-> The putback_lru_page() would not clear those two flags if the pages are
-> released via pagevec, it sounds nothing prevents from isolating active
-> or unevictable pages.
-
-Again, why should it? vmscan is equipped to deal with this.
-
-> However I didn't really run into these problems, just in theory by visual
-> inspection.
-> 
-> And, it also seems unnecessary to have the pages add back to LRU again since
-> they are about to be freed when reaching this point.  So, clearing active
-> and unevictable flags, unlocking and dropping refcount from isolate
-> instead of calling putback_lru_page() as what page cache collapse does.
-
-Hm? But we do call putback_lru_page() on the way out. I do not follow.
-
-> 
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
 > ---
->  mm/khugepaged.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index b679908..f42fa4e 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -673,7 +673,6 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
->  			src_page = pte_page(pteval);
->  			copy_user_highpage(page, src_page, address, vma);
->  			VM_BUG_ON_PAGE(page_mapcount(src_page) != 1, src_page);
-> -			release_pte_page(src_page);
->  			/*
->  			 * ptl mostly unnecessary, but preempt has to
->  			 * be disabled to update the per-cpu stats
-> @@ -687,6 +686,15 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
->  			pte_clear(vma->vm_mm, address, _pte);
->  			page_remove_rmap(src_page, false);
->  			spin_unlock(ptl);
-> +
-> +			dec_node_page_state(src_page,
-> +				NR_ISOLATED_ANON + page_is_file_cache(src_page));
-> +			ClearPageActive(src_page);
-> +			ClearPageUnevictable(src_page);
-> +			unlock_page(src_page);
-> +			/* Drop refcount from isolate */
-> +			put_page(src_page);
-> +
->  			free_page_and_swap_cache(src_page);
->  		}
->  	}
-> -- 
-> 1.8.3.1
-> 
-> 
+>  Documentation/admin-guide/mm/hugetlbpage.rst | 26 +++++++
+>  mm/hugetlb.c                                 | 78 +++++++++++++++-----
+>  2 files changed, 87 insertions(+), 17 deletions(-)
+
+
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index cc85b4f156ca..2b9bf01db2b6 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+
+> @@ -3214,8 +3238,15 @@ static int __init hugetlb_nrpages_setup(char *s)
+>  
+>  	return 1;
+>  }
+> -__setup("hugepages=", hugetlb_nrpages_setup);
+> +__setup("hugepages=", hugepages_setup);
+>  
+> +/*
+> + * hugepagesz command line processing
+> + * A specific huge page size can only be specified once with hugepagesz.
+> + * hugepagesz is followed by hugepages on the commnad line.  The global
+
+typo:                                            command
+
+> + * variable 'parsed_valid_hugepagesz' is used to determine if prior
+> + * hugepagesz argument was valid.
+> + */
+>  static int __init hugepagesz_setup(char *s)
+>  {
+>  	unsigned long long size;
+
+
+Does any of this need to be updated?  (from Documentation/admin-guide/kernel-parameters.txt)
+
+	hugepagesz=	[HW,IA-64,PPC,X86-64] The size of the HugeTLB pages.
+			On x86-64 and powerpc, this option can be specified
+			multiple times interleaved with hugepages= to reserve
+			huge pages of different sizes. Valid pages sizes on
+			x86-64 are 2M (when the CPU supports "pse") and 1G
+			(when the CPU supports the "pdpe1gb" cpuinfo flag).
+
 
 -- 
- Kirill A. Shutemov
+~Randy
+
