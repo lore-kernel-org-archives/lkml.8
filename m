@@ -2,108 +2,250 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D31FC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAF9C43332
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E978D2071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8862071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584639307;
-	bh=H6+Zt68q6NpwZY74Cv9pAkKGS0V2iIXKJCpMSO5Ui6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W+z49nf2U3dk8/derhRPGssVMbUJE2GP6OCLxjA0IzVMevmCXOI30jAoWotIQFEFk
-	 3QQ6/7FKlotgeUlsB84DOTibk2ZY0+RIYTxWkqxpslN7g6A4AC9Sjow5757wgVAI81
-	 kFOrqs8LVOqQDQHTNpp3j5wQOh8xJwED4X4u9om0=
+	s=default; t=1584639328;
+	bh=IvGRhxd6iOcumBWs2xSng6xshtkPL4ysx2yKzgkZsEI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=KP0SFONqhHm2B51KjDiKGd1D3QrinaJZLn9VCb3xlOGkavW+QbnhTSAn9szZuI6Rw
+	 g9+3Cdcm7ZJVJ7Y/BNFCb5JbReSgnRgSXVBJ+uQw3aaZ9nxTGQszKXF51DMkInjqSu
+	 XV+QxEMarxbmfYNTfwat7l5wzMbxySMvY5hrwv9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbgCSRfG (ORCPT
+        id S1728324AbgCSRf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:35:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:39466 "EHLO foss.arm.com"
+        Thu, 19 Mar 2020 13:35:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727009AbgCSRfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:35:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB94F30E;
-        Thu, 19 Mar 2020 10:35:04 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FD7C3F305;
-        Thu, 19 Mar 2020 10:35:04 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 17:35:02 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        kuninori.morimoto.gx@renesas.com,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-Message-ID: <20200319173502.GC3983@sirena.org.uk>
-References: <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
- <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
- <20200319130049.GA2244@light.dominikbrodowski.net>
- <20200319134139.GB3983@sirena.org.uk>
- <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
- <20200319165157.GA2254@light.dominikbrodowski.net>
- <eef45d20-3bce-184a-842c-216c15252014@linux.intel.com>
+        id S1727146AbgCSRf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:35:26 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1259A207FC;
+        Thu, 19 Mar 2020 17:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584639326;
+        bh=IvGRhxd6iOcumBWs2xSng6xshtkPL4ysx2yKzgkZsEI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=s3CpZf63sP82gcx/yecpSLHCUfnF9SKQhwJ6pIw1wWaW4hgRJn6I7YNHHvsvWrrpb
+         hC6btjNvwVW/OQMuMFGSC+48mJ/WCHoqxxRhF4c7UTOtmkC14CwbfzkHqoWbgnfe4V
+         P+0H+LCB9kI8kfUz+jWZYU7Tm4xzilyxjjVHArY4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D9C5335226B9; Thu, 19 Mar 2020 10:35:25 -0700 (PDT)
+Date:   Thu, 19 Mar 2020 10:35:25 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, dhowells@redhat.com,
+        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com,
+        joel@joelfernandes.org, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH RFC v2 tip/core/rcu 01/22] sched/core: Add function to
+ sample state of locked-down task
+Message-ID: <20200319173525.GI3199@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+ <20200319001100.24917-1-paulmck@kernel.org>
+ <20200319132238.75a034c3@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ALfTUftag+2gvp1h"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eef45d20-3bce-184a-842c-216c15252014@linux.intel.com>
-X-Cookie: Captain's Log, star date 21:34.5...
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200319132238.75a034c3@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 19, 2020 at 01:22:38PM -0400, Steven Rostedt wrote:
+> On Wed, 18 Mar 2020 17:10:39 -0700
+> paulmck@kernel.org wrote:
+> 
+> > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > 
+> > A running task's state can be sampled in a consistent manner (for example,
+> > for diagnostic purposes) simply by invoking smp_call_function_single()
+> > on its CPU, which may be obtained using task_cpu(), then having the
+> > IPI handler verify that the desired task is in fact still running.
+> > However, if the task is not running, this sampling can in theory be done
+> > immediately and directly.  In practice, the task might start running at
+> > any time, including during the sampling period.  Gaining a consistent
+> > sample of a not-running task therefore requires that something be done
+> > to lock down the target task's state.
+> > 
+> > This commit therefore adds a try_invoke_on_locked_down_task() function
+> > that invokes a specified function if the specified task can be locked
+> > down, returning true if successful and if the specified function returns
+> > true.  Otherwise this function simply returns false.  Given that the
+> > function passed to try_invoke_on_nonrunning_task() might be invoked with
+> > a runqueue lock held, that function had better be quite lightweight.
+> > 
+> > The function is passed the target task's task_struct pointer and the
+> > argument passed to try_invoke_on_locked_down_task(), allowing easy access
+> > to task state and to a location for further variables to be passed in
+> > and out.
+> > 
+> > Note that the specified function will be called even if the specified
+> > task is currently running.  The function can use ->on_rq and task_curr()
+> > to quickly and easily determine the task's state, and can return false
+> > if this state is not to the function's liking.  The caller of teh
+> 
+>   s/teh/the/
 
---ALfTUftag+2gvp1h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Good eyes, will fix!
 
-On Thu, Mar 19, 2020 at 12:21:47PM -0500, Pierre-Louis Bossart wrote:
-> On 3/19/20 11:51 AM, Dominik Brodowski wrote:
+> > try_invoke_on_locked_down_task() would then see the false return value,
+> > and could take appropriate action, for example, trying again later or
+> > sending an IPI if matters are more urgent.
+> > 
+> > It is expected that use cases such as the RCU CPU stall warning code will
+> > simply return false if the task is currently running.  However, there are
+> > use cases involving nohz_full CPUs where the specified function might
+> > instead fall back to an alternative sampling scheme that relies on heavier
+> > synchronization (such as memory barriers) in the target task.
+> > 
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > [ paulmck: Apply feedback from Peter Zijlstra and Steven Rostedt. ]
+> > [ paulmck: Invoke if running to handle feedback from Mathieu Desnoyers. ]
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Juri Lelli <juri.lelli@redhat.com>
+> > Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> > Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> > Cc: Ben Segall <bsegall@google.com>
+> > Cc: Mel Gorman <mgorman@suse.de>
+> > ---
+> >  include/linux/wait.h |  2 ++
+> >  kernel/sched/core.c  | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 50 insertions(+)
+> > 
+> > diff --git a/include/linux/wait.h b/include/linux/wait.h
+> > index 3283c8d..e2bb8ed 100644
+> > --- a/include/linux/wait.h
+> > +++ b/include/linux/wait.h
+> > @@ -1148,4 +1148,6 @@ int autoremove_wake_function(struct wait_queue_entry *wq_entry, unsigned mode, i
+> >  		(wait)->flags = 0;						\
+> >  	} while (0)
+> >  
+> > +bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct task_struct *t, void *arg), void *arg);
+> > +
+> >  #endif /* _LINUX_WAIT_H */
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index fc1dfc0..195eba0 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -2580,6 +2580,8 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+> >  	 *
+> >  	 * Pairs with the LOCK+smp_mb__after_spinlock() on rq->lock in
+> >  	 * __schedule().  See the comment for smp_mb__after_spinlock().
+> > +	 *
+> > +	 * A similar smb_rmb() lives in try_invoke_on_locked_down_task().
+> >  	 */
+> >  	smp_rmb();
+> >  	if (p->on_rq && ttwu_remote(p, wake_flags))
+> > @@ -2654,6 +2656,52 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+> >  }
+> >  
+> >  /**
+> > + * try_invoke_on_locked_down_task - Invoke a function on task in fixed state
+> > + * @p: Process for which the function is to be invoked.
+> > + * @func: Function to invoke.
+> > + * @arg: Argument to function.
+> > + *
+> > + * If the specified task can be quickly locked into a definite state
+> > + * (either sleeping or on a given runqueue), arrange to keep it in that
+> > + * state while invoking @func(@arg).  This function can use ->on_rq and
+> > + * task_curr() to work out what the state is, if required.  Given that
+> > + * @func can be invoked with a runqueue lock held, it had better be quite
+> > + * lightweight.
+> > + *
+> > + * Returns:
+> > + *	@false if the task slipped out from under the locks.
+> > + *	@true if the task was locked onto a runqueue or is sleeping.
+> > + *		However, @func can override this by returning @false.
+> 
+> Should probably state that it will return false if the state could be
+> locked, otherwise it returns the return code of the function.
 
-> > That patch fixes the issue(s). I didn't even need to revert 64df6afa0dab
-> > ("ASoC: Intel: broadwell: change cpu_dai and platform components for SOF")
-> > on top of that. But you can assess better whether that patch needs care for
-> > other reasons; for me, this one-liner you have suggested is perfect.
+So like this?
 
-Good news!
+ * Returns:
+ * @false if the task state could not be locked.
+ * Otherwise, the return value from @func(arg).
 
-> .ignore_suspend is set for bdw-rt5677.c and bdw-rt5650.c as well. I don't
-> know if that was intentional.
+> I'm wondering if we shouldn't have the function return code be something
+> passed in by the parameter, and have this return either true (locked and
+> function called), or false (not locked and function wasn't called).
 
-The intended use case is for applications doing audio during suspend
-like telephony audio between the modem and CODEC on a phone or
-compressed audio playback.  I guess the compressed audio playback case
-could possibly apply with these systems though x86 suspend/resume is
-usually sufficiently heavyweight that it's surprising.
+I was thinking of this as one of the possible uses of whatever arg
+points to, which allows the caller of try_invoke_on_locked_down_task()
+and the specified function to communicate whatever they wish.  Then
+the specified function could (for example) unconditionally return true
+so that the return value from try_invoke_on_locked_down_task() indicated
+whether or not the specified function was called.
 
---ALfTUftag+2gvp1h
-Content-Type: application/pgp-signature; name="signature.asc"
+The current setup is very convenient for the use cases thus far.  It
+allows the function to say "Yeah, I was called, but I couldn't do
+anything", thus allowing the caller to make exactly one check to know
+that corrective action is required.
 
------BEGIN PGP SIGNATURE-----
+> > + */
+> > +bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct task_struct *t, void *arg), void *arg)
+> > +{
+> > +	bool ret = false;
+> > +	struct rq_flags rf;
+> > +	struct rq *rq;
+> > +
+> > +	lockdep_assert_irqs_enabled();
+> > +	raw_spin_lock_irq(&p->pi_lock);
+> > +	if (p->on_rq) {
+> > +		rq = __task_rq_lock(p, &rf);
+> > +		if (task_rq(p) == rq)
+> > +			ret = func(p, arg);
+> > +		rq_unlock(rq, &rf);
+> > +	} else {
+> > +		switch (p->state) {
+> > +		case TASK_RUNNING:
+> > +		case TASK_WAKING:
+> > +			break;
+> > +		default:
+> 
+> Don't we need a comment here about why we have a rmb() and where the
+> matching wmb() is?
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5zrUYACgkQJNaLcl1U
-h9DIEwf9FLcdiU91qM0+JTKeKiJu3mL1vlW6iLHqYEhaCUw36glNuoopk/9psyqr
-hB6DFa3EJketJQe9qh1VdB6kmTVNYALb6XL8xnXG0S5vbviIFlm/cZjCFm+ZJMCK
-ugGjuCb6oqwAjWL/0WVtgA+v7Vw7RQYVpiz+3rq3IdXIFKhTvvN/F804ZgMWkCv8
-Qu+s/2EZg3gfln2oPzbKfJiL/5rV8ksQf0kptl5oe4PRRrdaGdlHnuSqYem/da5W
-c/i3ub8sriBXvmEEgyDh7J8H0qywfe0w/awxnWoagYyZevMIazW8qI3o5oCU3m/J
-o2EEEyz0OhGHeadxs4nmhxCASV4xyw==
-=IDeG
------END PGP SIGNATURE-----
+Indeed we do!  I will fix that as well.
 
---ALfTUftag+2gvp1h--
+							Thanx, Paul
+
+> -- Steve
+> 
+> > +			smp_rmb();
+> > +			if (!p->on_rq)
+> > +				ret = func(p, arg);
+> > +		}
+> > +	}
+> > +	raw_spin_unlock_irq(&p->pi_lock);
+> > +	return ret;
+> > +}
+> > +
+> > +/**
+> >   * wake_up_process - Wake up a specific process
+> >   * @p: The process to be woken up.
+> >   *
+> 
