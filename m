@@ -2,119 +2,122 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BC3C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FE3C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4BC20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6391C20768
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 02:31:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="hvEOZxeg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PwhlomgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgCSC16 (ORCPT
+        id S1726802AbgCSCbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Mar 2020 22:27:58 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:52455 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726596AbgCSC15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Mar 2020 22:27:57 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 4babc347;
-        Thu, 19 Mar 2020 02:21:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=SJruqN6zl5PSRzknEp7SsMu9J
-        i0=; b=hvEOZxegwHJzTtT2ITiJ3UP0B6BqFtz4WlCAb2UGEMTh9dBxUZWqYLKpS
-        VmJEt0nGzyUl3Yv8LR3SpdO/KYThTQZ+caOwvrqtllLJd+72MQlSvakj1kAynwhz
-        F19s7EMuhZRrnifUvDB1h2DQesfiuikCevuT96F/Toifw8jUvfh8ahc9gdXxDfQp
-        sIWw8/rhU7pv9HcvMsu47ggzAmM9jsOd54XVbelYuaADUsvbSscIV6pGfYRm/S8p
-        76ARaEz5puvfT7CkGOueDbS6CCK421xwyO7PwG/DnQVpau+Df8uzHjC1zFBEwy0P
-        aoUn/tAnnJLM8x9YIdKFfLIpHfQLQ==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id bfeca116 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 19 Mar 2020 02:21:30 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ard Biesheuvel <ardb@kernel.org>, stable@vger.kernel.org
-Subject: [PATCH URGENT crypto v2] crypto: arm64/chacha - correctly walk through blocks
-Date:   Wed, 18 Mar 2020 20:27:32 -0600
-Message-Id: <20200319022732.166085-1-Jason@zx2c4.com>
-In-Reply-To: <CAHmME9otcAe7H4Anan8Tv1KreTZtwt4XXEPMG--x2Ljr0M+o1Q@mail.gmail.com>
-References: <CAHmME9otcAe7H4Anan8Tv1KreTZtwt4XXEPMG--x2Ljr0M+o1Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 18 Mar 2020 22:31:08 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:33211 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgCSCbI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Mar 2020 22:31:08 -0400
+Received: by mail-pl1-f202.google.com with SMTP id b10so479356pls.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Mar 2020 19:31:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=0M5yDwMnWT3eGZaAP87ZabJ+9eP1uwNT7JZCCK6lZ+Y=;
+        b=PwhlomgHR1+g2Hz328zTELcv/E8xMN4kqTsk1VLMjmk75iZK+oIKmEK7MJahYHG5BP
+         kcPC9l41zCjZ341/knu7ZZw5WBtcev9Ml3kfmcvwY9VKthfE+buc7N50eI6UQTffu46G
+         PnCl7GJneUqZIaujSqeFrYK1hpjkFbTh+66qqeDqgAvpehiayerXDZ8li+XJTCzPfaPj
+         2eLhBAwd9ebNTtB2F7t79w8lvl/DJriXaIh7BV/2g71ArBBAQ3wDMJjzi6k6XAA7/lP3
+         urAkVMH1vSGSNOJ9ZIFhRbnM1KyIC5jO2l7LhSSdmNLlzA+aT4RahJNmqWJ8g03hp6OB
+         G8ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=0M5yDwMnWT3eGZaAP87ZabJ+9eP1uwNT7JZCCK6lZ+Y=;
+        b=sL4P/kheEQwT5736bvM5kkQowFZq4W9jduxV/KbvSxFS+wKyMckKTPquUXM++1FKPZ
+         XuSS8Ykp1I2fklmWPXo3d/JCIUY+Kl6bsKjs0OHFkL8b2+B3omUKP171/aBYLnT6gduk
+         zXZqjhlMM9w+7mGLdNLQBRD7n/NO+a4RlSp/2f7bT/kmI94DNgPtfcq38om5KFSqyZRC
+         UDGNWNcWoy/hphQpeACsK8xmvzNt3KXAzovbL9AVt+/8kaLCHx38e5OnZlxfzqAXaQ42
+         S7/b1pk5CLBIyWqaIK9xiVixM6bZXZ72uqWjZY7pCBUiyq+a3zd0cQep/Dy+9IKTRwr8
+         UWBg==
+X-Gm-Message-State: ANhLgQ3VG0yjs6O897X9S+M1LJbBOyVXC66dnxXdbbs4OWdXiyK7IHkC
+        ZEiRIrv6kGfPOnYJk2BqiXs9w3EN/svf
+X-Google-Smtp-Source: ADFU+vvuKQO4fHtyUgZCAFTgWocS2aZxTI5FzOLz1r8YgDx7IcsM5NaTIMynat5PaF6uan/j14po6BysyzlF
+X-Received: by 2002:a63:7359:: with SMTP id d25mr881791pgn.2.1584585066575;
+ Wed, 18 Mar 2020 19:31:06 -0700 (PDT)
+Date:   Wed, 18 Mar 2020 19:31:00 -0700
+Message-Id: <20200319023101.82458-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v2 1/2] perf parse-events: fix memory leaks found on parse_events
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prior, passing in chunks of 2, 3, or 4, followed by any additional
-chunks would result in the chacha state counter getting out of sync,
-resulting in incorrect encryption/decryption, which is a pretty nasty
-crypto vuln: "why do images look weird on webpages?" WireGuard users
-never experienced this prior, because we have always, out of tree, used
-a different crypto library, until the recent Frankenzinc addition. This
-commit fixes the issue by advancing the pointers and state counter by
-the actual size processed. It also fixes up a bug in the (optional,
-costly) stride test that prevented it from running on arm64.
+Memory leaks found by applying LLVM's libfuzzer on the parse_events
+function.
 
-Fixes: b3aad5bad26a ("crypto: arm64/chacha - expose arm64 ChaCha routine as library function")
-Reported-and-tested-by: Emil Renner Berthing <kernel@esmil.dk>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- arch/arm64/crypto/chacha-neon-glue.c   |  8 ++++----
- lib/crypto/chacha20poly1305-selftest.c | 11 ++++++++---
- 2 files changed, 12 insertions(+), 7 deletions(-)
+ tools/perf/util/parse-events.c | 2 ++
+ tools/perf/util/parse-events.y | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/crypto/chacha-neon-glue.c b/arch/arm64/crypto/chacha-neon-glue.c
-index c1f9660d104c..37ca3e889848 100644
---- a/arch/arm64/crypto/chacha-neon-glue.c
-+++ b/arch/arm64/crypto/chacha-neon-glue.c
-@@ -55,10 +55,10 @@ static void chacha_doneon(u32 *state, u8 *dst, const u8 *src,
- 			break;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 593b6b03785d..1e0bec5c0846 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1482,6 +1482,8 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 
+ 		list_for_each_entry_safe(pos, tmp, &config_terms, list) {
+ 			list_del_init(&pos->list);
++			if (pos->free_str)
++				free(pos->val.str);
+ 			free(pos);
  		}
- 		chacha_4block_xor_neon(state, dst, src, nrounds, l);
--		bytes -= CHACHA_BLOCK_SIZE * 5;
--		src += CHACHA_BLOCK_SIZE * 5;
--		dst += CHACHA_BLOCK_SIZE * 5;
--		state[12] += 5;
-+		bytes -= l;
-+		src += l;
-+		dst += l;
-+		state[12] += DIV_ROUND_UP(l, CHACHA_BLOCK_SIZE);
+ 		return -EINVAL;
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 94f8bcd83582..8212cc771667 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -44,7 +44,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+ 
+ 	list_for_each_entry_safe(evsel, tmp, list_evsel, core.node) {
+ 		list_del_init(&evsel->core.node);
+-		perf_evsel__delete(evsel);
++		evsel__delete(evsel);
  	}
+ 	free(list_evsel);
  }
- 
-diff --git a/lib/crypto/chacha20poly1305-selftest.c b/lib/crypto/chacha20poly1305-selftest.c
-index c391a91364e9..fa43deda2660 100644
---- a/lib/crypto/chacha20poly1305-selftest.c
-+++ b/lib/crypto/chacha20poly1305-selftest.c
-@@ -9028,10 +9028,15 @@ bool __init chacha20poly1305_selftest(void)
- 	     && total_len <= 1 << 10; ++total_len) {
- 		for (i = 0; i <= total_len; ++i) {
- 			for (j = i; j <= total_len; ++j) {
-+				k = 0;
- 				sg_init_table(sg_src, 3);
--				sg_set_buf(&sg_src[0], input, i);
--				sg_set_buf(&sg_src[1], input + i, j - i);
--				sg_set_buf(&sg_src[2], input + j, total_len - j);
-+				if (i)
-+					sg_set_buf(&sg_src[k++], input, i);
-+				if (j - i)
-+					sg_set_buf(&sg_src[k++], input + i, j - i);
-+				if (total_len - j)
-+					sg_set_buf(&sg_src[k++], input + j, total_len - j);
-+				sg_init_marker(sg_src, k);
- 				memset(computed_output, 0, total_len);
- 				memset(input, 0, total_len);
- 
+@@ -326,6 +326,7 @@ PE_NAME opt_pmu_config
+ 	}
+ 	parse_events_terms__delete($2);
+ 	parse_events_terms__delete(orig_terms);
++	free(pattern);
+ 	free($1);
+ 	$$ = list;
+ #undef CLEANUP_YYABORT
 -- 
-2.25.1
+2.25.1.696.g5e7596f4ac-goog
 
