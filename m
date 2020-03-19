@@ -2,104 +2,148 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E040AC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94691C4332E
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F2820658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:11:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mwuBwFR4"
+	by mail.kernel.org (Postfix) with ESMTP id 7196D20767
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 23:17:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbgCSXL2 (ORCPT
+        id S1727649AbgCSXRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 19:11:28 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:29817 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727456AbgCSXL2 (ORCPT
+        Thu, 19 Mar 2020 19:17:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47390 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727452AbgCSXRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 19:11:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1584659487; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=lgPcKGxes2wWKu8ZYirzlVaF0XLf7i8dA+8OTprMqPo=; b=mwuBwFR4suPnDWS02fxmuE4C1jGRoO0j2C933CXwziS+wXB74LB8payvh6mSJuuGJ1TUkAXR
- Ucz4DMG9nPM4bFdrqGpe2KRhcWTuDsSArZVJOlPqwHzk11XonC+1jm7nmkeJ47TJbG7XDDlI
- YbM2UGHV4rv0ihe+LBbOaGP/9zs=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e73fc1f.7f3350c28420-smtp-out-n04;
- Thu, 19 Mar 2020 23:11:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 140D7C43636; Thu, 19 Mar 2020 23:11:27 +0000 (UTC)
-Received: from mdtipton-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mdtipton)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36160C433D2;
-        Thu, 19 Mar 2020 23:11:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36160C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mdtipton@codeaurora.org
-From:   Mike Tipton <mdtipton@codeaurora.org>
-To:     georgi.djakov@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Tipton <mdtipton@codeaurora.org>
-Subject: [PATCH] interconnect: qcom: Fix uninitialized tcs_cmd::wait
-Date:   Thu, 19 Mar 2020 16:10:21 -0700
-Message-Id: <20200319231021.18108-1-mdtipton@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
+        Thu, 19 Mar 2020 19:17:05 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JN423h079616;
+        Thu, 19 Mar 2020 19:15:59 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yu7ftjx6b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 19:15:59 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02JN7DJq004569;
+        Thu, 19 Mar 2020 23:15:58 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01wdc.us.ibm.com with ESMTP id 2yrpw6v020-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Mar 2020 23:15:58 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02JNFwn515008662
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Mar 2020 23:15:58 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 61715AC05E;
+        Thu, 19 Mar 2020 23:15:58 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 40401AC05B;
+        Thu, 19 Mar 2020 23:15:58 +0000 (GMT)
+Received: from t440p.yottatech.com (unknown [9.85.138.240])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 19 Mar 2020 23:15:58 +0000 (GMT)
+Received: (from gcwilson@localhost)
+        by t440p.yottatech.com (8.15.2/8.15.2/Submit) id 02JNFq2I027749;
+        Thu, 19 Mar 2020 18:15:52 -0500
+X-Authentication-Warning: t440p.yottatech.com: gcwilson set sender to gcwilson@linux.ibm.com using -f
+Date:   Thu, 19 Mar 2020 18:15:52 -0500
+From:   George Wilson <gcwilson@linux.ibm.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Nayna Jain <nayna@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        Linh Pham <phaml@us.ibm.com>
+Subject: Re: [PATCH v3] tpm: ibmvtpm: retry on H_CLOSED in tpm_ibmvtpm_send()
+Message-ID: <20200319231552.GA25351@us.ibm.com>
+References: <20200318234927.206075-1-gcwilson@linux.ibm.com>
+ <20200319195011.GB24804@linux.intel.com>
+ <20200319195503.GC24804@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200319195503.GC24804@linux.intel.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-19_09:2020-03-19,2020-03-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=0 bulkscore=0 phishscore=0 malwarescore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003190091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, if tcs_cmd_gen is called with commit=false, then
-tcs_cmd::wait is left uninitialized. Since the tcs_cmd structures passed
-to this function aren't zero-initialized, then we're left with random
-wait values. This results in waiting for completion for more commands
-than is necessary, depending on what's on the stack at the time.
+On Thu, Mar 19, 2020 at 09:55:03PM +0200, Jarkko Sakkinen wrote:
+> On Thu, Mar 19, 2020 at 09:50:16PM +0200, Jarkko Sakkinen wrote:
+> > On Wed, Mar 18, 2020 at 07:49:27PM -0400, George Wilson wrote:
+> > > tpm_ibmvtpm_send() can fail during PowerVM Live Partition Mobility resume
+> > > with an H_CLOSED return from ibmvtpm_send_crq().  The PAPR says, 'The
+> > > “partner partition suspended” transport event disables the associated CRQ
+> > > such that any H_SEND_CRQ hcall() to the associated CRQ returns H_Closed
+> > > until the CRQ has been explicitly enabled using the H_ENABLE_CRQ hcall.'
+> > > This patch adds a check in tpm_ibmvtpm_send() for an H_CLOSED return from
+> > > ibmvtpm_send_crq() and in that case calls tpm_ibmvtpm_resume() and
+> > > retries the ibmvtpm_send_crq() once.
+> > > 
+> > > Reported-by: Linh Pham <phaml@us.ibm.com>
+> > > Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> > > Signed-off-by: George Wilson <gcwilson@linux.ibm.com>
+> > > Tested-by: Linh Pham <phaml@us.ibm.com>
+> > > Fixes: 132f76294744 ("Add new device driver to support IBM vTPM")
+> > 
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> 
+> Unfortunately have to take that back because it has checkpatch
+> errors:
+> 
+> $ scripts/checkpatch.pl 0001-tpm-ibmvtpm-retry-on-H_CLOSED-in-tpm_ibmvtpm_send.patch
+> WARNING: Possible unwrapped commit description (prefer a maximum 75 chars per line)
+> #11:
+> “partner partition suspended” transport event disables the associated CRQ
 
-Removing the unnecessary if-condition fixes this, but add an explicit
-memset of the tcs_cmd structure as well to ensure predictable behavior
-if more tcs_cmd members are added in the future.
+I'd noticed that but it appears to be a spurious checkpatch warning.
+The line is 73 chars long, the same as the first line of the commit
+description.  Maybe the quotes throw it off?
 
-Fixes: 976daac4a1c5 ("interconnect: qcom: Consolidate interconnect RPMh support")
-Signed-off-by: Mike Tipton <mdtipton@codeaurora.org>
----
- drivers/interconnect/qcom/bcm-voter.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> WARNING: Prefer using '"%s...", __func__' to using 'ibmvtpm_crq_send_init', this function's name, in a string
+> #61: FILE: drivers/char/tpm/tpm_ibmvtpm.c:152:
+> +			"ibmvtpm_crq_send_init failed rc=%d\n", rc);
 
-diff --git a/drivers/interconnect/qcom/bcm-voter.c b/drivers/interconnect/qcom/bcm-voter.c
-index 2adfde8cdf19..2a11a63e7217 100644
---- a/drivers/interconnect/qcom/bcm-voter.c
-+++ b/drivers/interconnect/qcom/bcm-voter.c
-@@ -96,6 +96,8 @@ static inline void tcs_cmd_gen(struct tcs_cmd *cmd, u64 vote_x, u64 vote_y,
- 	if (!cmd)
- 		return;
- 
-+	memset(cmd, 0, sizeof(*cmd));
-+
- 	if (vote_x == 0 && vote_y == 0)
- 		valid = false;
- 
-@@ -112,8 +114,7 @@ static inline void tcs_cmd_gen(struct tcs_cmd *cmd, u64 vote_x, u64 vote_y,
- 	 * Set the wait for completion flag on command that need to be completed
- 	 * before the next command.
- 	 */
--	if (commit)
--		cmd->wait = true;
-+	cmd->wait = commit;
- }
- 
- static void tcs_list_gen(struct list_head *bcm_list, int bucket,
+I didn't change that error string because it's in an unmodified existing
+function that I moved above the caller so a declaration wasn't required.
+All other examples in the file are the same.  I'm of course happy to
+change it in this function if you think it's appropriate to do so.
+
+> 
+> Also the fixes tag is incorrect. Should be:
+> 
+> Fixes: 132f76294744 ("drivers/char/tpm: Add new device driver to support IBM vTPM")
+
+I see it done different ways, mostly without the path, even for the TPM
+drivers.  For example, there's no path in Stefan's "[PATCH v7 2/3] tpm:
+ibmvtpm: Wait for buffer to be set before proceeding."  I'm certainly
+happy to change it, however, and it's good to know that's the preferred
+style going forward.
+
+Separate topic:  Since this fixes a migration hang, do you think it
+should also be cc'd to stable?
+
+> 
+> /Jarkko
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+George Wilson
+IBM Linux Technology Center
+Security Development
