@@ -2,51 +2,51 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F97C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB346C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E2D2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19B92072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgCSPDS (ORCPT
+        id S1727513AbgCSPDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:03:18 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:32379 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728435AbgCSPDO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:03:14 -0400
-IronPort-SDR: 5Jq3RKvLYTAyLEqWcpKPL+X7sjRYA9I00NjWhYhzpEP+ecJhAozwJkNb5TYHC/OfWosxuyRGXt
- 01Avo63f0kjPIhuEelXmOP94ZEiMsgWS4fpwPy8iQFaNg+SmGQHNN2lm+FGVwRucaKLO5GAzHz
- J60QJcJDuL1DdoKz3144OPo2otj1Y0eKMD5FQDHfoFlkyoJt4MyfiRANgBwILixsfXSGydw+GZ
- zuaLkryr5ZaZQdAcEtZgPCd4hkougaim5q8gpd7zvzkrhYWGo3EWLMMC3Z8ZRerx9RR9J+bQ2d
- g7A=
-X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
-   d="scan'208";a="46891060"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 19 Mar 2020 07:03:14 -0800
-IronPort-SDR: o9oTlPpDDDoKlapVti8kaUvE0cke1Is3vdMmgwl1RQFVcs9yu+cN7kKSFkI3evS8/yl9WgqStB
- DE69twgXtjO/a50kROpTpAST5s46mmqF/fkRI6r679HKoFTjVXMEyHJlO5ZqXzFyBaQqCDDkMc
- kb2yxlOdB0d/XZEdEuISKvHVNpwyvu/8Ist4iQhViIAUOZGlI43ubiGje8fa3W2HWMZqGgKkfL
- uMqNRaFysSW9KhRxTrTyGDlQo5etfoC0eH4svwsZg8LRyhUzrI61aDCr8uQ1RioNbHHML7PpfB
- uO8=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <bsz@semihalf.com>, <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v8 44/52] Input: Atmel: improve error handling in mxt_update_cfg()
-Date:   Thu, 19 Mar 2020 08:00:08 -0700
-Message-ID: <20200319150016.61398-45-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200319150016.61398-1-jiada_wang@mentor.com>
-References: <20200319150016.61398-1-jiada_wang@mentor.com>
+        Thu, 19 Mar 2020 11:03:24 -0400
+Received: from albireo.enyo.de ([37.24.231.21]:47372 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728463AbgCSPDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:03:21 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1jEwa5-0004U0-7Q; Thu, 19 Mar 2020 14:55:33 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1jEwYO-0004nA-PY; Thu, 19 Mar 2020 15:53:48 +0100
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Mathieu Desnoyers via Libc-alpha <libc-alpha@sourceware.org>
+Cc:     Carlos O'Donell <carlos@redhat.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Rich Felker <dalias@libc.org>, linux-api@vger.kernel.org,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>
+Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C startup and thread creation (v15)
+References: <20200319144110.3733-1-mathieu.desnoyers@efficios.com>
+        <20200319144110.3733-5-mathieu.desnoyers@efficios.com>
+Date:   Thu, 19 Mar 2020 15:53:48 +0100
+In-Reply-To: <20200319144110.3733-5-mathieu.desnoyers@efficios.com> (Mathieu
+        Desnoyers via Libc-alpha's message of "Thu, 19 Mar 2020 10:41:06
+        -0400")
+Message-ID: <874kukpf9f.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,33 +54,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Deepak Das <deepak_das@mentor.com>
+* Mathieu Desnoyers via Libc-alpha:
 
-mxt_update_cfg() failed to propagate the error
-code from mxt_init_t7_power_cfg() so return the error code.
+> Changes since v14:
+> - Update copyright range to include 2020.
+> - Introduce __ASSUME_RSEQ defined for --enable-kernel=4.18.0 and higher.
+> - Use ifdef __ASSUME_RSEQ rather than ifdef __NR_rseq to discover rseq
+>   availability. This is necessary now that the system call numbers are
+>   integrated within glibc.
 
-Signed-off-by: Deepak Das <deepak_das@mentor.com>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+It's not quite clear to me why you need __ASSUME_RSEQ.
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 1eedde24e38f..edab65337061 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -2185,7 +2185,9 @@ static int mxt_update_cfg(struct mxt_data *data, const struct firmware *fw)
- 	dev_info(dev, "Config successfully updated\n");
- 
- 	/* T7 config may have changed */
--	mxt_init_t7_power_cfg(data);
-+	ret = mxt_init_t7_power_cfg(data);
-+	if (ret)
-+		dev_warn(dev, "Power Config failed to update\n");
- 
- release_mem:
- 	kfree(cfg.mem);
--- 
-2.17.1
-
+Can you use __has_include in <sys/rseq.h>, with a copy of the kernel
+definitions if the kernel header is not available?
