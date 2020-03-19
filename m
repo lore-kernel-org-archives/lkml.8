@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020D6C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74607C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF0CB20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A27821556
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623642;
-	bh=n2Jb4jsnRII9y5tNm9UqEt5AoQBN3RcTHJJ0jhZ/8XA=;
+	s=default; t=1584623645;
+	bh=+IjVORKh/seQrNgXksEThu2KTYNq7FzrhANnMv4hTSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KAc3GZ5iKdd7BDg0hcMWeCLjgLufq8aEWFweS9/+AoJRULCro3Tcn4+YUTgqA/Ymh
-	 dJcpYEMZVrvSreSbUAMl8++AvhqpKoqRSNY4qpoDCjtCRQ8QIUruCmv2CbCFKrWkQK
-	 8Jc3lYI41zN8OqmIfFloaWGBlsDRZyysdNP3Ci4U=
+	b=hACeHb6Z0mUPH5fvIC7vAGMSxMSyqrkTnsyjfym1n2MbvNo5F3IeH/3tAJJ2e/lEO
+	 yrZ7syB5KMmz7Hvu39g5SmhVnaBAnrCsE4srzQ3EtthIFK2wQcNS9V17QZpVWaC8PV
+	 Vk8IswnSMxp7zxjgQLEro9eJHC5XOoQR+4+6wOJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgCSNN5 (ORCPT
+        id S1729238AbgCSNOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:13:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33062 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:14:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727837AbgCSNNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:13:54 -0400
+        id S1727789AbgCSNOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:14:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A30D20722;
-        Thu, 19 Mar 2020 13:13:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59CC921556;
+        Thu, 19 Mar 2020 13:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623634;
-        bh=n2Jb4jsnRII9y5tNm9UqEt5AoQBN3RcTHJJ0jhZ/8XA=;
+        s=default; t=1584623640;
+        bh=+IjVORKh/seQrNgXksEThu2KTYNq7FzrhANnMv4hTSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTz6wALlCnQxw/iNw0+JuMvYrMXFfBkGv0Xgd7ESWpYK18fWdbsFDV/F3AHJZyb0/
-         HifRFPsWe40A4YbXnun2Ph8UZStny4jNGP4HQ9kD87U6lIjwvuVKqJelvvSMb//+Yh
-         fi5vKoxV7rsWqkNrri49oxiv5fpGSOCjz8Tow+/Y=
+        b=liHulxlMT+8Z5TQSv1auUwVD+Hidl2XCrNFJ2/3R+8ICe2Wo540rQlgO//CF0PJ+Y
+         5Kah3F+YklVWoIgJgTv+qQSJVr0/GhGeM7W87IPUocVONGM4lRmWYAZKMrxgyfX6VA
+         zQAQ/f5pK9rWd7j4FZq0gH1cXYLwDS62uRNkLa5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 79/90] ACPI: watchdog: Allow disabling WDAT at boot
-Date:   Thu, 19 Mar 2020 14:00:41 +0100
-Message-Id: <20200319123952.852295391@linuxfoundation.org>
+Subject: [PATCH 4.9 81/90] HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
+Date:   Thu, 19 Mar 2020 14:00:43 +0100
+Message-Id: <20200319123953.375432978@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123928.635114118@linuxfoundation.org>
 References: <20200319123928.635114118@linuxfoundation.org>
@@ -61,72 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean Delvare <jdelvare@suse.de>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 3f9e12e0df012c4a9a7fd7eb0d3ae69b459d6b2c ]
+[ Upstream commit be0aba826c4a6ba5929def1962a90d6127871969 ]
 
-In case the WDAT interface is broken, give the user an option to
-ignore it to let a native driver bind to the watchdog device instead.
+The Surfbook E11B uses the SIPODEV SP1064 touchpad, which does not supply
+descriptors, so it has to be added to the override list.
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+BugLink: https://bugs.launchpad.net/bugs/1858299
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/kernel-parameters.txt |  4 ++++
- drivers/acpi/acpi_watchdog.c        | 12 +++++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-index b2d2f4539a3fe..e05d65d6fcb68 100644
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -335,6 +335,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
- 			dynamic table installation which will install SSDT
- 			tables to /sys/firmware/acpi/tables/dynamic.
- 
-+	acpi_no_watchdog	[HW,ACPI,WDT]
-+			Ignore the ACPI-based watchdog interface (WDAT) and let
-+			a native driver control the watchdog device instead.
-+
- 	acpi_rsdp=	[ACPI,EFI,KEXEC]
- 			Pass the RSDP address to the kernel, mostly used
- 			on machines running EFI runtime service to boot the
-diff --git a/drivers/acpi/acpi_watchdog.c b/drivers/acpi/acpi_watchdog.c
-index 7ef0a0e105e18..4296f4932294f 100644
---- a/drivers/acpi/acpi_watchdog.c
-+++ b/drivers/acpi/acpi_watchdog.c
-@@ -58,12 +58,14 @@ static bool acpi_watchdog_uses_rtc(const struct acpi_table_wdat *wdat)
- }
- #endif
- 
-+static bool acpi_no_watchdog;
-+
- static const struct acpi_table_wdat *acpi_watchdog_get_wdat(void)
- {
- 	const struct acpi_table_wdat *wdat = NULL;
- 	acpi_status status;
- 
--	if (acpi_disabled)
-+	if (acpi_disabled || acpi_no_watchdog)
- 		return NULL;
- 
- 	status = acpi_get_table(ACPI_SIG_WDAT, 0,
-@@ -91,6 +93,14 @@ bool acpi_has_watchdog(void)
- }
- EXPORT_SYMBOL_GPL(acpi_has_watchdog);
- 
-+/* ACPI watchdog can be disabled on boot command line */
-+static int __init disable_acpi_watchdog(char *str)
-+{
-+	acpi_no_watchdog = true;
-+	return 1;
-+}
-+__setup("acpi_no_watchdog", disable_acpi_watchdog);
-+
- void __init acpi_watchdog_init(void)
- {
- 	const struct acpi_wdat_entry *entries;
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index 10af8585c820d..95052373a8282 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -341,6 +341,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Trekstor SURFBOOK E11B",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SURFBOOK E11B"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{
+ 		.ident = "Direkt-Tek DTLAPY116-2",
+ 		.matches = {
 -- 
 2.20.1
 
