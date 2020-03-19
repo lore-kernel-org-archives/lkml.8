@@ -2,211 +2,148 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD01C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE3FC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B866D2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6C62071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 05:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJie2FFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbgCSF50 (ORCPT
+        id S1727148AbgCSF7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 01:57:26 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36731 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbgCSF50 (ORCPT
+        Thu, 19 Mar 2020 01:59:31 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46530 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgCSF7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 01:57:26 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jEoAh-0000e1-EN; Thu, 19 Mar 2020 06:56:47 +0100
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jEoAZ-0001zw-VI; Thu, 19 Mar 2020 06:56:39 +0100
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: [PATCH v2 5/5] ARM: dts: add Protonic RVT board
-Date:   Thu, 19 Mar 2020 06:56:36 +0100
-Message-Id: <20200319055636.7573-6-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200319055636.7573-1-o.rempel@pengutronix.de>
-References: <20200319055636.7573-1-o.rempel@pengutronix.de>
+        Thu, 19 Mar 2020 01:59:30 -0400
+Received: by mail-lf1-f67.google.com with SMTP id a28so587382lfr.13;
+        Wed, 18 Mar 2020 22:59:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4AbHLBURcg70iEWU76CnCq8iJIf343eM2hhp8ZJ9uIs=;
+        b=WJie2FFqqnjkHSs7KRUyot9wFIe/zORBUT6bNUlWZiD15hdkbXDt2Bz6Z9urRfN5Ms
+         V7jm7TUtBh5LivuF6ukKuhwi8nowZgTdkfJ/S2blg3RIkBzclxMIKe6JUaLrDSj600kS
+         XgkvJ9sm7QnxNMNaLYmiecvfhrR+iERPRPSwfPITv6UflMhtHti4Tgor28gtpCnYmxd0
+         Y0avHBoL3qmTr7BrhnpFltnlo5VVDA9aRj6WUf0dD9DtKH8z2JUXxDL5bdZ5kb8OEXW1
+         R7OFWd8zLzU1wJqQ3LI5vtS7ay2iKZ/ICwp54BFBoqQjD1aWRJs9qeN/E/TQp1ae9A46
+         CGqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4AbHLBURcg70iEWU76CnCq8iJIf343eM2hhp8ZJ9uIs=;
+        b=pZxLJcs4OFRcn4L19N46r/n9a4mQg19J2o3d3arnnmqfn02+UUbWIx7vZYPEuertQs
+         ZfnmZ4yCIw8oAQl7rbqKhVQSs0Eq3j7Mlf09Sm2MKVIFhYWPZP0nO5hLITR+qv9PcUN4
+         GxD2np1dtM7H7qhY2W8EPU4yxLoND4TRzJn/4TxNVTJs9XNkBD3yEBygJtshmiGONF7F
+         KyDN2AkRtpmJcgYmjC/oV+1zNsZB7+mpHx6dXEd90kH5lC8Z/UelaQ0fVLx6W/q4B1jF
+         TUs3ByU5DCn8jxOE1reOAmVnkD2Wdp5ISyAvXbIg+6JbkVJXCw6LEa9g/4mFJhWao9dg
+         WIFA==
+X-Gm-Message-State: ANhLgQ0aQIWMJqiBsFp7g0qnuLBpXKN66C4i3QoxRr/21P5g3InPOVJa
+        0v8EdRIuNsEkGYNIBGqXDY3h1F1jARjpJA==
+X-Google-Smtp-Source: ADFU+vtffu02yPuSwfMvRqzYoFHvAnQpPa5NGlmqCKfTHzfqmex3xIco+kCqUplRSHES4MDsakSH8w==
+X-Received: by 2002:ac2:5187:: with SMTP id u7mr1055273lfi.153.1584597566619;
+        Wed, 18 Mar 2020 22:59:26 -0700 (PDT)
+Received: from localhost.localdomain ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id o15sm604393ljj.55.2020.03.18.22.59.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 22:59:26 -0700 (PDT)
+From:   Pawel Dembicki <paweldembicki@gmail.com>
+To:     linux-usb@vger.kernel.org
+Cc:     Pawel Dembicki <paweldembicki@gmail.com>,
+        Cezary Jackiewicz <cezary@eko.one.pl>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: qmi_wwan: add support for ASKEY WWHC050
+Date:   Thu, 19 Mar 2020 06:58:45 +0100
+Message-Id: <20200319055845.6431-1-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Protonic RVT is an internal development platform for a wireless ISObus
-Virtual Terminal based on COTS tablets, and the predecessor of the WD2
-platform.
+ASKEY WWHC050 is a mcie LTE modem.
+The oem configuration states:
 
-Signed-off-by: David Jander <david@protonic.nl>
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
+D:  Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1690 ProdID=7588 Rev=ff.ff
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=813f0eef6e6e
+C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=84(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=86(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+E:  Ad=88(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
+E:  Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
+
+Tested on openwrt distribution.
+
+Signed-off-by: Cezary Jackiewicz <cezary@eko.one.pl>
+[add commit message]
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 ---
- .../devicetree/bindings/arm/fsl.yaml          |   1 +
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/imx6dl-prtrvt.dts           | 108 ++++++++++++++++++
- 3 files changed, 110 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-prtrvt.dts
+ drivers/net/usb/qmi_wwan.c  | 1 +
+ drivers/usb/serial/option.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 424be1edf005..2e8a03ef5c95 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -168,6 +168,7 @@ properties:
-               - emtrion,emcon-mx6-avari   # emCON-MX6S or emCON-MX6DL SoM on Avari Base
-               - fsl,imx6dl-sabreauto      # i.MX6 DualLite/Solo SABRE Automotive Board
-               - fsl,imx6dl-sabresd        # i.MX6 DualLite SABRE Smart Device Board
-+              - prt,prtrvt                # Protonic RVT board
-               - prt,prtvt7                # Protonic VT7 board
-               - technologic,imx6dl-ts4900
-               - technologic,imx6dl-ts7970
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e53abe1de259..afaccc9bc645 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -446,6 +446,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-nitrogen6x.dtb \
- 	imx6dl-phytec-mira-rdk-nand.dtb \
- 	imx6dl-phytec-pbab01.dtb \
-+	imx6dl-prtrvt.dtb \
- 	imx6dl-prtvt7.dtb \
- 	imx6dl-rex-basic.dtb \
- 	imx6dl-riotboard.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-prtrvt.dts b/arch/arm/boot/dts/imx6dl-prtrvt.dts
-new file mode 100644
-index 000000000000..fddc91b5a113
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-prtrvt.dts
-@@ -0,0 +1,108 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright (c) 2014 Protonic Holland
-+ */
-+
-+/dts-v1/;
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-prti6q.dtsi"
-+
-+/ {
-+	model = "Protonic RVT board";
-+	compatible = "prt,prtrvt", "fsl,imx6dl";
-+
-+	memory@10000000 {
-+		device_type = "memory";
-+		reg = <0x10000000 0x10000000>;
-+	};
-+};
-+
-+&iomuxc {
-+	prti6q {
-+		pinctrl_hog: hoggrp {
-+			fsl,pins = <
-+				/* SGTL5000 sys_mclk */
-+				MX6QDL_PAD_CSI0_MCLK__CCM_CLKO1	0x030b0
-+				/* CAN1_SR + CAN2_SR GPIO outputs */
-+				MX6QDL_PAD_KEY_COL3__GPIO4_IO12	0x13070
-+				MX6QDL_PAD_KEY_ROW3__GPIO4_IO13	0x13070
-+
-+				/* CAN1_TERM */
-+				MX6QDL_PAD_GPIO_0__GPIO1_IO00	0x1b0b0
-+				/* ITU656_nRESET */
-+				MX6QDL_PAD_GPIO_2__GPIO1_IO02	0x1b0b0
-+
-+				/* HW revision detect */
-+				/* REV_ID0 */
-+				MX6QDL_PAD_SD4_DAT0__GPIO2_IO08 0x1b0b0
-+				/* REV_ID1 */
-+				MX6QDL_PAD_SD4_DAT1__GPIO2_IO09 0x1b0b0
-+				/* REV_ID2 */
-+				MX6QDL_PAD_SD4_DAT2__GPIO2_IO10 0x1b0b0
-+				/* REV_ID3 */
-+				MX6QDL_PAD_SD4_DAT3__GPIO2_IO11 0x1b0b0
-+				/* REV_ID4 */
-+				MX6QDL_PAD_SD4_DAT4__GPIO2_IO12 0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_leds: ledsgrp {
-+			fsl,pins = <
-+				/* DEBUG0 */
-+				MX6QDL_PAD_GPIO_8__GPIO1_IO08	0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_usbotg: usbotggrp {
-+			fsl,pins = <
-+				/* Not connected */
-+				MX6QDL_PAD_EIM_D21__USB_OTG_OC	0x1b0b0
-+				/* power enable, high active */
-+				MX6QDL_PAD_EIM_D22__GPIO3_IO22  0x1b0b0
-+			>;
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	rtc: pcf8563@51 {
-+		compatible = "nxp,pcf8563";
-+		reg = <0x51>;
-+	};
-+};
-+
-+&pwm1 {
-+	status = "disabled";
-+};
-+
-+&ssi1 {
-+	status = "disabled";
-+};
-+
-+&uart2 {
-+	status = "disabled";
-+};
-+
-+&uart5 {
-+	status = "disabled";
-+};
-+
-+&usbh1 {
-+	status = "disabled";
-+};
-+
-+&can2 {
-+	status = "disabled";
-+};
-+
-+&vpu {
-+	status = "disabled";
-+};
-+
-+&audmux {
-+	status = "disabled";
-+};
-+
-+&ipu1 {
-+	status = "disabled";
-+};
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 5754bb6ca0ee..6c738a271257 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1210,6 +1210,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x1435, 0xd182, 5)},	/* Wistron NeWeb D18 */
+ 	{QMI_FIXED_INTF(0x1435, 0xd191, 4)},	/* Wistron NeWeb D19Q1 */
+ 	{QMI_QUIRK_SET_DTR(0x1508, 0x1001, 4)},	/* Fibocom NL668 series */
++	{QMI_FIXED_INTF(0x1690, 0x7588, 4)},    /* ASKEY WWHC050 */
+ 	{QMI_FIXED_INTF(0x16d8, 0x6003, 0)},	/* CMOTech 6003 */
+ 	{QMI_FIXED_INTF(0x16d8, 0x6007, 0)},	/* CMOTech CHE-628S */
+ 	{QMI_FIXED_INTF(0x16d8, 0x6008, 0)},	/* CMOTech CMU-301 */
+diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+index 084cc2fff3ae..809e6ba85045 100644
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -2016,6 +2016,8 @@ static const struct usb_device_id option_ids[] = {
+ 	  .driver_info = RSVD(4) | RSVD(5) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2cb7, 0x0105, 0xff),			/* Fibocom NL678 series */
+ 	  .driver_info = RSVD(6) },
++	{ USB_DEVICE(0x1690, 0x7588),                                           /* ASKEY WWHC050 */
++	  .driver_info = RSVD(1) | RSVD(4) },
+ 	{ } /* Terminating entry */
+ };
+ MODULE_DEVICE_TABLE(usb, option_ids);
 -- 
-2.25.1
+2.20.1
 
