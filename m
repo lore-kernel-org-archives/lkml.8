@@ -2,215 +2,162 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD3BC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEACC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5FE20732
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D7C20732
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 12:45:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WhUXOt8z"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="P54ryr6c";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BJksx+PB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgCSMmJ (ORCPT
+        id S1727102AbgCSMo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 08:42:09 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:56860 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726589AbgCSMmI (ORCPT
+        Thu, 19 Mar 2020 08:44:59 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:33199 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726589AbgCSMo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 08:42:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584621726;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JMWTP1FvAmqrLatWYU8wb1X6z1m+ck5CANNtYl0hBd8=;
-        b=WhUXOt8zFKsVycvhzvBz80KaGs0bVll5Xf8pCyZAIyU0h1NIGbL/VdfNWhT3KTHEEJI5J+
-        pCk3gGvVOv8+ZZEeqGI4BwXRmOeLr9/9L3AXTXe5PbTQ6hOxS26519Avfh/5nhgdQaUha0
-        U32G6wjXM/HuBXng3Ggc/7TlykQH6MA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-4r9TKv-YOseQxcOY8nikOA-1; Thu, 19 Mar 2020 08:41:50 -0400
-X-MC-Unique: 4r9TKv-YOseQxcOY8nikOA-1
-Received: by mail-wr1-f69.google.com with SMTP id u12so943754wrw.10
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Mar 2020 05:41:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JMWTP1FvAmqrLatWYU8wb1X6z1m+ck5CANNtYl0hBd8=;
-        b=XGlCHPjbHWS4Y1j6KdWmPRLLVvIXEa3icDkeWFFoZBAijKV5gvcTa5Xr/UGyS/xxhL
-         qMMA/WN5Uhk0eP2YBCbeK/e3hbSJ6aqHEQZXIr8pIbAbsOMHCi3f8qZffWRQcE/nktBC
-         FIyWOi9dmcmjLt8maMo9diqECOPQKZ8ejel8IVnzdabgyrsE6cejot44OPpxbKqrpIt8
-         aHyRkndT6UTUIspnLoXuyReKa0mR1fqrpcnXEoUNrF/e75YPVWwUS11dZEnCM+LbFbhl
-         XKlYxSjtuwf8qjZoCNw30j2Y+SFBabGNFikZvQVjBrF/OkeyfOHFcch3QK2gJ5xA/ezh
-         tpHQ==
-X-Gm-Message-State: ANhLgQ236EwecRuoSZLTimfb+hLdD//uobyOVarTt22pZ9D/3itJtjI2
-        lCPzK7cxDEqcRDYuhSMWMX9xrpr3LMaUCNwU5rthRHhNyA7HEMkd/5HRZid6BW5PMyW11IxaphO
-        aH1j/odgIHgTM3BzB7HdD0H/I
-X-Received: by 2002:adf:d4ce:: with SMTP id w14mr4140894wrk.101.1584621709099;
-        Thu, 19 Mar 2020 05:41:49 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtvrtAr43ZhFSSZZGQnqoY1/6frmfvCc2nPfx93vuDH1GUQBIx8hURhPgVeaYUV7vjs1RlRqw==
-X-Received: by 2002:adf:d4ce:: with SMTP id w14mr4140859wrk.101.1584621708665;
-        Thu, 19 Mar 2020 05:41:48 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
-        by smtp.gmail.com with ESMTPSA id n18sm3344646wrw.34.2020.03.19.05.41.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Mar 2020 05:41:48 -0700 (PDT)
-Subject: Re: Updating cypress/brcm firmware in linux-firmware for
- CVE-2019-15126
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Chung-Hsien Hsu <cnhu@cypress.com>,
-        Christopher Rumpf <Christopher.Rumpf@cypress.com>
-List-Id: <linux-firmware.lore.kernel.org>
-Cc:     linux-firmware@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <93dba8d2-6e46-9157-d292-4d93feb8ec1a@redhat.com>
- <f7f5076f-d799-7c5c-90e9-3ad781ef96a9@redhat.com>
-Message-ID: <437b92f4-71c5-7f60-5764-668cc6cc16d8@redhat.com>
-Date:   Thu, 19 Mar 2020 13:41:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 19 Mar 2020 08:44:58 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 172F258066E;
+        Thu, 19 Mar 2020 08:44:57 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 19 Mar 2020 08:44:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=fPef86flXx0XBtfvoeNEs+6nqE5
+        kjHbY/H2scm6omuc=; b=P54ryr6cYmDL3HtEmHxTsHrnPfMlr4pYagLUkS7ib6U
+        IOsPIXi8dXU4dBWVk8gkZr2UKAt1i+V1i0veGvLvTAWfaPNSqzxjTYDC4Kk9OxKw
+        FJTjiecptq6P3vlPWZxPF8W6AiAMprS5FeVKu7yUg/uCwo+g+WDFDeKVPULVHN4/
+        zcYD4Yxo7qj93XuM75MVktOz4aIbcrpWGzI7yiupyv+H8c3L7xbnNRJR/gIpvgEt
+        dQWyzJX8TZZJlfOA3GEQcEOlsUp/8qYUOZ1KLKa5cDr3KUOhvJ1nazwc+ERjlEmm
+        5B3PEl2iAPM66FtXNnrVm3jIAZVFNez3aDYMo+qucdQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=fPef86
+        flXx0XBtfvoeNEs+6nqE5kjHbY/H2scm6omuc=; b=BJksx+PBF56TFgnOUEJ/kw
+        QYXX0L26+g+4Cw1qAQ79baQSlMIrv7ZTfJLTnWZVVV6wQFmy82Dc8FaOaidq1CKo
+        +2JoVnkIBoaTOLU87oR//m2HOUsHzqw7y5jAW8O4xV6hkqY5UDsQctLlwR4AMVHg
+        GYKD47FuwoDwgzbx0yILhumliPKt3JN/iLDrxL+bp7JvYGkyjKrVQ08UWKgFDPni
+        eAHy1x7Zi9xAYq8g34OQ+uuWTXfRU5ovY931qS6bQQ9y8m/195yyn1xo1uhn1Rb4
+        f/Wx4H3Df1KWSY8HXG1TUokdODU9QKDr4g16hLhSv9Zyk2/t/gbpSGRUno9L2Odg
+        ==
+X-ME-Sender: <xms:RmlzXoTyYLruReR4fEM0EZvVGx3em7prj6ItaYEYTSZV26yRnpGTFw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudefledggeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:RmlzXtY1tPKrM6iWyQqASsTBEGtmgOPWGqhrEs3xnNQqk5vuqNZGyw>
+    <xmx:RmlzXjcrygJZCEd_r1wE2kBm2DARMoXFqq3ORMp_UnaSKchfDCJm2Q>
+    <xmx:RmlzXmKOKO9aidJcE9GYNfnbTaV_5jXHPN6vJMdMmBwUC3t183rxYQ>
+    <xmx:SWlzXp97jLbUzb-fmPLA-z2NnPcEfHSko1oXqiOB69IY6YKZfezmkg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8AF24328005D;
+        Thu, 19 Mar 2020 08:44:54 -0400 (EDT)
+Date:   Thu, 19 Mar 2020 13:44:52 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to
+ assigned-clock-rates
+Message-ID: <20200319124452.3yfcvq754vi4q2rv@gilmour.lan>
+References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <f7f5076f-d799-7c5c-90e9-3ad781ef96a9@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5j65trj5d3psj2o7"
+Content-Disposition: inline
+In-Reply-To: <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
 
-Relaying Chris Rumpf's answer here again because of
-his email issues:
+--5j65trj5d3psj2o7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 3/18/20 11:06 PM, Hans de Goede wrote:
-> Hi All,
-> 
-> On 2/26/20 11:16 PM, Hans de Goede wrote:
->> Hello Cypress people,
->>
->> Can we please get updated firmware for
->> brcm/brcmfmac4356-pcie.bin and brcm/brcmfmac4356-sdio.bin
->> fixing CVE-2019-15126 as well as for any other affected
->> models (the 4356 is explicitly named in the CVE description) ?
->>
->> The current Cypress firmware files in linux-firmware are
->> quite old, e.g. for brcm/brcmfmac4356-pcie.bin linux-firmware has:
->> version 7.35.180.176 dated 2017-10-23, way before the CVE
->>
->> Where as https://community.cypress.com/docs/DOC-19000 /
->> cypress-fmac-v4.14.77-2020_0115.zip has:
->> version 7.35.180.197 which presumably contains a fix (no changelog)
-> 
-> Chris from Cypress has replied privately to me because of some
-> email issues, with the request to relay the information he
-> wrote here:
-> 
-> On 3/18/20 6:54 PM, Christopher Rumpf wrote:
-> 
->  >  Cypress' CLM upstream policy is currently fragmented, as you have indicated.
->  > The 43340 and 43362 have embedded CLM upstreamed yet no other Cypress parts
->  > have done so and only deliver the firmware.bin files.  Cypress' customers
->  > have been OK to follow this technote
->  > https://www.cypress.com/documentation/application-notes/an225347-cypress-wi-fi-clm-regulatory-manual
->  > which requires users to contact Cypress support to obtain the best performing
->  > Country Locale Matrix (CLM) for the Wi-Fi module and targeted regions.
->  > Such a model is of course not ideal for the open source community or for
->  > what we  call “the broad market” as it requires an extra human to human
->  > interaction that at the end of the day may reduce the user's time to
->  > market and ability to independently move forward.
->  >
->  >  As I am sure you are aware, Cypress’ Embedded CLM = Wi-Fi Firmware +
->  > regional regulatory database + RF settings (NVRAM).  The Wi-Fi Firmware is
->  > static across all projects however the regional regulatory database and the
->  > RF settings are implementation specific.  Previously the hesitation to
->  > release a "worldwide generic embedded CLM” was because the regional
->  > regulatory and RF settings are not tuned correctly for the implementation's
->  > characteristics and the project may experience sub-par connectivity
->  > performance or even perceived defects (such as power, RF, robustness).
->  >
->  > In the long term Cypress will be investing in additional tooling to automate
->  > these steps, perhaps even as part of the project's config or build step.
->  >
->  > In the short term Cypress is considering these two actions:
->  >
->  > 1. For all active upstreamed Cypress parts, Cypress will upstream a
->  >    "worldwide generic embedded CLM”.  These Embedded CLMs won’t be tuned for
->  >    specific project’s regional or RF settings and customers may still need
->  >    to reach out to Cypress support but at least they will be able to use the
->  >    Cypress firmware in the linux-firmware repo right out of the box.
-> 
-> Note Chris later send me some clarification on this point:
-> 
-> On 3/18/20 10:29 PM, Christopher Rumpf wrote:
->  > One clarification here! Regarding the short term solution -
->  > the delivery may not be “embedded clm”.  It may be three different artifacts
->  > which are meant to service the broad market. The Cypress R&D team will decide
->  > the specifics of how to address the technical implementation to deliver the
->  > worldwide clm.
-> 
-> The below is a continuation of Chris' original email:
-> 
->  >  2. Cypress will add some more documentation in our READMEs and other
->  >     supporting docs that discusses the risks which
->  >     "worldwide generic embedded CLM” brings.  Customers can then make
->  >     their own decision to engage with Cypress support which will depend
->  >     on the characteristics of their project, I would imagine.
->  >
->  > Cypress would be able to implement these actions for the next release train
->  > which will be posted somewhere around end of June (pending any impact due
->  > to the coronavirus).
->  >
->  > Would these short and long term solutions meet the needs of the
->  > linux-firmware community?  If no, may we collaborate more?
-> 
-> Chris, if I understand you correctly then the plan would result in the Cypress
-> maintained firmwares in linux-firmware being in sync (being the same versions
-> but with a more generic CLM) with the firmwares Cypress releases as part of
-> their SDK; and the first time we would see this in sync. release of Cypress
-> maintained firmwares would be around June. Correct?
+Hi,
 
-On 3/18/20 11:19 PM, Christopher Rumpf wrote:
+On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
+> Use assigned-clock-rates to specify the clock rate. Also mark
+> clock-frequency property as deprecated.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> index 72ad992..e62fe82 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
+> @@ -8,7 +8,7 @@ Required Properties:
+>  - compatible: Value should be "ovti,ov5645".
+>  - clocks: Reference to the xclk clock.
+>  - clock-names: Should be "xclk".
+> -- clock-frequency: Frequency of the xclk clock.
+> +- clock-frequency (deprecated): Frequency of the xclk clock.
+>  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+>    to the hardware pin PWDNB which is physically active low.
+>  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
+> @@ -37,7 +37,8 @@ Example:
+>
+>  			clocks = <&clks 200>;
+>  			clock-names = "xclk";
+> -			clock-frequency = <24000000>;
+> +			assigned-clocks = <&clks 200>;
+> +			assigned-clock-rates = <24000000>;
+>
+>  			vdddo-supply = <&camera_dovdd_1v8>;
+>  			vdda-supply = <&camera_avdd_2v8>;
 
-The understanding of the solution and the timeline is correct.
+clock-frequency is quite different from assigned-clock-rates though,
+semantically speaking. clock-frequency is only about what the clock
+frequency is, while assigned-clock-rates will change the rate as well,
+and you have no idea how long it will last.
 
-> This sounds very good to me.
-> 
-> I do have one question though, you describe the firmware as consisting of
-> 3 parts: The actual firmware, the Country Locale Matrix and the NVRAM.
-> 
-> Currently linux-firmware contains firmwares with a generic CLM embedded
-> in them. But AFAIK the nvram-s are device-model/project specific (more so
-> then the CLM-s I believe) and normally the nvram is actual part of the
-> device and read by the kernel driver?  The one exception to this is the
-> nvram files for some SDIO boards. Recent kernels have code to load
-> the nvram files for these SDIO boards using a device-model specific
-> name and the linux-firmware repository contains community contributed
-> NVRAM files for various device-models. Would this change with the
-> new firmware versions ?
+If you want to retrieve that through the clock framework, then just
+making clock-frequency optional is enough and falling back to
+clk_get_rate on the clocks property already provided is enough.
 
-On 3/18/20 11:19 PM, Christopher Rumpf wrote:
+Maxime
 
-No changes here.  My bad, I probably should have written this:
- > Cypress’ Embedded CLM = Wi-Fi Firmware + regional regulatory database + RF settings (NVRAM).
-as
-Cypress’ Solution = Wi-Fi Firmware + regional regulatory database (CLM) + RF settings (NVRAM).
+--5j65trj5d3psj2o7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The idea/architecture here is to allow for these software parts to change
-independently. So yes, users can change nvram (or CLM or the firmware itself)
-and still use the overall solution.
+-----BEGIN PGP SIGNATURE-----
 
-Regards,
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXnNpRAAKCRDj7w1vZxhR
+xesHAP9VTAePw+WAADpRdawWbVIeQrmRXEWIUIh4/u+DB1CnCQEAtrdAD6cdnFZV
+PoQsLM8/8h0mlE9auOHjPVUcOLYy1gs=
+=qLmi
+-----END PGP SIGNATURE-----
 
-Hans
-
+--5j65trj5d3psj2o7--
