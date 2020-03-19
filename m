@@ -2,106 +2,102 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B500C4332E
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC94C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CBA420773
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C732076F
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 21:49:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1584654579;
+	bh=CVs01TGipmPGpf0FCCjonz7WVkscCZD6wIB3CNx0vQI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=LhtRCnHwck5TFiOqLl+WxxwnBBDGE0Cz+bEO46hK6T+og0Zl0spf44VIwLHb3ZdeD
+	 7Hl8KoSVo6eOBvRLKnhudnygopIwtmgKeA6TR7YQ/tLuoVVGsfttgXzKmD7f3ZNzEn
+	 pQnqFgtb8PnjS2asIcZksp+CbFqpIG8iEm9tiyt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbgCSVsi (ORCPT
+        id S1727338AbgCSVth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 17:48:38 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36072 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgCSVsi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 17:48:38 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 11A621C032A; Thu, 19 Mar 2020 22:48:36 +0100 (CET)
-Date:   Thu, 19 Mar 2020 22:48:35 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        ben.hutchings@codethink.co.uk, Chris.Paterson2@renesas.com
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Julia Cartwright <julia@ni.com>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Subject: Re: [ANNOUNCE] 4.19.106-rt44
-Message-ID: <20200319214835.GA29781@duo.ucw.cz>
-References: <20200228170837.3fe8bb57@gandalf.local.home>
+        Thu, 19 Mar 2020 17:49:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgCSVth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 17:49:37 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E44B2076F;
+        Thu, 19 Mar 2020 21:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1584654576;
+        bh=CVs01TGipmPGpf0FCCjonz7WVkscCZD6wIB3CNx0vQI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=H2ALHgZ04MLBIcS9leloUIRe+vDtmh0wftirNSk5X4hZDlYYjmkn4POOjdsIke53Z
+         1EVLw3k+hisKl3+B5G6AryXSyrb8dGjKFtskO2feKFq3fy4v6NqkCvdKKHc/ItmUys
+         hMc+PkhNlPNnrFllKgtPXkS4IljdtREQORSGZfXg=
+Date:   Thu, 19 Mar 2020 16:49:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Avoid ASMedia XHCI USB PME# from D0 defect
+Message-ID: <20200319214934.GA8156@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228170837.3fe8bb57@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191219192006.16270-1-kai.heng.feng@canonical.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Dec 20, 2019 at 03:20:06AM +0800, Kai-Heng Feng wrote:
+> The ASMedia USB XHCI Controller claims to support generating PME# while
+> in D0:
+> 
+> 01:00.0 USB controller: ASMedia Technology Inc. Device 2142 (prog-if 30 [XHCI])
+>         Subsystem: SUNIX Co., Ltd. Device 312b
+>         Capabilities: [78] Power Management version 3
+>                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0+,D1-,D2-,D3hot-,D3cold-)
+>                 Status: D0 NoSoftRst+ PME-Enable+ DSel=0 DScale=0 PME-
+> 
+> However PME# only gets asserted when plugging USB 2.0 or USB 1.1
+> devices, but not for USB 3.0 devices.
+> 
+> So remove PCI_PM_CAP_PME_D0 to avoid using PME under D0.
+> 
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205919
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
---gBBFr7Ir9EOA20Yy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to pci/misc for v5.7, thanks!
 
-Hi!
-
-> I'm pleased to announce the 4.19.106-rt44 stable release.
->=20
->=20
-> This release is just an update to the new stable 4.19.106 version
-> and no RT specific changes have been made.
->=20
->=20
-> You can get this release via the git tree at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
->=20
->   branch: v4.19-rt
->   Head SHA1: 0f2960c75dd68d339f0aff2935f51652b5625fbf
-
-This brought some problems for me. de0-nano board now fails to boot in
-cca 50% of cases if I move these patches on top of -cip tree.
-
-This is example of failed job:
-
-https://lava.ciplatform.org/scheduler/job/13037
-
-de0-nano is 32-bit arm, should be based on Altera SoCFPGA if I understand
-things correctly.
-
-"fc9f4631a290 irqwork: push most work into softirq context" touches
-area of the panic above. I tried to revert it on top of the full
-series, and tests passed twice so far...
-
-Best regards,
-								=09
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---gBBFr7Ir9EOA20Yy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXnPoswAKCRAw5/Bqldv6
-8vuoAKC/ilemsFP8sD6l8Pde9X/EGm4YLwCfUn8TX1RIe2ZozX/4KwtFbGlI+Vc=
-=EDGz
------END PGP SIGNATURE-----
-
---gBBFr7Ir9EOA20Yy--
+> ---
+>  drivers/pci/quirks.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 79379b4c9d7a..24c71555dc77 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5436,3 +5436,14 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+>  			      PCI_CLASS_DISPLAY_VGA, 8,
+>  			      quirk_reset_lenovo_thinkpad_p50_nvgpu);
+> +
+> +/*
+> + * Device [1b21:2142]
+> + * When in D0, PME# doesn't get asserted when plugging USB 3.0 device.
+> + */
+> +static void pci_fixup_no_d0_pme(struct pci_dev *dev)
+> +{
+> +	pci_info(dev, "PME# does not work under D0, disabling it\n");
+> +	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x2142, pci_fixup_no_d0_pme);
+> -- 
+> 2.17.1
+> 
