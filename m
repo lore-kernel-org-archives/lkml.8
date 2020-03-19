@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D5CC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF1CC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12AE220658
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5991A207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624408;
-	bh=wKyo751Qb290M1eueCeLhse11w1D722qA+2YbQAX6yU=;
+	s=default; t=1584624412;
+	bh=REpsYXfZCjqkDDB8VV0pmsaiEOHyUa6o40zKlxKoOQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QCIhXqrUKSwJH3razQ8XWqWvb1IS3yB6o3wlV4TedFESfp972iXkKOa+Wq7swyoMY
-	 b4ENnOElLfO5mdb53lfG/4P9ODQahzHLhyp2OhkW6ISnqsiIvPi2CUxPFpaQ6WHyCn
-	 7vvjgZKvGXuu/kK0vbKVYlQ7cbkfu+0+TEtrnsAc=
+	b=LhObzANCQzSF+fRFwd6BPtUK+pI6iprMfv36M5UTNGeUYXOWheAswF7C+9Qs4s0Xu
+	 ySKhjYRo+kKbGxTwUFErdp5SWVxfHwDPWcoqSqX9tEoN50W894OIoTig8cgePHw3Hw
+	 dQ2WpEc2cYaQjQ9jl6coXhLSjTUV+si4hIO8PXHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730829AbgCSN0q (ORCPT
+        id S1730818AbgCSN0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:26:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54798 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:26:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730818AbgCSN0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:26:44 -0400
+        id S1730825AbgCSN0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:26:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F130A20658;
-        Thu, 19 Mar 2020 13:26:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77FBC208C3;
+        Thu, 19 Mar 2020 13:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584624403;
-        bh=wKyo751Qb290M1eueCeLhse11w1D722qA+2YbQAX6yU=;
+        s=default; t=1584624405;
+        bh=REpsYXfZCjqkDDB8VV0pmsaiEOHyUa6o40zKlxKoOQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OpwAuhT30kjYajYLYAYXNiKS1XhHZO/YWTAiMKL3AjAgmXGMDsYVouAwBHpTStR3E
-         l93sdx4ll8MpxHiRVh2qkKDv4ybFBeIJ06R1Sf2MrBPqY5B/lWXYGn1dDqNLuMyM/w
-         DqyLSxdAg3rwRYuwlEq2v76CrEwyOpgJdTj0f7iY=
+        b=GtZBo1GdNpYoPtkgBteCNinniMcfDNk7ioRyDqnsf5zSDuT+Q99CB88vnVarYomxl
+         uskHIef7o0vhvR4P2vqurEX+Ush2cJBgBwuxzpcNGs8VpdTlyBEKvqK/TjH1NAcu64
+         j1VGJgF1UFx/m+nNk4s0hWiN0L4mBJYWzWOI8rwI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Esben Haabendal <esben@geanix.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 32/65] net: ll_temac: Handle DMA halt condition caused by buffer underrun
-Date:   Thu, 19 Mar 2020 14:04:14 +0100
-Message-Id: <20200319123936.502308862@linuxfoundation.org>
+Subject: [PATCH 5.5 33/65] blk-mq: insert passthrough request into hctx->dispatch directly
+Date:   Thu, 19 Mar 2020 14:04:15 +0100
+Message-Id: <20200319123936.847425916@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123926.466988514@linuxfoundation.org>
 References: <20200319123926.466988514@linuxfoundation.org>
@@ -60,174 +62,179 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Esben Haabendal <esben@geanix.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 1d63b8d66d146deaaedbe16c80de105f685ea012 ]
+[ Upstream commit 01e99aeca3979600302913cef3f89076786f32c8 ]
 
-The SDMA engine used by TEMAC halts operation when it has finished
-processing of the last buffer descriptor in the buffer ring.
-Unfortunately, no interrupt event is generated when this happens,
-so we need to setup another mechanism to make sure DMA operation is
-restarted when enough buffers have been added to the ring.
+For some reason, device may be in one situation which can't handle
+FS request, so STS_RESOURCE is always returned and the FS request
+will be added to hctx->dispatch. However passthrough request may
+be required at that time for fixing the problem. If passthrough
+request is added to scheduler queue, there isn't any chance for
+blk-mq to dispatch it given we prioritize requests in hctx->dispatch.
+Then the FS IO request may never be completed, and IO hang is caused.
 
-Fixes: 92744989533c ("net: add Xilinx ll_temac device driver")
-Signed-off-by: Esben Haabendal <esben@geanix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+So passthrough request has to be added to hctx->dispatch directly
+for fixing the IO hang.
+
+Fix this issue by inserting passthrough request into hctx->dispatch
+directly together withing adding FS request to the tail of
+hctx->dispatch in blk_mq_dispatch_rq_list(). Actually we add FS request
+to tail of hctx->dispatch at default, see blk_mq_request_bypass_insert().
+
+Then it becomes consistent with original legacy IO request
+path, in which passthrough request is always added to q->queue_head.
+
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/xilinx/ll_temac.h      |  3 ++
- drivers/net/ethernet/xilinx/ll_temac_main.c | 58 +++++++++++++++++++--
- 2 files changed, 56 insertions(+), 5 deletions(-)
+ block/blk-flush.c    |  2 +-
+ block/blk-mq-sched.c | 22 +++++++++++++++-------
+ block/blk-mq.c       | 18 +++++++++++-------
+ block/blk-mq.h       |  3 ++-
+ 4 files changed, 29 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/xilinx/ll_temac.h b/drivers/net/ethernet/xilinx/ll_temac.h
-index 99fe059e5c7f3..53fb8141f1a67 100644
---- a/drivers/net/ethernet/xilinx/ll_temac.h
-+++ b/drivers/net/ethernet/xilinx/ll_temac.h
-@@ -380,6 +380,9 @@ struct temac_local {
- 	/* DMA channel control setup */
- 	u32 tx_chnl_ctrl;
- 	u32 rx_chnl_ctrl;
-+	u8 coalesce_count_rx;
-+
-+	struct delayed_work restart_work;
- };
- 
- /* Wrappers for temac_ior()/temac_iow() function pointers above */
-diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
-index 2e3f59dae586e..eb480204cdbeb 100644
---- a/drivers/net/ethernet/xilinx/ll_temac_main.c
-+++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
-@@ -51,6 +51,7 @@
- #include <linux/ip.h>
- #include <linux/slab.h>
- #include <linux/interrupt.h>
-+#include <linux/workqueue.h>
- #include <linux/dma-mapping.h>
- #include <linux/processor.h>
- #include <linux/platform_data/xilinx-ll-temac.h>
-@@ -866,8 +867,11 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
- 				      skb_headlen(skb), DMA_TO_DEVICE);
- 	cur_p->len = cpu_to_be32(skb_headlen(skb));
--	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr)))
--		return NETDEV_TX_BUSY;
-+	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr))) {
-+		dev_kfree_skb_any(skb);
-+		ndev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
- 	cur_p->phys = cpu_to_be32(skb_dma_addr);
- 	ptr_to_txbd((void *)skb, cur_p);
- 
-@@ -897,7 +901,9 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 			dma_unmap_single(ndev->dev.parent,
- 					 be32_to_cpu(cur_p->phys),
- 					 skb_headlen(skb), DMA_TO_DEVICE);
--			return NETDEV_TX_BUSY;
-+			dev_kfree_skb_any(skb);
-+			ndev->stats.tx_dropped++;
-+			return NETDEV_TX_OK;
- 		}
- 		cur_p->phys = cpu_to_be32(skb_dma_addr);
- 		cur_p->len = cpu_to_be32(skb_frag_size(frag));
-@@ -920,6 +926,17 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	return NETDEV_TX_OK;
- }
- 
-+static int ll_temac_recv_buffers_available(struct temac_local *lp)
-+{
-+	int available;
-+
-+	if (!lp->rx_skb[lp->rx_bd_ci])
-+		return 0;
-+	available = 1 + lp->rx_bd_tail - lp->rx_bd_ci;
-+	if (available <= 0)
-+		available += RX_BD_NUM;
-+	return available;
-+}
- 
- static void ll_temac_recv(struct net_device *ndev)
- {
-@@ -990,6 +1007,18 @@ static void ll_temac_recv(struct net_device *ndev)
- 			lp->rx_bd_ci = 0;
- 	} while (rx_bd != lp->rx_bd_tail);
- 
-+	/* DMA operations will halt when the last buffer descriptor is
-+	 * processed (ie. the one pointed to by RX_TAILDESC_PTR).
-+	 * When that happens, no more interrupt events will be
-+	 * generated.  No IRQ_COAL or IRQ_DLY, and not even an
-+	 * IRQ_ERR.  To avoid stalling, we schedule a delayed work
-+	 * when there is a potential risk of that happening.  The work
-+	 * will call this function, and thus re-schedule itself until
-+	 * enough buffers are available again.
-+	 */
-+	if (ll_temac_recv_buffers_available(lp) < lp->coalesce_count_rx)
-+		schedule_delayed_work(&lp->restart_work, HZ / 1000);
-+
- 	/* Allocate new buffers for those buffer descriptors that were
- 	 * passed to network stack.  Note that GFP_ATOMIC allocations
- 	 * can fail (e.g. when a larger burst of GFP_ATOMIC
-@@ -1045,6 +1074,18 @@ static void ll_temac_recv(struct net_device *ndev)
- 	spin_unlock_irqrestore(&lp->rx_lock, flags);
- }
- 
-+/* Function scheduled to ensure a restart in case of DMA halt
-+ * condition caused by running out of buffer descriptors.
-+ */
-+static void ll_temac_restart_work_func(struct work_struct *work)
-+{
-+	struct temac_local *lp = container_of(work, struct temac_local,
-+					      restart_work.work);
-+	struct net_device *ndev = lp->ndev;
-+
-+	ll_temac_recv(ndev);
-+}
-+
- static irqreturn_t ll_temac_tx_irq(int irq, void *_ndev)
- {
- 	struct net_device *ndev = _ndev;
-@@ -1137,6 +1178,8 @@ static int temac_stop(struct net_device *ndev)
- 
- 	dev_dbg(&ndev->dev, "temac_close()\n");
- 
-+	cancel_delayed_work_sync(&lp->restart_work);
-+
- 	free_irq(lp->tx_irq, ndev);
- 	free_irq(lp->rx_irq, ndev);
- 
-@@ -1269,6 +1312,7 @@ static int temac_probe(struct platform_device *pdev)
- 	lp->dev = &pdev->dev;
- 	lp->options = XTE_OPTION_DEFAULTS;
- 	spin_lock_init(&lp->rx_lock);
-+	INIT_DELAYED_WORK(&lp->restart_work, ll_temac_restart_work_func);
- 
- 	/* Setup mutex for synchronization of indirect register access */
- 	if (pdata) {
-@@ -1375,6 +1419,7 @@ static int temac_probe(struct platform_device *pdev)
- 		 */
- 		lp->tx_chnl_ctrl = 0x10220000;
- 		lp->rx_chnl_ctrl = 0xff070000;
-+		lp->coalesce_count_rx = 0x07;
- 
- 		/* Finished with the DMA node; drop the reference */
- 		of_node_put(dma_np);
-@@ -1406,11 +1451,14 @@ static int temac_probe(struct platform_device *pdev)
- 				(pdata->tx_irq_count << 16);
- 		else
- 			lp->tx_chnl_ctrl = 0x10220000;
--		if (pdata->rx_irq_timeout || pdata->rx_irq_count)
-+		if (pdata->rx_irq_timeout || pdata->rx_irq_count) {
- 			lp->rx_chnl_ctrl = (pdata->rx_irq_timeout << 24) |
- 				(pdata->rx_irq_count << 16);
--		else
-+			lp->coalesce_count_rx = pdata->rx_irq_count;
-+		} else {
- 			lp->rx_chnl_ctrl = 0xff070000;
-+			lp->coalesce_count_rx = 0x07;
-+		}
+diff --git a/block/blk-flush.c b/block/blk-flush.c
+index 3f977c517960e..5cc775bdb06ac 100644
+--- a/block/blk-flush.c
++++ b/block/blk-flush.c
+@@ -412,7 +412,7 @@ void blk_insert_flush(struct request *rq)
+ 	 */
+ 	if ((policy & REQ_FSEQ_DATA) &&
+ 	    !(policy & (REQ_FSEQ_PREFLUSH | REQ_FSEQ_POSTFLUSH))) {
+-		blk_mq_request_bypass_insert(rq, false);
++		blk_mq_request_bypass_insert(rq, false, false);
+ 		return;
  	}
  
- 	/* Error handle returned DMA RX and TX interrupts */
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index ca22afd47b3dc..856356b1619e8 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -361,13 +361,19 @@ static bool blk_mq_sched_bypass_insert(struct blk_mq_hw_ctx *hctx,
+ 				       bool has_sched,
+ 				       struct request *rq)
+ {
+-	/* dispatch flush rq directly */
+-	if (rq->rq_flags & RQF_FLUSH_SEQ) {
+-		spin_lock(&hctx->lock);
+-		list_add(&rq->queuelist, &hctx->dispatch);
+-		spin_unlock(&hctx->lock);
++	/*
++	 * dispatch flush and passthrough rq directly
++	 *
++	 * passthrough request has to be added to hctx->dispatch directly.
++	 * For some reason, device may be in one situation which can't
++	 * handle FS request, so STS_RESOURCE is always returned and the
++	 * FS request will be added to hctx->dispatch. However passthrough
++	 * request may be required at that time for fixing the problem. If
++	 * passthrough request is added to scheduler queue, there isn't any
++	 * chance to dispatch it given we prioritize requests in hctx->dispatch.
++	 */
++	if ((rq->rq_flags & RQF_FLUSH_SEQ) || blk_rq_is_passthrough(rq))
+ 		return true;
+-	}
+ 
+ 	if (has_sched)
+ 		rq->rq_flags |= RQF_SORTED;
+@@ -391,8 +397,10 @@ void blk_mq_sched_insert_request(struct request *rq, bool at_head,
+ 
+ 	WARN_ON(e && (rq->tag != -1));
+ 
+-	if (blk_mq_sched_bypass_insert(hctx, !!e, rq))
++	if (blk_mq_sched_bypass_insert(hctx, !!e, rq)) {
++		blk_mq_request_bypass_insert(rq, at_head, false);
+ 		goto run;
++	}
+ 
+ 	if (e && e->type->ops.insert_requests) {
+ 		LIST_HEAD(list);
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 323c9cb28066b..329df7986bf60 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -727,7 +727,7 @@ static void blk_mq_requeue_work(struct work_struct *work)
+ 		 * merge.
+ 		 */
+ 		if (rq->rq_flags & RQF_DONTPREP)
+-			blk_mq_request_bypass_insert(rq, false);
++			blk_mq_request_bypass_insert(rq, false, false);
+ 		else
+ 			blk_mq_sched_insert_request(rq, true, false, false);
+ 	}
+@@ -1278,7 +1278,7 @@ bool blk_mq_dispatch_rq_list(struct request_queue *q, struct list_head *list,
+ 			q->mq_ops->commit_rqs(hctx);
+ 
+ 		spin_lock(&hctx->lock);
+-		list_splice_init(list, &hctx->dispatch);
++		list_splice_tail_init(list, &hctx->dispatch);
+ 		spin_unlock(&hctx->lock);
+ 
+ 		/*
+@@ -1629,12 +1629,16 @@ void __blk_mq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+  * Should only be used carefully, when the caller knows we want to
+  * bypass a potential IO scheduler on the target device.
+  */
+-void blk_mq_request_bypass_insert(struct request *rq, bool run_queue)
++void blk_mq_request_bypass_insert(struct request *rq, bool at_head,
++				  bool run_queue)
+ {
+ 	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
+ 
+ 	spin_lock(&hctx->lock);
+-	list_add_tail(&rq->queuelist, &hctx->dispatch);
++	if (at_head)
++		list_add(&rq->queuelist, &hctx->dispatch);
++	else
++		list_add_tail(&rq->queuelist, &hctx->dispatch);
+ 	spin_unlock(&hctx->lock);
+ 
+ 	if (run_queue)
+@@ -1824,7 +1828,7 @@ static blk_status_t __blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
+ 	if (bypass_insert)
+ 		return BLK_STS_RESOURCE;
+ 
+-	blk_mq_request_bypass_insert(rq, run_queue);
++	blk_mq_request_bypass_insert(rq, false, run_queue);
+ 	return BLK_STS_OK;
+ }
+ 
+@@ -1840,7 +1844,7 @@ static void blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
+ 
+ 	ret = __blk_mq_try_issue_directly(hctx, rq, cookie, false, true);
+ 	if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE)
+-		blk_mq_request_bypass_insert(rq, true);
++		blk_mq_request_bypass_insert(rq, false, true);
+ 	else if (ret != BLK_STS_OK)
+ 		blk_mq_end_request(rq, ret);
+ 
+@@ -1874,7 +1878,7 @@ void blk_mq_try_issue_list_directly(struct blk_mq_hw_ctx *hctx,
+ 		if (ret != BLK_STS_OK) {
+ 			if (ret == BLK_STS_RESOURCE ||
+ 					ret == BLK_STS_DEV_RESOURCE) {
+-				blk_mq_request_bypass_insert(rq,
++				blk_mq_request_bypass_insert(rq, false,
+ 							list_empty(list));
+ 				break;
+ 			}
+diff --git a/block/blk-mq.h b/block/blk-mq.h
+index eaaca8fc1c287..c0fa34378eb2f 100644
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -66,7 +66,8 @@ int blk_mq_alloc_rqs(struct blk_mq_tag_set *set, struct blk_mq_tags *tags,
+  */
+ void __blk_mq_insert_request(struct blk_mq_hw_ctx *hctx, struct request *rq,
+ 				bool at_head);
+-void blk_mq_request_bypass_insert(struct request *rq, bool run_queue);
++void blk_mq_request_bypass_insert(struct request *rq, bool at_head,
++				  bool run_queue);
+ void blk_mq_insert_requests(struct blk_mq_hw_ctx *hctx, struct blk_mq_ctx *ctx,
+ 				struct list_head *list);
+ 
 -- 
 2.20.1
 
