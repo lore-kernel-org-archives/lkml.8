@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED89FC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACFAC4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC67F21775
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307A421775
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584623836;
-	bh=MNISfiGq26FrWPxt9X9i15XovzbjQzDF8bZvT5s9xpc=;
+	s=default; t=1584623841;
+	bh=0gFlzQXyqjqvTe384NB+HND7LEicV5ORE+ok2fAc4Qo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gwYWyjp3k7pCiTE8+x3dW6vUl/lYoCC90P5H2MRMg64YJIQKXHv+rcgT9LVAAA/sn
-	 hPUJAriyKEphMPQVXraUZ702MObsS1SL1pbAftlKS5s2Kk2W1haCbXEgv2/EpFRpDL
-	 SeezUzEIn/3XAviYuxtd6s2KA1aMchJuJnMSXd2k=
+	b=b3i/PVzZFbcuTlr/MaAFV92EfuuFNsLxiP4XRj9tLF6otFmQhPiv4o5gJVItwJMOM
+	 3fFl6BsQNJOSHHcvlSrwjmZfBYf1Fw8W1Ziqx/4w3x6laFidKQ6AP5kL2+PKl3aMEG
+	 ibD11Glvf3oN/bJNsCcRHPJ73E6rf0PB8FvP1AvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbgCSNRP (ORCPT
+        id S1729626AbgCSNRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:17:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38252 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:17:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729355AbgCSNRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:17:12 -0400
+        id S1729355AbgCSNRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:17:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBAE421775;
-        Thu, 19 Mar 2020 13:17:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF4D92098B;
+        Thu, 19 Mar 2020 13:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623832;
-        bh=MNISfiGq26FrWPxt9X9i15XovzbjQzDF8bZvT5s9xpc=;
+        s=default; t=1584623836;
+        bh=0gFlzQXyqjqvTe384NB+HND7LEicV5ORE+ok2fAc4Qo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fi0sfW2g1BdTl+i+wgvSXJntoB5ieRbfoagrptiSvt+Q/G4L4+c/RfFz1m5f6AYdh
-         UkaML+xsLqM/EcU4+roh2hJpMWNAAClh0pHcWAWHSwii1DNgL4tkBiMaQwa20f3lRG
-         yEYEG2i1phISIunz3R9yH7Ln/FUtJ5P1CLaJeYO8=
+        b=Z3um633u5YrChHfCDkPTUCHq9NpXpCZAsUCOaYNfXwi7nIsDAb4TKlS/3T+EhD2AM
+         nLVhgX42zzyB+UICfkbejmqNAAmWkIFo6cLke6fxSrkNHZtr5OVrbuA1K2YSkKOlsq
+         hyMT2Acz+rbMuj2QpKcncl6N3p243l9xJgSEos+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sven Eckelmann <sven.eckelmann@openmesh.com>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.14 67/99] batman-adv: Avoid spurious warnings from bat_v neigh_cmp implementation
-Date:   Thu, 19 Mar 2020 14:03:45 +0100
-Message-Id: <20200319124001.631716954@linuxfoundation.org>
+        stable@vger.kernel.org, Suren Baghdasaryan <surenb@google.com>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4.14 38/99] cgroup: Iterate tasks that did not finish do_exit()
+Date:   Thu, 19 Mar 2020 14:03:16 +0100
+Message-Id: <20200319123953.345883567@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -59,66 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven.eckelmann@openmesh.com>
+From: Michal Koutný <mkoutny@suse.com>
 
-commit 6a4bc44b012cbc29c9d824be2c7ab9eac8ee6b6f upstream.
+commit 9c974c77246460fa6a92c18554c3311c8c83c160 upstream.
 
-The neighbor compare API implementation for B.A.T.M.A.N. V checks whether
-the neigh_ifinfo for this neighbor on a specific interface exists. A
-warning is printed when it isn't found.
+PF_EXITING is set earlier than actual removal from css_set when a task
+is exitting. This can confuse cgroup.procs readers who see no PF_EXITING
+tasks, however, rmdir is checking against css_set membership so it can
+transitionally fail with EBUSY.
 
-But it is not called inside a lock which would prevent that this
-information is lost right before batadv_neigh_ifinfo_get. It must therefore
-be expected that batadv_v_neigh_(cmp|is_sob) might not be able to get the
-requested neigh_ifinfo.
+Fix this by listing tasks that weren't unlinked from css_set active
+lists.
+It may happen that other users of the task iterator (without
+CSS_TASK_ITER_PROCS) spot a PF_EXITING task before cgroup_exit(). This
+is equal to the state before commit c03cd7738a83 ("cgroup: Include dying
+leaders with live threads in PROCS iterations") but it may be reviewed
+later.
 
-A WARN_ON for such a situation seems not to be appropriate because this
-will only flood the kernel logs. The warnings must therefore be removed.
-
-Signed-off-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Reported-by: Suren Baghdasaryan <surenb@google.com>
+Fixes: c03cd7738a83 ("cgroup: Include dying leaders with live threads in PROCS iterations")
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/batman-adv/bat_v.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/net/batman-adv/bat_v.c
-+++ b/net/batman-adv/bat_v.c
-@@ -19,7 +19,6 @@
- #include "main.h"
+---
+ include/linux/cgroup.h |    1 +
+ kernel/cgroup/cgroup.c |   23 ++++++++++++++++-------
+ 2 files changed, 17 insertions(+), 7 deletions(-)
+
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -61,6 +61,7 @@ struct css_task_iter {
+ 	struct list_head		*mg_tasks_head;
+ 	struct list_head		*dying_tasks_head;
  
- #include <linux/atomic.h>
--#include <linux/bug.h>
- #include <linux/cache.h>
- #include <linux/errno.h>
- #include <linux/if_ether.h>
-@@ -623,11 +622,11 @@ static int batadv_v_neigh_cmp(struct bat
- 	int ret = 0;
++	struct list_head		*cur_tasks_head;
+ 	struct css_set			*cur_cset;
+ 	struct css_set			*cur_dcset;
+ 	struct task_struct		*cur_task;
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4051,12 +4051,16 @@ static void css_task_iter_advance_css_se
+ 		}
+ 	} while (!css_set_populated(cset) && list_empty(&cset->dying_tasks));
  
- 	ifinfo1 = batadv_neigh_ifinfo_get(neigh1, if_outgoing1);
--	if (WARN_ON(!ifinfo1))
-+	if (!ifinfo1)
- 		goto err_ifinfo1;
+-	if (!list_empty(&cset->tasks))
++	if (!list_empty(&cset->tasks)) {
+ 		it->task_pos = cset->tasks.next;
+-	else if (!list_empty(&cset->mg_tasks))
++		it->cur_tasks_head = &cset->tasks;
++	} else if (!list_empty(&cset->mg_tasks)) {
+ 		it->task_pos = cset->mg_tasks.next;
+-	else
++		it->cur_tasks_head = &cset->mg_tasks;
++	} else {
+ 		it->task_pos = cset->dying_tasks.next;
++		it->cur_tasks_head = &cset->dying_tasks;
++	}
  
- 	ifinfo2 = batadv_neigh_ifinfo_get(neigh2, if_outgoing2);
--	if (WARN_ON(!ifinfo2))
-+	if (!ifinfo2)
- 		goto err_ifinfo2;
+ 	it->tasks_head = &cset->tasks;
+ 	it->mg_tasks_head = &cset->mg_tasks;
+@@ -4114,10 +4118,14 @@ repeat:
+ 		else
+ 			it->task_pos = it->task_pos->next;
  
- 	ret = ifinfo1->bat_v.throughput - ifinfo2->bat_v.throughput;
-@@ -649,11 +648,11 @@ static bool batadv_v_neigh_is_sob(struct
- 	bool ret = false;
+-		if (it->task_pos == it->tasks_head)
++		if (it->task_pos == it->tasks_head) {
+ 			it->task_pos = it->mg_tasks_head->next;
+-		if (it->task_pos == it->mg_tasks_head)
++			it->cur_tasks_head = it->mg_tasks_head;
++		}
++		if (it->task_pos == it->mg_tasks_head) {
+ 			it->task_pos = it->dying_tasks_head->next;
++			it->cur_tasks_head = it->dying_tasks_head;
++		}
+ 		if (it->task_pos == it->dying_tasks_head)
+ 			css_task_iter_advance_css_set(it);
+ 	} else {
+@@ -4136,11 +4144,12 @@ repeat:
+ 			goto repeat;
  
- 	ifinfo1 = batadv_neigh_ifinfo_get(neigh1, if_outgoing1);
--	if (WARN_ON(!ifinfo1))
-+	if (!ifinfo1)
- 		goto err_ifinfo1;
- 
- 	ifinfo2 = batadv_neigh_ifinfo_get(neigh2, if_outgoing2);
--	if (WARN_ON(!ifinfo2))
-+	if (!ifinfo2)
- 		goto err_ifinfo2;
- 
- 	threshold = ifinfo1->bat_v.throughput / 4;
+ 		/* and dying leaders w/o live member threads */
+-		if (!atomic_read(&task->signal->live))
++		if (it->cur_tasks_head == it->dying_tasks_head &&
++		    !atomic_read(&task->signal->live))
+ 			goto repeat;
+ 	} else {
+ 		/* skip all dying ones */
+-		if (task->flags & PF_EXITING)
++		if (it->cur_tasks_head == it->dying_tasks_head)
+ 			goto repeat;
+ 	}
+ }
 
 
