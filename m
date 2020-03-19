@@ -2,121 +2,125 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB97DC4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8ACC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBB02072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 448472072C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 06:42:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C34cn+c8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgCSGih (ORCPT
+        id S1727016AbgCSGmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 02:38:37 -0400
-Received: from aliyun-cloud.icoremail.net ([47.90.88.95]:61321 "HELO
-        aliyun-sdnproxy-1.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with SMTP id S1726714AbgCSGih (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 02:38:37 -0400
-Received: from 137.localdomain (unknown [218.107.205.216])
-        by app2 (Coremail) with SMTP id 4zNnewCnrxcNEnNeD5MUAA--.301S2;
-        Thu, 19 Mar 2020 14:32:46 +0800 (CST)
-From:   Pengcheng Yang <yangpc@wangsu.com>
-To:     edumazet@google.com, davem@davemloft.net, ncardwell@google.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pengcheng Yang <yangpc@wangsu.com>
-Subject: [PATCH RFC net-next] tcp: make cwnd-limited not affected by tcp internal pacing
-Date:   Thu, 19 Mar 2020 14:32:29 +0800
-Message-Id: <1584599549-6793-1-git-send-email-yangpc@wangsu.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: 4zNnewCnrxcNEnNeD5MUAA--.301S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZryDGr47WFyftrW7Kw15Arb_yoW5Wr43pF
-        WFkw40qw1kXry3Crn7Ar1rZF1UurZYkFyUW3y5Z34qy39rXw1Y9F47Kr4F9Fy7GF4fXw43
-        Xr4j934rCryDZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyG1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK
-        0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
-        x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28E
-        F7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F4
-        0EFcxC0VAKzVAqx4xG6I80ewAv7VCjz48v1sIEY20_Gr4lYx0Ec7CjxVAajcxG14v26r1j
-        6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI
-        8I648v4I1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_
-        Gr4l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-        xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-        cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-        AvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
-        xVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VU8J3ktUUUUU==
-X-CM-SenderInfo: p1dqw1nf6zt0xjvxhudrp/
+        Thu, 19 Mar 2020 02:42:14 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39647 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgCSGmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 02:42:14 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48jclP2sYNz9sPF;
+        Thu, 19 Mar 2020 17:42:09 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1584600131;
+        bh=+5lhggxbhdVnZoEt9bh3nTvCzaNh8yLI+gywBcqpyeg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=C34cn+c8smSAz3FD5hCNqtKaEzumXF27309hy2ImDCd+dEZlZj9zepDeJ//FpNS9s
+         JeDTbAn+mQNAL+nEVeDbBY5rI973NQxA8wFC+1mc+PBxN2QWVQj/JmY0VQPrRDs6F3
+         IbrM4+rIwh5o7qD8d/kpMHAVoqKKeeFPAJtsDc2kp3eVbJynrK66zpPhINNvO9ZHoO
+         M8l1EcYikamZWohmPg9NcPyjqL1I8QiRgSY8ArIAZcX+/uhCarLRV6NDaJ8LoLIf24
+         uhgv7E/27IKzxF6O9xuHzaXpKX7WX790hk0ujGfPEqlNMGq32Yyj6g+HT6kRQGlX7M
+         12p5tC9z6VNGQ==
+Date:   Thu, 19 Mar 2020 17:42:07 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Peter Xu <peterx@redhat.com>
+Subject: linux-next: manual merge of the akpm-current tree with the tip tree
+Message-ID: <20200319174207.5ab1c990@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/hoCZsQRqtvSChcwHQqNA/eE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current cwnd-limited is set when cwnd is fully used
-(inflight >= cwnd), which allows the congestion algorithm
-to accurately determine whether cwnd needs to be added.
+--Sig_/hoCZsQRqtvSChcwHQqNA/eE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-However, there may be a problem when using tcp internal pacing:
-In congestion avoidance phase, when a burst of packets are
-acked by a stretched ACK or a burst of ACKs, this makes a large
-reduction in inflight in a short time. At this time, the sender
-sends data according to the pacing rate cannot fill CWND and
-cwnd-limited is not set. The worst case is that cwnd-limited
-is set only after the last packet in a window is sent. This causes
-the congestion algorithm to be too conservative to increase CWND.
+Hi all,
 
-The idea is that once cwnd-limited is set, it maintains a window period.
-In this period, it is considered that the CWND is limited. This makes
-the congestion algorithm unaffected by tcp internal pacing.
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
----
- include/linux/tcp.h   |  2 +-
- net/ipv4/tcp_output.c | 14 ++++++++------
- 2 files changed, 9 insertions(+), 7 deletions(-)
+  arch/x86/include/asm/pgtable_types.h
 
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 3dc9640..3b3329f 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -286,7 +286,7 @@ struct tcp_sock {
- 	u32	packets_out;	/* Packets which are "in flight"	*/
- 	u32	retrans_out;	/* Retransmitted packets out		*/
- 	u32	max_packets_out;  /* max packets_out in last window */
--	u32	max_packets_seq;  /* right edge of max_packets_out flight */
-+	u32	cwnd_limited_seq; /* snd_nxt at cwnd limited */
- 
- 	u16	urg_data;	/* Saved octet of OOB data and control flags */
- 	u8	ecn_flags;	/* ECN status bits.			*/
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 306e25d..31dd6dc 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1705,14 +1705,16 @@ static void tcp_cwnd_validate(struct sock *sk, bool is_cwnd_limited)
- 	const struct tcp_congestion_ops *ca_ops = inet_csk(sk)->icsk_ca_ops;
- 	struct tcp_sock *tp = tcp_sk(sk);
- 
--	/* Track the maximum number of outstanding packets in each
--	 * window, and remember whether we were cwnd-limited then.
-+	/* Remember whether we were cwnd-limited in last window,
-+	 * and track the maximum number of outstanding packets in each window.
- 	 */
--	if (!before(tp->snd_una, tp->max_packets_seq) ||
--	    tp->packets_out > tp->max_packets_out) {
--		tp->max_packets_out = tp->packets_out;
--		tp->max_packets_seq = tp->snd_nxt;
-+	if (is_cwnd_limited ||
-+	    !before(tp->snd_una, tp->cwnd_limited_seq)) {
- 		tp->is_cwnd_limited = is_cwnd_limited;
-+		tp->cwnd_limited_seq = tp->snd_nxt;
-+		tp->max_packets_out = tp->packets_out;
-+	} else if (tp->packets_out > tp->max_packets_out) {
-+		tp->max_packets_out = tp->packets_out;
- 	}
- 
- 	if (tcp_is_cwnd_limited(sk)) {
--- 
-1.8.3.1
+between commit:
 
+  6db73f17c5f1 ("x86: Don't let pgprot_modify() change the page encryption =
+bit")
+
+from the tip tree and commit:
+
+  faaa52178603 ("userfaultfd: wp: add WP pagetable tracking to x86")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/x86/include/asm/pgtable_types.h
+index 65c2ecd730c5,e24a2ecf9475..000000000000
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@@ -118,7 -127,7 +127,8 @@@
+   */
+  #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
+  			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
+- 			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_ENC)
+ -			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_UFFD_WP)
+++			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_ENC |	\
+++			 _PAGE_UFFD_WP)
+  #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
+ =20
+  /*
+
+--Sig_/hoCZsQRqtvSChcwHQqNA/eE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5zFD8ACgkQAVBC80lX
+0GwIfAf/dyYf/0/q6p12k3DnYU9XnkSKIMv2u31K8+2lt73koGkhP+rKbqJGoou7
+e8tGFOUkVYgPS9CLguSGhG2TxvJM5PkdphVR440e67e0zocKnxoN0QGTal3ufoJ3
+7qGkpL7JaGuc7Bnvy2WAIbFUaVECStA3imfeSd+zq+X5RJcXzkuCJxwPSvOfuDxz
+RkGmTfe1t+66lk8J7dcaQ/b+fjIh8XnF8IhP0vLZLFyKHhlum1cXSRmUkp7Imx7q
+XrizbQ545xUXVg6m72Nt+d7bjxVqP7v160/x1kXzdoGWA+tyJFvOX6vvFKY6mdlp
+Np5zeFTtg5/tjxptDibKbCJcnhY0+Q==
+=4kiG
+-----END PGP SIGNATURE-----
+
+--Sig_/hoCZsQRqtvSChcwHQqNA/eE--
