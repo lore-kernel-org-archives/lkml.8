@@ -4,24 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB14C4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54902C4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB6420724
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A0F20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 09:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbgCSJQH (ORCPT
+        id S1727559AbgCSJQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 05:16:07 -0400
-Received: from 8bytes.org ([81.169.241.247]:53144 "EHLO theia.8bytes.org"
+        Thu, 19 Mar 2020 05:16:19 -0400
+Received: from 8bytes.org ([81.169.241.247]:51930 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727483AbgCSJOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 05:14:46 -0400
+        id S1727116AbgCSJOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 05:14:45 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 7DE5DEC5; Thu, 19 Mar 2020 10:14:27 +0100 (CET)
+        id 56DA0EC0; Thu, 19 Mar 2020 10:14:27 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
@@ -36,9 +35,9 @@ Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 60/70] x86/sev-es: Handle #DB Events
-Date:   Thu, 19 Mar 2020 10:13:57 +0100
-Message-Id: <20200319091407.1481-61-joro@8bytes.org>
+Subject: [PATCH 59/70] x86/sev-es: Handle #AC Events
+Date:   Thu, 19 Mar 2020 10:13:56 +0100
+Message-Id: <20200319091407.1481-60-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200319091407.1481-1-joro@8bytes.org>
 References: <20200319091407.1481-1-joro@8bytes.org>
@@ -49,44 +48,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Handle #VC exceptions caused by #DB exceptions in the guest. Do not
-forward them to the hypervisor and handle them with do_debug() instead.
+Implement a handler for #VC exceptions caused by #AC exceptions. The #AC
+exception is just forwarded to do_alignment_check() and not pushed down
+to the hypervisor, as requested by the SEV-ES GHCB Standardization
+Specification.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/sev-es.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/x86/kernel/sev-es.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index f22b361f6b60..bc553aae31d2 100644
+index efb392e6f483..f22b361f6b60 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -752,6 +752,15 @@ static enum es_result vc_handle_vmmcall(struct ghcb *ghcb,
- 	return ES_OK;
- }
- 
-+static enum es_result vc_handle_db_exception(struct ghcb *ghcb,
-+					     struct es_em_ctxt *ctxt)
-+{
-+	do_debug(ctxt->regs, 0);
-+
-+	/* Exception event, do not advance RIP */
-+	return ES_RETRY;
-+}
-+
- static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 					 struct ghcb *ghcb,
- 					 unsigned long exit_code,
-@@ -766,6 +775,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+@@ -766,6 +766,10 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
  	case SVM_EXIT_WRITE_DR7:
  		result = vc_handle_dr7_write(ghcb, ctxt, early);
  		break;
-+	case SVM_EXIT_EXCP_BASE + X86_TRAP_DB:
-+		result = vc_handle_db_exception(ghcb, ctxt);
++	case SVM_EXIT_EXCP_BASE + X86_TRAP_AC:
++		do_alignment_check(ctxt->regs, 0);
++		result = ES_RETRY;
 +		break;
- 	case SVM_EXIT_EXCP_BASE + X86_TRAP_AC:
- 		do_alignment_check(ctxt->regs, 0);
- 		result = ES_RETRY;
+ 	case SVM_EXIT_RDTSC:
+ 	case SVM_EXIT_RDTSCP:
+ 		result = vc_handle_rdtsc(ghcb, ctxt, exit_code);
 -- 
 2.17.1
 
