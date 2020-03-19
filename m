@@ -2,105 +2,87 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C200AC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9E8C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F99120739
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:31:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="V+mZ7etU"
+	by mail.kernel.org (Postfix) with ESMTP id 72DDE20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 10:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbgCSKbE (ORCPT
+        id S1727193AbgCSKbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 06:31:04 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:13864 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726765AbgCSKbE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 06:31:04 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02JASqwX011436;
-        Thu, 19 Mar 2020 11:30:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=T6KxkBVdSlvswEwEr/fHrokZ23VjltZtaEhbr8esy5Y=;
- b=V+mZ7etU3SXK2Sgi/eC0JJJcC0C2b6+W/lPBlCAm7cql5HaWiqr1nCquGskoO938ojO3
- TdSa/73rQ4/9Vvydn+LYsfxmm9I3QKhZN0JEy+AOwUCnb0aeS/71iN2Yva50ffyWCgq9
- I0MCbyxNAYcW/39U+TDk9ZKbSkOZsYCL8JGlcJt3G2UCWPWPGhcKA1ZyR7oHBgPqpjgV
- d5U7uQKSx9mtCf1tjaEMXBLZGcjHBReEe4BlbVciglZhy7j4HO9qOoGTq5xv49RadOwH
- UDbgdOcwmZUUsC+ZbjX8ZrM2hb9dppXkrhQGS0VR4mTJn5+H9X7tbTD8lWRFOJtMYtOh AQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yu6xdhk8b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Mar 2020 11:30:54 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 12BCD100038;
-        Thu, 19 Mar 2020 11:30:54 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F0ED82A5824;
-        Thu, 19 Mar 2020 11:30:53 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Mar 2020 11:30:53
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <alexandre.torgue@st.com>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <fabrice.gasnier@st.com>
-Subject: [PATCH] ARM: dts: stm32: fix a typo for DAC io-channel-cells on stm32mp15
-Date:   Thu, 19 Mar 2020 11:30:26 +0100
-Message-ID: <1584613826-10838-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 19 Mar 2020 06:31:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56756 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726589AbgCSKbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 06:31:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 44D14B197;
+        Thu, 19 Mar 2020 10:31:19 +0000 (UTC)
+Date:   Thu, 19 Mar 2020 11:31:18 +0100 (CET)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Jan Beulich <jbeulich@suse.com>
+cc:     boris.ostrovsky@oracle.com, jgross@suse.com,
+        sstabellini@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, jpoimboe@redhat.com,
+        andrew.cooper3@citrix.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        xen-devel@lists.xenproject.org, jslaby@suse.cz
+Subject: Re: [PATCH v2 1/2] x86/xen: Make the boot CPU idle task reliable
+In-Reply-To: <71c4eeaf-958a-b215-3033-c3e0d74a9cfa@suse.com>
+Message-ID: <alpine.LSU.2.21.2003191129050.24428@pobox.suse.cz>
+References: <20200319095606.23627-1-mbenes@suse.cz> <20200319095606.23627-2-mbenes@suse.cz> <71c4eeaf-958a-b215-3033-c3e0d74a9cfa@suse.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-19_02:2020-03-19,2020-03-19 signatures=0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a typo on STM32MP15 DAC, e.g. s/channels/channel
+On Thu, 19 Mar 2020, Jan Beulich wrote:
 
-Fixes: da6cddc7e8a4 ("ARM: dts: stm32: Add DAC support to stm32mp157c")
+> On 19.03.2020 10:56, Miroslav Benes wrote:
+> > The unwinder reports the boot CPU idle task's stack on XEN PV as
+> > unreliable, which affects at least live patching. There are two reasons
+> > for this. First, the task does not follow the x86 convention that its
+> > stack starts at the offset right below saved pt_regs. It allows the
+> > unwinder to easily detect the end of the stack and verify it. Second,
+> > startup_xen() function does not store the return address before jumping
+> > to xen_start_kernel() which confuses the unwinder.
+> > 
+> > Amend both issues by moving the starting point of initial stack in
+> > startup_xen() and storing the return address before the jump, which is
+> > exactly what call instruction does.
+> > 
+> > Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> > ---
+> >  arch/x86/xen/xen-head.S | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/x86/xen/xen-head.S b/arch/x86/xen/xen-head.S
+> > index 1d0cee3163e4..edc776af0e0a 100644
+> > --- a/arch/x86/xen/xen-head.S
+> > +++ b/arch/x86/xen/xen-head.S
+> > @@ -35,7 +35,11 @@ SYM_CODE_START(startup_xen)
+> >  	rep __ASM_SIZE(stos)
+> >  
+> >  	mov %_ASM_SI, xen_start_info
+> > -	mov $init_thread_union+THREAD_SIZE, %_ASM_SP
+> > +#ifdef CONFIG_X86_64
+> > +	mov initial_stack(%rip), %_ASM_SP
+> > +#else
+> > +	mov pa(initial_stack), %_ASM_SP
+> > +#endif
+> 
+> If you need to distinguish the two anyway, why not use %rsp and
+> %esp respectively?
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32mp151.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I could, I just preferred the unification instead. Will change it if you 
+think it would be better.
 
-diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index 3ea05ba..5260818 100644
---- a/arch/arm/boot/dts/stm32mp151.dtsi
-+++ b/arch/arm/boot/dts/stm32mp151.dtsi
-@@ -550,14 +550,14 @@
- 
- 			dac1: dac@1 {
- 				compatible = "st,stm32-dac";
--				#io-channels-cells = <1>;
-+				#io-channel-cells = <1>;
- 				reg = <1>;
- 				status = "disabled";
- 			};
- 
- 			dac2: dac@2 {
- 				compatible = "st,stm32-dac";
--				#io-channels-cells = <1>;
-+				#io-channel-cells = <1>;
- 				reg = <2>;
- 				status = "disabled";
- 			};
--- 
-2.7.4
-
+Miroslav
