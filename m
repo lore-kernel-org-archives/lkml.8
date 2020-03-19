@@ -2,179 +2,152 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6272C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F99C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9BFA21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5718D2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 15:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584631376;
-	bh=yzGcAxB0C+KeElt+4BpqJFWiXG2vLhWxT6V+UOeTDkU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=UQ3n0iUBsinLbTgrVJwChH8If10J5L8mBugsx+JuuzP0iC3VFeaCV/rMogG2zC+1m
-	 6nyekyT8Fvy6uKtd0gTaIo6dRkeQPxcEpzpaQec8fEjBHC14Own6E2s9bdhcGc1r+q
-	 s4y5B4VR9yxf2rg3l9XRTloSkS3L6wJa/L0byGeM=
+	s=default; t=1584631388;
+	bh=SlljuaGs1KMSs3ky6qTJukGaUJLwqiTtskKLHAtiojY=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=s01WgRSBdgfvxaqq8cHaZ5UQNxS5Ws7eHLkvOqz80TfVayQqkQqv1luVvITxqs6p5
+	 Xu8BX2X3zoEQWdBkO4CaFGXi/Ixgxuo/wg/TFTpmwPWtUvyfnAckCTOpyUNLl/2Fdg
+	 fu95mn1kqc3nT7huaJNIoZc4w5UuRIigWJsfNeFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgCSPWz (ORCPT
+        id S1727946AbgCSPXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 11:22:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727395AbgCSPWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 11:22:55 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C84A120658;
-        Thu, 19 Mar 2020 15:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584631373;
-        bh=yzGcAxB0C+KeElt+4BpqJFWiXG2vLhWxT6V+UOeTDkU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=q4vQwzA/flKbNBzlh8LqbfDrP15uXTdRUOA24G/lXRd8avNQYuhfpaMP0/HWm1Tcm
-         kUtlbuuzTurieiNOLCyc/Amn1Q22I6u44QwUajrRhOyIRFyQVegoo6DmGfPf61MYoy
-         PbvlokhE8IB2ebPIJ1I3GqwI5ZBO/J4HxG9LIJVU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 9B13A3520F2A; Thu, 19 Mar 2020 08:22:53 -0700 (PDT)
-Date:   Thu, 19 Mar 2020 08:22:53 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH RFC v2 tip/core/rcu 03/22] rcutorture: Add flag to
- produce non-busy-wait task stalls
-Message-ID: <20200319152253.GE3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
- <20200319104614.11444-1-hdanton@sina.com>
- <20200319133947.12172-1-hdanton@sina.com>
+        Thu, 19 Mar 2020 11:23:07 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:62303 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727356AbgCSPXG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 11:23:06 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 02JFMkBx018431;
+        Fri, 20 Mar 2020 00:22:47 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 02JFMkBx018431
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1584631367;
+        bh=Tu2djgmKkAF8RYObtpeLT7Ttw9jLZvbbIJmApmRreD0=;
+        h=From:Date:Subject:To:Cc:From;
+        b=LRCjykCyVBAJvUCb6ajcQ+J4yAo1Luz0uuAUATklkclcu0fG7IP/A432OiBzK4naU
+         21fS22cQTvtl6HGxUeCi+6u63BJqWNDXXKtcCKEi+P5Qrrn1jaC8ry64GKY0b+iPpH
+         5900rfcdbp1v5OLZPSuOEot6K/GlYT/MtVYPf1e0HkY3WumWWMFvNlnJY79vVNs8YJ
+         P65gOQ6dOshgpyFhL9X0czw1EXEd1Kk3UNrvEVtAnQRvnI8CmgIaNKdJy/Tzo9SAHP
+         xlfNARNquflYbDt9yynKHGuPaymGKIJOs9y72MN9hxMzxnvrjnLfei+IaHLlBixHFl
+         lRqtdSlplJEnw==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id r47so897672uad.11;
+        Thu, 19 Mar 2020 08:22:47 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2U8IS2cjA4ImJpDDHitPRAWGNFxpGfOfCUXOxf9SoX9XNwMmIi
+        TS+SzouFWtT4jxRJMzGctmYpt1XmxNc0RqvLWjA=
+X-Google-Smtp-Source: ADFU+vuhm04AxBGx6dccv3oM51vQOCjxZbw1TUdNd2347ssYWgwR6Gk9KJUrX3UXpvAgfP2p1oTj13v3diMBQgPrRJI=
+X-Received: by 2002:ab0:28d8:: with SMTP id g24mr2169125uaq.121.1584631365859;
+ Thu, 19 Mar 2020 08:22:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200319133947.12172-1-hdanton@sina.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 20 Mar 2020 00:22:09 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASTxvF9AbddpkgABM2fAmvCP_bwCCrS9gmeDN0w-ZjfwA@mail.gmail.com>
+Message-ID: <CAK7LNASTxvF9AbddpkgABM2fAmvCP_bwCCrS9gmeDN0w-ZjfwA@mail.gmail.com>
+Subject: [GIT PULL] Kbuild fixes for v5.6-rc7
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 09:39:47PM +0800, Hillf Danton wrote:
-> 
-> On Thu, 19 Mar 2020 05:38:12 -0700 "Paul E. McKenney" wrote:
-> > 
-> > On Thu, Mar 19, 2020 at 06:46:14PM +0800, Hillf Danton wrote:
-> > > 
-> > > On Wed, 18 Mar 2020 17:10:41 -0700
-> > > >  static int rcu_torture_stall(void *args)
-> > > >  {
-> > > > +	int idx;
-> > > >  	unsigned long stop_at;
-> > > >  
-> > > >  	VERBOSE_TOROUT_STRING("rcu_torture_stall task started");
-> > > > @@ -1610,21 +1612,22 @@ static int rcu_torture_stall(void *args)
-> > > >  	if (!kthread_should_stop()) {
-> > > >  		stop_at = ktime_get_seconds() + stall_cpu;
-> > > >  		/* RCU CPU stall is expected behavior in following code. */
-> > > > -		rcu_read_lock();
-> > > > +		idx = cur_ops->readlock();
-> > > >  		if (stall_cpu_irqsoff)
-> > > >  			local_irq_disable();
-> > > > -		else
-> > > > +		else if (!stall_cpu_block)
-> > > >  			preempt_disable();
-> > > >  		pr_alert("rcu_torture_stall start on CPU %d.\n",
-> > > > -			 smp_processor_id());
-> > > > +			 raw_smp_processor_id());
-> > > >  		while (ULONG_CMP_LT((unsigned long)ktime_get_seconds(),
-> > > >  				    stop_at))
-> > > > -			continue;  /* Induce RCU CPU stall warning. */
-> > > > +			if (stall_cpu_block)
-> > > > +				schedule_timeout_uninterruptible(HZ);
-> > > 
-> > > Why is the scheduled-in task so special that it will be running on
-> > > the current CPU with irq disabled?
-> > 
-> > You lost me on this one.
-> 
-> Quite likely :)
-> 
-> > IRQs are not at all disabled.
-> > 
-> > > >  		if (stall_cpu_irqsoff)
-> > > >  			local_irq_enable();
-> 
-> Local IRQs get enabled here depending on stall_cpu_irqsoff.
-> 
-> What I was asking is the scheduling case like
-> 
-> 	local_irq_disable();
-> 	schedule_timeout(HZ);
-> 	local_irq_enable();
-> 
-> Is it likely going to be ruled out in this patch?
+Hi Linus,
 
-If an rcutorture run specified both the rcutorture.stall_cpu_irqsoff and
-the rcutorture.stall_cpu_block module parameters, then yes, exactly the
-sequence you call out should occur.  Can't say that I have tried this,
-though.  Nor would I expect to have ever done so without your suggesting
-that I do.
+Please pull more Kbuild fixes.
+Thanks.
 
-But why not try it on current -rcu?
 
-tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 12 --duration 3 --configs "TRACE01" --bootargs "rcutorture.stall_cpu=25 rcutorture.stall_cpu_holdoff=30 rcutorture.stall_cpu_block=1 rcupdate.rcu_task_stall_timeout=10000 rcutorture.stall_cpu_irqsoff"
 
-This tells rcutorture to use all 12 hardware threads, to run the kernel for
-three minutes, to run only the TRACE01 rcutorture scenario, and to test
-RCU CPU stall warnings:
+The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b=
+:
 
-rcutorture.stall_cpu=25: Stall the CPU for 25 seconds.
+  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
 
-rcutorture.stall_cpu_holdoff=30: Wait 30 seconds after boot to start stalling.
+are available in the Git repository at:
 
-rcutorture.stall_cpu_block=1: Do the schedule_timeout_uninterruptible()
-	while stalling.
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-fixes-v5.6-3
 
-rcupdate.rcu_task_stall_timeout=10000: Set the stall-warning timeout
-	to 10,000 jiffies, or ten seconds.
+for you to fetch changes up to 7883a14339299773b2ce08dcfd97c63c199a9289:
 
-rcutorture.stall_cpu_irqsoff: This tells rcutorture to execute the
-	local_irq_disable() that you called out above.
+  scripts/kallsyms: fix wrong kallsyms_relative_base (2020-03-19 23:40:20 +=
+0900)
 
-And this results in a couple of stall warning messages, as expected
-given that you get two ten-second intervals in a 25-second interval.
+----------------------------------------------------------------
+Kbuild fixes for v5.6 (3rd)
 
-No other complaints, though.  And of course what happens is that
-__schedule() enables interrupts on first call (as it must do) and they
-remain enabled past that point.  Then local_irq_enable() redundantly
-enables them.
+ - fix __uint128_t capability test in Kconfig when GCC that defaults
+   to 32-bit is used to build the 64-bit kernel
 
-> Or is it anything by design?
+ - suppress new noisy Clang warnings -Wpointer-to-enum-cast
 
-So no, not by design.  I don't see any reason to change it.  After all,
-if you are running rcutorture and also asking rcutorture to make CPU
-stall warnings, you have to expect a bit of noise from the kernel.
-Testing that noise is after all the whole point.  ;-)
+ - move the namespace field in Module.symvers for the backward
+   compatibility reason for the depmod tool
 
-							Thanx, Paul
+ - use available compression for initramdisk when INTRAMFS_SOURCE
+   is defined, which was the original behavior
 
-> > > > -		else
-> > > > +		else if (!stall_cpu_block)
-> > > >  			preempt_enable();
-> > > > -		rcu_read_unlock();
-> > > > +		cur_ops->readunlock(idx);
-> > > >  		pr_alert("rcu_torture_stall end.\n");
-> > > >  	}
-> > > >  	torture_shutdown_absorb("rcu_torture_stall");
-> > > > -- 
-> > > > 2.9.5
-> 
+ - fix modpost to handle correct large section numbers when it refers
+   to modversion CRCs and module namespaces
+
+ - fix comments and documents
+
+----------------------------------------------------------------
+Eugeniy Paltsev (1):
+      initramfs: restore default compression behavior
+
+Jessica Yu (1):
+      modpost: move the namespace field in Module.symvers last
+
+Masahiro Yamada (3):
+      kconfig: introduce m32-flag and m64-flag
+      int128: fix __uint128_t compiler test in Kconfig
+      kbuild: doc: fix references to other documents
+
+Mikhail Petrov (1):
+      scripts/kallsyms: fix wrong kallsyms_relative_base
+
+Nathan Chancellor (1):
+      kbuild: Disable -Wpointer-to-enum-cast
+
+SZ Lin (=E6=9E=97=E4=B8=8A=E6=99=BA) (1):
+      kbuild: Fix inconsistent comment
+
+Xiao Yang (1):
+      modpost: Get proper section index by get_secindex() instead of st_shn=
+dx
+
+ Documentation/kbuild/kbuild.rst                 |  2 +-
+ Documentation/kbuild/kconfig-macro-language.rst |  2 +-
+ Documentation/kbuild/makefiles.rst              |  6 +++---
+ Documentation/kbuild/modules.rst                |  4 ++--
+ Makefile                                        |  2 +-
+ init/Kconfig                                    |  3 +--
+ scripts/Kconfig.include                         |  7 ++++++
+ scripts/Makefile.extrawarn                      |  1 +
+ scripts/export_report.pl                        |  2 +-
+ scripts/kallsyms.c                              |  8 +++----
+ scripts/mod/modpost.c                           | 27 ++++++++++++---------=
+---
+ usr/Kconfig                                     | 22 +++++++++----------
+ 12 files changed, 47 insertions(+), 39 deletions(-)
+
+
+--=20
+Best Regards
+Masahiro Yamada
