@@ -2,116 +2,200 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C91F4C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1963BC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7C420732
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8DE420788
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:03:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="tU0XZSw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgCSNAz (ORCPT
+        id S1727065AbgCSNDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:00:55 -0400
-Received: from isilmar-4.linta.de ([136.243.71.142]:57546 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgCSNAy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:00:54 -0400
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 5E6E12009CA;
-        Thu, 19 Mar 2020 13:00:53 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 172B020B1E; Thu, 19 Mar 2020 14:00:49 +0100 (CET)
-Date:   Thu, 19 Mar 2020 14:00:49 +0100
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>,
-        kuninori.morimoto.gx@renesas.com
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, curtis@malainey.com,
-        linux-kernel@vger.kernel.org, tiwai@suse.com,
-        liam.r.girdwood@linux.intel.com, broonie@kernel.org
-Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
- 5.6-rc1
-Message-ID: <20200319130049.GA2244@light.dominikbrodowski.net>
-References: <20200318063022.GA116342@light.dominikbrodowski.net>
- <41d0b2b5-6014-6fab-b6a2-7a7dbc4fe020@linux.intel.com>
- <20200318123930.GA2433@light.dominikbrodowski.net>
- <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
- <20200318162029.GA3999@light.dominikbrodowski.net>
- <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
- <20200318192213.GA2987@light.dominikbrodowski.net>
- <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
- <20200318215218.GA2439@light.dominikbrodowski.net>
- <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+        Thu, 19 Mar 2020 09:03:12 -0400
+Received: from mail-eopbgr10094.outbound.protection.outlook.com ([40.107.1.94]:28933
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726793AbgCSNDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:03:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X8JxkgFYn6ejoYvL14Bknc/3taLDqAPVhRnHqFM9+Add67LApRwjLGLZVcspMAEXkgc+m05fx3SA4TcZY6hXyz9oyPItDowa4LT1F97c1PuzgilIxLOEo0WZ4LwkIWXlI0wPmJwuTAY2MYSi+cppVXFGNvvn6VtRzzkwqFo2oV2gjLnnSe0Ce2anlbskLRVuJlq9Dw9ikoFdWD2QWV52QoK2Gp2qxEKbKcp+KR+EF+bhu7Y7J0BPd1uwsx+ropsVDqwFVdW72+KBxKQgMdz669qz53mtprrBPVk5vM4rFeVsRvJ8P8w1A6wLKkcU2KGcmnK424XyEU4FBf0787bzYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ct/vC+pyknaapJ/kjDeMGgchdOUlt5aZcJZO1q8mKtw=;
+ b=WyWChx4rwOPq+eOV0RJC/SR68bWq2r6Ab4pChpN34R67Gp0RxQ98o64zmhFWBoUn700pQY3zXc9VRb+qsz1RP7790TJBoP4tnJoQ93Rpy85B4N0cMBbaXuJpoPyhQkyVPLRUN7bifax3oqZiZ3qewjY5dLkuMgIx2oEcHp5nkdlqu99BqgnE/BPgT3AdcN9BrhQOs1gVvQgzWmqIUSCRwv3vDAURwWUYTBq8bUtdMWEnB0NzusKMWbY071sWRaqsmijtDu+8W3IYKoazGD/YMO15U2hK3z4G0gb2O1eES1gcv0akURteq9bvgQEUnbJZQ0gLq4BjUwxuZdathXHKCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ct/vC+pyknaapJ/kjDeMGgchdOUlt5aZcJZO1q8mKtw=;
+ b=tU0XZSw8e4Ws6iZOGfhACAY0qOFB6LptP/wiQNm3bDY4LOdL/QsmUpuSVGfc5wxLWtX2MZxhcdXBwQnXrZoOMtwYJFlToj4VF4qWVgsGTuEeMPTbAKCbRCLJ8Y1sIUEPxA5HEQeUUFZf0E3g777xw/ytCIkXIRggsMXi5DlPnqQ=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
+ VI1PR05MB6189.eurprd05.prod.outlook.com (20.178.123.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.14; Thu, 19 Mar 2020 13:03:06 +0000
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2814.021; Thu, 19 Mar 2020
+ 13:03:06 +0000
+X-Gm-Message-State: ANhLgQ0w7ngJPBJlFvOZsFY38uEFn9v1eGmnZjLsNEhxYSDJLnNpIZjH
+        nMLOtsFkywVwXEWGRxGj1mlUyo1z80a65uxbUDY=
+X-Google-Smtp-Source: ADFU+vv7UiYjMyQD/4E12h86CR7/cYPU2WKNtIqkeDfie1uanDVnCD4QjGal5pFHF/ZOfpjDVMav8J/uvLvFUH2D2Ko=
+X-Received: by 2002:ac8:554a:: with SMTP id o10mr2778015qtr.224.1584622638973;
+ Thu, 19 Mar 2020 05:57:18 -0700 (PDT)
+References: <20200317123231.2843297-1-oleksandr.suvorov@toradex.com>
+ <20200317123231.2843297-2-oleksandr.suvorov@toradex.com> <20200317174043.GA1464607@ulmo>
+ <20200317210042.ryrof3amr7fxp4w5@pengutronix.de> <20200318225953.GA2874972@ulmo>
+ <CAGgjyvGd4y8M0L1sFMvQ1=gPcKfUPoR13dVS7F5WZx=333KG6g@mail.gmail.com> <20200319121026.3rzcxdknfyhtkryi@pengutronix.de>
+In-Reply-To: <20200319121026.3rzcxdknfyhtkryi@pengutronix.de>
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Date:   Thu, 19 Mar 2020 14:57:07 +0200
+X-Gmail-Original-Message-ID: <CAGgjyvFebxXaKkhy-UR1-kaYWozpP67YtVf5mp4mTHFQRhsjKg@mail.gmail.com>
+Message-ID: <CAGgjyvFebxXaKkhy-UR1-kaYWozpP67YtVf5mp4mTHFQRhsjKg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/7] pwm: rename the PWM_POLARITY_INVERSED enum
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Paul Barker <pbarker@konsulko.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: DM3PR12CA0088.namprd12.prod.outlook.com
+ (2603:10b6:0:57::32) To VI1PR05MB3279.eurprd05.prod.outlook.com
+ (2603:10a6:802:1c::24)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mail-io1-f44.google.com (209.85.166.44) by DM3PR12CA0088.namprd12.prod.outlook.com (2603:10b6:0:57::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Thu, 19 Mar 2020 13:03:06 +0000
+Received: by mail-io1-f44.google.com with SMTP id c19so2135218ioo.6;        Thu, 19 Mar 2020 06:03:06 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0w7ngJPBJlFvOZsFY38uEFn9v1eGmnZjLsNEhxYSDJLnNpIZjH
+        nMLOtsFkywVwXEWGRxGj1mlUyo1z80a65uxbUDY=
+X-Google-Smtp-Source: ADFU+vv7UiYjMyQD/4E12h86CR7/cYPU2WKNtIqkeDfie1uanDVnCD4QjGal5pFHF/ZOfpjDVMav8J/uvLvFUH2D2Ko=
+X-Received: by 2002:ac8:554a:: with SMTP id o10mr2778015qtr.224.1584622638973;
+ Thu, 19 Mar 2020 05:57:18 -0700 (PDT)
+X-Gmail-Original-Message-ID: <CAGgjyvFebxXaKkhy-UR1-kaYWozpP67YtVf5mp4mTHFQRhsjKg@mail.gmail.com>
+X-Originating-IP: [209.85.166.44]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6b21bc9d-2c8a-49fb-be61-08d7cc05ddb8
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6189:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB618992448139681499764DD5F9F40@VI1PR05MB6189.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 0347410860
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(26005)(5660300002)(54906003)(44832011)(52116002)(2906002)(42186006)(498600001)(81166006)(81156014)(8676002)(55446002)(966005)(53546011)(86362001)(66476007)(8936002)(6862004)(107886003)(186003)(450100002)(66556008)(4326008)(9686003)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB6189;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: v0DJZn8OCp3LrljOxY0Gktju6cKZJFXe9un6szgTWEwcRydwt6haxnRNXvWZ67kRLwJKnJ9uS5YIdzW7cIAtdN+nSGE0NwgB0ZTIMHwiN2MljCDmCswjN8JsWrd5FC9Jx1YkRYuL7THh2S8njbqqstrFPtTlbCnpOE+29OHBMHApVsPdX5rDlzhV+MZ4ZAFnHPNB8sEO7F2wsCJeQEnCIguCqcGTjB2gccsRqoggCRNulVb59SXx6KZ7Ie8yNh30bTVVTlpN3vK1fh2kSQXZZm1WMFEJwkzcS4PULfXz/ORBuWPHpMm4sDDbc8Pv+9bacVeSBpYRIQGKCFBX1wnLhZFwpHLt5BCbIGjQWZZa0GXTaz1g2jIuhPc3P2lbJ8rPcuFuniAJPx7GThIPi6q9nvn8jKOkPhU+vrBjn6KvC91mpYLCExbOfE0U23ZU55V+tKZPJ6k+kp3r3FKHnPogBN81INHEqBYzbiPmjAxe6G4LXnnhMcVB60uPmIyX/MiLEto1L4PbHpR6677h4Pt+tA==
+X-MS-Exchange-AntiSpam-MessageData: j2cE6DVaiBnQJlVcjGyGGW2MYrFyajBAo+7rG1kUA4dRI8GlyrzNUNWyI8MzXms/zTeiWRMQ2lmGXN88eB3wk3ClDDdBaKeiIjt90YlqgSoxFkGhqbb3iudK39/HVn98wjqDz21Tv0QV5Xx/aoywfw==
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b21bc9d-2c8a-49fb-be61-08d7cc05ddb8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2020 13:03:06.5697
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hN04Tsy9Rb3otdnYZo+UM9fwsaVcuJpiWK8Dl8WdIzZ0FVbvbsAyh6RRzv1ycqmk6cpbJn9LkZwMFSJj5FVtW+TpaVGxGZJ4edzeUJwfoPs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6189
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 18, 2020 at 11:20:55PM +0100, Cezary Rojewski wrote:
-> On 2020-03-18 22:52, Dominik Brodowski wrote:
-> > On Wed, Mar 18, 2020 at 09:43:54PM +0100, Cezary Rojewski wrote:
-> > > On 2020-03-18 20:22, Dominik Brodowski wrote:
-> > > > On Wed, Mar 18, 2020 at 07:27:58PM +0100, Cezary Rojewski wrote:
-> > > 
-> > > > > 
-> > > > > Due to pandemic I'm working remotely and right now won't be able to test
-> > > > > audio quality so focusing on the stream==NULL issue. And thus we got to help
-> > > > > each other out : )
-> > > > 
-> > > > Sure, and thanks for taking a look at this!
-> > > > 
-> > > > > Could you verify issue reproduces on 5.6.0-rc1 on your machine?
-> > > > 
-> > > > It reproduces on 5.6.0-rc1 + i915-bugfix. I'm trying to bisect it further in
-> > > > the background, but that may take quite some time.
-> > > > 
-> > > 
-> > > Could you checkout v5.6-rc1 with following commit reverted:
-> > > 	ASoC: Intel: broadwell: change cpu_dai and platform components for SOF
-> > > 
-> > > For my working v5.6-rc1 commit id is:
-> > > 64df6afa0dab5eda95cc4cc2269e3d4e83b6b6ce.
-> > 
-> > Hm, no joy -- after suspend/resume, no sound at first, and if I twiggle some
-> > options with pulseaudio, I get garbled output (even when using
-> > 
-> > 	aplay -f S16_LE -r 44100 -c 2 --device="sysdefault:CARD=broadwellrt286"
-> > 
-> > ). Will try to bisect further the next days.
-> > 
-> 
-> Thanks for quick reply. Revert of said commit fixes stream==NULL issue for
-> me. See if there were any changes in dmesg.
-> Will ask technicians to assist me on site tomorrow.
+On Thu, Mar 19, 2020 at 2:11 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello,
+>
+> [dropping Tony Prisk <linux@prisktech.co.nz> from recipients]
+>
+> On Thu, Mar 19, 2020 at 01:40:28PM +0200, Oleksandr Suvorov wrote:
+> > Thierry, I see the PWM core converts the bit field "third cell" into
+> > the polarity variable.
+> > Now I probably understand your sight and agree that we shouldn't give
+> > the same names to bits in bitfield (dts) and values of a variable.
+> >
+> > But there are lots of useless "0" values of third cell of "pwms"
+> > option in dts files.
+> >
+> > I see 2 ways now:
+> > - just remove all "0" "third cell" from "pwms" options in dts files. I
+> > see this "0" confuses some people.
+>
+> Then you have to overwrite pwm-cells of the provider. If there are two
+> PWMs used from the same provider and only one is inverted this won't
+> work. (Not entirely sure I understood your suggestion.) So I don't like
+> this suggestion.
 
-Have some good news now, namely that a bisect is complete: That pointed to
-1272063a7ee4 ("ASoC: soc-core: care .ignore_suspend for Component suspend");
-therefore I've added Kuninori Morimoto to this e-mail thread.
+Good point, agree. But we still have the unnamed "0".
 
-Additionally, I have tested mainline (v5.6-rc6+ as of 5076190daded) with
-*both* 64df6afa0dab (which you suggested yesterday) and 1272063a7ee4
-reverted. And that works like a charm as well.
+What about renaming the dt-bindings macro PWM_POLARITY_INVERTED
+and add the new one for the normal polarity?
+Like PWM_FLAG_POLARITY_NORMAL / PWM_FLAG_POLARITY_INVERTED or
+DT_PWM_POLARITY_NORMAL / DT_PWM_POLARITY_INVERTED?
 
-Hope this helps!
+Using different prefix will prevent interfering names of enum and
+macros in the future
+and will allow using the named nop-flag PWM_FLAG_POLARITY_NORMAL in dts.
 
-Thanks,
-	Dominik
+> And also in my eyes this isn't clearer, just more complicated to use.
+>
+> > - convert pwm_state.polarity into pwm_state.flags and use bitfield
+> >   directly from dtb.
+> >   It simplifies the parsing logic and makes adding new flags easier.
+>
+> *shrug*, I don't care much.
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
+
+
+
+--=20
+Best regards
+Oleksandr Suvorov
+
+Toradex AG
+Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
