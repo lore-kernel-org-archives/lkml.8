@@ -2,81 +2,251 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1406FC4332B
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C16BC4332B
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2AC20754
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:33:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gLdyCm/1"
+	by mail.kernel.org (Postfix) with ESMTP id CF79B2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 17:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgCSRdf (ORCPT
+        id S1727816AbgCSRdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 13:33:35 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:36995 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727180AbgCSRdf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 13:33:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584639214;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1ltXOqIPzRx7dR67ps6b3k3yRk8aYyZvqCRinMvNF4E=;
-        b=gLdyCm/1c2NbmBLL1kp7fW/rvtP79LFDmXQkTJPY/LyHYtOYhgL+05usmaJAb345wpWZWv
-        WqB13mqmfi5oZ6UidRaGEao/to9Z4i2VQfGpiNVd6Wnh1xdkHhEm1K2nyGK93Snga64P+v
-        isvEdc1cqDrcbdJm1GTNCogM3v+0fu0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281-UJfw37p7PLSHd3_tr4PPDA-1; Thu, 19 Mar 2020 13:33:32 -0400
-X-MC-Unique: UJfw37p7PLSHd3_tr4PPDA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 046698010EC;
-        Thu, 19 Mar 2020 17:33:31 +0000 (UTC)
-Received: from treble (unknown [10.10.110.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C404460BF1;
-        Thu, 19 Mar 2020 17:33:29 +0000 (UTC)
-Date:   Thu, 19 Mar 2020 12:33:26 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: linux-next: Tree for Mar 18 (objtool)
-Message-ID: <20200319173326.oj4qs24x4ly5lrgt@treble>
-References: <20200318220920.48df2e76@canb.auug.org.au>
- <d7dc5b4a-9a7e-ccf7-e00e-2e7f0e79a9bc@infradead.org>
- <20200318182352.2dgwwl4ugbwndi4x@treble>
- <20200318200542.GK20730@hirez.programming.kicks-ass.net>
- <20200319173101.wufpymi7obhqgoqd@treble>
+        Thu, 19 Mar 2020 13:33:55 -0400
+Received: from mga05.intel.com ([192.55.52.43]:57837 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727146AbgCSRdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 13:33:55 -0400
+IronPort-SDR: kWXRJWnNm8Lja2c5tYhbxG4k3byXcXt++XW91Wx19+h9OWwxA/Duno+ndKX2sBYhT6n96YNqTE
+ oho1bm9HHecA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2020 10:33:54 -0700
+IronPort-SDR: 8FgO5haJ3ddZNdsffiGVbL1Khpu4o8sWqM4JvYJa6tvMjkU2y4tz98J1H/2ULmXCUkOnUstQaD
+ kfWhVBdh3pGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,572,1574150400"; 
+   d="scan'208";a="245230137"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.249.128.140]) ([10.249.128.140])
+  by orsmga003.jf.intel.com with ESMTP; 19 Mar 2020 10:33:51 -0700
+Subject: Re: snd_hda_intel/sst-acpi sound breakage on suspend/resume since
+ 5.6-rc1
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Mark Brown <broonie@kernel.org>, kuninori.morimoto.gx@renesas.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        alsa-devel@alsa-project.org, curtis@malainey.com,
+        linux-kernel@vger.kernel.org, tiwai@suse.com,
+        liam.r.girdwood@linux.intel.com
+References: <d7a357c5-54af-3e69-771c-d7ea83c6fbb7@linux.intel.com>
+ <20200318162029.GA3999@light.dominikbrodowski.net>
+ <e49eec28-2037-f5db-e75b-9eadf6180d81@intel.com>
+ <20200318192213.GA2987@light.dominikbrodowski.net>
+ <b352a46b-8a66-8235-3622-23e561d3728c@intel.com>
+ <20200318215218.GA2439@light.dominikbrodowski.net>
+ <e7f4f38d-b53e-8c69-8b23-454718cf92af@intel.com>
+ <20200319130049.GA2244@light.dominikbrodowski.net>
+ <20200319134139.GB3983@sirena.org.uk>
+ <a01359dc-479e-b3e3-37a6-4a9c421d18da@intel.com>
+ <20200319165157.GA2254@light.dominikbrodowski.net>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <a7bf2aee-78e7-f905-bcc3-cd21bf16a976@intel.com>
+Date:   Thu, 19 Mar 2020 18:33:50 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200319173101.wufpymi7obhqgoqd@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200319165157.GA2254@light.dominikbrodowski.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 12:31:05PM -0500, Josh Poimboeuf wrote:
-> ... except the __builtin_trap() UD2 seems to be coming *after* the BUG
-> UD2.  Could it be the BUG UD2 itself which is convincing UBSAN to add
-> the __builtin_trap()?
+On 2020-03-19 17:51, Dominik Brodowski wrote:
+> On Thu, Mar 19, 2020 at 04:48:03PM +0100, Cezary Rojewski wrote:
+>> On 2020-03-19 14:41, Mark Brown wrote:
+>>> On Thu, Mar 19, 2020 at 02:00:49PM +0100, Dominik Brodowski wrote:
+>>>
+>>>> Have some good news now, namely that a bisect is complete: That pointed to
+>>>> 1272063a7ee4 ("ASoC: soc-core: care .ignore_suspend for Component suspend");
+>>>> therefore I've added Kuninori Morimoto to this e-mail thread.
+>>>
+>>> If that's an issue it feels more like a driver bug in that if the driver
+>>> asked for ignore_suspend then it should expect not to have the suspend
+>>> callback called.
+>>>
+>>
+>> Requested for tests with following diff applied:
+>>
+>> diff --git a/sound/soc/intel/boards/broadwell.c
+>> b/sound/soc/intel/boards/broadwell.c
+>> index db7e1e87156d..6ed4c1b0a515 100644
+>> --- a/sound/soc/intel/boards/broadwell.c
+>> +++ b/sound/soc/intel/boards/broadwell.c
+>> @@ -212,7 +212,6 @@ static struct snd_soc_dai_link broadwell_rt286_dais[] =
+>> {
+>>                  .init = broadwell_rt286_codec_init,
+>>                  .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
+>>                          SND_SOC_DAIFMT_CBS_CFS,
+>> -               .ignore_suspend = 1,
+>>                  .ignore_pmdown_time = 1,
+>>                  .be_hw_params_fixup = broadwell_ssp0_fixup,
+>>                  .ops = &broadwell_rt286_ops,
+> 
+> That patch fixes the issue(s). I didn't even need to revert 64df6afa0dab
+> ("ASoC: Intel: broadwell: change cpu_dai and platform components for SOF")
+> on top of that. But you can assess better whether that patch needs care for
+> other reasons; for me, this one-liner you have suggested is perfect.
+> 
+> Many thanks -- it's been a pleasure to work with you on tracking this issue
+> down.
+> 
+> 	Dominik
+> 
 
-Actually I suspect it's the __builtin_unreachable() annotation which is
-making UBSAN add the __builtin_trap()...  because I don't see any double
-UD2s for WARNs.
+Thank you for being so cooperative during this 2day debug session.
 
--- 
-Josh
+The patch I mentioned earlier unintentionally (?) changed 'platform' 
+component param for ssp0_port from 'dummy' to 'platform' for non-SOF 
+solution:
 
+diff --git a/sound/soc/intel/boards/broadwell.c 
+b/sound/soc/intel/boards/broadwell.c
+index b9c12e24c70b..db7e1e87156d 100644
+--- a/sound/soc/intel/boards/broadwell.c
++++ b/sound/soc/intel/boards/broadwell.c
+@@ -164,14 +164,6 @@ SND_SOC_DAILINK_DEF(platform,
+  SND_SOC_DAILINK_DEF(codec,
+         DAILINK_COMP_ARRAY(COMP_CODEC("i2c-INT343A:00", "rt286-aif1")));
+
+-#if IS_ENABLED(CONFIG_SND_SOC_SOF_BROADWELL)
+-SND_SOC_DAILINK_DEF(ssp0_port,
+-           DAILINK_COMP_ARRAY(COMP_CPU("ssp0-port")));
+-#else
+-SND_SOC_DAILINK_DEF(ssp0_port,
+-           DAILINK_COMP_ARRAY(COMP_DUMMY()));
+-#endif
+-
+  /* broadwell digital audio interface glue - connects codec <--> CPU */
+  static struct snd_soc_dai_link broadwell_rt286_dais[] = {
+         /* Front End DAI links */
+@@ -226,7 +218,7 @@ static struct snd_soc_dai_link 
+broadwell_rt286_dais[] = {
+                 .ops = &broadwell_rt286_ops,
+                 .dpcm_playback = 1,
+                 .dpcm_capture = 1,
+-               SND_SOC_DAILINK_REG(ssp0_port, codec, platform),
++               SND_SOC_DAILINK_REG(dummy, codec, dummy),
+         },
+
+
+Said change causes following to occur:
+
+
+(stream start)
+[  113.251950] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000003000000 size: 77
+[  113.252090] haswell-pcm-audio haswell-pcm-audio: > rx: 
+0x0000000043000000 size: 48
+[  113.252097] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006301000 size: 20
+[  113.252147] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006301000 size: 20
+[  113.252179] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006100000 size: 0
+[  113.252219] snd_soc_core:dpcm_fe_dai_hw_params:  System PCM: ASoC: 
+hw_params FE System PCM rate 48000 chan 2 fmt 2
+[  113.252229] snd_soc_core:dapm_update_dai_unlocked: haswell-pcm-audio 
+haswell-pcm-audio: Update DAI routes for System Pin playback
+[  113.252236] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006000000 size: 0
+[  113.252304] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000004000000 size: 4
+[  113.252425] snd_soc_sst_haswell_pcm:create_adsp_page_table:  System 
+PCM: generating page table for 00000000a8c2b8a6 size 0x17700 pages 24
+
+
+(In essence these tx'es denote sequence for stream initialization while 
+the last two for stream RESET (0x6000000) and FREE (0x4000000))
+
+and that is only to recreate the stream once again:
+
+
+[  113.252673] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000003000000 size: 77
+[  113.252803] haswell-pcm-audio haswell-pcm-audio: > rx: 
+0x0000000043000000 size: 48
+[  113.252810] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006301000 size: 20
+[  113.252864] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006301000 size: 20
+[  113.252900] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006100000 size: 0
+[  113.252987] snd_soc_core:dpcm_fe_dai_prepare:  System PCM: ASoC: 
+prepare FE System PCM
+[  113.252993] snd_soc_core:dpcm_be_dai_prepare:  Codec: ASoC: prepare 
+BE Codec
+[  113.253028] snd_soc_core:dpcm_dapm_stream_event:  Codec: ASoC: BE 
+Codec event 1 dir 0
+[  113.254962] snd_soc_core:dpcm_do_trigger:  Codec: ASoC: trigger BE 
+Codec cmd 1
+
+
+Because of that we ended up in _reset and _free being called twice:
+
+
+[  113.254969] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006200000 size: 0
+[  113.254980] snd_soc_core:dpcm_dai_trigger_fe_be:  System PCM: ASoC: 
+post trigger FE System PCM cmd 1
+[  113.254983] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006200000 size: 0
+[  113.254996] snd_soc_sst_ipc:ipc_tx_msgs: haswell-pcm-audio 
+haswell-pcm-audio: ipc_tx_msgs dsp busy
+[  118.486291]  System PCM: ASoC: trigger FE cmd: 7 failed: -22
+[  118.486431] snd_soc_core:dpcm_dai_trigger_fe_be:  System PCM: ASoC: 
+pre trigger FE System PCM cmd 0
+[  118.486464] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006100000 size: 0
+[  118.486495] snd_soc_core:dpcm_do_trigger:  Codec: ASoC: trigger BE 
+Codec cmd 0
+[  118.486514] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006100000 size: 0
+[  118.486550] snd_soc_core:dpcm_fe_dai_hw_free:  System PCM: ASoC: 
+hw_free FE System PCM
+[  118.486569] snd_soc_core:dpcm_be_dai_hw_free:  Codec: ASoC: hw_free 
+BE Codec
+[  118.486719] snd_soc_core:dpcm_fe_dai_hw_free:  System PCM: ASoC: 
+hw_free FE System PCM
+[  118.486734] snd_soc_core:dpcm_be_dai_hw_free:  Codec: ASoC: hw_free 
+BE Codec
+[  118.486751] snd_soc_core:dpcm_be_dai_shutdown:  Codec: ASoC: close BE 
+Codec
+[  118.486801] snd_soc_sst_ipc:ipc_tx_msgs: haswell-pcm-audio 
+haswell-pcm-audio: ipc_tx_msgs dsp busy
+[  118.489279] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000006000000 size: 0
+[  118.489382] haswell-pcm-audio haswell-pcm-audio: tx: 
+0x0000000004000000 size: 4
+[  118.489535] snd_soc_core:dpcm_fe_dai_shutdown:  System PCM: ASoC: 
+close FE System PCM
+[  118.489547] haswell-pcm-audio haswell-pcm-audio: warning: stream is 
+NULL, no stream to reset, ignore it.
+[  118.489553] haswell-pcm-audio haswell-pcm-audio: warning: stream is 
+NULL, no stream to free, ignore it.
+[  118.489571] snd_soc_core:dpcm_be_disconnect:  System PCM: ASoC: BE 
+playback disconnect check for Codec
+[  118.489580] snd_soc_core:dpcm_be_disconnect:  System PCM: freed DSP 
+playback path System PCM -> Codec
+
+
+Could you confirm the same happens on your machine when revert of 
+mentioned patch is not applied ("stream is NULL" messages occur)? Issue 
+may be harmless but explained sequence does not look right.
+
+Czarek
