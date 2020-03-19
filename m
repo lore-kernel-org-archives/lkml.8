@@ -2,53 +2,53 @@ Return-Path: <SRS0=Q7wL=5E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC724C43333
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92863C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC0220787
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C5920787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584624687;
-	bh=B7+I1mSmsDqDgm4UDj9cbHnSmDsai94jiaEQVKiE0ZE=;
+	s=default; t=1584624697;
+	bh=95Stwcqtece387pNJtyKZ6oyYcBuFG7GTJeN/SLiS/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o27nJof32Kk0WR9oVkgzaGVP/SIlkbEcEb5v/MTXQNURI+6iPwJzoWSZCgzcYnVnd
-	 moGBUIhvq3zYAaJglCsybt40y9UaWWYMFLypZ3zFEV4J+VoYo+pM5oHIois46MXXRW
-	 WDI9dtumbBohcdJk0iTrhvEMhZ93njpGHNsCtaVs=
+	b=uIFbMjxR8A+AQDMSfUurbMtrKkjvMMPUJnoWdZNy7wnWVaG7prChahHhZ9MbBZcQX
+	 Ilpww7y49enZP81uX6hXz8krB7QppYfw8D7AeSrCnpgcgM2FJ5j50LT0ux5DZ6imvP
+	 EIsbT2LRYM7QNol+OKHrFDcqTO0W119fdrX+x5Dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbgCSNSQ (ORCPT
+        id S1729688AbgCSNRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:18:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:17:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729584AbgCSNSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:18:12 -0400
+        id S1729670AbgCSNRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:17:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98E5421556;
-        Thu, 19 Mar 2020 13:18:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 669552098B;
+        Thu, 19 Mar 2020 13:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623892;
-        bh=B7+I1mSmsDqDgm4UDj9cbHnSmDsai94jiaEQVKiE0ZE=;
+        s=default; t=1584623858;
+        bh=95Stwcqtece387pNJtyKZ6oyYcBuFG7GTJeN/SLiS/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZjAWD5bUvXFWI08Y7lz8KxqzbkXfRzJDzAAec79QINQsFdWOhQVhGFJWmx2yzqKa
-         RazdkgQwxYGFPa3hW+xsym4rm2v6lErevibM1hmcwQMt/7RR8L2ixR8GXqgxsUb9KF
-         XUJfQquC4NsW8C4csxcoLpyOp9Mh7MaqaYLtqx64=
+        b=fh0am8CHu4T0PAOZVhG3ImLxYjsxchIenZpZFltTo7FOLdkbFPSeyZOoQohcwxz5C
+         bGodSP0qiQr8oBnj7hZbtSX92nYNeTr9mLJkqe+Yx2NLjte8Z1Crx5Q8l6Ke/UuRnm
+         3c/zohNodgIyz7VZyEgTILhiiNdINFB1xitJ+190=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 88/99] net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
-Date:   Thu, 19 Mar 2020 14:04:06 +0100
-Message-Id: <20200319124006.527255358@linuxfoundation.org>
+        =?UTF-8?q?Linus=20L=FCssing?= <linus.luessing@c0d3.blue>,
+        Marek Lindner <mareklindner@neomailbox.ch>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.14 78/99] batman-adv: Fix duplicated OGMs on NETDEV_UP
+Date:   Thu, 19 Mar 2020 14:03:56 +0100
+Message-Id: <20200319124004.534913607@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123941.630731708@linuxfoundation.org>
 References: <20200319123941.630731708@linuxfoundation.org>
@@ -61,48 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-[ Upstream commit eae7172f8141eb98e64e6e81acc9e9d5b2add127 ]
+commit 9e6b5648bbc4cd48fab62cecbb81e9cc3c6e7e88 upstream.
 
-usbnet creates network interfaces with min_mtu = 0 and
-max_mtu = ETH_MAX_MTU.
+The state of slave interfaces are handled differently depending on whether
+the interface is up or not. All active interfaces (IFF_UP) will transmit
+OGMs. But for B.A.T.M.A.N. IV, also non-active interfaces are scheduling
+(low TTL) OGMs on active interfaces. The code which setups and schedules
+the OGMs must therefore already be called when the interfaces gets added as
+slave interface and the transmit function must then check whether it has to
+send out the OGM or not on the specific slave interface.
 
-These values are not modified by qmi_wwan when the network interface
-is created initially, allowing, for example, to set mtu greater than 1500.
+But the commit f0d97253fb5f ("batman-adv: remove ogm_emit and ogm_schedule
+API calls") moved the setup code from the enable function to the activate
+function. The latter is called either when the added slave was already up
+when batadv_hardif_enable_interface processed the new interface or when a
+NETDEV_UP event was received for this slave interfac. As result, each
+NETDEV_UP would schedule a new OGM worker for the interface and thus OGMs
+would be send a lot more than expected.
 
-When a raw_ip switch is done (raw_ip set to 'Y', then set to 'N') the mtu
-values for the network interface are set through ether_setup, with
-min_mtu = ETH_MIN_MTU and max_mtu = ETH_DATA_LEN, not allowing anymore to
-set mtu greater than 1500 (error: mtu greater than device maximum).
-
-The patch restores the original min/max mtu values set by usbnet after a
-raw_ip switch.
-
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Acked-by: BjÃ¸rn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: f0d97253fb5f ("batman-adv: remove ogm_emit and ogm_schedule API calls")
+Reported-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Tested-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Acked-by: Marek Lindner <mareklindner@neomailbox.ch>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/qmi_wwan.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/batman-adv/bat_iv_ogm.c     |    4 ++--
+ net/batman-adv/hard-interface.c |    3 +++
+ net/batman-adv/types.h          |    2 ++
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 189715438328f..a8d5561afc7d4 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -274,6 +274,9 @@ static void qmi_wwan_netdev_setup(struct net_device *net)
- 		netdev_dbg(net, "mode: raw IP\n");
- 	} else if (!net->header_ops) { /* don't bother if already set */
- 		ether_setup(net);
-+		/* Restoring min/max mtu values set originally by usbnet */
-+		net->min_mtu = 0;
-+		net->max_mtu = ETH_MAX_MTU;
- 		clear_bit(EVENT_NO_IP_ALIGN, &dev->flags);
- 		netdev_dbg(net, "mode: Ethernet\n");
- 	}
--- 
-2.20.1
-
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -2481,7 +2481,7 @@ batadv_iv_ogm_neigh_is_sob(struct batadv
+ 	return ret;
+ }
+ 
+-static void batadv_iv_iface_activate(struct batadv_hard_iface *hard_iface)
++static void batadv_iv_iface_enabled(struct batadv_hard_iface *hard_iface)
+ {
+ 	/* begin scheduling originator messages on that interface */
+ 	batadv_iv_ogm_schedule(hard_iface);
+@@ -2821,8 +2821,8 @@ unlock:
+ static struct batadv_algo_ops batadv_batman_iv __read_mostly = {
+ 	.name = "BATMAN_IV",
+ 	.iface = {
+-		.activate = batadv_iv_iface_activate,
+ 		.enable = batadv_iv_ogm_iface_enable,
++		.enabled = batadv_iv_iface_enabled,
+ 		.disable = batadv_iv_ogm_iface_disable,
+ 		.update_mac = batadv_iv_ogm_iface_update_mac,
+ 		.primary_set = batadv_iv_ogm_primary_iface_set,
+--- a/net/batman-adv/hard-interface.c
++++ b/net/batman-adv/hard-interface.c
+@@ -795,6 +795,9 @@ int batadv_hardif_enable_interface(struc
+ 
+ 	batadv_hardif_recalc_extra_skbroom(soft_iface);
+ 
++	if (bat_priv->algo_ops->iface.enabled)
++		bat_priv->algo_ops->iface.enabled(hard_iface);
++
+ out:
+ 	return 0;
+ 
+--- a/net/batman-adv/types.h
++++ b/net/batman-adv/types.h
+@@ -1424,6 +1424,7 @@ struct batadv_forw_packet {
+  * @activate: start routing mechanisms when hard-interface is brought up
+  *  (optional)
+  * @enable: init routing info when hard-interface is enabled
++ * @enabled: notification when hard-interface was enabled (optional)
+  * @disable: de-init routing info when hard-interface is disabled
+  * @update_mac: (re-)init mac addresses of the protocol information
+  *  belonging to this hard-interface
+@@ -1432,6 +1433,7 @@ struct batadv_forw_packet {
+ struct batadv_algo_iface_ops {
+ 	void (*activate)(struct batadv_hard_iface *hard_iface);
+ 	int (*enable)(struct batadv_hard_iface *hard_iface);
++	void (*enabled)(struct batadv_hard_iface *hard_iface);
+ 	void (*disable)(struct batadv_hard_iface *hard_iface);
+ 	void (*update_mac)(struct batadv_hard_iface *hard_iface);
+ 	void (*primary_set)(struct batadv_hard_iface *hard_iface);
 
 
