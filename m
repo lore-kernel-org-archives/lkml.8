@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8080C4332D
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01340C4332D
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D9220789
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A9220787
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Mar 2020 13:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1584625084;
-	bh=dhGUR4xatn233XksUDPF0ILpwQzNjiz/U8o9OsPwpEc=;
+	s=default; t=1584625091;
+	bh=JrmUqTgMon90qUzbBMJ2CgVIQapLMr7+IEomIsc6lNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JSCxVJiHBlleQsRcIq23syvBjX+6epRxCn3Fpq0VuVXPOfpgLQ4j3m7e0N4dIQnNk
-	 iPzpG8jIO2nD/reRD5Ajj4QTfTVBVWGEWmQgzA7o6mkjsvoULp+VWsItSIrkd7cI+l
-	 R7uQ/HiamALdLVEA1F1JsixAtLuYlJZE0qzY6AZw=
+	b=BCJe3AFtmwa8Y706q7u7I9EB1NbyKbYAgKzP/zFdBpaPFRz05bNoqWONA7LAd1zXt
+	 YE4S4eA001xHE9ciGKZB8TiM1wEXtnk/AJrKYLUqoykeYMlwz75+i1CSO0x0FNTX51
+	 qpSZ5btwmD4BFixoFQ2AQrJEQZfOEVb0Zb4k7gqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgCSNiD (ORCPT
+        id S1728174AbgCSNiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Mar 2020 09:38:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51056 "EHLO mail.kernel.org"
+        Thu, 19 Mar 2020 09:38:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727915AbgCSNHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Mar 2020 09:07:24 -0400
+        id S1727878AbgCSNHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Mar 2020 09:07:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EAB120836;
-        Thu, 19 Mar 2020 13:07:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BD6820772;
+        Thu, 19 Mar 2020 13:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584623244;
-        bh=dhGUR4xatn233XksUDPF0ILpwQzNjiz/U8o9OsPwpEc=;
+        s=default; t=1584623235;
+        bh=JrmUqTgMon90qUzbBMJ2CgVIQapLMr7+IEomIsc6lNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PPx468wVRl6BqvyLu+V1UzlXNs0A2Bx7UjFfTISl0+FyCm9SWLCr30fLd0w9RoYnO
-         vHCmcp4wgMRRAd7CYlEuHk8akKv3L4WrxH75166wFtxhFB5NicVB2J2zjKgB10oruj
-         36Ae/ByLtxfo53WOtvL9GnjzuACDdCyPj4HAvYeg=
+        b=RSzIu4E2lDAY8kOhF34XMz4//dg8Cbk3ighaYGtzbjfUaOkFbD2ZCZISvIxhJGig4
+         UJX3Xk0tVu77mrH9PIZhqVYkYxTjMEvwyebBmXlHrvQYmQ/XA1p9SaVtmoGQLSXblm
+         w6qyn7DuI9Xm3IanZWsKHq4u38jXVUVDlRjHSkGY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladis Dronov <vdronov@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.4 37/93] efi: Add a sanity check to efivar_store_raw()
-Date:   Thu, 19 Mar 2020 13:59:41 +0100
-Message-Id: <20200319123936.603478201@linuxfoundation.org>
+        Sven Eckelmann <sven@narfation.org>,
+        Marek Lindner <mareklindner@neomailbox.ch>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.4 53/93] batman-adv: Avoid nullptr dereference in bla after vlan_insert_tag
+Date:   Thu, 19 Mar 2020 13:59:57 +0100
+Message-Id: <20200319123941.828317784@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200319123924.795019515@linuxfoundation.org>
 References: <20200319123924.795019515@linuxfoundation.org>
@@ -60,37 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladis Dronov <vdronov@redhat.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit d6c066fda90d578aacdf19771a027ed484a79825 upstream.
+commit 10c78f5854d361ded4736c1831948e0a5f67b932 upstream.
 
-Add a sanity check to efivar_store_raw() the same way
-efivar_{attr,size,data}_read() and efivar_show_raw() have it.
+vlan_insert_tag can return NULL on errors. The bridge loop avoidance code
+therefore has to check the return value of vlan_insert_tag for NULL before
+it can safely operate on this pointer.
 
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200305084041.24053-3-vdronov@redhat.com
-Link: https://lore.kernel.org/r/20200308080859.21568-25-ardb@kernel.org
+Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Marek Lindner <mareklindner@neomailbox.ch>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
 ---
- drivers/firmware/efi/efivars.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/batman-adv/bridge_loop_avoidance.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -272,6 +272,9 @@ efivar_store_raw(struct efivar_entry *en
- 	u8 *data;
- 	int err;
+--- a/net/batman-adv/bridge_loop_avoidance.c
++++ b/net/batman-adv/bridge_loop_avoidance.c
+@@ -352,9 +352,12 @@ static void batadv_bla_send_claim(struct
+ 		break;
+ 	}
  
-+	if (!entry || !buf)
-+		return -EINVAL;
-+
- 	if (is_compat()) {
- 		struct compat_efi_variable *compat;
+-	if (vid & BATADV_VLAN_HAS_TAG)
++	if (vid & BATADV_VLAN_HAS_TAG) {
+ 		skb = vlan_insert_tag(skb, htons(ETH_P_8021Q),
+ 				      vid & VLAN_VID_MASK);
++		if (!skb)
++			goto out;
++	}
  
+ 	skb_reset_mac_header(skb);
+ 	skb->protocol = eth_type_trans(skb, soft_iface);
 
 
